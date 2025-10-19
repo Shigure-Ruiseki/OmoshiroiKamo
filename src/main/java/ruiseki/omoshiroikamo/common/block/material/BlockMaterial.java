@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -21,8 +20,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
+import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockMaterial extends BlockOK {
@@ -114,12 +113,10 @@ public class BlockMaterial extends BlockOK {
         return mat.getColor();
     }
 
-    public static class ItemBlockMaterial extends ItemBlockWithMetadata {
+    public static class ItemBlockMaterial extends ItemBlockOK {
 
         public ItemBlockMaterial(Block block) {
             super(block, block);
-            setHasSubtypes(true);
-            setCreativeTab(OKCreativeTab.tabBlock);
         }
 
         @Override

@@ -233,7 +233,6 @@ public class ItemRecipes {
                 'I',
                 "ingotIron",
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Magnet Upgrade
@@ -252,7 +251,6 @@ public class ItemRecipes {
                 'I',
                 "ingotIron",
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Feeding Upgrade
@@ -271,7 +269,6 @@ public class ItemRecipes {
                 'M',
                 new ItemStack(Items.speckled_melon, 1, 0),
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Battery Upgrade
@@ -286,7 +283,22 @@ public class ItemRecipes {
                 'R',
                 "blockRedstone",
                 'U',
+                ModItems.BASE_UPGRADE.get()));
 
+        // Light Upgrade
+        GameRegistry.addRecipe(
+            new ShapedOreRecipe(
+                ModItems.LIGHT_UPGRADE.get(),
+                " S ",
+                "IUI",
+                " T ",
+                'I',
+                "ingotIron",
+                'S',
+                Items.string,
+                'T',
+                Blocks.torch,
+                'U',
                 ModItems.BASE_UPGRADE.get()));
 
         // Everlasting Upgrade

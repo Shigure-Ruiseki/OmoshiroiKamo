@@ -6,14 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
+import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
 import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.TEVoidMiner;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -80,12 +79,10 @@ public class BlockVoidOreMiner extends AbstractMultiBlockBlock<TEVoidMiner> {
         }
     }
 
-    public static class ItemBlockVoidOreMiner extends ItemBlockWithMetadata {
+    public static class ItemBlockVoidOreMiner extends ItemBlockOK {
 
         public ItemBlockVoidOreMiner(Block block) {
             super(block, block);
-            setHasSubtypes(true);
-            setCreativeTab(OKCreativeTab.tabBlock);
         }
 
         @Override

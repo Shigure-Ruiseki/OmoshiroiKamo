@@ -6,6 +6,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public enum ModObject {
 
+    blockTest,
     blockMultiblock,
     blockBoiler,
     blockFluidInOut,
@@ -56,6 +57,7 @@ public enum ModObject {
     itemFeedingUpgrade,
     itemBatteryUpgrade,
     itemEverlastingUpgrade,
+    itemLightUpgrade,
 
     itemStabilizedEnderPear,
     itemPhotovoltaicCell,

@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemBatteryUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemLightUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
@@ -30,13 +31,15 @@ public enum ModItems {
     FEEDING_UPGRADE(true, ItemFeedingUpgrade.create()),
     BATTERY_UPGRADE(true, ItemBatteryUpgrade.create()),
     EVERLASTING_UPGRADE(true, ItemEverlastingUpgrade.create()),
+    LIGHT_UPGRADE(true, ItemLightUpgrade.create()),
     MATERIAL(true, ItemMaterial.create()),
     ORE(true, ItemOre.create()),
     HAMMER(true, ItemHammer.create()),
     ASSEMBLER(true, ItemAssembler.create()),
     STABILIZED_ENDER_PEAR(true, ItemOK.create(ModObject.itemStabilizedEnderPear, "ender_stabilized")),
     PHOTOVOLTAIC_CELL(true, ItemOK.create(ModObject.itemPhotovoltaicCell, "photovoltaic_cell")),
-    WIRE_COIL(true, ItemWireCoil.create()),;
+    WIRE_COIL(true, ItemWireCoil.create()),
+    ;
 
     public static final ModItems[] VALUES = values();
 

@@ -1,8 +1,9 @@
-package ruiseki.omoshiroikamo.common.item;
+package ruiseki.omoshiroikamo.common.block;
 
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,21 +23,21 @@ import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class ItemBauble extends ItemOK implements IBauble {
+public class ItemBlockBauble extends ItemBlockOK implements IBauble {
 
     private static final String TAG_HASHCODE = "playerHashcode";
     private static final String TAG_BAUBLE_UUID_MOST = "baubleUUIDMost";
     private static final String TAG_BAUBLE_UUID_LEAST = "baubleUUIDLeast";
     private boolean disableRightClickEquip;
 
-    public ItemBauble(String name, boolean disableRightClickEquip) {
-        super(name);
-        this.disableRightClickEquip = disableRightClickEquip;
+    public ItemBlockBauble(Block blockA, Block blockB) {
+        super(blockA, blockB);
         setMaxStackSize(1);
     }
 
-    public ItemBauble(String name) {
-        this(name, true);
+    public ItemBlockBauble(Block blockA) {
+        super(blockA);
+        setMaxStackSize(1);
     }
 
     public static UUID getBaubleUUID(ItemStack stack) {
@@ -188,5 +189,4 @@ public class ItemBauble extends ItemOK implements IBauble {
             setLastPlayerHashcode(stack, player.hashCode());
         }
     }
-
 }

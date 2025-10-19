@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -18,8 +17,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
+import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockLaserLens extends BlockOK {
@@ -86,12 +85,10 @@ public class BlockLaserLens extends BlockOK {
         return DyeColor.values()[meta];
     }
 
-    public static class ItemBlockLaserLens extends ItemBlockWithMetadata {
+    public static class ItemBlockLaserLens extends ItemBlockOK {
 
         public ItemBlockLaserLens(Block block) {
             super(block, block);
-            setHasSubtypes(true);
-            setCreativeTab(OKCreativeTab.tabBlock);
         }
 
         @Override

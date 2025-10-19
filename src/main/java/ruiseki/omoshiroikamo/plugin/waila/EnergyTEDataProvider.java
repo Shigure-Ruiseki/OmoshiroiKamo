@@ -12,7 +12,6 @@ import cofh.api.energy.IEnergyHandler;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
-import ruiseki.omoshiroikamo.api.IWailaInfoProvider;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
@@ -25,13 +24,13 @@ public class EnergyTEDataProvider implements IWailaDataProvider {
 
     @Override
     public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-        IWailaConfigHandler config) {
+                                     IWailaConfigHandler config) {
         return currenttip;
     }
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-        IWailaConfigHandler config) {
+                                     IWailaConfigHandler config) {
         if (!config.getConfig(LibMisc.MOD_ID + ".energyTE")) {
             return currenttip;
         }
@@ -40,12 +39,6 @@ public class EnergyTEDataProvider implements IWailaDataProvider {
         if (tileEntity instanceof IEnergyHandler handler) {
 
             AbstractTE te = (AbstractTE) tileEntity;
-            if (!(tileEntity instanceof IWailaInfoProvider provider)) {
-                return currenttip;
-            }
-            if (!provider.hasEnergyStorage()) {
-                return currenttip;
-            }
 
             if (!config.getConfig("thermalexpansion.energyhandler")) {
                 int stored = handler.getEnergyStored(accessor.getSide());
@@ -84,13 +77,13 @@ public class EnergyTEDataProvider implements IWailaDataProvider {
 
     @Override
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-        IWailaConfigHandler config) {
+                                     IWailaConfigHandler config) {
         return currenttip;
     }
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x,
-        int y, int z) {
+                                     int y, int z) {
         return tag;
     }
 }

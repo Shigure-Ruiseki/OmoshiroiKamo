@@ -24,11 +24,6 @@ import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.gtnewhorizons.wdmla.api.accessor.BlockAccessor;
-import com.gtnewhorizons.wdmla.api.ui.IComponent;
-import com.gtnewhorizons.wdmla.api.ui.ITooltip;
-import com.gtnewhorizons.wdmla.impl.ui.ThemeHelper;
-import com.gtnewhorizons.wdmla.plugin.vanilla.VanillaIdentifiers;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
@@ -52,7 +47,7 @@ public class TEFurnace extends AbstractTaskTE {
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-        float hitZ) {
+                                    float hitZ) {
         openGui(player);
         return true;
     }
@@ -182,10 +177,10 @@ public class TEFurnace extends AbstractTaskTE {
         syncManager.syncValue("totalBurnTime", new IntSyncValue(() -> totalBurnTime, value -> totalBurnTime = value));
         panel.child(
             new Column().child(
-                new ProgressWidget().progress(this::getProgress)
-                    .topRel(0.2f)
-                    .leftRel(0.375f)
-                    .texture(GuiTextures.PROGRESS_ARROW, 20))
+                    new ProgressWidget().progress(this::getProgress)
+                        .topRel(0.2f)
+                        .leftRel(0.375f)
+                        .texture(GuiTextures.PROGRESS_ARROW, 20))
                 .child(
                     SlotGroupWidget.builder()
                         .matrix("ISSOOO", "BSSOOO", "ISSOOO")
@@ -210,82 +205,6 @@ public class TEFurnace extends AbstractTaskTE {
                         .alignX(Alignment.CENTER)));
         panel.bindPlayerInventory();
         return panel;
-    }
-
-    @Override
-    public boolean hasProcessStatus() {
-        return false;
-    }
-
-    @Override
-    public boolean hasItemStorage() {
-        return false;
-    }
-
-    @Override
-    public void appendTooltip(ITooltip tooltip, BlockAccessor accessor) {
-        if (!(accessor.getTileEntity() instanceof TEFurnace)) {
-            return;
-        }
-        NBTTagCompound data = accessor.getServerData();
-        float burnTime = data.getFloat("burnTime");
-        this.inv.deserializeNBT(data.getCompoundTag("item_inv"));
-
-        ItemStack input = inv.getStackInSlot(0);
-        ItemStack fuel = inv.getStackInSlot(1);
-
-        List<ItemStack> outputs = new ArrayList<>();
-        for (int i = slotDefinition.getMinOutputSlot(); i < slotDefinition.getMaxOutputSlot(); i++) {
-            outputs.add(inv.getStackInSlot(i));
-        }
-
-        boolean allOutputEmpty = outputs.stream()
-            .allMatch(s -> s == null);
-
-        if (input != null && allOutputEmpty) {
-            List<ChanceItemStack> resultList = getItemOutput();
-            for (int i = 0; i < resultList.size() && i < outputs.size(); i++) {
-                ChanceItemStack out = resultList.get(i);
-                if (out != null && out.stack != null) {
-                    ItemStack ghost = out.stack.copy();
-                    ghost.stackSize = 0;
-                    outputs.set(i, ghost);
-                }
-            }
-        }
-
-        boolean allEmpty = input == null && fuel == null
-            && outputs.stream()
-                .allMatch(s -> s == null);
-
-        if (!allEmpty) {
-            IComponent progress = ThemeHelper.INSTANCE.furnaceLikeProgress(
-                Arrays.asList(input, fuel),
-                outputs,
-                (int) (getProgress() * 100),
-                100,
-                accessor.showDetails());
-
-            if (progress != null) {
-                tooltip.child(progress.tag(VanillaIdentifiers.FURNACE));
-            }
-        }
-        if (burnTime > 0) {
-            tooltip.text(String.format("Burn Time: " + ((int) burnTime) / 20) + "s");
-        }
-
-        super.appendTooltip(tooltip, accessor);
-    }
-
-    @Override
-    public void appendServerData(NBTTagCompound data, BlockAccessor accessor) {
-        if (!(accessor.getTileEntity() instanceof TEFurnace te)) {
-            return;
-        }
-
-        // data.setFloat("progressTE", te.getProgress());
-        data.setFloat("burnTime", burnTime);
-        data.setTag("item_inv", this.inv.serializeNBT());
     }
 
 }

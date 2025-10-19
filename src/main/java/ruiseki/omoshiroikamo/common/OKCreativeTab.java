@@ -57,6 +57,7 @@ public class OKCreativeTab extends CreativeTabs {
         addItem(ModItems.FEEDING_UPGRADE.get());
         addItem(ModItems.BATTERY_UPGRADE.get());
         addItem(ModItems.EVERLASTING_UPGRADE.get());
+        addItem(ModItems.LIGHT_UPGRADE.get());
         addItem(ModItems.STABILIZED_ENDER_PEAR.get());
         addItem(ModItems.PHOTOVOLTAIC_CELL.get());
         addItem(ModItems.ASSEMBLER.get());

@@ -27,7 +27,6 @@ import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import ruiseki.omoshiroikamo.api.IWailaInfoProvider;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.fluid.IFluidHandlerAdv;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
@@ -38,7 +37,7 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractPoweredTaskTE;
 import ruiseki.omoshiroikamo.common.recipe.chance.ChanceFluidStack;
 import ruiseki.omoshiroikamo.common.recipe.chance.ChanceItemStack;
 
-public class TEElectrolyzer extends AbstractPoweredTaskTE implements IFluidHandlerAdv, IWailaInfoProvider {
+public class TEElectrolyzer extends AbstractPoweredTaskTE implements IFluidHandlerAdv {
 
     public TEElectrolyzer() {
         super(new SlotDefinition(0, 2, 3, 5, 0, 2, 3, 5, -1, -1), MaterialRegistry.get("Iron"));
@@ -87,14 +86,14 @@ public class TEElectrolyzer extends AbstractPoweredTaskTE implements IFluidHandl
                             return new ItemSlot().slot(
                                 new ModularSlot(this.inv, index).slotGroup("item_inv")
                                     .filter(stack -> isMachineItemValidForSlot(index, stack)))
-                                .debugName("Slot " + index);
+                                .name("Slot " + index);
                         })
                         .key('F', index -> {
                             return new FluidSlot()
                                 .syncHandler(
                                     new FluidSlotSyncHandler(fluidTanks[index])
                                         .canFillSlot(index <= slotDefinition.maxFluidInputSlot))
-                                .debugName("Slot " + index);
+                                .name("Slot " + index);
                         })
                         .build()
                         .topRel(0.1f)

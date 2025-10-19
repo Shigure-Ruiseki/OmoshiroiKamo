@@ -12,14 +12,14 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class ItemBatteryUpgrade extends ItemUpgrade {
+public class ItemLightUpgrade extends ItemUpgrade {
 
-    public static ItemBatteryUpgrade create() {
-        return new ItemBatteryUpgrade();
+    public static ItemLightUpgrade create() {
+        return new ItemLightUpgrade();
     }
 
-    public ItemBatteryUpgrade() {
-        super(ModObject.itemBatteryUpgrade.unlocalisedName);
+    public ItemLightUpgrade() {
+        super(ModObject.itemLightUpgrade.unlocalisedName);
         setNoRepair();
         setMaxStackSize(1);
     }
@@ -27,16 +27,11 @@ public class ItemBatteryUpgrade extends ItemUpgrade {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "battery_upgrade");
-    }
-
-    @Override
-    public boolean hasTab() {
-        return true;
+        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "light_upgrade");
     }
 
     @Override
     public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "battery_upgrade"));
+        list.add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "light_upgrade"));
     }
 }

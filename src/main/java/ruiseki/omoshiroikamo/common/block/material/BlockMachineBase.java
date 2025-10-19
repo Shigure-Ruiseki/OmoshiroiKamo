@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
@@ -15,8 +14,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
+import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockMachineBase extends BlockOK {
@@ -28,7 +27,6 @@ public class BlockMachineBase extends BlockOK {
     private IIcon[] icons;
 
     public static BlockMachineBase create() {
-
         return new BlockMachineBase();
     }
 
@@ -73,12 +71,10 @@ public class BlockMachineBase extends BlockOK {
         return icons[meta];
     }
 
-    public static class ItemBlockMachineBase extends ItemBlockWithMetadata {
+    public static class ItemBlockMachineBase extends ItemBlockOK {
 
         public ItemBlockMachineBase(Block block) {
             super(block, block);
-            setHasSubtypes(true);
-            setCreativeTab(OKCreativeTab.tabBlock);
         }
 
         @Override

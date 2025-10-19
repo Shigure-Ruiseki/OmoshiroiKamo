@@ -116,10 +116,10 @@ public class BackpackController {
             }
 
             NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
-            if (!tag.hasKey(BackpackGui.BACKPACKUPGRADE)) {
+            if (!tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
                 continue;
             }
-            upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKUPGRADE));
+            upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_UPGRADE));
 
             for (int slot = 0; slot < upgradeHandler.getSlots(); slot++) {
                 ItemStack upgrade = upgradeHandler.getStackInSlot(slot);
@@ -140,10 +140,10 @@ public class BackpackController {
                 }
 
                 NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
-                if (!tag.hasKey(BackpackGui.BACKPACKUPGRADE)) {
+                if (!tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
                     continue;
                 }
-                upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKUPGRADE));
+                upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_UPGRADE));
 
                 for (int slot = 0; slot < upgradeHandler.getSlots(); slot++) {
                     ItemStack upgrade = upgradeHandler.getStackInSlot(slot);
@@ -161,11 +161,11 @@ public class BackpackController {
 
     private static boolean hasUpgrade(ItemStack stack, Class<?> clazz) {
         NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
-        if (tag == null || !tag.hasKey(BackpackGui.BACKPACKUPGRADE)) {
+        if (tag == null || !tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
             return false;
         }
         UpgradeItemStackHandler upgradeHandler = new UpgradeItemStackHandler(BackpackGui.upgradeSlot);
-        upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKUPGRADE));
+        upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_UPGRADE));
         for (int i = 0; i < upgradeHandler.getSlots(); i++) {
             ItemStack upgrade = upgradeHandler.getStackInSlot(i);
             if (upgrade != null && clazz.isInstance(upgrade.getItem())) {
@@ -184,12 +184,12 @@ public class BackpackController {
         }
 
         NBTTagCompound tag = ItemNBTHelper.getNBT(mag.item);
-        if (tag == null || !tag.hasKey(BackpackGui.BACKPACKINV)) {
+        if (tag == null || !tag.hasKey(BackpackGui.BACKPACK_INV)) {
             return;
         }
 
         ItemStackHandler handler = new ItemStackHandler(BackpackGui.slot);
-        handler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKINV));
+        handler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_INV));
 
         FoodStats foodStats = player.getFoodStats();
         boolean consumedAny = false;
@@ -271,7 +271,7 @@ public class BackpackController {
         }
 
         if (consumedAny) {
-            tag.setTag(BackpackGui.BACKPACKINV, handler.serializeNBT());
+            tag.setTag(BackpackGui.BACKPACK_INV, handler.serializeNBT());
             mag.item.setTagCompound(tag);
             ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, 100);
         }
@@ -544,7 +544,7 @@ public class BackpackController {
     }
 
     public static void setBackpackActive(EntityPlayerMP player, PacketBackPackState.SlotType type, int slot,
-        boolean isActive) {
+                                         boolean isActive) {
         ItemStack stack = null;
         IInventory baubles = null;
         int dropOff = -1;
@@ -599,7 +599,7 @@ public class BackpackController {
         List<String> filterList = new ArrayList<>();
         if (magnet != null && magnet.hasTagCompound()
             && magnet.getTagCompound()
-                .hasKey(tag)) {
+            .hasKey(tag)) {
             NBTTagList list = magnet.getTagCompound()
                 .getTagList(tag, 10);
             for (int i = 0; i < list.tagCount(); i++) {

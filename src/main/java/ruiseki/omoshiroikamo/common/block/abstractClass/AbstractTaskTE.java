@@ -12,10 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import com.enderio.core.api.common.util.IProgressTile;
-import com.gtnewhorizons.wdmla.api.accessor.BlockAccessor;
-import com.gtnewhorizons.wdmla.api.ui.ITooltip;
 
-import ruiseki.omoshiroikamo.api.IWailaInfoProvider;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.common.recipe.chance.ChanceFluidStack;
 import ruiseki.omoshiroikamo.common.recipe.chance.ChanceItemStack;
@@ -27,7 +24,7 @@ import ruiseki.omoshiroikamo.common.recipe.machine.PoweredTaskProgress;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 
-public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTile, IWailaInfoProvider {
+public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTile {
 
     protected final Random random = new Random();
     protected IPoweredTask currentTask = null;
@@ -484,20 +481,5 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
             }
         }
         return result;
-    }
-
-    @Override
-    public boolean hasItemStorage() {
-        return true;
-    }
-
-    @Override
-    public boolean hasProcessStatus() {
-        return true;
-    }
-
-    @Override
-    public void appendTooltip(ITooltip tooltip, BlockAccessor accessor) {
-
     }
 }
