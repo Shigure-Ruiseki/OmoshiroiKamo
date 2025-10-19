@@ -1,9 +1,5 @@
 package ruiseki.omoshiroikamo.common.block.furnace;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +25,6 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTaskTE;
-import ruiseki.omoshiroikamo.common.recipe.chance.ChanceItemStack;
 
 public class TEFurnace extends AbstractTaskTE {
 
@@ -47,7 +42,7 @@ public class TEFurnace extends AbstractTaskTE {
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-                                    float hitZ) {
+        float hitZ) {
         openGui(player);
         return true;
     }
@@ -177,10 +172,10 @@ public class TEFurnace extends AbstractTaskTE {
         syncManager.syncValue("totalBurnTime", new IntSyncValue(() -> totalBurnTime, value -> totalBurnTime = value));
         panel.child(
             new Column().child(
-                    new ProgressWidget().progress(this::getProgress)
-                        .topRel(0.2f)
-                        .leftRel(0.375f)
-                        .texture(GuiTextures.PROGRESS_ARROW, 20))
+                new ProgressWidget().progress(this::getProgress)
+                    .topRel(0.2f)
+                    .leftRel(0.375f)
+                    .texture(GuiTextures.PROGRESS_ARROW, 20))
                 .child(
                     SlotGroupWidget.builder()
                         .matrix("ISSOOO", "BSSOOO", "ISSOOO")

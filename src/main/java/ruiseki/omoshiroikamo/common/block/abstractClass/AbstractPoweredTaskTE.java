@@ -235,8 +235,7 @@ public abstract class AbstractPoweredTaskTE extends AbstractPoweredTE implements
                 }
             }
 
-            if (remaining > 0) {
-            }
+            if (remaining > 0) {}
         }
 
         cachedNextRecipe = null;
@@ -362,7 +361,7 @@ public abstract class AbstractPoweredTaskTE extends AbstractPoweredTE implements
                     "[consumeInputs] Không đủ fluid để tiêu thụ: " + input.stack.amount
                         + "L of "
                         + input.stack.getFluid()
-                        .getName());
+                            .getName());
             }
         }
     }

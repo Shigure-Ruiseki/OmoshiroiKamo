@@ -544,7 +544,7 @@ public class BackpackController {
     }
 
     public static void setBackpackActive(EntityPlayerMP player, PacketBackPackState.SlotType type, int slot,
-                                         boolean isActive) {
+        boolean isActive) {
         ItemStack stack = null;
         IInventory baubles = null;
         int dropOff = -1;
@@ -599,7 +599,7 @@ public class BackpackController {
         List<String> filterList = new ArrayList<>();
         if (magnet != null && magnet.hasTagCompound()
             && magnet.getTagCompound()
-            .hasKey(tag)) {
+                .hasKey(tag)) {
             NBTTagList list = magnet.getTagCompound()
                 .getTagList(tag, 10);
             for (int i = 0; i < list.tagCount(); i++) {

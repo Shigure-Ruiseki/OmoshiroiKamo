@@ -24,13 +24,13 @@ public class EnergyTEDataProvider implements IWailaDataProvider {
 
     @Override
     public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-                                     IWailaConfigHandler config) {
+        IWailaConfigHandler config) {
         return currenttip;
     }
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-                                     IWailaConfigHandler config) {
+        IWailaConfigHandler config) {
         if (!config.getConfig(LibMisc.MOD_ID + ".energyTE")) {
             return currenttip;
         }
@@ -77,13 +77,13 @@ public class EnergyTEDataProvider implements IWailaDataProvider {
 
     @Override
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-                                     IWailaConfigHandler config) {
+        IWailaConfigHandler config) {
         return currenttip;
     }
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x,
-                                     int y, int z) {
+        int y, int z) {
         return tag;
     }
 }
