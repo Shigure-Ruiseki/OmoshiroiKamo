@@ -137,10 +137,38 @@ public class VoidMinerRecipes {
             defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:end_stone", 0, DyeColor.WHITE, 7));
             defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:hardened_clay", 0, DyeColor.RED, 6));
 
-            for (DyeColor dye : DyeColor.values()) {
-                defaults.addEntry(
-                    new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", dye.getColor(), dye, 1));
-            }
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 0, DyeColor.WHITE, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 1, DyeColor.ORANGE, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 2, DyeColor.MAGENTA, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 3, DyeColor.LIGHT_BLUE, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 4, DyeColor.YELLOW, 1));
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 5, DyeColor.LIME, 1));
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 6, DyeColor.PINK, 1));
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 7, DyeColor.GRAY, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 8, DyeColor.SILVER, 1));
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 9, DyeColor.CYAN, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 10, DyeColor.PURPLE, 1));
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 11, DyeColor.BLUE, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 12, DyeColor.BROWN, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 13, DyeColor.GREEN, 1));
+            defaults
+                .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 14, DyeColor.RED, 1));
+            defaults.addEntry(
+                new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 15, DyeColor.BLACK, 1));
 
             defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:sponge", 0, DyeColor.YELLOW, 2));
             defaults

@@ -7,6 +7,8 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.AnvilRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.ElectrolyzerRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.MaterialPropertiesHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidOreRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidResRecipeHandler;
 
 @SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
@@ -24,6 +26,12 @@ public class NEIConfig implements IConfigureNEI {
 
         API.registerRecipeHandler(new MaterialPropertiesHandler());
         API.registerUsageHandler(new MaterialPropertiesHandler());
+
+        API.registerRecipeHandler(new VoidOreRecipeHandler());
+        API.registerUsageHandler(new VoidOreRecipeHandler());
+
+        API.registerRecipeHandler(new VoidResRecipeHandler());
+        API.registerUsageHandler(new VoidResRecipeHandler());
         Logger.info("Loaded NeiConfig");
     }
 
