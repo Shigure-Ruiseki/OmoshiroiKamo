@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import codechicken.nei.NEIServerUtils;
@@ -39,6 +38,11 @@ public class AnvilRecipeHandler extends RecipeHandlerBase {
     }
 
     @Override
+    public void loadTransferRects() {
+        this.addTransferRect(0, 0, 0, 0);
+    }
+
+    @Override
     public void loadAllRecipes() {
         Set<MachineRecipe> added = new HashSet<>();
         for (MachineRecipe recipe : MachineRecipeRegistry.getRecipes(ModObject.blockAnvil.unlocalisedName)) {
@@ -69,9 +73,8 @@ public class AnvilRecipeHandler extends RecipeHandlerBase {
         super.loadUsageRecipes(ingredient);
         Set<MachineRecipe> added = new HashSet<>();
         boolean isHammer = ingredient.getItem() == ModItems.HAMMER.get();
-        boolean isAnvil = ingredient.getItem() == Item.getItemFromBlock(ModBlocks.ANVIL.get());
         for (MachineRecipe recipe : MachineRecipeRegistry.getRecipes(ModObject.blockAnvil.unlocalisedName)) {
-            if (isHammer || isAnvil) {
+            if (isHammer) {
                 if (added.add(recipe)) {
                     arecipes.add(new CachedAnvilRecipe(recipe));
                 }

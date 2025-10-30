@@ -73,13 +73,13 @@ public abstract class AbstractUpgrade implements IAnvilUpgrade {
     @Override
     @SideOnly(Side.CLIENT)
     public void addBasicEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
-        list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG_UTILS.localizeExact(getUnlocalizedName() + ".name"));
+        list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
-        list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG_UTILS.localizeExact(getUnlocalizedName() + ".name"));
+        list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
         SpecialTooltipHandler.addDetailedTooltipFromResources(list, getUnlocalizedName());
     }
 

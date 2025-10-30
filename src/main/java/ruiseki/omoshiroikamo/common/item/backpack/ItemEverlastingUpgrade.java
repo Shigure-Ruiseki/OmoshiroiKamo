@@ -37,6 +37,6 @@ public class ItemEverlastingUpgrade extends ItemUpgrade {
 
     @Override
     public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "everlasting_upgrade"));
+        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "everlasting_upgrade"));
     }
 }

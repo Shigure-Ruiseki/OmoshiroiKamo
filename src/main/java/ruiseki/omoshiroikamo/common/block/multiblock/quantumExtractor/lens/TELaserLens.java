@@ -11,6 +11,10 @@ public class TELaserLens extends AbstractTE {
         this.meta = meta;
     }
 
+    public TELaserLens() {
+        this(0);
+    }
+
     @Override
     public String getMachineName() {
         return ModObject.blockLaserLens.unlocalisedName;

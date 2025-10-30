@@ -80,7 +80,6 @@ public class BackpackGui extends ModularPanel {
     public static final String FEEDING_MODE = "FeedingMode";
     public static final String FEEDING_TYPE = "FeedingType";
     public static final String EVERLASTING_MODE = "EverlastingMode";
-    public static final String LIGHT_MODE = "LightMode";
     public static final String BACKPACK_UPGRADE = "BackpackUpgrade";
     public static final String BACKPACK_INV = "BackpackInv";
     public static final String CRAFTING_INV = "CraftingInv";
@@ -560,7 +559,7 @@ public class BackpackGui extends ModularPanel {
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
                             .tooltipBuilder(
                                 richTooltip -> richTooltip
-                                    .add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "filter_mode")))
+                                    .add(LibMisc.LANG.localize(LibResources.TOOLTIP + "filter_mode")))
                             .overlay(true, MGuiTextures.WHITELIST)
                             .overlay(false, MGuiTextures.BLACKLIST)
                             .value(
@@ -603,7 +602,7 @@ public class BackpackGui extends ModularPanel {
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
                             .tooltipBuilder(
                                 richTooltip -> richTooltip
-                                    .add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "filter_mode")))
+                                    .add(LibMisc.LANG.localize(LibResources.TOOLTIP + "filter_mode")))
                             .overlay(false, MGuiTextures.WHITELIST)
                             .overlay(true, MGuiTextures.BLACKLIST)
                             .value(
@@ -615,7 +614,7 @@ public class BackpackGui extends ModularPanel {
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
                             .tooltipBuilder(
                                 richTooltip -> richTooltip
-                                    .add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "feeding_type")))
+                                    .add(LibMisc.LANG.localize(LibResources.TOOLTIP + "feeding_type")))
                             .overlay(false, MGuiTextures.FULL_HUNGER)
                             .overlay(true, MGuiTextures.EXACT_HUNGER)
                             .value(

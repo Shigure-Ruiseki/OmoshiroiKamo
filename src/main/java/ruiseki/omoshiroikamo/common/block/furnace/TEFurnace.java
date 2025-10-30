@@ -20,6 +20,7 @@ import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.enderio.core.common.util.ItemUtil;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
@@ -80,7 +81,7 @@ public class TEFurnace extends AbstractTaskTE {
 
                     ItemStack container = fuel.getItem()
                         .getContainerItem(fuel);
-                    if (container != null && !ItemStack.areItemStacksEqual(container, fuel)) {
+                    if (container != null && !ItemUtil.areStacksEqual(container, fuel)) {
                         inv.setStackInSlot(1, container);
                     } else {
                         fuel.stackSize--;

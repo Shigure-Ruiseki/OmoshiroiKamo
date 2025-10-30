@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,13 +23,13 @@ import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
 import ruiseki.omoshiroikamo.api.ore.OreRegistry;
 import ruiseki.omoshiroikamo.client.ResourePackGen;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
+import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModCommands;
 import ruiseki.omoshiroikamo.common.init.ModFluids;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.init.ModRecipes;
 import ruiseki.omoshiroikamo.common.init.OKWorldGenerator;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.common.ore.OreRegister;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.handler.ElementalHandler;
@@ -56,8 +55,7 @@ public class CommonProxy {
         OreRegistry.init();
         MaterialWireType.init();
 
-        ruiseki.omoshiroikamo.common.init.ModBlocks.init();
-        OreRegister.init();
+        ModBlocks.init();
         ModItems.init();
         ModFluids.init();
         ModAchievements.init();
@@ -93,19 +91,6 @@ public class CommonProxy {
         TICCompat.init();
     }
 
-    public EntityPlayer getClientPlayer() {
-        return null;
-    }
-
-    public World getClientWorld() {
-        return null;
-    }
-
-    public World getEntityWorld() {
-        return MinecraftServer.getServer()
-            .getEntityWorld();
-    }
-
     public void serverLoad(FMLServerStartingEvent event) {
         ModCommands.init(event);
     }
@@ -117,7 +102,8 @@ public class CommonProxy {
 
         if (FMLCommonHandler.instance()
             .getEffectiveSide() == Side.SERVER) {
-            World world = OmoshiroiKamo.proxy.getEntityWorld();
+            World world = MinecraftServer.getServer()
+                .getEntityWorld();
             if (!world.isRemote) {
                 Logger.info("WorldData loading");
                 WireNetSaveData worldData = (WireNetSaveData) world

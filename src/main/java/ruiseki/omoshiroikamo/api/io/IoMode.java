@@ -6,11 +6,11 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public enum IoMode {
 
-    NONE(LibMisc.LANG_UTILS.localize("gui.machine.ioMode.none")),
-    INPUT(LibMisc.LANG_UTILS.localize("gui.machine.ioMode.input")),
-    OUTPUT(LibMisc.LANG_UTILS.localize("gui.machine.ioMode.output")),
-    INPUT_OUTPUT(LibMisc.LANG_UTILS.localize("gui.machine.ioMode.inputOutput")),
-    DISABLED(LibMisc.LANG_UTILS.localize("gui.machine.ioMode.disabled"));
+    NONE(LibMisc.LANG.localize("gui.machine.ioMode.none")),
+    INPUT(LibMisc.LANG.localize("gui.machine.ioMode.input")),
+    OUTPUT(LibMisc.LANG.localize("gui.machine.ioMode.output")),
+    INPUT_OUTPUT(LibMisc.LANG.localize("gui.machine.ioMode.inputOutput")),
+    DISABLED(LibMisc.LANG.localize("gui.machine.ioMode.disabled"));
 
     private final String unlocalisedName;
 
@@ -39,7 +39,7 @@ public enum IoMode {
     }
 
     public String getLocalisedName() {
-        return LibMisc.LANG_UTILS.localize(unlocalisedName);
+        return LibMisc.LANG.localize(unlocalisedName);
     }
 
     public String colorLocalisedName() {
@@ -55,7 +55,7 @@ public enum IoMode {
                 return EnumChatFormatting.GOLD + loc;
             case INPUT_OUTPUT:
                 return String.format(
-                    LibMisc.LANG_UTILS.localize(this.getUnlocalisedName() + ".colored"),
+                    LibMisc.LANG.localize(this.getUnlocalisedName() + ".colored"),
                     EnumChatFormatting.GOLD,
                     EnumChatFormatting.WHITE,
                     EnumChatFormatting.AQUA);

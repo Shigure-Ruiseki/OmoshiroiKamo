@@ -7,7 +7,6 @@ import cpw.mods.fml.common.Loader;
 public enum LibMods {
 
     Waila("Waila"),
-    WDMLA("wdmla"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
     NotEnoughItems("NotEnoughItems"),

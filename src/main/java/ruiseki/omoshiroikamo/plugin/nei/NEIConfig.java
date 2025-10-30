@@ -13,26 +13,21 @@ import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidResRecipeHandler;
 @SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
 
-    public static final GuiContainerWrapperStackPositioner stackPositioner = new GuiContainerWrapperStackPositioner();
-    public static final GuiContainerWrapperOverlayHandler overlayHandler = new GuiContainerWrapperOverlayHandler();
-
     @Override
     public void loadConfig() {
-        API.registerRecipeHandler(new ElectrolyzerRecipeHandler());
-        API.registerUsageHandler(new ElectrolyzerRecipeHandler());
+        Logger.info("Loading NeiConfig: " + getName());
 
-        API.registerRecipeHandler(new AnvilRecipeHandler());
-        API.registerUsageHandler(new AnvilRecipeHandler());
+        registerHandler(new ElectrolyzerRecipeHandler());
+        registerHandler(new AnvilRecipeHandler());
+        registerHandler(new MaterialPropertiesHandler());
+        registerHandler(new VoidOreRecipeHandler());
+        registerHandler(new VoidResRecipeHandler());
+    }
 
-        API.registerRecipeHandler(new MaterialPropertiesHandler());
-        API.registerUsageHandler(new MaterialPropertiesHandler());
-
-        API.registerRecipeHandler(new VoidOreRecipeHandler());
-        API.registerUsageHandler(new VoidOreRecipeHandler());
-
-        API.registerRecipeHandler(new VoidResRecipeHandler());
-        API.registerUsageHandler(new VoidResRecipeHandler());
-        Logger.info("Loaded NeiConfig");
+    protected static void registerHandler(IRecipeHandlerBase handler) {
+        handler.prepare();
+        API.registerRecipeHandler(handler);
+        API.registerUsageHandler(handler);
     }
 
     @Override

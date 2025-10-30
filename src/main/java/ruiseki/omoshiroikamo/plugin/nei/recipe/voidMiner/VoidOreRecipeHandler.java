@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.enderio.core.common.util.DyeColor;
+import com.enderio.core.common.util.ItemUtil;
 
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -40,7 +41,23 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
     }
 
     @Override
-    public void loadAllRecipes() {}
+    public void loadTransferRects() {
+        this.addTransferRect(0, 0, 0, 0);
+    }
+
+    @Override
+    public void loadAllRecipes() {
+        Set<WeightedStackBase> added = new HashSet<>();
+        IFocusableRegistry registry = QuantumExtractorRecipes.quantumOreExtractorRegistry;
+        for (WeightedStackBase ws : registry.getUnFocusedList()) {
+            ItemStack output = ws.getMainStack();
+            if (output != null) {
+                if (added.add(ws)) {
+                    arecipes.add(new CachedVoidOreRecipe(ws, null));
+                }
+            }
+        }
+    }
 
     @Override
     public void loadCraftingRecipes(ItemStack item) {
@@ -50,7 +67,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
 
         for (WeightedStackBase ws : registry.getUnFocusedList()) {
             ItemStack output = ws.getMainStack();
-            if (output != null && ItemStack.areItemStacksEqual(output, item)) {
+            if (output != null && ItemUtil.areStacksEqual(output, item)) {
                 if (added.add(ws)) {
                     arecipes.add(new CachedVoidOreRecipe(ws, null));
                 }
@@ -61,7 +78,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
         if (color != null) {
             for (WeightedStackBase ws : registry.getFocusedList(color, 1.0f)) {
                 ItemStack output = ws.getMainStack();
-                if (output != null && ItemStack.areItemStacksEqual(output, item)) {
+                if (output != null && ItemUtil.areStacksEqual(output, item)) {
                     if (added.add(ws)) {
                         arecipes.add(new CachedVoidOreRecipe(ws, color));
                     }
@@ -78,21 +95,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
 
         Item item = ingredient.getItem();
         Item lensItem = ModBlocks.LASER_LENS.getItem();
-        Item minerItem = ModBlocks.QUANTUM_ORE_EXTRACTOR.getItem();
-
-        boolean isMiner = item == minerItem;
         boolean isLens = item == lensItem;
-
-        if (isMiner) {
-            for (WeightedStackBase ws : registry.getUnFocusedList()) {
-                ItemStack output = ws.getMainStack();
-                if (output != null) {
-                    if (added.add(ws)) {
-                        arecipes.add(new CachedVoidOreRecipe(ws, null));
-                    }
-                }
-            }
-        }
 
         if (isLens) {
             if (ingredient.getItemDamage() == 0) {

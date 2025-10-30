@@ -5,18 +5,12 @@ import net.minecraft.item.crafting.CraftingManager;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
-import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import codechicken.nei.recipe.IRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.INEIRecipeTransfer;
-
-public class BackpackCraftingModularContainer extends BackPackContainer
-    implements INEIRecipeTransfer<BackpackCraftingModularContainer> {
+public class BackpackCraftingModularContainer extends BackPackContainer {
 
     private final InventoryCraftingWrapper craftMatrix;
     private ModularCraftingSlot craftingSlot;
@@ -57,16 +51,5 @@ public class BackpackCraftingModularContainer extends BackPackContainer
                 CraftingManager.getInstance()
                     .findMatchingRecipe(this.craftMatrix, getPlayer().worldObj));
         }
-    }
-
-    @Override
-    public String[] getIdents() {
-        return new String[] { "crafting" };
-    }
-
-    @Override
-    public int transferRecipe(GuiContainerWrapper gui, ModularContainer self, IRecipeHandler recipe, int recipeIndex,
-        int multiplier) {
-        return 0;
     }
 }

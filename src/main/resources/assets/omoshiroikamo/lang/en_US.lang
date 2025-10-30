@@ -55,6 +55,11 @@ tooltip.feeding_upgrade=Allows backpacks to automatically feed player
 tooltip.everlasting_upgrade=Makes the backpack invincible, preventing despawning or falling into the void. Ensures retrieval even when thrown into the void.
 tooltip.battery_upgrade=Stores energy and automatically recharges energy-using items.
 
+tooltip.progress=Progress
+tooltip.duration=Duration
+tooltip.efficiency=Efficiency
+tooltip.sunlightBlocked=Sky Blocked!
+
 tooltip.assembler.l1=Shift + Right-click on controllers to assemble.
 tooltip.assembler.l2=Left-click to instantly break any multiblock block.
 

@@ -5,18 +5,22 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
-public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> {
+public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> implements IWailaInfoProvider {
 
     protected BlockSolarArray() {
         super(ModObject.blockSolarArray, TESolarArray.class);
@@ -75,6 +79,30 @@ public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> {
             default:
                 return new TESolarArrayT1();
         }
+    }
+
+    @Override
+    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TESolarArray solar) {
+            float efficiency = solar.calculateLightRatio();
+            if (!solar.canSeeSun()) {
+                tooltip.add(EnumChatFormatting.RED + LibMisc.LANG.localize("tooltip.sunlightBlocked"));
+            } else {
+                tooltip.add(
+                    String.format(
+                        "%s : %s%.0f%%",
+                        EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.efficiency")
+                            + EnumChatFormatting.RESET,
+                        EnumChatFormatting.GRAY,
+                        efficiency * 100));
+            }
+        }
+    }
+
+    @Override
+    public int getDefaultDisplayMask(World world, int x, int y, int z) {
+        return 0;
     }
 
     public static class ItemBlockSolarArray extends ItemBlockOK {

@@ -16,9 +16,6 @@ import ruiseki.omoshiroikamo.config.worldGen.WorldGenConfig;
 public class GeneralConfig {
 
     @Config.DefaultBoolean(true)
-    public static boolean useWDMLA;
-
-    @Config.DefaultBoolean(true)
     public static boolean increasedRenderboxes;
 
     @Config.DefaultBoolean(true)

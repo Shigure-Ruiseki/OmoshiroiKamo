@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import com.enderio.core.api.common.util.IProgressTile;
+import com.enderio.core.common.util.ItemUtil;
 
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.material.MaterialEntry;
@@ -270,7 +271,7 @@ public abstract class AbstractPoweredTaskTE extends AbstractPoweredTE implements
 
             for (int i = slotDefinition.minItemOutputSlot; i <= slotDefinition.maxItemOutputSlot; i++) {
                 ItemStack target = inv.getStackInSlot(i);
-                if (target == null || (ItemStack.areItemStacksEqual(target, out.stack)
+                if (target == null || (ItemUtil.areStacksEqual(target, out.stack)
                     && target.stackSize + out.stack.stackSize <= target.getMaxStackSize())) {
                     canInsert = true;
                     break;

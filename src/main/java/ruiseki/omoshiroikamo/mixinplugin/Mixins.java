@@ -6,10 +6,7 @@ import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 
 public enum Mixins implements IMixins {
-
-    NEI(new MixinBuilder().addCommonMixins("nei.RecipeInfoMixin")
-        .setPhase(Phase.LATE)
-        .addRequiredMod(TargetedMod.NEI));
+    ;
 
     private final MixinBuilder builder;
 

@@ -62,7 +62,7 @@ public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements
         }
     }
 
-    public abstract void loadAllRecipes();
+    public void loadAllRecipes() {}
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
@@ -85,8 +85,8 @@ public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements
     }
 
     @Override
-    public void loadUsageRecipes(ItemStack ingred) {
-        FluidStack fluid = NEIUtils.getFluidStack(ingred);
+    public void loadUsageRecipes(ItemStack ingredient) {
+        FluidStack fluid = NEIUtils.getFluidStack(ingredient);
         if (fluid != null && fluid.getFluid() != null) {
             this.loadUsageRecipes(fluid);
         }

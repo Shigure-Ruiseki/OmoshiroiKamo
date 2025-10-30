@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,7 +13,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 
 public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTanks, IMessage> {
@@ -58,11 +58,15 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
     @Override
     public IMessage onMessage(PacketFluidTanks message, MessageContext ctx) {
         EntityPlayer player = ctx.side == Side.SERVER ? ctx.getServerHandler().playerEntity
-            : OmoshiroiKamo.proxy.getClientPlayer();
+            : Minecraft.getMinecraft().thePlayer;
 
-        if (player == null) return null;
+        if (player == null) {
+            return null;
+        }
         TileEntity te = player.worldObj.getTileEntity(message.x, message.y, message.z);
-        if (!(te instanceof AbstractStorageTE storage)) return null;
+        if (!(te instanceof AbstractStorageTE storage)) {
+            return null;
+        }
 
         NBTTagCompound tanksTag = message.nbtRoot.getCompoundTag("FluidTanks");
         for (int i = 0; i < storage.fluidTanks.length; i++) {

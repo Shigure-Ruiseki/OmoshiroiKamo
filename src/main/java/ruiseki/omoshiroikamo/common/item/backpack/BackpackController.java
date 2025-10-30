@@ -176,7 +176,7 @@ public class BackpackController {
     }
 
     private static void handleFeeding(EntityPlayer player, ActiveBackPack mag) {
-        int cooldown = ItemNBTHelper.getInt(mag.item, TAG_COOLDOWN_FEED, 2);
+        int cooldown = ItemNBTHelper.getInt(mag.item, TAG_COOLDOWN_FEED, 20);
 
         if (cooldown > 0) {
             ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, cooldown - 1);
@@ -271,9 +271,21 @@ public class BackpackController {
         }
 
         if (consumedAny) {
+            int dynamicCooldown = 20;
+            for (int slotIndex : foodSlots) {
+                ItemStack stack = handler.getStackInSlot(slotIndex);
+                if (stack != null && stack.getItem() instanceof ItemFood) {
+                    dynamicCooldown = Math.max(
+                        20,
+                        stack.getItem()
+                            .getMaxItemUseDuration(stack) / 2);
+                    break;
+                }
+            }
+
             tag.setTag(BackpackGui.BACKPACK_INV, handler.serializeNBT());
             mag.item.setTagCompound(tag);
-            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, 100);
+            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, dynamicCooldown);
         }
     }
 

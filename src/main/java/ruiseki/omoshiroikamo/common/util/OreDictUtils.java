@@ -7,6 +7,8 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.enderio.core.common.util.ItemUtil;
+
 import codechicken.nei.NEIServerUtils;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
@@ -82,7 +84,7 @@ public class OreDictUtils {
         ItemStack to = oreDictStacks.get(0)
             .copy();
 
-        if (ItemStack.areItemStacksEqual(from, to) && ItemStack.areItemStackTagsEqual(from, to)) {
+        if (ItemUtil.areStacksEqual(from, to)) {
             return;
         }
 

@@ -37,6 +37,6 @@ public class ItemCraftingUpgrade extends ItemUpgrade {
 
     @Override
     public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "crafting_upgrade"));
+        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "crafting_upgrade"));
     }
 }

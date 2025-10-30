@@ -22,7 +22,7 @@ public class ModFluids {
     }
 
     public static String MB() {
-        return LibMisc.LANG_UTILS.localize("fluid.millibucket.abr");
+        return LibMisc.LANG.localize("fluid.millibucket.abr");
     }
 
     public static void init() {

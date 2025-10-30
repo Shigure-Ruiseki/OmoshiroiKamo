@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -9,7 +10,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
 
 public class PacketPowerStorage implements IMessage, IMessageHandler<PacketPowerStorage, IMessage> {
@@ -47,7 +47,7 @@ public class PacketPowerStorage implements IMessage, IMessageHandler<PacketPower
 
     @Override
     public IMessage onMessage(PacketPowerStorage message, MessageContext ctx) {
-        EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         TileEntity te = player.worldObj.getTileEntity(message.x, message.y, message.z);
         if (te instanceof IPowerContainer me) {
             me.setEnergyStored(message.storedEnergy);

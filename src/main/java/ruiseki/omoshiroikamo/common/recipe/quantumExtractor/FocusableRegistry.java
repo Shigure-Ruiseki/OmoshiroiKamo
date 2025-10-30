@@ -9,6 +9,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
 
 import com.enderio.core.common.util.DyeColor;
+import com.enderio.core.common.util.ItemUtil;
 
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedRandomUtil;
@@ -99,7 +100,7 @@ public class FocusableRegistry implements IFocusableRegistry {
             List<ItemStack> list = this.priorityOres.get(dye);
             if (list != null) {
                 for (ItemStack item : list) {
-                    if (item != null && ItemStack.areItemStacksEqual(item, stack)) {
+                    if (item != null && ItemUtil.areStacksEqual(item, stack)) {
                         return dye;
                     }
                 }

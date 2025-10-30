@@ -34,6 +34,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.BlockQ
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.BlockQuantumResExtractor;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarArray;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.cell.BlockSolarCell;
+import ruiseki.omoshiroikamo.common.ore.OreRegister;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModBlocks {
@@ -89,6 +90,7 @@ public enum ModBlocks {
                 Logger.error("Failed to initialize block: +" + block.name());
             }
         }
+        OreRegister.init();
     }
 
     private final boolean enabled;

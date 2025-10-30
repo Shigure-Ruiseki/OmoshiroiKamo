@@ -5,9 +5,11 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -15,9 +17,12 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
-public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumExtractor> {
+public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumExtractor>
+    implements IWailaInfoProvider {
 
     protected BlockQuantumResExtractor() {
         super(ModObject.blockQuantumResExtractor, TEQuantumExtractor.class);
@@ -77,6 +82,36 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
             default:
                 return new TEQuantumResExtractorT1();
         }
+    }
+
+    @Override
+    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TEQuantumExtractor extractor) {
+            int progress = extractor.getCurrentProgress();
+            int duration = extractor.getCurrentDuration();
+
+            if (duration > 0) {
+                float percent = (progress / (float) duration) * 100f;
+                tooltip.add(
+                    String.format(
+                        "%s: %s%.1f%%%s",
+                        EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.progress"),
+                        EnumChatFormatting.GRAY,
+                        percent,
+                        EnumChatFormatting.RESET));
+            } else {
+                tooltip.add(
+                    EnumChatFormatting.GRAY + LibMisc.LANG.localize(
+                        "tooltip.progress") + ": " + EnumChatFormatting.GRAY + "N/A" + EnumChatFormatting.RESET);
+            }
+        }
+
+    }
+
+    @Override
+    public int getDefaultDisplayMask(World world, int x, int y, int z) {
+        return 0;
     }
 
     public static class ItemBlockQuantumResExtractor extends ItemBlockOK {

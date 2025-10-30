@@ -28,14 +28,9 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
     private final IModelCustom model;
     private static final String MODEL = LibResources.PREFIX_MODEL + "void_miner.obj";
 
-    private static final ResourceLocation bottom = new ResourceLocation(LibResources.PREFIX_BLOCK + "basalt.png");
-    private static final ResourceLocation panelRes = new ResourceLocation(
-        LibResources.PREFIX_BLOCK + "res_extractor.png");
-    private static final ResourceLocation panelOre = new ResourceLocation(
-        LibResources.PREFIX_BLOCK + "ore_extractor.png");
-    private static final ResourceLocation laser = new ResourceLocation(LibResources.PREFIX_BLOCK + "laser_core.png");
-
-    private static final ResourceLocation TEX_IRON = new ResourceLocation(LibResources.PREFIX_BLOCK + "cont_tier.png");
+    private static final ResourceLocation BOTTOM = new ResourceLocation(LibResources.PREFIX_BLOCK + "basalt.png");
+    private static final ResourceLocation LASER = new ResourceLocation(LibResources.PREFIX_BLOCK + "laser_core.png");
+    private static final ResourceLocation PANEL = new ResourceLocation(LibResources.PREFIX_BLOCK + "cont_tier.png");
     private static final ResourceLocation BEAM_TEXTURE = new ResourceLocation("textures/entity/beacon_beam.png");
 
     public QuantumExtractorTESR() {
@@ -55,10 +50,11 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
         GL11.glTranslatef((float) x + 0.5f, (float) y, (float) z + 0.5f);
 
         if (te.getBlockType() == ModBlocks.QUANTUM_RES_EXTRACTOR.get()) {
-            RenderUtil.bindTexture(panelRes);
+            GL11.glColor3f(0.31f, 0.78f, 0.47f);
         } else {
-            RenderUtil.bindTexture(panelOre);
+            GL11.glColor3f(0.40f, 0.90f, 1.00f);
         }
+        RenderUtil.bindTexture(PANEL);
         model.renderOnly("TopPanelW", "TopPanelN", "TopPanelEW", "PanelNorth", "PanelSouth", "PanelEast", "PanelWest");
         render(tier);
         GL11.glPopMatrix();
@@ -81,10 +77,11 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
         GL11.glTranslatef(0.5f, -0.1f, 0.5f);
 
         if (item.getItem() == ModBlocks.QUANTUM_RES_EXTRACTOR.getItem()) {
-            RenderUtil.bindTexture(panelRes);
+            GL11.glColor3f(0.31f, 0.78f, 0.47f);
         } else {
-            RenderUtil.bindTexture(panelOre);
+            GL11.glColor3f(0.40f, 0.90f, 1.00f);
         }
+        RenderUtil.bindTexture(PANEL);
         model.renderOnly("TopPanelW", "TopPanelN", "TopPanelEW", "PanelNorth", "PanelSouth", "PanelEast", "PanelWest");
         render(tier);
         GL11.glPopMatrix();
@@ -166,9 +163,9 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
 
     public void render(int tier) {
 
-        RenderUtil.bindTexture(bottom);
+        RenderUtil.bindTexture(BOTTOM);
         model.renderOnly("Bottom");
-        RenderUtil.bindTexture(laser);
+        RenderUtil.bindTexture(LASER);
         model.renderOnly("LaserHead");
 
         int color = DyeColor.WHITE.getColor();
@@ -197,7 +194,7 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
         b = Math.min(1.0f, b * brightnessFactor);
 
         GL11.glColor3f(r, g, b);
-        RenderUtil.bindTexture(TEX_IRON);
+        RenderUtil.bindTexture(PANEL);
         model.renderOnly(
             "TopEast",
             "TopWest",
