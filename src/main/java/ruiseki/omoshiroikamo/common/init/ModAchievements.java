@@ -94,7 +94,7 @@ public enum ModAchievements {
         }
     }
 
-    public static void init() {
+    public static void preInit() {
         for (ModAchievements entry : values()) {
             entry.create();
         }

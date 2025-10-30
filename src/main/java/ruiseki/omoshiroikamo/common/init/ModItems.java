@@ -36,11 +36,12 @@ public enum ModItems {
     ASSEMBLER(true, ItemAssembler.create()),
     STABILIZED_ENDER_PEAR(true, ItemOK.create(ModObject.itemStabilizedEnderPear, "ender_stabilized")),
     PHOTOVOLTAIC_CELL(true, ItemOK.create(ModObject.itemPhotovoltaicCell, "photovoltaic_cell")),
-    WIRE_COIL(true, ItemWireCoil.create()),;
+    WIRE_COIL(true, ItemWireCoil.create()),
+    ;
 
     public static final ModItems[] VALUES = values();
 
-    public static void init() {
+    public static void preInit() {
         for (ModItems item : VALUES) {
             if (!item.isEnabled()) {
                 continue;

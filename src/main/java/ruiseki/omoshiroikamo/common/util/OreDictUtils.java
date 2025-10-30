@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.common.init.ModBlocks;
 
 public class OreDictUtils {
 
-    public static void init() {
+    public static void preInit() {
         OreDictionary.registerOre("stoneBasalt", ModBlocks.BLOCK_BASALT.get());
         OreDictionary.registerOre("stoneAlabaster", ModBlocks.BLOCK_ALABASTER.get());
         OreDictionary.registerOre("stoneHardened", ModBlocks.BLOCK_HARDENED_STONE.get());

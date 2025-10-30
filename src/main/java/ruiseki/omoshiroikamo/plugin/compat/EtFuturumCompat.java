@@ -21,11 +21,10 @@ public class EtFuturumCompat {
 
         addRecipes();
 
-        Logger.info("Loaded EtFuturumCompat");
+        Logger.info("Loaded EtFuturum Compat");
     }
 
     public static void addRecipes() {
-        Logger.info("Loaded EtFuturum Compat Recipes");
 
         // Crafting
 

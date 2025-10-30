@@ -35,6 +35,7 @@ import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.handler.ElementalHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.world.WireNetSaveData;
+import ruiseki.omoshiroikamo.plugin.baubles.BaubleExpandedCompat;
 import ruiseki.omoshiroikamo.plugin.compat.EtFuturumCompat;
 import ruiseki.omoshiroikamo.plugin.compat.TICCompat;
 import ruiseki.omoshiroikamo.plugin.nei.NEICompat;
@@ -47,20 +48,23 @@ public class CommonProxy {
     protected long clientTickCount = 0;
     protected final TickTimer tickTimer = new TickTimer();
 
-    public CommonProxy() {}
+    public CommonProxy() {
+    }
 
     public void preInit(FMLPreInitializationEvent event) {
-        MaterialRegistry.init();
-        FluidRegistry.init();
-        OreRegistry.init();
-        MaterialWireType.init();
+        MaterialRegistry.preInit();
+        FluidRegistry.preInit();
+        OreRegistry.preInit();
+        MaterialWireType.preInit();
 
-        ModBlocks.init();
-        ModItems.init();
-        ModFluids.init();
-        ModAchievements.init();
-        OKWorldGenerator.init();
-        OreDictUtils.init();
+        ModBlocks.preInit();
+        ModItems.preInit();
+        ModFluids.preInit();
+        ModAchievements.preInit();
+        OKWorldGenerator.preInit();
+        OreDictUtils.preInit();
+
+        BaubleExpandedCompat.preInit();
 
         callAssembleResourcePack(event);
 
@@ -87,8 +91,9 @@ public class CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new ElementalHandler());
 
-        StructureCompat.init();
-        TICCompat.init();
+        StructureCompat.postInit();
+        TICCompat.postInit();
+        BaubleExpandedCompat.postInit();
     }
 
     public void serverLoad(FMLServerStartingEvent event) {
@@ -138,7 +143,8 @@ public class CommonProxy {
         ++serverTickCount;
     }
 
-    protected void onClientTick() {}
+    protected void onClientTick() {
+    }
 
     public long getTickCount() {
         return serverTickCount;

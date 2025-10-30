@@ -220,7 +220,7 @@ public class QuantumBeaconStructure {
         }};
     // spotless:on
 
-    public static final int[][] TIER_OFFSET = { { 2, 0, 2 }, { 3, 0, 3 }, { 4, 0, 4 }, { 5, 0, 5 } };
+    public static final int[][] TIER_OFFSET = {{2, 0, 2}, {3, 0, 3}, {4, 0, 4}, {5, 0, 5}};
     public static IStructureDefinition<TEQuantumBeaconT1> STRUCTURE_DEFINITION_TIER_1;
     public static IStructureDefinition<TEQuantumBeaconT2> STRUCTURE_DEFINITION_TIER_2;
     public static IStructureDefinition<TEQuantumBeaconT3> STRUCTURE_DEFINITION_TIER_3;
@@ -350,8 +350,6 @@ public class QuantumBeaconStructure {
         IMultiblockInfoContainer.registerTileClass(TEQuantumBeaconT2.class, new MultiblockInfoContainerT2(definition2));
         IMultiblockInfoContainer.registerTileClass(TEQuantumBeaconT3.class, new MultiblockInfoContainerT3(definition3));
         IMultiblockInfoContainer.registerTileClass(TEQuantumBeaconT4.class, new MultiblockInfoContainerT4(definition4));
-
-        Logger.info("Register Solar Array Structure Info");
     }
 
     private static class MultiblockInfoContainerT1 implements IMultiblockInfoContainer<TEQuantumBeaconT1> {
@@ -383,7 +381,7 @@ public class QuantumBeaconStructure {
 
         @Override
         public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
-            TEQuantumBeaconT1 ctx, ExtendedFacing aSide) {
+                                     TEQuantumBeaconT1 ctx, ExtendedFacing aSide) {
             int built = 0;
             int tier = ctx.getTier();
             built = this.structure.survivalBuild(
@@ -440,7 +438,7 @@ public class QuantumBeaconStructure {
 
         @Override
         public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
-            TEQuantumBeaconT2 ctx, ExtendedFacing aSide) {
+                                     TEQuantumBeaconT2 ctx, ExtendedFacing aSide) {
             int built = 0;
             int tier = ctx.getTier();
             built = this.structure.survivalBuild(
@@ -497,7 +495,7 @@ public class QuantumBeaconStructure {
 
         @Override
         public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
-            TEQuantumBeaconT3 ctx, ExtendedFacing aSide) {
+                                     TEQuantumBeaconT3 ctx, ExtendedFacing aSide) {
             int built = 0;
             int tier = ctx.getTier();
             built = this.structure.survivalBuild(
@@ -554,7 +552,7 @@ public class QuantumBeaconStructure {
 
         @Override
         public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
-            TEQuantumBeaconT4 ctx, ExtendedFacing aSide) {
+                                     TEQuantumBeaconT4 ctx, ExtendedFacing aSide) {
             int built = 0;
             int tier = ctx.getTier();
             built = this.structure.survivalBuild(

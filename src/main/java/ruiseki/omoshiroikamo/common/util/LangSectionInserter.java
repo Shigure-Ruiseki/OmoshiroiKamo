@@ -128,9 +128,9 @@ public class LangSectionInserter {
     }
 
     public static void main(String[] args) throws IOException {
-        MaterialRegistry.init();
-        FluidRegistry.init();
-        OreRegistry.init();
+        MaterialRegistry.preInit();
+        FluidRegistry.preInit();
+        OreRegistry.preInit();
         generateLang(
             new File(LANG_PATH),
             new ArrayList<>(MaterialRegistry.all()),
@@ -173,7 +173,7 @@ public class LangSectionInserter {
     // }
 
     private static void generateLang(File file, Collection<MaterialEntry> materials, Collection<FluidEntry> fluids,
-        Collection<OreEntry> ores, String beginTag, String endTag) throws IOException {
+                                     Collection<OreEntry> ores, String beginTag, String endTag) throws IOException {
 
         List<String> existingLines = file.exists() ? Files.readAllLines(file.toPath()) : new ArrayList<>();
         List<String> cleaned = new ArrayList<>();

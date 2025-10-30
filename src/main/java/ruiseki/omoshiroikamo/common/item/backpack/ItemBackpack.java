@@ -118,6 +118,7 @@ public class ItemBackpack extends ItemBauble
 
     @Override
     public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+        super.addDetailedEntries(itemstack, entityplayer, list, flag);
         EnergyUpgrade up = EnergyUpgrade.loadFromItem(itemstack);
         if (up != null) {
             list.add(PowerDisplayUtil.formatStoredPower(up.getEnergy(), up.getCapacity()));
@@ -151,5 +152,10 @@ public class ItemBackpack extends ItemBauble
         model.renderModel(stack);
 
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public String[] getBaubleTypes(ItemStack itemstack) {
+        return new String[]{"body"};
     }
 }

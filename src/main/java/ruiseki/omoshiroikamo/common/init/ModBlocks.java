@@ -77,7 +77,7 @@ public enum ModBlocks {
 
     public static final ModBlocks[] VALUES = values();
 
-    public static void init() {
+    public static void preInit() {
         for (ModBlocks block : VALUES) {
             if (!block.isEnabled()) {
                 continue;

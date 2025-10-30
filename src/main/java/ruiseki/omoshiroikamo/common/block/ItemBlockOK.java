@@ -1,13 +1,18 @@
 package ruiseki.omoshiroikamo.common.block;
 
+import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBlockOK extends ItemBlock {
+import java.util.List;
+
+public class ItemBlockOK extends ItemBlock implements IAdvancedTooltipProvider {
 
     private final Block field_150939_b;
 
@@ -36,5 +41,20 @@ public class ItemBlockOK extends ItemBlock {
     @Override
     public int getMetadata(int meta) {
         return meta;
+    }
+
+    @Override
+    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+
+    }
+
+    @Override
+    public void addBasicEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+
+    }
+
+    @Override
+    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+
     }
 }

@@ -56,7 +56,7 @@ public class FluidRegistry {
         return REGISTRY.containsKey(name);
     }
 
-    public static void init() {
+    public static void preInit() {
         register(new FluidEntry("Water", 0, 1000, 0.00089, 298.15, 0x3F76E4, false));
 
         register(new FluidEntry("Hydrogen", 50, 0.08988, 8.76e-6, 298.15, 0xE6FFFF, true));

@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayStruct
 
 public class StructureCompat {
 
-    public static void init() {
+    public static void postInit() {
         SolarArrayStructure.registerStructureInfo();
         QuantumOreExtractorStructure.registerStructureInfo();
         QuantumResExtractorStructure.registerStructureInfo();

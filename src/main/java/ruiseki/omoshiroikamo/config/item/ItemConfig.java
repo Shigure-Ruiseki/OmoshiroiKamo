@@ -29,4 +29,7 @@ public class ItemConfig {
 
     @Config.DefaultBoolean(true)
     public static boolean renderChargeBar;
+
+    @Config.DefaultBoolean(true)
+    public static boolean renderBaubles;
 }
