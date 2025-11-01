@@ -154,12 +154,4 @@ public final class ItemNBTHelper {
         return verifyExistance(stack, tag) ? getNBT(stack).getTagList(tag, objtype)
             : nullifyOnFail ? null : new NBTTagList();
     }
-
-    public static NBTTagCompound getOrCreateNBT(ItemStack stack) {
-        if (stack.stackTagCompound == null) {
-            stack.stackTagCompound = new NBTTagCompound();
-        }
-        return stack.stackTagCompound;
-    }
-
 }
