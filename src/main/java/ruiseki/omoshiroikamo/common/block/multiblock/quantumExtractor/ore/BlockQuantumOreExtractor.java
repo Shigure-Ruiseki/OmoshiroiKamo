@@ -52,7 +52,7 @@ public class BlockQuantumOreExtractor extends AbstractMultiBlockBlock<TEQuantumE
 
     @Override
     public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "ore_extractor");
+        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "cont_tier");
     }
 
     @Override

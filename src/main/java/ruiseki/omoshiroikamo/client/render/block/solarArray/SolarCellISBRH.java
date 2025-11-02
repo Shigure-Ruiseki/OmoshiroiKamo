@@ -18,56 +18,39 @@ public class SolarCellISBRH implements ISimpleBlockRenderingHandler {
         renderId = RenderingRegistry.getNextAvailableRenderId();
     }
 
-    private static final float HEIGHT = 13f / 16f;
-
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
 
         Tessellator tess = Tessellator.instance;
 
+        GL11.glPushMatrix();
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
-        renderer.setRenderBounds(0, 0, 0, 1, HEIGHT, 1);
+        tess.startDrawingQuads();
+        renderer.setRenderBoundsFromBlock(block);
 
         // BOTTOM
-        tess.startDrawingQuads();
         renderer.renderFaceYNeg(block, 0, 0, 0, block.getIcon(0, metadata));
-        tess.draw();
-
         // TOP
-        tess.startDrawingQuads();
         renderer.renderFaceYPos(block, 0, 0, 0, block.getIcon(1, metadata));
-        tess.draw();
-
         // NORTH
-        tess.startDrawingQuads();
         renderer.renderFaceZNeg(block, 0, 0, 0, block.getIcon(2, metadata));
-        tess.draw();
-
         // SOUTH
-        tess.startDrawingQuads();
         renderer.renderFaceZPos(block, 0, 0, 0, block.getIcon(3, metadata));
-        tess.draw();
-
         // WEST
-        tess.startDrawingQuads();
         renderer.renderFaceXNeg(block, 0, 0, 0, block.getIcon(4, metadata));
-        tess.draw();
-
         // EAST
-        tess.startDrawingQuads();
         renderer.renderFaceXPos(block, 0, 0, 0, block.getIcon(5, metadata));
-        tess.draw();
 
-        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        tess.draw();
+        GL11.glPopMatrix();
     }
 
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
 
-        renderer.setRenderBounds(0, 0, 0, 1, HEIGHT, 1);
-
+        renderer.setRenderBoundsFromBlock(block);
         return renderer.renderStandardBlock(block, x, y, z);
     }
 

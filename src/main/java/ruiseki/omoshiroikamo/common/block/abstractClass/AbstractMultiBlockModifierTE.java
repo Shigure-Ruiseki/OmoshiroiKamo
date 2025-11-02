@@ -92,7 +92,6 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
         } else {
             this.isProcessing = false;
         }
-        updateClientWithPlayer();
         super.doUpdate();
     }
 
@@ -111,7 +110,7 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
         } else {
             this.isProcessing = false;
         }
-
+        updateClientWithPlayer();
     }
 
     public abstract int getBaseDuration();

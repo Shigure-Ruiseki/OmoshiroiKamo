@@ -127,7 +127,7 @@ public abstract class AbstractUpgrade implements IAnvilUpgrade {
 
         writeUpgradeToNBT(upgradeRoot);
 
-        ItemNBTHelper.getOrCreateNBT(stack)
+        ItemNBTHelper.getNBT(stack)
             .setTag(id, upgradeRoot);
     }
 

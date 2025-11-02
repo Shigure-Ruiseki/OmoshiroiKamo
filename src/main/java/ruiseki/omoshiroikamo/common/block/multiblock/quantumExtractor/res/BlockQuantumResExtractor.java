@@ -52,7 +52,7 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
 
     @Override
     public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "res_extractor");
+        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "cont_tier");
     }
 
     @Override
