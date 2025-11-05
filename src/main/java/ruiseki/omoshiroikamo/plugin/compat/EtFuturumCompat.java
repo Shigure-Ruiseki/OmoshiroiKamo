@@ -21,11 +21,10 @@ public class EtFuturumCompat {
 
         addRecipes();
 
-        Logger.info("Loaded EtFuturumCompat");
+        Logger.info("Loaded EtFuturum Compat");
     }
 
     public static void addRecipes() {
-        Logger.info("Loaded EtFuturum Compat Recipes");
 
         // Crafting
 
@@ -143,7 +142,7 @@ public class EtFuturumCompat {
         // Nano Bot Beacon Tier 1
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 0),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 0),
                 "GPG",
                 "GNG",
                 "BCB",
@@ -156,7 +155,7 @@ public class EtFuturumCompat {
                 'C',
                 new ItemStack(Blocks.beacon, 1, 0),
                 'B',
-                new ItemStack(Blocks.brewing_stand, 1, 0)));
+                Items.brewing_stand));
 
         // SmithingTable
 

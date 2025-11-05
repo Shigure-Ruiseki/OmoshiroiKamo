@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.api.multiblock.ModifierRegistry;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 
-public abstract class BlockModifier extends BlockOK implements IModifierBlock {
+public abstract class BlockModifier extends BlockOK implements IModifierBlock, IMBBlock {
 
     private final String modifierName;
     private final List<IModifierAttribute> attributes;

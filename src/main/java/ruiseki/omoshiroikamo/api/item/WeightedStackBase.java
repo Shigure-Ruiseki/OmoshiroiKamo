@@ -18,4 +18,5 @@ public abstract class WeightedStackBase extends WeightedRandom.Item {
     public abstract ItemStack getMainStack();
 
     public abstract WeightedStackBase copy();
+
 }

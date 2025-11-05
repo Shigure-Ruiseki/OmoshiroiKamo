@@ -10,6 +10,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.enderio.core.common.util.DyeColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -233,7 +235,6 @@ public class ItemRecipes {
                 'I',
                 "ingotIron",
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Magnet Upgrade
@@ -252,7 +253,6 @@ public class ItemRecipes {
                 'I',
                 "ingotIron",
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Feeding Upgrade
@@ -271,7 +271,6 @@ public class ItemRecipes {
                 'M',
                 new ItemStack(Items.speckled_melon, 1, 0),
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Battery Upgrade
@@ -286,7 +285,6 @@ public class ItemRecipes {
                 'R',
                 "blockRedstone",
                 'U',
-
                 ModItems.BASE_UPGRADE.get()));
 
         // Everlasting Upgrade
@@ -366,6 +364,23 @@ public class ItemRecipes {
                 'B',
                 ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9)));
 
+        // Colored Egg
+        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.COLORED_EGG.newItemStack(1, chicken.getDyeMetadata()),
+                    "DDD",
+                    "DED",
+                    "DDD",
+                    'E',
+                    Items.egg,
+                    'D',
+                    new ItemStack(Items.dye, 1, chicken.getDyeMetadata())));
+        }
+
+        // Analyzer
+        GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.egg, Items.compass);
     }
 
 }

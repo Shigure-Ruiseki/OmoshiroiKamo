@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.common.achievement;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 
+import com.enderio.core.common.util.ItemUtil;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 
@@ -16,7 +18,7 @@ public class AchievementTrigger {
         }
 
         for (ItemStack entry : AchievementsRegistry.pickupList) {
-            if (ItemStack.areItemStacksEqual(stack, entry)) {
+            if (ItemUtil.areStackMergable(stack, entry)) {
                 Achievement achievement = AchievementsRegistry.getAchievementForItem(stack);
                 if (achievement != null) {
                     event.player.addStat(achievement, 1);
@@ -34,7 +36,7 @@ public class AchievementTrigger {
         }
 
         for (ItemStack entry : AchievementsRegistry.craftingList) {
-            if (ItemStack.areItemStacksEqual(result, entry)) {
+            if (ItemUtil.areStacksEqual(result, entry)) {
                 Achievement achievement = AchievementsRegistry.getAchievementForItem(result);
                 if (achievement != null) {
                     event.player.addStat(achievement, 1);

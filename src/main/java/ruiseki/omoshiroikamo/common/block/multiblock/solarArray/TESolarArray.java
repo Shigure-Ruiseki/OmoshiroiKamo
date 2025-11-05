@@ -38,13 +38,11 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     private int storedEnergyRF = 0;
     protected float lastSyncPowerStored = -1;
     private final EnergyStorage energyStorage;
-    private ModifierHandler modifierHandler;
-    private List<BlockCoord> modifiers;
+    private ModifierHandler modifierHandler = new ModifierHandler();
+    private List<BlockCoord> modifiers = new ArrayList<>();
 
     public TESolarArray(int energyGen) {
         this.energyStorage = new EnergyStorage(energyGen * getBaseDuration());
-        this.modifiers = new ArrayList<>();
-        this.modifierHandler = new ModifierHandler();
     }
 
     @Override
@@ -68,7 +66,6 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
             lastSyncPowerStored = storedEnergyRF;
             PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
-        collectEnergy();
         transmitEnergy();
     }
 
@@ -111,10 +108,14 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     }
 
     @Override
-    public void onProcessTick() {}
+    public void onProcessTick() {
+        collectEnergy();
+    }
 
     @Override
-    public void onProcessComplete() {}
+    public void onProcessComplete() {
+        collectEnergy();
+    }
 
     @Override
     public void onFormed() {
@@ -239,23 +240,17 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
             return false;
         }
 
-        boolean added = false;
-
         if (block == ModBlocks.MODIFIER_PIEZO.get()) {
-            added = true;
-        }
-
-        if (added) {
             modifiers.add(coord);
+            return true;
         }
-
-        return added;
+        return false;
     }
 
     @Override
     protected void clearStructureParts() {
-        this.modifiers = new ArrayList<>();
-        this.modifierHandler = new ModifierHandler();
+        modifiers.clear();
+        modifierHandler = new ModifierHandler();
     }
 
     public abstract int getTier();
@@ -263,6 +258,12 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
+        root.setInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY, storedEnergyRF);
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
         int energy;
         if (root.hasKey("storedEnergy")) {
             float storedEnergyMJ = root.getFloat("storedEnergy");
@@ -271,11 +272,5 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
             energy = root.getInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY);
         }
         setEnergyStored(energy);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        root.setInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY, storedEnergyRF);
     }
 }

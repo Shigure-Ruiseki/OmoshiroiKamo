@@ -35,30 +35,37 @@
  */
 dependencies {
 
-    api("com.github.GTNewHorizons:GTNHLib:0.7.0:dev")
-    api("com.github.GTNewHorizons:StructureLib:1.4.23:dev")
-    api("com.github.GTNewHorizons:ModularUI2:2.3.4-1.7.10:dev")
-    api("com.github.GTNewHorizons:NotEnoughIds:2.1.10:dev")
-    api("com.github.GTNewHorizons:EnderCore:0.5.0:dev")
-    
-    devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.9.2:dev")
-    devOnlyNonPublishable("com.github.GTNewHorizons:Baubles-Expanded:2.2.1-GTNH:dev")
-    devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
-    devOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta62:dev") { transitive = false }
-    devOnlyNonPublishable("com.github.GTNewHorizons:Botania:1.13.3-GTNH:dev") { transitive = false }
-    devOnlyNonPublishable("com.github.GTNewHorizons:TinkersConstruct:1.14.6-GTNH:dev")
-    devOnlyNonPublishable("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.6-GTNH:dev")
-    devOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.18-GTNH:dev")
+    implementation('curse.maven:cofh-lib-220333:2388748')
+    implementation("com.github.GTNewHorizons:StructureLib:1.4.23:dev")
+    implementation("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
+    implementation("com.github.GTNewHorizons:ModularUI2:2.3.4-1.7.10:dev")
+    implementation("com.github.GTNewHorizons:EnderCore:0.5.0:dev") { transitive = false }
+    implementation("com.github.GTNewHorizons:GTNHLib:0.7.0:dev")
+    implementation('com.github.GTNewHorizons:Baubles-Expanded:2.2.1-GTNH:dev')
 
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.10.2:dev")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.7.3:dev")
+    devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.2:dev") { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.20-GTNH:dev")
+    devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.9.5:dev") { transitive = false }
+    devOnlyNonPublishable('com.github.GTNewHorizons:Angelica:1.0.0-beta62:dev') { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:Botania:1.13.3-GTNH:dev") { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.10.2:dev")
+    devOnlyNonPublishable("com.github.GTNewHorizons:TinkersConstruct:1.14.6-GTNH:dev")
+    devOnlyNonPublishable('curse.maven:thermal-foundation-222880:2388752')
+    devOnlyNonPublishable('curse.maven:minefactory-reloaded-66672:2366150')
+    devOnlyNonPublishable("curse.maven:mekanism-268560:2475797")
+    devOnlyNonPublishable("curse.maven:big-reactors-241994:2282591")
+    devOnlyNonPublishable("com.github.GTNewHorizons:Draconic-Evolution:1.5.2-GTNH:dev")
+    devOnlyNonPublishable("curse.maven:actually-additions-228404:2274681")
+
+    compileOnly('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
+    compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
+    compileOnly files("libs/neverenoughanimations-v1.0.6-1-7-10.8+91c551807b-dirty-dev.jar")
+
+    runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.6.110:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-716-GTNH:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Chisel:2.17.0-GTNH:dev") { transitive = false }
-
-    compileOnly("com.github.GTNewHorizons:ModularUI:1.3.0:dev")
-    compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
-    compileOnly("com.github.GTNewHorizons:WDMla:2.7.3:dev")
-    compileOnly files("libs/neverenoughanimations-v1.0.6-1-7-10.8+91c551807b-dirty-dev.jar")
 
     shadowImplementation('com.github.makamys:MCLib:0.3.7.7') {
         exclude group: "codechicken"

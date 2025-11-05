@@ -15,7 +15,7 @@ public class TESolarArrayT2 extends TESolarArray {
     }
 
     @Override
-    protected String getStructurePieceName() {
+    public String getStructurePieceName() {
         return STRUCTURE_TIER_2;
     }
 

@@ -7,13 +7,15 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.enderio.core.common.util.ItemUtil;
+
 import codechicken.nei.NEIServerUtils;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 
 public class OreDictUtils {
 
-    public static void init() {
+    public static void preInit() {
         OreDictionary.registerOre("stoneBasalt", ModBlocks.BLOCK_BASALT.get());
         OreDictionary.registerOre("stoneAlabaster", ModBlocks.BLOCK_ALABASTER.get());
         OreDictionary.registerOre("stoneHardened", ModBlocks.BLOCK_HARDENED_STONE.get());
@@ -82,7 +84,7 @@ public class OreDictUtils {
         ItemStack to = oreDictStacks.get(0)
             .copy();
 
-        if (ItemStack.areItemStacksEqual(from, to) && ItemStack.areItemStackTagsEqual(from, to)) {
+        if (ItemUtil.areStacksEqual(from, to)) {
             return;
         }
 

@@ -1,16 +1,16 @@
 package ruiseki.omoshiroikamo.plugin.structureLib;
 
-import ruiseki.omoshiroikamo.common.block.multiblock.nanoBotBeacon.NanoBotBeaconStructure;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.QuantumBeaconStructure;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.QuantumOreExtractorStructure;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.QuantumResExtractorStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayStructure;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.oreMiner.VoidOreMinerStructure;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.resMiner.VoidResMinerStructure;
 
 public class StructureCompat {
 
-    public static void init() {
+    public static void postInit() {
         SolarArrayStructure.registerStructureInfo();
-        VoidOreMinerStructure.registerStructureInfo();
-        VoidResMinerStructure.registerStructureInfo();
-        NanoBotBeaconStructure.registerStructureInfo();
+        QuantumOreExtractorStructure.registerStructureInfo();
+        QuantumResExtractorStructure.registerStructureInfo();
+        QuantumBeaconStructure.registerStructureInfo();
     }
 }

@@ -27,16 +27,9 @@ power.rf=RF
 fluid.millibucket.abr=L
 fluid.empty=Empty
 
-#BAUBLE TOOLTIPS
-
-baubletype.amulet=Equippable in the &aAmulet&7 slot
-baubletype.ring=Equippable in the &aRing&7 slot
-baubletype.belt=Equippable in the &aBelt&7 slot
-baubletype.universal=Equippable in the &aEvery&7 slot
-baubletooltip=Press &b%key%&7 to open the Baubles menu
-
 #TOOLTIPS
 
+gui.energy.tooltip=RF: %s / %s
 tooltip.lvs=lvs
 tooltip.effPowered=Efficiency when powered
 
@@ -55,8 +48,33 @@ tooltip.feeding_upgrade=Allows backpacks to automatically feed player
 tooltip.everlasting_upgrade=Makes the backpack invincible, preventing despawning or falling into the void. Ensures retrieval even when thrown into the void.
 tooltip.battery_upgrade=Stores energy and automatically recharges energy-using items.
 
+tooltip.progress=Progress
+tooltip.duration=Duration
+tooltip.efficiency=Efficiency
+tooltip.sunlightBlocked=Sky Blocked!
+
+tooltip.chicken_spawn_egg.tier=Tier: %1$s
+tooltip.chicken_spawn_egg.notbreedable=Can't be bred
+tooltip.chicken_spawn_egg.breedable=Breed
+tooltip.chicken_spawn_egg.spawnType=SpawnType
+tooltip.chicken_spawn_egg.layitem=Lay Item: %1$s
+tooltip.chicken_spawn_egg.nolayitem=Lay Item: Null
+
+tooltip.entity.tier=Tier: %1$s
+tooltip.entity.layProgress=Next egg in ~%1$smin.
+tooltip.entity.nextEggSoon=Next egg in <1min.
+tooltip.entity.growth=Growth: %1$s
+tooltip.entity.gain=Gain: %1$s
+tooltip.entity.strength=Strength: %1$s
+
 tooltip.assembler.l1=Shift + Right-click on controllers to assemble.
 tooltip.assembler.l2=Left-click to instantly break any multiblock block.
+
+tooltip.liquid_egg.l1=It's like one-off bucket.
+tooltip.colored_egg.l1=Throw it to have a chance to spawn the chicken.
+
+tooltip.analyzer.l1=Use it on chickens to determine their stats.
+tooltip.analyzer.l2= - "Which day of the week do chickens hate most? Fry-day!"
 
 #ANVIL UPGRADE
 
@@ -171,6 +189,28 @@ item.assembler.name=Assembler
 
 item.hammer.name=Hammer
 
+item.analyzer.name=Chicken Analyzer
+item.solidXp.name=Solid Experience
+
+item.liquidEgg.water.name=Water Egg
+item.liquidEgg.lava.name=Lava Egg
+item.coloredEgg.white.name=Bone White Chicken Egg
+item.coloredEgg.orange.name=Orange Chicken Egg
+item.coloredEgg.magenta.name=Magenta Chicken Egg
+item.coloredEgg.lightBlue.name=Light Blue Chicken Egg
+item.coloredEgg.yellow.name=Yellow Chicken Egg
+item.coloredEgg.lime.name=Lime Chicken Egg
+item.coloredEgg.pink.name=Pink Chicken Egg
+item.coloredEgg.gray.name=Gray Chicken Egg
+item.coloredEgg.silverDye.name=Light Gray Chicken Egg
+item.coloredEgg.cyan.name=Cyan Chicken Egg
+item.coloredEgg.purple.name=Purple Chicken Egg
+item.coloredEgg.blue.name=Lapis Blue Chicken Egg
+item.coloredEgg.brown.name=Cocoa Brown Chicken Egg
+item.coloredEgg.green.name=Cactus Green Chicken Egg
+item.coloredEgg.red.name=Red Chicken Egg
+item.coloredEgg.black.name=Ink Black Chicken Egg
+
 #Block
 
 tile.electrolyzer.name=Electrolyzer
@@ -186,9 +226,7 @@ tile.anvil.name=Anvil
 tile.furnace.name=Furnace
 
 tile.basalt.name=Basalt
-
 tile.alabaster.name=Alabaster
-
 tile.hardenedStone.name=Hardened Stone
 
 tile.mica.name=Mica
@@ -251,20 +289,150 @@ tile.solarArray.tier_2.name=Solar Array Tier 2
 tile.solarArray.tier_3.name=Solar Array Tier 3
 tile.solarArray.tier_4.name=Solar Array Tier 4
 
-tile.voidOreMiner.tier_1.name=Void Ore Miner Tier 1
-tile.voidOreMiner.tier_2.name=Void Ore Miner Tier 2
-tile.voidOreMiner.tier_3.name=Void Ore Miner Tier 3
-tile.voidOreMiner.tier_4.name=Void Ore Miner Tier 4
+tile.quantumOreExtractor.tier_1.name=Quantum Ore Extractor Tier 1
+tile.quantumOreExtractor.tier_2.name=Quantum Ore Extractor Tier 2
+tile.quantumOreExtractor.tier_3.name=Quantum Ore Extractor Tier 3
+tile.quantumOreExtractor.tier_4.name=Quantum Ore Extractor Tier 4
 
-tile.voidResMiner.tier_1.name=Void Resource Miner Tier 1
-tile.voidResMiner.tier_2.name=Void Resource Miner Tier 2
-tile.voidResMiner.tier_3.name=Void Resource Miner Tier 3
-tile.voidResMiner.tier_4.name=Void Resource Miner Tier 4
+tile.quantumResExtractor.tier_1.name=Quantum Resource Extractor Tier 1
+tile.quantumResExtractor.tier_2.name=Quantum Resource Extractor Tier 2
+tile.quantumResExtractor.tier_3.name=Quantum Resource Extractor Tier 3
+tile.quantumResExtractor.tier_4.name=Quantum Resource Extractor Tier 4
 
-tile.nanoBotBeacon.tier_1.name=Nano Bot Beacon Tier 1
-tile.nanoBotBeacon.tier_2.name=Nano Bot Beacon Tier 2
-tile.nanoBotBeacon.tier_3.name=Nano Bot Beacon Tier 3
-tile.nanoBotBeacon.tier_4.name=Nano Bot Beacon Tier 4
+tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
+tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
+tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
+tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
+
+#ENTITY
+
+entity.SmartChicken.name=Smart Chicken
+entity.WhiteChicken.name=Bone White Chicken
+entity.OrangeChicken.name=Orange Chicken
+entity.MagentaChicken.name=Magenta Chicken
+entity.LightBlueChicken.name=Light Blue Chicken
+entity.YellowChicken.name=Yellow Chicken
+entity.LimeChicken.name=Lime Chicken
+entity.PinkChicken.name=Pink Chicken
+entity.GrayChicken.name=Gray Chicken
+entity.SilverDyeChicken.name=Light Gray Chicken
+entity.CyanChicken.name=Cyan Chicken
+entity.PurpleChicken.name=Purple Chicken
+entity.BlueChicken.name=Lapis Blue Chicken
+entity.BrownChicken.name=Cocoa Brown Chicken
+entity.GreenChicken.name=Cactus Green Chicken
+entity.RedChicken.name=Red Chicken
+entity.BlackChicken.name=Ink Black Chicken
+entity.GunpowderChicken.name=Gunpowder Chicken
+entity.FlintChicken.name=Flint Chicken
+entity.SnowballChicken.name=Snowball Chicken
+entity.LavaChicken.name=Lava Chicken
+entity.QuartzChicken.name=Nether Quartz Chicken
+entity.RedstoneChicken.name=Redstone Chicken
+entity.GlowstoneChicken.name=Glowstone Chicken
+entity.IronChicken.name=Iron Chicken
+entity.CoalChicken.name=Coal Chicken
+entity.ClayChicken.name=Clay Chicken
+entity.SlimeChicken.name=Slime Chicken
+entity.WaterChicken.name=Water Chicken
+entity.NetherwartChicken.name=Nether Wart Chicken
+entity.GoldChicken.name=Gold Chicken
+entity.DiamondChicken.name=Diamond Chicken
+entity.BlazeChicken.name=Blaze Rod Chicken
+entity.EmeraldChicken.name=Emerald Chicken
+entity.EnderChicken.name=Ender Pearl Chicken
+entity.GhastChicken.name=Ghast Tear Chicken
+entity.MagmaChicken.name=Magma Cream Chicken
+entity.StringChicken.name=String Chicken
+entity.LogChicken.name=Log Chicken
+entity.SandChicken.name=Sand Chicken
+entity.GlassChicken.name=Glass Chicken
+entity.LeatherChicken.name=Leather Chicken
+entity.XpChicken.name=Xp Chicken
+entity.PShardChicken.name=Prismarine Shard Chicken
+entity.PCrystalChicken.name=Prismarine Crystal Chicken
+entity.ObsidianChicken.name=Obsidian Chicken
+entity.SoulSandChicken.name=Soul Sand Chicken
+
+entity.ArditeChicken.name=Ardite Chicken
+entity.CobaltChicken.name=Cobalt ChickenS
+entity.ManyullynChicken.name=Manyullyn Chicken
+entity.BloodSlime.name=Blood Chicken
+entity.PigIronChicken.name=Pig Iron Chicken
+entity.BlueSlime.name=Blue Chicken
+
+entity.TerrasteelChicken.name=Terrasteel Chicken
+entity.ManasteelChicken.name=Manasteel Chicken
+entity.ElementiumChicken.name=Elementium Chicken
+
+entity.InvarChicken.name=Invar Chicken
+entity.BronzeChicken.name=Bronze Chicken
+entity.ZincChicken.name=Zinc Chicken
+entity.TinChicken.name=Tin Chicken
+entity.SteelChicken.name=Steel Chicken
+entity.SilverChicken.name=Silver Chicken
+entity.PlatinumChicken.name=Platinum Chicken
+entity.NickelChicken.name=Nickel Chicken
+entity.LeadChicken.name=Lead Chicken
+entity.CopperChicken.name=Copper Chicken
+entity.BrassChicken.name=Brass Chicken
+entity.CupronickelChicken.name=Cupronickel Chicken
+entity.ElectrumChicken.name=Electrum Chicken
+entity.SiliconChicken.name=Silicon Chicken
+entity.AmberChicken.name=Amber Chicken
+entity.AmethystChicken.name=Amethyst Chicken
+entity.MalachiteChicken.name=Malachite Chicken
+entity.PeridotChicken.name=Peridot Chicken
+entity.RubyChicken.name=Ruby Chicken
+entity.SaltpeterChicken.name=Saltpeter Chicken
+entity.SulfurChicken.name=Sulfur Chicken
+entity.SapphireChicken.name=Sapphire Chicken
+entity.TanzaniteChicken.name=Tanzanite Chicken
+entity.TopazChicken.name=Topaz Chicken
+entity.GarnetChicken.name=Garnet Chicken
+entity.SaltChicken.name=Salt Chicken
+entity.RubberChicken.name=Rubber Chicken
+entity.UraniumChicken.name=Uranium Chicken 
+
+entity.ElectricalSteelChicken.name=Electrical Steel Chicken
+entity.EnergeticAlloyChicken.name=Energetic Alloy Chicken
+entity.VibrantAlloyChicken.name=Vibrant Alloy Chicken
+entity.RedstoneAlloyChicken.name=Redstone Alloy Chicken
+entity.ConductiveIronChicken.name=Conductive Iron Chicken
+entity.PulsatingIronChicken.name=Pulsating Iron Chicken
+entity.DarkSteelChicken.name=Dark Steel Chicken
+entity.EndSteelChicken.name=End Steel Chicken
+entity.SoulariumChicken.name=Soularium Chicken
+
+entity.BasalzRodChicken.name=Basalz Rod Chicken
+entity.BlitzRodChicken.name=Blitz Rod Chicken
+entity.BlizzRodChicken.name=Blizz Rod Chicken
+entity.CinnabarChicken.name=Cinnabar Chicken
+entity.EnderiumChicken.name=Enderium Chicken
+entity.LumiumChicken.name=Lumium Chicken
+entity.MithrilChicken.name=Mithril Chicken
+entity.SignalumChicken.name=Signalum Chicken
+
+entity.PinkSlimeChicken.name=Pink Slime Chicken 
+
+entity.OsmiumChicken.name=Osmium Chicken
+
+entity.YelloriumChicken.name=Yellorium Chicken
+entity.CyaniteChicken.name=Cyanite Chicken
+entity.BlutoniumChicken.name=Blutonium Chicken
+entity.LudicriteChicken.name=Ludicrite Chicken
+entity.GraphiteChicken.name=Graphite Chicken
+
+entity.DraconiumAwakenedChicken.name=Awakened Draconium Chicken
+entity.DraconiumChicken.name=Draconium Chicken
+
+entity.BlackQuartzChicken.name=Black Quartz Chicken
+entity.VoidCrystalChicken.name=Void Crystal Chicken
+entity.RestoniaCrystalChicken.name=Restonia Crystal Chicken
+entity.EnoriCrystalChicken.name=Enori Crystal Chicken
+entity.EmeradicCrystalChicken.name=Emeradic Crystal Chicken
+entity.DiamantineCrystalChicken.name=Diamantine Crystal Chicken
+entity.PalisCrystalChicken.name=Palis Crystal Chicken
 
 #Immersive Engineering
 

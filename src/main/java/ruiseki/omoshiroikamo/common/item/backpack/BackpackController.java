@@ -17,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -44,11 +43,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.client.gui.modularui2.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
-import ruiseki.omoshiroikamo.common.network.PacketBackPackState;
 import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
 import ruiseki.omoshiroikamo.config.item.FeedingConfig;
 import ruiseki.omoshiroikamo.config.item.MagnetConfig;
-import ruiseki.omoshiroikamo.plugin.baubles.BaublesUtil;
 
 @EventBusSubscriber
 public class BackpackController {
@@ -116,10 +113,10 @@ public class BackpackController {
             }
 
             NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
-            if (!tag.hasKey(BackpackGui.BACKPACKUPGRADE)) {
+            if (!tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
                 continue;
             }
-            upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKUPGRADE));
+            upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_UPGRADE));
 
             for (int slot = 0; slot < upgradeHandler.getSlots(); slot++) {
                 ItemStack upgrade = upgradeHandler.getStackInSlot(slot);
@@ -140,10 +137,10 @@ public class BackpackController {
                 }
 
                 NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
-                if (!tag.hasKey(BackpackGui.BACKPACKUPGRADE)) {
+                if (!tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
                     continue;
                 }
-                upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKUPGRADE));
+                upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_UPGRADE));
 
                 for (int slot = 0; slot < upgradeHandler.getSlots(); slot++) {
                     ItemStack upgrade = upgradeHandler.getStackInSlot(slot);
@@ -161,11 +158,11 @@ public class BackpackController {
 
     private static boolean hasUpgrade(ItemStack stack, Class<?> clazz) {
         NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
-        if (tag == null || !tag.hasKey(BackpackGui.BACKPACKUPGRADE)) {
+        if (tag == null || !tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
             return false;
         }
         UpgradeItemStackHandler upgradeHandler = new UpgradeItemStackHandler(BackpackGui.upgradeSlot);
-        upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKUPGRADE));
+        upgradeHandler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_UPGRADE));
         for (int i = 0; i < upgradeHandler.getSlots(); i++) {
             ItemStack upgrade = upgradeHandler.getStackInSlot(i);
             if (upgrade != null && clazz.isInstance(upgrade.getItem())) {
@@ -176,7 +173,7 @@ public class BackpackController {
     }
 
     private static void handleFeeding(EntityPlayer player, ActiveBackPack mag) {
-        int cooldown = ItemNBTHelper.getInt(mag.item, TAG_COOLDOWN_FEED, 2);
+        int cooldown = ItemNBTHelper.getInt(mag.item, TAG_COOLDOWN_FEED, 20);
 
         if (cooldown > 0) {
             ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, cooldown - 1);
@@ -184,12 +181,12 @@ public class BackpackController {
         }
 
         NBTTagCompound tag = ItemNBTHelper.getNBT(mag.item);
-        if (tag == null || !tag.hasKey(BackpackGui.BACKPACKINV)) {
+        if (tag == null || !tag.hasKey(BackpackGui.BACKPACK_INV)) {
             return;
         }
 
         ItemStackHandler handler = new ItemStackHandler(BackpackGui.slot);
-        handler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACKINV));
+        handler.deserializeNBT(tag.getCompoundTag(BackpackGui.BACKPACK_INV));
 
         FoodStats foodStats = player.getFoodStats();
         boolean consumedAny = false;
@@ -271,9 +268,21 @@ public class BackpackController {
         }
 
         if (consumedAny) {
-            tag.setTag(BackpackGui.BACKPACKINV, handler.serializeNBT());
+            int dynamicCooldown = 20;
+            for (int slotIndex : foodSlots) {
+                ItemStack stack = handler.getStackInSlot(slotIndex);
+                if (stack != null && stack.getItem() instanceof ItemFood) {
+                    dynamicCooldown = Math.max(
+                        20,
+                        stack.getItem()
+                            .getMaxItemUseDuration(stack) / 2);
+                    break;
+                }
+            }
+
+            tag.setTag(BackpackGui.BACKPACK_INV, handler.serializeNBT());
             mag.item.setTagCompound(tag);
-            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, 100);
+            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, dynamicCooldown);
         }
     }
 
@@ -540,58 +549,6 @@ public class BackpackController {
         public ActiveBackPack(ItemStack item, int slot) {
             this.item = item;
             this.slot = slot;
-        }
-    }
-
-    public static void setBackpackActive(EntityPlayerMP player, PacketBackPackState.SlotType type, int slot,
-        boolean isActive) {
-        ItemStack stack = null;
-        IInventory baubles = null;
-        int dropOff = -1;
-        switch (type) {
-            case INVENTORY:
-                stack = player.inventory.getStackInSlot(slot);
-                break;
-            case ARMOR:
-                return;
-            case BAUBLES:
-                baubles = BaublesUtil.instance()
-                    .getBaubles(player);
-                if (baubles != null) {
-                    stack = baubles.getStackInSlot(slot);
-                }
-                break;
-        }
-        if (stack == null || stack.getItem() == null) {
-            return;
-        }
-        if (type == PacketBackPackState.SlotType.BAUBLES && !isActive) {
-            ItemStack[] inv = player.inventory.mainInventory;
-            for (int i = 0; i < inv.length && dropOff < 0; i++) {
-                if (inv[i] == null) {
-                    dropOff = i;
-                }
-            }
-            if (dropOff < 0) {
-                return;
-            }
-        }
-        switch (type) {
-            case INVENTORY:
-                player.inventory.setInventorySlotContents(slot, stack);
-                player.inventory.markDirty();
-                break;
-            case ARMOR:
-                return;
-            case BAUBLES:
-                if (dropOff < 0) {
-                    baubles.setInventorySlotContents(slot, stack);
-                } else {
-                    baubles.setInventorySlotContents(slot, null);
-                    player.inventory.setInventorySlotContents(dropOff, stack);
-                }
-                player.inventory.markDirty();
-                break;
         }
     }
 

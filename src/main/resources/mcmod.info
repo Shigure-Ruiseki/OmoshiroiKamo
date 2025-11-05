@@ -1,21 +1,25 @@
 {
-	"modListVersion": 2,
-	"modList": [{
-		"modid": "${modId}",
-		"name": "${modName}",
-		"description": "",
-		"version": "${modVersion}",
-		"mcversion": "${minecraftVersion}",
-		"url": "https://github.com/Louis-LD29/OmoshiroiKamo",
-		"updateUrl": "",
-		"authorList": ["Louis"],
-		"credits": "",
-		"logoFile": "",
-		"screenshots": [],
-		"parent": "",
-		"requiredMods": [],
-		"dependencies": [],
-		"dependants": [],
-		"useDependencyInformation": false
-	}]
+  "modListVersion": 2,
+  "modList": [
+    {
+      "modid": "${modId}",
+      "name": "${modName}",
+      "description": "",
+      "version": "${modVersion}",
+      "mcversion": "${minecraftVersion}",
+      "url": "https://github.com/Shigure-Ruiseki/OmoshiroiKamo",
+      "updateUrl": "",
+      "authorList": [
+        "Ruiseki"
+      ],
+      "credits": "",
+      "logoFile": "",
+      "screenshots": [],
+      "parent": "",
+      "requiredMods": [],
+      "dependencies": [],
+      "dependants": [],
+      "useDependencyInformation": false
+    }
+  ]
 }

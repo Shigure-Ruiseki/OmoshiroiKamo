@@ -215,7 +215,7 @@ public class EnergyUpgrade extends AbstractUpgrade {
     public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
 
         List<String> upgradeStr = new ArrayList<String>();
-        upgradeStr.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG_UTILS.localizeExact(getUnlocalizedName() + ".name"));
+        upgradeStr.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
         SpecialTooltipHandler.addDetailedTooltipFromResources(upgradeStr, getUnlocalizedName());
 
         String capString = PowerDisplayUtil.formatPower(capacity) + " " + PowerDisplayUtil.abrevation();

@@ -25,7 +25,7 @@ public class MaterialWireType extends WireType {
 
     public static final Map<Integer, MaterialWireType> MATERIAL_WIRE_TYPES = new HashMap<>();
 
-    public static void init() {
+    public static void preInit() {
         for (MaterialEntry material : MaterialRegistry.all()) {
             if (material != null) {
                 MATERIAL_WIRE_TYPES.put(material.getMeta(), new MaterialWireType(material.meta));

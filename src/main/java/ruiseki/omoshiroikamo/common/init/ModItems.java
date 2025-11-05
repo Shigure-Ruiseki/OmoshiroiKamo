@@ -17,6 +17,11 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemAnalyzer;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenSpawnEgg;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemSolidXp;
 import ruiseki.omoshiroikamo.common.ore.ItemOre;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
@@ -30,6 +35,11 @@ public enum ModItems {
     FEEDING_UPGRADE(true, ItemFeedingUpgrade.create()),
     BATTERY_UPGRADE(true, ItemBatteryUpgrade.create()),
     EVERLASTING_UPGRADE(true, ItemEverlastingUpgrade.create()),
+    ANALYZER(true, ItemAnalyzer.create()),
+    CHICKEN_SPAWN_EGG(true, ItemChickenSpawnEgg.create()),
+    COLORED_EGG(true, ItemColoredEgg.create()),
+    LIQUID_EGG(true, ItemLiquidEgg.create()),
+    SOLID_XP(true, ItemSolidXp.create()),
     MATERIAL(true, ItemMaterial.create()),
     ORE(true, ItemOre.create()),
     HAMMER(true, ItemHammer.create()),
@@ -40,7 +50,7 @@ public enum ModItems {
 
     public static final ModItems[] VALUES = values();
 
-    public static void init() {
+    public static void preInit() {
         for (ModItems item : VALUES) {
             if (!item.isEnabled()) {
                 continue;

@@ -19,19 +19,19 @@ public enum ModAchievements {
     ASSEMBLE_SOLAR_ARRAY_T4("assemble_solar_array_t4", 3, 2, ModBlocks.SOLAR_ARRAY.newItemStack(1, 3),
         ASSEMBLE_SOLAR_ARRAY_T1, true),
 
-    ASSEMBLE_VOID_ORE_MINER_T1("assemble_void_ore_miner_t1", -1, 2, ModBlocks.VOID_ORE_MINER.newItemStack(1, 0),
+    ASSEMBLE_VOID_ORE_MINER_T1("assemble_void_ore_miner_t1", -1, 2, ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0),
         CRAFT_ASSEMBLER),
-    ASSEMBLE_VOID_ORE_MINER_T4("assemble_void_ore_miner_t4", -3, 2, ModBlocks.VOID_ORE_MINER.newItemStack(1, 3),
+    ASSEMBLE_VOID_ORE_MINER_T4("assemble_void_ore_miner_t4", -3, 2, ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 3),
         ASSEMBLE_VOID_ORE_MINER_T1, true),
 
-    ASSEMBLE_VOID_RES_MINER_T1("assemble_void_res_miner_t1", -1, 4, ModBlocks.VOID_RES_MINER.newItemStack(1, 0),
+    ASSEMBLE_VOID_RES_MINER_T1("assemble_void_res_miner_t1", -1, 4, ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0),
         CRAFT_ASSEMBLER),
-    ASSEMBLE_VOID_RES_MINER_T4("assemble_void_res_miner_t4", -3, 4, ModBlocks.VOID_RES_MINER.newItemStack(1, 3),
+    ASSEMBLE_VOID_RES_MINER_T4("assemble_void_res_miner_t4", -3, 4, ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3),
         ASSEMBLE_VOID_RES_MINER_T1, true),
 
-    ASSEMBLE_NANO_BOT_BEACON_T1("assemble_nano_bot_beacon_t1", -1, 6, ModBlocks.NANO_BOT_BEACON.newItemStack(1, 0),
+    ASSEMBLE_NANO_BOT_BEACON_T1("assemble_nano_bot_beacon_t1", -1, 6, ModBlocks.QUANTUM_BEACON.newItemStack(1, 0),
         CRAFT_ASSEMBLER),
-    ASSEMBLE_NANO_BOT_BEACON_T4("assemble_nano_bot_beacon_t4", -3, 6, ModBlocks.NANO_BOT_BEACON.newItemStack(1, 3),
+    ASSEMBLE_NANO_BOT_BEACON_T4("assemble_nano_bot_beacon_t4", -3, 6, ModBlocks.QUANTUM_BEACON.newItemStack(1, 3),
         ASSEMBLE_NANO_BOT_BEACON_T1, true),
 
     CRAFT_MODIFIER_CORE("craft_modifier_core", 7, 0, ModBlocks.MODIFIER_NULL.newItemStack(), null),
@@ -94,7 +94,7 @@ public enum ModAchievements {
         }
     }
 
-    public static void init() {
+    public static void preInit() {
         for (ModAchievements entry : values()) {
             entry.create();
         }

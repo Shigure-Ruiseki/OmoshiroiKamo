@@ -15,7 +15,7 @@ import com.enderio.core.common.util.DyeColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.common.block.multiblock.nanoBotBeacon.TENanoBotBeacon;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeacon;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 @SideOnly(Side.CLIENT)
@@ -25,7 +25,7 @@ public class NanoBotBeaconTESR extends TileEntitySpecialRenderer implements IIte
     private static final String MODEL = LibResources.PREFIX_MODEL + "nano_bot_beacon.obj";
 
     private static final ResourceLocation controllerBase = new ResourceLocation(
-        LibResources.PREFIX_BLOCK + "basalt_normal.png");
+        LibResources.PREFIX_BLOCK + "basalt.png");
     private static final ResourceLocation laser = new ResourceLocation(LibResources.PREFIX_BLOCK + "laser_core.png");
 
     private static final ResourceLocation TEX_IRON = new ResourceLocation(LibResources.PREFIX_BLOCK + "cont_tier.png");
@@ -36,7 +36,7 @@ public class NanoBotBeaconTESR extends TileEntitySpecialRenderer implements IIte
 
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks) {
-        TENanoBotBeacon nanoBotBeacon = (TENanoBotBeacon) te;
+        TEQuantumBeacon nanoBotBeacon = (TEQuantumBeacon) te;
         int tier = nanoBotBeacon.getTier();
 
         GL11.glPushMatrix();
@@ -60,7 +60,7 @@ public class NanoBotBeaconTESR extends TileEntitySpecialRenderer implements IIte
         int tier = item.getItemDamage() + 1;
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(0.5f, 0f, 0.5f);
+        GL11.glTranslatef(0.5f, -0.1f, 0.5f);
         render(tier);
         GL11.glPopMatrix();
     }

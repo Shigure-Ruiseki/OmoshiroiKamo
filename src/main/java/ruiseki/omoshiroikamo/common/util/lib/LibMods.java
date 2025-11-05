@@ -7,7 +7,6 @@ import cpw.mods.fml.common.Loader;
 public enum LibMods {
 
     Waila("Waila"),
-    WDMLA("wdmla"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
     NotEnoughItems("NotEnoughItems"),
@@ -16,6 +15,7 @@ public enum LibMods {
     BuildCraftEnergy("BuildCraft|Energy"),
     IC2("IC2"),
     BogoSorter("bogosorter"),
+    CraftingTweaks("craftingtweaks"),
     Botania("Botania"),
     EtFuturum("etfuturum"),;
 

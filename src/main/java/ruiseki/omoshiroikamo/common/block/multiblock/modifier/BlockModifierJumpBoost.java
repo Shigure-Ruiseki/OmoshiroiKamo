@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockModifierJumpBoost extends BlockModifier {
@@ -21,7 +22,7 @@ public class BlockModifierJumpBoost extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(ModifierAttributes.P_JUMP_BOOST);
+        list.add(ModifierAttribute.P_JUMP_BOOST.getAttribute());
         list.add(new AttributeEnergyCostFixed(128));
     }
 

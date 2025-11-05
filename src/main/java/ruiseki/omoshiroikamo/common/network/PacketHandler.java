@@ -17,8 +17,6 @@ public class PacketHandler {
 
     public static void init() {
         PacketHandler.INSTANCE
-            .registerMessage(PacketBackPackState.class, PacketBackPackState.class, PacketHandler.nextID(), Side.SERVER);
-        PacketHandler.INSTANCE
             .registerMessage(PacketIoMode.class, PacketIoMode.class, PacketHandler.nextID(), Side.SERVER);
 
         PacketHandler.INSTANCE
@@ -52,6 +50,10 @@ public class PacketHandler {
         INSTANCE.sendToAllAround(
             message,
             new TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, range));
+    }
+
+    public static void sendToAllAround(IMessage message, EntityPlayer player) {
+        sendToAllAround(message, player, 64);
     }
 
     public static void sendTo(IMessage message, EntityPlayerMP player) {

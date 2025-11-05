@@ -28,7 +28,7 @@ import tconstruct.smeltery.TinkerSmeltery;
 
 public class TICCompat {
 
-    public static void init() {
+    public static void postInit() {
         if (!LibMods.TConstruct.isLoaded()) {
             return;
         }

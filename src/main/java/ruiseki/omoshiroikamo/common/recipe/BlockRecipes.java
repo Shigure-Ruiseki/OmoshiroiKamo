@@ -117,10 +117,10 @@ public class BlockRecipes {
                 'C',
                 ModBlocks.SOLAR_CELL.get()));
 
-        // Void Ore Tier 1
+        // Quantum Ore Tier 1
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 0),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0),
                 "GQG",
                 "GLG",
                 "ICD",
@@ -137,10 +137,10 @@ public class BlockRecipes {
                 'C',
                 ModBlocks.LASER_CORE.get()));
 
-        // Void Ore Tier 2
+        // Quantum Ore Tier 2
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 1),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1),
                 "GQG",
                 "GLG",
                 "QCQ",
@@ -149,14 +149,14 @@ public class BlockRecipes {
                 'L',
                 ModBlocks.LASER_LENS.get(),
                 'Q',
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 0),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0),
                 'C',
                 ModBlocks.LASER_CORE.get()));
 
-        // Void Ore Tier 3
+        // Quantum Ore Tier 3
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 2),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2),
                 "EQE",
                 "ELE",
                 "MQM",
@@ -165,14 +165,14 @@ public class BlockRecipes {
                 'L',
                 ModBlocks.LASER_LENS.get(),
                 'Q',
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 1),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1),
                 'M',
                 ModBlocks.BLOCK_MICA.get()));
 
-        // Void Ore Tier 4
+        // Quantum Ore Tier 4
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 3),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 3),
                 "EQE",
                 "ELE",
                 "MQM",
@@ -181,14 +181,14 @@ public class BlockRecipes {
                 'L',
                 ModBlocks.LASER_LENS.get(),
                 'Q',
-                ModBlocks.VOID_ORE_MINER.newItemStack(1, 2),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2),
                 'M',
                 ModBlocks.BLOCK_MICA.get()));
 
-        // Void Res Tier 1
+        // Quantum Res Tier 1
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 0),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0),
                 "GQG",
                 "GLG",
                 "ICD",
@@ -206,10 +206,10 @@ public class BlockRecipes {
                 'C',
                 ModBlocks.LASER_CORE.get()));
 
-        // Void Res Tier 2
+        // Quantum Res Tier 2
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 1),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1),
                 "GQG",
                 "GLG",
                 "QCQ",
@@ -219,14 +219,14 @@ public class BlockRecipes {
 
                 ModBlocks.LASER_LENS.get(),
                 'Q',
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 0),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0),
                 'C',
                 ModBlocks.LASER_CORE.get()));
 
-        // Void Res Tier 3
+        // Quantum Res Tier 3
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 2),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2),
                 "EQE",
                 "ELE",
                 "MQM",
@@ -236,14 +236,14 @@ public class BlockRecipes {
 
                 ModBlocks.LASER_LENS.get(),
                 'Q',
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 1),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1),
                 'M',
                 ModBlocks.BLOCK_MICA.get()));
 
-        // Void Res Tier 4
+        // Quantum Res Tier 4
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 3),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3),
                 "EQE",
                 "ELE",
                 "MQM",
@@ -253,15 +253,15 @@ public class BlockRecipes {
 
                 ModBlocks.LASER_LENS.get(),
                 'Q',
-                ModBlocks.VOID_RES_MINER.newItemStack(1, 2),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2),
                 'M',
                 ModBlocks.BLOCK_MICA.get()));
 
-        // Nano Bot Beacon Tier 1
+        // Quantum Beacon Tier 1
         if (!LibMods.EtFuturum.isLoaded()) {
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.NANO_BOT_BEACON.newItemStack(1, 0),
+                    ModBlocks.QUANTUM_BEACON.newItemStack(1, 0),
                     "GPG",
                     "GNG",
                     "BCB",
@@ -272,15 +272,15 @@ public class BlockRecipes {
                     'N',
                     ModBlocks.MODIFIER_NULL.get(),
                     'C',
-                    new ItemStack(Blocks.beacon, 1, 0),
+                    Blocks.beacon,
                     'B',
-                    new ItemStack(Blocks.brewing_stand, 1, 0)));
+                    Items.brewing_stand));
         }
 
-        // Nano Bot Beacon Tier 2
+        // Quantum Beacon Tier 2
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 1),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 1),
                 "GCG",
                 "GNG",
                 "BCB",
@@ -289,14 +289,14 @@ public class BlockRecipes {
                 'N',
                 ModBlocks.MODIFIER_NULL.get(),
                 'C',
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 0),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 0),
                 'B',
-                new ItemStack(Blocks.brewing_stand, 1, 0)));
+                Items.brewing_stand));
 
-        // Nano Bot Beacon Tier 3
+        // Quantum Beacon Tier 3
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 2),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 2),
                 "GCG",
                 "GNG",
                 "BCB",
@@ -305,14 +305,14 @@ public class BlockRecipes {
                 'N',
                 ModBlocks.MODIFIER_NULL.get(),
                 'C',
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 1),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 1),
                 'B',
                 ModBlocks.BLOCK_MICA.get()));
 
-        // Nano Bot Beacon Tier 4
+        // Quantum Beacon Tier 4
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 3),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 3),
                 "GCG",
                 "GNG",
                 "BCB",
@@ -321,7 +321,7 @@ public class BlockRecipes {
                 'N',
                 ModBlocks.MODIFIER_NULL.get(),
                 'C',
-                ModBlocks.NANO_BOT_BEACON.newItemStack(1, 2),
+                ModBlocks.QUANTUM_BEACON.newItemStack(1, 2),
                 'B',
                 ModBlocks.BLOCK_MICA.get()));
 
@@ -607,9 +607,9 @@ public class BlockRecipes {
                     "MNM",
                     "LFL",
                     'P',
-                    new ItemStack(Blocks.sticky_piston, 1, 0),
+                    Blocks.sticky_piston,
                     'M',
-                    new ItemStack(ModBlocks.BLOCK_MICA.get(), 1, 0),
+                    ModBlocks.BLOCK_MICA.get(),
                     'F',
                     ModBlocks.STRUCTURE_FRAME.newItemStack(1, 3),
                     'L',
@@ -623,9 +623,9 @@ public class BlockRecipes {
                     "MNM",
                     "LFL",
                     'P',
-                    new ItemStack(Blocks.sticky_piston, 1, 0),
+                    Blocks.sticky_piston,
                     'M',
-                    new ItemStack(ModBlocks.BLOCK_MICA.get(), 1, 0),
+                    ModBlocks.BLOCK_MICA.get(),
                     'F',
                     ModBlocks.STRUCTURE_FRAME.newItemStack(1, 7),
                     'L',
@@ -639,9 +639,9 @@ public class BlockRecipes {
                     "MNM",
                     "LFL",
                     'P',
-                    new ItemStack(Blocks.sticky_piston, 1, 0),
+                    Blocks.sticky_piston,
                     'M',
-                    new ItemStack(ModBlocks.BLOCK_MICA.get(), 1, 0),
+                    ModBlocks.BLOCK_MICA.get(),
                     'F',
                     ModBlocks.STRUCTURE_FRAME.newItemStack(1, 11),
                     'L',
@@ -731,9 +731,9 @@ public class BlockRecipes {
                     'P',
                     "slimeball",
                     'R',
-                    new ItemStack(Blocks.piston, 1, 0),
+                    Blocks.piston,
                     'M',
-                    new ItemStack(ModBlocks.BLOCK_MICA.get(), 1, 0),
+                    ModBlocks.BLOCK_MICA.get(),
                     'N',
                     ModBlocks.MODIFIER_NULL.get()));
         }
@@ -785,11 +785,11 @@ public class BlockRecipes {
                     "CNC",
                     "MAM",
                     'A',
-                    new ItemStack(Items.golden_apple, 1, 0),
+                    Items.golden_apple,
                     'C',
-                    new ItemStack(Items.golden_carrot, 1, 0),
+                    Items.golden_carrot,
                     'M',
-                    new ItemStack(ModBlocks.BLOCK_MICA.get(), 1, 0),
+                    ModBlocks.BLOCK_MICA.get(),
                     'N',
                     ModBlocks.MODIFIER_NULL.get()));
         }

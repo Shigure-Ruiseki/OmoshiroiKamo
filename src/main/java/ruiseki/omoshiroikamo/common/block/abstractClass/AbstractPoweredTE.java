@@ -61,7 +61,9 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
     @Override
     public void invalidate() {
         super.invalidate();
-        unload();
+        if (LibMods.IC2.isLoaded()) {
+            unload();
+        }
     }
 
     @Override
@@ -111,7 +113,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
         if (!canReceivePower) {
             return 0;
         }
-        return PowerHandlerUtil.recieveInternal(this, maxReceive, from, simulate);
+        return PowerHandlerUtil.receiveInternal(this, maxReceive, from, simulate);
     }
 
     @Override
@@ -142,7 +144,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
         return 0;
     }
 
-    public int getMaxEnergyRecieved() {
+    public int getMaxEnergyReceived() {
         return energyStorage.getMaxReceive();
     }
 
@@ -164,7 +166,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
         if (!canReceivePower) {
             return 0;
         }
-        return convertRFtoEU(getMaxEnergyRecieved() - storedEnergyRF, getIC2Tier());
+        return convertRFtoEU(getMaxEnergyReceived() - storedEnergyRF, getIC2Tier());
     }
 
     @Optional.Method(modid = "IC2")
@@ -173,7 +175,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
             return amount;
         }
         int rf = convertEUtoRF(amount);
-        int r = Math.max(0, Math.min(getMaxEnergyRecieved() - storedEnergyRF, rf));
+        int r = Math.max(0, Math.min(getMaxEnergyReceived() - storedEnergyRF, rf));
         storedEnergyRF += r;
         double eu = convertRFtoEU(r, getIC2Tier());
         return amount - eu;

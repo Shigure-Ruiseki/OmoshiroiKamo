@@ -6,6 +6,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public enum ModObject {
 
+    blockTest,
     blockMultiblock,
     blockBoiler,
     blockFluidInOut,
@@ -13,9 +14,9 @@ public enum ModObject {
     blockEnergyInOut,
     blockElectrolyzer,
 
-    blockVoidOreMiner,
-    blockVoidResMiner,
-    blockNanoBotBeacon,
+    blockQuantumOreExtractor,
+    blockQuantumResExtractor,
+    blockQuantumBeacon,
     blockLaserCore,
     blockLaserLens,
     blockSolarArray,
@@ -56,11 +57,17 @@ public enum ModObject {
     itemFeedingUpgrade,
     itemBatteryUpgrade,
     itemEverlastingUpgrade,
+    itemLightUpgrade,
 
     itemStabilizedEnderPear,
     itemPhotovoltaicCell,
     itemAssembler,
 
+    itemChickenSpawnEgg,
+    itemColoredEgg,
+    itemLiquidEgg,
+    itemAnalyzer,
+    itemSolidXp,
     itemItemMaterial,
     itemBucketMaterial,
     itemBucketFluid,

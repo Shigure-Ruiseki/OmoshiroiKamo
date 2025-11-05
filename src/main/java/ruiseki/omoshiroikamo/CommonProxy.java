@@ -23,20 +23,21 @@ import ruiseki.omoshiroikamo.api.fluid.FluidRegistry;
 import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
 import ruiseki.omoshiroikamo.api.ore.OreRegistry;
 import ruiseki.omoshiroikamo.client.ResourePackGen;
-import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierAttributes;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
+import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModCommands;
+import ruiseki.omoshiroikamo.common.init.ModEntity;
 import ruiseki.omoshiroikamo.common.init.ModFluids;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.init.ModRecipes;
 import ruiseki.omoshiroikamo.common.init.OKWorldGenerator;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.common.ore.OreRegister;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.handler.ElementalHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.world.WireNetSaveData;
+import ruiseki.omoshiroikamo.plugin.baubles.BaubleExpandedCompat;
 import ruiseki.omoshiroikamo.plugin.compat.EtFuturumCompat;
 import ruiseki.omoshiroikamo.plugin.compat.TICCompat;
 import ruiseki.omoshiroikamo.plugin.nei.NEICompat;
@@ -52,19 +53,20 @@ public class CommonProxy {
     public CommonProxy() {}
 
     public void preInit(FMLPreInitializationEvent event) {
-        MaterialRegistry.init();
-        FluidRegistry.init();
-        OreRegistry.init();
-        MaterialWireType.init();
-        ModifierAttributes.init();
+        MaterialRegistry.preInit();
+        FluidRegistry.preInit();
+        OreRegistry.preInit();
+        MaterialWireType.preInit();
 
-        ruiseki.omoshiroikamo.common.init.ModBlocks.init();
-        OreRegister.init();
-        ModItems.init();
-        ModFluids.init();
-        ModAchievements.init();
-        OKWorldGenerator.init();
-        OreDictUtils.init();
+        ModBlocks.preInit();
+        ModItems.preInit();
+        ModFluids.preInit();
+        ModAchievements.preInit();
+        OKWorldGenerator.preInit();
+        OreDictUtils.preInit();
+        ModEntity.preInit();
+
+        BaubleExpandedCompat.preInit();
 
         callAssembleResourcePack(event);
 
@@ -82,7 +84,7 @@ public class CommonProxy {
         PacketHandler.init();
 
         ModRecipes.init();
-
+        ModEntity.init();
         WailaCompat.init();
         NEICompat.init();
         EtFuturumCompat.init();
@@ -91,21 +93,9 @@ public class CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new ElementalHandler());
 
-        StructureCompat.init();
-        TICCompat.init();
-    }
-
-    public EntityPlayer getClientPlayer() {
-        return null;
-    }
-
-    public World getClientWorld() {
-        return null;
-    }
-
-    public World getEntityWorld() {
-        return MinecraftServer.getServer()
-            .getEntityWorld();
+        StructureCompat.postInit();
+        TICCompat.postInit();
+        BaubleExpandedCompat.postInit();
     }
 
     public void serverLoad(FMLServerStartingEvent event) {
@@ -119,7 +109,8 @@ public class CommonProxy {
 
         if (FMLCommonHandler.instance()
             .getEffectiveSide() == Side.SERVER) {
-            World world = OmoshiroiKamo.proxy.getEntityWorld();
+            World world = MinecraftServer.getServer()
+                .getEntityWorld();
             if (!world.isRemote) {
                 Logger.info("WorldData loading");
                 WireNetSaveData worldData = (WireNetSaveData) world
@@ -148,6 +139,19 @@ public class CommonProxy {
 
     public void callAssembleResourcePack(FMLPreInitializationEvent event) {
         ResourePackGen.assembleResourcePack(event);
+    }
+
+    public EntityPlayer getClientPlayer() {
+        return null;
+    }
+
+    public World getClientWorld() {
+        return null;
+    }
+
+    public World getEntityWorld() {
+        return MinecraftServer.getServer()
+            .getEntityWorld();
     }
 
     protected void onServerTick() {

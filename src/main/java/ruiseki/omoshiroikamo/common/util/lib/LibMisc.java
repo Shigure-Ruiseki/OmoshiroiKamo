@@ -10,19 +10,29 @@ public final class LibMisc {
     public static final String MOD_ID = Tags.MOD_ID;
     public static final String MOD_NAME = Tags.MOD_NAME;
     public static final String VERSION = Tags.VERSION;
-    public static final String DEPENDENCIES = "required-after:Baubles;" + "required-after:endercore;"
+    public static final String DEPENDENCIES = "required-after:Baubles|Expanded;" + "required-after:endercore;"
         + "required-after:structurelib;"
         + "required-after:modularui2;"
-        + "required-after:neid;"
         + "after:NotEnoughItems;"
         + "after:Waila;"
-        + "after:TConstruct;";
+        + "after:Botania;"
+        + "after:TConstruct;"
+        + "after:EnderIO;"
+        + "after:ThermalFoundation;"
+        + "after:MinefactoryReloaded;"
+        + "after:Mekanism;"
+        + "after:BigReactors;"
+        + "after:ActuallyAdditions;"
+        + "after:DraconicEvolution;"
+        + "after:arsmagica2;"
+        + "after:evilcraft;"
+        + "after:extrautils2;";
 
     // Proxy Constants
     public static final String PROXY_COMMON = Tags.MOD_GROUP + ".CommonProxy";
     public static final String PROXY_CLIENT = Tags.MOD_GROUP + ".ClientProxy";
     public static final String GUI_FACTORY = Tags.MOD_GROUP + ".config.OKGuiConfigFactory";
-    public static final LangUtils LANG_UTILS = new LangUtils();
+    public static final LangUtils LANG = new LangUtils();
 
     public static final boolean SNAPSHOT_BUILD = Boolean.parseBoolean(Tags.SNAPSHOT_BUILD);
     public static final boolean DEV_ENVIRONMENT = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");

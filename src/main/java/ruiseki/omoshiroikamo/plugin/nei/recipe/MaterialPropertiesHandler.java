@@ -33,10 +33,8 @@ public class MaterialPropertiesHandler extends RecipeHandlerBase {
     }
 
     @Override
-    public void loadAllRecipes() {
-        for (MaterialEntry entry : MaterialRegistry.all()) {
-            arecipes.add(new CachedMaterialPropertise(entry));
-        }
+    public void loadTransferRects() {
+        this.addTransferRect(0, 0, 0, 0);
     }
 
     @Override

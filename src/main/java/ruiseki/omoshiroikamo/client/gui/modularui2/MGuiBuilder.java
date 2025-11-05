@@ -113,7 +113,7 @@ public class MGuiBuilder {
     private IWidget createConfig() {
         IPanelHandler panelSyncHandler = syncManager.panel("other_panel", this::configPanel, true);
         Flow column = Flow.column()
-            .debugName("Settings");
+            .name("Settings");
 
         column.coverChildren()
             .leftRelOffset(1f, 1)
@@ -171,7 +171,7 @@ public class MGuiBuilder {
             .size(68, 68);
 
         PagedWidget.Controller tabController = new PagedWidget.Controller();
-        Flow tabRow = new Row().debugName("Tab row")
+        Flow tabRow = new Row().name("Tab row")
             .coverChildren()
             .topRel(0f, 4, 1f);
 
@@ -203,7 +203,7 @@ public class MGuiBuilder {
                 0,
                 () -> createIoConfigColumn(IoType.HEAT, layout, faceMap)));
 
-        PagedWidget<?> paged = new PagedWidget<>().debugName("root parent")
+        PagedWidget<?> paged = new PagedWidget<>().name("root parent")
             .controller(tabController)
             .sizeRel(1f);
 
@@ -273,7 +273,7 @@ public class MGuiBuilder {
     }
 
     private Flow createIoConfigColumn(IoType type, char[][] layout, Map<Character, ForgeDirection> faceMap) {
-        Flow column = new Column().debugName("Side Configs")
+        Flow column = new Column().name("Side Configs")
             .padding(5);
         for (char[] row : layout) {
             Flow guiRow = new Row().coverChildren();

@@ -32,11 +32,12 @@ import ruiseki.omoshiroikamo.client.render.block.connectable.ConnectorULVTESR;
 import ruiseki.omoshiroikamo.client.render.block.connectable.InsulatorTESR;
 import ruiseki.omoshiroikamo.client.render.block.connectable.TransformerTESR;
 import ruiseki.omoshiroikamo.client.render.block.nanoBotBeacon.NanoBotBeaconTESR;
+import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.LaserCoreTESR;
+import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.LaserLensTESR;
+import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarArrayTESR;
-import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarCellTESR;
-import ruiseki.omoshiroikamo.client.render.block.voidMiner.LaserCoreTESR;
-import ruiseki.omoshiroikamo.client.render.block.voidMiner.LaserLensTESR;
-import ruiseki.omoshiroikamo.client.render.block.voidMiner.VoidMinerTESR;
+import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarCellISBRH;
+import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.item.backpack.BackpackRenderer;
 import ruiseki.omoshiroikamo.client.render.item.hammer.HammerRenderer;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
@@ -49,25 +50,25 @@ import ruiseki.omoshiroikamo.common.block.energyConnector.TEConnectorMV;
 import ruiseki.omoshiroikamo.common.block.energyConnector.TEConnectorULV;
 import ruiseki.omoshiroikamo.common.block.energyConnector.TEInsulator;
 import ruiseki.omoshiroikamo.common.block.energyConnector.TETransformer;
-import ruiseki.omoshiroikamo.common.block.multiblock.nanoBotBeacon.TENanoBotBeaconT1;
-import ruiseki.omoshiroikamo.common.block.multiblock.nanoBotBeacon.TENanoBotBeaconT2;
-import ruiseki.omoshiroikamo.common.block.multiblock.nanoBotBeacon.TENanoBotBeaconT3;
-import ruiseki.omoshiroikamo.common.block.multiblock.nanoBotBeacon.TENanoBotBeaconT4;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT1;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT2;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT3;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT4;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.core.TELaserCore;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.lens.TELaserLens;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT1;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT2;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT3;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT4;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT1;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT2;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT3;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT4;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT1;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT2;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT3;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT4;
-import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.cell.TESolarCell;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.core.TELaserCore;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.lens.TELaserLens;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.oreMiner.TEVoidOreMinerT1;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.oreMiner.TEVoidOreMinerT2;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.oreMiner.TEVoidOreMinerT3;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.oreMiner.TEVoidOreMinerT4;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.resMiner.TEVoidResMinerT1;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.resMiner.TEVoidResMinerT2;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.resMiner.TEVoidResMinerT3;
-import ruiseki.omoshiroikamo.common.block.multiblock.voidMiner.resMiner.TEVoidResMinerT4;
+import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.config.item.ItemConfig;
@@ -115,31 +116,30 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TESolarArrayT4.class, solarArrayTESR);
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.SOLAR_ARRAY.get()), solarArrayTESR);
 
-        SolarCellTESR solarCellTESR = new SolarCellTESR();
-        ClientRegistry.bindTileEntitySpecialRenderer(TESolarCell.class, solarCellTESR);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.SOLAR_CELL.get()), solarCellTESR);
+        SolarCellISBRH solarCellISBRH = new SolarCellISBRH();
+        RenderingRegistry.registerBlockHandler(solarCellISBRH);
 
-        VoidMinerTESR voidOreMinerTESR = new VoidMinerTESR();
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidOreMinerT1.class, voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidOreMinerT2.class, voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidOreMinerT3.class, voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidOreMinerT4.class, voidOreMinerTESR);
+        QuantumExtractorTESR quantumExtractorTESR = new QuantumExtractorTESR();
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumOreExtractorT1.class, quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumOreExtractorT2.class, quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumOreExtractorT3.class, quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumOreExtractorT4.class, quantumExtractorTESR);
         MinecraftForgeClient
-            .registerItemRenderer(Item.getItemFromBlock(ModBlocks.VOID_ORE_MINER.get()), voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidResMinerT1.class, voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidResMinerT2.class, voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidResMinerT3.class, voidOreMinerTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEVoidResMinerT4.class, voidOreMinerTESR);
+            .registerItemRenderer(Item.getItemFromBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get()), quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumResExtractorT1.class, quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumResExtractorT2.class, quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumResExtractorT3.class, quantumExtractorTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumResExtractorT4.class, quantumExtractorTESR);
         MinecraftForgeClient
-            .registerItemRenderer(Item.getItemFromBlock(ModBlocks.VOID_RES_MINER.get()), voidOreMinerTESR);
+            .registerItemRenderer(Item.getItemFromBlock(ModBlocks.QUANTUM_RES_EXTRACTOR.get()), quantumExtractorTESR);
 
         NanoBotBeaconTESR nanoBotBeaconTESR = new NanoBotBeaconTESR();
-        ClientRegistry.bindTileEntitySpecialRenderer(TENanoBotBeaconT1.class, nanoBotBeaconTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TENanoBotBeaconT2.class, nanoBotBeaconTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TENanoBotBeaconT3.class, nanoBotBeaconTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TENanoBotBeaconT4.class, nanoBotBeaconTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumBeaconT1.class, nanoBotBeaconTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumBeaconT2.class, nanoBotBeaconTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumBeaconT3.class, nanoBotBeaconTESR);
+        ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumBeaconT4.class, nanoBotBeaconTESR);
         MinecraftForgeClient
-            .registerItemRenderer(Item.getItemFromBlock(ModBlocks.NANO_BOT_BEACON.get()), nanoBotBeaconTESR);
+            .registerItemRenderer(Item.getItemFromBlock(ModBlocks.QUANTUM_BEACON.get()), nanoBotBeaconTESR);
 
         LaserCoreTESR laserCoreTESR = new LaserCoreTESR();
         ClientRegistry.bindTileEntitySpecialRenderer(TELaserCore.class, laserCoreTESR);
@@ -156,6 +156,8 @@ public class ClientProxy extends CommonProxy {
 
         MinecraftForgeClient.registerItemRenderer(ModItems.HAMMER.get(), new HammerRenderer());
         MinecraftForgeClient.registerItemRenderer(ModItems.BACKPACK.get(), new BackpackRenderer());
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
     }
 
     @Override

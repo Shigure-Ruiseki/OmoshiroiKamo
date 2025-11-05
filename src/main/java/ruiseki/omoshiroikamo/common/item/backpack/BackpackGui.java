@@ -80,12 +80,12 @@ public class BackpackGui extends ModularPanel {
     public static final String FEEDING_MODE = "FeedingMode";
     public static final String FEEDING_TYPE = "FeedingType";
     public static final String EVERLASTING_MODE = "EverlastingMode";
-    public static final String BACKPACKUPGRADE = "BackpackUpgrade";
-    public static final String BACKPACKINV = "BackpackInv";
-    public static final String CRAFTINGINV = "CraftingInv";
-    public static final String MAGNETINV = "MagnetInv";
-    public static final String FEEDINGINV = "FeedingInv";
-    private static final int[] panelWidth = { 176, 176, 176, 176, 230, 230 };
+    public static final String BACKPACK_UPGRADE = "BackpackUpgrade";
+    public static final String BACKPACK_INV = "BackpackInv";
+    public static final String CRAFTING_INV = "CraftingInv";
+    public static final String MAGNET_INV = "MagnetInv";
+    public static final String FEEDING_INV = "FeedingInv";
+    private static final int[] panelWidth = { 194, 194, 194, 194, 248, 248 };
     private static final int[] panelHeight = { 166, 184, 220, 274, 274, 292 };
     public static int slot = 120;
     public static int upgradeSlot = 7;
@@ -116,11 +116,8 @@ public class BackpackGui extends ModularPanel {
                 if (!player.worldObj.isRemote) {
                     ItemStack usedItem = data.getUsedItemStack();
                     if (usedItem != null) {
-                        NBTTagCompound root = usedItem.getTagCompound();
-                        if (root == null) {
-                            root = new NBTTagCompound();
-                        }
-                        root.setTag(BACKPACKUPGRADE, this.serializeNBT());
+                        NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                        root.setTag(BACKPACK_UPGRADE, this.serializeNBT());
                         usedItem.setTagCompound(root);
                     }
                 }
@@ -133,11 +130,8 @@ public class BackpackGui extends ModularPanel {
             protected void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = usedItem.getTagCompound();
-                    if (root == null) {
-                        root = new NBTTagCompound();
-                    }
-                    root.setTag(BACKPACKINV, this.serializeNBT());
+                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    root.setTag(BACKPACK_INV, this.serializeNBT());
                     usedItem.setTagCompound(root);
                 }
             }
@@ -149,11 +143,8 @@ public class BackpackGui extends ModularPanel {
             public void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = usedItem.getTagCompound();
-                    if (root == null) {
-                        root = new NBTTagCompound();
-                    }
-                    root.setTag(CRAFTINGINV, this.serializeNBT());
+                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    root.setTag(CRAFTING_INV, this.serializeNBT());
                     usedItem.setTagCompound(root);
                 }
             }
@@ -165,11 +156,8 @@ public class BackpackGui extends ModularPanel {
             public void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = usedItem.getTagCompound();
-                    if (root == null) {
-                        root = new NBTTagCompound();
-                    }
-                    root.setTag(MAGNETINV, this.serializeNBT());
+                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    root.setTag(MAGNET_INV, this.serializeNBT());
                     root.setTag(MAGNET_FILTER, createFilterList(magnetHandler));
                     usedItem.setTagCompound(root);
                 }
@@ -182,11 +170,8 @@ public class BackpackGui extends ModularPanel {
             public void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = usedItem.getTagCompound();
-                    if (root == null) {
-                        root = new NBTTagCompound();
-                    }
-                    root.setTag(FEEDINGINV, this.serializeNBT());
+                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    root.setTag(FEEDING_INV, this.serializeNBT());
                     root.setTag(FEEDING_FILTER, createFilterList(feedingHandler));
                     usedItem.setTagCompound(root);
                 }
@@ -208,20 +193,20 @@ public class BackpackGui extends ModularPanel {
         if (!player.worldObj.isRemote) {
             if (usedItem.hasTagCompound()) {
                 NBTTagCompound root = usedItem.getTagCompound();
-                if (root.hasKey(BACKPACKINV)) {
-                    backpackHandler.deserializeNBT(root.getCompoundTag(BACKPACKINV));
+                if (root.hasKey(BACKPACK_INV)) {
+                    backpackHandler.deserializeNBT(root.getCompoundTag(BACKPACK_INV));
                 }
-                if (root.hasKey(BACKPACKUPGRADE)) {
-                    upgradeHandler.deserializeNBT(root.getCompoundTag(BACKPACKUPGRADE));
+                if (root.hasKey(BACKPACK_UPGRADE)) {
+                    upgradeHandler.deserializeNBT(root.getCompoundTag(BACKPACK_UPGRADE));
                 }
-                if (root.hasKey(CRAFTINGINV)) {
-                    craftingHandler.deserializeNBT(root.getCompoundTag(CRAFTINGINV));
+                if (root.hasKey(CRAFTING_INV)) {
+                    craftingHandler.deserializeNBT(root.getCompoundTag(CRAFTING_INV));
                 }
-                if (root.hasKey(MAGNETINV)) {
-                    magnetHandler.deserializeNBT(root.getCompoundTag(MAGNETINV));
+                if (root.hasKey(MAGNET_INV)) {
+                    magnetHandler.deserializeNBT(root.getCompoundTag(MAGNET_INV));
                 }
-                if (root.hasKey(FEEDINGINV)) {
-                    feedingHandler.deserializeNBT(root.getCompoundTag(FEEDINGINV));
+                if (root.hasKey(FEEDING_INV)) {
+                    feedingHandler.deserializeNBT(root.getCompoundTag(FEEDING_INV));
                 }
             }
         }
@@ -254,12 +239,12 @@ public class BackpackGui extends ModularPanel {
                             .alignY(0.99f)))
                 .child(
                     MGuiBuilder.buildPlayerInventorySlotGroup(playerInventory)
-                        .align(Alignment.TopLeft)
+                        .align(Alignment.TopCenter)
                         .marginLeft(invMargin[meta])
                         .marginTop(panelHeight[meta] - 82))
                 .child(
                     MGuiBuilder.buildPlayerHotbarSlotGroup(playerInventory)
-                        .align(Alignment.TopLeft)
+                        .align(Alignment.TopCenter)
                         .marginLeft(invMargin[meta])
                         .marginTop(panelHeight[meta] - 24)));
 
@@ -279,10 +264,8 @@ public class BackpackGui extends ModularPanel {
     private SlotGroupWidget buildBackpackSlotGroup(int tier) {
         SlotGroupWidget.Builder builder = SlotGroupWidget.builder();
 
-        int rows = this.getItem()
-            .getBackpackRow(tier);
-        int cols = this.getItem()
-            .getBackpackCol(tier);
+        int rows = this.getBackpackRow(tier);
+        int cols = this.getBackpackCol(tier);
         int size = rows * cols;
 
         char[] chars = new char[cols];
@@ -319,16 +302,13 @@ public class BackpackGui extends ModularPanel {
             return slotWidget;
         });
 
-        SlotGroupWidget widget = builder.build();
-
-        return widget;
+        return builder.build();
     }
 
     private SlotGroupWidget buildUpgradeSlotGroup(int tier) {
         SlotGroupWidget.Builder builder = SlotGroupWidget.builder();
 
-        int rows = this.getItem()
-            .getUpgradeRow(tier);
+        int rows = this.getUpgradeRow(tier);
         int cols = 1;
 
         int size = rows * cols;
@@ -435,11 +415,9 @@ public class BackpackGui extends ModularPanel {
 
         upgradeController = new PagedWidget.Controller();
         upgradePage = new PagedWidget<>().controller(upgradeController)
-            .debugName("root parent")
             .rightRelOffset(0f, 1);
 
-        upgradeTabRow = new Row().debugName("Tab col")
-            .coverChildren()
+        upgradeTabRow = new Row().coverChildren()
             .topRel(0f, 4, 1f);
 
         List<TabEntry> tabs = Arrays.asList(
@@ -447,7 +425,7 @@ public class BackpackGui extends ModularPanel {
             new TabEntry(ModItems.MAGNET_UPGRADE.get(), buildMagnetSlotGroup(), ItemMagnetUpgrade.class),
             new TabEntry(ModItems.FEEDING_UPGRADE.get(), buildFeedingSlotGroup(), ItemFeedingUpgrade.class));
 
-        ParentWidget<?> emptyPage = new ParentWidget<>().debugName("Empty Page");
+        ParentWidget<?> emptyPage = new ParentWidget<>();
         upgradePage.addPage(emptyPage);
 
         for (int i = 0; i < tabs.size(); i++) {
@@ -566,7 +544,7 @@ public class BackpackGui extends ModularPanel {
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
                             .tooltipBuilder(
                                 richTooltip -> richTooltip
-                                    .add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "filter_mode")))
+                                    .add(LibMisc.LANG.localize(LibResources.TOOLTIP + "filter_mode")))
                             .overlay(true, MGuiTextures.WHITELIST)
                             .overlay(false, MGuiTextures.BLACKLIST)
                             .value(
@@ -609,7 +587,7 @@ public class BackpackGui extends ModularPanel {
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
                             .tooltipBuilder(
                                 richTooltip -> richTooltip
-                                    .add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "filter_mode")))
+                                    .add(LibMisc.LANG.localize(LibResources.TOOLTIP + "filter_mode")))
                             .overlay(false, MGuiTextures.WHITELIST)
                             .overlay(true, MGuiTextures.BLACKLIST)
                             .value(
@@ -621,7 +599,7 @@ public class BackpackGui extends ModularPanel {
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
                             .tooltipBuilder(
                                 richTooltip -> richTooltip
-                                    .add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "feeding_type")))
+                                    .add(LibMisc.LANG.localize(LibResources.TOOLTIP + "feeding_type")))
                             .overlay(false, MGuiTextures.FULL_HUNGER)
                             .overlay(true, MGuiTextures.EXACT_HUNGER)
                             .value(
@@ -843,4 +821,44 @@ public class BackpackGui extends ModularPanel {
         NBTTagCompound root = stack.getTagCompound();
         root.setBoolean(EVERLASTING_MODE, active);
     }
+
+    public int getBackpackRow(int meta) {
+        switch (meta) {
+            case 1:
+                return 4;
+            case 2:
+                return 6;
+            case 3, 4:
+                return 9;
+            case 5:
+                return 10;
+            default:
+                return 3;
+        }
+    }
+
+    public int getBackpackCol(int meta) {
+        switch (meta) {
+            case 4, 5:
+                return 12;
+            default:
+                return 9;
+        }
+    }
+
+    public int getUpgradeRow(int meta) {
+        switch (meta) {
+            case 2:
+                return 2;
+            case 3:
+                return 3;
+            case 4:
+                return 5;
+            case 5:
+                return 7;
+            default:
+                return 1;
+        }
+    }
+
 }

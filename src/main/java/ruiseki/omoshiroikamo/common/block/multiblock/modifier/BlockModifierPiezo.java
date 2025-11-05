@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockModifierPiezo extends BlockModifier {
@@ -20,7 +21,7 @@ public class BlockModifierPiezo extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(ModifierAttributes.PIEZO);
+        list.add(ModifierAttribute.PIEZO.getAttribute());
     }
 
     @Override

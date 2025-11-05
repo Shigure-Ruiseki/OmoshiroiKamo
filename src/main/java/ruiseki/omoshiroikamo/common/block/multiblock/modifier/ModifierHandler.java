@@ -1,8 +1,10 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.modifier;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
@@ -10,66 +12,67 @@ import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 public class ModifierHandler {
 
     private List<IModifierBlock> modifiers = new ArrayList<>();
-    private HashMap<String, Float> attributeTotals = new HashMap<>();
+    private final Map<String, Float> attributeTotals = new HashMap<>();
     private boolean hasCalculated = false;
 
     public void setModifiers(List<IModifierBlock> modifiers) {
-        this.modifiers = modifiers;
+        this.modifiers = (modifiers != null) ? modifiers : Collections.emptyList();
+        this.hasCalculated = false;
     }
 
     public void calculateAttributeMultipliers() {
-        HashMap<String, Float> attributeFactors = new HashMap<>();
-        HashMap<String, IModifierAttribute> baseAttributes = new HashMap<>();
+        if (modifiers.isEmpty()) {
+            attributeTotals.clear();
+            hasCalculated = true;
+            return;
+        }
 
-        for (IModifierBlock mod : this.modifiers) {
-            List<IModifierAttribute> attributes = mod.getAttributes();
-            if (attributes != null) {
-                for (IModifierAttribute attr : attributes) {
-                    boolean hasAttribute = false;
+        Map<String, Float> attributeFactors = new HashMap<>();
+        Map<String, IModifierAttribute> baseAttributes = new HashMap<>();
 
-                    for (String atF : attributeFactors.keySet()) {
-                        if (atF.equalsIgnoreCase(attr.getAttributeName())) {
-                            hasAttribute = true;
-                        }
-                    }
+        for (IModifierBlock modifier : modifiers) {
+            List<IModifierAttribute> attributes = modifier.getAttributes();
+            if (attributes == null) {
+                continue;
+            }
 
-                    float currFactor = 0.0F;
-                    if (hasAttribute) {
-                        currFactor = attributeFactors.get(attr.getAttributeName());
-                    } else {
-                        baseAttributes.put(attr.getAttributeName(), attr);
-                    }
-
-                    currFactor += attr.getModificationFactor();
-                    attributeFactors.put(attr.getAttributeName(), currFactor);
+            for (IModifierAttribute attr : attributes) {
+                String name = attr.getAttributeName();
+                if (name == null || name.isEmpty()) {
+                    continue;
                 }
+
+                attributeFactors.merge(name, attr.getModificationFactor(), Float::sum);
+                baseAttributes.putIfAbsent(name, attr);
             }
         }
 
-        for (String fact : attributeFactors.keySet()) {
-            IModifierAttribute ma = baseAttributes.get(fact);
-            float totalMultiplier = ma.getMultiplier(attributeFactors.get(fact));
-            this.attributeTotals.put(fact, totalMultiplier);
-        }
+        attributeTotals.clear();
+        attributeFactors.forEach((name, totalFactor) -> {
+            IModifierAttribute base = baseAttributes.get(name);
+            if (base != null) {
+                float totalMultiplier = base.getMultiplier(totalFactor);
+                attributeTotals.put(name, totalMultiplier);
+            }
+        });
 
         hasCalculated = true;
     }
 
     public boolean hasAttribute(String attributeName) {
-        for (String modName : this.attributeTotals.keySet()) {
-            if (attributeName.equalsIgnoreCase(modName)) {
-                return true;
-            }
-        }
-        return false;
+        return attributeTotals.keySet()
+            .stream()
+            .anyMatch(name -> name.equalsIgnoreCase(attributeName));
     }
 
     public float getAttributeMultiplier(String attributeName) {
-        for (String modName : this.attributeTotals.keySet()) {
-            if (attributeName.equalsIgnoreCase(modName)) {
-                return this.attributeTotals.get(modName);
-            }
-        }
-        return 1.0F;
+        return attributeTotals.entrySet()
+            .stream()
+            .filter(
+                e -> e.getKey()
+                    .equalsIgnoreCase(attributeName))
+            .map(Map.Entry::getValue)
+            .findFirst()
+            .orElse(1.0F);
     }
 }

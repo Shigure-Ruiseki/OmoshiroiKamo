@@ -24,14 +24,14 @@ import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.item.IBaubleRender;
-import ruiseki.omoshiroikamo.config.GeneralConfig;
+import ruiseki.omoshiroikamo.config.item.ItemConfig;
 
 @EventBusSubscriber
 public class BaubleRenderHandler {
 
     @SubscribeEvent
     public static void onPlayerRender(RenderPlayerEvent.Specials.Post event) {
-        if (!GeneralConfig.renderBaubles || event.entityLiving.getActivePotionEffect(Potion.invisibility) != null) {
+        if (!ItemConfig.renderBaubles || event.entityLiving.getActivePotionEffect(Potion.invisibility) != null) {
             return;
         }
 

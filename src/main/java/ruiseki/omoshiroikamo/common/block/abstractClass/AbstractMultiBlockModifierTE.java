@@ -32,7 +32,7 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
 
     public abstract int[][] getOffSet();
 
-    protected abstract String getStructurePieceName();
+    public abstract String getStructurePieceName();
 
     protected ExtendedFacing getExtendedFacing() {
         return ExtendedFacing.of(ForgeDirection.getOrientation(getFacing()));
@@ -92,7 +92,6 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
         } else {
             this.isProcessing = false;
         }
-        // updateClientWithPlayer();
         super.doUpdate();
     }
 
@@ -111,7 +110,7 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
         } else {
             this.isProcessing = false;
         }
-
+        updateClientWithPlayer();
     }
 
     public abstract int getBaseDuration();

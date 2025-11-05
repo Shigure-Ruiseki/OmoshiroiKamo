@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockModifierAccuracy extends BlockModifier {
@@ -21,7 +22,7 @@ public class BlockModifierAccuracy extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(ModifierAttributes.ACCURACY);
+        list.add(ModifierAttribute.ACCURACY.getAttribute());
         list.add(new AttributeEnergyCost(0.5F));
     }
 

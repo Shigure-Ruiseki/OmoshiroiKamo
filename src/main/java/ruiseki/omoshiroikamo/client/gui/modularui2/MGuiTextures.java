@@ -2,8 +2,6 @@ package ruiseki.omoshiroikamo.client.gui.modularui2;
 
 import static ruiseki.omoshiroikamo.client.gui.modularui2.MUITexture.icon;
 
-import com.cleanroommc.modularui.ModularUI;
-import com.cleanroommc.modularui.drawable.ColorType;
 import com.cleanroommc.modularui.drawable.UITexture;
 
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -17,7 +15,7 @@ public interface MGuiTextures {
     UITexture NONE = icon("none", 64, 0);
 
     UITexture BUTTON_REDSTONE_ON = UITexture.builder()
-        .location(LibResources.OVERLAY_BUTTON_REDSTONE_ON)
+        .location(LibResources.PROGRESS_ENERGY)
         .imageSize(32, 32)
         .build();
 
@@ -66,6 +64,9 @@ public interface MGuiTextures {
         .imageSize(18, 36)
         .build();
 
-    UITexture TAB_LEFT = UITexture.fullImage(ModularUI.ID, "gui/tab/tabs_left", ColorType.DEFAULT);
-    UITexture TAB_RIGHT = UITexture.fullImage(ModularUI.ID, "gui/tab/tabs_right", ColorType.DEFAULT);
+    UITexture ENERGY_PROGRESS = UITexture.builder()
+        .location(LibResources.PROGRESS_ENERGY)
+        .adaptable(1)
+        .imageSize(16, 128)
+        .build();
 }

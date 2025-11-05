@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockModifierResistance extends BlockModifier {
@@ -21,7 +22,7 @@ public class BlockModifierResistance extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(ModifierAttributes.P_RESISTANCE);
+        list.add(ModifierAttribute.P_RESISTANCE.getAttribute());
         list.add(new AttributeEnergyCostFixed(128));
     }
 

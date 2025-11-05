@@ -78,7 +78,7 @@ public class ItemStackUpgrade extends ItemUpgrade {
 
     @Override
     public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG_UTILS.localize(LibResources.TOOLTIP + "stack_multiplier", multiplier(itemstack)));
+        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "stack_multiplier", multiplier(itemstack)));
     }
 
     public int multiplier(ItemStack stack) {

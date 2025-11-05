@@ -60,9 +60,13 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
         EntityPlayer player = ctx.side == Side.SERVER ? ctx.getServerHandler().playerEntity
             : OmoshiroiKamo.proxy.getClientPlayer();
 
-        if (player == null) return null;
+        if (player == null) {
+            return null;
+        }
         TileEntity te = player.worldObj.getTileEntity(message.x, message.y, message.z);
-        if (!(te instanceof AbstractStorageTE storage)) return null;
+        if (!(te instanceof AbstractStorageTE storage)) {
+            return null;
+        }
 
         NBTTagCompound tanksTag = message.nbtRoot.getCompoundTag("FluidTanks");
         for (int i = 0; i < storage.fluidTanks.length; i++) {

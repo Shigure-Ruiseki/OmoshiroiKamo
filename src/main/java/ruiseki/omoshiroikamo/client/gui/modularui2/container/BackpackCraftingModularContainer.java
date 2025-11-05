@@ -5,20 +5,14 @@ import net.minecraft.item.crafting.CraftingManager;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
-import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import codechicken.nei.recipe.IRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.INEIRecipeTransfer;
+public class BackpackCraftingModularContainer extends BackPackContainer {
 
-public class BackpackCraftingModularContainer extends BackPackContainer
-    implements INEIRecipeTransfer<BackpackCraftingModularContainer> {
-
-    private final InventoryCraftingWrapper inventoryCrafting;
+    private final InventoryCraftingWrapper craftMatrix;
     private ModularCraftingSlot craftingSlot;
 
     public BackpackCraftingModularContainer(int width, int height, IItemHandlerModifiable craftingInventory) {
@@ -28,13 +22,13 @@ public class BackpackCraftingModularContainer extends BackPackContainer
     public BackpackCraftingModularContainer(int width, int height, IItemHandlerModifiable craftingInventory,
         int startIndex) {
         super();
-        this.inventoryCrafting = new InventoryCraftingWrapper(this, width, height, craftingInventory, startIndex);
+        this.craftMatrix = new InventoryCraftingWrapper(this, width, height, craftingInventory, startIndex);
     }
 
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        this.inventoryCrafting.detectChanges();
+        this.craftMatrix.detectChanges();
     }
 
     @Override
@@ -46,7 +40,7 @@ public class BackpackCraftingModularContainer extends BackPackContainer
                     "Only one crafting output slot is supported with CraftingModularContainer!");
             }
             this.craftingSlot = craftingSlot1;
-            craftingSlot1.setCraftMatrix(this.inventoryCrafting);
+            craftingSlot1.setCraftMatrix(this.craftMatrix);
         }
     }
 
@@ -55,18 +49,7 @@ public class BackpackCraftingModularContainer extends BackPackContainer
         if (!getGuiData().isClient()) {
             this.craftingSlot.updateResult(
                 CraftingManager.getInstance()
-                    .findMatchingRecipe(this.inventoryCrafting, getPlayer().worldObj));
+                    .findMatchingRecipe(this.craftMatrix, getPlayer().worldObj));
         }
-    }
-
-    @Override
-    public String[] getIdents() {
-        return new String[] { "crafting" };
-    }
-
-    @Override
-    public int transferRecipe(GuiContainerWrapper gui, ModularContainer self, IRecipeHandler recipe, int recipeIndex,
-        int multiplier) {
-        return 0;
     }
 }

@@ -8,19 +8,24 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.oredict.RecipeSorter;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.recipe.BlockRecipes;
 import ruiseki.omoshiroikamo.common.recipe.ItemRecipes;
+import ruiseki.omoshiroikamo.common.recipe.NBTShapedOreRecipe;
+import ruiseki.omoshiroikamo.common.recipe.NBTShapelessOreRecipe;
 import ruiseki.omoshiroikamo.common.recipe.machine.MachineRecipeRegistry;
 import ruiseki.omoshiroikamo.common.recipe.machine.RecipeBuilder;
 import ruiseki.omoshiroikamo.common.recipe.machine.RecipeHandler;
 import ruiseki.omoshiroikamo.common.recipe.ore.CopperRecipes;
-import ruiseki.omoshiroikamo.common.recipe.voidMiner.VoidMinerRecipes;
+import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
+import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ModRecipes {
 
     public static void init() {
+        initRecipeSorter();
 
         RecipeHandler.loadRecipes(ModObject.blockElectrolyzer.unlocalisedName);
         RecipeHandler.loadRecipes(ModObject.blockAnvil.unlocalisedName);
@@ -29,7 +34,20 @@ public class ModRecipes {
 
         ItemRecipes.init();
         BlockRecipes.init();
-        VoidMinerRecipes.init();
+        QuantumExtractorRecipes.init();
+    }
+
+    public static void initRecipeSorter() {
+        RecipeSorter.register(
+            LibResources.PREFIX_MOD + "nbtshaped",
+            NBTShapedOreRecipe.class,
+            RecipeSorter.Category.SHAPED,
+            "after:minecraft:shaped");
+        RecipeSorter.register(
+            LibResources.PREFIX_MOD + "nbtshapeless",
+            NBTShapelessOreRecipe.class,
+            RecipeSorter.Category.SHAPELESS,
+            "after:minecraft:shapeless");
     }
 
     public static void loadAllRecipes() {

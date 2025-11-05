@@ -25,7 +25,7 @@ public class OKWorldGenerator implements IWorldGenerator {
         ModBlocks.BLOCK_BASALT.get(),
         WorldGenConfig.basaltNodeSize);
 
-    public static void init() {
+    public static void preInit() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
     }
 

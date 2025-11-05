@@ -17,6 +17,10 @@ public class LibResources {
 
     public static final String GUI_MANA_HUD = PREFIX_GUI + "mana.png";
     public static final String GUI_NEI_BLANK = PREFIX_GUI + "nei/neiBlank.png";
+    public static final String GUI_CHICKEN_LAYING = PREFIX_GUI + "nei/chicken/laying.png";
+    public static final String GUI_CHICKEN_BREEDING = PREFIX_GUI + "nei/chicken/breeding.png";
+    public static final String GUI_CHICKEN_DROPS = PREFIX_GUI + "nei/chicken/drops.png";
+    public static final String GUI_CHICKEN_THROWS = PREFIX_GUI + "nei/chicken/throws.png";
     public static final String GUI_SLOT = PREFIX_GUI + "nei/slot.png";
     public static final String GUI_ICONS = PREFIX_GUI + "icons.png";
     public static final String OVERLAY_BUTTON_REDSTONE_ON = PREFIX_GUI + "icons/redstone_on.png";
@@ -28,6 +32,7 @@ public class LibResources {
     public static final String OVERLAY_PRIORITY_LEFT = PREFIX_GUI + "icons/priority_right.png";
     public static final String OVERLAY_PRIORITY_DOWN = PREFIX_GUI + "icons/priority_down.png";
     public static final String CYCLE_IOMODE = PREFIX_GUI + "cycle_iomode.png";
+    public static final String PROGRESS_ENERGY = PREFIX_GUI + "progress_energy.png";
     public static final String PROGRESS_BURN = PREFIX_GUI + "progress_burn.png";
 
     public static final String KEY_MANA = "mana";

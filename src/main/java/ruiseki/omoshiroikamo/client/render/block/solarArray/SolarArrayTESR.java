@@ -25,7 +25,7 @@ public class SolarArrayTESR extends TileEntitySpecialRenderer implements IItemRe
     private static final String MODEL = LibResources.PREFIX_MODEL + "solar_array.obj";
 
     private static final ResourceLocation controllerBase = new ResourceLocation(
-        LibResources.PREFIX_BLOCK + "basalt_normal.png");
+        LibResources.PREFIX_BLOCK + "basalt.png");
     private static final ResourceLocation brain = new ResourceLocation(LibResources.PREFIX_BLOCK + "solar_tex.png");
 
     private static final ResourceLocation TEX_IRON = new ResourceLocation(LibResources.PREFIX_BLOCK + "cont_tier.png");
@@ -60,7 +60,7 @@ public class SolarArrayTESR extends TileEntitySpecialRenderer implements IItemRe
         int tier = item.getItemDamage() + 1;
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(0.5f, 0f, 0.5f);
+        GL11.glTranslatef(0.5f, -0.1f, 0.5f);
         render(tier);
         GL11.glPopMatrix();
     }

@@ -56,7 +56,7 @@ public class MaterialRegistry {
         return REGISTRY.containsKey(name);
     }
 
-    public static void init() {
+    public static void preInit() {
 
         register(new MaterialEntry("Iron", 0, 7870, 449, 80.2, 1811, 25, 1.0e7, 0xD8D8D8, 0xFF5500));
         register(new MaterialEntry("Copper", 1, 8960, 385, 401, 1358, 21, 5.96e7, 0xF08048, 0xFF7700));

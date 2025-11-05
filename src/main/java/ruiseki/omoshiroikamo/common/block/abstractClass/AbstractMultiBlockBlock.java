@@ -10,8 +10,10 @@ import net.minecraft.world.World;
 import com.enderio.core.common.TileEntityEnder;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 
-public class AbstractMultiBlockBlock<T extends AbstractMultiBlockModifierTE> extends AbstractBlock<T> {
+public class AbstractMultiBlockBlock<T extends AbstractMultiBlockModifierTE> extends AbstractBlock<T>
+    implements IMBBlock {
 
     protected AbstractMultiBlockBlock(ModObject mo, Class<T> teClass, Material material) {
         super(mo, teClass, material);

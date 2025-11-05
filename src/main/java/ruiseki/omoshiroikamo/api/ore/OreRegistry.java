@@ -56,7 +56,7 @@ public class OreRegistry {
         return REGISTRY.containsKey(name);
     }
 
-    public static void init() {
+    public static void preInit() {
         register(new OreEntry("Hematite", 0, 10, 12, 64, 0.4f, true, 0x7A1F1F, 5, 10, 2));
         register(new OreEntry("Magnetite", 1, 9, 8, 48, 0.35f, true, 0x1C1C1C, 5, 10, 2));
 

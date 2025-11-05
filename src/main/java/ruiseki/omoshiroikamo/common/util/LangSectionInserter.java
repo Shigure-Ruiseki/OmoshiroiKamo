@@ -128,9 +128,9 @@ public class LangSectionInserter {
     }
 
     public static void main(String[] args) throws IOException {
-        MaterialRegistry.init();
-        FluidRegistry.init();
-        OreRegistry.init();
+        MaterialRegistry.preInit();
+        FluidRegistry.preInit();
+        OreRegistry.preInit();
         generateLang(
             new File(LANG_PATH),
             new ArrayList<>(MaterialRegistry.all()),

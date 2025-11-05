@@ -11,7 +11,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class BlockModifierNull extends BlockModifier {
 
     protected BlockModifierNull() {
-        super(ModObject.blockModifierNull, "null");
+        super(ModObject.blockModifierNull, "");
     }
 
     public static BlockModifierNull create() {
@@ -19,9 +19,7 @@ public class BlockModifierNull extends BlockModifier {
     }
 
     @Override
-    public void addAttributes(List<IModifierAttribute> list) {
-        list.add(ModifierAttributes.NULL);
-    }
+    public void addAttributes(List<IModifierAttribute> list) {}
 
     @Override
     public void registerBlockIcons(IIconRegister iIconRegister) {

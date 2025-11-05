@@ -7,24 +7,35 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.AnvilRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.ElectrolyzerRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.MaterialPropertiesHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidOreRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidResRecipeHandler;
 
 @SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
 
-    public static final GuiContainerWrapperStackPositioner stackPositioner = new GuiContainerWrapperStackPositioner();
-    public static final GuiContainerWrapperOverlayHandler overlayHandler = new GuiContainerWrapperOverlayHandler();
-
     @Override
     public void loadConfig() {
-        API.registerRecipeHandler(new ElectrolyzerRecipeHandler());
-        API.registerUsageHandler(new ElectrolyzerRecipeHandler());
+        Logger.info("Loading NeiConfig: " + getName());
 
-        API.registerRecipeHandler(new AnvilRecipeHandler());
-        API.registerUsageHandler(new AnvilRecipeHandler());
+        registerHandler(new ElectrolyzerRecipeHandler());
+        registerHandler(new AnvilRecipeHandler());
+        registerHandler(new MaterialPropertiesHandler());
+        registerHandler(new VoidOreRecipeHandler());
+        registerHandler(new VoidResRecipeHandler());
+        registerHandler(new ChickenLayingRecipeHandler());
+        registerHandler(new ChickenBreedingRecipeHandler());
+        registerHandler(new ChickenDropsRecipeHandler());
+        registerHandler(new ChickenThrowsRecipeHandler());
+    }
 
-        API.registerRecipeHandler(new MaterialPropertiesHandler());
-        API.registerUsageHandler(new MaterialPropertiesHandler());
-        Logger.info("Loaded NeiConfig");
+    protected static void registerHandler(IRecipeHandlerBase handler) {
+        handler.prepare();
+        API.registerRecipeHandler(handler);
+        API.registerUsageHandler(handler);
     }
 
     @Override

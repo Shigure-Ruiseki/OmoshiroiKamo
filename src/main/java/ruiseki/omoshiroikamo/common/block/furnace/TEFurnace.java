@@ -1,9 +1,5 @@
 package ruiseki.omoshiroikamo.common.block.furnace;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,17 +20,12 @@ import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.gtnewhorizons.wdmla.api.accessor.BlockAccessor;
-import com.gtnewhorizons.wdmla.api.ui.IComponent;
-import com.gtnewhorizons.wdmla.api.ui.ITooltip;
-import com.gtnewhorizons.wdmla.impl.ui.ThemeHelper;
-import com.gtnewhorizons.wdmla.plugin.vanilla.VanillaIdentifiers;
+import com.enderio.core.common.util.ItemUtil;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTaskTE;
-import ruiseki.omoshiroikamo.common.recipe.chance.ChanceItemStack;
 
 public class TEFurnace extends AbstractTaskTE {
 
@@ -90,7 +81,7 @@ public class TEFurnace extends AbstractTaskTE {
 
                     ItemStack container = fuel.getItem()
                         .getContainerItem(fuel);
-                    if (container != null && !ItemStack.areItemStacksEqual(container, fuel)) {
+                    if (container != null && !ItemUtil.areStacksEqual(container, fuel)) {
                         inv.setStackInSlot(1, container);
                     } else {
                         fuel.stackSize--;
@@ -210,82 +201,6 @@ public class TEFurnace extends AbstractTaskTE {
                         .alignX(Alignment.CENTER)));
         panel.bindPlayerInventory();
         return panel;
-    }
-
-    @Override
-    public boolean hasProcessStatus() {
-        return false;
-    }
-
-    @Override
-    public boolean hasItemStorage() {
-        return false;
-    }
-
-    @Override
-    public void appendTooltip(ITooltip tooltip, BlockAccessor accessor) {
-        if (!(accessor.getTileEntity() instanceof TEFurnace)) {
-            return;
-        }
-        NBTTagCompound data = accessor.getServerData();
-        float burnTime = data.getFloat("burnTime");
-        this.inv.deserializeNBT(data.getCompoundTag("item_inv"));
-
-        ItemStack input = inv.getStackInSlot(0);
-        ItemStack fuel = inv.getStackInSlot(1);
-
-        List<ItemStack> outputs = new ArrayList<>();
-        for (int i = slotDefinition.getMinOutputSlot(); i < slotDefinition.getMaxOutputSlot(); i++) {
-            outputs.add(inv.getStackInSlot(i));
-        }
-
-        boolean allOutputEmpty = outputs.stream()
-            .allMatch(s -> s == null);
-
-        if (input != null && allOutputEmpty) {
-            List<ChanceItemStack> resultList = getItemOutput();
-            for (int i = 0; i < resultList.size() && i < outputs.size(); i++) {
-                ChanceItemStack out = resultList.get(i);
-                if (out != null && out.stack != null) {
-                    ItemStack ghost = out.stack.copy();
-                    ghost.stackSize = 0;
-                    outputs.set(i, ghost);
-                }
-            }
-        }
-
-        boolean allEmpty = input == null && fuel == null
-            && outputs.stream()
-                .allMatch(s -> s == null);
-
-        if (!allEmpty) {
-            IComponent progress = ThemeHelper.INSTANCE.furnaceLikeProgress(
-                Arrays.asList(input, fuel),
-                outputs,
-                (int) (getProgress() * 100),
-                100,
-                accessor.showDetails());
-
-            if (progress != null) {
-                tooltip.child(progress.tag(VanillaIdentifiers.FURNACE));
-            }
-        }
-        if (burnTime > 0) {
-            tooltip.text(String.format("Burn Time: " + ((int) burnTime) / 20) + "s");
-        }
-
-        super.appendTooltip(tooltip, accessor);
-    }
-
-    @Override
-    public void appendServerData(NBTTagCompound data, BlockAccessor accessor) {
-        if (!(accessor.getTileEntity() instanceof TEFurnace te)) {
-            return;
-        }
-
-        // data.setFloat("progressTE", te.getProgress());
-        data.setFloat("burnTime", burnTime);
-        data.setTag("item_inv", this.inv.serializeNBT());
     }
 
 }

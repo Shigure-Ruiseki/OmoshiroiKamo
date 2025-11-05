@@ -60,6 +60,10 @@ public class OKCreativeTab extends CreativeTabs {
         addItem(ModItems.STABILIZED_ENDER_PEAR.get());
         addItem(ModItems.PHOTOVOLTAIC_CELL.get());
         addItem(ModItems.ASSEMBLER.get());
+        addItem(ModItems.ANALYZER.get());
+        addItem(ModItems.CHICKEN_SPAWN_EGG.get());
+        addItem(ModItems.COLORED_EGG.get());
+        addItem(ModItems.LIQUID_EGG.get());
         addItem(FluidMaterialRegister.itemBucketMaterial);
         addItem(FluidRegister.itemBucketFluid);
 
@@ -78,9 +82,9 @@ public class OKCreativeTab extends CreativeTabs {
         addBlock(ModBlocks.MODIFIER_PIEZO.get());
         addBlock(ModBlocks.SOLAR_ARRAY.get());
         addBlock(ModBlocks.SOLAR_CELL.get());
-        addBlock(ModBlocks.VOID_ORE_MINER.get());
-        addBlock(ModBlocks.VOID_RES_MINER.get());
-        addBlock(ModBlocks.NANO_BOT_BEACON.get());
+        addBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get());
+        addBlock(ModBlocks.QUANTUM_RES_EXTRACTOR.get());
+        addBlock(ModBlocks.QUANTUM_BEACON.get());
         addBlock(ModBlocks.LASER_LENS.get());
         addBlock(ModBlocks.LASER_CORE.get());
 
