@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.client.ResourePackGen;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModCommands;
+import ruiseki.omoshiroikamo.common.init.ModEntity;
 import ruiseki.omoshiroikamo.common.init.ModFluids;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.init.ModRecipes;
@@ -63,6 +64,7 @@ public class CommonProxy {
         ModAchievements.preInit();
         OKWorldGenerator.preInit();
         OreDictUtils.preInit();
+        ModEntity.preInit();
 
         BaubleExpandedCompat.preInit();
 
@@ -82,7 +84,7 @@ public class CommonProxy {
         PacketHandler.init();
 
         ModRecipes.init();
-
+        ModEntity.init();
         WailaCompat.init();
         NEICompat.init();
         EtFuturumCompat.init();

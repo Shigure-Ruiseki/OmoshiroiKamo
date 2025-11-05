@@ -61,7 +61,9 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
     @Override
     public void invalidate() {
         super.invalidate();
-        unload();
+        if (LibMods.IC2.isLoaded()) {
+            unload();
+        }
     }
 
     @Override

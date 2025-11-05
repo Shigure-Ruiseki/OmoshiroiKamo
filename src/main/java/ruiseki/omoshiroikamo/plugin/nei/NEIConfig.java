@@ -7,6 +7,10 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.AnvilRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.ElectrolyzerRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.MaterialPropertiesHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidOreRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidResRecipeHandler;
 
@@ -22,6 +26,10 @@ public class NEIConfig implements IConfigureNEI {
         registerHandler(new MaterialPropertiesHandler());
         registerHandler(new VoidOreRecipeHandler());
         registerHandler(new VoidResRecipeHandler());
+        registerHandler(new ChickenLayingRecipeHandler());
+        registerHandler(new ChickenBreedingRecipeHandler());
+        registerHandler(new ChickenDropsRecipeHandler());
+        registerHandler(new ChickenThrowsRecipeHandler());
     }
 
     protected static void registerHandler(IRecipeHandlerBase handler) {

@@ -22,7 +22,7 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifi
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.init.ModifierAttributeType;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketNBBClientFlight;
 import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
@@ -122,16 +122,16 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
     }
 
     private void applyPotionEffects(EntityPlayer plr, int duration) {
-        Object[][] effects = { { ModifierAttributeType.P_SPEED.getAttributeName(), Potion.moveSpeed },
-            { ModifierAttributeType.P_NIGHT_VISION.getAttributeName(), Potion.nightVision },
-            { ModifierAttributeType.P_HASTE.getAttributeName(), Potion.digSpeed },
-            { ModifierAttributeType.P_STRENGTH.getAttributeName(), Potion.damageBoost },
-            { ModifierAttributeType.P_WATER_BREATHING.getAttributeName(), Potion.waterBreathing },
-            { ModifierAttributeType.P_REGEN.getAttributeName(), Potion.regeneration },
-            { ModifierAttributeType.P_SATURATION.getAttributeName(), Potion.field_76443_y },
-            { ModifierAttributeType.P_RESISTANCE.getAttributeName(), Potion.resistance },
-            { ModifierAttributeType.P_JUMP_BOOST.getAttributeName(), Potion.jump },
-            { ModifierAttributeType.P_FIRE_RESISTANCE.getAttributeName(), Potion.fireResistance } };
+        Object[][] effects = { { ModifierAttribute.P_SPEED.getAttributeName(), Potion.moveSpeed },
+            { ModifierAttribute.P_NIGHT_VISION.getAttributeName(), Potion.nightVision },
+            { ModifierAttribute.P_HASTE.getAttributeName(), Potion.digSpeed },
+            { ModifierAttribute.P_STRENGTH.getAttributeName(), Potion.damageBoost },
+            { ModifierAttribute.P_WATER_BREATHING.getAttributeName(), Potion.waterBreathing },
+            { ModifierAttribute.P_REGEN.getAttributeName(), Potion.regeneration },
+            { ModifierAttribute.P_SATURATION.getAttributeName(), Potion.field_76443_y },
+            { ModifierAttribute.P_RESISTANCE.getAttributeName(), Potion.resistance },
+            { ModifierAttribute.P_JUMP_BOOST.getAttributeName(), Potion.jump },
+            { ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName(), Potion.fireResistance } };
 
         for (Object[] entry : effects) {
             addPotionEffect(plr, (String) entry[0], duration, (Potion) entry[1]);
@@ -154,7 +154,7 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
             return;
         }
 
-        boolean canFly = modifierHandler.hasAttribute(ModifierAttributeType.E_FLIGHT_CREATIVE.getAttributeName());
+        boolean canFly = modifierHandler.hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
 
         if (canFly && !dealsWithFlight) {
             plr.capabilities.allowFlying = true;
@@ -182,7 +182,7 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
         }
 
         boolean hasFlightAttribute = modifierHandler
-            .hasAttribute(ModifierAttributeType.E_FLIGHT_CREATIVE.getAttributeName());
+            .hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
         if (dealsWithFlight && !hasFlightAttribute) {
             plr.capabilities.allowFlying = false;
             plr.capabilities.isFlying = false;

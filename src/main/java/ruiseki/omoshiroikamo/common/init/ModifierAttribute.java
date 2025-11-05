@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.AttributeAccuracy;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.AttributeSpeed;
 
-public enum ModifierAttributeType {
+public enum ModifierAttribute {
 
     SPEED(new AttributeSpeed()),
     ACCURACY(new AttributeAccuracy()),
@@ -30,7 +30,7 @@ public enum ModifierAttributeType {
 
     private final IModifierAttribute attribute;
 
-    ModifierAttributeType(IModifierAttribute attribute) {
+    ModifierAttribute(IModifierAttribute attribute) {
         this.attribute = attribute;
     }
 
@@ -43,14 +43,14 @@ public enum ModifierAttributeType {
     }
 
     // --- Optional tiện ích ---
-    private static final Map<String, ModifierAttributeType> LOOKUP = Arrays.stream(values())
+    private static final Map<String, ModifierAttribute> LOOKUP = Arrays.stream(values())
         .collect(
             Collectors.toMap(
                 e -> e.getAttributeName()
                     .toLowerCase(Locale.ROOT),
                 e -> e));
 
-    public static ModifierAttributeType fromName(String name) {
+    public static ModifierAttribute fromName(String name) {
         if (name == null) {
             return NULL;
         }

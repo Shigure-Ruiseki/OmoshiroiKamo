@@ -63,6 +63,11 @@ public enum ModObject {
     itemPhotovoltaicCell,
     itemAssembler,
 
+    itemChickenSpawnEgg,
+    itemColoredEgg,
+    itemLiquidEgg,
+    itemAnalyzer,
+    itemSolidXp,
     itemItemMaterial,
     itemBucketMaterial,
     itemBucketFluid,

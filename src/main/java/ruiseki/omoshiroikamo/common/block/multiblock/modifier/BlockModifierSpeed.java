@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
-import ruiseki.omoshiroikamo.common.init.ModifierAttributeType;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockModifierSpeed extends BlockModifier {
@@ -24,8 +24,8 @@ public class BlockModifierSpeed extends BlockModifier {
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
         list.add(new AttributeEnergyCost(1.0F));
-        list.add(ModifierAttributeType.SPEED.getAttribute());
-        list.add(ModifierAttributeType.P_SPEED.getAttribute());
+        list.add(ModifierAttribute.SPEED.getAttribute());
+        list.add(ModifierAttribute.P_SPEED.getAttribute());
         list.add(new AttributeEnergyCostFixed(16));
     }
 

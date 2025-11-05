@@ -37,6 +37,7 @@ import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.LaserLensTESR;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarArrayTESR;
 import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarCellISBRH;
+import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.item.backpack.BackpackRenderer;
 import ruiseki.omoshiroikamo.client.render.item.hammer.HammerRenderer;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
@@ -67,6 +68,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT1;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT2;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT3;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT4;
+import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.config.item.ItemConfig;
@@ -154,6 +156,8 @@ public class ClientProxy extends CommonProxy {
 
         MinecraftForgeClient.registerItemRenderer(ModItems.HAMMER.get(), new HammerRenderer());
         MinecraftForgeClient.registerItemRenderer(ModItems.BACKPACK.get(), new BackpackRenderer());
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
     }
 
     @Override

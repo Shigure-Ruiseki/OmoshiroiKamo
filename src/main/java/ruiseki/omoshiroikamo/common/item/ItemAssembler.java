@@ -69,8 +69,7 @@ public class ItemAssembler extends ItemOK {
     }
 
     @Override
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        super.addDetailedEntries(itemstack, entityplayer, list, flag);
+    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "assembler.l1"));
         list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "assembler.l2"));
     }

@@ -6,7 +6,7 @@ import static ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.Quantu
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.common.init.ModifierAttributeType;
+import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 
 public class TEQuantumBeaconT3 extends TEQuantumBeacon {
 
@@ -16,34 +16,34 @@ public class TEQuantumBeaconT3 extends TEQuantumBeacon {
 
     @Override
     protected int maxPotionLevel(String attribute) {
-        if (attribute == ModifierAttributeType.P_SATURATION.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_SATURATION.getAttributeName()) {
             return 1;
         }
-        if (attribute == ModifierAttributeType.P_SPEED.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_SPEED.getAttributeName()) {
             return 3;
         }
-        if (attribute == ModifierAttributeType.P_HASTE.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_HASTE.getAttributeName()) {
             return 3;
         }
-        if (attribute == ModifierAttributeType.P_STRENGTH.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_STRENGTH.getAttributeName()) {
             return 3;
         }
-        if (attribute == ModifierAttributeType.P_REGEN.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_REGEN.getAttributeName()) {
             return 2;
         }
-        if (attribute == ModifierAttributeType.P_RESISTANCE.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_RESISTANCE.getAttributeName()) {
             return 2;
         }
-        if (attribute == ModifierAttributeType.P_FIRE_RESISTANCE.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName()) {
             return 1;
         }
-        if (attribute == ModifierAttributeType.P_WATER_BREATHING.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_WATER_BREATHING.getAttributeName()) {
             return 1;
         }
-        if (attribute == ModifierAttributeType.P_NIGHT_VISION.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_NIGHT_VISION.getAttributeName()) {
             return 1;
         }
-        if (attribute == ModifierAttributeType.P_JUMP_BOOST.getAttributeName()) {
+        if (attribute == ModifierAttribute.P_JUMP_BOOST.getAttributeName()) {
             return 3;
         }
         return 0;

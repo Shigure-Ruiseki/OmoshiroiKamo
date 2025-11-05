@@ -13,10 +13,20 @@ public final class LibMisc {
     public static final String DEPENDENCIES = "required-after:Baubles|Expanded;" + "required-after:endercore;"
         + "required-after:structurelib;"
         + "required-after:modularui2;"
-        + "required-after:neid;"
         + "after:NotEnoughItems;"
         + "after:Waila;"
-        + "after:TConstruct;";
+        + "after:Botania;"
+        + "after:TConstruct;"
+        + "after:EnderIO;"
+        + "after:ThermalFoundation;"
+        + "after:MinefactoryReloaded;"
+        + "after:Mekanism;"
+        + "after:BigReactors;"
+        + "after:ActuallyAdditions;"
+        + "after:DraconicEvolution;"
+        + "after:arsmagica2;"
+        + "after:evilcraft;"
+        + "after:extrautils2;";
 
     // Proxy Constants
     public static final String PROXY_COMMON = Tags.MOD_GROUP + ".CommonProxy";

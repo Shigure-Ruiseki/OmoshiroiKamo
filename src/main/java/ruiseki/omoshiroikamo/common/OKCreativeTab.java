@@ -60,6 +60,10 @@ public class OKCreativeTab extends CreativeTabs {
         addItem(ModItems.STABILIZED_ENDER_PEAR.get());
         addItem(ModItems.PHOTOVOLTAIC_CELL.get());
         addItem(ModItems.ASSEMBLER.get());
+        addItem(ModItems.ANALYZER.get());
+        addItem(ModItems.CHICKEN_SPAWN_EGG.get());
+        addItem(ModItems.COLORED_EGG.get());
+        addItem(ModItems.LIQUID_EGG.get());
         addItem(FluidMaterialRegister.itemBucketMaterial);
         addItem(FluidRegister.itemBucketFluid);
 

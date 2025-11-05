@@ -6,6 +6,7 @@ import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.block.BlockConfigs;
+import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
 import ruiseki.omoshiroikamo.config.general.DamageIndicatorsConfig;
 import ruiseki.omoshiroikamo.config.item.FeedingConfig;
 import ruiseki.omoshiroikamo.config.item.ItemConfig;
@@ -30,6 +31,7 @@ public class GeneralConfig {
         BlockConfigs.registerConfig();
         WorldGenConfig.registerConfig();
         ConfigurationManager.registerConfig(MagnetConfig.class);
+        ConfigurationManager.registerConfig(ChickenConfigs.class);
         ConfigurationManager.registerConfig(FeedingConfig.class);
         ConfigurationManager.registerConfig(DamageIndicatorsConfig.class);
     }

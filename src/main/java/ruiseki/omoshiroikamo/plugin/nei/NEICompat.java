@@ -10,6 +10,11 @@ import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
+import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
 
 public class NEICompat {
 
@@ -54,6 +59,46 @@ public class NEICompat {
         sendCatalyst(
             ModObject.blockQuantumResExtractor.getRegistryName(),
             ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3));
+
+        sendHandlerImage(
+            ChickenLayingRecipeHandler.UID,
+            LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
+            1,
+            0,
+            16,
+            16,
+            64,
+            6);
+
+        sendHandlerImage(
+            ChickenBreedingRecipeHandler.UID,
+            LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
+            1,
+            0,
+            16,
+            16,
+            64,
+            6);
+
+        sendHandlerImage(
+            ChickenDropsRecipeHandler.UID,
+            LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
+            1,
+            0,
+            16,
+            16,
+            64,
+            6);
+
+        sendHandlerImage(
+            ChickenThrowsRecipeHandler.UID,
+            LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
+            1,
+            0,
+            16,
+            16,
+            64,
+            6);
 
         sendCatalyst("smelting", ModObject.blockFurnace.getRegistryName());
         sendCatalyst("fuel", ModObject.blockFurnace.getRegistryName());
@@ -102,6 +147,33 @@ public class NEICompat {
         tag.setString("modName", LibMisc.MOD_NAME);
         tag.setString("modId", LibMisc.MOD_ID);
         tag.setBoolean("modRequired", true);
+        FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
+    }
+
+    private static void sendHandlerImage(String handler, String imageResource, int imageX, int imageY, int imageW,
+        int imageH, int handlerHeight, int recipesPerPage) {
+
+        NBTTagCompound tag = new NBTTagCompound();
+
+        // ID của recipe handler
+        tag.setString("handler", handler);
+
+        // === IMAGE ICON ===
+        tag.setString("imageResource", imageResource);
+        tag.setInteger("imageX", imageX);
+        tag.setInteger("imageY", imageY);
+        tag.setInteger("imageWidth", imageW);
+        tag.setInteger("imageHeight", imageH);
+
+        // Chiều cao handler và số recipe/trang
+        tag.setInteger("handlerHeight", handlerHeight);
+        tag.setInteger("maxRecipesPerPage", recipesPerPage);
+
+        // Thông tin mod
+        tag.setString("modName", LibMisc.MOD_NAME);
+        tag.setString("modId", LibMisc.MOD_ID);
+        tag.setBoolean("modRequired", true);
+
         FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
     }
 

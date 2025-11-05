@@ -1,27 +1,12 @@
 # ⚙️ Omoshiroi Kamo [Minecraft 1.7.10]
 
-A Minecraft mod for 1.7.10 that adds scientifically-grounded materials, physical properties, and technology
-integration — with a focus on real-world physics and chemistry.
+## 🧩 Backports
 
-## 🔬 Vision
+- Sophisticated Backpacks (Backport Rewrite)
 
-- Unlike most Minecraft mods that abstract or simplify mechanics, this mod aims to model real physical and chemical
-  properties — including density, thermal conductivity, specific heat, melting point, pressure resistance, and
-  electrical
-  conductivity — for each material.
-
-- Whether you're building with titanium alloys or designing energy systems with copper and silver wires, the numbers you
-  see are grounded in actual engineering principles.
-
-## 🔧 Features
-
-- Compatibility with **Tinkers' Construct** cast systems
-
-## 🧩 Integrations / Backports
-
-- Sophisticated Backpacks (Backport)
-
-- Environmental Tech (Backport)
+- Environmental Tech (Backport Rewrite)
+-
+- Chickens And More Chickens (Backport)
 
 ## 📦 Credits
 
