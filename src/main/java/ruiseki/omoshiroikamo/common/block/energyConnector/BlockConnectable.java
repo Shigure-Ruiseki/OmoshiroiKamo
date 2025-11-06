@@ -44,7 +44,7 @@ public class BlockConnectable extends AbstractBlock<TEConnectable> {
     public static final int META_transformer = 7;
 
     protected BlockConnectable() {
-        super(ModObject.blockConnectable, null);
+        super(ModObject.blockConnectable, TEConnectable.class);
     }
 
     public static BlockConnectable create() {

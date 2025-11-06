@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -22,24 +21,24 @@ import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockMaterial extends BlockOK {
 
     @SideOnly(Side.CLIENT)
     protected IIcon icon;
 
+    protected BlockMaterial() {
+        super(ModObject.blockBlockMaterial);
+        setBlockTextureName("material_block");
+    }
+
     public static BlockMaterial create() {
         return new BlockMaterial();
     }
 
-    private BlockMaterial() {
-        super(ModObject.blockBlockMaterial, null, net.minecraft.block.material.Material.iron);
-    }
-
     @Override
     public void init() {
-        GameRegistry.registerBlock(this, ItemBlockMaterial.class, ModObject.blockBlockMaterial.unlocalisedName);
+        GameRegistry.registerBlock(this, ItemBlockMaterial.class, name);
 
         for (MaterialEntry entry : MaterialRegistry.all()) {
             String matName = entry.getUnlocalizedName();
@@ -75,12 +74,6 @@ public class BlockMaterial extends BlockOK {
         int meta = world.getBlockMetadata(x, y, z);
         return MaterialRegistry.fromMeta(meta)
             .getResistance();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister reg) {
-        icon = reg.registerIcon(LibResources.PREFIX_MOD + "material_block");
     }
 
     @Override

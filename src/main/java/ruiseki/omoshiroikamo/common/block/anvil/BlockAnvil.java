@@ -28,6 +28,7 @@ public class BlockAnvil extends AbstractBlock<TEAnvil> {
     protected BlockAnvil() {
         super(ModObject.blockAnvil, TEAnvil.class);
         setStepSound(soundTypeStone);
+        setTextureName("anvil");
     }
 
     public static BlockAnvil create() {
@@ -51,20 +52,17 @@ public class BlockAnvil extends AbstractBlock<TEAnvil> {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister reg) {
-        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + "anvil");
-    }
-
-    @Override
     public int damageDropped(int meta) {
         return 0;
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
+    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {
+    }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+    }
 
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {

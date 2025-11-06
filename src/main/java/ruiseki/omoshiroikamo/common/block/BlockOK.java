@@ -14,10 +14,6 @@ public class BlockOK extends BlockEnder {
     protected String name;
     protected String textureName;
 
-    public BlockOK(Material material) {
-        super("", null, material);
-    }
-
     public BlockOK(ModObject modObject) {
         super(modObject.unlocalisedName, null, Material.iron);
         this.name = modObject.unlocalisedName;
@@ -36,16 +32,6 @@ public class BlockOK extends BlockEnder {
     public BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, Material material) {
         super(modObject.unlocalisedName, teClass, material);
         this.name = modObject.unlocalisedName;
-    }
-
-    public BlockOK setName(String name) {
-        this.name = name;
-        setBlockName(name);
-        return this;
-    }
-
-    public BlockOK setName(ModObject modObject) {
-        return setName(modObject.unlocalisedName);
     }
 
     public String getName() {
