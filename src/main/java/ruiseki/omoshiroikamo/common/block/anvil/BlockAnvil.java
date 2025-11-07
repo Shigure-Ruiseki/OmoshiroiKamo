@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.block.anvil;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -21,13 +20,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.render.block.anvil.AnvilISBRH;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockAnvil extends AbstractBlock<TEAnvil> {
 
     protected BlockAnvil() {
         super(ModObject.blockAnvil, TEAnvil.class);
         setStepSound(soundTypeStone);
+        setTextureName("anvil");
     }
 
     public static BlockAnvil create() {
@@ -48,11 +47,6 @@ public class BlockAnvil extends AbstractBlock<TEAnvil> {
     @Override
     public int getRenderType() {
         return AnvilISBRH.renderAnvilId;
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister reg) {
-        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + "anvil");
     }
 
     @Override

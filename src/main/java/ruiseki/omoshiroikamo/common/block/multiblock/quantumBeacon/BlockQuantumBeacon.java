@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,13 +13,13 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockQuantumBeacon extends AbstractMultiBlockBlock<TEQuantumBeacon> {
 
     protected BlockQuantumBeacon() {
         super(ModObject.blockQuantumBeacon, TEQuantumBeacon.class);
         this.setLightLevel(0.2F);
+        setTextureName("cont_tier");
     }
 
     public static BlockQuantumBeacon create() {
@@ -42,11 +41,6 @@ public class BlockQuantumBeacon extends AbstractMultiBlockBlock<TEQuantumBeacon>
         list.add(new ItemStack(this, 1, 1));
         list.add(new ItemStack(this, 1, 2));
         list.add(new ItemStack(this, 1, 3));
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "cont_tier");
     }
 
     @Override

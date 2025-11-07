@@ -9,8 +9,6 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import com.enderio.core.common.util.ItemUtil;
-
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
@@ -61,8 +59,7 @@ public class ChickenBreedingRecipeHandler extends RecipeHandlerBase {
         Set<ChickensRegistryItem> added = new HashSet<>();
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
             ItemStack egg = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId());
-            if (ItemUtil.areStacksEqual(egg, result)
-                && (chicken.getParent1() != null || chicken.getParent2() != null)) {
+            if (egg.isItemEqual(result) && (chicken.getParent1() != null || chicken.getParent2() != null)) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }
@@ -86,7 +83,7 @@ public class ChickenBreedingRecipeHandler extends RecipeHandlerBase {
             ItemStack egg1 = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, p1.getId());
             ItemStack egg2 = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, p2.getId());
 
-            if (ItemUtil.areStacksEqual(egg1, ingredient) || ItemUtil.areStacksEqual(egg2, ingredient)) {
+            if (egg1.isItemEqual(ingredient) || egg2.isItemEqual(ingredient)) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }

@@ -229,7 +229,9 @@ public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfi
         boolean res = false;
 
         for (Map<ForgeDirection, IoMode> faceMap : ioConfigs.values()) {
-            if (faceMap == null || faceMap.isEmpty()) continue;
+            if (faceMap == null || faceMap.isEmpty()) {
+                continue;
+            }
 
             for (Map.Entry<ForgeDirection, IoMode> entry : faceMap.entrySet()) {
                 ForgeDirection side = entry.getKey();
@@ -249,7 +251,7 @@ public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfi
 
     protected boolean doPush(ForgeDirection dir) {
 
-        if (slotDefinition.getNumOutputSlots() <= 0) {
+        if (slotDefinition.getItemOutputs() <= 0) {
             return false;
         }
         if (!shouldDoWorkThisTick(20)) {
@@ -259,7 +261,7 @@ public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfi
         BlockCoord loc = getLocation().getLocation(dir);
         TileEntity te = worldObj.getTileEntity(loc.x, loc.y, loc.z);
 
-        return doPush(dir, te, slotDefinition.minItemInputSlot, slotDefinition.maxItemInputSlot);
+        return doPush(dir, te, slotDefinition.getMinItemInput(), slotDefinition.getMaxItemInput());
     }
 
     protected boolean doPush(ForgeDirection dir, TileEntity te, int minSlot, int maxSlot) {
@@ -285,7 +287,7 @@ public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfi
     }
 
     protected boolean doPull(ForgeDirection dir) {
-        if (slotDefinition.getNumInputSlots() <= 0) {
+        if (slotDefinition.getItemInputs() <= 0) {
             return false;
         }
         if (!shouldDoWorkThisTick(20)) {
@@ -293,7 +295,8 @@ public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfi
         }
 
         boolean hasSpace = false;
-        for (int slot = slotDefinition.minItemInputSlot; slot <= slotDefinition.maxItemInputSlot && !hasSpace; slot++) {
+        for (int slot = slotDefinition.getMinItemInput(); slot <= slotDefinition.getMaxItemInput()
+            && !hasSpace; slot++) {
             ItemStack stack = inv.getStackInSlot(slot);
             hasSpace = (stack == null || stack.stackSize < Math.min(stack.getMaxStackSize(), getInventoryStackLimit()));
         }
@@ -322,8 +325,8 @@ public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfi
             return false;
         }
 
-        for (int inputSlot = slotDefinition.minItemInputSlot; inputSlot
-            <= slotDefinition.maxItemInputSlot; inputSlot++) {
+        for (int inputSlot = slotDefinition.getMinItemInput(); inputSlot
+            <= slotDefinition.getMaxItemInput(); inputSlot++) {
             if (doPull(inputSlot, target, targetSlots, dir)) {
                 return true;
             }

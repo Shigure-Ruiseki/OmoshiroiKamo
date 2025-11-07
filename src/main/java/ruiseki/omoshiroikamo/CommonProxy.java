@@ -63,8 +63,8 @@ public class CommonProxy {
         ModFluids.preInit();
         ModAchievements.preInit();
         OKWorldGenerator.preInit();
-        OreDictUtils.preInit();
         ModEntity.preInit();
+        OreDictUtils.preInit();
 
         BaubleExpandedCompat.preInit();
 

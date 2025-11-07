@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.anvil.BlockAnvil;
+import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
+import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
+import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
 import ruiseki.omoshiroikamo.common.block.electrolyzer.BlockElectrolyzer;
 import ruiseki.omoshiroikamo.common.block.energyConnector.BlockConnectable;
 import ruiseki.omoshiroikamo.common.block.furnace.BlockFurnace;
@@ -14,12 +17,12 @@ import ruiseki.omoshiroikamo.common.block.material.BlockMaterial;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockMachineBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockStructureFrame;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierAccuracy;
+import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierCore;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierFireResistance;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierFlight;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierHaste;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierJumpBoost;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierNightVision;
-import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierNull;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierPiezo;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierRegeneration;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierResistance;
@@ -39,10 +42,11 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModBlocks {
 
-    BLOCK_MICA(true, BlockOK.create(ModObject.blockMica, "mica", Material.rock)),
-    BLOCK_HARDENED_STONE(true, BlockOK.create(ModObject.blockHardenedStone, "hardened_stone", Material.rock)),
-    BLOCK_ALABASTER(true, BlockOK.create(ModObject.blockAlabaster, "alabaster", Material.rock)),
-    BLOCK_BASALT(true, BlockOK.create(ModObject.blockBasalt, "basalt", Material.rock)),
+    BLOCK_MICA(true, new BlockOK(ModObject.blockMica, Material.rock).setTextureName("mica")),
+    BLOCK_HARDENED_STONE(true,
+        new BlockOK(ModObject.blockHardenedStone, Material.rock).setTextureName("hardened_stone")),
+    BLOCK_ALABASTER(true, new BlockOK(ModObject.blockAlabaster, Material.rock).setTextureName("alabaster")),
+    BLOCK_BASALT(true, new BlockOK(ModObject.blockBasalt, Material.rock).setTextureName("basalt")),
 
     QUANTUM_ORE_EXTRACTOR(true, BlockQuantumOreExtractor.create()),
     QUANTUM_RES_EXTRACTOR(true, BlockQuantumResExtractor.create()),
@@ -67,27 +71,30 @@ public enum ModBlocks {
     MODIFIER_RESISTANCE(true, BlockModifierResistance.create()),
     MODIFIER_JUMP_BOOST(true, BlockModifierJumpBoost.create()),
     MODIFIER_FIRE_RESISTANCE(true, BlockModifierFireResistance.create()),
-    MODIFIER_NULL(true, BlockModifierNull.create()),
+    MODIFIER_NULL(true, BlockModifierCore.create()),
 
     ELECTROLYZER(true, BlockElectrolyzer.create()),
     CONNECTABLE(true, BlockConnectable.create()),
     MATERIAL(true, BlockMaterial.create()),
     ANVIL(true, BlockAnvil.create()),
-    FURNACE(true, BlockFurnace.create());
+    FURNACE(true, BlockFurnace.create()),
+
+    ROOST(true, BlockRoost.create()),
+    BREEDER(true, BlockBreeder.create()),
+    ROOST_COLLECTOR(true, BlockRoostCollector.create()),;
 
     public static final ModBlocks[] VALUES = values();
 
     public static void preInit() {
         for (ModBlocks block : VALUES) {
-            if (!block.isEnabled()) {
-                continue;
-            }
-            try {
-                block.get()
-                    .init();
-                Logger.info("Successfully initialized " + block.name());
-            } catch (Exception e) {
-                Logger.error("Failed to initialize block: +" + block.name());
+            if (block.isEnabled()) {
+                try {
+                    block.get()
+                        .init();
+                    Logger.info("Successfully initialized " + block.name());
+                } catch (Exception e) {
+                    Logger.error("Failed to initialize block: +" + block.name());
+                }
             }
         }
         OreRegister.init();

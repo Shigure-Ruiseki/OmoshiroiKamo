@@ -50,11 +50,6 @@ public class BlockFurnace extends AbstractBlock<TEFurnace> {
     }
 
     @Override
-    public int damageDropped(int meta) {
-        return 0;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister reg) {
         this.icon = reg.registerIcon("furnace_side");
@@ -173,11 +168,6 @@ public class BlockFurnace extends AbstractBlock<TEFurnace> {
         entityItem.motionZ = world.rand.nextGaussian() * motion;
 
         world.spawnEntityInWorld(entityItem);
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block blockId) {
-        super.onNeighborBlockChange(world, x, y, z, blockId);
     }
 
 }

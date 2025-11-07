@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import baubles.api.BaubleType;
 import baubles.api.expanded.BaubleItemHelper;
 import baubles.api.expanded.IBaubleExpanded;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.entity.EntityDoppleganger;
 import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -20,16 +21,15 @@ public class ItemBauble extends ItemOK implements IBaubleExpanded {
     private static final String TAG_HASHCODE = "playerHashcode";
     private static final String TAG_BAUBLE_UUID_MOST = "baubleUUIDMost";
     private static final String TAG_BAUBLE_UUID_LEAST = "baubleUUIDLeast";
-    private boolean disableRightClickEquip;
+    private boolean disableRightClickEquip = false;
 
-    public ItemBauble(String name, boolean disableRightClickEquip) {
+    public ItemBauble(String name) {
         super(name);
-        this.disableRightClickEquip = disableRightClickEquip;
         setMaxStackSize(1);
     }
 
-    public ItemBauble(String name) {
-        this(name, true);
+    public ItemBauble(ModObject modObject) {
+        super(modObject);
     }
 
     public static UUID getBaubleUUID(ItemStack stack) {

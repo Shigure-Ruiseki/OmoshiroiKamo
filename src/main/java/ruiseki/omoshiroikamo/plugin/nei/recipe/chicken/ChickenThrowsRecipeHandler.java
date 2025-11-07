@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import com.enderio.core.common.util.ItemUtil;
-
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
@@ -56,8 +54,8 @@ public class ChickenThrowsRecipeHandler extends RecipeHandlerBase {
         super.loadCraftingRecipes(result);
         Set<ChickensRegistryItem> added = new HashSet<>();
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
-            ItemStack egg = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getDyeMetadata());
-            if (ItemUtil.areStacksEqual(egg, result)) {
+            ItemStack egg = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId());
+            if (egg.isItemEqual(result) && chicken.isDye()) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }
@@ -72,7 +70,7 @@ public class ChickenThrowsRecipeHandler extends RecipeHandlerBase {
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
             if (chicken.isDye()) {
                 ItemStack egg = ModItems.COLORED_EGG.newItemStack(1, chicken.getDyeMetadata());
-                if (ItemUtil.areStacksEqual(egg, ingredient)) {
+                if (egg.isItemEqual(ingredient)) {
                     if (added.add(chicken)) {
                         arecipes.add(new CachedChickensRecipe(chicken));
                     }

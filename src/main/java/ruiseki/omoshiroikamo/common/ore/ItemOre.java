@@ -18,13 +18,12 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.ore.OreEntry;
 import ruiseki.omoshiroikamo.api.ore.OreRegistry;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
+import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -33,31 +32,23 @@ public class ItemOre extends ItemOK implements IAdvancedTooltipProvider {
     @SideOnly(Side.CLIENT)
     protected IIcon crushedOverlay, crushed, washed, enriched;
 
-    public static ItemOre create() {
-        return new ItemOre();
-    }
-
-    protected ItemOre() {
-        super(ModObject.itemOre.unlocalisedName);
-        setHasSubtypes(true);
+    public ItemOre() {
+        super(ModObject.itemOre);
         setMaxDamage(0);
-        setCreativeTab(OKCreativeTab.INSTANCE);
-        setUnlocalizedName(ModObject.itemOre.unlocalisedName);
     }
 
-    public void init() {
-        GameRegistry.registerItem(this, name);
-
+    public static void registerOre() {
         for (OreEntry entry : OreRegistry.all()) {
             String oreName = entry.getUnlocalizedName();
             registerMaterialOreDict(oreName, entry.getMeta());
         }
     }
 
-    private void registerMaterialOreDict(String name, int meta) {
-        OreDictionary.registerOre("crushed" + capitalize(name), new ItemStack(this, 1, LibResources.BASE + meta));
-        OreDictionary.registerOre("washed" + capitalize(name), new ItemStack(this, 1, LibResources.META1 + meta));
-        OreDictionary.registerOre("enriched" + capitalize(name), new ItemStack(this, 1, LibResources.META2 + meta));
+    private static void registerMaterialOreDict(String name, int meta) {
+        OreDictionary.registerOre("crushed" + capitalize(name), ModItems.ORE.newItemStack(1, LibResources.BASE + meta));
+        OreDictionary.registerOre("washed" + capitalize(name), ModItems.ORE.newItemStack(1, LibResources.META1 + meta));
+        OreDictionary
+            .registerOre("enriched" + capitalize(name), ModItems.ORE.newItemStack(1, LibResources.META1 + meta));
     }
 
     @Override

@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,13 +16,13 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
 public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> implements IWailaInfoProvider {
 
     protected BlockSolarArray() {
         super(ModObject.blockSolarArray, TESolarArray.class);
+        setTextureName("cont_tier");
     }
 
     public static BlockSolarArray create() {
@@ -45,11 +44,6 @@ public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> imple
         list.add(new ItemStack(this, 1, 1));
         list.add(new ItemStack(this, 1, 2));
         list.add(new ItemStack(this, 1, 3));
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "cont_tier");
     }
 
     @Override

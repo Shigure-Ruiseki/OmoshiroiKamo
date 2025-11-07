@@ -381,6 +381,23 @@ public class ItemRecipes {
 
         // Analyzer
         GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.egg, Items.compass);
+
+        // Chicken Catcher
+        GameRegistry.addRecipe(
+            new ShapedOreRecipe(
+                ModItems.CHICKEN_CATCHER.newItemStack(),
+                " E ",
+                " S ",
+                " F ",
+                'E',
+                Items.egg,
+                'S',
+                "stickWood",
+                'F',
+                Items.feather));
+
+        GameRegistry.addSmelting(ModItems.CHICKEN_SPAWN_EGG.get(), new ItemStack(Items.cooked_chicken), 0.35f);
+
     }
 
 }

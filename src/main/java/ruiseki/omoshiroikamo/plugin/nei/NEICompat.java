@@ -69,6 +69,7 @@ public class NEICompat {
             16,
             64,
             6);
+        sendCatalyst(ChickenLayingRecipeHandler.UID, ModBlocks.ROOST.newItemStack());
 
         sendHandlerImage(
             ChickenBreedingRecipeHandler.UID,
@@ -79,6 +80,7 @@ public class NEICompat {
             16,
             64,
             6);
+        sendCatalyst(ChickenBreedingRecipeHandler.UID, ModBlocks.BREEDER.newItemStack());
 
         sendHandlerImage(
             ChickenDropsRecipeHandler.UID,

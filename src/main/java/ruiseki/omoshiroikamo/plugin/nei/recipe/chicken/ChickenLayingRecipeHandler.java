@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import com.enderio.core.common.util.ItemUtil;
-
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
@@ -56,7 +54,8 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
         super.loadCraftingRecipes(result);
         Set<ChickensRegistryItem> added = new HashSet<>();
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
-            if (ItemUtil.areStacksEqual(chicken.createLayItem(), result)) {
+            if (chicken.createLayItem()
+                .isItemEqual(result)) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }
@@ -70,7 +69,7 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
         Set<ChickensRegistryItem> added = new HashSet<>();
         for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
             ItemStack egg = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId());
-            if (ItemUtil.areStacksEqual(egg, ingredient)) {
+            if (egg.isItemEqual(ingredient)) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }

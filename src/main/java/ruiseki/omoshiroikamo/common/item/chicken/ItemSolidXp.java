@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.common.item.chicken;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,21 +8,12 @@ import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ItemSolidXp extends ItemOK {
 
     public ItemSolidXp() {
-        super(ModObject.itemSolidXp.unlocalisedName);
-    }
-
-    public static ItemSolidXp create() {
-        return new ItemSolidXp();
-    }
-
-    @Override
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "solidxp");
+        super(ModObject.itemSolidXp);
+        setTextureName("solid_xp");
     }
 
     public boolean hasCustomEntity(ItemStack stack) {

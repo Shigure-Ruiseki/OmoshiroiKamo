@@ -61,6 +61,10 @@ public class ChickensRegistryItem {
         return entityName;
     }
 
+    public String getDisplayName() {
+        return "entity." + getEntityName() + ".name";
+    }
+
     @Nullable
     public ChickensRegistryItem getParent1() {
         return parent1;

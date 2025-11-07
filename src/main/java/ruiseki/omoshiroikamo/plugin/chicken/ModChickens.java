@@ -11,11 +11,13 @@ import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameData;
@@ -25,6 +27,8 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.entity.chicken.ChickenNetherPopulateHandler;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
+import ruiseki.omoshiroikamo.common.entity.chicken.LiquidEggRegistry;
+import ruiseki.omoshiroikamo.common.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
@@ -41,6 +45,9 @@ public class ModChickens {
             64,
             3,
             true);
+
+        LiquidEggRegistry.register(new LiquidEggRegistryItem(0, Blocks.flowing_water, 0x0000ff, FluidRegistry.WATER));
+        LiquidEggRegistry.register(new LiquidEggRegistryItem(1, Blocks.flowing_lava, 0xff0000, FluidRegistry.LAVA));
 
         registerModAddons();
     }

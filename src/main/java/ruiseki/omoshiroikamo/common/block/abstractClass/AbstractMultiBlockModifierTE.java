@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
+import com.enderio.core.api.common.util.IProgressTile;
 import com.enderio.core.common.util.BlockCoord;
 import com.enderio.core.common.util.ItemUtil;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
@@ -20,7 +21,7 @@ import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketMBClientUpdate;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
-public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
+public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements IProgressTile {
 
     protected GameProfile player;
     protected boolean isFormed = false;
@@ -110,7 +111,6 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
         } else {
             this.isProcessing = false;
         }
-        updateClientWithPlayer();
     }
 
     public abstract int getBaseDuration();
@@ -160,6 +160,21 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE {
         } else {
             this.player = null;
         }
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    @Override
+    public float getProgress() {
+        return getCurrentProgress();
+    }
+
+    @Override
+    public void setProgress(float progress) {
+        setCurrentProgress((int) progress);
     }
 
     public boolean isFormed() {

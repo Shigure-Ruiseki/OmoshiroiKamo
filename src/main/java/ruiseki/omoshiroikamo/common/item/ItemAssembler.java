@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.item;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,19 +18,10 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class ItemAssembler extends ItemOK {
 
     public ItemAssembler() {
-        super(ModObject.itemAssembler.unlocalisedName);
-        setHasSubtypes(true);
+        super(ModObject.itemAssembler);
         setMaxStackSize(1);
         setNoRepair();
-    }
-
-    public static ItemAssembler create() {
-        return new ItemAssembler();
-    }
-
-    @Override
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "assembler");
+        setTextureName("assembler");
     }
 
     @Override

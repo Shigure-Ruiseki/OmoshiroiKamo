@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.core;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,12 +10,12 @@ import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockLaserCore extends BlockOK {
 
     protected BlockLaserCore() {
         super(ModObject.blockLaserCore, TELaserCore.class);
+        setTextureName("laser_core");
     }
 
     public static BlockLaserCore create() {
@@ -36,11 +35,6 @@ public class BlockLaserCore extends BlockOK {
     @Override
     public int getRenderType() {
         return -1;
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "laser_core");
     }
 
     @Override

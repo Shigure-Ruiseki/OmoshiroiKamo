@@ -30,4 +30,8 @@ public class ChickenConfigs {
 
     @Config.DefaultBoolean(false)
     public static boolean alwaysShowStats;
+
+    @Config.RangeFloat(min = 1)
+    public static float roostSpeed;
+
 }

@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,7 +17,6 @@ import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
 public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumExtractor>
@@ -27,6 +25,7 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
     protected BlockQuantumResExtractor() {
         super(ModObject.blockQuantumResExtractor, TEQuantumExtractor.class);
         this.setLightLevel(0.5F);
+        setTextureName("cont_tier");
     }
 
     public static BlockQuantumResExtractor create() {
@@ -48,11 +47,6 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
         list.add(new ItemStack(this, 1, 1));
         list.add(new ItemStack(this, 1, 2));
         list.add(new ItemStack(this, 1, 3));
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "cont_tier");
     }
 
     @Override

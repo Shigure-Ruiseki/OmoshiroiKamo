@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
+import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -29,19 +30,13 @@ public class ItemMaterial extends ItemOK {
     @SideOnly(Side.CLIENT)
     protected IIcon ingotIcon, nuggetIcon, plateIcon, rodIcon, dustIcon, gearIcon;
 
-    public static ItemMaterial create() {
-        return new ItemMaterial();
-    }
-
-    protected ItemMaterial() {
-        super(ModObject.itemItemMaterial.unlocalisedName);
+    public ItemMaterial() {
+        super(ModObject.itemItemMaterial);
         setHasSubtypes(true);
         setMaxDamage(0);
     }
 
-    public void init() {
-        GameRegistry.registerItem(this, name);
-
+    public static void registerOre() {
         for (MaterialEntry entry : MaterialRegistry.all()) {
             String matName = entry.getUnlocalizedName();
             int meta = entry.meta;
@@ -57,27 +52,36 @@ public class ItemMaterial extends ItemOK {
         }
     }
 
-    private void registerMaterialOreDict(String name, int meta) {
-        OreDictionary.registerOre("ingot" + capitalize(name), new ItemStack(this, 1, LibResources.BASE + meta));
-        OreDictionary.registerOre("nugget" + capitalize(name), new ItemStack(this, 1, LibResources.META1 + meta));
-        OreDictionary.registerOre("plate" + capitalize(name), new ItemStack(this, 1, LibResources.META2 + meta));
-        OreDictionary.registerOre("rod" + capitalize(name), new ItemStack(this, 1, LibResources.META3 + meta));
-        OreDictionary.registerOre(uncapitalize(name) + "Rod", new ItemStack(this, 1, LibResources.META3 + meta));
-        OreDictionary.registerOre("stick" + capitalize(name), new ItemStack(this, 1, LibResources.META3 + meta));
-        OreDictionary.registerOre("dust" + capitalize(name), new ItemStack(this, 1, LibResources.META4 + meta));
-        OreDictionary.registerOre("gear" + capitalize(name), new ItemStack(this, 1, LibResources.META5 + meta));
+    private static void registerMaterialOreDict(String name, int meta) {
+        ModItems.MATERIAL.newItemStack(1, LibResources.BASE + meta);
+        OreDictionary
+            .registerOre("ingot" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.BASE + meta));
+        OreDictionary
+            .registerOre("nugget" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.META1 + meta));
+        OreDictionary
+            .registerOre("plate" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.META2 + meta));
+        OreDictionary
+            .registerOre("rod" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.META3 + meta));
+        OreDictionary
+            .registerOre(uncapitalize(name) + "Rod", ModItems.MATERIAL.newItemStack(1, LibResources.META3 + meta));
+        OreDictionary
+            .registerOre("stick" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.META3 + meta));
+        OreDictionary
+            .registerOre("dust" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.META4 + meta));
+        OreDictionary
+            .registerOre("gear" + capitalize(name), ModItems.MATERIAL.newItemStack(1, LibResources.META5 + meta));
     }
 
-    private void registerMaterialConversionRecipes(String oreBaseName, int meta) {
-        ItemStack ingot = new ItemStack(this, 1, meta);
-        ItemStack nugget = new ItemStack(this, 1, LibResources.META1 + meta);
+    private static void registerMaterialConversionRecipes(String oreBaseName, int meta) {
+        ItemStack ingot = ModItems.MATERIAL.newItemStack(1, meta);
+        ItemStack nugget = ModItems.MATERIAL.newItemStack(1, LibResources.META1 + meta);
         ItemStack nugget9 = nugget.copy();
         nugget9.stackSize = 9;
-        ItemStack plate = new ItemStack(this, 1, LibResources.META2 + meta);
-        ItemStack rod = new ItemStack(this, 1, LibResources.META3 + meta);
-        ItemStack dust = new ItemStack(this, 1, LibResources.META4 + meta);
-        ItemStack gear = new ItemStack(this, 1, LibResources.META5 + meta);
-        ItemStack block = new ItemStack(ModBlocks.MATERIAL.get(), 1, meta);
+        ItemStack plate = ModItems.MATERIAL.newItemStack(1, LibResources.META2 + meta);
+        ItemStack rod = ModItems.MATERIAL.newItemStack(1, LibResources.META3 + meta);
+        ItemStack dust = ModItems.MATERIAL.newItemStack(1, LibResources.META4 + meta);
+        ItemStack gear = ModItems.MATERIAL.newItemStack(1, LibResources.META5 + meta);
+        ItemStack block = ModBlocks.MATERIAL.newItemStack(1, meta);
 
         String ingotOre = "ingot" + capitalize(oreBaseName);
         String nuggetOre = "nugget" + capitalize(oreBaseName);

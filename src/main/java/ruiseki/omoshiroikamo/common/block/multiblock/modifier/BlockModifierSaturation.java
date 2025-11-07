@@ -2,18 +2,16 @@ package ruiseki.omoshiroikamo.common.block.multiblock.modifier;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockModifierSaturation extends BlockModifier {
 
     protected BlockModifierSaturation() {
         super(ModObject.blockModifierSaturation, "saturation");
+        setTextureName("modifier_saturation");
     }
 
     public static BlockModifierSaturation create() {
@@ -24,10 +22,5 @@ public class BlockModifierSaturation extends BlockModifier {
     public void addAttributes(List<IModifierAttribute> list) {
         list.add(ModifierAttribute.P_SATURATION.getAttribute());
         list.add(new AttributeEnergyCostFixed(128));
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "modifier_saturation");
     }
 }

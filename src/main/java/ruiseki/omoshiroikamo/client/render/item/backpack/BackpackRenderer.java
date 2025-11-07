@@ -65,7 +65,7 @@ public class BackpackRenderer implements IItemRenderer {
 
             case ENTITY:
                 GL11.glScalef(0.75f, 0.75f, 0.75f);
-                GL11.glTranslatef(0.0f, 0f, 0.0f);
+                GL11.glTranslatef(0.0f, -0.5f, 0.0f);
                 GL11.glRotatef(-90, 0f, 1f, 0f);
                 break;
             default:

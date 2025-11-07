@@ -60,6 +60,14 @@ tooltip.chicken_spawn_egg.spawnType=SpawnType
 tooltip.chicken_spawn_egg.layitem=Lay Item: %1$s
 tooltip.chicken_spawn_egg.nolayitem=Lay Item: Null
 
+tooltip.catcher.name=Chicken Catcher
+tooltip.chicken.strength=Strength: %s
+tooltip.chicken.gain=Gain: %s
+tooltip.chicken.growth=Growth: %s
+tooltip.chicken.parent1=Bred from %s
+tooltip.chicken.parent2=and %s
+tooltip.chicken.spawnType=SpawnType
+
 tooltip.entity.tier=Tier: %1$s
 tooltip.entity.layProgress=Next egg in ~%1$smin.
 tooltip.entity.nextEggSoon=Next egg in <1min.
@@ -192,12 +200,13 @@ item.hammer.name=Hammer
 item.analyzer.name=Chicken Analyzer
 item.solidXp.name=Solid Experience
 
+item.chickenCatcher.name=Chicken Catcher
 item.liquidEgg.water.name=Water Egg
 item.liquidEgg.lava.name=Lava Egg
 item.coloredEgg.white.name=Bone White Chicken Egg
 item.coloredEgg.orange.name=Orange Chicken Egg
 item.coloredEgg.magenta.name=Magenta Chicken Egg
-item.coloredEgg.lightBlue.name=Light Blue Chicken Egg
+item.coloredEgg.light_blue.name=Light Blue Chicken Egg
 item.coloredEgg.yellow.name=Yellow Chicken Egg
 item.coloredEgg.lime.name=Lime Chicken Egg
 item.coloredEgg.pink.name=Pink Chicken Egg
@@ -304,6 +313,10 @@ tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
 tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
 tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
 
+tile.roost.name=Roost
+tile.roostCollector.name=Roost Collector
+tile.breeder.name=Chicken Breeder
+
 #ENTITY
 
 entity.SmartChicken.name=Smart Chicken
@@ -393,6 +406,7 @@ entity.GarnetChicken.name=Garnet Chicken
 entity.SaltChicken.name=Salt Chicken
 entity.RubberChicken.name=Rubber Chicken
 entity.UraniumChicken.name=Uranium Chicken 
+entity.AluminiumChicken.name=Aluminium Chicken
 
 entity.ElectricalSteelChicken.name=Electrical Steel Chicken
 entity.EnergeticAlloyChicken.name=Energetic Alloy Chicken

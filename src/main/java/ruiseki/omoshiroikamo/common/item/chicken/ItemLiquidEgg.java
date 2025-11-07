@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -15,7 +14,6 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
@@ -29,25 +27,10 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
 
     public ItemLiquidEgg() {
-        super(ModObject.itemLiquidEgg.unlocalisedName);
-        setHasSubtypes(true);
+        super(ModObject.itemLiquidEgg);
         setMaxStackSize(16);
-    }
-
-    public static ItemLiquidEgg create() {
-        LiquidEggRegistry.register(new LiquidEggRegistryItem(0, Blocks.flowing_water, 0x0000ff, FluidRegistry.WATER));
-        LiquidEggRegistry.register(new LiquidEggRegistryItem(1, Blocks.flowing_lava, 0xff0000, FluidRegistry.LAVA));
-        return new ItemLiquidEgg();
-    }
-
-    @Override
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "liquid_egg");
-    }
-
-    @Override
-    public boolean isDamaged(ItemStack stack) {
-        return false;
+        setMaxDamage(0);
+        setTextureName("liquid_egg");
     }
 
     @Override

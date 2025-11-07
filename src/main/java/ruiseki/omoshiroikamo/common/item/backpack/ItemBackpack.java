@@ -36,18 +36,12 @@ public class ItemBackpack extends ItemBauble
 
     @SideOnly(Side.CLIENT)
     private static BackpackRenderer model;
-    public int light = 0;
 
     public ItemBackpack() {
-        super(ModObject.itemBackPack.unlocalisedName);
-        setHasSubtypes(true);
+        super(ModObject.itemBackPack);
         setMaxStackSize(1);
         setNoRepair();
         disableRightClickEquip();
-    }
-
-    public static ItemBackpack create() {
-        return new ItemBackpack();
     }
 
     @Override

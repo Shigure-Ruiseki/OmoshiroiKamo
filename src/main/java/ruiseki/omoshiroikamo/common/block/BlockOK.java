@@ -11,49 +11,40 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockOK extends BlockEnder {
 
-    protected final ModObject modObject;
     protected String textureName;
 
-    protected BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass) {
-        super(modObject.unlocalisedName, teClass);
-        this.modObject = modObject;
+    public BlockOK(ModObject modObject) {
+        this(modObject, null, Material.iron);
     }
 
-    protected BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, Material mat) {
-        super(modObject.unlocalisedName, teClass, mat);
-        this.modObject = modObject;
+    public BlockOK(ModObject modObject, Material material) {
+        this(modObject, null, material);
     }
 
-    protected BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, Material mat, String textureName) {
-        super(modObject.unlocalisedName, teClass, mat);
-        this.modObject = modObject;
-        this.textureName = textureName;
+    public BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass) {
+        this(modObject, teClass, Material.iron);
     }
 
-    protected BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, String textureName) {
-        super(modObject.unlocalisedName, teClass);
-        this.modObject = modObject;
-        this.textureName = textureName;
+    public BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, Material material) {
+        super(modObject.unlocalisedName, teClass, material);
     }
 
-    public static BlockOK create(ModObject modObject, String textureName, Material mat) {
-        return new BlockOK(modObject, null, mat, textureName);
-    }
-
-    public static BlockOK create(ModObject modObject, String textureName) {
-        return new BlockOK(modObject, null, textureName);
-    }
-
-    public static BlockOK create(ModObject modObject) {
-        return new BlockOK(modObject, null);
+    public BlockOK setTextureName(String texture) {
+        this.textureName = texture;
+        return this;
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        if (textureName != null) {
-            blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + textureName);
+    public String getTextureName() {
+        return textureName;
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister reg) {
+        if (getTextureName() != null) {
+            blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
         } else {
-            blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + name);
+            blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + name);
         }
     }
 

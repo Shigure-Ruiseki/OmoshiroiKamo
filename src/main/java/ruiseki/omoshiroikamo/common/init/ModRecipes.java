@@ -27,14 +27,14 @@ public class ModRecipes {
     public static void init() {
         initRecipeSorter();
 
+        ItemRecipes.init();
+        BlockRecipes.init();
+        QuantumExtractorRecipes.init();
+
         RecipeHandler.loadRecipes(ModObject.blockElectrolyzer.unlocalisedName);
         RecipeHandler.loadRecipes(ModObject.blockAnvil.unlocalisedName);
         loadVanillaFurnaceRecipes();
         CopperRecipes.init();
-
-        ItemRecipes.init();
-        BlockRecipes.init();
-        QuantumExtractorRecipes.init();
     }
 
     public static void initRecipeSorter() {

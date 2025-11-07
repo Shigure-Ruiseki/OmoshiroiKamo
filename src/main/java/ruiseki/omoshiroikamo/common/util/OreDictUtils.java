@@ -12,6 +12,8 @@ import com.enderio.core.common.util.ItemUtil;
 import codechicken.nei.NEIServerUtils;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
+import ruiseki.omoshiroikamo.common.item.ItemMaterial;
+import ruiseki.omoshiroikamo.common.ore.ItemOre;
 
 public class OreDictUtils {
 
@@ -19,6 +21,8 @@ public class OreDictUtils {
         OreDictionary.registerOre("stoneBasalt", ModBlocks.BLOCK_BASALT.get());
         OreDictionary.registerOre("stoneAlabaster", ModBlocks.BLOCK_ALABASTER.get());
         OreDictionary.registerOre("stoneHardened", ModBlocks.BLOCK_HARDENED_STONE.get());
+        ItemMaterial.registerOre();
+        ItemOre.registerOre();
     }
 
     public static boolean isOreDictMatch(ItemStack a, ItemStack b) {

@@ -44,8 +44,8 @@ public class AnvilTESR extends AbstractMTESR {
         // Render input stack bên phải
         int inputIndex = 0;
         for (int i = te.getSlotDefinition()
-            .getMinInputSlot(); i <= te.getSlotDefinition()
-                .getMaxInputSlot(); i++) {
+            .getMinItemInput(); i <= te.getSlotDefinition()
+                .getMaxItemInput(); i++) {
             ItemStack stack = te.getStackInSlot(i);
             if (stack == null) {
                 continue;
@@ -67,8 +67,8 @@ public class AnvilTESR extends AbstractMTESR {
         // Render output stack bên trái
         int outputIndex = 0;
         for (int i = te.getSlotDefinition()
-            .getMinOutputSlot(); i <= te.getSlotDefinition()
-                .getMaxOutputSlot(); i++) {
+            .getMinItemOutput(); i <= te.getSlotDefinition()
+                .getMaxItemOutput(); i++) {
             ItemStack stack = te.getStackInSlot(i);
             if (stack == null) {
                 continue;

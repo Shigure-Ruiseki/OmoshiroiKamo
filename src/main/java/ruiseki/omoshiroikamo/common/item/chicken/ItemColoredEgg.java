@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.common.item.chicken;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -23,22 +22,9 @@ public class ItemColoredEgg extends ItemOK {
 
     public ItemColoredEgg() {
         super(ModObject.itemColoredEgg.unlocalisedName);
-        setHasSubtypes(true);
         setMaxStackSize(16);
-    }
-
-    public static ItemColoredEgg create() {
-        return new ItemColoredEgg();
-    }
-
-    @Override
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "colored_egg");
-    }
-
-    @Override
-    public boolean isDamaged(ItemStack stack) {
-        return false;
+        setMaxDamage(0);
+        setTextureName("colored_egg");
     }
 
     @Override

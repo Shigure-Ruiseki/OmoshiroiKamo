@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockLaserLens extends BlockOK {
 
@@ -28,6 +26,7 @@ public class BlockLaserLens extends BlockOK {
 
     protected BlockLaserLens() {
         super(ModObject.blockLaserLens, TELaserLens.class, Material.glass);
+        setTextureName("lens_colored");
     }
 
     public static BlockLaserLens create() {
@@ -55,11 +54,6 @@ public class BlockLaserLens extends BlockOK {
     @Override
     public int getRenderType() {
         return -1;
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        blockIcon = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "lens_colored");
     }
 
     @Override

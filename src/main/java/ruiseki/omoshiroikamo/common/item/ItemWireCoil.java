@@ -50,13 +50,8 @@ public class ItemWireCoil extends ItemOK implements IWireCoil, IAdvancedTooltipP
     @SideOnly(Side.CLIENT)
     protected IIcon baseIcon, overlayIcon;
 
-    public static ItemWireCoil create() {
-        return new ItemWireCoil();
-    }
-
-    protected ItemWireCoil() {
-        super(ModObject.itemWireCoil.unlocalisedName);
-        setHasSubtypes(true);
+    public ItemWireCoil() {
+        super(ModObject.itemWireCoil);
         setMaxDamage(0);
     }
 

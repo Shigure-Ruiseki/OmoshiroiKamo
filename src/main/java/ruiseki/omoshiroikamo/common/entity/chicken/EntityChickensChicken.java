@@ -70,7 +70,7 @@ public class EntityChickensChicken extends EntityChicken {
     }
 
     private ChickensRegistryItem getChickenDescription() {
-        return ChickensRegistry.getByType(getChickenTypeInternal());
+        return ChickensRegistry.getByType(getChickenType());
     }
 
     public int getTier() {
@@ -82,47 +82,32 @@ public class EntityChickensChicken extends EntityChicken {
         if (hasCustomNameTag()) {
             return getCustomNameTag();
         }
-        return LibMisc.LANG.localize("entity." + getChickenDescription().getEntityName() + ".name");
-    }
-
-    @Override
-    public void setCustomNameTag(String p_94058_1_) {
-        super.setCustomNameTag(p_94058_1_);
+        return LibMisc.LANG.localize(getChickenDescription().getDisplayName());
     }
 
     @Override
     public EntityChicken createChild(EntityAgeable ageable) {
         EntityChickensChicken mateChicken = (EntityChickensChicken) ageable;
 
-        ChickensRegistryItem chickenDescription = getChickenDescription();
-        ChickensRegistryItem mateChickenDescription = mateChicken.getChickenDescription();
+        ChickensRegistryItem parentA = getChickenDescription();
+        ChickensRegistryItem parentB = mateChicken.getChickenDescription();
 
-        ChickensRegistryItem childToBeBorn = ChickensRegistry
-            .getRandomChild(chickenDescription, mateChickenDescription);
-        if (childToBeBorn == null) {
+        ChickensRegistryItem childType = ChickensRegistry.getRandomChild(parentA, parentB);
+
+        if (childType == null) {
             return null;
         }
 
-        EntityChickensChicken newChicken = new EntityChickensChicken(this.worldObj);
-        newChicken.setChickenType(childToBeBorn.getId());
+        EntityChickensChicken child = new EntityChickensChicken(this.worldObj);
+        child.setChickenType(childType.getId());
 
-        boolean mutatingStats = chickenDescription.getId() == mateChickenDescription.getId()
-            && childToBeBorn.getId() == chickenDescription.getId();
-        if (mutatingStats) {
-            increaseStats(newChicken, this, mateChicken, rand);
-        } else if (chickenDescription.getId() == childToBeBorn.getId()) {
-            inheritStats(newChicken, this);
-        } else if (mateChickenDescription.getId() == childToBeBorn.getId()) {
-            inheritStats(newChicken, mateChicken);
+        increaseStats(child, this, mateChicken, rand);
+
+        if (this.getStatsAnalyzed() || mateChicken.getStatsAnalyzed()) {
+            child.setStatsAnalyzed(true);
         }
 
-        return newChicken;
-    }
-
-    private static void inheritStats(EntityChickensChicken newChicken, EntityChickensChicken parent) {
-        newChicken.setGrowth(parent.getGrowth());
-        newChicken.setGain(parent.getGain());
-        newChicken.setStrength(parent.getStrength());
+        return child;
     }
 
     private static void increaseStats(EntityChickensChicken newChicken, EntityChickensChicken parent1,
@@ -143,10 +128,7 @@ public class EntityChickensChicken extends EntityChicken {
         if (newStatValue <= 1) {
             return 1;
         }
-        if (newStatValue >= 10) {
-            return 10;
-        }
-        return newStatValue;
+        return Math.min(newStatValue, 10);
     }
 
     @Override
@@ -257,17 +239,13 @@ public class EntityChickensChicken extends EntityChicken {
     }
 
     public void setChickenType(int type) {
-        setChickenTypeInternal(type);
+        dataWatcher.updateObject(20, type);
         isImmuneToFire = getChickenDescription().isImmuneToFire();
         resetTimeUntilNextEgg();
     }
 
-    private int getChickenTypeInternal() {
+    public int getChickenType() {
         return dataWatcher.getWatchableObjectInt(20);
-    }
-
-    private void setChickenTypeInternal(int t) {
-        dataWatcher.updateObject(20, t);
     }
 
     @Override
@@ -284,12 +262,11 @@ public class EntityChickensChicken extends EntityChicken {
     @Override
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
-        tagCompound.setInteger(TYPE_NBT, getChickenTypeInternal());
+        tagCompound.setInteger(TYPE_NBT, getChickenType());
         tagCompound.setBoolean(CHICKEN_STATS_ANALYZED_NBT, getStatsAnalyzed());
         tagCompound.setInteger(CHICKEN_GROWTH_NBT, getGrowth());
         tagCompound.setInteger(CHICKEN_GAIN_NBT, getGain());
         tagCompound.setInteger(CHICKEN_STRENGTH_NBT, getStrength());
-
     }
 
     @Override

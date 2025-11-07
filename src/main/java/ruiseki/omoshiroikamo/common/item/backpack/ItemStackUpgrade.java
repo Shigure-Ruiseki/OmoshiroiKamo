@@ -20,13 +20,8 @@ public class ItemStackUpgrade extends ItemUpgrade {
     @SideOnly(Side.CLIENT)
     protected IIcon tier1, tier2, tier3, tier4;
 
-    public static ItemStackUpgrade create() {
-        return new ItemStackUpgrade();
-    }
-
     public ItemStackUpgrade() {
-        super(ModObject.itemStackUpgrade.unlocalisedName);
-        setNoRepair();
+        super(ModObject.itemStackUpgrade);
         setMaxStackSize(1);
     }
 

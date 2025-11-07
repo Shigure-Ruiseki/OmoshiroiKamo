@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
@@ -51,13 +50,13 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
     }
 
     protected AbstractBlock(ModObject mo, Class<T> teClass) {
-        this(mo, teClass, new Material(MapColor.ironColor));
+        this(mo, teClass, Material.iron);
     }
 
     @Override
     public void init() {
-        GameRegistry.registerBlock(this, modObject.unlocalisedName);
-        GameRegistry.registerTileEntity(teClass, modObject.unlocalisedName + "TileEntity");
+        GameRegistry.registerBlock(this, name);
+        GameRegistry.registerTileEntity(teClass, name + "TileEntity");
     }
 
     @Override

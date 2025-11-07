@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.block.multiblock.base;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -31,8 +30,8 @@ public class BlockMachineBase extends BlockOK implements IMBBlock {
         return new BlockMachineBase();
     }
 
-    private BlockMachineBase() {
-        super(ModObject.blockMachineBase, null, Material.rock);
+    protected BlockMachineBase() {
+        super(ModObject.blockMachineBase);
     }
 
     @Override

@@ -61,6 +61,7 @@ public class OKCreativeTab extends CreativeTabs {
         addItem(ModItems.PHOTOVOLTAIC_CELL.get());
         addItem(ModItems.ASSEMBLER.get());
         addItem(ModItems.ANALYZER.get());
+        addItem(ModItems.CHICKEN_CATCHER.get());
         addItem(ModItems.CHICKEN_SPAWN_EGG.get());
         addItem(ModItems.COLORED_EGG.get());
         addItem(ModItems.LIQUID_EGG.get());
@@ -70,6 +71,9 @@ public class OKCreativeTab extends CreativeTabs {
         addBlock(ModBlocks.MATERIAL.get());
         addBlock(ModBlocks.ANVIL.get());
         addBlock(ModBlocks.FURNACE.get());
+        addBlock(ModBlocks.ROOST.get());
+        addBlock(ModBlocks.ROOST_COLLECTOR.get());
+        addBlock(ModBlocks.BREEDER.get());
         addBlock(ModBlocks.BLOCK_ALABASTER.get());
         addBlock(ModBlocks.BLOCK_BASALT.get());
         addBlock(ModBlocks.BLOCK_HARDENED_STONE.get());

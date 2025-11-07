@@ -1,9 +1,10 @@
 package ruiseki.omoshiroikamo.common.init;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.client.handler.PoweredItemRenderer;
 import ruiseki.omoshiroikamo.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.ItemHammer;
 import ruiseki.omoshiroikamo.common.item.ItemMaterial;
@@ -18,6 +19,7 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemAnalyzer;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenCatcher;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenSpawnEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
@@ -27,48 +29,49 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModItems {
 
-    BACKPACK(true, ItemBackpack.create()),
-    BASE_UPGRADE(true, ItemUpgrade.create()),
-    STACK_UPGRADE(true, ItemStackUpgrade.create()),
-    CRAFTING_UPGRADE(true, ItemCraftingUpgrade.create()),
-    MAGNET_UPGRADE(true, ItemMagnetUpgrade.create()),
-    FEEDING_UPGRADE(true, ItemFeedingUpgrade.create()),
-    BATTERY_UPGRADE(true, ItemBatteryUpgrade.create()),
-    EVERLASTING_UPGRADE(true, ItemEverlastingUpgrade.create()),
-    ANALYZER(true, ItemAnalyzer.create()),
-    CHICKEN_SPAWN_EGG(true, ItemChickenSpawnEgg.create()),
-    COLORED_EGG(true, ItemColoredEgg.create()),
-    LIQUID_EGG(true, ItemLiquidEgg.create()),
-    SOLID_XP(true, ItemSolidXp.create()),
-    MATERIAL(true, ItemMaterial.create()),
-    ORE(true, ItemOre.create()),
-    HAMMER(true, ItemHammer.create()),
-    ASSEMBLER(true, ItemAssembler.create()),
-    STABILIZED_ENDER_PEAR(true, ItemOK.create(ModObject.itemStabilizedEnderPear, "ender_stabilized")),
-    PHOTOVOLTAIC_CELL(true, ItemOK.create(ModObject.itemPhotovoltaicCell, "photovoltaic_cell")),
-    WIRE_COIL(true, ItemWireCoil.create()),;
+    BACKPACK(true, new ItemBackpack()),
+    BASE_UPGRADE(true, new ItemUpgrade()),
+    STACK_UPGRADE(true, new ItemStackUpgrade()),
+    CRAFTING_UPGRADE(true, new ItemCraftingUpgrade()),
+    MAGNET_UPGRADE(true, new ItemMagnetUpgrade()),
+    FEEDING_UPGRADE(true, new ItemFeedingUpgrade()),
+    BATTERY_UPGRADE(true, new ItemBatteryUpgrade()),
+    EVERLASTING_UPGRADE(true, new ItemEverlastingUpgrade()),
+    ANALYZER(true, new ItemAnalyzer()),
+    CHICKEN_CATCHER(true, new ItemChickenCatcher()),
+    CHICKEN_SPAWN_EGG(true, new ItemChickenSpawnEgg()),
+    COLORED_EGG(true, new ItemColoredEgg()),
+    LIQUID_EGG(true, new ItemLiquidEgg()),
+    SOLID_XP(true, new ItemSolidXp()),
+    MATERIAL(true, new ItemMaterial()),
+    ORE(true, new ItemOre()),
+    HAMMER(true, new ItemHammer()),
+    ASSEMBLER(true, new ItemAssembler()),
+    STABILIZED_ENDER_PEAR(true, new ItemOK().setName(ModObject.itemStabilizedEnderPear)
+        .setTextureName("ender_stabilized")),
+    PHOTOVOLTAIC_CELL(true, new ItemOK().setName(ModObject.itemPhotovoltaicCell)
+        .setTextureName("photovoltaic_cell")),
+    WIRE_COIL(true, new ItemWireCoil()),;
 
     public static final ModItems[] VALUES = values();
 
     public static void preInit() {
         for (ModItems item : VALUES) {
-            if (!item.isEnabled()) {
-                continue;
-            }
-            try {
-                item.get()
-                    .init();
-                Logger.info("Successfully initialized " + item.name());
-            } catch (Exception e) {
-                Logger.error("Failed to initialize item: +" + item.name());
+            if (item.isEnabled()) {
+                try {
+                    GameRegistry.registerItem(item.get(), item.getName());
+                    Logger.info("Successfully initialized " + item.name());
+                } catch (Exception e) {
+                    Logger.error("Failed to initialize item: +" + item.name());
+                }
             }
         }
     }
 
     private final boolean enabled;
-    private final ItemOK item;
+    private final Item item;
 
-    ModItems(boolean enabled, ItemOK item) {
+    ModItems(boolean enabled, Item item) {
         this.enabled = enabled;
         this.item = item;
     }
@@ -77,8 +80,13 @@ public enum ModItems {
         return enabled;
     }
 
-    public ItemOK get() {
+    public Item get() {
         return item;
+    }
+
+    public String getName() {
+        return get().getUnlocalizedName()
+            .replace("item.", "");
     }
 
     public ItemStack newItemStack() {
@@ -91,10 +99,5 @@ public enum ModItems {
 
     public ItemStack newItemStack(int count, int meta) {
         return new ItemStack(this.get(), count, meta);
-    }
-
-    public static void registerItemRenderer() {
-        PoweredItemRenderer dsr = new PoweredItemRenderer();
-        // MinecraftForgeClient.registerItemRenderer(itemOperationOrb, dsr);
     }
 }

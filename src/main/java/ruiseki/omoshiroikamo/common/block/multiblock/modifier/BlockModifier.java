@@ -16,7 +16,7 @@ public abstract class BlockModifier extends BlockOK implements IModifierBlock, I
     private final List<IModifierAttribute> attributes;
 
     protected BlockModifier(ModObject modObject, String modifierName) {
-        super(modObject, null);
+        super(modObject);
         this.modifierName = modifierName;
         ModifierRegistry.getInstance()
             .registerModifier(this);

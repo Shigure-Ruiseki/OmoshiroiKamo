@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.common.item;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,57 +17,72 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ItemOK extends Item implements IAdvancedTooltipProvider {
 
-    protected final String name;
-    protected String textureName;
+    protected String name;
 
-    public ItemOK(String name) {
-        this.name = name;
-        setUnlocalizedName(name);
+    public ItemOK() {
         setCreativeTab(OKCreativeTab.INSTANCE);
+        setHasSubtypes(true);
     }
 
-    public ItemOK(String name, String textureName) {
+    public ItemOK(String name) {
+        this();
         this.name = name;
-        this.textureName = textureName;
         setUnlocalizedName(name);
-        setCreativeTab(OKCreativeTab.INSTANCE);
+    }
+
+    public ItemOK(ModObject modObject) {
+        this(modObject.unlocalisedName);
     }
 
     public void init() {
         GameRegistry.registerItem(this, name);
     }
 
-    public static ItemOK create(String name) {
-        ItemOK mat = new ItemOK(name);
-        mat.init();
-        return mat;
+    public ItemOK setName(String name) {
+        this.name = name;
+        setUnlocalizedName(name);
+        return this;
     }
 
-    public static ItemOK create(ModObject modObject, String textureName) {
-        return new ItemOK(modObject.unlocalisedName, textureName);
+    public ItemOK setName(ModObject modObject) {
+        this.setName(modObject.unlocalisedName);
+        return this;
+    }
+
+    @Override
+    public ItemOK setTextureName(String textureName) {
+        this.iconString = textureName;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTextureName() {
+        return iconString;
     }
 
     @Override
     public void registerIcons(IIconRegister register) {
-        if (textureName != null) {
-            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + textureName);
+        if (getTextureName() != null) {
+            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + getTextureName());
         } else {
-            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + name);
+            itemIcon = register.registerIcon(LibResources.PREFIX_MOD + getName());
         }
     }
 
     @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-
+    public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
+        list.add(new ItemStack(item, 1, 0));
     }
 
     @Override
-    public void addBasicEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-
-    }
+    public void addCommonEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {}
 
     @Override
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+    public void addBasicEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {}
 
-    }
+    @Override
+    public void addDetailedEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {}
 }
