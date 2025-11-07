@@ -121,7 +121,8 @@ public class BaseChickens extends BaseChickenHandler {
             "FlintChicken.png",
             new ItemStack(Items.flint),
             0x6b6b47,
-            0xa3a375);
+            0xa3a375,
+            SpawnType.NONE);
 
         quartzChicken = addChicken(
             all,
@@ -140,7 +141,8 @@ public class BaseChickens extends BaseChickenHandler {
             "LogChicken.png",
             new ItemStack(Blocks.log),
             0x98846d,
-            0x528358);
+            0x528358,
+            SpawnType.NONE);
 
         sandChicken = addChicken(
             all,
@@ -149,7 +151,8 @@ public class BaseChickens extends BaseChickenHandler {
             "SandChicken.png",
             new ItemStack(Blocks.sand),
             0xece5b1,
-            0xa7a06c);
+            0xa7a06c,
+            SpawnType.NONE);
 
         // TIER 2
         stringChicken = addChicken(
@@ -159,7 +162,8 @@ public class BaseChickens extends BaseChickenHandler {
             "StringChicken.png",
             new ItemStack(Items.string),
             0x331a00,
-            0x800000).setDropItem(new ItemStack(Items.spider_eye));
+            0x800000,
+            SpawnType.NONE).setDropItem(new ItemStack(Items.spider_eye));
 
         glowstoneChicken = addChicken(
             all,
@@ -168,7 +172,8 @@ public class BaseChickens extends BaseChickenHandler {
             "GlowstoneChicken.png",
             new ItemStack(Items.glowstone_dust),
             0xffff66,
-            0xffff00);
+            0xffff00,
+            SpawnType.NONE);
 
         gunpowderChicken = addChicken(
             all,
@@ -177,7 +182,8 @@ public class BaseChickens extends BaseChickenHandler {
             "GunpowderChicken.png",
             new ItemStack(Items.gunpowder),
             0x999999,
-            0x404040);
+            0x404040,
+            SpawnType.NONE);
 
         redstoneChicken = addChicken(
             all,
@@ -186,7 +192,8 @@ public class BaseChickens extends BaseChickenHandler {
             "RedstoneChicken.png",
             new ItemStack(Items.redstone),
             0xe60000,
-            0x800000);
+            0x800000,
+            SpawnType.NONE);
 
         glassChicken = addChicken(
             all,
@@ -195,7 +202,8 @@ public class BaseChickens extends BaseChickenHandler {
             "GlassChicken.png",
             new ItemStack(Blocks.glass),
             0xffffff,
-            0xeeeeff);
+            0xeeeeff,
+            SpawnType.NONE);
 
         ironChicken = addChicken(
             all,
@@ -204,7 +212,8 @@ public class BaseChickens extends BaseChickenHandler {
             "IronChicken.png",
             new ItemStack(Items.iron_ingot),
             0xffffcc,
-            0xffcccc);
+            0xffcccc,
+            SpawnType.NONE);
 
         coalChicken = addChicken(
             all,
@@ -213,7 +222,8 @@ public class BaseChickens extends BaseChickenHandler {
             "CoalChicken.png",
             new ItemStack(Items.coal),
             0x262626,
-            0x000000);
+            0x000000,
+            SpawnType.NONE);
 
         brownChicken = addDye(all, DyeColor.BROWN, "BrownChicken");
 
@@ -225,7 +235,8 @@ public class BaseChickens extends BaseChickenHandler {
             "GoldChicken.png",
             new ItemStack(Items.gold_ingot),
             0xcccc00,
-            0xffff80);
+            0xffff80,
+            SpawnType.NONE);
 
         snowballChicken = addChicken(
             all,
@@ -244,7 +255,8 @@ public class BaseChickens extends BaseChickenHandler {
             "WaterChicken.png",
             ModItems.LIQUID_EGG.newItemStack(1, 0),
             0x000099,
-            0x8080ff);
+            0x8080ff,
+            SpawnType.NONE);
 
         lavaChicken = addChicken(
             all,
@@ -263,7 +275,8 @@ public class BaseChickens extends BaseChickenHandler {
             "ClayChicken.png",
             new ItemStack(Items.clay_ball),
             0xcccccc,
-            0xbfbfbf);
+            0xbfbfbf,
+            SpawnType.NONE);
 
         leatherChicken = addChicken(
             all,
@@ -272,7 +285,8 @@ public class BaseChickens extends BaseChickenHandler {
             "LeatherChicken.png",
             new ItemStack(Items.leather),
             0xA7A06C,
-            0x919191);
+            0x919191,
+            SpawnType.NONE);
 
         netherwartChicken = addChicken(
             all,
@@ -281,7 +295,8 @@ public class BaseChickens extends BaseChickenHandler {
             "NetherwartChicken.png",
             new ItemStack(Items.nether_wart),
             0x800000,
-            0x331a00);
+            0x331a00,
+            SpawnType.NONE);
 
         // TIER 4
         diamondChicken = addChicken(
@@ -291,7 +306,8 @@ public class BaseChickens extends BaseChickenHandler {
             "DiamondChicken.png",
             new ItemStack(Items.diamond),
             0x99ccff,
-            0xe6f2ff);
+            0xe6f2ff,
+            SpawnType.NONE);
 
         blazeChicken = addChicken(
             all,
@@ -300,7 +316,8 @@ public class BaseChickens extends BaseChickenHandler {
             "BlazeChicken.png",
             new ItemStack(Items.blaze_rod),
             0xffff66,
-            0xff3300);
+            0xff3300,
+            SpawnType.NONE);
 
         slimeChicken = addChicken(
             all,
@@ -309,7 +326,8 @@ public class BaseChickens extends BaseChickenHandler {
             "SlimeChicken.png",
             new ItemStack(Items.slime_ball),
             0x009933,
-            0x99ffbb);
+            0x99ffbb,
+            SpawnType.NONE);
 
         // TIER 5
         enderChicken = addChicken(
@@ -319,7 +337,8 @@ public class BaseChickens extends BaseChickenHandler {
             "EnderChicken.png",
             new ItemStack(Items.ender_pearl),
             0x001a00,
-            0x001a33);
+            0x001a33,
+            SpawnType.NONE);
 
         ghastChicken = addChicken(
             all,
@@ -328,7 +347,8 @@ public class BaseChickens extends BaseChickenHandler {
             "GhastChicken.png",
             new ItemStack(Items.ghast_tear),
             0xffffcc,
-            0xffffff);
+            0xffffff,
+            SpawnType.NONE);
 
         emeraldChicken = addChicken(
             all,
@@ -337,7 +357,8 @@ public class BaseChickens extends BaseChickenHandler {
             "EmeraldChicken.png",
             new ItemStack(Items.emerald),
             0x00cc00,
-            0x003300);
+            0x003300,
+            SpawnType.NONE);
 
         magmaChicken = addChicken(
             all,
@@ -346,7 +367,8 @@ public class BaseChickens extends BaseChickenHandler {
             "MagmaChicken.png",
             new ItemStack(Items.magma_cream),
             0x1a0500,
-            0x000000);
+            0x000000,
+            SpawnType.NONE);
 
         xpChicken = addChicken(
             all,

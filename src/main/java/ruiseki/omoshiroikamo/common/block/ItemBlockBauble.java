@@ -13,7 +13,7 @@ import baubles.api.BaubleType;
 import baubles.api.expanded.BaubleItemHelper;
 import baubles.api.expanded.IBaubleExpanded;
 import ruiseki.omoshiroikamo.common.entity.EntityDoppleganger;
-import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
+import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
@@ -34,24 +34,24 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     }
 
     public static UUID getBaubleUUID(ItemStack stack) {
-        long most = ItemNBTHelper.getLong(stack, TAG_BAUBLE_UUID_MOST, 0);
+        long most = ItemNBTUtils.getLong(stack, TAG_BAUBLE_UUID_MOST, 0);
         if (most == 0) {
             UUID uuid = UUID.randomUUID();
-            ItemNBTHelper.setLong(stack, TAG_BAUBLE_UUID_MOST, uuid.getMostSignificantBits());
-            ItemNBTHelper.setLong(stack, TAG_BAUBLE_UUID_LEAST, uuid.getLeastSignificantBits());
+            ItemNBTUtils.setLong(stack, TAG_BAUBLE_UUID_MOST, uuid.getMostSignificantBits());
+            ItemNBTUtils.setLong(stack, TAG_BAUBLE_UUID_LEAST, uuid.getLeastSignificantBits());
             return getBaubleUUID(stack);
         }
 
-        long least = ItemNBTHelper.getLong(stack, TAG_BAUBLE_UUID_LEAST, 0);
+        long least = ItemNBTUtils.getLong(stack, TAG_BAUBLE_UUID_LEAST, 0);
         return new UUID(most, least);
     }
 
     public static void setLastPlayerHashcode(ItemStack stack, int hash) {
-        ItemNBTHelper.setInt(stack, TAG_HASHCODE, hash);
+        ItemNBTUtils.setInt(stack, TAG_HASHCODE, hash);
     }
 
     public static int getLastPlayerHashcode(ItemStack stack) {
-        return ItemNBTHelper.getInt(stack, TAG_HASHCODE, 0);
+        return ItemNBTUtils.getInt(stack, TAG_HASHCODE, 0);
     }
 
     public void disableRightClickEquip() {

@@ -72,7 +72,7 @@ public class PowerDistributor {
             if (tile == null) {
                 continue;
             }
-            IPowerInterface pi = PowerHandlerUtil.create(tile);
+            IPowerInterface pi = PowerHandlerUtils.create(tile);
             if (pi != null && pi.canConduitConnect(dir)) {
                 receptors.add(new Receptor(pi, dir));
             }

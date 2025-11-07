@@ -11,7 +11,6 @@ import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
 import ruiseki.omoshiroikamo.common.block.electrolyzer.BlockElectrolyzer;
-import ruiseki.omoshiroikamo.common.block.energyConnector.BlockConnectable;
 import ruiseki.omoshiroikamo.common.block.furnace.BlockFurnace;
 import ruiseki.omoshiroikamo.common.block.material.BlockMaterial;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockMachineBase;
@@ -74,7 +73,6 @@ public enum ModBlocks {
     MODIFIER_NULL(true, BlockModifierCore.create()),
 
     ELECTROLYZER(true, BlockElectrolyzer.create()),
-    CONNECTABLE(true, BlockConnectable.create()),
     MATERIAL(true, BlockMaterial.create()),
     ANVIL(true, BlockAnvil.create()),
     FURNACE(true, BlockFurnace.create()),

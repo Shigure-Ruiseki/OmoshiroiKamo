@@ -27,9 +27,6 @@ public class LangSectionInserter {
 
     static {
         addMaterialSection(
-            "#Item Wire Coil",
-            mat -> "item.itemWireCoil." + mat.getUnlocalizedName() + ".name=Wire Coil (" + mat.getName() + ")");
-        addMaterialSection(
             "#Item Material Ingot",
             mat -> "item.itemMaterial.ingot." + mat.getUnlocalizedName() + ".name=" + mat.getName() + " Ingot");
         addMaterialSection(

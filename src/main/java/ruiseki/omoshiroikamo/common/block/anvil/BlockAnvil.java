@@ -18,7 +18,6 @@ import com.enderio.core.common.TileEntityEnder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.client.render.block.anvil.AnvilISBRH;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 
 public class BlockAnvil extends AbstractBlock<TEAnvil> {
@@ -42,16 +41,6 @@ public class BlockAnvil extends AbstractBlock<TEAnvil> {
     @Override
     public TileEntity createTileEntity(World world, int meta) {
         return new TEAnvil();
-    }
-
-    @Override
-    public int getRenderType() {
-        return AnvilISBRH.renderAnvilId;
-    }
-
-    @Override
-    public int damageDropped(int meta) {
-        return 0;
     }
 
     @Override
@@ -108,6 +97,11 @@ public class BlockAnvil extends AbstractBlock<TEAnvil> {
         entityItem.motionZ = world.rand.nextGaussian() * motion;
 
         world.spawnEntityInWorld(entityItem);
+    }
+
+    @Override
+    public int getRenderType() {
+        return -1;
     }
 
     @Override

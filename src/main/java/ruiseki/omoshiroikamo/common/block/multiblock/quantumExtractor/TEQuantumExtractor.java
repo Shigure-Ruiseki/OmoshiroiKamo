@@ -24,7 +24,7 @@ import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtil;
+import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
@@ -159,7 +159,7 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        root.setInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY, storedEnergyRF);
+        root.setInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY, storedEnergyRF);
         root.setTag("output_inv", this.output.serializeNBT());
     }
 
@@ -169,8 +169,8 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
         if (root.hasKey("storedEnergy")) {
             float storedEnergyMJ = root.getFloat("storedEnergy");
             setEnergyStored((int) (storedEnergyMJ * 10f));
-        } else if (root.hasKey(PowerHandlerUtil.STORED_ENERGY_NBT_KEY)) {
-            setEnergyStored(root.getInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY));
+        } else if (root.hasKey(PowerHandlerUtils.STORED_ENERGY_NBT_KEY)) {
+            setEnergyStored(root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY));
         }
         if (root.hasKey("output_inv")) {
             this.output.deserializeNBT(root.getCompoundTag("output_inv"));
@@ -403,10 +403,12 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory() {
+    }
 
     @Override
-    public void closeInventory() {}
+    public void closeInventory() {
+    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {

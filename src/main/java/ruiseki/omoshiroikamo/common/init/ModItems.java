@@ -9,7 +9,6 @@ import ruiseki.omoshiroikamo.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.ItemHammer;
 import ruiseki.omoshiroikamo.common.item.ItemMaterial;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
-import ruiseki.omoshiroikamo.common.item.ItemWireCoil;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBackpack;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBatteryUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
@@ -50,8 +49,7 @@ public enum ModItems {
     STABILIZED_ENDER_PEAR(true, new ItemOK().setName(ModObject.itemStabilizedEnderPear)
         .setTextureName("ender_stabilized")),
     PHOTOVOLTAIC_CELL(true, new ItemOK().setName(ModObject.itemPhotovoltaicCell)
-        .setTextureName("photovoltaic_cell")),
-    WIRE_COIL(true, new ItemWireCoil()),;
+        .setTextureName("photovoltaic_cell")),;
 
     public static final ModItems[] VALUES = values();
 

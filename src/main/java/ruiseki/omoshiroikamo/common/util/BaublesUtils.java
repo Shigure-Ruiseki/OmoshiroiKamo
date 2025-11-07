@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.plugin.baubles;
+package ruiseki.omoshiroikamo.common.util;
 
 import java.lang.reflect.Field;
 
@@ -11,10 +11,8 @@ import net.minecraft.world.World;
 import baubles.api.BaublesApi;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
-public class BaublesUtil {
+public class BaublesUtils {
 
     public static enum WhoAmI {
 
@@ -24,7 +22,7 @@ public class BaublesUtil {
         MPSERVER,
         OTHER;
 
-        public static BaublesUtil.WhoAmI whoAmI(World world) {
+        public static BaublesUtils.WhoAmI whoAmI(World world) {
             Side side = FMLCommonHandler.instance()
                 .getSide();
             if (side == Side.CLIENT) {
@@ -51,16 +49,12 @@ public class BaublesUtil {
         }
     }
 
-    private static final BaublesUtil instance = new BaublesUtil();
+    private static final BaublesUtils instance = new BaublesUtils();
 
-    private BaublesUtil() {}
+    private BaublesUtils() {}
 
-    public static BaublesUtil instance() {
+    public static BaublesUtils instance() {
         return instance;
-    }
-
-    public boolean hasBaubles() {
-        return LibMods.Baubles.isLoaded();
     }
 
     /**
@@ -69,10 +63,6 @@ public class BaublesUtil {
      * Wrap it in a ShadowInventory if you need to.
      */
     public IInventory getBaubles(EntityPlayer player) {
-        return hasBaubles() ? getBaublesInvUnsafe(player) : null;
-    }
-
-    private IInventory getBaublesInvUnsafe(EntityPlayer player) {
         return BaublesApi.getBaubles(player);
     }
 

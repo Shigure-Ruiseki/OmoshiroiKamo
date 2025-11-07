@@ -170,7 +170,6 @@ public class MaterialPropertiesHandler extends RecipeHandlerBase {
             for (int meta : metas) {
                 materialItems.add(ModItems.MATERIAL.newItemStack(1, meta));
             }
-            materialItems.add(ModItems.WIRE_COIL.newItemStack(1, entry.meta));
         }
 
         @Override

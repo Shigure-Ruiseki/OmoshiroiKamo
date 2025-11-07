@@ -16,7 +16,7 @@ import com.enderio.core.common.util.BlockCoord;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtil;
+import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
@@ -122,16 +122,16 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
     }
 
     private void applyPotionEffects(EntityPlayer plr, int duration) {
-        Object[][] effects = { { ModifierAttribute.P_SPEED.getAttributeName(), Potion.moveSpeed },
-            { ModifierAttribute.P_NIGHT_VISION.getAttributeName(), Potion.nightVision },
-            { ModifierAttribute.P_HASTE.getAttributeName(), Potion.digSpeed },
-            { ModifierAttribute.P_STRENGTH.getAttributeName(), Potion.damageBoost },
-            { ModifierAttribute.P_WATER_BREATHING.getAttributeName(), Potion.waterBreathing },
-            { ModifierAttribute.P_REGEN.getAttributeName(), Potion.regeneration },
-            { ModifierAttribute.P_SATURATION.getAttributeName(), Potion.field_76443_y },
-            { ModifierAttribute.P_RESISTANCE.getAttributeName(), Potion.resistance },
-            { ModifierAttribute.P_JUMP_BOOST.getAttributeName(), Potion.jump },
-            { ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName(), Potion.fireResistance } };
+        Object[][] effects = {{ModifierAttribute.P_SPEED.getAttributeName(), Potion.moveSpeed},
+            {ModifierAttribute.P_NIGHT_VISION.getAttributeName(), Potion.nightVision},
+            {ModifierAttribute.P_HASTE.getAttributeName(), Potion.digSpeed},
+            {ModifierAttribute.P_STRENGTH.getAttributeName(), Potion.damageBoost},
+            {ModifierAttribute.P_WATER_BREATHING.getAttributeName(), Potion.waterBreathing},
+            {ModifierAttribute.P_REGEN.getAttributeName(), Potion.regeneration},
+            {ModifierAttribute.P_SATURATION.getAttributeName(), Potion.field_76443_y},
+            {ModifierAttribute.P_RESISTANCE.getAttributeName(), Potion.resistance},
+            {ModifierAttribute.P_JUMP_BOOST.getAttributeName(), Potion.jump},
+            {ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName(), Potion.fireResistance}};
 
         for (Object[] entry : effects) {
             addPotionEffect(plr, (String) entry[0], duration, (Potion) entry[1]);
@@ -316,7 +316,7 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
             float storedEnergyMJ = root.getFloat("storedEnergy");
             energy = (int) (storedEnergyMJ * 10);
         } else {
-            energy = root.getInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY);
+            energy = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
         }
         setEnergyStored(energy);
     }
@@ -324,7 +324,7 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        this.storedEnergyRF = root.getInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY);
+        this.storedEnergyRF = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
         this.dealsWithFlight = root.getBoolean("dflight");
     }
 

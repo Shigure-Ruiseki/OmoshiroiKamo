@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.energy.PowerDisplayUtil;
 import ruiseki.omoshiroikamo.api.item.IAnvilUpgradeItem;
-import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
+import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.general.AnvilUpgradeConfig;
 
@@ -89,7 +89,7 @@ public class EnergyUpgrade extends AbstractUpgrade {
         if (stack == null) {
             return null;
         }
-        NBTTagCompound nbt = ItemNBTHelper.getNBT(stack);
+        NBTTagCompound nbt = ItemNBTUtils.getNBT(stack);
         if (nbt == null) {
             return null;
         }

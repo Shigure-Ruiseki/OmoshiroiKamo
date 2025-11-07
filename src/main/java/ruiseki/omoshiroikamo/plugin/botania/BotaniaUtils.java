@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 
 import ruiseki.omoshiroikamo.common.util.Logger;
 
-public class BotaniaUtil {
+public class BotaniaUtils {
 
     private static final String SOLEGNOLIA = "vazkii.botania.common.block.subtile.functional.SubTileSolegnolia";
     private static final String HAS_SOLEGNOLIA_AROUND = "hasSolegnoliaAround";

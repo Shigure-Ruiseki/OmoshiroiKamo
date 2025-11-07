@@ -9,7 +9,7 @@ import cpw.mods.fml.common.Optional;
 import ic2.api.energy.tile.IEnergySink;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorageAdv;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtil;
+import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
@@ -17,8 +17,8 @@ import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.plugin.compat.IC2Compat;
 
-@Optional.InterfaceList({ @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
-    @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2") })
+@Optional.InterfaceList({@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
+    @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2")})
 public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyHandler, IEnergySink, IPowerContainer {
 
     private int storedEnergyRF = 0;
@@ -87,7 +87,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        root.setInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY, storedEnergyRF);
+        root.setInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY, storedEnergyRF);
     }
 
     @Override
@@ -98,7 +98,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
             float storedEnergyMJ = root.getFloat("storedEnergy");
             energy = (int) (storedEnergyMJ * 10);
         } else {
-            energy = root.getInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY);
+            energy = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
         }
         setEnergyStored(energy);
     }
@@ -113,7 +113,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
         if (!canReceivePower) {
             return 0;
         }
-        return PowerHandlerUtil.receiveInternal(this, maxReceive, from, simulate);
+        return PowerHandlerUtils.receiveInternal(this, maxReceive, from, simulate);
     }
 
     @Override

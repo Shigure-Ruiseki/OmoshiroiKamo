@@ -55,7 +55,7 @@ import ruiseki.omoshiroikamo.client.gui.modularui2.slot.ModularCraftingSlotAdv;
 import ruiseki.omoshiroikamo.client.gui.modularui2.widgets.BackPackPageButton;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
-import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
+import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -116,7 +116,7 @@ public class BackpackGui extends ModularPanel {
                 if (!player.worldObj.isRemote) {
                     ItemStack usedItem = data.getUsedItemStack();
                     if (usedItem != null) {
-                        NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                        NBTTagCompound root = ItemNBTUtils.getNBT(usedItem);
                         root.setTag(BACKPACK_UPGRADE, this.serializeNBT());
                         usedItem.setTagCompound(root);
                     }
@@ -130,7 +130,7 @@ public class BackpackGui extends ModularPanel {
             protected void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    NBTTagCompound root = ItemNBTUtils.getNBT(usedItem);
                     root.setTag(BACKPACK_INV, this.serializeNBT());
                     usedItem.setTagCompound(root);
                 }
@@ -143,7 +143,7 @@ public class BackpackGui extends ModularPanel {
             public void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    NBTTagCompound root = ItemNBTUtils.getNBT(usedItem);
                     root.setTag(CRAFTING_INV, this.serializeNBT());
                     usedItem.setTagCompound(root);
                 }
@@ -156,7 +156,7 @@ public class BackpackGui extends ModularPanel {
             public void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    NBTTagCompound root = ItemNBTUtils.getNBT(usedItem);
                     root.setTag(MAGNET_INV, this.serializeNBT());
                     root.setTag(MAGNET_FILTER, createFilterList(magnetHandler));
                     usedItem.setTagCompound(root);
@@ -170,7 +170,7 @@ public class BackpackGui extends ModularPanel {
             public void onContentsChanged(int slot) {
                 ItemStack usedItem = data.getUsedItemStack();
                 if (usedItem != null) {
-                    NBTTagCompound root = ItemNBTHelper.getNBT(usedItem);
+                    NBTTagCompound root = ItemNBTUtils.getNBT(usedItem);
                     root.setTag(FEEDING_INV, this.serializeNBT());
                     root.setTag(FEEDING_FILTER, createFilterList(feedingHandler));
                     usedItem.setTagCompound(root);
@@ -389,7 +389,7 @@ public class BackpackGui extends ModularPanel {
         }
 
         if (upgradeController.isInitialised()) {
-            int savedIndex = ItemNBTHelper.getInt(getUsedItemStack(), TAG_PAGE, 0);
+            int savedIndex = ItemNBTUtils.getInt(getUsedItemStack(), TAG_PAGE, 0);
 
             if (enabledIndices.isEmpty()) {
                 upgradeController.setPage(0);
@@ -438,7 +438,7 @@ public class BackpackGui extends ModularPanel {
                 .excludeAreaInRecipeViewer()
                 .syncHandler(
                     new InteractionSyncHandler()
-                        .setOnMousePressed(mouseData -> ItemNBTHelper.setInt(getUsedItemStack(), TAG_PAGE, index)))
+                        .setOnMousePressed(mouseData -> ItemNBTUtils.setInt(getUsedItemStack(), TAG_PAGE, index)))
                 .overlay(
                     tab.getDrawable()
                         .asIcon());
@@ -549,8 +549,8 @@ public class BackpackGui extends ModularPanel {
                             .overlay(false, MGuiTextures.BLACKLIST)
                             .value(
                                 new BooleanSyncValue(
-                                    () -> ItemNBTHelper.getBoolean(getUsedItemStack(), MAGNET_MODE, false),
-                                    value -> ItemNBTHelper.setBoolean(getUsedItemStack(), MAGNET_MODE, value))))
+                                    () -> ItemNBTUtils.getBoolean(getUsedItemStack(), MAGNET_MODE, false),
+                                    value -> ItemNBTUtils.setBoolean(getUsedItemStack(), MAGNET_MODE, value))))
                     .build()
                     .margin(0, 7, 18, 5))
             .child(
@@ -592,8 +592,8 @@ public class BackpackGui extends ModularPanel {
                             .overlay(true, MGuiTextures.BLACKLIST)
                             .value(
                                 new BooleanSyncValue(
-                                    () -> ItemNBTHelper.getBoolean(getUsedItemStack(), FEEDING_MODE, false),
-                                    value -> ItemNBTHelper.setBoolean(getUsedItemStack(), FEEDING_MODE, value))))
+                                    () -> ItemNBTUtils.getBoolean(getUsedItemStack(), FEEDING_MODE, false),
+                                    value -> ItemNBTUtils.setBoolean(getUsedItemStack(), FEEDING_MODE, value))))
                     .key(
                         'M',
                         new ToggleButton().selectedBackground(GuiTextures.MC_BUTTON)
@@ -604,8 +604,8 @@ public class BackpackGui extends ModularPanel {
                             .overlay(true, MGuiTextures.EXACT_HUNGER)
                             .value(
                                 new BooleanSyncValue(
-                                    () -> ItemNBTHelper.getBoolean(getUsedItemStack(), FEEDING_TYPE, false),
-                                    value -> ItemNBTHelper.setBoolean(getUsedItemStack(), FEEDING_TYPE, value))))
+                                    () -> ItemNBTUtils.getBoolean(getUsedItemStack(), FEEDING_TYPE, false),
+                                    value -> ItemNBTUtils.setBoolean(getUsedItemStack(), FEEDING_TYPE, value))))
                     .build()
                     .margin(0, 7, 18, 5))
             .child(

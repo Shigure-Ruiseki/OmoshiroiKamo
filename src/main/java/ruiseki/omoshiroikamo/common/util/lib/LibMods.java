@@ -6,18 +6,24 @@ import cpw.mods.fml.common.Loader;
 
 public enum LibMods {
 
-    Waila("Waila"),
+    ActuallyAdditions("ActuallyAdditions"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
+    BigReactors("BigReactors"),
+    BogoSorter("bogosorter"),
+    Botania("Botania"),
+    BuildCraftEnergy("BuildCraft|Energy"),
+    CraftingTweaks("craftingtweaks"),
+    DraconicEvolution("DraconicEvolution"),
+    EtFuturum("etfuturum"),
+    EnderIO("EnderIO"),
+    IC2("IC2"),
+    Mekanism("Mekanism"),
+    MinefactoryReloaded("MinefactoryReloaded"),
     NotEnoughItems("NotEnoughItems"),
     TConstruct("TConstruct"),
-    ImmersiveEngineering("ImmersiveEngineering"),
-    BuildCraftEnergy("BuildCraft|Energy"),
-    IC2("IC2"),
-    BogoSorter("bogosorter"),
-    CraftingTweaks("craftingtweaks"),
-    Botania("Botania"),
-    EtFuturum("etfuturum"),;
+    ThermalFoundation("ThermalFoundation"),
+    Waila("Waila"),;
 
     public final String modid;
     private final Supplier<Boolean> supplier;

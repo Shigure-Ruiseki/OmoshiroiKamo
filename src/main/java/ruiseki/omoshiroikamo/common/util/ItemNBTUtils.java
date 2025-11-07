@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public final class ItemNBTHelper {
+public final class ItemNBTUtils {
 
     /**
      * Checks if an ItemStack has a Tag Compound

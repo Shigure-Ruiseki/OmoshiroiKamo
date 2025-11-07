@@ -223,14 +223,6 @@ item.coloredEgg.black.name=Ink Black Chicken Egg
 #Block
 
 tile.electrolyzer.name=Electrolyzer
-tile.connectable.insulator.name=Insulator
-tile.connectable.connectorULV.name=ULV Wire Connector
-tile.connectable.connectorLV.name=LV Wire Connector
-tile.connectable.connectorMV.name=MV Wire Connector
-tile.connectable.connectorHV.name=HV Wire Connector
-tile.connectable.connectorEV.name=EV Wire Connector
-tile.connectable.connectorIV.name=IV Wire Connector
-tile.connectable.transformer.name=Transformer
 tile.anvil.name=Anvil
 tile.furnace.name=Furnace
 
@@ -450,43 +442,12 @@ entity.PalisCrystalChicken.name=Palis Crystal Chicken
 
 #Immersive Engineering
 
-#CHAT
-chat.ImmersiveEngineering.warning.wrongCable=You cannot attach this wire here
-chat.ImmersiveEngineering.warning.wrongDimension=You are in the wrong dimension
-chat.ImmersiveEngineering.warning.sameConnection=You cannot attach a wire to the same point
-chat.ImmersiveEngineering.warning.tooFar=You are too far away from the previous connection
-chat.ImmersiveEngineering.warning.cantSee=The connection is obstructed
-chat.ImmersiveEngineering.warning.connectionExists=The connection exists already
-chat.ImmersiveEngineering.warning.invalidPoint=One of the connection points is invalid
-chat.ImmersiveEngineering.info.averageLoss=Average loss between points: %1$s%%
-
-#DESCRIPTIONS
-desc.ImmersiveEngineering.info.attachedToDim=Linking from %1$s, %2$s, %3$s in Dimension %4$s
-
 #NEI INTEGRATION
 neiintegration.chance=Chance: %s
 neiintegration.chance.never=Never
 neiintegration.chance.lessThan1=<1%
 
 # BEGIN AUTOGEN
-#Item Wire Coil
-item.wireCoil.Iron.name=Wire Coil (Iron)
-item.wireCoil.Copper.name=Wire Coil (Copper)
-item.wireCoil.Silver.name=Wire Coil (Silver)
-item.wireCoil.Gold.name=Wire Coil (Gold)
-item.wireCoil.Zinc.name=Wire Coil (Zinc)
-item.wireCoil.Aluminum.name=Wire Coil (Aluminum)
-item.wireCoil.Lead.name=Wire Coil (Lead)
-item.wireCoil.Titanium.name=Wire Coil (Titanium)
-item.wireCoil.Chromium.name=Wire Coil (Chromium)
-item.wireCoil.Nickel.name=Wire Coil (Nickel)
-item.wireCoil.CarbonSteel.name=Wire Coil (Carbon Steel)
-item.wireCoil.StainlessSteel.name=Wire Coil (Stainless Steel)
-item.wireCoil.Brass.name=Wire Coil (Brass)
-item.wireCoil.Inconel625.name=Wire Coil (Inconel 625)
-item.wireCoil.Tungsten.name=Wire Coil (Tungsten)
-item.wireCoil.TungstenCarbide.name=Wire Coil (Tungsten Carbide)
-item.wireCoil.Niobium.name=Wire Coil (Niobium)
 
 #Item Material Ingot
 item.material.ingot.Iron.name=Iron Ingot

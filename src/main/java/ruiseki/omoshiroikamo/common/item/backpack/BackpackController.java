@@ -4,7 +4,7 @@ import static ruiseki.omoshiroikamo.common.item.backpack.BackpackGui.EVERLASTING
 import static ruiseki.omoshiroikamo.common.item.backpack.BackpackGui.FEEDING_MODE;
 import static ruiseki.omoshiroikamo.common.item.backpack.BackpackGui.FEEDING_TYPE;
 import static ruiseki.omoshiroikamo.common.item.backpack.BackpackGui.MAGNET_MODE;
-import static ruiseki.omoshiroikamo.plugin.botania.BotaniaUtil.hasSolegnoliaAround;
+import static ruiseki.omoshiroikamo.plugin.botania.BotaniaUtils.hasSolegnoliaAround;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +43,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.client.gui.modularui2.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
-import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
+import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
 import ruiseki.omoshiroikamo.config.item.FeedingConfig;
 import ruiseki.omoshiroikamo.config.item.MagnetConfig;
 
@@ -112,7 +112,7 @@ public class BackpackController {
                 continue;
             }
 
-            NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
+            NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
             if (!tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
                 continue;
             }
@@ -136,7 +136,7 @@ public class BackpackController {
                     continue;
                 }
 
-                NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
+                NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
                 if (!tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
                     continue;
                 }
@@ -157,7 +157,7 @@ public class BackpackController {
     }
 
     private static boolean hasUpgrade(ItemStack stack, Class<?> clazz) {
-        NBTTagCompound tag = ItemNBTHelper.getNBT(stack);
+        NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
         if (tag == null || !tag.hasKey(BackpackGui.BACKPACK_UPGRADE)) {
             return false;
         }
@@ -173,14 +173,14 @@ public class BackpackController {
     }
 
     private static void handleFeeding(EntityPlayer player, ActiveBackPack mag) {
-        int cooldown = ItemNBTHelper.getInt(mag.item, TAG_COOLDOWN_FEED, 20);
+        int cooldown = ItemNBTUtils.getInt(mag.item, TAG_COOLDOWN_FEED, 20);
 
         if (cooldown > 0) {
-            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, cooldown - 1);
+            ItemNBTUtils.setInt(mag.item, TAG_COOLDOWN_FEED, cooldown - 1);
             return;
         }
 
-        NBTTagCompound tag = ItemNBTHelper.getNBT(mag.item);
+        NBTTagCompound tag = ItemNBTUtils.getNBT(mag.item);
         if (tag == null || !tag.hasKey(BackpackGui.BACKPACK_INV)) {
             return;
         }
@@ -282,7 +282,7 @@ public class BackpackController {
 
             tag.setTag(BackpackGui.BACKPACK_INV, handler.serializeNBT());
             mag.item.setTagCompound(tag);
-            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_FEED, dynamicCooldown);
+            ItemNBTUtils.setInt(mag.item, TAG_COOLDOWN_FEED, dynamicCooldown);
         }
     }
 
@@ -347,10 +347,10 @@ public class BackpackController {
     }
 
     private static void handleMagnet(EntityPlayer player, ActiveBackPack mag) {
-        int cooldown = ItemNBTHelper.getInt(mag.item, TAG_COOLDOWN_MAGNET, 2);
+        int cooldown = ItemNBTUtils.getInt(mag.item, TAG_COOLDOWN_MAGNET, 2);
 
         if (cooldown > 0) {
-            ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_MAGNET, cooldown - 1);
+            ItemNBTUtils.setInt(mag.item, TAG_COOLDOWN_MAGNET, cooldown - 1);
             return;
         }
 
@@ -388,7 +388,7 @@ public class BackpackController {
             }
         }
 
-        ItemNBTHelper.setInt(mag.item, TAG_COOLDOWN_MAGNET, 2);
+        ItemNBTUtils.setInt(mag.item, TAG_COOLDOWN_MAGNET, 2);
     }
 
     private static void initFilter(ActiveBackPack mag) {
@@ -504,14 +504,14 @@ public class BackpackController {
             if (stack == null || !(stack.getItem() instanceof ItemBackpack)) {
                 continue;
             }
-            ItemNBTHelper.setInt(stack, TAG_COOLDOWN_MAGNET, 100);
+            ItemNBTUtils.setInt(stack, TAG_COOLDOWN_MAGNET, 100);
         }
 
         InventoryBaubles baubleInv = PlayerHandler.getPlayerBaubles(event.player);
         for (int i = 0; i < baubleInv.getSizeInventory(); i++) {
             ItemStack stack = baubleInv.getStackInSlot(i);
             if (stack != null && stack.getItem() instanceof ItemBackpack) {
-                ItemNBTHelper.setInt(stack, TAG_COOLDOWN_MAGNET, 100);
+                ItemNBTUtils.setInt(stack, TAG_COOLDOWN_MAGNET, 100);
                 baubleInv.markDirty();
             }
         }
@@ -534,7 +534,7 @@ public class BackpackController {
             return;
         }
 
-        boolean mode = ItemNBTHelper.getBoolean(stack, EVERLASTING_MODE, false);
+        boolean mode = ItemNBTUtils.getBoolean(stack, EVERLASTING_MODE, false);
 
         if (entityItem instanceof EntityImmortalItem immortalItem) {
             immortalItem.setImmortal(mode);

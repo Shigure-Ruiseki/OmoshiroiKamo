@@ -14,11 +14,8 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 import makamys.mclib.core.MCLib;
 import makamys.mclib.core.MCLibModules;
-import ruiseki.omoshiroikamo.api.energy.wire.MaterialWireType;
-import ruiseki.omoshiroikamo.api.energy.wire.WireNetHandler;
 import ruiseki.omoshiroikamo.api.fluid.FluidRegistry;
 import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
 import ruiseki.omoshiroikamo.api.ore.OreRegistry;
@@ -36,7 +33,6 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.handler.ElementalHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.common.world.WireNetSaveData;
 import ruiseki.omoshiroikamo.plugin.baubles.BaubleExpandedCompat;
 import ruiseki.omoshiroikamo.plugin.compat.EtFuturumCompat;
 import ruiseki.omoshiroikamo.plugin.compat.TICCompat;
@@ -56,15 +52,14 @@ public class CommonProxy {
         MaterialRegistry.preInit();
         FluidRegistry.preInit();
         OreRegistry.preInit();
-        MaterialWireType.preInit();
 
+        ModFluids.preInit();
         ModBlocks.preInit();
         ModItems.preInit();
-        ModFluids.preInit();
-        ModAchievements.preInit();
-        OKWorldGenerator.preInit();
         ModEntity.preInit();
         OreDictUtils.preInit();
+        ModAchievements.preInit();
+        OKWorldGenerator.preInit();
 
         BaubleExpandedCompat.preInit();
 
@@ -102,30 +97,7 @@ public class CommonProxy {
         ModCommands.init(event);
     }
 
-    public void serverStarted(FMLServerStartedEvent event) {
-        if (WireNetHandler.INSTANCE == null) {
-            WireNetHandler.INSTANCE = new WireNetHandler();
-        }
-
-        if (FMLCommonHandler.instance()
-            .getEffectiveSide() == Side.SERVER) {
-            World world = MinecraftServer.getServer()
-                .getEntityWorld();
-            if (!world.isRemote) {
-                Logger.info("WorldData loading");
-                WireNetSaveData worldData = (WireNetSaveData) world
-                    .loadItemData(WireNetSaveData.class, WireNetSaveData.dataName);
-                if (worldData == null) {
-                    Logger.info("WorldData not found");
-                    worldData = new WireNetSaveData(WireNetSaveData.dataName);
-                    world.setItemData(WireNetSaveData.dataName, worldData);
-                } else {
-                    Logger.info("WorldData retrieved");
-                }
-                WireNetSaveData.setInstance(world.provider.dimensionId, worldData);
-            }
-        }
-    }
+    public void serverStarted(FMLServerStartedEvent event) {}
 
     public void onConstruction(FMLConstructionEvent event) {
         if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {

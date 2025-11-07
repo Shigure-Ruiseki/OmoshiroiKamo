@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.api.energy.powerInterface.EnergyReceiverPI;
 import ruiseki.omoshiroikamo.api.energy.powerInterface.IPowerInterface;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractPoweredTE;
 
-public class PowerHandlerUtil {
+public class PowerHandlerUtils {
 
     public static final String STORED_ENERGY_NBT_KEY = "storedEnergyRF";
 
@@ -56,7 +56,6 @@ public class PowerHandlerUtil {
     }
 
     public static int receiveInternal(AbstractPoweredTE target, int maxReceive, ForgeDirection from, boolean simulate) {
-
         int result = Math.min(target.getMaxEnergyReceived(), maxReceive);
         result = Math.min(target.getMaxEnergyStored() - target.getEnergyStored(), result);
         result = Math.max(0, result);

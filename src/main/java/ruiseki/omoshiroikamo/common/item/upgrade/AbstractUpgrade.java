@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.client.IRenderUpgrade;
 import ruiseki.omoshiroikamo.api.item.IAnvilUpgrade;
-import ruiseki.omoshiroikamo.common.util.ItemNBTHelper;
+import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -127,7 +127,7 @@ public abstract class AbstractUpgrade implements IAnvilUpgrade {
 
         writeUpgradeToNBT(upgradeRoot);
 
-        ItemNBTHelper.getNBT(stack)
+        ItemNBTUtils.getNBT(stack)
             .setTag(id, upgradeRoot);
     }
 

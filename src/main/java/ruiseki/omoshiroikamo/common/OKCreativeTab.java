@@ -46,7 +46,6 @@ public class OKCreativeTab extends CreativeTabs {
         this.list = list;
 
         addItem(ModItems.MATERIAL.get());
-        addItem(ModItems.WIRE_COIL.get());
         addItem(ModItems.ORE.get());
         addItem(ModItems.HAMMER.get());
         addItem(ModItems.BACKPACK.get());

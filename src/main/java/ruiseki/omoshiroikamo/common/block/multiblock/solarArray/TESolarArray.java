@@ -18,7 +18,7 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
 import ruiseki.omoshiroikamo.api.energy.PowerDistributor;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtil;
+import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifierTE;
@@ -258,7 +258,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        root.setInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY, storedEnergyRF);
+        root.setInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY, storedEnergyRF);
     }
 
     @Override
@@ -269,7 +269,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
             float storedEnergyMJ = root.getFloat("storedEnergy");
             energy = (int) (storedEnergyMJ * 10);
         } else {
-            energy = root.getInteger(PowerHandlerUtil.STORED_ENERGY_NBT_KEY);
+            energy = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
         }
         setEnergyStored(energy);
     }

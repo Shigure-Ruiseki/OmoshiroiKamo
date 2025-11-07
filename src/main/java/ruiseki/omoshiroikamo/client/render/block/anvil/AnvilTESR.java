@@ -1,47 +1,48 @@
 package ruiseki.omoshiroikamo.client.render.block.anvil;
 
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
+import com.enderio.core.client.render.RenderUtil;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.client.models.ModelIEObj;
-import ruiseki.omoshiroikamo.client.render.AbstractMTESR;
 import ruiseki.omoshiroikamo.common.block.anvil.TEAnvil;
-import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.plugin.chickenbones.Matrix4;
 
 @SideOnly(Side.CLIENT)
-public class AnvilTESR extends AbstractMTESR {
+public class AnvilTESR extends TileEntitySpecialRenderer implements IItemRenderer {
 
-    ModelIEObj modelAnvil = new ModelIEObj(LibResources.PREFIX_MODEL + "anvil.obj") {
+    private final IModelCustom model;
+    private static final String MODEL = LibResources.PREFIX_MODEL + "anvil.obj";
 
-        @Override
-        public IIcon getBlockIcon(String groupName) {
-            return ModBlocks.ANVIL.get()
-                .getIcon(0, 0);
-        }
-    };
+    private static final ResourceLocation texture = new ResourceLocation(LibResources.PREFIX_MODEL + "anvil.png");
+
+    public AnvilTESR() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
+    }
 
     @Override
-    public void renderDynamic(TileEntity tile, double x, double y, double z, float partialTicks) {
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks) {
+
         TEAnvil te = (TEAnvil) tile;
 
         GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y + 0.375, z + 0.5); // căn giữa block
+        GL11.glTranslated(x + 0.5, y + 0.375, z + 0.5);
 
         RenderItem renderItem = (RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class);
 
-        // Render input stack bên phải
         int inputIndex = 0;
         for (int i = te.getSlotDefinition()
             .getMinItemInput(); i <= te.getSlotDefinition()
@@ -64,7 +65,6 @@ public class AnvilTESR extends AbstractMTESR {
             inputIndex++;
         }
 
-        // Render output stack bên trái
         int outputIndex = 0;
         for (int i = te.getSlotDefinition()
             .getMinItemOutput(); i <= te.getSlotDefinition()
@@ -88,22 +88,36 @@ public class AnvilTESR extends AbstractMTESR {
         }
 
         GL11.glPopMatrix();
-    }
 
-    @Override
-    public void renderStatic(TileEntity tile, Tessellator tes, Matrix4 translationMatrix, Matrix4 rotationMatrix) {
-        if (!(tile instanceof TEAnvil te)) {
-            return;
-        }
-        translationMatrix.translate(.5, 0, .5);
-        modelAnvil.render(tile, tes, translationMatrix, rotationMatrix, 1, false);
-    }
-
-    @Override
-    public void renderItem(TileEntity tile, Tessellator tes, Matrix4 translationMatrix, Matrix4 rotationMatrix) {
         GL11.glPushMatrix();
-        modelAnvil.renderItem();
+        GL11.glTranslated(x + 0.5, y, z + 0.5);
+        RenderUtil.bindTexture(texture);
+        model.renderAll();
         GL11.glPopMatrix();
     }
 
+    @Override
+    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
+        return true;
+    }
+
+    @Override
+    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+        GL11.glPushMatrix();
+        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
+            GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        } else if (type == ItemRenderType.INVENTORY) {
+            GL11.glTranslatef(0f, -0.2f, 0f);
+        } else if (type == ItemRenderType.EQUIPPED) {
+            GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        }
+        RenderUtil.bindTexture(texture);
+        model.renderAll();
+        GL11.glPopMatrix();
+    }
 }
