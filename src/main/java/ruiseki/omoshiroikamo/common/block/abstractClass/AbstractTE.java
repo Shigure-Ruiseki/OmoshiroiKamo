@@ -185,11 +185,16 @@ public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<P
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return null;
+        return new ModularPanel("base");
     }
 
     @Override
     public BlockCoord getLocation() {
         return new BlockCoord(xCoord, yCoord, zCoord);
     }
+
+    protected void notifyBlockUpdate() {
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
 }

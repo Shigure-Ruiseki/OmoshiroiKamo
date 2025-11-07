@@ -169,8 +169,8 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
     }
 
     protected void mergeResults(List<ItemStack> itemStacks, List<FluidStack> fluidStacks) {
-        List<ItemStack> outputStacks = new ArrayList<ItemStack>();
-        for (int i = slotDefinition.minItemOutputSlot; i <= slotDefinition.maxItemOutputSlot; i++) {
+        List<ItemStack> outputStacks = new ArrayList<>();
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
             outputStacks.add(stack != null ? stack.copy() : null);
         }
@@ -183,7 +183,6 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
             ItemStack copy = output.copy();
             int remaining = copy.stackSize;
 
-            // Merge vào stack đã có (ưu tiên oredict)
             for (int i = 0; i < outputStacks.size() && remaining > 0; i++) {
                 ItemStack current = outputStacks.get(i);
                 if (current != null && current.isItemEqual(copy) && ItemStack.areItemStackTagsEqual(current, copy)) {
@@ -213,7 +212,7 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
 
         // Ghi lại vào inv
         int listIndex = 0;
-        for (int i = slotDefinition.minItemOutputSlot; i <= slotDefinition.maxItemOutputSlot; i++) {
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
             inv.setStackInSlot(i, outputStacks.get(listIndex++));
         }
 
@@ -224,7 +223,7 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
 
             int remaining = output.amount;
 
-            for (int i = slotDefinition.minFluidOutputSlot; i <= slotDefinition.maxFluidOutputSlot
+            for (int i = slotDefinition.getMinFluidOutput(); i <= slotDefinition.getMaxFluidOutput()
                 && remaining > 0; i++) {
                 FluidStack current = fluidTanks[i].getFluid();
                 if (current != null && current.isFluidEqual(output)) {
@@ -233,7 +232,7 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
                 }
             }
 
-            for (int i = slotDefinition.minFluidOutputSlot; i <= slotDefinition.maxFluidOutputSlot
+            for (int i = slotDefinition.getMinFluidOutput(); i <= slotDefinition.getMaxFluidOutput()
                 && remaining > 0; i++) {
                 FluidStack current = fluidTanks[i].getFluid();
                 if (current == null || current.amount == 0) {
@@ -272,7 +271,7 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
             }
             boolean canInsert = false;
 
-            for (int i = slotDefinition.minItemOutputSlot; i <= slotDefinition.maxItemOutputSlot; i++) {
+            for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
                 ItemStack target = inv.getStackInSlot(i);
                 if (target == null || (ItemUtil.areStacksEqual(target, out.stack)
                     && target.stackSize + out.stack.stackSize <= target.getMaxStackSize())) {
@@ -292,7 +291,7 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
             }
             boolean canInsert = false;
 
-            for (int i = slotDefinition.minFluidOutputSlot; i <= slotDefinition.maxFluidOutputSlot; i++) {
+            for (int i = slotDefinition.getMinFluidOutput(); i <= slotDefinition.getMaxFluidOutput(); i++) {
                 FluidTank tank = fluidTanks[i];
                 if (tank.fill(out.stack, false) == out.stack.amount) {
                     canInsert = true;
@@ -313,7 +312,8 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
 
             int remaining = input.stack.stackSize;
 
-            for (int i = slotDefinition.minItemInputSlot; i <= slotDefinition.maxItemInputSlot && remaining > 0; i++) {
+            for (int i = slotDefinition.getMinItemInput(); i <= slotDefinition.getMaxItemInput()
+                && remaining > 0; i++) {
                 ItemStack target = inv.getStackInSlot(i);
                 if (target == null) {
                     continue;
@@ -353,7 +353,7 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
         for (ChanceFluidStack input : recipe.getFluidInputs()) {
             int remaining = input.stack.amount;
 
-            for (int i = slotDefinition.minFluidInputSlot; i <= slotDefinition.maxFluidInputSlot
+            for (int i = slotDefinition.getMinFluidInput(); i <= slotDefinition.getMaxFluidInput()
                 && remaining > 0; i++) {
                 FluidTank tank = fluidTanks[i];
                 FluidStack contained = tank.getFluid();
@@ -425,10 +425,12 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
 
     private List<ItemStack> getItemInputs() {
         List<ItemStack> list = new ArrayList<>();
-        for (int i = slotDefinition.minItemInputSlot; i <= slotDefinition.maxItemInputSlot; i++) {
-            ItemStack stack = this.inv.getStackInSlot(i);
-            if (stack != null) {
-                list.add(stack.copy());
+        if (slotDefinition.getItemInputs() != 0) {
+            for (int i = slotDefinition.getMaxItemInput(); i <= slotDefinition.getMaxItemInput(); i++) {
+                ItemStack stack = this.inv.getStackInSlot(i);
+                if (stack != null) {
+                    list.add(stack.copy());
+                }
             }
         }
         return list;
@@ -436,12 +438,14 @@ public abstract class AbstractTaskTE extends AbstractIOTE implements IProgressTi
 
     private List<FluidStack> getFluidInputs() {
         List<FluidStack> list = new ArrayList<>();
-        for (int i = slotDefinition.minFluidInputSlot; i <= slotDefinition.maxFluidInputSlot; i++) {
-            FluidTank tank = this.fluidTanks[i];
-            if (tank.getFluid() != null && tank.getFluidAmount() > 0) {
-                list.add(
-                    tank.getFluid()
-                        .copy());
+        if (slotDefinition.getFluidSlots() != 0) {
+            for (int i = slotDefinition.getMinFluidInput(); i <= slotDefinition.getMaxFluidInput(); i++) {
+                FluidTank tank = this.fluidTanks[i];
+                if (tank.getFluid() != null && tank.getFluidAmount() > 0) {
+                    list.add(
+                        tank.getFluid()
+                            .copy());
+                }
             }
         }
         return list;

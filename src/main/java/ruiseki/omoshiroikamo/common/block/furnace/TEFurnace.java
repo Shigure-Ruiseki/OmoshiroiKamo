@@ -33,7 +33,7 @@ public class TEFurnace extends AbstractTaskTE {
     public int totalBurnTime;
 
     public TEFurnace() {
-        super(new SlotDefinition(0, 1, 2, 10, -1, -1));
+        super(new SlotDefinition().setItemSlots(2, 9));
     }
 
     @Override

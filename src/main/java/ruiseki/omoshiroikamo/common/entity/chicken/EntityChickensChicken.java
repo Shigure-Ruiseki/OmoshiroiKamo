@@ -88,36 +88,26 @@ public class EntityChickensChicken extends EntityChicken {
     @Override
     public EntityChicken createChild(EntityAgeable ageable) {
         EntityChickensChicken mateChicken = (EntityChickensChicken) ageable;
-        ChickensRegistryItem chickenDescription = getChickenDescription();
-        ChickensRegistryItem mateChickenDescription = mateChicken.getChickenDescription();
-        ChickensRegistryItem childToBeBorn = ChickensRegistry
-            .getRandomChild(chickenDescription, mateChickenDescription);
-        if (childToBeBorn == null) {
+
+        ChickensRegistryItem parentA = getChickenDescription();
+        ChickensRegistryItem parentB = mateChicken.getChickenDescription();
+
+        ChickensRegistryItem childType = ChickensRegistry.getRandomChild(parentA, parentB);
+
+        if (childType == null) {
             return null;
         }
-        EntityChickensChicken newChicken = new EntityChickensChicken(this.worldObj);
-        newChicken.setChickenType(childToBeBorn.getId());
-        boolean mutatingStats = chickenDescription.getId() == mateChickenDescription.getId()
-            && childToBeBorn.getId() == chickenDescription.getId();
-        if (mutatingStats) {
-            increaseStats(newChicken, this, mateChicken, rand);
-        } else if (chickenDescription.getId() == childToBeBorn.getId()) {
-            inheritStats(newChicken, this);
-        } else if (mateChickenDescription.getId() == childToBeBorn.getId()) {
-            inheritStats(newChicken, mateChicken);
-        }
+
+        EntityChickensChicken child = new EntityChickensChicken(this.worldObj);
+        child.setChickenType(childType.getId());
+
+        increaseStats(child, this, mateChicken, rand);
 
         if (this.getStatsAnalyzed() || mateChicken.getStatsAnalyzed()) {
-            newChicken.setStatsAnalyzed(true);
+            child.setStatsAnalyzed(true);
         }
-        return newChicken;
-    }
 
-    private static void inheritStats(EntityChickensChicken newChicken, EntityChickensChicken parent) {
-        newChicken.setGrowth(parent.getGrowth());
-        newChicken.setGain(parent.getGain());
-        newChicken.setStrength(parent.getStrength());
-        newChicken.setStatsAnalyzed(parent.getStatsAnalyzed());
+        return child;
     }
 
     private static void increaseStats(EntityChickensChicken newChicken, EntityChickensChicken parent1,
@@ -138,10 +128,7 @@ public class EntityChickensChicken extends EntityChicken {
         if (newStatValue <= 1) {
             return 1;
         }
-        if (newStatValue >= 10) {
-            return 10;
-        }
-        return newStatValue;
+        return Math.min(newStatValue, 10);
     }
 
     @Override

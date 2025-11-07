@@ -1,0 +1,141 @@
+package ruiseki.omoshiroikamo.common.block.chicken;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.SlotGroupWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.enderio.core.common.util.BlockCoord;
+import com.enderio.core.common.util.ItemUtil;
+
+import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.io.SlotDefinition;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
+
+public class TERoostCollector extends AbstractStorageTE {
+
+    private int searchOffset = 0;
+
+    public TERoostCollector() {
+        super(new SlotDefinition().setItemSlots(0, 27));
+    }
+
+    @Override
+    protected void doUpdate() {
+        super.doUpdate();
+        if (!worldObj.isRemote) {}
+        updateSearchOffset();
+        gatherItems();
+    }
+
+    private void updateSearchOffset() {
+        searchOffset = (searchOffset + 1) % 27;
+    }
+
+    private void gatherItems() {
+        for (int x = -4; x < 5; x++) {
+            int y = searchOffset / 9;
+            int z = (searchOffset % 9) - 4;
+            BlockCoord targetPos = new BlockCoord(xCoord + x, yCoord + y, zCoord + z);
+            gatherItemAtPos(targetPos);
+        }
+    }
+
+    private void gatherItemAtPos(BlockCoord pos) {
+        TileEntity tileEntity = pos.getTileEntity(worldObj);
+        if (!(tileEntity instanceof TERoost teRoost)) {
+            return;
+        }
+        SlotDefinition slots = teRoost.getSlotDefinition();
+        for (int i = slots.getMinItemOutput(); i <= slots.getMaxItemOutput(); i++) {
+            if (pullItemFromSlot(teRoost, i)) {
+                return;
+            }
+        }
+    }
+
+    private boolean pullItemFromSlot(TERoost tileRoost, int index) {
+        ItemStack itemStack = tileRoost.getStackInSlot(index);
+        if (itemStack != null && tileRoost.canExtractItem(index, itemStack, 0)) {
+            int inserted = ItemUtil.doInsertItem(this, itemStack, ForgeDirection.UNKNOWN);
+
+            if (inserted > 0) {
+                itemStack.stackSize -= inserted;
+
+                if (itemStack.stackSize <= 0) {
+                    tileRoost.setInventorySlotContents(index, null);
+                } else {
+                    tileRoost.setInventorySlotContents(index, itemStack);
+                }
+
+                markDirty();
+                tileRoost.markDirty();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    protected boolean isMachineItemValidForSlot(int slot, ItemStack itemstack) {
+        return true;
+    }
+
+    @Override
+    public String getMachineName() {
+        return ModObject.blockRoostCollector.unlocalisedName;
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        openGui(player);
+        return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        ModularPanel panel = new ModularPanel("roost_gui");
+        panel.bindPlayerInventory();
+
+        panel.child(
+            Flow.column()
+                .child(
+                    IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
+                        .asWidget()
+                        .margin(6, 0, 5, 0)
+                        .align(Alignment.TopLeft))
+                .child(
+                    SlotGroupWidget.builder()
+                        .row("OOOOOOOOO")
+                        .row("OOOOOOOOO")
+                        .row("OOOOOOOOO")
+                        .key('O', index -> new ItemSlot().slot(new ModularSlot(inv, index).accessibility(false, true)))
+                        .build()
+                        .topRel(0.15f)
+                        .alignX(Alignment.CENTER)));
+
+        panel.child(new Column().coverChildren());
+
+        return panel;
+    }
+}

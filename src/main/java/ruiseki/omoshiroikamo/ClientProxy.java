@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.client.handler.DameEvents;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.render.block.anvil.AnvilISBRH;
 import ruiseki.omoshiroikamo.client.render.block.anvil.AnvilTESR;
+import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.connectable.ConnectableISBRH;
 import ruiseki.omoshiroikamo.client.render.block.connectable.ConnectorEVTESR;
 import ruiseki.omoshiroikamo.client.render.block.connectable.ConnectorHVTESR;
@@ -42,6 +43,7 @@ import ruiseki.omoshiroikamo.client.render.item.backpack.BackpackRenderer;
 import ruiseki.omoshiroikamo.client.render.item.hammer.HammerRenderer;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
 import ruiseki.omoshiroikamo.common.block.anvil.TEAnvil;
+import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
 import ruiseki.omoshiroikamo.common.block.energyConnector.TEConnectorEV;
 import ruiseki.omoshiroikamo.common.block.energyConnector.TEConnectorHV;
 import ruiseki.omoshiroikamo.common.block.energyConnector.TEConnectorIV;
@@ -146,7 +148,11 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.LASER_CORE.get()), laserCoreTESR);
         LaserLensTESR laserLensTESR = new LaserLensTESR();
         ClientRegistry.bindTileEntitySpecialRenderer(TELaserLens.class, laserLensTESR);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.LASER_LENS.get()), laserLensTESR);
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.LASER_LENS.getItem(), laserLensTESR);
+
+        RoostTESR roostTESR = new RoostTESR();
+        ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, roostTESR);
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.ROOST.getItem(), roostTESR);
 
         if (ItemConfig.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());

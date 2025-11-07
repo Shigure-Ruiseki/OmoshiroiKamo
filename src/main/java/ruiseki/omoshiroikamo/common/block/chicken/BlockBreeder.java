@@ -23,47 +23,41 @@ import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
-public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProvider {
+public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaInfoProvider {
 
     @SideOnly(Side.CLIENT)
-    public IIcon wood, front, haySide, hay;
+    IIcon side, up, down;
 
-    protected BlockRoost() {
-        super(ModObject.blockRoost, TERoost.class, Material.wood);
+    protected BlockBreeder() {
+        super(ModObject.blockBreeder, TEBreeder.class, Material.wood);
     }
 
-    public static BlockRoost create() {
-        return new BlockRoost();
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, int meta) {
-        return new TERoost();
+    public static BlockBreeder create() {
+        return new BlockBreeder();
     }
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        wood = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        up = reg.registerIcon(LibResources.PREFIX_MOD + "hay_floor");
+        down = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        side = reg.registerIcon(LibResources.PREFIX_MOD + "curtain_side");
     }
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        return wood;
+        switch (side) {
+            case 0:
+                return this.up;
+            case 1:
+                return this.down;
+            default:
+                return this.side;
+        }
     }
 
     @Override
-    public int getRenderType() {
-        return -1;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
+    public TileEntity createTileEntity(World world, int meta) {
+        return new TEBreeder();
     }
 
     @Override
@@ -105,10 +99,12 @@ public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProv
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof TERoost roost) {
+        if (tileEntity instanceof TEBreeder roost) {
             DataChicken chicken1 = roost.getChickenData(0);
-            if (chicken1 != null) {
+            DataChicken chicken2 = roost.getChickenData(1);
+            if (chicken1 != null && chicken2 != null) {
                 tooltip.add(chicken1.getDisplaySummary());
+                tooltip.add(chicken2.getDisplaySummary());
                 tooltip.add("Progress: " + roost.getFormattedProgress());
             }
         }

@@ -71,6 +71,9 @@ public class OKCreativeTab extends CreativeTabs {
         addBlock(ModBlocks.MATERIAL.get());
         addBlock(ModBlocks.ANVIL.get());
         addBlock(ModBlocks.FURNACE.get());
+        addBlock(ModBlocks.ROOST.get());
+        addBlock(ModBlocks.ROOST_COLLECTOR.get());
+        addBlock(ModBlocks.BREEDER.get());
         addBlock(ModBlocks.BLOCK_ALABASTER.get());
         addBlock(ModBlocks.BLOCK_BASALT.get());
         addBlock(ModBlocks.BLOCK_HARDENED_STONE.get());

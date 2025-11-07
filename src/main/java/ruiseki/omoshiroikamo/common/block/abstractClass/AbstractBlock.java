@@ -55,8 +55,8 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
 
     @Override
     public void init() {
-        GameRegistry.registerBlock(this, modObject.unlocalisedName);
-        GameRegistry.registerTileEntity(teClass, modObject.unlocalisedName + "TileEntity");
+        GameRegistry.registerBlock(this, name);
+        GameRegistry.registerTileEntity(teClass, name + "TileEntity");
     }
 
     @Override

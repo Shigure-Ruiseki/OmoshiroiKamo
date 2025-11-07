@@ -25,15 +25,22 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     public AbstractStorageTE(SlotDefinition slotDefinition, MaterialEntry material) {
         this.slotDefinition = slotDefinition;
         this.material = material;
-        inv = new ItemStackHandler(slotDefinition.getNumSlots());
-        fluidTanks = new SmartTank[slotDefinition.getNumFluidSlots()];
-        for (int i = 0; i < fluidTanks.length; i++) {
-            if (material != null) {
-                fluidTanks[i] = new SmartTank(material);
-            } else {
-                fluidTanks[i] = new SmartTank(8000);
+
+        inv = new ItemStackHandler(slotDefinition.getItemSlots()) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                onContentsChange(slot);
             }
+        };
+
+        int fluidSlots = slotDefinition.getFluidSlots();
+        fluidTanks = new SmartTank[fluidSlots];
+        for (int i = 0; i < fluidSlots; i++) {
+            fluidTanks[i] = (material != null) ? new SmartTank(material) : new SmartTank(8000);
         }
+
         allSlots = new int[inv.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
@@ -196,4 +203,5 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
 
     protected abstract boolean isMachineItemValidForSlot(int slot, ItemStack itemstack);
 
+    public void onContentsChange(int slot) {}
 }

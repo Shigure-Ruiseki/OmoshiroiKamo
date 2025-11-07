@@ -1,0 +1,373 @@
+package ruiseki.omoshiroikamo.common.block.chicken;
+
+import java.text.DecimalFormat;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import com.enderio.core.api.common.util.IProgressTile;
+import com.enderio.core.common.util.ItemUtil;
+
+import ruiseki.omoshiroikamo.api.io.SlotDefinition;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
+
+public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
+
+    protected static final DecimalFormat FORMATTER = new DecimalFormat("0.0%");
+
+    protected int timeUntilNextDrop = 0;
+    protected int timeElapsed = 0;
+    protected int progress = 0;
+
+    protected boolean needsCacheRefresh = true;
+    protected DataChicken[] chickenCache;
+
+    public TERoostBase() {
+        super(new SlotDefinition().setItemSlots(3, 3));
+        chickenCache = new DataChicken[getSizeChickenInventory()];
+    }
+
+    @Override
+    protected void doUpdate() {
+        super.doUpdate();
+        if (!worldObj.isRemote) {
+            updateTimerIfNeeded();
+            spawnChickenDropIfNeeded();
+            updateProgress();
+        }
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Chicken / Seed getters
+     * -----------------------------------------------------------
+     */
+
+    public DataChicken getChickenData(int slot) {
+        if (slot < 0 || slot >= getSizeChickenInventory()) {
+            return null;
+        }
+
+        if (needsCacheRefresh) {
+            for (int i = 0; i < getSizeChickenInventory(); i++) {
+                ItemStack stack = getStackInSlot(i);
+
+                if (stack == null) {
+                    chickenCache[i] = null;
+                } else {
+                    chickenCache[i] = DataChicken.getDataFromStack(stack);
+                }
+            }
+            needsCacheRefresh = false;
+        }
+
+        return chickenCache[slot];
+    }
+
+    public void needsCacheRefresh() {
+        needsCacheRefresh = true;
+    }
+
+    protected boolean isFullChickens() {
+        for (int i = 0; i < getSizeChickenInventory(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (!DataChicken.isChicken(stack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected boolean isFullSeeds() {
+        int needed = requiredSeedsForDrop();
+        if (needed <= 0) {
+            return true;
+        }
+
+        ItemStack seedStack = getStackInSlot(getSizeChickenInventory());
+        if (seedStack == null || seedStack.getItem() == null) {
+            return false;
+        }
+
+        return seedStack.stackSize >= needed;
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Timer
+     * -----------------------------------------------------------
+     */
+
+    private int computeTimeIncrement() {
+        if (!isFullChickens()) {
+            return 0;
+        }
+
+        int time = Integer.MAX_VALUE;
+
+        for (int i = 0; i < getSizeChickenInventory(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack == null) {
+                return 0;
+            }
+
+            DataChicken chicken = DataChicken.getDataFromStack(stack);
+            if (chicken == null) {
+                return 0;
+            }
+
+            time = Math.min(time, chicken.getAddedTime(stack));
+        }
+        return time;
+    }
+
+    private void updateTimerIfNeeded() {
+        if (isFullChickens() && isFullSeeds() && !outputIsFull()) {
+            timeElapsed += computeTimeIncrement();
+            markDirty();
+        }
+    }
+
+    private void updateProgress() {
+
+        if (!isFullChickens() || !isFullSeeds()) {
+            progress = 0;
+            timeElapsed = 0;
+            timeUntilNextDrop = 0;
+            return;
+        }
+
+        progress = timeUntilNextDrop == 0 ? 0 : (timeElapsed * 1000 / timeUntilNextDrop);
+    }
+
+    private void resetTimer() {
+
+        timeElapsed = 0;
+        timeUntilNextDrop = 0;
+
+        for (int i = 0; i < getSizeChickenInventory(); i++) {
+            DataChicken chicken = getChickenData(i);
+            if (chicken != null) {
+                timeUntilNextDrop = Math.max(timeUntilNextDrop, chicken.getLayTime());
+            }
+        }
+
+        if (speedMultiplier() > 0) {
+            timeUntilNextDrop /= (int) speedMultiplier();
+        }
+
+        markDirty();
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Drop logic
+     * -----------------------------------------------------------
+     */
+
+    private void spawnChickenDropIfNeeded() {
+        if (isFullChickens() && isFullSeeds() && timeElapsed >= timeUntilNextDrop) {
+
+            if (timeUntilNextDrop > 0) {
+                decrStackSize(getSizeChickenInventory(), requiredSeedsForDrop());
+                spawnChickenDrop();
+            }
+
+            resetTimer();
+        }
+    }
+
+    protected boolean outputIsFull() {
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack == null) {
+                return false;
+            }
+            if (stack.stackSize < stack.getMaxStackSize()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected void putStackInOutput(ItemStack stack) {
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
+            stack = insertStack(stack, i);
+        }
+        markDirty();
+    }
+
+    private ItemStack insertStack(ItemStack stack, int index) {
+        if (stack == null) {
+            return null;
+        }
+
+        int max = Math.min(stack.getMaxStackSize(), getInventoryStackLimit());
+        ItemStack outputStack = getStackInSlot(index);
+
+        if (outputStack == null) {
+            if (stack.stackSize >= max) {
+                ItemStack insert = stack.copy();
+                insert.stackSize = max;
+                setInventorySlotContents(index, insert);
+                stack.stackSize -= max;
+                return stack.stackSize > 0 ? stack : null;
+            } else {
+                setInventorySlotContents(index, stack);
+                return null;
+            }
+        }
+
+        if (ItemUtil.areStackMergable(outputStack, stack)) {
+            int space = max - outputStack.stackSize;
+            int move = Math.min(stack.stackSize, space);
+
+            outputStack.stackSize += move;
+            stack.stackSize -= move;
+
+            return stack.stackSize > 0 ? stack : null;
+        }
+
+        return stack;
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Progress UI
+     * -----------------------------------------------------------
+     */
+
+    @Override
+    public float getProgress() {
+        return Math.max(0f, progress / 1000.0f);
+    }
+
+    @Override
+    public void setProgress(float progress) {
+        this.progress = (int) (progress * 1000.0);
+    }
+
+    public String getFormattedProgress() {
+        return formatProgress(getProgress());
+    }
+
+    public String formatProgress(double progress) {
+        return FORMATTER.format(progress);
+    }
+
+    @Override
+    public boolean isActive() {
+        return getProgress() > 0f;
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Inventory overrides
+     * -----------------------------------------------------------
+     */
+
+    @Override
+    public ItemStack decrStackSize(int slot, int amount) {
+        ItemStack stack = super.decrStackSize(slot, amount);
+        needsCacheRefresh();
+        resetTimer();
+
+        return stack;
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        super.setInventorySlotContents(slot, stack);
+        needsCacheRefresh();
+        resetTimer();
+    }
+
+    @Override
+    public void onContentsChange(int slot) {
+        super.onContentsChange(slot);
+        needsCacheRefresh();
+    }
+
+    @Override
+    protected void updateEntityClient() {
+        super.updateEntityClient();
+    }
+
+    @Override
+    protected boolean isMachineItemValidForSlot(int slot, ItemStack stack) {
+        if (slot == 2) {
+            return isSeed(stack);
+        }
+        return slotDefinition.isInputSlot(slot) && DataChicken.isChicken(stack);
+    }
+
+    public static boolean isSeed(ItemStack stack) {
+        Item item = stack.getItem();
+        return (item == Items.wheat_seeds || item == Items.melon_seeds || item == Items.pumpkin_seeds);
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Saving
+     * -----------------------------------------------------------
+     */
+
+    @Override
+    public void writeCommon(NBTTagCompound root) {
+        super.writeCommon(root);
+        root.setInteger("timeUntilNextDrop", timeUntilNextDrop);
+        root.setInteger("timeElapsed", timeElapsed);
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
+        timeUntilNextDrop = root.getInteger("timeUntilNextDrop");
+        timeElapsed = root.getInteger("timeElapsed");
+    }
+
+    /*
+     * -----------------------------------------------------------
+     * Abstracts for subclasses
+     * -----------------------------------------------------------
+     */
+
+    protected abstract int getSizeChickenInventory();
+
+    protected abstract void spawnChickenDrop();
+
+    protected abstract int requiredSeedsForDrop();
+
+    protected abstract double speedMultiplier();
+
+    protected void playSpawnSound() {
+        worldObj.playSoundEffect(xCoord, yCoord, zCoord, "mob.chicken.plop", 0.5F, 0.8F);
+    }
+
+    protected void playPutChickenInSound() {
+        worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
+    }
+
+    protected void playPullChickenOutSound() {
+        worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        openGui(player);
+        return true;
+    }
+}

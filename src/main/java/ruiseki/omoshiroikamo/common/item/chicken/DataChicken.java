@@ -24,6 +24,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModItems;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class DataChicken {
@@ -62,7 +63,7 @@ public class DataChicken {
             .add(new ChatComponentTranslation(LibResources.TOOLTIP + "chicken.strength", strength).getFormattedText());
     }
 
-    public EntityChicken buildEntity(World world) {
+    public EntityChickensChicken buildEntity(World world) {
         EntityChickensChicken chicken = new EntityChickensChicken(world);
         chicken.readEntityFromNBT(createTagCompound());
         chicken.setChickenType(getChickenType());
@@ -108,6 +109,34 @@ public class DataChicken {
         ItemStack stack = chicken.createLayItem();
         stack.stackSize = gain >= 10 ? 3 : gain >= 5 ? 2 : 1;
         return stack;
+    }
+
+    private static ItemStack createChildStack(DataChicken chickenA, DataChicken chickenB, World world) {
+        EntityChickensChicken parentA = chickenA.buildEntity(world);
+        EntityChickensChicken parentB = chickenB.buildEntity(world);
+
+        if (parentA == null || parentB == null) {
+            return null;
+        }
+
+        EntityChicken childEntity = parentA.createChild(parentB);
+        if (!(childEntity instanceof EntityChickensChicken child)) {
+            return null;
+        }
+
+        DataChicken childData = DataChicken.getDataFromEntity(child);
+        if (childData == null) {
+            return null;
+        }
+
+        return childData.buildChickenStack();
+    }
+
+    public ItemStack createChildStack(DataChicken other, World world) {
+        if (rand.nextBoolean()) {
+            return createChildStack(this, other, world);
+        }
+        return createChildStack(other, this, world);
     }
 
     public NBTTagCompound createTagCompound() {
@@ -160,7 +189,7 @@ public class DataChicken {
     }
 
     public String getDisplaySummary() {
-        return getDisplayName() + " " + growth + "/" + gain + "/" + strength;
+        return LibMisc.LANG.localize(getDisplayName()) + ": " + growth + "/" + gain + "/" + strength;
     }
 
     public static List<DataChicken> getAllChickens() {

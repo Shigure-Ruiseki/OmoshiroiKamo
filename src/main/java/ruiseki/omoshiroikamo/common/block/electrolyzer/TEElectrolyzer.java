@@ -40,7 +40,10 @@ import ruiseki.omoshiroikamo.common.recipe.chance.ChanceItemStack;
 public class TEElectrolyzer extends AbstractPoweredTaskTE implements IFluidHandlerAdv {
 
     public TEElectrolyzer() {
-        super(new SlotDefinition(0, 2, 3, 5, 0, 2, 3, 5, -1, -1), MaterialRegistry.get("Iron"));
+        super(
+            new SlotDefinition().setItemSlots(3, 3)
+                .setFluidSlots(3, 3),
+            MaterialRegistry.get("Iron"));
     }
 
     @Override
@@ -58,7 +61,7 @@ public class TEElectrolyzer extends AbstractPoweredTaskTE implements IFluidHandl
         if (stack == null) {
             return false;
         }
-        return slot >= slotDefinition.minItemInputSlot && slot <= slotDefinition.maxItemInputSlot;
+        return slotDefinition.isInputSlot(slot);
     }
 
     @Override
@@ -92,7 +95,7 @@ public class TEElectrolyzer extends AbstractPoweredTaskTE implements IFluidHandl
                             return new FluidSlot()
                                 .syncHandler(
                                     new FluidSlotSyncHandler(fluidTanks[index])
-                                        .canFillSlot(index <= slotDefinition.maxFluidInputSlot))
+                                        .canFillSlot(slotDefinition.isFluidInputSlot(index)))
                                 .name("Slot " + index);
                         })
                         .build()

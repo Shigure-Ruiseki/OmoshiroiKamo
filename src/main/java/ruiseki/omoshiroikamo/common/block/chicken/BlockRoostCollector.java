@@ -1,12 +1,9 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -19,51 +16,40 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
-public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProvider {
+public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 
     @SideOnly(Side.CLIENT)
-    public IIcon wood, front, haySide, hay;
+    IIcon side, down;
 
-    protected BlockRoost() {
-        super(ModObject.blockRoost, TERoost.class, Material.wood);
+    protected BlockRoostCollector() {
+        super(ModObject.blockRoostCollector, TERoostCollector.class, Material.wood);
     }
 
-    public static BlockRoost create() {
-        return new BlockRoost();
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, int meta) {
-        return new TERoost();
+    public static BlockRoostCollector create() {
+        return new BlockRoostCollector();
     }
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        wood = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        down = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        side = reg.registerIcon(LibResources.PREFIX_MOD + "slat_side");
     }
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        return wood;
+        switch (side) {
+            case 0, 1:
+                return this.down;
+            default:
+                return this.side;
+        }
     }
 
     @Override
-    public int getRenderType() {
-        return -1;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
+    public TileEntity createTileEntity(World world, int meta) {
+        return new TERoostCollector();
     }
 
     @Override
@@ -100,22 +86,5 @@ public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProv
         entityItem.motionZ = world.rand.nextGaussian() * motion;
 
         world.spawnEntityInWorld(entityItem);
-    }
-
-    @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof TERoost roost) {
-            DataChicken chicken1 = roost.getChickenData(0);
-            if (chicken1 != null) {
-                tooltip.add(chicken1.getDisplaySummary());
-                tooltip.add("Progress: " + roost.getFormattedProgress());
-            }
-        }
-    }
-
-    @Override
-    public int getDefaultDisplayMask(World world, int x, int y, int z) {
-        return 0;
     }
 }

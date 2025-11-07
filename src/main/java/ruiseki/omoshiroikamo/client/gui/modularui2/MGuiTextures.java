@@ -4,6 +4,7 @@ import static ruiseki.omoshiroikamo.client.gui.modularui2.MUITexture.icon;
 
 import com.cleanroommc.modularui.drawable.UITexture;
 
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public interface MGuiTextures {
@@ -68,5 +69,15 @@ public interface MGuiTextures {
         .location(LibResources.PROGRESS_ENERGY)
         .adaptable(1)
         .imageSize(16, 128)
+        .build();
+
+    UITexture BREEDER_PROGRESS = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/widgets/progress_breeder")
+        .imageSize(36, 36)
+        .build();
+
+    UITexture ROOST_SLOT = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/slot/roost_slot")
+        .imageSize(18, 18)
         .build();
 }

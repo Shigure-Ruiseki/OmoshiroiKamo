@@ -11,31 +11,22 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockOK extends BlockEnder {
 
-    protected String name;
     protected String textureName;
 
     public BlockOK(ModObject modObject) {
-        super(modObject.unlocalisedName, null, Material.iron);
-        this.name = modObject.unlocalisedName;
+        this(modObject, null, Material.iron);
     }
 
     public BlockOK(ModObject modObject, Material material) {
-        super(modObject.unlocalisedName, null, material);
-        this.name = modObject.unlocalisedName;
+        this(modObject, null, material);
     }
 
     public BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass) {
-        super(modObject.unlocalisedName, teClass, Material.iron);
-        this.name = modObject.unlocalisedName;
+        this(modObject, teClass, Material.iron);
     }
 
     public BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, Material material) {
         super(modObject.unlocalisedName, teClass, material);
-        this.name = modObject.unlocalisedName;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public BlockOK setTextureName(String texture) {

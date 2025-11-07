@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.common.item.ItemHammer;
 public class TEAnvil extends AbstractTaskTE {
 
     public TEAnvil() {
-        super(new SlotDefinition(0, 0, 1, 8, -1, -1));
+        super(new SlotDefinition().setItemSlots(1, 9));
     }
 
     @Override
@@ -25,7 +25,9 @@ public class TEAnvil extends AbstractTaskTE {
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
-        if (world.isRemote) return true;
+        if (world.isRemote) {
+            return true;
+        }
 
         ItemStack held = player.getHeldItem();
         boolean isSneaking = player.isSneaking();
@@ -105,7 +107,9 @@ public class TEAnvil extends AbstractTaskTE {
                 held.stackSize -= insertCount;
             } else if (existing.isItemEqual(held) && ItemStack.areItemStackTagsEqual(existing, held)) {
                 int canAdd = Math.min(held.stackSize, maxStackSize - existing.stackSize);
-                if (canAdd <= 0) return false;
+                if (canAdd <= 0) {
+                    return false;
+                }
 
                 existing.stackSize += canAdd;
                 inv.setStackInSlot(0, existing);

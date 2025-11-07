@@ -48,6 +48,8 @@ public enum ModObject {
     blockFurnace,
 
     blockRoost,
+    blockBreeder,
+    blockRoostCollector,
 
     itemOperationOrb,
     itemBackPack,

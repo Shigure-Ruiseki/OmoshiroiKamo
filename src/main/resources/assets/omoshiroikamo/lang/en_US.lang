@@ -206,7 +206,7 @@ item.liquidEgg.lava.name=Lava Egg
 item.coloredEgg.white.name=Bone White Chicken Egg
 item.coloredEgg.orange.name=Orange Chicken Egg
 item.coloredEgg.magenta.name=Magenta Chicken Egg
-item.coloredEgg.lightBlue.name=Light Blue Chicken Egg
+item.coloredEgg.light_blue.name=Light Blue Chicken Egg
 item.coloredEgg.yellow.name=Yellow Chicken Egg
 item.coloredEgg.lime.name=Lime Chicken Egg
 item.coloredEgg.pink.name=Pink Chicken Egg
@@ -312,6 +312,10 @@ tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
 tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
 tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
 tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
+
+tile.roost.name=Roost
+tile.roostCollector.name=Roost Collector
+tile.breeder.name=Chicken Breeder
 
 #ENTITY
 
