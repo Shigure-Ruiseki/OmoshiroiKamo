@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -16,17 +18,17 @@ import com.enderio.core.common.TileEntityEnder;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
 public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaInfoProvider {
 
     @SideOnly(Side.CLIENT)
-    IIcon side, up, down;
+    IIcon side, floor, top;
 
     protected BlockBreeder() {
         super(ModObject.blockBreeder, TEBreeder.class, Material.wood);
@@ -38,21 +40,19 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaInfo
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        up = reg.registerIcon(LibResources.PREFIX_MOD + "hay_floor");
-        down = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        floor = reg.registerIcon(LibResources.PREFIX_MOD + "hay_floor");
+        top = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
         side = reg.registerIcon(LibResources.PREFIX_MOD + "curtain_side");
     }
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        switch (side) {
-            case 0:
-                return this.up;
-            case 1:
-                return this.down;
-            default:
-                return this.side;
-        }
+        return this.side;
+    }
+
+    @Override
+    public int getRenderType() {
+        return JSON_ISBRH_ID;
     }
 
     @Override
@@ -61,7 +61,8 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaInfo
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
+    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {
+    }
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {

@@ -30,8 +30,9 @@ import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierSpeed
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierStrength;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierWaterBreathing;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.BlockQuantumBeacon;
-import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.core.BlockLaserCore;
-import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.lens.BlockLaserLens;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockLens;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockLaserCore;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.BlockQuantumOreExtractor;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.BlockQuantumResExtractor;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarArray;
@@ -51,7 +52,8 @@ public enum ModBlocks {
     QUANTUM_RES_EXTRACTOR(true, BlockQuantumResExtractor.create()),
     QUANTUM_BEACON(true, BlockQuantumBeacon.create()),
     LASER_CORE(true, BlockLaserCore.create()),
-    LASER_LENS(true, BlockLaserLens.create()),
+    COLORED_LENS(true, BlockColoredLens.create()),
+    LENS(true, BlockLens.create()),
     SOLAR_ARRAY(true, BlockSolarArray.create()),
     SOLAR_CELL(true, BlockSolarCell.create()),
     STRUCTURE_FRAME(true, BlockStructureFrame.create()),
@@ -79,7 +81,8 @@ public enum ModBlocks {
 
     ROOST(true, BlockRoost.create()),
     BREEDER(true, BlockBreeder.create()),
-    ROOST_COLLECTOR(true, BlockRoostCollector.create()),;
+    ROOST_COLLECTOR(true, BlockRoostCollector.create()),
+    ;
 
     public static final ModBlocks[] VALUES = values();
 

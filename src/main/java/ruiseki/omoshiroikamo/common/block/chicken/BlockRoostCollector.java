@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -21,7 +23,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 
     @SideOnly(Side.CLIENT)
-    IIcon side, down;
+    IIcon side, face;
 
     protected BlockRoostCollector() {
         super(ModObject.blockRoostCollector, TERoostCollector.class, Material.wood);
@@ -33,18 +35,18 @@ public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        down = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        face = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
         side = reg.registerIcon(LibResources.PREFIX_MOD + "slat_side");
     }
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        switch (side) {
-            case 0, 1:
-                return this.down;
-            default:
-                return this.side;
-        }
+        return this.side;
+    }
+
+    @Override
+    public int getRenderType() {
+        return JSON_ISBRH_ID;
     }
 
     @Override

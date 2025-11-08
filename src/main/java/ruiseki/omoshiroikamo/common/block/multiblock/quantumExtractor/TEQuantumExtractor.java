@@ -30,7 +30,6 @@ import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
-import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.lens.BlockLaserLens;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT1;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT4;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT4;
@@ -132,7 +131,7 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
             return false;
         }
 
-        if (block == ModBlocks.LASER_LENS.get()) {
+        if (block == ModBlocks.COLORED_LENS.get() || block == ModBlocks.LENS.get()) {
             lens = new BlockCoord(x, y, z);
             return true;
         }
@@ -184,7 +183,8 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
             if (block.isAir(worldObj, xCoord, y, zCoord) || block == Blocks.bedrock
                 || block == Blocks.glass
                 || block == ModBlocks.LASER_CORE.get()
-                || block == ModBlocks.LASER_LENS.get()) {
+                || block == ModBlocks.LENS.get()
+                || block == ModBlocks.COLORED_LENS.get()) {
                 continue;
             }
 
@@ -258,21 +258,19 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
         if (this.possibleResults.isEmpty()) {
             if (lens != null) {
                 Block block = lens.getBlock(worldObj);
-                if (block instanceof BlockLaserLens) {
+                if (block instanceof BlockColoredLens) {
                     int meta = lens.getMetadata(worldObj);
-                    if (meta >= 1) {
-                        this.focusColor = ((BlockLaserLens) block).getFocusColor(meta);
-                        this.possibleResults.clear();
-                        this.possibleResults.addAll(
-                            this.getRegistry()
-                                .getFocusedList(this.focusColor, this.focusBoostModifier));
-                    } else {
-                        this.focusColor = null;
-                        this.possibleResults.clear();
-                        this.possibleResults.addAll(
-                            this.getRegistry()
-                                .getUnFocusedList());
-                    }
+                    this.focusColor = ((BlockColoredLens) block).getFocusColor(meta);
+                    this.possibleResults.clear();
+                    this.possibleResults.addAll(
+                        this.getRegistry()
+                            .getFocusedList(this.focusColor, this.focusBoostModifier));
+                } else {
+                    this.focusColor = null;
+                    this.possibleResults.clear();
+                    this.possibleResults.addAll(
+                        this.getRegistry()
+                            .getUnFocusedList());
                 }
             } else {
                 this.possibleResults.clear();
@@ -403,12 +401,10 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
     }
 
     @Override
-    public void openInventory() {
-    }
+    public void openInventory() {}
 
     @Override
-    public void closeInventory() {
-    }
+    public void closeInventory() {}
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {

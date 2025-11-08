@@ -303,8 +303,9 @@ public class QuantumResExtractorStructure {
             .addElement(
                 'L',
                 ofChain(
-                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LASER_LENS.get(), 0),
-                    ofBlockAnyMeta(ModBlocks.LASER_LENS.get(), 0)))
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LENS.get(), 0),
+                    ofBlock(ModBlocks.LENS.get(), 0),
+                    ofBlockAnyMeta(ModBlocks.COLORED_LENS.get(), 0)))
             .addElement(
                 'A',
                 ofChain(
@@ -326,8 +327,9 @@ public class QuantumResExtractorStructure {
             .addElement(
                 'L',
                 ofChain(
-                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LASER_LENS.get(), 0),
-                    ofBlockAnyMeta(ModBlocks.LASER_LENS.get(), 0)))
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LENS.get(), 0),
+                    ofBlock(ModBlocks.LENS.get(), 0),
+                    ofBlockAnyMeta(ModBlocks.COLORED_LENS.get(), 0)))
             .addElement(
                 'A',
                 ofChain(
@@ -349,8 +351,9 @@ public class QuantumResExtractorStructure {
             .addElement(
                 'L',
                 ofChain(
-                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LASER_LENS.get(), 0),
-                    ofBlockAnyMeta(ModBlocks.LASER_LENS.get(), 0)))
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LENS.get(), 0),
+                    ofBlock(ModBlocks.LENS.get(), 0),
+                    ofBlockAnyMeta(ModBlocks.COLORED_LENS.get(), 0)))
             .addElement(
                 'A',
                 ofChain(
@@ -372,8 +375,9 @@ public class QuantumResExtractorStructure {
             .addElement(
                 'L',
                 ofChain(
-                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LASER_LENS.get(), 0),
-                    ofBlockAnyMeta(ModBlocks.LASER_LENS.get(), 0)))
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LENS.get(), 0),
+                    ofBlock(ModBlocks.LENS.get(), 0),
+                    ofBlockAnyMeta(ModBlocks.COLORED_LENS.get(), 0)))
             .addElement(
                 'A',
                 ofChain(

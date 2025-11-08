@@ -18,9 +18,9 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
-import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
 
 public class TEBreeder extends TERoostBase {

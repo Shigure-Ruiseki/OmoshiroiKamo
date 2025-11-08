@@ -1,12 +1,12 @@
-package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.core;
+package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor;
+
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.common.block.BlockOK;
 public class BlockLaserCore extends BlockOK {
 
     protected BlockLaserCore() {
-        super(ModObject.blockLaserCore, TELaserCore.class);
+        super(ModObject.blockLaserCore);
         setTextureName("laser_core");
     }
 
@@ -28,13 +28,8 @@ public class BlockLaserCore extends BlockOK {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int meta) {
-        return new TELaserCore();
-    }
-
-    @Override
     public int getRenderType() {
-        return -1;
+        return JSON_ISBRH_ID;
     }
 
     @Override

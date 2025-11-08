@@ -25,11 +25,11 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
-import ruiseki.omoshiroikamo.common.entity.chicken.ChickenNetherPopulateHandler;
+import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
-import ruiseki.omoshiroikamo.common.entity.chicken.LiquidEggRegistry;
-import ruiseki.omoshiroikamo.common.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.common.util.handler.ChickenNetherPopulateHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
 

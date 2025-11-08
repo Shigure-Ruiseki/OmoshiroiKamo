@@ -58,7 +58,7 @@ public enum ModAchievements {
     CRAFT_MODIFIER_SATURATION("craft_modifier_saturation", 8, 14, ModBlocks.MODIFIER_SATURATION.newItemStack(),
         CRAFT_MODIFIER_CORE),
 
-    CRAFT_COLORED_LENS("craft_colored_lens", 10, 3, ModBlocks.LASER_LENS.newItemStack(), null);
+    CRAFT_COLORED_LENS("craft_colored_lens", 10, 3, ModBlocks.COLORED_LENS.newItemStack(), null);
 
     public static final ModAchievements[] VALUES = values();
 

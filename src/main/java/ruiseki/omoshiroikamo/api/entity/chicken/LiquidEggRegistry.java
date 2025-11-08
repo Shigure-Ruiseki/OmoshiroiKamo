@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.common.entity.chicken;
+package ruiseki.omoshiroikamo.api.entity.chicken;
 
 import java.util.Collection;
 import java.util.HashMap;

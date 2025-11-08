@@ -127,7 +127,7 @@ public class BlockRecipes {
                 'G',
                 "blockGold",
                 'L',
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 "oreQuartz",
                 'I',
@@ -147,7 +147,7 @@ public class BlockRecipes {
                 'G',
                 "blockDiamond",
                 'L',
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0),
                 'C',
@@ -163,7 +163,7 @@ public class BlockRecipes {
                 'E',
                 ModItems.STABILIZED_ENDER_PEAR.get(),
                 'L',
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1),
                 'M',
@@ -179,7 +179,7 @@ public class BlockRecipes {
                 'E',
                 "itemNetherStar",
                 'L',
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2),
                 'M',
@@ -195,8 +195,7 @@ public class BlockRecipes {
                 'G',
                 "blockGold",
                 'L',
-
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 new ItemStack(Blocks.end_stone, 1, 0),
                 'I',
@@ -216,8 +215,7 @@ public class BlockRecipes {
                 'G',
                 "blockDiamond",
                 'L',
-
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0),
                 'C',
@@ -233,8 +231,7 @@ public class BlockRecipes {
                 'E',
                 ModItems.STABILIZED_ENDER_PEAR.get(),
                 'L',
-
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1),
                 'M',
@@ -250,8 +247,7 @@ public class BlockRecipes {
                 'E',
                 "itemNetherStar",
                 'L',
-
-                ModBlocks.LASER_LENS.get(),
+                ModBlocks.LENS.get(),
                 'Q',
                 ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2),
                 'M',
@@ -506,20 +502,17 @@ public class BlockRecipes {
                 ModBlocks.STRUCTURE_FRAME.newItemStack(1, 10)));
 
         // Clear Lens
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.LASER_LENS.get(), "G G", "GGG", "G G", 'G', "blockGlass"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.LENS.get(), "G G", "GGG", "G G", 'G', "blockGlass"));
 
         // Color Lens
         for (int i = 0; i < DYE_ORE_NAMES.length; i++) {
             GameRegistry.addRecipe(
                 new ShapelessOreRecipe(
-                    ModBlocks.LASER_LENS.newItemStack(1, i + 1),
-                    ModBlocks.LASER_LENS.get(),
+                    ModBlocks.COLORED_LENS.newItemStack(1, i),
+                    ModBlocks.LENS.get(),
                     DYE_ORE_NAMES[i]));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-
-                    ModBlocks.LASER_LENS.get(),
-                    ModBlocks.LASER_LENS.newItemStack(1, i + 1)));
+            GameRegistry
+                .addRecipe(new ShapelessOreRecipe(ModBlocks.LENS.get(), ModBlocks.COLORED_LENS.newItemStack(1, i)));
         }
 
         // Laser Core

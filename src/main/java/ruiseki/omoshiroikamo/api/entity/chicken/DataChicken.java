@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.common.item.chicken;
+package ruiseki.omoshiroikamo.api.entity.chicken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +20,6 @@ import net.minecraft.world.World;
 
 import com.enderio.core.common.util.BlockCoord;
 
-import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
-import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;

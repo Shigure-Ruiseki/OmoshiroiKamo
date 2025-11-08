@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.common.entity.chicken;
+package ruiseki.omoshiroikamo.api.entity.chicken;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.fluids.Fluid;

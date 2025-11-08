@@ -14,9 +14,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.enderio.core.api.common.util.IProgressTile;
 import com.enderio.core.common.util.ItemUtil;
 
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
 

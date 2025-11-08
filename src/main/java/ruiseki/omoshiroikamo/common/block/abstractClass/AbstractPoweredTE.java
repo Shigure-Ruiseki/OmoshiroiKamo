@@ -17,8 +17,8 @@ import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.plugin.compat.IC2Compat;
 
-@Optional.InterfaceList({@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
-    @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2")})
+@Optional.InterfaceList({ @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
+    @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "IC2") })
 public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyHandler, IEnergySink, IPowerContainer {
 
     private int storedEnergyRF = 0;

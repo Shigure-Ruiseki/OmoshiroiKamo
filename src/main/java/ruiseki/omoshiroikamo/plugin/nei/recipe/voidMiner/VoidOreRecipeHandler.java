@@ -16,7 +16,7 @@ import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
-import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.lens.BlockLaserLens;
+import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -94,11 +94,12 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
         IFocusableRegistry registry = QuantumExtractorRecipes.quantumOreExtractorRegistry;
 
         Item item = ingredient.getItem();
-        Item lensItem = ModBlocks.LASER_LENS.getItem();
-        boolean isLens = item == lensItem;
+        Item coloredLend = ModBlocks.COLORED_LENS.getItem();
+        Item lens = ModBlocks.LENS.getItem();
+        boolean isLens = (item == lens || item == coloredLend);
 
         if (isLens) {
-            if (ingredient.getItemDamage() == 0) {
+            if (ingredient.getItem() == lens) {
                 for (WeightedStackBase ws : registry.getUnFocusedList()) {
                     ItemStack output = ws.getMainStack();
                     if (output != null) {
@@ -108,8 +109,8 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
                     }
                 }
             } else {
-                BlockLaserLens lens = (BlockLaserLens) Block.getBlockFromItem(ingredient.getItem());
-                DyeColor color = lens.getFocusColor(ingredient.getItemDamage());
+                BlockColoredLens coloredLens = (BlockColoredLens) Block.getBlockFromItem(ingredient.getItem());
+                DyeColor color = coloredLens.getFocusColor(ingredient.getItemDamage());
                 List<WeightedStackBase> focusedList = registry.getFocusedList(color, 1.0f);
 
                 for (WeightedStackBase ws : focusedList) {
@@ -141,10 +142,10 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
 
             this.color = color;
             if (color == null) {
-                this.input.add(new PositionedStack(ModBlocks.LASER_LENS.newItemStack(1, 0), 75, 16));
+                this.input.add(new PositionedStack(ModBlocks.LENS.newItemStack(1, 0), 75, 16));
             } else {
                 int lens = color.ordinal() + 1;
-                this.input.add(new PositionedStack(ModBlocks.LASER_LENS.newItemStack(1, lens), 75, 16));
+                this.input.add(new PositionedStack(ModBlocks.COLORED_LENS.newItemStack(1, lens), 75, 16));
             }
             this.output = new PositionedStackAdv(recipe.getMainStack(), 125, 16)
                 .setChance((float) recipe.getWeight() / 100);

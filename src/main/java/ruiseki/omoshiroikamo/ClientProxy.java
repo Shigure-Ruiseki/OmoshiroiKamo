@@ -23,8 +23,6 @@ import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.render.block.anvil.AnvilTESR;
 import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.nanoBotBeacon.NanoBotBeaconTESR;
-import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.LaserCoreTESR;
-import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.LaserLensTESR;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarArrayTESR;
 import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarCellISBRH;
@@ -38,8 +36,6 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeac
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT2;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT3;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.TEQuantumBeaconT4;
-import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.core.TELaserCore;
-import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.lens.TELaserLens;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT1;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT2;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuantumOreExtractorT3;
@@ -112,16 +108,8 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient
             .registerItemRenderer(Item.getItemFromBlock(ModBlocks.QUANTUM_BEACON.get()), nanoBotBeaconTESR);
 
-        LaserCoreTESR laserCoreTESR = new LaserCoreTESR();
-        ClientRegistry.bindTileEntitySpecialRenderer(TELaserCore.class, laserCoreTESR);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.LASER_CORE.get()), laserCoreTESR);
-        LaserLensTESR laserLensTESR = new LaserLensTESR();
-        ClientRegistry.bindTileEntitySpecialRenderer(TELaserLens.class, laserLensTESR);
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.LASER_LENS.getItem(), laserLensTESR);
-
         RoostTESR roostTESR = new RoostTESR();
         ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, roostTESR);
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.ROOST.getItem(), roostTESR);
 
         if (ItemConfig.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());

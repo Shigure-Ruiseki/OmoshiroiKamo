@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.common.entity.chicken;
+package ruiseki.omoshiroikamo.common.util.handler;
 
 import static net.minecraft.util.AxisAlignedBB.getBoundingBox;
 
@@ -13,6 +13,7 @@ import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import com.enderio.core.common.util.BlockCoord;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 
 public class ChickenNetherPopulateHandler {
 

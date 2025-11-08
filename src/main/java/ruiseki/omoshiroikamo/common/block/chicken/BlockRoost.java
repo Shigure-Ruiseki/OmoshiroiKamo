@@ -1,10 +1,13 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,17 +19,18 @@ import com.enderio.core.common.TileEntityEnder;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.item.chicken.DataChicken;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
 public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProvider {
 
     @SideOnly(Side.CLIENT)
-    public IIcon wood, front, haySide, hay;
+    public IIcon wood, front, hay_side, hay;
 
     protected BlockRoost() {
         super(ModObject.blockRoost, TERoost.class, Material.wood);
@@ -43,7 +47,10 @@ public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProv
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
+        hay_side = reg.registerIcon(LibResources.PREFIX_MOD + "hay_side");
+        hay = reg.registerIcon(LibResources.PREFIX_MOD + "hay_floor");
         wood = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
+        front = reg.registerIcon(LibResources.PREFIX_MOD + "curtain_side");
     }
 
     @Override
@@ -53,16 +60,18 @@ public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProv
 
     @Override
     public int getRenderType() {
-        return -1;
+        return JSON_ISBRH_ID;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, player, stack);
+        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
+        world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
     }
 
     @Override
     public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
         return false;
     }
 

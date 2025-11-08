@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "omoshiroikamo:plain_face",
+    "down": "omoshiroikamo:plain_face",
+    "up": "omoshiroikamo:plain_face",
+    "north": "omoshiroikamo:slat_side",
+    "east": "omoshiroikamo:slat_side",
+    "south": "omoshiroikamo:slat_side",
+    "west": "omoshiroikamo:slat_side"
+  }
+}
