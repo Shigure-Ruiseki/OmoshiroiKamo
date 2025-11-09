@@ -73,6 +73,7 @@ public enum ModObject {
     itemLiquidEgg,
     itemAnalyzer,
     itemSolidXp,
+    itemCowSpawnEgg,
     itemItemMaterial,
     itemBucketMaterial,
     itemBucketFluid,

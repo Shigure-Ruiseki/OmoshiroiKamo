@@ -107,7 +107,7 @@ public class ThermalChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
 
         setParents(basalzRodChicken, MetalsChickens.saltpeterChicken, BaseChickens.blazeChicken);
         setParents(blitzRodChicken, basalzRodChicken, MetalsChickens.sulfurChicken);

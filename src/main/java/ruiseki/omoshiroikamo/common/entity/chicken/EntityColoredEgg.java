@@ -61,7 +61,7 @@ public class EntityColoredEgg extends EntityEgg {
 
             for (int j = 0; j < i; ++j) {
                 EntityChickensChicken entityChicken = new EntityChickensChicken(this.worldObj);
-                entityChicken.setChickenType(getChickenTypeInternal());
+                entityChicken.setType(getChickenTypeInternal());
                 entityChicken.setGrowingAge(-24000);
                 entityChicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
                 this.worldObj.spawnEntityInWorld(entityChicken);

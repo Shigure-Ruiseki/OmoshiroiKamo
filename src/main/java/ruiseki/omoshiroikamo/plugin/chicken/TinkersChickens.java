@@ -89,7 +89,7 @@ public class TinkersChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         setParents(arditeChicken, BaseChickens.blazeChicken, BaseChickens.magmaChicken);
         setParents(colbaltChicken, BaseChickens.netherwartChicken, BaseChickens.ghastChicken);
         setParents(manyullynChicken, arditeChicken, colbaltChicken);

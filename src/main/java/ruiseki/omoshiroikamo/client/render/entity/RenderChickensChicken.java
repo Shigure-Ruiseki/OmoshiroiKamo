@@ -39,23 +39,24 @@ public class RenderChickensChicken extends RenderLiving {
         return (MathHelper.sin(flap) + 1.0F) * flapSpeed;
     }
 
-    public void doRender(EntityChickensChicken entity, double x, double y, double z, float yaw, float partialTicks) {
+    public void doRenderChicken(EntityChickensChicken entity, double x, double y, double z, float yaw,
+        float partialTicks) {
         super.doRender((EntityLiving) entity, x, y, z, yaw, partialTicks);
     }
 
     @Override
     public void doRender(EntityLiving entity, double x, double y, double z, float yaw, float partialTicks) {
-        super.doRender((EntityChickensChicken) entity, x, y, z, yaw, partialTicks);
+        this.doRenderChicken((EntityChickensChicken) entity, x, y, z, yaw, partialTicks);
     }
 
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float yaw, float partialTicks) {
-        super.doRender((EntityChickensChicken) entity, x, y, z, yaw, partialTicks);
+        this.doRenderChicken((EntityChickensChicken) entity, x, y, z, yaw, partialTicks);
     }
 
     @Override
     public void doRender(Entity entity, double x, double y, double z, float yaw, float partialTicks) {
-        super.doRender((EntityChickensChicken) entity, x, y, z, yaw, partialTicks);
+        this.doRenderChicken((EntityChickensChicken) entity, x, y, z, yaw, partialTicks);
     }
 
 }

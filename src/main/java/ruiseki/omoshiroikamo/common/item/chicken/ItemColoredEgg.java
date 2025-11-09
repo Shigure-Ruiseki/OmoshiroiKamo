@@ -39,7 +39,7 @@ public class ItemColoredEgg extends ItemOK {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             if (chicken.isDye()) {
                 list.add(new ItemStack(item, 1, chicken.getDyeMetadata()));
             }
@@ -53,7 +53,7 @@ public class ItemColoredEgg extends ItemOK {
     }
 
     public int getChickenType(ItemStack itemStack) {
-        ChickensRegistryItem chicken = ChickensRegistry.findDyeChicken(itemStack.getItemDamage());
+        ChickensRegistryItem chicken = ChickensRegistry.INSTANCE.findDyeChicken(itemStack.getItemDamage());
         if (chicken == null) {
             return -1;
         }

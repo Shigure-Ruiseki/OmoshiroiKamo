@@ -56,6 +56,7 @@ dependencies {
     devOnlyNonPublishable("curse.maven:big-reactors-241994:2282591")
     devOnlyNonPublishable("com.github.GTNewHorizons:Draconic-Evolution:1.5.2-GTNH:dev")
     devOnlyNonPublishable("curse.maven:actually-additions-228404:2274681")
+    devOnlyNonPublishable("curse.maven:elemental-cows-224582:2215463")
 
     compileOnly("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
     compileOnly('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')

@@ -364,7 +364,7 @@ public class MetalsChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         setParents(brassChicken, copperChicken, zincChicken);
         setParents(bronzeChicken, copperChicken, tinChicken);
         setParents(invarChicken, BaseChickens.ironChicken, nickelChicken);

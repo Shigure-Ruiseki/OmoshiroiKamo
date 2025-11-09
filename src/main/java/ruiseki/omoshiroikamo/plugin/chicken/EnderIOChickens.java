@@ -120,7 +120,7 @@ public class EnderIOChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         setParents(electricalSteelChicken, BaseChickens.ironChicken, MetalsChickens.siliconChicken);
         setParents(energeticAlloyChicken, BaseChickens.goldChicken, BaseChickens.glowstoneChicken);
         setParents(vibrantAlloyChicken, energeticAlloyChicken, BaseChickens.enderChicken);

@@ -42,7 +42,7 @@ public class DraconicEvolutionChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         if (LibMods.TConstruct.isLoaded()) {
             setParents(draconiumChicken, TinkersChickens.pigIronChicken, BaseChickens.enderChicken);
         } else {

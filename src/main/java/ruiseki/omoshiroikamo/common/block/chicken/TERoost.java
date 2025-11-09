@@ -33,7 +33,7 @@ public class TERoost extends TERoostBase {
     protected void spawnChickenDrop() {
         DataChicken chicken = getChickenData(0);
         if (chicken != null) {
-            putStackInOutput(chicken.createDropStack());
+            putStackInOutput(chicken.createLayStack());
 
         }
     }

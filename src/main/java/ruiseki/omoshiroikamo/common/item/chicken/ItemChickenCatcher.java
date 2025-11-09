@@ -47,7 +47,7 @@ public class ItemChickenCatcher extends ItemOK {
         }
 
         if (!isRemote) {
-            EntityItem item = entity.entityDropItem(chickenData.buildChickenStack(), 1.0F);
+            EntityItem item = entity.entityDropItem(chickenData.buildStack(), 1.0F);
             item.motionX = 0;
             item.motionY = 0.2D;
             item.motionZ = 0;

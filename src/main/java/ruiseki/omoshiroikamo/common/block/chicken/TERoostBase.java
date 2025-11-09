@@ -155,7 +155,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         for (int i = 0; i < getSizeChickenInventory(); i++) {
             DataChicken chicken = getChickenData(i);
             if (chicken != null) {
-                timeUntilNextDrop = Math.max(timeUntilNextDrop, chicken.getLayTime());
+                timeUntilNextDrop = Math.max(timeUntilNextDrop, chicken.getTime());
             }
         }
 

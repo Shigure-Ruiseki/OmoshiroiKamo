@@ -6,169 +6,106 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import ruiseki.omoshiroikamo.api.entity.SpawnType;
+import ruiseki.omoshiroikamo.api.entity.BaseRegistryItem;
 
-public class ChickensRegistryItem {
+/**
+ * Represents a single chicken type registered in {@link ChickensRegistry}.
+ *
+ * <p>
+ * Each chicken has:
+ * <ul>
+ * <li>A unique ID</li>
+ * <li>A display/registry name</li>
+ * <li>Texture</li>
+ * <li>Primary lay item (egg alternative)</li>
+ * <li>Optional parents for breeding</li>
+ * <li>Tier determined by its parents</li>
+ * </ul>
+ *
+ * <p>
+ * Also includes dye-specific helper methods for chickens whose lay item is dye.
+ */
+public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem> {
 
-    private final int id;
-    private final String entityName;
+    /**
+     * The item this chicken lays periodically.
+     */
     private ItemStack layItem;
-    private ItemStack dropItem;
-    private final int bgColor;
-    private final int fgColor;
-    private final ResourceLocation texture;
-    private ChickensRegistryItem parent1;
-    private ChickensRegistryItem parent2;
-    private SpawnType spawnType;
-    private boolean isEnabled = true;
-    private float layCoefficient = 1.0f;
 
+    /**
+     * Creates a new chicken registry item.
+     *
+     * @param id         unique numeric ID
+     * @param entityName registry and localization name
+     * @param texture    entity texture
+     * @param layItem    the item this chicken lays
+     * @param bgColor    background color for JEI/GUI
+     * @param fgColor    foreground color for JEI/GUI
+     */
     public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem, int bgColor,
         int fgColor) {
         this(id, entityName, texture, layItem, bgColor, fgColor, null, null);
     }
 
+    /**
+     * Full constructor with parent definitions.
+     *
+     * @param parent1 chicken parent 1 (nullable)
+     * @param parent2 chicken parent 2 (nullable)
+     */
     public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem, int bgColor,
         int fgColor, @Nullable ChickensRegistryItem parent1, @Nullable ChickensRegistryItem parent2) {
-        this.id = id;
-        this.entityName = entityName;
+        super(id, entityName, texture, bgColor, fgColor, parent1, parent2);
         this.layItem = layItem;
-        this.bgColor = bgColor;
-        this.fgColor = fgColor;
-        this.texture = texture;
-        this.spawnType = SpawnType.NORMAL;
-        this.parent1 = parent1;
-        this.parent2 = parent2;
     }
 
-    public ChickensRegistryItem setDropItem(ItemStack stack) {
-        dropItem = stack;
+    /**
+     * Sets the item this chicken lays.
+     *
+     * @param itemStack item to lay
+     * @return this item (for chaining)
+     */
+    public ChickensRegistryItem setLayItem(ItemStack itemStack) {
+        this.layItem = itemStack;
         return this;
     }
 
-    public ChickensRegistryItem setSpawnType(SpawnType type) {
-        spawnType = type;
-        return this;
+    /**
+     * @return drop item (overridden to use lay item as fallback)
+     */
+    @Override
+    public ItemStack createDropItem() {
+        return dropItem != null ? dropItem.copy() : createLayItem();
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public ChickensRegistryItem setLayCoefficient(float coef) {
-        layCoefficient = coef;
-        return this;
-    }
-
-    public String getEntityName() {
-        return entityName;
-    }
-
-    public String getDisplayName() {
-        return "entity." + getEntityName() + ".name";
-    }
-
-    @Nullable
-    public ChickensRegistryItem getParent1() {
-        return parent1;
-    }
-
-    @Nullable
-    public ChickensRegistryItem getParent2() {
-        return parent2;
-    }
-
-    public int getBgColor() {
-        return bgColor;
-    }
-
-    public int getFgColor() {
-        return fgColor;
-    }
-
-    public ResourceLocation getTexture() {
-        return texture;
-    }
-
+    /**
+     * @return a new copy of the primary lay item
+     */
     public ItemStack createLayItem() {
         return layItem.copy();
     }
 
-    public ItemStack createDropItem() {
-        if (dropItem != null) {
-            return dropItem.copy();
-        }
-        return createLayItem();
-    }
-
-    public int getTier() {
-        if (parent1 == null || parent2 == null) {
-            return 1;
-        }
-        return Math.max(parent1.getTier(), parent2.getTier()) + 1;
-    }
-
-    public boolean isChildOf(ChickensRegistryItem parent1, ChickensRegistryItem parent2) {
-        return this.parent1 == parent1 && this.parent2 == parent2 || this.parent1 == parent2 && this.parent2 == parent1;
-    }
-
-    public boolean isDye() {
-        return layItem.getItem() == Items.dye;
-    }
-
-    public boolean isDye(int dyeMetadata) {
-        return layItem.getItem() == Items.dye && layItem.getItemDamage() == dyeMetadata;
-    }
-
+    /**
+     * @return metadata value if the lay item is dye
+     */
     public int getDyeMetadata() {
         return layItem.getItemDamage();
     }
 
-    public boolean canSpawn() {
-        return getTier() == 1 && spawnType != SpawnType.NONE;
+    /**
+     * @return true if the lay item is dye (all colors)
+     */
+    public boolean isDye() {
+        return layItem.getItem() == Items.dye;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getMinLayTime() {
-        return (int) Math.max(6000 * getTier() * layCoefficient, 1.0f);
-    }
-
-    public int getMaxLayTime() {
-        return 2 * getMinLayTime();
-    }
-
-    public SpawnType getSpawnType() {
-        return spawnType;
-    }
-
-    public boolean isImmuneToFire() {
-        return spawnType == SpawnType.HELL;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    public boolean isEnabled() {
-        return !(!isEnabled || parent1 != null && !parent1.isEnabled() || parent2 != null && !parent2.isEnabled());
-    }
-
-    public void setLayItem(ItemStack itemStack) {
-        layItem = itemStack;
-    }
-
-    public void setNoParents() {
-        parent1 = null;
-        parent2 = null;
-    }
-
-    public ChickensRegistryItem setParentsNew(ChickensRegistryItem parent1, ChickensRegistryItem parent2) {
-        this.parent1 = parent1;
-        this.parent2 = parent2;
-        return this;
-    }
-
-    public boolean isBreedable() {
-        return parent1 != null && parent2 != null;
+    /**
+     * Checks if this chicken lays a specific dye color.
+     *
+     * @param dyeMetadata the dye damage value
+     * @return true if this chicken lays that dye color
+     */
+    public boolean isDye(int dyeMetadata) {
+        return layItem.getItem() == Items.dye && layItem.getItemDamage() == dyeMetadata;
     }
 }

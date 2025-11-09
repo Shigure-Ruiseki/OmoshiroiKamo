@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -14,14 +16,13 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarCellISBRH;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockSolarCell extends BlockOK {
 
     @SideOnly(Side.CLIENT)
-    IIcon top, side;
+    IIcon solar, basalt;
 
     protected BlockSolarCell() {
         super(ModObject.blockSolarCell);
@@ -38,22 +39,29 @@ public class BlockSolarCell extends BlockOK {
 
     @Override
     public int getRenderType() {
-        return SolarCellISBRH.renderId;
+        return JSON_ISBRH_ID;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
     }
 
     @Override
     public void registerBlockIcons(IIconRegister iIconRegister) {
-        top = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "solar_cell_top");
-        side = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "basalt");
+        solar = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "solar");
+        basalt = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "basalt");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        if (side == 1) {
-            return top;
-        }
-        return this.side;
+        return this.solar;
     }
 
     @Override
@@ -71,16 +79,6 @@ public class BlockSolarCell extends BlockOK {
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
         this.setBlockBoundsBasedOnState(world, x, y, z);
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
 }

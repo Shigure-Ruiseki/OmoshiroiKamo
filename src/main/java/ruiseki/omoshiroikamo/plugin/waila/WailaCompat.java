@@ -37,6 +37,8 @@ public class WailaCompat implements IWailaDataProvider {
             return;
         }
         ChickensEntityProvider.init();
+        CowsEntityProvider.init();
+        EntityAnimalProvider.init();
 
         String callback = WailaCompat.class.getCanonicalName() + ".load";
         FMLInterModComms.sendMessage("Waila", "register", callback);

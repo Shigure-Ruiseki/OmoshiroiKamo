@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.plugin.chicken;
+package ruiseki.omoshiroikamo.plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,16 +6,16 @@ import java.util.List;
 
 import net.minecraft.util.EnumChatFormatting;
 
-public class ChickenInformation {
+public class ModCompatInformation {
 
-    public static HashMap<Integer, ChickenInformation> TOOLTIPCHICKENS = new HashMap<>();
+    public static HashMap<Integer, ModCompatInformation> TOOLTIP = new HashMap<>();
 
     /*
      * From Mod
      */
     private String registeredMod;
     /**
-     * Creator of chicken
+     * Creator of item
      */
     private String author;
     /*
@@ -23,7 +23,7 @@ public class ChickenInformation {
      */
     private String addon;
 
-    public ChickenInformation(String registeredMod, String author, String registeredAddon) {
+    public ModCompatInformation(String registeredMod, String author, String registeredAddon) {
         this.registeredMod = registeredMod;
         this.author = author;
         this.addon = registeredAddon;
@@ -47,8 +47,8 @@ public class ChickenInformation {
         return this.addon;
     }
 
-    public static void addChickenInformation(int chickenID, ChickenInformation info) {
-        ChickenInformation.TOOLTIPCHICKENS.put(chickenID, info);
+    public static void addInformation(int id, ModCompatInformation info) {
+        ModCompatInformation.TOOLTIP.put(id, info);
     }
 
 }

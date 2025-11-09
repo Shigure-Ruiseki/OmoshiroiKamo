@@ -31,7 +31,7 @@ public class MekanismChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         setParents(osmiumChicken, BaseChickens.ironChicken, BaseChickens.quartzChicken);
     }
 }

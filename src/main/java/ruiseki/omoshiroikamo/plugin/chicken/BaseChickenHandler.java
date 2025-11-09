@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 public abstract class BaseChickenHandler {
 
@@ -63,7 +64,7 @@ public abstract class BaseChickenHandler {
 
     public abstract List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens);
 
-    public abstract void RegisterAllParents(List<ChickensRegistryItem> allChickens);
+    public abstract void registerAllParents(List<ChickensRegistryItem> allChickens);
 
     boolean first = true;
 
@@ -97,8 +98,8 @@ public abstract class BaseChickenHandler {
 
         chickenList.add(chicken);
 
-        ChickenInformation
-            .addChickenInformation(chickenID, new ChickenInformation(this.getModID(), "", this.getModName()));
+        ModCompatInformation
+            .addInformation(chickenID, new ModCompatInformation(this.getModID(), "", this.getModName()));
 
         return chicken;
     }
@@ -147,7 +148,7 @@ public abstract class BaseChickenHandler {
             return;
         }
 
-        child.setParentsNew(parentChicken1, parentChicken2);
+        child.setParents(parentChicken1, parentChicken2);
 
     }
 
@@ -165,7 +166,7 @@ public abstract class BaseChickenHandler {
 
     // Looks for a chicken inside Chickens mod
     public static ChickensRegistryItem findChickenChickensMod(String name) {
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             if (chicken.getEntityName()
                 .compareToIgnoreCase(name) == 0) {
 

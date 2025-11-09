@@ -55,10 +55,14 @@ public class ChickensEntityProvider implements IWailaEntityProvider {
 
         if (!chicken.isChild()) {
             int layProgress = chicken.getLayProgress();
-            if (layProgress <= 0) {
-                currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.nextEggSoon"));
-            } else {
-                currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.layProgress", layProgress));
+            if (layProgress > 0) {
+                int totalSeconds = layProgress / 20;
+                int minutes = totalSeconds / 60;
+                int seconds = totalSeconds % 60;
+
+                String timeFormatted = String.format("%d:%02d", minutes, seconds);
+
+                currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.layProgress", timeFormatted));
             }
         }
 

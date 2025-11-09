@@ -96,7 +96,7 @@ public class ModChickens {
 
         List<BiomeGenBase> biomesForSpawning = new ArrayList<BiomeGenBase>();
         for (BiomeGenBase biome : allPossibleBiomes) {
-            if (ChickensRegistry.isAnyIn(ChickensRegistry.getSpawnType(biome))) {
+            if (ChickensRegistry.INSTANCE.isAnyIn(ChickensRegistry.getSpawnType(biome))) {
                 biomesForSpawning.add(biome);
             }
         }
@@ -113,7 +113,7 @@ public class ModChickens {
     }
 
     private static List<ChickensRegistryItem> generateDefaultChickens() {
-        List<ChickensRegistryItem> chickens = new ArrayList<ChickensRegistryItem>();
+        List<ChickensRegistryItem> chickens = new ArrayList<>();
 
         for (BaseChickenHandler addon : registeredModAddons) {
             chickens = addon.tryRegisterChickens(chickens);
@@ -123,7 +123,7 @@ public class ModChickens {
 
         for (BaseChickenHandler addon : registeredModAddons) {
             Logger.debug("Register " + addon.getModName() + " Parents");
-            addon.RegisterAllParents(chickens);
+            addon.registerAllParents(chickens);
         }
 
         return chickens;
@@ -162,9 +162,9 @@ public class ModChickens {
             boolean enabled = configuration.getBoolean("enabled", chicken.getEntityName(), true, "Is chicken enabled?");
             chicken.setEnabled(enabled);
 
-            float layCoefficient = configuration
-                .getFloat("layCoefficient", chicken.getEntityName(), 1.0f, 0.01f, 100.f, "Scale time to lay an egg.");
-            chicken.setLayCoefficient(layCoefficient);
+            float coefficient = configuration
+                .getFloat("coefficient", chicken.getEntityName(), 1.0f, 0.01f, 100.f, "Scale time to lay an egg.");
+            chicken.setCoefficient(coefficient);
 
             ItemStack itemStack = loadItemStack(configuration, chicken, "egg", chicken.createLayItem());
             chicken.setLayItem(itemStack);
@@ -179,7 +179,7 @@ public class ModChickens {
             ChickensRegistryItem parent2 = findChicken(allChickens, parent2ID);
 
             if (parent1 != null && parent2 != null) {
-                chicken.setParentsNew(parent1, parent2);
+                chicken.setParents(parent1, parent2);
             } else {
                 chicken.setNoParents();
             }
@@ -193,7 +193,7 @@ public class ModChickens {
                     "Chicken spawn type, can be: " + String.join(",", SpawnType.names())));
             chicken.setSpawnType(spawnType);
 
-            ChickensRegistry.register(chicken);
+            ChickensRegistry.INSTANCE.register(chicken);
         }
         configuration.save();
 
@@ -247,18 +247,6 @@ public class ModChickens {
         for (ChickensRegistryItem chicken : chickens) {
             if (chicken.getEntityName()
                 .compareToIgnoreCase(name) == 0) {
-                return chicken;
-            }
-        }
-
-        return findChickenChickensMod(name);
-    }
-
-    public static ChickensRegistryItem findChickenChickensMod(String name) {
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
-            if (chicken.getEntityName()
-                .compareToIgnoreCase(name) == 0) {
-
                 return chicken;
             }
         }

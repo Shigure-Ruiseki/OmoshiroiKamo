@@ -11,15 +11,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.client.render.DamageParticleRenderer;
 import ruiseki.omoshiroikamo.config.general.DamageIndicatorsConfig;
 
-/**
- * Inspired by or partially based on ToroHealth Damage Indicators
- *
- * <a href="https://www.curseforge.com/minecraft/mc-mods/torohealth-damage-indicators">...</a>
- * <p>
- * <p>
- * Licensed under GNU GENERAL PUBLIC LICENSE, Version 3 (GPLv3)
- * See: <a href="https://www.gnu.org/licenses/gpl-3.0.html">...</a>
- */
 public class DameEvents {
 
     @SubscribeEvent

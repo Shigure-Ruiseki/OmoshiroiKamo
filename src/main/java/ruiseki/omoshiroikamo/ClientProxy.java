@@ -25,8 +25,8 @@ import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.nanoBotBeacon.NanoBotBeaconTESR;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarArrayTESR;
-import ruiseki.omoshiroikamo.client.render.block.solarArray.SolarCellISBRH;
 import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
+import ruiseki.omoshiroikamo.client.render.entity.RenderCowsCow;
 import ruiseki.omoshiroikamo.client.render.item.backpack.BackpackRenderer;
 import ruiseki.omoshiroikamo.client.render.item.hammer.HammerRenderer;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
@@ -49,6 +49,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT2;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT3;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.TESolarArrayT4;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
+import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.config.item.ItemConfig;
@@ -83,9 +84,6 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TESolarArrayT4.class, solarArrayTESR);
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.SOLAR_ARRAY.get()), solarArrayTESR);
 
-        SolarCellISBRH solarCellISBRH = new SolarCellISBRH();
-        RenderingRegistry.registerBlockHandler(solarCellISBRH);
-
         QuantumExtractorTESR quantumExtractorTESR = new QuantumExtractorTESR();
         ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumOreExtractorT1.class, quantumExtractorTESR);
         ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumOreExtractorT2.class, quantumExtractorTESR);
@@ -119,6 +117,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient.registerItemRenderer(ModItems.BACKPACK.get(), new BackpackRenderer());
 
         RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
+        RenderingRegistry.registerEntityRenderingHandler(EntityCowsCow.class, new RenderCowsCow());
     }
 
     @Override

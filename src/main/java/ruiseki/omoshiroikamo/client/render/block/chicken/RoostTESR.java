@@ -27,12 +27,12 @@ public class RoostTESR extends TileEntitySpecialRenderer {
         }
 
         DataChicken chicken = tile.getChickenData(0);
-        if (chicken != null && chicken.getChicken() != null) {
+        if (chicken != null && chicken.getItems() != null) {
 
             GL11.glPushMatrix();
             GL11.glTranslated(x + 0.5, y, z + 0.5);
 
-            ResourceLocation CHICKEN_TEXTURE = chicken.getChicken()
+            ResourceLocation CHICKEN_TEXTURE = chicken.getItems()
                 .getTexture();
             RenderUtil.bindTexture(CHICKEN_TEXTURE);
 

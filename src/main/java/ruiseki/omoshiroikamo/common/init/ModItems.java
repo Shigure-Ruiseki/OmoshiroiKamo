@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenSpawnEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemSolidXp;
+import ruiseki.omoshiroikamo.common.item.cow.ItemCowSpawnEgg;
 import ruiseki.omoshiroikamo.common.ore.ItemOre;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
@@ -41,6 +42,7 @@ public enum ModItems {
     CHICKEN_SPAWN_EGG(true, new ItemChickenSpawnEgg()),
     COLORED_EGG(true, new ItemColoredEgg()),
     LIQUID_EGG(true, new ItemLiquidEgg()),
+    COW_SPAWN_EGG(true, new ItemCowSpawnEgg()),
     SOLID_XP(true, new ItemSolidXp()),
     MATERIAL(true, new ItemMaterial()),
     ORE(true, new ItemOre()),

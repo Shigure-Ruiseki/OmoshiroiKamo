@@ -167,11 +167,9 @@ public class NEICompat {
         tag.setInteger("imageWidth", imageW);
         tag.setInteger("imageHeight", imageH);
 
-        // Chiều cao handler và số recipe/trang
         tag.setInteger("handlerHeight", handlerHeight);
         tag.setInteger("maxRecipesPerPage", recipesPerPage);
 
-        // Thông tin mod
         tag.setString("modName", LibMisc.MOD_NAME);
         tag.setString("modId", LibMisc.MOD_ID);
         tag.setBoolean("modRequired", true);

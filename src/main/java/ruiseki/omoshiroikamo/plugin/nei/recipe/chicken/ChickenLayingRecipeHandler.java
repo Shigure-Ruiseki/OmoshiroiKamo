@@ -42,7 +42,7 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
     @Override
     public void loadAllRecipes() {
         Set<ChickensRegistryItem> added = new HashSet<>();
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             if (added.add(chicken)) {
                 arecipes.add(new CachedChickensRecipe(chicken));
             }
@@ -53,7 +53,7 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
     public void loadCraftingRecipes(ItemStack result) {
         super.loadCraftingRecipes(result);
         Set<ChickensRegistryItem> added = new HashSet<>();
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             if (chicken.createLayItem()
                 .isItemEqual(result)) {
                 if (added.add(chicken)) {
@@ -67,7 +67,7 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
     public void loadUsageRecipes(ItemStack ingredient) {
         super.loadUsageRecipes(ingredient);
         Set<ChickensRegistryItem> added = new HashSet<>();
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             ItemStack egg = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId());
             if (egg.isItemEqual(ingredient)) {
                 if (added.add(chicken)) {

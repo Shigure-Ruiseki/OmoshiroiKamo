@@ -52,7 +52,7 @@ public class BotaniaChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         setParents(manasteelChicken, BaseChickens.ironChicken, BaseChickens.ghastChicken);
         setParents(terrasteelChicken, BaseChickens.enderChicken, manasteelChicken);
         setParents(elementiumChicken, manasteelChicken, terrasteelChicken);

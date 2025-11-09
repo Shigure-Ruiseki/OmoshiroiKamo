@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube",
+  "solarCell": "block/cube",
   "textures": {
     "particle": "omoshiroikamo:plain_face",
     "down": "omoshiroikamo:plain_face",

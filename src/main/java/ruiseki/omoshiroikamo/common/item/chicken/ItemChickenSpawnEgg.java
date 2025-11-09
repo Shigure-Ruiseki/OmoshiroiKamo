@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.plugin.chicken.ChickenInformation;
+import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 public class ItemChickenSpawnEgg extends ItemOK {
 
@@ -80,7 +80,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
             return super.getItemStackDisplayName(stack);
         }
         return LibMisc.LANG.localize(
-            chicken.getChicken()
+            chicken.getItems()
                 .getDisplayName());
     }
 
@@ -91,9 +91,9 @@ public class ItemChickenSpawnEgg extends ItemOK {
         if (chicken == null) {
             return renderPass;
         }
-        return renderPass == 0 ? chicken.getChicken()
+        return renderPass == 0 ? chicken.getItems()
             .getBgColor()
-            : chicken.getChicken()
+            : chicken.getItems()
                 .getFgColor();
     }
 
@@ -135,7 +135,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
         DataChicken chicken = DataChicken.getDataFromStack(stack);
         if (chicken != null) {
             NBTTagCompound tag = chicken.createTagCompound();
-            tag.setInteger("Type", chicken.getChickenType());
+            tag.setInteger("Type", chicken.getType());
             stack.setTagCompound(tag);
         }
     }
@@ -150,69 +150,64 @@ public class ItemChickenSpawnEgg extends ItemOK {
 
         list.add(
             new ChatComponentTranslation(
-                LibResources.TOOLTIP + "chicken_spawn_egg.tier",
-                chicken.getChicken()
+                LibResources.TOOLTIP + "spawn_egg.tier",
+                chicken.getItems()
                     .getTier()).getFormattedText());
-        ItemStack layitem = chicken.getChicken()
+        ItemStack layitem = chicken.getItems()
             .createLayItem();
 
         chicken.addStatsInfoToTooltip(list);
 
         if (layitem != null && layitem.getItem() != null) {
             list.add(
-                new ChatComponentTranslation(
-                    LibResources.TOOLTIP + "chicken_spawn_egg.layitem",
-                    layitem.getDisplayName()).getFormattedText());
+                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.layitem", layitem.getDisplayName())
+                    .getFormattedText());
         } else {
             list.add(
-                new ChatComponentTranslation(
-                    LibResources.TOOLTIP + "chicken_spawn_egg.nolayitem",
-                    layitem.getDisplayName()).getFormattedText());
+                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.nolayitem", layitem.getDisplayName())
+                    .getFormattedText());
         }
 
-        if (chicken.getChicken()
+        if (chicken.getItems()
             .getSpawnType() != SpawnType.NONE) {
-            EnumChatFormatting format = chicken.getChicken()
+            EnumChatFormatting format = chicken.getItems()
                 .getSpawnType() == SpawnType.NORMAL ? EnumChatFormatting.GREEN
-                    : chicken.getChicken()
+                    : chicken.getItems()
                         .getSpawnType() == SpawnType.HELL ? EnumChatFormatting.RED
-                            : chicken.getChicken()
+                            : chicken.getItems()
                                 .getSpawnType() == SpawnType.SNOW ? EnumChatFormatting.AQUA : EnumChatFormatting.WHITE;
             list.add(
-                new ChatComponentTranslation(LibResources.TOOLTIP + "chicken_spawn_egg.spawnType").getFormattedText()
-                    + ": "
+                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.spawnType").getFormattedText() + ": "
                     + EnumChatFormatting.RESET
                     + format
-                    + chicken.getChicken()
+                    + chicken.getItems()
                         .getSpawnType()
                         .toString());
         }
 
-        if (!chicken.getChicken()
+        if (!chicken.getItems()
             .isBreedable()) {
             list.add(
                 EnumChatFormatting.RED
-                    + new ChatComponentTranslation(LibResources.TOOLTIP + "chicken_spawn_egg.notbreedable")
-                        .getFormattedText());
+                    + new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.notbreedable").getFormattedText());
         } else {
-            if (chicken.getChicken()
+            if (chicken.getItems()
                 .getParent1() != null
-                && chicken.getChicken()
+                && chicken.getItems()
                     .getParent2() != null) {
                 String parent1 = new ChatComponentTranslation(
-                    chicken.getChicken()
+                    chicken.getItems()
                         .getParent1()
                         .getDisplayName()).getFormattedText();
 
                 String parent2 = new ChatComponentTranslation(
-                    chicken.getChicken()
+                    chicken.getItems()
                         .getParent2()
                         .getDisplayName()).getFormattedText();
 
                 list.add(
                     EnumChatFormatting.YELLOW
-                        + new ChatComponentTranslation(LibResources.TOOLTIP + "chicken_spawn_egg.breedable")
-                            .getFormattedText()
+                        + new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.breedable").getFormattedText()
                         + ": "
                         + EnumChatFormatting.RESET
                         + EnumChatFormatting.ITALIC
@@ -227,8 +222,8 @@ public class ItemChickenSpawnEgg extends ItemOK {
 
         }
 
-        if (ChickenInformation.TOOLTIPCHICKENS.containsKey(itemstack.getItemDamage())) {
-            ChickenInformation info = ChickenInformation.TOOLTIPCHICKENS.get(itemstack.getItemDamage());
+        if (ModCompatInformation.TOOLTIP.containsKey(chicken.getType())) {
+            ModCompatInformation info = ModCompatInformation.TOOLTIP.get(chicken.getType());
             list.addAll(info.getToolTip());
         }
     }

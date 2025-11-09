@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/block",
+  "solarCell": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
     "particle": "omoshiroikamo:curtain_side",

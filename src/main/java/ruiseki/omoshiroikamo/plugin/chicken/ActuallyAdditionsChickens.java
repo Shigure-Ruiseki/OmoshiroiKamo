@@ -107,7 +107,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
 
         setParents(blackQuartzChicken, BaseChickens.quartzChicken, BaseChickens.blackChicken);
         setParents(restoniaCrystalChicken, BaseChickens.redstoneChicken, blackQuartzChicken);

@@ -31,7 +31,7 @@ public class MineFactoryReloadedChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> allChickens) {
+    public void registerAllParents(List<ChickensRegistryItem> allChickens) {
         setParents(pinkSlimeChicken, BaseChickens.pinkChicken, BaseChickens.slimeChicken);
     }
 }

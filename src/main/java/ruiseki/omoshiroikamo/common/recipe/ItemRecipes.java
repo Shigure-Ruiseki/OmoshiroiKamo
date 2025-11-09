@@ -365,7 +365,7 @@ public class ItemRecipes {
                 ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9)));
 
         // Colored Egg
-        for (ChickensRegistryItem chicken : ChickensRegistry.getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
 
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(

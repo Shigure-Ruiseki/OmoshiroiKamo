@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +15,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.util.FakePlayer;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
@@ -23,10 +25,10 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 public class EntityChickensChicken extends EntityChicken {
 
     private static final String TYPE_NBT = "Type";
-    private static final String CHICKEN_STATS_ANALYZED_NBT = "Analyzed";
-    private static final String CHICKEN_GROWTH_NBT = "Growth";
-    private static final String CHICKEN_GAIN_NBT = "Gain";
-    private static final String CHICKEN_STRENGTH_NBT = "Strength";
+    private static final String STATS_ANALYZED_NBT = "Analyzed";
+    private static final String GROWTH_NBT = "Growth";
+    private static final String GAIN_NBT = "Gain";
+    private static final String STRENGTH_NBT = "Strength";
 
     public EntityChickensChicken(World world) {
         super(world);
@@ -64,13 +66,23 @@ public class EntityChickensChicken extends EntityChicken {
         this.dataWatcher.updateObject(23, strength);
     }
 
+    public void setType(int type) {
+        dataWatcher.updateObject(20, type);
+        isImmuneToFire = getChickenDescription().isImmuneToFire();
+        resetTimeUntilNextEgg();
+    }
+
+    public int getType() {
+        return dataWatcher.getWatchableObjectInt(20);
+    }
+
     public ResourceLocation getTexture() {
         ChickensRegistryItem chickenDescription = getChickenDescription();
         return chickenDescription.getTexture();
     }
 
     private ChickensRegistryItem getChickenDescription() {
-        return ChickensRegistry.getByType(getChickenType());
+        return ChickensRegistry.INSTANCE.getByType(getType());
     }
 
     public int getTier() {
@@ -92,14 +104,14 @@ public class EntityChickensChicken extends EntityChicken {
         ChickensRegistryItem parentA = getChickenDescription();
         ChickensRegistryItem parentB = mateChicken.getChickenDescription();
 
-        ChickensRegistryItem childType = ChickensRegistry.getRandomChild(parentA, parentB);
+        ChickensRegistryItem childType = ChickensRegistry.INSTANCE.getRandomChild(parentA, parentB);
 
         if (childType == null) {
             return null;
         }
 
         EntityChickensChicken child = new EntityChickensChicken(this.worldObj);
-        child.setChickenType(childType.getId());
+        child.setType(childType.getId());
 
         increaseStats(child, this, mateChicken, rand);
 
@@ -132,25 +144,49 @@ public class EntityChickensChicken extends EntityChicken {
     }
 
     @Override
+    public boolean interact(EntityPlayer player) {
+        ItemStack stack = player.getHeldItem();
+        if (stack == null) {
+            return false;
+        }
+
+        if (!(player instanceof FakePlayer)) {
+
+            if (this.isChild() && isBreedingItem(stack)) {
+                --stack.stackSize;
+                this.addGrowth((int) ((-this.getGrowingAge() / 20.0F) * 0.1F));
+                return true;
+            }
+
+            if (isBreedingItem(stack) && this.getGrowingAge() == 0 && !this.isInLove()) {
+                --stack.stackSize;
+                this.func_146082_f(player);
+                return true;
+            }
+        }
+
+        return super.interact(player);
+    }
+
+    @Override
     public void onLivingUpdate() {
         if (!this.worldObj.isRemote && !this.isChild() && !this.field_152118_bv) {
             int newTimeUntilNextEgg = timeUntilNextEgg - 1;
             setTimeUntilNextEgg(newTimeUntilNextEgg);
             if (newTimeUntilNextEgg <= 1) {
-                ChickensRegistryItem chickenDescription = getChickenDescription();
-                ItemStack itemToLay = chickenDescription.createLayItem();
-
-                // itemToLay = TileEntityHenhouse.pushItemStack(itemToLay, worldObj, new Vector3d(posX, posY, posZ));
+                ChickensRegistryItem chicken = getChickenDescription();
+                ItemStack itemToLay = chicken.createLayItem();
 
                 if (itemToLay != null) {
-                    entityDropItem(chickenDescription.createLayItem(), 0);
                     int gain = getGain();
                     if (gain >= 5) {
-                        entityDropItem(chickenDescription.createLayItem(), 0);
+                        itemToLay.stackSize += chicken.createLayItem().stackSize;
                     }
                     if (gain >= 10) {
-                        entityDropItem(chickenDescription.createLayItem(), 0);
+                        itemToLay.stackSize += chicken.createLayItem().stackSize;
                     }
+
+                    entityDropItem(itemToLay, 0.0F);
                     playSound("mob.chicken.plop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
                 }
 
@@ -170,21 +206,22 @@ public class EntityChickensChicken extends EntityChicken {
     }
 
     private void updateLayProgress() {
-        this.dataWatcher.updateObject(24, timeUntilNextEgg / 60 / 20 / 2);
+        this.dataWatcher.updateObject(24, timeUntilNextEgg);
     }
 
     private void resetTimeUntilNextEgg() {
         ChickensRegistryItem chickenDescription = getChickenDescription();
-        int newBaseTimeUntilNextEgg = (chickenDescription.getMinLayTime()
-            + rand.nextInt(chickenDescription.getMaxLayTime() - chickenDescription.getMinLayTime()));
+        int newBaseTimeUntilNextEgg = (chickenDescription.getMinTime()
+            + rand.nextInt(chickenDescription.getMaxTime() - chickenDescription.getMinTime()));
         int newTimeUntilNextEgg = (int) Math.max(1.0f, (newBaseTimeUntilNextEgg * (10.f - getGrowth() + 1.f)) / 10.f);
         setTimeUntilNextEgg(newTimeUntilNextEgg * 2);
     }
 
     @Override
     public boolean getCanSpawnHere() {
-        boolean anyInNether = ChickensRegistry.isAnyIn(SpawnType.HELL);
-        boolean anyInOverworld = ChickensRegistry.isAnyIn(SpawnType.NORMAL) || ChickensRegistry.isAnyIn(SpawnType.SNOW);
+        boolean anyInNether = ChickensRegistry.INSTANCE.isAnyIn(SpawnType.HELL);
+        boolean anyInOverworld = ChickensRegistry.INSTANCE.isAnyIn(SpawnType.NORMAL)
+            || ChickensRegistry.INSTANCE.isAnyIn(SpawnType.SNOW);
 
         BiomeGenBase biome = worldObj
             .getBiomeGenForCoords(MathHelper.floor_double(posX), MathHelper.floor_double(posZ));
@@ -199,15 +236,15 @@ public class EntityChickensChicken extends EntityChicken {
         data = super.onSpawnWithEgg(data);
 
         if (data instanceof GroupData) {
-            setChickenType(((GroupData) data).type);
+            setType(((GroupData) data).type);
         } else {
             SpawnType spawnType = getSpawnType();
-            List<ChickensRegistryItem> list = ChickensRegistry.getPossibleChickensToSpawn(spawnType);
+            List<ChickensRegistryItem> list = ChickensRegistry.INSTANCE.getPossibleToSpawn(spawnType);
 
             if (!list.isEmpty()) {
                 int type = list.get(rand.nextInt(list.size()))
                     .getId();
-                setChickenType(type);
+                setType(type);
                 data = new GroupData(type);
             }
         }
@@ -238,20 +275,10 @@ public class EntityChickensChicken extends EntityChicken {
         }
     }
 
-    public void setChickenType(int type) {
-        dataWatcher.updateObject(20, type);
-        isImmuneToFire = getChickenDescription().isImmuneToFire();
-        resetTimeUntilNextEgg();
-    }
-
-    public int getChickenType() {
-        return dataWatcher.getWatchableObjectInt(20);
-    }
-
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(20, 0); // CHICKEN_TYPE
+        this.dataWatcher.addObject(20, 0); // TYPE
         this.dataWatcher.addObject(21, 1); // GROWTH
         this.dataWatcher.addObject(22, 1); // GAIN
         this.dataWatcher.addObject(23, 1); // STRENGTH
@@ -262,21 +289,21 @@ public class EntityChickensChicken extends EntityChicken {
     @Override
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
-        tagCompound.setInteger(TYPE_NBT, getChickenType());
-        tagCompound.setBoolean(CHICKEN_STATS_ANALYZED_NBT, getStatsAnalyzed());
-        tagCompound.setInteger(CHICKEN_GROWTH_NBT, getGrowth());
-        tagCompound.setInteger(CHICKEN_GAIN_NBT, getGain());
-        tagCompound.setInteger(CHICKEN_STRENGTH_NBT, getStrength());
+        tagCompound.setInteger(TYPE_NBT, getType());
+        tagCompound.setBoolean(STATS_ANALYZED_NBT, getStatsAnalyzed());
+        tagCompound.setInteger(GROWTH_NBT, getGrowth());
+        tagCompound.setInteger(GAIN_NBT, getGain());
+        tagCompound.setInteger(STRENGTH_NBT, getStrength());
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound) {
         super.readEntityFromNBT(tagCompound);
-        setChickenType(tagCompound.getInteger(TYPE_NBT));
-        setStatsAnalyzed(tagCompound.getBoolean(CHICKEN_STATS_ANALYZED_NBT));
-        setGrowth(getStatusValue(tagCompound, CHICKEN_GROWTH_NBT));
-        setGain(getStatusValue(tagCompound, CHICKEN_GAIN_NBT));
-        setStrength(getStatusValue(tagCompound, CHICKEN_STRENGTH_NBT));
+        setType(tagCompound.getInteger(TYPE_NBT));
+        setStatsAnalyzed(tagCompound.getBoolean(STATS_ANALYZED_NBT));
+        setGrowth(getStatusValue(tagCompound, GROWTH_NBT));
+        setGain(getStatusValue(tagCompound, GAIN_NBT));
+        setStrength(getStatusValue(tagCompound, STRENGTH_NBT));
     }
 
     private int getStatusValue(NBTTagCompound compound, String statusName) {

@@ -426,7 +426,7 @@ public class BaseChickens extends BaseChickenHandler {
     }
 
     @Override
-    public void RegisterAllParents(List<ChickensRegistryItem> all) {
+    public void registerAllParents(List<ChickensRegistryItem> all) {
 
         // === Dye ===
         setParents(pinkChicken, redChicken, whiteChicken);
