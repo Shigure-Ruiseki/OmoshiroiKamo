@@ -447,6 +447,9 @@ entity.EmeradicCrystalChicken.name=Emeradic Crystal Chicken
 entity.DiamantineCrystalChicken.name=Diamantine Crystal Chicken
 entity.PalisCrystalChicken.name=Palis Crystal Chicken
 
+entity.WaterCow.name=Water Cow
+entity.LavaCow.name=Lava Cow
+
 #Immersive Engineering
 
 #NEI INTEGRATION
