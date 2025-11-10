@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.client.render.entity;
 
-import java.awt.*;
-
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
