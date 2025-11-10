@@ -1,13 +1,13 @@
 {
-  "lens": "block/cube_all",
+  "parent": "block/cube",
   "__comment": "Designed by ValkyrieofNight",
   "textures": {
-    "glass_top2": "omoshiroikamo:lens_top",
-    "glass_top": "omoshiroikamo:lens_top_2",
-    "glass_side": "omoshiroikamo:lens_side",
-    "glass_side_2": "omoshiroikamo:lens_side_2",
-    "support": "minecraft:iron_block",
-    "particle": "minecraft:glass"
+    "glass_top2": "omoshiroikamo:block/lens_top",
+    "glass_top": "omoshiroikamo:block/lens_top_2",
+    "glass_side": "omoshiroikamo:block/lens_side",
+    "glass_side_2": "omoshiroikamo:block/lens_side_2",
+    "support": "minecraft:block/iron_block",
+    "particle": "minecraft:block/glass"
   },
   "elements": [
     {

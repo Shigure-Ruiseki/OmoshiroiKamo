@@ -2,9 +2,9 @@
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "omoshiroikamo:plain_face",
-		"up": "omoshiroikamo:plain_face",
-		"west": "omoshiroikamo:slat_side"
+		"particle": "omoshiroikamo:block/plain_face",
+		"up": "omoshiroikamo:block/plain_face",
+		"west": "omoshiroikamo:block/slat_side"
 	},
 	"elements": [
 		{
@@ -20,5 +20,5 @@
 			}
 		}
 	],
-	"roostCollector": "minecraft:block/cube"
+	"parent": "minecraft:block/cube"
 }

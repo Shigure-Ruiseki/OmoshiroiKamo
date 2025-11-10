@@ -1,11 +1,11 @@
 {
-  "solarCell": "block/cube_all",
+  "solarCell": "block/cube",
   "ambientocclusion": false,
 	"textures": {
-		"solar_bottom": "omoshiroikamo:basalt",
-		"solar_top": "omoshiroikamo:solar",
-		"solar_side": "omoshiroikamo:basalt",
-		"particle": "omoshiroikamo:solar"
+		"solar_bottom": "omoshiroikamo:block/basalt",
+		"solar_top": "omoshiroikamo:block/solar",
+		"solar_side": "omoshiroikamo:block/basalt",
+		"particle": "omoshiroikamo:block/solar"
 	},
 	"elements": [
 		{

@@ -3,10 +3,10 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "omoshiroikamo:curtain_side",
-		"side": "omoshiroikamo:curtain_side",
-		"floor": "omoshiroikamo:hay_floor",
-		"top": "omoshiroikamo:plain_face"
+		"particle": "omoshiroikamo:block/curtain_side",
+		"side": "omoshiroikamo:block/curtain_side",
+		"floor": "omoshiroikamo:block/hay_floor",
+		"top": "omoshiroikamo:block/plain_face"
 	},
 	"elements": [
 		{
@@ -80,5 +80,5 @@
 			}
 		}
 	],
-	"breederInactive": "minecraft:block/block"
+	"parent": "minecraft:block/block"
 }

@@ -3,39 +3,20 @@ package ruiseki.omoshiroikamo.client.render.block.quantumExtractor;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
-
-import com.enderio.core.client.render.RenderUtil;
-import com.enderio.core.common.util.DyeColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
-import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 @SideOnly(Side.CLIENT)
-public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements IItemRenderer {
+public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
 
-    private final IModelCustom model;
-    private static final String MODEL = LibResources.PREFIX_MODEL + "void_miner.obj";
-
-    private static final ResourceLocation BOTTOM = new ResourceLocation(LibResources.PREFIX_BLOCK + "basalt.png");
-    private static final ResourceLocation LASER = new ResourceLocation(LibResources.PREFIX_BLOCK + "laser_core.png");
-    private static final ResourceLocation PANEL = new ResourceLocation(LibResources.PREFIX_BLOCK + "cont_tier.png");
     private static final ResourceLocation BEAM_TEXTURE = new ResourceLocation("textures/entity/beacon_beam.png");
-
-    public QuantumExtractorTESR() {
-        model = AdvancedModelLoader.loadModel(new ResourceLocation(MODEL));
-    }
 
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks) {
@@ -43,48 +24,6 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
         if (voidOreMiner.isFormed()) {
             renderBeam(voidOreMiner, x, y, z, partialTicks);
         }
-
-        int tier = voidOreMiner.getTier();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) x + 0.5f, (float) y, (float) z + 0.5f);
-
-        if (te.getBlockType() == ModBlocks.QUANTUM_RES_EXTRACTOR.get()) {
-            GL11.glColor3f(0.31f, 0.78f, 0.47f);
-        } else {
-            GL11.glColor3f(0.40f, 0.90f, 1.00f);
-        }
-        RenderUtil.bindTexture(PANEL);
-        model.renderOnly("TopPanelW", "TopPanelN", "TopPanelEW", "PanelNorth", "PanelSouth", "PanelEast", "PanelWest");
-        render(tier);
-        GL11.glPopMatrix();
-    }
-
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return true;
-    }
-
-    @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        int tier = item.getItemDamage() + 1;
-        GL11.glPushMatrix();
-        GL11.glTranslatef(0.5f, -0.1f, 0.5f);
-
-        if (item.getItem() == ModBlocks.QUANTUM_RES_EXTRACTOR.getItem()) {
-            GL11.glColor3f(0.31f, 0.78f, 0.47f);
-        } else {
-            GL11.glColor3f(0.40f, 0.90f, 1.00f);
-        }
-        RenderUtil.bindTexture(PANEL);
-        model.renderOnly("TopPanelW", "TopPanelN", "TopPanelEW", "PanelNorth", "PanelSouth", "PanelEast", "PanelWest");
-        render(tier);
-        GL11.glPopMatrix();
     }
 
     @SideOnly(Side.CLIENT)
@@ -159,51 +98,6 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer implements I
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glDepthMask(true);
         }
-    }
-
-    public void render(int tier) {
-
-        RenderUtil.bindTexture(BOTTOM);
-        model.renderOnly("Bottom");
-        RenderUtil.bindTexture(LASER);
-        model.renderOnly("LaserHead");
-
-        int color = DyeColor.WHITE.getColor();
-        switch (tier) {
-            case 1:
-                color = DyeColor.YELLOW.getColor();
-                break;
-            case 2:
-                color = DyeColor.LIGHT_BLUE.getColor();
-                break;
-            case 3:
-                color = DyeColor.CYAN.getColor();
-                break;
-            case 4:
-                color = DyeColor.WHITE.getColor();
-                break;
-        }
-
-        float r = ((color >> 16) & 0xFF) / 255.0f;
-        float g = ((color >> 8) & 0xFF) / 255.0f;
-        float b = (color & 0xFF) / 255.0f;
-
-        float brightnessFactor = 1.18f;
-        r = Math.min(1.0f, r * brightnessFactor);
-        g = Math.min(1.0f, g * brightnessFactor);
-        b = Math.min(1.0f, b * brightnessFactor);
-
-        GL11.glColor3f(r, g, b);
-        RenderUtil.bindTexture(PANEL);
-        model.renderOnly(
-            "TopEast",
-            "TopWest",
-            "TopSouth",
-            "TopNorth",
-            "NorthEast",
-            "SouthEast",
-            "SouthWest",
-            "NorthWest");
     }
 
 }
