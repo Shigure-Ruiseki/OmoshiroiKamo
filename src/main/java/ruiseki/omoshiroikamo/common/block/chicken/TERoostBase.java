@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.enderio.core.api.common.util.IProgressTile;
+import com.enderio.core.common.TileEntityEnder;
 import com.enderio.core.common.util.ItemUtil;
 
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
@@ -35,16 +36,17 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     @Override
-    protected void doUpdate() {
-        super.doUpdate();
+    protected boolean processTasks(boolean redstoneChecksPassed) {
         if (!worldObj.isRemote) {
             updateTimerIfNeeded();
             spawnChickenDropIfNeeded();
             updateProgress();
         }
+
+        return super.processTasks(redstoneChecksPassed);
     }
 
-    /*
+    /**
      * -----------------------------------------------------------
      * Chicken / Seed getters
      * -----------------------------------------------------------
@@ -99,7 +101,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         return seedStack.stackSize >= needed;
     }
 
-    /*
+    /**
      * -----------------------------------------------------------
      * Timer
      * -----------------------------------------------------------
@@ -166,7 +168,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         markDirty();
     }
 
-    /*
+    /**
      * -----------------------------------------------------------
      * Drop logic
      * -----------------------------------------------------------
@@ -238,7 +240,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         return stack;
     }
 
-    /*
+    /**
      * -----------------------------------------------------------
      * Progress UI
      * -----------------------------------------------------------
@@ -264,10 +266,22 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public boolean isActive() {
-        return getProgress() > 0f;
+        return isFullChickens();
     }
 
-    /*
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        openGui(player);
+        return true;
+    }
+
+    /**
      * -----------------------------------------------------------
      * Inventory overrides
      * -----------------------------------------------------------
@@ -313,7 +327,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         return (item == Items.wheat_seeds || item == Items.melon_seeds || item == Items.pumpkin_seeds);
     }
 
-    /*
+    /**
      * -----------------------------------------------------------
      * Saving
      * -----------------------------------------------------------
@@ -333,7 +347,10 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         timeElapsed = root.getInteger("timeElapsed");
     }
 
-    /*
+    @Override
+    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
+
+    /**
      * -----------------------------------------------------------
      * Abstracts for subclasses
      * -----------------------------------------------------------
@@ -357,17 +374,5 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     protected void playPullChickenOutSound() {
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
-    }
-
-    @Override
-    public TileEntity getTileEntity() {
-        return this;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-        float hitZ) {
-        openGui(player);
-        return true;
     }
 }

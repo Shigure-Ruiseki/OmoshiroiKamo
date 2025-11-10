@@ -1,5 +1,5 @@
 {
-  "solarCell": "block/cube_all",
+  "coloredLens": "block/cube_all",
   "__comment": "Designed by ValkyrieofNight",
   "textures": {
     "glass_top2": "omoshiroikamo:lens_colored_top",

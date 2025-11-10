@@ -1,6 +1,9 @@
 {
   "variants": {
-    "": {
+    "meta=0": {
+      "model": "omoshiroikamo:blocks/breederInactive"
+    },
+    "meta=1": {
       "model": "omoshiroikamo:blocks/breeder"
     }
   }

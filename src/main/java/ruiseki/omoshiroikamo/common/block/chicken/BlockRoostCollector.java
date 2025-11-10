@@ -1,29 +1,19 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.TileEntityEnder;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
-
-    @SideOnly(Side.CLIENT)
-    IIcon side, face;
 
     protected BlockRoostCollector() {
         super(ModObject.blockRoostCollector, TERoostCollector.class, Material.wood);
@@ -31,17 +21,6 @@ public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 
     public static BlockRoostCollector create() {
         return new BlockRoostCollector();
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister reg) {
-        face = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
-        side = reg.registerIcon(LibResources.PREFIX_MOD + "slat_side");
-    }
-
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return this.side;
     }
 
     @Override
@@ -53,9 +32,6 @@ public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
     public TileEntity createTileEntity(World world, int meta) {
         return new TERoostCollector();
     }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {

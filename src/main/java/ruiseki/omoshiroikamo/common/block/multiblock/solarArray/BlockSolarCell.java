@@ -1,28 +1,20 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockSolarCell extends BlockOK {
-
-    @SideOnly(Side.CLIENT)
-    IIcon solar, basalt;
 
     protected BlockSolarCell() {
         super(ModObject.blockSolarCell);
@@ -50,18 +42,6 @@ public class BlockSolarCell extends BlockOK {
     @Override
     public boolean renderAsNormalBlock() {
         return false;
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister iIconRegister) {
-        solar = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "solar");
-        basalt = iIconRegister.registerIcon(LibResources.PREFIX_MOD + "basalt");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta) {
-        return this.solar;
     }
 
     @Override

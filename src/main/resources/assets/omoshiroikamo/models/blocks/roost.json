@@ -1,5 +1,5 @@
 {
-  "solarCell": "minecraft:block/block",
+  "roost": "minecraft:block/block",
   "ambientocclusion": false,
   "display": {
     "firstperson_righthand": {

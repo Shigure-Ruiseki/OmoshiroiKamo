@@ -10,16 +10,18 @@ public class ModCompatInformation {
 
     public static HashMap<Integer, ModCompatInformation> TOOLTIP = new HashMap<>();
 
-    /*
+    /**
      * From Mod
      */
     private String registeredMod;
+
     /**
      * Creator of item
      */
     private String author;
-    /*
-     * Chickens mod ID for addon
+
+    /**
+     * Mod ID for addon
      */
     private String addon;
 

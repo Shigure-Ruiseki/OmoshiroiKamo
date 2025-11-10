@@ -1,53 +1,33 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.TileEntityEnder;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
 public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaInfoProvider {
 
-    @SideOnly(Side.CLIENT)
-    IIcon side, floor, top;
-
     protected BlockBreeder() {
         super(ModObject.blockBreeder, TEBreeder.class, Material.wood);
+        this.setTickRandomly(true);
     }
 
     public static BlockBreeder create() {
         return new BlockBreeder();
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister reg) {
-        floor = reg.registerIcon(LibResources.PREFIX_MOD + "hay_floor");
-        top = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
-        side = reg.registerIcon(LibResources.PREFIX_MOD + "curtain_side");
-    }
-
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return this.side;
     }
 
     @Override
@@ -56,12 +36,25 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaInfo
     }
 
     @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
     public TileEntity createTileEntity(World world, int meta) {
         return new TEBreeder();
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
+    public void updateTick(World world, int x, int y, int z, Random rand) {
+        int currentMeta = world.getBlockMetadata(x, y, z);
+        int targetMeta = isActive(world, x, y, z) ? 1 : 0; // meta mong muốn
+
+        if (currentMeta != targetMeta) {
+            world.setBlockMetadataWithNotify(x, y, z, targetMeta, 2);
+            world.scheduleBlockUpdate(x, y, z, this, 2);
+        }
+    }
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {

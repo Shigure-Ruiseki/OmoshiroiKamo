@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
@@ -25,11 +25,8 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockColoredLens extends BlockOK {
 
-    @SideOnly(Side.CLIENT)
-    IIcon lens_colored_top, lens_colored_top_2, lens_colored_side, lens_colored_side_2, glass_colored;
-
-    public static String[] blocks = new String[] { "black", "red", "green", "brown", "blue", "purple", "cyan",
-        "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white" };
+    public static String[] blocks = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan",
+        "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white"};
 
     protected BlockColoredLens() {
         super(ModObject.blockColoredLens, Material.glass);
@@ -42,21 +39,6 @@ public class BlockColoredLens extends BlockOK {
     @Override
     public void init() {
         GameRegistry.registerBlock(this, ItemBlockLaserLens.class, name);
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister reg) {
-
-        lens_colored_top = reg.registerIcon(LibResources.PREFIX_MOD + "lens_colored_top");
-        lens_colored_top_2 = reg.registerIcon(LibResources.PREFIX_MOD + "lens_colored_top_2");
-        lens_colored_side = reg.registerIcon(LibResources.PREFIX_MOD + "lens_colored_side");
-        lens_colored_side_2 = reg.registerIcon(LibResources.PREFIX_MOD + "lens_colored_side_2");
-        glass_colored = reg.registerIcon(LibResources.PREFIX_MOD + "glass_colored");
-    }
-
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return lens_colored_top;
     }
 
     @Override

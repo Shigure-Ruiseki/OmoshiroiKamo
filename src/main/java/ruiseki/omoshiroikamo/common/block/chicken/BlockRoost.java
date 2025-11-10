@@ -1,8 +1,9 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -29,9 +30,6 @@ import ruiseki.omoshiroikamo.plugin.waila.IWailaInfoProvider;
 
 public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProvider {
 
-    @SideOnly(Side.CLIENT)
-    public IIcon wood, front, hay_side, hay;
-
     protected BlockRoost() {
         super(ModObject.blockRoost, TERoost.class, Material.wood);
     }
@@ -45,18 +43,6 @@ public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProv
         return new TERoost();
     }
 
-    @Override
-    public void registerBlockIcons(IIconRegister reg) {
-        hay_side = reg.registerIcon(LibResources.PREFIX_MOD + "hay_side");
-        hay = reg.registerIcon(LibResources.PREFIX_MOD + "hay_floor");
-        wood = reg.registerIcon(LibResources.PREFIX_MOD + "plain_face");
-        front = reg.registerIcon(LibResources.PREFIX_MOD + "curtain_side");
-    }
-
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return wood;
-    }
 
     @Override
     public int getRenderType() {
@@ -74,9 +60,6 @@ public class BlockRoost extends AbstractBlock<TERoost> implements IWailaInfoProv
     public boolean isOpaqueCube() {
         return false;
     }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {

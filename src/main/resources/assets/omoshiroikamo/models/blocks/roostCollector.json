@@ -1,12 +1,24 @@
 {
-  "solarCell": "block/cube",
-  "textures": {
-    "particle": "omoshiroikamo:plain_face",
-    "down": "omoshiroikamo:plain_face",
-    "up": "omoshiroikamo:plain_face",
-    "north": "omoshiroikamo:slat_side",
-    "east": "omoshiroikamo:slat_side",
-    "south": "omoshiroikamo:slat_side",
-    "west": "omoshiroikamo:slat_side"
-  }
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "omoshiroikamo:plain_face",
+		"up": "omoshiroikamo:plain_face",
+		"west": "omoshiroikamo:slat_side"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#west"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#west"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#west"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#up"}
+			}
+		}
+	],
+	"roostCollector": "minecraft:block/cube"
 }

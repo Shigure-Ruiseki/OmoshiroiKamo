@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -100,7 +101,7 @@ public class BlockMaterial extends BlockOK {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int colorMultiplier(net.minecraft.world.IBlockAccess world, int x, int y, int z) {
+    public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
         MaterialEntry mat = MaterialRegistry.fromMeta(meta);
         return mat.getColor();
