@@ -1,13 +1,13 @@
 {
-  "coloredLens": "block/cube_all",
+  "parent": "block/cube",
   "__comment": "Designed by ValkyrieofNight",
   "textures": {
-    "glass_top2": "omoshiroikamo:lens_colored_top",
-    "glass_top": "omoshiroikamo:lens_colored_top_2",
-    "glass_side": "omoshiroikamo:lens_colored_side",
-    "glass_side_2": "omoshiroikamo:lens_colored_side_2",
-    "support": "omoshiroikamo:glass_colored",
-    "particle": "minecraft:glass"
+    "glass_top2": "omoshiroikamo:block/lens_colored_top",
+    "glass_top": "omoshiroikamo:block/lens_colored_top_2",
+    "glass_side": "omoshiroikamo:block/lens_colored_side",
+    "glass_side_2": "omoshiroikamo:block/lens_colored_side_2",
+    "support": "omoshiroikamo:block/glass_colored",
+    "particle": "minecraft:block/glass"
   },
   "elements": [
     {

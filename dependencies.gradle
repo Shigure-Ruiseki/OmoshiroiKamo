@@ -62,6 +62,7 @@ dependencies {
     compileOnly('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
     compileOnly files("libs/neverenoughanimations-v1.0.6-1-7-10.8+91c551807b-dirty-dev.jar")
+    compileOnly("curse.maven:environmental-tech-245453:2387220")
 
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.6.110:dev") { transitive = false }

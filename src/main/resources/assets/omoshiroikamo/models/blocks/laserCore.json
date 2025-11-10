@@ -1,10 +1,10 @@
 {
-  "laserCore": "block/cube_all",
+  "parent": "block/cube",
   "__comment": "Designed by ValkyrieofNight",
   "textures": {
-    "particle": "omoshiroikamo:laser_core",
-    "texture": "omoshiroikamo:laser_core",
-    "hsink": "minecraft:iron_block"
+    "particle": "omoshiroikamo:block/laser_core",
+    "texture": "omoshiroikamo:block/laser_core",
+    "hsink": "minecraft:block/iron_block"
   },
   "elements": [
     {

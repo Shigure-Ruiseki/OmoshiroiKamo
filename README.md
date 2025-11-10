@@ -4,9 +4,11 @@
 
 - Sophisticated Backpacks (Backport Rewrite)
 
-- Environmental Tech (Backport Rewrite)
+- Environmental Tech (Backport Rewrite Open Source)
 
 - Chickens, More Chickens and Roost (Backport)
+
+- Fluid Cows (Backport)
 
 ## 📦 Credits
 

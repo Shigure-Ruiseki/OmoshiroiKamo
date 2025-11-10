@@ -1,5 +1,5 @@
 {
-  "roost": "minecraft:block/block",
+  "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "display": {
     "firstperson_righthand": {
@@ -9,11 +9,11 @@
     }
   },
   "textures": {
-    "particle": "omoshiroikamo:plain_face",
-    "wood": "omoshiroikamo:plain_face",
-    "front": "omoshiroikamo:curtain_side",
-    "hay_side": "omoshiroikamo:hay_side",
-    "hay": "omoshiroikamo:hay_floor"
+    "particle": "omoshiroikamo:block/plain_face",
+    "wood": "omoshiroikamo:block/plain_face",
+    "front": "omoshiroikamo:block/curtain_side",
+    "hay_side": "omoshiroikamo:block/hay_side",
+    "hay": "omoshiroikamo:block/hay_floor"
   },
   "elements": [
     {

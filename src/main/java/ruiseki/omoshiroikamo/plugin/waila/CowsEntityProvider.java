@@ -66,9 +66,7 @@ public class CowsEntityProvider implements IWailaEntityProvider {
             }
 
             FluidStack stored = cow.getMilkFluid();
-            if (stored == null || stored.getFluid() == null) {
-                currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.none"));
-            } else {
+            if (!(stored == null || stored.getFluid() == null)) {
                 String fluidName = stored.getFluid()
                     .getLocalizedName(stored);
                 int amount = stored.amount;

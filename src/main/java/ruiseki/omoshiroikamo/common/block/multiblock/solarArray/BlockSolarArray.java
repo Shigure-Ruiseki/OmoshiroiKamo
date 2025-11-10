@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
+import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -9,7 +11,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.enderio.core.common.util.DyeColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -22,7 +27,6 @@ public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> imple
 
     protected BlockSolarArray() {
         super(ModObject.blockSolarArray, TESolarArray.class);
-        setTextureName("cont_tier");
     }
 
     public static BlockSolarArray create() {
@@ -48,7 +52,7 @@ public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> imple
 
     @Override
     public int getRenderType() {
-        return -1;
+        return JSON_ISBRH_ID;
     }
 
     @Override
@@ -59,6 +63,35 @@ public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> imple
     @Override
     public boolean renderAsNormalBlock() {
         return false;
+    }
+
+    @Override
+    public int getRenderColor(int meta) {
+        int rgb;
+        switch (meta) {
+            case 0:
+                rgb = DyeColor.YELLOW.getColor();
+                break;
+            case 1:
+                rgb = DyeColor.LIGHT_BLUE.getColor();
+                break;
+            case 2:
+                rgb = DyeColor.CYAN.getColor();
+                break;
+            case 3:
+                rgb = DyeColor.WHITE.getColor();
+                break;
+            default:
+                rgb = DyeColor.WHITE.getColor();
+                break;
+        }
+
+        return (0xFF << 24) | ((rgb & 0xFF) << 16) | (rgb & 0xFF00) | ((rgb >> 16) & 0xFF);
+    }
+
+    @Override
+    public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
+        return this.getRenderColor(worldIn.getBlockMetadata(x, y, z));
     }
 
     @Override
