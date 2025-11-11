@@ -11,6 +11,8 @@ import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHand
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.cow.CowBreedingRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.cow.CowMilkingRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidOreRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.VoidResRecipeHandler;
 
@@ -30,6 +32,8 @@ public class NEIConfig implements IConfigureNEI {
         registerHandler(new ChickenBreedingRecipeHandler());
         registerHandler(new ChickenDropsRecipeHandler());
         registerHandler(new ChickenThrowsRecipeHandler());
+        registerHandler(new CowBreedingRecipeHandler());
+        registerHandler(new CowMilkingRecipeHandler());
     }
 
     protected static void registerHandler(IRecipeHandlerBase handler) {
