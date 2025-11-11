@@ -46,8 +46,7 @@ public class CommonProxy {
     protected long clientTickCount = 0;
     protected final TickTimer tickTimer = new TickTimer();
 
-    public CommonProxy() {
-    }
+    public CommonProxy() {}
 
     public void preInit(FMLPreInitializationEvent event) {
         MaterialRegistry.preInit();
@@ -98,8 +97,7 @@ public class CommonProxy {
         ModCommands.init(event);
     }
 
-    public void serverStarted(FMLServerStartedEvent event) {
-    }
+    public void serverStarted(FMLServerStartedEvent event) {}
 
     public void onConstruction(FMLConstructionEvent event) {
         if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
@@ -132,8 +130,7 @@ public class CommonProxy {
         ++serverTickCount;
     }
 
-    protected void onClientTick() {
-    }
+    protected void onClientTick() {}
 
     public long getTickCount() {
         return serverTickCount;
