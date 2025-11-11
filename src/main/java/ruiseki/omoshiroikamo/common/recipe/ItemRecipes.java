@@ -5,6 +5,7 @@ import static com.enderio.core.common.util.DyeColor.DYE_ORE_NAMES;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.enderio.core.common.util.DyeColor;
@@ -19,9 +20,6 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 public class ItemRecipes {
 
     public static void init() {
-        // Hammer
-        GameRegistry.addRecipe(
-            new ShapedOreRecipe(ModItems.HAMMER.get(), "  C", "  S", "   ", 'C', "cobblestone", 'S', "stickWood"));
 
         // Starter Backpack
         GameRegistry.addRecipe(
@@ -37,31 +35,47 @@ public class ItemRecipes {
                 'C',
                 new ItemStack(Blocks.chest, 1, 1)).withInt("BackpackColor", DyeColor.BROWN.getColor()));
 
-        // Copper Backpack
-        GameRegistry.addRecipe(
-            new NBTShapedOreRecipe(
-                ModItems.BACKPACK.newItemStack(1, 1),
-                "CCC",
-                "CBC",
-                "CCC",
-                'C',
-                "ingotCopper",
-                'B',
-                ModItems.BACKPACK.newItemStack(1, 0)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 0))
-                    .allowAllTags());
+        if (OreDictionary.doesOreNameExist("ingotCopper")) {
+            // Copper Backpack
+            GameRegistry.addRecipe(
+                new NBTShapedOreRecipe(
+                    ModItems.BACKPACK.newItemStack(1, 1),
+                    "CCC",
+                    "CBC",
+                    "CCC",
+                    'C',
+                    "ingotCopper",
+                    'B',
+                    ModItems.BACKPACK.newItemStack(1, 0)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 0))
+                        .allowAllTags());
 
-        // Iron Backpack
-        GameRegistry.addRecipe(
-            new NBTShapedOreRecipe(
-                ModItems.BACKPACK.newItemStack(1, 2),
-                "CCC",
-                "CBC",
-                "CCC",
-                'C',
-                "ingotIron",
-                'B',
-                ModItems.BACKPACK.newItemStack(1, 1)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 1))
-                    .allowAllTags());
+            // Iron Backpack
+            GameRegistry.addRecipe(
+                new NBTShapedOreRecipe(
+                    ModItems.BACKPACK.newItemStack(1, 2),
+                    "CCC",
+                    "CBC",
+                    "CCC",
+                    'C',
+                    "ingotIron",
+                    'B',
+                    ModItems.BACKPACK.newItemStack(1, 1)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 1))
+                        .allowAllTags());
+        } else {
+
+            // Iron Backpack
+            GameRegistry.addRecipe(
+                new NBTShapedOreRecipe(
+                    ModItems.BACKPACK.newItemStack(1, 2),
+                    "CCC",
+                    "CBC",
+                    "CCC",
+                    'C',
+                    "ingotIron",
+                    'B',
+                    ModItems.BACKPACK.newItemStack(1, 0)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 0))
+                        .allowAllTags());
+        }
 
         // Gold Backpack
         GameRegistry.addRecipe(

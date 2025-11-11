@@ -6,8 +6,6 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemAssembler;
-import ruiseki.omoshiroikamo.common.item.ItemHammer;
-import ruiseki.omoshiroikamo.common.item.ItemMaterial;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBackpack;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBatteryUpgrade;
@@ -24,7 +22,6 @@ import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemSolidXp;
 import ruiseki.omoshiroikamo.common.item.cow.ItemCowSpawnEgg;
-import ruiseki.omoshiroikamo.common.ore.ItemOre;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModItems {
@@ -44,9 +41,6 @@ public enum ModItems {
     LIQUID_EGG(true, new ItemLiquidEgg()),
     COW_SPAWN_EGG(true, new ItemCowSpawnEgg()),
     SOLID_XP(true, new ItemSolidXp()),
-    MATERIAL(true, new ItemMaterial()),
-    ORE(true, new ItemOre()),
-    HAMMER(true, new ItemHammer()),
     ASSEMBLER(true, new ItemAssembler()),
     STABILIZED_ENDER_PEAR(true, new ItemOK().setName(ModObject.itemStabilizedEnderPear)
         .setTextureName("ender_stabilized")),

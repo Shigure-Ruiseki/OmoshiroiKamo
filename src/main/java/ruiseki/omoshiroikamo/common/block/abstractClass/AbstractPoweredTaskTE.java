@@ -15,7 +15,6 @@ import com.enderio.core.api.common.util.IProgressTile;
 import com.enderio.core.common.util.ItemUtil;
 
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
-import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.common.recipe.chance.ChanceFluidStack;
 import ruiseki.omoshiroikamo.common.recipe.chance.ChanceItemStack;
 import ruiseki.omoshiroikamo.common.recipe.machine.IPoweredTask;
@@ -38,8 +37,8 @@ public abstract class AbstractPoweredTaskTE extends AbstractPoweredTE implements
     protected float nextChance = Float.NaN;
     protected boolean confirmedToStart = false;
 
-    public AbstractPoweredTaskTE(SlotDefinition slotDefinition, MaterialEntry material) {
-        super(slotDefinition, material);
+    public AbstractPoweredTaskTE(SlotDefinition slotDefinition) {
+        super(slotDefinition);
         energyStorage.setCapacity(10000);
     }
 

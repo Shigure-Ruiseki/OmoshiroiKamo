@@ -10,8 +10,6 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.common.fluid.FluidMaterialRegister;
-import ruiseki.omoshiroikamo.common.fluid.FluidRegister;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -28,7 +26,7 @@ public class OKCreativeTab extends CreativeTabs {
 
     @Override
     public ItemStack getIconItemStack() {
-        return new ItemStack(ModItems.MATERIAL.get());
+        return new ItemStack(ModItems.COW_SPAWN_EGG.get());
     }
 
     @Override
@@ -48,9 +46,6 @@ public class OKCreativeTab extends CreativeTabs {
         for (ModItems item : ModItems.values()) {
             addItem(item.get());
         }
-
-        addItem(FluidMaterialRegister.itemBucketMaterial);
-        addItem(FluidRegister.itemBucketFluid);
 
         for (ModBlocks block : ModBlocks.values()) {
             addBlock(block.get());

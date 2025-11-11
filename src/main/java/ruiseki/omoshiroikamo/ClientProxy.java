@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,24 +16,19 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.client.ResourePackGen;
 import ruiseki.omoshiroikamo.client.handler.DameEvents;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
-import ruiseki.omoshiroikamo.client.render.block.anvil.AnvilTESR;
 import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.entity.RenderCowsCow;
 import ruiseki.omoshiroikamo.client.render.item.backpack.BackpackRenderer;
-import ruiseki.omoshiroikamo.client.render.item.hammer.HammerRenderer;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
-import ruiseki.omoshiroikamo.common.block.anvil.TEAnvil;
 import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
-import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.config.item.ItemConfig;
 
@@ -57,10 +51,6 @@ public class ClientProxy extends CommonProxy {
             .bus()
             .register(KeyHandler.instance);
 
-        AnvilTESR anvilTESR = new AnvilTESR();
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.ANVIL.get()), anvilTESR);
-        ClientRegistry.bindTileEntitySpecialRenderer(TEAnvil.class, anvilTESR);
-
         QuantumExtractorTESR quantumExtractorTESR = new QuantumExtractorTESR();
         ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumExtractor.class, quantumExtractorTESR);
 
@@ -71,7 +61,6 @@ public class ClientProxy extends CommonProxy {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());
         }
 
-        MinecraftForgeClient.registerItemRenderer(ModItems.HAMMER.get(), new HammerRenderer());
         MinecraftForgeClient.registerItemRenderer(ModItems.BACKPACK.get(), new BackpackRenderer());
 
         RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
@@ -84,12 +73,6 @@ public class ClientProxy extends CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
         MinecraftForge.EVENT_BUS.register(new DameEvents());
-    }
-
-    @Override
-    public void callAssembleResourcePack(FMLPreInitializationEvent event) {
-        ResourePackGen.applyAllTexture(event);
-        super.callAssembleResourcePack(event);
     }
 
     @Override

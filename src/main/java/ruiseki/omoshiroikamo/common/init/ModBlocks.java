@@ -6,13 +6,9 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
-import ruiseki.omoshiroikamo.common.block.anvil.BlockAnvil;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
-import ruiseki.omoshiroikamo.common.block.electrolyzer.BlockElectrolyzer;
-import ruiseki.omoshiroikamo.common.block.furnace.BlockFurnace;
-import ruiseki.omoshiroikamo.common.block.material.BlockMaterial;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockMachineBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockStructureFrame;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierAccuracy;
@@ -37,7 +33,6 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.BlockQ
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.BlockQuantumResExtractor;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarArray;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarCell;
-import ruiseki.omoshiroikamo.common.ore.OreRegister;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModBlocks {
@@ -74,11 +69,6 @@ public enum ModBlocks {
     MODIFIER_FIRE_RESISTANCE(true, BlockModifierFireResistance.create()),
     MODIFIER_NULL(true, BlockModifierCore.create()),
 
-    ELECTROLYZER(true, BlockElectrolyzer.create()),
-    MATERIAL(true, BlockMaterial.create()),
-    ANVIL(true, BlockAnvil.create()),
-    FURNACE(true, BlockFurnace.create()),
-
     ROOST(true, BlockRoost.create()),
     BREEDER(true, BlockBreeder.create()),
     ROOST_COLLECTOR(true, BlockRoostCollector.create()),;
@@ -97,7 +87,6 @@ public enum ModBlocks {
                 }
             }
         }
-        OreRegister.init();
     }
 
     private final boolean enabled;

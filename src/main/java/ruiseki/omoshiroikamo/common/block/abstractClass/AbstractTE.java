@@ -15,7 +15,6 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.enderio.core.common.TileEntityEnder;
 import com.enderio.core.common.util.BlockCoord;
 
-import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuis;
 
 public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<PosGuiData> {
@@ -28,7 +27,6 @@ public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<P
     protected int ticksSinceActiveChanged = 0;
     public boolean isDirty = false;
     protected boolean notifyNeighbours = false;
-    protected MaterialEntry material;
     protected int meta;
 
     public short getFacing() {
@@ -167,14 +165,6 @@ public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<P
         NBTTagCompound root = stack.stackTagCompound;
         root.setBoolean("te.abstractMachine", true);
         writeCommon(root);
-    }
-
-    public MaterialEntry getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(MaterialEntry material) {
-        this.material = material;
     }
 
     public void openGui(EntityPlayer player) {
