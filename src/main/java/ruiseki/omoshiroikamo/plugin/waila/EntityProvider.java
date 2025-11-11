@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.plugin.waila;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +14,6 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 
 public class EntityProvider implements IWailaEntityProvider {
 
@@ -26,7 +26,7 @@ public class EntityProvider implements IWailaEntityProvider {
     }
 
     public static void load(IWailaRegistrar registrar) {
-        registrar.registerBodyProvider(INSTANCE, EntityCowsCow.class);
+        registrar.registerBodyProvider(INSTANCE, EntityLiving.class);
     }
 
     @Override

@@ -146,6 +146,7 @@ public class DataChicken {
         entity.setPosition(coord.x + 0.5, coord.y, coord.z + 0.5);
         entity.onSpawnWithEgg(null);
         entity.setStatsAnalyzed(true);
+        entity.setType(getType());
         world.spawnEntityInWorld(entity);
     }
 
