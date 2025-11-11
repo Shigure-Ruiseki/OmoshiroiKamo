@@ -9,8 +9,6 @@ import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
-import ruiseki.omoshiroikamo.api.material.MaterialEntry;
-import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
 import ruiseki.omoshiroikamo.common.network.PacketFluidTanks;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 
@@ -22,9 +20,8 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     public SmartTank[] fluidTanks;
     protected boolean tanksDirty = false;
 
-    public AbstractStorageTE(SlotDefinition slotDefinition, MaterialEntry material) {
+    public AbstractStorageTE(SlotDefinition slotDefinition) {
         this.slotDefinition = slotDefinition;
-        this.material = material;
 
         inv = new ItemStackHandler(slotDefinition.getItemSlots()) {
 
@@ -38,17 +35,13 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
         int fluidSlots = slotDefinition.getFluidSlots();
         fluidTanks = new SmartTank[fluidSlots];
         for (int i = 0; i < fluidSlots; i++) {
-            fluidTanks[i] = (material != null) ? new SmartTank(material) : new SmartTank(8000);
+            fluidTanks[i] = new SmartTank(8000);
         }
 
         allSlots = new int[inv.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
         }
-    }
-
-    public AbstractStorageTE(SlotDefinition slotDefinition) {
-        this(slotDefinition, MaterialRegistry.get("Iron"));
     }
 
     public SlotDefinition getSlotDefinition() {
@@ -203,5 +196,6 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
 
     protected abstract boolean isMachineItemValidForSlot(int slot, ItemStack itemstack);
 
-    public void onContentsChange(int slot) {}
+    public void onContentsChange(int slot) {
+    }
 }

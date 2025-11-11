@@ -23,16 +23,11 @@ import ruiseki.omoshiroikamo.api.io.IIoConfigurable;
 import ruiseki.omoshiroikamo.api.io.IoMode;
 import ruiseki.omoshiroikamo.api.io.IoType;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
-import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuis;
 
 public abstract class AbstractIOTE extends AbstractStorageTE implements IIoConfigurable {
 
     protected Map<IoType, Map<ForgeDirection, IoMode>> ioConfigs;
-
-    public AbstractIOTE(SlotDefinition slotDefinition, MaterialEntry material) {
-        super(slotDefinition, material);
-    }
 
     public AbstractIOTE(SlotDefinition slotDefinition) {
         super(slotDefinition);

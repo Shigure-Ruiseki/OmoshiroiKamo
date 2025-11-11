@@ -8,11 +8,8 @@ import net.minecraftforge.fluids.FluidTank;
 
 import com.google.common.base.Strings;
 
-import ruiseki.omoshiroikamo.api.material.MaterialEntry;
-
 public class SmartTank extends FluidTank {
 
-    protected MaterialEntry material;
     protected Fluid restriction;
 
     public SmartTank(FluidStack liquid, int capacity) {
@@ -31,15 +28,6 @@ public class SmartTank extends FluidTank {
     public SmartTank(Fluid liquid, int capacity) {
         super(capacity);
         restriction = liquid;
-    }
-
-    public SmartTank(MaterialEntry material) {
-        super(material.getVolumeMB());
-        this.material = material;
-    }
-
-    public MaterialEntry getMaterial() {
-        return material;
     }
 
     public void setRestriction(Fluid restriction) {
@@ -76,10 +64,7 @@ public class SmartTank extends FluidTank {
     }
 
     public boolean canFill(FluidStack resource) {
-        if (resource == null || resource.getFluid() == null) return false;
-
-        if (material != null && resource.getFluid()
-            .getTemperature(resource) >= material.getMeltingPointK()) {
+        if (resource == null || resource.getFluid() == null) {
             return false;
         }
 

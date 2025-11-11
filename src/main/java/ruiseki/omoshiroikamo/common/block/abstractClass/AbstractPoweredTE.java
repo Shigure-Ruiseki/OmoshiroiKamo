@@ -4,14 +4,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
 import ic2.api.energy.tile.IEnergySink;
-import ruiseki.omoshiroikamo.api.energy.EnergyStorageAdv;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
 import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
-import ruiseki.omoshiroikamo.api.material.MaterialEntry;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -26,14 +25,14 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
     boolean inICNet = false;
     protected boolean canReceivePower = true;
 
-    protected EnergyStorageAdv energyStorage;
+    protected EnergyStorage energyStorage;
 
-    public AbstractPoweredTE(SlotDefinition slotDefinition, MaterialEntry material) {
-        super(slotDefinition, material);
-        energyStorage = new EnergyStorageAdv(material);
+    public AbstractPoweredTE(SlotDefinition slotDefinition) {
+        super(slotDefinition);
+        energyStorage = new EnergyStorage(100000);
     }
 
-    public AbstractPoweredTE(SlotDefinition slotDefinition, EnergyStorageAdv energyStorage) {
+    public AbstractPoweredTE(SlotDefinition slotDefinition, EnergyStorage energyStorage) {
         super(slotDefinition);
         this.energyStorage = energyStorage;
     }
@@ -187,8 +186,7 @@ public abstract class AbstractPoweredTE extends AbstractIOTE implements IEnergyH
     }
 
     int getIC2Tier() {
-        return material != null ? material.getVoltageTier()
-            .getIC2VoltageTier() : 1;
+        return 2;
     }
 
     public static double convertRFtoEU(int rf, int maxTier) {

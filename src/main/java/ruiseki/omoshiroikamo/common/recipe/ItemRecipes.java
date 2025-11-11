@@ -19,9 +19,6 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 public class ItemRecipes {
 
     public static void init() {
-        // Hammer
-        GameRegistry.addRecipe(
-            new ShapedOreRecipe(ModItems.HAMMER.get(), "  C", "  S", "   ", 'C', "cobblestone", 'S', "stickWood"));
 
         // Starter Backpack
         GameRegistry.addRecipe(

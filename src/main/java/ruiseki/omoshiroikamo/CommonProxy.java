@@ -16,10 +16,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import makamys.mclib.core.MCLib;
 import makamys.mclib.core.MCLibModules;
-import ruiseki.omoshiroikamo.api.fluid.FluidRegistry;
-import ruiseki.omoshiroikamo.api.material.MaterialRegistry;
-import ruiseki.omoshiroikamo.api.ore.OreRegistry;
-import ruiseki.omoshiroikamo.client.ResourePackGen;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModCommands;
@@ -31,11 +27,9 @@ import ruiseki.omoshiroikamo.common.init.OKWorldGenerator;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
-import ruiseki.omoshiroikamo.common.util.handler.ElementalHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.compat.BaubleExpandedCompat;
 import ruiseki.omoshiroikamo.plugin.compat.EtFuturumCompat;
-import ruiseki.omoshiroikamo.plugin.compat.TICCompat;
 import ruiseki.omoshiroikamo.plugin.nei.NEICompat;
 import ruiseki.omoshiroikamo.plugin.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.plugin.waila.WailaCompat;
@@ -46,12 +40,10 @@ public class CommonProxy {
     protected long clientTickCount = 0;
     protected final TickTimer tickTimer = new TickTimer();
 
-    public CommonProxy() {}
+    public CommonProxy() {
+    }
 
     public void preInit(FMLPreInitializationEvent event) {
-        MaterialRegistry.preInit();
-        FluidRegistry.preInit();
-        OreRegistry.preInit();
 
         ModFluids.preInit();
         ModBlocks.preInit();
@@ -62,8 +54,6 @@ public class CommonProxy {
         OKWorldGenerator.preInit();
 
         BaubleExpandedCompat.preInit();
-
-        callAssembleResourcePack(event);
 
         if (!LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
             MCLibModules.updateCheckAPI.submitModTask(LibMisc.MOD_ID, Tags.VERSION, LibMisc.VERSION_URL);
@@ -86,10 +76,7 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ElementalHandler());
-
         StructureCompat.postInit();
-        TICCompat.postInit();
         BaubleExpandedCompat.postInit();
     }
 
@@ -97,7 +84,8 @@ public class CommonProxy {
         ModCommands.init(event);
     }
 
-    public void serverStarted(FMLServerStartedEvent event) {}
+    public void serverStarted(FMLServerStartedEvent event) {
+    }
 
     public void onConstruction(FMLConstructionEvent event) {
         if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
@@ -107,10 +95,6 @@ public class CommonProxy {
         }
 
         MCLib.init();
-    }
-
-    public void callAssembleResourcePack(FMLPreInitializationEvent event) {
-        ResourePackGen.assembleResourcePack(event);
     }
 
     public EntityPlayer getClientPlayer() {
@@ -130,7 +114,8 @@ public class CommonProxy {
         ++serverTickCount;
     }
 
-    protected void onClientTick() {}
+    protected void onClientTick() {
+    }
 
     public long getTickCount() {
         return serverTickCount;
