@@ -5,10 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
@@ -258,15 +256,6 @@ public class DataChicken {
     public static void addAllChickens(List<DataChicken> chickens) {
         for (ChickensRegistryItem item : ChickensRegistry.INSTANCE.getItems()) {
             chickens.add(new DataChicken(item, null));
-        }
-    }
-
-    /**
-     * Fills creative tab with spawn eggs for all chickens
-     */
-    public static void getItemChickenSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-        for (DataChicken chicken : getAllChickens()) {
-            subItems.add(chicken.buildStack());
         }
     }
 

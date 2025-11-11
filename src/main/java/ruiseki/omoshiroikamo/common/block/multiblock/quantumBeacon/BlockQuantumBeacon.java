@@ -65,9 +65,6 @@ public class BlockQuantumBeacon extends AbstractMultiBlockBlock<TEQuantumBeacon>
             case 2:
                 rgb = DyeColor.CYAN.getColor();
                 break;
-            case 3:
-                rgb = DyeColor.WHITE.getColor();
-                break;
             default:
                 rgb = DyeColor.WHITE.getColor();
                 break;

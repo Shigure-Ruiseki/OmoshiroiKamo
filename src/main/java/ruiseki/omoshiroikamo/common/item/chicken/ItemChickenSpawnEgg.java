@@ -18,6 +18,8 @@ import com.enderio.core.common.util.BlockCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
@@ -38,7 +40,9 @@ public class ItemChickenSpawnEgg extends ItemOK {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
-        DataChicken.getItemChickenSubItems(item, tabs, list);
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
+            list.add(new ItemStack(this, 1, chicken.getId()));
+        }
     }
 
     @SideOnly(Side.CLIENT)

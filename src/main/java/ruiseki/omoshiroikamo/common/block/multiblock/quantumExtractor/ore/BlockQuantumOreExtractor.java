@@ -71,9 +71,6 @@ public class BlockQuantumOreExtractor extends AbstractMultiBlockBlock<TEQuantumE
             case 2:
                 rgb = DyeColor.CYAN.getColor();
                 break;
-            case 3:
-                rgb = DyeColor.WHITE.getColor();
-                break;
             default:
                 rgb = DyeColor.WHITE.getColor();
                 break;
