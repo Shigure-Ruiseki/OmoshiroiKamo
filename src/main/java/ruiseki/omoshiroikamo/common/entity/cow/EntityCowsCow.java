@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.entity.cow;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -24,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.enderio.core.common.util.FluidUtil;
 
+import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
@@ -34,13 +34,8 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.general.CowsConfigs;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
-public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider {
+public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider {
 
-    private static final String TYPE_NBT = "Type";
-    private static final String STATS_ANALYZED_NBT = "Analyzed";
-    private static final String GROWTH_NBT = "Growth";
-    private static final String GAIN_NBT = "Gain";
-    private static final String STRENGTH_NBT = "Strength";
     public int timeUntilNextMilk;
     public SmartTank milkTank;
 
@@ -50,36 +45,69 @@ public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider
         milkTank = new SmartTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
     }
 
+    @Override
+    public void setType(int type) {
+        dataWatcher.updateObject(20, type);
+        isImmuneToFire = getCowDescription().isImmuneToFire();
+    }
+
+    @Override
+    public int getType() {
+        return dataWatcher.getWatchableObjectInt(20);
+    }
+
+    @Override
     public boolean getStatsAnalyzed() {
-        return this.dataWatcher.getWatchableObjectByte(25) != 0;
+        return this.dataWatcher.getWatchableObjectByte(24) != 0;
     }
 
+    @Override
     public void setStatsAnalyzed(boolean val) {
-        this.dataWatcher.updateObject(25, (byte) (val ? 1 : 0));
+        this.dataWatcher.updateObject(24, (byte) (val ? 1 : 0));
     }
 
+    @Override
     public int getGrowth() {
         return this.dataWatcher.getWatchableObjectInt(21);
     }
 
-    private void setGrowth(int growth) {
+    @Override
+    public void setGrowth(int growth) {
         this.dataWatcher.updateObject(21, growth);
     }
 
+    @Override
     public int getGain() {
         return this.dataWatcher.getWatchableObjectInt(22);
     }
 
-    private void setGain(int gain) {
+    @Override
+    public void setGain(int gain) {
         this.dataWatcher.updateObject(22, gain);
     }
 
+    @Override
     public int getStrength() {
         return this.dataWatcher.getWatchableObjectInt(23);
     }
 
-    private void setStrength(int strength) {
+    @Override
+    public void setStrength(int strength) {
         this.dataWatcher.updateObject(23, strength);
+    }
+
+    @Override
+    public void setGrowingAge(int age) {
+        age = setStatsGrowingAge(age);
+        super.setGrowingAge(age);
+    }
+
+    public int getMilkProgress() {
+        return dataWatcher.getWatchableObjectInt(25);
+    }
+
+    public void updateMilkProgress() {
+        this.dataWatcher.updateObject(25, timeUntilNextMilk);
     }
 
     public ResourceLocation getTexture() {
@@ -93,19 +121,6 @@ public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider
 
     public int getTier() {
         return getCowDescription().getTier();
-    }
-
-    public void setType(int type) {
-        dataWatcher.updateObject(20, type);
-        isImmuneToFire = getCowDescription().isImmuneToFire();
-    }
-
-    public int getType() {
-        return dataWatcher.getWatchableObjectInt(20);
-    }
-
-    public SmartTank getMilkTank() {
-        return milkTank;
     }
 
     @Override
@@ -139,27 +154,6 @@ public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider
         }
 
         return child;
-    }
-
-    private static void increaseStats(EntityCowsCow newChicken, EntityCowsCow parent1, EntityCowsCow parent2,
-        Random rand) {
-        int parent1Strength = parent1.getStrength();
-        int parent2Strength = parent2.getStrength();
-        newChicken.setGrowth(
-            calculateNewStat(parent1Strength, parent2Strength, parent1.getGrowth(), parent2.getGrowth(), rand));
-        newChicken
-            .setGain(calculateNewStat(parent1Strength, parent2Strength, parent2.getGain(), parent2.getGain(), rand));
-        newChicken
-            .setStrength(calculateNewStat(parent1Strength, parent2Strength, parent1Strength, parent2Strength, rand));
-    }
-
-    private static int calculateNewStat(int thisStrength, int mateStrength, int stat1, int stat2, Random rand) {
-        int mutation = rand.nextInt(2) + 1;
-        int newStatValue = (stat1 * thisStrength + stat2 * mateStrength) / (thisStrength + mateStrength) + mutation;
-        if (newStatValue <= 1) {
-            return 1;
-        }
-        return Math.min(newStatValue, 10);
     }
 
     @Override
@@ -243,14 +237,6 @@ public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider
         updateMilkProgress();
     }
 
-    public int getMilkProgress() {
-        return dataWatcher.getWatchableObjectInt(24);
-    }
-
-    private void updateMilkProgress() {
-        this.dataWatcher.updateObject(24, timeUntilNextMilk);
-    }
-
     private void resetTimeUntilNextMilk() {
         CowsRegistryItem cowDescription = getCowDescription();
         int newBaseTimeUntilNextEgg = (cowDescription.getMaxTime()
@@ -324,42 +310,30 @@ public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider
         this.dataWatcher.addObject(21, 1); // GROWTH
         this.dataWatcher.addObject(22, 1); // GAIN
         this.dataWatcher.addObject(23, 1); // STRENGTH
-        this.dataWatcher.addObject(24, 0); // PROGRESS
-        this.dataWatcher.addObject(25, (byte) 0); // ANALYZED (boolean)
+        this.dataWatcher.addObject(24, (byte) 0); // ANALYZED (boolean)
+        this.dataWatcher.addObject(25, 0); // PROGRESS
         this.dataWatcher.addObject(26, ""); // FluidStack (NBT string)
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
-        tagCompound.setInteger(TYPE_NBT, getType());
-        tagCompound.setBoolean(STATS_ANALYZED_NBT, getStatsAnalyzed());
-        tagCompound.setInteger(GROWTH_NBT, getGrowth());
-        tagCompound.setInteger(GAIN_NBT, getGain());
-        tagCompound.setInteger(STRENGTH_NBT, getStrength());
+        writeStatsNBT(tagCompound);
         milkTank.writeCommon("milkTank", tagCompound);
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound) {
         super.readEntityFromNBT(tagCompound);
-        setType(tagCompound.getInteger(TYPE_NBT));
-        setStatsAnalyzed(tagCompound.getBoolean(STATS_ANALYZED_NBT));
-        setGrowth(getStatusValue(tagCompound, GROWTH_NBT));
-        setGain(getStatusValue(tagCompound, GAIN_NBT));
-        setStrength(getStatusValue(tagCompound, STRENGTH_NBT));
+        readStatsNBT(tagCompound);
         milkTank.readCommon("milkTank", tagCompound);
-    }
-
-    private int getStatusValue(NBTTagCompound compound, String statusName) {
-        return compound.hasKey(statusName) ? compound.getInteger(statusName) : 1;
     }
 
     public void syncMilkFluid() {
         if (milkTank.getFluid() != null) {
             NBTTagCompound tag = milkTank.getFluid()
                 .writeToNBT(new NBTTagCompound());
-            this.dataWatcher.updateObject(26, tag.toString()); // lưu NBT thành string
+            this.dataWatcher.updateObject(26, tag.toString());
         } else {
             this.dataWatcher.updateObject(26, "");
         }
@@ -403,23 +377,6 @@ public class EntityCowsCow extends EntityCow implements IWailaEntityInfoProvider
         } else {
             this.dropItem(Items.beef, 1);
         }
-    }
-
-    @Override
-    public void setGrowingAge(int age) {
-        int childAge = -24000;
-        boolean resetToChild = age == childAge;
-        if (resetToChild) {
-            age = Math.min(-1, (childAge * (10 - getGrowth() + 1)) / 10);
-        }
-
-        int loveAge = 6000;
-        boolean resetLoveAfterBreeding = age == loveAge;
-        if (resetLoveAfterBreeding) {
-            age = Math.max(1, (loveAge * (10 - getGrowth() + 1)) / 10);
-        }
-
-        super.setGrowingAge(age);
     }
 
     @Override
