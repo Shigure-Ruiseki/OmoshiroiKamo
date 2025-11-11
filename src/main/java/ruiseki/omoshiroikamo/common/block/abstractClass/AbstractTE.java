@@ -46,7 +46,7 @@ public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<P
     }
 
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-                                    float hitZ) {
+        float hitZ) {
         return false;
     }
 

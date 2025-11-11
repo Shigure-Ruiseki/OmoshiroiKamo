@@ -36,8 +36,7 @@ import ruiseki.omoshiroikamo.config.item.ItemConfig;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
-    public ClientProxy() {
-    }
+    public ClientProxy() {}
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {

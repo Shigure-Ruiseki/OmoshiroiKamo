@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
@@ -40,8 +39,7 @@ public class CommonProxy {
     protected long clientTickCount = 0;
     protected final TickTimer tickTimer = new TickTimer();
 
-    public CommonProxy() {
-    }
+    public CommonProxy() {}
 
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -84,8 +82,7 @@ public class CommonProxy {
         ModCommands.init(event);
     }
 
-    public void serverStarted(FMLServerStartedEvent event) {
-    }
+    public void serverStarted(FMLServerStartedEvent event) {}
 
     public void onConstruction(FMLConstructionEvent event) {
         if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
@@ -114,8 +111,7 @@ public class CommonProxy {
         ++serverTickCount;
     }
 
-    protected void onClientTick() {
-    }
+    protected void onClientTick() {}
 
     public long getTickCount() {
         return serverTickCount;

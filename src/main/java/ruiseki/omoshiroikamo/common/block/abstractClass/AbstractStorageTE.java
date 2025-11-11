@@ -196,6 +196,5 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
 
     protected abstract boolean isMachineItemValidForSlot(int slot, ItemStack itemstack);
 
-    public void onContentsChange(int slot) {
-    }
+    public void onContentsChange(int slot) {}
 }

@@ -71,8 +71,7 @@ public enum ModBlocks {
 
     ROOST(true, BlockRoost.create()),
     BREEDER(true, BlockBreeder.create()),
-    ROOST_COLLECTOR(true, BlockRoostCollector.create()),
-    ;
+    ROOST_COLLECTOR(true, BlockRoostCollector.create()),;
 
     public static final ModBlocks[] VALUES = values();
 
