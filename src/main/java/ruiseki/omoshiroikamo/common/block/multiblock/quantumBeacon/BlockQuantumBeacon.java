@@ -53,16 +53,6 @@ public class BlockQuantumBeacon extends AbstractMultiBlockBlock<TEQuantumBeacon>
     }
 
     @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
     public int getRenderColor(int meta) {
         int rgb;
         switch (meta) {
@@ -74,9 +64,6 @@ public class BlockQuantumBeacon extends AbstractMultiBlockBlock<TEQuantumBeacon>
                 break;
             case 2:
                 rgb = DyeColor.CYAN.getColor();
-                break;
-            case 3:
-                rgb = DyeColor.WHITE.getColor();
                 break;
             default:
                 rgb = DyeColor.WHITE.getColor();

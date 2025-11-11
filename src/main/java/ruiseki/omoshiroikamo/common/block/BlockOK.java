@@ -8,7 +8,6 @@ import com.enderio.core.common.TileEntityEnder;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockOK extends BlockEnder {
@@ -29,7 +28,6 @@ public class BlockOK extends BlockEnder {
 
     public BlockOK(ModObject modObject, Class<? extends TileEntityEnder> teClass, Material material) {
         super(modObject.unlocalisedName, teClass, material);
-        OKCreativeTab.addToTab(this);
     }
 
     public BlockOK setTextureName(String texture) {

@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.entity.chicken;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -18,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.FakePlayer;
 
+import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
@@ -26,58 +26,76 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
-public class EntityChickensChicken extends EntityChicken implements IWailaEntityInfoProvider {
-
-    private static final String TYPE_NBT = "Type";
-    private static final String STATS_ANALYZED_NBT = "Analyzed";
-    private static final String GROWTH_NBT = "Growth";
-    private static final String GAIN_NBT = "Gain";
-    private static final String STRENGTH_NBT = "Strength";
+public class EntityChickensChicken extends EntityChicken implements IMobStats, IWailaEntityInfoProvider {
 
     public EntityChickensChicken(World world) {
         super(world);
     }
 
+    @Override
     public boolean getStatsAnalyzed() {
         return this.dataWatcher.getWatchableObjectByte(25) != 0;
     }
 
+    @Override
     public void setStatsAnalyzed(boolean val) {
         this.dataWatcher.updateObject(25, (byte) (val ? 1 : 0));
     }
 
+    @Override
     public int getGrowth() {
         return this.dataWatcher.getWatchableObjectInt(21);
     }
 
-    private void setGrowth(int growth) {
+    @Override
+    public void setGrowth(int growth) {
         this.dataWatcher.updateObject(21, growth);
     }
 
+    @Override
     public int getGain() {
         return this.dataWatcher.getWatchableObjectInt(22);
     }
 
-    private void setGain(int gain) {
+    @Override
+    public void setGain(int gain) {
         this.dataWatcher.updateObject(22, gain);
     }
 
+    @Override
     public int getStrength() {
         return this.dataWatcher.getWatchableObjectInt(23);
     }
 
-    private void setStrength(int strength) {
+    @Override
+    public void setStrength(int strength) {
         this.dataWatcher.updateObject(23, strength);
     }
 
+    @Override
     public void setType(int type) {
         dataWatcher.updateObject(20, type);
         isImmuneToFire = getChickenDescription().isImmuneToFire();
         resetTimeUntilNextEgg();
     }
 
+    @Override
     public int getType() {
         return dataWatcher.getWatchableObjectInt(20);
+    }
+
+    @Override
+    public void setGrowingAge(int age) {
+        age = setStatsGrowingAge(age);
+        super.setGrowingAge(age);
+    }
+
+    public int getLayProgress() {
+        return dataWatcher.getWatchableObjectInt(24);
+    }
+
+    private void updateLayProgress() {
+        this.dataWatcher.updateObject(24, timeUntilNextEgg);
     }
 
     public ResourceLocation getTexture() {
@@ -124,27 +142,6 @@ public class EntityChickensChicken extends EntityChicken implements IWailaEntity
         }
 
         return child;
-    }
-
-    private static void increaseStats(EntityChickensChicken newChicken, EntityChickensChicken parent1,
-        EntityChickensChicken parent2, Random rand) {
-        int parent1Strength = parent1.getStrength();
-        int parent2Strength = parent2.getStrength();
-        newChicken.setGrowth(
-            calculateNewStat(parent1Strength, parent2Strength, parent1.getGrowth(), parent2.getGrowth(), rand));
-        newChicken
-            .setGain(calculateNewStat(parent1Strength, parent2Strength, parent2.getGain(), parent2.getGain(), rand));
-        newChicken
-            .setStrength(calculateNewStat(parent1Strength, parent2Strength, parent1Strength, parent2Strength, rand));
-    }
-
-    private static int calculateNewStat(int thisStrength, int mateStrength, int stat1, int stat2, Random rand) {
-        int mutation = rand.nextInt(2) + 1;
-        int newStatValue = (stat1 * thisStrength + stat2 * mateStrength) / (thisStrength + mateStrength) + mutation;
-        if (newStatValue <= 1) {
-            return 1;
-        }
-        return Math.min(newStatValue, 10);
     }
 
     @Override
@@ -203,14 +200,6 @@ public class EntityChickensChicken extends EntityChicken implements IWailaEntity
     private void setTimeUntilNextEgg(int value) {
         timeUntilNextEgg = value;
         updateLayProgress();
-    }
-
-    public int getLayProgress() {
-        return dataWatcher.getWatchableObjectInt(24);
-    }
-
-    private void updateLayProgress() {
-        this.dataWatcher.updateObject(24, timeUntilNextEgg);
     }
 
     private void resetTimeUntilNextEgg() {
@@ -293,25 +282,13 @@ public class EntityChickensChicken extends EntityChicken implements IWailaEntity
     @Override
     public void writeEntityToNBT(NBTTagCompound tagCompound) {
         super.writeEntityToNBT(tagCompound);
-        tagCompound.setInteger(TYPE_NBT, getType());
-        tagCompound.setBoolean(STATS_ANALYZED_NBT, getStatsAnalyzed());
-        tagCompound.setInteger(GROWTH_NBT, getGrowth());
-        tagCompound.setInteger(GAIN_NBT, getGain());
-        tagCompound.setInteger(STRENGTH_NBT, getStrength());
+        writeStatsNBT(tagCompound);
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound) {
         super.readEntityFromNBT(tagCompound);
-        setType(tagCompound.getInteger(TYPE_NBT));
-        setStatsAnalyzed(tagCompound.getBoolean(STATS_ANALYZED_NBT));
-        setGrowth(getStatusValue(tagCompound, GROWTH_NBT));
-        setGain(getStatusValue(tagCompound, GAIN_NBT));
-        setStrength(getStatusValue(tagCompound, STRENGTH_NBT));
-    }
-
-    private int getStatusValue(NBTTagCompound compound, String statusName) {
-        return compound.hasKey(statusName) ? compound.getInteger(statusName) : 1;
+        readStatsNBT(tagCompound);
     }
 
     @Override
@@ -339,23 +316,6 @@ public class EntityChickensChicken extends EntityChicken implements IWailaEntity
         } else {
             this.dropItem(Items.chicken, 1);
         }
-    }
-
-    @Override
-    public void setGrowingAge(int age) {
-        int childAge = -24000;
-        boolean resetToChild = age == childAge;
-        if (resetToChild) {
-            age = Math.min(-1, (childAge * (10 - getGrowth() + 1)) / 10);
-        }
-
-        int loveAge = 6000;
-        boolean resetLoveAfterBreeding = age == loveAge;
-        if (resetLoveAfterBreeding) {
-            age = Math.max(1, (loveAge * (10 - getGrowth() + 1)) / 10);
-        }
-
-        super.setGrowingAge(age);
     }
 
     @Override

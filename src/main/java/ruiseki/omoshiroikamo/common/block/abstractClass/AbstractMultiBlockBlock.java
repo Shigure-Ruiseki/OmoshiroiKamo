@@ -35,7 +35,5 @@ public class AbstractMultiBlockBlock<T extends AbstractMultiBlockModifierTE> ext
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {
-
-    }
+    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {}
 }

@@ -59,16 +59,6 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
     }
 
     @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
     public int getRenderColor(int meta) {
         int rgb;
         switch (meta) {
@@ -80,9 +70,6 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
                 break;
             case 2:
                 rgb = DyeColor.CYAN.getColor();
-                break;
-            case 3:
-                rgb = DyeColor.WHITE.getColor();
                 break;
             default:
                 rgb = DyeColor.WHITE.getColor();

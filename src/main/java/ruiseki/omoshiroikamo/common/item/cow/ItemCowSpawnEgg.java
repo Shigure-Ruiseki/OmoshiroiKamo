@@ -46,8 +46,8 @@ public class ItemCowSpawnEgg extends ItemOK {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
-        for (CowsRegistryItem chicken : CowsRegistry.INSTANCE.getItems()) {
-            list.add(new ItemStack(item, 1, chicken.getId()));
+        for (CowsRegistryItem cow : CowsRegistry.INSTANCE.getItems()) {
+            list.add(new ItemStack(item, 1, cow.getId()));
         }
     }
 

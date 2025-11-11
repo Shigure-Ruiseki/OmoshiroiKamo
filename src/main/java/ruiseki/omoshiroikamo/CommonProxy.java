@@ -33,7 +33,7 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.handler.ElementalHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.plugin.baubles.BaubleExpandedCompat;
+import ruiseki.omoshiroikamo.plugin.compat.BaubleExpandedCompat;
 import ruiseki.omoshiroikamo.plugin.compat.EtFuturumCompat;
 import ruiseki.omoshiroikamo.plugin.compat.TICCompat;
 import ruiseki.omoshiroikamo.plugin.nei.NEICompat;

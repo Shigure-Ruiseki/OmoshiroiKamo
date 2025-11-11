@@ -31,7 +31,7 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 public class BlockProvider implements IWailaDataProvider {
 
     public static void init() {
-        String callback = EntityProvider.class.getCanonicalName() + ".load";
+        String callback = BlockProvider.class.getCanonicalName() + ".load";
         FMLInterModComms.sendMessage("Waila", "register", callback);
     }
 
@@ -64,8 +64,7 @@ public class BlockProvider implements IWailaDataProvider {
         Block block = world.getBlock(x, y, z);
         Item item = Item.getItemFromBlock(block);
 
-        if (block instanceof IWailaBlockInfoProvider) {
-            IWailaBlockInfoProvider info = (IWailaBlockInfoProvider) block;
+        if (block instanceof IWailaBlockInfoProvider info) {
 
             if (block instanceof IAdvancedTooltipProvider) {
                 int mask = info.getDefaultDisplayMask(world, pos.blockX, pos.blockY, pos.blockZ);

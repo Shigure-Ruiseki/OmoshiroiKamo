@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.plugin.baubles;
+package ruiseki.omoshiroikamo.plugin.compat;
 
 import baubles.api.expanded.BaubleExpandedSlots;
 

@@ -62,7 +62,7 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements
             clearStructureParts();
         }
 
-        return !valid;
+        return isFormed;
     }
 
     protected abstract void clearStructureParts();
@@ -79,19 +79,12 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements
 
     @Override
     public void doUpdate() {
-
-        if (structureCheck(
+        if (!structureCheck(
             getStructurePieceName(),
             getOffSet()[getTier() - 1][0],
             getOffSet()[getTier() - 1][1],
-            getOffSet()[getTier() - 1][2])) {
+            getOffSet()[getTier() - 1][2]) && !shouldDoWorkThisTick(20)) {
             return;
-        }
-
-        if (this.isFormed) {
-            this.machineTick();
-        } else {
-            this.isProcessing = false;
         }
         super.doUpdate();
     }
@@ -245,11 +238,19 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements
 
     @Override
     public boolean isActive() {
-        return false;
+        return getCurrentDuration() > 0;
     }
 
     @Override
     protected boolean processTasks(boolean redstoneCheckPassed) {
+        if (!redstoneCheckPassed) {
+            if (this.isFormed) {
+                this.machineTick();
+            } else {
+                this.isProcessing = false;
+            }
+        }
+
         return false;
     }
 

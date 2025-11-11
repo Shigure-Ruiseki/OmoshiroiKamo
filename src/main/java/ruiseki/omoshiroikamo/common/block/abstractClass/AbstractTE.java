@@ -78,7 +78,7 @@ public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<P
         boolean requiresClientSync = forceClientUpdate;
         boolean prevRedCheck = redstoneCheckPassed;
         if (redstoneStateDirty) {
-            redstoneCheckPassed = true;
+            redstoneCheckPassed = this.worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0;
             redstoneStateDirty = false;
         }
 
