@@ -148,7 +148,7 @@ public class NEICompat {
     }
 
     private static void sendHandlerImage(String handler, String imageResource, int imageX, int imageY, int imageW,
-                                         int imageH, int handlerHeight, int recipesPerPage) {
+        int imageH, int handlerHeight, int recipesPerPage) {
 
         NBTTagCompound tag = new NBTTagCompound();
 
