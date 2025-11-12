@@ -6,7 +6,6 @@ import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.config.general.AnvilUpgradeConfig;
 
 @Config.Comment("Main item settings")
 @Config.LangKey(LibResources.CONFIG + "itemConfig")
@@ -14,15 +13,11 @@ import ruiseki.omoshiroikamo.config.general.AnvilUpgradeConfig;
 public class ItemConfig {
 
     public static void registerConfig() throws ConfigException {
-        ConfigurationManager.registerConfig(ItemConfig.class);
         ConfigurationManager.registerConfig(AnvilUpgradeConfig.class);
     }
 
     @Config.DefaultBoolean(true)
     public static boolean renderPufferFish;
-
-    @Config.DefaultBoolean(true)
-    public static boolean addDurabilityTootip;
 
     @Config.DefaultBoolean(true)
     public static boolean renderDurabilityBar;

@@ -25,20 +25,14 @@ import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.handler.CowNetherPopulateHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.config.general.CowsConfigs;
+import ruiseki.omoshiroikamo.config.backport.CowConfig;
 
 public class ModCows {
 
     public static void preInit() {
 
-        EntityRegistry.registerModEntity(
-            EntityCowsCow.class,
-            "cow",
-            CowsConfigs.cowEntityId,
-            OmoshiroiKamo.instance,
-            64,
-            1,
-            true);
+        EntityRegistry
+            .registerModEntity(EntityCowsCow.class, "cow", CowConfig.cowEntityId, OmoshiroiKamo.instance, 64, 1, true);
 
         registerModAddons();
     }
@@ -50,14 +44,14 @@ public class ModCows {
         if (biomesForSpawning.size() > 0) {
             EntityRegistry.addSpawn(
                 EntityCowsCow.class,
-                CowsConfigs.spawnProbability,
-                CowsConfigs.minBroodSize,
-                CowsConfigs.maxBroodSize,
+                CowConfig.spawnProbability,
+                CowConfig.minBroodSize,
+                CowConfig.maxBroodSize,
                 EnumCreatureType.creature,
                 biomesForSpawning.toArray(new BiomeGenBase[biomesForSpawning.size()]));
             if (biomesForSpawning.contains(BiomeGenBase.hell)) {
                 MinecraftForge.TERRAIN_GEN_BUS
-                    .register(new CowNetherPopulateHandler(CowsConfigs.netherSpawnChanceMultiplier));
+                    .register(new CowNetherPopulateHandler(CowConfig.netherSpawnChanceMultiplier));
             }
         }
     }

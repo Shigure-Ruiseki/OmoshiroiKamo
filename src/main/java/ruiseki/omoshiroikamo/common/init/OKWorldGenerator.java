@@ -10,20 +10,21 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.config.worldGen.WorldGenConfig;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 public class OKWorldGenerator implements IWorldGenerator {
 
     public static final OKWorldGenerator INSTANCE = new OKWorldGenerator();
     private final WorldGenMinable hardened_stone = new WorldGenMinable(
         ModBlocks.BLOCK_HARDENED_STONE.get(),
-        WorldGenConfig.hardenedStoneNodeSize);
+        EnvironmentalConfig.worldGenConfig.hardenedStoneNodeSize);
     private final WorldGenMinable alabaster = new WorldGenMinable(
         ModBlocks.BLOCK_ALABASTER.get(),
-        WorldGenConfig.alabasterNodeSize);
+        EnvironmentalConfig.worldGenConfig.alabasterNodeSize);
     private final WorldGenMinable basalt = new WorldGenMinable(
         ModBlocks.BLOCK_BASALT.get(),
-        WorldGenConfig.basaltNodeSize);
+        EnvironmentalConfig.worldGenConfig.basaltNodeSize);
 
     public static void preInit() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
@@ -34,41 +35,45 @@ public class OKWorldGenerator implements IWorldGenerator {
         IChunkProvider chunkProvider) {
         if (world.provider instanceof WorldProviderSurface) {
 
-            if (WorldGenConfig.enableHardenedStoneGeneration) {
-                this.runGeneration(
-                    this.hardened_stone,
-                    world,
-                    random,
-                    chunkX,
-                    chunkZ,
-                    WorldGenConfig.hardenedStoneNodes,
-                    WorldGenConfig.hardenedStoneMinHeight,
-                    WorldGenConfig.hardenedStoneMaxHeight);
+            if (BackportConfigs.useEnvironmentalTech) {
+
+                if (EnvironmentalConfig.worldGenConfig.enableHardenedStoneGeneration) {
+                    this.runGeneration(
+                        this.hardened_stone,
+                        world,
+                        random,
+                        chunkX,
+                        chunkZ,
+                        EnvironmentalConfig.worldGenConfig.hardenedStoneNodes,
+                        EnvironmentalConfig.worldGenConfig.hardenedStoneMinHeight,
+                        EnvironmentalConfig.worldGenConfig.hardenedStoneMaxHeight);
+                }
+
+                if (EnvironmentalConfig.worldGenConfig.enableAlabasterGeneration) {
+                    this.runGeneration(
+                        this.alabaster,
+                        world,
+                        random,
+                        chunkX,
+                        chunkZ,
+                        EnvironmentalConfig.worldGenConfig.alabasterNodes,
+                        EnvironmentalConfig.worldGenConfig.alabasterMinHeight,
+                        EnvironmentalConfig.worldGenConfig.alabasterMaxHeight);
+                }
+
+                if (EnvironmentalConfig.worldGenConfig.enableBasaltGeneration) {
+                    this.runGeneration(
+                        this.basalt,
+                        world,
+                        random,
+                        chunkX,
+                        chunkZ,
+                        EnvironmentalConfig.worldGenConfig.basaltNodes,
+                        EnvironmentalConfig.worldGenConfig.basaltMinHeight,
+                        EnvironmentalConfig.worldGenConfig.basaltMaxHeight);
+                }
             }
 
-            if (WorldGenConfig.enableAlabasterGeneration) {
-                this.runGeneration(
-                    this.alabaster,
-                    world,
-                    random,
-                    chunkX,
-                    chunkZ,
-                    WorldGenConfig.alabasterNodes,
-                    WorldGenConfig.alabasterMinHeight,
-                    WorldGenConfig.alabasterMaxHeight);
-            }
-
-            if (WorldGenConfig.enableBasaltGeneration) {
-                this.runGeneration(
-                    this.basalt,
-                    world,
-                    random,
-                    chunkX,
-                    chunkZ,
-                    WorldGenConfig.basaltNodes,
-                    WorldGenConfig.basaltMinHeight,
-                    WorldGenConfig.basaltMaxHeight);
-            }
         }
     }
 

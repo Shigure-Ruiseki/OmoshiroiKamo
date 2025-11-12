@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.config.general;
+package ruiseki.omoshiroikamo.config.item;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 

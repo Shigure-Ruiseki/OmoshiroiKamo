@@ -6,6 +6,7 @@ import com.enderio.core.common.util.DyeColor;
 
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 
 public class QuantumExtractorRecipes {
 
@@ -13,6 +14,9 @@ public class QuantumExtractorRecipes {
     public static IFocusableRegistry quantumResExtractorRegistry;
 
     public static void init() {
+        if (!BackportConfigs.useEnvironmentalTech) {
+            return;
+        }
         quantumOreExtractorRegistry = new FocusableRegistry();
         quantumResExtractorRegistry = new FocusableRegistry();
         addVoidOreMinerRecipes();
@@ -21,7 +25,7 @@ public class QuantumExtractorRecipes {
 
     public static void addVoidOreMinerRecipes() {
         IFocusableRegistry reg = quantumOreExtractorRegistry;
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumOreExtractor/minable.json");
+        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/ore.json");
         if (file.exists()) {
             FocusableHandler.loadRegistryFromJson(file, reg);
         } else {
@@ -112,7 +116,7 @@ public class QuantumExtractorRecipes {
 
     public static void addVoidResMinerRecipes() {
         IFocusableRegistry reg = quantumResExtractorRegistry;
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumResExtractor/minable.json");
+        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/res.json");
         if (file.exists()) {
             FocusableHandler.loadRegistryFromJson(file, reg);
         } else {

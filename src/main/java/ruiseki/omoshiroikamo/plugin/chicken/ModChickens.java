@@ -1,9 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
-import static ruiseki.omoshiroikamo.config.general.ChickenConfigs.maxBroodSize;
-import static ruiseki.omoshiroikamo.config.general.ChickenConfigs.minBroodSize;
-import static ruiseki.omoshiroikamo.config.general.ChickenConfigs.netherSpawnChanceMultiplier;
-import static ruiseki.omoshiroikamo.config.general.ChickenConfigs.spawnProbability;
+import static ruiseki.omoshiroikamo.config.backport.ChickenConfig.netherSpawnChanceMultiplier;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.handler.ChickenNetherPopulateHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 public class ModChickens {
 
@@ -40,7 +37,7 @@ public class ModChickens {
         EntityRegistry.registerModEntity(
             EntityChickensChicken.class,
             "chicken",
-            ChickenConfigs.chickenEntityId,
+            ChickenConfig.chickenEntityId,
             OmoshiroiKamo.instance,
             64,
             3,
@@ -59,9 +56,9 @@ public class ModChickens {
         if (biomesForSpawning.size() > 0) {
             EntityRegistry.addSpawn(
                 EntityChickensChicken.class,
-                spawnProbability,
-                minBroodSize,
-                maxBroodSize,
+                ChickenConfig.spawnProbability,
+                ChickenConfig.minBroodSize,
+                ChickenConfig.maxBroodSize,
                 EnumCreatureType.creature,
                 biomesForSpawning.toArray(new BiomeGenBase[biomesForSpawning.size()]));
             if (biomesForSpawning.contains(BiomeGenBase.hell)) {

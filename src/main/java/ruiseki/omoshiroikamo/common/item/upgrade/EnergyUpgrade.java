@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.api.energy.PowerDisplayUtil;
 import ruiseki.omoshiroikamo.api.item.IAnvilUpgradeItem;
 import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.config.general.AnvilUpgradeConfig;
+import ruiseki.omoshiroikamo.config.item.AnvilUpgradeConfig;
 
 public class EnergyUpgrade extends AbstractUpgrade {
 

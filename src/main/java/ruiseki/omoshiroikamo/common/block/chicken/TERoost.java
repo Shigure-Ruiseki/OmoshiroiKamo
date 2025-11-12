@@ -18,7 +18,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
-import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 public class TERoost extends TERoostBase {
 
@@ -50,7 +50,7 @@ public class TERoost extends TERoostBase {
 
     @Override
     protected double speedMultiplier() {
-        return ChickenConfigs.roostSpeed;
+        return ChickenConfig.roostSpeed;
     }
 
     @Override

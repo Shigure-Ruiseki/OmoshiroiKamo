@@ -9,9 +9,11 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
-import ruiseki.omoshiroikamo.config.block.QuantumExtractorConfig;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 public class TEQuantumResExtractorT1 extends TEQuantumExtractor {
+
+    public static EnvironmentalConfig.QuantumExtractorConfig config = EnvironmentalConfig.quantumExtractorConfig;
 
     public TEQuantumResExtractorT1() {}
 
@@ -41,18 +43,18 @@ public class TEQuantumResExtractorT1 extends TEQuantumExtractor {
     }
 
     public int getEnergyCostPerDuration() {
-        return QuantumExtractorConfig.energyCostResTier1;
+        return config.energyCostResTier1;
     }
 
     public int getBaseDuration() {
-        return QuantumExtractorConfig.tickResTier1;
+        return config.tickResTier1;
     }
 
     public int getMinDuration() {
-        return QuantumExtractorConfig.tickResTier1;
+        return config.tickResTier1;
     }
 
     public int getMaxDuration() {
-        return QuantumExtractorConfig.tickResTier1;
+        return config.tickResTier1;
     }
 }

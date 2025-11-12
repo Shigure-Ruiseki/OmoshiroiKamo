@@ -14,7 +14,5 @@ public class BlockConfigs {
 
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(BlockConfigs.class);
-        ConfigurationManager.registerConfig(SolarArrayConfig.class);
-        ConfigurationManager.registerConfig(QuantumExtractorConfig.class);
     }
 }

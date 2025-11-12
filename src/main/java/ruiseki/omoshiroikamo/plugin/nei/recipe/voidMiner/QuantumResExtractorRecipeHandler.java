@@ -23,16 +23,16 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
 
-public class VoidOreRecipeHandler extends RecipeHandlerBase {
+public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return "Void Ore Miner";
+        return "Void Resource Miner";
     }
 
     @Override
     public String getRecipeID() {
-        return ModObject.blockQuantumOreExtractor.getRegistryName();
+        return ModObject.blockQuantumResExtractor.getRegistryName();
     }
 
     @Override
@@ -48,12 +48,12 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
     @Override
     public void loadAllRecipes() {
         Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry registry = QuantumExtractorRecipes.quantumOreExtractorRegistry;
+        IFocusableRegistry registry = QuantumExtractorRecipes.quantumResExtractorRegistry;
         for (WeightedStackBase ws : registry.getUnFocusedList()) {
             ItemStack output = ws.getMainStack();
             if (output != null) {
                 if (added.add(ws)) {
-                    arecipes.add(new CachedVoidOreRecipe(ws, null));
+                    arecipes.add(new CachedVoidResRecipe(ws, null));
                 }
             }
         }
@@ -63,13 +63,13 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
     public void loadCraftingRecipes(ItemStack item) {
         super.loadCraftingRecipes(item);
         Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry registry = QuantumExtractorRecipes.quantumOreExtractorRegistry;
+        IFocusableRegistry registry = QuantumExtractorRecipes.quantumResExtractorRegistry;
 
         for (WeightedStackBase ws : registry.getUnFocusedList()) {
             ItemStack output = ws.getMainStack();
             if (output != null && ItemUtil.areStacksEqual(output, item)) {
                 if (added.add(ws)) {
-                    arecipes.add(new CachedVoidOreRecipe(ws, null));
+                    arecipes.add(new CachedVoidResRecipe(ws, null));
                 }
             }
         }
@@ -80,7 +80,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
                 ItemStack output = ws.getMainStack();
                 if (output != null && ItemUtil.areStacksEqual(output, item)) {
                     if (added.add(ws)) {
-                        arecipes.add(new CachedVoidOreRecipe(ws, color));
+                        arecipes.add(new CachedVoidResRecipe(ws, color));
                     }
                 }
             }
@@ -91,7 +91,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
     public void loadUsageRecipes(ItemStack ingredient) {
         super.loadUsageRecipes(ingredient);
         Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry registry = QuantumExtractorRecipes.quantumOreExtractorRegistry;
+        IFocusableRegistry registry = QuantumExtractorRecipes.quantumResExtractorRegistry;
 
         Item item = ingredient.getItem();
         Item coloredLend = ModBlocks.COLORED_LENS.getItem();
@@ -104,7 +104,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
                     ItemStack output = ws.getMainStack();
                     if (output != null) {
                         if (added.add(ws)) {
-                            arecipes.add(new CachedVoidOreRecipe(ws, null));
+                            arecipes.add(new CachedVoidResRecipe(ws, null));
                         }
                     }
                 }
@@ -117,7 +117,7 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
                     ItemStack output = ws.getMainStack();
                     if (output != null && registry.getPrioritizedLens(output) == color) {
                         if (added.add(ws)) {
-                            arecipes.add(new CachedVoidOreRecipe(ws, color));
+                            arecipes.add(new CachedVoidResRecipe(ws, color));
                         }
                     }
                 }
@@ -125,26 +125,26 @@ public class VoidOreRecipeHandler extends RecipeHandlerBase {
         }
     }
 
-    public class CachedVoidOreRecipe extends CachedBaseRecipe {
+    public class CachedVoidResRecipe extends CachedBaseRecipe {
 
         private List<PositionedStack> input;
         private PositionedStack output;
         private DyeColor color;
 
-        public CachedVoidOreRecipe(WeightedStackBase recipe, DyeColor color) {
+        public CachedVoidResRecipe(WeightedStackBase recipe, DyeColor color) {
             this.input = new ArrayList<>();
             List<ItemStack> miners = new ArrayList<>();
-            miners.add(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0));
-            miners.add(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1));
-            miners.add(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2));
-            miners.add(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 3));
+            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0));
+            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1));
+            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2));
+            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3));
             this.input.add(new PositionedStack(miners, 25, 16));
 
             this.color = color;
             if (color == null) {
                 this.input.add(new PositionedStack(ModBlocks.LENS.newItemStack(1, 0), 75, 16));
             } else {
-                int lens = color.ordinal() + 1;
+                int lens = color.ordinal();
                 this.input.add(new PositionedStack(ModBlocks.COLORED_LENS.newItemStack(1, lens), 75, 16));
             }
             this.output = new PositionedStackAdv(recipe.getMainStack(), 125, 16)

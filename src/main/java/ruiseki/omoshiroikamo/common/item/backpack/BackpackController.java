@@ -44,8 +44,7 @@ import ruiseki.omoshiroikamo.client.gui.modularui2.handler.UpgradeItemStackHandl
 import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
-import ruiseki.omoshiroikamo.config.item.FeedingConfig;
-import ruiseki.omoshiroikamo.config.item.MagnetConfig;
+import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 
 @EventBusSubscriber
 public class BackpackController {
@@ -103,8 +102,8 @@ public class BackpackController {
 
         ItemStack[] inv = player.inventory.mainInventory;
         int maxSlot = Math.max(
-            FeedingConfig.feedingAllowInMainInventory ? 4 * 9 : 9,
-            MagnetConfig.magnetAllowInMainInventory ? 4 * 9 : 9);
+            BackpackConfig.feedingConfig.feedingAllowInMainInventory ? 4 * 9 : 9,
+            BackpackConfig.magnetConfig.magnetAllowInMainInventory ? 4 * 9 : 9);
 
         for (int i = 0; i < maxSlot; i++) {
             ItemStack stack = inv[i];
@@ -128,7 +127,8 @@ public class BackpackController {
             }
         }
 
-        if (FeedingConfig.feedingAllowInBaublesSlot || MagnetConfig.magnetAllowInBaublesSlot) {
+        if (BackpackConfig.feedingConfig.feedingAllowInBaublesSlot
+            || BackpackConfig.magnetConfig.magnetAllowInBaublesSlot) {
             InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
             for (int i = 0; i < baubles.getSizeInventory(); i++) {
                 ItemStack stack = baubles.getStackInSlot(i);
@@ -355,12 +355,12 @@ public class BackpackController {
         }
 
         AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
-            player.posX - MagnetConfig.magnetRange,
-            player.posY - MagnetConfig.magnetRange,
-            player.posZ - MagnetConfig.magnetRange,
-            player.posX + MagnetConfig.magnetRange,
-            player.posY + MagnetConfig.magnetRange,
-            player.posZ + MagnetConfig.magnetRange);
+            player.posX - BackpackConfig.magnetConfig.magnetRange,
+            player.posY - BackpackConfig.magnetConfig.magnetRange,
+            player.posZ - BackpackConfig.magnetConfig.magnetRange,
+            player.posX + BackpackConfig.magnetConfig.magnetRange,
+            player.posY + BackpackConfig.magnetConfig.magnetRange,
+            player.posZ + BackpackConfig.magnetConfig.magnetRange);
 
         List<Entity> entities = selectEntitiesWithinAABB(player.worldObj, aabb, mag);
         if (entities.isEmpty()) {
@@ -422,7 +422,8 @@ public class BackpackController {
     @SuppressWarnings("unchecked")
     private static List<Entity> selectEntitiesWithinAABB(World world, AxisAlignedBB bb, ActiveBackPack mag) {
         List<Entity> result = new ArrayList<>();
-        int remaining = MagnetConfig.magnetMaxItems <= 0 ? Integer.MAX_VALUE : MagnetConfig.magnetMaxItems;
+        int remaining = BackpackConfig.magnetConfig.magnetMaxItems <= 0 ? Integer.MAX_VALUE
+            : BackpackConfig.magnetConfig.magnetMaxItems;
 
         NBTTagCompound root = mag.item.getTagCompound();
         boolean filterMode = root.getBoolean(MAGNET_MODE);

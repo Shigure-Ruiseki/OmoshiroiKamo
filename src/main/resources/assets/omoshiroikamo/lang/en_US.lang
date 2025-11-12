@@ -2,15 +2,21 @@
 #Config
 
 config.itemConfig=Item Settings
-config.magnetConfig=Magnet Settings
 config.damageIndicatorsConfig=Damage Indicators Settings
 config.anvilUpgradeConfig=Anvil Upgrade Settings
-config.feedingConfig=Feeding Settings
-config.worldGenConfig=World Generation Settings
 
 config.blockConfig=Block Settings
+
+config.backportConfig=Backport Settings
+config.environmentalConfig=Environmental Tech Settings
+config.quantumExtractorConfig=Quantum Extractor Settings
 config.solarArrayConfig=Solar Array Settings
-config.voidMinerConfig=Void Miner Settings
+config.eTWorldGenConfig=World Generation Settings
+config.chickenConfig=Chicken Settings
+config.cowConfig=Cow Settings
+config.backpackConfig=Backpack Settings
+config.feedingConfig=Feeding Settings
+config.magnetConfig=Magnet Settings
 
 #IO
 

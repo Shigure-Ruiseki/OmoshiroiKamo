@@ -11,6 +11,7 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
@@ -26,86 +27,80 @@ public class NEICompat {
     }
 
     public static void IMCSender() {
-        sendHandler(ModObject.blockElectrolyzer.getRegistryName(), 85, 6);
-        sendCatalyst(ModObject.blockElectrolyzer.getRegistryName());
+        if (BackportConfigs.useEnvironmentalTech) {
+            sendHandler(ModObject.blockQuantumOreExtractor.getRegistryName(), 48, 8);
+            sendCatalyst(
+                ModObject.blockQuantumOreExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0));
+            sendCatalyst(
+                ModObject.blockQuantumOreExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1));
+            sendCatalyst(
+                ModObject.blockQuantumOreExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2));
+            sendCatalyst(
+                ModObject.blockQuantumOreExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 3));
 
-        sendHandler(ModObject.blockAnvil.getRegistryName(), 64, 6);
-        sendCatalyst(ModObject.blockAnvil.getRegistryName());
+            sendHandler(ModObject.blockQuantumResExtractor.getRegistryName(), 48, 8);
+            sendCatalyst(
+                ModObject.blockQuantumResExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0));
+            sendCatalyst(
+                ModObject.blockQuantumResExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1));
+            sendCatalyst(
+                ModObject.blockQuantumResExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2));
+            sendCatalyst(
+                ModObject.blockQuantumResExtractor.getRegistryName(),
+                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3));
+        }
 
-        sendHandler(ModObject.blockQuantumOreExtractor.getRegistryName(), 48, 8);
-        sendCatalyst(
-            ModObject.blockQuantumOreExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0));
-        sendCatalyst(
-            ModObject.blockQuantumOreExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1));
-        sendCatalyst(
-            ModObject.blockQuantumOreExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2));
-        sendCatalyst(
-            ModObject.blockQuantumOreExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 3));
+        if (BackportConfigs.useChicken) {
 
-        sendHandler(ModObject.blockQuantumResExtractor.getRegistryName(), 48, 8);
-        sendCatalyst(
-            ModObject.blockQuantumResExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0));
-        sendCatalyst(
-            ModObject.blockQuantumResExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1));
-        sendCatalyst(
-            ModObject.blockQuantumResExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2));
-        sendCatalyst(
-            ModObject.blockQuantumResExtractor.getRegistryName(),
-            ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3));
+            sendHandlerImage(
+                ChickenLayingRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
+            sendCatalyst(ChickenLayingRecipeHandler.UID, ModBlocks.ROOST.newItemStack());
 
-        sendHandlerImage(
-            ChickenLayingRecipeHandler.UID,
-            LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
-            1,
-            0,
-            16,
-            16,
-            64,
-            6);
-        sendCatalyst(ChickenLayingRecipeHandler.UID, ModBlocks.ROOST.newItemStack());
+            sendHandlerImage(
+                ChickenBreedingRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
+            sendCatalyst(ChickenBreedingRecipeHandler.UID, ModBlocks.BREEDER.newItemStack());
 
-        sendHandlerImage(
-            ChickenBreedingRecipeHandler.UID,
-            LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
-            1,
-            0,
-            16,
-            16,
-            64,
-            6);
-        sendCatalyst(ChickenBreedingRecipeHandler.UID, ModBlocks.BREEDER.newItemStack());
+            sendHandlerImage(
+                ChickenDropsRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
 
-        sendHandlerImage(
-            ChickenDropsRecipeHandler.UID,
-            LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
-            1,
-            0,
-            16,
-            16,
-            64,
-            6);
-
-        sendHandlerImage(
-            ChickenThrowsRecipeHandler.UID,
-            LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
-            1,
-            0,
-            16,
-            16,
-            64,
-            6);
-
-        sendCatalyst("smelting", ModObject.blockFurnace.getRegistryName());
-        sendCatalyst("fuel", ModObject.blockFurnace.getRegistryName());
-
-        sendHandler("materialProperties", ModObject.itemItemMaterial.getRegistryName(), 85, 1);
+            sendHandlerImage(
+                ChickenThrowsRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
+        }
 
         Logger.info("Loaded IMCForNEI");
     }

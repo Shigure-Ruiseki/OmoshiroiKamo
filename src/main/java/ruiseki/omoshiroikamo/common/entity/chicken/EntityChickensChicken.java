@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.config.general.ChickenConfigs;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 public class EntityChickensChicken extends EntityChicken implements IMobStats, IWailaEntityInfoProvider {
@@ -325,7 +325,7 @@ public class EntityChickensChicken extends EntityChicken implements IMobStats, I
         }
         tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.tier", chicken.getTier()));
 
-        if (chicken.getStatsAnalyzed() || ChickenConfigs.alwaysShowStats) {
+        if (chicken.getStatsAnalyzed() || ChickenConfig.alwaysShowStats) {
             tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.growth", chicken.getGrowth()));
             tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.gain", chicken.getGain()));
             tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.strength", chicken.getStrength()));

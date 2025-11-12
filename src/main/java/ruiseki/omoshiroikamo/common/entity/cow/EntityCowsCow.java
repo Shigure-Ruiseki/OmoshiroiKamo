@@ -31,7 +31,7 @@ import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.config.general.CowsConfigs;
+import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider {
@@ -386,7 +386,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         }
         tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.tier", cow.getTier()));
 
-        if (cow.getStatsAnalyzed() || CowsConfigs.alwaysShowStats) {
+        if (cow.getStatsAnalyzed() || CowConfig.alwaysShowStats) {
             tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.growth", cow.getGrowth()));
             tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.gain", cow.getGain()));
             tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.strength", cow.getStrength()));
