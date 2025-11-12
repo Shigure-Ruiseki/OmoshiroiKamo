@@ -28,8 +28,8 @@ public class BlockColoredLens extends BlockOK {
     @SideOnly(Side.CLIENT)
     IIcon lens_colored_top, lens_colored_top_2, lens_colored_side, lens_colored_side_2, glass_colored;
 
-    public static String[] blocks = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan",
-        "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white"};
+    public static String[] blocks = new String[] { "black", "red", "green", "brown", "blue", "purple", "cyan",
+        "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white" };
 
     protected BlockColoredLens() {
         super(ModObject.blockColoredLens, Material.glass);
