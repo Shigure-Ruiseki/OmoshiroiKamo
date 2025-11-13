@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.entity.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -18,6 +19,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.FakePlayer;
 
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
+import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
@@ -27,6 +29,8 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 public class EntityChickensChicken extends EntityChicken implements IMobStats, IWailaEntityInfoProvider {
+
+    private final List<MobTrait> traits = new ArrayList<>();
 
     public EntityChickensChicken(World world) {
         super(world);
@@ -43,33 +47,38 @@ public class EntityChickensChicken extends EntityChicken implements IMobStats, I
     }
 
     @Override
-    public int getGrowth() {
+    public int getBaseGrowth() {
         return this.dataWatcher.getWatchableObjectInt(21);
     }
 
     @Override
-    public void setGrowth(int growth) {
+    public void setBaseGrowth(int growth) {
         this.dataWatcher.updateObject(21, growth);
     }
 
     @Override
-    public int getGain() {
+    public int getBaseGain() {
         return this.dataWatcher.getWatchableObjectInt(22);
     }
 
     @Override
-    public void setGain(int gain) {
+    public void setBaseGain(int gain) {
         this.dataWatcher.updateObject(22, gain);
     }
 
     @Override
-    public int getStrength() {
+    public int getBaseStrength() {
         return this.dataWatcher.getWatchableObjectInt(23);
     }
 
     @Override
-    public void setStrength(int strength) {
+    public void setBaseStrength(int strength) {
         this.dataWatcher.updateObject(23, strength);
+    }
+
+    @Override
+    public List<MobTrait> getTraits() {
+        return traits;
     }
 
     @Override
@@ -245,7 +254,6 @@ public class EntityChickensChicken extends EntityChicken implements IMobStats, I
         if (rand.nextInt(5) == 0) {
             setGrowingAge(-24000);
         }
-
         return data;
     }
 
