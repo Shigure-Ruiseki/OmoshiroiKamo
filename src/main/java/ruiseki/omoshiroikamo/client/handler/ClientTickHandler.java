@@ -18,8 +18,6 @@ public class ClientTickHandler {
     public static float partialTicks = 0.0F;
     public static float delta = 0.0F;
     public static float total = 0.0F;
-    public static float displayedMana = 0.0F;
-    public static float displayedCMana = 0.0F;
 
     private static void calcDelta() {
         float oldTotal = total;

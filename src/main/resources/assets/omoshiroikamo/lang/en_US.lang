@@ -2,7 +2,6 @@
 #Config
 
 config.itemConfig=Item Settings
-config.damageIndicatorsConfig=Damage Indicators Settings
 config.anvilUpgradeConfig=Anvil Upgrade Settings
 
 config.blockConfig=Block Settings
@@ -17,6 +16,11 @@ config.cowConfig=Cow Settings
 config.backpackConfig=Backpack Settings
 config.feedingConfig=Feeding Settings
 config.magnetConfig=Magnet Settings
+
+# Waila
+
+option.omoshiroikamo.breedingTime=Breeding Time
+option.omoshiroikamo.grownTime=Grown Time
 
 #IO
 

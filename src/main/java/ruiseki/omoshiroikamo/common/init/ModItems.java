@@ -40,7 +40,7 @@ public enum ModItems {
     BATTERY_UPGRADE(useBackpack, new ItemBatteryUpgrade()),
     EVERLASTING_UPGRADE(useBackpack, new ItemEverlastingUpgrade()),
 
-    ANALYZER(useChicken, new ItemAnalyzer()),
+    ANALYZER(useChicken || useCow, new ItemAnalyzer()),
     CHICKEN_CATCHER(useChicken, new ItemChickenCatcher()),
     CHICKEN_SPAWN_EGG(useChicken, new ItemChickenSpawnEgg()),
     COLORED_EGG(useChicken, new ItemColoredEgg()),

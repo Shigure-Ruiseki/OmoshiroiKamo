@@ -10,9 +10,10 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 @Config.Comment("Main item settings")
 @Config.LangKey(LibResources.CONFIG + "itemConfig")
 @Config(modid = LibMisc.MOD_ID, category = "general.items", configSubDirectory = LibMisc.MOD_ID)
-public class ItemConfig {
+public class ItemConfigs {
 
     public static void registerConfig() throws ConfigException {
+        ConfigurationManager.registerConfig(ItemConfigs.class);
         ConfigurationManager.registerConfig(AnvilUpgradeConfig.class);
     }
 

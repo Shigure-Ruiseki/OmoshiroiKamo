@@ -124,6 +124,7 @@ public class ItemCowSpawnEgg extends ItemOK {
 
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
+        entity.addRandomTraits();
         entity.setType(metadata);
 
         if (stack.hasTagCompound()) {

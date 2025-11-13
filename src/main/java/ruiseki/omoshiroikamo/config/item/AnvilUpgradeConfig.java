@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 @Config.Comment("Main anvil upgrade settings")
 @Config.LangKey(LibResources.CONFIG + "anvilUpgradeConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.anvil_upgrade", configSubDirectory = LibMisc.MOD_ID)
+@Config(modid = LibMisc.MOD_ID, category = "general.items.anvil_upgrade", configSubDirectory = LibMisc.MOD_ID)
 public class AnvilUpgradeConfig {
 
     @Config.DefaultInt(100000)

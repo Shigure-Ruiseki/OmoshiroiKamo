@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.entity.cow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -24,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 import com.enderio.core.common.util.FluidUtil;
 
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
+import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
@@ -36,6 +38,7 @@ import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider {
 
+    private final List<MobTrait> traits = new ArrayList<>();
     public int timeUntilNextMilk;
     public SmartTank milkTank;
 
@@ -67,33 +70,38 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
     }
 
     @Override
-    public int getGrowth() {
+    public int getBaseGrowth() {
         return this.dataWatcher.getWatchableObjectInt(21);
     }
 
     @Override
-    public void setGrowth(int growth) {
+    public void setBaseGrowth(int growth) {
         this.dataWatcher.updateObject(21, growth);
     }
 
     @Override
-    public int getGain() {
+    public int getBaseGain() {
         return this.dataWatcher.getWatchableObjectInt(22);
     }
 
     @Override
-    public void setGain(int gain) {
+    public void setBaseGain(int gain) {
         this.dataWatcher.updateObject(22, gain);
     }
 
     @Override
-    public int getStrength() {
+    public int getBaseStrength() {
         return this.dataWatcher.getWatchableObjectInt(23);
     }
 
     @Override
-    public void setStrength(int strength) {
+    public void setBaseStrength(int strength) {
         this.dataWatcher.updateObject(23, strength);
+    }
+
+    @Override
+    public List<MobTrait> getTraits() {
+        return traits;
     }
 
     @Override
@@ -280,7 +288,6 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         if (rand.nextInt(5) == 0) {
             setGrowingAge(-24000);
         }
-
         return data;
     }
 
@@ -327,6 +334,11 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         super.readEntityFromNBT(tagCompound);
         readStatsNBT(tagCompound);
         milkTank.readCommon("milkTank", tagCompound);
+    }
+
+    @Override
+    public void addTrait(MobTrait trait) {
+        IMobStats.super.addTrait(trait);
     }
 
     public void syncMilkFluid() {
@@ -381,19 +393,19 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
 
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, Entity entity) {
-        if (!(entity instanceof EntityCowsCow cow)) {
+        if (!(entity instanceof EntityCowsCow)) {
             return;
         }
-        tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.tier", cow.getTier()));
+        tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.tier", getTier()));
 
-        if (cow.getStatsAnalyzed() || CowConfig.alwaysShowStats) {
-            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.growth", cow.getGrowth()));
-            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.gain", cow.getGain()));
-            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.strength", cow.getStrength()));
+        if (getStatsAnalyzed() || CowConfig.alwaysShowStats) {
+            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.growth", getGrowth()));
+            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.gain", getGain()));
+            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.strength", getStrength()));
         }
 
-        if (!cow.isChild()) {
-            int milkProgress = cow.getMilkProgress();
+        if (!isChild()) {
+            int milkProgress = getMilkProgress();
             if (milkProgress > 0) {
                 int totalSeconds = milkProgress / 20;
                 int minutes = totalSeconds / 60;
@@ -402,7 +414,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
                 tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.milkProgress", timeFormatted));
             }
 
-            FluidStack stored = cow.getMilkFluid();
+            FluidStack stored = milkTank.getFluid();
             if (!(stored == null || stored.getFluid() == null)) {
                 String fluidName = stored.getFluid()
                     .getLocalizedName(stored);

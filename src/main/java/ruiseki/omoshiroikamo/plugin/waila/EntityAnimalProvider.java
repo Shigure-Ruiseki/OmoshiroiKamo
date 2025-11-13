@@ -15,7 +15,6 @@ import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.config.general.WailaConfigs;
 
 public class EntityAnimalProvider implements IWailaEntityProvider {
 
@@ -27,6 +26,8 @@ public class EntityAnimalProvider implements IWailaEntityProvider {
     }
 
     public static void load(IWailaRegistrar registrar) {
+        registrar.addConfigRemote(LibMisc.MOD_NAME, LibMisc.MOD_ID + ".breedingTime");
+        registrar.addConfigRemote(LibMisc.MOD_NAME, LibMisc.MOD_ID + ".grownTime");
         registrar.registerBodyProvider(INSTANCE, EntityAnimal.class);
     }
 
@@ -46,7 +47,7 @@ public class EntityAnimalProvider implements IWailaEntityProvider {
         IWailaConfigHandler config) {
         EntityAnimal animal = (EntityAnimal) entity;
 
-        if (!animal.isChild() && WailaConfigs.showBreedTime) {
+        if (!animal.isChild() && config.getConfig(LibMisc.MOD_ID + ".breedingTime")) {
             int countDown = animal.getGrowingAge();
             if (countDown > 0) {
                 int totalSeconds = countDown / 20;
@@ -57,7 +58,7 @@ public class EntityAnimalProvider implements IWailaEntityProvider {
 
                 currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.breedCountdown", timeFormatted));
             }
-        } else if (WailaConfigs.showGrowTime) {
+        } else if (config.getConfig(LibMisc.MOD_ID + ".grownTime")) {
             int growUp = -animal.getGrowingAge();
             int totalSeconds = growUp / 20;
             int minutes = totalSeconds / 60;
