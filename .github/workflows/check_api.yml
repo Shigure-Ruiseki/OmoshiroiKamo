@@ -1,0 +1,27 @@
+name: Secret Check
+
+on:
+  workflow_dispatch: # có thể trigger thủ công
+
+jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check CurseForge Token
+        run: |
+          if [ -z "${{ secrets.CURSEFORGE_TOKEN }}" ]; then
+            echo "❌ CURSEFORGE_TOKEN is missing or null!"
+            exit 1
+          else
+            echo "✅ CURSEFORGE_TOKEN exists."
+            # Không in ra giá trị thật vì bảo mật
+          fi
+
+      - name: Check Modrinth Token
+        run: |
+          if [ -z "${{ secrets.MODRINTH_TOKEN }}" ]; then
+            echo "❌ MODRINTH_TOKEN is missing or null!"
+            exit 1
+          else
+            echo "✅ MODRINTH_TOKEN exists."
+          fi
