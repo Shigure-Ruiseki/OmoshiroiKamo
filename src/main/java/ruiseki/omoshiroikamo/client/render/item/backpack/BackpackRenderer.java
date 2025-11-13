@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.client.handler.ClientTickHandler;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.config.item.ItemConfig;
+import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 
 @SideOnly(Side.CLIENT)
 public class BackpackRenderer implements IItemRenderer {
@@ -169,7 +169,7 @@ public class BackpackRenderer implements IItemRenderer {
 
     private void renderBars(ItemStack item) {
         if (EnergyUpgrade.loadFromItem(item) == null
-            || (!ItemConfig.renderChargeBar && !ItemConfig.renderDurabilityBar)) {
+            || (!ItemConfigs.renderChargeBar && !ItemConfigs.renderDurabilityBar)) {
             return;
         }
 
@@ -183,7 +183,7 @@ public class BackpackRenderer implements IItemRenderer {
 
         double maxDam, dispDamage;
 
-        if (ItemConfig.renderChargeBar && hasEnergyUpgrade) {
+        if (ItemConfigs.renderChargeBar && hasEnergyUpgrade) {
             IEnergyContainerItem backpack = (IEnergyContainerItem) item.getItem();
             maxDam = backpack.getMaxEnergyStored(item);
             dispDamage = backpack.getEnergyStored(item);

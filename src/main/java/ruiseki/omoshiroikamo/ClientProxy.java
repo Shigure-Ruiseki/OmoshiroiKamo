@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -16,7 +15,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.client.handler.DameEvents;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
 import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
@@ -30,7 +28,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumE
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.init.ModItems;
-import ruiseki.omoshiroikamo.config.item.ItemConfig;
+import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
@@ -57,7 +55,7 @@ public class ClientProxy extends CommonProxy {
         RoostTESR roostTESR = new RoostTESR();
         ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, roostTESR);
 
-        if (ItemConfig.renderPufferFish) {
+        if (ItemConfigs.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());
         }
 
@@ -72,7 +70,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        MinecraftForge.EVENT_BUS.register(new DameEvents());
     }
 
     @Override
