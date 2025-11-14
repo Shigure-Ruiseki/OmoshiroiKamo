@@ -74,12 +74,7 @@ public enum ModObject {
     itemAnalyzer,
     itemSolidXp,
     itemCowSpawnEgg,
-    itemItemMaterial,
-    itemBucketMaterial,
-    itemBucketFluid,
-    itemOre,
-    itemHammer,
-    itemWireCoil;
+    itemSyringe,;
 
     public final String unlocalisedName;
     private Block blockInstance;

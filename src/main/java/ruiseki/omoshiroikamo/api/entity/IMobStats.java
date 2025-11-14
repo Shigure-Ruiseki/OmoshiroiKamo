@@ -5,7 +5,6 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public interface IMobStats {
 
@@ -161,19 +160,7 @@ public interface IMobStats {
         tag.setInteger(GAIN_NBT, getBaseGain());
         tag.setInteger(STRENGTH_NBT, getBaseStrength());
 
-        NBTTagList list = new NBTTagList();
-
-        for (Map.Entry<MobTrait, Integer> e : getTraits().entrySet()) {
-            NBTTagCompound t = new NBTTagCompound();
-            t.setString(
-                "id",
-                e.getKey()
-                    .getId());
-            t.setInteger("level", e.getValue());
-            list.appendTag(t);
-        }
-
-        tag.setTag(TRAITS_NBT, list);
+        TraitUtils.writeTraitsNBT(getTraits(), tag);
     }
 
     default void readStatsNBT(NBTTagCompound tag) {
@@ -184,20 +171,7 @@ public interface IMobStats {
         setBaseGain(getStatusValue(tag, GAIN_NBT));
         setBaseStrength(getStatusValue(tag, STRENGTH_NBT));
 
-        if (tag.hasKey(TRAITS_NBT)) {
-            NBTTagList list = tag.getTagList(TRAITS_NBT, 10);
-
-            for (int i = 0; i < list.tagCount(); i++) {
-                NBTTagCompound t = list.getCompoundTagAt(i);
-
-                MobTrait trait = MobTraitRegistry.getTraitById(t.getString("id"));
-                int level = t.getInteger("level");
-
-                if (trait != null) {
-                    addTrait(trait, level);
-                }
-            }
-        }
+        TraitUtils.readTraitsFromNBT(getTraits(), tag);
     }
 
     default int getStatusValue(NBTTagCompound compound, String statusName) {

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.common.item.chicken;
+package ruiseki.omoshiroikamo.common.item.trait;
 
 import java.util.List;
 import java.util.Map;

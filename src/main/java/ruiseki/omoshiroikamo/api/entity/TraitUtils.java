@@ -1,8 +1,13 @@
 package ruiseki.omoshiroikamo.api.entity;
 
+import static ruiseki.omoshiroikamo.api.entity.IMobStats.TRAITS_NBT;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 public class TraitUtils {
 
@@ -94,5 +99,41 @@ public class TraitUtils {
             result.add(formatTrait(traits, trait));
         }
         return result;
+    }
+
+    public static void writeTraitsNBT(Map<MobTrait, Integer> traits, NBTTagCompound tag) {
+        if (traits == null || traits.isEmpty() || tag == null) {
+            return;
+        }
+
+        NBTTagList list = new NBTTagList();
+        for (Map.Entry<MobTrait, Integer> entry : traits.entrySet()) {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setString(
+                "id",
+                entry.getKey()
+                    .getId());
+            t.setInteger("level", entry.getValue());
+            list.appendTag(t);
+        }
+        tag.setTag(TRAITS_NBT, list);
+    }
+
+    public static void readTraitsFromNBT(Map<MobTrait, Integer> traits, NBTTagCompound tag) {
+        if (tag == null || !tag.hasKey(TRAITS_NBT)) {
+            return;
+        }
+
+        NBTTagList list = tag.getTagList(TRAITS_NBT, 10);
+        for (int i = 0; i < list.tagCount(); i++) {
+            NBTTagCompound t = list.getCompoundTagAt(i);
+            String id = t.getString("id");
+            int level = t.getInteger("level");
+
+            MobTrait trait = MobTraitRegistry.getTraitById(id);
+            if (trait != null) {
+                traits.put(trait, level);
+            }
+        }
     }
 }
