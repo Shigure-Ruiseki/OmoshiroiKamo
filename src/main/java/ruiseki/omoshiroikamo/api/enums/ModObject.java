@@ -52,7 +52,6 @@ public enum ModObject {
     blockBreeder,
     blockRoostCollector,
 
-    itemOperationOrb,
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,
@@ -69,6 +68,7 @@ public enum ModObject {
 
     itemChickenCatcher,
     itemChickenSpawnEgg,
+    itemChicken,
     itemColoredEgg,
     itemLiquidEgg,
     itemAnalyzer,

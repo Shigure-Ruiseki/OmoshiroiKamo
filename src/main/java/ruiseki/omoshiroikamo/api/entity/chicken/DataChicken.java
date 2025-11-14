@@ -1,5 +1,10 @@
 package ruiseki.omoshiroikamo.api.entity.chicken;
 
+import static ruiseki.omoshiroikamo.api.entity.IMobStats.GAIN_NBT;
+import static ruiseki.omoshiroikamo.api.entity.IMobStats.GROWTH_NBT;
+import static ruiseki.omoshiroikamo.api.entity.IMobStats.STRENGTH_NBT;
+import static ruiseki.omoshiroikamo.api.entity.IMobStats.TYPE_NBT;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,11 +41,6 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
  */
 public class DataChicken {
 
-    private static final String GAIN_KEY = "Gain";
-    private static final String GROWTH_KEY = "Growth";
-    private static final String STRENGTH_KEY = "Strength";
-    private static final String TYPE_KEY = "Type";
-
     private int gain = 1;
     private int growth = 1;
     private int strength = 1;
@@ -57,9 +57,9 @@ public class DataChicken {
     private DataChicken(ChickensRegistryItem chickenIn, NBTTagCompound compound) {
         chicken = chickenIn;
         if (compound != null) {
-            gain = Math.max(1, Math.min(10, compound.getInteger(GAIN_KEY)));
-            growth = Math.max(1, Math.min(10, compound.getInteger(GROWTH_KEY)));
-            strength = Math.max(1, Math.min(10, compound.getInteger(STRENGTH_KEY)));
+            gain = Math.max(1, Math.min(10, compound.getInteger(GROWTH_NBT)));
+            growth = Math.max(1, Math.min(10, compound.getInteger(GAIN_NBT)));
+            strength = Math.max(1, Math.min(10, compound.getInteger(STRENGTH_NBT)));
         }
     }
 
@@ -143,7 +143,6 @@ public class DataChicken {
         EntityChickensChicken entity = buildEntity(world);
         entity.setPosition(coord.x + 0.5, coord.y, coord.z + 0.5);
         entity.onSpawnWithEgg(null);
-        entity.addRandomTraits();
         entity.setStatsAnalyzed(true);
         entity.setType(getType());
         world.spawnEntityInWorld(entity);
@@ -153,9 +152,9 @@ public class DataChicken {
      * @return A spawn egg ItemStack representing this chicken
      */
     public ItemStack buildStack() {
-        ItemStack stack = ModItems.CHICKEN_SPAWN_EGG.newItemStack(1, getType());
+        ItemStack stack = ModItems.CHICKEN.newItemStack(1, getType());
         NBTTagCompound tag = createTagCompound();
-        tag.setInteger(TYPE_KEY, getType());
+        tag.setInteger(TYPE_NBT, getType());
         stack.setTagCompound(tag);
         return stack;
     }
@@ -176,7 +175,7 @@ public class DataChicken {
      * @return A spawn egg as if caught from the world
      */
     public ItemStack buildCaughtFromStack() {
-        return new ItemStack(ModItems.CHICKEN_SPAWN_EGG.get(), 1, getType());
+        return new ItemStack(ModItems.CHICKEN.get(), 1, getType());
     }
 
     /**
@@ -220,9 +219,9 @@ public class DataChicken {
      */
     public NBTTagCompound createTagCompound() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger(GAIN_KEY, gain);
-        tag.setInteger(GROWTH_KEY, growth);
-        tag.setInteger(STRENGTH_KEY, strength);
+        tag.setInteger(GAIN_NBT, gain);
+        tag.setInteger(GROWTH_NBT, growth);
+        tag.setInteger(STRENGTH_NBT, strength);
         return tag;
     }
 
@@ -288,7 +287,7 @@ public class DataChicken {
      * @return True if ItemStack is a chicken spawn egg
      */
     public static boolean isChicken(ItemStack stack) {
-        return stack != null && stack.getItem() == ModItems.CHICKEN_SPAWN_EGG.get();
+        return stack != null && stack.getItem() == ModItems.CHICKEN.get();
     }
 
     @Override

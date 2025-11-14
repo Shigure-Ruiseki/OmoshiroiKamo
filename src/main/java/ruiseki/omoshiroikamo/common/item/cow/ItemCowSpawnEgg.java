@@ -99,7 +99,7 @@ public class ItemCowSpawnEgg extends ItemOK {
         float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             BlockCoord blockCoord = correctPosition(new BlockCoord(x, y, z), side);
-            activate(stack, world, blockCoord, stack.getItemDamage());
+            activate(stack, world, blockCoord);
             if (!player.capabilities.isCreativeMode) {
                 stack.stackSize--;
             }
@@ -119,13 +119,13 @@ public class ItemCowSpawnEgg extends ItemOK {
         return new BlockCoord(posX, posY, posZ);
     }
 
-    private void activate(ItemStack stack, World worldIn, BlockCoord pos, int metadata) {
+    private void activate(ItemStack stack, World worldIn, BlockCoord pos) {
         EntityCowsCow entity = new EntityCowsCow(worldIn);
 
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
         entity.addRandomTraits();
-        entity.setType(metadata);
+        entity.setType(stack.getItemDamage());
 
         if (stack.hasTagCompound()) {
             NBTTagCompound entityNBT = new NBTTagCompound();

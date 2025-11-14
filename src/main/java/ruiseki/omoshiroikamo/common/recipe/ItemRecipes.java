@@ -416,7 +416,7 @@ public class ItemRecipes {
                     'F',
                     Items.feather));
 
-            GameRegistry.addSmelting(ModItems.CHICKEN_SPAWN_EGG.get(), new ItemStack(Items.cooked_chicken), 0.35f);
+            GameRegistry.addSmelting(ModItems.CHICKEN.get(), new ItemStack(Items.cooked_chicken), 0.35f);
         }
 
     }

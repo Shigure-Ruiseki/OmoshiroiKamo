@@ -1,13 +1,14 @@
 package ruiseki.omoshiroikamo.common.item.chicken;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -19,82 +20,62 @@ import com.enderio.core.common.util.BlockCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
-import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
-import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
-import vazkii.botania.common.core.helper.ItemNBTHelper;
 
-public class ItemChickenSpawnEgg extends ItemOK {
+public class ItemChicken extends ItemOK {
 
     @SideOnly(Side.CLIENT)
-    protected IIcon baseIcon, overlayIcon;
+    private Map<Integer, IIcon> iconMap = new HashMap<>();
 
-    public ItemChickenSpawnEgg() {
-        super(ModObject.itemChickenSpawnEgg);
+    public ItemChicken() {
+        super(ModObject.itemChicken);
         setHasSubtypes(true);
+        setMaxStackSize(16);
     }
 
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
-        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
-            list.add(new ItemStack(this, 1, chicken.getId()));
+        for (DataChicken chicken : DataChicken.getAllChickens()) {
+            list.add(new ItemStack(this, 1, chicken.getType()));
         }
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-
     @SideOnly(Side.CLIENT)
-    @Override
-    public int getRenderPasses(int metadata) {
-        return 2;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        return pass == 0 ? baseIcon : overlayIcon;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIconFromDamage(int damage) {
-        return baseIcon;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister register) {
-        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "spawn_egg");
-        overlayIcon = register.registerIcon(LibResources.PREFIX_MOD + "spawn_egg_overlay");
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        ChickensRegistryItem chickenDescription = ChickensRegistry.INSTANCE.getByType(stack.getItemDamage());
-        if (chickenDescription == null) {
+        DataChicken chicken = DataChicken.getDataFromStack(stack);
+        if (chicken == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(chickenDescription.getDisplayName());
+        return LibMisc.LANG.localize(
+            chicken.getItems()
+                .getDisplayName());
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public int getColorFromItemStack(ItemStack stack, int renderPass) {
-        ChickensRegistryItem chickenDescription = ChickensRegistry.INSTANCE.getByType(stack.getItemDamage());
-        if (chickenDescription == null) {
-            return renderPass;
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister reg) {
+
+        for (DataChicken chicken : DataChicken.getAllChickens()) {
+            int type = chicken.getType();
+            IIcon icon = reg.registerIcon(LibResources.PREFIX_MOD + "chicken/" + chicken.getName());
+            iconMap.put(type, icon);
         }
-        return renderPass == 0 ? chickenDescription.getBgColor() : chickenDescription.getFgColor();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int meta) {
+        IIcon icon = iconMap.get(meta);
+        if (icon == null) {
+            icon = iconMap.get(0);
+        }
+        return icon;
     }
 
     @Override
@@ -123,41 +104,40 @@ public class ItemChickenSpawnEgg extends ItemOK {
     }
 
     private void activate(ItemStack stack, World worldIn, BlockCoord pos) {
-        EntityChickensChicken entity = new EntityChickensChicken(worldIn);
-
-        entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
-        entity.onSpawnWithEgg(null);
-        entity.addRandomTraits();
-        entity.setType(stack.getItemDamage());
-
-        if (stack.hasTagCompound()) {
-            NBTTagCompound entityNBT = new NBTTagCompound();
-            entity.writeEntityToNBT(entityNBT);
-
-            NBTTagCompound stackNBT = ItemNBTHelper.getNBT(stack);
-            for (String key : stackNBT.func_150296_c()) {
-                NBTBase value = stackNBT.getTag(key);
-                entityNBT.setTag(key, value.copy());
-            }
-
-            entity.readEntityFromNBT(entityNBT);
+        DataChicken chicken = DataChicken.getDataFromStack(stack);
+        if (chicken == null) {
+            return;
         }
+        chicken.spawnEntity(worldIn, pos);
+    }
 
-        worldIn.spawnEntityInWorld(entity);
+    @Override
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+        DataChicken chicken = DataChicken.getDataFromStack(stack);
+        if (chicken != null) {
+            NBTTagCompound tag = chicken.createTagCompound();
+            tag.setInteger("Type", chicken.getType());
+            stack.setTagCompound(tag);
+        }
     }
 
     @Override
     public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        ChickensRegistryItem chickenDescription = ChickensRegistry.INSTANCE.getByType(itemstack.getItemDamage());
+        DataChicken chicken = DataChicken.getDataFromStack(itemstack);
 
-        if (chickenDescription == null) {
+        if (chicken == null) {
             return;
         }
 
         list.add(
-            new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.tier", chickenDescription.getTier())
-                .getFormattedText());
-        ItemStack layitem = chickenDescription.createLayItem();
+            new ChatComponentTranslation(
+                LibResources.TOOLTIP + "spawn_egg.tier",
+                chicken.getItems()
+                    .getTier()).getFormattedText());
+        ItemStack layitem = chicken.getItems()
+            .createLayItem();
+
+        chicken.addStatsInfoToTooltip(list);
 
         if (layitem != null && layitem.getItem() != null) {
             list.add(
@@ -169,31 +149,41 @@ public class ItemChickenSpawnEgg extends ItemOK {
                     .getFormattedText());
         }
 
-        if (chickenDescription.getSpawnType() != SpawnType.NONE) {
-            EnumChatFormatting format = chickenDescription.getSpawnType() == SpawnType.NORMAL ? EnumChatFormatting.GREEN
-                : chickenDescription.getSpawnType() == SpawnType.HELL ? EnumChatFormatting.RED
-                    : chickenDescription.getSpawnType() == SpawnType.SNOW ? EnumChatFormatting.AQUA
-                        : EnumChatFormatting.WHITE;
+        if (chicken.getItems()
+            .getSpawnType() != SpawnType.NONE) {
+            EnumChatFormatting format = chicken.getItems()
+                .getSpawnType() == SpawnType.NORMAL ? EnumChatFormatting.GREEN
+                    : chicken.getItems()
+                        .getSpawnType() == SpawnType.HELL ? EnumChatFormatting.RED
+                            : chicken.getItems()
+                                .getSpawnType() == SpawnType.SNOW ? EnumChatFormatting.AQUA : EnumChatFormatting.WHITE;
             list.add(
                 new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.spawnType").getFormattedText() + ": "
                     + EnumChatFormatting.RESET
                     + format
-                    + chickenDescription.getSpawnType()
+                    + chicken.getItems()
+                        .getSpawnType()
                         .toString());
         }
 
-        if (!chickenDescription.isBreedable()) {
+        if (!chicken.getItems()
+            .isBreedable()) {
             list.add(
                 EnumChatFormatting.RED
                     + new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.notbreedable").getFormattedText());
         } else {
-            if (chickenDescription.getParent1() != null && chickenDescription.getParent2() != null) {
+            if (chicken.getItems()
+                .getParent1() != null
+                && chicken.getItems()
+                    .getParent2() != null) {
                 String parent1 = new ChatComponentTranslation(
-                    chickenDescription.getParent1()
+                    chicken.getItems()
+                        .getParent1()
                         .getDisplayName()).getFormattedText();
 
                 String parent2 = new ChatComponentTranslation(
-                    chickenDescription.getParent2()
+                    chicken.getItems()
+                        .getParent2()
                         .getDisplayName()).getFormattedText();
 
                 list.add(
@@ -213,8 +203,8 @@ public class ItemChickenSpawnEgg extends ItemOK {
 
         }
 
-        if (ModCompatInformation.TOOLTIP.containsKey(chickenDescription.getId())) {
-            ModCompatInformation info = ModCompatInformation.TOOLTIP.get(chickenDescription.getId());
+        if (ModCompatInformation.TOOLTIP.containsKey(chicken.getType())) {
+            ModCompatInformation info = ModCompatInformation.TOOLTIP.get(chicken.getType());
             list.addAll(info.getToolTip());
         }
     }

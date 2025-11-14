@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemAnalyzer;
+import ruiseki.omoshiroikamo.common.item.chicken.ItemChicken;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenCatcher;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenSpawnEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
@@ -43,6 +44,7 @@ public enum ModItems {
     ANALYZER(useChicken || useCow, new ItemAnalyzer()),
     CHICKEN_CATCHER(useChicken, new ItemChickenCatcher()),
     CHICKEN_SPAWN_EGG(useChicken, new ItemChickenSpawnEgg()),
+    CHICKEN(useChicken, new ItemChicken()),
     COLORED_EGG(useChicken, new ItemColoredEgg()),
     LIQUID_EGG(useChicken, new ItemLiquidEgg()),
     SOLID_XP(useChicken, new ItemSolidXp()),

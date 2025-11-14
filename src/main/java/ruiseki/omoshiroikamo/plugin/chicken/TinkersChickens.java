@@ -67,9 +67,9 @@ public class TinkersChickens extends BaseChickenHandler {
 
         bloodSlimeChicken = addChicken(
             allChickens,
-            "BloodSlime",
+            "BloodSlimeChicken",
             this.nextID(),
-            "BloodSlime.png",
+            "BloodSlimeChicken.png",
             new ItemStack(TinkerWorld.strangeFood, 1, 1),
             0xc50616,
             0xee0316,
@@ -77,9 +77,9 @@ public class TinkersChickens extends BaseChickenHandler {
 
         blueSlimeChicken = addChicken(
             allChickens,
-            "BlueSlime",
+            "BlueSlimeChicken",
             this.nextID(),
-            "BlueSlime.png",
+            "BlueSlimeChicken.png",
             new ItemStack(TinkerWorld.strangeFood, 1, 0),
             0x67b4c4,
             0x30717f,

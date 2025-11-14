@@ -379,9 +379,9 @@ entity.SoulSandChicken.name=Soul Sand Chicken
 entity.ArditeChicken.name=Ardite Chicken
 entity.CobaltChicken.name=Cobalt ChickenS
 entity.ManyullynChicken.name=Manyullyn Chicken
-entity.BloodSlime.name=Blood Chicken
+entity.BloodSlimeChicken.name=Blood Chicken
 entity.PigIronChicken.name=Pig Iron Chicken
-entity.BlueSlime.name=Blue Chicken
+entity.BlueSlimeChicken.name=Blue Chicken
 
 entity.TerrasteelChicken.name=Terrasteel Chicken
 entity.ManasteelChicken.name=Manasteel Chicken
