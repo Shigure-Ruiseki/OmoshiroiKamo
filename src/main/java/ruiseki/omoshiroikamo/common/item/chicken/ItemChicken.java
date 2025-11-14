@@ -29,8 +29,7 @@ import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 public class ItemChicken extends ItemOK {
 
-    @SideOnly(Side.CLIENT)
-    private Map<Integer, IIcon> icons = new HashMap<>();
+    private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemChicken() {
         super(ModObject.itemChicken);
