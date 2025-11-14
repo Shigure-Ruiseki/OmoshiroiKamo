@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.common.block.chicken;
 import java.text.DecimalFormat;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -324,7 +324,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     public static boolean isSeed(ItemStack stack) {
         Item item = stack.getItem();
-        return (item == Items.wheat_seeds || item == Items.melon_seeds || item == Items.pumpkin_seeds);
+        return item instanceof ItemSeeds;
     }
 
     /**
