@@ -30,7 +30,7 @@ import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 public class ItemChicken extends ItemOK {
 
     @SideOnly(Side.CLIENT)
-    private Map<Integer, IIcon> iconMap = new HashMap<>();
+    private Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemChicken() {
         super(ModObject.itemChicken);
@@ -64,16 +64,16 @@ public class ItemChicken extends ItemOK {
         for (DataChicken chicken : DataChicken.getAllChickens()) {
             int type = chicken.getType();
             IIcon icon = reg.registerIcon(LibResources.PREFIX_MOD + "chicken/" + chicken.getName());
-            iconMap.put(type, icon);
+            icons.put(type, icon);
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta) {
-        IIcon icon = iconMap.get(meta);
+        IIcon icon = icons.get(meta);
         if (icon == null) {
-            icon = iconMap.get(0);
+            icon = icons.get(0);
         }
         return icon;
     }
