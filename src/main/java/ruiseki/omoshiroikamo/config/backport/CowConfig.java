@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 @Config(modid = LibMisc.MOD_ID, category = "general.backports.cow", configSubDirectory = LibMisc.MOD_ID)
 public class CowConfig {
 
-    @Config.DefaultBoolean(false)
+    @Config.DefaultBoolean(true)
     public static boolean useTrait;
 
     @Config.DefaultInt(40000)
