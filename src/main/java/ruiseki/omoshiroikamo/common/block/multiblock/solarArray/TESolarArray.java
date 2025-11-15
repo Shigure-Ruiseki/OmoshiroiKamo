@@ -59,14 +59,14 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     }
 
     @Override
-    public void doUpdate() {
-        super.doUpdate();
+    protected boolean processTasks(boolean redstoneCheckPassed) {
         boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = storedEnergyRF;
             PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
         transmitEnergy();
+        return super.processTasks(redstoneCheckPassed);
     }
 
     public abstract int getEnergyPerTick();
@@ -150,7 +150,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     }
 
     float calculateLightRatio() {
-        return calculateLightRatio(worldObj, xCoord, yCoord, zCoord);
+        return calculateLightRatio(worldObj, xCoord, yCoord + 1, zCoord);
     }
 
     private void collectEnergy() {
@@ -191,7 +191,6 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
         lightValue = Math.round(lightValue * MathHelper.cos(sunAngle));
 
         lightValue = MathHelper.clamp_int(lightValue, 0, 15);
-
         return lightValue / 15f;
     }
 
