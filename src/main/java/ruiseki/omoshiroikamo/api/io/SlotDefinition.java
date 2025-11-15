@@ -15,7 +15,8 @@ public class SlotDefinition {
     private int minFluidOutputSlot = -1;
     private int maxFluidOutputSlot = -1;
 
-    public SlotDefinition() {}
+    public SlotDefinition() {
+    }
 
     /**
      * Item slots
@@ -119,6 +120,26 @@ public class SlotDefinition {
 
     public int getItemSlots() {
         return getItemInputs() + getItemOutputs();
+    }
+
+    public int[] getAllItemSlots() {
+        int inputCount = getItemInputs();
+        int outputCount = getItemOutputs();
+        if (inputCount == 0 && outputCount == 0) {
+            return new int[0];
+        }
+
+        int[] all = new int[inputCount + outputCount];
+
+        for (int i = 0; i < inputCount; i++) {
+            all[i] = minItemInputSlot + i;
+        }
+
+        for (int i = 0; i < outputCount; i++) {
+            all[inputCount + i] = minItemOutputSlot + i;
+        }
+
+        return all;
     }
 
     public int getFluidInputs() {

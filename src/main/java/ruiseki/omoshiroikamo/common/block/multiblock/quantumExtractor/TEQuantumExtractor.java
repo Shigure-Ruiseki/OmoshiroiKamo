@@ -14,10 +14,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.enderio.core.common.util.BlockCoord;
 import com.enderio.core.common.util.DyeColor;
+import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemIO;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
+import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
@@ -26,6 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
 import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
+import ruiseki.omoshiroikamo.api.item.OKItemIO;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifierTE;
@@ -40,7 +49,7 @@ import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
 public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
-    implements IEnergyReceiver, IPowerContainer, ISidedInventory {
+    implements IEnergyReceiver, IPowerContainer, ISidedInventory, CapabilityProvider {
 
     protected int storedEnergyRF = 0;
     protected float lastSyncPowerStored = -1;
@@ -237,7 +246,21 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
             ItemStack clone = resultStack.copy();
             clone.stackSize = 1;
             ItemHandlerHelper.insertItem(this.output, clone, false);
-            this.ejectAll(output);
+            this.extract();
+        }
+    }
+
+    public void extract() {
+        ItemTransfer transfer = new ItemTransfer();
+
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+
+            TileEntity adjacent = this.getWorldObj()
+                .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+
+            transfer.push(this, side, adjacent);
+            transfer.transfer();
+
         }
     }
 
@@ -410,6 +433,15 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         return false;
+    }
+
+    @Override
+    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
+        if (capability == ItemSource.class || capability == ItemSink.class || capability == ItemIO.class) {
+            return capability.cast(new OKItemIO(this, side, allSlots));
+        }
+
+        return null;
     }
 
     @Override
