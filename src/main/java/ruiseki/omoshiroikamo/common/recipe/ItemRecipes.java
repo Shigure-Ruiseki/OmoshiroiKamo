@@ -47,7 +47,7 @@ public class ItemRecipes {
                         "ingotCopper",
                         'B',
                         ModItems.BACKPACK.newItemStack(1, 0)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 0))
-                            .allowAllTags());
+                        .allowAllTags());
 
                 // Iron Backpack
                 GameRegistry.addRecipe(
@@ -60,7 +60,7 @@ public class ItemRecipes {
                         "ingotIron",
                         'B',
                         ModItems.BACKPACK.newItemStack(1, 1)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 1))
-                            .allowAllTags());
+                        .allowAllTags());
             } else {
 
                 // Iron Backpack
@@ -74,7 +74,7 @@ public class ItemRecipes {
                         "ingotIron",
                         'B',
                         ModItems.BACKPACK.newItemStack(1, 0)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 0))
-                            .allowAllTags());
+                        .allowAllTags());
             }
 
             // Gold Backpack
@@ -88,7 +88,7 @@ public class ItemRecipes {
                     "ingotGold",
                     'B',
                     ModItems.BACKPACK.newItemStack(1, 2)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 2))
-                        .allowAllTags());
+                    .allowAllTags());
 
             // Diamond Backpack
             GameRegistry.addRecipe(
@@ -101,7 +101,7 @@ public class ItemRecipes {
                     "gemDiamond",
                     'B',
                     ModItems.BACKPACK.newItemStack(1, 3)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 3))
-                        .allowAllTags());
+                    .allowAllTags());
 
             if (!LibMods.EtFuturum.isLoaded()) {
                 GameRegistry.addRecipe(
@@ -116,7 +116,7 @@ public class ItemRecipes {
                         "blockObsidian",
                         'B',
                         ModItems.BACKPACK.newItemStack(1, 4)).allowNBTFrom(ModItems.BACKPACK.newItemStack(1, 4))
-                            .allowAllTags());
+                        .allowAllTags());
             }
 
             for (int i = 0; i < DYE_ORE_NAMES.length; i++) {
@@ -126,49 +126,49 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 0),
                         ModItems.BACKPACK.newItemStack(1, 0),
                         dyeOreName).withInt(
-                            "BackpackColor",
-                            DyeColor.fromIndex(i)
-                                .getColor()));
+                        "BackpackColor",
+                        DyeColor.fromIndex(i)
+                            .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
                         ModItems.BACKPACK.newItemStack(1, 1),
                         ModItems.BACKPACK.newItemStack(1, 1),
                         dyeOreName).withInt(
-                            "BackpackColor",
-                            DyeColor.fromIndex(i)
-                                .getColor()));
+                        "BackpackColor",
+                        DyeColor.fromIndex(i)
+                            .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
                         ModItems.BACKPACK.newItemStack(1, 2),
                         ModItems.BACKPACK.newItemStack(1, 2),
                         dyeOreName).withInt(
-                            "BackpackColor",
-                            DyeColor.fromIndex(i)
-                                .getColor()));
+                        "BackpackColor",
+                        DyeColor.fromIndex(i)
+                            .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
                         ModItems.BACKPACK.newItemStack(1, 3),
                         ModItems.BACKPACK.newItemStack(1, 3),
                         dyeOreName).withInt(
-                            "BackpackColor",
-                            DyeColor.fromIndex(i)
-                                .getColor()));
+                        "BackpackColor",
+                        DyeColor.fromIndex(i)
+                            .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
                         ModItems.BACKPACK.newItemStack(1, 4),
                         ModItems.BACKPACK.newItemStack(1, 4),
                         dyeOreName).withInt(
-                            "BackpackColor",
-                            DyeColor.fromIndex(i)
-                                .getColor()));
+                        "BackpackColor",
+                        DyeColor.fromIndex(i)
+                            .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
                         ModItems.BACKPACK.newItemStack(1, 5),
                         ModItems.BACKPACK.newItemStack(1, 5),
                         dyeOreName).withInt(
-                            "BackpackColor",
-                            DyeColor.fromIndex(i)
-                                .getColor()));
+                        "BackpackColor",
+                        DyeColor.fromIndex(i)
+                            .getColor()));
             }
 
             // Upgrade Base
@@ -397,7 +397,7 @@ public class ItemRecipes {
             }
 
             // Analyzer
-            GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.egg, Items.compass);
+            GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.stick, Items.compass);
 
             // Chicken Catcher
             GameRegistry.addRecipe(
