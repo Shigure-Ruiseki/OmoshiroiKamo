@@ -129,8 +129,7 @@ public abstract class TileEntityOK extends TileEntity {
      * <p>
      * Note: This will not be called when the TE is loaded from the save. Hook into the nbt methods for that.
      */
-    public void init() {
-    }
+    public void init() {}
 
     private BlockPos cachedLocation = null;
 
