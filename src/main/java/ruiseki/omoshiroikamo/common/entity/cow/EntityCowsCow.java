@@ -1,7 +1,8 @@
 package ruiseki.omoshiroikamo.common.entity.cow;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -38,7 +39,7 @@ import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider {
 
-    private final List<MobTrait> traits = new ArrayList<>();
+    private final Map<MobTrait, Integer> traits = new HashMap<>();
     public int timeUntilNextMilk;
     public SmartTank milkTank;
 
@@ -100,7 +101,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
     }
 
     @Override
-    public List<MobTrait> getTraits() {
+    public Map<MobTrait, Integer> getTraits() {
         return traits;
     }
 

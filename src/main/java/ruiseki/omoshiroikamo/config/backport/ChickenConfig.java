@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 @Config(modid = LibMisc.MOD_ID, category = "general.backports.chicken", configSubDirectory = LibMisc.MOD_ID)
 public class ChickenConfig {
 
-    @Config.DefaultBoolean(false)
+    @Config.DefaultBoolean(true)
     public static boolean useTrait;
 
     @Config.DefaultInt(30000)

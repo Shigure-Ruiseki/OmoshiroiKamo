@@ -41,10 +41,6 @@ public class ItemCowSpawnEgg extends ItemOK {
         setHasSubtypes(true);
     }
 
-    public static ItemCowSpawnEgg create() {
-        return new ItemCowSpawnEgg();
-    }
-
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
         for (CowsRegistryItem cow : CowsRegistry.INSTANCE.getItems()) {

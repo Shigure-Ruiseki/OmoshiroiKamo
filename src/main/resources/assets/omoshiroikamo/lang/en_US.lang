@@ -214,7 +214,7 @@ item.assembler.name=Assembler
 
 item.hammer.name=Hammer
 
-item.analyzer.name=Chicken Analyzer
+item.analyzer.name=Analyzer
 item.solidXp.name=Solid Experience
 
 item.chickenCatcher.name=Chicken Catcher
@@ -377,7 +377,7 @@ entity.ObsidianChicken.name=Obsidian Chicken
 entity.SoulSandChicken.name=Soul Sand Chicken
 
 entity.ArditeChicken.name=Ardite Chicken
-entity.CobaltChicken.name=Cobalt ChickenS
+entity.CobaltChicken.name=Cobalt Chicken
 entity.ManyullynChicken.name=Manyullyn Chicken
 entity.BloodSlimeChicken.name=Blood Chicken
 entity.PigIronChicken.name=Pig Iron Chicken

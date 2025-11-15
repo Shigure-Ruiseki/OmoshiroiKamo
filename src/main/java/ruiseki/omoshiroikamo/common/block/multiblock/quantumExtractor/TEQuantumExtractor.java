@@ -81,13 +81,13 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
     }
 
     @Override
-    public void doUpdate() {
-        super.doUpdate();
+    protected boolean processTasks(boolean redstoneCheckPassed) {
         boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = storedEnergyRF;
             PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
+        return super.processTasks(redstoneCheckPassed);
     }
 
     @Override
@@ -243,6 +243,20 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
 
     @Override
     public boolean canProcess() {
+
+        boolean hasFreeSlot = false;
+        for (int i = 0; i < output.getSlots(); i++) {
+            ItemStack stack = output.getStackInSlot(i);
+            if (stack == null) {
+                hasFreeSlot = true;
+                break;
+            }
+        }
+        if (!hasFreeSlot) {
+            this.ejectAll(output);
+            return false;
+        }
+
         List<IModifierBlock> mods = new ArrayList<>();
         for (BlockCoord coord : this.modifiers) {
             Block blk = coord.getBlock(worldObj);
@@ -278,19 +292,6 @@ public abstract class TEQuantumExtractor extends AbstractMultiBlockModifierTE
                     this.getRegistry()
                         .getUnFocusedList());
             }
-        }
-
-        boolean hasFreeSlot = false;
-        for (int i = 0; i < output.getSlots(); i++) {
-            ItemStack stack = output.getStackInSlot(i);
-            if (stack == null || stack.stackSize < stack.getMaxStackSize()) {
-                hasFreeSlot = true;
-                break;
-            }
-        }
-        if (!hasFreeSlot) {
-            this.ejectAll(output);
-            return false;
         }
 
         if (getEnergyStored() < getEnergyCostPerTick()) {

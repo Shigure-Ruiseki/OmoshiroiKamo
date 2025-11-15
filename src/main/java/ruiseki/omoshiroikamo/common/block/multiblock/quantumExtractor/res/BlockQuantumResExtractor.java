@@ -121,7 +121,7 @@ public class BlockQuantumResExtractor extends AbstractMultiBlockBlock<TEQuantumE
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof TEQuantumExtractor extractor) {
             int progress = extractor.getCurrentProgress();
-            int duration = extractor.getCurrentDuration();
+            int duration = extractor.getCurrentProcessDuration();
 
             if (duration > 0) {
                 float percent = (progress / (float) duration) * 100f;

@@ -1,7 +1,8 @@
 package ruiseki.omoshiroikamo.common.entity.chicken;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -30,7 +31,7 @@ import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 public class EntityChickensChicken extends EntityChicken implements IMobStats, IWailaEntityInfoProvider {
 
-    private final List<MobTrait> traits = new ArrayList<>();
+    private final Map<MobTrait, Integer> traits = new HashMap<>();
 
     public EntityChickensChicken(World world) {
         super(world);
@@ -77,7 +78,7 @@ public class EntityChickensChicken extends EntityChicken implements IMobStats, I
     }
 
     @Override
-    public List<MobTrait> getTraits() {
+    public Map<MobTrait, Integer> getTraits() {
         return traits;
     }
 

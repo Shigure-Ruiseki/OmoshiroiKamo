@@ -1,6 +1,7 @@
-package ruiseki.omoshiroikamo.common.item.chicken;
+package ruiseki.omoshiroikamo.common.item.trait;
 
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,12 +38,18 @@ public class ItemAnalyzer extends ItemOK {
             .setColor(EnumChatFormatting.GOLD);
         player.addChatMessage(chickenName);
 
-        List<MobTrait> traits = stats.getTraits();
+        Map<MobTrait, Integer> traits = stats.getTraits();
         if (traits != null && !traits.isEmpty()) {
-            for (MobTrait trait : traits) {
-                ChatComponentText traitMessage = new ChatComponentText("- " + trait.getName());
+
+            for (Map.Entry<MobTrait, Integer> entry : traits.entrySet()) {
+                MobTrait trait = entry.getKey();
+                int level = entry.getValue();
+
+                ChatComponentText traitMessage = new ChatComponentText("- " + trait.getName() + " Lv." + level);
+
                 traitMessage.getChatStyle()
                     .setColor(EnumChatFormatting.AQUA);
+
                 player.addChatMessage(traitMessage);
             }
         }

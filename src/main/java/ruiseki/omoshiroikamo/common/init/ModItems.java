@@ -20,7 +20,6 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemAnalyzer;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChicken;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenCatcher;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenSpawnEgg;
@@ -28,6 +27,8 @@ import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemSolidXp;
 import ruiseki.omoshiroikamo.common.item.cow.ItemCowSpawnEgg;
+import ruiseki.omoshiroikamo.common.item.trait.ItemAnalyzer;
+import ruiseki.omoshiroikamo.common.item.trait.ItemSyringe;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModItems {
@@ -50,6 +51,7 @@ public enum ModItems {
     SOLID_XP(useChicken, new ItemSolidXp()),
 
     COW_SPAWN_EGG(useCow, new ItemCowSpawnEgg()),
+    SYRINGE(useCow, new ItemSyringe()),
 
     ASSEMBLER(useEnvironmentalTech, new ItemAssembler()),
     STABILIZED_ENDER_PEAR(useEnvironmentalTech, new ItemOK().setName(ModObject.itemStabilizedEnderPear)

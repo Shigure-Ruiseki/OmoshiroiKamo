@@ -397,7 +397,7 @@ public class ItemRecipes {
             }
 
             // Analyzer
-            GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.egg, Items.compass);
+            GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.stick, Items.compass);
 
             // Chicken Catcher
             GameRegistry.addRecipe(

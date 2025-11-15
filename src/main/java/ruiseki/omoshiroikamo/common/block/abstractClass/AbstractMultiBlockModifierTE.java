@@ -17,8 +17,6 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.mojang.authlib.GameProfile;
 
-import ruiseki.omoshiroikamo.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.common.network.PacketMBClientUpdate;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
 public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements IProgressTile {
@@ -98,10 +96,11 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements
             } else {
                 this.onProcessComplete();
                 this.currentDuration = this.getCurrentProcessDuration();
-                this.currentProgress = 0;
+                this.currentProgress = 1;
                 this.isProcessing = false;
             }
         } else {
+            this.currentProgress = 1;
             this.isProcessing = false;
         }
     }
@@ -174,24 +173,8 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements
         return this.isFormed;
     }
 
-    public void setFormed(boolean formed) {
-        isFormed = formed;
-    }
-
-    public boolean isProcessing() {
-        return this.isProcessing;
-    }
-
-    public void setProcessing(boolean processing) {
-        isProcessing = processing;
-    }
-
     public int getCurrentDuration() {
         return currentDuration;
-    }
-
-    public void setCurrentDuration(int currentDuration) {
-        this.currentDuration = currentDuration;
     }
 
     public int getCurrentProgress() {
@@ -222,18 +205,6 @@ public abstract class AbstractMultiBlockModifierTE extends AbstractTE implements
 
     public GameProfile getPlayerProfile() {
         return this.player;
-    }
-
-    public void updateClientWithPlayer() {
-        if (this.player == null) {
-            return;
-        }
-
-        EntityPlayer playerObj = PlayerUtils.getPlayerFromWorld(this.worldObj, this.player.getId());
-        if (playerObj == null) {
-            return;
-        }
-        PacketHandler.sendToAllAround(new PacketMBClientUpdate(this), playerObj, 8.0D);
     }
 
     @Override
