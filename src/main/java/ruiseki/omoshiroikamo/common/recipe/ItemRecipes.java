@@ -11,8 +11,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.enderio.core.common.util.DyeColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
-import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -385,18 +383,17 @@ public class ItemRecipes {
         if (BackportConfigs.useChicken) {
 
             // Colored Egg
-            for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
-
+            for (int i = 0; i < DYE_ORE_NAMES.length; i++) {
                 GameRegistry.addRecipe(
                     new ShapedOreRecipe(
-                        ModItems.COLORED_EGG.newItemStack(1, chicken.getDyeMetadata()),
+                        ModItems.COLORED_EGG.newItemStack(1, i),
                         "DDD",
                         "DED",
                         "DDD",
                         'E',
                         Items.egg,
                         'D',
-                        new ItemStack(Items.dye, 1, chicken.getDyeMetadata())));
+                        DYE_ORE_NAMES[i]));
             }
 
             // Analyzer
