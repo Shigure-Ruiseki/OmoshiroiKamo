@@ -1,6 +1,6 @@
 {
 	"format_version": "1.21.6",
-	"credit": "Made with Blockbench",
+  "__comment": "Designed by timrwood",
 	"textures": {
 		"particle": "omoshiroikamo:block/plain_face",
 		"up": "omoshiroikamo:block/plain_face",

@@ -1,5 +1,6 @@
 {
   "parent": "block/cube",
+  "__comment": "Designed by ValkyrieofNight",
   "textures": {
     "frame": "omoshiroikamo:block/cont_tier",
     "base": "omoshiroikamo:block/basalt",

@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/block",
+  "__comment": "Designed by timrwood",
   "ambientocclusion": false,
   "textures": {
     "particle": "omoshiroikamo:block/curtain_side",

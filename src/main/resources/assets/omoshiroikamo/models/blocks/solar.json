@@ -1,5 +1,6 @@
 {
   "solarCell": "block/cube",
+  "__comment": "Designed by ValkyrieofNight",
   "ambientocclusion": false,
 	"textures": {
 		"solar_bottom": "omoshiroikamo:block/basalt",

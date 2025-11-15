@@ -1,5 +1,6 @@
 {
   "parent": "block/cube",
+  "__comment": "Designed by ValkyrieofNight",
   "textures": {
     "tier": "omoshiroikamo:block/cont_tier",
     "laser_core": "omoshiroikamo:block/laser_core",
