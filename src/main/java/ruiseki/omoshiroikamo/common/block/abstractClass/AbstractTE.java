@@ -12,10 +12,10 @@ import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.enderio.core.common.TileEntityEnder;
 import com.enderio.core.common.util.BlockCoord;
 
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuis;
+import ruiseki.omoshiroikamo.common.block.TileEntityEnder;
 
 public abstract class AbstractTE extends TileEntityEnder implements IGuiHolder<PosGuiData> {
 

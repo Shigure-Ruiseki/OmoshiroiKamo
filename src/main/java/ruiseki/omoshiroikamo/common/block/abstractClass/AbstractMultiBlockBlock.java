@@ -7,10 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.TileEntityEnder;
-
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
+import ruiseki.omoshiroikamo.common.block.TileEntityEnder;
 
 public class AbstractMultiBlockBlock<T extends AbstractMultiBlockModifierTE> extends AbstractBlock<T>
     implements IMBBlock {

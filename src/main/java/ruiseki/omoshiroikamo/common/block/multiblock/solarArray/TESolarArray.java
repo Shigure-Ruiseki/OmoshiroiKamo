@@ -59,14 +59,14 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
+    public void doUpdate() {
+        super.doUpdate();
         boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = storedEnergyRF;
             PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
         transmitEnergy();
-        return super.processTasks(redstoneCheckPassed);
     }
 
     public abstract int getEnergyPerTick();

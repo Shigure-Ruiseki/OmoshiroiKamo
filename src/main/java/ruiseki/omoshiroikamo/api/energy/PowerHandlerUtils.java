@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.api.energy;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
@@ -13,7 +12,6 @@ import ruiseki.omoshiroikamo.api.energy.powerInterface.EnergyHandlerPI;
 import ruiseki.omoshiroikamo.api.energy.powerInterface.EnergyProviderPI;
 import ruiseki.omoshiroikamo.api.energy.powerInterface.EnergyReceiverPI;
 import ruiseki.omoshiroikamo.api.energy.powerInterface.IPowerInterface;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractPoweredTE;
 
 public class PowerHandlerUtils {
 
@@ -53,16 +51,6 @@ public class PowerHandlerUtils {
         }
         tag.setInteger(STORED_ENERGY_NBT_KEY, storedEnergy);
         item.setTagCompound(tag);
-    }
-
-    public static int receiveInternal(AbstractPoweredTE target, int maxReceive, ForgeDirection from, boolean simulate) {
-        int result = Math.min(target.getMaxEnergyReceived(), maxReceive);
-        result = Math.min(target.getMaxEnergyStored() - target.getEnergyStored(), result);
-        result = Math.max(0, result);
-        if (result > 0 && !simulate) {
-            target.setEnergyStored(target.getEnergyStored() + result);
-        }
-        return result;
     }
 
 }
