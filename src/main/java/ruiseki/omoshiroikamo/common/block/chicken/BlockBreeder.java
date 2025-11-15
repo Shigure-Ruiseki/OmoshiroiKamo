@@ -22,9 +22,8 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
-public class BlockBreeder extends AbstractBlock<TEBreeder> implements IWailaBlockInfoProvider {
+public class BlockBreeder extends AbstractBlock<TEBreeder> {
 
     @SideOnly(Side.CLIENT)
     IIcon side, floor, top;

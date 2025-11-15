@@ -12,7 +12,7 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyProvider;
@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.api.energy.PowerDistributor;
 import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifierTE;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
-public abstract class TESolarArray extends AbstractMultiBlockModifierTE implements IEnergyProvider, IPowerContainer {
+public abstract class TESolarArray extends AbstractMBModifierTE implements IEnergyProvider, IPowerContainer {
 
     private PowerDistributor powerDis;
     private int lastCollectionValue = -1;
@@ -39,7 +39,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     protected float lastSyncPowerStored = -1;
     private final EnergyStorage energyStorage;
     private ModifierHandler modifierHandler = new ModifierHandler();
-    private List<BlockCoord> modifiers = new ArrayList<>();
+    private List<BlockPos> modifiers = new ArrayList<>();
 
     public TESolarArray(int energyGen) {
         this.energyStorage = new EnergyStorage(energyGen * getBaseDuration());
@@ -59,14 +59,14 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     }
 
     @Override
-    public void doUpdate() {
-        super.doUpdate();
+    protected boolean processTasks(boolean redstoneCheckPassed) {
         boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = storedEnergyRF;
             PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
         transmitEnergy();
+        return super.processTasks(redstoneCheckPassed);
     }
 
     public abstract int getEnergyPerTick();
@@ -95,10 +95,10 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     public boolean canProcess() {
         List<IModifierBlock> mods = new ArrayList<>();
 
-        for (BlockCoord coord : this.modifiers) {
-            Block blk = coord.getBlock(worldObj);
-            if (blk instanceof IModifierBlock) {
-                mods.add((IModifierBlock) blk);
+        for (BlockPos pos : this.modifiers) {
+            Block block = worldObj.getBlock(pos.x, pos.y, pos.z);
+            if (block instanceof IModifierBlock) {
+                mods.add((IModifierBlock) block);
             }
         }
 
@@ -126,7 +126,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getLocation().getTileEntity(worldObj);
+        TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord, zCoord);
         if (tileEntity instanceof TESolarArrayT1) {
             player.triggerAchievement(ModAchievements.ASSEMBLE_SOLAR_ARRAY_T1.get());
         }
@@ -137,7 +137,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
 
     private void transmitEnergy() {
         if (powerDis == null) {
-            powerDis = new PowerDistributor(getLocation());
+            powerDis = new PowerDistributor(xCoord, yCoord, zCoord);
         }
 
         int canTransmit = Math.min(getEnergyStored(), getMaxEnergyStored());
@@ -150,7 +150,7 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
     }
 
     float calculateLightRatio() {
-        return calculateLightRatio(worldObj, xCoord, yCoord, zCoord);
+        return calculateLightRatio(worldObj, xCoord, yCoord + 1, zCoord);
     }
 
     private void collectEnergy() {
@@ -191,7 +191,6 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
         lightValue = Math.round(lightValue * MathHelper.cos(sunAngle));
 
         lightValue = MathHelper.clamp_int(lightValue, 0, 15);
-
         return lightValue / 15f;
     }
 
@@ -235,13 +234,13 @@ public abstract class TESolarArray extends AbstractMultiBlockModifierTE implemen
             return false;
         }
 
-        BlockCoord coord = new BlockCoord(x, y, z);
-        if (modifiers.contains(coord)) {
+        BlockPos pos = new BlockPos(x, y, z);
+        if (modifiers.contains(pos)) {
             return false;
         }
 
         if (block == ModBlocks.MODIFIER_PIEZO.get()) {
-            modifiers.add(coord);
+            modifiers.add(pos);
             return true;
         }
         return false;

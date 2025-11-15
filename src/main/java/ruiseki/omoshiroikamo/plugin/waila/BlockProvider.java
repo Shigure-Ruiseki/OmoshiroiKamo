@@ -26,7 +26,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 
 public class BlockProvider implements IWailaDataProvider {
 
@@ -39,7 +39,7 @@ public class BlockProvider implements IWailaDataProvider {
 
     public static void load(IWailaRegistrar registrar) {
         registrar.registerBodyProvider(INSTANCE, BlockOK.class);
-        registrar.registerNBTProvider(INSTANCE, AbstractTE.class);
+        registrar.registerNBTProvider(INSTANCE, TileEntityOK.class);
     }
 
     @Override

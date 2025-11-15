@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import ruiseki.omoshiroikamo.api.energy.powerInterface.IPowerInterface;
 
@@ -18,10 +18,14 @@ public class PowerDistributor {
     private ListIterator<Receptor> receptorIterator = receptors.listIterator();
     private boolean receptorsDirty = true;
 
-    private final BlockCoord bc;
+    private final BlockPos pos;
 
-    public PowerDistributor(BlockCoord bc) {
-        this.bc = bc;
+    public PowerDistributor(BlockPos pos) {
+        this.pos = pos;
+    }
+
+    public PowerDistributor(int x, int y, int z) {
+        this.pos = new BlockPos(x, y, z);
     }
 
     public void neighboursChanged() {
@@ -66,7 +70,7 @@ public class PowerDistributor {
         receptors.clear();
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            BlockCoord checkLoc = bc.getLocation(dir);
+            BlockPos checkLoc = pos.offset(dir);
             TileEntity tile = worldObj.getTileEntity(checkLoc.x, checkLoc.y, checkLoc.z);
 
             if (tile == null) {

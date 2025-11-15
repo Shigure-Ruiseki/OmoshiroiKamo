@@ -13,12 +13,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.enderio.core.client.render.ColorUtil;
 import com.enderio.core.client.render.RenderUtil;
-import com.enderio.core.common.util.DyeColor;
 import com.enderio.core.common.vecmath.Vector4f;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.client.handler.ClientTickHandler;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -84,7 +84,7 @@ public class BackpackRenderer implements IItemRenderer {
         RenderUtil.bindTexture(border);
         model.renderOnly("trim1", "trim2", "trim3", "trim4", "trim5", "padding1");
 
-        int color = DyeColor.BROWN.getColor();
+        int color = EnumDye.BROWN.getColor();
         if (item.hasTagCompound()) {
             NBTTagCompound tag = item.getTagCompound();
             if (tag != null && tag.hasKey("BackpackColor")) {

@@ -9,11 +9,11 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import com.enderio.core.common.util.DyeColor;
-import com.enderio.core.common.util.ItemUtil;
+import com.gtnewhorizon.gtnhlib.util.ItemUtil;
 
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
@@ -74,7 +74,7 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
             }
         }
 
-        DyeColor color = registry.getPrioritizedLens(item);
+        EnumDye color = registry.getPrioritizedLens(item);
         if (color != null) {
             for (WeightedStackBase ws : registry.getFocusedList(color, 1.0f)) {
                 ItemStack output = ws.getMainStack();
@@ -110,7 +110,7 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
                 }
             } else {
                 BlockColoredLens coloredLens = (BlockColoredLens) Block.getBlockFromItem(ingredient.getItem());
-                DyeColor color = coloredLens.getFocusColor(ingredient.getItemDamage());
+                EnumDye color = coloredLens.getFocusColor(ingredient.getItemDamage());
                 List<WeightedStackBase> focusedList = registry.getFocusedList(color, 1.0f);
 
                 for (WeightedStackBase ws : focusedList) {
@@ -129,9 +129,9 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
 
         private List<PositionedStack> input;
         private PositionedStack output;
-        private DyeColor color;
+        private EnumDye color;
 
-        public CachedVoidResRecipe(WeightedStackBase recipe, DyeColor color) {
+        public CachedVoidResRecipe(WeightedStackBase recipe, EnumDye color) {
             this.input = new ArrayList<>();
             List<ItemStack> miners = new ArrayList<>();
             miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0));
@@ -156,7 +156,7 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
             return getCycledIngredients(cycleticks, input);
         }
 
-        public DyeColor getColor() {
+        public EnumDye getColor() {
             return color;
         }
 

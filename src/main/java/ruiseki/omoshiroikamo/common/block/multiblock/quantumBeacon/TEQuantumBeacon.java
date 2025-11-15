@@ -11,14 +11,14 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
 import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockModifierTE;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
@@ -28,13 +28,13 @@ import ruiseki.omoshiroikamo.common.network.PacketNBBClientFlight;
 import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
-public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE implements IEnergyReceiver, IPowerContainer {
+public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IEnergyReceiver, IPowerContainer {
 
     private int storedEnergyRF = 0;
     private float lastSyncPowerStored = -1;
 
     private final EnergyStorage energyStorage;
-    private final List<BlockCoord> modifiers = new ArrayList<>();
+    private final List<BlockPos> modifiers = new ArrayList<>();
     protected ModifierHandler modifierHandler = new ModifierHandler();
 
     private boolean dealsWithFlight = false;
@@ -57,13 +57,25 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
     }
 
     @Override
-    public void doUpdate() {
-        super.doUpdate();
+    protected boolean processTasks(boolean redstoneCheckPassed) {
+
+        if (redstoneCheckPassed) {
+            EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
+            if (plr != null && !plr.capabilities.isCreativeMode && dealsWithFlight) {
+                plr.capabilities.allowFlying = false;
+                plr.capabilities.isFlying = false;
+                dealsWithFlight = false;
+                plr.sendPlayerAbilities();
+                PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
+            }
+        }
+
         boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = storedEnergyRF;
             PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
+        return super.processTasks(redstoneCheckPassed);
     }
 
     @Override
@@ -72,7 +84,7 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
             return false;
         }
 
-        BlockCoord coord = new BlockCoord(x, y, z);
+        BlockPos coord = new BlockPos(x, y, z);
         if (modifiers.contains(coord)) {
             return false;
         }
@@ -217,16 +229,15 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
     @Override
     public boolean canProcess() {
         List<IModifierBlock> mods = new ArrayList<>();
-        for (BlockCoord coord : this.modifiers) {
-            Block blk = coord.getBlock(worldObj);
-            if (blk instanceof IModifierBlock) {
-                mods.add((IModifierBlock) blk);
+        for (BlockPos pos : this.modifiers) {
+            Block block = worldObj.getBlock(pos.x, pos.y, pos.z);
+            if (block instanceof IModifierBlock) {
+                mods.add((IModifierBlock) block);
             }
         }
 
         modifierHandler.setModifiers(mods);
         modifierHandler.calculateAttributeMultipliers();
-
         return this.player != null;
     }
 
@@ -249,7 +260,7 @@ public abstract class TEQuantumBeacon extends AbstractMultiBlockModifierTE imple
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getLocation().getTileEntity(worldObj);
+        TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord, zCoord);
         if (tileEntity instanceof TEQuantumBeaconT1) {
             player.triggerAchievement(ModAchievements.ASSEMBLE_NANO_BOT_BEACON_T1.get());
         }

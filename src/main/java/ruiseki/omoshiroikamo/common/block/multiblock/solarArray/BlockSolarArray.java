@@ -16,17 +16,16 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.util.DyeColor;
-
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMultiBlockBlock;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBBlock;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
-public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> implements IWailaBlockInfoProvider {
+public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IWailaBlockInfoProvider {
 
     IIcon solar_tex;
 
@@ -75,16 +74,16 @@ public class BlockSolarArray extends AbstractMultiBlockBlock<TESolarArray> imple
         int rgb;
         switch (meta) {
             case 0:
-                rgb = DyeColor.YELLOW.getColor();
+                rgb = EnumDye.YELLOW.getColor();
                 break;
             case 1:
-                rgb = DyeColor.LIGHT_BLUE.getColor();
+                rgb = EnumDye.LIGHT_BLUE.getColor();
                 break;
             case 2:
-                rgb = DyeColor.CYAN.getColor();
+                rgb = EnumDye.CYAN.getColor();
                 break;
             default:
-                rgb = DyeColor.WHITE.getColor();
+                rgb = EnumDye.WHITE.getColor();
                 break;
         }
 

@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModItems;
@@ -139,9 +139,9 @@ public class DataChicken {
     /**
      * Spawns the chicken at a block coordinate
      */
-    public void spawnEntity(World world, BlockCoord coord) {
+    public void spawnEntity(World world, BlockPos pos) {
         EntityChickensChicken entity = buildEntity(world);
-        entity.setPosition(coord.x + 0.5, coord.y, coord.z + 0.5);
+        entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
         entity.setStatsAnalyzed(true);
         entity.setType(getType());

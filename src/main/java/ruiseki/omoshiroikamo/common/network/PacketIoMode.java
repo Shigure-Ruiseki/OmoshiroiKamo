@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -26,7 +26,7 @@ public class PacketIoMode implements IMessage, IMessageHandler<PacketIoMode, IMe
     public PacketIoMode() {}
 
     public PacketIoMode(IIoConfigurable cont, IoType type) {
-        BlockCoord location = cont.getLocation();
+        BlockPos location = cont.getLocation();
         this.x = location.x;
         this.y = location.y;
         this.z = location.z;
@@ -36,7 +36,7 @@ public class PacketIoMode implements IMessage, IMessageHandler<PacketIoMode, IMe
     }
 
     public PacketIoMode(IIoConfigurable cont, ForgeDirection face, IoType type) {
-        BlockCoord location = cont.getLocation();
+        BlockPos location = cont.getLocation();
         this.x = location.x;
         this.y = location.y;
         this.z = location.z;
@@ -69,7 +69,9 @@ public class PacketIoMode implements IMessage, IMessageHandler<PacketIoMode, IMe
     public IMessage onMessage(PacketIoMode message, MessageContext ctx) {
         EntityPlayer player = ctx.getServerHandler().playerEntity;
         TileEntity te = player.worldObj.getTileEntity(message.x, message.y, message.z);
-        if (PacketUtil.isInvalidPacketForGui(ctx, te, getClass())) return null;
+        if (PacketUtil.isInvalidPacketForGui(ctx, te, getClass())) {
+            return null;
+        }
         if (te instanceof IIoConfigurable io) {
             if (message.face == ForgeDirection.UNKNOWN) {
                 io.clearAllIoModes(message.type);

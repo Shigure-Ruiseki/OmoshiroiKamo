@@ -23,9 +23,8 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
-import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
-public class BlockRoost extends AbstractBlock<TERoost> implements IWailaBlockInfoProvider {
+public class BlockRoost extends AbstractBlock<TERoost> {
 
     @SideOnly(Side.CLIENT)
     public IIcon wood, front, hay_side, hay;

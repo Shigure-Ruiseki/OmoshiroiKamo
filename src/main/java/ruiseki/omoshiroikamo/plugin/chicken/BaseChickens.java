@@ -7,10 +7,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import com.enderio.core.common.util.DyeColor;
-
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -83,24 +82,24 @@ public class BaseChickens extends BaseChickenHandler {
     public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> all) {
 
         // DYE CHICKENS
-        whiteChicken = addDye(all, DyeColor.WHITE, "WhiteChicken").setDropItem(new ItemStack(Items.bone))
+        whiteChicken = addDye(all, EnumDye.WHITE, "WhiteChicken").setDropItem(new ItemStack(Items.bone))
             .setSpawnType(SpawnType.NORMAL);
 
-        yellowChicken = addDye(all, DyeColor.YELLOW, "YellowChicken");
-        blueChicken = addDye(all, DyeColor.BLUE, "BlueChicken");
-        greenChicken = addDye(all, DyeColor.GREEN, "GreenChicken");
-        redChicken = addDye(all, DyeColor.RED, "RedChicken");
-        blackChicken = addDye(all, DyeColor.BLACK, "BlackChicken");
+        yellowChicken = addDye(all, EnumDye.YELLOW, "YellowChicken");
+        blueChicken = addDye(all, EnumDye.BLUE, "BlueChicken");
+        greenChicken = addDye(all, EnumDye.GREEN, "GreenChicken");
+        redChicken = addDye(all, EnumDye.RED, "RedChicken");
+        blackChicken = addDye(all, EnumDye.BLACK, "BlackChicken");
 
-        pinkChicken = addDye(all, DyeColor.PINK, "PinkChicken");
-        purpleChicken = addDye(all, DyeColor.PURPLE, "PurpleChicken");
-        orangeChicken = addDye(all, DyeColor.ORANGE, "OrangeChicken");
-        lightBlueChicken = addDye(all, DyeColor.LIGHT_BLUE, "LightBlueChicken");
-        limeChicken = addDye(all, DyeColor.LIME, "LimeChicken");
-        grayChicken = addDye(all, DyeColor.GRAY, "GrayChicken");
-        cyanChicken = addDye(all, DyeColor.CYAN, "CyanChicken");
-        silverChicken = addDye(all, DyeColor.SILVER, "SilverDyeChicken");
-        magentaChicken = addDye(all, DyeColor.MAGENTA, "MagentaChicken");
+        pinkChicken = addDye(all, EnumDye.PINK, "PinkChicken");
+        purpleChicken = addDye(all, EnumDye.PURPLE, "PurpleChicken");
+        orangeChicken = addDye(all, EnumDye.ORANGE, "OrangeChicken");
+        lightBlueChicken = addDye(all, EnumDye.LIGHT_BLUE, "LightBlueChicken");
+        limeChicken = addDye(all, EnumDye.LIME, "LimeChicken");
+        grayChicken = addDye(all, EnumDye.GRAY, "GrayChicken");
+        cyanChicken = addDye(all, EnumDye.CYAN, "CyanChicken");
+        silverChicken = addDye(all, EnumDye.SILVER, "SilverDyeChicken");
+        magentaChicken = addDye(all, EnumDye.MAGENTA, "MagentaChicken");
 
         // SMART CHICKEN
         smartChicken = addChicken(
@@ -225,7 +224,7 @@ public class BaseChickens extends BaseChickenHandler {
             0x000000,
             SpawnType.NONE);
 
-        brownChicken = addDye(all, DyeColor.BROWN, "BrownChicken");
+        brownChicken = addDye(all, EnumDye.BROWN, "BrownChicken");
 
         // TIER 3
         goldChicken = addChicken(
@@ -476,7 +475,7 @@ public class BaseChickens extends BaseChickenHandler {
         setParents(pCrystalChicken, waterChicken, emeraldChicken);
     }
 
-    private ChickensRegistryItem addDye(List<ChickensRegistryItem> all, DyeColor color, String name) {
+    private ChickensRegistryItem addDye(List<ChickensRegistryItem> all, EnumDye color, String name) {
         ChickensRegistryItem item = new ChickensRegistryItem(
             this.nextID(),
             name,

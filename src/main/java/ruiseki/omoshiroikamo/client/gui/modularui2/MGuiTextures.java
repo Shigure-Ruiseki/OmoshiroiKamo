@@ -1,19 +1,11 @@
 package ruiseki.omoshiroikamo.client.gui.modularui2;
 
-import static ruiseki.omoshiroikamo.client.gui.modularui2.MUITexture.icon;
-
 import com.cleanroommc.modularui.drawable.UITexture;
 
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public interface MGuiTextures {
-
-    UITexture PULL = icon("pull", 0, 0);
-    UITexture PUSH = icon("push", 16, 0);
-    UITexture DISABLED = icon("disable", 32, 0);
-    UITexture PULLNPUSH = icon("pullnpush", 48, 0);
-    UITexture NONE = icon("none", 64, 0);
 
     UITexture BUTTON_REDSTONE_ON = UITexture.builder()
         .location(LibResources.PROGRESS_ENERGY)

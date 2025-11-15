@@ -15,7 +15,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -81,8 +81,8 @@ public class ItemChicken extends ItemOK {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            BlockCoord blockCoord = correctPosition(new BlockCoord(x, y, z), side);
-            activate(stack, world, blockCoord);
+            BlockPos pos = correctPosition(new BlockPos(x, y, z), side);
+            activate(stack, world, pos);
             if (!player.capabilities.isCreativeMode) {
                 stack.stackSize--;
             }
@@ -90,7 +90,7 @@ public class ItemChicken extends ItemOK {
         return true;
     }
 
-    private static BlockCoord correctPosition(BlockCoord pos, int side) {
+    private static BlockPos correctPosition(BlockPos pos, int side) {
         final int[] offsetsXForSide = new int[] { 0, 0, 0, 0, -1, 1 };
         final int[] offsetsYForSide = new int[] { -1, 1, 0, 0, 0, 0 };
         final int[] offsetsZForSide = new int[] { 0, 0, -1, 1, 0, 0 };
@@ -99,10 +99,10 @@ public class ItemChicken extends ItemOK {
         int posY = pos.y + offsetsYForSide[side];
         int posZ = pos.z + offsetsZForSide[side];
 
-        return new BlockCoord(posX, posY, posZ);
+        return new BlockPos(posX, posY, posZ);
     }
 
-    private void activate(ItemStack stack, World worldIn, BlockCoord pos) {
+    private void activate(ItemStack stack, World worldIn, BlockPos pos) {
         DataChicken chicken = DataChicken.getDataFromStack(stack);
         if (chicken == null) {
             return;

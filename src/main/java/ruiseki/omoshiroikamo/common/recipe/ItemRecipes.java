@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.recipe;
 
-import static com.enderio.core.common.util.DyeColor.DYE_ORE_NAMES;
+import static ruiseki.omoshiroikamo.api.item.EnumDye.DYE_ORE_NAMES;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -8,9 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import com.enderio.core.common.util.DyeColor;
-
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -33,7 +32,7 @@ public class ItemRecipes {
                     'L',
                     "itemLeather",
                     'C',
-                    new ItemStack(Blocks.chest, 1, 1)).withInt("BackpackColor", DyeColor.BROWN.getColor()));
+                    new ItemStack(Blocks.chest, 1, 1)).withInt("BackpackColor", EnumDye.BROWN.getColor()));
 
             if (OreDictionary.doesOreNameExist("ingotCopper")) {
                 // Copper Backpack
@@ -127,7 +126,7 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 0),
                         dyeOreName).withInt(
                             "BackpackColor",
-                            DyeColor.fromIndex(i)
+                            EnumDye.fromIndex(i)
                                 .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
@@ -135,7 +134,7 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 1),
                         dyeOreName).withInt(
                             "BackpackColor",
-                            DyeColor.fromIndex(i)
+                            EnumDye.fromIndex(i)
                                 .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
@@ -143,7 +142,7 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 2),
                         dyeOreName).withInt(
                             "BackpackColor",
-                            DyeColor.fromIndex(i)
+                            EnumDye.fromIndex(i)
                                 .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
@@ -151,7 +150,7 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 3),
                         dyeOreName).withInt(
                             "BackpackColor",
-                            DyeColor.fromIndex(i)
+                            EnumDye.fromIndex(i)
                                 .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
@@ -159,7 +158,7 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 4),
                         dyeOreName).withInt(
                             "BackpackColor",
-                            DyeColor.fromIndex(i)
+                            EnumDye.fromIndex(i)
                                 .getColor()));
                 GameRegistry.addRecipe(
                     new NBTShapelessOreRecipe(
@@ -167,7 +166,7 @@ public class ItemRecipes {
                         ModItems.BACKPACK.newItemStack(1, 5),
                         dyeOreName).withInt(
                             "BackpackColor",
-                            DyeColor.fromIndex(i)
+                            EnumDye.fromIndex(i)
                                 .getColor()));
             }
 

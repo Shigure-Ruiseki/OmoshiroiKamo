@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.common.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -22,7 +22,7 @@ public class PacketPowerStorage implements IMessage, IMessageHandler<PacketPower
     public PacketPowerStorage() {}
 
     public PacketPowerStorage(IPowerContainer ent) {
-        BlockCoord bc = ent.getLocation();
+        BlockPos bc = ent.getLocation();
         x = bc.x;
         y = bc.y;
         z = bc.z;

@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.io;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 public interface IIoConfigurable {
 
@@ -16,5 +16,5 @@ public interface IIoConfigurable {
 
     public void clearAllIoModes(IoType type);
 
-    BlockCoord getLocation();
+    BlockPos getLocation();
 }

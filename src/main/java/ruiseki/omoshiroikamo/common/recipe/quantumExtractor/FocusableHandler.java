@@ -19,13 +19,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.enderio.core.common.util.DyeColor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameData;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedItemStack;
 import ruiseki.omoshiroikamo.api.item.WeightedOreStack;
@@ -161,8 +161,8 @@ public class FocusableHandler {
 
         public abstract WeightedStackBase getRegistryEntry();
 
-        public DyeColor getFocusColor() {
-            return focusColor != null ? focusColor.getColor() : DyeColor.WHITE;
+        public EnumDye getFocusColor() {
+            return focusColor != null ? focusColor.getColor() : EnumDye.WHITE;
         }
 
         public boolean isValid() {
@@ -199,7 +199,7 @@ public class FocusableHandler {
 
         public FocusableOre() {}
 
-        public FocusableOre(String oreName, DyeColor color, int weight) {
+        public FocusableOre(String oreName, EnumDye color, int weight) {
             this.id = oreName;
             this.meta = 0;
             this.focusColor = EnumFocusColor.getFromDye(color);
@@ -224,7 +224,7 @@ public class FocusableHandler {
 
         public FocusableItem() {}
 
-        public FocusableItem(String id, int meta, DyeColor color, int weight, boolean isOreDict) {
+        public FocusableItem(String id, int meta, EnumDye color, int weight, boolean isOreDict) {
             this.id = id;
             this.meta = meta;
             this.focusColor = EnumFocusColor.getFromDye(color);
@@ -232,7 +232,7 @@ public class FocusableHandler {
             this.isOreDict = isOreDict;
         }
 
-        public FocusableItem(String id, int meta, DyeColor color, int weight) {
+        public FocusableItem(String id, int meta, EnumDye color, int weight) {
             this(id, meta, color, weight, false);
         }
 
@@ -270,11 +270,11 @@ public class FocusableHandler {
 
         public FocusableBlock() {}
 
-        public FocusableBlock(String id, int meta, DyeColor color, int weight, boolean isOreDict) {
+        public FocusableBlock(String id, int meta, EnumDye color, int weight, boolean isOreDict) {
             super(id, meta, color, weight, isOreDict);
         }
 
-        public FocusableBlock(String id, int meta, DyeColor color, int weight) {
+        public FocusableBlock(String id, int meta, EnumDye color, int weight) {
             this(id, meta, color, weight, false);
         }
 
@@ -303,36 +303,36 @@ public class FocusableHandler {
 
     public enum EnumFocusColor {
 
-        WHITE(DyeColor.WHITE),
-        ORANGE(DyeColor.ORANGE),
-        MAGENTA(DyeColor.MAGENTA),
-        LIGHT_BLUE(DyeColor.LIGHT_BLUE),
-        YELLOW(DyeColor.YELLOW),
-        LIME(DyeColor.LIME),
-        PINK(DyeColor.PINK),
-        GRAY(DyeColor.GRAY),
-        SILVER(DyeColor.SILVER),
-        CYAN(DyeColor.CYAN),
-        PURPLE(DyeColor.PURPLE),
-        BLUE(DyeColor.BLUE),
-        BROWN(DyeColor.BROWN),
-        GREEN(DyeColor.GREEN),
-        RED(DyeColor.RED),
-        BLACK(DyeColor.BLACK);
+        WHITE(EnumDye.WHITE),
+        ORANGE(EnumDye.ORANGE),
+        MAGENTA(EnumDye.MAGENTA),
+        LIGHT_BLUE(EnumDye.LIGHT_BLUE),
+        YELLOW(EnumDye.YELLOW),
+        LIME(EnumDye.LIME),
+        PINK(EnumDye.PINK),
+        GRAY(EnumDye.GRAY),
+        SILVER(EnumDye.SILVER),
+        CYAN(EnumDye.CYAN),
+        PURPLE(EnumDye.PURPLE),
+        BLUE(EnumDye.BLUE),
+        BROWN(EnumDye.BROWN),
+        GREEN(EnumDye.GREEN),
+        RED(EnumDye.RED),
+        BLACK(EnumDye.BLACK);
 
-        private final DyeColor dyeColor;
+        private final EnumDye dye;
 
-        EnumFocusColor(DyeColor color) {
-            this.dyeColor = color;
+        EnumFocusColor(EnumDye color) {
+            this.dye = color;
         }
 
-        public DyeColor getColor() {
-            return dyeColor;
+        public EnumDye getColor() {
+            return dye;
         }
 
-        public static EnumFocusColor getFromDye(DyeColor dye) {
+        public static EnumFocusColor getFromDye(EnumDye dye) {
             return Arrays.stream(values())
-                .filter(c -> c.dyeColor == dye)
+                .filter(c -> c.dye == dye)
                 .findFirst()
                 .orElse(WHITE);
         }

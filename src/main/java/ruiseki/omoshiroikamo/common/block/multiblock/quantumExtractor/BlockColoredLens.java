@@ -13,12 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
-import com.enderio.core.common.util.DyeColor;
-
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -86,14 +85,14 @@ public class BlockColoredLens extends BlockOK {
         }
     }
 
-    public DyeColor getFocusColor(int meta) {
-        meta = Math.min(meta, DyeColor.values().length);
-        return DyeColor.values()[meta];
+    public EnumDye getFocusColor(int meta) {
+        meta = Math.min(meta, EnumDye.values().length);
+        return EnumDye.values()[meta];
     }
 
     @Override
     public int getRenderColor(int meta) {
-        int rgb = DyeColor.values()[meta].getColor();
+        int rgb = EnumDye.values()[meta].getColor();
         return (0xFF << 24) | ((rgb & 0xFF) << 16) | (rgb & 0xFF00) | ((rgb >> 16) & 0xFF);
     }
 

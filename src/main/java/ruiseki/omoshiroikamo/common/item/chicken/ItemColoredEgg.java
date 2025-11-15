@@ -8,11 +8,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import com.enderio.core.common.util.DyeColor;
-
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityColoredEgg;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -29,7 +28,7 @@ public class ItemColoredEgg extends ItemOK {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        DyeColor color = DyeColor.fromIndex(stack.getItemDamage());
+        EnumDye color = EnumDye.fromIndex(stack.getItemDamage());
         String unlocalizedName = color.getName();
         if (unlocalizedName.equals("silver")) {
             unlocalizedName += "Dye";
@@ -48,7 +47,7 @@ public class ItemColoredEgg extends ItemOK {
 
     @Override
     public int getColorFromItemStack(ItemStack stack, int renderPass) {
-        return DyeColor.fromIndex(stack.getItemDamage())
+        return EnumDye.fromIndex(stack.getItemDamage())
             .getColor();
     }
 

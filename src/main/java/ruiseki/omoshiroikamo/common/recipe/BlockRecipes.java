@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.recipe;
 
-import static com.enderio.core.common.util.DyeColor.DYE_ORE_NAMES;
+import static ruiseki.omoshiroikamo.api.item.EnumDye.DYE_ORE_NAMES;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;

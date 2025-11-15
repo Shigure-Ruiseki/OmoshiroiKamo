@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.abstractClass;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -10,7 +9,6 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -18,50 +16,24 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
 import com.enderio.core.api.client.gui.IResourceTooltipProvider;
-import com.enderio.core.common.TileEntityEnder;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
+import ruiseki.omoshiroikamo.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
 public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
-    implements IResourceTooltipProvider, IAdvancedTooltipProvider {
-
-    public static int renderId;
-
-    @SideOnly(Side.CLIENT)
-    protected IIcon[][] iconBuffer;
-
-    protected final Random random;
-    protected final ModObject modObject;
-
-    protected final Class<T> teClass;
+    implements IResourceTooltipProvider, IAdvancedTooltipProvider, IWailaBlockInfoProvider {
 
     protected AbstractBlock(ModObject mo, Class<T> teClass, Material mat) {
         super(mo, teClass, mat);
-        modObject = mo;
-        this.teClass = teClass;
         setHardness(2.0F);
         setStepSound(soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
-        random = new Random();
     }
 
     protected AbstractBlock(ModObject mo, Class<T> teClass) {
         this(mo, teClass, Material.iron);
-    }
-
-    @Override
-    public void init() {
-        GameRegistry.registerBlock(this, name);
-        GameRegistry.registerTileEntity(teClass, name + "TileEntity");
-    }
-
-    @Override
-    public int getRenderType() {
-        return renderId;
     }
 
     @Override
@@ -85,7 +57,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityEnder te, ItemStack stack) {
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
         if (te != null) {
             ((AbstractTE) te).processDrop(world, x, y, z, te, stack);
         }
@@ -143,6 +115,14 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
         }
     }
 
+    public boolean isActive(IBlockAccess blockAccess, int x, int y, int z) {
+        TileEntity te = blockAccess.getTileEntity(x, y, z);
+        if (te instanceof AbstractTE) {
+            return ((AbstractTE) te).isActive();
+        }
+        return false;
+    }
+
     @Override
     public String getUnlocalizedNameForTooltip(ItemStack itemStack) {
         return getUnlocalizedName();
@@ -159,11 +139,13 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
     @Override
     public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {}
 
-    public boolean isActive(IBlockAccess blockAccess, int x, int y, int z) {
-        TileEntity te = blockAccess.getTileEntity(x, y, z);
-        if (te instanceof AbstractTE) {
-            return ((AbstractTE) te).isActive();
-        }
-        return false;
+    @Override
+    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public int getDefaultDisplayMask(World world, int x, int y, int z) {
+        return 0;
     }
 }

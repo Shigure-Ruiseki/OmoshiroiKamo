@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.energy;
 
-import com.enderio.core.common.util.BlockCoord;
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 public interface IPowerContainer {
 
@@ -10,5 +10,5 @@ public interface IPowerContainer {
 
     int getMaxEnergyStored();
 
-    BlockCoord getLocation();
+    BlockPos getLocation();
 }
