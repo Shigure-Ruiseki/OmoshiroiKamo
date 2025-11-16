@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon;
 
+import static ruiseki.omoshiroikamo.api.energy.EnergyUtil.STORED_ENERGY_NBT_KEY;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +13,16 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
-import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
+import ruiseki.omoshiroikamo.api.energy.EnergySink;
+import ruiseki.omoshiroikamo.api.energy.OKEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
@@ -25,13 +31,11 @@ import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketNBBClientFlight;
-import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
-public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IEnergyReceiver, IPowerContainer {
+public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IEnergyReceiver, CapabilityProvider {
 
     private int storedEnergyRF = 0;
-    private float lastSyncPowerStored = -1;
 
     private final EnergyStorage energyStorage;
     private final List<BlockPos> modifiers = new ArrayList<>();
@@ -68,12 +72,6 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
                 plr.sendPlayerAbilities();
                 PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
             }
-        }
-
-        boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
-        if (powerChanged) {
-            lastSyncPowerStored = storedEnergyRF;
-            PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
         }
         return super.processTasks(redstoneCheckPassed);
     }
@@ -300,23 +298,28 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         return true;
     }
 
-    @Override
     public int getEnergyStored() {
         return storedEnergyRF;
     }
 
-    @Override
     public void setEnergyStored(int storedEnergy) {
         storedEnergyRF = Math.min(storedEnergy, getMaxEnergyStored());
     }
 
-    @Override
     public int getMaxEnergyStored() {
         return energyStorage.getMaxEnergyStored();
     }
 
     public int getMaxEnergyReceived() {
         return energyStorage.getMaxReceive();
+    }
+
+    @Override
+    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
+        if (capability == EnergySink.class) {
+            return capability.cast(new OKEnergySink(this));
+        }
+        return null;
     }
 
     @Override
@@ -327,7 +330,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
             float storedEnergyMJ = root.getFloat("storedEnergy");
             energy = (int) (storedEnergyMJ * 10);
         } else {
-            energy = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
+            energy = root.getInteger(STORED_ENERGY_NBT_KEY);
         }
         setEnergyStored(energy);
     }
@@ -335,7 +338,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        this.storedEnergyRF = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
+        this.storedEnergyRF = root.getInteger(STORED_ENERGY_NBT_KEY);
         this.dealsWithFlight = root.getBoolean("dflight");
     }
 

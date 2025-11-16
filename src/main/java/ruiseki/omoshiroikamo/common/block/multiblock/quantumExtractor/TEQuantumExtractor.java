@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor;
 
+import static ruiseki.omoshiroikamo.api.energy.EnergyUtil.STORED_ENERGY_NBT_KEY;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,8 +32,8 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
+import ruiseki.omoshiroikamo.api.energy.EnergySink;
+import ruiseki.omoshiroikamo.api.energy.OKEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.OKItemIO;
@@ -44,15 +46,12 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuan
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT4;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
 public abstract class TEQuantumExtractor extends AbstractMBModifierTE
-    implements IEnergyReceiver, IPowerContainer, ISidedInventory, CapabilityProvider {
+    implements IEnergyReceiver, ISidedInventory, CapabilityProvider {
 
     protected int storedEnergyRF = 0;
-    protected float lastSyncPowerStored = -1;
 
     protected EnergyStorage energyStorage;
 
@@ -87,16 +86,6 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
     @Override
     public String getMachineName() {
         return "quantumExtractor";
-    }
-
-    @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
-        boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
-        if (powerChanged) {
-            lastSyncPowerStored = storedEnergyRF;
-            PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
-        }
-        return super.processTasks(redstoneCheckPassed);
     }
 
     @Override
@@ -167,7 +156,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        root.setInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY, storedEnergyRF);
+        root.setInteger(STORED_ENERGY_NBT_KEY, storedEnergyRF);
         root.setTag("output_inv", this.output.serializeNBT());
     }
 
@@ -177,8 +166,8 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
         if (root.hasKey("storedEnergy")) {
             float storedEnergyMJ = root.getFloat("storedEnergy");
             setEnergyStored((int) (storedEnergyMJ * 10f));
-        } else if (root.hasKey(PowerHandlerUtils.STORED_ENERGY_NBT_KEY)) {
-            setEnergyStored(root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY));
+        } else if (root.hasKey(STORED_ENERGY_NBT_KEY)) {
+            setEnergyStored(root.getInteger(STORED_ENERGY_NBT_KEY));
         }
         if (root.hasKey("output_inv")) {
             this.output.deserializeNBT(root.getCompoundTag("output_inv"));
@@ -443,18 +432,22 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
             return capability.cast(new OKItemIO(this, side));
         }
 
+        if (capability == EnergySink.class) {
+            return capability.cast(new OKEnergySink(this));
+        }
         return null;
     }
 
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-        int result = Math.min(getMaxEnergyReceived(), maxReceive);
-        result = Math.min(getMaxEnergyStored() - getEnergyStored(), result);
-        result = Math.max(0, result);
-        if (result > 0 && !simulate) {
-            setEnergyStored(getEnergyStored() + result);
+        int spaceAvailable = getMaxEnergyStored() - getEnergyStored();
+        int energyToReceive = Math.min(spaceAvailable, maxReceive);
+
+        if (!simulate) {
+            setEnergyStored(getEnergyStored() + energyToReceive);
         }
-        return result;
+
+        return energyToReceive;
     }
 
     @Override
@@ -472,22 +465,15 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
         return true;
     }
 
-    @Override
     public int getEnergyStored() {
         return storedEnergyRF;
     }
 
-    @Override
     public void setEnergyStored(int storedEnergy) {
         this.storedEnergyRF = Math.min(storedEnergy, getMaxEnergyStored());
     }
 
-    @Override
     public int getMaxEnergyStored() {
         return energyStorage.getMaxEnergyStored();
-    }
-
-    public int getMaxEnergyReceived() {
-        return energyStorage.getMaxReceive();
     }
 }

@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
+import static ruiseki.omoshiroikamo.api.energy.EnergyUtil.STORED_ENERGY_NBT_KEY;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,31 +14,31 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyProvider;
-import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
-import ruiseki.omoshiroikamo.api.energy.PowerDistributor;
-import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
+import ruiseki.omoshiroikamo.api.energy.EnergySource;
+import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
+import ruiseki.omoshiroikamo.api.energy.OKEnergySource;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.common.network.PacketPowerStorage;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
-public abstract class TESolarArray extends AbstractMBModifierTE implements IEnergyProvider, IPowerContainer {
+public abstract class TESolarArray extends AbstractMBModifierTE implements IEnergyProvider, CapabilityProvider {
 
-    private PowerDistributor powerDis;
     private int lastCollectionValue = -1;
     private static final int CHECK_INTERVAL = 100;
 
     private int storedEnergyRF = 0;
-    protected float lastSyncPowerStored = -1;
     private final EnergyStorage energyStorage;
     private ModifierHandler modifierHandler = new ModifierHandler();
     private List<BlockPos> modifiers = new ArrayList<>();
@@ -51,20 +53,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block nbid) {
-        super.onNeighborBlockChange(world, x, y, z, nbid);
-        if (powerDis != null) {
-            powerDis.neighboursChanged();
-        }
-    }
-
-    @Override
     protected boolean processTasks(boolean redstoneCheckPassed) {
-        boolean powerChanged = (lastSyncPowerStored != storedEnergyRF && shouldDoWorkThisTick(5));
-        if (powerChanged) {
-            lastSyncPowerStored = storedEnergyRF;
-            PacketHandler.sendToAllAround(new PacketPowerStorage(this), this);
-        }
         transmitEnergy();
         return super.processTasks(redstoneCheckPassed);
     }
@@ -135,20 +124,6 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
         }
     }
 
-    private void transmitEnergy() {
-        if (powerDis == null) {
-            powerDis = new PowerDistributor(xCoord, yCoord, zCoord);
-        }
-
-        int canTransmit = Math.min(getEnergyStored(), getMaxEnergyStored());
-        if (canTransmit <= 0) {
-            return;
-        }
-
-        int transmitted = powerDis.transmitEnergy(worldObj, canTransmit);
-        setEnergyStored(getEnergyStored() - transmitted);
-    }
-
     float calculateLightRatio() {
         return calculateLightRatio(worldObj, xCoord, yCoord + 1, zCoord);
     }
@@ -194,9 +169,29 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
         return lightValue / 15f;
     }
 
+    private void transmitEnergy() {
+        EnergyTransfer transfer = new EnergyTransfer();
+
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+
+            TileEntity adjacent = this.getWorldObj()
+                .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+            if (adjacent == null) {
+                continue;
+            }
+            transfer.push(this, side, adjacent);
+            transfer.transfer();
+
+        }
+    }
+
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-        return 0;
+        int extracted = Math.min(maxExtract, getEnergyStored());
+        if (!simulate) {
+            setEnergyStored(getEnergyStored() - extracted);
+        }
+        return extracted;
     }
 
     @Override
@@ -214,12 +209,10 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
         return true;
     }
 
-    @Override
     public int getEnergyStored() {
         return storedEnergyRF;
     }
 
-    @Override
     public void setEnergyStored(int storedEnergy) {
         storedEnergyRF = Math.min(storedEnergy, getMaxEnergyStored());
     }
@@ -257,7 +250,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        root.setInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY, storedEnergyRF);
+        root.setInteger(STORED_ENERGY_NBT_KEY, storedEnergyRF);
     }
 
     @Override
@@ -268,8 +261,17 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
             float storedEnergyMJ = root.getFloat("storedEnergy");
             energy = (int) (storedEnergyMJ * 10);
         } else {
-            energy = root.getInteger(PowerHandlerUtils.STORED_ENERGY_NBT_KEY);
+            energy = root.getInteger(STORED_ENERGY_NBT_KEY);
         }
         setEnergyStored(energy);
+    }
+
+    @Override
+    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
+        if (capability == EnergySource.class) {
+            return capability.cast(new OKEnergySource(this));
+        }
+
+        return null;
     }
 }
