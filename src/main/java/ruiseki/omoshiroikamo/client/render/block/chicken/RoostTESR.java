@@ -1,12 +1,11 @@
 package ruiseki.omoshiroikamo.client.render.block.chicken;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
-
-import com.enderio.core.client.render.RenderUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,7 +35,7 @@ public class RoostTESR extends TileEntitySpecialRenderer {
 
             ResourceLocation CHICKEN_TEXTURE = chicken.getItems()
                 .getTexture();
-            RenderUtil.bindTexture(CHICKEN_TEXTURE);
+            Minecraft.getMinecraft().renderEngine.bindTexture(CHICKEN_TEXTURE);
 
             GL11.glTranslatef(0F, 1.30F, 0F);
             GL11.glRotatef(180F, 0F, 0F, 1F);

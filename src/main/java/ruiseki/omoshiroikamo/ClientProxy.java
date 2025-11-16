@@ -72,11 +72,11 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
     }
 
-    public static EntityPlayer getClientPlayer() {
+    public EntityPlayer getClientPlayer() {
         return Minecraft.getMinecraft().thePlayer;
     }
 
-    public static World getClientWorld() {
+    public World getClientWorld() {
         return FMLClientHandler.instance()
             .getClient().theWorld;
     }

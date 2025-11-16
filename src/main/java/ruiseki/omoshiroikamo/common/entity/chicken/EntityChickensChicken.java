@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.entity.chicken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -19,6 +21,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.FakePlayer;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.kuba6000.mobsinfo.api.IMobInfoProvider;
+import com.kuba6000.mobsinfo.api.MobDrop;
+
+import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -29,7 +37,9 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
-public class EntityChickensChicken extends EntityChicken implements IMobStats, IWailaEntityInfoProvider {
+@Optional.Interface(iface = "com.kuba6000.mobsinfo.api.IMobInfoProvider", modid = "mobsinfo")
+public class EntityChickensChicken extends EntityChicken
+    implements IMobStats, IWailaEntityInfoProvider, IMobInfoProvider {
 
     private final Map<MobTrait, Integer> traits = new HashMap<>();
 
@@ -268,19 +278,6 @@ public class EntityChickensChicken extends EntityChicken implements IMobStats, I
         return ChickensRegistry.getSpawnType(biome);
     }
 
-    private static class GroupData implements IEntityLivingData {
-
-        private final int type;
-
-        public GroupData(int type) {
-            this.type = type;
-        }
-
-        public int getType() {
-            return type;
-        }
-    }
-
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -355,6 +352,30 @@ public class EntityChickensChicken extends EntityChicken implements IMobStats, I
 
                 tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.layProgress", timeFormatted));
             }
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "mobsinfo")
+    public void provideDropsInformation(@NotNull ArrayList<MobDrop> drops) {
+        Item j = this.getDropItem();
+        if (j != null) {
+            drops.add(
+                MobDrop.create(j)
+                    .withLooting());
+        }
+    }
+
+    private static class GroupData implements IEntityLivingData {
+
+        private final int type;
+
+        public GroupData(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
         }
     }
 }

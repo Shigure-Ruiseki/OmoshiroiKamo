@@ -77,6 +77,7 @@ public class JsonModelISBRH extends ModelISBRH {
             }
         }
 
+        GL11.glRotated(180, 0f, 1f, 0f);
         tesselator.draw();
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();

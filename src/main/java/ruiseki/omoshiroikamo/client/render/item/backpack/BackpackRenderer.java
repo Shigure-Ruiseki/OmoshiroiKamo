@@ -2,6 +2,10 @@ package ruiseki.omoshiroikamo.client.render.item.backpack;
 
 import java.awt.Color;
 
+import javax.vecmath.Vector4f;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -10,10 +14,6 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
-
-import com.enderio.core.client.render.ColorUtil;
-import com.enderio.core.client.render.RenderUtil;
-import com.enderio.core.common.vecmath.Vector4f;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.relauncher.Side;
@@ -81,7 +81,7 @@ public class BackpackRenderer implements IItemRenderer {
 
     public void renderModel(ItemStack item) {
         GL11.glColor3f(0.353f, 0.243f, 0.106f);
-        RenderUtil.bindTexture(border);
+        Minecraft.getMinecraft().renderEngine.bindTexture(border);
         model.renderOnly("trim1", "trim2", "trim3", "trim4", "trim5", "padding1");
 
         int color = EnumDye.BROWN.getColor();
@@ -102,7 +102,7 @@ public class BackpackRenderer implements IItemRenderer {
         b = Math.min(1.0f, b * brightnessFactor);
 
         GL11.glColor3f(r, g, b);
-        RenderUtil.bindTexture(cloth);
+        Minecraft.getMinecraft().renderEngine.bindTexture(cloth);
         model.renderOnly(
             "inner1",
             "inner2",
@@ -145,7 +145,8 @@ public class BackpackRenderer implements IItemRenderer {
                 material = "leather";
                 break;
         }
-        RenderUtil.bindTexture(new ResourceLocation(LibResources.PREFIX_ITEM + material + "_clips.png"));
+        Minecraft.getMinecraft().renderEngine
+            .bindTexture(new ResourceLocation(LibResources.PREFIX_ITEM + material + "_clips.png"));
         model.renderOnly(
             "top4",
             "right1",
@@ -204,15 +205,33 @@ public class BackpackRenderer implements IItemRenderer {
 
     public static void renderBar2(int y, double maxDam, double dispDamage, Color full, Color empty) {
         double ratio = dispDamage / maxDam;
-        Vector4f fg = ColorUtil.toFloat(full);
-        Vector4f ec = ColorUtil.toFloat(empty);
+        Vector4f fg = toFloat(full);
+        Vector4f ec = toFloat(empty);
         fg.interpolate(ec, (float) ratio);
-        Vector4f bg = ColorUtil.toFloat(Color.black);
+        Vector4f bg = toFloat(Color.black);
         bg.interpolate(fg, 0.15f);
 
         int barLength = (int) Math.round(12.0 * (1 - ratio));
 
-        RenderUtil.renderQuad2D(2, y, 0, 12, 1, bg);
-        RenderUtil.renderQuad2D(2 + (12 - barLength), y, 0, barLength, 1, fg);
+        renderQuad2D(2, y, 0, 12, 1, bg);
+        renderQuad2D(2 + (12 - barLength), y, 0, barLength, 1, fg);
+    }
+
+    public static Vector4f toFloat(Color color) {
+        float[] rgba = color.getComponents(null);
+        return new Vector4f(rgba[0], rgba[1], rgba[2], rgba[3]);
+    }
+
+    public static void renderQuad2D(double x, double y, double z, double width, double height, Vector4f colorRGBA) {
+        GL11.glColor4f(colorRGBA.x, colorRGBA.y, colorRGBA.z, colorRGBA.w);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        final Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertex(x, y + height, z);
+        tessellator.addVertex(x + width, y + height, z);
+        tessellator.addVertex(x + width, y, z);
+        tessellator.addVertex(x, y, z);
+        tessellator.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 }

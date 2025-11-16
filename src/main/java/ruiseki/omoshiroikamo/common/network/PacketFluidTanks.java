@@ -4,15 +4,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-import com.enderio.core.common.network.NetworkUtil;
-
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.ClientProxy;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.common.util.NetworkUtils;
 
 public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTanks, IMessage> {
 
@@ -42,7 +41,7 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        NetworkUtil.writeNBTTagCompound(nbtRoot, buf);
+        NetworkUtils.writeNBTTagCompound(nbtRoot, buf);
     }
 
     @Override
@@ -50,13 +49,13 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
-        nbtRoot = NetworkUtil.readNBTTagCompound(buf);
+        nbtRoot = NetworkUtils.readNBTTagCompound(buf);
     }
 
     @Override
     public IMessage onMessage(PacketFluidTanks message, MessageContext ctx) {
         EntityPlayer player = ctx.side == Side.SERVER ? ctx.getServerHandler().playerEntity
-            : ClientProxy.getClientPlayer();
+            : OmoshiroiKamo.proxy.getClientPlayer();
 
         if (player == null) {
             return null;

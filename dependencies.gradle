@@ -60,6 +60,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
     compileOnly('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
+    compileOnly('com.github.GTNewHorizons:Mobs-Info:0.5.7-GTNH:dev')
 
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.6.110:dev") { transitive = false }

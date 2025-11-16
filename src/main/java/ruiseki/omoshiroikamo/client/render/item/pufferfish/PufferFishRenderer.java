@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.client.render.item.pufferfish;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -10,8 +11,6 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
-
-import com.enderio.core.client.render.RenderUtil;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -59,7 +58,7 @@ public class PufferFishRenderer implements IItemRenderer {
             }
 
             GL11.glScalef(1.2f, 1.2f, 1.2f);
-            RenderUtil.bindTexture(texture);
+            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             model.renderAllExcept("open", "close");
 
             EntityPlayer player = null;

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.entity.cow;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,8 +25,12 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import com.enderio.core.common.util.FluidUtil;
+import org.jetbrains.annotations.NotNull;
 
+import com.kuba6000.mobsinfo.api.IMobInfoProvider;
+import com.kuba6000.mobsinfo.api.MobDrop;
+
+import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -37,7 +43,8 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
-public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider {
+@Optional.Interface(iface = "com.kuba6000.mobsinfo.api.IMobInfoProvider", modid = "mobsinfo")
+public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityInfoProvider, IMobInfoProvider {
 
     private final Map<MobTrait, Integer> traits = new HashMap<>();
     public int timeUntilNextMilk;
@@ -177,27 +184,13 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         }
 
         if (!isChild() && milkTank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
-            FluidStack milkToDrain = milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, false);
-            if (milkToDrain != null && milkToDrain.amount > 0) {
-                FluidUtil.FluidAndStackResult result = FluidUtil.tryFillContainer(stack, milkToDrain);
-                if (result.result != null && result.result.fluidStack != null) {
-                    worldObj.playSoundAtEntity(this, "mob.cow.milking", 1.0F, 1.0F);
-
-                    milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-
-                    ItemStack filledItem = result.result.itemStack;
-                    ItemStack remainderItem = result.remainder.itemStack;
-
-                    player.inventory.setInventorySlotContents(
-                        player.inventory.currentItem,
-                        remainderItem == null ? filledItem : remainderItem);
-
-                    if (remainderItem != null && !player.inventory.addItemStackToInventory(filledItem)) {
-                        entityDropItem(filledItem, 0.0F);
-                    }
-                    syncMilkFluid();
-                    return true;
-                }
+            FluidStack milkToDrain = milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+            if (milkToDrain.amount == 1000) {
+                ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(milkToDrain, stack);
+                worldObj.playSoundAtEntity(this, "mob.cow.milking", 1.0F, 1.0F);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
+                syncMilkFluid();
+                return true;
             }
         }
 
@@ -302,19 +295,6 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         return CowsRegistry.getSpawnType(biome);
     }
 
-    private static class GroupData implements IEntityLivingData {
-
-        private final int type;
-
-        public GroupData(int type) {
-            this.type = type;
-        }
-
-        public int getType() {
-            return type;
-        }
-    }
-
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -398,7 +378,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
 
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, Entity entity) {
-        if (!(entity instanceof EntityCowsCow)) {
+        if (!(entity instanceof EntityCowsCow cow)) {
             return;
         }
         tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.tier", getTier()));
@@ -419,7 +399,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
                 tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.milkProgress", timeFormatted));
             }
 
-            FluidStack stored = milkTank.getFluid();
+            FluidStack stored = cow.getMilkFluid();
             if (!(stored == null || stored.getFluid() == null)) {
                 String fluidName = stored.getFluid()
                     .getLocalizedName(stored);
@@ -435,4 +415,29 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
             }
         }
     }
+
+    @Override
+    @Optional.Method(modid = "mobsinfo")
+    public void provideDropsInformation(@NotNull ArrayList<MobDrop> drops) {
+        Item j = this.getDropItem();
+        if (j != null) {
+            drops.add(
+                MobDrop.create(j)
+                    .withLooting());
+        }
+    }
+
+    private static class GroupData implements IEntityLivingData {
+
+        private final int type;
+
+        public GroupData(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+    }
+
 }
