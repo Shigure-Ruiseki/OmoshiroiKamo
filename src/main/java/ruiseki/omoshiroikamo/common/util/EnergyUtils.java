@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.energy;
+package ruiseki.omoshiroikamo.common.util;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -9,8 +9,15 @@ import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import ruiseki.omoshiroikamo.api.energy.EnergyIO;
+import ruiseki.omoshiroikamo.api.energy.EnergySink;
+import ruiseki.omoshiroikamo.api.energy.EnergySource;
+import ruiseki.omoshiroikamo.api.energy.OKEnergyIO;
+import ruiseki.omoshiroikamo.api.energy.OKEnergySink;
+import ruiseki.omoshiroikamo.api.energy.OKEnergySource;
+import ruiseki.omoshiroikamo.api.energy.WrappedEnergyIO;
 
-public class EnergyUtil {
+public class EnergyUtils {
 
     public static final String STORED_ENERGY_NBT_KEY = "storedEnergyRF";
 
@@ -25,7 +32,7 @@ public class EnergyUtil {
     }
 
     public static EnergySource getEnergySource(Object obj, ForgeDirection side,
-        @MagicConstant(flagsFromClass = EnergyUtil.class) int usage) {
+        @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
         if ((usage & FOR_EXTRACTS) == 0) {
             return null;
         }
@@ -58,7 +65,7 @@ public class EnergyUtil {
     }
 
     public static EnergySink getEnergySink(Object obj, ForgeDirection side,
-        @MagicConstant(flagsFromClass = EnergyUtil.class) int usage) {
+        @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
         if ((usage & FOR_INSERTS) == 0) {
             return null;
         }
@@ -91,7 +98,7 @@ public class EnergyUtil {
     }
 
     public static EnergyIO getEnergyIO(Object obj, ForgeDirection side,
-        @MagicConstant(flagsFromClass = EnergyUtil.class) int usage) {
+        @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
         if (obj instanceof EnergyIO energyIO) {
             return energyIO;
         }

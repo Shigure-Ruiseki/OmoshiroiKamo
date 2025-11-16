@@ -25,15 +25,7 @@ public class OKEnergySink extends SimpleEnergyIO {
 
             @Override
             public int insert(ForgeDirection side, int amount, boolean simulate) {
-                if (!canConnectEnergy(side)) {
-                    return 0;
-                }
                 return receiver.receiveEnergy(side, amount, simulate);
-            }
-
-            @Override
-            public boolean canConnectEnergy(ForgeDirection side) {
-                return receiver.canConnectEnergy(side);
             }
         };
     }

@@ -20,20 +20,12 @@ public class OKEnergySource extends SimpleEnergyIO {
 
             @Override
             public int extract(ForgeDirection side, int amount, boolean simulate) {
-                if (!canConnectEnergy(side)) {
-                    return 0;
-                }
                 return provider.extractEnergy(side, amount, simulate);
             }
 
             @Override
             public int insert(ForgeDirection side, int amount, boolean simulate) {
                 return 0;
-            }
-
-            @Override
-            public boolean canConnectEnergy(ForgeDirection side) {
-                return provider.canConnectEnergy(side);
             }
         };
     }

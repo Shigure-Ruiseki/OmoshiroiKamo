@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon;
 
-import static ruiseki.omoshiroikamo.api.energy.EnergyUtil.STORED_ENERGY_NBT_KEY;
+import static ruiseki.omoshiroikamo.common.util.EnergyUtils.STORED_ENERGY_NBT_KEY;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,6 +6,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.gtnewhorizon.gtnhlib.blockpos.IBlockPos;
 import com.gtnewhorizon.gtnhlib.blockpos.IWorldReferent;
 
+import ruiseki.omoshiroikamo.common.util.EnergyUtils;
+
 public class EnergyTransfer {
 
     protected EnergySource source;
@@ -22,7 +24,7 @@ public class EnergyTransfer {
     }
 
     public void source(Object source, ForgeDirection side) {
-        this.source = EnergyUtil.getEnergySource(source, side);
+        this.source = EnergyUtils.getEnergySource(source, side);
     }
 
     public void sink(EnergySink sink) {
@@ -30,7 +32,7 @@ public class EnergyTransfer {
     }
 
     public void sink(Object sink, ForgeDirection side) {
-        this.sink = EnergyUtil.getEnergySink(sink, side);
+        this.sink = EnergyUtils.getEnergySink(sink, side);
     }
 
     public <Coord extends IBlockPos & IWorldReferent> void push(Coord pos, ForgeDirection side) {
@@ -82,13 +84,11 @@ public class EnergyTransfer {
         while (remaining > 0) {
             int extractAmount = Math.min(maxEnergyPerTransfer, remaining);
 
-            // Lấy điện từ nguồn
             int pulled = sourceAcc.extract(ForgeDirection.UNKNOWN, extractAmount, false);
             if (pulled <= 0) {
                 break;
             }
 
-            // Đẩy điện vào sink
             int rejected = sinkAcc.insert(ForgeDirection.UNKNOWN, pulled, false);
             int accepted = pulled - rejected;
 

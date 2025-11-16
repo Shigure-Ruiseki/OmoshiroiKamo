@@ -34,9 +34,6 @@ public interface EnergyAccess {
     @Nonnegative
     int insert(ForgeDirection side, int amount, boolean simulate);
 
-    @Nonnegative
-    boolean canConnectEnergy(ForgeDirection side);
-
     /**
      * Empty implementation for convenience.
      */
@@ -50,11 +47,6 @@ public interface EnergyAccess {
         @Override
         public int insert(ForgeDirection side, int amount, boolean simulate) {
             return amount;
-        }
-
-        @Override
-        public boolean canConnectEnergy(ForgeDirection var1) {
-            return true;
         }
     }
 }
