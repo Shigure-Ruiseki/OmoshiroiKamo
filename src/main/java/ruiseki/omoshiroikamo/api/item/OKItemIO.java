@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.item;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,39 +11,42 @@ import com.gtnewhorizon.gtnhlib.item.AbstractInventoryIterator;
 import com.gtnewhorizon.gtnhlib.item.ImmutableItemStack;
 import com.gtnewhorizon.gtnhlib.item.InventoryIterator;
 import com.gtnewhorizon.gtnhlib.item.SimpleItemIO;
-import com.gtnewhorizon.gtnhlib.util.ItemUtil;
 
-import ruiseki.omoshiroikamo.api.io.SlotDefinition;
+import ruiseki.omoshiroikamo.common.util.ItemUtils;
 
 public class OKItemIO extends SimpleItemIO {
 
-    private final ISidedInventory inv;
+    private final IInventory inv;
     private final ForgeDirection side;
-    private final int[] allSlots;
 
     private boolean markedDirty = false;
 
-    public OKItemIO(ISidedInventory inv, ForgeDirection side, int[] allSlots) {
+    public OKItemIO(IInventory inv, ForgeDirection side) {
         this.inv = inv;
         this.side = side;
-        this.allSlots = allSlots;
     }
 
-    public OKItemIO(ISidedInventory inv, int[] allSlots) {
-        this(inv, ForgeDirection.UNKNOWN, allSlots);
+    public OKItemIO(IInventory inv) {
+        this(inv, ForgeDirection.UNKNOWN);
     }
 
-    public OKItemIO(ISidedInventory inv, ForgeDirection side, SlotDefinition definition) {
-        this(inv, side, definition.getAllItemSlots());
-    }
+    public static int[] getInventorySlotIndices(IInventory inv, ForgeDirection side) {
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(side.ordinal());
+        } else {
+            int[] slots = new int[inv.getSizeInventory()];
 
-    public OKItemIO(ISidedInventory inv, SlotDefinition definition) {
-        this(inv, ForgeDirection.UNKNOWN, definition);
+            for (int i = 0; i < slots.length; i++) {
+                slots[i] = i;
+            }
+
+            return slots;
+        }
     }
 
     @Override
     protected @NotNull InventoryIterator iterator(int[] allowedSlots) {
-        return new AbstractInventoryIterator(allSlots) {
+        return new AbstractInventoryIterator(getInventorySlotIndices(inv, side)) {
 
             @Override
             protected ItemStack getStackInSlot(int slot) {
@@ -55,17 +59,21 @@ public class OKItemIO extends SimpleItemIO {
 
             @Override
             protected boolean canExtract(ItemStack stack, int slot) {
-                if (side == ForgeDirection.UNKNOWN) {
-                    return true;
+
+                if (inv instanceof ISidedInventory sided) {
+                    return sided.canExtractItem(slot, stack, side.ordinal());
                 }
-                return inv.canExtractItem(slot, stack, side.ordinal());
+
+                return inv.isItemValidForSlot(slot, stack);
             }
 
             private boolean canInsert(ItemStack stack, int slot) {
-                if (side == ForgeDirection.UNKNOWN) {
-                    return true;
+
+                if (inv instanceof ISidedInventory sided) {
+                    return sided.canInsertItem(slot, stack, side.ordinal());
                 }
-                return inv.canInsertItem(slot, stack, side.ordinal());
+
+                return inv.isItemValidForSlot(slot, stack);
             }
 
             @Override
@@ -74,7 +82,7 @@ public class OKItemIO extends SimpleItemIO {
 
                 ItemStack inSlot = getStackInSlot(slotIndex);
 
-                if (ItemUtil.isStackEmpty(inSlot)) {
+                if (ItemUtils.isStackEmpty(inSlot)) {
                     return null;
                 }
                 if (!forced && !canExtract(inSlot, slotIndex)) {
@@ -102,7 +110,7 @@ public class OKItemIO extends SimpleItemIO {
 
                 ItemStack inSlot = getStackInSlot(slotIndex);
 
-                if (!ItemUtil.isStackEmpty(inSlot) && !stack.matches(inSlot)) {
+                if (!ItemUtils.isStackEmpty(inSlot) && !stack.matches(inSlot)) {
                     return stack.getStackSize();
                 }
 
@@ -112,7 +120,7 @@ public class OKItemIO extends SimpleItemIO {
                     return stack.getStackSize();
                 }
 
-                if (!ItemUtil.isStackEmpty(inSlot)) {
+                if (!ItemUtils.isStackEmpty(inSlot)) {
                     int maxStack = getSlotStackLimit(slotIndex, partialCopy);
                     int toInsert = forced ? stack.getStackSize()
                         : Math.min(maxStack - inSlot.stackSize, stack.getStackSize());

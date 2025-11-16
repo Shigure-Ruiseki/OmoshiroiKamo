@@ -76,7 +76,7 @@ public class TERoost extends TERoostBase {
                                 .hoverBackground(MGuiTextures.ROOST_SLOT)
                                 .slot(
                                     new ModularSlot(inv, index).slotGroup("input")
-                                        .filter(stack -> isMachineItemValidForSlot(index, stack))))
+                                        .filter(stack -> isItemValidForSlot(index, stack))))
                         .key(
                             'O',
                             index -> new ItemSlot().slot(new ModularSlot(inv, index + 3).accessibility(false, true)))

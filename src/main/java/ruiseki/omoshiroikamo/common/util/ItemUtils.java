@@ -1,0 +1,18 @@
+package ruiseki.omoshiroikamo.common.util;
+
+import net.minecraft.item.ItemStack;
+
+import com.gtnewhorizon.gtnhlib.util.ItemUtil;
+
+public class ItemUtils extends ItemUtil {
+
+    public static boolean areStackMergable(ItemStack s1, ItemStack s2) {
+        if (s1 == null || s2 == null || !s1.isStackable() || !s2.isStackable()) {
+            return false;
+        }
+        if (!s1.isItemEqual(s2)) {
+            return false;
+        }
+        return areStacksEqual(s1, s2);
+    }
+}

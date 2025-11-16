@@ -16,22 +16,18 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.enderio.core.api.common.util.ITankAccess;
-import com.enderio.core.common.interfaces.IComparatorOutput;
-import com.enderio.core.common.util.FluidUtil;
-import com.enderio.core.common.util.Log;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
+import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockOK extends Block {
 
     protected final @Nullable Class<? extends TileEntityOK> teClass;
     protected final String name;
-    protected final boolean hasComparatorInputOverride;
 
     protected BlockOK(String name) {
         this(name, null, new Material(MapColor.ironColor));
@@ -69,7 +65,6 @@ public class BlockOK extends Block {
         setBlockName(name);
         setStepSound(Block.soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
-        hasComparatorInputOverride = teClass != null && IComparatorOutput.class.isAssignableFrom(teClass);
     }
 
     public void init() {
@@ -92,7 +87,7 @@ public class BlockOK extends Block {
                 te.init();
                 return te;
             } catch (Exception e) {
-                Log.error("Could not create tile entity for block " + name + " for class " + teClass);
+                Logger.error("Could not create tile entity for block " + name + " for class " + teClass);
             }
         }
         return null;
@@ -116,37 +111,6 @@ public class BlockOK extends Block {
     }
 
     /* Subclass Helpers */
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float par7,
-        float par8, float par9) {
-
-        TileEntity te = world.getTileEntity(x, y, z);
-
-        if (entityPlayer.isSneaking()) {
-            return false;
-        }
-
-        if (te instanceof ITankAccess) {
-            if (FluidUtil.fillInternalTankFromPlayerHandItem(world, x, y, z, entityPlayer, (ITankAccess) te)) {
-                return true;
-            }
-            if (FluidUtil.fillPlayerHandItemFromInternalTank(world, x, y, z, entityPlayer, (ITankAccess) te)) {
-                return true;
-            }
-        }
-
-        return openGui(world, x, y, z, entityPlayer, side);
-    }
-
-    protected boolean shouldWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side) {
-        return true;
-    }
-
-    protected boolean openGui(World world, int x, int y, int z, EntityPlayer entityPlayer, int side) {
-        return false;
-    }
-
     public boolean doNormalDrops(World world, int x, int y, int z) {
         return true;
     }
@@ -203,22 +167,6 @@ public class BlockOK extends Block {
             }
         }
         return null;
-    }
-
-    @Override
-    public boolean hasComparatorInputOverride() {
-        return hasComparatorInputOverride;
-    }
-
-    @Override
-    public int getComparatorInputOverride(World w, int x, int y, int z, int side) {
-        if (hasComparatorInputOverride) {
-            TileEntityOK te = getTileEntityEio(w, x, y, z);
-            if (te != null) {
-                return ((IComparatorOutput) te).getComparatorOutput();
-            }
-        }
-        return 0;
     }
 
     // Because the vanilla method takes floats...

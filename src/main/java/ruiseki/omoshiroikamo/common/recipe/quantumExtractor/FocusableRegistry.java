@@ -8,12 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
 
-import com.gtnewhorizon.gtnhlib.util.ItemUtil;
-
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedRandomUtil;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
+import ruiseki.omoshiroikamo.common.util.ItemUtils;
 
 public class FocusableRegistry implements IFocusableRegistry {
 
@@ -100,7 +99,7 @@ public class FocusableRegistry implements IFocusableRegistry {
             List<ItemStack> list = this.priorityOres.get(dye);
             if (list != null) {
                 for (ItemStack item : list) {
-                    if (item != null && ItemUtil.areStacksEqual(item, stack)) {
+                    if (item != null && ItemUtils.areStacksEqual(item, stack)) {
                         return dye;
                     }
                 }

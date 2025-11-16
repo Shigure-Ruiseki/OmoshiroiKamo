@@ -32,7 +32,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.energy.IPowerContainer;
 import ruiseki.omoshiroikamo.api.energy.PowerHandlerUtils;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.OKItemIO;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
@@ -434,13 +434,13 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return false;
+        return true;
     }
 
     @Override
     public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
         if (capability == ItemSource.class || capability == ItemSink.class || capability == ItemIO.class) {
-            return capability.cast(new OKItemIO(this, side, allSlots));
+            return capability.cast(new OKItemIO(this, side));
         }
 
         return null;

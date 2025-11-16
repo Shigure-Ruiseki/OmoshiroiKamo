@@ -9,16 +9,15 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import com.gtnewhorizon.gtnhlib.util.ItemUtil;
-
 import codechicken.nei.PositionedStack;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedStackBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
+import ruiseki.omoshiroikamo.common.util.ItemUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
@@ -67,7 +66,7 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
 
         for (WeightedStackBase ws : registry.getUnFocusedList()) {
             ItemStack output = ws.getMainStack();
-            if (output != null && ItemUtil.areStacksEqual(output, item)) {
+            if (output != null && ItemUtils.areStacksEqual(output, item)) {
                 if (added.add(ws)) {
                     arecipes.add(new CachedVoidResRecipe(ws, null));
                 }
@@ -78,7 +77,7 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
         if (color != null) {
             for (WeightedStackBase ws : registry.getFocusedList(color, 1.0f)) {
                 ItemStack output = ws.getMainStack();
-                if (output != null && ItemUtil.areStacksEqual(output, item)) {
+                if (output != null && ItemUtils.areStacksEqual(output, item)) {
                     if (added.add(ws)) {
                         arecipes.add(new CachedVoidResRecipe(ws, color));
                     }

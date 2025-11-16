@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityColoredEgg;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.item;
+package ruiseki.omoshiroikamo.api.enums;
 
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;

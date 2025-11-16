@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
@@ -92,14 +91,6 @@ public class CommonProxy {
     }
 
     public void serverStarted(FMLServerStartedEvent event) {}
-
-    public EntityPlayer getClientPlayer() {
-        return null;
-    }
-
-    public World getClientWorld() {
-        return null;
-    }
 
     public World getEntityWorld() {
         return MinecraftServer.getServer()

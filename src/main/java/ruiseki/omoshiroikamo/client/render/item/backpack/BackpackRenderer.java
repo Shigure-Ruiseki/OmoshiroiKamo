@@ -18,7 +18,7 @@ import com.enderio.core.common.vecmath.Vector4f;
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.client.handler.ClientTickHandler;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;

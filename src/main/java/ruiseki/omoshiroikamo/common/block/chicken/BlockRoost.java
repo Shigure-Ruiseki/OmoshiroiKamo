@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.common.block.chicken;
 import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -65,6 +66,18 @@ public class BlockRoost extends AbstractBlock<TERoost> {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
         world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
+    }
+
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random rand) {
+        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
+        int currentMeta = world.getBlockMetadata(x, y, z);
+        int targetMeta = te.getFacing();
+
+        if (currentMeta != targetMeta) {
+            world.setBlockMetadataWithNotify(x, y, z, targetMeta, 2);
+            world.scheduleBlockUpdate(x, y, z, this, 2);
+        }
     }
 
     @Override

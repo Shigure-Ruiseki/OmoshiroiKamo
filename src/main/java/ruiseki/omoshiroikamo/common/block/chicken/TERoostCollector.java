@@ -18,8 +18,8 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.enderio.core.common.util.ItemUtil;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
@@ -59,39 +59,13 @@ public class TERoostCollector extends AbstractStorageTE {
         if (!(tileEntity instanceof TERoost teRoost)) {
             return;
         }
-        SlotDefinition slots = teRoost.getSlotDefinition();
-        for (int i = slots.getMinItemOutput(); i <= slots.getMaxItemOutput(); i++) {
-            if (pullItemFromSlot(teRoost, i)) {
-                return;
-            }
-        }
-    }
-
-    private boolean pullItemFromSlot(TERoost tileRoost, int index) {
-        ItemStack itemStack = tileRoost.getStackInSlot(index);
-        if (itemStack != null && tileRoost.canExtractItem(index, itemStack, 0)) {
-            int inserted = ItemUtil.doInsertItem(this, itemStack, ForgeDirection.UNKNOWN);
-
-            if (inserted > 0) {
-                itemStack.stackSize -= inserted;
-
-                if (itemStack.stackSize <= 0) {
-                    tileRoost.setInventorySlotContents(index, null);
-                } else {
-                    tileRoost.setInventorySlotContents(index, itemStack);
-                }
-
-                markDirty();
-                tileRoost.markDirty();
-                return true;
-            }
-        }
-
-        return false;
+        ItemTransfer transfer = new ItemTransfer();
+        transfer.pull(this, ForgeDirection.UNKNOWN, teRoost);
+        transfer.transfer();
     }
 
     @Override
-    protected boolean isMachineItemValidForSlot(int slot, ItemStack itemstack) {
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return true;
     }
 

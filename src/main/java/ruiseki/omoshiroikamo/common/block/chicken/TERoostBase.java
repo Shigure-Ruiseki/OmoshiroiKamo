@@ -11,13 +11,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.common.util.ItemUtil;
-
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.common.util.ItemUtils;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
 
@@ -227,7 +226,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             }
         }
 
-        if (ItemUtil.areStackMergable(outputStack, stack)) {
+        if (ItemUtils.areStackMergable(outputStack, stack)) {
             int space = max - outputStack.stackSize;
             int move = Math.min(stack.stackSize, space);
 
@@ -310,12 +309,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     @Override
-    protected void updateEntityClient() {
-        super.updateEntityClient();
-    }
-
-    @Override
-    protected boolean isMachineItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) {
             return isSeed(stack);
         }

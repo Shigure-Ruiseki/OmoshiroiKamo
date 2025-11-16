@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;

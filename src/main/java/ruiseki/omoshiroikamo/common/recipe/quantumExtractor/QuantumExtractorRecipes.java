@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.common.recipe.quantumExtractor;
 
 import java.io.File;
 
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;

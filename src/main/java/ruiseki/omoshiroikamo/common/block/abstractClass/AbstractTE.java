@@ -168,7 +168,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     }
 
     public void openGui(EntityPlayer player) {
-        if (worldObj.isRemote) {
+        if (!worldObj.isRemote) {
             GuiFactories.tileEntity()
                 .open(player, xCoord, yCoord, zCoord);
         }

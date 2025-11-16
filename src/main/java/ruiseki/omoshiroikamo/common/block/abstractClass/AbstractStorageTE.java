@@ -4,15 +4,25 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
+import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemIO;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
 
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
+import ruiseki.omoshiroikamo.api.item.OKItemIO;
 import ruiseki.omoshiroikamo.common.network.PacketFluidTanks;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.common.util.ItemUtils;
 
-public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory {
+public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory, CapabilityProvider {
 
     protected final SlotDefinition slotDefinition;
     public ItemStackHandler inv;
@@ -94,7 +104,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
         ItemStack existing = inv.getStackInSlot(slot);
         if (existing != null) {
-            return existing.isStackable() && existing.isItemEqual(itemstack);
+            return ItemUtils.areStackMergable(existing, itemstack);
         }
         return isItemValidForSlot(slot, itemstack);
     }
@@ -190,11 +200,16 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return isMachineItemValidForSlot(slot, stack);
-    }
-
-    protected abstract boolean isMachineItemValidForSlot(int slot, ItemStack itemstack);
+    public abstract boolean isItemValidForSlot(int slot, ItemStack stack);
 
     public void onContentsChange(int slot) {}
+
+    @Override
+    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
+        if (capability == ItemSource.class || capability == ItemSink.class || capability == ItemIO.class) {
+            return capability.cast(new OKItemIO(this, side));
+        }
+
+        return null;
+    }
 }

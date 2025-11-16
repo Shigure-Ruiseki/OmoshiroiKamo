@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.recipe;
 
-import static ruiseki.omoshiroikamo.api.item.EnumDye.DYE_ORE_NAMES;
+import static ruiseki.omoshiroikamo.api.enums.EnumDye.DYE_ORE_NAMES;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -9,7 +9,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;

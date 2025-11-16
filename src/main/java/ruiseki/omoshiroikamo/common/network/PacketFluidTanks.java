@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.ClientProxy;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 
 public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTanks, IMessage> {
@@ -56,7 +56,7 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
     @Override
     public IMessage onMessage(PacketFluidTanks message, MessageContext ctx) {
         EntityPlayer player = ctx.side == Side.SERVER ? ctx.getServerHandler().playerEntity
-            : OmoshiroiKamo.proxy.getClientPlayer();
+            : ClientProxy.getClientPlayer();
 
         if (player == null) {
             return null;

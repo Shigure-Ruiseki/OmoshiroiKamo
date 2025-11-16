@@ -80,12 +80,12 @@ public class TEBreeder extends TERoostBase {
                                 .hoverBackground(MGuiTextures.ROOST_SLOT)
                                 .slot(
                                     new ModularSlot(inv, index).slotGroup("input")
-                                        .filter(stack -> isMachineItemValidForSlot(index, stack))))
+                                        .filter(stack -> isItemValidForSlot(index, stack))))
                         .key(
                             'S',
                             new ItemSlot().slot(
                                 new ModularSlot(inv, 2).slotGroup("input")
-                                    .filter(stack -> isMachineItemValidForSlot(2, stack))))
+                                    .filter(stack -> isItemValidForSlot(2, stack))))
                         .key('+', new Widget<>().background(GuiTextures.ADD))
                         .key(
                             'O',

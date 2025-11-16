@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
+
 public interface IFocusableRegistry {
 
     List<WeightedStackBase> getFocusedList(EnumDye var1, float var2);

@@ -25,7 +25,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameData;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.WeightedItemStack;
 import ruiseki.omoshiroikamo.api.item.WeightedOreStack;

@@ -72,13 +72,11 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
     }
 
-    @Override
-    public EntityPlayer getClientPlayer() {
+    public static EntityPlayer getClientPlayer() {
         return Minecraft.getMinecraft().thePlayer;
     }
 
-    @Override
-    public World getClientWorld() {
+    public static World getClientWorld() {
         return FMLClientHandler.instance()
             .getClient().theWorld;
     }

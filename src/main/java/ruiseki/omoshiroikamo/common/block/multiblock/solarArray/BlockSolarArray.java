@@ -17,8 +17,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.item.EnumDye;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBBlock;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
