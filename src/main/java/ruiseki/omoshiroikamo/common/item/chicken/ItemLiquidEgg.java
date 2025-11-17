@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -60,8 +61,10 @@ public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
     }
 
     @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "liquid_egg.l1"));
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+        TooltipUtils builder = TooltipUtils.builder();
+        builder.addLang(LibResources.TOOLTIP + "liquid_egg.l1");
+        list.addAll(builder.build());
     }
 
     @Override

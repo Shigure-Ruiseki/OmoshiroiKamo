@@ -1,16 +1,17 @@
 package ruiseki.omoshiroikamo.api.item;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-
-import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.client.IRenderUpgrade;
 
-public interface IAnvilUpgrade extends IAdvancedTooltipProvider {
+public interface IAnvilUpgrade {
 
     String getUnlocalizedName();
 
@@ -33,4 +34,6 @@ public interface IAnvilUpgrade extends IAdvancedTooltipProvider {
     @Nullable
     @SideOnly(Side.CLIENT)
     IRenderUpgrade getRender();
+
+    void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag);
 }

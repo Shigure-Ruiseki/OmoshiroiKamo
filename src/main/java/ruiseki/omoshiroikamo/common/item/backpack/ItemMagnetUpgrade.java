@@ -23,7 +23,7 @@ public class ItemMagnetUpgrade extends ItemUpgrade {
     }
 
     @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "magnet_upgrade"));
     }
 }

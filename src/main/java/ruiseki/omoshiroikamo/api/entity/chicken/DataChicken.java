@@ -21,6 +21,7 @@ import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModItems;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -101,10 +102,12 @@ public class DataChicken {
     /**
      * Add tooltip information describing growth, gain, strength
      */
-    public void addStatsInfoToTooltip(List<String> tooltip) {
-        tooltip.add(new ChatComponentTranslation(LibResources.TOOLTIP + "mob.growth", growth).getFormattedText());
-        tooltip.add(new ChatComponentTranslation(LibResources.TOOLTIP + "mob.gain", gain).getFormattedText());
-        tooltip.add(new ChatComponentTranslation(LibResources.TOOLTIP + "mob.strength", strength).getFormattedText());
+    public List<String> getStatsInfoTooltip() {
+        return TooltipUtils.builder()
+            .addLang(LibResources.TOOLTIP + "mob.growth", growth)
+            .addLang(LibResources.TOOLTIP + "mob.gain", gain)
+            .addLang(LibResources.TOOLTIP + "mob.strength", strength)
+            .build();
     }
 
     /**

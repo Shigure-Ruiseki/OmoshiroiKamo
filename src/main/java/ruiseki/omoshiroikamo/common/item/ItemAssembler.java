@@ -12,7 +12,7 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtilit
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ItemAssembler extends ItemOK {
@@ -59,8 +59,10 @@ public class ItemAssembler extends ItemOK {
     }
 
     @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "assembler.l1"));
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "assembler.l2"));
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+        TooltipUtils builder = TooltipUtils.builder();
+        builder.addLang(LibResources.TOOLTIP + "assembler.l1");
+        builder.addLang(LibResources.TOOLTIP + "assembler.l2");
+        list.addAll(builder.build());
     }
 }

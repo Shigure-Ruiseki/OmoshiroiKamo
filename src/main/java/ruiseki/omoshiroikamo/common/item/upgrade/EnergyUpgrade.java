@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
-import com.enderio.core.client.handlers.SpecialTooltipHandler;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import lombok.Getter;
+import lombok.Setter;
 import ruiseki.omoshiroikamo.api.energy.PowerDisplayUtil;
 import ruiseki.omoshiroikamo.api.item.IAnvilUpgradeItem;
 import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
@@ -64,9 +63,21 @@ public class EnergyUpgrade extends AbstractUpgrade {
     private static final String KEY_MAX_OUT = "maxOuput";
 
     private static final Random RANDOM = new Random();
+
+    @Setter
+    @Getter
     protected int capacity;
+
+    @Setter
+    @Getter
     protected int energy;
+
+    @Setter
+    @Getter
     protected int maxInRF;
+
+    @Setter
+    @Getter
     protected int maxOutRF;
 
     public EnergyUpgrade(String name, int levels, ItemStack upgradeItem, int capcity, int maxReceiveIO) {
@@ -211,20 +222,18 @@ public class EnergyUpgrade extends AbstractUpgrade {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
-
-        List<String> upgradeStr = new ArrayList<String>();
-        upgradeStr.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
-        SpecialTooltipHandler.addDetailedTooltipFromResources(upgradeStr, getUnlocalizedName());
-
-        String capString = PowerDisplayUtil.formatPower(capacity) + " " + PowerDisplayUtil.abrevation();
-        for (int i = 0; i < upgradeStr.size(); i++) {
-            String str = upgradeStr.get(i);
-            str = str.replaceAll("\\$P", capString);
-            upgradeStr.set(i, str);
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+        if (GuiScreen.isShiftKeyDown()) {
+            List<String> upgradeStr = new ArrayList<String>();
+            upgradeStr.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
+            String capString = PowerDisplayUtil.formatPower(capacity) + " " + PowerDisplayUtil.abrevation();
+            for (int i = 0; i < upgradeStr.size(); i++) {
+                String str = upgradeStr.get(i);
+                str = str.replaceAll("\\$P", capString);
+                upgradeStr.set(i, str);
+            }
+            list.addAll(upgradeStr);
         }
-        list.addAll(upgradeStr);
     }
 
     @Override
@@ -233,14 +242,6 @@ public class EnergyUpgrade extends AbstractUpgrade {
         upgradeRoot.setInteger(KEY_ENERGY, energy);
         upgradeRoot.setInteger(KEY_MAX_IN, maxInRF);
         upgradeRoot.setInteger(KEY_MAX_OUT, maxOutRF);
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
     }
 
     public int receiveEnergy(int maxRF, boolean simulate) {
@@ -260,7 +261,4 @@ public class EnergyUpgrade extends AbstractUpgrade {
         return energyExtracted;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
 }

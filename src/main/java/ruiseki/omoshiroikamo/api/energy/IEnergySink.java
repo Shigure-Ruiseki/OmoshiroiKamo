@@ -8,12 +8,16 @@ import cpw.mods.fml.common.Optional;
 @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyReceiver", striprefs = true)
 public interface IEnergySink extends IEnergyReceiver, IEnergyTile {
 
+    int receiveEnergy(ForgeDirection side, int amount, boolean simulate);
+
     @Override
+    @Optional.Method(modid = "CoFHLib")
     default int getEnergyStored(ForgeDirection forgeDirection) {
         return getEnergyStored();
     }
 
     @Override
+    @Optional.Method(modid = "CoFHLib")
     default int getMaxEnergyStored(ForgeDirection forgeDirection) {
         return getMaxEnergyStored();
     }

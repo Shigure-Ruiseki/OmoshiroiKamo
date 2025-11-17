@@ -14,16 +14,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
-import com.enderio.core.api.client.gui.IResourceTooltipProvider;
-
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
-public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
-    implements IResourceTooltipProvider, IAdvancedTooltipProvider, IWailaBlockInfoProvider {
+public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
 
     protected AbstractBlock(ModObject mo, Class<T> teClass, Material mat) {
         super(mo, teClass, mat);
@@ -113,22 +109,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
         }
         return false;
     }
-
-    @Override
-    public String getUnlocalizedNameForTooltip(ItemStack itemStack) {
-        return getUnlocalizedName();
-    }
-
-    @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {}
-
-    @Override
-    public void addBasicEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean advanced) {
-
-    }
-
-    @Override
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {}
 
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
