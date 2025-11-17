@@ -25,6 +25,7 @@ import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
@@ -145,77 +146,74 @@ public class ItemCowSpawnEgg extends ItemOK {
     }
 
     @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        CowsRegistryItem cowsRegistryItem = CowsRegistry.INSTANCE.getByType(itemstack.getItemDamage());
-
-        if (cowsRegistryItem == null) {
+    public void addInformation(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {
+        CowsRegistryItem cow = CowsRegistry.INSTANCE.getByType(itemstack.getItemDamage());
+        if (cow == null) {
             return;
         }
 
-        list.add(
-            new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.tier", cowsRegistryItem.getTier())
-                .getFormattedText());
-        FluidStack fluidStack = cowsRegistryItem.createMilkFluid();
+        FluidStack milk = cow.createMilkFluid();
+        SpawnType spawnType = cow.getSpawnType();
+        TooltipUtils builder = TooltipUtils.builder();
 
-        if (fluidStack != null && fluidStack.getFluid() != null) {
-            list.add(
-                new ChatComponentTranslation(
-                    LibResources.TOOLTIP + "spawn_egg.milkfluid",
-                    fluidStack.getLocalizedName()).getFormattedText());
+        // Tier
+        builder.addLang(LibResources.TOOLTIP + "spawn_egg.tier", cow.getTier());
+
+        // Milk fluid
+        builder.addLangIf(
+            milk != null && milk.getFluid() != null,
+            LibResources.TOOLTIP + "spawn_egg.milkfluid",
+            milk.getLocalizedName());
+        builder.addLangIf(milk.getFluid() == null, LibResources.TOOLTIP + "spawn_egg.nomilkfluid");
+
+        EnumChatFormatting labelColor = EnumChatFormatting.GRAY;
+        EnumChatFormatting valueColor;
+
+        if (spawnType == SpawnType.NORMAL) {
+            valueColor = EnumChatFormatting.GREEN;
+        } else if (spawnType == SpawnType.HELL) {
+            valueColor = EnumChatFormatting.RED;
+        } else if (spawnType == SpawnType.SNOW) {
+            valueColor = EnumChatFormatting.AQUA;
         } else {
-            list.add(
-                new ChatComponentTranslation(
-                    LibResources.TOOLTIP + "spawn_egg.nomilkfluid",
-                    fluidStack.getLocalizedName()).getFormattedText());
+            valueColor = EnumChatFormatting.WHITE;
         }
 
-        if (cowsRegistryItem.getSpawnType() != SpawnType.NONE) {
-            EnumChatFormatting format = cowsRegistryItem.getSpawnType() == SpawnType.NORMAL ? EnumChatFormatting.GREEN
-                : cowsRegistryItem.getSpawnType() == SpawnType.HELL ? EnumChatFormatting.RED
-                    : cowsRegistryItem.getSpawnType() == SpawnType.SNOW ? EnumChatFormatting.AQUA
-                        : EnumChatFormatting.WHITE;
-            list.add(
-                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.spawnType").getFormattedText() + ": "
-                    + EnumChatFormatting.RESET
-                    + format
-                    + cowsRegistryItem.getSpawnType()
-                        .toString());
+        builder.addLabelWithLangValue(
+            LibResources.TOOLTIP + "spawn_egg.spawnType",
+            labelColor,
+            spawnType.toString(),
+            valueColor);
+
+        // Breedable
+        builder.addColoredLangIf(
+            !cow.isBreedable(),
+            EnumChatFormatting.RED,
+            LibResources.TOOLTIP + "spawn_egg.notbreedable");
+
+        // Breedable with parents
+        if (cow.isBreedable() && cow.getParent1() != null && cow.getParent2() != null) {
+            String parent1 = new ChatComponentTranslation(
+                cow.getParent1()
+                    .getDisplayName()).getFormattedText();
+            String parent2 = new ChatComponentTranslation(
+                cow.getParent2()
+                    .getDisplayName()).getFormattedText();
+
+            builder.addLabelWithValue(
+                new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
+                EnumChatFormatting.YELLOW,
+                parent1 + " & " + parent2,
+                EnumChatFormatting.GOLD);
         }
 
-        if (!cowsRegistryItem.isBreedable()) {
-            list.add(
-                EnumChatFormatting.RED
-                    + new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.notbreedable").getFormattedText());
-        } else {
-            if (cowsRegistryItem.getParent1() != null && cowsRegistryItem.getParent2() != null) {
-                String parent1 = new ChatComponentTranslation(
-                    cowsRegistryItem.getParent1()
-                        .getDisplayName()).getFormattedText();
-
-                String parent2 = new ChatComponentTranslation(
-                    cowsRegistryItem.getParent2()
-                        .getDisplayName()).getFormattedText();
-
-                list.add(
-                    EnumChatFormatting.YELLOW
-                        + new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.breedable").getFormattedText()
-                        + ": "
-                        + EnumChatFormatting.RESET
-                        + EnumChatFormatting.ITALIC
-                        + EnumChatFormatting.GOLD
-                        + parent1
-                        + EnumChatFormatting.RESET
-                        + " & "
-                        + EnumChatFormatting.ITALIC
-                        + EnumChatFormatting.GOLD
-                        + parent2);
-            }
-
+        // ModCompat tooltip
+        if (ModCompatInformation.TOOLTIP.containsKey(cow.getId())) {
+            ModCompatInformation info = ModCompatInformation.TOOLTIP.get(cow.getId());
+            builder.addAll(info.getToolTip());
         }
 
-        if (ModCompatInformation.TOOLTIP.containsKey(cowsRegistryItem.getId())) {
-            ModCompatInformation info = ModCompatInformation.TOOLTIP.get(cowsRegistryItem.getId());
-            list.addAll(info.getToolTip());
-        }
+        list.addAll(builder.build());
     }
+
 }

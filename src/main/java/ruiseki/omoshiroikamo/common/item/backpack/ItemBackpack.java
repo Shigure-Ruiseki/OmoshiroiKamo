@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.common.item.backpack;
 
 import java.util.List;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -110,11 +111,13 @@ public class ItemBackpack extends ItemBauble implements IEnergyItem, IGuiHolder<
     }
 
     @Override
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        super.addDetailedEntries(itemstack, entityplayer, list, flag);
-        EnergyUpgrade up = EnergyUpgrade.loadFromItem(itemstack);
-        if (up != null) {
-            list.add(PowerDisplayUtil.formatStoredPower(up.getEnergy(), up.getCapacity()));
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+        super.addInformation(itemstack, entityplayer, list, flag);
+        if (GuiScreen.isShiftKeyDown()) {
+            EnergyUpgrade up = EnergyUpgrade.loadFromItem(itemstack);
+            if (up != null) {
+                list.add(PowerDisplayUtil.formatStoredPower(up.getEnergy(), up.getCapacity()));
+            }
         }
     }
 

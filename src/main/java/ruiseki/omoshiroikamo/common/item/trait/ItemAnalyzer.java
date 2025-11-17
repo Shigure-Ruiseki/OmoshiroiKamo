@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ItemAnalyzer extends ItemOK {
@@ -63,8 +63,10 @@ public class ItemAnalyzer extends ItemOK {
     }
 
     @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "analyzer.l1"));
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "analyzer.l2"));
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+        TooltipUtils builder = TooltipUtils.builder();
+        builder.addLang(LibResources.TOOLTIP + "analyzer.l1");
+        builder.addLang(LibResources.TOOLTIP + "analyzer.l2");
+        list.addAll(builder.build());
     }
 }

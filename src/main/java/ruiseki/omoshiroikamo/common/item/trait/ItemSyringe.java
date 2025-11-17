@@ -75,12 +75,4 @@ public class ItemSyringe extends ItemOK {
 
         return true;
     }
-
-    @Override
-    public void addCommonEntries(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean flag) {
-        tooltip.add("meta=" + stack.getItemDamage());
-        NBTTagCompound tag = stack.getTagCompound();
-        tooltip.add(tag == null ? "NO NBT" : tag.toString());
-    }
-
 }

@@ -8,6 +8,8 @@ import cpw.mods.fml.common.Optional;
 @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyProvider", striprefs = true)
 public interface IEnergySource extends IEnergyProvider, IEnergyTile {
 
+    int extractEnergy(ForgeDirection side, int amount, boolean simulate);
+
     @Override
     @Optional.Method(modid = "CoFHLib")
     default int getEnergyStored(ForgeDirection side) {

@@ -2,12 +2,11 @@ package ruiseki.omoshiroikamo.common.item.upgrade;
 
 import java.util.List;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-
-import com.enderio.core.client.handlers.SpecialTooltipHandler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -64,23 +63,11 @@ public abstract class AbstractUpgrade implements IAnvilUpgrade {
         return getUpgradeItem().getDisplayName();
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
-        SpecialTooltipHandler.addCommonTooltipFromResources(list, getUnlocalizedName());
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addBasicEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
-        list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
-        SpecialTooltipHandler.addDetailedTooltipFromResources(list, getUnlocalizedName());
+        if (GuiScreen.isShiftKeyDown()) {
+            list.add(EnumChatFormatting.DARK_AQUA + LibMisc.LANG.localizeExact(getUnlocalizedName() + ".name"));
+        }
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import lombok.Getter;
 import ruiseki.omoshiroikamo.api.item.IAnvilUpgrade;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -22,6 +23,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 @SuppressWarnings("unused")
 public class ManaAnvilRecipe {
 
+    @Getter
     private static final List<IAnvilUpgrade> UPGRADES = new ArrayList<>();
 
     static {
@@ -55,38 +57,16 @@ public class ManaAnvilRecipe {
         }
     }
 
-    public static List<IAnvilUpgrade> getUPGRADES() {
-        return UPGRADES;
-    }
-
-    public static void addCommonTooltipEntries(ItemStack itemstack, EntityPlayer entityplayer, List list,
-        boolean flag) {
-        for (IAnvilUpgrade upgrade : UPGRADES) {
-            if (upgrade.hasUpgrade(itemstack)) {
-                upgrade.addCommonEntries(itemstack, entityplayer, list, flag);
-            }
-        }
-    }
-
-    public static void addBasicTooltipEntries(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag) {
-        for (IAnvilUpgrade upgrade : UPGRADES) {
-            if (upgrade.hasUpgrade(itemstack)) {
-                upgrade.addBasicEntries(itemstack, entityplayer, list, flag);
-            }
-        }
-    }
-
-    public static void addAdvancedTooltipEntries(ItemStack itemstack, EntityPlayer entityplayer, List list,
-        boolean flag) {
-
+    public static void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         List<IAnvilUpgrade> applyableUPGRADES = new ArrayList<IAnvilUpgrade>();
         for (IAnvilUpgrade upgrade : UPGRADES) {
             if (upgrade.hasUpgrade(itemstack)) {
-                upgrade.addDetailedEntries(itemstack, entityplayer, list, flag);
+                upgrade.addInformation(itemstack, entityplayer, list, flag);
             } else if (upgrade.canAddToItem(itemstack)) {
                 applyableUPGRADES.add(upgrade);
             }
         }
+
         if (!applyableUPGRADES.isEmpty()) {
             list.add(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("tooltip.anvilUPGRADES") + " ");
             for (IAnvilUpgrade up : applyableUPGRADES) {

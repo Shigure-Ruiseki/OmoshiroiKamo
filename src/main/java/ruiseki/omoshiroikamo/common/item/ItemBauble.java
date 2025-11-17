@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.common.item;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -129,9 +130,11 @@ public class ItemBauble extends ItemOK implements IBaubleExpanded {
     }
 
     @Override
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        super.addDetailedEntries(itemstack, entityplayer, list, flag);
-        String[] types = getBaubleTypes(itemstack);
-        BaubleItemHelper.addSlotInformation(list, types);
+    public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
+        super.addInformation(itemstack, entityplayer, list, flag);
+        if (GuiScreen.isShiftKeyDown()) {
+            String[] types = getBaubleTypes(itemstack);
+            BaubleItemHelper.addSlotInformation(list, types);
+        }
     }
 }

@@ -4,18 +4,15 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import com.enderio.core.api.client.gui.IAdvancedTooltipProvider;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.OKCreativeTab;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class ItemOK extends Item implements IAdvancedTooltipProvider {
+public class ItemOK extends Item {
 
     protected String name;
 
@@ -76,13 +73,4 @@ public class ItemOK extends Item implements IAdvancedTooltipProvider {
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, 0));
     }
-
-    @Override
-    public void addCommonEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {}
-
-    @Override
-    public void addBasicEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {}
-
-    @Override
-    public void addDetailedEntries(ItemStack itemstack, EntityPlayer player, List<String> list, boolean flag) {}
 }
