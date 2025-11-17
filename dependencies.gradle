@@ -49,6 +49,7 @@ dependencies {
     devOnlyNonPublishable("com.github.GTNewHorizons:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:Botania:1.13.3-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.10.2:dev")
+    devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
 
     compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.6-GTNH:dev")
     compileOnly('curse.maven:thermal-foundation-222880:2388752')
@@ -58,7 +59,6 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Draconic-Evolution:1.5.2-GTNH:dev")
     compileOnly("curse.maven:actually-additions-228404:2274681")
     compileOnly("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
-    compileOnly('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
     compileOnly('com.github.GTNewHorizons:Mobs-Info:0.5.7-GTNH:dev')
 

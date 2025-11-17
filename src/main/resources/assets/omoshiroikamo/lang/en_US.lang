@@ -17,6 +17,7 @@ config.backpackConfig=Backpack Settings
 config.feedingConfig=Feeding Settings
 config.magnetConfig=Magnet Settings
 
+config.energyConfig=Energy Settings
 # Waila
 
 option.omoshiroikamo.breedingTime=Breeding Time

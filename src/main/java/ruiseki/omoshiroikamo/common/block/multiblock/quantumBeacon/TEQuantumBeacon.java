@@ -14,6 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
+import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
@@ -67,7 +68,22 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
                 PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
             }
         }
+        transmitEnergy();
         return super.processTasks(redstoneCheckPassed);
+    }
+
+    private void transmitEnergy() {
+
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+            EnergyTransfer transfer = new EnergyTransfer();
+            TileEntity adjacent = this.getWorldObj()
+                .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+            if (adjacent == null) {
+                continue;
+            }
+            transfer.pull(this, side, adjacent);
+            transfer.transfer();
+        }
     }
 
     @Override
