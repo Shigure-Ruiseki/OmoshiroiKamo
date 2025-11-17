@@ -13,6 +13,7 @@ public enum LibMods {
     BogoSorter("bogosorter"),
     Botania("Botania"),
     BuildCraftEnergy("BuildCraft|Energy"),
+    CoFHLib("CoFHLib"),
     CraftingTweaks("craftingtweaks"),
     CraftTweaker("MineTweaker3"),
     DraconicEvolution("DraconicEvolution"),
@@ -24,7 +25,8 @@ public enum LibMods {
     NotEnoughItems("NotEnoughItems"),
     TConstruct("TConstruct"),
     ThermalFoundation("ThermalFoundation"),
-    Waila("Waila"),;
+    Waila("Waila"),
+    ;
 
     public final String modid;
     private final Supplier<Boolean> supplier;

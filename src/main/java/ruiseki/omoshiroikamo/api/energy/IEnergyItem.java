@@ -1,0 +1,18 @@
+package ruiseki.omoshiroikamo.api.energy;
+
+import net.minecraft.item.ItemStack;
+
+import cofh.api.energy.IEnergyContainerItem;
+import cpw.mods.fml.common.Optional;
+
+@Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyContainerItem", striprefs = true)
+public interface IEnergyItem extends IEnergyContainerItem {
+
+    int receiveEnergy(ItemStack stack, int amount, boolean simulate);
+
+    int extractEnergy(ItemStack stack, int amount, boolean simulate);
+
+    int getEnergyStored(ItemStack stack);
+
+    int getMaxEnergyStored(ItemStack stack);
+}

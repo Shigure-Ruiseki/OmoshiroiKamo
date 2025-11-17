@@ -1,15 +1,16 @@
-package ruiseki.omoshiroikamo.api.energy;
+package ruiseki.omoshiroikamo.api.energy.capability.cofh;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergyIO;
 
-public class OKEnergyIO implements EnergyIO {
+public class CoFHEnergyProvider implements EnergyIO {
 
-    private final IEnergyHandler handler;
+    private final IEnergyProvider handler;
     private final ForgeDirection side;
 
-    public OKEnergyIO(IEnergyHandler handler, ForgeDirection side) {
+    public CoFHEnergyProvider(IEnergyProvider handler, ForgeDirection side) {
         this.handler = handler;
         this.side = side;
     }
@@ -21,6 +22,6 @@ public class OKEnergyIO implements EnergyIO {
 
     @Override
     public int insert(int amount, boolean simulate) {
-        return handler.receiveEnergy(side, amount, simulate);
+        return 0;
     }
 }

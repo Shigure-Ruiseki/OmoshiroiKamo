@@ -16,7 +16,6 @@ public final class LibMisc {
         + "required-after:gtnhlib@[0.8.0,);"
         + "required-after:structurelib@[1.4.23,);"
         + "required-after:modularui2@[2.3.4-1.7.10,);"
-        + "required-after:CoFHLib@[1.7.10R1.0.3B3,);"
         + "after:falsetweaks;"
         + "after:angelica;"
         + "after:angelica;"

@@ -19,9 +19,9 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.energy.IEnergyItem;
 import ruiseki.omoshiroikamo.api.energy.PowerDisplayUtil;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.IBaubleRender;
@@ -32,7 +32,7 @@ import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
 public class ItemBackpack extends ItemBauble
-    implements IEnergyContainerItem, IGuiHolder<PlayerInventoryGuiData>, IBaubleRender {
+    implements IEnergyItem, IGuiHolder<PlayerInventoryGuiData>, IBaubleRender {
 
     @SideOnly(Side.CLIENT)
     private static BackpackRenderer model;
@@ -150,6 +150,6 @@ public class ItemBackpack extends ItemBauble
 
     @Override
     public String[] getBaubleTypes(ItemStack itemstack) {
-        return new String[] { "body" };
+        return new String[]{"body"};
     }
 }

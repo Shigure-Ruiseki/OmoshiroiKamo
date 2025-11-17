@@ -3,22 +3,20 @@ package ruiseki.omoshiroikamo.api.energy;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyProvider;
+import cpw.mods.fml.common.Optional;
 
-public interface IEnergySource extends IEnergyProvider {
-
-    int getEnergyStored();
-
-    int getMaxEnergyStored();
-
-    void setEnergyStored(int stored);
+@Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyProvider", striprefs = true)
+public interface IEnergySource extends IEnergyProvider, IEnergyTile {
 
     @Override
-    default int getEnergyStored(ForgeDirection forgeDirection) {
+    @Optional.Method(modid = "CoFHLib")
+    default int getEnergyStored(ForgeDirection side) {
         return getEnergyStored();
     }
 
     @Override
-    default int getMaxEnergyStored(ForgeDirection forgeDirection) {
+    @Optional.Method(modid = "CoFHLib")
+    default int getMaxEnergyStored(ForgeDirection side) {
         return getMaxEnergyStored();
     }
 }

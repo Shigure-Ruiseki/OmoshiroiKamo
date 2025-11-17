@@ -15,9 +15,9 @@ import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.energy.IEnergyItem;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.client.handler.ClientTickHandler;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
@@ -185,7 +185,7 @@ public class BackpackRenderer implements IItemRenderer {
         double maxDam, dispDamage;
 
         if (ItemConfigs.renderChargeBar && hasEnergyUpgrade) {
-            IEnergyContainerItem backpack = (IEnergyContainerItem) item.getItem();
+            IEnergyItem backpack = (IEnergyItem) item.getItem();
             maxDam = backpack.getMaxEnergyStored(item);
             dispDamage = backpack.getEnergyStored(item);
             Color color = new Color(

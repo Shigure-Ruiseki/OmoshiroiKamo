@@ -37,12 +37,12 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import codechicken.lib.vec.Vector3;
-import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.OKItemEnergyIO;
+import ruiseki.omoshiroikamo.api.energy.IEnergyItem;
+import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergyItem;
 import ruiseki.omoshiroikamo.client.gui.modularui2.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
 import ruiseki.omoshiroikamo.common.util.ItemNBTUtils;
@@ -297,16 +297,14 @@ public class BackpackController {
         List<ItemStack> stacks = new ArrayList<>();
 
         for (ItemStack stack : player.inventory.mainInventory) {
-            if (stack == null || stack.getItem() instanceof ItemBackpack
-                || !(stack.getItem() instanceof IEnergyContainerItem)) {
+            if (stack == null || stack.getItem() instanceof ItemBackpack || !(stack.getItem() instanceof IEnergyItem)) {
                 continue;
             }
             stacks.add(stack);
         }
 
         for (ItemStack stack : player.inventory.armorInventory) {
-            if (stack == null || stack.getItem() instanceof ItemBackpack
-                || !(stack.getItem() instanceof IEnergyContainerItem)) {
+            if (stack == null || stack.getItem() instanceof ItemBackpack || !(stack.getItem() instanceof IEnergyItem)) {
                 continue;
             }
             stacks.add(stack);
@@ -317,7 +315,7 @@ public class BackpackController {
             for (int i = 0; i < baubles.getSizeInventory(); i++) {
                 ItemStack stack = baubles.getStackInSlot(i);
                 if (stack == null || stack.getItem() instanceof ItemBackpack
-                    || !(stack.getItem() instanceof IEnergyContainerItem)) {
+                    || !(stack.getItem() instanceof IEnergyItem)) {
                     continue;
                 }
                 stacks.add(stack);
@@ -326,10 +324,8 @@ public class BackpackController {
 
         for (ItemStack stack : stacks) {
             EnergyTransfer transfer = new EnergyTransfer();
-            transfer.source(
-                new OKItemEnergyIO((IEnergyContainerItem) mag.item.getItem(), mag.item),
-                ForgeDirection.UNKNOWN);
-            transfer.sink(new OKItemEnergyIO((IEnergyContainerItem) stack.getItem(), stack), ForgeDirection.UNKNOWN);
+            transfer.source(new OKEnergyItem((IEnergyItem) mag.item.getItem(), mag.item), ForgeDirection.UNKNOWN);
+            transfer.sink(new OKEnergyItem((IEnergyItem) stack.getItem(), stack), ForgeDirection.UNKNOWN);
             transfer.transfer();
         }
     }

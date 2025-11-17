@@ -7,7 +7,6 @@ import java.text.NumberFormat;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
 
-import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -50,11 +49,11 @@ public class PowerDisplayUtil {
         if (item == null) {
             return null;
         }
-        if (!(item.getItem() instanceof IEnergyContainerItem)) {
+        if (!(item.getItem() instanceof IEnergyItem)) {
             return null;
         }
 
-        IEnergyContainerItem ci = (IEnergyContainerItem) item.getItem();
+        IEnergyItem ci = (IEnergyItem) item.getItem();
         return LibMisc.LANG.localize("item.tooltip.power") + " "
             + PowerDisplayUtil.formatPower(ci.getEnergyStored(item))
             + "/"

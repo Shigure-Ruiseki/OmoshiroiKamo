@@ -29,9 +29,9 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 import cofh.api.energy.EnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.energy.EnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergySink;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
-import ruiseki.omoshiroikamo.api.energy.OKEnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.OKItemIO;
@@ -407,10 +407,12 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory() {
+    }
 
     @Override
-    public void closeInventory() {}
+    public void closeInventory() {
+    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {

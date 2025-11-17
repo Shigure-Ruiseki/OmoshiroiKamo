@@ -1,15 +1,16 @@
-package ruiseki.omoshiroikamo.api.energy;
+package ruiseki.omoshiroikamo.api.energy.capability.ok;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.api.energy.IEnergyReceiver;
+import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergySink;
 
 public class OKEnergySink implements EnergySink {
 
-    private final IEnergyReceiver receiver;
+    private final IEnergySink receiver;
     private final ForgeDirection side;
 
-    public OKEnergySink(IEnergyReceiver receiver, ForgeDirection side) {
+    public OKEnergySink(IEnergySink receiver, ForgeDirection side) {
         this.receiver = receiver;
         this.side = side;
     }

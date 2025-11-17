@@ -1,16 +1,13 @@
 package ruiseki.omoshiroikamo.api.energy;
 
+import cpw.mods.fml.common.Optional;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyReceiver;
 
-public interface IEnergySink extends IEnergyReceiver {
-
-    int getEnergyStored();
-
-    int getMaxEnergyStored();
-
-    void setEnergyStored(int stored);
+@Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyReceiver",
+    striprefs = true)
+public interface IEnergySink extends IEnergyReceiver, IEnergyTile {
 
     @Override
     default int getEnergyStored(ForgeDirection forgeDirection) {

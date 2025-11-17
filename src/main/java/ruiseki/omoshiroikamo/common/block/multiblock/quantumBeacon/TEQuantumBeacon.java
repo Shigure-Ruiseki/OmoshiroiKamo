@@ -18,9 +18,9 @@ import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import cofh.api.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.api.energy.EnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergySink;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
-import ruiseki.omoshiroikamo.api.energy.OKEnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.ModifierHandler;
@@ -128,16 +128,16 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     }
 
     private void applyPotionEffects(EntityPlayer plr, int duration) {
-        Object[][] effects = { { ModifierAttribute.P_SPEED.getAttributeName(), Potion.moveSpeed },
-            { ModifierAttribute.P_NIGHT_VISION.getAttributeName(), Potion.nightVision },
-            { ModifierAttribute.P_HASTE.getAttributeName(), Potion.digSpeed },
-            { ModifierAttribute.P_STRENGTH.getAttributeName(), Potion.damageBoost },
-            { ModifierAttribute.P_WATER_BREATHING.getAttributeName(), Potion.waterBreathing },
-            { ModifierAttribute.P_REGEN.getAttributeName(), Potion.regeneration },
-            { ModifierAttribute.P_SATURATION.getAttributeName(), Potion.field_76443_y },
-            { ModifierAttribute.P_RESISTANCE.getAttributeName(), Potion.resistance },
-            { ModifierAttribute.P_JUMP_BOOST.getAttributeName(), Potion.jump },
-            { ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName(), Potion.fireResistance } };
+        Object[][] effects = {{ModifierAttribute.P_SPEED.getAttributeName(), Potion.moveSpeed},
+            {ModifierAttribute.P_NIGHT_VISION.getAttributeName(), Potion.nightVision},
+            {ModifierAttribute.P_HASTE.getAttributeName(), Potion.digSpeed},
+            {ModifierAttribute.P_STRENGTH.getAttributeName(), Potion.damageBoost},
+            {ModifierAttribute.P_WATER_BREATHING.getAttributeName(), Potion.waterBreathing},
+            {ModifierAttribute.P_REGEN.getAttributeName(), Potion.regeneration},
+            {ModifierAttribute.P_SATURATION.getAttributeName(), Potion.field_76443_y},
+            {ModifierAttribute.P_RESISTANCE.getAttributeName(), Potion.resistance},
+            {ModifierAttribute.P_JUMP_BOOST.getAttributeName(), Potion.jump},
+            {ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName(), Potion.fireResistance}};
 
         for (Object[] entry : effects) {
             addPotionEffect(plr, (String) entry[0], duration, (Potion) entry[1]);

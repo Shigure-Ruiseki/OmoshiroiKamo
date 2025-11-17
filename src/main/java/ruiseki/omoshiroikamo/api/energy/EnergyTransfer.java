@@ -5,8 +5,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockpos.IBlockPos;
 import com.gtnewhorizon.gtnhlib.blockpos.IWorldReferent;
-
-import ruiseki.omoshiroikamo.common.util.EnergyUtils;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergySource;
 
 public class EnergyTransfer {
 
