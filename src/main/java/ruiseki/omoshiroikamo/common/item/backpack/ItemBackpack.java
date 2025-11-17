@@ -31,8 +31,7 @@ import ruiseki.omoshiroikamo.common.item.ItemBauble;
 import ruiseki.omoshiroikamo.common.item.upgrade.EnergyUpgrade;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
-public class ItemBackpack extends ItemBauble
-    implements IEnergyItem, IGuiHolder<PlayerInventoryGuiData>, IBaubleRender {
+public class ItemBackpack extends ItemBauble implements IEnergyItem, IGuiHolder<PlayerInventoryGuiData>, IBaubleRender {
 
     @SideOnly(Side.CLIENT)
     private static BackpackRenderer model;
@@ -150,6 +149,6 @@ public class ItemBackpack extends ItemBauble
 
     @Override
     public String[] getBaubleTypes(ItemStack itemstack) {
-        return new String[]{"body"};
+        return new String[] { "body" };
     }
 }

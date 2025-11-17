@@ -12,13 +12,13 @@ import cofh.api.energy.IEnergyReceiver;
 import ruiseki.omoshiroikamo.api.energy.capability.EnergyIO;
 import ruiseki.omoshiroikamo.api.energy.capability.EnergySink;
 import ruiseki.omoshiroikamo.api.energy.capability.EnergySource;
-import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergyIO;
-import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySink;
-import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySource;
 import ruiseki.omoshiroikamo.api.energy.capability.WrappedEnergyIO;
 import ruiseki.omoshiroikamo.api.energy.capability.cofh.CoFHEnergyHandler;
 import ruiseki.omoshiroikamo.api.energy.capability.cofh.CoFHEnergyProvider;
 import ruiseki.omoshiroikamo.api.energy.capability.cofh.CoFHEnergyReceiver;
+import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergyIO;
+import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySink;
+import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySource;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
 public class EnergyUtils {
@@ -37,7 +37,7 @@ public class EnergyUtils {
     }
 
     public static EnergySource getEnergySource(Object obj, ForgeDirection side,
-                                               @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
+        @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
         if ((usage & FOR_EXTRACTS) == 0) {
             return null;
         }
@@ -74,7 +74,7 @@ public class EnergyUtils {
     }
 
     public static EnergySink getEnergySink(Object obj, ForgeDirection side,
-                                           @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
+        @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
         if ((usage & FOR_INSERTS) == 0) {
             return null;
         }
@@ -111,7 +111,7 @@ public class EnergyUtils {
     }
 
     public static EnergyIO getEnergyIO(Object obj, ForgeDirection side,
-                                       @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
+        @MagicConstant(flagsFromClass = EnergyUtils.class) int usage) {
         if (obj instanceof EnergyIO energyIO) {
             return energyIO;
         }

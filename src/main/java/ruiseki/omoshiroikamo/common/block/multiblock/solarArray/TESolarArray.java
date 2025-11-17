@@ -19,9 +19,9 @@ import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import cofh.api.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.api.energy.capability.EnergySource;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySource;
+import ruiseki.omoshiroikamo.api.energy.capability.EnergySource;
 import ruiseki.omoshiroikamo.api.energy.capability.ok.OKEnergySource;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;

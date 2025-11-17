@@ -1,12 +1,11 @@
 package ruiseki.omoshiroikamo.api.energy;
 
-import cpw.mods.fml.common.Optional;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.Optional;
 
-@Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyReceiver",
-    striprefs = true)
+@Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyReceiver", striprefs = true)
 public interface IEnergySink extends IEnergyReceiver, IEnergyTile {
 
     @Override
