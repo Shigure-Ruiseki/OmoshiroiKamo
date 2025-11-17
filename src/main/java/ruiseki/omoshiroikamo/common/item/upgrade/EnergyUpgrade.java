@@ -72,12 +72,7 @@ public class EnergyUpgrade extends AbstractUpgrade {
     @Getter
     protected int energy;
 
-    @Setter
-    @Getter
     protected int maxInRF;
-
-    @Setter
-    @Getter
     protected int maxOutRF;
 
     public EnergyUpgrade(String name, int levels, ItemStack upgradeItem, int capcity, int maxReceiveIO) {
