@@ -35,7 +35,7 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 public class ItemCowSpawnEgg extends ItemOK {
 
     @SideOnly(Side.CLIENT)
-    protected IIcon baseIcon, overlayIcon;
+    protected IIcon baseIcon;
 
     public ItemCowSpawnEgg() {
         super(ModObject.itemCowSpawnEgg);
@@ -49,35 +49,22 @@ public class ItemCowSpawnEgg extends ItemOK {
         }
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-
     @SideOnly(Side.CLIENT)
-    @Override
-    public int getRenderPasses(int metadata) {
-        return 2;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
     public IIcon getIcon(ItemStack stack, int pass) {
-        return pass == 0 ? baseIcon : overlayIcon;
+        return baseIcon;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage) {
         return baseIcon;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "spawn_egg");
-        overlayIcon = register.registerIcon(LibResources.PREFIX_MOD + "spawn_egg_overlay");
+        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "cow_displayer");
     }
 
     @Override
@@ -89,7 +76,7 @@ public class ItemCowSpawnEgg extends ItemOK {
     @Override
     public int getColorFromItemStack(ItemStack stack, int renderPass) {
         CowsRegistryItem cowsRegistryItem = CowsRegistry.INSTANCE.getByType(stack.getItemDamage());
-        return renderPass == 0 ? cowsRegistryItem.getBgColor() : cowsRegistryItem.getFgColor();
+        return cowsRegistryItem.getBgColor();
     }
 
     @Override
