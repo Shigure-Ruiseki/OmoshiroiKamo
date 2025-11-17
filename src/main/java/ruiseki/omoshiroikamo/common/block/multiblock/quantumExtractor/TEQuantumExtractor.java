@@ -19,9 +19,9 @@ import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
-import cofh.api.energy.EnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.IFocusableRegistry;
@@ -406,13 +406,6 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-        int spaceAvailable = getMaxEnergyStored() - getEnergyStored();
-        int energyToReceive = Math.min(spaceAvailable, maxReceive);
-
-        if (!simulate) {
-            setEnergyStored(getEnergyStored() + energyToReceive);
-        }
-
-        return energyToReceive;
+        return energyStorage.receiveEnergy(maxReceive, simulate);
     }
 }

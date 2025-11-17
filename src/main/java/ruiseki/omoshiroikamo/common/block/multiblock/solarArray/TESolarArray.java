@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
-import cofh.api.energy.EnergyStorage;
+import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySource;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -174,32 +174,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
 
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-        int extracted = Math.min(maxExtract, getEnergyStored());
-        if (!simulate) {
-            setEnergyStored(getEnergyStored() - extracted);
-        }
-        return extracted;
-    }
-
-    @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        return true;
-    }
-
-    @Override
-    public int getEnergyStored() {
-        return energyStorage.getEnergyStored();
-    }
-
-    @Override
-    public void setEnergyStored(int storedEnergy) {
-        int storedEnergyRF = Math.min(storedEnergy, getMaxEnergyStored());
-        energyStorage.setEnergyStored(storedEnergyRF);
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return energyStorage.getMaxEnergyStored();
+        return energyStorage.extractEnergy(maxExtract, simulate);
     }
 
     @Override

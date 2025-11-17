@@ -14,6 +14,7 @@ public enum LibMods {
     Botania("Botania"),
     BuildCraftEnergy("BuildCraft|Energy"),
     CoFHLib("CoFHLib"),
+    CoFHCore("CoFHCore"),
     CraftingTweaks("craftingtweaks"),
     CraftTweaker("MineTweaker3"),
     DraconicEvolution("DraconicEvolution"),

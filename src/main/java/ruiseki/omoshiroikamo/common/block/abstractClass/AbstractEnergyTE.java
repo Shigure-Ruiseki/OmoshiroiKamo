@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.common.block.abstractClass;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
+import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 import ruiseki.omoshiroikamo.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
@@ -41,8 +41,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
 
     @Override
     public void setEnergyStored(int storedEnergy) {
-        int storedEnergyRF = Math.min(storedEnergy, getMaxEnergyStored());
-        energyStorage.setEnergyStored(storedEnergyRF);
+        energyStorage.setEnergyStored(storedEnergy);
     }
 
     @Override

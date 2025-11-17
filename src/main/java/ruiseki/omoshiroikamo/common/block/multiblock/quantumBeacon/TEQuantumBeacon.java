@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
-import cofh.api.energy.EnergyStorage;
+import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
@@ -275,14 +275,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
 
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-        int spaceAvailable = getMaxEnergyStored() - getEnergyStored();
-        int energyToReceive = Math.min(spaceAvailable, maxReceive);
-
-        if (!simulate) {
-            setEnergyStored(getEnergyStored() + energyToReceive);
-        }
-
-        return energyToReceive;
+        return energyStorage.receiveEnergy(maxReceive, simulate);
     }
 
 }
