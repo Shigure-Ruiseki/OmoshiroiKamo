@@ -12,14 +12,13 @@ public interface IEnergySink extends IEnergyReceiver, IEnergyTile {
 
     @Override
     @Optional.Method(modid = "CoFHLib")
-    default int getEnergyStored(ForgeDirection forgeDirection) {
+    default int getEnergyStored(ForgeDirection side) {
         return getEnergyStored();
     }
 
     @Override
     @Optional.Method(modid = "CoFHLib")
-    default int getMaxEnergyStored(ForgeDirection forgeDirection) {
+    default int getMaxEnergyStored(ForgeDirection side) {
         return getMaxEnergyStored();
     }
-
 }

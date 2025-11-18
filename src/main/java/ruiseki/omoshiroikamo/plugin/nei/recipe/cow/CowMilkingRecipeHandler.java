@@ -79,7 +79,7 @@ public class CowMilkingRecipeHandler extends RecipeHandlerBase {
     @Override
     public void drawBackground(int recipe) {
         super.drawBackground(recipe);
-        drawItemSlot(53, 26);
+        drawItemSlot(52, 26);
         drawFluidSlot(98, 26);
     }
 
@@ -98,7 +98,7 @@ public class CowMilkingRecipeHandler extends RecipeHandlerBase {
 
         @Override
         public PositionedStack getIngredient() {
-            return new PositionedStack(ModItems.COW_SPAWN_EGG.newItemStack(1, cow.getId()), 53, 26);
+            return new PositionedStack(ModItems.COW_SPAWN_EGG.newItemStack(1, cow.getId()), 53, 27);
         }
 
         @Override

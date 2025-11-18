@@ -60,6 +60,11 @@ public class ModCows {
 
     private static void registerModAddons() {
         addModAddon(new BaseCows());
+        addModAddon(new TinkersCows());
+        addModAddon(new EnderIOCows());
+        addModAddon(new BuildCraftCows());
+        addModAddon(new BigReactorsCows());
+        addModAddon(new MineFactoryReloadedCows());
     }
 
     private static List<BiomeGenBase> getAllSpawnBiomes() {
