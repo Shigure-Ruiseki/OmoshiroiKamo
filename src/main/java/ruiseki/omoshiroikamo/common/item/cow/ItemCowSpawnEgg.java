@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -22,7 +21,7 @@ import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.block.cow.TileStall;
+import ruiseki.omoshiroikamo.common.block.cow.TEStall;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
@@ -84,12 +83,6 @@ public class ItemCowSpawnEgg extends ItemOK {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (te instanceof TileStall) {
-                return onItemUseOnTile((TileStall) te, stack, player, world);
-            }
-
             BlockPos pos = correctPosition(new BlockPos(x, y, z, world), side);
             activate(stack, world, pos);
             if (!player.capabilities.isCreativeMode) {
@@ -139,7 +132,7 @@ public class ItemCowSpawnEgg extends ItemOK {
         worldIn.spawnEntityInWorld(entity);
     }
 
-    public boolean onItemUseOnTile(TileStall tile, ItemStack stack, EntityPlayer player, World world) {
+    public boolean onItemUseOnTile(TEStall tile, ItemStack stack, EntityPlayer player, World world) {
         if (tile == null || world.isRemote) {
             return false;
         }

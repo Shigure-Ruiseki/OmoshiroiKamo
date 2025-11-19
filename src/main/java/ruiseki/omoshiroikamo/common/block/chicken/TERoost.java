@@ -34,7 +34,6 @@ public class TERoost extends TERoostBase {
         DataChicken chicken = getChickenData(0);
         if (chicken != null) {
             putStackInOutput(chicken.createLayStack());
-
         }
     }
 

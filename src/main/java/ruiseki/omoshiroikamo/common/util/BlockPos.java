@@ -87,6 +87,10 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         return getWorld().getBiomeGenForCoords(getX(), getZ());
     }
 
+    public void markBlockForUpdate() {
+        getWorld().markBlockForUpdate(getX(), getY(), getZ());
+    }
+
     public boolean equals(int x, int y, int z) {
         return x == getX() && y == getY() && z == getZ();
     }

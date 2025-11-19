@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.common.block.cow;
 
-import static ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow.PROGRESS_NBT;
-
 import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,32 +20,41 @@ import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 
-public class TileStall extends AbstractTE implements IFluidHandler, IProgressTile {
+public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile {
 
     public static final int amount = FluidContainerRegistry.BUCKET_VOLUME * 10;
 
-    public SmartTank tank = new SmartTank(amount);
+    public final SmartTank tank = new SmartTank(amount);
 
     private int progress;
+    @Getter
     private int maxProgress;
+
+    private float progressPercent;
 
     @Getter
     private int cowType;
     private int cowGain;
     private int cowGrowth;
     private boolean cowIsChild;
+    @Getter
     private NBTTagCompound cowNBT;
-    private final Random rand = new Random();
 
-    public TileStall() {}
+    private final Random rand = new Random();
+    private CowsRegistryItem cachedCowDesc;
 
     public void setCow(EntityCowsCow cow) {
         cowNBT = new NBTTagCompound();
         cow.writeEntityToNBT(cowNBT);
+
         cowType = cow.getType();
         cowGain = cow.getGain();
         cowGrowth = cow.getGrowth();
         cowIsChild = cow.isChild();
+
+        cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
+        getLocation().markBlockForUpdate();
+        resetMaxProgress();
     }
 
     public boolean hasCow() {
@@ -59,71 +66,108 @@ public class TileStall extends AbstractTE implements IFluidHandler, IProgressTil
             return null;
         }
         EntityCowsCow cow = new EntityCowsCow(world);
-        cowNBT.setInteger(PROGRESS_NBT, maxProgress);
         cow.readEntityFromNBT(cowNBT);
         return cow;
     }
 
-    private CowsRegistryItem getCowDesc() {
-        return CowsRegistry.INSTANCE.getByType(cowType);
+    public void removeCow() {
+        cowNBT = null;
+        cowType = 0;
+        cowGain = 0;
+        cowGrowth = 0;
+        cowIsChild = false;
+
+        progress = 0;
+        maxProgress = 0;
+        progressPercent = 0;
+
+        cachedCowDesc = null;
+        getLocation().markBlockForUpdate();
     }
 
     @Override
     public float getProgress() {
-        return ((float) progress / (float) maxProgress) * 100f;
+        return progressPercent;
     }
 
     @Override
     public void setProgress(float percent) {
-        progress = (int) ((percent / 100f) * maxProgress);
+        progressPercent = percent;
     }
 
     @Override
     public boolean isActive() {
-        return getProgress() > 0;
+        return progress > 0 && hasCow();
+    }
+
+    private void resetMaxProgress() {
+        if (!hasCow() || cachedCowDesc == null) {
+            return;
+        }
+
+        int min = cachedCowDesc.getMinTime();
+        int max = cachedCowDesc.getMaxTime();
+        int range = max - min;
+
+        int baseTime = min + (range > 0 ? rand.nextInt(range) : 0);
+
+        float growthFactor = (10f - cowGrowth + 1f) / 10f;
+        maxProgress = Math.max(1, (int) (baseTime * growthFactor) * 2);
+
+        progress = 0;
+        progressPercent = 0;
     }
 
     @Override
     protected boolean processTasks(boolean redstoneCheckPassed) {
-        if (!this.worldObj.isRemote && hasCow() && !cowIsChild) {
-            progress++;
-            if (progress >= maxProgress) {
-                CowsRegistryItem cowDesc = getCowDesc();
-                FluidStack fluid = cowDesc.createMilkFluid();
-                int gain = cowGain;
-
-                if (fluid != null) {
-                    if (gain >= 5) {
-                        fluid.amount += cowDesc.createMilkFluid().amount;
-                    }
-                    if (gain >= 10) {
-                        fluid.amount += cowDesc.createMilkFluid().amount;
-                    }
-
-                    int filled = tank.fill(fluid, true);
-                    if (filled >= fluid.amount) {
-                        resetMaxProgress();
-                    }
-                }
-            }
+        if (worldObj.isRemote || !hasCow() || cowIsChild) {
+            return false;
         }
+
+        if (maxProgress <= 0) {
+            resetMaxProgress();
+            return false;
+        }
+
+        progress++;
+        progressPercent = (progress * 100f) / maxProgress;
+
+        if (progress < maxProgress) {
+            return false;
+        }
+
+        produceMilk();
+
         return false;
     }
 
-    private void resetMaxProgress() {
-        if (!hasCow()) {
+    private void produceMilk() {
+        if (cachedCowDesc == null) {
             return;
         }
 
-        CowsRegistryItem cowDesc = getCowDesc();
-        int baseTime = cowDesc.getMaxTime() + rand.nextInt(cowDesc.getMaxTime() - cowDesc.getMinTime());
-        maxProgress = Math.max(1, (int) ((baseTime * (10f - cowGrowth + 1f)) / 10f) * 2);
-        progress = 0;
+        FluidStack fluid = cachedCowDesc.createMilkFluid();
+        if (fluid == null) {
+            resetMaxProgress();
+            return;
+        }
+
+        if (cowGain >= 10) {
+            fluid.amount *= 3;
+        } else if (cowGain >= 5) {
+            fluid.amount *= 2;
+        }
+
+        int filled = tank.fill(fluid, true);
+
+        if (filled >= fluid.amount) {
+            resetMaxProgress();
+        }
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-        if (!canDrain(from, resource.getFluid())) {
+        if (resource == null || !tank.canDrainFluidType(resource.getFluid())) {
             return null;
         }
         return tank.drain(resource, doDrain);
@@ -157,13 +201,16 @@ public class TileStall extends AbstractTE implements IFluidHandler, IProgressTil
     @Override
     protected void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
+
         tank.writeCommon("tank", root);
+
         root.setInteger("progress", progress);
         root.setInteger("maxProgress", maxProgress);
         root.setInteger("cowType", cowType);
         root.setInteger("cowGain", cowGain);
         root.setInteger("cowGrowth", cowGrowth);
         root.setBoolean("cowIsChild", cowIsChild);
+
         if (cowNBT != null) {
             root.setTag("cowNBT", cowNBT);
         }
@@ -172,15 +219,19 @@ public class TileStall extends AbstractTE implements IFluidHandler, IProgressTil
     @Override
     protected void readCommon(NBTTagCompound root) {
         super.readCommon(root);
+
         tank.readCommon("tank", root);
+
         progress = root.getInteger("progress");
         maxProgress = root.getInteger("maxProgress");
         cowType = root.getInteger("cowType");
         cowGain = root.getInteger("cowGain");
         cowGrowth = root.getInteger("cowGrowth");
         cowIsChild = root.getBoolean("cowIsChild");
+
         if (root.hasKey("cowNBT")) {
             cowNBT = root.getCompoundTag("cowNBT");
+            cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
         }
     }
 

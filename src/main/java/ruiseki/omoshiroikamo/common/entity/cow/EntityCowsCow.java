@@ -24,6 +24,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +64,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
     public void setType(int type) {
         dataWatcher.updateObject(20, type);
         isImmuneToFire = getCowDescription().isImmuneToFire();
+        resetTimeUntilNextMilk();
     }
 
     @Override
@@ -186,7 +188,8 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
             return false;
         }
 
-        if (!isChild() && milkTank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
+        if (!isChild() && milkTank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME
+            && stack.getItem() instanceof IFluidContainerItem) {
             FluidStack milkToDrain = milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
             if (milkToDrain.amount == 1000) {
                 ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(milkToDrain, stack);

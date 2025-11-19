@@ -213,8 +213,7 @@ item.stabilizedEnderPear.name=Stabilized Ender Pearl
 item.photovoltaicCell.name=Photovoltaic Cell
 item.assembler.name=Assembler
 
-item.hammer.name=Hammer
-
+item.cowHalter.name=Cow Halter
 item.analyzer.name=Analyzer
 item.solidXp.name=Solid Experience
 
@@ -326,6 +325,7 @@ tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
 tile.roost.name=Roost
 tile.roostCollector.name=Roost Collector
 tile.breeder.name=Chicken Breeder
+tile.stall.name=Stall
 
 #ENTITY
 

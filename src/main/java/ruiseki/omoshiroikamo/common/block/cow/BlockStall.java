@@ -20,10 +20,10 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
-public class BlockStall extends AbstractBlock<TileStall> {
+public class BlockStall extends AbstractBlock<TEStall> {
 
     protected BlockStall() {
-        super(ModObject.blockStall, TileStall.class, Material.rock);
+        super(ModObject.blockStall, TEStall.class, Material.rock);
     }
 
     public static BlockStall create() {
@@ -56,13 +56,13 @@ public class BlockStall extends AbstractBlock<TileStall> {
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        return new TileStall();
+        return new TEStall();
     }
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof TileStall te) {
+        if (tileEntity instanceof TEStall te) {
             spawnCow(world, x, y, z);
         }
         super.breakBlock(world, x, y, z, block, meta);
@@ -70,18 +70,17 @@ public class BlockStall extends AbstractBlock<TileStall> {
 
     private void spawnCow(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (!(tileEntity instanceof TileStall tileStall)) {
+        if (!(tileEntity instanceof TEStall TEStall)) {
             return;
         }
 
-        if (!tileStall.hasCow()) {
+        if (!TEStall.hasCow()) {
             return;
         }
 
-        EntityCowsCow cow = tileStall.getCow(world);
+        EntityCowsCow cow = TEStall.getCow(world);
         cow.setPosition(x + 0.5, y, z + 0.5);
-        cow.onSpawnWithEgg(null);
-        cow.setType(tileStall.getCowType());
+        cow.setType(TEStall.getCowType());
         world.spawnEntityInWorld(cow);
     }
 
@@ -93,9 +92,9 @@ public class BlockStall extends AbstractBlock<TileStall> {
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof TileStall tileStall) {
+        if (tileEntity instanceof TEStall TEStall) {
 
-            float progress = tileStall.getProgress();
+            float progress = TEStall.getProgress();
 
             if (progress > 0) {
                 float percent = Math.max(0f, progress);
