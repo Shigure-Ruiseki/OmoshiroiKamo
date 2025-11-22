@@ -389,12 +389,10 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     }
 
     @Override
-    public void openInventory() {
-    }
+    public void openInventory() {}
 
     @Override
-    public void closeInventory() {
-    }
+    public void closeInventory() {}
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
