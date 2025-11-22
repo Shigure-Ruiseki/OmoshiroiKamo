@@ -28,10 +28,10 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
 
     @SideOnly(Side.CLIENT)
     private void renderBeam(TEQuantumExtractor miner, double x, double y, double z, float partialTicks) {
-        float f1 = miner.getBeamProgress();
+        float beamProgress = miner.getBeamProgress();
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
 
-        if (f1 > 0.0F) {
+        if (beamProgress > 0.0F) {
             Tessellator tessellator = Tessellator.instance;
             this.bindTexture(BEAM_TEXTURE);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, 10497.0F);
@@ -58,7 +58,7 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
                 { 0.5 + Math.cos(d3 + 3.9269908169872414D) * d5, 0.5 + Math.sin(d3 + 3.9269908169872414D) * d5 },
                 { 0.5 + Math.cos(d3 + 5.497787143782138D) * d5, 0.5 + Math.sin(d3 + 5.497787143782138D) * d5 } };
 
-            double beamHeight = 256.0 * f1; // chiếu xuống
+            double beamHeight = 256.0 * beamProgress;
             float u1 = 0, u2 = 1;
             float v1 = 0, v2 = (float) beamHeight;
             double d28 = -1.0F + f3;
@@ -80,7 +80,7 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
             tessellator.setColorRGBA(255, 255, 255, 32);
 
             double[][] innerCorners = { { 0.2, 0.2 }, { 0.8, 0.2 }, { 0.8, 0.8 }, { 0.2, 0.8 } };
-            double beamHeight2 = 256.0 * f1;
+            double beamHeight2 = 256.0 * beamProgress;
             double d24 = -1.0F + f3;
             double d26 = beamHeight2 + d24;
 
