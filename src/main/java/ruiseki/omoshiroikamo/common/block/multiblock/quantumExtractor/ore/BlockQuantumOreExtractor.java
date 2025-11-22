@@ -34,7 +34,7 @@ public class BlockQuantumOreExtractor extends AbstractMBBlock<TEQuantumExtractor
     IIcon cont_tier;
 
     protected BlockQuantumOreExtractor() {
-        super(ModObject.blockQuantumOreExtractor, TEQuantumExtractor.class);
+        super(ModObject.blockQuantumOreExtractor.unlocalisedName, TEQuantumExtractor.class);
         this.setLightLevel(0.5F);
     }
 

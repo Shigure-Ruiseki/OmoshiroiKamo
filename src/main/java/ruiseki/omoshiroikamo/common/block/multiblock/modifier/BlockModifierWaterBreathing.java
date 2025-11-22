@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierWaterBreathing extends BlockModifier {
 
     protected BlockModifierWaterBreathing() {
-        super(ModObject.blockModifierWaterBreathing, "water_breathing");
+        super(ModObject.blockModifierWaterBreathing.unlocalisedName, "water_breathing");
         setTextureName("modifier_water_breathing");
     }
 

@@ -1,0 +1,6 @@
+{
+  "parent": "omoshiroikamo:blocks/backpackLeather",
+  "textures": {
+    "clips": "omoshiroikamo:block/iron_clips"
+  }
+}

@@ -14,22 +14,21 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
 public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
 
-    protected AbstractBlock(ModObject mo, Class<T> teClass, Material mat) {
-        super(mo, teClass, mat);
+    protected AbstractBlock(String name, Class<T> teClass, Material mat) {
+        super(name, teClass, mat);
         setHardness(2.0F);
         setStepSound(soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
     }
 
-    protected AbstractBlock(ModObject mo, Class<T> teClass) {
-        this(mo, teClass, Material.iron);
+    protected AbstractBlock(String name, Class<T> teClass) {
+        this(name, teClass, Material.iron);
     }
 
     @Override
@@ -75,8 +74,8 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
         super.onBlockPlacedBy(world, x, y, z, player, stack);
         int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
-        te.setFacing(getFacingForHeading(heading));
         te.readFromItemStack(stack);
+        te.setFacing(getFacingForHeading(heading));
         if (world.isRemote) {
             return;
         }

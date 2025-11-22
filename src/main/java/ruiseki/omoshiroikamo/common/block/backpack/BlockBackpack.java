@@ -1,0 +1,169 @@
+package ruiseki.omoshiroikamo.common.block.backpack;
+
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
+import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import lombok.Getter;
+import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
+import ruiseki.omoshiroikamo.common.block.ItemBlockBauble;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+
+public class BlockBackpack extends AbstractBlock<TEBackpack> {
+
+    @Getter
+    private final int slots;
+    @Getter
+    private final int upgradeSlots;
+    IIcon cloth, border, leatherClips, copperClips, ironClips, goldClips, diamondClips, obsidianClips;
+
+    protected BlockBackpack(String name, int slots, int upgradeSlots) {
+        super(name, TEBackpack.class, Material.cloth);
+        setStepSound(soundTypeCloth);
+        setHardness(0f);
+        this.slots = slots;
+        this.upgradeSlots = upgradeSlots;
+    }
+
+    public static BlockBackpack create(String name, int slots, int upgradeSlots) {
+        return new BlockBackpack(name, slots, upgradeSlots);
+    }
+
+    @Override
+    public int getRenderType() {
+        return JsonModelISBRH.JSON_ISBRH_ID;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister reg) {
+        cloth = reg.registerIcon(LibResources.PREFIX_MOD + "backpack_cloth");
+        border = reg.registerIcon(LibResources.PREFIX_MOD + "backpack_border");
+        leatherClips = reg.registerIcon(LibResources.PREFIX_MOD + "leather_clips");
+        copperClips = reg.registerIcon(LibResources.PREFIX_MOD + "copper_clips");
+        ironClips = reg.registerIcon(LibResources.PREFIX_MOD + "iron_clips");
+        goldClips = reg.registerIcon(LibResources.PREFIX_MOD + "gold_clips");
+        diamondClips = reg.registerIcon(LibResources.PREFIX_MOD + "diamond_clips");
+        obsidianClips = reg.registerIcon(LibResources.PREFIX_MOD + "obsidian_clips");
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, player, stack);
+        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
+        world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
+    }
+
+    @Override
+    public int damageDropped(int meta) {
+        return 0;
+    }
+
+    @Override
+    public void init() {
+        GameRegistry.registerBlock(this, ItemBackpack.class, name);
+        GameRegistry.registerTileEntity(teClass, name + "TileEntity");
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int metadata) {
+        return new TEBackpack(slots, upgradeSlots);
+    }
+
+    public static class ItemBackpack extends ItemBlockBauble implements IGuiHolder<PlayerInventoryGuiData> {
+
+        private int slots = 27;
+        private int upgradeSlots = 1;
+
+        public ItemBackpack(Block block) {
+            super(block, block);
+            if (block instanceof BlockBackpack backpack) {
+                this.slots = backpack.getSlots();
+                this.upgradeSlots = backpack.upgradeSlots;
+            }
+        }
+
+        @Override
+        public String[] getBaubleTypes(ItemStack itemstack) {
+            return new String[] { "body" };
+        }
+
+        @Override
+        public boolean hasCustomEntity(ItemStack stack) {
+            return true;
+        }
+
+        @Override
+        public Entity createEntity(World world, Entity location, ItemStack stack) {
+            return new EntityImmortalItem(world, location, stack);
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+            super.addInformation(stack, player, list, flag);
+            TooltipUtils builder = TooltipUtils.builder();
+            builder.add(
+                ItemNBTUtils.getNBT(stack)
+                    .toString());
+            list.addAll(builder.build());
+        }
+
+        @Override
+        public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (player.isSneaking() && te == null) {
+                return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
+            }
+            if (!world.isRemote) {
+                GuiFactories.playerInventory()
+                    .openFromMainHand(player);
+                return true;
+            }
+
+            return false;
+        }
+
+        @Override
+        public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+            if (!world.isRemote) {
+                GuiFactories.playerInventory()
+                    .openFromMainHand(player);
+            }
+            return super.onItemRightClick(stack, world, player);
+        }
+
+        @Override
+        public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
+            ItemStack stack = data.getUsedItemStack();
+            BackpackHandler cap = new BackpackHandler(stack, null, slots, upgradeSlots);
+            return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
+        }
+    }
+}

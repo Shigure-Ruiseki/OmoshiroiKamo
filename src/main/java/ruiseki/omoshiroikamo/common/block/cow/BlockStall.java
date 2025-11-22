@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 public class BlockStall extends AbstractBlock<TEStall> {
 
     protected BlockStall() {
-        super(ModObject.blockStall, TEStall.class, Material.rock);
+        super(ModObject.blockStall.unlocalisedName, TEStall.class, Material.rock);
     }
 
     public static BlockStall create() {
@@ -49,9 +49,12 @@ public class BlockStall extends AbstractBlock<TEStall> {
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
-        if (te != null) {
-            world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
-        }
+        world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
+    }
+
+    @Override
+    public int damageDropped(int meta) {
+        return 0;
     }
 
     @Override

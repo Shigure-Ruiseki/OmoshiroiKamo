@@ -19,14 +19,13 @@ import net.minecraft.world.World;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockOK extends Block {
 
-    protected final @Nullable Class<? extends TileEntityOK> teClass;
+    protected final Class<? extends TileEntityOK> teClass;
     protected final String name;
 
     protected BlockOK(String name) {
@@ -41,23 +40,7 @@ public class BlockOK extends Block {
         this(name, teClass, new Material(MapColor.ironColor));
     }
 
-    public BlockOK(ModObject modObject) {
-        this(modObject, null, Material.iron);
-    }
-
-    public BlockOK(ModObject modObject, Material material) {
-        this(modObject, null, material);
-    }
-
-    public BlockOK(ModObject modObject, Class<? extends TileEntityOK> teClass) {
-        this(modObject, teClass, Material.iron);
-    }
-
-    public BlockOK(ModObject modObject, Class<? extends TileEntityOK> teClass, Material material) {
-        this(modObject.unlocalisedName, teClass, material);
-    }
-
-    protected BlockOK(String name, Class<? extends TileEntityOK> teClass, Material mat) {
+    protected BlockOK(String name, @Nullable Class<? extends TileEntityOK> teClass, Material mat) {
         super(mat);
         this.teClass = teClass;
         this.name = name;

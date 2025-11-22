@@ -14,11 +14,16 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import lombok.Getter;
+import lombok.Setter;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
+import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData> {
 
+    @Setter
+    @Getter
     public int facing;
 
     // Client sync monitoring
@@ -33,14 +38,6 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     protected boolean notifyNeighbours = false;
 
     public boolean isDirty = false;
-
-    public int getFacing() {
-        return facing;
-    }
-
-    public void setFacing(int facing) {
-        this.facing = facing;
-    }
 
     public ForgeDirection getFacingDir() {
         return ForgeDirection.getOrientation(facing);
@@ -150,11 +147,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         if (stack == null) {
             return;
         }
-        if (stack.stackTagCompound == null) {
-            stack.stackTagCompound = new NBTTagCompound();
-        }
-
-        NBTTagCompound root = stack.stackTagCompound;
+        NBTTagCompound root = ItemNBTUtils.getNBT(stack);
         writeCommon(root);
     }
 

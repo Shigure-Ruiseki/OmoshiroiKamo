@@ -16,6 +16,11 @@ public class BackpackConfig {
     @Config.Comment("Main Magnet Settings")
     public static final MagnetConfig magnetConfig = new MagnetConfig();
 
+    @Config.DefaultIntList({ 27, 36, 54, 81, 108, 120 })
+    public static int[] backpackSlots;
+    @Config.DefaultIntList({ 1, 1, 2, 3, 5, 7 })
+    public static int[] upgradeSlots;
+
     @Config.LangKey(LibResources.CONFIG + "feedingConfig")
     public static class FeedingConfig {
 

@@ -29,7 +29,7 @@ public class BlockStructureFrame extends BlockOK implements IMBBlock {
     private IIcon[] icons;
 
     protected BlockStructureFrame() {
-        super(ModObject.blockStructureFrame);
+        super(ModObject.blockStructureFrame.unlocalisedName);
     }
 
     public static BlockStructureFrame create() {

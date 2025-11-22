@@ -22,7 +22,7 @@ public class BlockSolarCell extends BlockOK {
     IIcon solar;
 
     protected BlockSolarCell() {
-        super(ModObject.blockSolarCell);
+        super(ModObject.blockSolarCell.unlocalisedName);
     }
 
     public static BlockSolarCell create() {

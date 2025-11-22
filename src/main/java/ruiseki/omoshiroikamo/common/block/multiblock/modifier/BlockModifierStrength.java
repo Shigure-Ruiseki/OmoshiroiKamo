@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierStrength extends BlockModifier {
 
     protected BlockModifierStrength() {
-        super(ModObject.blockModifierStrength, "strength");
+        super(ModObject.blockModifierStrength.unlocalisedName, "strength");
         setTextureName("modifier_strength");
     }
 

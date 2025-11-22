@@ -23,7 +23,7 @@ public class BlockLens extends BlockOK {
     IIcon lens_top, lens_top_2, lens_side, lens_side_2;
 
     protected BlockLens() {
-        super(ModObject.blockLens, Material.glass);
+        super(ModObject.blockLens.unlocalisedName, Material.glass);
     }
 
     public static BlockLens create() {

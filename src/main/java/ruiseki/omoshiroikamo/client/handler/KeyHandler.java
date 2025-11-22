@@ -13,6 +13,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
+import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBackpack;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -50,7 +51,8 @@ public class KeyHandler {
     private void handleOpenBackpack() {
         if (keyOpenBackpack.isPressed() && LibMods.Baubles.isLoaded()) {
             InventoryTypes.BAUBLES.visitAll(Platform.getClientPlayer(), (type, index, stack) -> {
-                if (stack != null && stack.getItem() instanceof ItemBackpack) {
+                if (stack != null && (stack.getItem() instanceof ItemBackpack
+                    || stack.getItem() instanceof BlockBackpack.ItemBackpack)) {
                     GuiFactories.playerInventory()
                         .openFromBaublesClient(index);
                     return true;

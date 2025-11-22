@@ -29,7 +29,7 @@ public class BlockQuantumBeacon extends AbstractMBBlock<TEQuantumBeacon> {
     IIcon cont_tier;
 
     protected BlockQuantumBeacon() {
-        super(ModObject.blockQuantumBeacon, TEQuantumBeacon.class);
+        super(ModObject.blockQuantumBeacon.unlocalisedName, TEQuantumBeacon.class);
         this.setLightLevel(0.2F);
     }
 

@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierPiezo extends BlockModifier {
 
     protected BlockModifierPiezo() {
-        super(ModObject.blockModifierPiezo, "piezo");
+        super(ModObject.blockModifierPiezo.unlocalisedName, "piezo");
         setTextureName("modifier_piezo");
     }
 

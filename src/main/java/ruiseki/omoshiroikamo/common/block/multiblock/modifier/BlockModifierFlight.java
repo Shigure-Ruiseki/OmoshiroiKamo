@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierFlight extends BlockModifier {
 
     protected BlockModifierFlight() {
-        super(ModObject.blockModifierFlight, "flight");
+        super(ModObject.blockModifierFlight.unlocalisedName, "flight");
         setTextureName("modifier_flight");
     }
 

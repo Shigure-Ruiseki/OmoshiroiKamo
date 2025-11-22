@@ -84,5 +84,17 @@ a rewritten backport of the modern Environmental Tech mod:
 
 ## License
 
-This mod is released under the MIT License, except for any assets (e.g. textures, models) used from other mods such as
-Sophisticated Backpacks, or Environmental Tech, which retain their original licenses and ownership.
+This mod is primarily released under the MIT License (see LICENSE file).
+
+### Third-party components
+
+Some parts of this mod (assets or code) are derived from other mods and retain
+their original licenses:
+
+- RetroSophisticated Backpacks (textures/models) — original license applies.
+- Any GPLv3 components used in this project remain under GPLv3 and must be
+  respected accordingly.
+
+You are free to use, modify, and distribute the MIT-licensed portions of this
+project, but must comply with the original licenses of the included third-party
+components.

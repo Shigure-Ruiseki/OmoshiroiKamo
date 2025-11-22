@@ -1,0 +1,10 @@
+{
+  "multipart": [
+    { "when": { "meta": 0 }, "apply": { "model": "omoshiroikamo:blocks/backpackLeather", "y": 0 } },
+    { "when": { "meta": 1 }, "apply": { "model": "omoshiroikamo:blocks/backpackLeather", "y": 0 } },
+    { "when": { "meta": 2 }, "apply": { "model": "omoshiroikamo:blocks/backpackLeather", "y": 180 } },
+    { "when": { "meta": 3 }, "apply": { "model": "omoshiroikamo:blocks/backpackLeather", "y": 0 } },
+    { "when": { "meta": 4 }, "apply": { "model": "omoshiroikamo:blocks/backpackLeather", "y": 270 } },
+    { "when": { "meta": 5 }, "apply": { "model": "omoshiroikamo:blocks/backpackLeather", "y": 90 } }
+  ]
+}

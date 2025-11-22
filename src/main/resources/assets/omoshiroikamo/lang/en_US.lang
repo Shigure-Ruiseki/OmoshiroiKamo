@@ -327,6 +327,12 @@ tile.roostCollector.name=Roost Collector
 tile.breeder.name=Chicken Breeder
 tile.stall.name=Stall
 
+tile.backpackLeather.name=Leather Backpack
+tile.backpackIron.name=Iron Backpack
+tile.backpackGold.name=Gold Backpack
+tile.backpackDiamond.name=Diamond Backpack
+tile.backpackObsidian.name=Obsidian Backpack
+
 #ENTITY
 
 entity.SmartChicken.name=Smart Chicken

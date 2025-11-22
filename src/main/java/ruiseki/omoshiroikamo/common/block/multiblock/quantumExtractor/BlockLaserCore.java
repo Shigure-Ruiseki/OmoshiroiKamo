@@ -22,7 +22,7 @@ public class BlockLaserCore extends BlockOK {
     IIcon laser_core;
 
     protected BlockLaserCore() {
-        super(ModObject.blockLaserCore);
+        super(ModObject.blockLaserCore.unlocalisedName);
     }
 
     public static BlockLaserCore create() {

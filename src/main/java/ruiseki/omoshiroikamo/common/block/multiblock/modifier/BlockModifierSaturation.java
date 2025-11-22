@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierSaturation extends BlockModifier {
 
     protected BlockModifierSaturation() {
-        super(ModObject.blockModifierSaturation, "saturation");
+        super(ModObject.blockModifierSaturation.unlocalisedName, "saturation");
         setTextureName("modifier_saturation");
     }
 

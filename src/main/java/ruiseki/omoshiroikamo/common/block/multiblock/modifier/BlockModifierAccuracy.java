@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierAccuracy extends BlockModifier {
 
     protected BlockModifierAccuracy() {
-        super(ModObject.blockModifierAccuracy, "accuracy");
+        super(ModObject.blockModifierAccuracy.unlocalisedName, "accuracy");
         setTextureName("modifier_accuracy");
     }
 

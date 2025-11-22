@@ -54,10 +54,6 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
         }
     }
 
-    public SlotDefinition getSlotDefinition() {
-        return slotDefinition;
-    }
-
     @Override
     protected boolean processTasks(boolean redstoneChecksPassed) {
         if (tanksDirty && shouldDoWorkThisTick(10)) {

@@ -13,15 +13,32 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class EntityImmortalItem extends EntityItemOK {
 
+    @Getter
     private boolean immortal = false;
+    @Setter
+    @Getter
     private boolean immuneToExplosions = false;
+    @Setter
+    @Getter
     private boolean immuneToCactus = false;
+    @Setter
+    @Getter
     private boolean immuneToLava = false;
+    @Setter
     private boolean immuneToFire = false;
+    @Setter
+    @Getter
     private boolean noDespawn = false;
+    @Setter
+    @Getter
     private boolean floatOnLava = false;
+    @Setter
+    @Getter
     private boolean preventVoidFall = false;
 
     public EntityImmortalItem(World world, Entity original, ItemStack stack) {
@@ -36,10 +53,6 @@ public class EntityImmortalItem extends EntityItemOK {
         applyImmortalFlags();
     }
 
-    public boolean isImmortal() {
-        return immortal;
-    }
-
     private void applyImmortalFlags() {
         this.isImmuneToFire = immortal;
         this.immuneToExplosions = immortal;
@@ -48,58 +61,6 @@ public class EntityImmortalItem extends EntityItemOK {
         this.noDespawn = immortal;
         this.floatOnLava = immortal;
         this.preventVoidFall = immortal;
-    }
-
-    public void setImmuneToExplosions(boolean val) {
-        this.immuneToExplosions = val;
-    }
-
-    public boolean isImmuneToExplosions() {
-        return immuneToExplosions;
-    }
-
-    public void setImmuneToCactus(boolean val) {
-        this.immuneToCactus = val;
-    }
-
-    public boolean isImmuneToCactus() {
-        return immuneToCactus;
-    }
-
-    public void setImmuneToLava(boolean val) {
-        this.immuneToLava = val;
-    }
-
-    public boolean isImmuneToLava() {
-        return immuneToLava;
-    }
-
-    public void setImmuneToFire(boolean val) {
-        this.isImmuneToFire = val;
-    }
-
-    public void setNoDespawn(boolean val) {
-        this.noDespawn = val;
-    }
-
-    public boolean isNoDespawn() {
-        return noDespawn;
-    }
-
-    public void setFloatOnLava(boolean val) {
-        this.floatOnLava = val;
-    }
-
-    public boolean doesFloatOnLava() {
-        return floatOnLava;
-    }
-
-    public void setPreventVoidFall(boolean val) {
-        this.preventVoidFall = val;
-    }
-
-    public boolean doesPreventVoidFall() {
-        return preventVoidFall;
     }
 
     @Override

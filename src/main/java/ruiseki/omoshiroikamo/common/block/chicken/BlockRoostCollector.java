@@ -24,7 +24,7 @@ public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
     IIcon side, face;
 
     protected BlockRoostCollector() {
-        super(ModObject.blockRoostCollector, TERoostCollector.class, Material.wood);
+        super(ModObject.blockRoostCollector.unlocalisedName, TERoostCollector.class, Material.wood);
     }
 
     public static BlockRoostCollector create() {

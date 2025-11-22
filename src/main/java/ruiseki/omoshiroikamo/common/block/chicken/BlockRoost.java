@@ -30,7 +30,7 @@ public class BlockRoost extends AbstractBlock<TERoost> {
     public IIcon wood, front, hay_side, hay;
 
     protected BlockRoost() {
-        super(ModObject.blockRoost, TERoost.class, Material.wood);
+        super(ModObject.blockRoost.unlocalisedName, TERoost.class, Material.wood);
     }
 
     public static BlockRoost create() {
@@ -70,6 +70,11 @@ public class BlockRoost extends AbstractBlock<TERoost> {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
         world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
+    }
+
+    @Override
+    public int damageDropped(int meta) {
+        return 0;
     }
 
     @Override

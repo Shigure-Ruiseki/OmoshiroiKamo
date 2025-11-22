@@ -19,3 +19,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+------------------------------------------------------------
+Notes on third-party components:
+
+- RetroSophisticated Backpacks assets: original license retained by the authors.
+- Any code/assets under GPLv3 or other licenses retain their original licenses.
+  These parts are NOT MIT-licensed and must comply with their respective terms.

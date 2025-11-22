@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierRegeneration extends BlockModifier {
 
     protected BlockModifierRegeneration() {
-        super(ModObject.blockModifierRegeneration, "regen");
+        super(ModObject.blockModifierRegeneration.unlocalisedName, "regen");
         setTextureName("modifier_regen");
     }
 

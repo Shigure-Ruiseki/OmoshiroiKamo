@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierHaste extends BlockModifier {
 
     protected BlockModifierHaste() {
-        super(ModObject.blockModifierHaste, "haste");
+        super(ModObject.blockModifierHaste.unlocalisedName, "haste");
         setTextureName("modifier_haste");
     }
 

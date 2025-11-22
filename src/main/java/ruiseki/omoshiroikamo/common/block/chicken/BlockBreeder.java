@@ -29,7 +29,7 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
     IIcon side, floor, top;
 
     protected BlockBreeder() {
-        super(ModObject.blockBreeder, TEBreeder.class, Material.wood);
+        super(ModObject.blockBreeder.unlocalisedName, TEBreeder.class, Material.wood);
         this.setTickRandomly(true);
     }
 

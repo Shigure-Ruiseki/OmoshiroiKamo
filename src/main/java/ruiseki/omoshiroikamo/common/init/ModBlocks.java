@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.init;
 
+import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useChicken;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useCow;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
+import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
@@ -42,12 +44,14 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 
 public enum ModBlocks {
 
-    BLOCK_MICA(useEnvironmentalTech, new BlockOK(ModObject.blockMica, Material.rock).setTextureName("mica")),
+    BLOCK_MICA(useEnvironmentalTech,
+        new BlockOK(ModObject.blockMica.unlocalisedName, Material.rock).setTextureName("mica")),
     BLOCK_HARDENED_STONE(useEnvironmentalTech,
-        new BlockOK(ModObject.blockHardenedStone, Material.rock).setTextureName("hardened_stone")),
+        new BlockOK(ModObject.blockHardenedStone.unlocalisedName, Material.rock).setTextureName("hardened_stone")),
     BLOCK_ALABASTER(useEnvironmentalTech,
-        new BlockOK(ModObject.blockAlabaster, Material.rock).setTextureName("alabaster")),
-    BLOCK_BASALT(useEnvironmentalTech, new BlockOK(ModObject.blockBasalt, Material.rock).setTextureName("basalt")),
+        new BlockOK(ModObject.blockAlabaster.unlocalisedName, Material.rock).setTextureName("alabaster")),
+    BLOCK_BASALT(useEnvironmentalTech,
+        new BlockOK(ModObject.blockBasalt.unlocalisedName, Material.rock).setTextureName("basalt")),
     QUANTUM_ORE_EXTRACTOR(useEnvironmentalTech, BlockQuantumOreExtractor.create()),
     QUANTUM_RES_EXTRACTOR(useEnvironmentalTech, BlockQuantumResExtractor.create()),
     QUANTUM_BEACON(useEnvironmentalTech, BlockQuantumBeacon.create()),
@@ -72,6 +76,12 @@ public enum ModBlocks {
     MODIFIER_JUMP_BOOST(useEnvironmentalTech, BlockModifierJumpBoost.create()),
     MODIFIER_FIRE_RESISTANCE(useEnvironmentalTech, BlockModifierFireResistance.create()),
     MODIFIER_NULL(useEnvironmentalTech, BlockModifierCore.create()),
+
+    BACKPACK_BASE(useBackpack, BlockBackpack.create(ModObject.backpackLeather.unlocalisedName, 27, 1)),
+    BACKPACK_IRON(useBackpack, BlockBackpack.create(ModObject.blockBackpackIron.unlocalisedName, 54, 2)),
+    BACKPACK_GOLD(useBackpack, BlockBackpack.create(ModObject.blockBackpackGold.unlocalisedName, 81, 3)),
+    BACKPACK_DIAMOND(useBackpack, BlockBackpack.create(ModObject.blockBackpackDiamond.unlocalisedName, 108, 5)),
+    BACKPACK_OBSIDIAN(useBackpack, BlockBackpack.create(ModObject.blockBackpackObsidian.unlocalisedName, 120, 7)),
 
     STALL(useCow, BlockStall.create()),
     ROOST(useChicken, BlockRoost.create()),

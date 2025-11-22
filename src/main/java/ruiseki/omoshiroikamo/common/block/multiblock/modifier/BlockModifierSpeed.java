@@ -11,7 +11,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierSpeed extends BlockModifier {
 
     protected BlockModifierSpeed() {
-        super(ModObject.blockModifierSpeed, "speed");
+        super(ModObject.blockModifierSpeed.unlocalisedName, "speed");
         setTextureName("modifier_speed");
     }
 

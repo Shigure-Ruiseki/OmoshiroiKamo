@@ -30,7 +30,7 @@ public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IW
     IIcon solar_tex;
 
     protected BlockSolarArray() {
-        super(ModObject.blockSolarArray, TESolarArray.class);
+        super(ModObject.blockSolarArray.unlocalisedName, TESolarArray.class);
     }
 
     public static BlockSolarArray create() {

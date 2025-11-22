@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 public class BlockModifierFireResistance extends BlockModifier {
 
     protected BlockModifierFireResistance() {
-        super(ModObject.blockModifierFireResistance, "fire_resistance");
+        super(ModObject.blockModifierFireResistance.unlocalisedName, "fire_resistance");
         setTextureName("modifier_fire_resistance");
     }
 
