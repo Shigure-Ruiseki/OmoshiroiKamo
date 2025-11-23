@@ -15,13 +15,13 @@ import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.FeedingUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.ToggleableWrapper;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.UpgradeWrapper;
-import ruiseki.omoshiroikamo.common.block.backpack.handler.BackpackItemStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.capabilities.FeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.capabilities.ToggleableWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.capabilities.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class BackpackHandler implements IItemHandlerModifiable {

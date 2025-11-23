@@ -9,7 +9,7 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import ruiseki.omoshiroikamo.client.gui.modularui2.container.BackPackContainer;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackPackContainer;
 import ruiseki.omoshiroikamo.common.util.item.BaublesUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 

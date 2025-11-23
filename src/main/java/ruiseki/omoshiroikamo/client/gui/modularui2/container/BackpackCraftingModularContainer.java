@@ -10,6 +10,8 @@ import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackPackContainer;
+
 public class BackpackCraftingModularContainer extends BackPackContainer {
 
     private final InventoryCraftingWrapper craftMatrix;

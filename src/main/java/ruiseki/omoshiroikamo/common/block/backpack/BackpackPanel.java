@@ -29,19 +29,19 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.client.gui.modularui2.container.BackPackContainer;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.FeedingUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.ToggleableWrapper;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.UpgradeWrapper;
-import ruiseki.omoshiroikamo.common.block.backpack.slot.ModularBackpackSlot;
-import ruiseki.omoshiroikamo.common.block.backpack.slot.ModularUpgradeSlot;
-import ruiseki.omoshiroikamo.common.block.backpack.syncHandler.BackpackSlotSH;
-import ruiseki.omoshiroikamo.common.block.backpack.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.common.block.backpack.widget.FeedingUpgradeWidget;
-import ruiseki.omoshiroikamo.common.block.backpack.widget.TabWidget;
-import ruiseki.omoshiroikamo.common.block.backpack.widget.UpgradeSlotGroupWidget;
-import ruiseki.omoshiroikamo.common.block.backpack.widget.UpgradeSlotUpdateGroup;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackPackContainer;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularBackpackSlot;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularUpgradeSlot;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.BackpackSlotSH;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.FeedingUpgradeWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TabWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotGroupWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.capabilities.FeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.capabilities.ToggleableWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.capabilities.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class BackpackPanel extends ModularPanel {
