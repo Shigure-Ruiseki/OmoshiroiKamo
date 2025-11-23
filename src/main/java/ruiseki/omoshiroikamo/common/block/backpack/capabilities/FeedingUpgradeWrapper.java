@@ -32,7 +32,6 @@ public class FeedingUpgradeWrapper extends FilterableWrapper {
                 continue;
             }
             int healingAmount = food.func_150905_g(stack);
-
             if (healingAmount <= 20 - foodLevel && checkFilter(stack)) {
                 return handler.extractItem(i, 1, false);
             }

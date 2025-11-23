@@ -31,6 +31,7 @@ public class BackpackItemStackHandler extends ItemStackHandler {
     public void setStackInSlot(int slot, ItemStack stack) {
         validateSlotIndex(slot);
         super.setStackInSlot(slot, stack);
+        handler.writeToItem();
     }
 
     @Override

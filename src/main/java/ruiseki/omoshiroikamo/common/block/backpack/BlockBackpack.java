@@ -34,16 +34,16 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class BlockBackpack extends AbstractBlock<TEBackpack> {
 
     @Getter
-    private final int slots;
+    private final int backpackSlots;
     @Getter
     private final int upgradeSlots;
     IIcon cloth, border, leatherClips, copperClips, ironClips, goldClips, diamondClips, obsidianClips;
 
-    protected BlockBackpack(String name, int slots, int upgradeSlots) {
+    protected BlockBackpack(String name, int backpackSlots, int upgradeSlots) {
         super(name, TEBackpack.class, Material.cloth);
         setStepSound(soundTypeCloth);
         setHardness(0f);
-        this.slots = slots;
+        this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
     }
 
@@ -93,19 +93,21 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        return new TEBackpack(slots, upgradeSlots);
+        return new TEBackpack(backpackSlots, upgradeSlots);
     }
 
     public static class ItemBackpack extends ItemBlockBauble implements IGuiHolder<PlayerInventoryGuiData> {
 
-        private int slots = 27;
+        @Getter
+        private int backpackSlots = 27;
+        @Getter
         private int upgradeSlots = 1;
 
         public ItemBackpack(Block block) {
             super(block, block);
             if (block instanceof BlockBackpack backpack) {
-                this.slots = backpack.getSlots();
-                this.upgradeSlots = backpack.upgradeSlots;
+                this.backpackSlots = backpack.getBackpackSlots();
+                this.upgradeSlots = backpack.getUpgradeSlots();
             }
         }
 
@@ -128,7 +130,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!stack.hasTagCompound()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, slots, upgradeSlots);
+                BackpackHandler cap = new BackpackHandler(stack, null, backpackSlots, upgradeSlots);
                 cap.writeToItem();
             }
         }
@@ -171,7 +173,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         @Override
         public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
             ItemStack stack = data.getUsedItemStack();
-            BackpackHandler cap = new BackpackHandler(stack, null, slots, upgradeSlots);
+            BackpackHandler cap = new BackpackHandler(stack, null, backpackSlots, upgradeSlots);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
         }
     }

@@ -168,7 +168,6 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         boolean allow = plr.capabilities.allowFlying;
         if (!hasFlight) {
             if (allow || plr.capabilities.isFlying) {
-                // Chỉ tắt nếu đang bật
                 plr.capabilities.allowFlying = false;
                 plr.capabilities.isFlying = false;
                 plr.sendPlayerAbilities();
@@ -177,9 +176,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
             return;
         }
 
-        // --- Case 2: Có buff bay ---
         if (!allow) {
-            // Chỉ bật nếu chưa bật (tránh spam mỗi tick)
             plr.capabilities.allowFlying = true;
             plr.sendPlayerAbilities();
             PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), true), plr);

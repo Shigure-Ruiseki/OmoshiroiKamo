@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,9 @@ import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.FeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.ToggleableWrapper;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.block.backpack.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
@@ -35,6 +39,8 @@ public class BackpackHandler implements IItemHandlerModifiable {
     private static final String BACKPACK_SLOTS = "BackpackSlots";
     @Getter
     private static final String UPGRADE_SLOTS = "UpgradeSlots";
+    @Getter
+    private static final String OPEN_GUI = "OpenGui";
 
     @Getter
     @Setter
@@ -45,6 +51,10 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     public BackpackHandler(ItemStack backpack, TileEntity tile) {
         this(backpack, tile, 120, 7);
+    }
+
+    public BackpackHandler(ItemStack backpack, TileEntity tile, BlockBackpack.ItemBackpack itemBackpack) {
+        this(backpack, tile, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
     }
 
     public BackpackHandler(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
@@ -168,6 +178,43 @@ public class BackpackHandler implements IItemHandlerModifiable {
         return true;
     }
 
+    public ItemStack getFeedingStack(int foodLevel, float health, float maxHealth) {
+        List<FeedingUpgradeWrapper> feedingUpgrades = gatherCapabilityUpgrades(FeedingUpgradeWrapper.class);
+
+        for (FeedingUpgradeWrapper upgrade : feedingUpgrades) {
+            ItemStack feedingStack = upgrade.getFeedingStack(backpackHandler, foodLevel, health, maxHealth);
+
+            if (feedingStack != null && feedingStack.stackSize > 0) {
+                return feedingStack;
+            }
+        }
+
+        return null;
+    }
+
+    private <T> List<T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
+        List<T> result = new ArrayList<>();
+
+        for (ItemStack stack : upgradeHandler.getStacks()) {
+            if (stack == null) {
+                continue;
+            }
+            UpgradeWrapper wrapper = BackpackPanel.createWrapper(stack);
+            if (wrapper == null) {
+                continue;
+            }
+            if (wrapper instanceof ToggleableWrapper toggleable && !toggleable.isEnabled()) {
+                continue;
+            }
+
+            if (capabilityClass.isInstance(wrapper)) {
+                result.add(capabilityClass.cast(wrapper));
+            }
+        }
+
+        return result;
+    }
+
     public boolean canDeposit(int slotIndex) {
         ItemStack stack = getStackInSlot(slotIndex);
         // for (IDepositUpgrade upgrade : gatherCapabilityUpgrades(Capabilities.IDEPOSIT_UPGRADE_CAPABILITY)) {
@@ -175,8 +222,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
         // return true;
         // }
         // }
-        // return false;
-        return true;
+        return false;
     }
 
     public boolean canRestock(ItemStack stack) {
@@ -185,7 +231,6 @@ public class BackpackHandler implements IItemHandlerModifiable {
         // return true;
         // }
         // }
-        // return false;
         return false;
     }
 
@@ -219,9 +264,15 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
         if (tag.hasKey(BACKPACK_SLOTS)) {
             backpackSlots = tag.getInteger(BACKPACK_SLOTS);
+            if (backpackHandler.getSlots() != backpackSlots) {
+                backpackHandler.setSize(backpackSlots);
+            }
         }
         if (tag.hasKey(UPGRADE_SLOTS)) {
             upgradeSlots = tag.getInteger(UPGRADE_SLOTS);
+            if (upgradeHandler.getSlots() != upgradeSlots) {
+                upgradeHandler.setSize(upgradeSlots);
+            }
         }
 
         if (tag.hasKey(BACKPACK_INV)) {
