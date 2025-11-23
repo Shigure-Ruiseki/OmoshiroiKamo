@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class ItemCraftingUpgrade extends ItemUpgrade {
 
     public ItemCraftingUpgrade() {
-        super(ModObject.itemCraftingUpgrade);
+        super(ModObject.itemCraftingUpgrade.unlocalisedName);
         setMaxStackSize(1);
         setTextureName("crafting_upgrade");
     }

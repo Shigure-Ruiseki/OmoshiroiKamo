@@ -2,11 +2,11 @@ package ruiseki.omoshiroikamo.common.block.backpack.widget;
 
 import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.TOGGLE_DISABLE_ICON;
 import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.TOGGLE_ENABLE_ICON;
+import static ruiseki.omoshiroikamo.common.block.backpack.BackpackPanel.createWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cleanroommc.modularui.widget.ParentWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,13 +17,13 @@ import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
+import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
-import com.cleanroommc.modularui.widgets.SlotGroupWidget;
-import com.gtnewhorizon.gtnhlib.capability.Capabilities;
 
 import lombok.Setter;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackPanel;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.IToggleable;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.ToggleableWrapper;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.block.backpack.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
@@ -123,32 +123,31 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
 
             this.setEnabled(false);
 
-            IToggleable wrapper = getWrapper();
+            ToggleableWrapper wrapper = getWrapper();
             if (wrapper != null) {
-                ItemStack stack = panel.getHandler()
-                    .getUpgradeHandler()
-                    .getStackInSlot(slotIndex);
-                isToggleEnabled = wrapper.isEnabled(stack);
+                isToggleEnabled = wrapper.isEnabled();
                 setEnabled(true);
             }
         }
 
-        public IToggleable getWrapper() {
+        public ToggleableWrapper getWrapper() {
             ItemStack stack = panel.getHandler()
                 .getUpgradeHandler()
                 .getStackInSlot(slotIndex);
-            return Capabilities.getCapability(stack, IToggleable.class);
+            UpgradeWrapper wrapper = createWrapper(stack);
+            if (wrapper instanceof ToggleableWrapper toggleableWrapper) {
+                return toggleableWrapper;
+            } else {
+                return null;
+            }
         }
 
         @Override
         public @NotNull Result onMousePressed(int mouseButton) {
             isToggleEnabled = !isToggleEnabled;
-            IToggleable wrapper = getWrapper();
-            ItemStack stack = panel.getHandler()
-                .getUpgradeHandler()
-                .getStackInSlot(slotIndex);
+            ToggleableWrapper wrapper = getWrapper();
             if (wrapper != null) {
-                wrapper.toggle(stack);
+                wrapper.toggle();
             }
             if (slotSyncHandler != null) {
                 slotSyncHandler.syncToServer(UpgradeSlotSH.UPDATE_UPGRADE_TOGGLE);

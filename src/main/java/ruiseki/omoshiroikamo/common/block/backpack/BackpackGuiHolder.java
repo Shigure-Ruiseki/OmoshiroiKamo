@@ -34,7 +34,7 @@ public abstract class BackpackGuiHolder {
     }
 
     protected BackpackPanel createPanel(PanelSyncManager syncManager, UISettings settings, EntityPlayer player,
-                                        TileEntity tileEntity) {
+        TileEntity tileEntity) {
         return BackpackPanel.defaultPanel(
             syncManager,
             settings,
@@ -48,6 +48,7 @@ public abstract class BackpackGuiHolder {
     protected void addCommonWidgets(BackpackPanel panel, EntityPlayer player) {
         panel.addBackpackInventorySlots();
         panel.addUpgradeSlots();
+        panel.addUpgradeTabs();
         panel.addTexts(player);
     }
 

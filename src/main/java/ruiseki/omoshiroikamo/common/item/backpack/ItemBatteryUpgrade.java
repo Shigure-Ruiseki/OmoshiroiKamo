@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class ItemBatteryUpgrade extends ItemUpgrade {
 
     public ItemBatteryUpgrade() {
-        super(ModObject.itemBatteryUpgrade);
+        super(ModObject.itemBatteryUpgrade.unlocalisedName);
         setMaxStackSize(1);
         setTextureName("battery_upgrade");
     }

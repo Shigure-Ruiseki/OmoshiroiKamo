@@ -31,6 +31,7 @@ gui.machine.ioMode.output=Output
 gui.machine.ioMode.disabled=Disabled
 gui.machine.ioMode.inputOutput=Output / Input
 gui.powerMonitor.of=of
+gui.feeding_settings=Feeding Settings
 
 #Display
 

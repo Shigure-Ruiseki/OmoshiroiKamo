@@ -56,6 +56,9 @@ public final class MGuiTextures {
 
     private static final ResourceLocation ICON_LOCATION = new ResourceLocation(LibMisc.MOD_ID, "gui/icons");
 
+    public static final UITexture CHECK_ICON = icon("check", 0, 0);
+    public static final UITexture CROSS_ICON = icon("cross", 16, 0);
+
     public static final UITexture TOGGLE_DISABLE_ICON = icon("disable", 0, 128, 4, 10);
     public static final UITexture TOGGLE_ENABLE_ICON = icon("enable", 4, 128, 4, 10);
 

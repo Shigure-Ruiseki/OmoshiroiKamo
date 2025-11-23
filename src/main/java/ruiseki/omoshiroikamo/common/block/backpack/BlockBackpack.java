@@ -125,6 +125,15 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         }
 
         @Override
+        public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
+            super.onUpdate(stack, world, entity, slot, isHeld);
+            if (!stack.hasTagCompound()) {
+                BackpackHandler cap = new BackpackHandler(stack, null, slots, upgradeSlots);
+                cap.writeToItem();
+            }
+        }
+
+        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             super.addInformation(stack, player, list, flag);
             TooltipUtils builder = TooltipUtils.builder();

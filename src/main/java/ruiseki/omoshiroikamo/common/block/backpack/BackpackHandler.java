@@ -12,6 +12,7 @@ import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
+import lombok.Setter;
 import ruiseki.omoshiroikamo.common.block.backpack.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
@@ -30,20 +31,29 @@ public class BackpackHandler implements IItemHandlerModifiable {
     private static final String BACKPACK_INV = "BackpackInv";
     @Getter
     private static final String UPGRADE_INV = "UpgradeInv";
+    @Getter
+    private static final String BACKPACK_SLOTS = "BackpackSlots";
+    @Getter
+    private static final String UPGRADE_SLOTS = "UpgradeSlots";
 
     @Getter
-    private final int upgradeSlots;
+    @Setter
+    private int backpackSlots;
+    @Getter
+    @Setter
+    private int upgradeSlots;
 
     public BackpackHandler(ItemStack backpack, TileEntity tile) {
-        this(backpack, tile, 27, 1);
+        this(backpack, tile, 120, 7);
     }
 
-    public BackpackHandler(ItemStack backpack, TileEntity tile, int slots, int upgradeSlots) {
+    public BackpackHandler(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
         this.backpack = backpack;
         this.tile = tile;
+        this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
 
-        this.backpackHandler = new BackpackItemStackHandler(slots, this) {
+        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
             @Override
             protected void onContentsChanged(int slots) {
@@ -52,7 +62,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
             }
         };
 
-        this.upgradeHandler = new ItemStackHandler(this.upgradeSlots) {
+        this.upgradeHandler = new ItemStackHandler(upgradeSlots) {
 
             @Override
             protected void onContentsChanged(int slot) {
@@ -199,11 +209,21 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     // ---------- TILE ENTITY ----------
     public void writeToNBT(NBTTagCompound tag) {
+        tag.setInteger(BACKPACK_SLOTS, getBackpackSlots());
+        tag.setInteger(UPGRADE_SLOTS, getUpgradeSlots());
         tag.setTag(BACKPACK_INV, backpackHandler.serializeNBT());
         tag.setTag(UPGRADE_INV, upgradeHandler.serializeNBT());
     }
 
     public void readFromNBT(NBTTagCompound tag) {
+
+        if (tag.hasKey(BACKPACK_SLOTS)) {
+            backpackSlots = tag.getInteger(BACKPACK_SLOTS);
+        }
+        if (tag.hasKey(UPGRADE_SLOTS)) {
+            upgradeSlots = tag.getInteger(UPGRADE_SLOTS);
+        }
+
         if (tag.hasKey(BACKPACK_INV)) {
             backpackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
         }

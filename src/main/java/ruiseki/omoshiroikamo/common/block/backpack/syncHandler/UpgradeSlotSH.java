@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.backpack.syncHandler;
 
+import static ruiseki.omoshiroikamo.common.block.backpack.BackpackPanel.createWrapper;
+
 import java.io.IOException;
 
 import net.minecraft.item.ItemStack;
@@ -7,10 +9,11 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.gtnewhorizon.gtnhlib.capability.Capabilities;
 
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.IToggleable;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.IUpgrade;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.FilterableWrapper;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.IBasicFilterable;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.ToggleableWrapper;
+import ruiseki.omoshiroikamo.common.block.backpack.capabilities.UpgradeWrapper;
 
 public class UpgradeSlotSH extends ItemSlotSH {
 
@@ -37,48 +40,49 @@ public class UpgradeSlotSH extends ItemSlotSH {
                 updateToggleable();
                 break;
             case UPDATE_BASIC_FILTERABLE:
-                // updateBasicFilterable(buf);
+                updateBasicFilterable(buf);
                 break;
-            case UPDATE_ADVANCED_FILTERABLE:
-                // updateAdvancedFilterable(buf);
-                break;
-            case UPDATE_ADVANCED_FEEDING:
-                // updateAdvanceFeedingUpgrade(buf);
-                break;
-            case UPDATE_FILTER_WAY:
-                // updateFilterUpgrade(buf);
-                break;
+            // case UPDATE_ADVANCED_FILTERABLE:
+            // // updateAdvancedFilterable(buf);
+            // break;
+            // case UPDATE_ADVANCED_FEEDING:
+            // // updateAdvanceFeedingUpgrade(buf);
+            // break;
+            // case UPDATE_FILTER_WAY:
+            // // updateFilterUpgrade(buf);
+            // break;
         }
     }
 
     private void updateTabState(PacketBuffer buf) {
         ItemStack stack = getSlot().getStack();
-        var wrapper = Capabilities.getCapability(stack, IUpgrade.class);
+        UpgradeWrapper wrapper = createWrapper(stack);
         if (wrapper == null) {
             return;
         }
-        wrapper.setTabOpened(stack, buf.readBoolean());
+        wrapper.setTabOpened(buf.readBoolean());
     }
 
     private void updateToggleable() {
         ItemStack stack = getSlot().getStack();
-        var wrapper = Capabilities.getCapability(stack, IToggleable.class);
-        if (wrapper == null) {
+        UpgradeWrapper wrapper = createWrapper(stack);
+        if (!(wrapper instanceof ToggleableWrapper toggleWrapper)) {
             return;
         }
-        wrapper.toggle(stack);
+        toggleWrapper.toggle();
     }
 
-    //
-    // private void updateBasicFilterable(PacketBuffer buf) {
-    // var wrapper = slot.stack.getCapability(Capabilities.BASIC_FILTERABLE_CAPABILITY, null).orElse(null);
-    // if (wrapper == null) {
-    // return;
-    // }
-    // IBasicFilterable.FilterType type = buf.readEnumValue(IBasicFilterable.FilterType.class);
-    // wrapper.setFilterType(type);
-    // }
-    //
+    private void updateBasicFilterable(PacketBuffer buf) {
+        ItemStack stack = getSlot().getStack();
+        UpgradeWrapper wrapper = createWrapper(stack);
+        if (!(wrapper instanceof FilterableWrapper filterableWrapper)) {
+            return;
+        }
+        int ordinal = buf.readInt();
+        IBasicFilterable.FilterType[] types = IBasicFilterable.FilterType.values();
+        filterableWrapper.setFilterType(types[ordinal]);
+    }
+
     // private void updateAdvancedFilterable(PacketBuffer buf) {
     // var wrapper = slot.stack.getCapability(Capabilities.ADVANCED_FILTERABLE_CAPABILITY, null).orElse(null);
     // if (wrapper == null) {
@@ -96,7 +100,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
     // wrapper.getOreDictEntries().add(buf.readString(100));
     // }
     // }
-    //
+
     // private void updateAdvanceFeedingUpgrade(PacketBuffer buf) {
     // var wrapper = slot.stack.getCapability(Capabilities.ADVANCED_FEEDING_UPGRADE_CAPABILITY, null).orElse(null);
     // if (wrapper == null) {
@@ -106,14 +110,15 @@ public class UpgradeSlotSH extends ItemSlotSH {
     // wrapper.setHungerFeedingStrategy(buf.readEnumValue(AdvancedFeedingUpgradeWrapper.FeedingStrategy.Hunger.class));
     // wrapper.setHealthFeedingStrategy(buf.readEnumValue(AdvancedFeedingUpgradeWrapper.FeedingStrategy.Health.class));
     // }
-    //
+
     // private void updateFilterUpgrade(PacketBuffer buf) {
-    // var wrapper = slot.stack.getCapability(Capabilities.IFILTER_UPGRADE_CAPABILITY, null).orElse(null);
-    // if (wrapper == null) {
+    // ItemStack stack = getSlot().getStack();
+    // UpgradeWrapper wrapper = createWrapper(stack);
+    // if (!(wrapper instanceof FilterableWrapper filterableWrapper)) {
     // return;
     // }
     //
-    // wrapper.setFilterWay(buf.readEnumValue(IFilterUpgrade.FilterWayType.class));
+    // filterableWrapper.setFilterWay(buf.readEnumValue(IFilterUpgrade.FilterWayType.class));
     // }
 
 }

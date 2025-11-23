@@ -160,14 +160,26 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     }
 
     private void handleFlightUpdate(EntityPlayer plr) {
-        if (!modifierHandler.hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName())) {
-            plr.capabilities.isFlying = false;
-            plr.capabilities.allowFlying = false;
-            plr.sendPlayerAbilities();
-            PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
+        if (plr.capabilities.isCreativeMode) {
             return;
         }
-        if (!plr.capabilities.allowFlying) {
+        boolean hasFlight = modifierHandler.hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
+
+        boolean allow = plr.capabilities.allowFlying;
+        if (!hasFlight) {
+            if (allow || plr.capabilities.isFlying) {
+                // Chỉ tắt nếu đang bật
+                plr.capabilities.allowFlying = false;
+                plr.capabilities.isFlying = false;
+                plr.sendPlayerAbilities();
+                PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
+            }
+            return;
+        }
+
+        // --- Case 2: Có buff bay ---
+        if (!allow) {
+            // Chỉ bật nếu chưa bật (tránh spam mỗi tick)
             plr.capabilities.allowFlying = true;
             plr.sendPlayerAbilities();
             PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), true), plr);

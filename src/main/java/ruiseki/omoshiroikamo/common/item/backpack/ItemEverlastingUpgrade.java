@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 public class ItemEverlastingUpgrade extends ItemUpgrade {
 
     public ItemEverlastingUpgrade() {
-        super(ModObject.itemEverlastingUpgrade);
+        super(ModObject.itemEverlastingUpgrade.unlocalisedName);
         setMaxStackSize(1);
         setTextureName("everlasting_upgrade");
     }

@@ -6,23 +6,23 @@ public interface IToggleable {
 
     String ENABLED_TAG = "Enabled";
 
-    boolean isEnabled(ItemStack stack);
+    boolean isEnabled();
 
-    void setEnabled(ItemStack stack, boolean enabled);
+    void setEnabled(boolean enabled);
 
     default void toggle(ItemStack stack) {
-        setEnabled(stack, !isEnabled(stack));
+        setEnabled(!isEnabled());
     }
 
     class Impl implements IToggleable {
 
         @Override
-        public boolean isEnabled(ItemStack stack) {
+        public boolean isEnabled() {
             return false;
         }
 
         @Override
-        public void setEnabled(ItemStack stack, boolean enabled) {
+        public void setEnabled(boolean enabled) {
 
         }
     }

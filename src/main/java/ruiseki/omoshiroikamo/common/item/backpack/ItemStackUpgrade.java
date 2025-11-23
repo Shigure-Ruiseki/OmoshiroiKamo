@@ -22,7 +22,7 @@ public class ItemStackUpgrade extends ItemUpgrade {
     protected IIcon tier1, tier2, tier3, tier4;
 
     public ItemStackUpgrade() {
-        super(ModObject.itemStackUpgrade);
+        super(ModObject.itemStackUpgrade.unlocalisedName);
         setMaxStackSize(1);
     }
 

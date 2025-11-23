@@ -4,16 +4,14 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.block.backpack.capabilities.IUpgrade;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class ItemUpgrade extends ItemOK implements IUpgrade {
+public class ItemUpgrade extends ItemOK {
 
     public ItemUpgrade(String name) {
         super(name);
@@ -21,12 +19,8 @@ public class ItemUpgrade extends ItemOK implements IUpgrade {
         setTextureName("upgrade_base");
     }
 
-    public ItemUpgrade(ModObject modObject) {
-        this(modObject.unlocalisedName);
-    }
-
     public ItemUpgrade() {
-        this(ModObject.itemUpgrade);
+        this(ModObject.itemUpgrade.unlocalisedName);
     }
 
     public boolean hasTab() {
@@ -41,15 +35,4 @@ public class ItemUpgrade extends ItemOK implements IUpgrade {
                 .toString());
     }
 
-    @Override
-    public void setTabOpened(ItemStack upgrade, boolean opened) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        tag.setBoolean(TAB_STATE_TAG, opened);
-    }
-
-    @Override
-    public boolean getTabOpened(ItemStack upgrade) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        return tag.hasKey(TAB_STATE_TAG) && tag.getBoolean(TAB_STATE_TAG);
-    }
 }
