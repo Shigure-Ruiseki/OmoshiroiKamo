@@ -13,12 +13,14 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedFeedingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedPickupUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBackpack;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBatteryUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemPickupUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemChicken;
@@ -42,6 +44,8 @@ public enum ModItems {
     MAGNET_UPGRADE(useBackpack, new ItemMagnetUpgrade()),
     FEEDING_UPGRADE(useBackpack, new ItemFeedingUpgrade()),
     ADVANCED_FEEDING_UPGRADE(useBackpack, new ItemAdvancedFeedingUpgrade()),
+    PICKUP_UPGRADE(useBackpack, new ItemPickupUpgrade()),
+    ADVANCED_PICKUP_UPGRADE(useBackpack, new ItemAdvancedPickupUpgrade()),
     BATTERY_UPGRADE(useBackpack, new ItemBatteryUpgrade()),
     EVERLASTING_UPGRADE(useBackpack, new ItemEverlastingUpgrade()),
 

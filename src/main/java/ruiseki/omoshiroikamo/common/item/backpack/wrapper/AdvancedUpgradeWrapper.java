@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.ExposedItemStackHandler;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
-public class AdvancedUpgradeWrapper extends ToggleableWrapper implements IAdvancedFilterable {
+public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedFilterable, IToggleable {
 
     protected ExposedItemStackHandler handler;
 
@@ -131,4 +131,20 @@ public class AdvancedUpgradeWrapper extends ToggleableWrapper implements IAdvanc
         return isEnabled() && IAdvancedFilterable.super.checkFilter(check);
     }
 
+    @Override
+    public boolean isEnabled() {
+        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+        return tag.hasKey(IUpgrade.TAB_STATE_TAG) && tag.getBoolean(ENABLED_TAG);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+        tag.setBoolean(ENABLED_TAG, enabled);
+    }
+
+    @Override
+    public void toggle() {
+        setEnabled(!isEnabled());
+    }
 }

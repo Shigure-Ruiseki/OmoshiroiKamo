@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
-public interface IFeedingUpgrade extends IUpgrade, IToggleable, IBasicFilterable {
+public interface IFeedingUpgrade {
 
     ItemStack getFeedingStack(IItemHandler handler, int foodLevel, float health, float maxHealth);
 }

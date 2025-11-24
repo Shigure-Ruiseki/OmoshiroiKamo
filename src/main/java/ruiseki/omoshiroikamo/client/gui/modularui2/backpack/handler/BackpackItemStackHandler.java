@@ -106,4 +106,8 @@ public class BackpackItemStackHandler extends ItemStackHandler {
             return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
         }
     }
+
+    public ItemStack prioritizedInsertion(int slotIndex, ItemStack stack, boolean simulate) {
+        return insertItem(slotIndex, stack, simulate);
+    }
 }

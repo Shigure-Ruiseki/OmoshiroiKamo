@@ -33,13 +33,17 @@ import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularBackpack
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularUpgradeSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.UpgradeSlotSH;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedExpandedTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedFeedingUpgradeWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.BasicExpandedTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.FeedingUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotGroupWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedFeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.BasicUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.FeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IToggleable;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
@@ -271,14 +275,24 @@ public class BackpackPanel extends ModularPanel {
                         .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
                 });
 
-            if (wrapper instanceof FeedingUpgradeWrapper feeding) {
-                upgradeSlotGroup.updateFilterDelegate(feeding);
-                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, feeding));
-            }
-
             if (wrapper instanceof AdvancedFeedingUpgradeWrapper feeding) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(feeding);
                 tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, feeding));
+            } else if (wrapper instanceof FeedingUpgradeWrapper feeding) {
+                upgradeSlotGroup.updateFilterDelegate(feeding);
+                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, feeding));
+            } else if (wrapper instanceof AdvancedUpgradeWrapper upgradeWrapper) {
+                upgradeSlotGroup.updateAdvancedFilterDelegate(upgradeWrapper);
+                tabWidget.setExpandedWidget(
+                    new AdvancedExpandedTabWidget<>(
+                        slotIndex,
+                        upgradeWrapper,
+                        stack,
+                        upgradeWrapper.getSettingLangKey()));
+            } else if (wrapper instanceof BasicUpgradeWrapper upgradeWrapper) {
+                upgradeSlotGroup.updateFilterDelegate(upgradeWrapper);
+                tabWidget.setExpandedWidget(
+                    new BasicExpandedTabWidget<>(slotIndex, upgradeWrapper, stack, upgradeWrapper.getSettingLangKey()));
             }
 
             if (tabWidget.getExpandedWidget() != null) {

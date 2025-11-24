@@ -96,7 +96,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             filterableWrapper.getFilterType()
                 .ordinal(),
             index -> {
-                this.filterableWrapper.setFilterType(IAdvancedFilterable.FilterType.values()[index]);
+                filterableWrapper.setFilterType(IAdvancedFilterable.FilterType.values()[index]);
                 updateWrapper();
             });
 
@@ -105,7 +105,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             filterableWrapper.getMatchType()
                 .ordinal(),
             index -> {
-                this.filterableWrapper.setMatchType(IAdvancedFilterable.MatchType.values()[index]);
+                filterableWrapper.setMatchType(IAdvancedFilterable.MatchType.values()[index]);
                 updateWrapper();
             });
 
@@ -115,7 +115,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             Arrays.asList(IGNORE_DURABILITY_VARIANTS),
             filterableWrapper.getIgnoreDurability() ? 1 : 0,
             index -> {
-                this.filterableWrapper.setIgnoreDurability(index == 1);
+                filterableWrapper.setIgnoreDurability(index == 1);
                 updateWrapper();
             });
         this.ignoreDurabilityButton.setInEffect(inEffect);
@@ -124,7 +124,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             Arrays.asList(IGNORE_NBT_VARIANTS),
             filterableWrapper.getIgnoreNBT() ? 1 : 0,
             index -> {
-                this.filterableWrapper.setIgnoreNBT(index == 1);
+                filterableWrapper.setIgnoreNBT(index == 1);
                 updateWrapper();
             });
         this.ignoreNBTButton.setInEffect(inEffect);
@@ -158,7 +158,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
                 return false;
             }
 
-            this.filterableWrapper.getOreDictEntries()
+            filterableWrapper.getOreDictEntries()
                 .add(oreName);
             this.oreDictList.child(new OreDictEntryWidget(this, oreName, 77));
             this.oreDictTextField.setText("");
@@ -174,7 +174,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             if (this.focusedOreDictEntry == null) {
                 return false;
             }
-            this.filterableWrapper.getOreDictEntries()
+            filterableWrapper.getOreDictEntries()
                 .remove(focusedOreDictEntry.getText());
             this.oreDictList.removeChild(focusedOreDictEntry);
             updateWrapper();
@@ -213,7 +213,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             .leftRel(0.5f)
             .top(24)
             .child(slotGroup)
-            .setEnabledIf(flow -> this.filterableWrapper.getMatchType() != IAdvancedFilterable.MatchType.ORE_DICT);
+            .setEnabledIf(flow -> filterableWrapper.getMatchType() != IAdvancedFilterable.MatchType.ORE_DICT);
 
         for (String entry : filterableWrapper.getOreDictEntries()) {
             this.oreDictList.child(new OreDictEntryWidget(this, entry, 77));
@@ -224,7 +224,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             .top(24)
             .child(oreDictList)
             .child(oreDictTextField)
-            .setEnabledIf(flow -> this.filterableWrapper.getMatchType() == IAdvancedFilterable.MatchType.ORE_DICT);
+            .setEnabledIf(flow -> filterableWrapper.getMatchType() == IAdvancedFilterable.MatchType.ORE_DICT);
 
         // Add all children
         child(buttonRow).child(this.itemBasedConfigurationGroup)
@@ -235,10 +235,10 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
         if (slotSyncHandler != null) {
             slotSyncHandler.syncToServer(UpgradeSlotSH.UPDATE_ADVANCED_FILTERABLE, writer -> {
                 writer.writeInt(
-                    this.filterableWrapper.getFilterType()
+                    filterableWrapper.getFilterType()
                         .ordinal());
                 writer.writeInt(
-                    this.filterableWrapper.getMatchType()
+                    filterableWrapper.getMatchType()
                         .ordinal());
                 writer.writeBoolean(filterableWrapper.getIgnoreDurability());
                 writer.writeBoolean(filterableWrapper.getIgnoreNBT());

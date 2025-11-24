@@ -1,9 +1,12 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
@@ -17,6 +20,85 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 public class BackpackEventHandler {
 
     private static int feedTickCounter = 0;
+
+    @SubscribeEvent
+    public static void onPlayerPickup(EntityItemPickupEvent event) {
+        EntityPlayer player = event.entityPlayer;
+        IInventory inventory = player.inventory;
+        ItemStack stack = event.item.getEntityItem()
+            .copy();
+
+        if (LibMods.Baubles.isLoaded()) {
+            IInventory baublesInventory = BaublesUtils.instance()
+                .getBaubles(player);
+            stack = attemptPickup(baublesInventory, stack);
+        }
+
+        stack = attemptPickup(inventory, stack);
+        if (stack == null || stack.stackSize <= 0) {
+            event.item.setDead();
+            event.setCanceled(true);
+
+            World world = event.item.worldObj;
+
+            world.playSoundEffect(
+                event.item.posX,
+                event.item.posY,
+                event.item.posZ,
+                "random.pop",
+                0.2F,
+                ((player.getRNG()
+                    .nextFloat()
+                    - player.getRNG()
+                        .nextFloat())
+                    * 0.7F + 1.0F) * 2.0F);
+            return;
+        } else if (stack.stackSize != event.item.getEntityItem().stackSize) {
+            event.item.setDead();
+            event.setCanceled(true);
+
+            World world = event.item.worldObj;
+
+            EntityItem newItem = new EntityItem(world, event.item.posX, event.item.posY, event.item.posZ, stack);
+
+            newItem.delayBeforeCanPickup = 0;
+            world.spawnEntityInWorld(newItem);
+        }
+
+    }
+
+    private static ItemStack attemptPickup(IInventory targetInventory, ItemStack stack) {
+
+        for (int i = 0; i < targetInventory.getSizeInventory(); i++) {
+            ItemStack backpackStack = targetInventory.getStackInSlot(i);
+            if (backpackStack == null || backpackStack.stackSize <= 0) {
+                continue;
+            }
+
+            if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) {
+                continue;
+            }
+
+            BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
+
+            if (!handler.canPickupItem(stack)) {
+                continue;
+            }
+
+            int slotIndex = 0;
+            while (stack != null && slotIndex < handler.getSlots()) {
+                stack = handler.getBackpackHandler()
+                    .prioritizedInsertion(slotIndex, stack, false);
+                slotIndex++;
+            }
+
+            if (stack == null) {
+                break;
+            }
+        }
+
+        return stack;
+    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {

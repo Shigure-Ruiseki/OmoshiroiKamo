@@ -17,9 +17,11 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedFeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedPickupUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.DepositUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.FeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IFeedingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.PickupUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.RestockUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapperFactory;
@@ -215,6 +217,23 @@ public class BackpackHandler implements IItemHandlerModifiable {
                 return true;
             }
         }
+        return false;
+    }
+
+    public boolean canPickupItem(ItemStack stack) {
+
+        for (AdvancedPickupUpgradeWrapper upgrade : gatherCapabilityUpgrades(AdvancedPickupUpgradeWrapper.class)) {
+            if (upgrade.canPickup(stack)) {
+                return true;
+            }
+        }
+
+        for (PickupUpgradeWrapper upgrade : gatherCapabilityUpgrades(PickupUpgradeWrapper.class)) {
+            if (upgrade.canPickup(stack)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

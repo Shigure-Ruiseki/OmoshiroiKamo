@@ -37,6 +37,10 @@ public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilte
         child(column);
     }
 
+    public AdvancedExpandedTabWidget(int slotIndex, T wrapper, ItemStack delegatedIconStack, String titleKey) {
+        this(slotIndex, wrapper, delegatedIconStack, titleKey, "adv_common_filter", 6, 100);
+    }
+
     @Override
     protected T getWrapper() {
         return wrapper;

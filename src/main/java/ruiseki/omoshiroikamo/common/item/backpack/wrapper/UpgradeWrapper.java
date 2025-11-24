@@ -27,4 +27,9 @@ public class UpgradeWrapper implements IUpgrade {
         return tag.hasKey(TAB_STATE_TAG) && tag.getBoolean(TAB_STATE_TAG);
     }
 
+    @Override
+    public String getSettingLangKey() {
+        return "";
+    }
+
 }

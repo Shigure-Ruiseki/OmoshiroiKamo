@@ -31,7 +31,7 @@ public interface IBasicFilterable {
                         return true;
                     }
                 }
-                return false;
+                return !getFilterItems().hasAnyItem();
             case BLACKLIST:
                 for (ItemStack s : getFilterItems().getStacks()) {
                     if (ItemUtils.areItemsEqualIgnoreDurability(s, check)) {

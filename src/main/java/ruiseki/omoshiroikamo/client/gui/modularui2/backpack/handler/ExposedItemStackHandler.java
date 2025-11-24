@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.client.gui.modularui2.handler.UpgradeItemStackHandler;
@@ -21,4 +22,15 @@ public class ExposedItemStackHandler extends UpgradeItemStackHandler {
         NBTTagCompound tag = ItemNBTUtils.getNBT(wrapper.getUpgrade());
         tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
     }
+
+    public boolean hasAnyItem() {
+        for (int i = 0; i < getSlots(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack != null && stack.stackSize > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
