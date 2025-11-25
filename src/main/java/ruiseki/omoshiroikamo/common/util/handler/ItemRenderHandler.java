@@ -11,6 +11,7 @@
 package ruiseki.omoshiroikamo.common.util.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -23,11 +24,13 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ruiseki.omoshiroikamo.api.item.IBaubleRender;
+import ruiseki.omoshiroikamo.api.client.IBaubleRender;
+import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
+import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 
 @EventBusSubscriber
-public class BaubleRenderHandler {
+public class ItemRenderHandler {
 
     @SubscribeEvent
     public static void onPlayerRender(RenderPlayerEvent.Specials.Post event) {
@@ -36,9 +39,11 @@ public class BaubleRenderHandler {
         }
 
         EntityPlayer player = event.entityPlayer;
-        InventoryBaubles inv = PlayerHandler.getPlayerBaubles(player);
+        InventoryPlayer inv = player.inventory;
+        InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
 
-        dispatchRenders(inv, event, IBaubleRender.RenderType.BODY);
+        renderArmor(inv, event, RenderUtils.RenderType.BODY);
+        renderBauble(baubles, event, RenderUtils.RenderType.BODY);
 
         float yaw = player.prevRotationYawHead
             + (player.rotationYawHead - player.prevRotationYawHead) * event.partialRenderTick;
@@ -51,12 +56,12 @@ public class BaubleRenderHandler {
         GL11.glRotatef(yawOffset, 0, -1, 0);
         GL11.glRotatef(yaw - 270, 0, 1, 0);
         GL11.glRotatef(pitch, 0, 0, 1);
-        dispatchRenders(inv, event, IBaubleRender.RenderType.HEAD);
-
+        renderArmor(inv, event, RenderUtils.RenderType.HEAD);
+        renderBauble(baubles, event, RenderUtils.RenderType.HEAD);
         GL11.glPopMatrix();
     }
 
-    private static void dispatchRenders(InventoryBaubles inv, RenderPlayerEvent event, IBaubleRender.RenderType type) {
+    private static void renderBauble(InventoryBaubles inv, RenderPlayerEvent event, RenderUtils.RenderType type) {
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack != null) {
@@ -69,6 +74,21 @@ public class BaubleRenderHandler {
                     GL11.glPopMatrix();
                 }
             }
+        }
+    }
+
+    private static void renderArmor(InventoryPlayer inv, RenderPlayerEvent event, RenderUtils.RenderType type) {
+        EntityPlayer player = event.entityPlayer;
+
+        for (int armorIndex = 0; armorIndex < 4; armorIndex++) {
+            int slot = player.inventory.getSizeInventory() - 1 - armorIndex;
+            ItemStack stack = inv.getStackInSlot(slot);
+            if (stack == null || !(stack.getItem() instanceof IItemJSONRender renderer)) continue;
+
+            GL11.glPushMatrix();
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            renderer.onArmorRender(stack, event, type);
+            GL11.glPopMatrix();
         }
     }
 }

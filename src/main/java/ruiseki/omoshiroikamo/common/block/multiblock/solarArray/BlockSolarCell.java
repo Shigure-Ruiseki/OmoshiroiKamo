@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
-import static ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.api.client.JsonModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 

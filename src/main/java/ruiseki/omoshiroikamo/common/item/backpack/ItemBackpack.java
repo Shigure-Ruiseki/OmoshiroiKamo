@@ -22,9 +22,10 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.client.IBaubleRender;
+import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.energy.IEnergyItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.item.IBaubleRender;
 import ruiseki.omoshiroikamo.client.render.item.backpack.BackpackRenderer;
 import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
 import ruiseki.omoshiroikamo.common.item.ItemBauble;
@@ -133,8 +134,8 @@ public class ItemBackpack extends ItemBauble implements IEnergyItem, IGuiHolder<
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, IBaubleRender.RenderType type) {
-        if (stack == null || type != IBaubleRender.RenderType.BODY) {
+    public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderUtils.RenderType type) {
+        if (stack == null || type != RenderUtils.RenderType.BODY) {
             return;
         }
 

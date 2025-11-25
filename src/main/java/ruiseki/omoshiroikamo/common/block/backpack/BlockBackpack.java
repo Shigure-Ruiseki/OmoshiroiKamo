@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -12,6 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+
+import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
@@ -22,13 +23,14 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.client.render.block.JsonModelISBRH;
+import ruiseki.omoshiroikamo.api.client.IBaubleRender;
+import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
+import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
+import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.common.block.ItemBlockBauble;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
-import ruiseki.omoshiroikamo.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockBackpack extends AbstractBlock<TEBackpack> {
@@ -96,7 +98,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         return new TEBackpack(backpackSlots, upgradeSlots);
     }
 
-    public static class ItemBackpack extends ItemBlockBauble implements IGuiHolder<PlayerInventoryGuiData> {
+    public static class ItemBackpack extends ItemBlockBauble
+        implements IGuiHolder<PlayerInventoryGuiData>, IBaubleRender, IItemJSONRender {
 
         @Getter
         private int backpackSlots = 27;
@@ -141,16 +144,6 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         }
 
         @Override
-        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            super.addInformation(stack, player, list, flag);
-            TooltipUtils builder = TooltipUtils.builder();
-            builder.add(
-                ItemNBTUtils.getNBT(stack)
-                    .toString());
-            list.addAll(builder.build());
-        }
-
-        @Override
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
             float hitX, float hitY, float hitZ) {
             TileEntity te = world.getTileEntity(x, y, z);
@@ -180,6 +173,34 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
             ItemStack stack = data.getUsedItemStack();
             BackpackHandler cap = new BackpackHandler(stack, null, backpackSlots, upgradeSlots);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
+        }
+
+        @Override
+        public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderUtils.RenderType type) {
+            if (stack == null || type != RenderUtils.RenderType.BODY) {
+                return;
+            }
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0f, 0.3f, 0.3f);
+            ruiseki.omoshiroikamo.api.client.RenderUtils.rotateIfSneaking(event.entityPlayer);
+            JsonModelISBRH.renderToEntity(stack);
+            GL11.glPopMatrix();
+
+        }
+
+        @Override
+        public void onArmorRender(ItemStack stack, RenderPlayerEvent event, RenderUtils.RenderType type) {
+            if (stack == null || type != RenderUtils.RenderType.BODY) {
+                return;
+            }
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0f, 0.3f, 0.3f);
+            ruiseki.omoshiroikamo.api.client.RenderUtils.rotateIfSneaking(event.entityPlayer);
+            JsonModelISBRH.renderToEntity(stack);
+            GL11.glPopMatrix();
+
         }
     }
 }
