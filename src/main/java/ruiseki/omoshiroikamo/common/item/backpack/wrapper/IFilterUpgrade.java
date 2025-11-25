@@ -6,7 +6,7 @@ public interface IFilterUpgrade {
 
     String FILTER_WAY_TAG = "FilterWay";
 
-    FilterWayType filterWay();
+    FilterWayType getfilterWay();
 
     void setFilterWay(FilterWayType filterWay);
 

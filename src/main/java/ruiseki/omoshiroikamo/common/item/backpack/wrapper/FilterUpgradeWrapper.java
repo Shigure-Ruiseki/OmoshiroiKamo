@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
-public class AdvancedFilterUpgradeWrapper extends AdvancedUpgradeWrapper implements IFilterUpgrade {
+public class FilterUpgradeWrapper extends BasicUpgradeWrapper implements IFilterUpgrade {
 
-    public AdvancedFilterUpgradeWrapper(ItemStack upgrade) {
+    public FilterUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
     }
 

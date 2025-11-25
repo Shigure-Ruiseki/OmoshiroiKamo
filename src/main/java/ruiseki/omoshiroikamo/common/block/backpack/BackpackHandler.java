@@ -24,16 +24,12 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedFeedingUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedMagnetUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedPickupUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.DepositUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.FeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IDepositUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IFeedingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IMagnetUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.MagnetUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.PickupUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.RestockUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IPickupUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IRestockUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
@@ -235,16 +231,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
     }
 
     public ItemStack getFeedingStack(int foodLevel, float health, float maxHealth) {
-
-        for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(AdvancedFeedingUpgradeWrapper.class)) {
-            ItemStack feedingStack = upgrade.getFeedingStack(backpackHandler, foodLevel, health, maxHealth);
-
-            if (feedingStack != null && feedingStack.stackSize > 0) {
-                return feedingStack;
-            }
-        }
-
-        for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(FeedingUpgradeWrapper.class)) {
+        for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(IFeedingUpgrade.class)) {
             ItemStack feedingStack = upgrade.getFeedingStack(backpackHandler, foodLevel, health, maxHealth);
 
             if (feedingStack != null && feedingStack.stackSize > 0) {
@@ -260,21 +247,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
         List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, aabb);
         List<EntityXPOrb> xps = world.getEntitiesWithinAABB(EntityXPOrb.class, aabb);
-
-        for (IMagnetUpgrade upgrade : gatherCapabilityUpgrades(AdvancedMagnetUpgradeWrapper.class)) {
-            if (upgrade.isCollectItem()) {
-                for (EntityItem item : items) {
-                    if (upgrade.canCollectItem(item.getEntityItem())) {
-                        result.add(item);
-                    }
-                }
-            }
-            if (upgrade.isCollectExp()) {
-                result.addAll(xps);
-            }
-        }
-
-        for (IMagnetUpgrade upgrade : gatherCapabilityUpgrades(MagnetUpgradeWrapper.class)) {
+        for (IMagnetUpgrade upgrade : gatherCapabilityUpgrades(IMagnetUpgrade.class)) {
             if (upgrade.isCollectItem()) {
                 for (EntityItem item : items) {
                     if (upgrade.canCollectItem(item.getEntityItem())) {
@@ -292,7 +265,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     public boolean canDeposit(int slotIndex) {
         ItemStack stack = getStackInSlot(slotIndex);
-        for (DepositUpgradeWrapper upgrade : gatherCapabilityUpgrades(DepositUpgradeWrapper.class)) {
+        for (IDepositUpgrade upgrade : gatherCapabilityUpgrades(IDepositUpgrade.class)) {
             if (upgrade.canDeposit(stack)) {
                 return true;
             }
@@ -301,8 +274,34 @@ public class BackpackHandler implements IItemHandlerModifiable {
     }
 
     public boolean canRestock(ItemStack stack) {
-        for (RestockUpgradeWrapper upgrade : gatherCapabilityUpgrades(RestockUpgradeWrapper.class)) {
+        for (IRestockUpgrade upgrade : gatherCapabilityUpgrades(IRestockUpgrade.class)) {
             if (upgrade.canRestock(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canInsert(ItemStack stack) {
+        List<IFilterUpgrade> upgrades = gatherCapabilityUpgrades(IFilterUpgrade.class);
+        if (upgrades.isEmpty()) {
+            return true;
+        }
+        for (IFilterUpgrade upgrade : upgrades) {
+            if (upgrade.canInsert(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canExtract(ItemStack stack) {
+        List<IFilterUpgrade> upgrades = gatherCapabilityUpgrades(IFilterUpgrade.class);
+        if (upgrades.isEmpty()) {
+            return true;
+        }
+        for (IFilterUpgrade upgrade : upgrades) {
+            if (upgrade.canExtract(stack)) {
                 return true;
             }
         }
@@ -311,18 +310,11 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     public boolean canPickupItem(ItemStack stack) {
 
-        for (AdvancedPickupUpgradeWrapper upgrade : gatherCapabilityUpgrades(AdvancedPickupUpgradeWrapper.class)) {
+        for (IPickupUpgrade upgrade : gatherCapabilityUpgrades(IPickupUpgrade.class)) {
             if (upgrade.canPickup(stack)) {
                 return true;
             }
         }
-
-        for (PickupUpgradeWrapper upgrade : gatherCapabilityUpgrades(PickupUpgradeWrapper.class)) {
-            if (upgrade.canPickup(stack)) {
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -338,7 +330,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
                 continue;
             }
 
-            if (capabilityClass.isInstance(wrapper)) {
+            if (capabilityClass.isAssignableFrom(wrapper.getClass())) {
                 result.add(capabilityClass.cast(wrapper));
             }
         }

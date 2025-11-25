@@ -35,19 +35,23 @@ import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.Backpack
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedExpandedTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedFeedingUpgradeWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedFilterUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedMagnetUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.BasicExpandedTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.FeedingUpgradeWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.FilterUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.MagnetUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotGroupWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedFeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedFilterUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedMagnetUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.AdvancedUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.BasicUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.FeedingUpgradeWrapper;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.FilterUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IToggleable;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.MagnetUpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
@@ -279,19 +283,37 @@ public class BackpackPanel extends ModularPanel {
                         .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
                 });
 
-            if (wrapper instanceof AdvancedFeedingUpgradeWrapper feeding) {
-                upgradeSlotGroup.updateAdvancedFilterDelegate(feeding);
-                tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, feeding));
-            } else if (wrapper instanceof FeedingUpgradeWrapper feeding) {
-                upgradeSlotGroup.updateFilterDelegate(feeding);
-                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, feeding));
-            } else if (wrapper instanceof AdvancedMagnetUpgradeWrapper feeding) {
-                upgradeSlotGroup.updateAdvancedFilterDelegate(feeding);
-                tabWidget.setExpandedWidget(new AdvancedMagnetUpgradeWidget(slotIndex, feeding));
+            // spotless: off
+
+            // Feeding
+            if (wrapper instanceof AdvancedFeedingUpgradeWrapper upgrade) {
+                upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
+                tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, upgrade));
+            } else if (wrapper instanceof FeedingUpgradeWrapper upgrade) {
+                upgradeSlotGroup.updateFilterDelegate(upgrade);
+                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, upgrade));
+            }
+
+            // Magnet
+            else if (wrapper instanceof AdvancedMagnetUpgradeWrapper upgrade) {
+                upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
+                tabWidget.setExpandedWidget(new AdvancedMagnetUpgradeWidget(slotIndex, upgrade));
             } else if (wrapper instanceof MagnetUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
                 tabWidget.setExpandedWidget(new MagnetUpgradeWidget(slotIndex, upgrade));
-            } else if (wrapper instanceof AdvancedUpgradeWrapper upgrade) {
+            }
+
+            // Filter
+            else if (wrapper instanceof AdvancedFilterUpgradeWrapper feeding) {
+                upgradeSlotGroup.updateAdvancedFilterDelegate(feeding);
+                tabWidget.setExpandedWidget(new AdvancedFilterUpgradeWidget(slotIndex, feeding));
+            } else if (wrapper instanceof FilterUpgradeWrapper upgrade) {
+                upgradeSlotGroup.updateFilterDelegate(upgrade);
+                tabWidget.setExpandedWidget(new FilterUpgradeWidget(slotIndex, upgrade));
+            }
+
+            // Base
+            else if (wrapper instanceof AdvancedUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
                 tabWidget.setExpandedWidget(
                     new AdvancedExpandedTabWidget<>(slotIndex, upgrade, stack, upgrade.getSettingLangKey()));
@@ -300,6 +322,8 @@ public class BackpackPanel extends ModularPanel {
                 tabWidget.setExpandedWidget(
                     new BasicExpandedTabWidget<>(slotIndex, upgrade, stack, upgrade.getSettingLangKey()));
             }
+
+            // spotless: on
 
             if (tabWidget.getExpandedWidget() != null) {
                 getContext().getUISettings()

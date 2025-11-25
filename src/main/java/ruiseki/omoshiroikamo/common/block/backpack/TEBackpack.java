@@ -54,6 +54,9 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, int side) {
+        if (!handler.canInsert(stack)) {
+            return false;
+        }
         ItemStack existing = handler.getStackInSlot(slot);
         if (existing != null) {
             return ItemUtils.areStackMergable(existing, stack);
@@ -65,6 +68,9 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     public boolean canExtractItem(int slot, ItemStack stack, int side) {
         ItemStack existing = handler.getStackInSlot(slot);
         if (existing == null || existing.stackSize < stack.stackSize) {
+            return false;
+        }
+        if (!handler.canExtract(stack)) {
             return false;
         }
         return stack.getItem() == existing.getItem();

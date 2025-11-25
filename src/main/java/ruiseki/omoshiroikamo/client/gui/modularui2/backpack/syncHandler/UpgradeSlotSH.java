@@ -51,9 +51,9 @@ public class UpgradeSlotSH extends ItemSlotSH {
             case UPDATE_ADVANCED_FEEDING:
                 updateAdvanceFeedingUpgrade(buf);
                 break;
-            // case UPDATE_FILTER_WAY:
-            // // updateFilterUpgrade(buf);
-            // break;
+            case UPDATE_FILTER_WAY:
+                updateFilterUpgrade(buf);
+                break;
             case UPDATE_MAGNET:
                 updateMagnetUpgrade(buf);
                 break;

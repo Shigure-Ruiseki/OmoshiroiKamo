@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedFeedingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedFilterUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedPickupUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemBackpack;
@@ -20,6 +21,7 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemBatteryUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemFilterUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemPickupUpgrade;
@@ -40,7 +42,7 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 public enum ModItems {
 
     BACKPACK(useBackpack, new ItemBackpack()),
-    BASE_UPGRADE(useBackpack, new ItemUpgrade()),
+    BASE_UPGRADE(useBackpack, new ItemUpgrade<>()),
     STACK_UPGRADE(useBackpack, new ItemStackUpgrade()),
     CRAFTING_UPGRADE(useBackpack, new ItemCraftingUpgrade()),
     MAGNET_UPGRADE(useBackpack, new ItemMagnetUpgrade()),
@@ -52,6 +54,8 @@ public enum ModItems {
     BATTERY_UPGRADE(useBackpack, new ItemBatteryUpgrade()),
     EVERLASTING_UPGRADE(useBackpack, new ItemEverlastingUpgrade()),
     INCEPTION_UPGRADE(useBackpack, new ItemInceptionUpgrade()),
+    FILTER_UPGRADE(useBackpack, new ItemFilterUpgrade()),
+    ADVANCED_FILTER_UPGRADE(useBackpack, new ItemAdvancedFilterUpgrade()),
 
     ANALYZER(useChicken || useCow, new ItemAnalyzer()),
     CHICKEN_CATCHER(useChicken, new ItemChickenCatcher()),

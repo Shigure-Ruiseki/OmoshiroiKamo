@@ -315,6 +315,8 @@ item.pickupUpgrade.name=Pickup Upgrade
 item.advancedPickupUpgrade.name=Adv. Pickup Upgrade
 item.feedingUpgrade.name=Feeding Upgrade
 item.advancedFeedingUpgrade.name=Adv. Feeding Upgrade
+item.filterUpgrade.name=Filter Upgrade
+item.advancedFilterUpgrade.name=Adv. Filter Upgrade
 item.inceptionUpgrade.name=Inception Upgrade
 
 item.stabilizedEnderPear.name=Stabilized Ender Pearl

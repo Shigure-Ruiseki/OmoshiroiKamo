@@ -58,6 +58,8 @@ public enum ModObject {
     itemBatteryUpgrade,
     itemEverlastingUpgrade,
     itemInceptionUpgrade,
+    itemFilterUpgrade,
+    itemAdvancedFilterUpgrade,
 
     itemStabilizedEnderPear,
     itemPhotovoltaicCell,
