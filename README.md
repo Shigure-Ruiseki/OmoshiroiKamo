@@ -77,9 +77,7 @@ a rewritten backport of the modern Environmental Tech mod:
 - [X] Inception upgrade
 - [X] Pickup upgrade
 - [X] Feeding upgrade
-- [ ] Deposit upgrade
-- [ ] Restock upgrade
-- [ ] Filter upgrade
+- [X] Filter upgrade
 - [X] Magnet upgrade
 - [ ] Void upgrade
 - [ ] Crafting upgrade

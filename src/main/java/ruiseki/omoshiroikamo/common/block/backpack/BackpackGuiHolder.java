@@ -4,19 +4,14 @@ import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ceilDi
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.factory.PosGuiData;
-import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-
-import ruiseki.omoshiroikamo.common.util.item.BaublesUtils;
-import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
 public abstract class BackpackGuiHolder {
 
@@ -86,25 +81,12 @@ public abstract class BackpackGuiHolder {
                 if (!(player instanceof EntityPlayerMP)) {
                     return;
                 }
-                ItemStack backpackItem = handler.getBackpack();
-                ItemStack current;
-
-                if (data.getInventoryType() == InventoryTypes.PLAYER) {
-                    current = player.inventory.mainInventory[data.getSlotIndex()];
-                    if (current != null && current.getItem() instanceof BlockBackpack.ItemBackpack) {
-                        player.inventory.mainInventory[data.getSlotIndex()] = backpackItem;
-                    }
-                } else if (data.getInventoryType() == InventoryTypes.BAUBLES && LibMods.Baubles.isLoaded()) {
-                    current = BaublesUtils.instance()
-                        .getBaubles(player)
-                        .getStackInSlot(data.getSlotIndex());
-                    if (current != null && current.getItem() instanceof BlockBackpack.ItemBackpack) {
-                        BaublesUtils.instance()
-                            .getBaubles(player)
-                            .setInventorySlotContents(data.getSlotIndex(), backpackItem);
-                    }
-                }
+                data.getUsedItemStack()
+                    .setTagCompound(
+                        handler.getBackpack()
+                            .getTagCompound());
             });
+
             return panel;
         }
     }

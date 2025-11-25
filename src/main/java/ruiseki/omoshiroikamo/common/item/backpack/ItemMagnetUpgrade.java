@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.MagnetUpgradeWrapper;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -27,9 +26,6 @@ public class ItemMagnetUpgrade extends ItemUpgrade<MagnetUpgradeWrapper> {
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "magnet_upgrade"));
-        list.add(
-            ItemNBTUtils.getNBT(itemstack)
-                .toString());
     }
 
     @Override

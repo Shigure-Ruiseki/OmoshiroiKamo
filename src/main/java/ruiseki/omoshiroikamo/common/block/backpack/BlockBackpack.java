@@ -117,6 +117,11 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         }
 
         @Override
+        public boolean isValidArmor(ItemStack stack, int armorType, Entity entity) {
+            return armorType == 1;
+        }
+
+        @Override
         public boolean hasCustomEntity(ItemStack stack) {
             return true;
         }
