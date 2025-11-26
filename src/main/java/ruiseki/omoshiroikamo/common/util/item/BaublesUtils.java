@@ -12,6 +12,7 @@ import baubles.api.BaublesApi;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
 public class BaublesUtils {
 
@@ -64,6 +65,7 @@ public class BaublesUtils {
      * Wrap it in a ShadowInventory if you need to.
      */
     public IInventory getBaubles(EntityPlayer player) {
+        if (!LibMods.Baubles.isLoaded()) return null;
         return BaublesApi.getBaubles(player);
     }
 

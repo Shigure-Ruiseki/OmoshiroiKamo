@@ -1,10 +1,8 @@
 package ruiseki.omoshiroikamo;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -17,7 +15,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.cow.StallTESR;
@@ -70,28 +67,17 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
         RenderingRegistry.registerEntityRenderingHandler(EntityCowsCow.class, new RenderCowsCow());
 
-        RenderingRegistry.registerBlockHandler(JsonModelISBRH.INSTANCE);
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_BASE.getItem(), new ItemBackpackRenderer());
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_IRON.getItem(), new ItemBackpackRenderer());
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_GOLD.getItem(), new ItemBackpackRenderer());
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_DIAMOND.getItem(), new ItemBackpackRenderer());
-        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_OBSIDIAN.getItem(), new ItemBackpackRenderer());
-        for (Object obj : Block.blockRegistry) {
-            Block block = (Block) obj;
-
-            if (block.getRenderType() == JsonModelISBRH.JSON_ISBRH_ID) {
-                Item item = Item.getItemFromBlock(block);
-                if (item != null) {
-                    MinecraftForgeClient.registerItemRenderer(item, JsonModelISBRH.INSTANCE);
-                }
-            }
-        }
-
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
+
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_BASE.getItem(), new ItemBackpackRenderer());
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_IRON.getItem(), new ItemBackpackRenderer());
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_GOLD.getItem(), new ItemBackpackRenderer());
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_DIAMOND.getItem(), new ItemBackpackRenderer());
+        MinecraftForgeClient.registerItemRenderer(ModBlocks.BACKPACK_OBSIDIAN.getItem(), new ItemBackpackRenderer());
     }
 
     public EntityPlayer getClientPlayer() {

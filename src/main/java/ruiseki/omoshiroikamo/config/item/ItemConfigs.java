@@ -28,4 +28,7 @@ public class ItemConfigs {
 
     @Config.DefaultBoolean(true)
     public static boolean renderBaubles;
+
+    @Config.DefaultBoolean(true)
+    public static boolean renderArmor;
 }

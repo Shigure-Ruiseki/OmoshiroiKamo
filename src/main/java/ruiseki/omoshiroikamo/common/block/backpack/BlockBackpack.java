@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -20,10 +21,11 @@ import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
+import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.client.BlockColor;
 import ruiseki.omoshiroikamo.api.client.IBaubleRender;
 import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
@@ -98,16 +100,37 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
     public void init() {
         GameRegistry.registerBlock(this, ItemBackpack.class, name);
         GameRegistry.registerTileEntity(teClass, name + "TileEntity");
-        BlockColor.registerBlockColors((world, x, y, z, tintIndex) -> {
-            TileEntity tile = world.getTileEntity(x, y, z);
-            if (tile instanceof TEBackpack backpack) {
-                if (tintIndex == 0) {
-                    return EnumDye.rgbToAbgr(backpack.getMainColor());
-                } else if (tintIndex == 1) {
-                    return EnumDye.rgbToAbgr(backpack.getAccentColor());
+        BlockColor.registerBlockColors(new IBlockColor() {
+
+            @Override
+            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (te instanceof TEBackpack backpack) {
+                    BackpackHandler handler = new BackpackHandler(
+                        null,
+                        backpack,
+                        (BlockBackpack) backpack.getBlockType());
+                    if (tintIndex == 0) {
+                        return EnumDye.rgbToAbgr(handler.getMainColor());
+                    }
+                    if (tintIndex == 1) {
+                        return EnumDye.rgbToAbgr(handler.getAccentColor());
+                    }
                 }
+                return EnumDye.WHITE.dyeToAbgr();
             }
-            return EnumDye.WHITE.dyeToAbgr();
+
+            @Override
+            public int colorMultiplier(ItemStack stack, int tintIndex) {
+                BackpackHandler handler = new BackpackHandler(stack, null, (ItemBackpack) stack.getItem());
+                if (tintIndex == 0) {
+                    return EnumDye.rgbToAbgr(handler.getMainColor());
+                }
+                if (tintIndex == 1) {
+                    return EnumDye.rgbToAbgr(handler.getAccentColor());
+                }
+                return EnumDye.BROWN.dyeToAbgr();
+            }
         }, this);
     }
 

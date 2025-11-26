@@ -13,10 +13,15 @@ import net.minecraft.world.World;
 import baubles.api.BaubleType;
 import baubles.api.expanded.BaubleItemHelper;
 import baubles.api.expanded.IBaubleExpanded;
+import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.common.entity.EntityDoppleganger;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
+@Optional.InterfaceList({
+    @Optional.Interface(modid = "Baubles|Expanded", iface = "baubles.api.expanded.IBaubleExpanded"),
+    @Optional.Interface(modid = "Baubles", iface = "baubles.api.IBauble"), })
 public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
 
     private static final String TAG_HASHCODE = "playerHashcode";
@@ -64,6 +69,7 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (!disableRightClickEquip) {
             return itemStack;
@@ -81,27 +87,32 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
         return false;
     }
 
     // Bauble
     @Override
+    @Optional.Method(modid = "Baubles")
     public BaubleType getBaubleType(ItemStack itemstack) {
         return null;
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public boolean canEquip(ItemStack stack, EntityLivingBase player) {
         return true;
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public boolean canUnequip(ItemStack stack, EntityLivingBase player) {
         return true;
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public void onEquipped(ItemStack stack, EntityLivingBase player) {
         if (player != null) {
             if (!player.worldObj.isRemote) {
@@ -119,11 +130,13 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public void onUnequipped(ItemStack stack, EntityLivingBase player) {
         // NO-OP
     }
 
     @Override
+    @Optional.Method(modid = "Baubles")
     public void onWornTick(ItemStack stack, EntityLivingBase player) {
         if (getLastPlayerHashcode(stack) != player.hashCode()) {
             onEquippedOrLoadedIntoWorld(stack, player);
@@ -132,6 +145,7 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     }
 
     @Override
+    @Optional.Method(modid = "Baubles|Expanded")
     public String[] getBaubleTypes(ItemStack itemstack) {
         return null;
     }
@@ -139,7 +153,7 @@ public class ItemBlockBauble extends ItemBlockOK implements IBaubleExpanded {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         super.addInformation(stack, player, list, flag);
-        if (GuiScreen.isShiftKeyDown()) {
+        if (GuiScreen.isShiftKeyDown() && LibMods.BaublesExpanded.isLoaded()) {
             String[] types = getBaubleTypes(stack);
             BaubleItemHelper.addSlotInformation(list, types);
         }

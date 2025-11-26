@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
-import static ruiseki.omoshiroikamo.api.client.JsonModelISBRH.JSON_ISBRH_ID;
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 import java.util.Random;

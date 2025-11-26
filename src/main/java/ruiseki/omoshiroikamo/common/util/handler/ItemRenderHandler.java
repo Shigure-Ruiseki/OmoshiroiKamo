@@ -27,6 +27,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.client.IBaubleRender;
 import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.api.client.RenderUtils;
+import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 
 @EventBusSubscriber
@@ -34,7 +35,7 @@ public class ItemRenderHandler {
 
     @SubscribeEvent
     public static void onPlayerRender(RenderPlayerEvent.Specials.Post event) {
-        if (!ItemConfigs.renderBaubles || event.entityLiving.getActivePotionEffect(Potion.invisibility) != null) {
+        if (event.entityLiving.getActivePotionEffect(Potion.invisibility) != null) {
             return;
         }
 
@@ -62,6 +63,9 @@ public class ItemRenderHandler {
     }
 
     private static void renderBauble(InventoryBaubles inv, RenderPlayerEvent event, RenderUtils.RenderType type) {
+        if (!ItemConfigs.renderBaubles && !(LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
+            return;
+        }
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack != null) {
@@ -78,6 +82,9 @@ public class ItemRenderHandler {
     }
 
     private static void renderArmor(InventoryPlayer inv, RenderPlayerEvent event, RenderUtils.RenderType type) {
+        if (!ItemConfigs.renderArmor) {
+            return;
+        }
         EntityPlayer player = event.entityPlayer;
 
         for (int armorIndex = 0; armorIndex < 4; armorIndex++) {

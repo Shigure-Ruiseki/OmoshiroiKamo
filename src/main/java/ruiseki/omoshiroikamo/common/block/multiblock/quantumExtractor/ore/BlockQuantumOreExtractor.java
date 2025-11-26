@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore;
 
-import static ruiseki.omoshiroikamo.api.client.JsonModelISBRH.JSON_ISBRH_ID;
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
@@ -13,13 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBBlock;
@@ -49,6 +47,7 @@ public class BlockQuantumOreExtractor extends AbstractMBBlock<TEQuantumExtractor
         GameRegistry.registerTileEntity(TEQuantumOreExtractorT2.class, "TEQuantumOreExtractorT2TileEntity");
         GameRegistry.registerTileEntity(TEQuantumOreExtractorT3.class, "TEQuantumOreExtractorT3TileEntity");
         GameRegistry.registerTileEntity(TEQuantumOreExtractorT4.class, "TEQuantumOreExtractorT4TileEntity");
+        registerBlockColor();
     }
 
     @Override
@@ -77,32 +76,6 @@ public class BlockQuantumOreExtractor extends AbstractMBBlock<TEQuantumExtractor
     @Override
     public IIcon getIcon(int side, int meta) {
         return this.cont_tier;
-    }
-
-    @Override
-    public int getRenderColor(int meta) {
-        int rgb;
-        switch (meta) {
-            case 0:
-                rgb = EnumDye.YELLOW.getColor();
-                break;
-            case 1:
-                rgb = EnumDye.LIGHT_BLUE.getColor();
-                break;
-            case 2:
-                rgb = EnumDye.CYAN.getColor();
-                break;
-            default:
-                rgb = EnumDye.WHITE.getColor();
-                break;
-        }
-
-        return (0xFF << 24) | ((rgb & 0xFF) << 16) | (rgb & 0xFF00) | ((rgb >> 16) & 0xFF);
-    }
-
-    @Override
-    public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
-        return this.getRenderColor(worldIn.getBlockMetadata(x, y, z));
     }
 
     @Override

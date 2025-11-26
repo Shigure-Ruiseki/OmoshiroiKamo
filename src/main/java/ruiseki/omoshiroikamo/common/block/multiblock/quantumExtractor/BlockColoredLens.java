@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor;
 
-import static ruiseki.omoshiroikamo.api.client.JsonModelISBRH.JSON_ISBRH_ID;
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
@@ -123,6 +123,11 @@ public class BlockColoredLens extends BlockOK {
                 return base;
             }
         }
-    }
 
+        @Override
+        public int getColorFromItemStack(ItemStack stack, int pass) {
+            return Block.getBlockFromItem(stack.getItem())
+                .getRenderColor(stack.getItemDamage());
+        }
+    }
 }

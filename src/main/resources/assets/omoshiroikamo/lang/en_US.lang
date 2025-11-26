@@ -293,13 +293,15 @@ tile.backpackIron.name=Iron Backpack
 tile.backpackGold.name=Gold Backpack
 tile.backpackDiamond.name=Diamond Backpack
 tile.backpackObsidian.name=Obsidian Backpack
-item.backPack.Starter.name=Starter Backpack
-item.backPack.Copper.name=Copper Backpack
-item.backPack.Iron.name=Iron Backpack
-item.backPack.Gold.name=Gold Backpack
-item.backPack.Diamond.name=Diamond Backpack
-item.backPack.Obsidian.name=Obsidian Backpack
-item.backPack.Netherite.name=Netherite Backpack
+
+item.backPack.Starter.name=Starter Backpack (Will Remove Next Update)
+item.backPack.Copper.name=Copper Backpack (Will Remove Next Update)
+item.backPack.Iron.name=Iron Backpack (Will Remove Next Update)
+item.backPack.Gold.name=Gold Backpack (Will Remove Next Update)
+item.backPack.Diamond.name=Diamond Backpack (Will Remove Next Update)
+item.backPack.Obsidian.name=Obsidian Backpack (Will Remove Next Update)
+item.backPack.Netherite.name=Netherite Backpack (Will Remove Next Update)
+
 item.upgrade.name=Upgrade Base
 item.stackUpgrade.Starter.name=Stack Upgrade Starter Tier
 item.stackUpgrade.Iron.name=Stack Upgrade Tier 1
