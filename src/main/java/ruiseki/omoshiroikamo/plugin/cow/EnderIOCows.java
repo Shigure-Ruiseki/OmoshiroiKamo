@@ -2,9 +2,6 @@ package ruiseki.omoshiroikamo.plugin.cow;
 
 import java.util.List;
 
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 
@@ -28,83 +25,55 @@ public class EnderIOCows extends BaseCowHandler {
     @Override
     public List<CowsRegistryItem> registerCows(List<CowsRegistryItem> allCows) {
 
-        nutrientDistillationCow = addCow(
+        nutrientDistillationCow = tryAddCow(
             allCows,
             "NutrientDistillationCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("nutrient_distillation"), 1000),
+            200,
+            "nutrient_distillation",
             0x4e2a04,
             0xd3a156,
             SpawnType.NORMAL);
 
-        hootchCow = addCow(
-            allCows,
-            "HootchCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("hootch"), 1000),
-            0x8c6239,
-            0xf2d9ac,
-            SpawnType.NORMAL);
+        hootchCow = tryAddCow(allCows, "HootchCow", 201, "hootch", 0x8c6239, 0xf2d9ac, SpawnType.NORMAL);
 
-        rocketFuelCow = addCow(
-            allCows,
-            "RocketFuelCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("rocket_fuel"), 1000),
-            0xffff33,
-            0xffcc00,
-            SpawnType.NORMAL);
+        rocketFuelCow = tryAddCow(allCows, "RocketFuelCow", 202, "rocket_fuel", 0xffff33, 0xffcc00, SpawnType.NORMAL);
 
-        fireWaterCow = addCow(
-            allCows,
-            "FireWaterCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("fire_water"), 1000),
-            0xff3300,
-            0xffff66,
-            SpawnType.HELL);
+        fireWaterCow = tryAddCow(allCows, "FireWaterCow", 203, "fire_water", 0xff3300, 0xffff66, SpawnType.HELL);
 
-        liquidSunshineCow = addCow(
+        liquidSunshineCow = tryAddCow(
             allCows,
             "LiquidSunshineCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("liquid_sunshine"), 1000),
+            204,
+            "liquid_sunshine",
             0xffff66,
             0xffffff,
             SpawnType.NORMAL);
 
-        cloudSeedCow = addCow(
-            allCows,
-            "CloudSeedCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("cloud_seed"), 1000),
-            0xa0c4ff,
-            0xcaf0f8,
-            SpawnType.SNOW);
+        cloudSeedCow = tryAddCow(allCows, "CloudSeedCow", 205, "cloud_seed", 0xa0c4ff, 0xcaf0f8, SpawnType.SNOW);
 
-        cloudSeedConcentratedCow = addCow(
+        cloudSeedConcentratedCow = tryAddCow(
             allCows,
             "CloudSeedConcentratedCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("cloud_seed_concentrated"), 1000),
+            206,
+            "cloud_seed_concentrated",
             0x5390d9,
             0x90e0ef,
             SpawnType.SNOW);
 
-        enderDistillationCow = addCow(
+        enderDistillationCow = tryAddCow(
             allCows,
             "EnderDistillationCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("ender_distillation"), 1000),
+            207,
+            "ender_distillation",
             0x006666,
             0x33cccc,
             SpawnType.HELL);
 
-        vaporOfLevityCow = addCow(
+        vaporOfLevityCow = tryAddCow(
             allCows,
             "VaporOfLevityCow",
-            this.nextID(),
-            new FluidStack(FluidRegistry.getFluid("vapor_of_levity"), 1000),
+            208,
+            "vapor_of_levity",
             0xccffff,
             0xffffff,
             SpawnType.NORMAL);

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -95,6 +96,36 @@ public abstract class BaseCowHandler {
         ModCompatInformation.addInformation(cowID, new ModCompatInformation(this.getModID(), "", this.getModName()));
 
         return cow;
+    }
+
+    protected CowsRegistryItem tryAddCow(List<CowsRegistryItem> allCows, String name, int id, String fluidName,
+        int primary, int secondary, SpawnType type) {
+        if (FluidRegistry.getFluid(fluidName) != null) {
+            return addCow(
+                allCows,
+                name,
+                id,
+                new FluidStack(FluidRegistry.getFluid(fluidName), 1000),
+                primary,
+                secondary,
+                type);
+        }
+        return null;
+    }
+
+    protected CowsRegistryItem tryAddCow(List<CowsRegistryItem> allCows, String name, int id, String fluidName,
+        int fluidAmount, int primary, int secondary, SpawnType type) {
+        if (FluidRegistry.getFluid(fluidName) != null) {
+            return addCow(
+                allCows,
+                name,
+                id,
+                new FluidStack(FluidRegistry.getFluid(fluidName), fluidAmount),
+                primary,
+                secondary,
+                type);
+        }
+        return null;
     }
 
     protected void setParents(CowsRegistryItem child, Object parent1, Object parent2) {
