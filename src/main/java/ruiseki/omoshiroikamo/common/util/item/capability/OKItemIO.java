@@ -57,7 +57,6 @@ public class OKItemIO extends SimpleItemIO {
                 inv.setInventorySlotContents(slot, stack);
             }
 
-            @Override
             protected boolean canExtract(ItemStack stack, int slot) {
 
                 if (inv instanceof ISidedInventory sided) {
@@ -74,6 +73,11 @@ public class OKItemIO extends SimpleItemIO {
                 }
 
                 return inv.isItemValidForSlot(slot, stack);
+            }
+
+            @Override
+            protected boolean canAccess(ItemStack stack, int slot) {
+                return canExtract(stack, slot) || canInsert(stack, slot);
             }
 
             @Override

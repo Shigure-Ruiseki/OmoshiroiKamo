@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
@@ -120,7 +121,7 @@ public class ItemCowSpawnEgg extends ItemOK {
             NBTTagCompound entityNBT = new NBTTagCompound();
             entity.writeEntityToNBT(entityNBT);
 
-            NBTTagCompound stackNBT = ItemNBTHelper.getNBT(stack);
+            NBTTagCompound stackNBT = ItemNBTUtils.getNBT(stack);
             for (String key : stackNBT.func_150296_c()) {
                 NBTBase value = stackNBT.getTag(key);
                 entityNBT.setTag(key, value.copy());
@@ -154,7 +155,7 @@ public class ItemCowSpawnEgg extends ItemOK {
             NBTTagCompound entityNBT = new NBTTagCompound();
             cow.writeEntityToNBT(entityNBT);
 
-            NBTTagCompound stackNBT = ItemNBTHelper.getNBT(stack);
+            NBTTagCompound stackNBT = ItemNBTUtils.getNBT(stack);
             for (String key : stackNBT.func_150296_c()) {
                 NBTBase value = stackNBT.getTag(key);
                 entityNBT.setTag(key, value.copy());

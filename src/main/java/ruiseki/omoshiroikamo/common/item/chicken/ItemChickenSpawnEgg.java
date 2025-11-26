@@ -24,11 +24,11 @@ import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
-import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 public class ItemChickenSpawnEgg extends ItemOK {
 
@@ -139,7 +139,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
             NBTTagCompound entityNBT = new NBTTagCompound();
             entity.writeEntityToNBT(entityNBT);
 
-            NBTTagCompound stackNBT = ItemNBTHelper.getNBT(stack);
+            NBTTagCompound stackNBT = ItemNBTUtils.getNBT(stack);
             for (String key : stackNBT.func_150296_c()) {
                 NBTBase value = stackNBT.getTag(key);
                 entityNBT.setTag(key, value.copy());

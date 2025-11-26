@@ -6,9 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import crazypants.enderio.EnderIO;
-import crazypants.enderio.power.IPowerContainer;
 import io.netty.buffer.ByteBuf;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
 
@@ -49,9 +48,9 @@ public class PacketEnergy implements IMessage, IMessageHandler<PacketEnergy, IMe
 
     @Override
     public IMessage onMessage(PacketEnergy message, MessageContext ctx) {
-        EntityPlayer player = EnderIO.proxy.getClientPlayer();
+        EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
         TileEntity te = player.worldObj.getTileEntity(message.x, message.y, message.z);
-        if (te instanceof IPowerContainer me) {
+        if (te instanceof IEnergyTile me) {
             me.setEnergyStored(message.storedEnergy);
         }
         return null;
