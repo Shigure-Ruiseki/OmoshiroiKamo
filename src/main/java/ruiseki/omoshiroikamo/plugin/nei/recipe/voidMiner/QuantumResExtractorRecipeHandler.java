@@ -47,12 +47,15 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
     @Override
     public void loadAllRecipes() {
         Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry registry = QuantumExtractorRecipes.quantumResExtractorRegistry;
-        for (WeightedStackBase ws : registry.getUnFocusedList()) {
-            ItemStack output = ws.getMainStack();
-            if (output != null) {
-                if (added.add(ws)) {
-                    arecipes.add(new CachedVoidResRecipe(ws, null));
+        IFocusableRegistry[] registries = QuantumExtractorRecipes.resRegistry;
+        for (int tier = 0; tier < registries.length; tier++) {
+            IFocusableRegistry registry = registries[tier];
+            for (WeightedStackBase ws : registry.getUnFocusedList()) {
+                ItemStack output = ws.getMainStack();
+                if (output != null) {
+                    if (added.add(ws)) {
+                        arecipes.add(new CachedVoidResRecipe(ws, null, tier));
+                    }
                 }
             }
         }
@@ -62,24 +65,26 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
     public void loadCraftingRecipes(ItemStack item) {
         super.loadCraftingRecipes(item);
         Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry registry = QuantumExtractorRecipes.quantumResExtractorRegistry;
-
-        for (WeightedStackBase ws : registry.getUnFocusedList()) {
-            ItemStack output = ws.getMainStack();
-            if (output != null && ItemUtils.areStacksEqual(output, item)) {
-                if (added.add(ws)) {
-                    arecipes.add(new CachedVoidResRecipe(ws, null));
-                }
-            }
-        }
-
-        EnumDye color = registry.getPrioritizedLens(item);
-        if (color != null) {
-            for (WeightedStackBase ws : registry.getFocusedList(color, 1.0f)) {
+        IFocusableRegistry[] registries = QuantumExtractorRecipes.resRegistry;
+        for (int tier = 0; tier < registries.length; tier++) {
+            IFocusableRegistry registry = registries[tier];
+            for (WeightedStackBase ws : registry.getUnFocusedList()) {
                 ItemStack output = ws.getMainStack();
                 if (output != null && ItemUtils.areStacksEqual(output, item)) {
                     if (added.add(ws)) {
-                        arecipes.add(new CachedVoidResRecipe(ws, color));
+                        arecipes.add(new CachedVoidResRecipe(ws, null, tier));
+                    }
+                }
+            }
+
+            EnumDye color = registry.getPrioritizedLens(item);
+            if (color != null) {
+                for (WeightedStackBase ws : registry.getFocusedList(color, 1.0f)) {
+                    ItemStack output = ws.getMainStack();
+                    if (output != null && ItemUtils.areStacksEqual(output, item)) {
+                        if (added.add(ws)) {
+                            arecipes.add(new CachedVoidResRecipe(ws, color, tier));
+                        }
                     }
                 }
             }
@@ -90,7 +95,6 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
     public void loadUsageRecipes(ItemStack ingredient) {
         super.loadUsageRecipes(ingredient);
         Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry registry = QuantumExtractorRecipes.quantumResExtractorRegistry;
 
         Item item = ingredient.getItem();
         Item coloredLend = ModBlocks.COLORED_LENS.getItem();
@@ -98,25 +102,29 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
         boolean isLens = (item == lens || item == coloredLend);
 
         if (isLens) {
-            if (ingredient.getItem() == lens) {
-                for (WeightedStackBase ws : registry.getUnFocusedList()) {
-                    ItemStack output = ws.getMainStack();
-                    if (output != null) {
-                        if (added.add(ws)) {
-                            arecipes.add(new CachedVoidResRecipe(ws, null));
+            IFocusableRegistry[] registries = QuantumExtractorRecipes.oreRegistry;
+            for (int tier = 0; tier < registries.length; tier++) {
+                IFocusableRegistry registry = registries[tier];
+                if (ingredient.getItem() == lens) {
+                    for (WeightedStackBase ws : registry.getUnFocusedList()) {
+                        ItemStack output = ws.getMainStack();
+                        if (output != null) {
+                            if (added.add(ws)) {
+                                arecipes.add(new CachedVoidResRecipe(ws, null, tier));
+                            }
                         }
                     }
-                }
-            } else {
-                BlockColoredLens coloredLens = (BlockColoredLens) Block.getBlockFromItem(ingredient.getItem());
-                EnumDye color = coloredLens.getFocusColor(ingredient.getItemDamage());
-                List<WeightedStackBase> focusedList = registry.getFocusedList(color, 1.0f);
+                } else {
+                    BlockColoredLens coloredLens = (BlockColoredLens) Block.getBlockFromItem(ingredient.getItem());
+                    EnumDye color = coloredLens.getFocusColor(ingredient.getItemDamage());
+                    List<WeightedStackBase> focusedList = registry.getFocusedList(color, 1.0f);
 
-                for (WeightedStackBase ws : focusedList) {
-                    ItemStack output = ws.getMainStack();
-                    if (output != null && registry.getPrioritizedLens(output) == color) {
-                        if (added.add(ws)) {
-                            arecipes.add(new CachedVoidResRecipe(ws, color));
+                    for (WeightedStackBase ws : focusedList) {
+                        ItemStack output = ws.getMainStack();
+                        if (output != null && registry.getPrioritizedLens(output) == color) {
+                            if (added.add(ws)) {
+                                arecipes.add(new CachedVoidResRecipe(ws, color, tier));
+                            }
                         }
                     }
                 }
@@ -124,22 +132,15 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
         }
     }
 
+
     public class CachedVoidResRecipe extends CachedBaseRecipe {
 
         private List<PositionedStack> input;
         private PositionedStack output;
-        private EnumDye color;
-
-        public CachedVoidResRecipe(WeightedStackBase recipe, EnumDye color) {
+        public CachedVoidResRecipe(WeightedStackBase recipe, EnumDye color, int tier) {
             this.input = new ArrayList<>();
-            List<ItemStack> miners = new ArrayList<>();
-            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0));
-            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1));
-            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2));
-            miners.add(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3));
-            this.input.add(new PositionedStack(miners, 25, 16));
+            this.input.add(new PositionedStack(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, tier), 25, 16));
 
-            this.color = color;
             if (color == null) {
                 this.input.add(new PositionedStack(ModBlocks.LENS.newItemStack(1, 0), 75, 16));
             } else {
@@ -152,12 +153,9 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
 
         @Override
         public List<PositionedStack> getIngredients() {
-            return getCycledIngredients(cycleticks, input);
+            return input;
         }
 
-        public EnumDye getColor() {
-            return color;
-        }
 
         @Override
         public PositionedStack getResult() {

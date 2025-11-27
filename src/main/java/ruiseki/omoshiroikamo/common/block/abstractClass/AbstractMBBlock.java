@@ -31,7 +31,7 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override
-            public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
                 if (world != null) {
                     int meta = world.getBlockMetadata(x, y, z);
                     if (tintIndex == 0) {
@@ -51,7 +51,7 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
             }
 
             @Override
-            public int colorMultiplier(@Nullable ItemStack stack, int tintIndex) {
+            public int colorMultiplier(ItemStack stack, int tintIndex) {
                 if (tintIndex == 0 && stack != null) {
                     switch (stack.getItemDamage()) {
                         case 0:

@@ -29,7 +29,7 @@ public class TEQuantumResExtractorT2 extends TEQuantumExtractor {
 
     @Override
     public IFocusableRegistry getRegistry() {
-        return QuantumExtractorRecipes.quantumResExtractorRegistry;
+        return QuantumExtractorRecipes.resRegistry[1];
     }
 
     @Override
