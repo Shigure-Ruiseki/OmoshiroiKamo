@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.common.entity;
 
 import java.util.Iterator;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -125,19 +124,19 @@ public class EntityImmortalItem extends EntityItemOK {
                 || (int) this.prevPosZ != (int) this.posZ;
 
             if (flag || this.ticksExisted % 25 == 0) {
-                Block block = this.worldObj.getBlock(
-                    MathHelper.floor_double(this.posX),
-                    MathHelper.floor_double(this.posY),
-                    MathHelper.floor_double(this.posZ));
-
-                if (block.getMaterial() == Material.lava) {
+                if (this.isInsideOfMaterial(Material.lava)) {
                     if (floatOnLava) {
-                        this.motionY = 0.05D;
+                        this.motionY = Math.max(this.motionY, 0.05D);
                         this.motionX *= 0.5D;
                         this.motionZ *= 0.5D;
                     } else if (!immuneToLava && !immortal) {
-                        this.motionY = 0.2D;
+                        this.motionY = 0.1D;
                         this.playSound("random.fizz", 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+                        this.setFire(3);
+                    }
+                    this.fallDistance = 0.0F;
+                    if (this.motionY < -0.02D) {
+                        this.motionY = -0.02D;
                     }
                 }
 

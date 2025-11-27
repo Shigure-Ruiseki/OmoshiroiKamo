@@ -5,8 +5,8 @@
 
 ## About This Mod
 
-Omoshiroi Kamo is an open-source collection of modern mod backports for Minecraft 1.7.10. It brings newer mechanics, QoL
-improvements, and entire systems from later Minecraft versions back into legacy modpacks.
+Omoshiroi Kamo is an open-source collection of modern mod backports for Minecraft 1.7.10.
+It brings newer mod from later Minecraft versions back into legacy modpacks.
 
 Prefer for 1.7.10 tech packs, or any old-version modpack that wants modern features.
 Being open-source, contributions are always welcome — if you have ideas, fixes, or improvements,
@@ -14,7 +14,7 @@ I’d be thrilled to see them!
 
 ## Backports
 
-Can On/Off Backport Mod in Config
+Each backport module can be individually enabled or disabled in the config.
 
 - Environmental Tech (Backport Rewrite)
 - Chickens, More Chickens and Roost (Backport)
@@ -28,9 +28,6 @@ Can On/Off Backport Mod in Config
 - [StructureLib (GTNH)](https://github.com/GTNewHorizons/StructureLib)
 - [ModularUI2 (GTNH)](https://github.com/GTNewHorizons/ModularUI2)
 - [GTNHLib (GTNH)](https://github.com/GTNewHorizons/GTNHLib)
-- [Baubles Expanded (GTNH)](https://github.com/GTNewHorizons/Baubles-Expanded)
-- [EnderCore ](https://github.com/GTNewHorizons/EnderCore) (before 1.3.4) — from version 1.3.4 onward, it is not
-  required.
 
 ## Features:
 
@@ -42,7 +39,7 @@ a rewritten backport of the modern Environmental Tech mod:
 
 - Quantum Extractor (Ore, Blocks, Special Drops)
 - Solar Array (Generate Energy From Sun)
-- Quantum Extractor (Give Multieffect by Energy)
+- Quantum Beacon (Give Multieffect by Energy)
 - Extractor NEI integration
 
 ![Multiblock](https://media.forgecdn.net/attachments/1388/695/2025-11-11_12-44-56-png.png)
@@ -52,7 +49,7 @@ a rewritten backport of the modern Environmental Tech mod:
 - Over 50 Chicken Breeds Producing Ores, Materials, And Modded Items
 - Breeding System With Stats (Growth, Gain, Strength)
 - Breeding / Roost Automation
-- Mob Info Compat & Most Resources from Other Mods.
+- Supports most modded resources.
 - Breeding trees and NEI integration
 - Can Have Trait It will Give Buff/Debuff (Can Turn Off In Config)
 
@@ -73,15 +70,27 @@ a rewritten backport of the modern Environmental Tech mod:
 
 ### Sophisticated Backpacks (Backport Rewrite WIP)
 
-- [X] Stack upgrade
-- [X] Inception upgrade
-- [X] Pickup upgrade
-- [X] Feeding upgrade
-- [X] Filter upgrade
-- [X] Magnet upgrade
+#### Backpack
+
+- [ ] Sorting system
+- [ ] Memory slot
+- [ ] Lockable by player
+- [X] Backpack model render on player's back when equipped
+- [X] Custom Backpack main color and accent color
+- [X] Modifier each backpack and upgrade slot size
+
+#### Upgrades
+
+- [X] Stack upgrade — extended backpacks max slot stack
+- [X] Inception upgrade — backpacks inside backpacks
+- [X] Pickup upgrade — auto-pickup items
+- [X] Feeding upgrade — auto-feed player
+- [X] Filter upgrade — filter in/out to access backpacks block
+- [X] Magnet upgrade — collect item and experient around player
+- [X] Everlasting upgrade — make backpack immortal
 - [ ] Void upgrade
 - [ ] Crafting upgrade
-- [ ] Everlasting upgrade
+- [ ] Jukebox upgrade
 
 ### Traits (WIP)
 
@@ -97,10 +106,14 @@ This mod is primarily released under the MIT License (see LICENSE file).
 Some parts of this mod (assets or code) are derived from other mods and retain
 their original licenses:
 
+- This mod IS NOT OFFICIAL WORK of original author P3pp3rF1y & CleanroomMC,
+  please do not report any issue to original author.
 - RetroSophisticated Backpacks (textures/models) — original license applies.
 - Any GPLv3 components used in this project remain under GPLv3 and must be
-  respected accordingly.
+respected accordingly, all assets are forked before
+Sophisticated Backpack changes license to All Right Reserve.
 
 You are free to use, modify, and distribute the MIT-licensed portions of this
 project, but must comply with the original licenses of the included third-party
 components.
+

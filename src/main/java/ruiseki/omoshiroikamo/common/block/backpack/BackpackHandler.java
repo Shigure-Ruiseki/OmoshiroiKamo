@@ -17,19 +17,18 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
-import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.BackpackItemStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IDepositUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IFeedingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IPickupUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IRestockUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
@@ -43,17 +42,15 @@ public class BackpackHandler implements IItemHandlerModifiable {
     @Getter
     private final BackpackItemStackHandler backpackHandler;
     @Getter
-    private final ItemStackHandler upgradeHandler;
+    private final UpgradeItemStackHandler upgradeHandler;
     @Getter
-    private static final String BACKPACK_INV = "BackpackInv";
+    public static final String BACKPACK_INV = "BackpackInv";
     @Getter
-    private static final String UPGRADE_INV = "UpgradeInv";
+    public static final String UPGRADE_INV = "UpgradeInv";
     @Getter
-    private static final String BACKPACK_SLOTS = "BackpackSlots";
+    public static final String BACKPACK_SLOTS = "BackpackSlots";
     @Getter
-    private static final String UPGRADE_SLOTS = "UpgradeSlots";
-    @Getter
-    private static final String OPEN_GUI = "OpenGui";
+    public static final String UPGRADE_SLOTS = "UpgradeSlots";
 
     @Getter
     @Setter
@@ -69,9 +66,9 @@ public class BackpackHandler implements IItemHandlerModifiable {
     @Setter
     private int accentColor;
     @Getter
-    private static final String MAIN_COLOR = "MainColor";
+    public static final String MAIN_COLOR = "MainColor";
     @Getter
-    private static final String ACCENT_COLOR = "AccentColor";
+    public static final String ACCENT_COLOR = "AccentColor";
 
     public BackpackHandler(ItemStack backpack, TileEntity tile) {
         this(backpack, tile, 120, 7);
@@ -102,7 +99,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
             }
         };
 
-        this.upgradeHandler = new ItemStackHandler(upgradeSlots) {
+        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots) {
 
             @Override
             protected void onContentsChanged(int slot) {
@@ -209,8 +206,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
     }
 
     public boolean canNestBackpack() {
-        for (int i = 0; i < upgradeHandler.getSlots(); i++) {
-            ItemStack stack = upgradeHandler.getStackInSlot(i);
+        for (ItemStack stack : upgradeHandler.getStacks()) {
             if (stack != null && stack.getItem() instanceof ItemInceptionUpgrade) {
                 return true;
             }
@@ -220,10 +216,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     public boolean canRemoveInceptionUpgrade() {
         boolean containsBackpack = false;
-        int backpackSize = backpackHandler.getSlots();
-
-        for (int i = 0; i < backpackSize; i++) {
-            ItemStack stack = backpackHandler.getStackInSlot(i);
+        for (ItemStack stack : backpackHandler.getStacks()) {
             if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
                 containsBackpack = true;
                 break;
@@ -234,11 +227,8 @@ public class BackpackHandler implements IItemHandlerModifiable {
             return true;
         }
 
-        int upgradeSize = upgradeHandler.getSlots();
         int inceptionCount = 0;
-
-        for (int i = 0; i < upgradeSize; i++) {
-            ItemStack stack = upgradeHandler.getStackInSlot(i);
+        for (ItemStack stack : upgradeHandler.getStacks()) {
             if (stack != null && stack.getItem() instanceof ItemInceptionUpgrade) {
                 inceptionCount++;
             }
@@ -278,25 +268,6 @@ public class BackpackHandler implements IItemHandlerModifiable {
         }
 
         return new ArrayList<>(result);
-    }
-
-    public boolean canDeposit(int slotIndex) {
-        ItemStack stack = getStackInSlot(slotIndex);
-        for (IDepositUpgrade upgrade : gatherCapabilityUpgrades(IDepositUpgrade.class)) {
-            if (upgrade.canDeposit(stack)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean canRestock(ItemStack stack) {
-        for (IRestockUpgrade upgrade : gatherCapabilityUpgrades(IRestockUpgrade.class)) {
-            if (upgrade.canRestock(stack)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean canInsert(ItemStack stack) {
@@ -355,6 +326,16 @@ public class BackpackHandler implements IItemHandlerModifiable {
         return result;
     }
 
+    public boolean canImportant() {
+
+        for (ItemStack stack : upgradeHandler.getStacks()) {
+            if (stack != null && stack.getItem() instanceof ItemEverlastingUpgrade) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // ---------- ITEM STACK ----------
     public void writeToItem() {
         if (backpack == null) {
@@ -401,9 +382,15 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
         if (tag.hasKey(BACKPACK_INV)) {
             backpackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
+            if (backpackHandler.getSlots() != backpackSlots) {
+                backpackHandler.resize(backpackSlots);
+            }
         }
         if (tag.hasKey(UPGRADE_INV)) {
             upgradeHandler.deserializeNBT(tag.getCompoundTag(UPGRADE_INV));
+            if (upgradeHandler.getSlots() != upgradeSlots) {
+                upgradeHandler.resize(upgradeSlots);
+            }
         }
     }
 

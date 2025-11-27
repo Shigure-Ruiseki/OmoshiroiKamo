@@ -266,7 +266,41 @@ public class ItemRecipes {
                     'I',
                     "ingotIron",
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.PICKUP_UPGRADE.get()));
+
+            // Advanced Magnet Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.ADVANCED_MAGNET_UPGRADE.get(),
+                    "EIE",
+                    "IUI",
+                    "R L",
+                    'E',
+                    "pearlEnder",
+                    'R',
+                    "dustRedstone",
+                    'L',
+                    "gemLapis",
+                    'I',
+                    "ingotIron",
+                    'U',
+                    ModItems.ADVANCED_PICKUP_UPGRADE.get()));
+
+            // Advanced Magnet Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.ADVANCED_MAGNET_UPGRADE.get(),
+                    " D ",
+                    "GUG",
+                    "RRR",
+                    'D',
+                    "gemDiamond",
+                    'R',
+                    "dustRedstone",
+                    'G',
+                    "ingotGold",
+                    'U',
+                    ModItems.ADVANCED_PICKUP_UPGRADE.get()));
 
             // Feeding Upgrade
             GameRegistry.addRecipe(
@@ -283,6 +317,100 @@ public class ItemRecipes {
                     new ItemStack(Items.golden_apple, 1, 0),
                     'M',
                     new ItemStack(Items.speckled_melon, 1, 0),
+                    'U',
+                    ModItems.BASE_UPGRADE.get()));
+
+            // Advanced Feeding Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.ADVANCED_FEEDING_UPGRADE.get(),
+                    " D ",
+                    "GUG",
+                    "RRR",
+                    'D',
+                    "gemDiamond",
+                    'R',
+                    "dustRedstone",
+                    'G',
+                    "ingotGold",
+                    'U',
+                    ModItems.FEEDING_UPGRADE.get()));
+
+            // Pickup Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.PICKUP_UPGRADE.get(),
+                    " D ",
+                    "GUG",
+                    "RRR",
+                    'D',
+                    Blocks.sticky_piston,
+                    'R',
+                    "dustRedstone",
+                    'G',
+                    Items.string,
+                    'U',
+                    ModItems.BASE_UPGRADE.get()));
+
+            // Advanced Pickup Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.ADVANCED_PICKUP_UPGRADE.get(),
+                    " D ",
+                    "GUG",
+                    "RRR",
+                    'D',
+                    "gemDiamond",
+                    'R',
+                    "dustRedstone",
+                    'G',
+                    "ingotGold",
+                    'U',
+                    ModItems.PICKUP_UPGRADE.get()));
+
+            // Filter Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.FILTER_UPGRADE.get(),
+                    "RSR",
+                    "SUS",
+                    "RSR",
+                    'R',
+                    "dustRedstone",
+                    'S',
+                    Items.string,
+                    'U',
+                    ModItems.BASE_UPGRADE.get()));
+
+            // Advanced Filter Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.ADVANCED_FILTER_UPGRADE.get(),
+                    " D ",
+                    "GUG",
+                    "RRR",
+                    'D',
+                    "gemDiamond",
+                    'R',
+                    "dustRedstone",
+                    'G',
+                    "ingotGold",
+                    'U',
+                    ModItems.FILTER_UPGRADE.get()));
+
+            // Inception Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.INCEPTION_UPGRADE.get(),
+                    "ESE",
+                    "DUD",
+                    "EDE",
+                    'D',
+                    "gemDiamond",
+                    'S',
+                    "itemNetherStar",
+                    'E',
+                    Items.ender_eye,
                     'U',
                     ModItems.BASE_UPGRADE.get()));
 

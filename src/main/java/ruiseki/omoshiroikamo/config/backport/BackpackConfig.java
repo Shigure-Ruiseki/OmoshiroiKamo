@@ -16,10 +16,47 @@ public class BackpackConfig {
     @Config.Comment("Main Magnet Settings")
     public static final MagnetConfig magnetConfig = new MagnetConfig();
 
-    @Config.DefaultIntList({ 27, 36, 54, 81, 108, 120 })
-    public static int[] backpackSlots;
-    @Config.DefaultIntList({ 1, 1, 2, 3, 5, 7 })
-    public static int[] upgradeSlots;
+    @Config.DefaultInt(27)
+    public static int leatherBackpackSlots;
+
+    @Config.DefaultInt(54)
+    public static int ironBackpackSlots;
+
+    @Config.DefaultInt(81)
+    public static int goldBackpackSlots;
+
+    @Config.DefaultInt(108)
+    public static int diamondBackpackSlots;
+
+    @Config.DefaultInt(120)
+    public static int obsidianBackpackSlots;
+
+    @Config.DefaultInt(1)
+    public static int leatherUpgradeSlots;
+
+    @Config.DefaultInt(2)
+    public static int ironUpgradeSlots;
+
+    @Config.DefaultInt(3)
+    public static int goldUpgradeSlots;
+
+    @Config.DefaultInt(5)
+    public static int diamondUpgradeSlots;
+
+    @Config.DefaultInt(7)
+    public static int obsidianUpgradeSlots;
+
+    @Config.DefaultInt(2)
+    public static int stackUpgradeTier1Mul;
+
+    @Config.DefaultInt(4)
+    public static int stackUpgradeTier2Mul;
+
+    @Config.DefaultInt(8)
+    public static int stackUpgradeTier3Mul;
+
+    @Config.DefaultInt(16)
+    public static int stackUpgradeTier4Mul;
 
     @Config.LangKey(LibResources.CONFIG + "feedingConfig")
     public static class FeedingConfig {

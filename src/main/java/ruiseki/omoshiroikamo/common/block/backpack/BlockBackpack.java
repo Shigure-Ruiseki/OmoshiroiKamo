@@ -1,5 +1,9 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ACCENT_COLOR;
+import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.MAIN_COLOR;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -7,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -21,7 +26,6 @@ import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -34,10 +38,11 @@ import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.common.block.ItemBlockBauble;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
-import ruiseki.omoshiroikamo.common.entity.EntityImmortalItem;
+import ruiseki.omoshiroikamo.common.entity.EntityBackpack;
+import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class BlockBackpack extends AbstractBlock<TEBackpack> {
+public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockColor {
 
     @Getter
     private final int backpackSlots;
@@ -48,7 +53,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
     protected BlockBackpack(String name, int backpackSlots, int upgradeSlots) {
         super(name, TEBackpack.class, Material.cloth);
         setStepSound(soundTypeCloth);
-        setHardness(0f);
+        setHardness(1f);
         this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
     }
@@ -59,7 +64,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
 
     @Override
     public int getRenderType() {
-        return JsonModelISBRH.JSON_ISBRH_ID;
+        return JSON_ISBRH_ID;
     }
 
     @Override
@@ -100,38 +105,35 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
     public void init() {
         GameRegistry.registerBlock(this, ItemBackpack.class, name);
         GameRegistry.registerTileEntity(teClass, name + "TileEntity");
-        BlockColor.registerBlockColors(new IBlockColor() {
+    }
 
-            @Override
-            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
-                TileEntity te = world.getTileEntity(x, y, z);
-                if (te instanceof TEBackpack backpack) {
-                    BackpackHandler handler = new BackpackHandler(
-                        null,
-                        backpack,
-                        (BlockBackpack) backpack.getBlockType());
-                    if (tintIndex == 0) {
-                        return EnumDye.rgbToAbgr(handler.getMainColor());
-                    }
-                    if (tintIndex == 1) {
-                        return EnumDye.rgbToAbgr(handler.getAccentColor());
-                    }
-                }
-                return EnumDye.WHITE.dyeToAbgr();
+    @Override
+    public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TEBackpack backpack) {
+            if (tintIndex == 0) {
+                return EnumDye.rgbToAbgr(backpack.getMainColor());
             }
+            if (tintIndex == 1) {
+                return EnumDye.rgbToAbgr(backpack.getAccentColor());
+            }
+        }
+        return EnumDye.WHITE.dyeToAbgr();
+    }
 
-            @Override
-            public int colorMultiplier(ItemStack stack, int tintIndex) {
-                BackpackHandler handler = new BackpackHandler(stack, null, (ItemBackpack) stack.getItem());
-                if (tintIndex == 0) {
-                    return EnumDye.rgbToAbgr(handler.getMainColor());
-                }
-                if (tintIndex == 1) {
-                    return EnumDye.rgbToAbgr(handler.getAccentColor());
-                }
-                return EnumDye.BROWN.dyeToAbgr();
-            }
-        }, this);
+    @Override
+    public int colorMultiplier(ItemStack stack, int tintIndex) {
+        NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
+        int main = tag.hasKey(MAIN_COLOR) ? tag.getInteger(MAIN_COLOR) : 0xFFCC613A;
+        int accent = tag.hasKey(ACCENT_COLOR) ? tag.getInteger(ACCENT_COLOR) : 0xFF622E1A;
+
+        if (tintIndex == 0) {
+            return EnumDye.rgbToAbgr(main);
+        }
+        if (tintIndex == 1) {
+            return EnumDye.rgbToAbgr(accent);
+        }
+        return EnumDye.WHITE.dyeToAbgr();
     }
 
     @Override
@@ -172,7 +174,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            return new EntityImmortalItem(world, location, stack);
+            BackpackHandler handler = new BackpackHandler(stack, null, this);
+            return new EntityBackpack(world, location, stack, handler);
         }
 
         @Override
@@ -185,14 +188,12 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> {
         }
 
         @Override
-        public int getColorFromItemStack(ItemStack stack, int tintIndex) {
-            BackpackHandler handler = new BackpackHandler(stack, null, this);
-            if (tintIndex == 0) {
-                return EnumDye.rgbToAbgr(handler.getMainColor());
-            } else if (tintIndex == 1) {
-                return EnumDye.rgbToAbgr(handler.getAccentColor());
+        public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+            super.onCreated(stack, world, player);
+            if (!stack.hasTagCompound()) {
+                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                cap.writeToItem();
             }
-            return EnumDye.BROWN.dyeToAbgr();
         }
 
         @Override

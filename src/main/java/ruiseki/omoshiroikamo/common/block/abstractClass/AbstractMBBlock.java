@@ -47,7 +47,7 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
                         }
                     }
                 }
-                return IBlockColor.super.colorMultiplier(world, x, y, z, tintIndex);
+                return EnumDye.WHITE.dyeToAbgr();
             }
 
             @Override
@@ -64,7 +64,7 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
                             return EnumDye.WHITE.dyeToAbgr();
                     }
                 }
-                return IBlockColor.super.colorMultiplier(null, 0, 0, 0, tintIndex);
+                return EnumDye.WHITE.dyeToAbgr();
             }
         }, this);
     }

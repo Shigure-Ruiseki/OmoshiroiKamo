@@ -41,6 +41,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.BlockQ
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarArray;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarCell;
 import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 
 public enum ModBlocks {
 
@@ -77,11 +78,31 @@ public enum ModBlocks {
     MODIFIER_FIRE_RESISTANCE(useEnvironmentalTech, BlockModifierFireResistance.create()),
     MODIFIER_NULL(useEnvironmentalTech, BlockModifierCore.create()),
 
-    BACKPACK_BASE(useBackpack, BlockBackpack.create(ModObject.backpackLeather.unlocalisedName, 27, 1)),
-    BACKPACK_IRON(useBackpack, BlockBackpack.create(ModObject.blockBackpackIron.unlocalisedName, 54, 2)),
-    BACKPACK_GOLD(useBackpack, BlockBackpack.create(ModObject.blockBackpackGold.unlocalisedName, 81, 3)),
-    BACKPACK_DIAMOND(useBackpack, BlockBackpack.create(ModObject.blockBackpackDiamond.unlocalisedName, 108, 5)),
-    BACKPACK_OBSIDIAN(useBackpack, BlockBackpack.create(ModObject.blockBackpackObsidian.unlocalisedName, 120, 7)),
+    BACKPACK_BASE(useBackpack,
+        BlockBackpack.create(
+            ModObject.backpackLeather.unlocalisedName,
+            BackpackConfig.leatherBackpackSlots,
+            BackpackConfig.leatherUpgradeSlots)),
+    BACKPACK_IRON(useBackpack,
+        BlockBackpack.create(
+            ModObject.blockBackpackIron.unlocalisedName,
+            BackpackConfig.ironBackpackSlots,
+            BackpackConfig.ironUpgradeSlots)),
+    BACKPACK_GOLD(useBackpack,
+        BlockBackpack.create(
+            ModObject.blockBackpackGold.unlocalisedName,
+            BackpackConfig.goldBackpackSlots,
+            BackpackConfig.goldUpgradeSlots)),
+    BACKPACK_DIAMOND(useBackpack,
+        BlockBackpack.create(
+            ModObject.blockBackpackDiamond.unlocalisedName,
+            BackpackConfig.diamondBackpackSlots,
+            BackpackConfig.diamondUpgradeSlots)),
+    BACKPACK_OBSIDIAN(useBackpack,
+        BlockBackpack.create(
+            ModObject.blockBackpackObsidian.unlocalisedName,
+            BackpackConfig.obsidianBackpackSlots,
+            BackpackConfig.obsidianUpgradeSlots)),
 
     STALL(useCow, BlockStall.create()),
     ROOST(useChicken, BlockRoost.create()),

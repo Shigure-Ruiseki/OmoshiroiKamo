@@ -90,49 +90,47 @@ public class NBTShapedOreRecipe extends ShapedOreRecipe {
     @Override
     public ItemStack getCraftingResult(InventoryCrafting crafting) {
         ItemStack result = super.getCraftingResult(crafting);
-        if (result == null) {
-            return null;
-        }
+        if (result == null) return null;
+
+        NBTTagCompound combinedNBT = result.hasTagCompound() ? (NBTTagCompound) result.getTagCompound()
+            .copy() : new NBTTagCompound();
 
         for (int i = 0; i < crafting.getSizeInventory(); i++) {
             ItemStack input = crafting.getStackInSlot(i);
-            if (input != null && input.hasTagCompound() && matchesAllowed(input)) {
-                NBTTagCompound inputTag = input.getTagCompound();
-                NBTTagCompound copy = new NBTTagCompound();
+            if (input == null || !input.hasTagCompound() || !matchesAllowed(input)) continue;
 
-                if (allowAllTags) {
-                    copy = (NBTTagCompound) inputTag.copy();
-                } else if (allowAllExcept) {
-                    for (String key : inputTag.func_150296_c()) {
-                        if (!excludedTags.contains(key)) {
-                            copy.setTag(key, inputTag.getTag(key));
-                        }
-                    }
-                } else {
-                    for (String tag : allowedTags) {
-                        if (inputTag.hasKey(tag)) {
-                            copy.setTag(tag, inputTag.getTag(tag));
-                        }
+            NBTTagCompound inputTag = input.getTagCompound();
+            NBTTagCompound copy;
+
+            if (allowAllTags) {
+                copy = (NBTTagCompound) inputTag.copy();
+            } else if (allowAllExcept) {
+                copy = new NBTTagCompound();
+                for (String key : inputTag.func_150296_c()) {
+                    if (!excludedTags.contains(key)) {
+                        copy.setTag(key, inputTag.getTag(key));
                     }
                 }
-
-                for (String key : this.extraResultNBT.func_150296_c()) {
-                    copy.setTag(key, this.extraResultNBT.getTag(key));
+            } else {
+                copy = new NBTTagCompound();
+                for (String tag : allowedTags) {
+                    if (inputTag.hasKey(tag)) {
+                        copy.setTag(tag, inputTag.getTag(tag));
+                    }
                 }
+            }
 
-                if (!copy.hasNoTags()) {
-                    result.setTagCompound(copy);
-                }
-                break;
+            for (String key : copy.func_150296_c()) {
+                combinedNBT.setTag(key, copy.getTag(key));
             }
         }
 
-        if (!this.extraResultNBT.hasNoTags()) {
-            NBTTagCompound tag = result.hasTagCompound() ? result.getTagCompound() : new NBTTagCompound();
-            for (String key : this.extraResultNBT.func_150296_c()) {
-                tag.setTag(key, this.extraResultNBT.getTag(key));
-            }
-            result.setTagCompound(tag);
+        for (String key : this.extraResultNBT.func_150296_c()) {
+            combinedNBT.setTag(key, this.extraResultNBT.getTag(key));
+        }
+
+        if (!combinedNBT.hasNoTags()) {
+            result.setTagCompound(combinedNBT);
         }
 
         return result;

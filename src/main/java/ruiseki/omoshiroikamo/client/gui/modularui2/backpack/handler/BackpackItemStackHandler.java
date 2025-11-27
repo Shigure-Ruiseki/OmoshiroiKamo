@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
@@ -30,6 +33,20 @@ public class BackpackItemStackHandler extends ItemStackHandler {
     @Override
     public int getSlotLimit(int slot) {
         return 64 * handler.getTotalStackMultiplier();
+    }
+
+    public void resize(int newSize) {
+        List<ItemStack> newStacks = new ArrayList<>(newSize);
+
+        for (int i = 0; i < newSize; i++) {
+            if (i < stacks.size()) {
+                newStacks.add(stacks.get(i));
+            } else {
+                newStacks.add(null);
+            }
+        }
+
+        this.stacks = newStacks;
     }
 
     @Override

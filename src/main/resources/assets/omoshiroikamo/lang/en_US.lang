@@ -145,17 +145,12 @@ tooltip.everlasting_upgrade=Makes the backpack invincible, preventing despawning
 tooltip.battery_upgrade=Stores energy and automatically recharges energy-using items.
 tooltip.upgrade_base=It does nothing! Feel free to put it in your upgrade slots!
 tooltip.stack_upgrade=Multiplies stack size by %d
-tooltip.exponential_stack_upgrade=Stack multipliers will stack by multiplying instead of adding
 tooltip.crafting_upgrade=Adds additional crafting grid to side of backpack
 tooltip.inception_upgrade=Allows backpacks to be stored inside backpack
 tooltip.pickup_upgrade=Allows backpacks to pickup items
 tooltip.advanced_pickup_upgrade=Allows backpack to pickup items with more configurations
 tooltip.feeding_upgrade=Allows backpacks to automatically feed player
 tooltip.advanced_feeding_upgrade=Allows backpack to automatically feed player with more configurations
-tooltip.deposit_upgrade=Deposits items from backpack into sneak-right-clicked inventory
-tooltip.advanced_deposit_upgrade=Deposits items from backpack into sneak-right-clicked inventory with more configurations
-tooltip.restock_upgrade=Restocks items from sneak-right-clicked inventory to backpack
-tooltip.advanced_restock_upgrade=Restocks items from sneak-right-clicked inventory to backpack with more configurations
 tooltip.filter_upgrade=Filters inserted items when placing in world
 tooltip.advanced_filter_upgrade=Filters inserted items when placing in world with more configurations
 
@@ -288,11 +283,11 @@ element.dendro.name=Dendro
 
 #Item
 
-tile.backpackLeather.name=Leather Backpack
-tile.backpackIron.name=Iron Backpack
-tile.backpackGold.name=Gold Backpack
-tile.backpackDiamond.name=Diamond Backpack
-tile.backpackObsidian.name=Obsidian Backpack
+tile.backpackLeather.name=Leather Backpack (WIP)
+tile.backpackIron.name=Iron Backpack (WIP)
+tile.backpackGold.name=Gold Backpack (WIP)
+tile.backpackDiamond.name=Diamond Backpack (WIP)
+tile.backpackObsidian.name=Obsidian Backpack (WIP)
 
 item.backPack.Starter.name=Starter Backpack (Will Remove Next Update)
 item.backPack.Copper.name=Copper Backpack (Will Remove Next Update)
