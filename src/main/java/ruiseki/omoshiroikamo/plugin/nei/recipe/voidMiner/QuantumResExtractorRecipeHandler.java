@@ -132,11 +132,11 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
         }
     }
 
-
     public class CachedVoidResRecipe extends CachedBaseRecipe {
 
         private List<PositionedStack> input;
         private PositionedStack output;
+
         public CachedVoidResRecipe(WeightedStackBase recipe, EnumDye color, int tier) {
             this.input = new ArrayList<>();
             this.input.add(new PositionedStack(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, tier), 25, 16));
@@ -155,7 +155,6 @@ public class QuantumResExtractorRecipeHandler extends RecipeHandlerBase {
         public List<PositionedStack> getIngredients() {
             return input;
         }
-
 
         @Override
         public PositionedStack getResult() {
