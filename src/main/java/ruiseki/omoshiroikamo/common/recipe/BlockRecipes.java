@@ -31,11 +31,11 @@ public class BlockRecipes {
                     "SCS",
                     "LLL",
                     'S',
-                    new ItemStack(Items.string, 1, 1),
+                    new ItemStack(Items.string, 1, 0),
                     'L',
                     "itemLeather",
                     'C',
-                    new ItemStack(Blocks.chest, 1, 1)));
+                    new ItemStack(Blocks.chest, 1, 0)));
 
             // Iron Backpack
             GameRegistry.addRecipe(
