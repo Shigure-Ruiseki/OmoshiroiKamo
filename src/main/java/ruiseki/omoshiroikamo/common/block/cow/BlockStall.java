@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.cow;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -12,7 +14,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
@@ -32,7 +33,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
 
     @Override
     public int getRenderType() {
-        return JsonModelISBRH.JSON_ISBRH_ID;
+        return JSON_ISBRH_ID;
     }
 
     @Override
