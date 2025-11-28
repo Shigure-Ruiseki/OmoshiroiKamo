@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -19,12 +20,18 @@ import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
+import ruiseki.omoshiroikamo.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.common.network.PacketStall;
 
 public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile {
 
     public static final int amount = FluidContainerRegistry.BUCKET_VOLUME * 10;
 
     public final SmartTank tank = new SmartTank(amount);
+    protected int lastUpdateLevel = -1;
+
+    private boolean tankDirty = false;
+    private Fluid lastFluid = null;
 
     private int progress;
     @Getter
@@ -138,7 +145,35 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
 
         produceMilk();
 
+        int filledLevel = getFilledLevel();
+        if (lastUpdateLevel != filledLevel) {
+            lastUpdateLevel = filledLevel;
+            tankDirty = false;
+            return true;
+        }
+
+        if (tankDirty && shouldDoWorkThisTick(10)) {
+            PacketHandler.sendToAllAround(new PacketStall(this), this);
+            worldObj.func_147453_f(xCoord, yCoord, zCoord, getBlockType());
+            Fluid held = tank.getFluid() == null ? null
+                : tank.getFluid()
+                    .getFluid();
+            if (lastFluid != held) {
+                lastFluid = held;
+                worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
+            }
+            tankDirty = false;
+        }
+
         return false;
+    }
+
+    private int getFilledLevel() {
+        int level = (int) Math.floor(16 * tank.getFilledRatio());
+        if (level == 0 && tank.getFluidAmount() > 0) {
+            level = 1;
+        }
+        return level;
     }
 
     private void produceMilk() {
@@ -170,12 +205,20 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         if (resource == null || !tank.canDrainFluidType(resource.getFluid())) {
             return null;
         }
-        return tank.drain(resource, doDrain);
+        FluidStack res = tank.drain(resource, doDrain);
+        if (res != null && res.amount > 0 && doDrain) {
+            tankDirty = true;
+        }
+        return res;
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-        return tank.drain(maxDrain, doDrain);
+        FluidStack res = tank.drain(maxDrain, doDrain);
+        if (res != null && res.amount > 0 && doDrain) {
+            tankDirty = true;
+        }
+        return res;
     }
 
     @Override

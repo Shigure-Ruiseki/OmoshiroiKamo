@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
@@ -20,6 +21,7 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class BlockStall extends AbstractBlock<TEStall> {
 
@@ -96,9 +98,9 @@ public class BlockStall extends AbstractBlock<TEStall> {
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof TEStall TEStall) {
+        if (tileEntity instanceof TEStall stall) {
 
-            float progress = TEStall.getProgress();
+            float progress = stall.getProgress();
 
             if (progress > 0) {
                 float percent = Math.max(0f, progress);
@@ -113,6 +115,21 @@ public class BlockStall extends AbstractBlock<TEStall> {
                 tooltip.add(
                     EnumChatFormatting.GRAY + LibMisc.LANG.localize(
                         "tooltip.progress") + ": " + EnumChatFormatting.GRAY + "N/A" + EnumChatFormatting.RESET);
+            }
+
+            FluidStack stored = stall.tank.getFluid();
+            if (!(stored == null || stored.getFluid() == null)) {
+                String fluidName = stored.getFluid()
+                    .getLocalizedName(stored);
+                int amount = stored.amount;
+                tooltip.add(
+                    String.format(
+                        "%s%s : %s (%d %s)",
+                        EnumChatFormatting.GRAY,
+                        LibMisc.LANG.localize(LibResources.TOOLTIP + "entity.fluid"),
+                        fluidName,
+                        amount,
+                        LibMisc.LANG.localize("fluid.millibucket.abr")));
             }
         }
     }
