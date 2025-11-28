@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.common.block;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -19,7 +21,6 @@ import net.minecraft.world.World;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
@@ -88,7 +89,7 @@ public class BlockOK extends Block {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        if (!(getRenderType() == JsonModelISBRH.JSON_ISBRH_ID)) {
+        if (!(getRenderType() == JSON_ISBRH_ID)) {
             blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
         }
     }
