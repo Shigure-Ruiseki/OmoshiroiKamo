@@ -8,8 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
@@ -31,17 +29,23 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override
-            public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
                 if (world != null) {
                     int meta = world.getBlockMetadata(x, y, z);
                     if (tintIndex == 0) {
                         switch (meta) {
                             case 0:
-                                return EnumDye.YELLOW.dyeToAbgr();
+                                return EnumDye.rgbToAbgr(138, 255, 250);
                             case 1:
-                                return EnumDye.LIGHT_BLUE.dyeToAbgr();
+                                return EnumDye.rgbToAbgr(255, 179, 71);
                             case 2:
-                                return EnumDye.CYAN.dyeToAbgr();
+                                return EnumDye.rgbToAbgr(11, 0, 51);
+                            case 3:
+                                return EnumDye.rgbToAbgr(27, 255, 212);
+                            case 4:
+                                return EnumDye.rgbToAbgr(28, 28, 28);
+                            case 5:
+                                return EnumDye.rgbToAbgr(177, 156, 217);
                             default:
                                 return EnumDye.WHITE.dyeToAbgr();
                         }
@@ -51,15 +55,21 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
             }
 
             @Override
-            public int colorMultiplier(@Nullable ItemStack stack, int tintIndex) {
+            public int colorMultiplier(ItemStack stack, int tintIndex) {
                 if (tintIndex == 0 && stack != null) {
                     switch (stack.getItemDamage()) {
                         case 0:
-                            return EnumDye.YELLOW.dyeToAbgr();
+                            return EnumDye.rgbToAbgr(138, 255, 250);
                         case 1:
-                            return EnumDye.LIGHT_BLUE.dyeToAbgr();
+                            return EnumDye.rgbToAbgr(255, 179, 71);
                         case 2:
-                            return EnumDye.CYAN.dyeToAbgr();
+                            return EnumDye.rgbToAbgr(11, 0, 51);
+                        case 3:
+                            return EnumDye.rgbToAbgr(27, 255, 212);
+                        case 4:
+                            return EnumDye.rgbToAbgr(28, 28, 28);
+                        case 5:
+                            return EnumDye.rgbToAbgr(177, 156, 217);
                         default:
                             return EnumDye.WHITE.dyeToAbgr();
                     }

@@ -106,15 +106,12 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         }
 
         BlockPos pos = new BlockPos(x, y, z, worldObj);
-        if (modifiers.contains(pos)) {
-            return false;
-        }
-
-        if (block == ModBlocks.COLORED_LENS.get() || block == ModBlocks.LENS.get()) {
+        if ((block == ModBlocks.COLORED_LENS.get() || block == ModBlocks.LENS.get()) && lens != pos) {
             lens = new BlockPos(x, y, z, worldObj);
             return true;
         }
-        if (isModifierBlock(block)) {
+
+        if (isModifierBlock(block) && !modifiers.contains(pos)) {
             modifiers.add(pos);
             return true;
         }
@@ -267,11 +264,19 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
                         this.getRegistry()
                             .getFocusedList(this.focusColor, this.focusBoostModifier));
                 } else {
-                    this.focusColor = null;
-                    this.possibleResults.clear();
-                    this.possibleResults.addAll(
-                        this.getRegistry()
-                            .getUnFocusedList());
+                    if (lens.getMetadata() == 1) {
+                        this.focusColor = EnumDye.CRYSTAL;
+                        this.possibleResults.clear();
+                        this.possibleResults.addAll(
+                            this.getRegistry()
+                                .getFocusedList(this.focusColor, this.focusBoostModifier));
+                    } else {
+                        this.focusColor = null;
+                        this.possibleResults.clear();
+                        this.possibleResults.addAll(
+                            this.getRegistry()
+                                .getUnFocusedList());
+                    }
                 }
             } else {
                 this.possibleResults.clear();

@@ -16,6 +16,9 @@ import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
 import ruiseki.omoshiroikamo.common.block.cow.BlockStall;
+import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockAlabasterStructure;
+import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockBasaltStructure;
+import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockHardenedStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockMachineBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockStructureFrame;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierAccuracy;
@@ -59,9 +62,12 @@ public enum ModBlocks {
     LASER_CORE(useEnvironmentalTech, BlockLaserCore.create()),
     COLORED_LENS(useEnvironmentalTech, BlockColoredLens.create()),
     LENS(useEnvironmentalTech, BlockLens.create()),
-    SOLAR_ARRAY(useEnvironmentalTech, BlockSolarArray.create()),
     SOLAR_CELL(useEnvironmentalTech, BlockSolarCell.create()),
+    SOLAR_ARRAY(useEnvironmentalTech, BlockSolarArray.create()),
     STRUCTURE_FRAME(useEnvironmentalTech, BlockStructureFrame.create()),
+    BASALT_STRUCTURE(useEnvironmentalTech, BlockBasaltStructure.create()),
+    ALABASTER_STRUCTURE(useEnvironmentalTech, BlockAlabasterStructure.create()),
+    HARDENED_STRUCTURE(useEnvironmentalTech, BlockHardenedStructure.create()),
     MACHINE_BASE(useEnvironmentalTech, BlockMachineBase.create()),
     MODIFIER_PIEZO(useEnvironmentalTech, BlockModifierPiezo.create()),
     MODIFIER_SPEED(useEnvironmentalTech, BlockModifierSpeed.create()),

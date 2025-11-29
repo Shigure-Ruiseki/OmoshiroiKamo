@@ -26,6 +26,7 @@ import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -105,35 +106,37 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     public void init() {
         GameRegistry.registerBlock(this, ItemBackpack.class, name);
         GameRegistry.registerTileEntity(teClass, name + "TileEntity");
-    }
+        BlockColor.registerBlockColors(new IBlockColor() {
 
-    @Override
-    public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof TEBackpack backpack) {
-            if (tintIndex == 0) {
-                return EnumDye.rgbToAbgr(backpack.getMainColor());
+            @Override
+            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (te instanceof TEBackpack backpack) {
+                    if (tintIndex == 0) {
+                        return EnumDye.rgbToAbgr(backpack.getMainColor());
+                    }
+                    if (tintIndex == 1) {
+                        return EnumDye.rgbToAbgr(backpack.getAccentColor());
+                    }
+                }
+                return -1;
             }
-            if (tintIndex == 1) {
-                return EnumDye.rgbToAbgr(backpack.getAccentColor());
+
+            @Override
+            public int colorMultiplier(ItemStack stack, int tintIndex) {
+                NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
+                int main = tag.hasKey(MAIN_COLOR) ? tag.getInteger(MAIN_COLOR) : 0xFFCC613A;
+                int accent = tag.hasKey(ACCENT_COLOR) ? tag.getInteger(ACCENT_COLOR) : 0xFF622E1A;
+
+                if (tintIndex == 0) {
+                    return EnumDye.rgbToAbgr(main);
+                }
+                if (tintIndex == 1) {
+                    return EnumDye.rgbToAbgr(accent);
+                }
+                return -1;
             }
-        }
-        return EnumDye.WHITE.dyeToAbgr();
-    }
-
-    @Override
-    public int colorMultiplier(ItemStack stack, int tintIndex) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
-        int main = tag.hasKey(MAIN_COLOR) ? tag.getInteger(MAIN_COLOR) : 0xFFCC613A;
-        int accent = tag.hasKey(ACCENT_COLOR) ? tag.getInteger(ACCENT_COLOR) : 0xFF622E1A;
-
-        if (tintIndex == 0) {
-            return EnumDye.rgbToAbgr(main);
-        }
-        if (tintIndex == 1) {
-            return EnumDye.rgbToAbgr(accent);
-        }
-        return EnumDye.WHITE.dyeToAbgr();
+        }, this);
     }
 
     @Override

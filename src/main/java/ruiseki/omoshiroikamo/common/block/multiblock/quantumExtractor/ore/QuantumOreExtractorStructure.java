@@ -279,13 +279,246 @@ public class QuantumOreExtractorStructure {
             "  FPAAAPF  ",
             "   FFFFF   ",
         }};
+    public static final String STRUCTURE_TIER_5 = "tier5";
+    public static final String[][] SHAPE_TIER_5 = new String[][]{
+        {
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     Q     ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+        },
+        {
+            "           ",
+            "           ",
+            "     F     ",
+            "     F     ",
+            "     F     ",
+            "  FFFCFFF  ",
+            "     F     ",
+            "     F     ",
+            "     F     ",
+            "           ",
+            "           ",
+        },
+        {
+            "           ",
+            "     F     ",
+            "           ",
+            "           ",
+            "           ",
+            " F   C   F ",
+            "           ",
+            "           ",
+            "           ",
+            "     F     ",
+            "           ",
+        },
+        {
+            "     F     ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "F    C    F",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     F     ",
+        },
+        {
+            "     F     ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "F    C    F",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     F     ",
+        },
+        {
+            "     F     ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "F    C    F",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     F     ",
+        },
+        {
+            "   FFFFF   ",
+            "  F     F  ",
+            " F       F ",
+            "F         F",
+            "F         F",
+            "F    L    F",
+            "F         F",
+            "F         F",
+            " F       F ",
+            "  F     F  ",
+            "   FFFFF   ",
+        },
+
+        {
+            "           ",
+            "   PPFPP   ",
+            "  PPAFAPP  ",
+            " PPPAFAPPP ",
+            " PAAPFPAAP ",
+            " FFFFCFFFF ",
+            " PAAPFPAAP ",
+            " PPPAFAPPP ",
+            "  PPAFAPP  ",
+            "   PPFPP   ",
+            "           ",
+        }};
+    public static final String STRUCTURE_TIER_6 = "tier6";
+    public static final String[][] SHAPE_TIER_6 = new String[][]{
+        {
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "      Q      ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+        },
+        {
+            "             ",
+            "             ",
+            "      F      ",
+            "      F      ",
+            "      F      ",
+            "      F      ",
+            "  FFFFCFFFF  ",
+            "      F      ",
+            "      F      ",
+            "      F      ",
+            "      F      ",
+            "             ",
+            "             ",
+        },
+        {
+            "             ",
+            "      F      ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            " F    C    F ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "      F      ",
+            "             ",
+        },
+        {
+            "      F      ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "F     C     F",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "      F      ",
+        },
+        {
+            "      F      ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "F     C     F",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "      F      ",
+        },
+        {
+            "      F      ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "F     C     F",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "             ",
+            "      F      ",
+        },
+        {
+            "    FFFFF    ",
+            "  FF     FF  ",
+            " F         F ",
+            " F         F ",
+            "F           F",
+            "F           F",
+            "F     L     F",
+            "F           F",
+            "F           F",
+            " F         F ",
+            " F         F ",
+            "  FF     FF  ",
+            "    FFFFF    ",
+        },
+
+        {
+            "             ",
+            "    PPFPP    ",
+            "  PPPPFPPPP  ",
+            "  PPPAFAPPP  ",
+            " PPPAAFAAPPP ",
+            " PPAAFFFAAPP ",
+            " FFFFFCFFFFF ",
+            " PPAAFFFAAPP ",
+            " PPPAAFAAPPP ",
+            "  PPPAFAPPP  ",
+            "  PPPPFPPPP  ",
+            "    PPFPP    ",
+            "             ",
+        }};
     // spotless:on
 
-    public static final int[][] TIER_OFFSET = { { 3, 0, 3 }, { 3, 0, 3 }, { 5, 0, 5 }, { 5, 0, 5 } };
+    public static final int[][] TIER_OFFSET = { { 3, 0, 3 }, { 3, 0, 3 }, { 5, 0, 5 }, { 5, 0, 5 }, { 5, 0, 5 },
+        { 6, 0, 6 } };
     public static IStructureDefinition<TEQuantumOreExtractorT1> STRUCTURE_DEFINITION_TIER_1;
     public static IStructureDefinition<TEQuantumOreExtractorT2> STRUCTURE_DEFINITION_TIER_2;
     public static IStructureDefinition<TEQuantumOreExtractorT3> STRUCTURE_DEFINITION_TIER_3;
     public static IStructureDefinition<TEQuantumOreExtractorT4> STRUCTURE_DEFINITION_TIER_4;
+    public static IStructureDefinition<TEQuantumOreExtractorT5> STRUCTURE_DEFINITION_TIER_5;
+    public static IStructureDefinition<TEQuantumOreExtractorT6> STRUCTURE_DEFINITION_TIER_6;
 
     @SuppressWarnings("unchecked")
     public static void registerStructureInfo() {
@@ -293,13 +526,18 @@ public class QuantumOreExtractorStructure {
         StructureDefinition.Builder<TEQuantumOreExtractorT2> builder2 = StructureDefinition.builder();
         StructureDefinition.Builder<TEQuantumOreExtractorT3> builder3 = StructureDefinition.builder();
         StructureDefinition.Builder<TEQuantumOreExtractorT4> builder4 = StructureDefinition.builder();
+        StructureDefinition.Builder<TEQuantumOreExtractorT5> builder5 = StructureDefinition.builder();
+        StructureDefinition.Builder<TEQuantumOreExtractorT6> builder6 = StructureDefinition.builder();
 
         builder1.addShape(STRUCTURE_TIER_1, transpose(SHAPE_TIER_1))
-            .addShape(STRUCTURE_TIER_3, transpose(SHAPE_TIER_3))
-            .addShape(STRUCTURE_TIER_4, transpose(SHAPE_TIER_4))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 0))
-            .addElement('P', ofBlockAnyMeta(ModBlocks.MACHINE_BASE.get(), 0))
             .addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
+            .addElement(
+                'P',
+                ofChain(
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 0),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 1),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 2)))
             .addElement(
                 'L',
                 ofChain(
@@ -316,14 +554,19 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 0),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 4),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 8)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 0),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 0),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 0)));
 
         builder2.addShape(STRUCTURE_TIER_2, transpose(SHAPE_TIER_2))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 1))
-            .addElement('P', ofBlockAnyMeta(ModBlocks.MACHINE_BASE.get(), 0))
             .addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
+            .addElement(
+                'P',
+                ofChain(
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 0),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 1),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 2)))
             .addElement(
                 'L',
                 ofChain(
@@ -340,14 +583,19 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 1),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 5),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 9)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 1),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 1),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 1)));
 
         builder3.addShape(STRUCTURE_TIER_3, transpose(SHAPE_TIER_3))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 2))
-            .addElement('P', ofBlockAnyMeta(ModBlocks.MACHINE_BASE.get(), 0))
             .addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
+            .addElement(
+                'P',
+                ofChain(
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 0),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 1),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 2)))
             .addElement(
                 'L',
                 ofChain(
@@ -364,14 +612,19 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 2),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 6),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 10)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 2),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 2),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 2)));
 
         builder4.addShape(STRUCTURE_TIER_4, transpose(SHAPE_TIER_4))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 3))
-            .addElement('P', ofBlockAnyMeta(ModBlocks.MACHINE_BASE.get(), 0))
             .addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
+            .addElement(
+                'P',
+                ofChain(
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 0),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 1),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 2)))
             .addElement(
                 'L',
                 ofChain(
@@ -388,9 +641,67 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 3),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 7),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 11)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 3),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 3),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 3)));
+
+        builder5.addShape(STRUCTURE_TIER_5, transpose(SHAPE_TIER_5))
+            .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 4))
+            .addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
+            .addElement(
+                'P',
+                ofChain(
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 0),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 1),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 2)))
+            .addElement(
+                'L',
+                ofChain(
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LENS.get(), 0),
+                    ofBlock(ModBlocks.LENS.get(), 0),
+                    ofBlockAnyMeta(ModBlocks.COLORED_LENS.get(), 0)))
+            .addElement(
+                'A',
+                ofChain(
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.MODIFIER_NULL.get(), 0),
+                    ofBlock(ModBlocks.MODIFIER_NULL.get(), 0),
+                    ofBlock(ModBlocks.MODIFIER_ACCURACY.get(), 0),
+                    ofBlock(ModBlocks.MODIFIER_SPEED.get(), 0)))
+            .addElement(
+                'F',
+                ofChain(
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 4),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 4),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 4)));
+
+        builder6.addShape(STRUCTURE_TIER_6, transpose(SHAPE_TIER_6))
+            .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 5))
+            .addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
+            .addElement(
+                'P',
+                ofChain(
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 0),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 1),
+                    ofBlock(ModBlocks.MACHINE_BASE.get(), 2)))
+            .addElement(
+                'L',
+                ofChain(
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.LENS.get(), 0),
+                    ofBlock(ModBlocks.LENS.get(), 0),
+                    ofBlockAnyMeta(ModBlocks.COLORED_LENS.get(), 0)))
+            .addElement(
+                'A',
+                ofChain(
+                    ofBlockAdderWithPos(TEQuantumExtractor::addToMachine, ModBlocks.MODIFIER_NULL.get(), 0),
+                    ofBlock(ModBlocks.MODIFIER_NULL.get(), 0),
+                    ofBlock(ModBlocks.MODIFIER_ACCURACY.get(), 0),
+                    ofBlock(ModBlocks.MODIFIER_SPEED.get(), 0)))
+            .addElement(
+                'F',
+                ofChain(
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 5),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 5),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 5)));
 
         IStructureDefinition<TEQuantumOreExtractorT1> definition1 = builder1.build();
         STRUCTURE_DEFINITION_TIER_1 = definition1;
@@ -400,6 +711,10 @@ public class QuantumOreExtractorStructure {
         STRUCTURE_DEFINITION_TIER_3 = definition3;
         IStructureDefinition<TEQuantumOreExtractorT4> definition4 = builder4.build();
         STRUCTURE_DEFINITION_TIER_4 = definition4;
+        IStructureDefinition<TEQuantumOreExtractorT5> definition5 = builder5.build();
+        STRUCTURE_DEFINITION_TIER_5 = definition5;
+        IStructureDefinition<TEQuantumOreExtractorT6> definition6 = builder6.build();
+        STRUCTURE_DEFINITION_TIER_6 = definition6;
 
         IMultiblockInfoContainer
             .registerTileClass(TEQuantumOreExtractorT1.class, new MultiblockInfoContainerT1(definition1));
@@ -409,8 +724,12 @@ public class QuantumOreExtractorStructure {
             .registerTileClass(TEQuantumOreExtractorT3.class, new MultiblockInfoContainerT3(definition3));
         IMultiblockInfoContainer
             .registerTileClass(TEQuantumOreExtractorT4.class, new MultiblockInfoContainerT4(definition4));
+        IMultiblockInfoContainer
+            .registerTileClass(TEQuantumOreExtractorT5.class, new MultiblockInfoContainerT5(definition5));
+        IMultiblockInfoContainer
+            .registerTileClass(TEQuantumOreExtractorT6.class, new MultiblockInfoContainerT6(definition6));
 
-        Logger.info("Register Solar Array Structure Info");
+        Logger.info("Register Quantum Ore Extractor Structure Info");
     }
 
     private static class MultiblockInfoContainerT1 implements IMultiblockInfoContainer<TEQuantumOreExtractorT1> {
@@ -621,6 +940,126 @@ public class QuantumOreExtractorStructure {
         @Override
         public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
             TEQuantumOreExtractorT4 ctx, ExtendedFacing aSide) {
+
+            int built = 0;
+            int tier = ctx.getTier();
+            built = this.structure.survivalBuild(
+                ctx,
+                triggerStack,
+
+                ctx.getStructurePieceName(),
+                ctx.getWorldObj(),
+                ExtendedFacing.DEFAULT,
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                TIER_OFFSET[tier - 1][0],
+                TIER_OFFSET[tier - 1][1],
+                TIER_OFFSET[tier - 1][2],
+                elementBudget,
+                env,
+                false);
+
+            return built;
+        }
+
+        @Override
+        public String[] getDescription(ItemStack stackSize) {
+            return new String[0];
+        }
+    }
+
+    private static class MultiblockInfoContainerT5 implements IMultiblockInfoContainer<TEQuantumOreExtractorT5> {
+
+        private final IStructureDefinition<TEQuantumOreExtractorT5> structure;
+
+        private MultiblockInfoContainerT5(IStructureDefinition<TEQuantumOreExtractorT5> structure) {
+            this.structure = structure;
+        }
+
+        @Override
+        public void construct(ItemStack triggerStack, boolean hintsOnly, TEQuantumOreExtractorT5 ctx,
+            ExtendedFacing aSide) {
+            int tier = ctx.getTier();
+
+            this.structure.buildOrHints(
+                ctx,
+                triggerStack,
+                ctx.getStructurePieceName(),
+                ctx.getWorldObj(),
+                ExtendedFacing.DEFAULT,
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                TIER_OFFSET[tier - 1][0],
+                TIER_OFFSET[tier - 1][1],
+                TIER_OFFSET[tier - 1][2],
+                hintsOnly);
+        }
+
+        @Override
+        public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
+            TEQuantumOreExtractorT5 ctx, ExtendedFacing aSide) {
+
+            int built = 0;
+            int tier = ctx.getTier();
+            built = this.structure.survivalBuild(
+                ctx,
+                triggerStack,
+
+                ctx.getStructurePieceName(),
+                ctx.getWorldObj(),
+                ExtendedFacing.DEFAULT,
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                TIER_OFFSET[tier - 1][0],
+                TIER_OFFSET[tier - 1][1],
+                TIER_OFFSET[tier - 1][2],
+                elementBudget,
+                env,
+                false);
+
+            return built;
+        }
+
+        @Override
+        public String[] getDescription(ItemStack stackSize) {
+            return new String[0];
+        }
+    }
+
+    private static class MultiblockInfoContainerT6 implements IMultiblockInfoContainer<TEQuantumOreExtractorT6> {
+
+        private final IStructureDefinition<TEQuantumOreExtractorT6> structure;
+
+        private MultiblockInfoContainerT6(IStructureDefinition<TEQuantumOreExtractorT6> structure) {
+            this.structure = structure;
+        }
+
+        @Override
+        public void construct(ItemStack triggerStack, boolean hintsOnly, TEQuantumOreExtractorT6 ctx,
+            ExtendedFacing aSide) {
+            int tier = ctx.getTier();
+
+            this.structure.buildOrHints(
+                ctx,
+                triggerStack,
+                ctx.getStructurePieceName(),
+                ctx.getWorldObj(),
+                ExtendedFacing.DEFAULT,
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                TIER_OFFSET[tier - 1][0],
+                TIER_OFFSET[tier - 1][1],
+                TIER_OFFSET[tier - 1][2],
+                hintsOnly);
+        }
+
+        @Override
+        public int survivalConstruct(ItemStack triggerStack, int elementBudget, ISurvivalBuildEnvironment env,
+            TEQuantumOreExtractorT6 ctx, ExtendedFacing aSide) {
 
             int built = 0;
             int tier = ctx.getTier();

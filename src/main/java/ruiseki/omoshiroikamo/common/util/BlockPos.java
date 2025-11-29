@@ -97,26 +97,14 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
 
     @Override
     public boolean equals(final Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (!(o instanceof BlockPos)) {
-            return false;
-        }
+        if (o == this) return true;
+        if (!(o instanceof BlockPos)) return false;
         final BlockPos other = (BlockPos) o;
-        if (!other.canEqual((Object) this)) {
-            return false;
-        }
-        if (getX() != other.getX()) {
-            return false;
-        }
-        if (getY() != other.getY()) {
-            return false;
-        }
-        if (getZ() != other.getZ()) {
-            return false;
-        }
-        return true;
+        if (!other.canEqual(this)) return false;
+        return getX() == other.getX() && getY() == other.getY()
+            && getZ() == other.getZ()
+            && ((getWorld() == null && other.getWorld() == null)
+                || (getWorld() != null && getWorld().equals(other.getWorld())));
     }
 
     protected boolean canEqual(final Object other) {
@@ -130,6 +118,7 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         result = result * PRIME + getX();
         result = result * PRIME + getY();
         result = result * PRIME + getZ();
+        result = result * PRIME + (getWorld() == null ? 43 : getWorld().hashCode());
         return result;
     }
 

@@ -318,7 +318,9 @@ public class FocusableHandler {
         BROWN(EnumDye.BROWN),
         GREEN(EnumDye.GREEN),
         RED(EnumDye.RED),
-        BLACK(EnumDye.BLACK);
+        BLACK(EnumDye.BLACK),
+
+        CRYSTAL(EnumDye.CRYSTAL);
 
         private final EnumDye dye;
 

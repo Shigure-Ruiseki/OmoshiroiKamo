@@ -42,6 +42,8 @@ public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IW
         GameRegistry.registerTileEntity(TESolarArrayT2.class, name + "TESolarArrayT2TileEntity");
         GameRegistry.registerTileEntity(TESolarArrayT3.class, name + "TESolarArrayT3TileEntity");
         GameRegistry.registerTileEntity(TESolarArrayT4.class, name + "TESolarArrayT4TileEntity");
+        GameRegistry.registerTileEntity(TESolarArrayT5.class, name + "TESolarArrayT5TileEntity");
+        GameRegistry.registerTileEntity(TESolarArrayT6.class, name + "TESolarArrayT6TileEntity");
         registerBlockColor();
     }
 
@@ -51,6 +53,8 @@ public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IW
         list.add(new ItemStack(this, 1, 1));
         list.add(new ItemStack(this, 1, 2));
         list.add(new ItemStack(this, 1, 3));
+        list.add(new ItemStack(this, 1, 4));
+        list.add(new ItemStack(this, 1, 5));
     }
 
     @Override
@@ -76,6 +80,10 @@ public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IW
     @Override
     public TileEntity createTileEntity(World world, int meta) {
         switch (meta) {
+            case 5:
+                return new TESolarArrayT6();
+            case 4:
+                return new TESolarArrayT5();
             case 3:
                 return new TESolarArrayT4();
             case 2:

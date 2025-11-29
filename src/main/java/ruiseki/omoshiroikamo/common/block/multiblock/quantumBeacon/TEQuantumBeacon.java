@@ -86,11 +86,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         }
 
         BlockPos coord = new BlockPos(x, y, z, worldObj);
-        if (modifiers.contains(coord)) {
-            return false;
-        }
 
-        if (isModifierBlock(block)) {
+        if (isModifierBlock(block) && !modifiers.contains(coord)) {
             modifiers.add(coord);
             return true;
         }

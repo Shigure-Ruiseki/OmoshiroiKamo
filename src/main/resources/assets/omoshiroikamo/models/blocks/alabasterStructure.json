@@ -1,0 +1,7 @@
+{
+  "parent": "omoshiroikamo:blocks/hardenedStructure",
+  "textures": {
+    "base": "omoshiroikamo:block/alabaster_structure",
+    "particle": "omoshiroikamo:block/alabaster_structure"
+  }
+}

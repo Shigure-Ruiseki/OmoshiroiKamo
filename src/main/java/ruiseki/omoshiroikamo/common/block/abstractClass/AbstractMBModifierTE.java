@@ -53,10 +53,12 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
             offsetZ,
             false);
 
-        if (valid && !isFormed) {
-            isFormed = true;
-            onFormed();
-        } else if (!valid && isFormed) {
+        if (valid) {
+            if (!isFormed) {
+                isFormed = true;
+                onFormed();
+            }
+        } else {
             isFormed = false;
             clearStructureParts();
         }

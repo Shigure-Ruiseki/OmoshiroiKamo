@@ -356,18 +356,18 @@ tile.hardenedStone.name=Hardened Stone
 
 tile.mica.name=Mica
 
-tile.structureFrame.basalt_structure_1.name=Structure Frame Tier 1
-tile.structureFrame.basalt_structure_2.name=Structure Frame Tier 2
-tile.structureFrame.basalt_structure_3.name=Structure Frame Tier 3
-tile.structureFrame.basalt_structure_4.name=Structure Frame Tier 4
-tile.structureFrame.hardened_stone_structure_1.name=Structure Frame Tier 1
-tile.structureFrame.hardened_stone_structure_2.name=Structure Frame Tier 2
-tile.structureFrame.hardened_stone_structure_3.name=Structure Frame Tier 3
-tile.structureFrame.hardened_stone_structure_4.name=Structure Frame Tier 4
-tile.structureFrame.alabaster_structure_1.name=Structure Frame Tier 1
-tile.structureFrame.alabaster_structure_2.name=Structure Frame Tier 2
-tile.structureFrame.alabaster_structure_3.name=Structure Frame Tier 3
-tile.structureFrame.alabaster_structure_4.name=Structure Frame Tier 4
+tile.structureFrame.basalt_structure_1.name=Structure Frame Tier 1 (Will Remove Next Update)
+tile.structureFrame.basalt_structure_2.name=Structure Frame Tier 2 (Will Remove Next Update)
+tile.structureFrame.basalt_structure_3.name=Structure Frame Tier 3 (Will Remove Next Update)
+tile.structureFrame.basalt_structure_4.name=Structure Frame Tier 4 (Will Remove Next Update)
+tile.structureFrame.hardened_stone_structure_1.name=Structure Frame Tier 1 (Will Remove Next Update)
+tile.structureFrame.hardened_stone_structure_2.name=Structure Frame Tier 2 (Will Remove Next Update)
+tile.structureFrame.hardened_stone_structure_3.name=Structure Frame Tier 3 (Will Remove Next Update)
+tile.structureFrame.hardened_stone_structure_4.name=Structure Frame Tier 4 (Will Remove Next Update)
+tile.structureFrame.alabaster_structure_1.name=Structure Frame Tier 1 (Will Remove Next Update)
+tile.structureFrame.alabaster_structure_2.name=Structure Frame Tier 2 (Will Remove Next Update)
+tile.structureFrame.alabaster_structure_3.name=Structure Frame Tier 3 (Will Remove Next Update)
+tile.structureFrame.alabaster_structure_4.name=Structure Frame Tier 4 (Will Remove Next Update)
 
 tile.machineBase.basalt_machine_base.name=Machine Base
 tile.machineBase.hardened_stone_machine_base.name=Machine Base
@@ -388,7 +388,8 @@ tile.modifierResistance.name=Resistance Modifier
 tile.modifierJumpBoost.name=Jump Boost Modifier
 tile.modifierFireResistance.name=Fire Resistance Modifier
 
-tile.lens.name=Clear Lens
+tile.lens.tier_1.name=Clear Lens
+tile.lens.tier_2.name=Crystal Lens
 tile.coloredLens.black.name=Black Lens
 tile.coloredLens.red.name=Red Lens
 tile.coloredLens.green.name=Green Lens
@@ -406,28 +407,63 @@ tile.coloredLens.magenta.name=Magenta Lens
 tile.coloredLens.orange.name=Orange Lens
 tile.coloredLens.white.name=White Lens
 
+tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
+tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
+tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
+tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
+tile.quantumBeacon.tier_5.name=Quantum Beacon Tier 5
+tile.quantumBeacon.tier_6.name=Quantum Beacon Tier 6
+
 tile.laserCore.name=Laser Core
-tile.solarCell.name=Solar Cell
+
+tile.solarCell.tier_1.name=Luminite Solar Cell
+tile.solarCell.tier_2.name=Solaris Solar Cell
+tile.solarCell.tier_3.name=Abyssal Solar Cell
+tile.solarCell.tier_4.name=Aurora Solar Cell
+tile.solarCell.tier_5.name=Eclipse Solar Cell
+tile.solarCell.tier_6.name=NebulaSolar Cell
 
 tile.solarArray.tier_1.name=Solar Array Tier 1
 tile.solarArray.tier_2.name=Solar Array Tier 2
 tile.solarArray.tier_3.name=Solar Array Tier 3
 tile.solarArray.tier_4.name=Solar Array Tier 4
+tile.solarArray.tier_5.name=Solar Array Tier 5
+tile.solarArray.tier_6.name=Solar Array Tier 6
 
 tile.quantumOreExtractor.tier_1.name=Quantum Ore Extractor Tier 1
 tile.quantumOreExtractor.tier_2.name=Quantum Ore Extractor Tier 2
 tile.quantumOreExtractor.tier_3.name=Quantum Ore Extractor Tier 3
 tile.quantumOreExtractor.tier_4.name=Quantum Ore Extractor Tier 4
+tile.quantumOreExtractor.tier_5.name=Quantum Ore Extractor Tier 5
+tile.quantumOreExtractor.tier_6.name=Quantum Ore Extractor Tier 6
 
 tile.quantumResExtractor.tier_1.name=Quantum Resource Extractor Tier 1
 tile.quantumResExtractor.tier_2.name=Quantum Resource Extractor Tier 2
 tile.quantumResExtractor.tier_3.name=Quantum Resource Extractor Tier 3
 tile.quantumResExtractor.tier_4.name=Quantum Resource Extractor Tier 4
+tile.quantumResExtractor.tier_5.name=Quantum Resource Extractor Tier 5
+tile.quantumResExtractor.tier_6.name=Quantum Resource Extractor Tier 6
 
-tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
-tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
-tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
-tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
+tile.basaltStructure.tier_1.name=Basalt Structure Frame Tier 1
+tile.basaltStructure.tier_2.name=Basalt Structure Frame Tier 2
+tile.basaltStructure.tier_3.name=Basalt Structure Frame Tier 3
+tile.basaltStructure.tier_4.name=Basalt Structure Frame Tier 4
+tile.basaltStructure.tier_5.name=Basalt Structure Frame Tier 5
+tile.basaltStructure.tier_6.name=Basalt Structure Frame Tier 6
+
+tile.hardenedStructure.tier_1.name=Hardened Structure Frame Tier 1
+tile.hardenedStructure.tier_2.name=Hardened Structure Frame Tier 2
+tile.hardenedStructure.tier_3.name=Hardened Structure Frame Tier 3
+tile.hardenedStructure.tier_4.name=Hardened Structure Frame Tier 4
+tile.hardenedStructure.tier_5.name=Hardened Structure Frame Tier 5
+tile.hardenedStructure.tier_6.name=Hardened Structure Frame Tier 6
+
+tile.alabasterStructure.tier_1.name=Alabaster Structure Frame Tier 1
+tile.alabasterStructure.tier_2.name=Alabaster Structure Frame Tier 2
+tile.alabasterStructure.tier_3.name=Alabaster Structure Frame Tier 3
+tile.alabasterStructure.tier_4.name=Alabaster Structure Frame Tier 4
+tile.alabasterStructure.tier_5.name=Alabaster Structure Frame Tier 5
+tile.alabasterStructure.tier_6.name=Alabaster Structure Frame Tier 6
 
 tile.roost.name=Roost
 tile.roostCollector.name=Roost Collector

@@ -47,6 +47,8 @@ public class BlockQuantumResExtractor extends AbstractMBBlock<TEQuantumExtractor
         GameRegistry.registerTileEntity(TEQuantumResExtractorT2.class, "TEQuantumResExtractorT2TileEntity");
         GameRegistry.registerTileEntity(TEQuantumResExtractorT3.class, "TEQuantumResExtractorT3TileEntity");
         GameRegistry.registerTileEntity(TEQuantumResExtractorT4.class, "TEQuantumResExtractorT4TileEntity");
+        GameRegistry.registerTileEntity(TEQuantumResExtractorT5.class, "TEQuantumResExtractorT5TileEntity");
+        GameRegistry.registerTileEntity(TEQuantumResExtractorT6.class, "TEQuantumResExtractorT6TileEntity");
         registerBlockColor();
     }
 
@@ -56,6 +58,8 @@ public class BlockQuantumResExtractor extends AbstractMBBlock<TEQuantumExtractor
         list.add(new ItemStack(this, 1, 1));
         list.add(new ItemStack(this, 1, 2));
         list.add(new ItemStack(this, 1, 3));
+        list.add(new ItemStack(this, 1, 4));
+        list.add(new ItemStack(this, 1, 5));
     }
 
     @Override
@@ -81,6 +85,10 @@ public class BlockQuantumResExtractor extends AbstractMBBlock<TEQuantumExtractor
     @Override
     public TileEntity createTileEntity(World world, int meta) {
         switch (meta) {
+            case 5:
+                return new TEQuantumResExtractorT6();
+            case 4:
+                return new TEQuantumResExtractorT5();
             case 3:
                 return new TEQuantumResExtractorT4();
             case 2:

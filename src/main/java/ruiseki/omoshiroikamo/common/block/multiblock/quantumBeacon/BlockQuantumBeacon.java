@@ -42,6 +42,8 @@ public class BlockQuantumBeacon extends AbstractMBBlock<TEQuantumBeacon> {
         GameRegistry.registerTileEntity(TEQuantumBeaconT2.class, "TENanoBotBeaconT2TileEntity");
         GameRegistry.registerTileEntity(TEQuantumBeaconT3.class, "TENanoBotBeaconT3TileEntity");
         GameRegistry.registerTileEntity(TEQuantumBeaconT4.class, "TENanoBotBeaconT4TileEntity");
+        GameRegistry.registerTileEntity(TEQuantumBeaconT5.class, "TENanoBotBeaconT5TileEntity");
+        GameRegistry.registerTileEntity(TEQuantumBeaconT6.class, "TENanoBotBeaconT6TileEntity");
         registerBlockColor();
     }
 
@@ -51,6 +53,8 @@ public class BlockQuantumBeacon extends AbstractMBBlock<TEQuantumBeacon> {
         list.add(new ItemStack(this, 1, 1));
         list.add(new ItemStack(this, 1, 2));
         list.add(new ItemStack(this, 1, 3));
+        list.add(new ItemStack(this, 1, 4));
+        list.add(new ItemStack(this, 1, 5));
     }
 
     @Override
@@ -76,6 +80,10 @@ public class BlockQuantumBeacon extends AbstractMBBlock<TEQuantumBeacon> {
     @Override
     public TileEntity createTileEntity(World world, int meta) {
         switch (meta) {
+            case 5:
+                return new TEQuantumBeaconT6();
+            case 4:
+                return new TEQuantumBeaconT5();
             case 3:
                 return new TEQuantumBeaconT4();
             case 2:
