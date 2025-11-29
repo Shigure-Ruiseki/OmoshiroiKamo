@@ -1,4 +1,5 @@
 {
+  "parent": "block/block",
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
@@ -79,6 +80,5 @@
 				"west": {"uv": [13, 3, 16, 13], "texture": "#side"}
 			}
 		}
-	],
-	"parent": "minecraft:block/block"
+	]
 }

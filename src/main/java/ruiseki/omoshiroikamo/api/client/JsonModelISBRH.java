@@ -24,26 +24,14 @@ import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.ModelQuadView;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.properties.ModelQuadFacing;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-
 @ThreadSafeISBRH(perThread = true)
 public class JsonModelISBRH extends ModelISBRH implements IItemRenderer {
 
     public static final JsonModelISBRH INSTANCE = new JsonModelISBRH();
 
-    /**
-     * Any blocks using a JSON model should return this for {@link Block#getRenderType()}.
-     */
-    public static final int JSON_ISBRH_ID = RenderingRegistry.getNextAvailableRenderId();
-
     public final Random RAND = new Random();
 
     public JsonModelISBRH() {}
-
-    @Override
-    public int getRenderId() {
-        return JSON_ISBRH_ID;
-    }
 
     @Override
     public void renderQuad(ModelQuadView quad, float x, float y, float z, Tessellator tessellator,

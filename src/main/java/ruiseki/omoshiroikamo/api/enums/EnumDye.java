@@ -21,7 +21,8 @@ public enum EnumDye {
     LIGHT_BLUE,
     MAGENTA,
     ORANGE,
-    WHITE;
+    WHITE,
+    CRYSTAL;
 
     public static final String[] DYE_ORE_NAMES = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple",
         "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta",
@@ -89,8 +90,8 @@ public enum EnumDye {
         return (0xFF << 24) | (b << 16) | (g << 8) | r;
     }
 
-    public int rgbToArgb(int r, int g, int b) {
-        return (0xFF << 24) | (r << 16) | (g << 8) | b;
+    public static int rgbToAbgr(int r, int g, int b) {
+        return (0xFF << 24) | (b << 16) | (g << 8) | r;
     }
 
     public int dyeToAbgr() {

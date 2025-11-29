@@ -166,6 +166,55 @@ public class BlockRecipes {
             // Alabaster
             GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_ALABASTER.get(), "stoneAlabaster"));
 
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 0),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 0)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 1),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 1)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 2),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 2)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 3),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 3)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 0),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 4)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 1),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 5)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 2),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 6)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 3),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 7)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 0),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 8)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 1),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 2),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 10)));
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 3),
+                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 11)));
+
             // Solar Cell
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
@@ -447,186 +496,6 @@ public class BlockRecipes {
                     ModBlocks.QUANTUM_BEACON.newItemStack(1, 2),
                     'B',
                     ModBlocks.BLOCK_MICA.get()));
-
-            // Basalt Structure Frame Tier 1
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 0),
-                    " G ",
-                    "RBR",
-                    " G ",
-                    'G',
-                    "ingotGold",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    "stoneBasalt"));
-
-            // Basalt Structure Frame Tier 2
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 1),
-                    " G ",
-                    "RBR",
-                    " G ",
-                    'G',
-                    "gemDiamond",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 0)));
-
-            // Basalt Structure Frame Tier 3
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 2),
-                    " E ",
-                    "RBR",
-                    " G ",
-                    'E',
-                    "pearlEnder",
-                    'G',
-                    "dustGlowstone",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 1)));
-
-            // Basalt Structure Frame Tier 4
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 3),
-                    " E ",
-                    "RBR",
-                    " G ",
-                    'E',
-                    "itemNetherStar",
-                    'G',
-                    "dustRedstone",
-                    'R',
-                    "dustGlowstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 2)));
-
-            // Hardened Stone Structure Frame Tier 1
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 4),
-                    " G ",
-                    "RBR",
-                    " G ",
-                    'G',
-                    "ingotGold",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    "stoneHardened"));
-
-            // Hardened Stone Structure Frame Tier 2
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 5),
-                    " G ",
-                    "RBR",
-                    " G ",
-                    'G',
-                    "gemDiamond",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 4)));
-
-            // Hardened Stone Structure Frame Tier 3
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 6),
-                    " E ",
-                    "RBR",
-                    " G ",
-                    'E',
-                    "pearlEnder",
-                    'G',
-                    "dustGlowstone",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 5)));
-
-            // Hardened Stone Structure Frame Tier 4
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 7),
-                    " E ",
-                    "RBR",
-                    " G ",
-                    'E',
-                    "itemNetherStar",
-                    'G',
-                    "dustRedstone",
-                    'R',
-                    "dustGlowstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 6)));
-
-            // Alabaster Structure Frame Tier 1
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 8),
-                    " G ",
-                    "RBR",
-                    " G ",
-                    'G',
-                    "ingotGold",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    "stoneAlabaster"));
-
-            // Alabaster Structure Frame Tier 2
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9),
-                    " G ",
-                    "RBR",
-                    " G ",
-                    'G',
-                    "gemDiamond",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 8)));
-
-            // Alabaster Structure Frame Tier 3
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 10),
-                    " E ",
-                    "RBR",
-                    " G ",
-                    'E',
-                    "pearlEnder",
-                    'G',
-                    "dustGlowstone",
-                    'R',
-                    "dustRedstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9)));
-
-            // Alabaster Structure Frame Tier 4
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 11),
-                    " E ",
-                    "RBR",
-                    " G ",
-                    'E',
-                    "itemNetherStar",
-                    'G',
-                    "dustRedstone",
-                    'R',
-                    "dustGlowstone",
-                    'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 10)));
 
             // Clear Lens
             GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.LENS.get(), "G G", "GGG", "G G", 'G', "blockGlass"));
@@ -962,6 +831,7 @@ public class BlockRecipes {
                     'Q',
                     "stoneAlabaster"));
         }
+
         if (BackportConfigs.useChicken) {
 
             // Roost
@@ -1005,6 +875,24 @@ public class BlockRecipes {
                     "chestWood",
                     'H',
                     "blockHopper"));
+        }
+
+        if (BackportConfigs.useCow) {
+
+            // Stall
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModBlocks.STALL.get(),
+                    "B B",
+                    "BHB",
+                    "GGG",
+                    'B',
+                    Blocks.iron_bars,
+                    'H',
+                    Blocks.hay_block,
+                    'G',
+                    new ItemStack(Blocks.stained_hardened_clay, 1, 7)));
+
         }
     }
 }

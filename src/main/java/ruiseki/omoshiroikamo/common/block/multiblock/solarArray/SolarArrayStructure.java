@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlockAnyMeta;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 import static ruiseki.omoshiroikamo.plugin.structureLib.StructureLibUtils.ofBlockAdderWithPos;
@@ -123,7 +124,7 @@ public class SolarArrayStructure {
 
         builder1.addShape(STRUCTURE_TIER_1, transpose(SHAPE_TIER_1))
             .addElement('Q', ofBlock(ModBlocks.SOLAR_ARRAY.get(), 0))
-            .addElement('G', ofBlock(ModBlocks.SOLAR_CELL.get(), 0))
+            .addElement('G', ofBlockAnyMeta(ModBlocks.SOLAR_CELL.get(), 0))
             .addElement(
                 'A',
                 ofChain(
@@ -133,13 +134,13 @@ public class SolarArrayStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 0),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 4),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 8)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 0),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 0),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 0)));
 
         builder2.addShape(STRUCTURE_TIER_2, transpose(SHAPE_TIER_2))
             .addElement('Q', ofBlock(ModBlocks.SOLAR_ARRAY.get(), 1))
-            .addElement('G', ofBlock(ModBlocks.SOLAR_CELL.get(), 0))
+            .addElement('G', ofBlockAnyMeta(ModBlocks.SOLAR_CELL.get(), 0))
             .addElement(
                 'A',
                 ofChain(
@@ -149,13 +150,13 @@ public class SolarArrayStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 1),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 5),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 9)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 1),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 1),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 1)));
 
         builder3.addShape(STRUCTURE_TIER_3, transpose(SHAPE_TIER_3))
             .addElement('Q', ofBlock(ModBlocks.SOLAR_ARRAY.get(), 2))
-            .addElement('G', ofBlock(ModBlocks.SOLAR_CELL.get(), 0))
+            .addElement('G', ofBlockAnyMeta(ModBlocks.SOLAR_CELL.get(), 0))
             .addElement(
                 'A',
                 ofChain(
@@ -165,13 +166,13 @@ public class SolarArrayStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 2),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 6),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 10)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 2),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 2),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 2)));
 
         builder4.addShape(STRUCTURE_TIER_4, transpose(SHAPE_TIER_4))
             .addElement('Q', ofBlock(ModBlocks.SOLAR_ARRAY.get(), 3))
-            .addElement('G', ofBlock(ModBlocks.SOLAR_CELL.get(), 0))
+            .addElement('G', ofBlockAnyMeta(ModBlocks.SOLAR_CELL.get(), 0))
             .addElement(
                 'A',
                 ofChain(
@@ -181,9 +182,9 @@ public class SolarArrayStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 3),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 7),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 11)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 3),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 3),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 3)));
 
         IStructureDefinition<TESolarArrayT1> definition1 = builder1.build();
         STRUCTURE_DEFINITION_TIER_1 = definition1;

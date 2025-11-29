@@ -316,9 +316,9 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 0),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 4),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 8)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 0),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 0),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 0)));
 
         builder2.addShape(STRUCTURE_TIER_2, transpose(SHAPE_TIER_2))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 1))
@@ -340,9 +340,9 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 1),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 5),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 9)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 1),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 1),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 1)));
 
         builder3.addShape(STRUCTURE_TIER_3, transpose(SHAPE_TIER_3))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 2))
@@ -364,9 +364,9 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 2),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 6),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 10)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 2),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 2),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 2)));
 
         builder4.addShape(STRUCTURE_TIER_4, transpose(SHAPE_TIER_4))
             .addElement('Q', ofBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get(), 3))
@@ -388,9 +388,9 @@ public class QuantumOreExtractorStructure {
             .addElement(
                 'F',
                 ofChain(
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 3),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 7),
-                    ofBlock(ModBlocks.STRUCTURE_FRAME.get(), 11)));
+                    ofBlock(ModBlocks.BASALT_STRUCTURE.get(), 3),
+                    ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), 3),
+                    ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), 3)));
 
         IStructureDefinition<TEQuantumOreExtractorT1> definition1 = builder1.build();
         STRUCTURE_DEFINITION_TIER_1 = definition1;

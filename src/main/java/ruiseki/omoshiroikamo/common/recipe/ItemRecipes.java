@@ -543,6 +543,19 @@ public class ItemRecipes {
             GameRegistry.addSmelting(ModItems.CHICKEN.get(), new ItemStack(Items.cooked_chicken), 0.35f);
         }
 
+        if (BackportConfigs.useCow) {
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.COW_HALTER.get(),
+                    "  L",
+                    " S ",
+                    "S  ",
+                    'L',
+                    Items.leather,
+                    'S',
+                    Items.stick));
+        }
+
     }
 
 }

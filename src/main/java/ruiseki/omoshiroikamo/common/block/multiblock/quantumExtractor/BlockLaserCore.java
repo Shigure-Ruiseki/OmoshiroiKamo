@@ -13,10 +13,11 @@ import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class BlockLaserCore extends BlockOK {
+public class BlockLaserCore extends BlockOK implements IMBBlock {
 
     @SideOnly(Side.CLIENT)
     IIcon laser_core;

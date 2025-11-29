@@ -4,6 +4,8 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
+import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -16,13 +18,15 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
-public class BlockColoredLens extends BlockOK {
+public class BlockColoredLens extends BlockOK implements IMBBlock {
 
     @SideOnly(Side.CLIENT)
     IIcon lens_colored_top, lens_colored_top_2, lens_colored_side, lens_colored_side_2, glass_colored;
@@ -40,7 +44,27 @@ public class BlockColoredLens extends BlockOK {
 
     @Override
     public void init() {
-        GameRegistry.registerBlock(this, ItemBlockLaserLens.class, name);
+        GameRegistry.registerBlock(this, ItemBlockColoredLens.class, name);
+        BlockColor.registerBlockColors(new IBlockColor() {
+
+            @Override
+            public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+                if (tintIndex == 0 && world != null) {
+                    int meta = world.getBlockMetadata(x,y,z);
+                    return EnumDye.values()[meta].dyeToAbgr();
+                }
+                return -1;
+            }
+
+            @Override
+            public int colorMultiplier(@Nullable ItemStack stack, int tintIndex) {
+                if (tintIndex == 0 && stack !=null) {
+                    int meta = stack.getItemDamage();
+                    return EnumDye.values()[meta].dyeToAbgr();
+                }
+                return -1;
+            }
+        }, this);
     }
 
     @Override
@@ -95,20 +119,9 @@ public class BlockColoredLens extends BlockOK {
         return EnumDye.values()[meta];
     }
 
-    @Override
-    public int getRenderColor(int meta) {
-        return EnumDye.values()[meta].dyeToAbgr();
-    }
+    public static class ItemBlockColoredLens extends ItemBlockOK {
 
-    @Override
-    public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
-        int meta = worldIn.getBlockMetadata(x, y, z);
-        return getRenderColor(meta);
-    }
-
-    public static class ItemBlockLaserLens extends ItemBlockOK {
-
-        public ItemBlockLaserLens(Block block) {
+        public ItemBlockColoredLens(Block block) {
             super(block, block);
         }
 
@@ -122,12 +135,6 @@ public class BlockColoredLens extends BlockOK {
             } else {
                 return base;
             }
-        }
-
-        @Override
-        public int getColorFromItemStack(ItemStack stack, int pass) {
-            return Block.getBlockFromItem(stack.getItem())
-                .getRenderColor(stack.getItemDamage());
         }
     }
 }
