@@ -25,14 +25,20 @@ public class EnvironmentalConfig {
         @Config.DefaultInt(400)
         public int tickOreTier1;
 
-        @Config.DefaultInt(64)
+        @Config.DefaultInt(320)
         public int tickOreTier2;
 
-        @Config.DefaultInt(16)
+        @Config.DefaultInt(160)
         public int tickOreTier3;
 
-        @Config.DefaultInt(4)
+        @Config.DefaultInt(80)
         public int tickOreTier4;
+
+        @Config.DefaultInt(40)
+        public int tickOreTier5;
+
+        @Config.DefaultInt(20)
+        public int tickOreTier6;
 
         @Config.DefaultInt(400)
         public int tickResTier1;
@@ -46,45 +52,69 @@ public class EnvironmentalConfig {
         @Config.DefaultInt(4)
         public int tickResTier4;
 
-        @Config.DefaultInt(320000)
+        @Config.DefaultInt(40)
+        public int tickResTier5;
+
+        @Config.DefaultInt(20)
+        public int tickResTier6;
+
+        @Config.DefaultInt(264000)
         public int energyCostOreTier1;
 
-        @Config.DefaultInt(160000)
+        @Config.DefaultInt(184000)
         public int energyCostOreTier2;
 
-        @Config.DefaultInt(80000)
+        @Config.DefaultInt(120000)
         public int energyCostOreTier3;
 
-        @Config.DefaultInt(40000)
+        @Config.DefaultInt(72000)
         public int energyCostOreTier4;
 
-        @Config.DefaultInt(320000)
+        @Config.DefaultInt(40000)
+        public int energyCostOreTier5;
+
+        @Config.DefaultInt(16000)
+        public int energyCostOreTier6;
+
+        @Config.DefaultInt(264000)
         public int energyCostResTier1;
 
-        @Config.DefaultInt(160000)
+        @Config.DefaultInt(184000)
         public int energyCostResTier2;
 
-        @Config.DefaultInt(80000)
+        @Config.DefaultInt(120000)
         public int energyCostResTier3;
 
-        @Config.DefaultInt(40000)
+        @Config.DefaultInt(72000)
         public int energyCostResTier4;
+
+        @Config.DefaultInt(40000)
+        public int energyCostResTier5;
+
+        @Config.DefaultInt(16000)
+        public int energyCostResTier6;
     }
 
     @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")
     public static class SolarArrayConfig {
 
-        @Config.DefaultInt(720)
+        @Config.DefaultInt(2000)
         public int peakEnergyTier1;
 
-        @Config.DefaultInt(4000)
+        @Config.DefaultInt(12800)
         public int peakEnergyTier2;
 
-        @Config.DefaultInt(15680)
+        @Config.DefaultInt(64190)
         public int peakEnergyTier3;
 
-        @Config.DefaultInt(51840)
+        @Config.DefaultInt(212301)
         public int peakEnergyTier4;
+
+        @Config.DefaultInt(634282)
+        public int peakEnergyTier5;
+
+        @Config.DefaultInt(1771965)
+        public int peakEnergyTier6;
     }
 
     @Config.LangKey(LibResources.CONFIG + "eTWorldGenConfig")

@@ -264,11 +264,19 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
                         this.getRegistry()
                             .getFocusedList(this.focusColor, this.focusBoostModifier));
                 } else {
-                    this.focusColor = null;
-                    this.possibleResults.clear();
-                    this.possibleResults.addAll(
-                        this.getRegistry()
-                            .getUnFocusedList());
+                    if (lens.getMetadata() == 1) {
+                        this.focusColor = EnumDye.CRYSTAL;
+                        this.possibleResults.clear();
+                        this.possibleResults.addAll(
+                            this.getRegistry()
+                                .getFocusedList(this.focusColor, this.focusBoostModifier));
+                    } else {
+                        this.focusColor = null;
+                        this.possibleResults.clear();
+                        this.possibleResults.addAll(
+                            this.getRegistry()
+                                .getUnFocusedList());
+                    }
                 }
             } else {
                 this.possibleResults.clear();

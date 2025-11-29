@@ -44,21 +44,21 @@ public class TEQuantumOreExtractorT5 extends TEQuantumExtractor {
 
     @Override
     public int getEnergyCostPerDuration() {
-        return config.energyCostOreTier4;
+        return config.energyCostOreTier5;
     }
 
     @Override
     public int getBaseDuration() {
-        return config.tickOreTier4;
+        return config.tickOreTier5;
     }
 
     @Override
     public int getMinDuration() {
-        return config.tickOreTier4;
+        return config.tickOreTier5;
     }
 
     @Override
     public int getMaxDuration() {
-        return config.tickOreTier4;
+        return config.tickOreTier5;
     }
 }
