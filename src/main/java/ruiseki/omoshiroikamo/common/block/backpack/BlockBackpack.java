@@ -4,7 +4,6 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ACCENT_COLOR;
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.MAIN_COLOR;
 
-import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -19,7 +18,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
@@ -28,6 +26,7 @@ import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;

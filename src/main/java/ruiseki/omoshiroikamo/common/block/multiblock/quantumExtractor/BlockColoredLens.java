@@ -4,8 +4,6 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
-import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
-import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -15,10 +13,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
+import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
@@ -50,7 +52,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
             @Override
             public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
                 if (tintIndex == 0 && world != null) {
-                    int meta = world.getBlockMetadata(x,y,z);
+                    int meta = world.getBlockMetadata(x, y, z);
                     return EnumDye.values()[meta].dyeToAbgr();
                 }
                 return -1;
@@ -58,7 +60,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
 
             @Override
             public int colorMultiplier(@Nullable ItemStack stack, int tintIndex) {
-                if (tintIndex == 0 && stack !=null) {
+                if (tintIndex == 0 && stack != null) {
                     int meta = stack.getItemDamage();
                     return EnumDye.values()[meta].dyeToAbgr();
                 }
