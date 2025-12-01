@@ -115,6 +115,12 @@ public class EnvironmentalConfig {
 
         @Config.DefaultInt(1771965)
         public int peakEnergyTier6;
+
+        @Config.DefaultInt(60)
+        public int cellGen;
+
+        @Config.DefaultFloat(1.3f)
+        public int cellTierMul;
     }
 
     @Config.LangKey(LibResources.CONFIG + "eTWorldGenConfig")

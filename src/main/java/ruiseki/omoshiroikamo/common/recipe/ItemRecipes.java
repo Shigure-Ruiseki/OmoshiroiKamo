@@ -329,7 +329,7 @@ public class ItemRecipes {
                     'O',
                     "blockObsidian",
                     'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 1)));
+                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 1)));
 
             // Assembler
             GameRegistry.addRecipe(
@@ -341,7 +341,7 @@ public class ItemRecipes {
                     'O',
                     "blockObsidian",
                     'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 5)));
+                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 1)));
 
             // Assembler
             GameRegistry.addRecipe(
@@ -353,7 +353,7 @@ public class ItemRecipes {
                     'O',
                     "blockObsidian",
                     'B',
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9)));
+                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 1)));
         }
         if (BackportConfigs.useChicken) {
 
