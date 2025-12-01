@@ -303,7 +303,7 @@ public class ItemRecipes {
                     "FDF",
                     "GFG",
                     'G',
-                    "dyeBlue",
+                    "dyeCyan",
                     'F',
                     Items.flint,
                     'D',
