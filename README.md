@@ -42,7 +42,7 @@ a rewritten backport of the modern Environmental Tech mod:
 - Quantum Beacon (Give Multieffect by Energy)
 - Extractor NEI integration
 
-![Multiblock](https://media.forgecdn.net/attachments/1388/695/2025-11-11_12-44-56-png.png)
+![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
 
 ### Chickens, More Chickens & Roost (Backport)
 
