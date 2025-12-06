@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
-import static codechicken.core.ClientUtils.getWorld;
-
 import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -37,7 +35,7 @@ public class TEBreeder extends TERoostBase {
         DataChicken left = getChickenData(0);
         DataChicken right = getChickenData(1);
         if (left != null && right != null) {
-            putStackInOutput(left.createChildStack(right, getWorld()));
+            putStackInOutput(left.createChildStack(right, worldObj));
             playSpawnSound();
         }
     }
