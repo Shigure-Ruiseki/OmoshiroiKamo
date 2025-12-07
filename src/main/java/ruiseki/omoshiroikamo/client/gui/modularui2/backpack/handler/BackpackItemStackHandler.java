@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
-import org.jetbrains.annotations.NotNull;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
@@ -20,7 +19,6 @@ public class BackpackItemStackHandler extends ItemStackHandler {
     public final List<ItemStack> memorizedSlotStack;
     public final List<Boolean> memorizedSlotRespectNbtList;
     public final List<Boolean> sortLockedSlots;
-
 
     public BackpackItemStackHandler(int size, BackpackHandler handler) {
         super(size);
@@ -39,11 +37,11 @@ public class BackpackItemStackHandler extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        if (memorizedSlotStack.get(slot)==null) {
+        if (memorizedSlotStack.get(slot) == null) {
             return !(stack.getItem() instanceof BlockBackpack.ItemBackpack) || handler.canNestBackpack();
         }
         if (memorizedSlotRespectNbtList.get(slot)) {
-            return ItemStack.areItemStacksEqual(stack,memorizedSlotStack.get(slot));
+            return ItemStack.areItemStacksEqual(stack, memorizedSlotStack.get(slot));
         }
         return ItemUtils.areItemsEqualIgnoreDurability(stack, memorizedSlotStack.get(slot));
     }
@@ -82,8 +80,7 @@ public class BackpackItemStackHandler extends ItemStackHandler {
             ItemStack mem = memorizedSlotStack.get(i);
             if (mem == null) continue;
 
-            boolean match = memorizedSlotRespectNbtList.get(i)
-                ? ItemStack.areItemStacksEqual(stack, mem)
+            boolean match = memorizedSlotRespectNbtList.get(i) ? ItemStack.areItemStacksEqual(stack, mem)
                 : stack.isItemEqual(mem);
 
             if (!match) continue;

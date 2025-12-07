@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -400,7 +399,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
         List<Boolean> respectList = backpackHandler.memorizedSlotRespectNbtList;
         byte[] respectBytes = new byte[respectList.size()];
         for (int i = 0; i < respectList.size(); i++) {
-            respectBytes[i] = respectList.get(i) ? (byte)1 : (byte)0;
+            respectBytes[i] = respectList.get(i) ? (byte) 1 : (byte) 0;
         }
         tag.setByteArray(MEMORY_STACK_RESPECT_NBT_TAG, respectBytes);
     }
