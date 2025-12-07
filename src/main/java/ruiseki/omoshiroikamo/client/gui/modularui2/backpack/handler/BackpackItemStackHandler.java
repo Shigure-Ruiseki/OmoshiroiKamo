@@ -8,21 +8,44 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
+import org.jetbrains.annotations.NotNull;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
+import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 
 public class BackpackItemStackHandler extends ItemStackHandler {
 
     private final BackpackHandler handler;
 
+    public final List<ItemStack> memorizedSlotStack;
+    public final List<Boolean> memorizedSlotRespectNbtList;
+    public final List<Boolean> sortLockedSlots;
+
+
     public BackpackItemStackHandler(int size, BackpackHandler handler) {
         super(size);
         this.handler = handler;
+
+        this.memorizedSlotStack = new ArrayList<>(size);
+        this.memorizedSlotRespectNbtList = new ArrayList<>(size);
+        this.sortLockedSlots = new ArrayList<>(size);
+
+        for (int i = 0; i < size; i++) {
+            memorizedSlotStack.add(null);
+            memorizedSlotRespectNbtList.add(false);
+            sortLockedSlots.add(false);
+        }
     }
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return !(stack.getItem() instanceof BlockBackpack.ItemBackpack) || handler.canNestBackpack();
+        if (memorizedSlotStack.get(slot)==null) {
+            return !(stack.getItem() instanceof BlockBackpack.ItemBackpack) || handler.canNestBackpack();
+        }
+        if (memorizedSlotRespectNbtList.get(slot)) {
+            return ItemStack.areItemStacksEqual(stack,memorizedSlotStack.get(slot));
+        }
+        return ItemUtils.areItemsEqualIgnoreDurability(stack, memorizedSlotStack.get(slot));
     }
 
     @Override
@@ -47,6 +70,29 @@ public class BackpackItemStackHandler extends ItemStackHandler {
         }
 
         this.stacks = newStacks;
+    }
+
+    public ItemStack prioritizedInsertion(int slotIndex, ItemStack stack, boolean simulate) {
+        stack = insertItemToMemorySlots(stack, simulate);
+        return insertItem(slotIndex, stack, simulate);
+    }
+
+    public ItemStack insertItemToMemorySlots(ItemStack stack, boolean simulate) {
+        for (int i = 0; i < memorizedSlotStack.size(); i++) {
+            ItemStack mem = memorizedSlotStack.get(i);
+            if (mem == null) continue;
+
+            boolean match = memorizedSlotRespectNbtList.get(i)
+                ? ItemStack.areItemStacksEqual(stack, mem)
+                : stack.isItemEqual(mem);
+
+            if (!match) continue;
+
+            stack = insertItem(i, stack, simulate);
+            if (stack == null) return null;
+        }
+
+        return stack;
     }
 
     @Override
@@ -111,7 +157,4 @@ public class BackpackItemStackHandler extends ItemStackHandler {
         }
     }
 
-    public ItemStack prioritizedInsertion(int slotIndex, ItemStack stack, boolean simulate) {
-        return insertItem(slotIndex, stack, simulate);
-    }
 }

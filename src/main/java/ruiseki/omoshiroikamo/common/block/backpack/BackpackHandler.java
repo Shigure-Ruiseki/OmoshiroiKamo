@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,14 +44,16 @@ public class BackpackHandler implements IItemHandlerModifiable {
     private final BackpackItemStackHandler backpackHandler;
     @Getter
     private final UpgradeItemStackHandler upgradeHandler;
-    @Getter
+
     public static final String BACKPACK_INV = "BackpackInv";
-    @Getter
     public static final String UPGRADE_INV = "UpgradeInv";
-    @Getter
     public static final String BACKPACK_SLOTS = "BackpackSlots";
-    @Getter
     public static final String UPGRADE_SLOTS = "UpgradeSlots";
+
+    public static final String MEMORY_STACK_ITEMS_TAG = "MemoryItems";
+    public static final String MEMORY_STACK_RESPECT_NBT_TAG = "MemoryRespectNBT";
+    public static final String SORT_TYPE_TAG = "SortType";
+    public static final String LOCKED_SLOTS_TAG = "LockedSlots";
 
     @Getter
     @Setter
@@ -152,6 +155,37 @@ public class BackpackHandler implements IItemHandlerModifiable {
     @Override
     public void setStackInSlot(int slot, @Nullable ItemStack stack) {
         backpackHandler.setStackInSlot(slot, stack);
+    }
+
+    public boolean isSlotMemorized(int slotIndex) {
+        return !(backpackHandler.memorizedSlotStack.get(slotIndex) == null);
+    }
+
+    public ItemStack getMemorizedStack(int slotIndex) {
+        return backpackHandler.memorizedSlotStack.get(slotIndex);
+    }
+
+    public void setMemoryStack(int slotIndex, boolean respectNBT) {
+        ItemStack currentStack = getStackInSlot(slotIndex);
+        if (currentStack == null) return;
+
+        ItemStack copiedStack = currentStack.copy();
+        copiedStack.stackSize = 1;
+        backpackHandler.memorizedSlotStack.set(slotIndex, copiedStack);
+        backpackHandler.memorizedSlotRespectNbtList.set(slotIndex, respectNBT);
+    }
+
+    public void unsetMemoryStack(int slotIndex) {
+        backpackHandler.memorizedSlotStack.set(slotIndex, null);
+        backpackHandler.memorizedSlotRespectNbtList.set(slotIndex, false);
+    }
+
+    public boolean isMemoryStackRespectNBT(int slotIndex) {
+        return backpackHandler.memorizedSlotRespectNbtList.get(slotIndex);
+    }
+
+    public void setMemoryStackRespectNBT(int slotIndex, boolean respect) {
+        backpackHandler.memorizedSlotRespectNbtList.set(slotIndex, respect);
     }
 
     // ---------- UPGRADE ----------
@@ -362,6 +396,13 @@ public class BackpackHandler implements IItemHandlerModifiable {
         tag.setInteger(ACCENT_COLOR, getAccentColor());
         tag.setTag(BACKPACK_INV, backpackHandler.serializeNBT());
         tag.setTag(UPGRADE_INV, upgradeHandler.serializeNBT());
+
+        List<Boolean> respectList = backpackHandler.memorizedSlotRespectNbtList;
+        byte[] respectBytes = new byte[respectList.size()];
+        for (int i = 0; i < respectList.size(); i++) {
+            respectBytes[i] = respectList.get(i) ? (byte)1 : (byte)0;
+        }
+        tag.setByteArray(MEMORY_STACK_RESPECT_NBT_TAG, respectBytes);
     }
 
     public void readFromNBT(NBTTagCompound tag) {
