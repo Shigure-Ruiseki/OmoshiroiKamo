@@ -166,55 +166,6 @@ public class BlockRecipes {
             // Alabaster
             GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_ALABASTER.get(), "stoneAlabaster"));
 
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 0),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 0)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 1),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 1)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 2),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 2)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.BASALT_STRUCTURE.newItemStack(1, 3),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 3)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 0),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 4)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 1),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 5)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 2),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 6)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 3),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 7)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 0),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 8)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 1),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 9)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 2),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 10)));
-            GameRegistry.addRecipe(
-                new ShapelessOreRecipe(
-                    ModBlocks.ALABASTER_STRUCTURE.newItemStack(1, 3),
-                    ModBlocks.STRUCTURE_FRAME.newItemStack(1, 11)));
-
             // Structure T1
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(

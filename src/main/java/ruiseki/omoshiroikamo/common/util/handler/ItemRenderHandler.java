@@ -41,10 +41,12 @@ public class ItemRenderHandler {
 
         EntityPlayer player = event.entityPlayer;
         InventoryPlayer inv = player.inventory;
-        InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+        if (!ItemConfigs.renderBaubles && (LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
+            InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+            renderBauble(baubles, event, RenderUtils.RenderType.BODY);
+        }
 
         renderArmor(inv, event, RenderUtils.RenderType.BODY);
-        renderBauble(baubles, event, RenderUtils.RenderType.BODY);
 
         float yaw = player.prevRotationYawHead
             + (player.rotationYawHead - player.prevRotationYawHead) * event.partialRenderTick;
@@ -58,23 +60,23 @@ public class ItemRenderHandler {
         GL11.glRotatef(yaw - 270, 0, 1, 0);
         GL11.glRotatef(pitch, 0, 0, 1);
         renderArmor(inv, event, RenderUtils.RenderType.HEAD);
-        renderBauble(baubles, event, RenderUtils.RenderType.HEAD);
+        if (!ItemConfigs.renderBaubles && (LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
+            InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+            renderBauble(baubles, event, RenderUtils.RenderType.HEAD);
+        }
         GL11.glPopMatrix();
     }
 
     private static void renderBauble(InventoryBaubles inv, RenderPlayerEvent event, RenderUtils.RenderType type) {
-        if (!ItemConfigs.renderBaubles && !(LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
-            return;
-        }
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack != null) {
                 Item item = stack.getItem();
 
-                if (item instanceof IBaubleRender) {
+                if (item instanceof IBaubleRender iBaubleRender) {
                     GL11.glPushMatrix();
                     GL11.glColor4f(1F, 1F, 1F, 1F);
-                    ((IBaubleRender) stack.getItem()).onPlayerBaubleRender(stack, event, type);
+                    iBaubleRender.onPlayerBaubleRender(stack, event, type);
                     GL11.glPopMatrix();
                 }
             }
