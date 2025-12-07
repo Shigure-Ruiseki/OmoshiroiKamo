@@ -1,23 +1,22 @@
 {
-  "solarCell": "block/cube",
-  "ambientocclusion": false,
+	"credit": "Made with Blockbench",
+  "parent": "block/cube",
+	"ambientocclusion": false,
 	"textures": {
-		"solar_bottom": "omoshiroikamo:block/basalt",
-		"solar_top": "omoshiroikamo:block/solar",
-		"solar_side": "omoshiroikamo:block/basalt",
-		"particle": "omoshiroikamo:block/solar"
+		"particle": "omoshiroikamo:block/solar",
+		"solar_side": "omoshiroikamo:block/basalt"
 	},
 	"elements": [
 		{
-			"from": [ 0, 0, 0 ],
-			"to": [ 16, 13, 16 ],
+			"from": [0, 0, 0],
+			"to": [16, 13, 16],
 			"faces": {
-				"down":  { "uv": [ 16, 16, 0, 0 ], "texture": "#solar_bottom" },
-				"up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#solar_top", "tintindex": 0},
-				"north": { "uv": [ 0, 0, 16, 13 ], "texture": "#solar_side" },
-				"south": { "uv": [ 0, 0, 16, 13 ], "texture": "#solar_side" },
-				"west":  { "uv": [ 0, 0, 16, 13 ], "texture": "#solar_side" },
-				"east":  { "uv": [ 0, 0, 16, 13 ], "texture": "#solar_side" }
+				"north": {"uv": [0, 0, 16, 13], "texture": "#solar_side"},
+				"east": {"uv": [0, 0, 16, 13], "texture": "#solar_side"},
+				"south": {"uv": [0, 0, 16, 13], "texture": "#solar_side"},
+				"west": {"uv": [0, 0, 16, 13], "texture": "#solar_side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle", "tintindex": 0},
+				"down": {"uv": [16, 16, 0, 0], "texture": "#solar_side"}
 			}
 		}
 	]

@@ -1,6 +1,6 @@
 {
-	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube",
 	"textures": {
 		"particle": "omoshiroikamo:block/plain_face",
 		"up": "omoshiroikamo:block/plain_face",
@@ -19,6 +19,5 @@
 				"down": {"uv": [0, 0, 16, 16], "texture": "#up"}
 			}
 		}
-	],
-	"parent": "minecraft:block/cube"
+	]
 }

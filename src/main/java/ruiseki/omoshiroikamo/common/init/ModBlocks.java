@@ -21,7 +21,6 @@ import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockBasaltStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockCrystal;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockHardenedStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockMachineBase;
-import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockStructureFrame;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierAccuracy;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierCore;
 import ruiseki.omoshiroikamo.common.block.multiblock.modifier.BlockModifierFireResistance;
@@ -91,7 +90,6 @@ public enum ModBlocks {
     LENS(useEnvironmentalTech, BlockLens.create()),
     SOLAR_CELL(useEnvironmentalTech, BlockSolarCell.create()),
     SOLAR_ARRAY(useEnvironmentalTech, BlockSolarArray.create()),
-    STRUCTURE_FRAME(useEnvironmentalTech, BlockStructureFrame.create()),
     BASALT_STRUCTURE(useEnvironmentalTech, BlockBasaltStructure.create()),
     ALABASTER_STRUCTURE(useEnvironmentalTech, BlockAlabasterStructure.create()),
     HARDENED_STRUCTURE(useEnvironmentalTech, BlockHardenedStructure.create()),
