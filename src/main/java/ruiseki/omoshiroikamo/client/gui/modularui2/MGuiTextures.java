@@ -64,6 +64,8 @@ public final class MGuiTextures {
     public static final IDrawable BACKPACK_ICON = icon("backpack", 64, 48);
     public static final IDrawable UNLOCK_BACKPACK_ICON = icon("unlock_backpack", 176, 32);
     public static final IDrawable LOCK_BACKPACK_ICON = icon("lock_backpack", 192, 32);
+    public static final IDrawable UNLOCK_SEARCH_ICON = icon("unlock_search", 208, 32);
+    public static final IDrawable LOCK_SEARCH_ICON = icon("lock_search", 224, 32);
 
     public static final IDrawable ONE_IN_FOUR_SLOT_ICON = icon("one_in_four_slot", 0, 80);
     public static final IDrawable ALL_FOUR_SLOT_ICON = icon("all_in_four_slot", 16, 80);
@@ -71,6 +73,7 @@ public final class MGuiTextures {
     public static final IDrawable NONE_FOUR_SLOT_ICON = icon("none_in_four_slot", 48, 80);
 
     public static final IDrawable SETTING_ICON = icon("setting", 16, 96);
+    public static final IDrawable BACK_ICON = icon("back", 64, 80);
 
     public static final IDrawable EXP_MAGNET_ICON = icon("exp_magnet", 96, 48);
     public static final IDrawable IGNORE_EXP_MAGNET_ICON = icon("ignore_exp_magnet", 112, 48);

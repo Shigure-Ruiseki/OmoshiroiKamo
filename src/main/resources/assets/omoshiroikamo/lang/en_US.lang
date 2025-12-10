@@ -119,6 +119,7 @@ gui.transfer_to_backpack_inv_matched_1=Transfer Matched Items to Backpack Invent
 gui.transfer_to_backpack_inv_matched_2=Shift To Transfer All
 
 gui.settings=Settings
+gui.backpack=Backpack
 gui.configuration_tab=Configuration Tab
 
 gui.memorized_slot=Memorized Slot
@@ -129,8 +130,10 @@ gui.no_sorting_slot=No Sorting Slot
 gui.lock_all_sort=Select All Slots For No Sorting
 gui.unlock_all_sort=Select All Slots For Sorting
 
-gui.into_backpack= Shift Click Result Into\nBackpack
-gui.into_inventory= "Shift Click Result Into\nPlayer's Inventory
+gui.into_backpack=Shift Click Result Into\nBackpack
+gui.into_inventory=Shift Click Result Into\nPlayer's Inventory
+
+gui.search_hint= Search...
 
 #Display
 

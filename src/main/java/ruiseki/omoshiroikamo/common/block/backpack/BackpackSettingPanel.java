@@ -97,6 +97,8 @@ public class BackpackSettingPanel extends ModularPanel {
         parent.isMemorySettingTabOpened = memoryTab.isShowExpanded();
         parent.shouldMemorizeRespectNBT = ((MemorySettingWidget) memoryTab.getExpandedWidget()).isRespectNBT();
         parent.isSortingSettingTabOpened = sortTab.isShowExpanded();
+        parent.getUpgradeSlotGroupWidget()
+            .setEnabled(false);
     }
 
     @Override
@@ -106,6 +108,8 @@ public class BackpackSettingPanel extends ModularPanel {
         parent.shouldMemorizeRespectNBT = false;
         parent.isSortingSettingTabOpened = false;
         parent.updateUpgradeWidgets();
+        parent.getUpgradeSlotGroupWidget()
+            .setEnabled(true);
     }
 
     @Override

@@ -62,6 +62,10 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     @Getter
     @Setter
+    private boolean searchBackpack;
+
+    @Getter
+    @Setter
     private String uuid;
 
     public static final String MEMORY_STACK_ITEMS_TAG = "MemoryItems";
@@ -70,6 +74,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
     public static final String LOCKED_SLOTS_TAG = "LockedSlots";
     public static final String LOCKED_BACKPACK_TAG = "LockedBackpack";
     public static final String UUID_TAG = "UUID";
+    public static final String SEARCH_BACKPACK = "SearchBackpack";
 
     @Getter
     @Setter
@@ -111,6 +116,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
         this.sortType = SortType.BY_NAME;
         this.lockBackpack = false;
         this.uuid = "";
+        this.searchBackpack = true;
 
         this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
@@ -450,6 +456,8 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
         tag.setBoolean(LOCKED_BACKPACK_TAG, lockBackpack);
 
+        tag.setBoolean(SEARCH_BACKPACK, searchBackpack);
+
         tag.setString(UUID_TAG, uuid);
     }
 
@@ -507,6 +515,10 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
         if (tag.hasKey(LOCKED_BACKPACK_TAG)) {
             lockBackpack = tag.getBoolean(LOCKED_BACKPACK_TAG);
+        }
+
+        if (tag.hasKey(SEARCH_BACKPACK)) {
+            searchBackpack = tag.getBoolean(SEARCH_BACKPACK);
         }
 
         if (tag.hasKey(UUID_TAG)) {

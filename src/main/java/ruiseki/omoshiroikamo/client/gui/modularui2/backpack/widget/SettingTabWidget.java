@@ -22,11 +22,19 @@ public class SettingTabWidget extends Widget<SettingTabWidget> implements Intera
         size(TAB_TEXTURE.getWidth(), TAB_TEXTURE.getHeight()).right(-TAB_TEXTURE.getWidth() + 4)
             .top(0)
             .background(TAB_TEXTURE.get(-1, false))
-            .tooltipStatic(
-                tooltip -> {
+            .tooltipAutoUpdate(true)
+            .tooltipDynamic(tooltip -> {
+                BackpackPanel panel = (BackpackPanel) getPanel();
+                if (panel.getSettingPanel()
+                    .isPanelOpen()) {
+                    tooltip.addLine(IKey.lang("gui.backpack"))
+                        .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
+                } else {
                     tooltip.addLine(IKey.lang("gui.settings"))
                         .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
-                });
+                }
+                tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
+            });
     }
 
     @Override
@@ -61,6 +69,12 @@ public class SettingTabWidget extends Widget<SettingTabWidget> implements Intera
     @Override
     public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         super.draw(context, widgetTheme);
-        MGuiTextures.SETTING_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
+        BackpackPanel panel = (BackpackPanel) getPanel();
+        if (panel.getSettingPanel()
+            .isPanelOpen()) {
+            MGuiTextures.BACK_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
+        } else {
+            MGuiTextures.SETTING_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
+        }
     }
 }

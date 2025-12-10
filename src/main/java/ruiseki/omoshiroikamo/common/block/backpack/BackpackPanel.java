@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
+import com.cleanroommc.modularui.api.GuiAxis;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.Interactable;
@@ -29,7 +30,7 @@ import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
-import com.cleanroommc.modularui.widgets.SlotGroupWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
@@ -48,12 +49,15 @@ import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedFeedi
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedFilterUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedMagnetUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.AdvancedVoidUpgradeWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.BackpackList;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.BackpackRow;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.BasicExpandedTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.CraftingUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.FeedingUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.FilterUpgradeWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.MagnetUpgradeWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.SettingTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TransferButtonWidget;
@@ -97,8 +101,7 @@ public class BackpackPanel extends ModularPanel {
 
     public static BackpackPanel defaultPanel(PanelSyncManager syncManager, UISettings settings, EntityPlayer player,
         TileEntity tileEntity, BackpackHandler handler, int width, int height, Integer slotIndex) {
-        BackpackPanel panel = new BackpackPanel(player, tileEntity, syncManager, settings, handler);
-        panel.size(width, height);
+        BackpackPanel panel = new BackpackPanel(player, tileEntity, syncManager, settings, handler, width, height);
 
         panel.settings.customContainer(() -> new BackPackContainer(handler, slotIndex));
 
@@ -120,9 +123,13 @@ public class BackpackPanel extends ModularPanel {
     private final BackpackHandler handler;
 
     private final List<ItemSlot> upgradeSlotWidgets = new ArrayList<>();
+    @Getter
     private final UpgradeSlotGroupWidget upgradeSlotGroupWidget;
     private final List<TabWidget> tabWidgets;
 
+    private final int width;
+    private final int height;
+    private final int backpackSlotsHeight;
     private final int rowSize;
     private final int colSize;
 
@@ -135,13 +142,18 @@ public class BackpackPanel extends ModularPanel {
 
     @Getter
     private final IPanelHandler settingPanel;
+    @Getter
+    private BackpackList backpackList;
+    @Getter
+    private Column slotListCol;
+    private SearchBarWidget searchBarWidget;
 
     public boolean isMemorySettingTabOpened = false;
     public boolean shouldMemorizeRespectNBT = false;
     public boolean isSortingSettingTabOpened = false;
 
     public BackpackPanel(EntityPlayer player, TileEntity tileEntity, PanelSyncManager syncManager, UISettings settings,
-        BackpackHandler handler) {
+        BackpackHandler handler, int width, int height) {
         super("backpack_gui");
         this.player = player;
         this.tileEntity = tileEntity;
@@ -149,8 +161,13 @@ public class BackpackPanel extends ModularPanel {
         this.settings = settings;
         this.handler = handler;
 
-        this.rowSize = this.handler.getSlots() > 81 ? 12 : 9;
-        this.colSize = ceilDiv(this.handler.getSlots(), rowSize);
+        this.width = width;
+        this.height = height;
+        this.size(this.width, this.height);
+        this.backpackSlotsHeight = this.height - 112;
+        int calculated = (this.width - 14) / SLOT_SIZE;
+        this.rowSize = Math.max(9, Math.min(12, calculated));
+        this.colSize = ceilDiv(this.handler.getSlots(), this.rowSize);
 
         this.backpackSyncHandler = new BackpackSH(new PlayerMainInvWrapper(player.inventory), this.handler);
         this.syncManager.syncValue("backpack_wrapper", this.backpackSyncHandler);
@@ -250,20 +267,17 @@ public class BackpackPanel extends ModularPanel {
                 backpackSyncHandler
                     .syncToServer(BackpackSH.UPDATE_SET_SORT_TYPE, buf -> { buf.writeInt(nextSortType.ordinal()); });
 
-            });
-
-        sortTypeButton.setEnabledIf(cyclicVariantButtonWidget -> !settingPanel.isPanelOpen())
-            .top(4)
-            .right(7)
-            .size(12);
-
+            }).setEnabledIf(cyclicVariantButtonWidget -> !settingPanel.isPanelOpen())
+                .top(4)
+                .right(7)
+                .size(12);
         child(sortButton).child(sortTypeButton);
     }
 
     public void addTransferButtons() {
         TransferButtonWidget transferToPlayerButton = new TransferButtonWidget(
             MGuiTextures.DOT_DOWN_ARROW_ICON,
-            MGuiTextures.SOLID_DOWN_ARROW_ICON).top(17 + colSize * 18)
+            MGuiTextures.SOLID_DOWN_ARROW_ICON).top(17 + backpackSlotsHeight)
                 .right(21)
                 .size(12)
                 .setEnabledIf(transferButtonWidget -> !settingPanel.isPanelOpen())
@@ -296,7 +310,7 @@ public class BackpackPanel extends ModularPanel {
 
         TransferButtonWidget transferToBackpackButton = new TransferButtonWidget(
             MGuiTextures.DOT_UP_ARROW_ICON,
-            MGuiTextures.SOLID_UP_ARROW_ICON).top(17 + colSize * 18)
+            MGuiTextures.SOLID_UP_ARROW_ICON).top(17 + backpackSlotsHeight)
                 .right(7)
                 .size(12)
                 .setEnabledIf(transferButtonWidget -> !settingPanel.isPanelOpen())
@@ -331,18 +345,48 @@ public class BackpackPanel extends ModularPanel {
     }
 
     public void addBackpackInventorySlots() {
-        SlotGroupWidget backpackSlotGroupWidget = new SlotGroupWidget().name("backpack_inventory");
-        backpackSlotGroupWidget.flex()
-            .coverChildren()
-            .leftRel(0.5F)
-            .top(17);
-        for (int i = 0; i < handler.getBackpackSlots(); i++) {
-            ItemSlot itemSlot = new BackpackSlot(this, handler).syncHandler("backpack", i)
-                .pos((i % rowSize) * SLOT_SIZE, (i / rowSize) * SLOT_SIZE)
-                .name("slot_" + i);
-            backpackSlotGroupWidget.child(itemSlot);
+
+        backpackList = new BackpackList().name("backpack_slots")
+            .coverChildrenWidth()
+            .top(17)
+            .alignX(0.5f)
+            .scrollDirection(GuiAxis.Y)
+            .maxSize(backpackSlotsHeight)
+            .wrapTight();
+
+        slotListCol = (Column) new Column().coverChildren();
+        List<BackpackRow> rows = new ArrayList<>();
+
+        for (int r = 0; r < rowSize; r++) {
+            BackpackRow row = (BackpackRow) new BackpackRow().coverChildren();
+            rows.add(row);
+            slotListCol.child(row);
         }
-        this.child(backpackSlotGroupWidget);
+
+        for (int i = 0; i < handler.getBackpackSlots(); i++) {
+            int row = i / rowSize;
+
+            ItemSlot slot = new BackpackSlot(this, handler).syncHandler("backpack", i)
+                .size(SLOT_SIZE)
+                .name("slot_" + i);
+
+            rows.get(row)
+                .child(slot);
+        }
+
+        backpackList.child(slotListCol);
+        this.child(backpackList);
+    }
+
+    public void addSearchBar() {
+
+        searchBarWidget = (SearchBarWidget) new SearchBarWidget(this, slotListCol).top(6)
+            .width(this.width - 37)
+            .height(10)
+            .right(32);
+        searchBarWidget.setEnabledIf(textFieldWidget -> !settingPanel.isPanelOpen());
+
+        child(searchBarWidget);
     }
 
     public void addUpgradeSlots() {
@@ -381,13 +425,9 @@ public class BackpackPanel extends ModularPanel {
 
     public void addTexts(EntityPlayer player) {
         child(
-            IKey.lang(handler.getDisplayName() + ".name")
-                .asWidget()
-                .pos(8, 6));
-        child(
             IKey.lang(player.inventory.getInventoryName())
                 .asWidget()
-                .pos(8, 18 + colSize * 18));
+                .pos(8, 18 + backpackSlotsHeight));
     }
 
     public void updateUpgradeWidgets() {

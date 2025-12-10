@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.common.block.backpack;
 
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ceilDiv;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -35,14 +36,21 @@ public abstract class BackpackGuiHolder {
 
     protected BackpackPanel createPanel(PanelSyncManager syncManager, UISettings settings, EntityPlayer player,
         TileEntity tileEntity, InventoryType type, Integer backpackSlotIndex) {
+
+        int screenWidth = Minecraft.getMinecraft().displayWidth;
+        int minWidth = 14 + 9 * SLOT_SIZE;
+        int maxWidth = 14 + rowSize * SLOT_SIZE;
+        int width = Math.max(minWidth, Math.min(maxWidth, screenWidth / 4));
+        int height = 112 + colSize * SLOT_SIZE;
+
         return BackpackPanel.defaultPanel(
             syncManager,
             settings,
             player,
             tileEntity,
             handler,
-            14 + rowSize * SLOT_SIZE,
-            112 + colSize * SLOT_SIZE,
+            width,
+            height,
             type == InventoryTypes.PLAYER ? backpackSlotIndex : null);
     }
 
@@ -50,6 +58,7 @@ public abstract class BackpackGuiHolder {
         panel.addSortingButtons();
         panel.addTransferButtons();
         panel.addBackpackInventorySlots();
+        panel.addSearchBar();
         panel.addUpgradeSlots();
         panel.addSettingTab();
         panel.addUpgradeTabs();

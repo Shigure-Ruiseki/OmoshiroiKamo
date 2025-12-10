@@ -21,6 +21,10 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
 
     private final Row buttonRow;
 
+    private static final List<CyclicVariantButtonWidget.Variant> SEARCH_VARIANTS = Arrays.asList(
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.lock_search"), MGuiTextures.LOCK_SEARCH_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.unlock_search"), MGuiTextures.UNLOCK_SEARCH_ICON));
+
     private static final List<CyclicVariantButtonWidget.Variant> LOCK_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.lock_backpack"), MGuiTextures.LOCK_BACKPACK_ICON),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.unlock_backpack"), MGuiTextures.UNLOCK_BACKPACK_ICON));
@@ -38,13 +42,24 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
             .coverChildrenWidth()
             .childPadding(2);
 
+        CyclicVariantButtonWidget searchButton = new CyclicVariantButtonWidget(
+            SEARCH_VARIANTS,
+            handler.isSearchBackpack() ? 0 : 1,
+            (index) -> {
+                BackpackSH backpackSyncHandler = this.panel.getBackpackSyncHandler();
+                handler.setSearchBackpack(index == 0);
+                backpackSyncHandler.syncToServer(
+                    BackpackSH.UPDATE_SEARCH,
+                    buffer -> { buffer.writeBoolean(handler.isSearchBackpack()); });
+            });
+
         CyclicVariantButtonWidget lockButton = new CyclicVariantButtonWidget(
             LOCK_VARIANTS,
             handler.isLockBackpack() ? 0 : 1,
             (index) -> {
                 BackpackSH backpackSyncHandler = this.panel.getBackpackSyncHandler();
                 handler.setLockBackpack(index == 0);
-                backpackSyncHandler.syncToServer(BackpackSH.UPDATE_LOCK_BACKPACK, buffer -> {
+                backpackSyncHandler.syncToServer(BackpackSH.UPDATE_LOCK, buffer -> {
                     buffer.writeBoolean(handler.isLockBackpack());
                     buffer.writeStringToBuffer(
                         panel.getPlayer()
@@ -54,6 +69,7 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
             });
 
         buttonRow.top(28)
+            .child(searchButton)
             .child(lockButton);
 
         child(buttonRow);
