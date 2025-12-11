@@ -151,7 +151,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     private void updateTimerIfNeeded() {
-        if (isFullChickens() && isFullSeeds() && !outputIsFull()) {
+        if (isFullChickens() && isFullSeeds() && hasFreeOutputSlot()) {
             timeElapsed += computeTimeIncrement();
             markDirty();
         }
@@ -181,8 +181,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             }
         }
 
-        if (speedMultiplier() > 0) {
-            timeUntilNextDrop /= (int) speedMultiplier();
+        if (timeUntilNextDrop > 0) {
+            double speed = Math.max(0.001d, speedMultiplier());
+            timeUntilNextDrop = (int) Math.max(1, Math.round(timeUntilNextDrop / speed));
         }
 
         markDirty();
@@ -195,7 +196,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
      */
 
     private void spawnChickenDropIfNeeded() {
-        if (isFullChickens() && isFullSeeds() && timeElapsed >= timeUntilNextDrop) {
+        if (isFullChickens() && isFullSeeds() && hasFreeOutputSlot() && timeElapsed >= timeUntilNextDrop) {
 
             if (timeUntilNextDrop > 0) {
                 decrStackSize(getSizeChickenInventory(), requiredSeedsForDrop());
@@ -286,7 +287,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public boolean isActive() {
-        return isFullChickens();
+        return isFullChickens() && hasFreeOutputSlot();
     }
 
     @Override
@@ -403,5 +404,14 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     protected void playPullChickenOutSound() {
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
+    }
+
+    protected boolean hasFreeOutputSlot() {
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
+            if (getStackInSlot(i) == null) {
+                return true;
+            }
+        }
+        return false;
     }
 }

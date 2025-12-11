@@ -156,15 +156,14 @@ public interface IMobStats {
 
         if (targetValue > currentStat) {
             int desiredIncrease = targetValue - currentStat;
-            float modifier = getDiminishingReturnsModifier(currentStat, maxValue);
+            float modifier = getDiminishingReturnsModifier(currentStat, desiredIncrease, maxValue);
 
+            int adjustedIncrease = Math.max(1, Math.round(desiredIncrease * modifier));
             if (rand.nextFloat() <= modifier) {
-                desiredIncrease = Math.max(1, Math.round(desiredIncrease * modifier));
+                targetValue = currentStat + adjustedIncrease;
             } else {
-                desiredIncrease = 0;
+                targetValue = currentStat;
             }
-
-            targetValue = currentStat + desiredIncrease;
         }
 
         if (targetValue <= 1) {
@@ -174,8 +173,11 @@ public interface IMobStats {
         return Math.min(targetValue, maxValue);
     }
 
-    default float getDiminishingReturnsModifier(int currentStat, int maxStatValue) {
-        int effectiveStat = Math.max(1, Math.min(currentStat, Math.max(1, maxStatValue)));
+    default float getDiminishingReturnsModifier(int currentStat, int desiredIncrease, int maxStatValue) {
+        int current = Math.max(1, currentStat);
+        int cappedIncrease = Math.max(0, desiredIncrease);
+        int effectiveStat = Math.max(1,
+                Math.min(current + cappedIncrease, Math.max(1, maxStatValue)));
         float modifier = 1.0f;
         long threshold = 10;
 

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -34,8 +35,20 @@ public class TERoost extends TERoostBase {
     @Override
     protected void spawnChickenDrop() {
         DataChicken chicken = getChickenData(0);
-        if (chicken != null) {
-            putStackInOutput(chicken.createLayStack());
+        ItemStack chickenStack = getStackInSlot(0);
+
+        if (chicken == null || chickenStack == null) {
+            return;
+        }
+
+        ItemStack drop = chicken.createLayStack();
+        if (drop == null) {
+            return;
+        }
+
+        if (drop.stackSize > 0) {
+            putStackInOutput(drop);
+            playSpawnSound();
         }
     }
 

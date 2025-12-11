@@ -1,5 +1,9 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
+import java.util.Random;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -16,6 +20,7 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
@@ -37,8 +42,12 @@ public class TEBreeder extends TERoostBase {
         DataChicken left = getChickenData(0);
         DataChicken right = getChickenData(1);
         if (left != null && right != null) {
-            putStackInOutput(left.createChildStack(right, worldObj));
+            ItemStack child = left.createChildStack(right, worldObj);
+            if (child != null) {
+                applyBreederStatScaling(child, left, right);
+                putStackInOutput(child);
                 playSpawnSound();
+            }
         }
     }
 
@@ -105,5 +114,62 @@ public class TEBreeder extends TERoostBase {
                                         .texture(MGuiTextures.BREEDER_PROGRESS, 36)));
         panel.bindPlayerInventory();
         return panel;
+    }
+
+    private void applyBreederStatScaling(ItemStack child, DataChicken left, DataChicken right) {
+        NBTTagCompound tag = child.getTagCompound();
+        if (tag == null) {
+            return;
+        }
+
+        Random random = worldObj != null ? worldObj.rand : new Random();
+        adjustChildStat(tag, IMobStats.GROWTH_NBT, left.getGrowthStat(), right.getGrowthStat(),
+                ChickenConfig.getMaxGrowthStat(), random);
+        adjustChildStat(tag, IMobStats.GAIN_NBT, left.getGainStat(), right.getGainStat(),
+                ChickenConfig.getMaxGainStat(), random);
+        adjustChildStat(tag, IMobStats.STRENGTH_NBT, left.getStrengthStat(), right.getStrengthStat(),
+                ChickenConfig.getMaxStrengthStat(), random);
+    }
+
+    private void adjustChildStat(NBTTagCompound tag, String key, int parentStatA, int parentStatB, int maxStat,
+            Random random) {
+        if (!tag.hasKey(key)) {
+            return;
+        }
+
+        int parentBaseline = Math.max(parentStatA, parentStatB);
+        int currentValue = Math.min(maxStat, Math.max(1, tag.getInteger(key)));
+        if (currentValue <= parentBaseline) {
+            return;
+        }
+
+        int extra = currentValue - parentBaseline;
+        float modifier = getBreederDiminishingModifier(parentBaseline, extra, maxStat);
+
+        if (modifier <= 0.0f || random.nextFloat() > modifier) {
+            tag.setInteger(key, parentBaseline);
+            return;
+        }
+
+        int adjustedIncrease = Math.max(1, Math.round(extra * modifier));
+        tag.setInteger(key, Math.min(parentBaseline + adjustedIncrease, maxStat));
+    }
+
+    private float getBreederDiminishingModifier(int parentBaseline, int desiredIncrease, int maxStat) {
+        int current = Math.max(1, parentBaseline);
+        int cappedIncrease = Math.max(0, desiredIncrease);
+        int effectiveStat = Math.max(1, Math.min(current + cappedIncrease, Math.max(1, maxStat)));
+        float modifier = 1.0f;
+        int threshold = 10;
+
+        while (effectiveStat > threshold) {
+            modifier *= 0.8f;
+            if (threshold >= Integer.MAX_VALUE / 2) {
+                break;
+            }
+            threshold *= 2;
+        }
+
+        return Math.max(0.0f, modifier);
     }
 }

@@ -200,8 +200,8 @@ public class DataChicken {
         if (stack == null) {
             return null;
         }
-        int bonusMultiplier = Math.max(0, gain / 5);
-        stack.stackSize *= (1 + bonusMultiplier);
+        int factor = calculateLayStackFactor(gain);
+        stack.stackSize *= factor;
         return stack;
     }
 
@@ -303,6 +303,16 @@ public class DataChicken {
         }
         ChickensRegistryItem chicken = ChickensRegistry.INSTANCE.getByType(stack.getItemDamage());
         return chicken != null ? new DataChicken(chicken, stack.getTagCompound()) : null;
+    }
+
+    public static int calculateLayStackFactor(int gainStat) {
+        if (gainStat < 5) {
+            return 1;
+        }
+        double ratio = gainStat / 5.0;
+        int multiplier = (int) Math.floor(Math.log(ratio) / Math.log(2.0));
+        multiplier = Math.max(0, multiplier) + 1;
+        return Math.max(1, 1 + multiplier);
     }
 
     /**

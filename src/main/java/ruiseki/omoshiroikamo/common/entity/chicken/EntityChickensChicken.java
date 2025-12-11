@@ -32,6 +32,7 @@ import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
@@ -209,10 +210,8 @@ public class EntityChickensChicken extends EntityChicken
 
                 if (itemToLay != null) {
                     int gain = getGain();
-                    if (gain >= 5) {
-                        int multiplier = (int) (Math.log(gain / 5.0) / Math.log(2)) + 1;
-                        itemToLay.stackSize += chicken.createLayItem().stackSize * multiplier;
-                    }
+                    int factor = DataChicken.calculateLayStackFactor(gain);
+                    itemToLay.stackSize *= factor;
 
                     entityDropItem(itemToLay, 0.0F);
                     playSound("mob.chicken.plop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
