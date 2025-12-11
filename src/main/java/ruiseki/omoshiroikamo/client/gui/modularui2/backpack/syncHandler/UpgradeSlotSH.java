@@ -177,8 +177,10 @@ public class UpgradeSlotSH extends ItemSlotSH {
             return;
         }
         int ordinal = buf.readInt();
+        boolean backpack = buf.readBoolean();
         ICraftingUpgrade.CraftingDestination[] types = ICraftingUpgrade.CraftingDestination.values();
         upgradeWrapper.setCraftingDes(types[ordinal]);
+        upgradeWrapper.setUseBackpack(backpack);
     }
 
 }

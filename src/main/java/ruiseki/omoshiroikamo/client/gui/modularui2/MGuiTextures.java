@@ -64,8 +64,10 @@ public final class MGuiTextures {
     public static final IDrawable BACKPACK_ICON = icon("backpack", 64, 48);
     public static final IDrawable UNLOCK_BACKPACK_ICON = icon("unlock_backpack", 176, 32);
     public static final IDrawable LOCK_BACKPACK_ICON = icon("lock_backpack", 192, 32);
-    public static final IDrawable UNLOCK_SEARCH_ICON = icon("unlock_search", 208, 32);
-    public static final IDrawable LOCK_SEARCH_ICON = icon("lock_search", 224, 32);
+    public static final IDrawable UNLOCK_SEARCH_ICON = icon("unlock_search", 224, 32);
+    public static final IDrawable LOCK_SEARCH_ICON = icon("lock_search", 208, 32);
+    public static final IDrawable KEEP_TAB_ICON = icon("keep_tab", 80, 80);
+    public static final IDrawable NOT_KEEP_TAB_ICON = icon("not_keep_tab", 80, 96);
 
     public static final IDrawable ONE_IN_FOUR_SLOT_ICON = icon("one_in_four_slot", 0, 80);
     public static final IDrawable ALL_FOUR_SLOT_ICON = icon("all_in_four_slot", 16, 80);
@@ -93,9 +95,11 @@ public final class MGuiTextures {
 
     public static final UITexture INTO_BACKPACK = icon("into_backpack", 32, 48);
     public static final UITexture INTO_INVENTORY = icon("small_m", 48, 48);
+    public static final UITexture USED_BACKPACK = icon("into_backpack", 176, 80);
+    public static final UITexture UNUSED_BACKPACK = icon("unused_backpack", 192, 80);
 
     public static final UITexture PLAY_ICON = icon("play", 0, 64);
-    public static final UITexture STOP_ICON = icon("stop", 16, 64);
+    public static final UITexture STOP_ICON = icon("stop", 16, 192);
 
     public static final UITexture SOLID_UP_ARROW_ICON = icon("solid_up_arrow", 0, 144, 12, 12);
     public static final UITexture SOLID_DOWN_ARROW_ICON = icon("solid_down_arrow", 12, 156, 12, 12);

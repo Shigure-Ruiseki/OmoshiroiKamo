@@ -29,7 +29,7 @@ public abstract class ExpandedUpgradeTabWidget<U extends UpgradeWrapper> extends
     public void updateTabState() {
         U wrapper = getWrapper();
         if (wrapper != null) {
-            boolean newState = !wrapper.getTabOpened();
+            boolean newState = !wrapper.isTabOpened();
             wrapper.setTabOpened(newState);
 
             if (slotSyncHandler != null) {

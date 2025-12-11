@@ -17,8 +17,7 @@ public class BackpackSH extends SyncHandler {
     public static final int UPDATE_SORT_INV = 1;
     public static final int UPDATE_TRANSFER_TO_BACKPACK_INV = 2;
     public static final int UPDATE_TRANSFER_TO_PLAYER_INV = 3;
-    public static final int UPDATE_LOCK = 4;
-    public static final int UPDATE_SEARCH = 5;
+    public static final int UPDATE_SETTING = 4;
 
     private final PlayerMainInvWrapper playerInv;
     private final BackpackHandler handler;
@@ -52,12 +51,8 @@ public class BackpackSH extends SyncHandler {
                 transferToPlayerInventory(buf);
                 break;
 
-            case UPDATE_LOCK:
-                updateLockBackpack(buf);
-                break;
-
-            case UPDATE_SEARCH:
-                updateSearch(buf);
+            case UPDATE_SETTING:
+                updateBackpack(buf);
                 break;
 
             default:
@@ -102,15 +97,14 @@ public class BackpackSH extends SyncHandler {
         BackpackInventoryHelper.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
     }
 
-    public void updateLockBackpack(PacketBuffer buf) throws IOException {
+    public void updateBackpack(PacketBuffer buf) throws IOException {
         boolean lock = buf.readBoolean();
         String uuid = buf.readStringFromBuffer(36);
+        boolean search = buf.readBoolean();
+        boolean tab = buf.readBoolean();
         handler.setLockBackpack(lock);
         handler.setUuid(uuid);
-    }
-
-    public void updateSearch(PacketBuffer buf) {
-        boolean search = buf.readBoolean();
         handler.setSearchBackpack(search);
+        handler.setKeepTab(tab);
     }
 }

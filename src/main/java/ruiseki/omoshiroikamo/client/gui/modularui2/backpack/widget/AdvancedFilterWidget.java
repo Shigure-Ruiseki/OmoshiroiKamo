@@ -113,7 +113,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
         this.ignoreDurabilityButton = new CyclicVariantButtonWidget(
             Arrays.asList(IGNORE_DURABILITY_VARIANTS),
-            filterableWrapper.getIgnoreDurability() ? 1 : 0,
+            filterableWrapper.isIgnoreDurability() ? 1 : 0,
             index -> {
                 filterableWrapper.setIgnoreDurability(index == 1);
                 updateWrapper();
@@ -122,7 +122,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
         this.ignoreNBTButton = new CyclicVariantButtonWidget(
             Arrays.asList(IGNORE_NBT_VARIANTS),
-            filterableWrapper.getIgnoreNBT() ? 1 : 0,
+            filterableWrapper.isIgnoreNBT() ? 1 : 0,
             index -> {
                 filterableWrapper.setIgnoreNBT(index == 1);
                 updateWrapper();
@@ -240,8 +240,8 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
                 writer.writeInt(
                     filterableWrapper.getMatchType()
                         .ordinal());
-                writer.writeBoolean(filterableWrapper.getIgnoreDurability());
-                writer.writeBoolean(filterableWrapper.getIgnoreNBT());
+                writer.writeBoolean(filterableWrapper.isIgnoreDurability());
+                writer.writeBoolean(filterableWrapper.isIgnoreNBT());
 
                 List<String> oreList = filterableWrapper.getOreDictEntries();
                 writer.writeInt(oreList.size());

@@ -50,4 +50,14 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
 
     }
 
+    @Override
+    public boolean isUseBackpack() {
+        return ItemNBTUtils.getBoolean(upgrade, USE_BACKPACK_TAG, false);
+    }
+
+    @Override
+    public void setUseBackpack(boolean used) {
+        ItemNBTUtils.setBoolean(upgrade, USE_BACKPACK_TAG, used);
+    }
+
 }

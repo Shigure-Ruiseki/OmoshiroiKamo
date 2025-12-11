@@ -18,11 +18,6 @@ public class SortingSettingWidget extends ExpandedTabWidget {
     private final BackpackSettingPanel settingPanel;
     private final TabWidget parentTabWidget;
 
-    private final Row buttonRow;
-
-    private final ButtonWidget<?> lockAllButton;
-    private final ButtonWidget<?> unlockAllButton;
-
     public SortingSettingWidget(BackpackPanel panel, BackpackSettingPanel settingPanel, TabWidget parentTabWidget) {
         super(2, MGuiTextures.NO_SORT_ICON, "gui.sorting_settings", 80, ExpandDirection.RIGHT);
 
@@ -30,12 +25,12 @@ public class SortingSettingWidget extends ExpandedTabWidget {
         this.settingPanel = settingPanel;
         this.parentTabWidget = parentTabWidget;
 
-        buttonRow = (Row) new Row().leftRel(0.5f)
+        Row buttonRow = (Row) new Row().leftRel(0.5f)
             .height(20)
             .coverChildrenWidth()
             .childPadding(2);
 
-        lockAllButton = new ButtonWidget<>().size(20)
+        ButtonWidget<?> lockAllButton = new ButtonWidget<>().size(20)
             .overlay(MGuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
@@ -57,7 +52,7 @@ public class SortingSettingWidget extends ExpandedTabWidget {
                 t -> t.addLine(IKey.lang("gui.lock_all_sort"))
                     .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
-        unlockAllButton = new ButtonWidget<>().size(20)
+        ButtonWidget<?> unlockAllButton = new ButtonWidget<>().size(20)
             .overlay(MGuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {

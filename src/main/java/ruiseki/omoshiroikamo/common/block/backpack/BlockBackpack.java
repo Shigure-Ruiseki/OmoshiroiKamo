@@ -149,6 +149,12 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         }
 
         @Override
+        public String getItemStackDisplayName(ItemStack stack) {
+            BackpackHandler cap = new BackpackHandler(stack, null, this);
+            return cap.getDisplayName();
+        }
+
+        @Override
         public String[] getBaubleTypes(ItemStack itemstack) {
             return new String[] { "body" };
         }

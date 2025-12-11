@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackGuiHolder.SLOT_SIZE;
-import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ceilDiv;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +59,7 @@ import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.MagnetUpgrade
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.SettingTabWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TabWidget;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TileWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.TransferButtonWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotGroupWidget;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.widget.UpgradeSlotUpdateGroup;
@@ -87,6 +87,14 @@ public class BackpackPanel extends ModularPanel {
         .location(LibMisc.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(132, 0, 124, 256)
+        .adaptable(4)
+        .tiled()
+        .build();
+
+    public static final AdaptableUITexture TILE_TAB_TEXTURE = (AdaptableUITexture) UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/gui_controls")
+        .imageSize(256, 256)
+        .xy(128, 0, 128, 10)
         .adaptable(4)
         .tiled()
         .build();
@@ -122,16 +130,19 @@ public class BackpackPanel extends ModularPanel {
     @Getter
     private final BackpackHandler handler;
 
-    private final List<ItemSlot> upgradeSlotWidgets = new ArrayList<>();
     @Getter
     private final UpgradeSlotGroupWidget upgradeSlotGroupWidget;
+    @Getter
     private final List<TabWidget> tabWidgets;
+    private final List<ItemSlot> upgradeSlotWidgets = new ArrayList<>();
 
+    @Getter
     private final int width;
+    @Getter
     private final int height;
     private final int backpackSlotsHeight;
+    @Getter
     private final int rowSize;
-    private final int colSize;
 
     @Getter
     public final BackpackSH backpackSyncHandler;
@@ -143,14 +154,12 @@ public class BackpackPanel extends ModularPanel {
     @Getter
     private final IPanelHandler settingPanel;
     @Getter
-    private BackpackList backpackList;
-    @Getter
-    private Column slotListCol;
-    private SearchBarWidget searchBarWidget;
+    private Column backpackInvCol;
 
     public boolean isMemorySettingTabOpened = false;
     public boolean shouldMemorizeRespectNBT = false;
     public boolean isSortingSettingTabOpened = false;
+    public boolean isResetOpenedTabs = false;
 
     public BackpackPanel(EntityPlayer player, TileEntity tileEntity, PanelSyncManager syncManager, UISettings settings,
         BackpackHandler handler, int width, int height) {
@@ -167,7 +176,6 @@ public class BackpackPanel extends ModularPanel {
         this.backpackSlotsHeight = this.height - 112;
         int calculated = (this.width - 14) / SLOT_SIZE;
         this.rowSize = Math.max(9, Math.min(12, calculated));
-        this.colSize = ceilDiv(this.handler.getSlots(), this.rowSize);
 
         this.backpackSyncHandler = new BackpackSH(new PlayerMainInvWrapper(player.inventory), this.handler);
         this.syncManager.syncValue("backpack_wrapper", this.backpackSyncHandler);
@@ -346,7 +354,7 @@ public class BackpackPanel extends ModularPanel {
 
     public void addBackpackInventorySlots() {
 
-        backpackList = new BackpackList().name("backpack_slots")
+        BackpackList backpackList = new BackpackList().name("backpack_slots")
             .coverChildrenWidth()
             .top(17)
             .alignX(0.5f)
@@ -354,19 +362,20 @@ public class BackpackPanel extends ModularPanel {
             .maxSize(backpackSlotsHeight)
             .wrapTight();
 
-        slotListCol = (Column) new Column().coverChildren();
+        backpackInvCol = (Column) new Column().coverChildren();
         List<BackpackRow> rows = new ArrayList<>();
 
         for (int r = 0; r < rowSize; r++) {
-            BackpackRow row = (BackpackRow) new BackpackRow().coverChildren();
+            BackpackRow row = (BackpackRow) new BackpackRow().coverChildren()
+                .left(0);
             rows.add(row);
-            slotListCol.child(row);
+            backpackInvCol.child(row);
         }
 
         for (int i = 0; i < handler.getBackpackSlots(); i++) {
             int row = i / rowSize;
 
-            ItemSlot slot = new BackpackSlot(this, handler).syncHandler("backpack", i)
+            BackpackSlot slot = (BackpackSlot) new BackpackSlot(this, handler).syncHandler("backpack", i)
                 .size(SLOT_SIZE)
                 .name("slot_" + i);
 
@@ -374,13 +383,13 @@ public class BackpackPanel extends ModularPanel {
                 .child(slot);
         }
 
-        backpackList.child(slotListCol);
+        backpackList.child(backpackInvCol);
         this.child(backpackList);
     }
 
     public void addSearchBar() {
 
-        searchBarWidget = (SearchBarWidget) new SearchBarWidget(this, slotListCol).top(6)
+        SearchBarWidget searchBarWidget = (SearchBarWidget) new SearchBarWidget(this).top(6)
             .width(this.width - 37)
             .height(10)
             .right(32);
@@ -408,9 +417,6 @@ public class BackpackPanel extends ModularPanel {
         for (int i = 0; i < handler.getUpgradeSlots(); i++) {
             TabWidget tab = new TabWidget(i + 1).name("upgrade_tab_" + i);
             tab.setEnabled(false);
-            if (settingPanel.isPanelOpen()) {
-                tab.setEnabled(false);
-            }
             tabWidgets.add(tab);
         }
 
@@ -424,6 +430,7 @@ public class BackpackPanel extends ModularPanel {
     }
 
     public void addTexts(EntityPlayer player) {
+        child(new TileWidget(this));
         child(
             IKey.lang(player.inventory.getInventoryName())
                 .asWidget()
@@ -452,7 +459,7 @@ public class BackpackPanel extends ModularPanel {
                 continue;
             }
 
-            if (wrapper.getTabOpened()) {
+            if (wrapper.isTabOpened()) {
                 if (openedTabIndex != null) {
                     wrapper.setTabOpened(false);
                     upgradeSlotSyncHandlers[slotIndex]
@@ -484,7 +491,7 @@ public class BackpackPanel extends ModularPanel {
                 continue;
             }
 
-            tabWidget.setShowExpanded(wrapper.getTabOpened());
+            tabWidget.setShowExpanded(wrapper.isTabOpened());
             tabWidget.setEnabled(true);
             tabWidget.setTabIcon(
                 new ItemDrawable(stack).asIcon()
@@ -574,6 +581,8 @@ public class BackpackPanel extends ModularPanel {
             }
         }
 
+        resetOpenedTabsIfNotKeep();
+
         syncToggles();
         disableUnusedTabWidgets(tabIndex);
         this.scheduleResize();
@@ -604,8 +613,10 @@ public class BackpackPanel extends ModularPanel {
             TabWidget tabWidget = tabWidgets.get(i);
             if (tabWidget != null) {
                 tabWidget.setEnabled(false);
+                tabWidget.setShowExpanded(false);
             }
         }
+        this.scheduleResize();
     }
 
     private void syncToggles() {
@@ -619,6 +630,25 @@ public class BackpackPanel extends ModularPanel {
             } else {
                 toggleWidget.setEnabled(false);
             }
+        }
+    }
+
+    public void resetOpenedTabsIfNotKeep() {
+        if (!handler.isKeepTab() && !isResetOpenedTabs) {
+            for (int i = 0; i < upgradeSlotWidgets.size(); i++) {
+                ItemSlot slotWidget = upgradeSlotWidgets.get(i);
+                ItemStack stack = slotWidget.getSlot()
+                    .getStack();
+                if (stack == null || !(stack.getItem() instanceof ItemUpgrade item) || !item.hasTab()) continue;
+
+                UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+                if (wrapper != null && wrapper.isTabOpened()) {
+                    wrapper.setTabOpened(false);
+                    upgradeSlotSyncHandlers[i]
+                        .syncToServer(UpgradeSlotSH.UPDATE_UPGRADE_TAB_STATE, buf -> buf.writeBoolean(false));
+                }
+            }
+            isResetOpenedTabs = true;
         }
     }
 

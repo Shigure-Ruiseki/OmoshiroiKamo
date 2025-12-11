@@ -77,17 +77,6 @@ public class BackpackItemStackHelper {
         }
     }
 
-    public static String getModId(ItemStack stack) {
-        if (stack == null || stack.getItem() == null) return "";
-
-        Item item = stack.getItem();
-
-        String name = Item.itemRegistry.getNameForObject(item);
-        int sepIdx = name.indexOf(":");
-        return name.substring(0, sepIdx)
-            .toLowerCase();
-    }
-
     public static boolean matchesAllTerms(String group, ItemStack stack, String lowerName, List<String> tooltip,
         String creativeTab) {
         String[] terms = splitTerms(group);

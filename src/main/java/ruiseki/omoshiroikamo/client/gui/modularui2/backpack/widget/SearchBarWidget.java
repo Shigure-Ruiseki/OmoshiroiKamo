@@ -28,10 +28,10 @@ public class SearchBarWidget extends TextFieldWidget {
         .name("vanilla_search")
         .build();
 
-    public SearchBarWidget(BackpackPanel panel, Column backpackSlots) {
+    public SearchBarWidget(BackpackPanel panel) {
         super();
-        this.backpackSlots = backpackSlots;
         this.panel = panel;
+        this.backpackSlots = panel.getBackpackInvCol();
         background(VANILLA_SEARCH_BACKGROUND);
         hintText(
             IKey.lang("gui.search_hint")

@@ -93,7 +93,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     }
 
     @Override
-    public boolean getIgnoreDurability() {
+    public boolean isIgnoreDurability() {
         return ItemNBTUtils.getBoolean(upgrade, IGNORE_DURABILITY_TAG, true);
     }
 
@@ -103,7 +103,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     }
 
     @Override
-    public boolean getIgnoreNBT() {
+    public boolean isIgnoreNBT() {
         return ItemNBTUtils.getBoolean(upgrade, IGNORE_NBT_TAG, true);
     }
 

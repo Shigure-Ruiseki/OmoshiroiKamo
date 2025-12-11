@@ -24,11 +24,6 @@ public class MemorySettingWidget extends ExpandedTabWidget {
     private final BackpackSettingPanel settingPanel;
     private final TabWidget parentTabWidget;
 
-    private final Row buttonRow;
-
-    private final ButtonWidget<?> memorizeAllButton;
-    private final ButtonWidget<?> unmemorizeAllButton;
-
     private final CyclicVariantButtonWidget respectNBTButton;
 
     public MemorySettingWidget(BackpackPanel panel, BackpackSettingPanel settingPanel, TabWidget parentTabWidget) {
@@ -38,12 +33,12 @@ public class MemorySettingWidget extends ExpandedTabWidget {
         this.settingPanel = settingPanel;
         this.parentTabWidget = parentTabWidget;
 
-        buttonRow = (Row) new Row().leftRel(0.5f)
+        Row buttonRow = (Row) new Row().leftRel(0.5f)
             .height(20)
             .coverChildrenWidth()
             .childPadding(2);
 
-        memorizeAllButton = new ButtonWidget<>().size(20)
+        ButtonWidget<?> memorizeAllButton = new ButtonWidget<>().size(20)
             .overlay(MGuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
@@ -67,7 +62,7 @@ public class MemorySettingWidget extends ExpandedTabWidget {
                 t -> t.addLine(IKey.lang("gui.memorize_all"))
                     .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
-        unmemorizeAllButton = new ButtonWidget<>().size(20)
+        ButtonWidget<?> unmemorizeAllButton = new ButtonWidget<>().size(20)
             .overlay(MGuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {

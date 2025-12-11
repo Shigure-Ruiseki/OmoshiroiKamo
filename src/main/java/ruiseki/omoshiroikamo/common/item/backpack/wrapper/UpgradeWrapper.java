@@ -20,7 +20,7 @@ public class UpgradeWrapper implements IUpgrade {
     }
 
     @Override
-    public boolean getTabOpened() {
+    public boolean isTabOpened() {
         return ItemNBTUtils.getBoolean(upgrade, TAB_STATE_TAG, false);
     }
 

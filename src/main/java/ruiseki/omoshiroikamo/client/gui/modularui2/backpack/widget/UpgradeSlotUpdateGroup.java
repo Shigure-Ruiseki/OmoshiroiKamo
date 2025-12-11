@@ -177,7 +177,11 @@ public class UpgradeSlotUpdateGroup {
             craftingMatrixSlots[i] = slot;
         }
 
-        ModularCraftingSlot resultSlot = new ModularCraftingSlot(craftingStackHandler.getDelegatedStackHandler(), 9);
+        ModularCraftingSlot resultSlot = new ModularCraftingSlot(
+            craftingStackHandler.getDelegatedStackHandler(),
+            9,
+            handler,
+            slotIndex);
         resultSlot.slotGroup("crafting_workbench_slot_" + slotIndex)
             .accessibility(false, true);
         resultSlot.setCraftMatrix(craftMatrix);

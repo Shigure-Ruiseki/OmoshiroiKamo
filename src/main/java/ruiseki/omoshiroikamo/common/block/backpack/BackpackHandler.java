@@ -35,6 +35,7 @@ import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IPickupUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class BackpackHandler implements IItemHandlerModifiable {
 
@@ -66,7 +67,15 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     @Getter
     @Setter
+    private boolean keepTab;
+
+    @Getter
+    @Setter
     private String uuid;
+
+    @Getter
+    @Setter
+    private String customName;
 
     public static final String MEMORY_STACK_ITEMS_TAG = "MemoryItems";
     public static final String MEMORY_STACK_RESPECT_NBT_TAG = "MemoryRespectNBT";
@@ -74,7 +83,9 @@ public class BackpackHandler implements IItemHandlerModifiable {
     public static final String LOCKED_SLOTS_TAG = "LockedSlots";
     public static final String LOCKED_BACKPACK_TAG = "LockedBackpack";
     public static final String UUID_TAG = "UUID";
-    public static final String SEARCH_BACKPACK = "SearchBackpack";
+    public static final String SEARCH_BACKPACK_TAG = "SearchBackpack";
+    public static final String KEEP_TAB_TAG = "KeepTab";
+    public static final String CUSTOM_NAME_TAG = "CustomName";
 
     @Getter
     @Setter
@@ -117,6 +128,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
         this.lockBackpack = false;
         this.uuid = "";
         this.searchBackpack = true;
+        this.keepTab = true;
 
         this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
@@ -140,16 +152,21 @@ public class BackpackHandler implements IItemHandlerModifiable {
     }
 
     public String getDisplayName() {
+        if (hasCustomInventoryName()) {
+            return this.customName;
+        }
         if (backpack != null && backpack.getItem() != null) {
-            return backpack.getItem()
-                .getUnlocalizedName(backpack);
+            return LibMisc.LANG.localize(
+                backpack.getItem()
+                    .getUnlocalizedName(backpack) + ".name");
         }
         if (tile != null) {
-            return tile.getBlockType()
-                .getUnlocalizedName();
+            return LibMisc.LANG.localize(
+                tile.getBlockType()
+                    .getUnlocalizedName() + ".name");
         }
 
-        return "container.inventory";
+        return LibMisc.LANG.localize("container.inventory");
     }
 
     @Override
@@ -170,6 +187,32 @@ public class BackpackHandler implements IItemHandlerModifiable {
     @Override
     public @Nullable ItemStack extractItem(int slot, int amount, boolean simulate) {
         return backpackHandler.extractItem(slot, amount, simulate);
+    }
+
+    public ItemStack extractItem(ItemStack wanted, int amount, boolean simulate) {
+        if (wanted == null || amount <= 0) return null;
+
+        int remaining = amount;
+        ItemStack result = null;
+
+        for (int i = 0; i < backpackHandler.getSlots(); i++) {
+            ItemStack slotStack = getStackInSlot(i);
+            if (slotStack != null && slotStack.isItemEqual(wanted)) {
+                int take = Math.min(slotStack.stackSize, remaining);
+                ItemStack extracted = extractItem(i, take, simulate);
+
+                if (result == null) {
+                    result = extracted;
+                } else if (extracted != null) {
+                    result.stackSize += extracted.stackSize;
+                }
+
+                remaining -= take;
+                if (remaining <= 0) break;
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -406,6 +449,10 @@ public class BackpackHandler implements IItemHandlerModifiable {
         return !isLockBackpack() || playerUUID.equals(UUID.fromString(getUuid()));
     }
 
+    public boolean hasCustomInventoryName() {
+        return this.customName != null && !this.customName.isEmpty();
+    }
+
     // ---------- ITEM STACK ----------
     public void writeToItem() {
         if (backpack == null) {
@@ -456,9 +503,15 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
         tag.setBoolean(LOCKED_BACKPACK_TAG, lockBackpack);
 
-        tag.setBoolean(SEARCH_BACKPACK, searchBackpack);
+        tag.setBoolean(SEARCH_BACKPACK_TAG, searchBackpack);
+
+        tag.setBoolean(KEEP_TAB_TAG, keepTab);
 
         tag.setString(UUID_TAG, uuid);
+
+        if (hasCustomInventoryName()) {
+            tag.setString(CUSTOM_NAME_TAG, this.customName);
+        }
     }
 
     public void readFromNBT(NBTTagCompound tag) {
@@ -517,12 +570,25 @@ public class BackpackHandler implements IItemHandlerModifiable {
             lockBackpack = tag.getBoolean(LOCKED_BACKPACK_TAG);
         }
 
-        if (tag.hasKey(SEARCH_BACKPACK)) {
-            searchBackpack = tag.getBoolean(SEARCH_BACKPACK);
+        if (tag.hasKey(SEARCH_BACKPACK_TAG)) {
+            searchBackpack = tag.getBoolean(SEARCH_BACKPACK_TAG);
+        }
+
+        if (tag.hasKey(KEEP_TAB_TAG)) {
+            keepTab = tag.getBoolean(KEEP_TAB_TAG);
         }
 
         if (tag.hasKey(UUID_TAG)) {
             uuid = tag.getString(UUID_TAG);
+        }
+
+        if (tag.hasKey("display", 10)) {
+            NBTTagCompound display = tag.getCompoundTag("display");
+            if (display.hasKey("Name", 8)) {
+                customName = display.getString("Name");
+            }
+        } else {
+            customName = tag.getString(CUSTOM_NAME_TAG);
         }
     }
 

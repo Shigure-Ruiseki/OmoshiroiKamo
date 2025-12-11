@@ -133,7 +133,18 @@ gui.unlock_all_sort=Select All Slots For Sorting
 gui.into_backpack=Shift Click Result Into\nBackpack
 gui.into_inventory=Shift Click Result Into\nPlayer's Inventory
 
-gui.search_hint= Search...
+gui.used_backpack=Refill Crafting Grid
+gui.unused_backpack=Do Not Refill Crafting Grid
+
+gui.search_hint=Search...
+gui.lock_search=Keep Search Phrase: On
+gui.unlock_search=Keep Search Phrase: Off
+
+gui.lock_backpack=Another Player Can Not Open
+gui.unlock_backpack=Another Player Can Open
+
+gui.keep_tab=Keep Tab Open: On
+gui.not_keep_tab=Keep Tab Open: Off
 
 #Display
 

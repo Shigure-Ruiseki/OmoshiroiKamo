@@ -19,15 +19,21 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
 
 public class ModularCraftingSlot extends ModularSlot {
 
     @Setter
     private InventoryCraftingWrapper craftMatrix;
+    private final BackpackHandler handler;
+    private final int slotIndex;
     private int amountCrafted;
 
-    public ModularCraftingSlot(IItemHandler itemHandler, int index) {
+    public ModularCraftingSlot(IItemHandler itemHandler, int index, BackpackHandler handler, int slotIndex) {
         super(itemHandler, index);
+        this.handler = handler;
+        this.slotIndex = slotIndex;
     }
 
     /**
@@ -126,29 +132,39 @@ public class ModularCraftingSlot extends ModularSlot {
             onCrafting(stack);
         }
 
-        for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i) {
-            ItemStack itemstack1 = this.craftMatrix.getStackInSlot(i);
+        ICraftingUpgrade wrapper = handler != null ? handler.gatherCapabilityUpgrades(ICraftingUpgrade.class)
+            .get(slotIndex) : null;
 
-            if (itemstack1 != null) {
-                itemstack1.stackSize--;
-                this.craftMatrix.setInventorySlotContents(i, itemstack1.stackSize <= 0 ? null : itemstack1);
+        for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
+            ItemStack slotStack = craftMatrix.getStackInSlot(i);
+            if (slotStack == null) continue;
 
-                if (itemstack1 != null && itemstack1.getItem()
-                    .hasContainerItem(itemstack1)) {
-                    ItemStack cont = itemstack1.getItem()
-                        .getContainerItem(itemstack1);
+            int toExtract = 1;
 
-                    if (cont != null && cont.isItemStackDamageable() && cont.getItemDamage() > cont.getMaxDamage()) {
-                        MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, cont));
-                        continue;
-                    }
+            if (wrapper != null && wrapper.isUseBackpack()) {
+                ItemStack extracted = handler.extractItem(slotStack, toExtract, false);
+                if (extracted != null) toExtract--;
+            }
 
-                    if (!itemstack1.getItem()
-                        .doesContainerItemLeaveCraftingGrid(itemstack1)
-                        || !player.inventory.addItemStackToInventory(cont)) {
+            if (toExtract > 0) {
+                slotStack = slotStack.copy();
+                slotStack.stackSize -= toExtract;
+                if (slotStack.stackSize <= 0) slotStack = null;
+                craftMatrix.setInventorySlotContents(i, slotStack);
+            }
 
-                        if (this.craftMatrix.getStackInSlot(i) == null) {
-                            this.craftMatrix.setInventorySlotContents(i, cont);
+            if (slotStack != null && slotStack.getItem()
+                .hasContainerItem(slotStack)) {
+                ItemStack cont = slotStack.getItem()
+                    .getContainerItem(slotStack);
+                if (cont != null && cont.isItemStackDamageable() && cont.getItemDamage() > cont.getMaxDamage()) {
+                    MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, cont));
+                } else {
+                    if (cont != null && (!slotStack.getItem()
+                        .doesContainerItemLeaveCraftingGrid(slotStack)
+                        || !player.inventory.addItemStackToInventory(cont))) {
+                        if (craftMatrix.getStackInSlot(i) == null) {
+                            craftMatrix.setInventorySlotContents(i, cont);
                         } else {
                             player.dropPlayerItemWithRandomChoice(cont, false);
                         }
@@ -156,7 +172,8 @@ public class ModularCraftingSlot extends ModularSlot {
                 }
             }
         }
-        this.craftMatrix.notifyContainer();
+
+        craftMatrix.notifyContainer();
     }
 
     public void updateResult(ItemStack stack) {
