@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.config.backport;
 
+import net.minecraft.util.MathHelper;
+
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -41,5 +43,9 @@ public class ChickenConfig {
 
     @Config.RangeFloat(min = 1)
     public static float roostSpeed;
+
+    public static int getChickenStackLimit() {
+        return MathHelper.clamp_int(chickenStackLimit, 1, 64);
+    }
 
 }

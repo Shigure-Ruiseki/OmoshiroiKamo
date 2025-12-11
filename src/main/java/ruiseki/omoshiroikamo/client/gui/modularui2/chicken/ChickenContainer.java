@@ -1,6 +1,9 @@
 package ruiseki.omoshiroikamo.client.gui.modularui2.chicken;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -20,23 +23,32 @@ public class ChickenContainer extends ModularContainer {
     @Override
     public ItemStack slotClick(int slotId, int mouseButton, int mode, EntityPlayer player) {
         ItemStack result = super.slotClick(slotId, mouseButton, mode, player);
-        enforceChickenStackLimit(player);
+        if (player == null || player.worldObj == null) {
+            return result;
+        }
+
+        boolean serverSide = !player.worldObj.isRemote;
+        if (enforceChickenStackLimit(player, serverSide)) {
+            if (serverSide) {
+                detectAndSendChanges();
+                if (player instanceof EntityPlayerMP mp) {
+                    mp.updateHeldItem();
+                }
+            }
+        }
         return result;
     }
 
-    private void enforceChickenStackLimit(EntityPlayer player) {
-        if (player == null || player.worldObj == null || player.worldObj.isRemote) {
-            return;
-        }
-
+    private boolean enforceChickenStackLimit(EntityPlayer player, boolean allowDrops) {
         InventoryPlayer inventory = player.inventory;
         if (inventory == null) {
-            return;
+            return false;
         }
 
-        int limit = ChickenConfig.chickenStackLimit;
+        int limit = ChickenConfig.getChickenStackLimit();
+        AtomicBoolean changed = new AtomicBoolean(false);
 
-        normalizeCarriedStack(player, inventory, limit);
+        normalizeCarriedStack(player, inventory, limit, changed, allowDrops);
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
@@ -47,17 +59,22 @@ public class ChickenContainer extends ModularContainer {
             int overflow = stack.stackSize - limit;
             stack.stackSize = limit;
             inventory.setInventorySlotContents(i, stack);
-            overflow = redistributeOverflow(player, inventory, stack, overflow, limit, i);
+            changed.set(true);
+            overflow = redistributeOverflow(player, inventory, stack, overflow, limit, i, changed, allowDrops);
 
             if (overflow > 0) {
-                dropOverflow(player, stack, overflow, limit);
+                dropOverflow(player, stack, overflow, limit, changed, allowDrops);
             }
         }
 
-        inventory.markDirty();
+        if (changed.get()) {
+            inventory.markDirty();
+        }
+        return changed.get();
     }
 
-    private void normalizeCarriedStack(EntityPlayer player, InventoryPlayer inventory, int limit) {
+    private void normalizeCarriedStack(EntityPlayer player, InventoryPlayer inventory, int limit,
+            AtomicBoolean changed, boolean allowDrops) {
         ItemStack carried = inventory.getItemStack();
         if (!DataChicken.isChicken(carried) || carried.stackSize <= limit) {
             return;
@@ -66,14 +83,15 @@ public class ChickenContainer extends ModularContainer {
         int overflow = carried.stackSize - limit;
         carried.stackSize = limit;
         inventory.setItemStack(carried);
-        overflow = redistributeOverflow(player, inventory, carried, overflow, limit, -1);
+        changed.set(true);
+        overflow = redistributeOverflow(player, inventory, carried, overflow, limit, -1, changed, allowDrops);
         if (overflow > 0) {
-            dropOverflow(player, carried, overflow, limit);
+            dropOverflow(player, carried, overflow, limit, changed, allowDrops);
         }
     }
 
     private int redistributeOverflow(EntityPlayer player, InventoryPlayer inventory, ItemStack template, int overflow,
-            int limit, int sourceSlot) {
+            int limit, int sourceSlot, AtomicBoolean changed, boolean allowDrops) {
         if (overflow <= 0) {
             return 0;
         }
@@ -81,16 +99,17 @@ public class ChickenContainer extends ModularContainer {
         int remaining = overflow;
 
         if (sourceSlot != -1) {
-            remaining = fillCarriedStack(inventory, template, remaining, limit);
+            remaining = fillCarriedStack(inventory, template, remaining, limit, changed);
         }
 
-        remaining = fillExistingSlots(inventory, template, remaining, limit, sourceSlot);
-        remaining = fillEmptySlots(inventory, template, remaining, limit, sourceSlot);
+        remaining = fillExistingSlots(inventory, template, remaining, limit, sourceSlot, changed);
+        remaining = fillEmptySlots(inventory, template, remaining, limit, sourceSlot, changed);
 
         return remaining;
     }
 
-    private int fillCarriedStack(InventoryPlayer inventory, ItemStack template, int overflow, int limit) {
+    private int fillCarriedStack(InventoryPlayer inventory, ItemStack template, int overflow, int limit,
+            AtomicBoolean changed) {
         if (overflow <= 0) {
             return overflow;
         }
@@ -100,6 +119,7 @@ public class ChickenContainer extends ModularContainer {
         if (carried == null) {
             int move = Math.min(limit, overflow);
             inventory.setItemStack(copyWithAmount(template, move));
+            changed.set(true);
             return overflow - move;
         }
 
@@ -110,11 +130,12 @@ public class ChickenContainer extends ModularContainer {
         int move = Math.min(limit - carried.stackSize, overflow);
         carried.stackSize += move;
         inventory.setItemStack(carried);
+        changed.set(true);
         return overflow - move;
     }
 
     private int fillExistingSlots(InventoryPlayer inventory, ItemStack template, int overflow, int limit,
-            int sourceSlot) {
+            int sourceSlot, AtomicBoolean changed) {
         if (overflow <= 0) {
             return overflow;
         }
@@ -132,12 +153,14 @@ public class ChickenContainer extends ModularContainer {
             slotStack.stackSize += move;
             inventory.setInventorySlotContents(i, slotStack);
             remaining -= move;
+            changed.set(true);
         }
 
         return remaining;
     }
 
-    private int fillEmptySlots(InventoryPlayer inventory, ItemStack template, int overflow, int limit, int sourceSlot) {
+    private int fillEmptySlots(InventoryPlayer inventory, ItemStack template, int overflow, int limit, int sourceSlot,
+            AtomicBoolean changed) {
         if (overflow <= 0) {
             return overflow;
         }
@@ -154,13 +177,16 @@ public class ChickenContainer extends ModularContainer {
             int move = Math.min(limit, remaining);
             inventory.setInventorySlotContents(i, copyWithAmount(template, move));
             remaining -= move;
+            changed.set(true);
         }
 
         return remaining;
     }
 
-    private void dropOverflow(EntityPlayer player, ItemStack template, int overflow, int limit) {
-        if (player == null || player.worldObj == null) {
+    private void dropOverflow(EntityPlayer player, ItemStack template, int overflow, int limit,
+            AtomicBoolean changed, boolean allowDrops) {
+        if (!allowDrops || player == null || player.worldObj == null) {
+            changed.set(true);
             return;
         }
 
@@ -173,6 +199,7 @@ public class ChickenContainer extends ModularContainer {
             }
             remaining -= move;
         }
+        changed.set(true);
     }
 
     private boolean stacksMatch(ItemStack stack, ItemStack template) {

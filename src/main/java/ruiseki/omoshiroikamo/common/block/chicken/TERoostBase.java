@@ -372,7 +372,8 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
+    }
 
     /**
      * -----------------------------------------------------------
@@ -389,7 +390,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     protected abstract double speedMultiplier();
 
     protected int getChickenStackLimit() {
-        return ChickenConfig.chickenStackLimit;
+        return ChickenConfig.getChickenStackLimit();
     }
 
     protected void playSpawnSound() {

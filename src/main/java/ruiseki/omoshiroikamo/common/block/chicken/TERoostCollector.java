@@ -22,6 +22,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
+import ruiseki.omoshiroikamo.client.gui.modularui2.chicken.ChickenContainer;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
@@ -37,7 +38,8 @@ public class TERoostCollector extends AbstractStorageTE {
     @Override
     protected void doUpdate() {
         super.doUpdate();
-        if (!worldObj.isRemote) {}
+        if (!worldObj.isRemote) {
+        }
         updateSearchOffset();
         gatherItems();
     }
@@ -77,7 +79,7 @@ public class TERoostCollector extends AbstractStorageTE {
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-        float hitZ) {
+            float hitZ) {
         openGui(player);
         return true;
     }
@@ -99,24 +101,27 @@ public class TERoostCollector extends AbstractStorageTE {
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ModularPanel panel = new ModularPanel("roost_gui");
+        settings.customContainer(ChickenContainer::new);
         panel.bindPlayerInventory();
 
         panel.child(
-            Flow.column()
-                .child(
-                    IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
-                        .asWidget()
-                        .margin(6, 0, 5, 0)
-                        .align(Alignment.TopLeft))
-                .child(
-                    SlotGroupWidget.builder()
-                        .row("OOOOOOOOO")
-                        .row("OOOOOOOOO")
-                        .row("OOOOOOOOO")
-                        .key('O', index -> new ItemSlot().slot(new ModularSlot(inv, index).accessibility(false, true)))
-                        .build()
-                        .topRel(0.15f)
-                        .alignX(Alignment.CENTER)));
+                Flow.column()
+                        .child(
+                                IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
+                                        .asWidget()
+                                        .margin(6, 0, 5, 0)
+                                        .align(Alignment.TopLeft))
+                        .child(
+                                SlotGroupWidget.builder()
+                                        .row("OOOOOOOOO")
+                                        .row("OOOOOOOOO")
+                                        .row("OOOOOOOOO")
+                                        .key('O',
+                                                index -> new ItemSlot()
+                                                        .slot(new ModularSlot(inv, index).accessibility(false, true)))
+                                        .build()
+                                        .topRel(0.15f)
+                                        .alignX(Alignment.CENTER)));
 
         panel.child(new Column().coverChildren());
 
