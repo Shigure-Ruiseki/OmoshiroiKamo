@@ -201,7 +201,12 @@ public class EntityChickensChicken extends EntityChicken
 
     @Override
     public void onLivingUpdate() {
-        if (!this.worldObj.isRemote && !this.isChild() && !this.field_152118_bv) {
+        boolean wasChickenJockey = this.field_152118_bv;
+        this.field_152118_bv = true; // prevent vanilla egg tick decrement
+        super.onLivingUpdate();
+        this.field_152118_bv = wasChickenJockey;
+
+        if (!this.worldObj.isRemote && !this.isChild() && !wasChickenJockey) {
             int newTimeUntilNextEgg = timeUntilNextEgg - 1;
             setTimeUntilNextEgg(newTimeUntilNextEgg);
             if (newTimeUntilNextEgg <= 1) {
@@ -220,7 +225,6 @@ public class EntityChickensChicken extends EntityChicken
                 resetTimeUntilNextEgg();
             }
         }
-        super.onLivingUpdate();
     }
 
     private void setTimeUntilNextEgg(int value) {
