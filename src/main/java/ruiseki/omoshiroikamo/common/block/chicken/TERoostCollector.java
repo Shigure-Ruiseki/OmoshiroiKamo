@@ -22,6 +22,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
+import ruiseki.omoshiroikamo.client.gui.modularui2.chicken.ChickenContainer;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
@@ -99,6 +100,7 @@ public class TERoostCollector extends AbstractStorageTE {
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ModularPanel panel = new ModularPanel("roost_gui");
+        settings.customContainer(ChickenContainer::new);
         panel.bindPlayerInventory();
 
         panel.child(

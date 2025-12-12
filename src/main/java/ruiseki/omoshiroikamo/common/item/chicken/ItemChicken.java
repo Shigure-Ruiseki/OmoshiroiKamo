@@ -25,6 +25,7 @@ import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 public class ItemChicken extends ItemOK {
@@ -34,7 +35,12 @@ public class ItemChicken extends ItemOK {
     public ItemChicken() {
         super(ModObject.itemChicken);
         setHasSubtypes(true);
-        setMaxStackSize(16);
+        setMaxStackSize(64);
+    }
+
+    @Override
+    public int getItemStackLimit() {
+        return ChickenConfig.getChickenStackLimit();
     }
 
     @Override

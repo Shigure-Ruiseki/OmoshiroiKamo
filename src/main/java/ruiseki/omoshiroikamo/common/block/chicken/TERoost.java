@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.chicken;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -18,6 +19,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.client.gui.modularui2.chicken.ChickenContainer;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 public class TERoost extends TERoostBase {
@@ -32,8 +34,20 @@ public class TERoost extends TERoostBase {
     @Override
     protected void spawnChickenDrop() {
         DataChicken chicken = getChickenData(0);
-        if (chicken != null) {
-            putStackInOutput(chicken.createLayStack());
+        ItemStack chickenStack = getStackInSlot(0);
+
+        if (chicken == null || chickenStack == null) {
+            return;
+        }
+
+        ItemStack drop = chicken.createLayStack();
+        if (drop == null) {
+            return;
+        }
+
+        if (drop.stackSize > 0) {
+            putStackInOutput(drop);
+            playSpawnSound();
         }
     }
 
@@ -55,6 +69,7 @@ public class TERoost extends TERoostBase {
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.registerSlotGroup("input", 3);
+        settings.customContainer(ChickenContainer::new);
         ModularPanel panel = new ModularPanel("roost_gui");
         panel.child(
             Flow.column()

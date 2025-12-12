@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 /**
  * Represents all data for a chicken entity in the mod, including stats,
@@ -56,9 +57,9 @@ public class DataChicken {
     private DataChicken(ChickensRegistryItem chickenIn, NBTTagCompound compound) {
         chicken = chickenIn;
         if (compound != null) {
-            gain = Math.max(1, Math.min(10, compound.getInteger(GROWTH_NBT)));
-            growth = Math.max(1, Math.min(10, compound.getInteger(GAIN_NBT)));
-            strength = Math.max(1, Math.min(10, compound.getInteger(STRENGTH_NBT)));
+            gain = clampStat(compound.getInteger(GAIN_NBT), ChickenConfig.getMaxGainStat());
+            growth = clampStat(compound.getInteger(GROWTH_NBT), ChickenConfig.getMaxGrowthStat());
+            strength = clampStat(compound.getInteger(STRENGTH_NBT), ChickenConfig.getMaxStrengthStat());
         }
     }
 
@@ -74,6 +75,18 @@ public class DataChicken {
      */
     public ChickensRegistryItem getItems() {
         return chicken;
+    }
+
+    public int getGrowthStat() {
+        return growth;
+    }
+
+    public int getGainStat() {
+        return gain;
+    }
+
+    public int getStrengthStat() {
+        return strength;
     }
 
     /**
@@ -184,7 +197,11 @@ public class DataChicken {
      */
     public ItemStack createLayStack() {
         ItemStack stack = chicken.createLayItem();
-        stack.stackSize = gain >= 10 ? 3 : gain >= 5 ? 2 : 1;
+        if (stack == null) {
+            return null;
+        }
+        int factor = calculateLayStackFactor(gain);
+        stack.stackSize *= factor;
         return stack;
     }
 
@@ -220,9 +237,9 @@ public class DataChicken {
      */
     public NBTTagCompound createTagCompound() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger(GAIN_NBT, gain);
-        tag.setInteger(GROWTH_NBT, growth);
-        tag.setInteger(STRENGTH_NBT, strength);
+        tag.setInteger(GAIN_NBT, clampStat(gain, ChickenConfig.getMaxGainStat()));
+        tag.setInteger(GROWTH_NBT, clampStat(growth, ChickenConfig.getMaxGrowthStat()));
+        tag.setInteger(STRENGTH_NBT, clampStat(strength, ChickenConfig.getMaxStrengthStat()));
         return tag;
     }
 
@@ -273,6 +290,10 @@ public class DataChicken {
         return null;
     }
 
+    private static int clampStat(int value, int maxValue) {
+        return Math.max(1, Math.min(maxValue, value));
+    }
+
     /**
      * @return DataChicken from a spawn egg stack, or null
      */
@@ -282,6 +303,16 @@ public class DataChicken {
         }
         ChickensRegistryItem chicken = ChickensRegistry.INSTANCE.getByType(stack.getItemDamage());
         return chicken != null ? new DataChicken(chicken, stack.getTagCompound()) : null;
+    }
+
+    public static int calculateLayStackFactor(int gainStat) {
+        if (gainStat < 5) {
+            return 1;
+        }
+        double ratio = gainStat / 5.0;
+        int multiplier = (int) Math.floor(Math.log(ratio) / Math.log(2.0));
+        multiplier = Math.max(0, multiplier) + 1;
+        return Math.max(1, 1 + multiplier);
     }
 
     /**

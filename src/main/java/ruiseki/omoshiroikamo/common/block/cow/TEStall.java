@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketStall;
+import ruiseki.omoshiroikamo.config.backport.CowConfig;
 
 public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile {
 
@@ -118,7 +119,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
 
         int baseTime = min + (range > 0 ? rand.nextInt(range) : 0);
 
-        float growthFactor = (10f - cowGrowth + 1f) / 10f;
+        float growthFactor = getCowGrowthModifier();
         maxProgress = Math.max(1, (int) (baseTime * growthFactor) * 2);
 
         progress = 0;
@@ -187,10 +188,9 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
             return;
         }
 
-        if (cowGain >= 10) {
-            fluid.amount *= 3;
-        } else if (cowGain >= 5) {
-            fluid.amount *= 2;
+        int bonusMultiplier = Math.max(0, cowGain / 5);
+        if (bonusMultiplier > 0) {
+            fluid.amount *= (1 + bonusMultiplier);
         }
 
         int filled = tank.fill(fluid, true);
@@ -234,6 +234,12 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid) {
         return false;
+    }
+
+    private float getCowGrowthModifier() {
+        int maxGrowth = Math.max(1, CowConfig.getMaxGrowthStat());
+        int clampedGrowth = Math.max(1, Math.min(cowGrowth, maxGrowth));
+        return (float) (maxGrowth - clampedGrowth + 1) / (float) maxGrowth;
     }
 
     @Override

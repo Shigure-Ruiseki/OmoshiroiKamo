@@ -35,4 +35,28 @@ public class CowConfig {
     @Config.DefaultBoolean(false)
     public static boolean alwaysShowStats;
 
+    @Config.DefaultInt(10)
+    @Config.RangeInt(min = 1)
+    public static int maxGrowthStat;
+
+    @Config.DefaultInt(10)
+    @Config.RangeInt(min = 1)
+    public static int maxGainStat;
+
+    @Config.DefaultInt(10)
+    @Config.RangeInt(min = 1)
+    public static int maxStrengthStat;
+
+    public static int getMaxGrowthStat() {
+        return Math.max(1, maxGrowthStat);
+    }
+
+    public static int getMaxGainStat() {
+        return Math.max(1, maxGainStat);
+    }
+
+    public static int getMaxStrengthStat() {
+        return Math.max(1, maxStrengthStat);
+    }
+
 }

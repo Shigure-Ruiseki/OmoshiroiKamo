@@ -89,7 +89,8 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
 
     @Override
     public void setBaseGrowth(int growth) {
-        this.dataWatcher.updateObject(21, growth);
+        int clamped = MathHelper.clamp_int(growth, 1, getMaxGrowthStat());
+        this.dataWatcher.updateObject(21, clamped);
     }
 
     @Override
@@ -99,7 +100,8 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
 
     @Override
     public void setBaseGain(int gain) {
-        this.dataWatcher.updateObject(22, gain);
+        int clamped = MathHelper.clamp_int(gain, 1, getMaxGainStat());
+        this.dataWatcher.updateObject(22, clamped);
     }
 
     @Override
@@ -109,7 +111,8 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
 
     @Override
     public void setBaseStrength(int strength) {
-        this.dataWatcher.updateObject(23, strength);
+        int clamped = MathHelper.clamp_int(strength, 1, getMaxStrengthStat());
+        this.dataWatcher.updateObject(23, clamped);
     }
 
     @Override
@@ -229,10 +232,11 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
                 if (fluid != null) {
                     int gain = getGain();
                     if (gain >= 5) {
-                        fluid.amount += cow.createMilkFluid().amount;
-                    }
-                    if (gain >= 10) {
-                        fluid.amount += cow.createMilkFluid().amount;
+                        int bonusMultiplier = Math.max(0, gain / 5);
+                        if (bonusMultiplier > 0) {
+                            int baseAmount = fluid.amount;
+                            fluid.amount += baseAmount * bonusMultiplier;
+                        }
                     }
 
                     milkTank.fill(fluid, true);
@@ -253,7 +257,8 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         CowsRegistryItem cowDescription = getCowDescription();
         int newBaseTimeUntilNextEgg = (cowDescription.getMaxTime()
             + rand.nextInt(cowDescription.getMaxTime() - cowDescription.getMinTime()));
-        int newTimeUntilNextMilk = (int) Math.max(1.0f, (newBaseTimeUntilNextEgg * (10.f - getGrowth() + 1.f)) / 10.f);
+        float growthModifier = getGrowthTimeModifier();
+        int newTimeUntilNextMilk = (int) Math.max(1.0f, newBaseTimeUntilNextEgg * growthModifier);
         setTimeUntilNextMilk(newTimeUntilNextMilk * 2);
     }
 
@@ -311,6 +316,12 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         this.dataWatcher.addObject(24, (byte) 0); // ANALYZED (boolean)
         this.dataWatcher.addObject(25, 0); // PROGRESS
         this.dataWatcher.addObject(26, ""); // FluidStack (NBT string)
+    }
+
+    private float getGrowthTimeModifier() {
+        int maxGrowth = Math.max(1, getMaxGrowthStat());
+        int clampedGrowth = Math.max(1, Math.min(getGrowth(), maxGrowth));
+        return (float) (maxGrowth - clampedGrowth + 1) / (float) maxGrowth;
     }
 
     @Override
@@ -446,6 +457,21 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         public int getType() {
             return type;
         }
+    }
+
+    @Override
+    public int getMaxGrowthStat() {
+        return CowConfig.getMaxGrowthStat();
+    }
+
+    @Override
+    public int getMaxGainStat() {
+        return CowConfig.getMaxGainStat();
+    }
+
+    @Override
+    public int getMaxStrengthStat() {
+        return CowConfig.getMaxStrengthStat();
     }
 
 }

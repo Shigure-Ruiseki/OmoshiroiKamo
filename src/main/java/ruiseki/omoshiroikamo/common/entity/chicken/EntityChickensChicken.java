@@ -32,6 +32,7 @@ import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
@@ -66,7 +67,8 @@ public class EntityChickensChicken extends EntityChicken
 
     @Override
     public void setBaseGrowth(int growth) {
-        this.dataWatcher.updateObject(21, growth);
+        int clamped = MathHelper.clamp_int(growth, 1, getMaxGrowthStat());
+        this.dataWatcher.updateObject(21, clamped);
     }
 
     @Override
@@ -76,7 +78,8 @@ public class EntityChickensChicken extends EntityChicken
 
     @Override
     public void setBaseGain(int gain) {
-        this.dataWatcher.updateObject(22, gain);
+        int clamped = MathHelper.clamp_int(gain, 1, getMaxGainStat());
+        this.dataWatcher.updateObject(22, clamped);
     }
 
     @Override
@@ -86,7 +89,8 @@ public class EntityChickensChicken extends EntityChicken
 
     @Override
     public void setBaseStrength(int strength) {
-        this.dataWatcher.updateObject(23, strength);
+        int clamped = MathHelper.clamp_int(strength, 1, getMaxStrengthStat());
+        this.dataWatcher.updateObject(23, clamped);
     }
 
     @Override
@@ -197,7 +201,12 @@ public class EntityChickensChicken extends EntityChicken
 
     @Override
     public void onLivingUpdate() {
-        if (!this.worldObj.isRemote && !this.isChild() && !this.field_152118_bv) {
+        boolean wasChickenJockey = this.field_152118_bv;
+        this.field_152118_bv = true; // prevent vanilla egg tick decrement
+        super.onLivingUpdate();
+        this.field_152118_bv = wasChickenJockey;
+
+        if (!this.worldObj.isRemote && !this.isChild() && !wasChickenJockey) {
             int newTimeUntilNextEgg = timeUntilNextEgg - 1;
             setTimeUntilNextEgg(newTimeUntilNextEgg);
             if (newTimeUntilNextEgg <= 1) {
@@ -206,12 +215,8 @@ public class EntityChickensChicken extends EntityChicken
 
                 if (itemToLay != null) {
                     int gain = getGain();
-                    if (gain >= 5) {
-                        itemToLay.stackSize += chicken.createLayItem().stackSize;
-                    }
-                    if (gain >= 10) {
-                        itemToLay.stackSize += chicken.createLayItem().stackSize;
-                    }
+                    int factor = DataChicken.calculateLayStackFactor(gain);
+                    itemToLay.stackSize *= factor;
 
                     entityDropItem(itemToLay, 0.0F);
                     playSound("mob.chicken.plop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
@@ -220,7 +225,6 @@ public class EntityChickensChicken extends EntityChicken
                 resetTimeUntilNextEgg();
             }
         }
-        super.onLivingUpdate();
     }
 
     private void setTimeUntilNextEgg(int value) {
@@ -232,7 +236,8 @@ public class EntityChickensChicken extends EntityChicken
         ChickensRegistryItem chickenDescription = getChickenDescription();
         int newBaseTimeUntilNextEgg = (chickenDescription.getMinTime()
             + rand.nextInt(chickenDescription.getMaxTime() - chickenDescription.getMinTime()));
-        int newTimeUntilNextEgg = (int) Math.max(1.0f, (newBaseTimeUntilNextEgg * (10.f - getGrowth() + 1.f)) / 10.f);
+        float growthModifier = getGrowthTimeModifier();
+        int newTimeUntilNextEgg = (int) Math.max(1.0f, newBaseTimeUntilNextEgg * growthModifier);
         setTimeUntilNextEgg(newTimeUntilNextEgg * 2);
     }
 
@@ -289,6 +294,12 @@ public class EntityChickensChicken extends EntityChicken
         this.dataWatcher.addObject(23, 1); // STRENGTH
         this.dataWatcher.addObject(24, 0); // LAY_PROGRESS
         this.dataWatcher.addObject(25, (byte) 0); // ANALYZED (boolean)
+    }
+
+    private float getGrowthTimeModifier() {
+        int maxGrowth = Math.max(1, getMaxGrowthStat());
+        int clampedGrowth = Math.max(1, Math.min(getGrowth(), maxGrowth));
+        return (float) (maxGrowth - clampedGrowth + 1) / (float) maxGrowth;
     }
 
     @Override
@@ -381,5 +392,20 @@ public class EntityChickensChicken extends EntityChicken
         public int getType() {
             return type;
         }
+    }
+
+    @Override
+    public int getMaxGrowthStat() {
+        return ChickenConfig.getMaxGrowthStat();
+    }
+
+    @Override
+    public int getMaxGainStat() {
+        return ChickenConfig.getMaxGainStat();
+    }
+
+    @Override
+    public int getMaxStrengthStat() {
+        return ChickenConfig.getMaxStrengthStat();
     }
 }
