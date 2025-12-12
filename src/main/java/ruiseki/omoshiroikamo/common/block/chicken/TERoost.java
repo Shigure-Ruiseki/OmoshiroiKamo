@@ -72,39 +72,37 @@ public class TERoost extends TERoostBase {
         settings.customContainer(ChickenContainer::new);
         ModularPanel panel = new ModularPanel("roost_gui");
         panel.child(
-                Flow.column()
-                        .child(
-                                IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
-                                        .asWidget()
-                                        .margin(6, 0, 5, 0)
-                                        .align(Alignment.TopLeft))
-                        .child(
-                                SlotGroupWidget.builder()
-                                        .matrix("I  OOO")
-                                        .key(
-                                                'I',
-                                                index -> new ItemSlot().background(MGuiTextures.ROOST_SLOT)
-                                                        .hoverBackground(MGuiTextures.ROOST_SLOT)
-                                                        .slot(
-                                                                new ModularSlot(inv, index).slotGroup("input")
-                                                                        .filter(stack -> isItemValidForSlot(index,
-                                                                                stack))))
-                                        .key(
-                                                'O',
-                                                index -> new ItemSlot().slot(
-                                                        new ModularSlot(inv, index + 3).accessibility(false, true)))
-                                        .build()
-                                        .topRel(0.25f)
-                                        .alignX(Alignment.CENTER))
-                        .child(
-                                new ProgressWidget().progress(this::getProgress)
-                                        .tooltipDynamic(richTooltip -> {
-                                            richTooltip.add(getFormattedProgress());
-                                            richTooltip.markDirty();
-                                        })
-                                        .topRel(0.25f)
-                                        .leftRel(0.375f)
-                                        .texture(GuiTextures.PROGRESS_ARROW, 20)));
+            Flow.column()
+                .child(
+                    IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
+                        .asWidget()
+                        .margin(6, 0, 5, 0)
+                        .align(Alignment.TopLeft))
+                .child(
+                    SlotGroupWidget.builder()
+                        .matrix("I  OOO")
+                        .key(
+                            'I',
+                            index -> new ItemSlot().background(MGuiTextures.ROOST_SLOT)
+                                .hoverBackground(MGuiTextures.ROOST_SLOT)
+                                .slot(
+                                    new ModularSlot(inv, index).slotGroup("input")
+                                        .filter(stack -> isItemValidForSlot(index, stack))))
+                        .key(
+                            'O',
+                            index -> new ItemSlot().slot(new ModularSlot(inv, index + 3).accessibility(false, true)))
+                        .build()
+                        .topRel(0.25f)
+                        .alignX(Alignment.CENTER))
+                .child(
+                    new ProgressWidget().progress(this::getProgress)
+                        .tooltipDynamic(richTooltip -> {
+                            richTooltip.add(getFormattedProgress());
+                            richTooltip.markDirty();
+                        })
+                        .topRel(0.25f)
+                        .leftRel(0.375f)
+                        .texture(GuiTextures.PROGRESS_ARROW, 20)));
         panel.bindPlayerInventory();
         return panel;
     }
