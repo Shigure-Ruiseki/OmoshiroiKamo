@@ -476,7 +476,6 @@ public class BackPackContainer extends ModularContainer {
         InventoryPlayer inv = player.inventory;
         ItemStack held = inv.getItemStack();
         ItemStack returnable = null;
-        int remaining;
 
         int previousState = dragState;
 

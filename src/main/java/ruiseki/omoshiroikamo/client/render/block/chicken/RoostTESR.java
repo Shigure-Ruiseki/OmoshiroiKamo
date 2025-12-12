@@ -51,13 +51,13 @@ public class RoostTESR extends TileEntitySpecialRenderer {
     private float getRotationAngle(int facing) {
         switch (facing) {
             case 2:
-                return 180f;
+                return 270;
             case 3:
-                return 0f;
-            case 4:
-                return 270f;
-            case 5:
                 return 90f;
+            case 4:
+                return 0f;
+            case 5:
+                return 180f;
         }
         return 0f;
     }
