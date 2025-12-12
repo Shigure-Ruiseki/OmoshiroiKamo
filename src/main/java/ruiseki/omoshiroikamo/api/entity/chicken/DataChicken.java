@@ -115,10 +115,10 @@ public class DataChicken {
      */
     public List<String> getStatsInfoTooltip() {
         return TooltipUtils.builder()
-                .addLang(LibResources.TOOLTIP + "mob.growth", growth)
-                .addLang(LibResources.TOOLTIP + "mob.gain", gain)
-                .addLang(LibResources.TOOLTIP + "mob.strength", strength)
-                .build();
+            .addLang(LibResources.TOOLTIP + "mob.growth", growth)
+            .addLang(LibResources.TOOLTIP + "mob.gain", gain)
+            .addLang(LibResources.TOOLTIP + "mob.strength", strength)
+            .build();
     }
 
     /**
@@ -129,8 +129,8 @@ public class DataChicken {
             return false;
         }
         return getType() == other.getType() && growth == other.growth
-                && gain == other.gain
-                && strength == other.strength;
+            && gain == other.gain
+            && strength == other.strength;
     }
 
     /**
@@ -325,14 +325,14 @@ public class DataChicken {
     @Override
     public String toString() {
         return "DataChicken [name=" + getName()
-                + " type="
-                + getType()
-                + ", gain="
-                + gain
-                + ", growth="
-                + growth
-                + ", strength="
-                + strength
-                + "]";
+            + " type="
+            + getType()
+            + ", gain="
+            + gain
+            + ", growth="
+            + growth
+            + ", strength="
+            + strength
+            + "]";
     }
 }

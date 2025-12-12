@@ -29,8 +29,7 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 public class TEBreeder extends TERoostBase {
 
-    public TEBreeder() {
-    }
+    public TEBreeder() {}
 
     @Override
     public String getMachineName() {

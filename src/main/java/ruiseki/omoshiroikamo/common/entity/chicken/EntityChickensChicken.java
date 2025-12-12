@@ -40,7 +40,7 @@ import ruiseki.omoshiroikamo.plugin.waila.IWailaEntityInfoProvider;
 
 @Optional.Interface(iface = "com.kuba6000.mobsinfo.api.IMobInfoProvider", modid = "mobsinfo")
 public class EntityChickensChicken extends EntityChicken
-        implements IMobStats, IWailaEntityInfoProvider, IMobInfoProvider {
+    implements IMobStats, IWailaEntityInfoProvider, IMobInfoProvider {
 
     public static final String PROGRESS_NBT = "Progress";
 
@@ -235,7 +235,7 @@ public class EntityChickensChicken extends EntityChicken
     private void resetTimeUntilNextEgg() {
         ChickensRegistryItem chickenDescription = getChickenDescription();
         int newBaseTimeUntilNextEgg = (chickenDescription.getMinTime()
-                + rand.nextInt(chickenDescription.getMaxTime() - chickenDescription.getMinTime()));
+            + rand.nextInt(chickenDescription.getMaxTime() - chickenDescription.getMinTime()));
         float growthModifier = getGrowthTimeModifier();
         int newTimeUntilNextEgg = (int) Math.max(1.0f, newBaseTimeUntilNextEgg * growthModifier);
         setTimeUntilNextEgg(newTimeUntilNextEgg * 2);
@@ -245,10 +245,10 @@ public class EntityChickensChicken extends EntityChicken
     public boolean getCanSpawnHere() {
         boolean anyInNether = ChickensRegistry.INSTANCE.isAnyIn(SpawnType.HELL);
         boolean anyInOverworld = ChickensRegistry.INSTANCE.isAnyIn(SpawnType.NORMAL)
-                || ChickensRegistry.INSTANCE.isAnyIn(SpawnType.SNOW);
+            || ChickensRegistry.INSTANCE.isAnyIn(SpawnType.SNOW);
 
         BiomeGenBase biome = worldObj
-                .getBiomeGenForCoords(MathHelper.floor_double(posX), MathHelper.floor_double(posZ));
+            .getBiomeGenForCoords(MathHelper.floor_double(posX), MathHelper.floor_double(posZ));
 
         boolean isNetherBiome = biome == BiomeGenBase.hell;
 
@@ -267,7 +267,7 @@ public class EntityChickensChicken extends EntityChicken
 
             if (!list.isEmpty()) {
                 int type = list.get(rand.nextInt(list.size()))
-                        .getId();
+                    .getId();
                 setType(type);
                 data = new GroupData(type);
             }
@@ -281,7 +281,7 @@ public class EntityChickensChicken extends EntityChicken
 
     private SpawnType getSpawnType() {
         BiomeGenBase biome = worldObj
-                .getBiomeGenForCoords(MathHelper.floor_double(posX), MathHelper.floor_double(posZ));
+            .getBiomeGenForCoords(MathHelper.floor_double(posX), MathHelper.floor_double(posZ));
         return ChickensRegistry.getSpawnType(biome);
     }
 
@@ -376,8 +376,8 @@ public class EntityChickensChicken extends EntityChicken
         Item j = this.getDropItem();
         if (j != null) {
             drops.add(
-                    MobDrop.create(j)
-                            .withLooting());
+                MobDrop.create(j)
+                    .withLooting());
         }
     }
 

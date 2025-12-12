@@ -157,8 +157,8 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
             PacketHandler.sendToAllAround(new PacketStall(this), this);
             worldObj.func_147453_f(xCoord, yCoord, zCoord, getBlockType());
             Fluid held = tank.getFluid() == null ? null
-                    : tank.getFluid()
-                            .getFluid();
+                : tank.getFluid()
+                    .getFluid();
             if (lastFluid != held) {
                 lastFluid = held;
                 worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);

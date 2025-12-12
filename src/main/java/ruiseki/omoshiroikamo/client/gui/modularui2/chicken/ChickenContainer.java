@@ -13,10 +13,8 @@ import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 /**
- * Container used by Roost/Breeder style GUIs to ensure chicken stacks never
- * exceed the
- * configurable cap when players manipulate their inventory while the GUI is
- * open.
+ * Container used by Roost/Breeder style GUIs to ensure chicken stacks never exceed the
+ * configurable cap when players manipulate their inventory while the GUI is open.
  */
 public class ChickenContainer extends ModularContainer {
 

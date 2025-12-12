@@ -24,8 +24,7 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 public class TERoost extends TERoostBase {
 
-    public TERoost() {
-    }
+    public TERoost() {}
 
     @Override
     public String getMachineName() {

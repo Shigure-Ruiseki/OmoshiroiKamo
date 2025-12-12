@@ -126,13 +126,13 @@ public interface IMobStats {
     default void mutationTrait(IMobStats child, IMobStats p1, IMobStats p2, Random rand) {
 
         for (Map.Entry<MobTrait, Integer> entry : p1.getTraits()
-                .entrySet()) {
+            .entrySet()) {
             if (rand.nextFloat() < 0.25f) {
                 child.addTrait(entry.getKey(), entry.getValue());
             }
         }
         for (Map.Entry<MobTrait, Integer> entry : p2.getTraits()
-                .entrySet()) {
+            .entrySet()) {
             if (rand.nextFloat() < 0.25f) {
                 child.addTrait(entry.getKey(), entry.getValue());
             }
