@@ -92,8 +92,8 @@ a rewritten backport of the modern Environmental Tech mod:
 - [X] Filter upgrade — filter in/out to access backpacks block
 - [X] Magnet upgrade — collect item and experient around player
 - [X] Everlasting upgrade — make backpack immortal
-- [ ] Void upgrade
-- [X] Crafting upgrade
+- [X] Void upgrade — filter item to remove
+- [X] Crafting upgrade — crafting table
 
 ### Traits (WIP)
 
