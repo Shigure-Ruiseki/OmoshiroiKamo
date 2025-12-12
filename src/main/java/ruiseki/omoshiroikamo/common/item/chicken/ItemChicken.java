@@ -192,13 +192,11 @@ public class ItemChicken extends ItemOK {
             String parent1 = new ChatComponentTranslation(
                 chicken.getItems()
                     .getParent1()
-                    .getDisplayName())
-                .getFormattedText();
+                    .getDisplayName()).getFormattedText();
             String parent2 = new ChatComponentTranslation(
                 chicken.getItems()
                     .getParent2()
-                    .getDisplayName())
-                .getFormattedText();
+                    .getDisplayName()).getFormattedText();
 
             builder.addLabelWithValue(
                 new ChatComponentTranslation(LibResources.TOOLTIP + "spawn_egg.breedable").getFormattedText(),
