@@ -11,12 +11,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.utils.item.ItemStackHandler;
+
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
 
@@ -31,6 +34,25 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     public TERoostBase() {
         super(new SlotDefinition().setItemSlots(3, 3));
+
+        // Override inv to enforce slot limits specific to chickens
+        this.inv = new ItemStackHandler(slotDefinition.getItemSlots()) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                onContentsChange(slot);
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                if (slot < getSizeChickenInventory()) {
+                    return getChickenStackLimit();
+                }
+                return super.getSlotLimit(slot);
+            }
+        };
+
         chickenCache = new DataChicken[getSizeChickenInventory()];
     }
 
@@ -130,7 +152,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     private void updateTimerIfNeeded() {
-        if (isFullChickens() && isFullSeeds() && !outputIsFull()) {
+        if (isFullChickens() && isFullSeeds() && hasFreeOutputSlot()) {
             timeElapsed += computeTimeIncrement();
             markDirty();
         }
@@ -160,8 +182,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             }
         }
 
-        if (speedMultiplier() > 0) {
-            timeUntilNextDrop /= (int) speedMultiplier();
+        if (timeUntilNextDrop > 0) {
+            double speed = Math.max(0.001d, speedMultiplier());
+            timeUntilNextDrop = (int) Math.max(1, Math.round(timeUntilNextDrop / speed));
         }
 
         markDirty();
@@ -174,7 +197,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
      */
 
     private void spawnChickenDropIfNeeded() {
-        if (isFullChickens() && isFullSeeds() && timeElapsed >= timeUntilNextDrop) {
+        if (isFullChickens() && isFullSeeds() && hasFreeOutputSlot() && timeElapsed >= timeUntilNextDrop) {
 
             if (timeUntilNextDrop > 0) {
                 decrStackSize(getSizeChickenInventory(), requiredSeedsForDrop());
@@ -265,7 +288,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public boolean isActive() {
-        return isFullChickens();
+        return isFullChickens() && hasFreeOutputSlot();
     }
 
     @Override
@@ -298,6 +321,15 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         super.setInventorySlotContents(slot, stack);
+
+        // Enforce chicken stack limit
+        ItemStack slotStack = inv.getStackInSlot(slot);
+        if (slotStack != null && slot < getSizeChickenInventory() && slotStack.stackSize > getChickenStackLimit()) {
+            slotStack.stackSize = getChickenStackLimit();
+            // setStackInSlot to notify changes
+            inv.setStackInSlot(slot, slotStack);
+        }
+
         needsCacheRefresh();
         resetTimer();
     }
@@ -311,9 +343,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) {
-            return isSeed(stack);
+            return requiredSeedsForDrop() > 0 && isSeed(stack);
         }
-        return slotDefinition.isInputSlot(slot) && DataChicken.isChicken(stack);
+        return slot < getSizeChickenInventory() && slotDefinition.isInputSlot(slot) && DataChicken.isChicken(stack);
     }
 
     public static boolean isSeed(ItemStack stack) {
@@ -358,6 +390,10 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     protected abstract double speedMultiplier();
 
+    protected int getChickenStackLimit() {
+        return ChickenConfig.getChickenStackLimit();
+    }
+
     protected void playSpawnSound() {
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "mob.chicken.plop", 0.5F, 0.8F);
     }
@@ -368,5 +404,14 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     protected void playPullChickenOutSound() {
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
+    }
+
+    protected boolean hasFreeOutputSlot() {
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
+            if (getStackInSlot(i) == null) {
+                return true;
+            }
+        }
+        return false;
     }
 }

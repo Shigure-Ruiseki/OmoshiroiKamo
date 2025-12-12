@@ -52,6 +52,7 @@ a rewritten backport of the modern Environmental Tech mod:
 - Supports most modded resources.
 - Breeding trees and NEI integration
 - Can Have Trait It will Give Buff/Debuff (Can Turn Off In Config)
+- Max Growth/Gain/Strength caps configurable (defaults 10/10/10)
 
 ![Chickens](https://media.forgecdn.net/attachments/1388/697/2025-11-11_13-12-17-png.png)
 ![Chickens](https://media.forgecdn.net/attachments/1393/409/2025-11-15_17-58-35-png.png)
@@ -64,6 +65,7 @@ a rewritten backport of the modern Environmental Tech mod:
 - Stall Automation
 - Breeding trees and NEI integration
 - Can Have Trait It will Give Buff/Debuff (Can Turn Off In Config)
+- Max Growth/Gain/Strength caps configurable (defaults 10/10/10)
 
 ![Cows](https://media.forgecdn.net/attachments/1388/696/2025-11-11_12-45-23-png.png)
 ![Cows](https://media.forgecdn.net/attachments/1397/915/2025-11-19_19-23-22-png.png)
