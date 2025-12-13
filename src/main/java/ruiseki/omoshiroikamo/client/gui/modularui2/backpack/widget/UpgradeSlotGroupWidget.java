@@ -70,7 +70,7 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
     public void onInit() {
         getContext().getUISettings()
             .getRecipeViewerSettings()
-            .addRecipeViewerExclusionArea(this);
+            .addExclusionArea(this);
     }
 
     @Override

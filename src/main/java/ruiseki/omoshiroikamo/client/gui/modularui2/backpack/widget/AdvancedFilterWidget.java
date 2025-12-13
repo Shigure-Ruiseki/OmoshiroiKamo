@@ -28,12 +28,13 @@ import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
-import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.drawble.Outline;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.FilterSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -73,7 +74,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
     @Getter
     private final Column oreDictBasedConfigurationGroup;
     @Getter
-    private final List<PhantomItemSlot> filterSlots;
+    private final List<ItemSlot> filterSlots;
 
     private final TextFieldWidget oreDictTextField;
     private final OreDictRegexListWidget oreDictList;
@@ -113,7 +114,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
         this.ignoreDurabilityButton = new CyclicVariantButtonWidget(
             Arrays.asList(IGNORE_DURABILITY_VARIANTS),
-            filterableWrapper.getIgnoreDurability() ? 1 : 0,
+            filterableWrapper.isIgnoreDurability() ? 1 : 0,
             index -> {
                 filterableWrapper.setIgnoreDurability(index == 1);
                 updateWrapper();
@@ -122,7 +123,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
         this.ignoreNBTButton = new CyclicVariantButtonWidget(
             Arrays.asList(IGNORE_NBT_VARIANTS),
-            filterableWrapper.getIgnoreNBT() ? 1 : 0,
+            filterableWrapper.isIgnoreNBT() ? 1 : 0,
             index -> {
                 filterableWrapper.setIgnoreNBT(index == 1);
                 updateWrapper();
@@ -200,7 +201,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
         this.filterSlots = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
-            PhantomItemSlot slot = new PhantomItemSlot();
+            ItemSlot slot = new FilterSlot();
             slot.name(syncKey + "_" + slotIndex)
                 .syncHandler(syncKey + "_" + slotIndex, i)
                 .pos(i % 4 * 18, i / 4 * 18);
@@ -240,8 +241,8 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
                 writer.writeInt(
                     filterableWrapper.getMatchType()
                         .ordinal());
-                writer.writeBoolean(filterableWrapper.getIgnoreDurability());
-                writer.writeBoolean(filterableWrapper.getIgnoreNBT());
+                writer.writeBoolean(filterableWrapper.isIgnoreDurability());
+                writer.writeBoolean(filterableWrapper.isIgnoreNBT());
 
                 List<String> oreList = filterableWrapper.getOreDictEntries();
                 writer.writeInt(oreList.size());

@@ -31,14 +31,14 @@ public interface IBasicFilterable {
                         return true;
                     }
                 }
-                return !getFilterItems().hasAnyItem();
+                return false;
             case BLACKLIST:
                 for (ItemStack s : getFilterItems().getStacks()) {
                     if (ItemUtils.areItemsEqualIgnoreDurability(s, check)) {
                         return false;
                     }
                 }
-                return getFilterItems().hasAnyItem();
+                return true;
             default:
                 return false;
         }

@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
@@ -78,8 +77,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     }
 
     public FeedingStrategy.Hunger getHungerFeedingStrategy() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        int ord = tag.getInteger(HUNGER_FEEDING_STRATEGY_TAG);
+        int ord = ItemNBTUtils.getInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, FeedingStrategy.Hunger.FULL.ordinal());
         FeedingStrategy.Hunger[] vals = FeedingStrategy.Hunger.values();
         return (ord < 0 || ord >= vals.length) ? FeedingStrategy.Hunger.FULL : vals[ord];
     }
@@ -88,13 +86,11 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
         if (strategy == null) {
             strategy = FeedingStrategy.Hunger.FULL;
         }
-        ItemNBTUtils.getNBT(upgrade)
-            .setInteger(HUNGER_FEEDING_STRATEGY_TAG, strategy.ordinal());
+        ItemNBTUtils.setInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, strategy.ordinal());
     }
 
     public FeedingStrategy.HEALTH getHealthFeedingStrategy() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        int ord = tag.getInteger(HURT_FEEDING_STRATEGY_TAG);
+        int ord = ItemNBTUtils.getInt(upgrade, HURT_FEEDING_STRATEGY_TAG, FeedingStrategy.HEALTH.ALWAYS.ordinal());
         FeedingStrategy.HEALTH[] vals = FeedingStrategy.HEALTH.values();
         return (ord < 0 || ord >= vals.length) ? FeedingStrategy.HEALTH.ALWAYS : vals[ord];
     }
@@ -103,8 +99,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
         if (strategy == null) {
             strategy = FeedingStrategy.HEALTH.ALWAYS;
         }
-        ItemNBTUtils.getNBT(upgrade)
-            .setInteger(HURT_FEEDING_STRATEGY_TAG, strategy.ordinal());
+        ItemNBTUtils.setInt(upgrade, HURT_FEEDING_STRATEGY_TAG, strategy.ordinal());
     }
 
     public static class FeedingStrategy {

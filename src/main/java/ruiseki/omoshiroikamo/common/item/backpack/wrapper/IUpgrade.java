@@ -6,7 +6,7 @@ public interface IUpgrade {
 
     void setTabOpened(boolean opened);
 
-    boolean getTabOpened();
+    boolean isTabOpened();
 
     String getSettingLangKey();
 }

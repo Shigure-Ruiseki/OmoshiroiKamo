@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
@@ -13,26 +12,22 @@ public class AdvancedMagnetUpgradeWrapper extends AdvancedPickupUpgradeWrapper i
 
     @Override
     public boolean isCollectItem() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        return tag.hasKey(MAG_ITEM_TAG) && tag.getBoolean(MAG_ITEM_TAG);
+        return ItemNBTUtils.getBoolean(upgrade, MAG_ITEM_TAG, true);
     }
 
     @Override
     public void setCollectItem(boolean enabled) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        tag.setBoolean(MAG_ITEM_TAG, enabled);
+        ItemNBTUtils.setBoolean(upgrade, MAG_ITEM_TAG, enabled);
     }
 
     @Override
     public boolean isCollectExp() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        return tag.hasKey(MAG_EXP_TAG) && tag.getBoolean(MAG_EXP_TAG);
+        return ItemNBTUtils.getBoolean(upgrade, MAG_EXP_TAG, true);
     }
 
     @Override
     public void setCollectExp(boolean enabled) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        tag.setBoolean(MAG_EXP_TAG, enabled);
+        ItemNBTUtils.setBoolean(upgrade, MAG_EXP_TAG, enabled);
     }
 
     @Override

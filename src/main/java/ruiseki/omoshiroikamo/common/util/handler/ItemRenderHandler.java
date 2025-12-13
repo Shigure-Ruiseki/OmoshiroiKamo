@@ -41,7 +41,7 @@ public class ItemRenderHandler {
 
         EntityPlayer player = event.entityPlayer;
         InventoryPlayer inv = player.inventory;
-        if (!ItemConfigs.renderBaubles && (LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
+        if (ItemConfigs.renderBaubles && (LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
             InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
             renderBauble(baubles, event, RenderUtils.RenderType.BODY);
         }
@@ -60,7 +60,7 @@ public class ItemRenderHandler {
         GL11.glRotatef(yaw - 270, 0, 1, 0);
         GL11.glRotatef(pitch, 0, 0, 1);
         renderArmor(inv, event, RenderUtils.RenderType.HEAD);
-        if (!ItemConfigs.renderBaubles && (LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
+        if (ItemConfigs.renderBaubles && (LibMods.BaublesExpanded.isLoaded() || LibMods.Baubles.isLoaded())) {
             InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
             renderBauble(baubles, event, RenderUtils.RenderType.HEAD);
         }

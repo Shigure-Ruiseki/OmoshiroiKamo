@@ -76,7 +76,7 @@ public class JsonModelISBRH extends ModelISBRH implements IItemRenderer {
             }
         }
 
-        GL11.glRotated(180f, 0f, 1f, 0f);
+        GL11.glRotated(90f, 0f, 1f, 0f);
         GL11.glRotatef(180f, 0f, 0f, 1f);
 
         tesselator.draw();
