@@ -15,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.inventory.ClickType;
+import com.cleanroommc.modularui.integration.nei.INEIRecipeTransfer;
+import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.NEAAnimationHandler;
 import com.cleanroommc.modularui.utils.Platform;
@@ -22,13 +24,15 @@ import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
+import codechicken.nei.recipe.IRecipeHandler;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IVoidUpgrade;
+import ruiseki.omoshiroikamo.plugin.nei.overlay.BackpackRecipeTransfer;
 
-public class BackPackContainer extends ModularContainer {
+public class BackPackContainer extends ModularContainer implements INEIRecipeTransfer<BackPackContainer> {
 
     private final BackpackHandler handler;
     private final Integer backpackSlotIndex;
@@ -558,8 +562,6 @@ public class BackPackContainer extends ModularContainer {
             this.resetDrag();
         }
 
-        System.out.println(dragSlots.size());
-
         return Platform.EMPTY_STACK;
     }
 
@@ -568,4 +570,14 @@ public class BackPackContainer extends ModularContainer {
         this.dragSlots.clear();
     }
 
+    @Override
+    public String[] getIdents() {
+        return BackpackRecipeTransfer.getIdents();
+    }
+
+    @Override
+    public int transferRecipe(GuiContainerWrapper gui, ModularContainer container, IRecipeHandler handler,
+        int recipeIndex, int multiplier) {
+        return BackpackRecipeTransfer.transferRecipe(gui, container, handler, recipeIndex, multiplier);
+    }
 }

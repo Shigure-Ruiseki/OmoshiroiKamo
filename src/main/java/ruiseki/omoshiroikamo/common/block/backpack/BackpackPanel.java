@@ -509,6 +509,7 @@ public class BackpackPanel extends ModularPanel {
             if (wrapper instanceof CraftingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateCraftingDelegate(upgrade);
                 tabWidget.setExpandedWidget(new CraftingUpgradeWidget(slotIndex, upgrade));
+                upgradeSlotGroup.updateCraftingSlotIndex();
             }
 
             // Feeding

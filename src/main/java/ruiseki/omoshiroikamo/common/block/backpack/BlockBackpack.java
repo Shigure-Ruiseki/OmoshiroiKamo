@@ -150,7 +150,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public String getItemStackDisplayName(ItemStack stack) {
-            BackpackHandler cap = new BackpackHandler(stack, null, this);
+            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
             return cap.getDisplayName();
         }
 
@@ -171,7 +171,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            BackpackHandler handler = new BackpackHandler(stack, null, this);
+            BackpackHandler handler = new BackpackHandler(stack.copy(), null, this);
             return new EntityBackpack(world, location, stack, handler);
         }
 
@@ -179,7 +179,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!stack.hasTagCompound()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
             }
         }
@@ -188,7 +188,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onCreated(ItemStack stack, World world, EntityPlayer player) {
             super.onCreated(stack, world, player);
             if (!stack.hasTagCompound()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
             }
         }
@@ -203,7 +203,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (player.isSneaking() && te == null) {
                 return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
             }
-            BackpackHandler cap = new BackpackHandler(stack, null, this);
+            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
             if (cap.canPlayerAccess(player.getUniqueID())) {
                 GuiFactories.playerInventory()
                     .openFromMainHand(player);
@@ -215,7 +215,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
             if (!world.isRemote) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 if (cap.canPlayerAccess(player.getUniqueID())) {
                     GuiFactories.playerInventory()
                         .openFromMainHand(player);
@@ -227,7 +227,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
             ItemStack stack = data.getUsedItemStack();
-            BackpackHandler cap = new BackpackHandler(stack, null, this);
+            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
         }
 
@@ -236,7 +236,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             list.add(LibMisc.LANG.localize("tooltip.backpack.inventory_size", backpackSlots));
             list.add(LibMisc.LANG.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
             if (GuiScreen.isShiftKeyDown()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 list.add(
                     LibMisc.LANG.localize("tooltip.backpack.stack_multiplier", cap.getTotalStackMultiplier(), "x"));
             }

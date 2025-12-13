@@ -9,9 +9,9 @@ import net.minecraft.item.crafting.CraftingManager;
 import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularCraftingSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.DelegatedStackHandlerSH;
@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.common.block.backpack.BackpackPanel;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IUpgrade;
 
 public class UpgradeSlotUpdateGroup {
 
@@ -44,7 +45,7 @@ public class UpgradeSlotUpdateGroup {
     // Crafting
     public DelegatedStackHandlerSH craftingStackHandler;
     private InventoryCraftingWrapper craftMatrix;
-    public ModularSlot[] craftingMatrixSlots;
+    public ModularCraftingMatrixSlot[] craftingMatrixSlots;
     public ModularCraftingSlot craftingResultSlot;
 
     public UpgradeSlotUpdateGroup(BackpackPanel panel, BackpackHandler handler, int slotIndex) {
@@ -135,6 +136,23 @@ public class UpgradeSlotUpdateGroup {
         craftingStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_CRAFTING);
     }
 
+    public void updateCraftingSlotIndex() {
+        if (craftingMatrixSlots != null) {
+            for (ModularCraftingMatrixSlot slot : craftingMatrixSlots) {
+                slot.setActive(false);
+            }
+        }
+
+        IUpgrade wrapper = handler != null ? handler.gatherCapabilityUpgrades(IUpgrade.class)
+            .get(slotIndex) : null;
+
+        if (wrapper != null) {
+            for (ModularCraftingMatrixSlot slot : craftingMatrixSlots) {
+                slot.setActive(wrapper.isTabOpened());
+            }
+        }
+    }
+
     private void craftingUpgradeGroup() {
         PanelSyncManager syncManager = panel.getSyncManager();
 
@@ -163,9 +181,12 @@ public class UpgradeSlotUpdateGroup {
                         .findMatchingRecipe(craftMatrix, panel.getPlayer().worldObj));
             }
         }, 3, 3, craftingStackHandler.getDelegatedStackHandler(), 0);
-        this.craftingMatrixSlots = new ModularSlot[9];
+
+        this.craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
         for (int i = 0; i < 9; i++) {
-            ModularSlot slot = new ModularSlot(craftingStackHandler.getDelegatedStackHandler(), i);
+            ModularCraftingMatrixSlot slot = new ModularCraftingMatrixSlot(
+                craftingStackHandler.getDelegatedStackHandler(),
+                i);
             slot.slotGroup("crafting_workbench_slot_" + slotIndex)
                 .changeListener((newItem, onlyAmountChanged, client, init) -> {
                     if (client || init) return;

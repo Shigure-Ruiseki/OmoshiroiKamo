@@ -15,14 +15,13 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
 
-public class ModularCraftingSlot extends ModularSlot {
+public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
 
     @Setter
     private InventoryCraftingWrapper craftMatrix;

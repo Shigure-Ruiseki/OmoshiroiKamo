@@ -37,7 +37,8 @@ dependencies {
 
     implementation("com.github.GTNewHorizons:GTNHLib:0.8.29:dev")
     implementation("com.github.GTNewHorizons:StructureLib:1.4.23:dev")
-    implementation("com.github.GTNewHorizons:ModularUI2:2.3.22-1.7.10:dev")
+//    implementation("com.github.GTNewHorizons:ModularUI2:2.3.22-1.7.10:dev")
+    implementation files("libs/modularui2-9c1a591-master+9c1a591c5e-dirty-dev.jar")
 
     devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.2-GTNH:dev')
     devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.2:dev") { transitive = false }

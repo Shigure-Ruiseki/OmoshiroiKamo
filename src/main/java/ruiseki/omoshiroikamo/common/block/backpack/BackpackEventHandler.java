@@ -92,7 +92,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
+            BackpackHandler handler = new BackpackHandler(backpackStack.copy(), null, backpack);
 
             if (!handler.canPickupItem(stack)) {
                 continue;
@@ -100,6 +100,9 @@ public class BackpackEventHandler {
 
             stack = handler.insertItem(stack, false);
 
+            backpackStack.setTagCompound(
+                handler.getBackpack()
+                    .getTagCompound());
             if (stack == null) {
                 break;
             }
@@ -164,7 +167,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(stack, null, backpack);
+            BackpackHandler handler = new BackpackHandler(stack.copy(), null, backpack);
 
             ItemStack feedingStack = handler.getFeedingStack(
                 player.getFoodStats()
@@ -177,6 +180,10 @@ public class BackpackEventHandler {
             }
 
             feedingStack.onFoodEaten(player.worldObj, player);
+
+            stack.setTagCompound(
+                handler.getBackpack()
+                    .getTagCompound());
             return true;
         }
 
@@ -226,7 +233,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(stack, null, backpack);
+            BackpackHandler handler = new BackpackHandler(stack.copy(), null, backpack);
 
             AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
                 player.posX - BackpackConfig.magnetConfig.magnetRange,

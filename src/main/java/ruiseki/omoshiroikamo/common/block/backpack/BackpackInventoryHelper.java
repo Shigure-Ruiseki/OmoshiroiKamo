@@ -126,7 +126,7 @@ public class BackpackInventoryHelper {
             if (stack == null) continue;
             if (stack.getItem() instanceof BlockBackpack.ItemBackpack backpack) {
 
-                BackpackHandler other = new BackpackHandler(stack, null, backpack);
+                BackpackHandler other = new BackpackHandler(stack.copy(), null, backpack);
                 if (other == handler) continue;
                 if (!handler.canNestBackpack()) continue;
             }
