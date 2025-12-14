@@ -298,7 +298,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public boolean isActive() {
-        return isFullChickens() && hasFreeOutputSlot();
+        return isFullChickens() && hasFreeOutputSlot() && isFullSeeds();
     }
 
     @Override
