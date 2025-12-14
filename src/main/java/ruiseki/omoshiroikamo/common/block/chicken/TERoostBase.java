@@ -298,7 +298,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-        float hitZ) {
+            float hitZ) {
         openGui(player);
         return true;
     }
@@ -374,7 +374,8 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
+    }
 
     /**
      * -----------------------------------------------------------
@@ -407,11 +408,6 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     protected boolean hasFreeOutputSlot() {
-        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
-            if (getStackInSlot(i) == null) {
-                return true;
-            }
-        }
-        return false;
+        return !outputIsFull();
     }
 }
