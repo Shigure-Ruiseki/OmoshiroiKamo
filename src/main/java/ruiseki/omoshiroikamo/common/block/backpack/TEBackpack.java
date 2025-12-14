@@ -13,7 +13,9 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<PosGuiData> {
@@ -110,10 +112,13 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     public void setInventorySlotContents(int slot, ItemStack contents) {
         if (contents == null) {
             handler.setStackInSlot(slot, null);
-        } else {
-            handler.setStackInSlot(slot, contents.copy());
+            return;
         }
 
+        boolean isVoided = handleVoid(slot, contents, IVoidUpgrade.VoidInput.ALL);
+        if (isVoided) return;
+
+        handler.setStackInSlot(slot, contents.copy());
         ItemStack stack = handler.getStackInSlot(slot);
         if (stack != null && stack.stackSize > getInventoryStackLimit()) {
             stack.stackSize = getInventoryStackLimit();
@@ -123,12 +128,12 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public String getInventoryName() {
-        return "Backpack";
+        return handler.getDisplayName();
     }
 
     @Override
     public boolean hasCustomInventoryName() {
-        return false;
+        return handler.hasCustomInventoryName();
     }
 
     @Override
@@ -164,6 +169,38 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         handler.readFromNBT(root);
     }
 
+    protected boolean handleVoid(int slot, ItemStack stack, IVoidUpgrade.VoidInput input) {
+        if (handler == null || stack == null) return false;
+
+        // Void ANY
+        if (handler.canVoid(stack, IVoidUpgrade.VoidType.ANY, input)) {
+            handler.setStackInSlot(slot, null);
+            return true;
+        }
+
+        // Void OVERFLOW
+        if (handler.canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, input)) {
+            for (int i = 0; i < handler.getBackpackSlots(); i++) {
+                ItemStack inSlot = handler.getStackInSlot(i);
+                if (ItemUtils.areStackMergable(inSlot, stack)) {
+                    int maxStack = Math.min(getInventoryStackLimit(), inSlot.getMaxStackSize());
+                    int toAdd = Math.min(maxStack - inSlot.stackSize, stack.stackSize);
+                    if (toAdd > 0) {
+                        inSlot.stackSize += toAdd;
+                        handler.setStackInSlot(i, inSlot);
+                    }
+                    stack.stackSize = 0;
+                    return true;
+                }
+            }
+
+            handler.setStackInSlot(slot, stack);
+            return true;
+        }
+
+        return false;
+    }
+
     public int getMainColor() {
         return handler.getMainColor();
     }
@@ -175,8 +212,18 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
-        openGui(player);
+        if (handler.canPlayerAccess(player.getUniqueID())) {
+            openGui(player);
+        }
         return true;
+    }
+
+    @Override
+    public void openGui(EntityPlayer player) {
+        if (!worldObj.isRemote) {
+            MGuiFactories.tileEntity()
+                .open(player, xCoord, yCoord, zCoord);
+        }
     }
 
     @Override

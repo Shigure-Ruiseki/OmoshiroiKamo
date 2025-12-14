@@ -50,15 +50,15 @@ public class EnvironmentalConfig {
         @Config.RangeInt(min = 0)
         public int tickResTier1;
 
-        @Config.DefaultInt(64)
+        @Config.DefaultInt(320)
         @Config.RangeInt(min = 0)
         public int tickResTier2;
 
-        @Config.DefaultInt(16)
+        @Config.DefaultInt(160)
         @Config.RangeInt(min = 0)
         public int tickResTier3;
 
-        @Config.DefaultInt(4)
+        @Config.DefaultInt(80)
         @Config.RangeInt(min = 0)
         public int tickResTier4;
 

@@ -41,7 +41,7 @@ public class FilterUpgradeWidget extends BasicExpandedTabWidget<FilterUpgradeWra
                 if (this.filterWidget.getSlotSyncHandler() != null) {
                     this.filterWidget.getSyncHandler()
                         .syncToServer(
-                            UpgradeSlotSH.UPDATE_FILTER_WAY,
+                            UpgradeSlotSH.UPDATE_FILTER,
                             buf -> {
                                 buf.writeInt(
                                     wrapper.getfilterWay()

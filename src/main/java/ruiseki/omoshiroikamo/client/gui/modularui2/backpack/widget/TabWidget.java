@@ -22,10 +22,12 @@ public class TabWidget extends SingleChildWidget<TabWidget> implements Interacta
 
     public static final TabTexture TAB_TEXTURE = GuiTextures.TAB_RIGHT;
 
+    @Getter
     private final int tabIndex;
     private final ExpandDirection expandDirection;
 
     @Setter
+    @Getter
     private boolean showExpanded = false;
     @Getter
     private ExpandedTabWidget expandedWidget = null;
@@ -35,6 +37,10 @@ public class TabWidget extends SingleChildWidget<TabWidget> implements Interacta
 
     public TabWidget(int tabIndex) {
         this(tabIndex, tabIndex * 30, ExpandDirection.RIGHT);
+    }
+
+    public TabWidget(int tabIndex, ExpandDirection expandDirection) {
+        this(tabIndex, tabIndex * 30, expandDirection);
     }
 
     public TabWidget(int tabIndex, int top) {
@@ -73,7 +79,7 @@ public class TabWidget extends SingleChildWidget<TabWidget> implements Interacta
     public void onInit() {
         getContext().getUISettings()
             .getRecipeViewerSettings()
-            .addRecipeViewerExclusionArea(this);
+            .addExclusionArea(this);
     }
 
     @Override

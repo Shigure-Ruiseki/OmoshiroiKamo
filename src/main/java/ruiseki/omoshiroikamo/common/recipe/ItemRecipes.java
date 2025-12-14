@@ -150,6 +150,40 @@ public class ItemRecipes {
                     'U',
                     ModItems.ADVANCED_PICKUP_UPGRADE.get()));
 
+            // Void Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.VOID_UPGRADE.get(),
+                    " E ",
+                    "OUO",
+                    "ROR",
+                    'E',
+                    "pearlEnder",
+                    'O',
+                    "blockObsidian",
+                    'A',
+                    new ItemStack(Items.golden_apple, 1, 0),
+                    'R',
+                    "dustRedstone",
+                    'U',
+                    ModItems.BASE_UPGRADE.get()));
+
+            // Advanced Void Upgrade
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.ADVANCED_VOID_UPGRADE.get(),
+                    " D ",
+                    "GUG",
+                    "RRR",
+                    'D',
+                    "gemDiamond",
+                    'R',
+                    "dustRedstone",
+                    'G',
+                    "ingotGold",
+                    'U',
+                    ModItems.VOID_UPGRADE.get()));
+
             // Feeding Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(

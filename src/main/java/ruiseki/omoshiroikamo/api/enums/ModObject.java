@@ -64,6 +64,8 @@ public enum ModObject {
     itemInceptionUpgrade,
     itemFilterUpgrade,
     itemAdvancedFilterUpgrade,
+    itemVoidUpgrade,
+    itemAdvancedVoidUpgrade,
 
     itemCrystal,
     itemStabilizedEnderPear,

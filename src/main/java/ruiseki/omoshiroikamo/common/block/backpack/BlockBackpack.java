@@ -4,8 +4,11 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ACCENT_COLOR;
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.MAIN_COLOR;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +22,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
-import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -34,11 +36,13 @@ import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.common.block.ItemBlockBauble;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockColor {
 
@@ -145,6 +149,12 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         }
 
         @Override
+        public String getItemStackDisplayName(ItemStack stack) {
+            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
+            return cap.getDisplayName();
+        }
+
+        @Override
         public String[] getBaubleTypes(ItemStack itemstack) {
             return new String[] { "body" };
         }
@@ -161,7 +171,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            BackpackHandler handler = new BackpackHandler(stack, null, this);
+            BackpackHandler handler = new BackpackHandler(stack.copy(), null, this);
             return new EntityBackpack(world, location, stack, handler);
         }
 
@@ -169,7 +179,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!stack.hasTagCompound()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
             }
         }
@@ -178,7 +188,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onCreated(ItemStack stack, World world, EntityPlayer player) {
             super.onCreated(stack, world, player);
             if (!stack.hasTagCompound()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
             }
         }
@@ -186,24 +196,30 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
             float hitX, float hitY, float hitZ) {
+            if (world.isRemote) return true;
+
             TileEntity te = world.getTileEntity(x, y, z);
+
             if (player.isSneaking() && te == null) {
                 return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
             }
-            if (!world.isRemote) {
-                GuiFactories.playerInventory()
+            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
+            if (cap.canPlayerAccess(player.getUniqueID())) {
+                MGuiFactories.playerInventory()
                     .openFromMainHand(player);
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
             if (!world.isRemote) {
-                GuiFactories.playerInventory()
-                    .openFromMainHand(player);
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
+                if (cap.canPlayerAccess(player.getUniqueID())) {
+                    MGuiFactories.playerInventory()
+                        .openFromMainHand(player);
+                }
             }
             return super.onItemRightClick(stack, world, player);
         }
@@ -211,8 +227,20 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
             ItemStack stack = data.getUsedItemStack();
-            BackpackHandler cap = new BackpackHandler(stack, null, this);
+            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+            list.add(LibMisc.LANG.localize("tooltip.backpack.inventory_size", backpackSlots));
+            list.add(LibMisc.LANG.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
+            if (GuiScreen.isShiftKeyDown()) {
+                BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
+                list.add(
+                    LibMisc.LANG.localize("tooltip.backpack.stack_multiplier", cap.getTotalStackMultiplier(), "x"));
+            }
+            super.addInformation(stack, player, list, flag);
         }
 
         @Override

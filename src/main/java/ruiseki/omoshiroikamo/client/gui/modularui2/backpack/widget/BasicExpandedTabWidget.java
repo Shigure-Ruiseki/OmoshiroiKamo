@@ -28,7 +28,7 @@ public class BasicExpandedTabWidget<T extends UpgradeWrapper & IBasicFilterable>
             .name("filter_widget");
 
         Column column = (Column) new Column().pos(8, 28)
-            .width(64)
+            .coverChildren()
             .childPadding(2)
             .child(startingRow)
             .child(filterWidget);

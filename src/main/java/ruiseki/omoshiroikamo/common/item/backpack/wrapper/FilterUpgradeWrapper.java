@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
@@ -13,8 +12,7 @@ public class FilterUpgradeWrapper extends BasicUpgradeWrapper implements IFilter
 
     @Override
     public FilterWayType getfilterWay() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        int ordinal = tag.getInteger(FILTER_WAY_TAG);
+        int ordinal = ItemNBTUtils.getInt(upgrade, FILTER_WAY_TAG, FilterWayType.IN_OUT.ordinal());
         FilterWayType[] types = FilterWayType.values();
         if (ordinal < 0 || ordinal >= types.length) {
             return FilterWayType.IN_OUT;
@@ -27,8 +25,7 @@ public class FilterUpgradeWrapper extends BasicUpgradeWrapper implements IFilter
         if (filterWay == null) {
             filterWay = FilterWayType.IN_OUT;
         }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        tag.setInteger(FILTER_WAY_TAG, filterWay.ordinal());
+        ItemNBTUtils.setInt(upgrade, FILTER_WAY_TAG, filterWay.ordinal());
     }
 
     @Override

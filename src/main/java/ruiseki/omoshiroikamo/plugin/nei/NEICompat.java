@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
+import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
@@ -112,6 +113,10 @@ public class NEICompat {
                 16,
                 64,
                 6);
+        }
+
+        if (BackportConfigs.useBackpack) {
+            sendCatalyst("crafting", ModItems.CRAFTING_UPGRADE.newItemStack());
         }
 
         Logger.info("Loaded IMCForNEI");

@@ -25,11 +25,11 @@ public interface IAdvancedFilterable extends IBasicFilterable {
 
     void setOreDictEntries(List<String> entries);
 
-    boolean getIgnoreDurability();
+    boolean isIgnoreDurability();
 
     void setIgnoreDurability(boolean ignore);
 
-    boolean getIgnoreNBT();
+    boolean isIgnoreNBT();
 
     void setIgnoreNBT(boolean ignore);
 
@@ -63,12 +63,12 @@ public interface IAdvancedFilterable extends IBasicFilterable {
                 for (boolean b : filterResult) if (b) {
                     return true;
                 }
-                return !getFilterItems().hasAnyItem();
+                return false;
             case BLACKLIST:
                 for (boolean b : filterResult) if (b) {
                     return false;
                 }
-                return getFilterItems().hasAnyItem();
+                return true;
             default:
                 return false;
         }
@@ -137,13 +137,13 @@ public interface IAdvancedFilterable extends IBasicFilterable {
         }
 
         boolean flag;
-        if (getIgnoreDurability()) {
+        if (isIgnoreDurability()) {
             flag = ItemUtils.areItemsEqualIgnoreDurability(filterStack, stack);
         } else {
             flag = filterStack.isItemEqual(stack);
         }
 
-        if (!getIgnoreNBT()) {
+        if (!isIgnoreNBT()) {
             flag = flag && ((filterStack.getTagCompound() == null && stack.getTagCompound() == null)
                 || (filterStack.getTagCompound() != null && filterStack.getTagCompound()
                     .equals(stack.getTagCompound())));

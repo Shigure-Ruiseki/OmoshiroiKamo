@@ -64,17 +64,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
 
     @Override
     protected boolean processTasks(boolean redstoneCheckPassed) {
-        if (!worldObj.isRemote && player != null && getEnergyStored() > 0) {
-            EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
-            if (plr != null) {
-                if (redstoneCheckPassed && !plr.capabilities.isCreativeMode) {
-                    plr.capabilities.allowFlying = false;
-                    plr.sendPlayerAbilities();
-                    PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
-                } else {
-                    handleFlightUpdate(plr);
-                }
-            }
+        if (!worldObj.isRemote && player != null && redstoneCheckPassed) {
+            disablePlayerFlight();
         }
         return super.processTasks(redstoneCheckPassed);
     }
@@ -108,23 +99,18 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     }
 
     private void addPlayerEffects() {
-        if (player == null || !PlayerUtils.doesPlayerExist(worldObj, player.getId())) {
-            return;
-        }
+        if (player == null || !PlayerUtils.doesPlayerExist(worldObj, player.getId())) return;
+
         EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
-        if (plr == null || modifierHandler == null) {
-            return;
-        }
+        if (plr == null) return;
+
         int potionDuration = getBaseDuration() * 2 + 300;
+
         int energyCost = (int) (modifierHandler.getAttributeMultiplier("energycost_fixed") * getBaseDuration());
-        if (getEnergyStored() < energyCost && !plr.capabilities.isCreativeMode) {
-            plr.capabilities.allowFlying = false;
-            plr.sendPlayerAbilities();
-            PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
-            return;
-        }
+        if (getEnergyStored() < energyCost && !plr.capabilities.isCreativeMode) return;
+
         setEnergyStored(getEnergyStored() - energyCost);
-        handleFlightUpdate(plr);
+        updatePlayerFlight();
         applyPotionEffects(plr, potionDuration);
     }
 
@@ -156,27 +142,33 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         }
     }
 
-    private void handleFlightUpdate(EntityPlayer plr) {
-        if (plr.capabilities.isCreativeMode) {
-            return;
-        }
-        boolean hasFlight = modifierHandler.hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
+    private void updatePlayerFlight() {
+        if (player == null || worldObj.isRemote) return;
 
-        boolean allow = plr.capabilities.allowFlying;
-        if (!hasFlight) {
-            if (allow || plr.capabilities.isFlying) {
-                plr.capabilities.allowFlying = false;
-                plr.capabilities.isFlying = false;
-                plr.sendPlayerAbilities();
-                PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), false), plr);
-            }
-            return;
+        EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
+        if (plr == null || plr.capabilities.isCreativeMode) return;
+
+        boolean hasFlightModifier = modifierHandler
+            .hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
+        boolean enoughEnergy = getEnergyStored()
+            >= (int) (modifierHandler.getAttributeMultiplier("energycost_fixed") * getBaseDuration());
+        boolean shouldHaveFlight = hasFlightModifier && enoughEnergy;
+
+        if (plr.capabilities.allowFlying == shouldHaveFlight) return;
+
+        plr.capabilities.allowFlying = shouldHaveFlight;
+
+        if (!shouldHaveFlight && plr.capabilities.isFlying) {
+            plr.capabilities.isFlying = false;
         }
 
-        if (!allow) {
-            plr.capabilities.allowFlying = true;
-            plr.sendPlayerAbilities();
-            PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), true), plr);
+        plr.sendPlayerAbilities();
+        PacketHandler.sendToAllAround(new PacketNBBClientFlight(plr.getUniqueID(), shouldHaveFlight), plr);
+
+        if (shouldHaveFlight && !plr.capabilities.isCreativeMode) {
+            setEnergyStored(
+                getEnergyStored()
+                    - (int) (modifierHandler.getAttributeMultiplier("energycost_fixed") * getBaseDuration()));
         }
     }
 

@@ -20,11 +20,10 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
 
     @Override
     public FilterType getFilterType() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        int ordinal = tag.getInteger(FILTER_TYPE_TAG);
+        int ordinal = ItemNBTUtils.getInt(upgrade, FILTER_TYPE_TAG, FilterType.BLACKLIST.ordinal());
         FilterType[] types = FilterType.values();
         if (ordinal < 0 || ordinal >= types.length) {
-            return FilterType.WHITELIST;
+            return FilterType.BLACKLIST;
         }
         return types[ordinal];
     }
@@ -32,36 +31,33 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     @Override
     public void setFilterType(FilterType type) {
         if (type == null) {
-            type = FilterType.WHITELIST;
+            type = FilterType.BLACKLIST;
         }
-        ItemNBTUtils.getNBT(upgrade)
-            .setInteger(FILTER_TYPE_TAG, type.ordinal());
+        ItemNBTUtils.setInt(upgrade, FILTER_TYPE_TAG, type.ordinal());
     }
 
     @Override
     public ExposedItemStackHandler getFilterItems() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        NBTTagCompound handlerTag = tag.getCompoundTag(FILTER_ITEMS_TAG);
-        handler.deserializeNBT(handlerTag);
+        NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        if (handlerTag != null) {
+            handler.deserializeNBT(handlerTag);
+        }
         return handler;
     }
 
     @Override
     public void setFilterItems(ExposedItemStackHandler handler) {
-        if (handler == null) {
-            return;
+        if (handler != null) {
+            ItemNBTUtils.setCompound(upgrade, FILTER_ITEMS_TAG, handler.serializeNBT());
         }
-        ItemNBTUtils.getNBT(upgrade)
-            .setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
     }
 
     @Override
     public MatchType getMatchType() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        int ordinal = tag.getInteger(MATCH_TYPE_TAG);
+        int ordinal = ItemNBTUtils.getInt(upgrade, MATCH_TYPE_TAG, MatchType.ITEM.ordinal());
         MatchType[] types = MatchType.values();
         if (ordinal < 0 || ordinal >= types.length) {
-            return MatchType.MOD;
+            return MatchType.ITEM;
         }
         return types[ordinal];
     }
@@ -71,59 +67,49 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
         if (matchType == null) {
             matchType = MatchType.ITEM;
         }
-        ItemNBTUtils.getNBT(upgrade)
-            .setInteger(MATCH_TYPE_TAG, matchType.ordinal());
+        ItemNBTUtils.setInt(upgrade, MATCH_TYPE_TAG, matchType.ordinal());
     }
 
     @Override
     public List<String> getOreDictEntries() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        if (!tag.hasKey(ORE_DICT_LIST_TAG)) {
-            return new ArrayList<>();
-        }
-        NBTTagCompound listTag = tag.getCompoundTag(ORE_DICT_LIST_TAG);
+        NBTTagCompound listTag = ItemNBTUtils.getCompound(upgrade, ORE_DICT_LIST_TAG, false);
         List<String> list = new ArrayList<>();
-        for (String key : listTag.func_150296_c()) {
-            list.add(listTag.getString(key));
+        if (listTag != null) {
+            for (String key : listTag.func_150296_c()) {
+                list.add(listTag.getString(key));
+            }
         }
         return list;
     }
 
     @Override
     public void setOreDictEntries(List<String> entries) {
-        if (entries == null) {
-            return;
-        }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+        if (entries == null) return;
         NBTTagCompound listTag = new NBTTagCompound();
         for (int i = 0; i < entries.size(); i++) {
             listTag.setString("e" + i, entries.get(i));
         }
-        tag.setTag(ORE_DICT_LIST_TAG, listTag);
+        ItemNBTUtils.setCompound(upgrade, ORE_DICT_LIST_TAG, listTag);
     }
 
     @Override
-    public boolean getIgnoreDurability() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        return tag.hasKey(IGNORE_DURABILITY_TAG) && tag.getBoolean(IGNORE_DURABILITY_TAG);
+    public boolean isIgnoreDurability() {
+        return ItemNBTUtils.getBoolean(upgrade, IGNORE_DURABILITY_TAG, true);
     }
 
     @Override
     public void setIgnoreDurability(boolean ignore) {
-        ItemNBTUtils.getNBT(upgrade)
-            .setBoolean(IGNORE_DURABILITY_TAG, ignore);
+        ItemNBTUtils.setBoolean(upgrade, IGNORE_DURABILITY_TAG, ignore);
     }
 
     @Override
-    public boolean getIgnoreNBT() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        return tag.hasKey(IGNORE_NBT_TAG) && tag.getBoolean(IGNORE_NBT_TAG);
+    public boolean isIgnoreNBT() {
+        return ItemNBTUtils.getBoolean(upgrade, IGNORE_NBT_TAG, true);
     }
 
     @Override
     public void setIgnoreNBT(boolean ignore) {
-        ItemNBTUtils.getNBT(upgrade)
-            .setBoolean(IGNORE_NBT_TAG, ignore);
+        ItemNBTUtils.setBoolean(upgrade, IGNORE_NBT_TAG, ignore);
     }
 
     @Override
@@ -133,14 +119,12 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
 
     @Override
     public boolean isEnabled() {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        return tag.hasKey(IUpgrade.TAB_STATE_TAG) && tag.getBoolean(ENABLED_TAG);
+        return ItemNBTUtils.getBoolean(upgrade, ENABLED_TAG, true);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
-        tag.setBoolean(ENABLED_TAG, enabled);
+        ItemNBTUtils.setBoolean(upgrade, ENABLED_TAG, enabled);
     }
 
     @Override

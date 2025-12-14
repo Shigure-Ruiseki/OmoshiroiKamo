@@ -19,11 +19,6 @@ public class ItemEverlastingUpgrade extends ItemUpgrade<UpgradeWrapper> {
     }
 
     @Override
-    public boolean hasTab() {
-        return true;
-    }
-
-    @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
         list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "everlasting_upgrade"));
     }

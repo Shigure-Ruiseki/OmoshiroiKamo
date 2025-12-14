@@ -29,7 +29,7 @@ public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilte
             .name("adv_filter_widget");
 
         Column column = (Column) new Column().pos(8, 28)
-            .width(88)
+            .coverChildren()
             .childPadding(2)
             .child(this.startingRow)
             .child(this.filterWidget);

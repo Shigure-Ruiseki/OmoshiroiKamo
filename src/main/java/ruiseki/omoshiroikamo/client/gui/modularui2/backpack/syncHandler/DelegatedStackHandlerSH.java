@@ -11,22 +11,28 @@ import lombok.Getter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.DelegatedItemHandler;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IBasicFilterable;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapperFactory;
 
 public class DelegatedStackHandlerSH extends SyncHandler {
 
     public static final int UPDATE_FILTERABLE = 0;
+    public static final int UPDATE_CRAFTING = 1;
 
     private final BackpackHandler handler;
     private final int slotIndex;
     @Getter
     public DelegatedItemHandler delegatedStackHandler;
 
-    public DelegatedStackHandlerSH(BackpackHandler handler, int slotIndex) {
+    public DelegatedStackHandlerSH(BackpackHandler handler, int slotIndex, int numSlot) {
         this.handler = handler;
         this.slotIndex = slotIndex;
-        this.delegatedStackHandler = new DelegatedItemHandler(() -> new ItemStackHandler(16));
+        this.delegatedStackHandler = new DelegatedItemHandler(() -> new ItemStackHandler(numSlot));
+    }
+
+    public DelegatedStackHandlerSH(BackpackHandler handler, int slotIndex) {
+        this(handler, slotIndex, 10);
     }
 
     public void setDelegatedStackHandler(IDelegatedSupplier delegated) {
@@ -44,10 +50,17 @@ public class DelegatedStackHandlerSH extends SyncHandler {
             .getStackInSlot(slotIndex);
         if (id == UPDATE_FILTERABLE) {
             UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-            if (wrapper instanceof IBasicFilterable filterable) {
-                setDelegatedStackHandler(filterable::getFilterItems);
+            if (wrapper instanceof IBasicFilterable upgrade) {
+                setDelegatedStackHandler(upgrade::getFilterItems);
             }
         }
+        if (id == UPDATE_CRAFTING) {
+            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            if (wrapper instanceof ICraftingUpgrade upgrade) {
+                setDelegatedStackHandler(upgrade::getMatrix);
+            }
+        }
+        handler.writeToItem();
     }
 
     @FunctionalInterface

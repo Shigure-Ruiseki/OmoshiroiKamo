@@ -33,9 +33,10 @@ Each backport module can be individually enabled or disabled in the config.
 
 ### *I will add as much compatibility as I can.
 
-### Environmental Tech (Backport Rewrite, Open Source)
+### Environmental Tech Clean-Room Rewrite (Open Source)
 
-a rewritten backport of the modern Environmental Tech mod:
+A clean-room rewrite and backport of the modern Environmental Tech mod.
+All code has been rewritten, and all textures are original.
 
 - Quantum Extractor (Ore, Blocks, Special Drops)
 - Solar Array (Generate Energy From Sun)
@@ -70,13 +71,15 @@ a rewritten backport of the modern Environmental Tech mod:
 ![Cows](https://media.forgecdn.net/attachments/1388/696/2025-11-11_12-45-23-png.png)
 ![Cows](https://media.forgecdn.net/attachments/1397/915/2025-11-19_19-23-22-png.png)
 
-### Sophisticated Backpacks (Backport Rewrite WIP)
+### RetroSophisticated Backpacks (Backport Rewrite WIP)
 
 #### Backpack
 
-- [ ] Sorting system
-- [ ] Memory slot
-- [ ] Lockable by player
+- [X] Sorting system
+- [X] Custom name
+- [X] Memory slot
+- [X] Lockable by player
+- [X] Searching System
 - [X] Backpack model render on player's back when equipped
 - [X] Custom Backpack main color and accent color
 - [X] Modifier each backpack and upgrade slot size
@@ -90,9 +93,8 @@ a rewritten backport of the modern Environmental Tech mod:
 - [X] Filter upgrade — filter in/out to access backpacks block
 - [X] Magnet upgrade — collect item and experient around player
 - [X] Everlasting upgrade — make backpack immortal
-- [ ] Void upgrade
-- [ ] Crafting upgrade
-- [ ] Jukebox upgrade
+- [X] Void upgrade — filter item to remove
+- [X] Crafting upgrade — crafting table
 
 ### Traits (WIP)
 

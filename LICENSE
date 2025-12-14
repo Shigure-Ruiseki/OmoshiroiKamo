@@ -23,6 +23,7 @@ SOFTWARE.
 ------------------------------------------------------------
 Notes on third-party components:
 
+- CraftingTweaks assets: original license retained by the authors.
 - RetroSophisticated Backpacks assets: original license retained by the authors.
-- Any code/assets under GPLv3 or other licenses retain their original licenses.
+- Any code/assets under GPLv3/LGPL-3.0 or other licenses retain their original licenses.
   These parts are NOT MIT-licensed and must comply with their respective terms.

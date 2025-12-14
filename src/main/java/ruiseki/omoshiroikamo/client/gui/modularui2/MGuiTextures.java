@@ -14,31 +14,6 @@ public final class MGuiTextures {
 
     private MGuiTextures() {}
 
-    public static final UITexture WHITELIST = UITexture.builder()
-        .location(LibResources.OVERLAY_WHITELIST)
-        .imageSize(16, 16)
-        .build();
-
-    public static final UITexture BLACKLIST = UITexture.builder()
-        .location(LibResources.OVERLAY_BLACKLIST)
-        .imageSize(16, 16)
-        .build();
-
-    public static final UITexture FULL_HUNGER = UITexture.builder()
-        .location(LibResources.OVERLAY_FULL_HUNGER)
-        .imageSize(16, 16)
-        .build();
-
-    public static final UITexture EXACT_HUNGER = UITexture.builder()
-        .location(LibResources.OVERLAY_EXACT_HUNGER)
-        .imageSize(16, 16)
-        .build();
-
-    public static final UITexture PROGRESS_BURN = UITexture.builder()
-        .location(LibResources.PROGRESS_BURN)
-        .imageSize(18, 36)
-        .build();
-
     public static final UITexture ENERGY_PROGRESS = UITexture.builder()
         .location(LibResources.PROGRESS_ENERGY)
         .adaptable(1)
@@ -86,6 +61,22 @@ public final class MGuiTextures {
     public static final IDrawable REMOVE_ICON = icon("remove", 112, 32);
     public static final IDrawable BRAIN_ICON = icon("brain", 128, 32);
 
+    public static final IDrawable BACKPACK_ICON = icon("backpack", 64, 48);
+    public static final IDrawable UNLOCK_BACKPACK_ICON = icon("unlock_backpack", 176, 32);
+    public static final IDrawable LOCK_BACKPACK_ICON = icon("lock_backpack", 192, 32);
+    public static final IDrawable UNLOCK_SEARCH_ICON = icon("unlock_search", 224, 32);
+    public static final IDrawable LOCK_SEARCH_ICON = icon("lock_search", 208, 32);
+    public static final IDrawable KEEP_TAB_ICON = icon("keep_tab", 80, 80);
+    public static final IDrawable NOT_KEEP_TAB_ICON = icon("not_keep_tab", 80, 96);
+
+    public static final IDrawable ONE_IN_FOUR_SLOT_ICON = icon("one_in_four_slot", 0, 80);
+    public static final IDrawable ALL_FOUR_SLOT_ICON = icon("all_in_four_slot", 16, 80);
+    public static final IDrawable NO_SORT_ICON = icon("no_sort", 32, 80);
+    public static final IDrawable NONE_FOUR_SLOT_ICON = icon("none_in_four_slot", 48, 80);
+
+    public static final IDrawable SETTING_ICON = icon("setting", 16, 96);
+    public static final IDrawable BACK_ICON = icon("back", 64, 80);
+
     public static final IDrawable EXP_MAGNET_ICON = icon("exp_magnet", 96, 48);
     public static final IDrawable IGNORE_EXP_MAGNET_ICON = icon("ignore_exp_magnet", 112, 48);
     public static final IDrawable ITEM_MAGNET_ICON = icon("exp_magnet", 128, 48);
@@ -94,18 +85,33 @@ public final class MGuiTextures {
     public static final UITexture MATCH_ORE_DICT_ICON = icon("consider_ore_dict", 112, 96);
     public static final UITexture IGNORE_ORE_DICT_ICON = icon("ignore_ore_dict", 128, 96);
 
-    public static final UITexture TOGGLE_DISABLE_ICON = icon("disable", 0, 128, 4, 10);
-    public static final UITexture TOGGLE_ENABLE_ICON = icon("enable", 4, 128, 4, 10);
+    public static final UITexture INTO_BACKPACK = icon("into_backpack", 32, 48);
+    public static final UITexture INTO_INVENTORY = icon("small_m", 48, 48);
+    public static final UITexture USED_BACKPACK = icon("into_backpack", 176, 80);
+    public static final UITexture UNUSED_BACKPACK = icon("unused_backpack", 192, 80);
+
+    public static final UITexture VOID_OVERFLOW = icon("void_overflow", 224, 16);
+    public static final UITexture VOID_ANY = icon("void_any", 208, 16);
+    public static final UITexture VOID_ALL = icon("void_all", 0, 48);
+    public static final UITexture VOID_AUTOMATION = icon("void_automation", 16, 48);
+
+    public static final UITexture ROTATED_RIGHT = icon("rotated_right", 0, 170, 16, 16);
+    public static final UITexture ROTATED_LEFT = icon("rotated_left", 48, 170, 16, 16);
+    public static final UITexture BALANCE = icon("balance", 32, 170, 16, 16);
+    public static final UITexture SPREAD = icon("spread", 80, 170, 16, 16);
+    public static final UITexture CLEAR = icon("clear", 16, 170, 16, 16);
 
     public static final UITexture SOLID_UP_ARROW_ICON = icon("solid_up_arrow", 0, 144, 12, 12);
-    public static final UITexture SMALL_A_ICON = icon("small_a", 24, 144, 12, 12);
-    public static final UITexture SMALL_1_ICON = icon("small_1", 36, 144, 12, 12);
-    public static final UITexture SMALL_O_ICON = icon("small_ore_dict", 64, 144, 12, 12);
-
-    public static final UITexture SMALL_M_ICON = icon("small_m", 0, 156, 12, 12);
     public static final UITexture SOLID_DOWN_ARROW_ICON = icon("solid_down_arrow", 12, 156, 12, 12);
     public static final UITexture DOT_DOWN_ARROW_ICON = icon("dot_down_arrow", 24, 156, 12, 12);
     public static final UITexture DOT_UP_ARROW_ICON = icon("dot_up_arrow", 36, 156, 12, 12);
+
+    public static final UITexture TOGGLE_DISABLE_ICON = icon("disable", 0, 128, 4, 10);
+    public static final UITexture TOGGLE_ENABLE_ICON = icon("enable", 4, 128, 4, 10);
+    public static final UITexture SMALL_M_ICON = icon("small_m", 0, 156, 12, 12);
+    public static final UITexture SMALL_A_ICON = icon("small_a", 24, 144, 12, 12);
+    public static final UITexture SMALL_1_ICON = icon("small_1", 36, 144, 12, 12);
+    public static final UITexture SMALL_O_ICON = icon("small_ore_dict", 64, 144, 12, 12);
 
     private static UITexture icon(String name, int x, int y) {
         return icon(name, x, y, 16, 16);

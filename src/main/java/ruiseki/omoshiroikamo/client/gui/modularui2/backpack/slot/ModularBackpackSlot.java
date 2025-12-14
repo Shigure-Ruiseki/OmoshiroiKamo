@@ -15,6 +15,10 @@ public class ModularBackpackSlot extends ModularSlot {
         this.handler = handler;
     }
 
+    public ItemStack getMemoryStack() {
+        return handler.getMemorizedStack(getSlotIndex());
+    }
+
     @Override
     public int getItemStackLimit(ItemStack stack) {
         int multiplier = handler.getTotalStackMultiplier();

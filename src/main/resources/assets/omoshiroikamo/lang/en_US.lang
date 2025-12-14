@@ -60,8 +60,14 @@ gui.advanced_restock_settings=Adv. Restock Settings
 gui.filter_settings=Filter Settings
 gui.advanced_filter_settings=Adv. Filter Settings
 
+gui.backpack_settings=Backpack Settings
 gui.memory_settings=Memory Settings
 gui.sorting_settings=Sorting Settings
+
+gui.crafting_settings=Crafting Settings
+
+gui.void_settings=Void Settings
+gui.advanced_void_settings=Adv. Void Settings
 
 # Backpack Gui Tooltips
 
@@ -116,6 +122,7 @@ gui.transfer_to_backpack_inv_matched_1=Transfer Matched Items to Backpack Invent
 gui.transfer_to_backpack_inv_matched_2=Shift To Transfer All
 
 gui.settings=Settings
+gui.backpack=Backpack
 gui.configuration_tab=Configuration Tab
 
 gui.memorized_slot=Memorized Slot
@@ -125,6 +132,28 @@ gui.unmemorize_all=Forget All Slots
 gui.no_sorting_slot=No Sorting Slot
 gui.lock_all_sort=Select All Slots For No Sorting
 gui.unlock_all_sort=Select All Slots For Sorting
+
+gui.into_backpack=Shift Click Result Into\nBackpack
+gui.into_inventory=Shift Click Result Into\nPlayer's Inventory
+
+gui.used_backpack=Refill Crafting Grid
+gui.unused_backpack=Do Not Refill Crafting Grid
+
+gui.search_hint=Search...
+gui.lock_search=Keep Search Phrase: On
+gui.unlock_search=Keep Search Phrase: Off
+
+gui.lock_backpack=Another Player Can Not Open
+gui.unlock_backpack=Another Player Can Open
+
+gui.keep_tab=Keep Tab Open: On
+gui.not_keep_tab=Keep Tab Open: Off
+
+gui.void_any=Void Any
+gui.void_overflow=Void Overflow
+
+gui.void_all=Works in Gui as well
+gui.void_automation=Only works with other upgrade/automation
 
 #Display
 
@@ -137,6 +166,10 @@ fluid.empty=Empty
 gui.energy.tooltip=RF: %s / %s
 tooltip.lvs=lvs
 tooltip.effPowered=Efficiency when powered
+
+tooltip.backpack.inventory_size=Inventory size: %d
+tooltip.backpack.upgrade_slots_size=Upgrade slots: %d
+tooltip.backpack.stack_multiplier=-> Stack multiplier: %d%s
 
 tooltip.oreDictNames=Ore Dictionary Names:
 tooltip.durability=Durability:
@@ -159,6 +192,8 @@ tooltip.feeding_upgrade=Allows backpacks to automatically feed player
 tooltip.advanced_feeding_upgrade=Allows backpack to automatically feed player with more configurations
 tooltip.filter_upgrade=Filters inserted items when placing in world
 tooltip.advanced_filter_upgrade=Filters inserted items when placing in world with more configurations
+tooltip.void_upgrade=Voids items selected in filter
+tooltip.advanced_void_upgrade=Voids items selected in filter. Has more filtering options
 
 tooltip.progress=Progress
 tooltip.duration=Duration
@@ -276,6 +311,7 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modi
 
 category.omoshiroikamo=Omoshiroi Kamo
 keybind.backpackOpenToggle=Open Backpack
+keybind.backpackSortToggle=Sort Backpack Inventory 
 
 #Elemental
 
@@ -321,6 +357,8 @@ item.advancedFeedingUpgrade.name=Adv. Feeding Upgrade
 item.filterUpgrade.name=Filter Upgrade
 item.advancedFilterUpgrade.name=Adv. Filter Upgrade
 item.inceptionUpgrade.name=Inception Upgrade
+item.voidUpgrade.name=Void Upgrade
+item.advancedVoidUpgrade.name=Adv. Void Upgrade
 
 item.stabilizedEnderPear.name=Stabilized Ender Pearl
 item.photovoltaicCell.name=Photovoltaic Cell

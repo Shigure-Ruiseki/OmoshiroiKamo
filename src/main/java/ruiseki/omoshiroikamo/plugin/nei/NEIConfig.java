@@ -2,9 +2,12 @@ package ruiseki.omoshiroikamo.plugin.nei;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.plugin.nei.overlay.BackpackOverlay;
+import ruiseki.omoshiroikamo.plugin.nei.positioner.BackpackPositioner;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
@@ -34,6 +37,11 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.useCow) {
             registerHandler(new CowBreedingRecipeHandler());
             registerHandler(new CowMilkingRecipeHandler());
+        }
+
+        if (BackportConfigs.useBackpack) {
+            API.registerGuiOverlay(BackpackGuiContainer.class, "crafting", new BackpackPositioner());
+            API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
         }
     }
 
