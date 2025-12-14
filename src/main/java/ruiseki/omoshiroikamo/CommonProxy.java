@@ -15,7 +15,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import makamys.mclib.core.MCLib;
 import makamys.mclib.core.MCLibModules;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModCommands;
@@ -62,7 +61,6 @@ public class CommonProxy {
         OKWorldGenerator.preInit();
 
         BaubleExpandedCompat.preInit();
-        MGuiFactories.init();
 
         if (!LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
             MCLibModules.updateCheckAPI.submitModTask(LibMisc.MOD_ID, LibMisc.VERSION, LibMisc.VERSION_URL);
