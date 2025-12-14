@@ -46,6 +46,7 @@ public class OriginalChickens extends BaseChickenHandler {
         String spawnType;
         String parent1;
         String parent2;
+        java.util.Map<String, String> lang;
     }
 
     private static class CustomItemData {
@@ -65,7 +66,10 @@ public class OriginalChickens extends BaseChickenHandler {
             createDefaultConfig(configFile);
         }
 
-        try (FileReader reader = new FileReader(configFile)) {
+        try (FileReader fileReader = new FileReader(configFile)) {
+            com.google.gson.stream.JsonReader reader = new com.google.gson.stream.JsonReader(fileReader);
+            reader.setLenient(true); // Allow comments
+
             Gson gson = new Gson();
             Type listType = new TypeToken<ArrayList<CustomChickenData>>() {
             }.getType();
@@ -110,6 +114,19 @@ public class OriginalChickens extends BaseChickenHandler {
                             type);
 
                     if (chicken != null) {
+                        // Register Localization
+                        String locKey = "entity." + data.name + ".name";
+                        // 1. Register 'name' as en_US default
+                        cpw.mods.fml.common.registry.LanguageRegistry.instance().addStringLocalization(locKey, "en_US",
+                                data.name);
+
+                        // 2. Register other languages if present
+                        if (data.lang != null) {
+                            for (java.util.Map.Entry<String, String> entry : data.lang.entrySet()) {
+                                cpw.mods.fml.common.registry.LanguageRegistry.instance().addStringLocalization(locKey,
+                                        entry.getKey(), entry.getValue());
+                            }
+                        }
 
                         if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
                             chicken.setTintColor(tint);
@@ -165,12 +182,6 @@ public class OriginalChickens extends BaseChickenHandler {
             ChickensRegistryItem p1 = findChicken(allChickens, data.parent1);
             ChickensRegistryItem p2 = findChicken(allChickens, data.parent2);
 
-            // Parents can be existing chickens or other custom chickens
-            // findChicken handles checking both the list passed and the compiled registry
-            // But wait, BaseChickenHandler.findChicken looks in 'chickens' list AND
-            // ChickensRegistry.INSTANCE
-            // Custom chickens added in registerChickens are in 'allChickens' list.
-
             if (p1 != null && p2 != null) {
                 child.setParents(p1, p2);
             } else {
@@ -185,27 +196,31 @@ public class OriginalChickens extends BaseChickenHandler {
 
     private void createDefaultConfig(File file) {
         try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            List<CustomChickenData> defaults = new ArrayList<>();
-
-            CustomChickenData example = new CustomChickenData();
-            example.name = "ExampleRedChicken";
-            example.texture = "base_chicken.png";
-            example.textureOverlay = "base_chicken.png"; // Use same for now as example or different if needed
-            example.tintColor = "0xFF0000";
-            example.layItem = new CustomItemData();
-            example.layItem.name = "minecraft:redstone";
-            example.layItem.amount = 1;
-            example.layItem.meta = 0;
-            example.colorBorder = "0xFF0000";
-            example.colorCenter = "0x800000";
-            example.spawnType = "NORMAL";
-            example.parent1 = "WhiteChicken";
-            example.parent2 = "RedChicken";
-
-            defaults.add(example);
-
-            gson.toJson(defaults, writer);
+            String defaultConfig = "[\n" +
+                    "  /*\n" +
+                    "  {\n" +
+                    "    \"name\": \"ExampleRedChicken\",\n" +
+                    "    \"texture\": \"base_chicken.png\",\n" +
+                    "    \"textureOverlay\": \"base_chicken_overlay.png\",\n" +
+                    "    \"tintColor\": \"0xFF0000\",\n" +
+                    "    \"layItem\": {\n" +
+                    "      \"name\": \"minecraft:redstone\",\n" +
+                    "      \"amount\": 1,\n" +
+                    "      \"meta\": 0\n" +
+                    "    },\n" +
+                    "    \"colorBorder\": \"0xFF0000\",\n" +
+                    "    \"colorCenter\": \"0x800000\",\n" +
+                    "    \"spawnType\": \"NORMAL\",\n" +
+                    "    \"parent1\": \"WhiteChicken\",\n" +
+                    "    \"parent2\": \"RedChicken\",\n" +
+                    "    \"lang\": {\n" +
+                    "      \"en_US\": \"Red Chicken\",\n" +
+                    "      \"ja_JP\": \"赤いニワトリ\"\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "  */\n" +
+                    "]";
+            writer.write(defaultConfig);
             Logger.info("Created default " + CONFIG_FILE_NAME);
         } catch (IOException e) {
             Logger.error("Failed to create default config: " + e.getMessage());
