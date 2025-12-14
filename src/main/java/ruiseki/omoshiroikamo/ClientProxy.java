@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.entity.RenderCowsCow;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
 import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
+import ruiseki.omoshiroikamo.common.block.chicken.TEBreeder;
 import ruiseki.omoshiroikamo.common.block.cow.TEStall;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
@@ -37,7 +38,8 @@ import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
-    public ClientProxy() {}
+    public ClientProxy() {
+    }
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -58,6 +60,8 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumExtractor.class, quantumExtractorTESR);
 
         ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, new RoostTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TEBreeder.class,
+                new ruiseki.omoshiroikamo.client.render.block.chicken.BreederTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(TEStall.class, new StallTESR());
 
         if (ItemConfigs.renderPufferFish) {
