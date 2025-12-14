@@ -68,6 +68,11 @@ public class TERoost extends TERoostBase {
     }
 
     @Override
+    protected boolean hasFreeOutputSlot() {
+        return !outputIsFull();
+    }
+
+    @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.registerSlotGroup("input", 3);
         settings.customContainer(ChickenContainer::new);

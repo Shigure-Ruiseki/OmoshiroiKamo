@@ -417,7 +417,5 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
     }
 
-    protected boolean hasFreeOutputSlot() {
-        return !outputIsFull();
-    }
+    protected abstract boolean hasFreeOutputSlot();
 }
