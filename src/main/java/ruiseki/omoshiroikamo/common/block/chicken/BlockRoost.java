@@ -52,6 +52,12 @@ public class BlockRoost extends AbstractBlock<TERoost> {
     }
 
     @Override
+    protected int getFacingForHeading(int heading) {
+        int[] map = { 2, 5, 3, 4 };
+        return map[heading];
+    }
+
+    @Override
     public int damageDropped(int meta) {
         return 0;
     }

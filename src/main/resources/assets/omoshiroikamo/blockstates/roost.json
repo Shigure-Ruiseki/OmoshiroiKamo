@@ -1,8 +1,28 @@
 {
   "variants": {
-    "meta=0": { "model": "omoshiroikamo:block/roost", "y": 270 },
-    "meta=1": { "model": "omoshiroikamo:block/roost", "y": 90 },
-    "meta=2": { "model": "omoshiroikamo:block/roost", "y": 0 },
-    "meta=3": { "model": "omoshiroikamo:block/roost", "y": 180 }
+    "meta=0": {
+      "model": "omoshiroikamo:block/roost",
+      "y": 0
+    },
+    "meta=1": {
+      "model": "omoshiroikamo:block/roost",
+      "y": 0
+    },
+    "meta=2": {
+      "model": "omoshiroikamo:block/roost",
+      "y": 0
+    },
+    "meta=3": {
+      "model": "omoshiroikamo:block/roost",
+      "y": 180
+    },
+    "meta=4": {
+      "model": "omoshiroikamo:block/roost",
+      "y": 90
+    },
+    "meta=5": {
+      "model": "omoshiroikamo:block/roost",
+      "y": 270
+    }
   }
 }

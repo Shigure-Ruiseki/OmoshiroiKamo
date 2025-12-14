@@ -34,7 +34,7 @@ public class RoostTESR extends TileEntitySpecialRenderer {
             GL11.glRotatef(getRotationAngle(tile.getFacing()), 0F, 1F, 0F);
 
             ResourceLocation CHICKEN_TEXTURE = chicken.getItems()
-                .getTexture();
+                    .getTexture();
             Minecraft.getMinecraft().renderEngine.bindTexture(CHICKEN_TEXTURE);
 
             GL11.glTranslatef(0F, 1.30F, 0F);
@@ -50,14 +50,14 @@ public class RoostTESR extends TileEntitySpecialRenderer {
 
     private float getRotationAngle(int facing) {
         switch (facing) {
-            case 0:
-                return 270;
-            case 1:
-                return 90f;
             case 2:
                 return 0f;
             case 3:
                 return 180f;
+            case 4:
+                return 90f;
+            case 5:
+                return 270f;
         }
         return 0f;
     }

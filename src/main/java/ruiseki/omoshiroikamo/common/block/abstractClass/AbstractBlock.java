@@ -60,11 +60,11 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
-        float hitY, float hitZ) {
+            float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof AbstractTE) {
             return ((AbstractTE) tile)
-                .onBlockActivated(world, player, ForgeDirection.getOrientation(side), hitX, hitY, hitZ);
+                    .onBlockActivated(world, player, ForgeDirection.getOrientation(side), hitX, hitY, hitZ);
         }
         return false;
     }
