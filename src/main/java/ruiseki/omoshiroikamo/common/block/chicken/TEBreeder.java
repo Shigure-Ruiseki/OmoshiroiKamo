@@ -2,6 +2,9 @@ package ruiseki.omoshiroikamo.common.block.chicken;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.world.World;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -44,6 +47,12 @@ public class TEBreeder extends TERoostBase {
             }
         }
         return super.processTasks(redstoneChecksPassed);
+    }
+
+    @Override
+    public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y,
+            int z) {
+        return oldBlock != newBlock;
     }
 
     @Override
