@@ -181,6 +181,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (!stack.hasTagCompound()) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
+                stack.setTagCompound(cap.getBackpack().getTagCompound());
             }
         }
 
@@ -190,6 +191,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (!stack.hasTagCompound()) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
+                stack.setTagCompound(cap.getBackpack().getTagCompound());
             }
         }
 
@@ -197,7 +199,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
             float hitX, float hitY, float hitZ) {
 
-            if (player.isSneaking()) {
+            if (player.isSneaking() && stack != null && stack.getTagCompound() != null) {
                 return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
             }
 
@@ -209,7 +211,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 if (cap.canPlayerAccess(player.getUniqueID())) {
-                    MGuiFactories.playerInventory().openFromMainHand(player);
+                    MGuiFactories.playerInventory()
+                        .openFromMainHand(player);
                 }
             }
             return stack;
