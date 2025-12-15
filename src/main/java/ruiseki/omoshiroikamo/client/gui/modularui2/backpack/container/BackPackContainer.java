@@ -23,7 +23,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularBackpackSlot;
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularCraftingMatrixSlot;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularCraftingSlot;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
@@ -94,7 +94,7 @@ public class BackPackContainer extends ModularContainer {
 
                         if (slot == null || !slot.getHasStack()) continue;
                         if (slot instanceof ModularFilterSlot) continue;
-                        if (slot instanceof ModularCraftingMatrixSlot) continue;
+                        if (slot instanceof ModularCraftingSlot) continue;
 
                         ItemStack slotStack = slot.getStack();
 
@@ -343,19 +343,19 @@ public class BackPackContainer extends ModularContainer {
             return returnable;
         }
         // creative clone
-        else if (clickTypeIn == ClickType.CLONE
-            && player.capabilities.isCreativeMode
+        else if (clickTypeIn == ClickType.CLONE && player.capabilities.isCreativeMode
             && (heldStack == null || heldStack.stackSize <= 0)
             && slotId >= 0) {
 
-            Slot slot = getSlot(slotId);
-            if (slot != null && slot.getHasStack()) {
-                ItemStack stack = slot.getStack().copy();
-                stack.stackSize = stack.getMaxStackSize();
-                player.inventory.setItemStack(stack);
+                Slot slot = getSlot(slotId);
+                if (slot != null && slot.getHasStack()) {
+                    ItemStack stack = slot.getStack()
+                        .copy();
+                    stack.stackSize = stack.getMaxStackSize();
+                    player.inventory.setItemStack(stack);
+                }
+                return Platform.EMPTY_STACK;
             }
-            return Platform.EMPTY_STACK;
-        }
         // hotbar swap blocked for backpack slot
         else if (clickTypeIn == ClickType.SWAP && mouseButton >= 0
             && mouseButton < 9

@@ -335,22 +335,51 @@ public class BackpackHandler implements IItemHandlerModifiable {
         return result == 0 ? 1 : result;
     }
 
+    public int getStackMultiplierExcluding(int excludeSlot, ItemStack replacement) {
+        List<ItemStack> stacks = upgradeHandler.getStacks();
+
+        int result = 0;
+        for (int i = 0; i < upgradeHandler.getSlots(); i++) {
+            ItemStack stack = stacks.get(i);
+
+            if (i == excludeSlot) {
+                if (replacement != null && replacement.getItem() instanceof ItemStackUpgrade up) {
+                    result += up.multiplier(replacement);
+                }
+                continue;
+            }
+
+            if (stack == null) {
+                continue;
+            }
+
+            if (stack.getItem() instanceof ItemStackUpgrade up) {
+                result += up.multiplier(stack);
+            }
+        }
+        return result == 0 ? 1 : result;
+    }
+
     public boolean canAddStackUpgrade(int newMultiplier) {
         long result = (long) getTotalStackMultiplier() * 64L * newMultiplier;
         return result == (int) result;
     }
 
-    public boolean canRemoveStackUpgrade(int originalMultiplier) {
-        return canReplaceStackUpgrade(originalMultiplier, 1);
-    }
+    public boolean canReplaceStackUpgrade(int slotIndex, ItemStack replacement) {
+        ItemStack old = upgradeHandler.getStacks()
+            .get(slotIndex);
 
-    public boolean canReplaceStackUpgrade(int oldMultiplier, int newMultiplier) {
-        int newStackMultiplier = getTotalStackMultiplier() / oldMultiplier * newMultiplier;
+        if (old != null && replacement != null
+            && old.getItem() instanceof ItemStackUpgrade oldUp
+            && replacement.getItem() instanceof ItemStackUpgrade newUp
+            && oldUp.multiplier(old) == newUp.multiplier(replacement)) {
+            return true;
+        }
+
+        int newStackMultiplier = getStackMultiplierExcluding(slotIndex, replacement);
 
         for (ItemStack stack : backpackHandler.getStacks()) {
-            if (stack == null) {
-                continue;
-            }
+            if (stack == null) continue;
 
             if (stack.stackSize > stack.getMaxStackSize() * newStackMultiplier) {
                 return false;
