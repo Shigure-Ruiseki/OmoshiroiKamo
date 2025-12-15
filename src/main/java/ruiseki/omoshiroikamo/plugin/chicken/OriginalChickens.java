@@ -23,7 +23,9 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 public class OriginalChickens extends BaseChickenHandler {
 
@@ -43,11 +45,14 @@ public class OriginalChickens extends BaseChickenHandler {
         String textureOverlay;
         String tintColor; // Hex string e.g. "0xFF0000"
         CustomItemData layItem;
+        CustomItemData dropItem;
         String colorBorder; // Hex string
         String colorCenter; // Hex string
         String spawnType;
         String parent1;
         String parent2;
+        boolean enabled = true;
+        float coefficient = 1.0f;
         java.util.Map<String, String> lang;
     }
 
@@ -92,6 +97,8 @@ public class OriginalChickens extends BaseChickenHandler {
                         continue;
                     }
 
+                    ItemStack dropItem = resolveItemStack(data.dropItem);
+
                     int bgColor = parseColor(data.colorCenter, 0xFFFFFF);
                     int fgColor = parseColor(data.colorBorder, 0xFF0000);
                     int tint = parseColor(data.tintColor, DEFAULT_TINT_COLOR);
@@ -116,6 +123,12 @@ public class OriginalChickens extends BaseChickenHandler {
                         type);
 
                     if (chicken != null) {
+                        chicken.setEnabled(data.enabled);
+                        chicken.setCoefficient(data.coefficient);
+                        if (dropItem != null) {
+                            chicken.setDropItem(dropItem);
+                        }
+
                         // Register Localization
                         String locKey = "entity." + data.name + ".name";
                         // Register 'name' as en_US default
@@ -202,14 +215,17 @@ public class OriginalChickens extends BaseChickenHandler {
             String defaultConfig = "// This file is for custom chicken settings.\n"
                 + "// You can add original chicken by writing format below.\n"
                 + "// name : Chicken's name\n"
-                + "// texture : Texture path\n"
-                + "// overlay Texture : If you use auto generated texture, write default\n"
-                + "// tintcolor : Color that base texture is tinted\n"
-                + "// lay item : Item that chicken produce\n"
+                + "// texture : Texture path. Same name file for model and item\n"
+                + "// overlay Texture : If you use auto generated texture, write default. Same name file for model and item\n"
+                + "// tintcolor : Color that base texture is tinted. Same color for model and item\n"
                 + "// color border : Spawn egg color\n"
                 + "// color center : Spawn egg color\n"
-                + "// spawn type : Choose NONE, NORMAL, ICE, HELL\n"
-                + "// parent : Parent chickens name\n"
+                + "// coefficient : Scale time to lay an egg. 0.01 ~ 100\n"
+                + "// lay item : Item that chicken produce. Amount is 1 ~ 64\n"
+                + "// drop item : Item that chicken drops when killed. Amount is 1 ~ 64\n"
+                + "// enabled : Enable or disable\n"
+                + "// parent : Parent chickens name. Empty if it's base chicken.\n"
+                + "// spawn type : Choose NONE, NORMAL, SNOW, HELL\n"
                 + "// lang : If you use language other than english, you can add\n"
                 + "// ===============================================================================\n"
                 + "/*\n"
@@ -219,18 +235,25 @@ public class OriginalChickens extends BaseChickenHandler {
                 + "    \"texture\": \"base_chicken.png\",\n"
                 + "    \"textureOverlay\": \"base_chicken_overlay.png\",\n"
                 + "    \"tintColor\": \"0xFF0000\",\n"
+                + "    \"colorBorder\": \"0xFF0000\",\n"
+                + "    \"colorCenter\": \"0x800000\",\n"
+                + "    \"coefficient\": 1.0,\n"
                 + "    \"layItem\": {\n"
                 + "      \"name\": \"minecraft:redstone\",\n"
                 + "      \"amount\": 1,\n"
                 + "      \"meta\": 0\n"
                 + "    },\n"
-                + "    \"colorBorder\": \"0xFF0000\",\n"
-                + "    \"colorCenter\": \"0x800000\",\n"
-                + "    \"spawnType\": \"NORMAL\",\n"
+                + "    \"dropItem\": {\n"
+                + "      \"name\": \"minecraft:redstone\",\n"
+                + "      \"amount\": 1,\n"
+                + "      \"meta\": 0\n"
+                + "    },\n"
+                + "    \"enabled\": true,\n"
                 + "    \"parent1\": \"WhiteChicken\",\n"
                 + "    \"parent2\": \"RedChicken\",\n"
+                + "    \"spawnType\": \"NORMAL\",\n"
                 + "    \"lang\": {\n"
-                + "      \"en_US\": \"Red Chicken\",\n"
+                + "      \"en_US\": \"Red Chicken\"\n"
                 + "    }\n"
                 + "  }\n"
                 + "]\n"
@@ -260,5 +283,46 @@ public class OriginalChickens extends BaseChickenHandler {
         } catch (NumberFormatException e) {
             return def;
         }
+    }
+
+    public static class OriginalChickensRegistryItem extends ChickensRegistryItem {
+
+        public OriginalChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem,
+            int bgColor, int fgColor) {
+            super(id, entityName, texture, layItem, bgColor, fgColor);
+        }
+    }
+
+    @Override
+    protected ChickensRegistryItem addChicken(List<ChickensRegistryItem> chickenList, String chickenName, int chickenID,
+        String texture, ItemStack layItem, int bgColor, int fgColor, SpawnType spawntype) {
+        if (layItem == null || layItem.getItem() == null) {
+            Logger.error("Error Registering (" + this.modID + ") Chicken: '" + chickenName + "' It's LayItem was null");
+            return null;
+        }
+
+        Logger.debug(
+            "Registering (" + this.modID
+                + ") Chicken: '"
+                + chickenName
+                + "':"
+                + chickenID
+                + ":"
+                + layItem.getDisplayName());
+
+        ChickensRegistryItem chicken = new OriginalChickensRegistryItem(
+            chickenID,
+            chickenName,
+            new ResourceLocation(LibMisc.MOD_ID, this.texturesLocation + texture),
+            layItem.copy(),
+            bgColor,
+            fgColor).setSpawnType(spawntype);
+
+        chickenList.add(chicken);
+
+        ModCompatInformation
+            .addInformation(chickenID, new ModCompatInformation(this.getModID(), "", this.getModName()));
+
+        return chicken;
     }
 }
