@@ -373,7 +373,7 @@ public class BackPackContainer extends ModularContainer {
                 return Platform.EMPTY_STACK;
             }
 
-        return superSlotClick(slotId,mouseButton,mode,player);
+        return superSlotClick(slotId, mouseButton, mode, player);
     }
 
     @Override
