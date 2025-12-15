@@ -343,18 +343,19 @@ public class BackPackContainer extends ModularContainer {
             return returnable;
         }
         // creative clone
-        else if (clickTypeIn == ClickType.CLONE && player.capabilities.isCreativeMode
+        else if (clickTypeIn == ClickType.CLONE
+            && player.capabilities.isCreativeMode
             && (heldStack == null || heldStack.stackSize <= 0)
             && slotId >= 0) {
 
-                ModularSlot slot = (ModularSlot) getSlot(slotId);
-                if (slot != null && slot.getStack() != null) {
-                    player.inventory.setItemStack(
-                        slot.getStack()
-                            .copy());
-                }
-                return Platform.EMPTY_STACK;
+            Slot slot = getSlot(slotId);
+            if (slot != null && slot.getHasStack()) {
+                ItemStack stack = slot.getStack().copy();
+                stack.stackSize = stack.getMaxStackSize();
+                player.inventory.setItemStack(stack);
             }
+            return Platform.EMPTY_STACK;
+        }
         // hotbar swap blocked for backpack slot
         else if (clickTypeIn == ClickType.SWAP && mouseButton >= 0
             && mouseButton < 9
