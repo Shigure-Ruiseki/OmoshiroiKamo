@@ -65,7 +65,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                     Interactable.playButtonClickSound();
                     boolean clockwise = !Interactable.hasShiftDown();
 
-                    BackpackInventoryHelper.rotated(wrapper.getMatrix(), clockwise);
+                    BackpackInventoryHelper.rotated(wrapper.getStorage(), clockwise);
                     getSlotSyncHandler()
                         .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING_R, buf -> { buf.writeBoolean(clockwise); });
                     return true;
@@ -80,9 +80,9 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                     boolean balance = !Interactable.hasShiftDown();
 
                     if (balance) {
-                        BackpackInventoryHelper.balance(wrapper.getMatrix());
+                        BackpackInventoryHelper.balance(wrapper.getStorage());
                     } else {
-                        BackpackInventoryHelper.spread(wrapper.getMatrix());
+                        BackpackInventoryHelper.spread(wrapper.getStorage());
                     }
                     getSlotSyncHandler()
                         .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING_G, buf -> { buf.writeBoolean(balance); });
@@ -99,7 +99,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
 
                     BackpackInventoryHelper.clear(
                         panel,
-                        wrapper.getMatrix(),
+                        wrapper.getStorage(),
                         wrapper.getCraftingDes()
                             .ordinal());
                     getSlotSyncHandler().syncToServer(

@@ -88,11 +88,11 @@ public final class MGuiTextures {
     public static final UITexture VOID_ALL = icon("void_all", 0, 48);
     public static final UITexture VOID_AUTOMATION = icon("void_automation", 16, 48);
 
-    public static final UITexture ROTATED_RIGHT = icon("rotated_right", 0, 170, 16, 16);
-    public static final UITexture ROTATED_LEFT = icon("rotated_left", 48, 170, 16, 16);
-    public static final UITexture BALANCE = icon("balance", 32, 170, 16, 16);
-    public static final UITexture SPREAD = icon("spread", 80, 170, 16, 16);
-    public static final UITexture CLEAR = icon("clear", 16, 170, 16, 16);
+    public static final UITexture ROTATED_RIGHT = icon("rotated_right", 0, 170);
+    public static final UITexture ROTATED_LEFT = icon("rotated_left", 48, 170);
+    public static final UITexture BALANCE = icon("balance", 32, 170);
+    public static final UITexture SPREAD = icon("spread", 80, 170);
+    public static final UITexture CLEAR = icon("clear", 16, 170);
 
     public static final UITexture SOLID_UP_ARROW_ICON = icon("solid_up_arrow", 0, 144, 12, 12);
     public static final UITexture SOLID_DOWN_ARROW_ICON = icon("solid_down_arrow", 12, 156, 12, 12);

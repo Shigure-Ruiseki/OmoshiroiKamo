@@ -20,7 +20,9 @@ public class TileWidget extends TextWidget<TileWidget> {
         .build();
 
     public TileWidget(BackpackPanel panel) {
-        super(panel.getHandler().getDisplayName());
+        super(
+            panel.getHandler()
+                .getDisplayName());
         this.padding(5, 5, 3, 1);
         pos(4, -12);
         maxWidth(panel.getWidth());

@@ -3,21 +3,28 @@ package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.CraftingStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingUpgrade {
 
-    protected CraftingStackHandler handler;
+    protected UpgradeItemStackHandler handler;
 
     public CraftingUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
-        handler = new CraftingStackHandler(10, this);
+        handler = new UpgradeItemStackHandler(10) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+                tag.setTag(ICraftingUpgrade.STORAGE_TAG, this.serializeNBT());
+            }
+        };
     }
 
     @Override
-    public CraftingStackHandler getMatrix() {
-        NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, MATRIX_TAG, false);
+    public UpgradeItemStackHandler getStorage() {
+        NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, STORAGE_TAG, false);
         if (handlerTag != null) {
             handler.deserializeNBT(handlerTag);
         }
@@ -25,9 +32,9 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
     }
 
     @Override
-    public void setMatrix(CraftingStackHandler handler) {
+    public void setStorage(UpgradeItemStackHandler handler) {
         if (handler != null) {
-            ItemNBTUtils.setCompound(upgrade, MATRIX_TAG, handler.serializeNBT());
+            ItemNBTUtils.setCompound(upgrade, STORAGE_TAG, handler.serializeNBT());
         }
     }
 

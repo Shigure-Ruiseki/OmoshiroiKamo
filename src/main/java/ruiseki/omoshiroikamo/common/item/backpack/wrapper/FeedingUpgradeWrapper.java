@@ -2,22 +2,29 @@ package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.ExposedItemStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedingUpgrade {
 
     public FeedingUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
-        handler = new ExposedItemStackHandler(9, this) {
+        handler = new UpgradeItemStackHandler(9) {
 
             @Override
             public boolean isItemValid(int slot, ItemStack stack) {
                 return stack != null && stack.getItem() instanceof ItemFood;
             }
 
+            @Override
+            protected void onContentsChanged(int slot) {
+                NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+                tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
+            }
         };
     }
 

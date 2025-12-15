@@ -1,11 +1,14 @@
 package ruiseki.omoshiroikamo.client.gui.modularui2.backpack.slot;
 
+import net.minecraft.item.ItemStack;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.cleanroommc.modularui.integration.recipeviewer.RecipeViewerGhostIngredientSlot;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.syncHandler.FilterSlotSH;
 
 public class FilterSlot extends ItemSlot implements RecipeViewerGhostIngredientSlot<ItemStack> {

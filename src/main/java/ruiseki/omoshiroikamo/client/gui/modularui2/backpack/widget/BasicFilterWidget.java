@@ -8,7 +8,6 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;

@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.ExposedItemStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 
 public interface IAdvancedFilterable extends IBasicFilterable {
@@ -48,7 +48,7 @@ public interface IAdvancedFilterable extends IBasicFilterable {
 
     default boolean matchItem(ItemStack stack) {
         boolean[] filterResult = new boolean[16];
-        ExposedItemStackHandler filterItems = getFilterItems();
+        UpgradeItemStackHandler filterItems = getFilterItems();
 
         for (int i = 0; i < filterItems.getSlots(); i++) {
             ItemStack filterStack = filterItems.getStackInSlot(i);
@@ -76,7 +76,7 @@ public interface IAdvancedFilterable extends IBasicFilterable {
 
     default boolean matchMod(ItemStack stack) {
         boolean[] filterResult = new boolean[16];
-        ExposedItemStackHandler filterItems = getFilterItems();
+        UpgradeItemStackHandler filterItems = getFilterItems();
 
         for (int i = 0; i < filterItems.getSlots(); i++) {
             ItemStack filterStack = filterItems.getStackInSlot(i);

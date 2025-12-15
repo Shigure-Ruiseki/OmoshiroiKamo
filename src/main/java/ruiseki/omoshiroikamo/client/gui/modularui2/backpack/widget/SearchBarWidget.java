@@ -19,7 +19,6 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class SearchBarWidget extends TextFieldWidget {
 
-    private final Column backpackSlots;
     private final BackpackPanel panel;
     private List<BackpackSlot> originalOrder;
 
@@ -35,7 +34,6 @@ public class SearchBarWidget extends TextFieldWidget {
     public SearchBarWidget(BackpackPanel panel) {
         super();
         this.panel = panel;
-        this.backpackSlots = panel.getBackpackInvCol();
         background(VANILLA_SEARCH_BACKGROUND);
         hintText(
             IKey.lang("gui.search_hint")
@@ -52,8 +50,12 @@ public class SearchBarWidget extends TextFieldWidget {
     }
 
     private void cacheOriginalOrder() {
+        Column backpackSlots = panel.getBackpackInvCol();
+        if (backpackSlots == null) return;
+
         originalOrder = new ArrayList<>();
-        for (IWidget child : backpackSlots.getChildren()) {
+        for (IWidget child : panel.getBackpackInvCol()
+            .getChildren()) {
             if (child instanceof BackpackSlot slot) {
                 originalOrder.add(slot);
             }
@@ -89,6 +91,12 @@ public class SearchBarWidget extends TextFieldWidget {
     }
 
     public void doSearch(String search) {
+        Column backpackSlots = panel.getBackpackInvCol();
+        if (backpackSlots == null) return;
+
+        IWidget parent = backpackSlots.getParent();
+        if (!(parent instanceof BackpackList backpackList)) return;
+
         int columns = panel.getRowSize();
         int slotSize = BackpackSlot.SIZE;
 
@@ -144,4 +152,9 @@ public class SearchBarWidget extends TextFieldWidget {
             .scrollTo(((BackpackList) backpackSlots.getParent()).getScrollArea(), 0);
     }
 
+    public void onInventoryRebuilt() {
+        originalOrder = null;
+        cacheOriginalOrder();
+        doSearch(prevText);
+    }
 }

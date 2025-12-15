@@ -25,9 +25,9 @@ public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
 
     @Setter
     private InventoryCraftingWrapper craftMatrix;
+    private int amountCrafted;
     private final BackpackHandler handler;
     private final int slotIndex;
-    private int amountCrafted;
 
     public ModularCraftingSlot(IItemHandler itemHandler, int index, BackpackHandler handler, int slotIndex) {
         super(itemHandler, index);

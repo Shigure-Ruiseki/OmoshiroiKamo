@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.common.block.backpack;
 
 import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ceilDiv;
 
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,11 +17,11 @@ import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 public abstract class BackpackGuiHolder {
 
     protected final BackpackHandler handler;
-    protected static final int SLOT_SIZE = 18;
     protected final int rowSize;
     protected final int colSize;
 

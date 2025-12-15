@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackPanel;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IBasicFilterable;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IStorageUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IUpgrade;
 
 public class UpgradeSlotUpdateGroup {
@@ -43,9 +43,10 @@ public class UpgradeSlotUpdateGroup {
     public ModularFilterSlot[] advancedFeedingFilterSlots;
 
     // Crafting
-    public DelegatedStackHandlerSH craftingStackHandler;
-    private InventoryCraftingWrapper craftMatrix;
+    public DelegatedStackHandlerSH craftingMatrixStackHandler;
     public ModularCraftingMatrixSlot[] craftingMatrixSlots;
+
+    private InventoryCraftingWrapper craftMatrix;
     public ModularCraftingSlot craftingResultSlot;
 
     public UpgradeSlotUpdateGroup(BackpackPanel panel, BackpackHandler handler, int slotIndex) {
@@ -117,7 +118,7 @@ public class UpgradeSlotUpdateGroup {
 
         syncManager.registerSlotGroup(new SlotGroup("adv_feeding_filters_" + slotIndex, 16, false));
 
-        // Crafting
+        // CRAFTING
         craftingUpgradeGroup();
     }
 
@@ -131,9 +132,9 @@ public class UpgradeSlotUpdateGroup {
         advancedCommonFilterStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_FILTERABLE);
     }
 
-    public void updateCraftingDelegate(ICraftingUpgrade wrapper) {
-        craftingStackHandler.setDelegatedStackHandler(wrapper::getMatrix);
-        craftingStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_CRAFTING);
+    public void updateCraftingDelegate(IStorageUpgrade wrapper) {
+        craftingMatrixStackHandler.setDelegatedStackHandler(wrapper::getStorage);
+        craftingMatrixStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_STORAGE);
     }
 
     public void updateCraftingSlotIndex() {
@@ -156,8 +157,8 @@ public class UpgradeSlotUpdateGroup {
     private void craftingUpgradeGroup() {
         PanelSyncManager syncManager = panel.getSyncManager();
 
-        this.craftingStackHandler = new DelegatedStackHandlerSH(handler, slotIndex, 10);
-        syncManager.syncValue("crafting_delegation_" + slotIndex, craftingStackHandler);
+        this.craftingMatrixStackHandler = new DelegatedStackHandlerSH(handler, slotIndex, 10);
+        syncManager.syncValue("crafting_delegation_" + slotIndex, craftingMatrixStackHandler);
 
         this.craftMatrix = new InventoryCraftingWrapper(new Container() {
 
@@ -180,19 +181,19 @@ public class UpgradeSlotUpdateGroup {
                     CraftingManager.getInstance()
                         .findMatchingRecipe(craftMatrix, panel.getPlayer().worldObj));
             }
-        }, 3, 3, craftingStackHandler.getDelegatedStackHandler(), 0);
+        }, 3, 3, craftingMatrixStackHandler.getDelegatedStackHandler(), 0);
 
         this.craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
         for (int i = 0; i < 9; i++) {
             ModularCraftingMatrixSlot slot = new ModularCraftingMatrixSlot(
-                craftingStackHandler.getDelegatedStackHandler(),
+                craftingMatrixStackHandler.getDelegatedStackHandler(),
                 i);
             slot.slotGroup("crafting_workbench_slot_" + slotIndex)
                 .changeListener((newItem, onlyAmountChanged, client, init) -> {
                     if (client) return;
                     boolean empty = true;
-                    for (int j = 0; j < craftingMatrixSlots.length; j++) {
-                        ItemStack stack = craftingMatrixSlots[j].getStack();
+                    for (ModularCraftingMatrixSlot craftingMatrixSlot : craftingMatrixSlots) {
+                        ItemStack stack = craftingMatrixSlot.getStack();
                         if (stack != null && stack.stackSize > 0) {
                             empty = false;
                             break;
@@ -212,7 +213,7 @@ public class UpgradeSlotUpdateGroup {
         }
 
         ModularCraftingSlot resultSlot = new ModularCraftingSlot(
-            craftingStackHandler.getDelegatedStackHandler(),
+            craftingMatrixStackHandler.getDelegatedStackHandler(),
             9,
             handler,
             slotIndex);

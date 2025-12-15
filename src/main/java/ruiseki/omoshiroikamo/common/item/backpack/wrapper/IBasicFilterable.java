@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.ExposedItemStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 
 public interface IBasicFilterable {
@@ -10,9 +10,9 @@ public interface IBasicFilterable {
     String FILTER_ITEMS_TAG = "FilterItems";
     String FILTER_TYPE_TAG = "FilterType";
 
-    ExposedItemStackHandler getFilterItems();
+    UpgradeItemStackHandler getFilterItems();
 
-    void setFilterItems(ExposedItemStackHandler handler);
+    void setFilterItems(UpgradeItemStackHandler handler);
 
     FilterType getFilterType();
 

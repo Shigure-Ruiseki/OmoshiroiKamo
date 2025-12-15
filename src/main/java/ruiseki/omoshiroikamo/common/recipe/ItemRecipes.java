@@ -296,20 +296,6 @@ public class ItemRecipes {
                     'U',
                     ModItems.BASE_UPGRADE.get()));
 
-            // Battery Upgrade
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModItems.BATTERY_UPGRADE.get(),
-                    "GRG",
-                    "RUR",
-                    "GRG",
-                    'G',
-                    "ingotGold",
-                    'R',
-                    "blockRedstone",
-                    'U',
-                    ModItems.BASE_UPGRADE.get()));
-
             // Everlasting Upgrade
             if (!LibMods.EtFuturum.isLoaded()) {
                 GameRegistry.addRecipe(

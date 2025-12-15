@@ -6,16 +6,23 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.ExposedItemStackHandler;
+import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedFilterable, IToggleable {
 
-    protected ExposedItemStackHandler handler;
+    protected UpgradeItemStackHandler handler;
 
     public AdvancedUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
-        this.handler = new ExposedItemStackHandler(16, this);
+        this.handler = new UpgradeItemStackHandler(16) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+                tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
+            }
+        };
     }
 
     @Override
@@ -37,7 +44,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     }
 
     @Override
-    public ExposedItemStackHandler getFilterItems() {
+    public UpgradeItemStackHandler getFilterItems() {
         NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, FILTER_ITEMS_TAG, false);
         if (handlerTag != null) {
             handler.deserializeNBT(handlerTag);
@@ -46,7 +53,7 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
     }
 
     @Override
-    public void setFilterItems(ExposedItemStackHandler handler) {
+    public void setFilterItems(UpgradeItemStackHandler handler) {
         if (handler != null) {
             ItemNBTUtils.setCompound(upgrade, FILTER_ITEMS_TAG, handler.serializeNBT());
         }

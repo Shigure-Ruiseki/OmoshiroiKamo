@@ -11,14 +11,14 @@ import lombok.Getter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.DelegatedItemHandler;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IBasicFilterable;
-import ruiseki.omoshiroikamo.common.item.backpack.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IStorageUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.UpgradeWrapperFactory;
 
 public class DelegatedStackHandlerSH extends SyncHandler {
 
     public static final int UPDATE_FILTERABLE = 0;
-    public static final int UPDATE_CRAFTING = 1;
+    public static final int UPDATE_STORAGE = 1;
 
     private final BackpackHandler handler;
     private final int slotIndex;
@@ -41,7 +41,7 @@ public class DelegatedStackHandlerSH extends SyncHandler {
 
     @Override
     public void readOnClient(int id, PacketBuffer buf) {
-        // Client side không cần implement
+        // NO OP
     }
 
     @Override
@@ -54,10 +54,10 @@ public class DelegatedStackHandlerSH extends SyncHandler {
                 setDelegatedStackHandler(upgrade::getFilterItems);
             }
         }
-        if (id == UPDATE_CRAFTING) {
+        if (id == UPDATE_STORAGE) {
             UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-            if (wrapper instanceof ICraftingUpgrade upgrade) {
-                setDelegatedStackHandler(upgrade::getMatrix);
+            if (wrapper instanceof IStorageUpgrade upgrade) {
+                setDelegatedStackHandler(upgrade::getStorage);
             }
         }
         handler.writeToItem();

@@ -227,7 +227,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
         }
 
         boolean clockwise = buf.readBoolean();
-        ItemStackHandler stackHandler = upgradeWrapper.getMatrix();
+        ItemStackHandler stackHandler = upgradeWrapper.getStorage();
         BackpackInventoryHelper.rotated(stackHandler, clockwise);
     }
 
@@ -239,7 +239,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
         }
 
         boolean balance = buf.readBoolean();
-        ItemStackHandler stackHandler = upgradeWrapper.getMatrix();
+        ItemStackHandler stackHandler = upgradeWrapper.getStorage();
         if (balance) {
             BackpackInventoryHelper.balance(stackHandler);
         } else {
@@ -255,7 +255,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
         }
 
         int ordinal = buf.readInt();
-        BackpackInventoryHelper.clear(panel, upgradeWrapper.getMatrix(), ordinal);
+        BackpackInventoryHelper.clear(panel, upgradeWrapper.getStorage(), ordinal);
     }
 
 }

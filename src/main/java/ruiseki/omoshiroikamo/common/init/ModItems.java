@@ -18,7 +18,6 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedFilterUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedMagnetUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedPickupUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedVoidUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemBatteryUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
@@ -54,7 +53,6 @@ public enum ModItems {
     ADVANCED_PICKUP_UPGRADE(useBackpack, new ItemAdvancedPickupUpgrade()),
     VOID_UPGRADE(useBackpack, new ItemVoidUpgrade()),
     ADVANCED_VOID_UPGRADE(useBackpack, new ItemAdvancedVoidUpgrade()),
-    BATTERY_UPGRADE(useBackpack, new ItemBatteryUpgrade()),
     EVERLASTING_UPGRADE(useBackpack, new ItemEverlastingUpgrade()),
     INCEPTION_UPGRADE(useBackpack, new ItemInceptionUpgrade()),
     FILTER_UPGRADE(useBackpack, new ItemFilterUpgrade()),

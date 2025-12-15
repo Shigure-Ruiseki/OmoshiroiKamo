@@ -5,15 +5,14 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 
+import lombok.Setter;
+
+@Setter
 public class DelegatedItemHandler implements IItemHandlerModifiable {
 
     private IDelegatedSupplier delegated;
 
     public DelegatedItemHandler(IDelegatedSupplier delegated) {
-        this.delegated = delegated;
-    }
-
-    public void setDelegated(IDelegatedSupplier delegated) {
         this.delegated = delegated;
     }
 

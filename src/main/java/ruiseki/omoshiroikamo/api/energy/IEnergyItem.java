@@ -14,5 +14,7 @@ public interface IEnergyItem extends IEnergyContainerItem {
 
     int getEnergyStored(ItemStack stack);
 
+    void setEnergyStored(ItemStack stack, int amount);
+
     int getMaxEnergyStored(ItemStack stack);
 }
