@@ -68,7 +68,7 @@ public class OriginalChickens extends BaseChickenHandler {
 
     @Override
     public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
-        File configFile = new File("config/OmoshiroiKamo/chicken", CONFIG_FILE_NAME);
+        File configFile = new File("config/" + LibMisc.MOD_ID + "/chicken", CONFIG_FILE_NAME);
 
         if (!configFile.exists()) {
             createDefaultConfig(configFile);
