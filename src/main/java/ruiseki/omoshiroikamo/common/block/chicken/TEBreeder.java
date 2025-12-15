@@ -2,9 +2,11 @@ package ruiseki.omoshiroikamo.common.block.chicken;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.GuiTextures;
@@ -30,6 +32,26 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 public class TEBreeder extends TERoostBase {
 
     public TEBreeder() {}
+
+    private boolean wasActive = false;
+
+    @Override
+    protected boolean processTasks(boolean redstoneChecksPassed) {
+        if (!worldObj.isRemote) {
+            boolean active = isActive();
+            if (active != wasActive) {
+                wasActive = active;
+                worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, active ? 1 : 0, 3);
+            }
+        }
+        return super.processTasks(redstoneChecksPassed);
+    }
+
+    @Override
+    public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y,
+        int z) {
+        return oldBlock != newBlock;
+    }
 
     @Override
     public String getMachineName() {
@@ -63,6 +85,17 @@ public class TEBreeder extends TERoostBase {
     @Override
     protected double speedMultiplier() {
         return ChickenConfig.roostSpeed;
+    }
+
+    @Override
+    protected boolean hasFreeOutputSlot() {
+        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
+            if (getStackInSlot(i) == null) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     @Override

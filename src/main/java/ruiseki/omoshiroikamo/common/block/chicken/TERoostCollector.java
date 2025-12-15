@@ -63,6 +63,9 @@ public class TERoostCollector extends AbstractStorageTE {
         }
         ItemTransfer transfer = new ItemTransfer();
         transfer.pull(this, ForgeDirection.DOWN, teRoost);
+        // 1 slot per operation
+        transfer.transfer();
+        transfer.transfer();
         transfer.transfer();
     }
 

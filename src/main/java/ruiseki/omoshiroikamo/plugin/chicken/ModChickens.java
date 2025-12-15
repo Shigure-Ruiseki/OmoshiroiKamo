@@ -80,6 +80,7 @@ public class ModChickens {
         addModAddon(new BigReactorsChickens());
         addModAddon(new DraconicEvolutionChickens());
         addModAddon(new ActuallyAdditionsChickens());
+        addModAddon(new OriginalChickens());
     }
 
     private static List<BiomeGenBase> getAllSpawnBiomes() {
@@ -127,13 +128,10 @@ public class ModChickens {
     }
 
     private static String getChickenParent(Configuration configuration, String propertyName,
-        Collection<ChickensRegistryItem> allChickens, ChickensRegistryItem chicken, ChickensRegistryItem parent) {
+        Collection<ChickensRegistryItem> allChickens, ChickensRegistryItem chicken, ChickensRegistryItem parent,
+        String comment) {
         String Category = chicken.getEntityName();
-        return configuration.getString(
-            propertyName,
-            Category,
-            parent != null ? parent.getEntityName() : "",
-            "First parent, empty if it's base chicken.");
+        return configuration.getString(propertyName, Category, parent != null ? parent.getEntityName() : "", comment);
     }
 
     private static void loadConfiguration() {
@@ -155,6 +153,11 @@ public class ModChickens {
         Logger.info("Chickens Loading Config...");
         for (ChickensRegistryItem chicken : allChickens) {
 
+            if (chicken instanceof OriginalChickens.OriginalChickensRegistryItem) {
+                ChickensRegistry.INSTANCE.register(chicken);
+                continue;
+            }
+
             boolean enabled = configuration.getBoolean("enabled", chicken.getEntityName(), true, "Is chicken enabled?");
             chicken.setEnabled(enabled);
 
@@ -168,8 +171,20 @@ public class ModChickens {
             ItemStack dropItemStack = loadItemStack(configuration, chicken, "drop", chicken.createDropItem());
             chicken.setDropItem(dropItemStack);
 
-            String parent1ID = getChickenParent(configuration, "parent1", allChickens, chicken, chicken.getParent1());
-            String parent2ID = getChickenParent(configuration, "parent2", allChickens, chicken, chicken.getParent2());
+            String parent1ID = getChickenParent(
+                configuration,
+                "parent1",
+                allChickens,
+                chicken,
+                chicken.getParent1(),
+                "First parent, empty if it's base chicken.");
+            String parent2ID = getChickenParent(
+                configuration,
+                "parent2",
+                allChickens,
+                chicken,
+                chicken.getParent2(),
+                "Second parent, empty if it's base chicken.");
 
             ChickensRegistryItem parent1 = findChicken(allChickens, parent1ID);
             ChickensRegistryItem parent2 = findChicken(allChickens, parent2ID);
@@ -208,7 +223,8 @@ public class ModChickens {
                 chicken.getEntityName(),
                 prefix + "ItemName",
                 defaultName,
-                "Item registry name to be laid/dropped (ex: minecraft:egg)")
+                prefix.equals("egg") ? "Item registry name to be laid (ex: minecraft:egg)"
+                    : "Item registry name to be dropped (ex: minecraft:bone)")
             .getString();
 
         int itemAmount = configuration.getInt(
@@ -217,14 +233,14 @@ public class ModChickens {
             defaultItemStack.stackSize,
             1,
             64,
-            "Item amount to be laid/dropped.");
+            prefix.equals("egg") ? "Item amount to be laid." : "Item amount to be dropped.");
         int itemMeta = configuration.getInt(
             prefix + "ItemMeta",
             chicken.getEntityName(),
             defaultItemStack.getItemDamage(),
             Integer.MIN_VALUE,
             Integer.MAX_VALUE,
-            "Item amount to be laid/dropped.");
+            prefix.equals("egg") ? "Item meta to be laid." : "Item meta to be dropped.");
 
         Item item = GameData.getItemRegistry()
             .getObject(itemName);

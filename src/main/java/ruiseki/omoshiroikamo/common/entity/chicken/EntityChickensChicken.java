@@ -133,6 +133,14 @@ public class EntityChickensChicken extends EntityChicken
         return ChickensRegistry.INSTANCE.getByType(getType());
     }
 
+    public int getTintColor() {
+        return getChickenDescription().getTintColor();
+    }
+
+    public ResourceLocation getTextureOverlay() {
+        return getChickenDescription().getTextureOverlay();
+    }
+
     public int getTier() {
         return getChickenDescription().getTier();
     }

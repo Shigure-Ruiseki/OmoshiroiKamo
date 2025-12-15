@@ -27,7 +27,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     protected ItemStack dropItem;
     protected final int bgColor;
     protected final int fgColor;
-    protected final ResourceLocation texture;
+    protected ResourceLocation texture;
 
     protected T parent1;
     protected T parent2;
@@ -233,7 +233,17 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     }
 
     /**
-     * @return true if this entry is enabled AND both its parents (if any) are enabled.
+     * Sets the texture reference.
+     * 
+     * @param texture The new texture.
+     */
+    public void setTexture(ResourceLocation texture) {
+        this.texture = texture;
+    }
+
+    /**
+     * @return true if this entry is enabled AND both its parents (if any) are
+     *         enabled.
      */
     public boolean isEnabled() {
         return !(!isEnabled || (parent1 != null && !parent1.isEnabled()) || (parent2 != null && !parent2.isEnabled()));

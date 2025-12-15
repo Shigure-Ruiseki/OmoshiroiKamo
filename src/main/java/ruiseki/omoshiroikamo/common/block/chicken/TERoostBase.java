@@ -18,6 +18,8 @@ import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.common.network.PacketProgress;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
@@ -161,13 +163,21 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     private void updateProgress() {
 
         if (!isFullChickens() || !isFullSeeds()) {
+            boolean wasRunning = progress > 0;
             progress = 0;
             timeElapsed = 0;
             timeUntilNextDrop = 0;
+            if (wasRunning) {
+                PacketHandler.sendToAllAround(new PacketProgress(this), this);
+            }
             return;
         }
 
         progress = timeUntilNextDrop == 0 ? 0 : (timeElapsed * 1000 / timeUntilNextDrop);
+
+        if (worldObj.getTotalWorldTime() % 5 == 0) {
+            PacketHandler.sendToAllAround(new PacketProgress(this), this);
+        }
     }
 
     private void resetTimer() {
@@ -288,7 +298,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public boolean isActive() {
-        return isFullChickens() && hasFreeOutputSlot();
+        return isFullChickens() && hasFreeOutputSlot() && isFullSeeds();
     }
 
     @Override
@@ -336,6 +346,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
 
     @Override
     public void onContentsChange(int slot) {
+        if (this.worldObj != null && !this.worldObj.isRemote) {
+            this.forceClientUpdate = true;
+        }
         super.onContentsChange(slot);
         needsCacheRefresh();
     }
@@ -371,6 +384,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         super.readCommon(root);
         timeUntilNextDrop = root.getInteger("timeUntilNextDrop");
         timeElapsed = root.getInteger("timeElapsed");
+        needsCacheRefresh();
     }
 
     @Override
@@ -406,12 +420,5 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.pop", 1.0F, 1.0F);
     }
 
-    protected boolean hasFreeOutputSlot() {
-        for (int i = slotDefinition.getMinItemOutput(); i <= slotDefinition.getMaxItemOutput(); i++) {
-            if (getStackInSlot(i) == null) {
-                return true;
-            }
-        }
-        return false;
-    }
+    protected abstract boolean hasFreeOutputSlot();
 }

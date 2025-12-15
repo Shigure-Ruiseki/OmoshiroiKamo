@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
@@ -31,6 +32,7 @@ import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 public class ItemChicken extends ItemOK {
 
     private final Map<Integer, IIcon> icons = new HashMap<>();
+    private final Map<Integer, IIcon> overlayIcons = new HashMap<>();
 
     public ItemChicken() {
         super(ModObject.itemChicken);
@@ -64,23 +66,71 @@ public class ItemChicken extends ItemOK {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister reg) {
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderPasses(int metadata) {
+        return overlayIcons.containsKey(metadata) ? 2 : 1;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister reg) {
         for (DataChicken chicken : DataChicken.getAllChickens()) {
             int type = chicken.getType();
-            IIcon icon = reg.registerIcon(LibResources.PREFIX_MOD + "chicken/" + chicken.getName());
+            ChickensRegistryItem item = chicken.getItems();
+
+            String iconName = item.getIconName();
+            if (iconName == null) {
+                iconName = LibResources.PREFIX_MOD + "chicken/" + chicken.getName();
+            }
+            IIcon icon = reg.registerIcon(iconName);
             icons.put(type, icon);
+
+            String overlayName = item.getIconOverlayName();
+            if (overlayName != null) {
+                IIcon overlayIcon = reg.registerIcon(overlayName);
+                overlayIcons.put(type, overlayIcon);
+            }
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int meta) {
+    public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
+        if (pass == 1) {
+            return overlayIcons.get(meta);
+        }
+
         IIcon icon = icons.get(meta);
         if (icon == null) {
             icon = icons.get(0);
         }
         return icon;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int meta) {
+        return getIconFromDamageForRenderPass(meta, 0);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getColorFromItemStack(ItemStack stack, int pass) {
+        DataChicken chicken = DataChicken.getDataFromStack(stack);
+        if (chicken != null) {
+            ChickensRegistryItem item = chicken.getItems();
+            if (pass == 0) {
+                return item.getTintColor();
+            } else {
+                return 0xFFFFFF;
+            }
+        }
+        return super.getColorFromItemStack(stack, pass);
     }
 
     @Override
