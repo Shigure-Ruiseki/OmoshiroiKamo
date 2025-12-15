@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
@@ -396,6 +397,17 @@ public class BackpackHandler implements IItemHandlerModifiable {
             }
         }
         return false;
+    }
+
+    public boolean canAddCrafting() {
+        for (ItemStack stack : upgradeHandler.getStacks()) {
+            if (stack == null) continue;
+            if (stack.getItem() instanceof ItemCraftingUpgrade) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean canRemoveInceptionUpgrade() {

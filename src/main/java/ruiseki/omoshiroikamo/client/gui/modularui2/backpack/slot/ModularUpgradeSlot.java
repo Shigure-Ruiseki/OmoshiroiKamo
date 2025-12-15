@@ -11,6 +11,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler;
 import ruiseki.omoshiroikamo.common.block.backpack.BackpackPanel;
+import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
@@ -83,6 +84,10 @@ public class ModularUpgradeSlot extends ModularSlot {
 
         if (item instanceof ItemStackUpgrade upgrade) {
             return handler.canAddStackUpgrade(upgrade.multiplier(stack));
+        }
+
+        if (item instanceof ItemCraftingUpgrade) {
+            return handler.canAddCrafting();
         }
 
         return item instanceof ItemUpgrade;
