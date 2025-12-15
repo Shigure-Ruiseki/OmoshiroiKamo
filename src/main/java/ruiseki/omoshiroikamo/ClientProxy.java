@@ -64,7 +64,7 @@ public class ClientProxy extends CommonProxy {
 
         if (BackportConfigs.useChicken) {
             ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, new RoostTESR());
-            ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, new BreederTESR());
+            ClientRegistry.bindTileEntitySpecialRenderer(TEBreeder.class, new BreederTESR());
             RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
         }
 
