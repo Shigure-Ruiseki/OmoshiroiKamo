@@ -201,25 +201,18 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
                 return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
             }
 
-            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
-            if (cap.canPlayerAccess(player.getUniqueID()) && !world.isRemote && !player.isSneaking()) {
-                MGuiFactories.playerInventory()
-                    .openFromMainHand(player);
-            }
-
-            return true;
+            return false;
         }
 
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-            if (!world.isRemote) {
+            if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 if (cap.canPlayerAccess(player.getUniqueID())) {
-                    MGuiFactories.playerInventory()
-                        .openFromMainHand(player);
+                    MGuiFactories.playerInventory().openFromMainHand(player);
                 }
             }
-            return super.onItemRightClick(stack, world, player);
+            return stack;
         }
 
         @Override
