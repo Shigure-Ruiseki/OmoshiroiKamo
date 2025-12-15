@@ -181,7 +181,9 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (!stack.hasTagCompound()) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
-                stack.setTagCompound(cap.getBackpack().getTagCompound());
+                stack.setTagCompound(
+                    cap.getBackpack()
+                        .getTagCompound());
             }
         }
 
@@ -191,7 +193,9 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (!stack.hasTagCompound()) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
-                stack.setTagCompound(cap.getBackpack().getTagCompound());
+                stack.setTagCompound(
+                    cap.getBackpack()
+                        .getTagCompound());
             }
         }
 
