@@ -153,8 +153,6 @@ public class BackpackPanel extends ModularPanel {
     public boolean isSortingSettingTabOpened = false;
     public boolean isResetOpenedTabs = false;
 
-    private boolean lastHasBattery = false;
-
     public BackpackPanel(EntityPlayer player, TileEntity tileEntity, PanelSyncManager syncManager, UISettings settings,
         BackpackHandler handler, int width, int height) {
         super("backpack_gui");
