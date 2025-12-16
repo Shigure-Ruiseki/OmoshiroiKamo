@@ -50,13 +50,13 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     }
 
     @Override
-    protected void writeCommon(NBTTagCompound root) {
+    public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
         energyStorage.writeToNBT(root);
     }
 
     @Override
-    protected void readCommon(NBTTagCompound root) {
+    public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         energyStorage.readFromNBT(root);
     }

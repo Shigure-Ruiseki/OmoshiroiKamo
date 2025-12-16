@@ -32,21 +32,21 @@ public abstract class OKCreativeTab extends CreativeTabs {
             addBlock(ModBlocks.BACKPACK_DIAMOND.get());
             addBlock(ModBlocks.BACKPACK_OBSIDIAN.get());
 
-            addItem(ModItems.BASE_UPGRADE.get());
-            addItem(ModItems.STACK_UPGRADE.get());
-            addItem(ModItems.MAGNET_UPGRADE.get());
-            addItem(ModItems.ADVANCED_MAGNET_UPGRADE.get());
-            addItem(ModItems.FEEDING_UPGRADE.get());
-            addItem(ModItems.ADVANCED_FEEDING_UPGRADE.get());
-            addItem(ModItems.PICKUP_UPGRADE.get());
-            addItem(ModItems.ADVANCED_PICKUP_UPGRADE.get());
-            addItem(ModItems.EVERLASTING_UPGRADE.get());
-            addItem(ModItems.INCEPTION_UPGRADE.get());
-            addItem(ModItems.FILTER_UPGRADE.get());
-            addItem(ModItems.ADVANCED_FILTER_UPGRADE.get());
-            addItem(ModItems.VOID_UPGRADE.get());
-            addItem(ModItems.ADVANCED_VOID_UPGRADE.get());
-            addItem(ModItems.CRAFTING_UPGRADE.get());
+            addItem(ModItems.BASE_UPGRADE.getItem());
+            addItem(ModItems.STACK_UPGRADE.getItem());
+            addItem(ModItems.MAGNET_UPGRADE.getItem());
+            addItem(ModItems.ADVANCED_MAGNET_UPGRADE.getItem());
+            addItem(ModItems.FEEDING_UPGRADE.getItem());
+            addItem(ModItems.ADVANCED_FEEDING_UPGRADE.getItem());
+            addItem(ModItems.PICKUP_UPGRADE.getItem());
+            addItem(ModItems.ADVANCED_PICKUP_UPGRADE.getItem());
+            addItem(ModItems.EVERLASTING_UPGRADE.getItem());
+            addItem(ModItems.INCEPTION_UPGRADE.getItem());
+            addItem(ModItems.FILTER_UPGRADE.getItem());
+            addItem(ModItems.ADVANCED_FILTER_UPGRADE.getItem());
+            addItem(ModItems.VOID_UPGRADE.getItem());
+            addItem(ModItems.ADVANCED_VOID_UPGRADE.getItem());
+            addItem(ModItems.CRAFTING_UPGRADE.getItem());
         }
     };
 
@@ -93,10 +93,10 @@ public abstract class OKCreativeTab extends CreativeTabs {
             addBlock(ModBlocks.MODIFIER_FIRE_RESISTANCE.get());
             addBlock(ModBlocks.BLOCK_CRYSTAL.get());
 
-            addItem(ModItems.CRYSTAL.get());
-            addItem(ModItems.ASSEMBLER.get());
-            addItem(ModItems.STABILIZED_ENDER_PEAR.get());
-            addItem(ModItems.PHOTOVOLTAIC_CELL.get());
+            addItem(ModItems.CRYSTAL.getItem());
+            addItem(ModItems.ASSEMBLER.getItem());
+            addItem(ModItems.STABILIZED_ENDER_PEAR.getItem());
+            addItem(ModItems.PHOTOVOLTAIC_CELL.getItem());
         }
     };
 
@@ -104,7 +104,7 @@ public abstract class OKCreativeTab extends CreativeTabs {
 
         @Override
         public ItemStack getIconItemStack() {
-            return new ItemStack(ModItems.CHICKEN.get());
+            return new ItemStack(ModItems.CHICKEN.getItem());
         }
 
         @Override
@@ -116,15 +116,15 @@ public abstract class OKCreativeTab extends CreativeTabs {
             addBlock(ModBlocks.ROOST_COLLECTOR.get());
             addBlock(ModBlocks.STALL.get());
 
-            addItem(ModItems.ANALYZER.get());
-            addItem(ModItems.CHICKEN_CATCHER.get());
-            addItem(ModItems.CHICKEN.get());
-            addItem(ModItems.COLORED_EGG.get());
-            addItem(ModItems.CHICKEN_SPAWN_EGG.get());
-            addItem(ModItems.LIQUID_EGG.get());
-            addItem(ModItems.SOLID_XP.get());
-            addItem(ModItems.COW_HALTER.get());
-            addItem(ModItems.COW_SPAWN_EGG.get());
+            addItem(ModItems.ANALYZER.getItem());
+            addItem(ModItems.CHICKEN_CATCHER.getItem());
+            addItem(ModItems.CHICKEN.getItem());
+            addItem(ModItems.COLORED_EGG.getItem());
+            addItem(ModItems.CHICKEN_SPAWN_EGG.getItem());
+            addItem(ModItems.LIQUID_EGG.getItem());
+            addItem(ModItems.SOLID_XP.getItem());
+            addItem(ModItems.COW_HALTER.getItem());
+            addItem(ModItems.COW_SPAWN_EGG.getItem());
         }
     };
 
@@ -144,7 +144,7 @@ public abstract class OKCreativeTab extends CreativeTabs {
         this.list = list;
 
         for (ModItems item : ModItems.values()) {
-            addItem(item.get());
+            addItem(item.getItem());
         }
 
         for (ModBlocks block : ModBlocks.values()) {

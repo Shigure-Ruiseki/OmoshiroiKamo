@@ -374,7 +374,7 @@ public class BaseChickens extends BaseChickenHandler {
             "XpChicken",
             this.nextID(),
             "XpChicken.png",
-            new ItemStack(ModItems.SOLID_XP.get(), 1, 0),
+            new ItemStack(ModItems.SOLID_XP.getItem(), 1, 0),
             0x3dff1e,
             0x3ff123,
             SpawnType.NONE);

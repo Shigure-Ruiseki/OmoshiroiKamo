@@ -54,7 +54,7 @@ public class AchievementsRegistry {
         Item item = stack.getItem();
         int meta = stack.getItemDamage();
 
-        if (item == ModItems.ASSEMBLER.get()) {
+        if (item == ModItems.ASSEMBLER.getItem()) {
             return ModAchievements.CRAFT_ASSEMBLER.get();
         }
 

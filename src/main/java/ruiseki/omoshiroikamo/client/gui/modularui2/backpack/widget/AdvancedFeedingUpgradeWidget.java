@@ -33,7 +33,7 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
         super(
             slotIndex,
             wrapper,
-            new ItemStack(ModItems.ADVANCED_FEEDING_UPGRADE.get()),
+            new ItemStack(ModItems.ADVANCED_FEEDING_UPGRADE.getItem()),
             "gui.advanced_feeding_settings",
             "adv_feeding_filter",
             6,

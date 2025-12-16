@@ -21,7 +21,7 @@ public class ItemRecipes {
             // Upgrade Base
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.BASE_UPGRADE.get(),
+                    ModItems.BASE_UPGRADE.getItem(),
                     "SIS",
                     "ILI",
                     "SIS",
@@ -42,7 +42,7 @@ public class ItemRecipes {
                     'B',
                     "blockIron",
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Stack Upgrade Tier 2
             GameRegistry.addRecipe(
@@ -85,7 +85,7 @@ public class ItemRecipes {
             // Crafting Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.CRAFTING_UPGRADE.get(),
+                    ModItems.CRAFTING_UPGRADE.getItem(),
                     " c ",
                     "IUI",
                     " C ",
@@ -96,12 +96,12 @@ public class ItemRecipes {
                     'I',
                     "ingotIron",
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Magnet Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.MAGNET_UPGRADE.get(),
+                    ModItems.MAGNET_UPGRADE.getItem(),
                     "EIE",
                     "IUI",
                     "R L",
@@ -114,12 +114,12 @@ public class ItemRecipes {
                     'I',
                     "ingotIron",
                     'U',
-                    ModItems.PICKUP_UPGRADE.get()));
+                    ModItems.PICKUP_UPGRADE.getItem()));
 
             // Advanced Magnet Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ADVANCED_MAGNET_UPGRADE.get(),
+                    ModItems.ADVANCED_MAGNET_UPGRADE.getItem(),
                     "EIE",
                     "IUI",
                     "R L",
@@ -132,12 +132,12 @@ public class ItemRecipes {
                     'I',
                     "ingotIron",
                     'U',
-                    ModItems.ADVANCED_PICKUP_UPGRADE.get()));
+                    ModItems.ADVANCED_PICKUP_UPGRADE.getItem()));
 
             // Advanced Magnet Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ADVANCED_MAGNET_UPGRADE.get(),
+                    ModItems.ADVANCED_MAGNET_UPGRADE.getItem(),
                     " D ",
                     "GUG",
                     "RRR",
@@ -148,12 +148,12 @@ public class ItemRecipes {
                     'G',
                     "ingotGold",
                     'U',
-                    ModItems.ADVANCED_PICKUP_UPGRADE.get()));
+                    ModItems.ADVANCED_PICKUP_UPGRADE.getItem()));
 
             // Void Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.VOID_UPGRADE.get(),
+                    ModItems.VOID_UPGRADE.getItem(),
                     " E ",
                     "OUO",
                     "ROR",
@@ -166,12 +166,12 @@ public class ItemRecipes {
                     'R',
                     "dustRedstone",
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Advanced Void Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ADVANCED_VOID_UPGRADE.get(),
+                    ModItems.ADVANCED_VOID_UPGRADE.getItem(),
                     " D ",
                     "GUG",
                     "RRR",
@@ -182,12 +182,12 @@ public class ItemRecipes {
                     'G',
                     "ingotGold",
                     'U',
-                    ModItems.VOID_UPGRADE.get()));
+                    ModItems.VOID_UPGRADE.getItem()));
 
             // Feeding Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.FEEDING_UPGRADE.get(),
+                    ModItems.FEEDING_UPGRADE.getItem(),
                     " C ",
                     "AUM",
                     " E ",
@@ -200,12 +200,12 @@ public class ItemRecipes {
                     'M',
                     new ItemStack(Items.speckled_melon, 1, 0),
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Advanced Feeding Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ADVANCED_FEEDING_UPGRADE.get(),
+                    ModItems.ADVANCED_FEEDING_UPGRADE.getItem(),
                     " D ",
                     "GUG",
                     "RRR",
@@ -216,12 +216,12 @@ public class ItemRecipes {
                     'G',
                     "ingotGold",
                     'U',
-                    ModItems.FEEDING_UPGRADE.get()));
+                    ModItems.FEEDING_UPGRADE.getItem()));
 
             // Pickup Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.PICKUP_UPGRADE.get(),
+                    ModItems.PICKUP_UPGRADE.getItem(),
                     " D ",
                     "GUG",
                     "RRR",
@@ -232,12 +232,12 @@ public class ItemRecipes {
                     'G',
                     Items.string,
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Advanced Pickup Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ADVANCED_PICKUP_UPGRADE.get(),
+                    ModItems.ADVANCED_PICKUP_UPGRADE.getItem(),
                     " D ",
                     "GUG",
                     "RRR",
@@ -248,12 +248,12 @@ public class ItemRecipes {
                     'G',
                     "ingotGold",
                     'U',
-                    ModItems.PICKUP_UPGRADE.get()));
+                    ModItems.PICKUP_UPGRADE.getItem()));
 
             // Filter Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.FILTER_UPGRADE.get(),
+                    ModItems.FILTER_UPGRADE.getItem(),
                     "RSR",
                     "SUS",
                     "RSR",
@@ -262,12 +262,12 @@ public class ItemRecipes {
                     'S',
                     Items.string,
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Advanced Filter Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ADVANCED_FILTER_UPGRADE.get(),
+                    ModItems.ADVANCED_FILTER_UPGRADE.getItem(),
                     " D ",
                     "GUG",
                     "RRR",
@@ -278,12 +278,12 @@ public class ItemRecipes {
                     'G',
                     "ingotGold",
                     'U',
-                    ModItems.FILTER_UPGRADE.get()));
+                    ModItems.FILTER_UPGRADE.getItem()));
 
             // Inception Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.INCEPTION_UPGRADE.get(),
+                    ModItems.INCEPTION_UPGRADE.getItem(),
                     "ESE",
                     "DUD",
                     "EDE",
@@ -294,13 +294,13 @@ public class ItemRecipes {
                     'E',
                     Items.ender_eye,
                     'U',
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
 
             // Everlasting Upgrade
             if (!LibMods.EtFuturum.isLoaded()) {
                 GameRegistry.addRecipe(
                     new ShapedOreRecipe(
-                        ModItems.EVERLASTING_UPGRADE.get(),
+                        ModItems.EVERLASTING_UPGRADE.getItem(),
                         "GRG",
                         "RUR",
                         "GRG",
@@ -310,7 +310,7 @@ public class ItemRecipes {
                         "itemNetherStar",
                         'U',
 
-                        ModItems.BASE_UPGRADE.get()));
+                        ModItems.BASE_UPGRADE.getItem()));
             }
         }
         if (BackportConfigs.useEnvironmentalTech) {
@@ -332,7 +332,7 @@ public class ItemRecipes {
             // Photovoltaic Cell
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.PHOTOVOLTAIC_CELL.get(),
+                    ModItems.PHOTOVOLTAIC_CELL.getItem(),
                     " L ",
                     "LQL",
                     " L ",
@@ -344,7 +344,7 @@ public class ItemRecipes {
             // Stabilized Ender Pear
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.STABILIZED_ENDER_PEAR.get(),
+                    ModItems.STABILIZED_ENDER_PEAR.getItem(),
                     " P ",
                     "PIP",
                     " P ",
@@ -356,7 +356,7 @@ public class ItemRecipes {
             // Assembler
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ASSEMBLER.get(),
+                    ModItems.ASSEMBLER.getItem(),
                     "  B",
                     " O ",
                     "O  ",
@@ -368,7 +368,7 @@ public class ItemRecipes {
             // Assembler
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ASSEMBLER.get(),
+                    ModItems.ASSEMBLER.getItem(),
                     "  B",
                     " O ",
                     "O  ",
@@ -380,7 +380,7 @@ public class ItemRecipes {
             // Assembler
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.ASSEMBLER.get(),
+                    ModItems.ASSEMBLER.getItem(),
                     "  B",
                     " O ",
                     "O  ",
@@ -422,13 +422,13 @@ public class ItemRecipes {
                     'F',
                     Items.feather));
 
-            GameRegistry.addSmelting(ModItems.CHICKEN.get(), new ItemStack(Items.cooked_chicken), 0.35f);
+            GameRegistry.addSmelting(ModItems.CHICKEN.getItem(), new ItemStack(Items.cooked_chicken), 0.35f);
         }
 
         if (BackportConfigs.useCow) {
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.COW_HALTER.get(),
+                    ModItems.COW_HALTER.getItem(),
                     "  L",
                     " S ",
                     "S  ",

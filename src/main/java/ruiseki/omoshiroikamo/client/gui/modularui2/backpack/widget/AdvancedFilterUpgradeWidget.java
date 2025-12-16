@@ -28,7 +28,7 @@ public class AdvancedFilterUpgradeWidget extends AdvancedExpandedTabWidget<Advan
         super(
             slotIndex,
             wrapper,
-            new ItemStack(ModItems.ADVANCED_FILTER_UPGRADE.get()),
+            new ItemStack(ModItems.ADVANCED_FILTER_UPGRADE.getItem()),
             "gui.advanced_filter_settings",
             "adv_common_filter",
             6,

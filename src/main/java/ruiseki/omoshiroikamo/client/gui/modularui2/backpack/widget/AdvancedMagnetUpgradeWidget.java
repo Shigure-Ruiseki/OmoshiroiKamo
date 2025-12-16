@@ -34,7 +34,7 @@ public class AdvancedMagnetUpgradeWidget extends AdvancedExpandedTabWidget<Advan
         super(
             slotIndex,
             wrapper,
-            new ItemStack(ModItems.ADVANCED_MAGNET_UPGRADE.get()),
+            new ItemStack(ModItems.ADVANCED_MAGNET_UPGRADE.getItem()),
             "gui.advanced_magnet_settings",
             "adv_common_filter",
             6,

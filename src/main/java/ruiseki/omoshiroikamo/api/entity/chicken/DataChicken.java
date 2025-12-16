@@ -189,7 +189,7 @@ public class DataChicken {
      * @return A spawn egg as if caught from the world
      */
     public ItemStack buildCaughtFromStack() {
-        return new ItemStack(ModItems.CHICKEN.get(), 1, getType());
+        return new ItemStack(ModItems.CHICKEN.getItem(), 1, getType());
     }
 
     /**
@@ -319,7 +319,7 @@ public class DataChicken {
      * @return True if ItemStack is a chicken spawn egg
      */
     public static boolean isChicken(ItemStack stack) {
-        return stack != null && stack.getItem() == ModItems.CHICKEN.get();
+        return stack != null && stack.getItem() == ModItems.CHICKEN.getItem();
     }
 
     @Override
