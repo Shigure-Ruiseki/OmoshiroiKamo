@@ -19,7 +19,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
+    public boolean processTasks(boolean redstoneCheckPassed) {
         boolean powerChanged = (lastSyncPowerStored != getEnergyStored() && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = getEnergyStored();

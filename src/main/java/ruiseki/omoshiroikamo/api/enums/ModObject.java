@@ -49,6 +49,8 @@ public enum ModObject {
     blockBreeder,
     blockRoostCollector,
 
+    blockLootFabricator,
+
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,

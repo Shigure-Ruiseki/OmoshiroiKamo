@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.ItemCrystal;
@@ -74,7 +75,9 @@ public enum ModItems {
     SOLID_XP(useChicken, new ItemSolidXp()),
     COW_HALTER(useCow, new ItemCowHalter()),
     COW_SPAWN_EGG(useCow, new ItemCowSpawnEgg()),
-    SYRINGE(useCow, new ItemSyringe()),;
+    SYRINGE(useCow, new ItemSyringe()),
+    //
+    ;
 
     public static final ModItems[] VALUES = values();
 
@@ -82,7 +85,7 @@ public enum ModItems {
         for (ModItems item : VALUES) {
             if (item.isEnabled()) {
                 try {
-                    GameRegistry.registerItem(item.get(), item.getName());
+                    GameRegistry.registerItem(item.getItem(), item.getName());
                     Logger.info("Successfully initialized " + item.name());
                 } catch (Exception e) {
                     Logger.error("Failed to initialize item: +" + item.name());
@@ -91,7 +94,9 @@ public enum ModItems {
         }
     }
 
+    @Getter
     private final boolean enabled;
+    @Getter
     private final Item item;
 
     ModItems(boolean enabled, Item item) {
@@ -99,16 +104,8 @@ public enum ModItems {
         this.item = item;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public Item get() {
-        return item;
-    }
-
     public String getName() {
-        return get().getUnlocalizedName()
+        return getItem().getUnlocalizedName()
             .replace("item.", "");
     }
 
@@ -121,6 +118,6 @@ public enum ModItems {
     }
 
     public ItemStack newItemStack(int count, int meta) {
-        return new ItemStack(this.get(), count, meta);
+        return new ItemStack(this.getItem(), count, meta);
     }
 }

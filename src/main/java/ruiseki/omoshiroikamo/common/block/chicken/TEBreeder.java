@@ -36,7 +36,7 @@ public class TEBreeder extends TERoostBase {
     private boolean wasActive = false;
 
     @Override
-    protected boolean processTasks(boolean redstoneChecksPassed) {
+    public boolean processTasks(boolean redstoneChecksPassed) {
         if (!worldObj.isRemote) {
             boolean active = isActive();
             if (active != wasActive) {

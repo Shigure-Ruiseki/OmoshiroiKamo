@@ -45,7 +45,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
+    public boolean processTasks(boolean redstoneCheckPassed) {
         transmitEnergy();
         return super.processTasks(redstoneCheckPassed);
     }

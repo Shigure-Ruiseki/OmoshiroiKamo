@@ -127,7 +127,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
+    public boolean processTasks(boolean redstoneCheckPassed) {
         if (worldObj.isRemote || !hasCow() || cowIsChild) {
             return false;
         }
@@ -248,7 +248,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
     }
 
     @Override
-    protected void writeCommon(NBTTagCompound root) {
+    public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
 
         tank.writeCommon("tank", root);
@@ -266,7 +266,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
     }
 
     @Override
-    protected void readCommon(NBTTagCompound root) {
+    public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
 
         tank.readCommon("tank", root);

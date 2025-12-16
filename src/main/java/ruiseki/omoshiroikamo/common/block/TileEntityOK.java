@@ -117,12 +117,6 @@ public abstract class TileEntityOK extends TileEntity {
         }
     }
 
-    protected boolean isPoweredRedstone() {
-        return worldObj.blockExists(xCoord, yCoord, zCoord)
-            ? worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0
-            : false;
-    }
-
     /**
      * Called directly after the TE is constructed. This is the place to call non-final methods.
      * <p>

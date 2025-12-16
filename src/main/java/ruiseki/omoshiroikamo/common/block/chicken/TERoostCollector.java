@@ -36,7 +36,7 @@ public class TERoostCollector extends AbstractStorageTE {
     }
 
     @Override
-    protected void doUpdate() {
+    public void doUpdate() {
         super.doUpdate();
         if (!worldObj.isRemote) {}
         updateSearchOffset();

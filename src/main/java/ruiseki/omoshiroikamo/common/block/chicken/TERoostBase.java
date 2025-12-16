@@ -59,7 +59,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneChecksPassed) {
+    public boolean processTasks(boolean redstoneChecksPassed) {
         if (!worldObj.isRemote) {
             updateTimerIfNeeded();
             spawnChickenDropIfNeeded();
@@ -388,7 +388,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
+    public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     /**
      * -----------------------------------------------------------

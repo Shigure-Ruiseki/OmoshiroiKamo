@@ -45,7 +45,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
+    public boolean processTasks(boolean redstoneCheckPassed) {
         return false;
     }
 

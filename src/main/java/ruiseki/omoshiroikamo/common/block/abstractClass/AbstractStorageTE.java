@@ -55,7 +55,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneChecksPassed) {
+    public boolean processTasks(boolean redstoneChecksPassed) {
         if (tanksDirty && shouldDoWorkThisTick(10)) {
             PacketHandler.sendToAllAround(new PacketFluidTanks(this), this);
             tanksDirty = false;

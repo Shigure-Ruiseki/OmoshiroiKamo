@@ -16,6 +16,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
@@ -24,20 +25,21 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
 
     @Setter
     @Getter
-    public int facing;
+    protected int facing;
 
     // Client sync monitoring
     protected boolean forceClientUpdate = true;
     protected boolean lastActive;
     protected int ticksSinceActiveChanged = 0;
+    protected boolean isDirty = false;
 
-    protected boolean redstoneCheckPassed;
-
-    private boolean redstoneStateDirty = true;
+    @Getter
+    protected RedstoneMode redstoneMode = RedstoneMode.ALWAYS_ON;
+    protected boolean redstonePowered;
+    protected int redstoneLevel;
+    protected boolean redstoneStateDirty = true;
 
     protected boolean notifyNeighbours = false;
-
-    public boolean isDirty = false;
 
     public ForgeDirection getFacingDir() {
         return ForgeDirection.getOrientation(facing);
@@ -49,14 +51,16 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     }
 
     public void onNeighborBlockChange(World world, int x, int y, int z, Block nbid) {
+        int oldLevel = redstoneLevel;
+        redstoneLevel = world.getStrongestIndirectPower(x, y, z);
+        redstonePowered = redstoneLevel > 0;
+
         redstoneStateDirty = true;
-    }
 
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        writeToItemStack(stack);
+        if (oldLevel != redstoneLevel) {
+            notifyNeighbours = true;
+        }
     }
-
-    // Special
 
     public String getMachineName() {
         return this.worldObj.getBlock(xCoord, yCoord, zCoord)
@@ -65,34 +69,36 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
 
     public abstract boolean isActive();
 
-    protected abstract boolean processTasks(boolean redstoneCheckPassed);
+    public boolean isRedstoneActive() {
+        return RedstoneMode.isActive(redstoneMode, redstonePowered);
+    }
+
+    public void setRedstoneMode(RedstoneMode mode) {
+        redstoneMode = mode;
+        forceClientUpdate = true;
+    }
+
+    public abstract boolean processTasks(boolean redstoneCheckPassed);
 
     @Override
-    protected void doUpdate() {
+    public void doUpdate() {
         if (worldObj.isRemote) {
             updateEntityClient();
             return;
-        } // else is server, do all logic only on the server
+        }
 
         boolean requiresClientSync = forceClientUpdate;
-        boolean prevRedCheck = redstoneCheckPassed;
+        boolean prevRedCheck = isRedstoneActive();
 
         if (redstoneStateDirty) {
-            redstoneCheckPassed = isPoweredRedstone();
             redstoneStateDirty = false;
         }
 
-        requiresClientSync |= prevRedCheck != redstoneCheckPassed;
-
-        requiresClientSync |= processTasks(redstoneCheckPassed);
+        requiresClientSync |= prevRedCheck != isRedstoneActive();
+        requiresClientSync |= processTasks(isRedstoneActive());
 
         if (requiresClientSync) {
-
-            // this will cause 'getPacketDescription()' to be called and its result
-            // will be sent to the PacketHandler on the other end of
-            // client/server connection
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-            // And this will make sure our current tile entity state is saved
             markDirty();
         }
 
@@ -102,7 +108,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         }
     }
 
-    protected void updateEntityClient() {
+    public void updateEntityClient() {
         if (isActive() != lastActive) {
             ticksSinceActiveChanged++;
             if (ticksSinceActiveChanged > 20 || isActive()) {
@@ -122,33 +128,33 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     }
 
     @Override
-    protected void writeCommon(NBTTagCompound root) {
+    public void writeCommon(NBTTagCompound root) {
         root.setInteger("facing", facing);
-        root.setBoolean("redstoneCheckPassed", redstoneCheckPassed);
+        root.setInteger("redstoneMode", redstoneMode.getIndex());
         root.setBoolean("forceClientUpdate", forceClientUpdate);
         forceClientUpdate = false;
     }
 
     @Override
-    protected void readCommon(NBTTagCompound root) {
+    public void readCommon(NBTTagCompound root) {
         setFacing(root.getInteger("facing"));
-        redstoneCheckPassed = root.getBoolean("redstoneCheckPassed");
+        redstoneMode = RedstoneMode.byIndex(root.getInteger("redstoneMode"));
         forceClientUpdate = root.getBoolean("forceClientUpdate");
     }
 
     public void readFromItemStack(ItemStack stack) {
-        if (stack == null || stack.stackTagCompound == null) {
-            return;
-        }
+        if (stack == null || stack.stackTagCompound == null) return;
         readCommon(stack.stackTagCompound);
     }
 
     public void writeToItemStack(ItemStack stack) {
-        if (stack == null) {
-            return;
-        }
+        if (stack == null) return;
         NBTTagCompound root = ItemNBTUtils.getNBT(stack);
         writeCommon(root);
+    }
+
+    public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
+        writeToItemStack(stack);
     }
 
     public void openGui(EntityPlayer player) {
@@ -168,4 +174,12 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         return new BlockPos(xCoord, yCoord, zCoord, worldObj);
     }
 
+    public void sendUpdatePacketToClient() {
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        forceClientUpdate = true;
+    }
+
+    public void sendBlockUpdate() {
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
 }
