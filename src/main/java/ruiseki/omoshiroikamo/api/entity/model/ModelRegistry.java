@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.api.entity.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -42,7 +43,7 @@ public class ModelRegistry {
         return items.get(id);
     }
 
-    public ModelRegistryItem getByKey(String key) {
+    public ModelRegistryItem getByName(String key) {
         for (ModelRegistryItem item : items.values()) {
             if (item.getEntityName()
                 .equalsIgnoreCase(key)) {
@@ -53,6 +54,12 @@ public class ModelRegistry {
     }
 
     public Collection<ModelRegistryItem> getItems() {
-        return new ArrayList<>(items.values());
+        List<ModelRegistryItem> result = new ArrayList<>();
+        for (ModelRegistryItem t : items.values()) {
+            if (t.isEnabled()) {
+                result.add(t);
+            }
+        }
+        return result;
     }
 }

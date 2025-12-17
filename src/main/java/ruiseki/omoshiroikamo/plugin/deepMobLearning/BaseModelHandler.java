@@ -187,7 +187,8 @@ public abstract class BaseModelHandler {
                     m.name = model.getEntityName();
                     m.enabled = true;
 
-                    String fullPath = model.getTexture().getResourcePath();
+                    String fullPath = model.getTexture()
+                        .getResourcePath();
                     m.texture = fullPath.substring(fullPath.lastIndexOf('/') + 1);
 
                     m.numberOfHearts = model.getNumberOfHearts();
@@ -200,7 +201,8 @@ public abstract class BaseModelHandler {
                     jsonModels.add(m);
                 }
 
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                Gson gson = new GsonBuilder().setPrettyPrinting()
+                    .create();
                 writer.write(gson.toJson(jsonModels));
             }
 

@@ -23,11 +23,9 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
-import ruiseki.omoshiroikamo.plugin.deepMobLearning.BaseModelHandler;
 
 // Refactor base on OriginalChicken by Chlorine0808
 public abstract class BaseCowHandler {
@@ -253,7 +251,8 @@ public abstract class BaseCowHandler {
                     m.lang = cow.getLang();
                     jsonModels.add(m);
                 }
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                Gson gson = new GsonBuilder().setPrettyPrinting()
+                    .create();
                 writer.write(gson.toJson(jsonModels));
             }
 

@@ -54,7 +54,7 @@ public class DataModel {
         if (!isModel(stack)) {
             return null;
         }
-        ModelRegistryItem model = ModelRegistry.INSTANCE.getByKey(key);
+        ModelRegistryItem model = ModelRegistry.INSTANCE.getByName(key);
         return model != null ? new DataModel(model, stack.getTagCompound()) : null;
     }
 
