@@ -30,11 +30,17 @@ public class AdvancedFilterUpgradeWrapper extends AdvancedUpgradeWrapper impleme
 
     @Override
     public boolean canInsert(ItemStack stack) {
+        if (!isEnabled()) {
+            return true;
+        }
         return checkFilter(stack) && (getfilterWay() == FilterWayType.IN_OUT || getfilterWay() == FilterWayType.IN);
     }
 
     @Override
     public boolean canExtract(ItemStack stack) {
+        if (!isEnabled()) {
+            return true;
+        }
         return checkFilter(stack) && (getfilterWay() == FilterWayType.IN_OUT || getfilterWay() == FilterWayType.OUT);
     }
 }
