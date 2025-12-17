@@ -150,7 +150,12 @@ public class EntityChickensChicken extends EntityChicken
         if (hasCustomNameTag()) {
             return getCustomNameTag();
         }
-        return LibMisc.LANG.localize(getChickenDescription().getDisplayName());
+
+        if (getChickenDescription() != null) {
+            return LibMisc.LANG.localize(getChickenDescription().getDisplayName());
+        }
+
+        return super.getCommandSenderName();
     }
 
     @Override
