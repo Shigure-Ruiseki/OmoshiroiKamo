@@ -115,14 +115,17 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
             return;
         }
 
-        boolean isVoided = handleVoid(slot, contents, IVoidUpgrade.VoidInput.ALL);
-        if (isVoided) return;
+        if (!(handler.canVoid(contents, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.AUTOMATION)
+            || handler.canVoid(contents, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.AUTOMATION))) {
 
-        handler.setStackInSlot(slot, contents.copy());
-        ItemStack stack = handler.getStackInSlot(slot);
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-            stack.stackSize = getInventoryStackLimit();
-            handler.setStackInSlot(slot, stack);
+            handler.setStackInSlot(slot, contents);
+            ItemStack stack = handler.getStackInSlot(slot);
+            if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+                stack.stackSize = getInventoryStackLimit();
+                handler.setStackInSlot(slot, stack);
+            }
+        } else {
+            handler.insertItem(contents.copy(), false);
         }
     }
 
@@ -167,38 +170,6 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     protected void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         handler.readFromNBT(root);
-    }
-
-    protected boolean handleVoid(int slot, ItemStack stack, IVoidUpgrade.VoidInput input) {
-        if (handler == null || stack == null) return false;
-
-        // Void ANY
-        if (handler.canVoid(stack, IVoidUpgrade.VoidType.ANY, input)) {
-            handler.setStackInSlot(slot, null);
-            return true;
-        }
-
-        // Void OVERFLOW
-        if (handler.canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, input)) {
-            for (int i = 0; i < handler.getBackpackSlots(); i++) {
-                ItemStack inSlot = handler.getStackInSlot(i);
-                if (ItemUtils.areStackMergable(inSlot, stack)) {
-                    int maxStack = Math.min(getInventoryStackLimit(), inSlot.getMaxStackSize());
-                    int toAdd = Math.min(maxStack - inSlot.stackSize, stack.stackSize);
-                    if (toAdd > 0) {
-                        inSlot.stackSize += toAdd;
-                        handler.setStackInSlot(i, inSlot);
-                    }
-                    stack.stackSize = 0;
-                    return true;
-                }
-            }
-
-            handler.setStackInSlot(slot, stack);
-            return true;
-        }
-
-        return false;
     }
 
     public int getMainColor() {
