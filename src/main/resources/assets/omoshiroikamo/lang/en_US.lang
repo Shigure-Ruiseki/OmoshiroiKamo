@@ -393,6 +393,8 @@ item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
 
 item.creativeModelLearner.name=Creative Model Learner
+item.dataModelBlank.name=Blank Data Model
+item.deepLearner.name=§bDeep Learner§r
 
 #Block
 

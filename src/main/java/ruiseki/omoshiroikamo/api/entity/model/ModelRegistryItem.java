@@ -6,6 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 public class ModelRegistryItem {
 
     @Getter
@@ -38,6 +40,9 @@ public class ModelRegistryItem {
     @Getter
     @Setter
     protected ItemStack pristineMatter;
+    @Getter
+    @Setter
+    Map<String, String> lang;
 
     public ModelRegistryItem(int id, String entityName, ResourceLocation texture, float numberOfHearts,
         float interfaceScale, int interfaceOffsetX, int interfaceOffsetY, String[] mobTrivia) {
