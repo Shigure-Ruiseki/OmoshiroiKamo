@@ -30,8 +30,10 @@ public class LangUtils {
     }
 
     /**
-     * Adds the stored prefix to this string, separating with a period. Using this method returns the string that is
-     * used for localizing if you passed this arg into {@link #localize(String, Object...)}.
+     * Adds the stored prefix to this string, separating with a period. Using this
+     * method returns the string that is
+     * used for localizing if you passed this arg into
+     * {@link #localize(String, Object...)}.
      *
      * @param suffix The suffix string
      * @return The full string
@@ -41,7 +43,8 @@ public class LangUtils {
     }
 
     /**
-     * Localizes the string passed, first appending the prefix stored in this instance of the class.
+     * Localizes the string passed, first appending the prefix stored in this
+     * instance of the class.
      *
      * @param unloc The unlocalized string.
      * @param args  The args to format the localized text with.
@@ -52,7 +55,8 @@ public class LangUtils {
     }
 
     /**
-     * Localizes the string passed, first appending the prefix stored in this instance of the class.
+     * Localizes the string passed, first appending the prefix stored in this
+     * instance of the class.
      *
      * @param unloc The unlocalized string.
      * @return A localized string.
@@ -62,7 +66,8 @@ public class LangUtils {
     }
 
     /**
-     * Ignores the prefix stored in this instance of the class and localizes the raw string passed.
+     * Ignores the prefix stored in this instance of the class and localizes the raw
+     * string passed.
      *
      * @param unloc The unlocalized string.
      * @param args  The args to format the localized text with.
@@ -73,7 +78,8 @@ public class LangUtils {
     }
 
     /**
-     * Ignores the prefix stored in this instance of the class and localizes the raw string passed.
+     * Ignores the prefix stored in this instance of the class and localizes the raw
+     * string passed.
      *
      * @param unloc The unlocalized string.
      * @return A localized string.
@@ -156,12 +162,17 @@ public class LangUtils {
     }
 
     /**
-     * Checks if the passed string has a localization mapped. Does not use the prefix.
+     * Checks if the passed string has a localization mapped. Does not use the
+     * prefix.
      *
      * @param unloc The unlocalized string
      * @return True if there is a localization mapped, false otherwise.
      */
     public boolean canLocalizeExact(String unloc) {
         return StatCollector.canTranslate(unloc);
+    }
+
+    public static String translateToLocal(String text) {
+        return StatCollector.translateToLocal(text);
     }
 }

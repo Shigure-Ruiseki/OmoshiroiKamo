@@ -26,9 +26,21 @@ public class PositionedStackAdv extends PositionedStack {
 
     private final List<String> tooltip = new ArrayList<>();
     public float chance;
+    public int textYOffset = 0;
+    public int textColor = 0xFFFFFF;
 
     public PositionedStackAdv(Object object, int x, int y) {
         super(object, x, y);
+    }
+
+    public PositionedStackAdv setTextYOffset(int offset) {
+        this.textYOffset = offset;
+        return this;
+    }
+
+    public PositionedStackAdv setTextColor(int color) {
+        this.textColor = color;
+        return this;
     }
 
     public PositionedStackAdv(Object object, int x, int y, List<String> tooltip) {
@@ -65,8 +77,8 @@ public class PositionedStackAdv extends PositionedStack {
         if (chance <= 0.0f || chance >= 1.0f) {
             return;
         }
-        float scale = 0.6f;
-        String text = String.format("%.0f%%", chance * 100f);
+        float scale = 0.8f;
+        String text = String.format("%.1f%%", chance * 100f);
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         int stringWidth = font.getStringWidth(text);
 
@@ -78,10 +90,10 @@ public class PositionedStackAdv extends PositionedStack {
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, 1.0f);
         font.drawStringWithShadow(
-            text,
-            (int) ((x + 16 - stringWidth * scale) * inverse),
-            (int) (y * inverse),
-            0xFFFFFF);
+                text,
+                (int) ((x + 8 - stringWidth * scale / 2) * inverse),
+                (int) ((y + 16 - font.FONT_HEIGHT * scale + textYOffset) * inverse),
+                textColor);
         GL11.glPopMatrix();
     }
 
@@ -89,18 +101,19 @@ public class PositionedStackAdv extends PositionedStack {
         this.chance = Math.max(0.0f, Math.min(1.0f, chance));
         if (chance <= 0.0F) {
             this.tooltip.add(
-                EnumChatFormatting.GRAY
-                    + String.format(NEIUtils.translate("chance"), NEIUtils.translate("chance.never")));
+                    EnumChatFormatting.GRAY
+                            + String.format(NEIUtils.translate("chance"), NEIUtils.translate("chance.never")));
         } else if (chance < 0.01F) {
             this.tooltip.add(
-                EnumChatFormatting.GRAY
-                    + String.format(NEIUtils.translate("chance"), NEIUtils.translate("chance.lessThan1")));
+                    EnumChatFormatting.GRAY
+                            + String.format(NEIUtils.translate("chance"), NEIUtils.translate("chance.lessThan1")));
         } else if (chance != 1.0F) {
             NumberFormat percentFormat = NumberFormat.getPercentInstance();
             percentFormat.setMaximumFractionDigits(2);
             this.tooltip.add(
-                EnumChatFormatting.GRAY
-                    + String.format(NEIUtils.translate("chance"), String.valueOf(percentFormat.format(chance))));
+                    EnumChatFormatting.GRAY
+                            + String.format(NEIUtils.translate("chance"),
+                                    String.valueOf(percentFormat.format(chance))));
         }
         return this;
     }

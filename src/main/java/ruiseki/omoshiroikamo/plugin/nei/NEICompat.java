@@ -29,45 +29,15 @@ public class NEICompat {
 
     public static void IMCSender() {
         if (BackportConfigs.useEnvironmentalTech) {
-            sendHandler(ModObject.blockQuantumOreExtractor.getRegistryName(), 48, 8);
-            sendCatalyst(
-                ModObject.blockQuantumOreExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0));
-            sendCatalyst(
-                ModObject.blockQuantumOreExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 1));
-            sendCatalyst(
-                ModObject.blockQuantumOreExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 2));
-            sendCatalyst(
-                ModObject.blockQuantumOreExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 3));
-            sendCatalyst(
-                ModObject.blockQuantumOreExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 4));
-            sendCatalyst(
-                ModObject.blockQuantumOreExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 5));
+            for (int i = 0; i <= 5; i++) { // Environmental Tech usually defaults to 6 tiers (1-6)
+                String oreId = ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + i;
+                sendHandler(oreId, 48, 8);
+                sendCatalyst(oreId, ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i));
 
-            sendHandler(ModObject.blockQuantumResExtractor.getRegistryName(), 48, 8);
-            sendCatalyst(
-                ModObject.blockQuantumResExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0));
-            sendCatalyst(
-                ModObject.blockQuantumResExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 1));
-            sendCatalyst(
-                ModObject.blockQuantumResExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 2));
-            sendCatalyst(
-                ModObject.blockQuantumResExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 3));
-            sendCatalyst(
-                ModObject.blockQuantumResExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 4));
-            sendCatalyst(
-                ModObject.blockQuantumResExtractor.getRegistryName(),
-                ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 5));
+                String resId = ModObject.blockQuantumResExtractor.getRegistryName() + ".tier" + i;
+                sendHandler(resId, 48, 8);
+                sendCatalyst(resId, ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i));
+            }
         }
 
         if (BackportConfigs.useChicken) {

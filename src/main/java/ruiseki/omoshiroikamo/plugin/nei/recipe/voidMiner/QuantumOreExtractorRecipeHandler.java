@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
@@ -17,6 +19,7 @@ import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
+import ruiseki.omoshiroikamo.common.util.LangUtils;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.nei.PositionedStackAdv;
@@ -24,14 +27,25 @@ import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
 
 public class QuantumOreExtractorRecipeHandler extends RecipeHandlerBase {
 
+    private final int tier;
+
+    public QuantumOreExtractorRecipeHandler(int tier) {
+        this.tier = tier;
+    }
+
+    @Override
+    public TemplateRecipeHandler newInstance() {
+        return new QuantumOreExtractorRecipeHandler(tier);
+    }
+
     @Override
     public String getRecipeName() {
-        return "Void Ore Miner";
+        return "Void Ore Miner Tier " + (tier + 1);
     }
 
     @Override
     public String getRecipeID() {
-        return ModObject.blockQuantumOreExtractor.getRegistryName();
+        return ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + tier;
     }
 
     @Override
@@ -45,18 +59,19 @@ public class QuantumOreExtractorRecipeHandler extends RecipeHandlerBase {
     }
 
     @Override
+    public void drawExtras(int recipe) {
+        // No extra text drawing needed, PositionedStackAdv handles it
+    }
+
+    @Override
     public void loadAllRecipes() {
-        Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry[] registries = QuantumExtractorRecipes.oreRegistry;
-        for (int tier = 0; tier < registries.length; tier++) {
-            IFocusableRegistry registry = registries[tier];
-            for (WeightedStackBase ws : registry.getUnFocusedList()) {
-                ItemStack output = ws.getMainStack();
-                if (output != null) {
-                    if (added.add(ws)) {
-                        arecipes.add(new CachedVoidOreRecipe(ws, null, tier));
-                    }
-                }
+        IFocusableRegistry registry = QuantumExtractorRecipes.oreRegistry[tier];
+        List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
+
+        for (WeightedStackBase ws : unfocusedList) {
+            ItemStack output = ws.getMainStack();
+            if (output != null) {
+                arecipes.add(new CachedVoidOreRecipe(ws, registry, tier));
             }
         }
     }
@@ -64,29 +79,13 @@ public class QuantumOreExtractorRecipeHandler extends RecipeHandlerBase {
     @Override
     public void loadCraftingRecipes(ItemStack item) {
         super.loadCraftingRecipes(item);
-        Set<WeightedStackBase> added = new HashSet<>();
-        IFocusableRegistry[] registries = QuantumExtractorRecipes.oreRegistry;
-        for (int tier = 0; tier < registries.length; tier++) {
-            IFocusableRegistry registry = registries[tier];
-            for (WeightedStackBase ws : registry.getUnFocusedList()) {
-                ItemStack output = ws.getMainStack();
-                if (output != null && ItemUtils.areStacksEqual(output, item)) {
-                    if (added.add(ws)) {
-                        arecipes.add(new CachedVoidOreRecipe(ws, null, tier));
-                    }
-                }
-            }
+        IFocusableRegistry registry = QuantumExtractorRecipes.oreRegistry[tier];
+        List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
 
-            EnumDye color = registry.getPrioritizedLens(item);
-            if (color != null) {
-                for (WeightedStackBase ws : registry.getFocusedList(color, 1.0f)) {
-                    ItemStack output = ws.getMainStack();
-                    if (output != null && ItemUtils.areStacksEqual(output, item)) {
-                        if (added.add(ws)) {
-                            arecipes.add(new CachedVoidOreRecipe(ws, color, tier));
-                        }
-                    }
-                }
+        for (WeightedStackBase ws : unfocusedList) {
+            ItemStack output = ws.getMainStack();
+            if (output != null && ItemUtils.areStacksEqual(output, item)) {
+                arecipes.add(new CachedVoidOreRecipe(ws, registry, tier));
             }
         }
     }
@@ -94,42 +93,50 @@ public class QuantumOreExtractorRecipeHandler extends RecipeHandlerBase {
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
         super.loadUsageRecipes(ingredient);
-        Set<WeightedStackBase> added = new HashSet<>();
-
+        IFocusableRegistry registry = QuantumExtractorRecipes.oreRegistry[tier];
         Item item = ingredient.getItem();
-        Item coloredLend = ModBlocks.COLORED_LENS.getItem();
-        Item lens = ModBlocks.LENS.getItem();
-        boolean isLens = (item == lens || item == coloredLend);
+        Item coloredLens = ModBlocks.COLORED_LENS.getItem();
+        Item clearLens = ModBlocks.LENS.getItem();
+        boolean isLens = (item == clearLens || item == coloredLens);
+        boolean isMiner = (item == Item.getItemFromBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get()));
 
-        if (isLens) {
-            IFocusableRegistry[] registries = QuantumExtractorRecipes.oreRegistry;
-            for (int tier = 0; tier < registries.length; tier++) {
-                IFocusableRegistry registry = registries[tier];
+        if (isMiner) {
+            // Show all recipes for this tier
+            if (ingredient.getItemDamage() == tier) {
+                loadAllRecipes();
+            }
+        } else if (isLens) {
+            // Filter by lens
+            EnumDye filterDye = null; // null means clear/no lens
+            int meta = ingredient.getItemDamage();
 
-                EnumDye dye = null;
-                Item itemType = ingredient.getItem();
-                int meta = ingredient.getItemDamage();
+            if (item == clearLens && meta == 1) {
+                filterDye = EnumDye.CRYSTAL;
+            } else if (item == coloredLens) {
+                BlockColoredLens lensBlock = (BlockColoredLens) Block.getBlockFromItem(coloredLens);
+                filterDye = lensBlock.getFocusColor(meta);
+            }
 
-                if (itemType == lens) {
-                    if (meta == 1) {
-                        dye = EnumDye.CRYSTAL;
-                    }
-                } else if (itemType == coloredLend) {
-                    BlockColoredLens coloredLens = (BlockColoredLens) Block.getBlockFromItem(itemType);
-                    dye = coloredLens.getFocusColor(meta);
-                }
+            List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
+            for (WeightedStackBase ws : unfocusedList) {
+                ItemStack output = ws.getMainStack();
+                if (output != null) {
+                    // Check if this recipe uses the lens
+                    EnumDye preferred = registry.getPrioritizedLens(output);
+                    boolean isMatch = false;
 
-                List<WeightedStackBase> listToUse = (dye != null) ? registry.getFocusedList(dye, 1.0f)
-                    : registry.getUnFocusedList();
-
-                for (WeightedStackBase ws : listToUse) {
-                    ItemStack output = ws.getMainStack();
-                    if (output != null) {
-                        if (dye == null || registry.getPrioritizedLens(output) == dye) {
-                            if (added.add(ws)) {
-                                arecipes.add(new CachedVoidOreRecipe(ws, dye, tier));
-                            }
+                    if (filterDye == null) {
+                        // Clear lens usage - shows for ALL items since clear lens is default
+                        isMatch = true;
+                    } else {
+                        // Colored lens usage - shows only if this item matches the lens
+                        if (preferred == filterDye) {
+                            isMatch = true;
                         }
+                    }
+
+                    if (isMatch) {
+                        arecipes.add(new CachedVoidOreRecipe(ws, registry, tier));
                     }
                 }
             }
@@ -141,21 +148,50 @@ public class QuantumOreExtractorRecipeHandler extends RecipeHandlerBase {
         private List<PositionedStack> input;
         private PositionedStack output;
 
-        public CachedVoidOreRecipe(WeightedStackBase recipe, EnumDye color, int tier) {
+        public CachedVoidOreRecipe(WeightedStackBase ws, IFocusableRegistry registry, int tier) {
             this.input = new ArrayList<>();
-            this.input.add(new PositionedStack(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, tier), 25, 16));
-            if (color == null) {
-                this.input.add(new PositionedStack(ModBlocks.LENS.newItemStack(1, 0), 75, 16));
-            } else {
-                int lens = color.ordinal();
-                if (lens == 16) {
-                    this.input.add(new PositionedStack(ModBlocks.LENS.newItemStack(1, 1), 75, 16));
+            ItemStack outputStack = ws.getMainStack();
+
+            // 1. Miner Icon (Far Left)
+            this.input.add(new PositionedStack(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, tier), 4, 16));
+
+            // 2. Clear Lens (Left Center) + Probability
+            PositionedStackAdv clearLensStack = new PositionedStackAdv(ModBlocks.LENS.newItemStack(1, 0), 40, 16);
+            clearLensStack.setChance((float) (ws.realWeight / 100.0f));
+            clearLensStack.setTextYOffset(10); // Draw below
+            this.input.add(clearLensStack);
+
+            // 3. Output Item (Center)
+            this.output = new PositionedStackAdv(outputStack, 84, 16);
+
+            // 4. Bonus Lens (Right) + Probability
+            EnumDye preferred = registry.getPrioritizedLens(outputStack);
+            if (preferred != null) {
+                ItemStack lensStack;
+                if (preferred == EnumDye.CRYSTAL) {
+                    lensStack = ModBlocks.LENS.newItemStack(1, 1);
                 } else {
-                    this.input.add(new PositionedStack(ModBlocks.COLORED_LENS.newItemStack(1, lens), 75, 16));
+                    int lensMeta = preferred.ordinal();
+                    // Safety check for meta? BlockColoredLens handles 0-15.
+                    // But we use the itemstack.
+                    lensStack = ModBlocks.COLORED_LENS.newItemStack(1, lensMeta);
                 }
+
+                // Calculate chance
+                List<WeightedStackBase> focusedList = registry.getFocusedList(preferred, 1.0f);
+                double focusedChance = 0;
+                for (WeightedStackBase fws : focusedList) {
+                    if (fws.isStackEqual(outputStack)) {
+                        focusedChance = fws.realWeight;
+                        break;
+                    }
+                }
+
+                PositionedStackAdv bonusLensStack = new PositionedStackAdv(lensStack, 128, 16);
+                bonusLensStack.setChance((float) (focusedChance / 100.0f));
+                bonusLensStack.setTextYOffset(10); // Draw below
+                this.input.add(bonusLensStack);
             }
-            this.output = new PositionedStackAdv(recipe.getMainStack(), 125, 16)
-                .setChance((float) recipe.getWeight() / 100);
         }
 
         @Override

@@ -156,7 +156,8 @@ public class FocusableHandler {
         protected String id;
         protected int meta;
         protected EnumFocusColor focusColor;
-        protected int weight;
+        protected double weight;
+        protected double focusedWeight;
         protected boolean isOreDict;
 
         public abstract WeightedStackBase getRegistryEntry();
@@ -199,11 +200,16 @@ public class FocusableHandler {
 
         public FocusableOre() {}
 
-        public FocusableOre(String oreName, EnumDye color, int weight) {
+        public FocusableOre(String oreName, EnumDye color, double weight) {
+            this(oreName, color, weight, weight);
+        }
+
+        public FocusableOre(String oreName, EnumDye color, double weight, double focusedWeight) {
             this.id = oreName;
             this.meta = 0;
             this.focusColor = EnumFocusColor.getFromDye(color);
             this.weight = weight;
+            this.focusedWeight = focusedWeight;
             this.isOreDict = true;
         }
 
@@ -212,7 +218,8 @@ public class FocusableHandler {
             if (!isValid()) {
                 return null;
             }
-            return new WeightedOreStack(id, weight);
+            double fw = focusedWeight > 0 ? focusedWeight : weight;
+            return new WeightedOreStack(id, weight, fw);
         }
     }
 
@@ -224,15 +231,21 @@ public class FocusableHandler {
 
         public FocusableItem() {}
 
-        public FocusableItem(String id, int meta, EnumDye color, int weight, boolean isOreDict) {
+        public FocusableItem(String id, int meta, EnumDye color, double weight, double focusedWeight,
+            boolean isOreDict) {
             this.id = id;
             this.meta = meta;
             this.focusColor = EnumFocusColor.getFromDye(color);
             this.weight = weight;
+            this.focusedWeight = focusedWeight;
             this.isOreDict = isOreDict;
         }
 
-        public FocusableItem(String id, int meta, EnumDye color, int weight) {
+        public FocusableItem(String id, int meta, EnumDye color, double weight, boolean isOreDict) {
+            this(id, meta, color, weight, weight, isOreDict);
+        }
+
+        public FocusableItem(String id, int meta, EnumDye color, double weight) {
             this(id, meta, color, weight, false);
         }
 
@@ -251,7 +264,8 @@ public class FocusableHandler {
             if (item == null) {
                 return null;
             }
-            return new WeightedItemStack(new ItemStack(item, 1, meta), weight);
+            double fw = focusedWeight > 0 ? focusedWeight : weight;
+            return new WeightedItemStack(new ItemStack(item, 1, meta), weight, fw);
         }
 
         WeightedStackBase getOreDictStack() {
@@ -259,10 +273,12 @@ public class FocusableHandler {
             if (ores.isEmpty()) {
                 return null;
             }
+            double fw = focusedWeight > 0 ? focusedWeight : weight;
             return new WeightedItemStack(
                 ores.get(0)
                     .copy(),
-                weight);
+                weight,
+                fw);
         }
     }
 
@@ -270,11 +286,11 @@ public class FocusableHandler {
 
         public FocusableBlock() {}
 
-        public FocusableBlock(String id, int meta, EnumDye color, int weight, boolean isOreDict) {
+        public FocusableBlock(String id, int meta, EnumDye color, double weight, boolean isOreDict) {
             super(id, meta, color, weight, isOreDict);
         }
 
-        public FocusableBlock(String id, int meta, EnumDye color, int weight) {
+        public FocusableBlock(String id, int meta, EnumDye color, double weight) {
             this(id, meta, color, weight, false);
         }
 
@@ -293,7 +309,8 @@ public class FocusableHandler {
             if (block == null) {
                 return null;
             }
-            return new WeightedItemStack(new ItemStack(block, 1, meta), weight);
+            double fw = focusedWeight > 0 ? focusedWeight : weight;
+            return new WeightedItemStack(new ItemStack(block, 1, meta), weight, fw);
         }
     }
 

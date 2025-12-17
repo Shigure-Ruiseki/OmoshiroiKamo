@@ -25,17 +25,17 @@ public enum EnumDye {
     CRYSTAL;
 
     public static final String[] DYE_ORE_NAMES = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple",
-        "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta",
-        "dyeOrange", "dyeWhite" };
+            "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta",
+            "dyeOrange", "dyeWhite" };
 
     public static final String[] DYE_ORE_UNLOCAL_NAMES = {
 
-        "item.fireworksCharge.black", "item.fireworksCharge.red", "item.fireworksCharge.green",
-        "item.fireworksCharge.brown", "item.fireworksCharge.blue", "item.fireworksCharge.purple",
-        "item.fireworksCharge.cyan", "item.fireworksCharge.silver", "item.fireworksCharge.gray",
-        "item.fireworksCharge.pink", "item.fireworksCharge.lime", "item.fireworksCharge.yellow",
-        "item.fireworksCharge.lightBlue", "item.fireworksCharge.magenta", "item.fireworksCharge.orange",
-        "item.fireworksCharge.white"
+            "item.fireworksCharge.black", "item.fireworksCharge.red", "item.fireworksCharge.green",
+            "item.fireworksCharge.brown", "item.fireworksCharge.blue", "item.fireworksCharge.purple",
+            "item.fireworksCharge.cyan", "item.fireworksCharge.silver", "item.fireworksCharge.gray",
+            "item.fireworksCharge.pink", "item.fireworksCharge.lime", "item.fireworksCharge.yellow",
+            "item.fireworksCharge.lightBlue", "item.fireworksCharge.magenta", "item.fireworksCharge.orange",
+            "item.fireworksCharge.white"
 
     };
 
@@ -67,13 +67,20 @@ public enum EnumDye {
         return EnumDye.values()[index];
     }
 
-    private EnumDye() {}
+    private EnumDye() {
+    }
 
     public int getColor() {
+        if (this == CRYSTAL) {
+            return 0xAAFFFF; // Crystal color (Light Blue-ish)
+        }
         return ItemDye.field_150922_c[ordinal()];
     }
 
     public String getName() {
+        if (this == CRYSTAL) {
+            return "crystal";
+        }
         return ItemDye.field_150921_b[ordinal()];
     }
 
@@ -97,9 +104,9 @@ public enum EnumDye {
     public static int rgbToHex(int r, int g, int b) {
         int a = 255; // alpha full
         return ((a & 0xFF) << 24) | // alpha
-            ((r & 0xFF) << 16) | // red
-            ((g & 0xFF) << 8) | // green
-            (b & 0xFF); // blue
+                ((r & 0xFF) << 16) | // red
+                ((g & 0xFF) << 8) | // green
+                (b & 0xFF); // blue
     }
 
     public int dyeToAbgr() {
