@@ -151,14 +151,18 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         for (int y = yCoord - 1; y >= 0; y--) {
             Block block = worldObj.getBlock(xCoord, y, zCoord);
 
-            if (block.isAir(worldObj, xCoord, y, zCoord) || block == Blocks.bedrock
-                || block == Blocks.glass
+            if (block.isAir(worldObj, xCoord, y, zCoord) || block == Blocks.glass
                 || block == ModBlocks.LASER_CORE.get()
                 || block == ModBlocks.LENS.get()
                 || block == ModBlocks.COLORED_LENS.get()) {
+                if (y == 0) {
+                    return true;
+                }
                 continue;
             }
-
+            if (block == Blocks.bedrock) {
+                return true;
+            }
             return false;
         }
         return true;
