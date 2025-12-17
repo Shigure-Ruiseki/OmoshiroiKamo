@@ -78,7 +78,13 @@ public abstract class BaseRegistry<T extends BaseRegistryItem<T>> {
      * @return Collection of enabled items.
      */
     public Collection<T> getItems() {
-        return new ArrayList<>(items.values());
+        List<T> result = new ArrayList<>();
+        for (T t : items.values()) {
+            if (t.isEnabled()) {
+                result.add(t);
+            }
+        }
+        return result;
     }
 
     /**
@@ -91,11 +97,15 @@ public abstract class BaseRegistry<T extends BaseRegistryItem<T>> {
      */
     public List<T> getChildren(T parent1, T parent2) {
         List<T> result = new ArrayList<>();
-        result.add(parent1);
-        result.add(parent2);
+        if (parent1.isEnabled()) {
+            result.add(parent1);
+        }
+        if (parent2.isEnabled()) {
+            result.add(parent2);
+        }
 
         for (T item : items.values()) {
-            if (item.isChildOf(parent1, parent2)) {
+            if (item.isEnabled() && item.isChildOf(parent1, parent2)) {
                 result.add(item);
             }
         }
@@ -133,7 +143,7 @@ public abstract class BaseRegistry<T extends BaseRegistryItem<T>> {
     public List<T> getPossibleToSpawn(SpawnType spawnType) {
         List<T> result = new ArrayList<>();
         for (T t : items.values()) {
-            if (t.canSpawn() && t.getSpawnType() == spawnType) {
+            if (t.canSpawn() && t.getSpawnType() == spawnType && t.isEnabled()) {
                 result.add(t);
             }
         }

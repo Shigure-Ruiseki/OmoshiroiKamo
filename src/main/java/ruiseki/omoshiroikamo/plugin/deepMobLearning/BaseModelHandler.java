@@ -58,6 +58,7 @@ public abstract class BaseModelHandler {
     private static class ModelJson {
 
         String name;
+        boolean enabled;
         String texture;
         float numberOfHearts;
         float interfaceScale;
@@ -112,6 +113,7 @@ public abstract class BaseModelHandler {
                     if (model != null) {
                         Logger.debug("Registering (" + this.modID + ") Model: '" + data.name + "':" + model.getId());
 
+                        model.setEnabled(data.enabled);
                         if (data.lang != null) {
                             String langKey = "item.model." + data.name + ".name";
                             for (String entry : data.lang) {
@@ -169,29 +171,42 @@ public abstract class BaseModelHandler {
     }
 
     public void createDefaultConfig(File file, List<ModelRegistryItem> allModels) {
-        try (Writer writer = new FileWriter(file)) {
-            List<ModelJson> jsonModels = new ArrayList<>();
-            for (ModelRegistryItem model : allModels) {
-                ModelJson m = new ModelJson();
-                m.name = model.getEntityName();
-                String fullPath = model.getTexture()
-                    .getResourcePath();
-                m.texture = fullPath.substring(fullPath.lastIndexOf('/') + 1);
-                m.numberOfHearts = model.getNumberOfHearts();
-                m.interfaceScale = model.getInterfaceScale();
-                m.interfaceOffsetX = model.getInterfaceOffsetX();
-                m.interfaceOffsetY = model.getInterfaceOffsetY();
-                m.mobTrivia = model.getMobTrivia();
-                m.lang = model.getLang();
-                jsonModels.add(m);
+        try {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
             }
-            Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-            writer.write(gson.toJson(jsonModels));
 
-            Logger.info("Created default " + configFileName);
+            try (Writer writer = new FileWriter(file)) {
+                List<ModelJson> jsonModels = new ArrayList<>();
+
+                for (ModelRegistryItem model : allModels) {
+                    if (model == null) continue;
+
+                    ModelJson m = new ModelJson();
+                    m.name = model.getEntityName();
+                    m.enabled = true;
+
+                    String fullPath = model.getTexture().getResourcePath();
+                    m.texture = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+
+                    m.numberOfHearts = model.getNumberOfHearts();
+                    m.interfaceScale = model.getInterfaceScale();
+                    m.interfaceOffsetX = model.getInterfaceOffsetX();
+                    m.interfaceOffsetY = model.getInterfaceOffsetY();
+                    m.mobTrivia = model.getMobTrivia();
+                    m.lang = model.getLang();
+
+                    jsonModels.add(m);
+                }
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                writer.write(gson.toJson(jsonModels));
+            }
+
+            Logger.info("Created default " + file.getPath());
         } catch (IOException e) {
-            Logger.error("Failed to create default config: " + e.getMessage());
+            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
         }
     }
 }

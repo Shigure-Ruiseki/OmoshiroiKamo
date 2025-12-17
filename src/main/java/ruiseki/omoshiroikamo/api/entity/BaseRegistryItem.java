@@ -33,6 +33,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     protected T parent2;
 
     protected SpawnType spawnType;
+    protected boolean isEnabled = true;
     protected float coefficient = 1.0f;
 
     protected String[] lang;
@@ -136,6 +137,16 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     }
 
     /**
+     * Enables or disables this registry item.
+     * Disabled items cannot spawn or be used in breeding chains.
+     *
+     * @param enabled true to enable, false to disable.
+     */
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    /**
      * @return A safe copy of the drop ItemStack, or null.
      */
     public ItemStack createDropItem() {
@@ -234,6 +245,14 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     }
 
     /**
+     * @return true if this entry is enabled AND both its parents (if any) are
+     *         enabled.
+     */
+    public boolean isEnabled() {
+        return !(!isEnabled || (parent1 != null && !parent1.isEnabled()) || (parent2 != null && !parent2.isEnabled()));
+    }
+
+    /**
      * Checks whether this item is a child of the given parents (order doesn't matter).
      *
      * @param parent1 Parent candidate 1.
@@ -269,15 +288,15 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
         return getTier() == 1 && spawnType != SpawnType.NONE;
     }
 
-    public String[] getLang() {
-        return lang;
+    public float getCoefficient() {
+        return coefficient;
     }
 
     public ItemStack getDropItem() {
         return dropItem;
     }
 
-    public float getCoefficient() {
-        return coefficient;
+    public String[] getLang() {
+        return lang;
     }
 }

@@ -68,6 +68,7 @@ public abstract class BaseChickenHandler {
     public static class ChickenJson {
 
         String name;
+        boolean enabled;
         String texture;
         String textureOverlay;
         String tintColor; // Hex string e.g. "0xFF0000"
@@ -168,6 +169,7 @@ public abstract class BaseChickenHandler {
                                 + ":"
                                 + layItem.getDisplayName());
 
+                        chicken.setEnabled(data.enabled);
                         chicken.setCoefficient(data.coefficient);
                         if (dropItem != null) {
                             chicken.setDropItem(dropItem);
@@ -364,46 +366,55 @@ public abstract class BaseChickenHandler {
     }
 
     public void createDefaultConfig(File file, List<ChickensRegistryItem> chickens) {
-        try (Writer writer = new FileWriter(file)) {
-            List<ChickenJson> jsonList = new ArrayList<>();
-
-            for (ChickensRegistryItem chicken : chickens) {
-                if (chicken == null) {
-                    Logger.warn("Skipping null chicken while creating default config");
-                    continue;
-                }
-
-                ChickenJson json = new ChickenJson();
-                json.name = chicken.getEntityName();
-                ResourceLocation tex = chicken.getTexture();
-                json.texture = tex.getResourcePath()
-                    .substring(
-                        tex.getResourcePath()
-                            .lastIndexOf("/") + 1);
-                json.tintColor = String.format("0x%06X", chicken.getTintColor());
-                json.bgColor = String.format("0x%06X", chicken.getBgColor());
-                json.fgColor = String.format("0x%06X", chicken.getFgColor());
-                json.parent1 = chicken.getParent1() != null ? chicken.getParent1()
-                    .getEntityName() : null;
-                json.parent2 = chicken.getParent2() != null ? chicken.getParent2()
-                    .getEntityName() : null;
-                json.spawnType = chicken.getSpawnType()
-                    .name();
-                json.coefficient = chicken.getCoefficient();
-                json.layItem = toItemJson(chicken.getLayItem());
-                if (chicken.getDropItem() != null) {
-                    json.dropItem = toItemJson(chicken.getDropItem());
-                }
-                json.lang = chicken.getLang();
-                jsonList.add(json);
+        try {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
             }
-            Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-            writer.write(gson.toJson(jsonList));
 
-            Logger.info("Created default " + configFileName);
-        } catch (IOException e) {
-            Logger.error("Failed to create default config: " + e.getMessage());
+            try (Writer writer = new FileWriter(file)) {
+                List<ChickenJson> jsonList = new ArrayList<>();
+
+                for (ChickensRegistryItem chicken : chickens) {
+                    if (chicken == null) {
+                        continue;
+                    }
+
+                    ChickenJson json = new ChickenJson();
+                    json.name = chicken.getEntityName();
+                    json.enabled = true;
+                    ResourceLocation tex = chicken.getTexture();
+                    json.texture = tex.getResourcePath()
+                        .substring(
+                            tex.getResourcePath()
+                                .lastIndexOf("/") + 1);
+                    json.tintColor = String.format("0x%06X", chicken.getTintColor());
+                    json.bgColor = String.format("0x%06X", chicken.getBgColor());
+                    json.fgColor = String.format("0x%06X", chicken.getFgColor());
+                    json.parent1 = chicken.getParent1() != null ? chicken.getParent1()
+                        .getEntityName() : null;
+                    json.parent2 = chicken.getParent2() != null ? chicken.getParent2()
+                        .getEntityName() : null;
+                    json.spawnType = chicken.getSpawnType()
+                        .name();
+                    json.coefficient = chicken.getCoefficient();
+                    json.layItem = toItemJson(chicken.getLayItem());
+                    if (chicken.getDropItem() != null) {
+                        json.dropItem = toItemJson(chicken.getDropItem());
+                    }
+                    json.lang = chicken.getLang();
+                    jsonList.add(json);
+                }
+                Gson gson = new GsonBuilder().setPrettyPrinting()
+                    .create();
+                writer.write(gson.toJson(jsonList));
+
+                Logger.info("Created default " + configFileName);
+            } catch (IOException e) {
+                Logger.error("Failed to create default config: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
         }
     }
 

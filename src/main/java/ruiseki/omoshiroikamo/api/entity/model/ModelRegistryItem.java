@@ -38,6 +38,9 @@ public class ModelRegistryItem {
     @Getter
     @Setter
     protected String[] lang;
+    @Getter
+    @Setter
+    protected boolean enabled;
 
     public ModelRegistryItem(int id, String entityName, ResourceLocation texture, float numberOfHearts,
         float interfaceScale, int interfaceOffsetX, int interfaceOffsetY, String[] mobTrivia, String[] lang) {

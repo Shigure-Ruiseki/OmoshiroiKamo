@@ -87,7 +87,7 @@ public class ChickensRegistry extends BaseRegistry<ChickensRegistryItem> {
         }
 
         ChickensRegistryItem smart = INSTANCE.getSmartChicken();
-        if (smart == null) {
+        if (smart == null || !smart.isEnabled()) {
             return;
         }
 

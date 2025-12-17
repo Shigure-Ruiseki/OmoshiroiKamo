@@ -23,9 +23,11 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
+import ruiseki.omoshiroikamo.plugin.deepMobLearning.BaseModelHandler;
 
 // Refactor base on OriginalChicken by Chlorine0808
 public abstract class BaseCowHandler {
@@ -61,6 +63,7 @@ public abstract class BaseCowHandler {
     private static class CowJson {
 
         String name;
+        boolean enabled;
         FluidJson fluid;
         String fgColor; // Hex string
         String bgColor; // Hex string
@@ -129,6 +132,7 @@ public abstract class BaseCowHandler {
                     if (cow != null) {
                         Logger.debug("Registering (" + this.modID + ") Cow: '" + data.name + "'");
 
+                        cow.setEnabled(data.enabled);
                         if (data.lang != null) {
                             String langKey = "entity." + data.name + ".name";
                             for (String entry : data.lang) {
@@ -221,33 +225,41 @@ public abstract class BaseCowHandler {
     }
 
     public void createDefaultConfig(File file, List<CowsRegistryItem> allCows) {
-        try (Writer writer = new FileWriter(file)) {
-            List<CowJson> jsonModels = new ArrayList<>();
-            for (CowsRegistryItem cow : allCows) {
-                CowJson m = new CowJson();
-                m.name = cow.getEntityName();
-                m.bgColor = String.format("0x%06X", cow.getBgColor() & 0xFFFFFF);
-                m.fgColor = String.format("0x%06X", cow.getFgColor() & 0xFFFFFF);
-                m.spawnType = cow.getSpawnType() != null ? cow.getSpawnType()
-                    .name() : "NORMAL";
-                if (cow.createMilkFluid() != null) {
-                    FluidJson f = new FluidJson();
-                    f.name = cow.createMilkFluid()
-                        .getFluid()
-                        .getName();
-                    f.amount = cow.createMilkFluid().amount;
-                    m.fluid = f;
-                }
-                m.lang = cow.getLang();
-                jsonModels.add(m);
+        try {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
             }
-            Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-            writer.write(gson.toJson(jsonModels));
 
-            Logger.info("Created default " + configFileName);
+            try (Writer writer = new FileWriter(file)) {
+                List<CowJson> jsonModels = new ArrayList<>();
+
+                for (CowsRegistryItem cow : allCows) {
+                    CowJson m = new CowJson();
+                    m.name = cow.getEntityName();
+                    m.enabled = true;
+                    m.bgColor = String.format("0x%06X", cow.getBgColor() & 0xFFFFFF);
+                    m.fgColor = String.format("0x%06X", cow.getFgColor() & 0xFFFFFF);
+                    m.spawnType = cow.getSpawnType() != null ? cow.getSpawnType()
+                        .name() : "NORMAL";
+                    if (cow.createMilkFluid() != null) {
+                        FluidJson f = new FluidJson();
+                        f.name = cow.createMilkFluid()
+                            .getFluid()
+                            .getName();
+                        f.amount = cow.createMilkFluid().amount;
+                        m.fluid = f;
+                    }
+                    m.lang = cow.getLang();
+                    jsonModels.add(m);
+                }
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                writer.write(gson.toJson(jsonModels));
+            }
+
+            Logger.info("Created default " + file.getPath());
         } catch (IOException e) {
-            Logger.error("Failed to create default config: " + e.getMessage());
+            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
         }
     }
 }
