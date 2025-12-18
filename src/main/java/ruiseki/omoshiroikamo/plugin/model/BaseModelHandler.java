@@ -264,9 +264,13 @@ public abstract class BaseModelHandler {
             } catch (Exception e) {
                 Logger.error("Failed to read existing model config: " + e.getMessage());
             }
+        } else {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) parent.mkdirs();
         }
 
         boolean updated = false;
+        List<String> addedModels = new ArrayList<>();
         for (ModelRegistryItem model : allModels) {
             if (model == null) continue;
 
@@ -276,6 +280,7 @@ public abstract class BaseModelHandler {
                 BaseModelHandler.ModelJson json = toModelJson(model);
                 if (json != null) {
                     existing.add(json);
+                    addedModels.add(model.getEntityName());
                     updated = true;
                 }
             }
@@ -287,9 +292,12 @@ public abstract class BaseModelHandler {
                     .create()
                     .toJson(existing, writer);
                 Logger.info("Updated model config with missing models: " + file.getName());
+                Logger.info("Added " + addedModels.size() + " model(s): " + String.join(", ", addedModels));
             } catch (IOException e) {
                 Logger.error("Failed to update model config: " + e.getMessage());
             }
+        } else {
+            Logger.info("No new models to add to config: " + file.getName());
         }
     }
 }

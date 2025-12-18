@@ -319,9 +319,13 @@ public abstract class BaseCowHandler {
             } catch (Exception e) {
                 Logger.error("Failed to read existing cow config: " + e.getMessage());
             }
+        } else {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) parent.mkdirs();
         }
 
         boolean updated = false;
+        List<String> addedCows = new ArrayList<>();
         for (CowsRegistryItem cow : allCows) {
             if (cow == null) continue;
 
@@ -331,6 +335,7 @@ public abstract class BaseCowHandler {
                 CowJson json = toCowJson(cow);
                 if (json != null) {
                     existing.add(json);
+                    addedCows.add(cow.getEntityName());
                     updated = true;
                 }
             }
@@ -342,9 +347,12 @@ public abstract class BaseCowHandler {
                     .create()
                     .toJson(existing, writer);
                 Logger.info("Updated cow config with missing cows: " + file.getName());
+                Logger.info("Added " + addedCows.size() + " cow(s): " + String.join(", ", addedCows));
             } catch (IOException e) {
                 Logger.error("Failed to update cow config: " + e.getMessage());
             }
+        } else {
+            Logger.info("No new cows to add to config: " + file.getName());
         }
     }
 }

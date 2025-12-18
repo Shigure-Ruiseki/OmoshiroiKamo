@@ -487,11 +487,15 @@ public abstract class BaseChickenHandler {
             } catch (Exception e) {
                 Logger.error("Failed to read existing chicken config: " + e.getMessage());
             }
+        } else {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) parent.mkdirs();
         }
 
         boolean updated = false;
+        List<String> addedChickens = new ArrayList<>();
         for (ChickensRegistryItem chicken : allChickens) {
-            if (chicken == null) continue;
+            if (chicken == null || chicken.getEntityName() == null) continue;
 
             boolean exists = existing.stream()
                 .anyMatch(c -> c.name.equalsIgnoreCase(chicken.getEntityName()));
@@ -499,6 +503,7 @@ public abstract class BaseChickenHandler {
                 ChickenJson json = toChickenJson(chicken);
                 if (json != null) {
                     existing.add(json);
+                    addedChickens.add(chicken.getEntityName());
                     updated = true;
                 }
             }
@@ -509,10 +514,13 @@ public abstract class BaseChickenHandler {
                 new GsonBuilder().setPrettyPrinting()
                     .create()
                     .toJson(existing, writer);
-                Logger.info("Updated model config with missing chickens: " + file.getName());
+                Logger.info("Updated chicken config with missing chickens: " + file.getName());
+                Logger.info("Added " + addedChickens.size() + " chicken(s): " + String.join(", ", addedChickens));
             } catch (IOException e) {
                 Logger.error("Failed to update chicken config: " + e.getMessage());
             }
+        } else {
+            Logger.info("No new chickens to add to config: " + file.getName());
         }
     }
 }
