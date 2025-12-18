@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.model.DataModel;
 import ruiseki.omoshiroikamo.api.entity.model.DataModelExperience;
+import ruiseki.omoshiroikamo.api.entity.model.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
@@ -34,39 +36,37 @@ public class ItemDataModel extends ItemOK {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
-        for (DataModel model : DataModel.getAllModels()) {
+        for (ModelRegistryItem model : ModelRegistry.INSTANCE.getItems()) {
             list.add(new ItemStack(this, 1, model.getId()));
         }
     }
 
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
-        DataModel model = DataModel.getDataFromStack(stack);
+        ModelRegistryItem model = DataModel.getDataFromStack(stack);
         if (model != null) {
-            model.createTagCompound(stack);
+            NBTTagCompound tag = DataModel.createTagCompound(stack);
+            stack.setTagCompound(tag);
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
-        DataModel model = DataModel.getDataFromStack(stack);
+        ModelRegistryItem model = ModelRegistry.INSTANCE.getByType(stack.getItemDamage());
         if (model == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(
-            model.getItem()
-                .getItemName());
+        return LibMisc.LANG.localize(model.getItemName());
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg) {
-        for (DataModel model : DataModel.getAllModels()) {
+        for (ModelRegistryItem model : ModelRegistry.INSTANCE.getItems()) {
             int type = model.getId();
-            ModelRegistryItem item = model.getItem();
 
-            ResourceLocation tex = item.getTexture();
+            ResourceLocation tex = model.getTexture();
             String path = tex.getResourcePath();
             String iconName = tex.getResourceDomain() + ":" + path;
 
@@ -94,8 +94,7 @@ public class ItemDataModel extends ItemOK {
         if (!KeyboardUtils.isHoldingShift()) {
             list.add(LibMisc.LANG.localize("tooltip.holdshift"));
         } else {
-            DataModel model = DataModel.getDataFromStack(stack);
-            int tier = model.getTier(stack);
+            int tier = DataModel.getTier(stack);
             list.add(
                 LibMisc.LANG
                     .localize("tooltip.data_model.tier", LibMisc.LANG.localize(DataModelExperience.getTierName(tier))));
@@ -105,9 +104,9 @@ public class ItemDataModel extends ItemOK {
                         "tooltip.data_model.data.collected",
                         DataModelExperience.getCurrentTierSimulationCountWithKills(
                             tier,
-                            model.getKillCount(stack),
-                            model.getSimulationCount(stack)),
-                        DataModelExperience.getTierRoof(tier, true)));
+                            DataModel.getKillCount(stack),
+                            DataModel.getSimulationCount(stack)),
+                        DataModelExperience.getTierRoof(tier, false)));
                 list.add(
                     LibMisc.LANG.localize(
                         "tooltip.data_model.data.killmultiplier",

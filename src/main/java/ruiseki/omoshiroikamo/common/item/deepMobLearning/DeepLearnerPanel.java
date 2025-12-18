@@ -39,6 +39,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.model.DataModel;
 import ruiseki.omoshiroikamo.api.entity.model.DataModelExperience;
+import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
@@ -222,18 +223,15 @@ public class DeepLearnerPanel extends ModularPanel {
         ItemStack stack = getHandler().getHandler()
             .getStackInSlot(modelIndex);
         if (stack == null) return;
-        DataModel model = DataModel.getDataFromStack(stack);
+        ModelRegistryItem model = DataModel.getDataFromStack(stack);
         if (model == null) return;
-        float numberOfHearts = model.getItem()
-            .getNumberOfHearts();
-        String name = model.getItem()
-            .getDisplayName();
-        String[] trivia = model.getItem()
-            .getMobTrivia();
-        int tier = model.getTier(stack);
-        int totalKillCount = model.getTotalKillCount(stack);
-        int killsThisTier = model.getKillCount(stack);
-        int simulationsThisTier = model.getSimulationCount(stack);
+        float numberOfHearts = model.getNumberOfHearts();
+        String name = model.getDisplayName();
+        String[] trivia = model.getMobTrivia();
+        int tier = DataModel.getTier(stack);
+        int totalKillCount = DataModel.getTotalKillCount(stack);
+        int killsThisTier = DataModel.getKillCount(stack);
+        int simulationsThisTier = DataModel.getSimulationCount(stack);
         boolean isMaxTier = tier >= DataModelExperience.getMaxTier();
 
         TextWidget<?> heartTile = IKey.lang("gui.learner_heart_tile")
@@ -425,10 +423,8 @@ public class DeepLearnerPanel extends ModularPanel {
             return;
         }
 
-        DataModel model = DataModel.getDataFromStack(stack);
-        if (model == null) return;
-
-        Class<? extends Entity> entityClass = model.getEntityClass();
+        ModelRegistryItem model = DataModel.getDataFromStack(stack);
+        Class<? extends Entity> entityClass = DataModel.getEntityClass(stack);
         if (entityClass == null) return;
 
         Entity entity;
@@ -445,12 +441,9 @@ public class DeepLearnerPanel extends ModularPanel {
         ModelDisplay display = modelDisplayList.get(modelIndex);
         display.setEnabled(true);
 
-        float scale = model.getItem()
-            .getInterfaceScale();
-        int offsetX = model.getItem()
-            .getInterfaceOffsetX();
-        int offsetY = model.getItem()
-            .getInterfaceOffsetY();
+        float scale = model.getInterfaceScale();
+        int offsetX = model.getInterfaceOffsetX();
+        int offsetY = model.getInterfaceOffsetY();
 
         Widget<?> widget = new EntityDisplayWidget(() -> livingBase).doesLookAtMouse(true)
             .asWidget()
@@ -484,8 +477,7 @@ public class DeepLearnerPanel extends ModularPanel {
             if (stack == null) continue;
             if (!(stack.getItem() instanceof ItemDataModel)) continue;
 
-            DataModel model = DataModel.getDataFromStack(stack);
-            if (model != null && model.getEntityClass() != null) {
+            if (DataModel.getEntityClass(stack) != null) {
                 valid.add(i);
             }
         }
