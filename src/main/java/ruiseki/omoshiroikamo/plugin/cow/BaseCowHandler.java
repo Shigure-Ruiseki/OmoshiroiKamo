@@ -27,7 +27,6 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
-import ruiseki.omoshiroikamo.config.backport.DeepMobLearningConfig;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 // Refactor base on OriginalChicken by Chlorine0808

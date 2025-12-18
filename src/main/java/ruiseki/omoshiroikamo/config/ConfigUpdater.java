@@ -1,10 +1,11 @@
 package ruiseki.omoshiroikamo.config;
 
-import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
-import ruiseki.omoshiroikamo.common.util.Logger;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+
+import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
+
+import ruiseki.omoshiroikamo.common.util.Logger;
 
 public class ConfigUpdater {
 
@@ -43,9 +44,15 @@ public class ConfigUpdater {
             Field field = configClass.getDeclaredField(fieldName);
             field.setAccessible(true);
 
-            if (field.getType().isArray() && value.getClass().isArray()) {
+            if (field.getType()
+                .isArray()
+                && value.getClass()
+                    .isArray()) {
                 int length = Array.getLength(value);
-                Object newArray = Array.newInstance(field.getType().getComponentType(), length);
+                Object newArray = Array.newInstance(
+                    field.getType()
+                        .getComponentType(),
+                    length);
                 for (int i = 0; i < length; i++) {
                     Array.set(newArray, i, Array.get(value, i));
                 }
