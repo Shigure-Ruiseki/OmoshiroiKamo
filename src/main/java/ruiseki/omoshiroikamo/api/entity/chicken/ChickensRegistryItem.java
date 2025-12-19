@@ -31,6 +31,7 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      * The item this chicken lays periodically.
      */
     private ItemStack layItem;
+    private String layString;
 
     private ResourceLocation textureOverlay;
 
@@ -40,13 +41,12 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      * @param id         unique numeric ID
      * @param entityName registry and localization name
      * @param texture    entity texture
-     * @param layItem    the item this chicken lays
      * @param bgColor    background color for JEI/GUI
      * @param fgColor    foreground color for JEI/GUI
      */
-    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem, int bgColor,
-        int fgColor, String[] lang) {
-        this(id, entityName, texture, layItem, bgColor, fgColor, null, null, lang);
+    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor,
+        String[] lang) {
+        this(id, entityName, texture, bgColor, fgColor, null, null, lang);
     }
 
     private int tintColor = 0xFFFFFF;
@@ -66,10 +66,9 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      * @param parent1 chicken parent 1 (nullable)
      * @param parent2 chicken parent 2 (nullable)
      */
-    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem, int bgColor,
-        int fgColor, @Nullable ChickensRegistryItem parent1, @Nullable ChickensRegistryItem parent2, String[] lang) {
+    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor,
+        @Nullable ChickensRegistryItem parent1, @Nullable ChickensRegistryItem parent2, String[] lang) {
         super(id, entityName, texture, bgColor, fgColor, parent1, parent2, lang);
-        this.layItem = layItem;
     }
 
     /**
@@ -80,6 +79,11 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      */
     public ChickensRegistryItem setLayItem(ItemStack itemStack) {
         this.layItem = itemStack;
+        return this;
+    }
+
+    public ChickensRegistryItem setLayString(String layString) {
+        this.layString = layString;
         return this;
     }
 
@@ -154,5 +158,9 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
 
     public ItemStack getLayItem() {
         return layItem;
+    }
+
+    public String getLayString() {
+        return layString;
     }
 }

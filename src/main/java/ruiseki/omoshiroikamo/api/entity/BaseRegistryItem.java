@@ -24,6 +24,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
 
     protected final int id;
     protected final String entityName;
+    protected String dropString;
     protected ItemStack dropItem;
     protected final int bgColor;
     protected final int fgColor;
@@ -95,6 +96,12 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     @SuppressWarnings("unchecked")
     public T setDropItem(ItemStack stack) {
         this.dropItem = stack;
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setDropString(String dropString) {
+        this.dropString = dropString;
         return (T) this;
     }
 
@@ -298,5 +305,9 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
 
     public String[] getLang() {
         return lang;
+    }
+
+    public String getDropString() {
+        return dropString;
     }
 }

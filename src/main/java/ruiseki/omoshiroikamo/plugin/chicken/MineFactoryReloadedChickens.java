@@ -23,11 +23,10 @@ public class MineFactoryReloadedChickens extends BaseChickenHandler {
             "PinkSlimeChicken",
             this.nextID(),
             "PinkSlimeChicken.png",
-            this.getFirstOreDictionary("slimeballPink"),
             0xC8738A,
             0x804954,
             SpawnType.NONE,
-            new String[] { "en_US:Pink Slime Chicken", "ja_JP:ピンクスライムのニワトリ" });
+            new String[] { "en_US:Pink Slime Chicken", "ja_JP:ピンクスライムのニワトリ" }).setLayString("ore:slimeballPink");
         allChickens.add(pinkSlimeChicken);
 
         return allChickens;

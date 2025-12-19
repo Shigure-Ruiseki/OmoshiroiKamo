@@ -25,33 +25,31 @@ public class BotaniaChickens extends BaseChickenHandler {
             "TerrasteelChicken",
             this.nextID(),
             "TerrasteelChicken.png",
-            this.getFirstOreDictionary("ingotTerrasteel"),
             0x3ff123,
             0xf5fcf1,
             SpawnType.NONE,
-            new String[] { "en_US:Terrasteel Chicken", "ja_JP:テラースチールのニワトリ" });
+            new String[] { "en_US:Terrasteel Chicken", "ja_JP:テラースチールのニワトリ" }).setLayString("ore:ingotTerrasteel");
         allChickens.add(terrasteelChicken);
 
         manasteelChicken = addChicken(
             "ManasteelChicken",
             this.nextID(),
             "ManasteelChicken.png",
-            this.getFirstOreDictionary("ingotManasteel"),
             0x69d7ff,
             0x002c4b,
             SpawnType.NONE,
-            new String[] { "en_US:Manasteel Chicken", "ja_JP:マナスチールのニワトリ" });
+            new String[] { "en_US:Manasteel Chicken", "ja_JP:マナスチールのニワトリ" }).setLayString("ore:ingotManasteel");
         allChickens.add(manasteelChicken);
 
         elementiumChicken = addChicken(
             "ElementiumChicken",
             this.nextID(),
             "ElementiumChicken.png",
-            this.getFirstOreDictionary("nuggetElvenElementium"),
             0xf655f3,
             0xb407b7,
             SpawnType.NONE,
-            new String[] { "en_US:Elementium Chicken", "ja_JP:エレメンティウムのニワトリ" });
+            new String[] { "en_US:Elementium Chicken", "ja_JP:エレメンティウムのニワトリ" })
+                .setLayString("ore:nuggetElvenElementium");
         allChickens.add(elementiumChicken);
 
         return allChickens;

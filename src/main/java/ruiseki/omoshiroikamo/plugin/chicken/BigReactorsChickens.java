@@ -27,55 +27,50 @@ public class BigReactorsChickens extends BaseChickenHandler {
             "YelloriumChicken",
             this.nextID(),
             "YelloriumChicken.png",
-            this.getFirstOreDictionary("ingotYellorium"),
             0xA5B700,
             0xD7EF00,
             SpawnType.NONE,
-            new String[] { "en_US:Yellorium Chicken", "ja_JP:イエロリウムのニワトリ" });
+            new String[] { "en_US:Yellorium Chicken", "ja_JP:イエロリウムのニワトリ" }).setLayString("ore:ingotYellorium");
         allChickens.add(yelloriumChicken);
 
         graphiteChicken = addChicken(
             "GraphiteChicken",
             this.nextID(),
             "GraphiteChicken.png",
-            this.getFirstOreDictionary("ingotGraphite"),
             0x41453F,
             0x595959,
             SpawnType.NONE,
-            new String[] { "en_US:Graphite Chicken", "ja_JP:グラファイトのニワトリ" });
+            new String[] { "en_US:Graphite Chicken", "ja_JP:グラファイトのニワトリ" }).setLayString("ore:ingotGraphite");
         allChickens.add(graphiteChicken);
 
         cyaniteChicken = addChicken(
             "CyaniteChicken",
             this.nextID(),
             "CyaniteChicken.png",
-            this.getFirstOreDictionary("ingotCyanite"),
             0x0068B4,
             0x5CAFDB,
             SpawnType.NONE,
-            new String[] { "en_US:Cyanite Chicken", "ja_JP:シアナイトのニワトリ" });
+            new String[] { "en_US:Cyanite Chicken", "ja_JP:シアナイトのニワトリ" }).setLayString("ore:ingotCyanite");
         allChickens.add(cyaniteChicken);
 
         blutoniumChicken = addChicken(
             "BlutoniumChicken",
             this.nextID(),
             "BlutoniumChicken.png",
-            this.getFirstOreDictionary("ingotBlutonium"),
             0x4642D6,
             0xf5fcf1,
             SpawnType.NONE,
-            new String[] { "en_US:Blutonium Chicken", "ja_JP:ブルトニウムのニワトリ" });
+            new String[] { "en_US:Blutonium Chicken", "ja_JP:ブルトニウムのニワトリ" }).setLayString("ore:ingotBlutonium");
         allChickens.add(blutoniumChicken);
 
         ludicriteChicken = addChicken(
             "LudicriteChicken",
             this.nextID(),
             "LudicriteChicken.png",
-            this.getFirstOreDictionary("ingotLudicrite"),
             0xC63BE5,
             0xF27CFF,
             SpawnType.NONE,
-            new String[] { "en_US:Ludicrite Chicken", "ja_JP:ルディクライトのニワトリ" });
+            new String[] { "en_US:Ludicrite Chicken", "ja_JP:ルディクライトのニワトリ" }).setLayString("ore:ingotLudicrite");
         allChickens.add(ludicriteChicken);
 
         return allChickens;

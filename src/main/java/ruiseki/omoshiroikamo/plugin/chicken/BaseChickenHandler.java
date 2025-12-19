@@ -160,7 +160,6 @@ public abstract class BaseChickenHandler {
                         data.name,
                         chickenID,
                         data.texture,
-                        layItem,
                         bgColor,
                         fgColor,
                         type,
@@ -176,6 +175,7 @@ public abstract class BaseChickenHandler {
 
                         chicken.setEnabled(data.enabled);
                         chicken.setCoefficient(data.coefficient);
+                        chicken.setLayItem(layItem);
                         if (dropItem != null) {
                             chicken.setDropItem(dropItem);
                         }
@@ -290,18 +290,13 @@ public abstract class BaseChickenHandler {
         }
     }
 
-    protected ChickensRegistryItem addChicken(String chickenName, int chickenID, String texture, ItemStack layItem,
-        int bgColor, int fgColor, SpawnType spawntype, String[] lang) {
-        if (layItem == null || layItem.getItem() == null) {
-            Logger.error("Error Registering ({}) Chicken: '{}' It's LayItem was null", this.modID, chickenName);
-            return null;
-        }
+    protected ChickensRegistryItem addChicken(String chickenName, int chickenID, String texture, int bgColor,
+        int fgColor, SpawnType spawntype, String[] lang) {
 
         return new ChickensRegistryItem(
             chickenID,
             chickenName,
             new ResourceLocation(LibMisc.MOD_ID, this.texturesLocation + texture),
-            layItem,
             bgColor,
             fgColor,
             lang).setSpawnType(spawntype);
@@ -407,7 +402,12 @@ public abstract class BaseChickenHandler {
         json.spawnType = chicken.getSpawnType()
             .name();
         json.coefficient = chicken.getCoefficient();
-        json.layItem = ItemJson.parseItemStack(chicken.getLayItem());
+        if (chicken.getLayString() != null) {
+            json.layItem = ItemJson.parseItemString(chicken.getLayString());
+        }
+        if (chicken.getLayItem() != null) {
+            json.layItem = ItemJson.parseItemStack(chicken.getLayItem());
+        }
         if (chicken.getDropItem() != null) {
             json.dropItem = ItemJson.parseItemStack((chicken.getDropItem()));
         }
