@@ -13,11 +13,11 @@ import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
+import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
-import ruiseki.omoshiroikamo.common.util.Logger;
 
 public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
@@ -40,7 +40,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return getMinerNameBase() + " Tier " + (tier + 1);
+        return getMinerNameBase();
     }
 
     @Override
@@ -80,8 +80,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         for (int i = 0; i < arecipes.size(); i++) {
             CachedRecipe recipe = arecipes.get(i);
             if (recipe.getResult() != null && recipe.getResult().item != null) {
-                Logger.info("[loadAllRecipes] tier=" + tier + " recipe[" + i + "]="
-                        + recipe.getResult().item.getDisplayName());
+                Logger.info(
+                    "[loadAllRecipes] tier=" + tier + " recipe[" + i + "]=" + recipe.getResult().item.getDisplayName());
             }
         }
     }
@@ -110,8 +110,12 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         boolean isLens = (item == clearLens || item == coloredLens);
         boolean isMiner = (item == Item.getItemFromBlock(getMinerBlock()));
 
-        Logger.info("[loadUsageRecipes] handler.tier=" + tier + ", ingredient.damage=" + ingredient.getItemDamage()
-                + ", isMiner=" + isMiner);
+        Logger.info(
+            "[loadUsageRecipes] handler.tier=" + tier
+                + ", ingredient.damage="
+                + ingredient.getItemDamage()
+                + ", isMiner="
+                + isMiner);
 
         if (isMiner) {
             // Extract the tier from the ingredient's metadata and load recipes for that
@@ -122,7 +126,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             if (tierRegistry != null) {
                 List<WeightedStackBase> unfocusedList = tierRegistry.getUnFocusedList();
                 Logger.info(
-                        "[loadUsageRecipes] tierRegistry has " + unfocusedList.size() + " items for tier=" + inputTier);
+                    "[loadUsageRecipes] tierRegistry has " + unfocusedList.size() + " items for tier=" + inputTier);
                 for (WeightedStackBase ws : unfocusedList) {
                     ItemStack output = ws.getMainStack();
                     if (output != null) {

@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.plugin.nei;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackpackGuiContainer;
+import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
@@ -26,11 +27,23 @@ public class NEIConfig implements IConfigureNEI {
         Logger.info("Loading NeiConfig: " + getName());
         if (BackportConfigs.useEnvironmentalTech) {
             Logger.info(
-                    "[NEIConfig] Registering QuantumExtractor handlers, MAX_TIER=" + QuantumExtractorRecipes.MAX_TIER);
+                "[NEIConfig] Registering QuantumExtractor handlers, MAX_TIER=" + QuantumExtractorRecipes.MAX_TIER);
             for (int i = 0; i < QuantumExtractorRecipes.MAX_TIER; i++) {
                 Logger.info("[NEIConfig] Registering tier " + i);
-                registerHandler(new QuantumOreExtractorRecipeHandler(i));
-                registerHandler(new QuantumResExtractorRecipeHandler(i));
+                // Use anonymous classes to make NEI treat each tier as a separate handler type
+                final int tierFinal = i;
+                QuantumOreExtractorRecipeHandler oreHandler = new QuantumOreExtractorRecipeHandler(tierFinal) {};
+                QuantumResExtractorRecipeHandler resHandler = new QuantumResExtractorRecipeHandler(tierFinal) {};
+                registerHandler(oreHandler);
+                registerHandler(resHandler);
+
+                // Register Recipe Catalysts (tab icons on the left side of the tab)
+                API.addRecipeCatalyst(
+                    ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, tierFinal),
+                    oreHandler.getRecipeID());
+                API.addRecipeCatalyst(
+                    ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, tierFinal),
+                    resHandler.getRecipeID());
             }
         }
         if (BackportConfigs.useChicken) {
