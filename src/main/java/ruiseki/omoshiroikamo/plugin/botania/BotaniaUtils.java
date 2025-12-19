@@ -33,8 +33,8 @@ public class BotaniaUtils {
             } catch (Throwable t) {
                 if (errorCount++ > 10) {
                     Logger.warn(
-                        "Failed to interact with Botania too often. Magnet will ignore Solegnolias from now on. Last error was: {}"
-                            , t);
+                        "Failed to interact with Botania too often. Magnet will ignore Solegnolias from now on. Last error was: {}",
+                        t);
                     hasSolegnoliaAround = null;
                 }
             }

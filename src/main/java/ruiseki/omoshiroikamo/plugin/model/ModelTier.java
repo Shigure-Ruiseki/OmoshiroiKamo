@@ -290,8 +290,7 @@ public class ModelTier {
                     .create()
                     .toJson(existing, writer);
                 Logger.info("Updated model tier config with missing model tiers: {}", file.getName());
-                Logger
-                    .info("Added {} model tier(s): {}", addedTiers.size(), String.join(", ", addedTiers.toString()));
+                Logger.info("Added {} model tier(s): {}", addedTiers.size(), String.join(", ", addedTiers.toString()));
             } catch (IOException e) {
                 Logger.error("Failed to update model tier config: {}", e.getMessage());
             }

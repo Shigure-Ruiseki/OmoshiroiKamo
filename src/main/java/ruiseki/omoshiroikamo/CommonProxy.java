@@ -41,7 +41,9 @@ public class CommonProxy {
 
     public void onConstruction(FMLConstructionEvent event) {
         if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
-            Logger.info("{} is in snapshot mode. Disabling update checker... Other features may also be different.", LibMisc.MOD_ID);
+            Logger.info(
+                "{} is in snapshot mode. Disabling update checker... Other features may also be different.",
+                LibMisc.MOD_ID);
         }
         MCLib.init();
     }
@@ -59,7 +61,7 @@ public class CommonProxy {
 
         if (!LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
             MCLibModules.updateCheckAPI.submitModTask(LibMisc.MOD_ID, LibMisc.VERSION, LibMisc.VERSION_URL);
-            Logger.info("Submitting update check for {} version {}",  LibMisc.MOD_ID, LibMisc.VERSION);
+            Logger.info("Submitting update check for {} version {}", LibMisc.MOD_ID, LibMisc.VERSION);
         }
     }
 

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
@@ -23,7 +22,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -122,7 +120,7 @@ public abstract class BaseChickenHandler {
             List<ChickenJson> customChickens = gson.fromJson(reader, listType);
 
             if (customChickens == null) {
-                Logger.info( "{} is empty or invalid.",configFileName);
+                Logger.info("{} is empty or invalid.", configFileName);
                 return allChickens;
             }
 
@@ -169,7 +167,12 @@ public abstract class BaseChickenHandler {
                         data.lang);
 
                     if (chicken != null) {
-                        Logger.debug("Registering ({}) Chicken: '{}':{}:{}", this.modID, chicken.getEntityName(), chicken.getId(), layItem.getDisplayName());
+                        Logger.debug(
+                            "Registering ({}) Chicken: '{}':{}:{}",
+                            this.modID,
+                            chicken.getEntityName(),
+                            chicken.getId(),
+                            layItem.getDisplayName());
 
                         chicken.setEnabled(data.enabled);
                         chicken.setCoefficient(data.coefficient);
@@ -250,7 +253,11 @@ public abstract class BaseChickenHandler {
             if (p1 != null && p2 != null) {
                 child.setParents(p1, p2);
             } else {
-                Logger.error("Could not find parents for custom chicken {}: {}, {}",data.name, data.parent1, data.parent2);
+                Logger.error(
+                    "Could not find parents for custom chicken {}: {}, {}",
+                    data.name,
+                    data.parent1,
+                    data.parent2);
             }
         }
 
@@ -286,7 +293,7 @@ public abstract class BaseChickenHandler {
     protected ChickensRegistryItem addChicken(String chickenName, int chickenID, String texture, ItemStack layItem,
         int bgColor, int fgColor, SpawnType spawntype, String[] lang) {
         if (layItem == null || layItem.getItem() == null) {
-            Logger.error("Error Registering ({}) Chicken: '{}' It's LayItem was null",this.modID , chickenName);
+            Logger.error("Error Registering ({}) Chicken: '{}' It's LayItem was null", this.modID, chickenName);
             return null;
         }
 
