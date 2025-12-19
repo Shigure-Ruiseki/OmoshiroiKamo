@@ -13,8 +13,6 @@ import net.minecraft.client.resources.IResourcePack;
 
 import org.apache.commons.io.FileUtils;
 
-import com.enderio.core.common.util.EnderFileUtils;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import ruiseki.omoshiroikamo.common.util.Logger;
@@ -140,7 +138,7 @@ public class ResourcePackAssembler {
      * @return The {@link ResourcePackAssembler} instance.
      */
     public ResourcePackAssembler assemble() {
-        EnderFileUtils.safeDeleteDirectory(dir);
+        OKFileUtils.safeDeleteDirectory(dir);
         dir.mkdirs();
 
         String pathToDir = dir.getAbsolutePath();
@@ -150,7 +148,7 @@ public class ResourcePackAssembler {
             writeNewFile(metaFile, mcmeta);
 
             if (hasPackPng) {
-                EnderFileUtils
+                OKFileUtils
                     .copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
             }
 
@@ -173,8 +171,8 @@ public class ResourcePackAssembler {
                 FileUtils.copyFile(custom.file, new File(directory.getAbsolutePath() + "/" + custom.file.getName()));
             }
 
-            EnderFileUtils.zipFolderContents(dir, zip);
-            EnderFileUtils.safeDeleteDirectory(dir);
+            OKFileUtils.zipFolderContents(dir, zip);
+            OKFileUtils.safeDeleteDirectory(dir);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -204,9 +202,9 @@ public class ResourcePackAssembler {
                 }
 
                 File dest = new File(dir.getParent() + "/resourcepack/" + zip.getName());
-                EnderFileUtils.safeDelete(dest);
+                OKFileUtils.safeDelete(dest);
                 FileUtils.copyFile(zip, dest);
-                EnderFileUtils.safeDelete(zip);
+                OKFileUtils.safeDelete(zip);
                 writeNewFile(
                     new File(dest.getParent() + "/readme.txt"),
                     LibMisc.LANG.localize("resourcepack.readme") + "\n\n"
@@ -221,7 +219,7 @@ public class ResourcePackAssembler {
     }
 
     private void writeNewFile(File file, String defaultText) throws IOException {
-        EnderFileUtils.safeDelete(file);
+        OKFileUtils.safeDelete(file);
         file.delete();
         file.getParentFile()
             .mkdirs();
