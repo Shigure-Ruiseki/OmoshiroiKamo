@@ -1,16 +1,6 @@
 package ruiseki.omoshiroikamo.api.entity.model;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class DataModelExperience {
-
-    public static List<ModelTierRegistryItem> getAllTiers() {
-        return ModelTierRegistry.INSTANCE.getItems()
-            .stream()
-            .sorted((a, b) -> Integer.compare(a.getTier(), b.getTier()))
-            .collect(Collectors.toList());
-    }
 
     public static ModelTierRegistryItem getTierItem(int tier) {
         return ModelTierRegistry.INSTANCE.getByType(tier);
@@ -21,58 +11,40 @@ public class DataModelExperience {
     }
 
     public static int getMaxTier() {
-        return getAllTiers().size();
+        return ModelTierRegistry.INSTANCE.getMaxTierValue();
     }
 
-    private static boolean isMaxTier(int tier) {
-        return tier >= getMaxTier();
+    public static boolean isMaxTier(int tier) {
+        return ModelTierRegistry.INSTANCE.isMaxTier(tier);
     }
 
     public static boolean shouldIncreaseTier(int tier, int kc, int sc) {
         if (isMaxTier(tier)) return false;
-
-        ModelTierRegistryItem tierItem = getTierItem(tier);
-        if (tierItem == null) return false;
-
-        int multiplier = tierItem.getKillMultiplier();
-        int roof = tierItem.getDataToNext(); // dataToNext = "experience needed to next tier"
-
-        int totalExp = kc * multiplier + sc;
-        return totalExp >= roof;
+        int roof = getTierRoof(tier, false);
+        int killExperience = kc * getKillMultiplier(tier);
+        return killExperience + sc >= roof;
     }
 
     public static double getCurrentTierKillCountWithSims(int tier, int kc, int sc) {
         if (isMaxTier(tier)) return 0;
-
-        ModelTierRegistryItem tierItem = getTierItem(tier);
-        int multiplier = tierItem.getKillMultiplier();
-
-        return kc + ((double) sc / multiplier);
+        int multi = Math.max(getKillMultiplier(tier), 1);
+        return kc + ((double) sc / multi);
     }
 
     public static int getCurrentTierSimulationCountWithKills(int tier, int kc, int sc) {
         if (isMaxTier(tier)) return 0;
-
-        ModelTierRegistryItem tierItem = getTierItem(tier);
-        int multiplier = tierItem.getKillMultiplier();
-
-        return sc + (kc * multiplier);
+        return sc + (kc * getTierItem(tier).getKillMultiplier());
     }
 
     public static double getKillsToNextTier(int tier, int kc, int sc) {
         if (isMaxTier(tier)) return 0;
-
-        ModelTierRegistryItem tierItem = getTierItem(tier);
-        return tierItem.getDataToNext() - getCurrentTierKillCountWithSims(tier, kc, sc);
+        int killRoof = getTierRoof(tier, true);
+        return killRoof - getCurrentTierKillCountWithSims(tier, kc, sc);
     }
 
     public static int getSimulationsToNextTier(int tier, int kc, int sc) {
         if (isMaxTier(tier)) return 0;
-
-        ModelTierRegistryItem tierItem = getTierItem(tier);
-        int multiplier = tierItem.getKillMultiplier();
-        int roof = tierItem.getDataToNext();
-
+        int roof = getTierRoof(tier, false);
         return roof - getCurrentTierSimulationCountWithKills(tier, kc, sc);
     }
 

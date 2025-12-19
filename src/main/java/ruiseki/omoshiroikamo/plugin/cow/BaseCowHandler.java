@@ -23,6 +23,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
+import ruiseki.omoshiroikamo.api.json.FluidJson;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -72,23 +73,17 @@ public abstract class BaseCowHandler {
         String[] lang;
     }
 
-    private static class FluidJson {
-
-        String name;
-        int amount;
-    }
-
     private List<CowJson> loadedCustomCows;
 
     public List<CowsRegistryItem> tryRegisterCows(List<CowsRegistryItem> allCows) {
-        Logger.info("Looking for " + modName + " cows...");
+        Logger.info("Looking for {} cows...", modName);
 
         if (needsMod && !Loader.isModLoaded(modID)) {
-            Logger.info("Skipped " + modName + " cows → required mod \"" + modID + "\" is not loaded.");
+            Logger.info("Skipped {} cows → required mod \"{}\" is not loaded.", modName, modID);
             return allCows;
         }
 
-        Logger.info("Loading " + modName + " cows...");
+        Logger.info("Loading {} cows...", modName);
 
         File configFile = new File("config/" + LibMisc.MOD_ID + "/cow/" + configFileName);
         if (!configFile.exists()) {
@@ -109,7 +104,7 @@ public abstract class BaseCowHandler {
             Type listType = new TypeToken<ArrayList<CowJson>>() {}.getType();
             List<CowJson> cows = gson.fromJson(reader, listType);
             if (cows == null) {
-                Logger.info(configFileName + " is empty or invalid.");
+                Logger.info("{} is empty or invalid.", configFileName);
                 return allCows;
             }
 
@@ -119,10 +114,9 @@ public abstract class BaseCowHandler {
 
             for (CowJson data : cows) {
                 try {
-                    FluidStack milk = resolveFluidStack(data.fluid);
+                    FluidStack milk = FluidJson.resolveFluidStack(data.fluid);
                     if (milk == null) {
-                        Logger.error(
-                            "Error Registering (" + this.modID + ") Cow: '" + data.name + "' It's fluid was null");
+                        Logger.error("Error registering ({}) Cow '{}' : fluid was null", this.modID, data.name);
                         continue;
                     }
                     int bgColor = parseColor(data.bgColor, 0xFFFFFF);
@@ -134,7 +128,7 @@ public abstract class BaseCowHandler {
                             type = SpawnType.valueOf(data.spawnType.toUpperCase());
                         }
                     } catch (IllegalArgumentException e) {
-                        Logger.error("Invalid spawn type for " + data.name + ": " + data.spawnType);
+                        Logger.error("Invalid spawn type for cow {}: {}", data.name, data.spawnType);
                     }
 
                     // Migrate
@@ -147,7 +141,7 @@ public abstract class BaseCowHandler {
                     CowsRegistryItem cow = addCow(data.name, cowID, milk, bgColor, fgColor, type, data.lang);
 
                     if (cow != null) {
-                        Logger.debug("Registering (" + this.modID + ") Cow: '" + data.name + "'");
+                        Logger.debug("Registering ({}) Cow '{}'", this.modID, data.name);
 
                         cow.setEnabled(data.enabled);
                         if (data.lang != null) {
@@ -173,13 +167,12 @@ public abstract class BaseCowHandler {
                     }
 
                 } catch (Exception e) {
-                    Logger.error("Error registering cow " + data.name + ": " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.error("Error registering cow {}", data.name, e);
                 }
             }
             this.loadedCustomCows = null;
         } catch (IOException e) {
-            Logger.error("Failed to read " + configFileName + ": " + e.getMessage());
+            Logger.error("Failed to read {}: {}", configFileName, e.getMessage());
         }
 
         return allCows;
@@ -202,16 +195,16 @@ public abstract class BaseCowHandler {
             Gson gson = new GsonBuilder().setPrettyPrinting()
                 .create();
             writer.write(gson.toJson(cows));
-            Logger.info("Migrated config with new IDs: " + file.getName());
+            Logger.info("Migrated config with new IDs: {}", file.getName());
         } catch (IOException e) {
-            Logger.error("Failed to migrate config with IDs: " + e.getMessage());
+            Logger.error("Failed to migrate config with IDs: {}", e.getMessage());
         }
     }
 
     protected CowsRegistryItem addCow(String cowName, int cowID, FluidStack fluid, int bgColor, int fgColor,
         SpawnType spawntype, String[] lang) {
         if (fluid == null || fluid.getFluid() == null) {
-            Logger.error("Error Registering (" + this.modID + ") Cow: '" + cowName + "' It's fluid was null");
+            Logger.error("Error registering ({}) Cow '{}': fluid was null", this.modID, cowName);
             return null;
         }
 
@@ -249,15 +242,6 @@ public abstract class BaseCowHandler {
         }
     }
 
-    private FluidStack resolveFluidStack(FluidJson data) {
-        if (data == null || data.name == null) return null;
-        if (FluidRegistry.isFluidRegistered(data.name)) {
-            return new FluidStack(FluidRegistry.getFluid(data.name), data.amount > 0 ? data.amount : 1000);
-        }
-        Logger.error("Fluid not found: " + data.name);
-        return null;
-    }
-
     private CowJson toCowJson(CowsRegistryItem cow) {
         if (cow == null) return null;
 
@@ -271,12 +255,7 @@ public abstract class BaseCowHandler {
             .name() : "NORMAL";
 
         if (cow.createMilkFluid() != null) {
-            FluidJson f = new FluidJson();
-            f.name = cow.createMilkFluid()
-                .getFluid()
-                .getName();
-            f.amount = cow.createMilkFluid().amount;
-            json.fluid = f;
+            json.fluid = FluidJson.parseFluidStack(cow.createMilkFluid());
         }
 
         json.lang = cow.getLang();
@@ -300,9 +279,9 @@ public abstract class BaseCowHandler {
                     .toJson(jsonModels, writer);
             }
 
-            Logger.info("Created default " + file.getPath());
+            Logger.info("Created default {}", file.getPath());
         } catch (IOException e) {
-            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
+            Logger.error("Failed to create default config: {} ({})", file.getPath(), e.getMessage());
         }
     }
 
@@ -317,7 +296,7 @@ public abstract class BaseCowHandler {
                 List<CowJson> loaded = new Gson().fromJson(jsonReader, listType);
                 if (loaded != null) existing.addAll(loaded);
             } catch (Exception e) {
-                Logger.error("Failed to read existing cow config: " + e.getMessage());
+                Logger.error("Failed to read existing cow config: {}", e.getMessage());
             }
         } else {
             File parent = file.getParentFile();
@@ -346,13 +325,13 @@ public abstract class BaseCowHandler {
                 new GsonBuilder().setPrettyPrinting()
                     .create()
                     .toJson(existing, writer);
-                Logger.info("Updated cow config with missing cows: " + file.getName());
-                Logger.info("Added " + addedCows.size() + " cow(s): " + String.join(", ", addedCows));
+                Logger.info("Updated cow config with missing cows: {}", file.getName());
+                Logger.info("Added {} cow(s): {}", addedCows.size(), String.join(", ", addedCows));
             } catch (IOException e) {
-                Logger.error("Failed to update cow config: " + e.getMessage());
+                Logger.error("Failed to update cow config: {}", e.getMessage());
             }
         } else {
-            Logger.info("No new cows to add to config: " + file.getName());
+            Logger.info("No new cows to add to config: {}", file.getName());
         }
     }
 }

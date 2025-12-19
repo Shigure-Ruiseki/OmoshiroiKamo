@@ -121,24 +121,4 @@ public class ItemDeepLearner extends ItemOK implements IGuiHolder<PlayerInventor
         // }
         // }
     }
-
-    // @SuppressWarnings("ConstantConditions")
-    // public static NonNullList<ItemStack> getContainedItems(ItemStack deepLearner) {
-    // NonNullList<ItemStack> list = NonNullList.withSize(numOfInternalSlots(), ItemStack.EMPTY);
-    //
-    // // Load the inventory if the ItemStack has a NBTTagcompound
-    // if(deepLearner.hasTag()) {
-    // NBTTagCompound currentTag = deepLearner.getTag();
-    // if(currentTag.hasKey("inventory")) {
-    // NBTTagList inventory = deepLearner.getTag().getList("inventory", Constants.NBT.TAG_COMPOUND);
-    //
-    // for(int i = 0; i < inventory.size(); i++) {
-    // NBTTagCompound tag = inventory.getCompound(i);
-    // list.set(i, ItemStack.read(tag));
-    // }
-    // }
-    // }
-    // return list;
-    // }
-
 }

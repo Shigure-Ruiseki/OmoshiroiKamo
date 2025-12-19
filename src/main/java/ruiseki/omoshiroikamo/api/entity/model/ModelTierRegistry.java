@@ -34,4 +34,15 @@ public class ModelTierRegistry {
         return new ArrayList<>(items.values());
     }
 
+    public int getMaxTierValue() {
+        int max = 0;
+        for (ModelTierRegistryItem item : items.values()) {
+            max = Math.max(max, item.getTier());
+        }
+        return max;
+    }
+
+    public boolean isMaxTier(int tier) {
+        return !items.containsKey(tier) || tier >= getMaxTierValue();
+    }
 }

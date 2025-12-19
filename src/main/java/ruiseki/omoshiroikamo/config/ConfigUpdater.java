@@ -63,9 +63,9 @@ public class ConfigUpdater {
 
             ConfigurationManager.save(configClass);
 
-            Logger.info("Updated " + configClass.getSimpleName() + "." + fieldName + " = " + value);
+            Logger.info("Updated {}.{} = {}", configClass.getSimpleName(), fieldName, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            Logger.info("Failed to update config: " + configClass.getSimpleName() + "." + fieldName);
+            Logger.info("Failed to update config: {}.{}", configClass.getSimpleName(), fieldName);
             e.printStackTrace();
         }
     }

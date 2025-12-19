@@ -129,9 +129,9 @@ public enum ModBlocks {
                 try {
                     block.get()
                         .init();
-                    Logger.info("Successfully initialized " + block.name());
+                    Logger.info("Successfully initialized {}", block.name());
                 } catch (Exception e) {
-                    Logger.error("Failed to initialize block: +" + block.name());
+                    Logger.error("Failed to initialize block: +{}", block.name());
                 }
             }
         }

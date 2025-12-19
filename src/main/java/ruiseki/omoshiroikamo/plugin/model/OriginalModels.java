@@ -63,9 +63,9 @@ public class OriginalModels extends BaseModelHandler {
                 + "[]";
 
             writer.write(defaultConfig);
-            Logger.info("Created default " + configFileName);
+            Logger.info("Created default {}", configFileName);
         } catch (IOException e) {
-            Logger.error("Failed to create default config: " + e.getMessage());
+            Logger.error("Failed to create default config: {}", e.getMessage());
         }
 
     }

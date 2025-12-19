@@ -16,10 +16,10 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.common.util.BlockPos;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData> {
 

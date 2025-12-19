@@ -8,10 +8,10 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedRandomUtil;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
-import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 
 public class FocusableRegistry implements IFocusableRegistry {
 

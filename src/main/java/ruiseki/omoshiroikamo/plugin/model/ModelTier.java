@@ -35,7 +35,17 @@ public class ModelTier {
         int killMultiplier;
         int dataToNext;
         boolean canSimulate;
+        int pristineChance;
+        TrialJson trial;
         String[] lang;
+    }
+
+    private static class TrialJson {
+
+        int pristine;
+        int maxWave;
+        int affixes;
+        int glitchChance;
     }
 
     public List<ModelTierRegistryItem> registerTiers() {
@@ -60,7 +70,7 @@ public class ModelTier {
             Type listType = new TypeToken<ArrayList<TierJson>>() {}.getType();
             List<TierJson> models = gson.fromJson(reader, listType);
             if (models == null) {
-                Logger.info(configFileName + " is empty or invalid.");
+                Logger.info("{} is empty or invalid.", configFileName);
             }
 
             for (TierJson data : models) {
@@ -71,10 +81,15 @@ public class ModelTier {
                         data.killMultiplier,
                         data.dataToNext,
                         data.canSimulate,
+                        data.pristineChance,
+                        data.trial.pristine,
+                        data.trial.maxWave,
+                        data.trial.affixes,
+                        data.trial.glitchChance,
                         data.lang);
 
                     if (model != null) {
-                        Logger.debug("Registering Model Tier: '" + data.tier);
+                        Logger.debug("Registering Model Tier: {}", data.tier);
 
                         if (data.lang != null) {
                             String langKey = "model.tier_" + data.tier + ".name";
@@ -95,12 +110,12 @@ public class ModelTier {
                     }
 
                 } catch (Exception e) {
-                    Logger.error("Error registering model tier " + data.tier + ": " + e.getMessage());
+                    Logger.error("Error registering model tier {}: {}", data.tier, e.getMessage());
                     e.printStackTrace();
                 }
             }
         } catch (IOException e) {
-            Logger.error("Failed to read " + configFileName + ": " + e.getMessage());
+            Logger.error("Failed to read : ", configFileName, e.getMessage());
         }
 
         return allTiers;
@@ -109,27 +124,87 @@ public class ModelTier {
     public List<ModelTierRegistryItem> registerModels() {
         List<ModelTierRegistryItem> allTiers = new ArrayList<>();
 
-        ModelTierRegistryItem tier0 = addTier(0, 1, 6, false, new String[] { "en_US:§7Faulty", "ja_JP:§7フォールティー" });
+        ModelTierRegistryItem tier0 = addTier(
+            0,
+            1,
+            6,
+            false,
+            0,
+            2,
+            1,
+            0,
+            0,
+            new String[] { "en_US:§7Faulty", "ja_JP:§7フォールティー" });
         allTiers.add(tier0);
 
-        ModelTierRegistryItem tier1 = addTier(1, 4, 48, true, new String[] { "en_US:§aBasic", "ja_JP:§aベーシック" });
+        ModelTierRegistryItem tier1 = addTier(
+            1,
+            4,
+            48,
+            true,
+            5,
+            5,
+            2,
+            1,
+            1,
+            new String[] { "en_US:§aBasic", "ja_JP:§aベーシック" });
         allTiers.add(tier1);
 
-        ModelTierRegistryItem tier2 = addTier(2, 10, 300, true, new String[] { "en_US:§9Advanced", "ja_JP:§9アドバンスド" });
+        ModelTierRegistryItem tier2 = addTier(
+            2,
+            10,
+            300,
+            true,
+            11,
+            8,
+            4,
+            1,
+            3,
+            new String[] { "en_US:§9Advanced", "ja_JP:§9アドバンスド" });
         allTiers.add(tier2);
 
-        ModelTierRegistryItem tier3 = addTier(3, 18, 900, true, new String[] { "en_US:§dSuperior", "ja_JP:§dスーペリア" });
+        ModelTierRegistryItem tier3 = addTier(
+            3,
+            18,
+            900,
+            true,
+            12,
+            24,
+            5,
+            2,
+            6,
+            new String[] { "en_US:§dSuperior", "ja_JP:§dスーペリア" });
         allTiers.add(tier3);
 
-        ModelTierRegistryItem tier4 = addTier(4, 0, 0, true, new String[] { "en_US:§6Self-Aware", "ja_JP:§6自己認識" });
+        ModelTierRegistryItem tier4 = addTier(
+            4,
+            0,
+            0,
+            true,
+            18,
+            42,
+            7,
+            3,
+            11,
+            new String[] { "en_US:§6Self-Aware", "ja_JP:§6自己認識" });
         allTiers.add(tier4);
 
         return allTiers;
     }
 
     public ModelTierRegistryItem addTier(int tier, int killMultiplier, int dataToNext, boolean canSimulate,
-        String[] lang) {
-        return new ModelTierRegistryItem(tier, killMultiplier, dataToNext, canSimulate, lang);
+        int pristineChance, int pristine, int maxWave, int affixes, int glitchChance, String[] lang) {
+        return new ModelTierRegistryItem(
+            tier,
+            killMultiplier,
+            dataToNext,
+            canSimulate,
+            pristineChance,
+            lang,
+            pristine,
+            maxWave,
+            affixes,
+            glitchChance);
     }
 
     private TierJson toModelJson(ModelTierRegistryItem model) {
@@ -140,7 +215,13 @@ public class ModelTier {
         json.killMultiplier = model.getKillMultiplier();
         json.canSimulate = model.isCanSimulate();
         json.dataToNext = model.getDataToNext();
+        json.pristineChance = model.getPristineChance();
         json.lang = model.getLang();
+        json.trial = new TrialJson();
+        json.trial.pristine = model.getPristine();
+        json.trial.maxWave = model.getMaxWave();
+        json.trial.affixes = model.getAffixes();
+        json.trial.glitchChance = model.getGlitchChance();
 
         return json;
     }
@@ -162,9 +243,9 @@ public class ModelTier {
                     .toJson(jsonModels, writer);
             }
 
-            Logger.info("Created default " + file.getPath());
+            Logger.info("Created default {}", file.getPath());
         } catch (IOException e) {
-            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
+            Logger.error("Failed to create default config: {} ({})", file.getPath(), e.getMessage());
         }
     }
 
@@ -179,7 +260,7 @@ public class ModelTier {
                 List<TierJson> loaded = new Gson().fromJson(jsonReader, listType);
                 if (loaded != null) existing.addAll(loaded);
             } catch (Exception e) {
-                Logger.error("Failed to read existing tier config: " + e.getMessage());
+                Logger.error("Failed to read existing tier config: {}", e.getMessage());
             }
         } else {
             File parent = file.getParentFile();
@@ -208,14 +289,14 @@ public class ModelTier {
                 new GsonBuilder().setPrettyPrinting()
                     .create()
                     .toJson(existing, writer);
-                Logger.info("Updated model tier config with missing model tiers: " + file.getName());
+                Logger.info("Updated model tier config with missing model tiers: {}", file.getName());
                 Logger
-                    .info("Added " + addedTiers.size() + " model tier(s): " + String.join(", ", addedTiers.toString()));
+                    .info("Added {} model tier(s): {}", addedTiers.size(), String.join(", ", addedTiers.toString()));
             } catch (IOException e) {
-                Logger.error("Failed to update model tier config: " + e.getMessage());
+                Logger.error("Failed to update model tier config: {}", e.getMessage());
             }
         } else {
-            Logger.info("No new model tiers to add to config: " + file.getName());
+            Logger.info("No new model tiers to add to config: {}", file.getName());
         }
     }
 }

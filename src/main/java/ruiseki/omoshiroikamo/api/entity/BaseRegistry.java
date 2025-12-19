@@ -232,7 +232,7 @@ public abstract class BaseRegistry<T extends BaseRegistryItem<T>> {
      */
     public boolean isAnyIn(SpawnType spawnType) {
         for (T t : items.values()) {
-            if (t.canSpawn() && t.getSpawnType() == spawnType) {
+            if (t.canSpawn() && t.isEnabled() && t.getSpawnType() == spawnType) {
                 return true;
             }
         }

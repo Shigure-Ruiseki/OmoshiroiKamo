@@ -12,9 +12,15 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.entity.model.DataModel;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 
 @EventBusSubscriber
 public class ModelEventHandler {
+
+    @EventBusSubscriber.Condition
+    public static boolean shouldSubscribe() {
+        return BackportConfigs.useDeepMobLearning;
+    }
 
     @SubscribeEvent
     public static void entityDeath(LivingDeathEvent event) {

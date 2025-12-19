@@ -9,7 +9,7 @@ import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 
 public class DeepLearnerHandler implements IItemHandlerModifiable {
 

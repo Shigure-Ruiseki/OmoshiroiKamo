@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.entity.model;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,6 +35,10 @@ public class ModelRegistryItem {
     @Setter
     protected ItemStack pristineMatter;
     @Getter
+    protected List<ItemStack> lootItems;
+    @Getter
+    protected String[] lootStrings;
+    @Getter
     @Setter
     protected boolean enabled;
 
@@ -55,5 +61,15 @@ public class ModelRegistryItem {
 
     public String getDisplayName() {
         return "entity." + entityName + ".name";
+    }
+
+    public ModelRegistryItem setLootStrings(String[] lootStrings) {
+        this.lootStrings = lootStrings;
+        return this;
+    }
+
+    public ModelRegistryItem setLootItems(List<ItemStack> lootItems) {
+        this.lootItems = lootItems;
+        return this;
     }
 }

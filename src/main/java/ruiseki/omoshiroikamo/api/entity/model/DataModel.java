@@ -9,8 +9,8 @@ import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.Nullable;
 
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.init.ModItems;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class DataModel {
 
@@ -33,18 +33,24 @@ public class DataModel {
 
     @Nullable
     public static Class<? extends Entity> getEntityClass(ItemStack stack) {
-        int id = getId(stack);
+        return getEntityClass(getId(stack));
+    }
+
+    @Nullable
+    public static Class<? extends Entity> getEntityClass(int id) {
         ModelRegistryItem model = ModelRegistry.INSTANCE.getByType(id);
         if (model == null) return null;
         return EntityList.stringToClassMapping.get(model.getEntityName());
     }
 
     public static boolean entityLivingMatchesMob(ItemStack stack, Entity entity) {
-        if (entity == null) return false;
-        Class<? extends Entity> clazz = getEntityClass(stack);
-        if (clazz != null && clazz.isInstance(entity)) return true;
+        return entityLivingMatchesMob(getId(stack), entity);
+    }
 
-        int id = getId(stack);
+    public static boolean entityLivingMatchesMob(int id, Entity entity) {
+        if (entity == null) return false;
+        Class<? extends Entity> clazz = getEntityClass(id);
+        if (clazz != null && clazz.isInstance(entity)) return true;
         ModelRegistryItem model = ModelRegistry.INSTANCE.getByType(id);
         if (model != null) {
             String name = EntityList.getEntityString(entity);
@@ -141,5 +147,23 @@ public class DataModel {
 
     public static void setTotalSimulationCount(int count, ItemStack stack) {
         ItemNBTUtils.setInt(stack, TOTAL_SIMULATION_COUNT_TAG, count);
+    }
+
+    public static int getCurrentTierSimulationCountWithKills(ItemStack stack) {
+        return DataModelExperience
+            .getCurrentTierSimulationCountWithKills(getTier(stack), getKillCount(stack), getSimulationCount(stack));
+    }
+
+    public static int getSimulationsToNextTier(ItemStack stack) {
+        return DataModelExperience
+            .getSimulationsToNextTier(getTier(stack), getKillCount(stack), getSimulationCount(stack));
+    }
+
+    public static int getTierRoof(ItemStack stack) {
+        return DataModelExperience.getTierRoof(getTier(stack), false);
+    }
+
+    public static int getKillMultiplier(ItemStack stack) {
+        return DataModelExperience.getKillMultiplier(getTier(stack));
     }
 }

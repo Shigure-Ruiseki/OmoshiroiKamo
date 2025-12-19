@@ -29,6 +29,8 @@ import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.api.json.ItemJson;
+import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -86,24 +88,17 @@ public abstract class BaseChickenHandler {
         String[] lang;
     }
 
-    public static class ItemJson {
-
-        String name;
-        int amount;
-        int meta;
-    }
-
     private List<ChickenJson> loadedCustomChickens;
 
     public List<ChickensRegistryItem> tryRegisterChickens(List<ChickensRegistryItem> allChickens) {
-        Logger.info("Looking for " + modName + " chickens...");
+        Logger.info("Looking for {} chickens...", modName);
 
         if (needsMod && !Loader.isModLoaded(modID)) {
-            Logger.info("Skipped " + modName + " chickens → required mod \"" + modID + "\" is not loaded.");
+            Logger.info("Skipped {} chickens → required mod \"{}\" is not loaded.", modName, modID);
             return allChickens;
         }
 
-        Logger.info("Loading " + modName + " chickens...");
+        Logger.info("Loading {} chickens...", modName);
 
         File configFile = new File("config/" + LibMisc.MOD_ID + "/chicken/" + configFileName);
         if (!configFile.exists()) {
@@ -127,7 +122,7 @@ public abstract class BaseChickenHandler {
             List<ChickenJson> customChickens = gson.fromJson(reader, listType);
 
             if (customChickens == null) {
-                Logger.info(configFileName + " is empty or invalid.");
+                Logger.info( "{} is empty or invalid.",configFileName);
                 return allChickens;
             }
 
@@ -135,17 +130,17 @@ public abstract class BaseChickenHandler {
 
             for (ChickenJson data : customChickens) {
                 try {
-                    ItemStack layItem = resolveItemStack(data.layItem);
+                    ItemStack layItem = ItemJson.resolveItemStack(data.layItem);
                     if (layItem == null) {
-                        Logger.error("Failed to resolve lay item for custom chicken: " + data.name);
+                        Logger.error("Failed to resolve lay item for custom chicken: {}", data.name);
                         continue;
                     }
 
-                    ItemStack dropItem = resolveItemStack(data.dropItem);
+                    ItemStack dropItem = ItemJson.resolveItemStack(data.dropItem);
 
-                    int bgColor = parseColor(data.bgColor, 0xFFFFFF);
-                    int fgColor = parseColor(data.fgColor, 0xFF0000);
-                    int tint = parseColor(data.tintColor, 0xFFFFFF);
+                    int bgColor = JsonUtils.resolveColor(data.bgColor, 0xFFFFFF);
+                    int fgColor = JsonUtils.resolveColor(data.fgColor, 0xFF0000);
+                    int tint = JsonUtils.resolveColor(data.tintColor, 0xFFFFFF);
 
                     SpawnType type = SpawnType.NORMAL;
                     try {
@@ -153,7 +148,7 @@ public abstract class BaseChickenHandler {
                             type = SpawnType.valueOf(data.spawnType.toUpperCase());
                         }
                     } catch (IllegalArgumentException e) {
-                        Logger.error("Invalid spawn type for " + data.name + ": " + data.spawnType);
+                        Logger.error("Invalid spawn type for {}: {}", data.name, data.spawnType);
                     }
 
                     // Migrate
@@ -174,14 +169,7 @@ public abstract class BaseChickenHandler {
                         data.lang);
 
                     if (chicken != null) {
-                        Logger.debug(
-                            "Registering (" + this.modID
-                                + ") Chicken: '"
-                                + chicken.getEntityName()
-                                + "':"
-                                + chicken.getId()
-                                + ":"
-                                + layItem.getDisplayName());
+                        Logger.debug("Registering ({}) Chicken: '{}':{}:{}", this.modID, chicken.getEntityName(), chicken.getId(), layItem.getDisplayName());
 
                         chicken.setEnabled(data.enabled);
                         chicken.setCoefficient(data.coefficient);
@@ -235,13 +223,12 @@ public abstract class BaseChickenHandler {
                     }
 
                 } catch (Exception e) {
-                    Logger.error("Error registering custom chicken " + data.name + ": " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.error("Error registering custom chicken {}", data.name, e);
                 }
             }
 
         } catch (IOException e) {
-            Logger.error("Failed to read " + configFileName + ": " + e.getMessage());
+            Logger.error("Failed to read {}: {}", configFileName, e.getMessage());
         }
 
         return allChickens;
@@ -263,12 +250,7 @@ public abstract class BaseChickenHandler {
             if (p1 != null && p2 != null) {
                 child.setParents(p1, p2);
             } else {
-                Logger.error(
-                    "Could not find parents for custom chicken " + data.name
-                        + ": "
-                        + data.parent1
-                        + ", "
-                        + data.parent2);
+                Logger.error("Could not find parents for custom chicken {}: {}, {}",data.name, data.parent1, data.parent2);
             }
         }
 
@@ -295,16 +277,16 @@ public abstract class BaseChickenHandler {
             Gson gson = new GsonBuilder().setPrettyPrinting()
                 .create();
             writer.write(gson.toJson(chickens));
-            Logger.info("Migrated config with new IDs: " + file.getName());
+            Logger.info("Migrated config with new IDs: {}", file.getName());
         } catch (IOException e) {
-            Logger.error("Failed to migrate config with IDs: " + e.getMessage());
+            Logger.error("Failed to migrate config with IDs: {}", e);
         }
     }
 
     protected ChickensRegistryItem addChicken(String chickenName, int chickenID, String texture, ItemStack layItem,
         int bgColor, int fgColor, SpawnType spawntype, String[] lang) {
         if (layItem == null || layItem.getItem() == null) {
-            Logger.error("Error Registering (" + this.modID + ") Chicken: '" + chickenName + "' It's LayItem was null");
+            Logger.error("Error Registering ({}) Chicken: '{}' It's LayItem was null",this.modID , chickenName);
             return null;
         }
 
@@ -353,12 +335,12 @@ public abstract class BaseChickenHandler {
         }
 
         if (parentChicken1 == null) {
-            Logger.error("Could not find Parent 1 for " + child.getEntityName());
+            Logger.error("Could not find Parent 1 for {}", child.getEntityName());
             return;
         }
 
         if (parentChicken2 == null) {
-            Logger.error("Could not find Parent 2 for " + child.getEntityName());
+            Logger.error("Could not find Parent 2 for {}", child.getEntityName());
             return;
         }
 
@@ -408,9 +390,9 @@ public abstract class BaseChickenHandler {
             .substring(
                 tex.getResourcePath()
                     .lastIndexOf("/") + 1);
-        json.tintColor = String.format("0x%06X", chicken.getTintColor());
-        json.bgColor = String.format("0x%06X", chicken.getBgColor());
-        json.fgColor = String.format("0x%06X", chicken.getFgColor());
+        json.tintColor = JsonUtils.parseColor(chicken.getTintColor());
+        json.bgColor = JsonUtils.parseColor(chicken.getBgColor());
+        json.fgColor = JsonUtils.parseColor(chicken.getFgColor());
         json.parent1 = chicken.getParent1() != null ? chicken.getParent1()
             .getEntityName() : null;
         json.parent2 = chicken.getParent2() != null ? chicken.getParent2()
@@ -418,8 +400,10 @@ public abstract class BaseChickenHandler {
         json.spawnType = chicken.getSpawnType()
             .name();
         json.coefficient = chicken.getCoefficient();
-        json.layItem = toItemJson(chicken.getLayItem());
-        if (chicken.getDropItem() != null) json.dropItem = toItemJson(chicken.getDropItem());
+        json.layItem = ItemJson.parseItemStack(chicken.getLayItem());
+        if (chicken.getDropItem() != null) {
+            json.dropItem = ItemJson.parseItemStack((chicken.getDropItem()));
+        }
         json.lang = chicken.getLang();
 
         return json;
@@ -440,38 +424,10 @@ public abstract class BaseChickenHandler {
                 new GsonBuilder().setPrettyPrinting()
                     .create()
                     .toJson(jsonList, writer);
-                Logger.info("Created default " + configFileName);
+                Logger.info("Created default {}", configFileName);
             }
         } catch (Exception e) {
-            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
-        }
-    }
-
-    private ItemStack resolveItemStack(ItemJson data) {
-        if (data == null || data.name == null) return null;
-        Item item = GameData.getItemRegistry()
-            .getObject(data.name);
-        if (item == null) return null;
-        return new ItemStack(item, data.amount > 0 ? data.amount : 1, data.meta);
-    }
-
-    private ItemJson toItemJson(ItemStack stack) {
-        if (stack == null || stack.getItem() == null) return null;
-
-        ItemJson json = new ItemJson();
-        json.name = GameData.getItemRegistry()
-            .getNameForObject(stack.getItem());
-        json.amount = stack.stackSize;
-        json.meta = stack.getItemDamage();
-        return json;
-    }
-
-    private int parseColor(String hex, int def) {
-        if (hex == null || hex.isEmpty()) return def;
-        try {
-            return Integer.decode(hex);
-        } catch (NumberFormatException e) {
-            return def;
+            Logger.error("Failed to create default config: {} ({})", file.getPath(), e);
         }
     }
 
@@ -485,7 +441,7 @@ public abstract class BaseChickenHandler {
                 List<ChickenJson> loaded = new Gson().fromJson(jsonReader, listType);
                 if (loaded != null) existing.addAll(loaded);
             } catch (Exception e) {
-                Logger.error("Failed to read existing chicken config: " + e.getMessage());
+                Logger.error("Failed to read existing chicken config: {}", e);
             }
         } else {
             File parent = file.getParentFile();
@@ -514,13 +470,13 @@ public abstract class BaseChickenHandler {
                 new GsonBuilder().setPrettyPrinting()
                     .create()
                     .toJson(existing, writer);
-                Logger.info("Updated chicken config with missing chickens: " + file.getName());
-                Logger.info("Added " + addedChickens.size() + " chicken(s): " + String.join(", ", addedChickens));
+                Logger.info("Updated chicken config with missing chickens: {}", file.getName());
+                Logger.info("Added {} chicken(s): {}", addedChickens.size(), String.join(", ", addedChickens));
             } catch (IOException e) {
-                Logger.error("Failed to update chicken config: " + e.getMessage());
+                Logger.error("Failed to update chicken config: {}", e);
             }
         } else {
-            Logger.info("No new chickens to add to config: " + file.getName());
+            Logger.info("No new chickens to add to config: {}", file.getName());
         }
     }
 }

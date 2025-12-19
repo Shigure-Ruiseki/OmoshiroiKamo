@@ -33,10 +33,10 @@ public class TextureGenerator {
                         item.setTexture(generated);
                         // Nullify overlay so renderer uses single pass
                         item.setTextureOverlay(null);
-                        Logger.info("Generated dynamic texture for " + item.getEntityName());
+                        Logger.info("Generated dynamic texture for {}", item.getEntityName());
                     }
                 } catch (Exception e) {
-                    Logger.error("Failed to generate texture for " + item.getEntityName() + ": " + e.getMessage());
+                    Logger.error("Failed to generate texture for {}: {}", item.getEntityName(), e);
                     e.printStackTrace();
                 }
             }
@@ -51,7 +51,7 @@ public class TextureGenerator {
         if (baseImage == null || overlayImage == null) return null;
 
         if (baseImage.getWidth() != overlayImage.getWidth() || baseImage.getHeight() != overlayImage.getHeight()) {
-            Logger.warn("Texture dimensions mismatch for " + name);
+            Logger.warn("Texture dimensions mismatch for {}", name);
         }
 
         int width = baseImage.getWidth();

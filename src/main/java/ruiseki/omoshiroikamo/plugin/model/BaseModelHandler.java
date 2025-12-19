@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.json.ItemJson;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -64,6 +66,7 @@ public abstract class BaseModelHandler {
         boolean enabled;
         String texture;
         DeepLearnerDisplay deepLearnerDisplay;
+        ItemJson[] lootItems;
         String[] lang;
     }
 
@@ -79,12 +82,12 @@ public abstract class BaseModelHandler {
     private List<ModelJson> loadedCustomModels;
 
     public List<ModelRegistryItem> tryRegisterModels(List<ModelRegistryItem> allModels) {
-        Logger.info("Looking for " + modName + " models...");
+        Logger.info("Looking for {} models...", modName);
         if (needsMod && !Loader.isModLoaded(modID)) {
-            Logger.info("Skipped " + modName + " models → required mod \"" + modID + "\" is not loaded.");
+            Logger.info("Skipped {} models → required mod \"{}\" is not loaded.", modName, modID);
             return allModels;
         }
-        Logger.info("Loading " + modName + " models...");
+        Logger.info("Loading {} models...", modName);
 
         File configFile = new File("config/" + LibMisc.MOD_ID + "/model/" + configFileName);
         if (!configFile.exists()) {
@@ -107,7 +110,7 @@ public abstract class BaseModelHandler {
             Type listType = new TypeToken<ArrayList<ModelJson>>() {}.getType();
             List<ModelJson> models = gson.fromJson(reader, listType);
             if (models == null) {
-                Logger.info(configFileName + " is empty or invalid.");
+                Logger.info("{} is empty or invalid.", configFileName);
                 return allModels;
             }
 
@@ -135,9 +138,15 @@ public abstract class BaseModelHandler {
                         data.lang);
 
                     if (model != null) {
-                        Logger.debug("Registering (" + this.modID + ") Model: '" + data.name + "':" + model.getId());
+                        Logger.debug("Registering ({}) Model: '{}' : {}", this.modID, data.name, model.getId());
 
                         model.setEnabled(data.enabled);
+
+                        if (data.lootItems != null && data.lootItems.length > 0) {
+                            List<ItemStack> loot = ItemJson.resolveListItemStack(data.lootItems);
+                            model.setLootItems(loot);
+                        }
+
                         if (data.lang != null) {
                             String langKey = "item.model." + data.name + ".name";
                             for (String entry : data.lang) {
@@ -161,13 +170,13 @@ public abstract class BaseModelHandler {
                     }
 
                 } catch (Exception e) {
-                    Logger.error("Error registering model " + data.name + ": " + e.getMessage());
+                    Logger.error("Error registering model {}: {}", data.name, e.getMessage());
                     e.printStackTrace();
                 }
             }
             this.loadedCustomModels = null;
         } catch (IOException e) {
-            Logger.error("Failed to read " + configFileName + ": " + e.getMessage());
+            Logger.error("Failed to read {}: {}", configFileName, e.getMessage());
         }
 
         return allModels;
@@ -190,9 +199,9 @@ public abstract class BaseModelHandler {
             Gson gson = new GsonBuilder().setPrettyPrinting()
                 .create();
             writer.write(gson.toJson(models));
-            Logger.info("Migrated config with new IDs: " + file.getName());
+            Logger.info("Migrated config with new IDs: {}", file.getName());
         } catch (IOException e) {
-            Logger.error("Failed to migrate config with IDs: " + e.getMessage());
+            Logger.error("Failed to migrate config with IDs: {}", e.getMessage());
         }
     }
 
@@ -218,22 +227,41 @@ public abstract class BaseModelHandler {
         json.id = model.getId();
         json.name = model.getEntityName();
         json.enabled = true;
-
         String fullPath = model.getTexture()
             .getResourcePath();
         json.texture = fullPath.substring(fullPath.lastIndexOf('/') + 1);
-        if (json.deepLearnerDisplay == null) {
-            json.deepLearnerDisplay = new DeepLearnerDisplay();
-        }
 
+        json.deepLearnerDisplay = new DeepLearnerDisplay();
         json.deepLearnerDisplay.numberOfHearts = model.getNumberOfHearts();
         json.deepLearnerDisplay.interfaceScale = model.getInterfaceScale();
         json.deepLearnerDisplay.interfaceOffsetX = model.getInterfaceOffsetX();
         json.deepLearnerDisplay.interfaceOffsetY = model.getInterfaceOffsetY();
         json.deepLearnerDisplay.mobTrivia = model.getMobTrivia();
 
-        json.lang = model.getLang();
+        List<ItemJson> lootList = new ArrayList<>();
+        if (model.getLootStrings() != null) {
+            for (String string : model.getLootStrings()) {
+                ItemJson item = ItemJson.parseItemString(string);
+                if (item != null) {
+                    lootList.add(item);
+                }
+            }
+        }
 
+        if (model.getLootItems() != null) {
+            for (ItemStack stack : model.getLootItems()) {
+                ItemJson item = ItemJson.parseItemStack(stack);
+                if (item != null) {
+                    lootList.add(item);
+                }
+            }
+        }
+
+        if (!lootList.isEmpty()) {
+            json.lootItems = lootList.toArray(new ItemJson[0]);
+        }
+
+        json.lang = model.getLang();
         return json;
     }
 
@@ -254,9 +282,9 @@ public abstract class BaseModelHandler {
                     .toJson(jsonModels, writer);
             }
 
-            Logger.info("Created default " + file.getPath());
+            Logger.info("Created default {}", file.getPath());
         } catch (IOException e) {
-            Logger.error("Failed to create default config: " + file.getPath() + " (" + e.getMessage() + ")");
+            Logger.error("Failed to create default config: {} ({})", file.getPath(), e.getMessage());
         }
     }
 
@@ -271,7 +299,7 @@ public abstract class BaseModelHandler {
                 List<BaseModelHandler.ModelJson> loaded = new Gson().fromJson(jsonReader, listType);
                 if (loaded != null) existing.addAll(loaded);
             } catch (Exception e) {
-                Logger.error("Failed to read existing model config: " + e.getMessage());
+                Logger.error("Failed to read existing model config: {}", e.getMessage());
             }
         } else {
             File parent = file.getParentFile();
@@ -300,13 +328,13 @@ public abstract class BaseModelHandler {
                 new GsonBuilder().setPrettyPrinting()
                     .create()
                     .toJson(existing, writer);
-                Logger.info("Updated model config with missing models: " + file.getName());
-                Logger.info("Added " + addedModels.size() + " model(s): " + String.join(", ", addedModels));
+                Logger.info("Updated model config with missing models: {}", file.getName());
+                Logger.info("Added {} model(s): {}", addedModels.size(), String.join(", ", addedModels));
             } catch (IOException e) {
-                Logger.error("Failed to update model config: " + e.getMessage());
+                Logger.error("Failed to update model config: {}", e.getMessage());
             }
         } else {
-            Logger.info("No new models to add to config: " + file.getName());
+            Logger.info("No new models to add to config: {}", file.getName());
         }
     }
 }

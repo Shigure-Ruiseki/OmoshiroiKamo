@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.KeyboardUtils;
+import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class ItemDataModel extends ItemOK {
@@ -87,34 +88,28 @@ public class ItemDataModel extends ItemOK {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+        TooltipUtils builder = TooltipUtils.builder();
+
         // if(DataModel.hasExtraTooltip(stack)) {
         // list.add(DataModel.getExtraTooltip(stack));
         // }
 
         if (!KeyboardUtils.isHoldingShift()) {
-            list.add(LibMisc.LANG.localize("tooltip.holdshift"));
+            builder.addLang("tooltip.holdshift");
         } else {
             int tier = DataModel.getTier(stack);
-            list.add(
-                LibMisc.LANG
-                    .localize("tooltip.data_model.tier", LibMisc.LANG.localize(DataModelExperience.getTierName(tier))));
+            builder.addLang("tooltip.data_model.tier", LibMisc.LANG.localize(DataModelExperience.getTierName(tier)));
             if (tier != DataModelExperience.getMaxTier()) {
-                list.add(
-                    LibMisc.LANG.localize(
-                        "tooltip.data_model.data.collected",
-                        DataModelExperience.getCurrentTierSimulationCountWithKills(
-                            tier,
-                            DataModel.getKillCount(stack),
-                            DataModel.getSimulationCount(stack)),
-                        DataModelExperience.getTierRoof(tier, false)));
-                list.add(
-                    LibMisc.LANG.localize(
-                        "tooltip.data_model.data.killmultiplier",
-                        DataModelExperience.getKillMultiplier(tier)));
+                builder.addLang(
+                    "tooltip.data_model.data.collected",
+                    DataModel.getCurrentTierSimulationCountWithKills(stack));
+                builder.addLang("tooltip.data_model.data.killmultiplier", DataModel.getKillMultiplier(stack));
             }
             // list.add(
             // LibMisc.LANG.localize("data_model.rfcost", model.getSimulationTickCost(stack)));
             // list.add(LibMisc.LANG.localize("data_model.type", model.getMatterTypeName(stack)));
         }
+
+        list.addAll(builder.build());
     }
 }
