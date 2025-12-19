@@ -1,21 +1,24 @@
 package ruiseki.omoshiroikamo.client.util;
 
-import com.enderio.core.common.util.EnderFileUtils;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.FileResourcePack;
-import net.minecraft.client.resources.IResourcePack;
-import org.apache.commons.io.FileUtils;
-import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.FileResourcePack;
+import net.minecraft.client.resources.IResourcePack;
+
+import org.apache.commons.io.FileUtils;
+
+import com.enderio.core.common.util.EnderFileUtils;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 /**
  * A class that can be used to inject resources from files/folders outside your mod resources. Useful for loading
@@ -148,7 +151,7 @@ public class ResourcePackAssembler {
 
             if (hasPackPng) {
                 EnderFileUtils
-                        .copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
+                    .copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
             }
 
             String itemsDir = pathToDir + "/assets/" + modid + "/textures/items";
@@ -187,15 +190,17 @@ public class ResourcePackAssembler {
      * same level as the directory passed into the constructor.
      */
     public void inject() {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+        if (FMLCommonHandler.instance()
+            .getEffectiveSide()
+            .isClient()) {
             try {
                 if (defaultResourcePacks == null) {
                     defaultResourcePacks = ReflectionHelper.getPrivateValue(
-                            Minecraft.class,
-                            Minecraft.getMinecraft(),
-                            "defaultResourcePacks",
-                            "field_110449_ao",
-                            "ap");
+                        Minecraft.class,
+                        Minecraft.getMinecraft(),
+                        "defaultResourcePacks",
+                        "field_110449_ao",
+                        "ap");
                 }
 
                 File dest = new File(dir.getParent() + "/resourcepack/" + zip.getName());
@@ -203,9 +208,9 @@ public class ResourcePackAssembler {
                 FileUtils.copyFile(zip, dest);
                 EnderFileUtils.safeDelete(zip);
                 writeNewFile(
-                        new File(dest.getParent() + "/readme.txt"),
-                        LibMisc.LANG.localize("resourcepack.readme") + "\n\n"
-                                + LibMisc.LANG.localize("resourcepack.readme2"));
+                    new File(dest.getParent() + "/readme.txt"),
+                    LibMisc.LANG.localize("resourcepack.readme") + "\n\n"
+                        + LibMisc.LANG.localize("resourcepack.readme2"));
                 defaultResourcePacks.add(new FileResourcePack(dest));
             } catch (Exception e) {
                 Logger.error("Failed to inject resource pack for mod {}", modid, e);
@@ -218,7 +223,8 @@ public class ResourcePackAssembler {
     private void writeNewFile(File file, String defaultText) throws IOException {
         EnderFileUtils.safeDelete(file);
         file.delete();
-        file.getParentFile().mkdirs();
+        file.getParentFile()
+            .mkdirs();
         file.createNewFile();
 
         FileWriter fw = new FileWriter(file);

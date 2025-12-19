@@ -1,11 +1,5 @@
 package ruiseki.omoshiroikamo.client.util;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-
-import javax.annotation.Nonnull;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -31,6 +25,14 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+
+import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 // Copy form EnderCore
 public class OKFileUtils {
@@ -85,7 +87,8 @@ public class OKFileUtils {
                 File destinationPath = new File(zipPath, entry.getName());
 
                 // create parent directories
-                destinationPath.getParentFile().mkdirs();
+                destinationPath.getParentFile()
+                    .mkdirs();
 
                 // if the entry is a file extract it
                 if (entry.isDirectory()) {
@@ -145,7 +148,8 @@ public class OKFileUtils {
             while (!queue.isEmpty()) {
                 directory = queue.pop();
                 for (File child : directory.listFiles()) {
-                    String name = base.relativize(child.toURI()).getPath();
+                    String name = base.relativize(child.toURI())
+                        .getPath();
                     if (child.isDirectory()) {
                         queue.push(child);
                         name = name.endsWith("/") ? name : name + "/";
@@ -239,8 +243,8 @@ public class OKFileUtils {
      * @return whether anything changed
      */
     public static boolean manuallyChangeConfigValue(String filePathFromConfigFolder, String prefix, String from,
-                                                    String to) {
-        File config = new File("config/"+ LibMisc.MOD_ID + "/" + filePathFromConfigFolder);
+        String to) {
+        File config = new File("config/" + LibMisc.MOD_ID + "/" + filePathFromConfigFolder);
         boolean found = false;
 
         try {
@@ -262,8 +266,7 @@ public class OKFileUtils {
             for (String s : strings) {
                 if (!found && s.contains(prefix + "=" + from) && !s.contains("=" + to)) {
                     s = s.replace(prefix + "=" + from, prefix + "=" + to);
-                    Logger
-                        .info("Successfully changed config value " + prefix + " from " + from + " to " + to);
+                    Logger.info("Successfully changed config value " + prefix + " from " + from + " to " + to);
                     found = true;
                 }
 
@@ -288,7 +291,7 @@ public class OKFileUtils {
      *         <code>Boolean.parseBoolean(String)</code>
      */
     public static String manuallyGetConfigValue(String filePathFromConfigFolder, String key) {
-        File config = new File("config/"+ LibMisc.MOD_ID + "/" + filePathFromConfigFolder);
+        File config = new File("config/" + LibMisc.MOD_ID + "/" + filePathFromConfigFolder);
         Scanner scan = null;
 
         try {
@@ -310,4 +313,3 @@ public class OKFileUtils {
         return "";
     }
 }
-
