@@ -27,94 +27,54 @@ public class EnderIOCows extends BaseCowHandler {
     public List<CowsRegistryItem> registerCows() {
         List<CowsRegistryItem> allCows = new ArrayList<>();
 
-        nutrientDistillationCow = tryAddCow(
-            "NutrientDistillationCow",
-            200,
-            "nutrient_distillation",
-            0x4e2a04,
-            0xd3a156,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Nutrient Distillation Cow", "ja_JP:栄養蒸留牛" });
+        nutrientDistillationCow = addCow("NutrientDistillationCow", 200, 0x4e2a04, 0xd3a156, SpawnType.NORMAL)
+            .setFluidString("nutrient_distillation")
+            .setLang("en_US", "Nutrient Distillation Cow")
+            .setLang("ja_JP", "栄養蒸留牛");
         allCows.add(nutrientDistillationCow);
 
-        hootchCow = tryAddCow(
-            "HootchCow",
-            201,
-            "hootch",
-            0x8c6239,
-            0xf2d9ac,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Hootch Cow", "ja_JP:フーチ牛" });
+        hootchCow = addCow("HootchCow", 201, 0x8c6239, 0xf2d9ac, SpawnType.NORMAL).setFluidString("hootch")
+            .setLang("en_US", "Hootch Cow")
+            .setLang("ja_JP", "フーチ牛");
         allCows.add(hootchCow);
 
-        rocketFuelCow = tryAddCow(
-            "RocketFuelCow",
-            202,
-            "rocket_fuel",
-            0xffff33,
-            0xffcc00,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Rocket Fuel Cow", "ja_JP:ロケット燃料牛" });
+        rocketFuelCow = addCow("RocketFuelCow", 202, 0xffff33, 0xffcc00, SpawnType.NORMAL).setFluidString("rocket_fuel")
+            .setLang("en_US", "Rocket Fuel Cow")
+            .setLang("ja_JP", "ロケット燃料牛");
         allCows.add(rocketFuelCow);
 
-        fireWaterCow = tryAddCow(
-            "FireWaterCow",
-            203,
-            "fire_water",
-            0xff3300,
-            0xffff66,
-            SpawnType.HELL,
-            new String[] { "en_US:Fire Water Cow", "ja_JP:ファイアウォーター牛" });
+        fireWaterCow = addCow("FireWaterCow", 203, 0xff3300, 0xffff66, SpawnType.HELL).setFluidString("fire_water")
+            .setLang("en_US", "Fire Water Cow")
+            .setLang("ja_JP", "ファイアウォーター牛");
         allCows.add(fireWaterCow);
 
-        liquidSunshineCow = tryAddCow(
-            "LiquidSunshineCow",
-            204,
-            "liquid_sunshine",
-            0xffff66,
-            0xffffff,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Liquid Sunshine Cow", "ja_JP:リキッドサンシャイン牛" });
+        liquidSunshineCow = addCow("LiquidSunshineCow", 204, 0xffff66, 0xffffff, SpawnType.NORMAL)
+            .setFluidString("liquid_sunshine")
+            .setLang("en_US", "Liquid Sunshine Cow")
+            .setLang("ja_JP", "リキッドサンシャイン牛");
         allCows.add(liquidSunshineCow);
 
-        cloudSeedCow = tryAddCow(
-            "CloudSeedCow",
-            205,
-            "cloud_seed",
-            0xa0c4ff,
-            0xcaf0f8,
-            SpawnType.SNOW,
-            new String[] { "en_US:Cloud Seed Cow", "ja_JP:クラウドシード牛" });
+        cloudSeedCow = addCow("CloudSeedCow", 205, 0xa0c4ff, 0xcaf0f8, SpawnType.SNOW).setFluidString("cloud_seed")
+            .setLang("en_US", "Cloud Seed Cow")
+            .setLang("ja_JP", "クラウドシード牛");
         allCows.add(cloudSeedCow);
 
-        cloudSeedConcentratedCow = tryAddCow(
-            "CloudSeedConcentratedCow",
-            206,
-            "cloud_seed_concentrated",
-            0x5390d9,
-            0x90e0ef,
-            SpawnType.SNOW,
-            new String[] { "en_US:Cloud Seed Concentrated Cow", "ja_JP:濃縮クラウドシード牛" });
+        cloudSeedConcentratedCow = addCow("CloudSeedConcentratedCow", 206, 0x5390d9, 0x90e0ef, SpawnType.SNOW)
+            .setFluidString("cloud_seed_concentrated")
+            .setLang("en_US", "Cloud Seed Concentrated Cow")
+            .setLang("ja_JP", "濃縮クラウドシード牛");
         allCows.add(cloudSeedConcentratedCow);
 
-        enderDistillationCow = tryAddCow(
-            "EnderDistillationCow",
-            207,
-            "ender_distillation",
-            0x006666,
-            0x33cccc,
-            SpawnType.HELL,
-            new String[] { "en_US:Ender Distillation Cow", "ja_JP:エンダー蒸留牛" });
+        enderDistillationCow = addCow("EnderDistillationCow", 207, 0x006666, 0x33cccc, SpawnType.HELL)
+            .setFluidString("ender_distillation")
+            .setLang("en_US", "Ender Distillation Cow")
+            .setLang("ja_JP", "エンダー蒸留牛");
         allCows.add(enderDistillationCow);
 
-        vaporOfLevityCow = tryAddCow(
-            "VaporOfLevityCow",
-            208,
-            "vapor_of_levity",
-            0xccffff,
-            0xffffff,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Vapor of Levity Cow", "ja_JP:軽さの蒸気牛" });
+        vaporOfLevityCow = addCow("VaporOfLevityCow", 208, 0xccffff, 0xffffff, SpawnType.NORMAL)
+            .setFluidString("vapor_of_levity")
+            .setLang("en_US", "Vapor of Levity Cow")
+            .setLang("ja_JP", "軽さの蒸気牛");
         allCows.add(vaporOfLevityCow);
 
         return allCows;

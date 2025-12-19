@@ -102,7 +102,8 @@ public class ItemDataModel extends ItemOK {
             if (tier != DataModelExperience.getMaxTier()) {
                 builder.addLang(
                     "tooltip.data_model.data.collected",
-                    DataModel.getCurrentTierSimulationCountWithKills(stack));
+                    DataModel.getCurrentTierSimulationCountWithKills(stack),
+                    DataModel.getTierRoof(stack));
                 builder.addLang("tooltip.data_model.data.killmultiplier", DataModel.getKillMultiplier(stack));
             }
             // list.add(

@@ -37,8 +37,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "RestoniaCrystalChicken.png",
             0xCA0000,
             0x8C0000,
-            SpawnType.NONE,
-            new String[] { "en_US:Restonia Crystal Chicken", "ja_JP:レストニアクリスタルのニワトリ" }).setLayItem(restoniaCrystal);
+            SpawnType.NONE).setLayItem(restoniaCrystal)
+                .setLang("en_US", "Restonia Crystal Chicken")
+                .setLang("ja_JP", "レストニアクリスタルのニワトリ");
         allChickens.add(restoniaCrystalChicken);
 
         ItemStack palisCrystal = new ItemStack(itemCrystal, 1, 1);
@@ -48,8 +49,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "PalisCrystalChicken.png",
             0x0E0E84,
             0x000048,
-            SpawnType.NONE,
-            new String[] { "en_US:Palis Crystal Chicken", "ja_JP:パリスクリスタルのニワトリ" }).setLayItem(palisCrystal);
+            SpawnType.NONE).setLayItem(palisCrystal)
+                .setLang("en_US", "Palis Crystal Chicken")
+                .setLang("ja_JP", "パリスクリスタルのニワトリ");
         allChickens.add(palisCrystalChicken);
 
         ItemStack diamantineCrystal = new ItemStack(itemCrystal, 1, 2);
@@ -59,9 +61,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "DiamantineCrystalChicken.png",
             0xAFB1FF,
             0x797CE5,
-            SpawnType.NONE,
-            new String[] { "en_US:Diamantine Crystal Chicken", "ja_JP:ディアマンティンクリスタルのニワトリ" })
-                .setLayItem(diamantineCrystal);
+            SpawnType.NONE).setLayItem(diamantineCrystal)
+                .setLang("en_US", "Diamantine Crystal Chicken")
+                .setLang("ja_JP", "ディアマンティンクリスタルのニワトリ");
         allChickens.add(diamantineCrystalChicken);
 
         ItemStack voidCrystal = new ItemStack(itemCrystal, 1, 3);
@@ -71,8 +73,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "VoidCrystalChicken.png",
             0x1F1F1F,
             0x000000,
-            SpawnType.NONE,
-            new String[] { "en_US:Void Crystal Chicken", "ja_JP:ヴォイドクリスタルのニワトリ" }).setLayItem(voidCrystal);
+            SpawnType.NONE).setLayItem(voidCrystal)
+                .setLang("en_US", "Void Crystal Chicken")
+                .setLang("ja_JP", "ヴォイドクリスタルのニワトリ");
         allChickens.add(voidCrystalChicken);
 
         ItemStack emeradicCrystal = new ItemStack(itemCrystal, 1, 4);
@@ -82,8 +85,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "EmeradicCrystalChicken.png",
             0x06D306,
             0x159A0E,
-            SpawnType.NONE,
-            new String[] { "en_US:Emeradic Crystal Chicken", "ja_JP:エメラディッククリスタルのニワトリ" }).setLayItem(emeradicCrystal);
+            SpawnType.NONE).setLayItem(emeradicCrystal)
+                .setLang("en_US", "Emeradic Crystal Chicken")
+                .setLang("ja_JP", "エメラディッククリスタルのニワトリ");
         allChickens.add(emeradicCrystalChicken);
 
         ItemStack enoriCrystal = new ItemStack(itemCrystal, 1, 5);
@@ -93,8 +97,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "EnoriCrystalChicken.png",
             0xECE3FF,
             0xB5B5B5,
-            SpawnType.NONE,
-            new String[] { "en_US:Enori Crystal Chicken", "ja_JP:エノリクリスタルのニワトリ" }).setLayItem(enoriCrystal);
+            SpawnType.NONE).setLayItem(enoriCrystal)
+                .setLang("en_US", "Enori Crystal Chicken")
+                .setLang("ja_JP", "エノリクリスタルのニワトリ");
         allChickens.add(enoriCrystalChicken);
 
         blackQuartzChicken = addChicken(
@@ -103,8 +108,9 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "BlackQuartzChicken.png",
             0x1F1F1F,
             0x535353,
-            SpawnType.NONE,
-            new String[] { "en_US:Black Quartz Chicken", "ja_JP:ブラッククォーツのニワトリ" }).setLayString("ore:gemQuartzBlack");
+            SpawnType.NONE).setLayString("ore:gemQuartzBlack")
+                .setLang("en_US", "Black Quartz Chicken")
+                .setLang("ja_JP", "ブラッククォーツのニワトリ");
         allChickens.add(blackQuartzChicken);
 
         return allChickens;

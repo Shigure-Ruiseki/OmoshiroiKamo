@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +23,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
@@ -83,7 +83,7 @@ public abstract class BaseChickenHandler {
         String parent1;
         String parent2;
         float coefficient = 1.0f;
-        String[] lang;
+        Map<String, String> lang;
     }
 
     private List<ChickenJson> loadedCustomChickens;
@@ -162,8 +162,7 @@ public abstract class BaseChickenHandler {
                         data.texture,
                         bgColor,
                         fgColor,
-                        type,
-                        data.lang);
+                        type);
 
                     if (chicken != null) {
                         Logger.debug(
@@ -182,17 +181,7 @@ public abstract class BaseChickenHandler {
 
                         if (data.lang != null) {
                             String langKey = "entity." + data.name + ".name";
-                            for (String entry : data.lang) {
-                                int splitIndex = entry.indexOf(':');
-                                if (splitIndex > 0) {
-                                    String lang = entry.substring(0, splitIndex)
-                                        .trim();
-                                    String value = entry.substring(splitIndex + 1)
-                                        .trim();
-                                    LanguageRegistry.instance()
-                                        .addStringLocalization(langKey, lang, value);
-                                }
-                            }
+                            JsonUtils.registerLang(langKey, data.lang);
                         }
 
                         if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
@@ -291,15 +280,14 @@ public abstract class BaseChickenHandler {
     }
 
     protected ChickensRegistryItem addChicken(String chickenName, int chickenID, String texture, int bgColor,
-        int fgColor, SpawnType spawntype, String[] lang) {
+        int fgColor, SpawnType spawntype) {
 
         return new ChickensRegistryItem(
             chickenID,
             chickenName,
             new ResourceLocation(LibMisc.MOD_ID, this.texturesLocation + texture),
             bgColor,
-            fgColor,
-            lang).setSpawnType(spawntype);
+            fgColor).setSpawnType(spawntype);
     }
 
     protected void setParents(ChickensRegistryItem child, Object parent1, Object parent2) {

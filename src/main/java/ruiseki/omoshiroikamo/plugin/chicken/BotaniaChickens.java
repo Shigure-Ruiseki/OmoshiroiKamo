@@ -27,8 +27,9 @@ public class BotaniaChickens extends BaseChickenHandler {
             "TerrasteelChicken.png",
             0x3ff123,
             0xf5fcf1,
-            SpawnType.NONE,
-            new String[] { "en_US:Terrasteel Chicken", "ja_JP:テラースチールのニワトリ" }).setLayString("ore:ingotTerrasteel");
+            SpawnType.NONE).setLayString("ore:ingotTerrasteel")
+                .setLang("en_US", "Terrasteel Chicken")
+                .setLang("ja_JP", "テラースチールのニワトリ");
         allChickens.add(terrasteelChicken);
 
         manasteelChicken = addChicken(
@@ -37,8 +38,9 @@ public class BotaniaChickens extends BaseChickenHandler {
             "ManasteelChicken.png",
             0x69d7ff,
             0x002c4b,
-            SpawnType.NONE,
-            new String[] { "en_US:Manasteel Chicken", "ja_JP:マナスチールのニワトリ" }).setLayString("ore:ingotManasteel");
+            SpawnType.NONE).setLayString("ore:ingotManasteel")
+                .setLang("en_US", "Manasteel Chicken")
+                .setLang("ja_JP", "マナスチールのニワトリ");
         allChickens.add(manasteelChicken);
 
         elementiumChicken = addChicken(
@@ -47,9 +49,9 @@ public class BotaniaChickens extends BaseChickenHandler {
             "ElementiumChicken.png",
             0xf655f3,
             0xb407b7,
-            SpawnType.NONE,
-            new String[] { "en_US:Elementium Chicken", "ja_JP:エレメンティウムのニワトリ" })
-                .setLayString("ore:nuggetElvenElementium");
+            SpawnType.NONE).setLayString("ore:nuggetElvenElementium")
+                .setLang("en_US", "Elementium Chicken")
+                .setLang("ja_JP", "エレメンティウムのニワトリ");
         allChickens.add(elementiumChicken);
 
         return allChickens;

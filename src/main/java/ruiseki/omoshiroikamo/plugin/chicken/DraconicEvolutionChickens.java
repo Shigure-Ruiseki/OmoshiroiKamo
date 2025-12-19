@@ -27,8 +27,9 @@ public class DraconicEvolutionChickens extends BaseChickenHandler {
             "DraconiumChicken.png",
             0x301549,
             0x1a0c27,
-            SpawnType.NONE,
-            new String[] { "en_US:Draconium Chicken", "ja_JP:ドラコニウムのニワトリ" }).setLayString("ore:ingotDraconium");
+            SpawnType.NONE).setLayString("ore:ingotDraconium")
+                .setLang("en_US", "Draconium Chicken")
+                .setLang("ja_JP", "ドラコニウムのニワトリ");
         allChickens.add(draconiumChicken);
 
         draconiumAwakenedChicken = addChicken(
@@ -37,9 +38,9 @@ public class DraconicEvolutionChickens extends BaseChickenHandler {
             "DraconiumAwakenedChicken.png",
             0xcc440c,
             0x9c691a,
-            SpawnType.NONE,
-            new String[] { "en_US:Awakened Draconium Chicken", "ja_JP:覚醒ドラコニウムのニワトリ" })
-                .setLayString("ore:nuggetDraconiumAwakened");
+            SpawnType.NONE).setLayString("ore:nuggetDraconiumAwakened")
+                .setLang("en_US", "Awakened Draconium Chicken")
+                .setLang("ja_JP", "覚醒ドラコニウムのニワトリ");
         allChickens.add(draconiumAwakenedChicken);
 
         return allChickens;

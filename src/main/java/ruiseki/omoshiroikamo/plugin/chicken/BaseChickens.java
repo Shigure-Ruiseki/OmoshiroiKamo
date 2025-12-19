@@ -82,95 +82,86 @@ public class BaseChickens extends BaseChickenHandler {
     @Override
     public List<ChickensRegistryItem> registerChickens() {
         List<ChickensRegistryItem> allChickens = new ArrayList<>();
+
         // DYE CHICKENS
-        whiteChicken = addDye(EnumDye.WHITE, "WhiteChicken", new String[] { "en_US:White Chicken", "ja_JP:白いニワトリ" })
-            .setDropItem(new ItemStack(Items.bone))
+        whiteChicken = addDye(EnumDye.WHITE, "WhiteChicken").setDropItem(new ItemStack(Items.bone))
+            .setLang("en_US", "White Chicken")
+            .setLang("ja_JP", "白いニワトリ")
             .setSpawnType(SpawnType.NORMAL);
         allChickens.add(whiteChicken);
 
-        yellowChicken = addDye(
-            EnumDye.YELLOW,
-            "YellowChicken",
-            new String[] { "en_US:Yellow Chicken", "ja_JP:黄色いニワトリ" });
+        yellowChicken = addDye(EnumDye.YELLOW, "YellowChicken").setLang("en_US", "Yellow Chicken")
+            .setLang("ja_JP", "黄色いニワトリ");
         allChickens.add(yellowChicken);
 
-        blueChicken = addDye(EnumDye.BLUE, "BlueChicken", new String[] { "en_US:Blue Chicken", "ja_JP:青いニワトリ" });
+        blueChicken = addDye(EnumDye.BLUE, "BlueChicken").setLang("en_US", "Blue Chicken")
+            .setLang("ja_JP", "青いニワトリ");
         allChickens.add(blueChicken);
 
-        greenChicken = addDye(EnumDye.GREEN, "GreenChicken", new String[] { "en_US:Green Chicken", "ja_JP:緑のニワトリ" });
+        greenChicken = addDye(EnumDye.GREEN, "GreenChicken").setLang("en_US", "Green Chicken")
+            .setLang("ja_JP", "緑のニワトリ");
         allChickens.add(greenChicken);
 
-        redChicken = addDye(EnumDye.RED, "RedChicken", new String[] { "en_US:Red Chicken", "ja_JP:赤いニワトリ" });
+        redChicken = addDye(EnumDye.RED, "RedChicken").setLang("en_US", "Red Chicken")
+            .setLang("ja_JP", "赤いニワトリ");
         allChickens.add(redChicken);
 
-        blackChicken = addDye(EnumDye.BLACK, "BlackChicken", new String[] { "en_US:Black Chicken", "ja_JP:黒いニワトリ" });
+        blackChicken = addDye(EnumDye.BLACK, "BlackChicken").setLang("en_US", "Black Chicken")
+            .setLang("ja_JP", "黒いニワトリ");
         allChickens.add(blackChicken);
 
-        pinkChicken = addDye(EnumDye.PINK, "PinkChicken", new String[] { "en_US:Pink Chicken", "ja_JP:ピンクのニワトリ" });
+        pinkChicken = addDye(EnumDye.PINK, "PinkChicken").setLang("en_US", "Pink Chicken")
+            .setLang("ja_JP", "ピンクのニワトリ");
         allChickens.add(pinkChicken);
 
-        purpleChicken = addDye(
-            EnumDye.PURPLE,
-            "PurpleChicken",
-            new String[] { "en_US:Purple Chicken", "ja_JP:紫のニワトリ" });
+        purpleChicken = addDye(EnumDye.PURPLE, "PurpleChicken").setLang("en_US", "Purple Chicken")
+            .setLang("ja_JP", "紫のニワトリ");
         allChickens.add(purpleChicken);
 
-        orangeChicken = addDye(
-            EnumDye.ORANGE,
-            "OrangeChicken",
-            new String[] { "en_US:Orange Chicken", "ja_JP:オレンジのニワトリ" });
+        orangeChicken = addDye(EnumDye.ORANGE, "OrangeChicken").setLang("en_US", "Orange Chicken")
+            .setLang("ja_JP", "オレンジのニワトリ");
         allChickens.add(orangeChicken);
 
-        lightBlueChicken = addDye(
-            EnumDye.LIGHT_BLUE,
-            "LightBlueChicken",
-            new String[] { "en_US:Light Blue Chicken", "ja_JP:水色のニワトリ" });
+        lightBlueChicken = addDye(EnumDye.LIGHT_BLUE, "LightBlueChicken").setLang("en_US", "Light Blue Chicken")
+            .setLang("ja_JP", "水色のニワトリ");
         allChickens.add(lightBlueChicken);
 
-        limeChicken = addDye(EnumDye.LIME, "LimeChicken", new String[] { "en_US:Lime Chicken", "ja_JP:黄緑のニワトリ" });
+        limeChicken = addDye(EnumDye.LIME, "LimeChicken").setLang("en_US", "Lime Chicken")
+            .setLang("ja_JP", "黄緑のニワトリ");
         allChickens.add(limeChicken);
 
-        grayChicken = addDye(EnumDye.GRAY, "GrayChicken", new String[] { "en_US:Gray Chicken", "ja_JP:灰色のニワトリ" });
+        grayChicken = addDye(EnumDye.GRAY, "GrayChicken").setLang("en_US", "Gray Chicken")
+            .setLang("ja_JP", "灰色のニワトリ");
         allChickens.add(grayChicken);
 
-        cyanChicken = addDye(EnumDye.CYAN, "CyanChicken", new String[] { "en_US:Cyan Chicken", "ja_JP:シアンのニワトリ" });
+        cyanChicken = addDye(EnumDye.CYAN, "CyanChicken").setLang("en_US", "Cyan Chicken")
+            .setLang("ja_JP", "シアンのニワトリ");
         allChickens.add(cyanChicken);
 
-        silverChicken = addDye(
-            EnumDye.SILVER,
-            "SilverDyeChicken",
-            new String[] { "en_US:Silver Chicken", "ja_JP:薄灰色のニワトリ" });
+        silverChicken = addDye(EnumDye.SILVER, "SilverDyeChicken").setLang("en_US", "Silver Chicken")
+            .setLang("ja_JP", "薄灰色のニワトリ");
         allChickens.add(silverChicken);
 
-        magentaChicken = addDye(
-            EnumDye.MAGENTA,
-            "MagentaChicken",
-            new String[] { "en_US:Magenta Chicken", "ja_JP:マゼンタのニワトリ" });
+        magentaChicken = addDye(EnumDye.MAGENTA, "MagentaChicken").setLang("en_US", "Magenta Chicken")
+            .setLang("ja_JP", "マゼンタのニワトリ");
         allChickens.add(magentaChicken);
 
-        brownChicken = addDye(EnumDye.BROWN, "BrownChicken", new String[] { "en_US:Brown Chicken", "ja_JP:茶色のニワトリ" });
+        brownChicken = addDye(EnumDye.BROWN, "BrownChicken").setLang("en_US", "Brown Chicken")
+            .setLang("ja_JP", "茶色のニワトリ");
         allChickens.add(brownChicken);
 
         // SMART CHICKEN
-        smartChicken = addChicken(
-            "SmartChicken",
-            this.nextID(),
-            "SmartChicken.png",
-            0xffffff,
-            0xffff00,
-            SpawnType.NONE,
-            new String[] { "en_US:Smart Chicken", "ja_JP:スマートニワトリ" }).setLayItem(new ItemStack(Items.egg));
+        smartChicken = addChicken("SmartChicken", this.nextID(), "SmartChicken.png", 0xffffff, 0xffff00, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.egg))
+            .setLang("en_US", "Smart Chicken")
+            .setLang("ja_JP", "スマートニワトリ");
         allChickens.add(smartChicken);
 
         // BASE CHICKENS
-        flintChicken = addChicken(
-            "FlintChicken",
-            this.nextID(),
-            "FlintChicken.png",
-            0x6b6b47,
-            0xa3a375,
-            SpawnType.NONE,
-            new String[] { "en_US:Flint Chicken", "ja_JP:火打石のニワトリ" }).setLayItem(new ItemStack(Items.flint));
+        flintChicken = addChicken("FlintChicken", this.nextID(), "FlintChicken.png", 0x6b6b47, 0xa3a375, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.flint))
+            .setLang("en_US", "Flint Chicken")
+            .setLang("ja_JP", "火打石のニワトリ");
         allChickens.add(flintChicken);
 
         quartzChicken = addChicken(
@@ -179,28 +170,21 @@ public class BaseChickens extends BaseChickenHandler {
             "QuartzChicken.png",
             0x4d0000,
             0x1a0000,
-            SpawnType.HELL,
-            new String[] { "en_US:Quartz Chicken", "ja_JP:ネザークォーツのニワトリ" }).setLayItem(new ItemStack(Items.quartz));
+            SpawnType.HELL).setLayItem(new ItemStack(Items.quartz))
+                .setLang("en_US", "Quartz Chicken")
+                .setLang("ja_JP", "ネザークォーツのニワトリ");
         allChickens.add(quartzChicken);
 
-        logChicken = addChicken(
-            "LogChicken",
-            this.nextID(),
-            "LogChicken.png",
-            0x98846d,
-            0x528358,
-            SpawnType.NONE,
-            new String[] { "en_US:Log Chicken", "ja_JP:原木のニワトリ" }).setLayItem(new ItemStack(Blocks.log));
+        logChicken = addChicken("LogChicken", this.nextID(), "LogChicken.png", 0x98846d, 0x528358, SpawnType.NONE)
+            .setLayItem(new ItemStack(Blocks.log))
+            .setLang("en_US", "Log Chicken")
+            .setLang("ja_JP", "原木のニワトリ");
         allChickens.add(logChicken);
 
-        sandChicken = addChicken(
-            "SandChicken",
-            this.nextID(),
-            "SandChicken.png",
-            0xece5b1,
-            0xa7a06c,
-            SpawnType.NONE,
-            new String[] { "en_US:Sand Chicken", "ja_JP:砂のニワトリ" }).setLayItem(new ItemStack(Blocks.sand));
+        sandChicken = addChicken("SandChicken", this.nextID(), "SandChicken.png", 0xece5b1, 0xa7a06c, SpawnType.NONE)
+            .setLayItem(new ItemStack(Blocks.sand))
+            .setLang("en_US", "Sand Chicken")
+            .setLang("ja_JP", "砂のニワトリ");
         allChickens.add(sandChicken);
 
         // TIER 2
@@ -210,9 +194,10 @@ public class BaseChickens extends BaseChickenHandler {
             "StringChicken.png",
             0x331a00,
             0x800000,
-            SpawnType.NONE,
-            new String[] { "en_US:String Chicken", "ja_JP:糸のニワトリ" }).setLayItem(new ItemStack(Items.string))
-                .setDropItem(new ItemStack(Items.spider_eye));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.string))
+                .setDropItem(new ItemStack(Items.spider_eye))
+                .setLang("en_US", "String Chicken")
+                .setLang("ja_JP", "糸のニワトリ");
         allChickens.add(stringChicken);
 
         glowstoneChicken = addChicken(
@@ -221,9 +206,9 @@ public class BaseChickens extends BaseChickenHandler {
             "GlowstoneChicken.png",
             0xffff66,
             0xffff00,
-            SpawnType.NONE,
-            new String[] { "en_US:Glowstone Chicken", "ja_JP:グロウストーンのニワトリ" })
-                .setLayItem(new ItemStack(Items.glowstone_dust));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.glowstone_dust))
+                .setLang("en_US", "Glowstone Chicken")
+                .setLang("ja_JP", "グロウストーンのニワトリ");
         allChickens.add(glowstoneChicken);
 
         gunpowderChicken = addChicken(
@@ -232,8 +217,9 @@ public class BaseChickens extends BaseChickenHandler {
             "GunpowderChicken.png",
             0x999999,
             0x404040,
-            SpawnType.NONE,
-            new String[] { "en_US:Gunpowder Chicken", "ja_JP:火薬のニワトリ" }).setLayItem(new ItemStack(Items.gunpowder));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.gunpowder))
+                .setLang("en_US", "Gunpowder Chicken")
+                .setLang("ja_JP", "火薬のニワトリ");
         allChickens.add(gunpowderChicken);
 
         redstoneChicken = addChicken(
@@ -242,49 +228,34 @@ public class BaseChickens extends BaseChickenHandler {
             "RedstoneChicken.png",
             0xe60000,
             0x800000,
-            SpawnType.NONE,
-            new String[] { "en_US:Redstone Chicken", "ja_JP:レッドストーンのニワトリ" }).setLayItem(new ItemStack(Items.redstone));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.redstone))
+                .setLang("en_US", "Redstone Chicken")
+                .setLang("ja_JP", "レッドストーンのニワトリ");
         allChickens.add(redstoneChicken);
 
-        glassChicken = addChicken(
-            "GlassChicken",
-            this.nextID(),
-            "GlassChicken.png",
-            0xffffff,
-            0xeeeeff,
-            SpawnType.NONE,
-            new String[] { "en_US:Glass Chicken", "ja_JP:ガラスのニワトリ" }).setLayItem(new ItemStack(Blocks.glass));
+        glassChicken = addChicken("GlassChicken", this.nextID(), "GlassChicken.png", 0xffffff, 0xeeeeff, SpawnType.NONE)
+            .setLayItem(new ItemStack(Blocks.glass))
+            .setLang("en_US", "Glass Chicken")
+            .setLang("ja_JP", "ガラスのニワトリ");
         allChickens.add(glassChicken);
 
-        ironChicken = addChicken(
-            "IronChicken",
-            this.nextID(),
-            "IronChicken.png",
-            0xffffcc,
-            0xffcccc,
-            SpawnType.NONE,
-            new String[] { "en_US:Iron Chicken", "ja_JP:鉄のニワトリ" }).setLayItem(new ItemStack(Items.iron_ingot));
+        ironChicken = addChicken("IronChicken", this.nextID(), "IronChicken.png", 0xffffcc, 0xffcccc, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.iron_ingot))
+            .setLang("en_US", "Iron Chicken")
+            .setLang("ja_JP", "鉄のニワトリ");
         allChickens.add(ironChicken);
 
-        coalChicken = addChicken(
-            "CoalChicken",
-            this.nextID(),
-            "CoalChicken.png",
-            0x262626,
-            0x000000,
-            SpawnType.NONE,
-            new String[] { "en_US:Coal Chicken", "ja_JP:石炭のニワトリ" }).setLayItem(new ItemStack(Items.coal));
+        coalChicken = addChicken("CoalChicken", this.nextID(), "CoalChicken.png", 0x262626, 0x000000, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.coal))
+            .setLang("en_US", "Coal Chicken")
+            .setLang("ja_JP", "石炭のニワトリ");
         allChickens.add(coalChicken);
 
         // TIER 3
-        goldChicken = addChicken(
-            "GoldChicken",
-            this.nextID(),
-            "GoldChicken.png",
-            0xcccc00,
-            0xffff80,
-            SpawnType.NONE,
-            new String[] { "en_US:Gold Chicken", "ja_JP:金のニワトリ" }).setLayItem(new ItemStack(Items.gold_ingot));
+        goldChicken = addChicken("GoldChicken", this.nextID(), "GoldChicken.png", 0xcccc00, 0xffff80, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.gold_ingot))
+            .setLang("en_US", "Gold Chicken")
+            .setLang("ja_JP", "金のニワトリ");
         allChickens.add(goldChicken);
 
         snowballChicken = addChicken(
@@ -293,38 +264,27 @@ public class BaseChickens extends BaseChickenHandler {
             "SnowballChicken.png",
             0x33bbff,
             0x0088cc,
-            SpawnType.SNOW,
-            new String[] { "en_US:Snowball Chicken", "ja_JP:雪玉のニワトリ" }).setLayItem(new ItemStack(Items.snowball));
+            SpawnType.SNOW).setLayItem(new ItemStack(Items.snowball))
+                .setLang("en_US", "Snowball Chicken")
+                .setLang("ja_JP", "雪玉のニワトリ");
         allChickens.add(snowballChicken);
 
-        waterChicken = addChicken(
-            "WaterChicken",
-            this.nextID(),
-            "WaterChicken.png",
-            0x000099,
-            0x8080ff,
-            SpawnType.NONE,
-            new String[] { "en_US:Water Chicken", "ja_JP:水のニワトリ" }).setLayItem(ModItems.LIQUID_EGG.newItemStack(1, 0));
+        waterChicken = addChicken("WaterChicken", this.nextID(), "WaterChicken.png", 0x000099, 0x8080ff, SpawnType.NONE)
+            .setLayItem(ModItems.LIQUID_EGG.newItemStack(1, 0))
+            .setLang("en_US", "Water Chicken")
+            .setLang("ja_JP", "水のニワトリ");
         allChickens.add(waterChicken);
 
-        lavaChicken = addChicken(
-            "LavaChicken",
-            this.nextID(),
-            "LavaChicken.png",
-            0xcc3300,
-            0xffff00,
-            SpawnType.HELL,
-            new String[] { "en_US:Lava Chicken", "ja_JP:溶岩のニワトリ" }).setLayItem(ModItems.LIQUID_EGG.newItemStack(1, 1));
+        lavaChicken = addChicken("LavaChicken", this.nextID(), "LavaChicken.png", 0xcc3300, 0xffff00, SpawnType.HELL)
+            .setLayItem(ModItems.LIQUID_EGG.newItemStack(1, 1))
+            .setLang("en_US", "Lava Chicken")
+            .setLang("ja_JP", "溶岩のニワトリ");
         allChickens.add(lavaChicken);
 
-        clayChicken = addChicken(
-            "ClayChicken",
-            this.nextID(),
-            "ClayChicken.png",
-            0xcccccc,
-            0xbfbfbf,
-            SpawnType.NONE,
-            new String[] { "en_US:Clay Chicken", "ja_JP:粘土のニワトリ" }).setLayItem(new ItemStack(Items.clay_ball));
+        clayChicken = addChicken("ClayChicken", this.nextID(), "ClayChicken.png", 0xcccccc, 0xbfbfbf, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.clay_ball))
+            .setLang("en_US", "Clay Chicken")
+            .setLang("ja_JP", "粘土のニワトリ");
         allChickens.add(clayChicken);
 
         leatherChicken = addChicken(
@@ -333,8 +293,9 @@ public class BaseChickens extends BaseChickenHandler {
             "LeatherChicken.png",
             0xA7A06C,
             0x919191,
-            SpawnType.NONE,
-            new String[] { "en_US:Leather Chicken", "ja_JP:革のニワトリ" }).setLayItem(new ItemStack(Items.leather));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.leather))
+                .setLang("en_US", "Leather Chicken")
+                .setLang("ja_JP", "革のニワトリ");
         allChickens.add(leatherChicken);
 
         netherwartChicken = addChicken(
@@ -343,9 +304,9 @@ public class BaseChickens extends BaseChickenHandler {
             "NetherwartChicken.png",
             0x800000,
             0x331a00,
-            SpawnType.NONE,
-            new String[] { "en_US:Nether Wart Chicken", "ja_JP:ネザーウォートのニワトリ" })
-                .setLayItem(new ItemStack(Items.nether_wart));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.nether_wart))
+                .setLang("en_US", "Nether Wart Chicken")
+                .setLang("ja_JP", "ネザーウォートのニワトリ");
         allChickens.add(netherwartChicken);
 
         // TIER 4
@@ -355,49 +316,34 @@ public class BaseChickens extends BaseChickenHandler {
             "DiamondChicken.png",
             0x99ccff,
             0xe6f2ff,
-            SpawnType.NONE,
-            new String[] { "en_US:Diamond Chicken", "ja_JP:ダイヤモンドのニワトリ" }).setLayItem(new ItemStack(Items.diamond));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.diamond))
+                .setLang("en_US", "Diamond Chicken")
+                .setLang("ja_JP", "ダイヤモンドのニワトリ");
         allChickens.add(diamondChicken);
 
-        blazeChicken = addChicken(
-            "BlazeChicken",
-            this.nextID(),
-            "BlazeChicken.png",
-            0xffff66,
-            0xff3300,
-            SpawnType.NONE,
-            new String[] { "en_US:Blaze Chicken", "ja_JP:ブレイズのニワトリ" }).setLayItem(new ItemStack(Items.blaze_rod));
+        blazeChicken = addChicken("BlazeChicken", this.nextID(), "BlazeChicken.png", 0xffff66, 0xff3300, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.blaze_rod))
+            .setLang("en_US", "Blaze Chicken")
+            .setLang("ja_JP", "ブレイズのニワトリ");
         allChickens.add(blazeChicken);
 
-        slimeChicken = addChicken(
-            "SlimeChicken",
-            this.nextID(),
-            "SlimeChicken.png",
-            0x009933,
-            0x99ffbb,
-            SpawnType.NONE,
-            new String[] { "en_US:Slime Chicken", "ja_JP:スライムのニワトリ" }).setLayItem(new ItemStack(Items.slime_ball));
+        slimeChicken = addChicken("SlimeChicken", this.nextID(), "SlimeChicken.png", 0x009933, 0x99ffbb, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.slime_ball))
+            .setLang("en_US", "Slime Chicken")
+            .setLang("ja_JP", "スライムのニワトリ");
         allChickens.add(slimeChicken);
 
         // TIER 5
-        enderChicken = addChicken(
-            "EnderChicken",
-            this.nextID(),
-            "EnderChicken.png",
-            0x001a00,
-            0x001a33,
-            SpawnType.NONE,
-            new String[] { "en_US:Ender Chicken", "ja_JP:エンダーのニワトリ" }).setLayItem(new ItemStack(Items.ender_pearl));
+        enderChicken = addChicken("EnderChicken", this.nextID(), "EnderChicken.png", 0x001a00, 0x001a33, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.ender_pearl))
+            .setLang("en_US", "Ender Chicken")
+            .setLang("ja_JP", "エンダーのニワトリ");
         allChickens.add(enderChicken);
 
-        ghastChicken = addChicken(
-            "GhastChicken",
-            this.nextID(),
-            "GhastChicken.png",
-            0xffffcc,
-            0xffffff,
-            SpawnType.NONE,
-            new String[] { "en_US:Ghast Chicken", "ja_JP:ガストのニワトリ" }).setLayItem(new ItemStack(Items.ghast_tear));
+        ghastChicken = addChicken("GhastChicken", this.nextID(), "GhastChicken.png", 0xffffcc, 0xffffff, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.ghast_tear))
+            .setLang("en_US", "Ghast Chicken")
+            .setLang("ja_JP", "ガストのニワトリ");
         allChickens.add(ghastChicken);
 
         emeraldChicken = addChicken(
@@ -406,31 +352,24 @@ public class BaseChickens extends BaseChickenHandler {
             "EmeraldChicken.png",
             0x00cc00,
             0x003300,
-            SpawnType.NONE,
-            new String[] { "en_US:Emerald Chicken", "ja_JP:エメラルドのニワトリ" }).setLayItem(new ItemStack(Items.emerald));
+            SpawnType.NONE).setLayItem(new ItemStack(Items.emerald))
+                .setLang("en_US", "Emerald Chicken")
+                .setLang("ja_JP", "エメラルドのニワトリ");
         allChickens.add(emeraldChicken);
 
-        magmaChicken = addChicken(
-            "MagmaChicken",
-            this.nextID(),
-            "MagmaChicken.png",
-            0x1a0500,
-            0x000000,
-            SpawnType.NONE,
-            new String[] { "en_US:Magma Chicken", "ja_JP:マグマのニワトリ" }).setLayItem(new ItemStack(Items.magma_cream));
+        magmaChicken = addChicken("MagmaChicken", this.nextID(), "MagmaChicken.png", 0x1a0500, 0x000000, SpawnType.NONE)
+            .setLayItem(new ItemStack(Items.magma_cream))
+            .setLang("en_US", "Magma Chicken")
+            .setLang("ja_JP", "マグマのニワトリ");
         allChickens.add(magmaChicken);
 
-        xpChicken = addChicken(
-            "XpChicken",
-            this.nextID(),
-            "XpChicken.png",
-            0x3dff1e,
-            0x3ff123,
-            SpawnType.NONE,
-            new String[] { "en_US:XP Chicken", "ja_JP:経験値のニワトリ" })
-                .setLayItem(new ItemStack(ModItems.SOLID_XP.getItem(), 1, 0));
+        xpChicken = addChicken("XpChicken", this.nextID(), "XpChicken.png", 0x3dff1e, 0x3ff123, SpawnType.NONE)
+            .setLayItem(new ItemStack(ModItems.SOLID_XP.getItem(), 1, 0))
+            .setLang("en_US", "XP Chicken")
+            .setLang("ja_JP", "経験値のニワトリ");
         allChickens.add(xpChicken);
 
+        // EtFuturum mod
         if (LibMods.EtFuturum.isLoaded()) {
             pShardChicken = addChicken(
                 "PShardChicken",
@@ -438,9 +377,9 @@ public class BaseChickens extends BaseChickenHandler {
                 "PShardChicken.png",
                 0x43806e,
                 0x9fcbbc,
-                SpawnType.NONE,
-                new String[] { "en_US:Prismarine Shard Chicken", "ja_JP:プリズマリンシャードのニワトリ" })
-                    .setLayItem(new ItemStack(ganymedes01.etfuturum.ModItems.PRISMARINE_SHARD.get(), 1, 0));
+                SpawnType.NONE).setLayString("etfuturum:prismarine_shard")
+                    .setLang("en_US", "Prismarine Shard Chicken")
+                    .setLang("ja_JP", "プリズマリンシャードのニワトリ");
             allChickens.add(pShardChicken);
 
             pCrystalChicken = addChicken(
@@ -449,9 +388,9 @@ public class BaseChickens extends BaseChickenHandler {
                 "PCrystalChicken.png",
                 0x4e6961,
                 0xdfe9dc,
-                SpawnType.NONE,
-                new String[] { "en_US:Prismarine Crystal Chicken", "ja_JP:プリズマリンクリスタルのニワトリ" })
-                    .setLayItem(new ItemStack(ganymedes01.etfuturum.ModItems.PRISMARINE_CRYSTALS.get(), 1, 0));
+                SpawnType.NONE).setLayString("etfuturum:prismarine_crystals")
+                    .setLang("en_US", "Prismarine Crystal Chicken")
+                    .setLang("ja_JP", "プリズマリンクリスタルのニワトリ");
             allChickens.add(pCrystalChicken);
         }
 
@@ -461,9 +400,9 @@ public class BaseChickens extends BaseChickenHandler {
             "SoulSandChicken.png",
             0x453125,
             0xd52f08,
-            SpawnType.HELL,
-            new String[] { "en_US:Soul Sand Chicken", "ja_JP:ソウルサンドのニワトリ" })
-                .setLayItem(new ItemStack(Blocks.soul_sand, 1, 0));
+            SpawnType.HELL).setLayItem(new ItemStack(Blocks.soul_sand, 1, 0))
+                .setLang("en_US", "Soul Sand Chicken")
+                .setLang("ja_JP", "ソウルサンドのニワトリ");
         allChickens.add(soulsandChicken);
 
         obsidianChicken = addChicken(
@@ -472,9 +411,9 @@ public class BaseChickens extends BaseChickenHandler {
             "ObsidianChicken.png",
             0x08080e,
             0x463a60,
-            SpawnType.NONE,
-            new String[] { "en_US:Obsidian Chicken", "ja_JP:黒曜石のニワトリ" })
-                .setLayItem(new ItemStack(Blocks.obsidian, 1, 0));
+            SpawnType.NONE).setLayItem(new ItemStack(Blocks.obsidian, 1, 0))
+                .setLang("en_US", "Obsidian Chicken")
+                .setLang("ja_JP", "黒曜石のニワトリ");
         allChickens.add(obsidianChicken);
 
         return allChickens;
@@ -531,14 +470,13 @@ public class BaseChickens extends BaseChickenHandler {
         setParents(pCrystalChicken, waterChicken, emeraldChicken);
     }
 
-    private ChickensRegistryItem addDye(EnumDye color, String name, String[] lang) {
+    private ChickensRegistryItem addDye(EnumDye color, String name) {
         return new ChickensRegistryItem(
             this.nextID(),
             name,
             new ResourceLocation(LibMisc.MOD_ID, texturesLocation + name + ".png"),
             0xf2f2f2,
-            color.getColor(),
-            lang).setSpawnType(SpawnType.NONE)
+            color.getColor()).setSpawnType(SpawnType.NONE)
                 .setLayItem(new ItemStack(Items.dye, 1, color.ordinal()));
     }
 

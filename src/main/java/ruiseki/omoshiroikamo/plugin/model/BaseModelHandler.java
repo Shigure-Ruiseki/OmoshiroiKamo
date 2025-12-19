@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -18,10 +19,10 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.json.ItemJson;
+import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -67,7 +68,7 @@ public abstract class BaseModelHandler {
         String texture;
         DeepLearnerDisplay deepLearnerDisplay;
         ItemJson[] lootItems;
-        String[] lang;
+        Map<String, String> lang;
     }
 
     private static class DeepLearnerDisplay {
@@ -134,8 +135,7 @@ public abstract class BaseModelHandler {
                         data.deepLearnerDisplay.interfaceScale,
                         data.deepLearnerDisplay.interfaceOffsetX,
                         data.deepLearnerDisplay.interfaceOffsetY,
-                        data.deepLearnerDisplay.mobTrivia,
-                        data.lang);
+                        data.deepLearnerDisplay.mobTrivia);
 
                     if (model != null) {
                         Logger.debug("Registering ({}) Model: '{}' : {}", this.modID, data.name, model.getId());
@@ -149,17 +149,7 @@ public abstract class BaseModelHandler {
 
                         if (data.lang != null) {
                             String langKey = "item.model." + data.name + ".name";
-                            for (String entry : data.lang) {
-                                int splitIndex = entry.indexOf(':');
-                                if (splitIndex > 0) {
-                                    String lang = entry.substring(0, splitIndex)
-                                        .trim();
-                                    String value = entry.substring(splitIndex + 1)
-                                        .trim();
-                                    LanguageRegistry.instance()
-                                        .addStringLocalization(langKey, lang, value);
-                                }
-                            }
+                            JsonUtils.registerLang(langKey, data.lang);
                         }
 
                         ModCompatInformation.addInformation(
@@ -206,7 +196,7 @@ public abstract class BaseModelHandler {
     }
 
     public ModelRegistryItem addModel(String registryName, int id, String texture, float numberOfHearts,
-        float interfaceScale, int interfaceOffsetX, int interfaceOffsetY, String[] mobTrivia, String[] lang) {
+        float interfaceScale, int interfaceOffsetX, int interfaceOffsetY, String[] mobTrivia) {
 
         return new ModelRegistryItem(
             id,
@@ -216,8 +206,7 @@ public abstract class BaseModelHandler {
             interfaceScale,
             interfaceOffsetX,
             interfaceOffsetY,
-            mobTrivia,
-            lang);
+            mobTrivia);
     }
 
     private ModelJson toModelJson(ModelRegistryItem model) {

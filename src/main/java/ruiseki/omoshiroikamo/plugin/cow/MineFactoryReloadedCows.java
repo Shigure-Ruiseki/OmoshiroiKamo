@@ -27,94 +27,51 @@ public class MineFactoryReloadedCows extends BaseCowHandler {
     public List<CowsRegistryItem> registerCows() {
         List<CowsRegistryItem> allCows = new ArrayList<>();
 
-        steamCow = tryAddCow(
-            "SteamCow",
-            600,
-            "steam",
-            0xCCCCCC,
-            0xFFFFFF,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Steam Cow", "ja_JP:スチーム牛" });
+        steamCow = addCow("SteamCow", 600, 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL).setFluidString("steam")
+            .setLang("en_US", "Steam Cow")
+            .setLang("ja_JP", "スチーム牛");
         allCows.add(steamCow);
 
-        sludgeCow = tryAddCow(
-            "SludgeCow",
-            601,
-            "sludge",
-            0x2d2d2d,
-            0x555555,
-            SpawnType.HELL,
-            new String[] { "en_US:Sludge Cow", "ja_JP:スラッジ牛" });
+        sludgeCow = addCow("SludgeCow", 601, 0x2d2d2d, 0x555555, SpawnType.HELL).setFluidString("sludge")
+            .setLang("en_US", "Sludge Cow")
+            .setLang("ja_JP", "スラッジ牛");
         allCows.add(sludgeCow);
 
-        sewageCow = tryAddCow(
-            "SewageCow",
-            602,
-            "sewage",
-            0x665500,
-            0xccaa33,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Sewage Cow", "ja_JP:下水牛" });
+        sewageCow = addCow("SewageCow", 602, 0x665500, 0xccaa33, SpawnType.NORMAL).setFluidString("sewage")
+            .setLang("en_US", "Sewage Cow")
+            .setLang("ja_JP", "下水牛");
         allCows.add(sewageCow);
 
-        mobEssenceCow = tryAddCow(
-            "MobEssenceCow",
-            603,
-            "mobessence",
-            0x33ff33,
-            0x99ff99,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Mob Essence Cow", "ja_JP:モブエッセンス牛" });
+        mobEssenceCow = addCow("MobEssenceCow", 603, 0x33ff33, 0x99ff99, SpawnType.NORMAL).setFluidString("mobessence")
+            .setLang("en_US", "Mob Essence Cow")
+            .setLang("ja_JP", "モブエッセンス牛");
         allCows.add(mobEssenceCow);
 
-        biofuelCow = tryAddCow(
-            "BiofuelCow",
-            604,
-            "biofuel",
-            0x99cc00,
-            0xccff66,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Biofuel Cow", "ja_JP:バイオ燃料牛" });
+        biofuelCow = addCow("BiofuelCow", 604, 0x99cc00, 0xccff66, SpawnType.NORMAL).setFluidString("biofuel")
+            .setLang("en_US", "Biofuel Cow")
+            .setLang("ja_JP", "バイオ燃料牛");
         allCows.add(biofuelCow);
 
-        meatCow = tryAddCow(
-            "MeatCow",
-            605,
-            "meat",
-            0xcc6666,
-            0xff9999,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Meat Cow", "ja_JP:肉牛" });
+        meatCow = addCow("MeatCow", 605, 0xcc6666, 0xff9999, SpawnType.NORMAL).setFluidString("meat")
+            .setLang("en_US", "Meat Cow")
+            .setLang("ja_JP", "肉牛");
         allCows.add(meatCow);
 
-        pinkSlimeCow = tryAddCow(
-            "PinkSlimeCow",
-            606,
-            "pinkslime",
-            0xff66cc,
-            0xff99dd,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Pink Slime Cow", "ja_JP:ピンクスライム牛" });
+        pinkSlimeCow = addCow("PinkSlimeCow", 606, 0xff66cc, 0xff99dd, SpawnType.NORMAL).setFluidString("pinkslime")
+            .setLang("en_US", "Pink Slime Cow")
+            .setLang("ja_JP", "ピンクスライム牛");
         allCows.add(pinkSlimeCow);
 
-        chocolateMilkCow = tryAddCow(
-            "ChocolateMilkCow",
-            607,
-            "chocolatemilk",
-            0x663300,
-            0xcc9966,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Chocolate Milk Cow", "ja_JP:チョコレートミルク牛" });
+        chocolateMilkCow = addCow("ChocolateMilkCow", 607, 0x663300, 0xcc9966, SpawnType.NORMAL)
+            .setFluidString("chocolatemilk")
+            .setLang("en_US", "Chocolate Milk Cow")
+            .setLang("ja_JP", "チョコレートミルク牛");
         allCows.add(chocolateMilkCow);
 
-        mushroomSoupCow = tryAddCow(
-            "MushroomSoupCow",
-            608,
-            "mushroomsoup",
-            0xccaa88,
-            0xffddbb,
-            SpawnType.NORMAL,
-            new String[] { "en_US:Mushroom Soup Cow", "ja_JP:マッシュルームスープ牛" });
+        mushroomSoupCow = addCow("MushroomSoupCow", 608, 0xccaa88, 0xffddbb, SpawnType.NORMAL)
+            .setFluidString("mushroomsoup")
+            .setLang("en_US", "Mushroom Soup Cow")
+            .setLang("ja_JP", "マッシュルームスープ牛");
         allCows.add(mushroomSoupCow);
 
         return allCows;

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.init.ModItems;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class DataModel {
 
@@ -70,9 +71,11 @@ public class DataModel {
         setTotalKillCount(getTotalKillCount(stack) + 1, stack);
 
         if (DataModelExperience.shouldIncreaseTier(tier, i, getSimulationCount(stack))) {
-            String nextTierName = DataModelExperience.getTierName(tier + 1);
-            String message = ModelRegistry.INSTANCE.getByType(getId(stack))
-                .getDisplayName() + " reached the " + nextTierName + " tier";
+            String nextTierName = LibMisc.LANG.localize(DataModelExperience.getTierName(tier + 1));
+            String entityName = LibMisc.LANG.localize(
+                ModelRegistry.INSTANCE.getByType(getId(stack))
+                    .getDisplayName());
+            String message = entityName + " reached the " + nextTierName + " tier";
             player.addChatMessage(new ChatComponentText(message));
             setKillCount(0, stack);
             setSimulationCount(0, stack);

@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.api.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -37,7 +40,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     protected boolean isEnabled = true;
     protected float coefficient = 1.0f;
 
-    protected String[] lang;
+    protected Map<String, String> lang;
 
     /**
      * Creates a new registry item.
@@ -51,7 +54,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
      * @param parent2    Second parent, or null if this is a base tier item.
      */
     public BaseRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor,
-        @Nullable T parent1, @Nullable T parent2, String[] lang) {
+        @Nullable T parent1, @Nullable T parent2) {
         this.id = id;
         this.entityName = entityName;
         this.bgColor = bgColor;
@@ -60,7 +63,6 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.spawnType = SpawnType.NORMAL;
-        this.lang = lang;
     }
 
     /**
@@ -303,11 +305,23 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
         return dropItem;
     }
 
-    public String[] getLang() {
+    public String getDropString() {
+        return dropString;
+    }
+
+    public Map<String, String> getLang() {
         return lang;
     }
 
-    public String getDropString() {
-        return dropString;
+    public T setLang(String langCode, String value) {
+        if (this.lang == null) {
+            this.lang = new HashMap<>();
+        }
+
+        if (langCode != null && !langCode.isEmpty() && value != null && !value.isEmpty()) {
+            this.lang.put(langCode, value);
+        }
+
+        return (T) this;
     }
 }

@@ -31,6 +31,7 @@ public class CowsRegistryItem extends BaseRegistryItem<CowsRegistryItem> {
      * The milk fluid this cow produces.
      */
     private FluidStack fluid;
+    private String fluidString;
 
     /**
      * Creates a new cow registry entry without parents (tier = 1).
@@ -38,13 +39,11 @@ public class CowsRegistryItem extends BaseRegistryItem<CowsRegistryItem> {
      * @param id         unique numeric ID
      * @param entityName registry and localization name
      * @param texture    texture used by the cow
-     * @param fluid      base milk fluid produced by this cow
      * @param bgColor    background color for GUIs/JEI
      * @param fgColor    foreground color for GUIs/JEI
      */
-    public CowsRegistryItem(int id, String entityName, ResourceLocation texture, FluidStack fluid, int bgColor,
-        int fgColor, String[] lang) {
-        this(id, entityName, texture, fluid, bgColor, fgColor, null, null, lang);
+    public CowsRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor) {
+        this(id, entityName, texture, bgColor, fgColor, null, null);
     }
 
     /**
@@ -53,10 +52,9 @@ public class CowsRegistryItem extends BaseRegistryItem<CowsRegistryItem> {
      * @param parent1 optional first parent
      * @param parent2 optional second parent
      */
-    public CowsRegistryItem(int id, String entityName, ResourceLocation texture, FluidStack fluid, int bgColor,
-        int fgColor, @Nullable CowsRegistryItem parent1, @Nullable CowsRegistryItem parent2, String[] lang) {
-        super(id, entityName, texture, bgColor, fgColor, parent1, parent2, lang);
-        this.fluid = fluid;
+    public CowsRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor,
+        @Nullable CowsRegistryItem parent1, @Nullable CowsRegistryItem parent2) {
+        super(id, entityName, texture, bgColor, fgColor, parent1, parent2);
     }
 
     /**
@@ -93,5 +91,22 @@ public class CowsRegistryItem extends BaseRegistryItem<CowsRegistryItem> {
      */
     public FluidStack createMilkFluid() {
         return fluid.copy();
+    }
+
+    public FluidStack getFluid() {
+        return fluid;
+    }
+
+    public void setFluid(FluidStack fluid) {
+        this.fluid = fluid;
+    }
+
+    public String getFluidString() {
+        return fluidString;
+    }
+
+    public CowsRegistryItem setFluidString(String fluidString) {
+        this.fluidString = fluidString;
+        return this;
     }
 }

@@ -29,8 +29,9 @@ public class BigReactorsChickens extends BaseChickenHandler {
             "YelloriumChicken.png",
             0xA5B700,
             0xD7EF00,
-            SpawnType.NONE,
-            new String[] { "en_US:Yellorium Chicken", "ja_JP:イエロリウムのニワトリ" }).setLayString("ore:ingotYellorium");
+            SpawnType.NONE).setLayString("ore:ingotYellorium")
+                .setLang("en_US", "Yellorium Chicken")
+                .setLang("ja_JP", "イエロリウムのニワトリ");
         allChickens.add(yelloriumChicken);
 
         graphiteChicken = addChicken(
@@ -39,8 +40,9 @@ public class BigReactorsChickens extends BaseChickenHandler {
             "GraphiteChicken.png",
             0x41453F,
             0x595959,
-            SpawnType.NONE,
-            new String[] { "en_US:Graphite Chicken", "ja_JP:グラファイトのニワトリ" }).setLayString("ore:ingotGraphite");
+            SpawnType.NONE).setLayString("ore:ingotGraphite")
+                .setLang("en_US", "Graphite Chicken")
+                .setLang("ja_JP", "グラファイトのニワトリ");
         allChickens.add(graphiteChicken);
 
         cyaniteChicken = addChicken(
@@ -49,8 +51,9 @@ public class BigReactorsChickens extends BaseChickenHandler {
             "CyaniteChicken.png",
             0x0068B4,
             0x5CAFDB,
-            SpawnType.NONE,
-            new String[] { "en_US:Cyanite Chicken", "ja_JP:シアナイトのニワトリ" }).setLayString("ore:ingotCyanite");
+            SpawnType.NONE).setLayString("ore:ingotCyanite")
+                .setLang("en_US", "Cyanite Chicken")
+                .setLang("ja_JP", "シアナイトのニワトリ");
         allChickens.add(cyaniteChicken);
 
         blutoniumChicken = addChicken(
@@ -59,8 +62,9 @@ public class BigReactorsChickens extends BaseChickenHandler {
             "BlutoniumChicken.png",
             0x4642D6,
             0xf5fcf1,
-            SpawnType.NONE,
-            new String[] { "en_US:Blutonium Chicken", "ja_JP:ブルトニウムのニワトリ" }).setLayString("ore:ingotBlutonium");
+            SpawnType.NONE).setLayString("ore:ingotBlutonium")
+                .setLang("en_US", "Blutonium Chicken")
+                .setLang("ja_JP", "ブルトニウムのニワトリ");
         allChickens.add(blutoniumChicken);
 
         ludicriteChicken = addChicken(
@@ -69,8 +73,9 @@ public class BigReactorsChickens extends BaseChickenHandler {
             "LudicriteChicken.png",
             0xC63BE5,
             0xF27CFF,
-            SpawnType.NONE,
-            new String[] { "en_US:Ludicrite Chicken", "ja_JP:ルディクライトのニワトリ" }).setLayString("ore:ingotLudicrite");
+            SpawnType.NONE).setLayString("ore:ingotLudicrite")
+                .setLang("en_US", "Ludicrite Chicken")
+                .setLang("ja_JP", "ルディクライトのニワトリ");
         allChickens.add(ludicriteChicken);
 
         return allChickens;

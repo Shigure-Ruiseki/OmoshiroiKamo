@@ -8,9 +8,9 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.google.gson.Gson;
@@ -19,11 +19,11 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.json.FluidJson;
+import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -70,7 +70,7 @@ public abstract class BaseCowHandler {
         String fgColor; // Hex string
         String bgColor; // Hex string
         String spawnType;
-        String[] lang;
+        Map<String, String> lang;
     }
 
     private List<CowJson> loadedCustomCows;
@@ -138,25 +138,16 @@ public abstract class BaseCowHandler {
                         saveJsonMigration(configFile, loadedCustomCows);
                     }
 
-                    CowsRegistryItem cow = addCow(data.name, cowID, milk, bgColor, fgColor, type, data.lang);
+                    CowsRegistryItem cow = addCow(data.name, cowID, bgColor, fgColor, type);
 
                     if (cow != null) {
                         Logger.debug("Registering ({}) Cow '{}'", this.modID, data.name);
 
                         cow.setEnabled(data.enabled);
+                        cow.setFluid(milk);
                         if (data.lang != null) {
                             String langKey = "entity." + data.name + ".name";
-                            for (String entry : data.lang) {
-                                int splitIndex = entry.indexOf(':');
-                                if (splitIndex > 0) {
-                                    String lang = entry.substring(0, splitIndex)
-                                        .trim();
-                                    String value = entry.substring(splitIndex + 1)
-                                        .trim();
-                                    LanguageRegistry.instance()
-                                        .addStringLocalization(langKey, lang, value);
-                                }
-                            }
+                            JsonUtils.registerLang(langKey, data.lang);
                         }
 
                         ModCompatInformation.addInformation(
@@ -201,36 +192,14 @@ public abstract class BaseCowHandler {
         }
     }
 
-    protected CowsRegistryItem addCow(String cowName, int cowID, FluidStack fluid, int bgColor, int fgColor,
-        SpawnType spawntype, String[] lang) {
-        if (fluid == null || fluid.getFluid() == null) {
-            Logger.error("Error registering ({}) Cow '{}': fluid was null", this.modID, cowName);
-            return null;
-        }
+    protected CowsRegistryItem addCow(String cowName, int cowID, int bgColor, int fgColor, SpawnType spawntype) {
 
         return new CowsRegistryItem(
             cowID,
             cowName,
             new ResourceLocation("minecraft", "textures/entity/cow/cow.png"),
-            fluid,
             bgColor,
-            fgColor,
-            lang).setSpawnType(spawntype);
-    }
-
-    protected CowsRegistryItem tryAddCow(String name, int id, String fluidName, int primary, int secondary,
-        SpawnType type, String[] lang) {
-        if (FluidRegistry.getFluid(fluidName) != null) {
-            return addCow(
-                name,
-                id,
-                new FluidStack(FluidRegistry.getFluid(fluidName), 1000),
-                primary,
-                secondary,
-                type,
-                lang);
-        }
-        return null;
+            fgColor).setSpawnType(spawntype);
     }
 
     private int parseColor(String hex, int def) {
@@ -254,8 +223,12 @@ public abstract class BaseCowHandler {
         json.spawnType = cow.getSpawnType() != null ? cow.getSpawnType()
             .name() : "NORMAL";
 
-        if (cow.createMilkFluid() != null) {
-            json.fluid = FluidJson.parseFluidStack(cow.createMilkFluid());
+        if (cow.getFluidString() != null) {
+            json.fluid = FluidJson.parseFluidString(cow.getFluidString());
+        }
+
+        if (cow.getFluid() != null) {
+            json.fluid = FluidJson.parseFluidStack(cow.getFluid());
         }
 
         json.lang = cow.getLang();

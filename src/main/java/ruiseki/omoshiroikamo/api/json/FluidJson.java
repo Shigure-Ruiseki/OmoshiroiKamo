@@ -23,4 +23,30 @@ public class FluidJson {
         json.amount = stack.amount;
         return json;
     }
+
+    /**
+     * Parse from string like "name,amount"
+     */
+    public static FluidJson parseFluidString(String string) {
+        if (string == null || string.trim()
+            .isEmpty()) return null;
+
+        String[] parts = string.split(",");
+        if (parts.length == 0) return null;
+
+        FluidJson json = new FluidJson();
+        json.name = parts[0].trim();
+
+        if (parts.length > 1) {
+            try {
+                json.amount = Integer.parseInt(parts[1].trim());
+            } catch (NumberFormatException e) {
+                json.amount = 1000;
+            }
+        } else {
+            json.amount = 1000;
+        }
+
+        return json;
+    }
 }

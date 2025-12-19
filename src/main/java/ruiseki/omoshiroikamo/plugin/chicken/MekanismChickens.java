@@ -25,8 +25,9 @@ public class MekanismChickens extends BaseChickenHandler {
             "OsmiumChicken.png",
             0x989585,
             0xd1ccb6,
-            SpawnType.NONE,
-            new String[] { "en_US:Osmium Chicken", "ja_JP:オスミウムのニワトリ" }).setLayString("ore:ingotOsmium");
+            SpawnType.NONE).setLang("en_US", "Osmium Chicken")
+                .setLang("ja_JP", "オスミウムのニワトリ")
+                .setLayString("ore:ingotOsmium");
         allChickens.add(osmiumChicken);
 
         return allChickens;

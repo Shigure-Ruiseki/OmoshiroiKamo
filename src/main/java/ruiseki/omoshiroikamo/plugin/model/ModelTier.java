@@ -8,14 +8,15 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import ruiseki.omoshiroikamo.api.entity.model.ModelTierRegistryItem;
+import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -37,7 +38,7 @@ public class ModelTier {
         boolean canSimulate;
         int pristineChance;
         TrialJson trial;
-        String[] lang;
+        Map<String, String> lang;
     }
 
     private static class TrialJson {
@@ -85,25 +86,14 @@ public class ModelTier {
                         data.trial.pristine,
                         data.trial.maxWave,
                         data.trial.affixes,
-                        data.trial.glitchChance,
-                        data.lang);
+                        data.trial.glitchChance);
 
                     if (model != null) {
                         Logger.debug("Registering Model Tier: {}", data.tier);
 
                         if (data.lang != null) {
                             String langKey = "model.tier_" + data.tier + ".name";
-                            for (String entry : data.lang) {
-                                int splitIndex = entry.indexOf(':');
-                                if (splitIndex > 0) {
-                                    String lang = entry.substring(0, splitIndex)
-                                        .trim();
-                                    String value = entry.substring(splitIndex + 1)
-                                        .trim();
-                                    LanguageRegistry.instance()
-                                        .addStringLocalization(langKey, lang, value);
-                                }
-                            }
+                            JsonUtils.registerLang(langKey, data.lang);
                         }
 
                         allTiers.add(model);
@@ -124,83 +114,37 @@ public class ModelTier {
     public List<ModelTierRegistryItem> registerModels() {
         List<ModelTierRegistryItem> allTiers = new ArrayList<>();
 
-        ModelTierRegistryItem tier0 = addTier(
-            0,
-            1,
-            6,
-            false,
-            0,
-            2,
-            1,
-            0,
-            0,
-            new String[] { "en_US:§7Faulty", "ja_JP:§7フォールティー" });
+        ModelTierRegistryItem tier0 = addTier(0, 1, 6, false, 0, 2, 1, 0, 0).setLang("en_US", "§7Faulty")
+            .setLang("ja_JP", "§7フォールティー");
         allTiers.add(tier0);
 
-        ModelTierRegistryItem tier1 = addTier(
-            1,
-            4,
-            48,
-            true,
-            5,
-            5,
-            2,
-            1,
-            1,
-            new String[] { "en_US:§aBasic", "ja_JP:§aベーシック" });
+        ModelTierRegistryItem tier1 = addTier(1, 4, 48, true, 5, 5, 2, 1, 1).setLang("en_US", "§aBasic")
+            .setLang("ja_JP", "§aベーシック");
         allTiers.add(tier1);
 
-        ModelTierRegistryItem tier2 = addTier(
-            2,
-            10,
-            300,
-            true,
-            11,
-            8,
-            4,
-            1,
-            3,
-            new String[] { "en_US:§9Advanced", "ja_JP:§9アドバンスド" });
+        ModelTierRegistryItem tier2 = addTier(2, 10, 300, true, 11, 8, 4, 1, 3).setLang("en_US", "§9Advanced")
+            .setLang("ja_JP", "§9アドバンスド");
         allTiers.add(tier2);
 
-        ModelTierRegistryItem tier3 = addTier(
-            3,
-            18,
-            900,
-            true,
-            12,
-            24,
-            5,
-            2,
-            6,
-            new String[] { "en_US:§dSuperior", "ja_JP:§dスーペリア" });
+        ModelTierRegistryItem tier3 = addTier(3, 18, 900, true, 12, 24, 5, 2, 6).setLang("en_US", "§dSuperior")
+            .setLang("ja_JP", "§dスーペリア");
         allTiers.add(tier3);
 
-        ModelTierRegistryItem tier4 = addTier(
-            4,
-            0,
-            0,
-            true,
-            18,
-            42,
-            7,
-            3,
-            11,
-            new String[] { "en_US:§6Self-Aware", "ja_JP:§6自己認識" });
+        ModelTierRegistryItem tier4 = addTier(4, 0, 0, true, 18, 42, 7, 3, 11).setLang("en_US", "§6Self-Aware")
+            .setLang("ja_JP", "§6自己認識");
         allTiers.add(tier4);
 
         return allTiers;
     }
 
     public ModelTierRegistryItem addTier(int tier, int killMultiplier, int dataToNext, boolean canSimulate,
-        int pristineChance, int pristine, int maxWave, int affixes, int glitchChance, String[] lang) {
+        int pristineChance, int pristine, int maxWave, int affixes, int glitchChance) {
         return new ModelTierRegistryItem(
             tier,
             killMultiplier,
             dataToNext,
             canSimulate,
             pristineChance,
-            lang,
             pristine,
             maxWave,
             affixes,

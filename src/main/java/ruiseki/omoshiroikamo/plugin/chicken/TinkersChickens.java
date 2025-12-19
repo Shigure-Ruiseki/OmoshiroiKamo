@@ -27,66 +27,60 @@ public class TinkersChickens extends BaseChickenHandler {
     public List<ChickensRegistryItem> registerChickens() {
         List<ChickensRegistryItem> allChickens = new ArrayList<>();
 
-        arditeChicken = addChicken(
-            "ArditeChicken",
-            this.nextID(),
-            "ArditeChicken.png",
-            0xdc3e00,
-            0xffb20b,
-            SpawnType.NONE,
-            new String[] { "en_US:Ardite Chicken", "ja_JP:アルダイトのニワトリ" }).setLayString("ore:ingotArdite");
+        arditeChicken = addChicken("ArditeChicken", nextID(), "ArditeChicken.png", 0xdc3e00, 0xffb20b, SpawnType.NONE)
+            .setLayString("ore:ingotArdite")
+            .setLang("en_US", "Ardite Chicken")
+            .setLang("ja_JP", "アルダイトのニワトリ");
         allChickens.add(arditeChicken);
 
-        colbaltChicken = addChicken(
-            "CobaltChicken",
-            this.nextID(),
-            "CobaltChicken.png",
-            0x0c5abe,
-            0x03d94f1,
-            SpawnType.NONE,
-            new String[] { "en_US:Cobalt Chicken", "ja_JP:コバルトのニワトリ" }).setLayString("ore:ingotCobalt");
+        colbaltChicken = addChicken("CobaltChicken", nextID(), "CobaltChicken.png", 0x0c5abe, 0x03d94f1, SpawnType.NONE)
+            .setLayString("ore:ingotCobalt")
+            .setLang("en_US", "Cobalt Chicken")
+            .setLang("ja_JP", "コバルトのニワトリ");
         allChickens.add(colbaltChicken);
 
         manyullynChicken = addChicken(
             "ManyullynChicken",
-            this.nextID(),
+            nextID(),
             "ManyullynChicken.png",
             0x652e87,
             0xbc8fe7,
-            SpawnType.NONE,
-            new String[] { "en_US:Manyullyn Chicken", "ja_JP:マニュリンのニワトリ" }).setLayString("ore:ingotManyullyn");
+            SpawnType.NONE).setLayString("ore:ingotManyullyn")
+                .setLang("en_US", "Manyullyn Chicken")
+                .setLang("ja_JP", "マニュリンのニワトリ");
         allChickens.add(manyullynChicken);
 
         pigIronChicken = addChicken(
             "PigIronChicken",
-            this.nextID(),
+            nextID(),
             "PigIronChicken.png",
             0xe6b8b8,
             0xdba9a9,
-            SpawnType.NONE,
-            new String[] { "en_US:Pig Iron Chicken", "ja_JP:ピッグアイアンのニワトリ" }).setLayString("ore:ingotPigIron");
+            SpawnType.NONE).setLayString("ore:ingotPigIron")
+                .setLang("en_US", "Pig Iron Chicken")
+                .setLang("ja_JP", "ピッグアイアンのニワトリ");
         allChickens.add(pigIronChicken);
 
         bloodSlimeChicken = addChicken(
             "BloodSlimeChicken",
-            this.nextID(),
+            nextID(),
             "BloodSlimeChicken.png",
             0xc50616,
             0xee0316,
-            SpawnType.NONE,
-            new String[] { "en_US:Blood Slime Chicken", "ja_JP:ブラッドスライムのニワトリ" })
-                .setLayItem(new ItemStack(TinkerWorld.strangeFood, 1, 1));
+            SpawnType.NONE).setLayItem(new ItemStack(TinkerWorld.strangeFood, 1, 1))
+                .setLang("en_US", "Blood Slime Chicken")
+                .setLang("ja_JP", "ブラッドスライムのニワトリ");
         allChickens.add(bloodSlimeChicken);
 
         blueSlimeChicken = addChicken(
             "BlueSlimeChicken",
-            this.nextID(),
+            nextID(),
             "BlueSlimeChicken.png",
             0x67b4c4,
             0x30717f,
-            SpawnType.NONE,
-            new String[] { "en_US:Blue Slime Chicken", "ja_JP:ブルースライムのニワトリ" })
-                .setLayItem(new ItemStack(TinkerWorld.strangeFood, 1, 0));
+            SpawnType.NONE).setLayItem(new ItemStack(TinkerWorld.strangeFood, 1, 0))
+                .setLang("en_US", "Blue Slime Chicken")
+                .setLang("ja_JP", "ブルースライムのニワトリ");
         allChickens.add(blueSlimeChicken);
 
         return allChickens;
