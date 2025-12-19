@@ -408,6 +408,9 @@ public abstract class BaseChickenHandler {
         if (chicken.getLayItem() != null) {
             json.layItem = ItemJson.parseItemStack(chicken.getLayItem());
         }
+        if (chicken.getDropString() != null) {
+            json.dropItem = ItemJson.parseItemString((chicken.getDropString()));
+        }
         if (chicken.getDropItem() != null) {
             json.dropItem = ItemJson.parseItemStack((chicken.getDropItem()));
         }
