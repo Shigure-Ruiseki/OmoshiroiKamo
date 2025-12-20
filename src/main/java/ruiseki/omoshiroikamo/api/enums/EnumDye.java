@@ -70,10 +70,16 @@ public enum EnumDye {
     private EnumDye() {}
 
     public int getColor() {
+        if (this == CRYSTAL) {
+            return 0xAAFFFF; // Crystal color (Light Blue-ish)
+        }
         return ItemDye.field_150922_c[ordinal()];
     }
 
     public String getName() {
+        if (this == CRYSTAL) {
+            return "crystal";
+        }
         return ItemDye.field_150921_b[ordinal()];
     }
 

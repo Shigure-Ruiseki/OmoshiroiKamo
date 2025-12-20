@@ -7,36 +7,29 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBBlock;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTieredMBBlock;
 
-public class BlockQuantumBeacon extends AbstractMBBlock<TEQuantumBeacon> {
+public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
 
     protected BlockQuantumBeacon() {
-        super(ModObject.blockQuantumBeacon.unlocalisedName, TEQuantumBeacon.class);
+        super(
+            ModObject.blockQuantumBeacon.unlocalisedName,
+            TEQuantumBeaconT1.class,
+            TEQuantumBeaconT2.class,
+            TEQuantumBeaconT3.class,
+            TEQuantumBeaconT4.class,
+            TEQuantumBeaconT5.class,
+            TEQuantumBeaconT6.class);
         this.setLightLevel(0.2F);
     }
 
     public static BlockQuantumBeacon create() {
         return new BlockQuantumBeacon();
-    }
-
-    @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockQuantumBeacon.class, name);
-        GameRegistry.registerTileEntity(TEQuantumBeaconT1.class, "TENanoBotBeaconT1TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumBeaconT2.class, "TENanoBotBeaconT2TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumBeaconT3.class, "TENanoBotBeaconT3TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumBeaconT4.class, "TENanoBotBeaconT4TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumBeaconT5.class, "TENanoBotBeaconT5TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumBeaconT6.class, "TENanoBotBeaconT6TileEntity");
-        registerBlockColor();
     }
 
     @Override
@@ -60,21 +53,8 @@ public class BlockQuantumBeacon extends AbstractMBBlock<TEQuantumBeacon> {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int meta) {
-        switch (meta) {
-            case 5:
-                return new TEQuantumBeaconT6();
-            case 4:
-                return new TEQuantumBeaconT5();
-            case 3:
-                return new TEQuantumBeaconT4();
-            case 2:
-                return new TEQuantumBeaconT3();
-            case 1:
-                return new TEQuantumBeaconT2();
-            default:
-                return new TEQuantumBeaconT1();
-        }
+    public Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockQuantumBeacon.class;
     }
 
     public static class ItemBlockQuantumBeacon extends ItemBlockOK {

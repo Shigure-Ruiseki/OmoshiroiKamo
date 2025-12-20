@@ -112,7 +112,23 @@ public class FocusableHandler {
         }
     }
 
+    public static FocusableList loadListFromJson(File file) {
+        if (file == null || !file.exists()) {
+            return null;
+        }
+        try (Reader reader = new BufferedReader(new FileReader(file))) {
+            return GSON.fromJson(reader, FocusableList.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void loadIntoRegistry(FocusableList list, IFocusableRegistry registry) {
+        loadIntoRegistry(list, registry, -1);
+    }
+
+    public static void loadIntoRegistry(FocusableList list, IFocusableRegistry registry, int tier) {
         if (list == null || registry == null) {
             return;
         }
@@ -120,7 +136,12 @@ public class FocusableHandler {
         list.getEntries()
             .stream()
             .filter(Objects::nonNull)
-            .forEach(entry -> registry.addResource(entry.getRegistryEntry(), entry.getFocusColor()));
+            .forEach(entry -> {
+                WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
+                if (wsb != null) {
+                    registry.addResource(wsb, entry.getFocusColor());
+                }
+            });
     }
 
     // ------------------------------
@@ -156,17 +177,44 @@ public class FocusableHandler {
         protected String id;
         protected int meta;
         protected EnumFocusColor focusColor;
-        protected int weight;
+        protected double[] weights;
+        protected double[] focusedWeights;
         protected boolean isOreDict;
 
         public abstract WeightedStackBase getRegistryEntry();
+
+        public abstract WeightedStackBase getRegistryEntry(int tier);
 
         public EnumDye getFocusColor() {
             return focusColor != null ? focusColor.getColor() : EnumDye.WHITE;
         }
 
         public boolean isValid() {
-            return id != null && !id.isEmpty() && weight > 0 && meta >= 0;
+            return id != null && !id.isEmpty() && meta >= 0;
+        }
+
+        public boolean isValidForTier(int tier) {
+            if (!isValid()) return false;
+            if (tier < 0) return false;
+
+            boolean hasWeight = weights != null && tier < weights.length && weights[tier] > 0;
+            boolean hasFocusedWeight = focusedWeights != null && tier < focusedWeights.length
+                && focusedWeights[tier] > 0;
+            return hasWeight || hasFocusedWeight;
+        }
+
+        protected double getWeightForTier(int tier) {
+            if (weights != null && tier >= 0 && tier < weights.length) {
+                return weights[tier];
+            }
+            return 0;
+        }
+
+        protected double getFocusedWeightForTier(int tier) {
+            if (focusedWeights != null && tier >= 0 && tier < focusedWeights.length && focusedWeights[tier] > 0) {
+                return focusedWeights[tier];
+            }
+            return getWeightForTier(tier);
         }
 
         public String getIDWithMeta() {
@@ -189,6 +237,15 @@ public class FocusableHandler {
         public int hashCode() {
             return Objects.hash(id, meta);
         }
+
+        protected static double[] multiply(double[] arr, double multiplier) {
+            if (arr == null) return null;
+            double[] result = new double[arr.length];
+            for (int i = 0; i < arr.length; i++) {
+                result[i] = arr[i] * multiplier;
+            }
+            return result;
+        }
     }
 
     // ------------------------------
@@ -199,20 +256,36 @@ public class FocusableHandler {
 
         public FocusableOre() {}
 
-        public FocusableOre(String oreName, EnumDye color, int weight) {
+        public FocusableOre(String oreName, EnumDye color, double weight) {
+            this(oreName, color, new double[] { weight, weight, weight, weight, weight, weight });
+        }
+
+        public FocusableOre(String oreName, EnumDye color, double[] weights) {
+            this(oreName, color, weights, null);
+        }
+
+        public FocusableOre(String oreName, EnumDye color, double[] weights, double[] focusedWeights) {
             this.id = oreName;
             this.meta = 0;
             this.focusColor = EnumFocusColor.getFromDye(color);
-            this.weight = weight;
+            this.weights = weights;
+            this.focusedWeights = focusedWeights != null ? focusedWeights : multiply(weights, 5.0);
             this.isOreDict = true;
         }
 
         @Override
         public WeightedStackBase getRegistryEntry() {
-            if (!isValid()) {
+            return getRegistryEntry(0);
+        }
+
+        @Override
+        public WeightedStackBase getRegistryEntry(int tier) {
+            if (!isValidForTier(tier)) {
                 return null;
             }
-            return new WeightedOreStack(id, weight);
+            double w = getWeightForTier(tier);
+            double fw = getFocusedWeightForTier(tier);
+            return new WeightedOreStack(id, w, fw);
         }
     }
 
@@ -224,37 +297,55 @@ public class FocusableHandler {
 
         public FocusableItem() {}
 
-        public FocusableItem(String id, int meta, EnumDye color, int weight, boolean isOreDict) {
+        public FocusableItem(String id, int meta, EnumDye color, double weight) {
+            this(id, meta, color, new double[] { weight, weight, weight, weight, weight, weight }, null, false);
+        }
+
+        public FocusableItem(String id, int meta, EnumDye color, double weight, boolean isOreDict) {
+            this(id, meta, color, new double[] { weight, weight, weight, weight, weight, weight }, null, isOreDict);
+        }
+
+        public FocusableItem(String id, int meta, EnumDye color, double[] weights) {
+            this(id, meta, color, weights, null, false);
+        }
+
+        public FocusableItem(String id, int meta, EnumDye color, double[] weights, double[] focusedWeights,
+            boolean isOreDict) {
             this.id = id;
             this.meta = meta;
             this.focusColor = EnumFocusColor.getFromDye(color);
-            this.weight = weight;
+            this.weights = weights;
+            this.focusedWeights = focusedWeights != null ? focusedWeights : multiply(weights, 5.0);
             this.isOreDict = isOreDict;
-        }
-
-        public FocusableItem(String id, int meta, EnumDye color, int weight) {
-            this(id, meta, color, weight, false);
         }
 
         @Override
         public WeightedStackBase getRegistryEntry() {
-            if (!isValid()) {
+            return getRegistryEntry(0);
+        }
+
+        @Override
+        public WeightedStackBase getRegistryEntry(int tier) {
+            if (!isValidForTier(tier)) {
                 return null;
             }
+            double w = getWeightForTier(tier);
+            double fw = getFocusedWeightForTier(tier);
 
             if (isOreDict) {
-                return getOreDictStack();
+                return getOreDictStack(w, fw);
             }
 
             Item item = GameData.getItemRegistry()
                 .getObject(id);
-            if (item == null) {
+            if (item == null || !GameData.getItemRegistry()
+                .containsKey(id)) {
                 return null;
             }
-            return new WeightedItemStack(new ItemStack(item, 1, meta), weight);
+            return new WeightedItemStack(new ItemStack(item, 1, meta), w, fw);
         }
 
-        WeightedStackBase getOreDictStack() {
+        WeightedStackBase getOreDictStack(double w, double fw) {
             List<ItemStack> ores = OreDictionary.getOres(id);
             if (ores.isEmpty()) {
                 return null;
@@ -262,7 +353,8 @@ public class FocusableHandler {
             return new WeightedItemStack(
                 ores.get(0)
                     .copy(),
-                weight);
+                w,
+                fw);
         }
     }
 
@@ -270,30 +362,41 @@ public class FocusableHandler {
 
         public FocusableBlock() {}
 
-        public FocusableBlock(String id, int meta, EnumDye color, int weight, boolean isOreDict) {
+        public FocusableBlock(String id, int meta, EnumDye color, double weight) {
+            super(id, meta, color, weight, false);
+        }
+
+        public FocusableBlock(String id, int meta, EnumDye color, double weight, boolean isOreDict) {
             super(id, meta, color, weight, isOreDict);
         }
 
-        public FocusableBlock(String id, int meta, EnumDye color, int weight) {
-            this(id, meta, color, weight, false);
+        public FocusableBlock(String id, int meta, EnumDye color, double[] weights) {
+            super(id, meta, color, weights, null, false);
+        }
+
+        public FocusableBlock(String id, int meta, EnumDye color, double[] weights, double[] focusedWeights) {
+            super(id, meta, color, weights, focusedWeights, false);
         }
 
         @Override
-        public WeightedStackBase getRegistryEntry() {
-            if (!isValid()) {
+        public WeightedStackBase getRegistryEntry(int tier) {
+            if (!isValidForTier(tier)) {
                 return null;
             }
+            double w = getWeightForTier(tier);
+            double fw = getFocusedWeightForTier(tier);
 
             if (isOreDict) {
-                return getOreDictStack();
+                return getOreDictStack(w, fw);
             }
 
             Block block = GameData.getBlockRegistry()
                 .getObject(id);
-            if (block == null) {
+            if (block == null || !GameData.getBlockRegistry()
+                .containsKey(id)) {
                 return null;
             }
-            return new WeightedItemStack(new ItemStack(block, 1, meta), weight);
+            return new WeightedItemStack(new ItemStack(block, 1, meta), w, fw);
         }
     }
 

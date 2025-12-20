@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon;
 
+import static ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.QuantumBeaconShapes.STRUCTURE_TIER_5;
+import static ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.QuantumBeaconShapes.TIER_OFFSET;
 import static ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.QuantumBeaconStructure.STRUCTURE_DEFINITION_TIER_5;
-import static ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.QuantumBeaconStructure.STRUCTURE_TIER_5;
-import static ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon.QuantumBeaconStructure.TIER_OFFSET;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 

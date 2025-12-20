@@ -164,4 +164,8 @@ public class LangUtils {
     public boolean canLocalizeExact(String unloc) {
         return StatCollector.canTranslate(unloc);
     }
+
+    public static String translateToLocal(String text) {
+        return StatCollector.translateToLocal(text);
+    }
 }

@@ -6,8 +6,13 @@ public class WeightedItemStack extends WeightedStackBase {
 
     private final ItemStack stack;
 
-    public WeightedItemStack(ItemStack stack, int itemWeightIn) {
-        super(itemWeightIn);
+    public WeightedItemStack(ItemStack stack, double weight) {
+        super(weight, weight); // Default: focused weight = normal weight
+        this.stack = stack;
+    }
+
+    public WeightedItemStack(ItemStack stack, double weight, double focusedWeight) {
+        super(weight, focusedWeight);
         this.stack = stack;
     }
 
@@ -23,6 +28,6 @@ public class WeightedItemStack extends WeightedStackBase {
 
     @Override
     public WeightedStackBase copy() {
-        return new WeightedItemStack(this.stack.copy(), this.itemWeight);
+        return new WeightedItemStack(this.stack.copy(), this.realWeight, this.realFocusedWeight);
     }
 }

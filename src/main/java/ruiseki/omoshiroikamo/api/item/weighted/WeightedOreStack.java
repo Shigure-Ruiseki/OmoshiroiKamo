@@ -11,14 +11,18 @@ public class WeightedOreStack extends WeightedStackBase {
     private final List<ItemStack> stacks;
     private final String oreName;
 
-    public WeightedOreStack(String oreName, int itemWeightIn) {
-        super(itemWeightIn);
+    public WeightedOreStack(String oreName, double weight) {
+        this(oreName, weight, weight);
+    }
+
+    public WeightedOreStack(String oreName, double weight, double focusedWeight) {
+        super(weight, focusedWeight);
         this.oreName = oreName;
         this.stacks = OreDictionary.getOres(oreName);
     }
 
-    protected WeightedOreStack(String oreName, List<ItemStack> stacks, int weight) {
-        super(weight);
+    protected WeightedOreStack(String oreName, List<ItemStack> stacks, double weight, double focusedWeight) {
+        super(weight, focusedWeight);
         this.oreName = oreName;
         this.stacks = stacks;
     }
@@ -43,6 +47,6 @@ public class WeightedOreStack extends WeightedStackBase {
             }
         }
 
-        return new WeightedOreStack(this.oreName, newStacks, this.itemWeight);
+        return new WeightedOreStack(this.oreName, newStacks, this.realWeight, this.realFocusedWeight);
     }
 }
