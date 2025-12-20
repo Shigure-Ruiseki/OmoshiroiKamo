@@ -52,9 +52,8 @@ public class TEQuantumOreExtractorT6 extends TEQuantumExtractor {
         return config.tickOreTier6;
     }
 
-    @Override
     public int getMinDuration() {
-        return config.tickOreTier6;
+        return config.minTickOreTier6;
     }
 
     @Override

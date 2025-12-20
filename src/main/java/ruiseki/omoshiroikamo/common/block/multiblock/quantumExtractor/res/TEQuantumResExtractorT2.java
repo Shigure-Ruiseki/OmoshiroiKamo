@@ -54,7 +54,7 @@ public class TEQuantumResExtractorT2 extends TEQuantumExtractor {
 
     @Override
     public int getMinDuration() {
-        return config.tickResTier2;
+        return config.minTickResTier2;
     }
 
     @Override

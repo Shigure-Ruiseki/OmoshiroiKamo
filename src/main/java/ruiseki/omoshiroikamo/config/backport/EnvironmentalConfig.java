@@ -26,7 +26,7 @@ public class EnvironmentalConfig {
         @Config.RangeInt(min = 0)
         public int tickOreTier1;
 
-        @Config.DefaultInt(320)
+        @Config.DefaultInt(300)
         @Config.RangeInt(min = 0)
         public int tickOreTier2;
 
@@ -50,7 +50,7 @@ public class EnvironmentalConfig {
         @Config.RangeInt(min = 0)
         public int tickResTier1;
 
-        @Config.DefaultInt(320)
+        @Config.DefaultInt(300)
         @Config.RangeInt(min = 0)
         public int tickResTier2;
 
@@ -70,53 +70,103 @@ public class EnvironmentalConfig {
         @Config.RangeInt(min = 0)
         public int tickResTier6;
 
-        @Config.DefaultInt(264000)
+        @Config.DefaultInt(320000)
         @Config.RangeInt(min = 0)
         public int energyCostOreTier1;
 
-        @Config.DefaultInt(184000)
+        @Config.DefaultInt(300000)
         @Config.RangeInt(min = 0)
         public int energyCostOreTier2;
 
-        @Config.DefaultInt(120000)
+        @Config.DefaultInt(192000)
         @Config.RangeInt(min = 0)
         public int energyCostOreTier3;
 
-        @Config.DefaultInt(72000)
+        @Config.DefaultInt(128000)
         @Config.RangeInt(min = 0)
         public int energyCostOreTier4;
 
-        @Config.DefaultInt(40000)
+        @Config.DefaultInt(80000)
         @Config.RangeInt(min = 0)
         public int energyCostOreTier5;
 
-        @Config.DefaultInt(16000)
+        @Config.DefaultInt(60000)
         @Config.RangeInt(min = 0)
         public int energyCostOreTier6;
 
-        @Config.DefaultInt(264000)
+        @Config.DefaultInt(320000)
         @Config.RangeInt(min = 0)
         public int energyCostResTier1;
 
-        @Config.DefaultInt(184000)
+        @Config.DefaultInt(300000)
         @Config.RangeInt(min = 0)
         public int energyCostResTier2;
 
-        @Config.DefaultInt(120000)
+        @Config.DefaultInt(192000)
         @Config.RangeInt(min = 0)
         public int energyCostResTier3;
 
-        @Config.DefaultInt(72000)
+        @Config.DefaultInt(128000)
         @Config.RangeInt(min = 0)
         public int energyCostResTier4;
 
-        @Config.DefaultInt(40000)
+        @Config.DefaultInt(80000)
         @Config.RangeInt(min = 0)
         public int energyCostResTier5;
 
-        @Config.DefaultInt(16000)
+        @Config.DefaultInt(60000)
         @Config.RangeInt(min = 0)
         public int energyCostResTier6;
+
+        @Config.Comment("Minimum tick duration for Ore Miners (limits how fast Speed Modifiers can make them)")
+        @Config.DefaultInt(200)
+        @Config.RangeInt(min = 1)
+        public int minTickOreTier1;
+
+        @Config.DefaultInt(100)
+        @Config.RangeInt(min = 1)
+        public int minTickOreTier2;
+
+        @Config.DefaultInt(50)
+        @Config.RangeInt(min = 1)
+        public int minTickOreTier3;
+
+        @Config.DefaultInt(30)
+        @Config.RangeInt(min = 1)
+        public int minTickOreTier4;
+
+        @Config.DefaultInt(10)
+        @Config.RangeInt(min = 1)
+        public int minTickOreTier5;
+
+        @Config.DefaultInt(1)
+        @Config.RangeInt(min = 1)
+        public int minTickOreTier6;
+
+        @Config.Comment("Minimum tick duration for Resource Miners (limits how fast Speed Modifiers can make them)")
+        @Config.DefaultInt(200)
+        @Config.RangeInt(min = 1)
+        public int minTickResTier1;
+
+        @Config.DefaultInt(100)
+        @Config.RangeInt(min = 1)
+        public int minTickResTier2;
+
+        @Config.DefaultInt(50)
+        @Config.RangeInt(min = 1)
+        public int minTickResTier3;
+
+        @Config.DefaultInt(30)
+        @Config.RangeInt(min = 1)
+        public int minTickResTier4;
+
+        @Config.DefaultInt(10)
+        @Config.RangeInt(min = 1)
+        public int minTickResTier5;
+
+        @Config.DefaultInt(1)
+        @Config.RangeInt(min = 1)
+        public int minTickResTier6;
     }
 
     @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")

@@ -78,8 +78,12 @@ public class FocusableRegistry implements IFocusableRegistry {
                 .anyMatch(stack::isStackEqual);
 
             // Use focusedWeight if matched, otherwise use normal weight
-            // Temporarily store effective weight in realFocusedWeight to avoid re-checking
-            stack.realFocusedWeight = isFocus ? stack.realFocusedWeight : stack.realWeight;
+            // Apply boostMultiplier to focused items to increase their drop chance
+            if (isFocus) {
+                stack.realFocusedWeight = stack.realFocusedWeight * boostMultiplier;
+            } else {
+                stack.realFocusedWeight = stack.realWeight;
+            }
             totalWeight += stack.realFocusedWeight;
         }
 
