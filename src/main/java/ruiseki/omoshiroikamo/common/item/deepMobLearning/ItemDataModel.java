@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
@@ -67,10 +66,7 @@ public class ItemDataModel extends ItemOK {
         for (ModelRegistryItem model : ModelRegistry.INSTANCE.getItems()) {
             int type = model.getId();
 
-            ResourceLocation tex = model.getTexture();
-            String path = tex.getResourcePath();
-            String iconName = tex.getResourceDomain() + ":" + path;
-
+            String iconName = model.getTexture();
             IIcon icon = reg.registerIcon(iconName);
             icons.put(type, icon);
         }
@@ -79,11 +75,7 @@ public class ItemDataModel extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta) {
-        IIcon icon = icons.get(meta);
-        if (icon == null) {
-            icon = icons.get(0);
-        }
-        return icon;
+        return icons.get(meta);
     }
 
     @Override
@@ -106,7 +98,7 @@ public class ItemDataModel extends ItemOK {
                     DataModel.getTierRoof(stack));
                 builder.addLang("tooltip.data_model.data.killmultiplier", DataModel.getKillMultiplier(stack));
             }
-            builder.addLang(LibMisc.LANG.localize("data_model.rfcost", DataModel.getSimulationTickCost(stack)));
+            builder.addLang("tooltip.data_model.rfcost", DataModel.getSimulationTickCost(stack));
             // list.add(LibMisc.LANG.localize("data_model.type", DataModel.getMatterTypeName(stack)));
         }
 

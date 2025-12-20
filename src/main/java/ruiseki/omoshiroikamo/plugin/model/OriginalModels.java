@@ -63,7 +63,7 @@ public class OriginalModels extends BaseModelHandler {
         + "// ===============================================================================\n";
 
     public OriginalModels() {
-        super("Original", "Original Models", "model/original/");
+        super("Original", "Original Models", "original/");
         this.setStartID(5000);
         this.setNeedsModPresent(false);
     }

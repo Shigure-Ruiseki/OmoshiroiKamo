@@ -12,7 +12,6 @@ import java.util.Map;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +25,7 @@ import ruiseki.omoshiroikamo.api.json.ItemJson;
 import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.DeepMobLearningConfig;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
@@ -67,12 +67,14 @@ public abstract class BaseModelHandler {
         String displayName;
         boolean enabled;
         String texture;
+        String pristineMatterTexture;
         int simulationRFCost;
         DeepLearnerDisplay deepLearnerDisplay;
         ItemJson[] lootItems;
         String[] associatedMobs;
         String extraTooltip;
         Map<String, String> lang;
+        Map<String, String> pristineLang;
     }
 
     private static class DeepLearnerDisplay {
@@ -134,7 +136,13 @@ public abstract class BaseModelHandler {
 
                     List<Class<? extends Entity>> associatedEntityClasses;
                     associatedEntityClasses = JsonUtils.resolveEntityClasses(data.associatedMobs);
-                    if (associatedEntityClasses.isEmpty()) continue;
+                    if (associatedEntityClasses.isEmpty()) {
+                        Logger.error(
+                            "Error registering ({}) Model '{}' : associatedEntityClasses was null",
+                            this.modID,
+                            data.displayName);
+                        continue;
+                    }
 
                     // Migrate
                     int modelID = (data.id != null && data.id >= 0) ? data.id : fixedID(data.displayName);
@@ -159,6 +167,19 @@ public abstract class BaseModelHandler {
 
                         model.setEnabled(data.enabled);
 
+                        if (data.pristineMatterTexture != null) {
+                            model.setPristineTexture(
+                                LibResources.PREFIX_MOD + "pristine/"
+                                    + this.texturesLocation
+                                    + data.pristineMatterTexture);
+                        } else {
+                            model.setPristineTexture(
+                                LibResources.PREFIX_MOD + "pristine/"
+                                    + this.texturesLocation
+                                    + "pristine_matter_"
+                                    + data.texture);
+                        }
+
                         if (data.lootItems != null && data.lootItems.length > 0) {
                             List<ItemStack> loot = ItemJson.resolveListItemStack(data.lootItems);
                             model.setLootItems(loot);
@@ -176,6 +197,11 @@ public abstract class BaseModelHandler {
                         if (data.lang != null) {
                             String langKey = "item.model." + data.displayName + ".name";
                             JsonUtils.registerLang(langKey, data.lang);
+                        }
+
+                        if (data.pristineLang != null) {
+                            String langKey = "item.pristine." + data.displayName + ".name";
+                            JsonUtils.registerLang(langKey, data.pristineLang);
                         }
 
                         ModCompatInformation.addInformation(
@@ -227,7 +253,7 @@ public abstract class BaseModelHandler {
         return new ModelRegistryItem(
             id,
             displayName,
-            new ResourceLocation(LibMisc.MOD_ID, this.texturesLocation + texture),
+            LibResources.PREFIX_MOD + "model/" + this.texturesLocation + texture,
             entityDisplay,
             numberOfHearts,
             interfaceScale,
@@ -243,8 +269,7 @@ public abstract class BaseModelHandler {
         json.id = model.getId();
         json.displayName = model.getDisplayName();
         json.enabled = true;
-        String fullPath = model.getTexture()
-            .getResourcePath();
+        String fullPath = model.getTexture();
         json.texture = fullPath.substring(fullPath.lastIndexOf('/') + 1);
 
         json.simulationRFCost = model.getSimulationRFCost() > 0 ? model.getSimulationRFCost() : 256;
@@ -287,6 +312,7 @@ public abstract class BaseModelHandler {
         }
 
         json.lang = model.getLang();
+        json.pristineLang = model.getPristineLang();
         return json;
     }
 

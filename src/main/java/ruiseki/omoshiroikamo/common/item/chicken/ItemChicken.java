@@ -102,12 +102,7 @@ public class ItemChicken extends ItemOK {
         if (pass == 1) {
             return overlayIcons.get(meta);
         }
-
-        IIcon icon = icons.get(meta);
-        if (icon == null) {
-            icon = icons.get(0);
-        }
-        return icon;
+        return icons.get(meta);
     }
 
     @Override

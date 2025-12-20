@@ -145,6 +145,7 @@ public abstract class OKCreativeTab extends CreativeTabs {
             addItem(ModItems.DEEP_LEARNER.getItem());
             addItem(ModItems.DATA_MODEL.getItem());
             addItem(ModItems.DATA_MODEL_BLANK.getItem());
+            addItem(ModItems.PRISTINE_MATTER.getItem());
         }
     };
 
@@ -156,7 +157,7 @@ public abstract class OKCreativeTab extends CreativeTabs {
 
     @Override
     public boolean hasSearchBar() {
-        return true;
+        return false;
     }
 
     @Override

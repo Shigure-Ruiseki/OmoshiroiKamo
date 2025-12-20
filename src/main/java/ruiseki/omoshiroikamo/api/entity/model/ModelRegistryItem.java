@@ -6,7 +6,6 @@ import java.util.Map;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,10 @@ public class ModelRegistryItem {
     @Getter
     protected final String displayName;
     @Getter
-    protected final ResourceLocation texture;
+    protected final String texture;
+    @Getter
+    @Setter
+    protected String pristineTexture;
 
     @Getter
     @Setter
@@ -39,17 +41,12 @@ public class ModelRegistryItem {
 
     @Getter
     protected Map<String, String> lang;
+    @Getter
+    protected Map<String, String> pristineLang;
 
     @Getter
     @Setter
     protected String extraTooltip;
-
-    @Getter
-    @Setter
-    protected ItemStack livingMatter;
-    @Getter
-    @Setter
-    protected ItemStack pristineMatter;
 
     @Getter
     protected String[] associatedMobs;
@@ -66,8 +63,8 @@ public class ModelRegistryItem {
     @Setter
     protected boolean enabled;
 
-    public ModelRegistryItem(int id, String displayName, ResourceLocation texture, String entityDisplay,
-        float numberOfHearts, float interfaceScale, int interfaceOffsetX, int interfaceOffsetY, String[] mobTrivia) {
+    public ModelRegistryItem(int id, String displayName, String texture, String entityDisplay, float numberOfHearts,
+        float interfaceScale, int interfaceOffsetX, int interfaceOffsetY, String[] mobTrivia) {
         this.id = id;
         this.displayName = displayName;
         this.texture = texture;
@@ -81,6 +78,10 @@ public class ModelRegistryItem {
 
     public String getItemName() {
         return "item.model." + displayName + ".name";
+    }
+
+    public String getPristineName() {
+        return "item.pristine." + displayName + ".name";
     }
 
     public ModelRegistryItem setLootStrings(String[] lootStrings) {
@@ -110,6 +111,18 @@ public class ModelRegistryItem {
 
         if (langCode != null && !langCode.isEmpty() && value != null && !value.isEmpty()) {
             this.lang.put(langCode, value);
+        }
+
+        return this;
+    }
+
+    public ModelRegistryItem setPristineLang(String langCode, String value) {
+        if (this.pristineLang == null) {
+            this.pristineLang = new HashMap<>();
+        }
+
+        if (langCode != null && !langCode.isEmpty() && value != null && !value.isEmpty()) {
+            this.pristineLang.put(langCode, value);
         }
 
         return this;
