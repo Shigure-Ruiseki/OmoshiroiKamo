@@ -1,6 +1,9 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.modifier;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.util.StatCollector;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
@@ -21,9 +24,17 @@ public class BlockModifierSpeed extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(new AttributeEnergyCost(1.0F));
+        list.add(new AttributeEnergyCost(1.5F));
         list.add(ModifierAttribute.SPEED.getAttribute());
         list.add(ModifierAttribute.P_SPEED.getAttribute());
         list.add(new AttributeEnergyCostFixed(16));
+    }
+
+    @Override
+    public List<String> getTooltipLines() {
+        List<String> list = new ArrayList<>();
+        list.add(StatCollector.translateToLocal("tooltip.modifier.speed.effect"));
+        list.add(StatCollector.translateToLocal("tooltip.modifier.speed.penalty"));
+        return list;
     }
 }

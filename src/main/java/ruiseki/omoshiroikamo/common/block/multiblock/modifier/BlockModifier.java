@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.common.block.multiblock.modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.api.multiblock.ModifierRegistry;
@@ -23,6 +24,21 @@ public abstract class BlockModifier extends BlockOK implements IModifierBlock {
     }
 
     public abstract void addAttributes(List<IModifierAttribute> var1);
+
+    /**
+     * Returns tooltip lines for this modifier block.
+     * Override in subclasses to provide custom tooltips.
+     * 
+     * @return List of tooltip strings (may include formatting codes)
+     */
+    public List<String> getTooltipLines() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void init() {
+        GameRegistry.registerBlock(this, ItemBlockModifier.class, name);
+    }
 
     @Override
     public String getModifierName() {

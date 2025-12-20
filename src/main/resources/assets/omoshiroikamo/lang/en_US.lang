@@ -547,3 +547,9 @@ tile.stall.name=Stall
 neiintegration.chance=Chance: %s
 neiintegration.chance.never=Never
 neiintegration.chance.lessThan1=<1%
+
+#Modifier Tooltips
+tooltip.modifier.speed.effect=§a+30% Mining Speed§r
+tooltip.modifier.speed.penalty=§c+50% Energy Cost§r
+tooltip.modifier.accuracy.effect=§a+18% Focus Boost§r  
+tooltip.modifier.accuracy.penalty=§c-10% Mining Speed§r
