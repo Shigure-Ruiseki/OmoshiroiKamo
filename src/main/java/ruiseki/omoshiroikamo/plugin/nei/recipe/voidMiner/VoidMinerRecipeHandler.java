@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.plugin.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
