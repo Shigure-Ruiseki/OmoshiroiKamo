@@ -8,38 +8,33 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBBlock;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
-public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IWailaBlockInfoProvider {
+public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> implements IWailaBlockInfoProvider {
 
     protected BlockSolarArray() {
-        super(ModObject.blockSolarArray.unlocalisedName, TESolarArray.class);
+        super(
+            ModObject.blockSolarArray.unlocalisedName,
+            TESolarArrayT1.class,
+            TESolarArrayT2.class,
+            TESolarArrayT3.class,
+            TESolarArrayT4.class,
+            TESolarArrayT5.class,
+            TESolarArrayT6.class);
     }
 
     public static BlockSolarArray create() {
         return new BlockSolarArray();
-    }
-
-    @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockSolarArray.class, name);
-        GameRegistry.registerTileEntity(TESolarArrayT1.class, name + "TESolarArrayT1TileEntity");
-        GameRegistry.registerTileEntity(TESolarArrayT2.class, name + "TESolarArrayT2TileEntity");
-        GameRegistry.registerTileEntity(TESolarArrayT3.class, name + "TESolarArrayT3TileEntity");
-        GameRegistry.registerTileEntity(TESolarArrayT4.class, name + "TESolarArrayT4TileEntity");
-        GameRegistry.registerTileEntity(TESolarArrayT5.class, name + "TESolarArrayT5TileEntity");
-        GameRegistry.registerTileEntity(TESolarArrayT6.class, name + "TESolarArrayT6TileEntity");
-        registerBlockColor();
     }
 
     @Override
@@ -63,21 +58,8 @@ public class BlockSolarArray extends AbstractMBBlock<TESolarArray> implements IW
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int meta) {
-        switch (meta) {
-            case 5:
-                return new TESolarArrayT6();
-            case 4:
-                return new TESolarArrayT5();
-            case 3:
-                return new TESolarArrayT4();
-            case 2:
-                return new TESolarArrayT3();
-            case 1:
-                return new TESolarArrayT2();
-            default:
-                return new TESolarArrayT1();
-        }
+    public Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockSolarArray.class;
     }
 
     @Override

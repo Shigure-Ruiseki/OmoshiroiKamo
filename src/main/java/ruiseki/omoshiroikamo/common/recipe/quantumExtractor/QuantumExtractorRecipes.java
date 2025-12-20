@@ -23,39 +23,43 @@ public class QuantumExtractorRecipes {
             resRegistry[i] = new FocusableRegistry();
         }
 
-        for (int t = 0; t < MAX_TIER; t++) {
-            loadOreTier(t);
-            loadResTier(t);
-        }
+        loadOreConfig();
+        loadResConfig();
     }
 
-    private static void loadOreTier(int tier) {
-        IFocusableRegistry reg = oreRegistry[tier];
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/ore_t" + (tier + 1) + ".json");
+    private static void loadOreConfig() {
+        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/ore.json");
 
+        FocusableHandler.FocusableList list;
         if (file.exists()) {
-            FocusableHandler.loadRegistryFromJson(file, reg);
+            list = FocusableHandler.loadListFromJson(file);
         } else {
-            FocusableHandler.FocusableList defaults = getDefaultOreList(tier);
-            FocusableHandler.saveRegistryDefaultsToJson(file, defaults);
-            FocusableHandler.loadIntoRegistry(defaults, reg);
+            list = getDefaultOreList();
+            FocusableHandler.saveRegistryDefaultsToJson(file, list);
+        }
+
+        for (int tier = 0; tier < MAX_TIER; tier++) {
+            FocusableHandler.loadIntoRegistry(list, oreRegistry[tier], tier);
         }
     }
 
-    private static void loadResTier(int tier) {
-        IFocusableRegistry reg = resRegistry[tier];
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/res_t" + (tier + 1) + ".json");
+    private static void loadResConfig() {
+        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/res.json");
 
+        FocusableHandler.FocusableList list;
         if (file.exists()) {
-            FocusableHandler.loadRegistryFromJson(file, reg);
+            list = FocusableHandler.loadListFromJson(file);
         } else {
-            FocusableHandler.FocusableList defaults = getDefaultResList(tier);
-            FocusableHandler.saveRegistryDefaultsToJson(file, defaults);
-            FocusableHandler.loadIntoRegistry(defaults, reg);
+            list = getDefaultResList();
+            FocusableHandler.saveRegistryDefaultsToJson(file, list);
+        }
+
+        for (int tier = 0; tier < MAX_TIER; tier++) {
+            FocusableHandler.loadIntoRegistry(list, resRegistry[tier], tier);
         }
     }
 
-    private static FocusableHandler.FocusableList getDefaultOreList(int tier) {
+    private static FocusableHandler.FocusableList getDefaultOreList() {
         FocusableHandler.FocusableList defaults = new FocusableHandler.FocusableList();
         defaults.addEntry(new FocusableHandler.FocusableOre("oreCoal", EnumDye.BLACK, 1000));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreIron", EnumDye.WHITE, 750));
@@ -105,11 +109,6 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(new FocusableHandler.FocusableOre("oreOsmium", EnumDye.LIGHT_BLUE, 251));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreSalt", EnumDye.WHITE, 160));
         defaults.addEntry(new FocusableHandler.FocusableBlock("rftools:dimensional_shard_ore", 0, EnumDye.WHITE, 127));
-        // defaults.addEntry(new FocusableHandler.FocusableBlock("mysticalagriculture:inferium_ore", 0, EnumDye.GREEN,
-        // 190));
-        // defaults.addEntry(new FocusableHandler.FocusableBlock("mysticalagriculture:prosperity_ore", 0,
-        // EnumDye.SILVER, 155));
-
         defaults.addEntry(new FocusableHandler.FocusableOre("oreBrainstone", EnumDye.LIME, 223));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreTitaniumIron", EnumDye.WHITE, 223));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreSilicon", EnumDye.PURPLE, 333));
@@ -147,42 +146,53 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(new FocusableHandler.FocusableOre("oreChaos", EnumDye.WHITE, 200));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreEnderEssence", EnumDye.GREEN, 200));
 
-        // --- Crystals ---
-        int[] crystalWeights;
-        switch (tier) {
-            case 0:
-                crystalWeights = new int[] { 200, 150 };
-                break;
-            case 1:
-                crystalWeights = new int[] { 200, 150, 120 };
-                break;
-            case 2:
-                crystalWeights = new int[] { 200, 150, 120, 90 };
-                break;
-            case 3:
-                crystalWeights = new int[] { 200, 150, 120, 90, 60 };
-                break;
-            case 4, 5:
-                crystalWeights = new int[] { 200, 150, 120, 90, 60, 30 };
-                break;
-            default:
-                crystalWeights = new int[] { 0 };
-                break;
-        }
-
-        for (int i = 0; i < crystalWeights.length; i++) {
-            defaults.addEntry(
-                new FocusableHandler.FocusableItem(
-                    LibResources.PREFIX_MOD + "crystal",
-                    i,
-                    EnumDye.CRYSTAL,
-                    crystalWeights[i]));
-        }
+        // Crystal 0
+        defaults.addEntry(
+            new FocusableHandler.FocusableItem(
+                LibResources.PREFIX_MOD + "crystal",
+                0,
+                EnumDye.CRYSTAL,
+                new double[] { 200, 200, 200, 200, 200, 200 }));
+        // Crystal 1
+        defaults.addEntry(
+            new FocusableHandler.FocusableItem(
+                LibResources.PREFIX_MOD + "crystal",
+                1,
+                EnumDye.CRYSTAL,
+                new double[] { 150, 150, 150, 150, 150, 150 }));
+        // Crystal 2
+        defaults.addEntry(
+            new FocusableHandler.FocusableItem(
+                LibResources.PREFIX_MOD + "crystal",
+                2,
+                EnumDye.CRYSTAL,
+                new double[] { 0, 120, 120, 120, 120, 120 }));
+        // Crystal 3
+        defaults.addEntry(
+            new FocusableHandler.FocusableItem(
+                LibResources.PREFIX_MOD + "crystal",
+                3,
+                EnumDye.CRYSTAL,
+                new double[] { 0, 0, 90, 90, 90, 90 }));
+        // Crystal 4
+        defaults.addEntry(
+            new FocusableHandler.FocusableItem(
+                LibResources.PREFIX_MOD + "crystal",
+                4,
+                EnumDye.CRYSTAL,
+                new double[] { 0, 0, 0, 60, 60, 60 }));
+        // Crystal 5
+        defaults.addEntry(
+            new FocusableHandler.FocusableItem(
+                LibResources.PREFIX_MOD + "crystal",
+                5,
+                EnumDye.CRYSTAL,
+                new double[] { 0, 0, 0, 0, 30, 30 }));
 
         return defaults;
     }
 
-    private static FocusableHandler.FocusableList getDefaultResList(int tier) {
+    private static FocusableHandler.FocusableList getDefaultResList() {
         FocusableHandler.FocusableList defaults = new FocusableHandler.FocusableList();
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:stone", 0, EnumDye.GRAY, 32));
         defaults.addEntry(new FocusableHandler.FocusableBlock("etfuturum:stone", 1, EnumDye.PINK, 30));
@@ -194,7 +204,7 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(new FocusableHandler.FocusableBlock("etfuturum:coarse_dirt", 0, EnumDye.BROWN, 10));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:sand", 0, EnumDye.YELLOW, 30));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:sand", 1, EnumDye.YELLOW, 24));
-        defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:sand_stone", 0, EnumDye.YELLOW, 10));
+        defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:sandstone", 0, EnumDye.YELLOW, 10));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:cobblestone", 0, EnumDye.GRAY, 28));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:mossy_cobblestone", 0, EnumDye.GREEN, 6));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:obsidian", 0, EnumDye.PURPLE, 10));
@@ -239,33 +249,13 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(
             new FocusableHandler.FocusableBlock("appliedenergistics2:tile.BlockSkyStone", 0, EnumDye.BLACK, 2));
 
-        int micaWeight;
-        switch (tier) {
-            case 0:
-                micaWeight = 2;
-                break;
-            case 1:
-                micaWeight = 3;
-                break;
-            case 2:
-                micaWeight = 4;
-                break;
-            case 3:
-                micaWeight = 5;
-                break;
-            case 4:
-                micaWeight = 6;
-                break;
-            case 5:
-                micaWeight = 7;
-                break;
-            default:
-                micaWeight = 0;
-                break;
-        }
-
+        // Mica (Tier-based weights)
         defaults.addEntry(
-            new FocusableHandler.FocusableBlock(LibResources.PREFIX_MOD + "mica", 0, EnumDye.WHITE, micaWeight));
+            new FocusableHandler.FocusableBlock(
+                LibResources.PREFIX_MOD + "mica",
+                0,
+                EnumDye.WHITE,
+                new double[] { 2, 4, 6, 8, 12, 16 }));
 
         return defaults;
     }

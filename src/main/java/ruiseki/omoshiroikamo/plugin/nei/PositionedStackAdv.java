@@ -9,13 +9,11 @@
 package ruiseki.omoshiroikamo.plugin.nei;
 
 import java.awt.Rectangle;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
@@ -26,9 +24,21 @@ public class PositionedStackAdv extends PositionedStack {
 
     private final List<String> tooltip = new ArrayList<>();
     public float chance;
+    public int textYOffset = 0;
+    public int textColor = 0xFFFFFF;
 
     public PositionedStackAdv(Object object, int x, int y) {
         super(object, x, y);
+    }
+
+    public PositionedStackAdv setTextYOffset(int offset) {
+        this.textYOffset = offset;
+        return this;
+    }
+
+    public PositionedStackAdv setTextColor(int color) {
+        this.textColor = color;
+        return this;
     }
 
     public PositionedStackAdv(Object object, int x, int y, List<String> tooltip) {
@@ -62,11 +72,30 @@ public class PositionedStackAdv extends PositionedStack {
     }
 
     public void drawChance() {
-        if (chance <= 0.0f || chance >= 1.0f) {
+        if (chance > 1.0f) {
             return;
         }
-        float scale = 0.6f;
-        String text = String.format("%.0f%%", chance * 100f);
+        float scale = 0.8f;
+        double percent = chance * 100.0;
+
+        String text;
+        if (chance <= 0.0f) {
+            // 0%: show as "-"
+            text = "-";
+        } else if (percent >= 10.0) {
+            // 10% - 99%: show 1 decimal place (3 sig figs)
+            text = String.format("%.1f%%", percent);
+        } else if (percent >= 1.0) {
+            // 1% - 10%: show 2 decimal places (3 sig figs)
+            text = String.format("%.2f%%", percent);
+        } else if (percent >= 0.1) {
+            // 0.1% - 1%: show 3 decimal places (3 sig figs)
+            text = String.format("%.3f%%", percent);
+        } else {
+            // Less than 0.1%: show 4 decimal places
+            text = String.format("%.4f%%", percent);
+        }
+
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         int stringWidth = font.getStringWidth(text);
 
@@ -77,31 +106,16 @@ public class PositionedStackAdv extends PositionedStack {
 
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, 1.0f);
-        font.drawStringWithShadow(
+        font.drawString(
             text,
-            (int) ((x + 16 - stringWidth * scale) * inverse),
-            (int) (y * inverse),
-            0xFFFFFF);
+            (int) ((x + 8 - stringWidth * scale / 2) * inverse),
+            (int) ((y + 16 - font.FONT_HEIGHT * scale + textYOffset) * inverse),
+            textColor);
         GL11.glPopMatrix();
     }
 
     public PositionedStackAdv setChance(float chance) {
         this.chance = Math.max(0.0f, Math.min(1.0f, chance));
-        if (chance <= 0.0F) {
-            this.tooltip.add(
-                EnumChatFormatting.GRAY
-                    + String.format(NEIUtils.translate("chance"), NEIUtils.translate("chance.never")));
-        } else if (chance < 0.01F) {
-            this.tooltip.add(
-                EnumChatFormatting.GRAY
-                    + String.format(NEIUtils.translate("chance"), NEIUtils.translate("chance.lessThan1")));
-        } else if (chance != 1.0F) {
-            NumberFormat percentFormat = NumberFormat.getPercentInstance();
-            percentFormat.setMaximumFractionDigits(2);
-            this.tooltip.add(
-                EnumChatFormatting.GRAY
-                    + String.format(NEIUtils.translate("chance"), String.valueOf(percentFormat.format(chance))));
-        }
         return this;
     }
 }

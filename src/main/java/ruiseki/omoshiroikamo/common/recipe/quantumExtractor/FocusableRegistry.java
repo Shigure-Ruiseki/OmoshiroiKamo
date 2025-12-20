@@ -62,43 +62,34 @@ public class FocusableRegistry implements IFocusableRegistry {
 
     @Override
     public List<WeightedStackBase> getFocusedList(EnumDye focusColor, float boostMultiplier) {
-        List<WeightedStackBase> weightedCopy = getUnFocusedList();
+        // Create copies
+        List<WeightedStackBase> weightedCopy = new ArrayList<>(this.oreStacks.size());
+        WeightedRandomUtil.copyWSList(weightedCopy, this.oreStacks);
 
         List<ItemStack> focusList = this.valuesOfFocus(focusColor);
-        if (focusList.isEmpty()) return weightedCopy;
-
         HashSet<ItemStack> focusSet = new HashSet<>(focusList);
 
-        int totalFocusWeight = 0;
-        int totalUnfocusWeight = 0;
+        double totalWeight = 0;
 
+        // First pass: Calculate Total Effective Weight
         for (WeightedStackBase stack : weightedCopy) {
             if (stack == null) continue;
-            if (focusSet.stream()
-                .anyMatch(stack::isStackEqual)) {
-                totalFocusWeight += stack.itemWeight;
-            } else {
-                totalUnfocusWeight += stack.itemWeight;
-            }
+            boolean isFocus = !focusSet.isEmpty() && focusSet.stream()
+                .anyMatch(stack::isStackEqual);
+
+            // Use focusedWeight if matched, otherwise use normal weight
+            // Temporarily store effective weight in realFocusedWeight to avoid re-checking
+            stack.realFocusedWeight = isFocus ? stack.realFocusedWeight : stack.realWeight;
+            totalWeight += stack.realFocusedWeight;
         }
 
-        if (totalFocusWeight <= 0) return weightedCopy;
+        if (totalWeight <= 0) return weightedCopy;
 
-        float groupBoost = Math.min(Math.abs(boostMultiplier), 2f);
-        int boostedFocusTotal = Math.min((int) Math.ceil(totalFocusWeight * (1 + groupBoost)), 100);
-        int remainingUnfocusTotal = 100 - boostedFocusTotal;
-
+        // Second pass: Calculate Percentage
         for (WeightedStackBase stack : weightedCopy) {
             if (stack == null) continue;
-            boolean isFocus = focusSet.stream()
-                .anyMatch(f -> stack.isStackEqual(f));
-            if (isFocus) {
-                stack.itemWeight = Math
-                    .max(1, (int) Math.ceil(stack.itemWeight / (float) totalFocusWeight * boostedFocusTotal));
-            } else {
-                stack.itemWeight = Math
-                    .max(1, (int) Math.ceil(stack.itemWeight / (float) totalUnfocusWeight * remainingUnfocusTotal));
-            }
+            // Calculate percentage (0-100)
+            stack.realWeight = (stack.realFocusedWeight / totalWeight) * 100.0;
         }
 
         return weightedCopy;
@@ -109,16 +100,16 @@ public class FocusableRegistry implements IFocusableRegistry {
         ArrayList<WeightedStackBase> weightedCopy = new ArrayList<>(this.oreStacks.size());
         WeightedRandomUtil.copyWSList(weightedCopy, this.oreStacks);
 
-        int totalWeight = 0;
+        double totalWeight = 0;
         for (WeightedStackBase ws : weightedCopy) {
-            if (ws != null) totalWeight += ws.itemWeight;
+            if (ws != null) totalWeight += ws.realWeight;
         }
         if (totalWeight <= 0) return weightedCopy;
 
-        final float targetTotal = 100f;
         for (WeightedStackBase ws : weightedCopy) {
             if (ws == null) continue;
-            ws.itemWeight = Math.max(1, (int) Math.ceil(ws.itemWeight / (float) totalWeight * targetTotal));
+            // Calculate percentage
+            ws.realWeight = (ws.realWeight / totalWeight) * 100.0;
         }
 
         return weightedCopy;

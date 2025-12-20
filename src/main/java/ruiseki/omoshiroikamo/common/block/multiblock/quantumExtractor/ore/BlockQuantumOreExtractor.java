@@ -8,40 +8,36 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBBlock;
+import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
-public class BlockQuantumOreExtractor extends AbstractMBBlock<TEQuantumExtractor> implements IWailaBlockInfoProvider {
+public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExtractor>
+    implements IWailaBlockInfoProvider {
 
     protected BlockQuantumOreExtractor() {
-        super(ModObject.blockQuantumOreExtractor.unlocalisedName, TEQuantumExtractor.class);
+        super(
+            ModObject.blockQuantumOreExtractor.unlocalisedName,
+            TEQuantumOreExtractorT1.class,
+            TEQuantumOreExtractorT2.class,
+            TEQuantumOreExtractorT3.class,
+            TEQuantumOreExtractorT4.class,
+            TEQuantumOreExtractorT5.class,
+            TEQuantumOreExtractorT6.class);
         this.setLightLevel(0.5F);
     }
 
     public static BlockQuantumOreExtractor create() {
         return new BlockQuantumOreExtractor();
-    }
-
-    @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockQuantumOreExtractor.class, name);
-        GameRegistry.registerTileEntity(TEQuantumOreExtractorT1.class, "TEQuantumOreExtractorT1TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumOreExtractorT2.class, "TEQuantumOreExtractorT2TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumOreExtractorT3.class, "TEQuantumOreExtractorT3TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumOreExtractorT4.class, "TEQuantumOreExtractorT4TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumOreExtractorT5.class, "TEQuantumOreExtractorT5TileEntity");
-        GameRegistry.registerTileEntity(TEQuantumOreExtractorT6.class, "TEQuantumOreExtractorT6TileEntity");
-        registerBlockColor();
     }
 
     @Override
@@ -65,21 +61,8 @@ public class BlockQuantumOreExtractor extends AbstractMBBlock<TEQuantumExtractor
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int meta) {
-        switch (meta) {
-            case 5:
-                return new TEQuantumOreExtractorT6();
-            case 4:
-                return new TEQuantumOreExtractorT5();
-            case 3:
-                return new TEQuantumOreExtractorT4();
-            case 2:
-                return new TEQuantumOreExtractorT3();
-            case 1:
-                return new TEQuantumOreExtractorT2();
-            default:
-                return new TEQuantumOreExtractorT1();
-        }
+    public Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockQuantumOreExtractor.class;
     }
 
     @Override

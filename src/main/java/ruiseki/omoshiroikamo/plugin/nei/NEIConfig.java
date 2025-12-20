@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.plugin.nei;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackpackGuiContainer;
+import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
@@ -24,8 +25,16 @@ public class NEIConfig implements IConfigureNEI {
     public void loadConfig() {
         Logger.info("Loading NeiConfig: {}", getName());
         if (BackportConfigs.useEnvironmentalTech) {
-            registerHandler(new QuantumOreExtractorRecipeHandler());
-            registerHandler(new QuantumResExtractorRecipeHandler());
+            // Register Ore/Res Extractors - single class parameterized by tier
+            for (int i = 0; i < 6; i++) {
+                QuantumOreExtractorRecipeHandler ore = new QuantumOreExtractorRecipeHandler(i);
+                registerHandler(ore);
+                API.addRecipeCatalyst(ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i), ore.getRecipeID());
+
+                QuantumResExtractorRecipeHandler res = new QuantumResExtractorRecipeHandler(i);
+                registerHandler(res);
+                API.addRecipeCatalyst(ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), res.getRecipeID());
+            }
         }
         if (BackportConfigs.useChicken) {
             registerHandler(new ChickenLayingRecipeHandler());

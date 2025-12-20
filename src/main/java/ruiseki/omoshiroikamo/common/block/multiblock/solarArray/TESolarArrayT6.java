@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.solarArray;
 
+import static ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayShapes.STRUCTURE_TIER_6;
+import static ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayShapes.TIER_OFFSET;
 import static ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayStructure.STRUCTURE_DEFINITION_TIER_6;
-import static ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayStructure.STRUCTURE_TIER_6;
-import static ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayStructure.TIER_OFFSET;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 

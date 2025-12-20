@@ -5,8 +5,13 @@ import net.minecraft.util.WeightedRandom;
 
 public abstract class WeightedStackBase extends WeightedRandom.Item {
 
-    public WeightedStackBase(int itemWeightIn) {
-        super(itemWeightIn);
+    public double realWeight;
+    public double realFocusedWeight;
+
+    public WeightedStackBase(double weight, double focusedWeight) {
+        super((int) (weight * 100));
+        this.realWeight = weight;
+        this.realFocusedWeight = focusedWeight;
     }
 
     public int getWeight() {
