@@ -16,8 +16,6 @@ public class QuantumOreExtractorRecipeHandler extends VoidMinerRecipeHandler {
 
     @Override
     public TemplateRecipeHandler newInstance() {
-        ruiseki.omoshiroikamo.common.util.Logger
-                .info("[QuantumOreExtractorRecipeHandler.newInstance] this.tier=" + tier);
         return new QuantumOreExtractorRecipeHandler(tier);
     }
 

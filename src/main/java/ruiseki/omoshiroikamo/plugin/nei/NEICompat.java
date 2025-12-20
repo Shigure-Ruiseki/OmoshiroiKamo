@@ -45,46 +45,46 @@ public class NEICompat {
         if (BackportConfigs.useChicken) {
 
             sendHandlerImage(
-                    ChickenLayingRecipeHandler.UID,
-                    LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
-                    1,
-                    0,
-                    16,
-                    16,
-                    64,
-                    6);
+                ChickenLayingRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
             sendCatalyst(ChickenLayingRecipeHandler.UID, ModBlocks.ROOST.newItemStack());
 
             sendHandlerImage(
-                    ChickenBreedingRecipeHandler.UID,
-                    LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
-                    1,
-                    0,
-                    16,
-                    16,
-                    64,
-                    6);
+                ChickenBreedingRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
             sendCatalyst(ChickenBreedingRecipeHandler.UID, ModBlocks.BREEDER.newItemStack());
 
             sendHandlerImage(
-                    ChickenDropsRecipeHandler.UID,
-                    LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
-                    1,
-                    0,
-                    16,
-                    16,
-                    64,
-                    6);
+                ChickenDropsRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
 
             sendHandlerImage(
-                    ChickenThrowsRecipeHandler.UID,
-                    LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
-                    1,
-                    0,
-                    16,
-                    16,
-                    64,
-                    6);
+                ChickenThrowsRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
         }
 
         if (BackportConfigs.useBackpack) {
@@ -137,7 +137,7 @@ public class NEICompat {
     }
 
     private static void sendHandlerImage(String handler, String imageResource, int imageX, int imageY, int imageW,
-            int imageH, int handlerHeight, int recipesPerPage) {
+        int imageH, int handlerHeight, int recipesPerPage) {
 
         NBTTagCompound tag = new NBTTagCompound();
 
