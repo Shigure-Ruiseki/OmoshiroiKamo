@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.cow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -23,45 +24,56 @@ public class MineFactoryReloadedCows extends BaseCowHandler {
     }
 
     @Override
-    public List<CowsRegistryItem> registerCows(List<CowsRegistryItem> allCows) {
+    public List<CowsRegistryItem> registerCows() {
+        List<CowsRegistryItem> allCows = new ArrayList<>();
 
-        steamCow = tryAddCow(allCows, "SteamCow", 600, "steam", 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL);
+        steamCow = addCow("SteamCow", 600, 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL).setFluidString("steam")
+            .setLang("en_US", "Steam Cow")
+            .setLang("ja_JP", "スチーム牛");
+        allCows.add(steamCow);
 
-        sludgeCow = tryAddCow(allCows, "SludgeCow", 601, "sludge", 0x2d2d2d, 0x555555, SpawnType.HELL);
+        sludgeCow = addCow("SludgeCow", 601, 0x2d2d2d, 0x555555, SpawnType.HELL).setFluidString("sludge")
+            .setLang("en_US", "Sludge Cow")
+            .setLang("ja_JP", "スラッジ牛");
+        allCows.add(sludgeCow);
 
-        sewageCow = tryAddCow(allCows, "SewageCow", 602, "sewage", 0x665500, 0xccaa33, SpawnType.NORMAL);
+        sewageCow = addCow("SewageCow", 602, 0x665500, 0xccaa33, SpawnType.NORMAL).setFluidString("sewage")
+            .setLang("en_US", "Sewage Cow")
+            .setLang("ja_JP", "下水牛");
+        allCows.add(sewageCow);
 
-        mobEssenceCow = tryAddCow(allCows, "MobEssenceCow", 603, "mobessence", 0x33ff33, 0x99ff99, SpawnType.NORMAL);
+        mobEssenceCow = addCow("MobEssenceCow", 603, 0x33ff33, 0x99ff99, SpawnType.NORMAL).setFluidString("mobessence")
+            .setLang("en_US", "Mob Essence Cow")
+            .setLang("ja_JP", "モブエッセンス牛");
+        allCows.add(mobEssenceCow);
 
-        biofuelCow = tryAddCow(allCows, "BiofuelCow", 604, "biofuel", 0x99cc00, 0xccff66, SpawnType.NORMAL);
+        biofuelCow = addCow("BiofuelCow", 604, 0x99cc00, 0xccff66, SpawnType.NORMAL).setFluidString("biofuel")
+            .setLang("en_US", "Biofuel Cow")
+            .setLang("ja_JP", "バイオ燃料牛");
+        allCows.add(biofuelCow);
 
-        meatCow = tryAddCow(allCows, "MeatCow", 605, "meat", 0xcc6666, 0xff9999, SpawnType.NORMAL);
+        meatCow = addCow("MeatCow", 605, 0xcc6666, 0xff9999, SpawnType.NORMAL).setFluidString("meat")
+            .setLang("en_US", "Meat Cow")
+            .setLang("ja_JP", "肉牛");
+        allCows.add(meatCow);
 
-        pinkSlimeCow = tryAddCow(allCows, "PinkSlimeCow", 606, "pinkslime", 0xff66cc, 0xff99dd, SpawnType.NORMAL);
+        pinkSlimeCow = addCow("PinkSlimeCow", 606, 0xff66cc, 0xff99dd, SpawnType.NORMAL).setFluidString("pinkslime")
+            .setLang("en_US", "Pink Slime Cow")
+            .setLang("ja_JP", "ピンクスライム牛");
+        allCows.add(pinkSlimeCow);
 
-        chocolateMilkCow = tryAddCow(
-            allCows,
-            "ChocolateMilkCow",
-            607,
-            "chocolatemilk",
-            0x663300,
-            0xcc9966,
-            SpawnType.NORMAL);
+        chocolateMilkCow = addCow("ChocolateMilkCow", 607, 0x663300, 0xcc9966, SpawnType.NORMAL)
+            .setFluidString("chocolatemilk")
+            .setLang("en_US", "Chocolate Milk Cow")
+            .setLang("ja_JP", "チョコレートミルク牛");
+        allCows.add(chocolateMilkCow);
 
-        mushroomSoupCow = tryAddCow(
-            allCows,
-            "MushroomSoupCow",
-            608,
-            "mushroomsoup",
-            0xccaa88,
-            0xffddbb,
-            SpawnType.NORMAL);
+        mushroomSoupCow = addCow("MushroomSoupCow", 608, 0xccaa88, 0xffddbb, SpawnType.NORMAL)
+            .setFluidString("mushroomsoup")
+            .setLang("en_US", "Mushroom Soup Cow")
+            .setLang("ja_JP", "マッシュルームスープ牛");
+        allCows.add(mushroomSoupCow);
 
         return allCows;
-    }
-
-    @Override
-    public void registerAllParents(List<CowsRegistryItem> allCows) {
-
     }
 }

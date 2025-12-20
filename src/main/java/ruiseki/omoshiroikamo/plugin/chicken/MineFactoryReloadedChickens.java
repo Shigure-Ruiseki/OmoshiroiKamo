@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -7,7 +8,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class MineFactoryReloadedChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem pinkSlimeChicken = null;
+    public static ChickensRegistryItem pinkSlimeChicken;
 
     public MineFactoryReloadedChickens() {
         super("MineFactoryReloaded", "MineFactory Reloaded", "textures/entity/chicken/minefactoryreloaded/");
@@ -15,17 +16,19 @@ public class MineFactoryReloadedChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
 
         pinkSlimeChicken = addChicken(
-            allChickens,
             "PinkSlimeChicken",
             this.nextID(),
-            "PinkSlimeChicken.png",
-            this.getFirstOreDictionary("slimeballPink"),
+            "PinkSlimeChicken",
             0xC8738A,
             0x804954,
-            SpawnType.NONE);
+            SpawnType.NONE).setLang("en_US", "Pink Slime Chicken")
+                .setLang("ja_JP", "ピンクスライムのニワトリ")
+                .setLayString("ore:slimeballPink");
+        allChickens.add(pinkSlimeChicken);
 
         return allChickens;
     }

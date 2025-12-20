@@ -12,7 +12,7 @@ import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import org.jetbrains.annotations.Nullable;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ruiseki.omoshiroikamo.common.util.BlockPos;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 
 public class NetherPopulateHandler {
 

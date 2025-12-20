@@ -20,6 +20,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
@@ -33,7 +34,6 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuan
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT4;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
 public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements IEnergySink, ISidedInventory {

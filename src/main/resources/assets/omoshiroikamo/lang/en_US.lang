@@ -2,7 +2,8 @@
 
 creativetab.okBackpack=OK Backpack
 creativetab.okMultiblock=OK Multiblock
-creativetab.okChickenCow=OK Chicken & Cow
+creativetab.okChickenCow=OK Chicken & 
+creativetab.okDeepMobLearner=OK Deep Mob Learning
 
 #Config
 
@@ -21,6 +22,8 @@ config.cowConfig=Cow Settings
 config.backpackConfig=Backpack Settings
 config.feedingConfig=Feeding Settings
 config.magnetConfig=Magnet Settings
+config.deepMobLearningConfig=Deep Mob Learning Settings
+config.dataModelConfig=Data Model Settings
 
 config.energyConfig=Energy Settings
 
@@ -150,6 +153,15 @@ gui.void_overflow=Void Overflow
 gui.void_all=Works in Gui as well
 gui.void_automation=Only works with other upgrade/automation
 
+# Deep Mob Learning
+
+gui.learner_heart_tile=Life Points
+gui.learner_name_tile=Name
+gui.learner_info_tile=Information
+gui.learner_model_tier=Model Tier: %s
+gui.learner_model_defeated=Defeated: %d
+gui.learner_model_defeated_more=Defeated %d more to reach %s
+
 #Display
 
 power.rf=RF
@@ -157,10 +169,6 @@ fluid.millibucket.abr=L
 fluid.empty=Empty
 
 #TOOLTIPS
-
-gui.energy.tooltip=RF: %s / %s
-tooltip.lvs=lvs
-tooltip.effPowered=Efficiency when powered
 
 tooltip.backpack.inventory_size=Inventory size: %d
 tooltip.backpack.upgrade_slots_size=Upgrade slots: %d
@@ -233,13 +241,19 @@ tooltip.colored_egg.l1=Throw it to have a chance to spawn the chicken.
 tooltip.analyzer.l1=Use it on chickens to determine their stats.
 tooltip.analyzer.l2= - "Which day of the week do chickens hate most? Fry-day!"
 
-#ANVIL UPGRADE
+tooltip.holdshift=§7- hold §r§oSHIFT§r§7 for more info§r
+tooltip.data_model.type=§rType: %s§r
+tooltip.data_model.tier=§rTier: %s§r
+tooltip.data_model.data.collected=§rData collected: §7%s/%s§r
+tooltip.data_model.data.killmultiplier=§rData per kill: §7%s§r
+tooltip.data_model.rfcost=§rSimulation cost: §7%s RF/t§r
+tooltip.living_matter.exp=§7Experience per item: §a%s§r
+tooltip.trial_key.notattuned=§7The key is currently not attuned§r
+tooltip.trial_key.attunement_go_to_jei=§7Read more about attunement in the Guidebook§r
+tooltip.trial_key.attuned_type=§rThe key is attuned to: §7%s§r
+tooltip.trial_key.tier=§rKey tier: §7%s§r
+tooltip.trial_key.affixes=§rAffixes: §7%s§r
 
-upgrade.energy_one.name=Energy Tier One
-upgrade.energy_two.name=Energy Tier Two
-upgrade.energy_three.name=Energy Tier Three
-upgrade.energy_four.name=Energy Tier Four
-upgrade.energy_five.name=Energy Tier Five
 
 #ACHIEVEMENT
 
@@ -390,6 +404,10 @@ item.coloredEgg.green.name=Cactus Green Chicken Egg
 item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
 
+item.creativeModelLearner.name=Creative Model Learner
+item.dataModelBlank.name=Blank Data Model
+item.deepLearner.name=§bDeep Learner§r
+
 #Block
 
 tile.electrolyzer.name=Electrolyzer
@@ -525,607 +543,7 @@ tile.stall.name=Stall
 
 #ENTITY
 
-entity.SmartChicken.name=Smart Chicken
-entity.WhiteChicken.name=Bone White Chicken
-entity.OrangeChicken.name=Orange Chicken
-entity.MagentaChicken.name=Magenta Chicken
-entity.LightBlueChicken.name=Light Blue Chicken
-entity.YellowChicken.name=Yellow Chicken
-entity.LimeChicken.name=Lime Chicken
-entity.PinkChicken.name=Pink Chicken
-entity.GrayChicken.name=Gray Chicken
-entity.SilverDyeChicken.name=Light Gray Chicken
-entity.CyanChicken.name=Cyan Chicken
-entity.PurpleChicken.name=Purple Chicken
-entity.BlueChicken.name=Lapis Blue Chicken
-entity.BrownChicken.name=Cocoa Brown Chicken
-entity.GreenChicken.name=Cactus Green Chicken
-entity.RedChicken.name=Red Chicken
-entity.BlackChicken.name=Ink Black Chicken
-entity.GunpowderChicken.name=Gunpowder Chicken
-entity.FlintChicken.name=Flint Chicken
-entity.SnowballChicken.name=Snowball Chicken
-entity.LavaChicken.name=Lava Chicken
-entity.QuartzChicken.name=Nether Quartz Chicken
-entity.RedstoneChicken.name=Redstone Chicken
-entity.GlowstoneChicken.name=Glowstone Chicken
-entity.IronChicken.name=Iron Chicken
-entity.CoalChicken.name=Coal Chicken
-entity.ClayChicken.name=Clay Chicken
-entity.SlimeChicken.name=Slime Chicken
-entity.WaterChicken.name=Water Chicken
-entity.NetherwartChicken.name=Nether Wart Chicken
-entity.GoldChicken.name=Gold Chicken
-entity.DiamondChicken.name=Diamond Chicken
-entity.BlazeChicken.name=Blaze Rod Chicken
-entity.EmeraldChicken.name=Emerald Chicken
-entity.EnderChicken.name=Ender Pearl Chicken
-entity.GhastChicken.name=Ghast Tear Chicken
-entity.MagmaChicken.name=Magma Cream Chicken
-entity.StringChicken.name=String Chicken
-entity.LogChicken.name=Log Chicken
-entity.SandChicken.name=Sand Chicken
-entity.GlassChicken.name=Glass Chicken
-entity.LeatherChicken.name=Leather Chicken
-entity.XpChicken.name=Xp Chicken
-entity.PShardChicken.name=Prismarine Shard Chicken
-entity.PCrystalChicken.name=Prismarine Crystal Chicken
-entity.ObsidianChicken.name=Obsidian Chicken
-entity.SoulSandChicken.name=Soul Sand Chicken
-
-entity.ArditeChicken.name=Ardite Chicken
-entity.CobaltChicken.name=Cobalt Chicken
-entity.ManyullynChicken.name=Manyullyn Chicken
-entity.BloodSlimeChicken.name=Blood Chicken
-entity.PigIronChicken.name=Pig Iron Chicken
-entity.BlueSlimeChicken.name=Blue Chicken
-
-entity.TerrasteelChicken.name=Terrasteel Chicken
-entity.ManasteelChicken.name=Manasteel Chicken
-entity.ElementiumChicken.name=Elementium Chicken
-
-entity.InvarChicken.name=Invar Chicken
-entity.BronzeChicken.name=Bronze Chicken
-entity.ZincChicken.name=Zinc Chicken
-entity.TinChicken.name=Tin Chicken
-entity.SteelChicken.name=Steel Chicken
-entity.SilverChicken.name=Silver Chicken
-entity.PlatinumChicken.name=Platinum Chicken
-entity.NickelChicken.name=Nickel Chicken
-entity.LeadChicken.name=Lead Chicken
-entity.CopperChicken.name=Copper Chicken
-entity.BrassChicken.name=Brass Chicken
-entity.CupronickelChicken.name=Cupronickel Chicken
-entity.ElectrumChicken.name=Electrum Chicken
-entity.SiliconChicken.name=Silicon Chicken
-entity.AmberChicken.name=Amber Chicken
-entity.AmethystChicken.name=Amethyst Chicken
-entity.MalachiteChicken.name=Malachite Chicken
-entity.PeridotChicken.name=Peridot Chicken
-entity.RubyChicken.name=Ruby Chicken
-entity.SaltpeterChicken.name=Saltpeter Chicken
-entity.SulfurChicken.name=Sulfur Chicken
-entity.SapphireChicken.name=Sapphire Chicken
-entity.TanzaniteChicken.name=Tanzanite Chicken
-entity.TopazChicken.name=Topaz Chicken
-entity.GarnetChicken.name=Garnet Chicken
-entity.SaltChicken.name=Salt Chicken
-entity.RubberChicken.name=Rubber Chicken
-entity.UraniumChicken.name=Uranium Chicken 
-entity.AluminiumChicken.name=Aluminium Chicken
-
-entity.ElectricalSteelChicken.name=Electrical Steel Chicken
-entity.EnergeticAlloyChicken.name=Energetic Alloy Chicken
-entity.VibrantAlloyChicken.name=Vibrant Alloy Chicken
-entity.RedstoneAlloyChicken.name=Redstone Alloy Chicken
-entity.ConductiveIronChicken.name=Conductive Iron Chicken
-entity.PulsatingIronChicken.name=Pulsating Iron Chicken
-entity.DarkSteelChicken.name=Dark Steel Chicken
-entity.EndSteelChicken.name=End Steel Chicken
-entity.SoulariumChicken.name=Soularium Chicken
-
-entity.BasalzRodChicken.name=Basalz Rod Chicken
-entity.BlitzRodChicken.name=Blitz Rod Chicken
-entity.BlizzRodChicken.name=Blizz Rod Chicken
-entity.CinnabarChicken.name=Cinnabar Chicken
-entity.EnderiumChicken.name=Enderium Chicken
-entity.LumiumChicken.name=Lumium Chicken
-entity.MithrilChicken.name=Mithril Chicken
-entity.SignalumChicken.name=Signalum Chicken
-
-entity.PinkSlimeChicken.name=Pink Slime Chicken 
-
-entity.OsmiumChicken.name=Osmium Chicken
-
-entity.YelloriumChicken.name=Yellorium Chicken
-entity.CyaniteChicken.name=Cyanite Chicken
-entity.BlutoniumChicken.name=Blutonium Chicken
-entity.LudicriteChicken.name=Ludicrite Chicken
-entity.GraphiteChicken.name=Graphite Chicken
-
-entity.DraconiumAwakenedChicken.name=Awakened Draconium Chicken
-entity.DraconiumChicken.name=Draconium Chicken
-
-entity.BlackQuartzChicken.name=Black Quartz Chicken
-entity.VoidCrystalChicken.name=Void Crystal Chicken
-entity.RestoniaCrystalChicken.name=Restonia Crystal Chicken
-entity.EnoriCrystalChicken.name=Enori Crystal Chicken
-entity.EmeradicCrystalChicken.name=Emeradic Crystal Chicken
-entity.DiamantineCrystalChicken.name=Diamantine Crystal Chicken
-entity.PalisCrystalChicken.name=Palis Crystal Chicken
-
-entity.WaterCow.name=Water Cow
-entity.LavaCow.name=Lava Cow
-entity.IronCow.name=Iron Cow
-entity.GoldCow.name=Gold Cow
-entity.CopperCow.name=Copper Cow
-entity.TinCow.name=Tin Cow
-entity.AluminiumCow.name=Aluminium Cow
-entity.CobaltCow.name=Cobalt Cow
-entity.ArditeCow.name=Ardite Cow
-entity.BronzeCow.name=Bronze Cow
-entity.AlubrassCow.name=Alubrass Cow
-entity.ManyullynCow.name=Manyullyn Cow
-entity.ObsidianCow.name=Obsidian Cow
-entity.SteelCow.name=Steel Cow
-entity.GlassCow.name=Glass Cow
-entity.StoneCow.name=Stone Cow
-entity.EmeraldCow.name=Emerald Cow
-entity.QuartzCow.name=Quartz Cow
-entity.NickelCow.name=Nickel Cow
-entity.LeadCow.name=Lead Cow
-entity.SilverCow.name=Silver Cow
-entity.ShinyCow.name=Shiny Cow
-entity.InvarCow.name=Invar Cow
-entity.ElectrumCow.name=Electrum Cow
-entity.LumiumCow.name=Lumium Cow
-entity.SignalumCow.name=Signalum Cow
-entity.MithrilCow.name=Mithril Cow
-entity.EnderCow.name=Ender Cow
-entity.EnderiumCow.name=Enderium Cow
-entity.PigIronCow.name=Pigiron Cow
-entity.NutrientDistillationCow.name=Nutrient Distillation Cow
-entity.HootchCow.name=Hootch Cow
-entity.RocketFuelCow.name=Rocket Fuel Cow
-entity.FireWaterCow.name=Fire Water Cow
-entity.LiquidSunshineCow.name=Liquid Sunshine Cow
-entity.CloudSeedCow.name=Cloud Seed Cow
-entity.CloudSeedConcentratedCow.name=Cloud Seed Concentrated Cow
-entity.EnderDistillationCow.name=Ender Distillation Cow
-entity.VaporOfLevityCow.name=Vapor of Levity Cow
-entity.OilCow.name=Oil Cow
-entity.FuelCow.name=Fuel Cow
-entity.RedPlasmaCow.name=Red Plasma Cow
-entity.HeavyWaterCow.name=Heavy Water Cow
-entity.BrineCow.name=Brine Cow
-entity.LithiumCow.name=Lithium Cow
-entity.YelloriumCow.name=Yellorium Cow
-entity.CyaniteCow.name=Cyanite Cow
-entity.SteamCow.name=Steam Cow
-entity.SludgeCow.name=Sludge Cow
-entity.SewageCow.name=Sewage Cow
-entity.MobEssenceCow.name=Mob Essence Cow
-entity.BiofuelCow.name=Biofuel Cow
-entity.MeatCow.name=Meat Cow
-entity.PinkSlimeCow.name=Pink Slime Cow
-entity.ChocolateMilkCow.name=Chocolate Milk Cow
-entity.MushroomSoupCow.name=Mushroom Soup Cow
-
-#Immersive Engineering
-
 #NEI INTEGRATION
 neiintegration.chance=Chance: %s
 neiintegration.chance.never=Never
 neiintegration.chance.lessThan1=<1%
-
-# BEGIN AUTOGEN
-
-#Item Material Ingot
-item.material.ingot.Iron.name=Iron Ingot
-item.material.ingot.Copper.name=Copper Ingot
-item.material.ingot.Silver.name=Silver Ingot
-item.material.ingot.Gold.name=Gold Ingot
-item.material.ingot.Zinc.name=Zinc Ingot
-item.material.ingot.Aluminum.name=Aluminum Ingot
-item.material.ingot.Lead.name=Lead Ingot
-item.material.ingot.Titanium.name=Titanium Ingot
-item.material.ingot.Chromium.name=Chromium Ingot
-item.material.ingot.Nickel.name=Nickel Ingot
-item.material.ingot.CarbonSteel.name=Carbon Steel Ingot
-item.material.ingot.StainlessSteel.name=Stainless Steel Ingot
-item.material.ingot.Brass.name=Brass Ingot
-item.material.ingot.Inconel625.name=Inconel 625 Ingot
-item.material.ingot.Tungsten.name=Tungsten Ingot
-item.material.ingot.TungstenCarbide.name=Tungsten Carbide Ingot
-item.material.ingot.Niobium.name=Niobium Ingot
-
-#Item Material Nugget
-item.material.nugget.Iron.name=Iron Nugget
-item.material.nugget.Copper.name=Copper Nugget
-item.material.nugget.Silver.name=Silver Nugget
-item.material.nugget.Gold.name=Gold Nugget
-item.material.nugget.Zinc.name=Zinc Nugget
-item.material.nugget.Aluminum.name=Aluminum Nugget
-item.material.nugget.Lead.name=Lead Nugget
-item.material.nugget.Titanium.name=Titanium Nugget
-item.material.nugget.Chromium.name=Chromium Nugget
-item.material.nugget.Nickel.name=Nickel Nugget
-item.material.nugget.CarbonSteel.name=Carbon Steel Nugget
-item.material.nugget.StainlessSteel.name=Stainless Steel Nugget
-item.material.nugget.Brass.name=Brass Nugget
-item.material.nugget.Inconel625.name=Inconel 625 Nugget
-item.material.nugget.Tungsten.name=Tungsten Nugget
-item.material.nugget.TungstenCarbide.name=Tungsten Carbide Nugget
-item.material.nugget.Niobium.name=Niobium Nugget
-
-#Item Material Plate
-item.material.plate.Iron.name=Iron Plate
-item.material.plate.Copper.name=Copper Plate
-item.material.plate.Silver.name=Silver Plate
-item.material.plate.Gold.name=Gold Plate
-item.material.plate.Zinc.name=Zinc Plate
-item.material.plate.Aluminum.name=Aluminum Plate
-item.material.plate.Lead.name=Lead Plate
-item.material.plate.Titanium.name=Titanium Plate
-item.material.plate.Chromium.name=Chromium Plate
-item.material.plate.Nickel.name=Nickel Plate
-item.material.plate.CarbonSteel.name=Carbon Steel Plate
-item.material.plate.StainlessSteel.name=Stainless Steel Plate
-item.material.plate.Brass.name=Brass Plate
-item.material.plate.Inconel625.name=Inconel 625 Plate
-item.material.plate.Tungsten.name=Tungsten Plate
-item.material.plate.TungstenCarbide.name=Tungsten Carbide Plate
-item.material.plate.Niobium.name=Niobium Plate
-
-#Item Material Rod
-item.material.rod.Iron.name=Iron Rod
-item.material.rod.Copper.name=Copper Rod
-item.material.rod.Silver.name=Silver Rod
-item.material.rod.Gold.name=Gold Rod
-item.material.rod.Zinc.name=Zinc Rod
-item.material.rod.Aluminum.name=Aluminum Rod
-item.material.rod.Lead.name=Lead Rod
-item.material.rod.Titanium.name=Titanium Rod
-item.material.rod.Chromium.name=Chromium Rod
-item.material.rod.Nickel.name=Nickel Rod
-item.material.rod.CarbonSteel.name=Carbon Steel Rod
-item.material.rod.StainlessSteel.name=Stainless Steel Rod
-item.material.rod.Brass.name=Brass Rod
-item.material.rod.Inconel625.name=Inconel 625 Rod
-item.material.rod.Tungsten.name=Tungsten Rod
-item.material.rod.TungstenCarbide.name=Tungsten Carbide Rod
-item.material.rod.Niobium.name=Niobium Rod
-
-#Item Material Dust
-item.material.dust.Iron.name=Iron Dust
-item.material.dust.Copper.name=Copper Dust
-item.material.dust.Silver.name=Silver Dust
-item.material.dust.Gold.name=Gold Dust
-item.material.dust.Zinc.name=Zinc Dust
-item.material.dust.Aluminum.name=Aluminum Dust
-item.material.dust.Lead.name=Lead Dust
-item.material.dust.Titanium.name=Titanium Dust
-item.material.dust.Chromium.name=Chromium Dust
-item.material.dust.Nickel.name=Nickel Dust
-item.material.dust.CarbonSteel.name=Carbon Steel Dust
-item.material.dust.StainlessSteel.name=Stainless Steel Dust
-item.material.dust.Brass.name=Brass Dust
-item.material.dust.Inconel625.name=Inconel 625 Dust
-item.material.dust.Tungsten.name=Tungsten Dust
-item.material.dust.TungstenCarbide.name=Tungsten Carbide Dust
-item.material.dust.Niobium.name=Niobium Dust
-
-#Item Material Gear
-item.material.gear.Iron.name=Iron Gear
-item.material.gear.Copper.name=Copper Gear
-item.material.gear.Silver.name=Silver Gear
-item.material.gear.Gold.name=Gold Gear
-item.material.gear.Zinc.name=Zinc Gear
-item.material.gear.Aluminum.name=Aluminum Gear
-item.material.gear.Lead.name=Lead Gear
-item.material.gear.Titanium.name=Titanium Gear
-item.material.gear.Chromium.name=Chromium Gear
-item.material.gear.Nickel.name=Nickel Gear
-item.material.gear.CarbonSteel.name=Carbon Steel Gear
-item.material.gear.StainlessSteel.name=Stainless Steel Gear
-item.material.gear.Brass.name=Brass Gear
-item.material.gear.Inconel625.name=Inconel 625 Gear
-item.material.gear.Tungsten.name=Tungsten Gear
-item.material.gear.TungstenCarbide.name=Tungsten Carbide Gear
-item.material.gear.Niobium.name=Niobium Gear
-
-#Item Bucket Material
-item.bucketMaterial.Iron.name=Molten Iron Bucket
-item.bucketMaterial.Copper.name=Molten Copper Bucket
-item.bucketMaterial.Silver.name=Molten Silver Bucket
-item.bucketMaterial.Gold.name=Molten Gold Bucket
-item.bucketMaterial.Zinc.name=Molten Zinc Bucket
-item.bucketMaterial.Aluminum.name=Molten Aluminum Bucket
-item.bucketMaterial.Lead.name=Molten Lead Bucket
-item.bucketMaterial.Titanium.name=Molten Titanium Bucket
-item.bucketMaterial.Chromium.name=Molten Chromium Bucket
-item.bucketMaterial.Nickel.name=Molten Nickel Bucket
-item.bucketMaterial.CarbonSteel.name=Molten Carbon Steel Bucket
-item.bucketMaterial.StainlessSteel.name=Molten Stainless Steel Bucket
-item.bucketMaterial.Brass.name=Molten Brass Bucket
-item.bucketMaterial.Inconel625.name=Molten Inconel 625 Bucket
-item.bucketMaterial.Tungsten.name=Molten Tungsten Bucket
-item.bucketMaterial.TungstenCarbide.name=Molten Tungsten Carbide Bucket
-item.bucketMaterial.Niobium.name=Molten Niobium Bucket
-
-#Item Bucket Fluid
-item.bucketFluid.Water.name=Water Bucket
-item.bucketFluid.Hydrogen.name=Hydrogen Bucket
-item.bucketFluid.Oxygen.name=Oxygen Bucket
-item.bucketFluid.Steam.name=Steam Bucket
-item.bucketFluid.Nitrogen.name=Nitrogen Bucket
-item.bucketFluid.CarbonDioxide.name=Carbon Dioxide Bucket
-item.bucketFluid.Methane.name=Methane Bucket
-item.bucketFluid.Helium.name=Helium Bucket
-item.bucketFluid.Argon.name=Argon Bucket
-item.bucketFluid.Neon.name=Neon Bucket
-item.bucketFluid.Ammonia.name=Ammonia Bucket
-item.bucketFluid.Chlorine.name=Chlorine Bucket
-item.bucketFluid.SulfurDioxide.name=Sulfur Dioxide Bucket
-
-#Ore Crushed
-item.ore.crushed.Hematite.name=Crushed Hematite Ore
-item.ore.crushed.Magnetite.name=Crushed Magnetite Ore
-item.ore.crushed.Chalcopyrite.name=Crushed Chalcopyrite Ore
-item.ore.crushed.Malachite.name=Crushed Malachite Ore
-item.ore.crushed.Bornite.name=Crushed Bornite Ore
-item.ore.crushed.Tetrahedrite.name=Crushed Tetrahedrite Ore
-item.ore.crushed.Cuprite.name=Crushed Cuprite Ore
-item.ore.crushed.Copper.name=Crushed Copper Ore
-
-#Ore Washed
-item.ore.washed.Hematite.name=Washed Hematite Ore
-item.ore.washed.Magnetite.name=Washed Magnetite Ore
-item.ore.washed.Chalcopyrite.name=Washed Chalcopyrite Ore
-item.ore.washed.Malachite.name=Washed Malachite Ore
-item.ore.washed.Bornite.name=Washed Bornite Ore
-item.ore.washed.Tetrahedrite.name=Washed Tetrahedrite Ore
-item.ore.washed.Cuprite.name=Washed Cuprite Ore
-item.ore.washed.Copper.name=Washed Copper Ore
-
-#Ore Enriched
-item.ore.enriched.Hematite.name=Enriched Hematite Ore
-item.ore.enriched.Magnetite.name=Enriched Magnetite Ore
-item.ore.enriched.Chalcopyrite.name=Enriched Chalcopyrite Ore
-item.ore.enriched.Malachite.name=Enriched Malachite Ore
-item.ore.enriched.Bornite.name=Enriched Bornite Ore
-item.ore.enriched.Tetrahedrite.name=Enriched Tetrahedrite Ore
-item.ore.enriched.Cuprite.name=Enriched Cuprite Ore
-item.ore.enriched.Copper.name=Enriched Copper Ore
-
-#Block of Material
-tile.material.Iron.name=Block of Iron
-tile.material.Copper.name=Block of Copper
-tile.material.Silver.name=Block of Silver
-tile.material.Gold.name=Block of Gold
-tile.material.Zinc.name=Block of Zinc
-tile.material.Aluminum.name=Block of Aluminum
-tile.material.Lead.name=Block of Lead
-tile.material.Titanium.name=Block of Titanium
-tile.material.Chromium.name=Block of Chromium
-tile.material.Nickel.name=Block of Nickel
-tile.material.CarbonSteel.name=Block of Carbon Steel
-tile.material.StainlessSteel.name=Block of Stainless Steel
-tile.material.Brass.name=Block of Brass
-tile.material.Inconel625.name=Block of Inconel 625
-tile.material.Tungsten.name=Block of Tungsten
-tile.material.TungstenCarbide.name=Block of Tungsten Carbide
-tile.material.Niobium.name=Block of Niobium
-
-#Energy Input
-tile.energyInOut.input.Iron.name=Energy Input (Iron)
-tile.energyInOut.input.Copper.name=Energy Input (Copper)
-tile.energyInOut.input.Silver.name=Energy Input (Silver)
-tile.energyInOut.input.Gold.name=Energy Input (Gold)
-tile.energyInOut.input.Zinc.name=Energy Input (Zinc)
-tile.energyInOut.input.Aluminum.name=Energy Input (Aluminum)
-tile.energyInOut.input.Lead.name=Energy Input (Lead)
-tile.energyInOut.input.Titanium.name=Energy Input (Titanium)
-tile.energyInOut.input.Chromium.name=Energy Input (Chromium)
-tile.energyInOut.input.Nickel.name=Energy Input (Nickel)
-tile.energyInOut.input.CarbonSteel.name=Energy Input (Carbon Steel)
-tile.energyInOut.input.StainlessSteel.name=Energy Input (Stainless Steel)
-tile.energyInOut.input.Brass.name=Energy Input (Brass)
-tile.energyInOut.input.Inconel625.name=Energy Input (Inconel 625)
-tile.energyInOut.input.Tungsten.name=Energy Input (Tungsten)
-tile.energyInOut.input.TungstenCarbide.name=Energy Input (Tungsten Carbide)
-tile.energyInOut.input.Niobium.name=Energy Input (Niobium)
-
-#Energy Output
-tile.energyInOut.output.Iron.name=Energy Output (Iron)
-tile.energyInOut.output.Copper.name=Energy Output (Copper)
-tile.energyInOut.output.Silver.name=Energy Output (Silver)
-tile.energyInOut.output.Gold.name=Energy Output (Gold)
-tile.energyInOut.output.Zinc.name=Energy Output (Zinc)
-tile.energyInOut.output.Aluminum.name=Energy Output (Aluminum)
-tile.energyInOut.output.Lead.name=Energy Output (Lead)
-tile.energyInOut.output.Titanium.name=Energy Output (Titanium)
-tile.energyInOut.output.Chromium.name=Energy Output (Chromium)
-tile.energyInOut.output.Nickel.name=Energy Output (Nickel)
-tile.energyInOut.output.CarbonSteel.name=Energy Output (Carbon Steel)
-tile.energyInOut.output.StainlessSteel.name=Energy Output (Stainless Steel)
-tile.energyInOut.output.Brass.name=Energy Output (Brass)
-tile.energyInOut.output.Inconel625.name=Energy Output (Inconel 625)
-tile.energyInOut.output.Tungsten.name=Energy Output (Tungsten)
-tile.energyInOut.output.TungstenCarbide.name=Energy Output (Tungsten Carbide)
-tile.energyInOut.output.Niobium.name=Energy Output (Niobium)
-
-#Fluid Input
-tile.fluidInOut.input.Iron.name=Fluid Input (Iron)
-tile.fluidInOut.input.Copper.name=Fluid Input (Copper)
-tile.fluidInOut.input.Silver.name=Fluid Input (Silver)
-tile.fluidInOut.input.Gold.name=Fluid Input (Gold)
-tile.fluidInOut.input.Zinc.name=Fluid Input (Zinc)
-tile.fluidInOut.input.Aluminum.name=Fluid Input (Aluminum)
-tile.fluidInOut.input.Lead.name=Fluid Input (Lead)
-tile.fluidInOut.input.Titanium.name=Fluid Input (Titanium)
-tile.fluidInOut.input.Chromium.name=Fluid Input (Chromium)
-tile.fluidInOut.input.Nickel.name=Fluid Input (Nickel)
-tile.fluidInOut.input.CarbonSteel.name=Fluid Input (Carbon Steel)
-tile.fluidInOut.input.StainlessSteel.name=Fluid Input (Stainless Steel)
-tile.fluidInOut.input.Brass.name=Fluid Input (Brass)
-tile.fluidInOut.input.Inconel625.name=Fluid Input (Inconel 625)
-tile.fluidInOut.input.Tungsten.name=Fluid Input (Tungsten)
-tile.fluidInOut.input.TungstenCarbide.name=Fluid Input (Tungsten Carbide)
-tile.fluidInOut.input.Niobium.name=Fluid Input (Niobium)
-
-#Fluid Output
-tile.fluidInOut.output.Iron.name=Fluid Output (Iron)
-tile.fluidInOut.output.Copper.name=Fluid Output (Copper)
-tile.fluidInOut.output.Silver.name=Fluid Output (Silver)
-tile.fluidInOut.output.Gold.name=Fluid Output (Gold)
-tile.fluidInOut.output.Zinc.name=Fluid Output (Zinc)
-tile.fluidInOut.output.Aluminum.name=Fluid Output (Aluminum)
-tile.fluidInOut.output.Lead.name=Fluid Output (Lead)
-tile.fluidInOut.output.Titanium.name=Fluid Output (Titanium)
-tile.fluidInOut.output.Chromium.name=Fluid Output (Chromium)
-tile.fluidInOut.output.Nickel.name=Fluid Output (Nickel)
-tile.fluidInOut.output.CarbonSteel.name=Fluid Output (Carbon Steel)
-tile.fluidInOut.output.StainlessSteel.name=Fluid Output (Stainless Steel)
-tile.fluidInOut.output.Brass.name=Fluid Output (Brass)
-tile.fluidInOut.output.Inconel625.name=Fluid Output (Inconel 625)
-tile.fluidInOut.output.Tungsten.name=Fluid Output (Tungsten)
-tile.fluidInOut.output.TungstenCarbide.name=Fluid Output (Tungsten Carbide)
-tile.fluidInOut.output.Niobium.name=Fluid Output (Niobium)
-
-#Item Input
-tile.itemInOut.input.Iron.name=Item Input (Iron)
-tile.itemInOut.input.Copper.name=Item Input (Copper)
-tile.itemInOut.input.Silver.name=Item Input (Silver)
-tile.itemInOut.input.Gold.name=Item Input (Gold)
-tile.itemInOut.input.Zinc.name=Item Input (Zinc)
-tile.itemInOut.input.Aluminum.name=Item Input (Aluminum)
-tile.itemInOut.input.Lead.name=Item Input (Lead)
-tile.itemInOut.input.Titanium.name=Item Input (Titanium)
-tile.itemInOut.input.Chromium.name=Item Input (Chromium)
-tile.itemInOut.input.Nickel.name=Item Input (Nickel)
-tile.itemInOut.input.CarbonSteel.name=Item Input (Carbon Steel)
-tile.itemInOut.input.StainlessSteel.name=Item Input (Stainless Steel)
-tile.itemInOut.input.Brass.name=Item Input (Brass)
-tile.itemInOut.input.Inconel625.name=Item Input (Inconel 625)
-tile.itemInOut.input.Tungsten.name=Item Input (Tungsten)
-tile.itemInOut.input.TungstenCarbide.name=Item Input (Tungsten Carbide)
-tile.itemInOut.input.Niobium.name=Item Input (Niobium)
-
-#Item Output
-tile.itemInOut.output.Iron.name=Item Output (Iron)
-tile.itemInOut.output.Copper.name=Item Output (Copper)
-tile.itemInOut.output.Silver.name=Item Output (Silver)
-tile.itemInOut.output.Gold.name=Item Output (Gold)
-tile.itemInOut.output.Zinc.name=Item Output (Zinc)
-tile.itemInOut.output.Aluminum.name=Item Output (Aluminum)
-tile.itemInOut.output.Lead.name=Item Output (Lead)
-tile.itemInOut.output.Titanium.name=Item Output (Titanium)
-tile.itemInOut.output.Chromium.name=Item Output (Chromium)
-tile.itemInOut.output.Nickel.name=Item Output (Nickel)
-tile.itemInOut.output.CarbonSteel.name=Item Output (Carbon Steel)
-tile.itemInOut.output.StainlessSteel.name=Item Output (Stainless Steel)
-tile.itemInOut.output.Brass.name=Item Output (Brass)
-tile.itemInOut.output.Inconel625.name=Item Output (Inconel 625)
-tile.itemInOut.output.Tungsten.name=Item Output (Tungsten)
-tile.itemInOut.output.TungstenCarbide.name=Item Output (Tungsten Carbide)
-tile.itemInOut.output.Niobium.name=Item Output (Niobium)
-
-#Block Fluid Material
-tile.fluid.molten.iron.name=Molten Iron
-tile.fluid.molten.copper.name=Molten Copper
-tile.fluid.molten.silver.name=Molten Silver
-tile.fluid.molten.gold.name=Molten Gold
-tile.fluid.molten.zinc.name=Molten Zinc
-tile.fluid.molten.aluminum.name=Molten Aluminum
-tile.fluid.molten.lead.name=Molten Lead
-tile.fluid.molten.titanium.name=Molten Titanium
-tile.fluid.molten.chromium.name=Molten Chromium
-tile.fluid.molten.nickel.name=Molten Nickel
-tile.fluid.molten.carbonSteel.name=Molten Carbon Steel
-tile.fluid.molten.stainlessSteel.name=Molten Stainless Steel
-tile.fluid.molten.brass.name=Molten Brass
-tile.fluid.molten.inconel625.name=Molten Inconel 625
-tile.fluid.molten.tungsten.name=Molten Tungsten
-tile.fluid.molten.tungstenCarbide.name=Molten Tungsten Carbide
-tile.fluid.molten.niobium.name=Molten Niobium
-
-#Fluid Material
-fluid.iron.molten=Molten Iron
-fluid.copper.molten=Molten Copper
-fluid.silver.molten=Molten Silver
-fluid.gold.molten=Molten Gold
-fluid.zinc.molten=Molten Zinc
-fluid.aluminum.molten=Molten Aluminum
-fluid.lead.molten=Molten Lead
-fluid.titanium.molten=Molten Titanium
-fluid.chromium.molten=Molten Chromium
-fluid.nickel.molten=Molten Nickel
-fluid.carbonSteel.molten=Molten Carbon Steel
-fluid.stainlessSteel.molten=Molten Stainless Steel
-fluid.brass.molten=Molten Brass
-fluid.inconel625.molten=Molten Inconel 625
-fluid.tungsten.molten=Molten Tungsten
-fluid.tungstenCarbide.molten=Molten Tungsten Carbide
-fluid.niobium.molten=Molten Niobium
-
-#Tic Material
-material.iron=Iron
-material.copper=Copper
-material.silver=Silver
-material.gold=Gold
-material.zinc=Zinc
-material.aluminum=Aluminum
-material.lead=Lead
-material.titanium=Titanium
-material.chromium=Chromium
-material.nickel=Nickel
-material.carbonSteel=Carbon Steel
-material.stainlessSteel=Stainless Steel
-material.brass=Brass
-material.inconel625=Inconel 625
-material.tungsten=Tungsten
-material.tungstenCarbide=Tungsten Carbide
-material.niobium=Niobium
-
-#Block Fluid
-tile.fluid.water.name=Water
-tile.fluid.hydrogen.name=Hydrogen
-tile.fluid.oxygen.name=Oxygen
-tile.fluid.steam.name=Steam
-tile.fluid.nitrogen.name=Nitrogen
-tile.fluid.carbonDioxide.name=Carbon Dioxide
-tile.fluid.methane.name=Methane
-tile.fluid.helium.name=Helium
-tile.fluid.argon.name=Argon
-tile.fluid.neon.name=Neon
-tile.fluid.ammonia.name=Ammonia
-tile.fluid.chlorine.name=Chlorine
-tile.fluid.sulfurDioxide.name=Sulfur Dioxide
-
-#Fluid
-fluid.water=Water
-fluid.hydrogen=Hydrogen
-fluid.oxygen=Oxygen
-fluid.steam=Steam
-fluid.nitrogen=Nitrogen
-fluid.carbonDioxide=Carbon Dioxide
-fluid.methane=Methane
-fluid.helium=Helium
-fluid.argon=Argon
-fluid.neon=Neon
-fluid.ammonia=Ammonia
-fluid.chlorine=Chlorine
-fluid.sulfurDioxide=Sulfur Dioxide
-
-#Ore
-tile.ore_Hematite.name=Hematite Ore
-tile.ore_Magnetite.name=Magnetite Ore
-tile.ore_Chalcopyrite.name=Chalcopyrite Ore
-tile.ore_Malachite.name=Malachite Ore
-tile.ore_Bornite.name=Bornite Ore
-tile.ore_Tetrahedrite.name=Tetrahedrite Ore
-tile.ore_Cuprite.name=Cuprite Ore
-tile.ore_Copper.name=Copper Ore
-
-# END AUTOGEN

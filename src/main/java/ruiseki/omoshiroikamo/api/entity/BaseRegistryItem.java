@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.api.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,6 +27,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
 
     protected final int id;
     protected final String entityName;
+    protected String dropString;
     protected ItemStack dropItem;
     protected final int bgColor;
     protected final int fgColor;
@@ -35,6 +39,8 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     protected SpawnType spawnType;
     protected boolean isEnabled = true;
     protected float coefficient = 1.0f;
+
+    protected Map<String, String> lang;
 
     /**
      * Creates a new registry item.
@@ -92,6 +98,12 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     @SuppressWarnings("unchecked")
     public T setDropItem(ItemStack stack) {
         this.dropItem = stack;
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setDropString(String dropString) {
+        this.dropString = dropString;
         return (T) this;
     }
 
@@ -234,7 +246,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
 
     /**
      * Sets the texture reference.
-     * 
+     *
      * @param texture The new texture.
      */
     public void setTexture(ResourceLocation texture) {
@@ -283,5 +295,33 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
      */
     public boolean canSpawn() {
         return getTier() == 1 && spawnType != SpawnType.NONE;
+    }
+
+    public float getCoefficient() {
+        return coefficient;
+    }
+
+    public ItemStack getDropItem() {
+        return dropItem;
+    }
+
+    public String getDropString() {
+        return dropString;
+    }
+
+    public Map<String, String> getLang() {
+        return lang;
+    }
+
+    public T setLang(String langCode, String value) {
+        if (this.lang == null) {
+            this.lang = new HashMap<>();
+        }
+
+        if (langCode != null && !langCode.isEmpty() && value != null && !value.isEmpty()) {
+            this.lang.put(langCode, value);
+        }
+
+        return (T) this;
     }
 }

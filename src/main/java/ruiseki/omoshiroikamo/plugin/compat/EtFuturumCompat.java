@@ -40,7 +40,7 @@ public class EtFuturumCompat {
             // Everlasting Upgrade
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.EVERLASTING_UPGRADE.get(),
+                    ModItems.EVERLASTING_UPGRADE.getItem(),
                     "GRG",
                     "RUR",
                     "GRG",
@@ -50,7 +50,7 @@ public class EtFuturumCompat {
                     "itemNetherStar",
                     'U',
 
-                    ModItems.BASE_UPGRADE.get()));
+                    ModItems.BASE_UPGRADE.getItem()));
         }
 
         if (BackportConfigs.useEnvironmentalTech) {

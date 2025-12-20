@@ -152,7 +152,12 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         if (hasCustomNameTag()) {
             return getCustomNameTag();
         }
-        return LibMisc.LANG.localize(getCowDescription().getDisplayName());
+
+        if (getCowDescription() != null) {
+            return LibMisc.LANG.localize(getCowDescription().getDisplayName());
+        }
+
+        return super.getCommandSenderName();
     }
 
     @Override

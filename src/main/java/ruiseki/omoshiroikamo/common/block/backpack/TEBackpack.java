@@ -13,10 +13,10 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.item.backpack.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.common.util.item.ItemUtils;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<PosGuiData> {
 
@@ -45,7 +45,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
+    public boolean processTasks(boolean redstoneCheckPassed) {
         return false;
     }
 
@@ -161,13 +161,13 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     @Override
-    protected void writeCommon(NBTTagCompound root) {
+    public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
         handler.writeToNBT(root);
     }
 
     @Override
-    protected void readCommon(NBTTagCompound root) {
+    public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         handler.readFromNBT(root);
     }

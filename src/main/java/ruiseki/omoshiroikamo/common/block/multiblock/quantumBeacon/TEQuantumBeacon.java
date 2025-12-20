@@ -10,6 +10,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
@@ -20,7 +21,6 @@ import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketNBBClientFlight;
-import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
 public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IEnergySink {
@@ -63,8 +63,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     }
 
     @Override
-    protected boolean processTasks(boolean redstoneCheckPassed) {
-        if (!worldObj.isRemote && player != null && redstoneCheckPassed) {
+    public boolean processTasks(boolean redstoneCheckPassed) {
+        if (!worldObj.isRemote && player != null && !redstoneCheckPassed) {
             disablePlayerFlight();
         }
         return super.processTasks(redstoneCheckPassed);

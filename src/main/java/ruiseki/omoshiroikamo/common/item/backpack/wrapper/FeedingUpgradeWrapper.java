@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedingUpgrade {
 

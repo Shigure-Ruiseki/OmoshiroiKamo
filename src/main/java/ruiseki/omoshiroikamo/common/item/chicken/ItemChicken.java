@@ -17,12 +17,12 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
-import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -48,7 +48,7 @@ public class ItemChicken extends ItemOK {
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
         for (DataChicken chicken : DataChicken.getAllChickens()) {
-            list.add(new ItemStack(this, 1, chicken.getType()));
+            list.add(new ItemStack(this, 1, chicken.getId()));
         }
     }
 
@@ -60,7 +60,7 @@ public class ItemChicken extends ItemOK {
             return super.getItemStackDisplayName(stack);
         }
         return LibMisc.LANG.localize(
-            chicken.getItems()
+            chicken.getItem()
                 .getDisplayName());
     }
 
@@ -80,13 +80,11 @@ public class ItemChicken extends ItemOK {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg) {
         for (DataChicken chicken : DataChicken.getAllChickens()) {
-            int type = chicken.getType();
-            ChickensRegistryItem item = chicken.getItems();
+            int type = chicken.getId();
+            ChickensRegistryItem item = chicken.getItem();
 
             String iconName = item.getIconName();
-            if (iconName == null) {
-                iconName = LibResources.PREFIX_MOD + "chicken/" + chicken.getName();
-            }
+
             IIcon icon = reg.registerIcon(iconName);
             icons.put(type, icon);
 
@@ -123,7 +121,7 @@ public class ItemChicken extends ItemOK {
     public int getColorFromItemStack(ItemStack stack, int pass) {
         DataChicken chicken = DataChicken.getDataFromStack(stack);
         if (chicken != null) {
-            ChickensRegistryItem item = chicken.getItems();
+            ChickensRegistryItem item = chicken.getItem();
             if (pass == 0) {
                 return item.getTintColor();
             } else {
@@ -171,7 +169,7 @@ public class ItemChicken extends ItemOK {
         DataChicken chicken = DataChicken.getDataFromStack(stack);
         if (chicken != null) {
             NBTTagCompound tag = chicken.createTagCompound();
-            tag.setInteger("Type", chicken.getType());
+            tag.setInteger("Type", chicken.getId());
             stack.setTagCompound(tag);
         }
     }
@@ -183,9 +181,9 @@ public class ItemChicken extends ItemOK {
             return;
         }
 
-        ItemStack layItem = chicken.getItems()
+        ItemStack layItem = chicken.getItem()
             .createLayItem();
-        SpawnType spawnType = chicken.getItems()
+        SpawnType spawnType = chicken.getItem()
             .getSpawnType();
 
         TooltipUtils builder = TooltipUtils.builder();
@@ -193,7 +191,7 @@ public class ItemChicken extends ItemOK {
         // Tier
         builder.addLang(
             LibResources.TOOLTIP + "spawn_egg.tier",
-            chicken.getItems()
+            chicken.getItem()
                 .getTier());
 
         builder.addAll(chicken.getStatsInfoTooltip());
@@ -227,24 +225,24 @@ public class ItemChicken extends ItemOK {
 
         // Not breedable
         builder.addColoredLangIf(
-            !chicken.getItems()
+            !chicken.getItem()
                 .isBreedable(),
             EnumChatFormatting.RED,
             LibResources.TOOLTIP + "spawn_egg.notbreedable");
 
         // Breedable with parents
-        if (chicken.getItems()
+        if (chicken.getItem()
             .isBreedable()
-            && chicken.getItems()
+            && chicken.getItem()
                 .getParent1() != null
-            && chicken.getItems()
+            && chicken.getItem()
                 .getParent2() != null) {
             String parent1 = new ChatComponentTranslation(
-                chicken.getItems()
+                chicken.getItem()
                     .getParent1()
                     .getDisplayName()).getFormattedText();
             String parent2 = new ChatComponentTranslation(
-                chicken.getItems()
+                chicken.getItem()
                     .getParent2()
                     .getDisplayName()).getFormattedText();
 
@@ -257,10 +255,10 @@ public class ItemChicken extends ItemOK {
 
         // Mod compat tooltips
         if (ModCompatInformation.TOOLTIP.containsKey(
-            chicken.getItems()
+            chicken.getItem()
                 .getId())) {
             ModCompatInformation info = ModCompatInformation.TOOLTIP.get(
-                chicken.getItems()
+                chicken.getItem()
                     .getId());
             builder.addAll(info.getToolTip());
         }

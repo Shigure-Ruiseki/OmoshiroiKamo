@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -7,7 +8,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class MekanismChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem osmiumChicken = null;
+    public static ChickensRegistryItem osmiumChicken;
 
     public MekanismChickens() {
         super("Mekanism", "Mekanism", "textures/entity/chicken/mekanism/");
@@ -15,17 +16,14 @@ public class MekanismChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
 
-        osmiumChicken = addChicken(
-            allChickens,
-            "OsmiumChicken",
-            this.nextID(),
-            "OsmiumChicken.png",
-            this.getFirstOreDictionary("ingotOsmium"),
-            0x989585,
-            0xd1ccb6,
-            SpawnType.NONE);
+        osmiumChicken = addChicken("OsmiumChicken", this.nextID(), "OsmiumChicken", 0x989585, 0xd1ccb6, SpawnType.NONE)
+            .setLang("en_US", "Osmium Chicken")
+            .setLang("ja_JP", "オスミウムのニワトリ")
+            .setLayString("ore:ingotOsmium");
+        allChickens.add(osmiumChicken);
 
         return allChickens;
     }

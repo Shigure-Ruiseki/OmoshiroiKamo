@@ -238,19 +238,4 @@ public abstract class BaseRegistry<T extends BaseRegistryItem<T>> {
         }
         return false;
     }
-
-    /**
-     * Returns items that are explicitly disabled.
-     *
-     * @return a list of disabled registry items.
-     */
-    public Collection<T> getDisabledItems() {
-        List<T> result = new ArrayList<>();
-        for (T t : items.values()) {
-            if (!t.isEnabled()) {
-                result.add(t);
-            }
-        }
-        return result;
-    }
 }

@@ -26,14 +26,14 @@ public class RoostTESR extends TileEntitySpecialRenderer {
         }
 
         DataChicken chicken = tile.getChickenData(0);
-        if (chicken != null && chicken.getItems() != null) {
+        if (chicken != null && chicken.getItem() != null) {
 
             GL11.glPushMatrix();
             GL11.glTranslated(x + 0.5, y, z + 0.5);
 
             GL11.glRotatef(getRotationAngle(tile.getFacing()), 0F, 1F, 0F);
 
-            ResourceLocation CHICKEN_TEXTURE = chicken.getItems()
+            ResourceLocation CHICKEN_TEXTURE = chicken.getItem()
                 .getTexture();
             Minecraft.getMinecraft().renderEngine.bindTexture(CHICKEN_TEXTURE);
 

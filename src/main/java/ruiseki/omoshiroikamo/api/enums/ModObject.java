@@ -49,6 +49,8 @@ public enum ModObject {
     blockBreeder,
     blockRoostCollector,
 
+    blockLootFabricator,
+
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,
@@ -81,7 +83,15 @@ public enum ModObject {
     itemAnalyzer,
     itemSolidXp,
     itemCowSpawnEgg,
-    itemSyringe,;
+
+    itemSyringe,
+
+    itemCreativeModelLearner,
+    itemDeepLearner,
+    itemDataModel,
+    itemDataModelBlank
+    //
+    ;
 
     public final String unlocalisedName;
     private Block blockInstance;

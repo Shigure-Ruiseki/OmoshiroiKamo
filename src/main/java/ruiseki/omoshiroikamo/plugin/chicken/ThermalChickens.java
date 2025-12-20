@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -7,14 +8,14 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class ThermalChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem basalzRodChicken = null;
-    public static ChickensRegistryItem blitzRodChicken = null;
-    public static ChickensRegistryItem blizzRodChicken = null;
-    public static ChickensRegistryItem cinnabarChicken = null;
-    public static ChickensRegistryItem enderiumChicken = null;
-    public static ChickensRegistryItem lumiumChicken = null;
-    public static ChickensRegistryItem mithrilChicken = null;
-    public static ChickensRegistryItem signalumChicken = null;
+    public static ChickensRegistryItem basalzRodChicken;
+    public static ChickensRegistryItem blitzRodChicken;
+    public static ChickensRegistryItem blizzRodChicken;
+    public static ChickensRegistryItem cinnabarChicken;
+    public static ChickensRegistryItem enderiumChicken;
+    public static ChickensRegistryItem lumiumChicken;
+    public static ChickensRegistryItem mithrilChicken;
+    public static ChickensRegistryItem signalumChicken;
 
     public ThermalChickens() {
         super("ThermalFoundation", "Thermal Foundation", "textures/entity/chicken/thermal/");
@@ -22,86 +23,61 @@ public class ThermalChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
+
         basalzRodChicken = addChicken(
-            allChickens,
             "BasalzRodChicken",
-            this.nextID(),
-            "BasalzRodChicken.png",
-            this.getFirstOreDictionary("rodBasalz"),
+            nextID(),
+            "BasalzRodChicken",
             0x980000,
             0x6E6664,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:rodBasalz")
+                .setLang("en_US", "Basalz Rod Chicken")
+                .setLang("ja_JP", "バサルズロッドのニワトリ");
+        allChickens.add(basalzRodChicken);
 
-        blitzRodChicken = addChicken(
-            allChickens,
-            "BlitzRodChicken",
-            this.nextID(),
-            "BlitzRodChicken.png",
-            this.getFirstOreDictionary("rodBlitz"),
-            0xECE992,
-            0x66E5EF,
-            SpawnType.NONE);
+        blitzRodChicken = addChicken("BlitzRodChicken", nextID(), "BlitzRodChicken", 0xECE992, 0x66E5EF, SpawnType.NONE)
+            .setLayString("ore:rodBlitz")
+            .setLang("en_US", "Blitz Rod Chicken")
+            .setLang("ja_JP", "ブリッツロッドのニワトリ");
+        allChickens.add(blitzRodChicken);
 
-        blizzRodChicken = addChicken(
-            allChickens,
-            "BlizzRodChicken",
-            this.nextID(),
-            "BlizzRodChicken.png",
-            this.getFirstOreDictionary("rodBlizz"),
-            0x88E0FF,
-            0x1D3B95,
-            SpawnType.NONE);
+        blizzRodChicken = addChicken("BlizzRodChicken", nextID(), "BlizzRodChicken", 0x88E0FF, 0x1D3B95, SpawnType.NONE)
+            .setLayString("ore:rodBlizz")
+            .setLang("en_US", "Blizz Rod Chicken")
+            .setLang("ja_JP", "ブリズロッドのニワトリ");
+        allChickens.add(blizzRodChicken);
 
-        cinnabarChicken = addChicken(
-            allChickens,
-            "CinnabarChicken",
-            this.nextID(),
-            "CinnabarChicken.png",
-            this.getFirstOreDictionary("crystalCinnabar"),
-            0xE49790,
-            0x9B3229,
-            SpawnType.NONE);
+        cinnabarChicken = addChicken("CinnabarChicken", nextID(), "CinnabarChicken", 0xE49790, 0x9B3229, SpawnType.NONE)
+            .setLayString("ore:crystalCinnabar")
+            .setLang("en_US", "Cinnabar Chicken")
+            .setLang("ja_JP", "辰砂のニワトリ");
+        allChickens.add(cinnabarChicken);
 
-        enderiumChicken = addChicken(
-            allChickens,
-            "EnderiumChicken",
-            this.nextID(),
-            "EnderiumChicken.png",
-            this.getFirstOreDictionary("nuggetEnderium"),
-            0x127575,
-            0x0A4849,
-            SpawnType.NONE);
+        enderiumChicken = addChicken("EnderiumChicken", nextID(), "EnderiumChicken", 0x127575, 0x0A4849, SpawnType.NONE)
+            .setLayString("ore:nuggetEnderium")
+            .setLang("en_US", "Enderium Chicken")
+            .setLang("ja_JP", "エンダリウムのニワトリ");
+        allChickens.add(enderiumChicken);
 
-        lumiumChicken = addChicken(
-            allChickens,
-            "LumiumChicken",
-            this.nextID(),
-            "LumiumChicken.png",
-            this.getFirstOreDictionary("ingotLumium"),
-            0xEEF4DF,
-            0xF4B134,
-            SpawnType.NONE);
+        lumiumChicken = addChicken("LumiumChicken", nextID(), "LumiumChicken", 0xEEF4DF, 0xF4B134, SpawnType.NONE)
+            .setLayString("ore:ingotLumium")
+            .setLang("en_US", "Lumium Chicken")
+            .setLang("ja_JP", "ルミウムのニワトリ");
+        allChickens.add(lumiumChicken);
 
-        mithrilChicken = addChicken(
-            allChickens,
-            "MithrilChicken",
-            this.nextID(),
-            "MithrilChicken.png",
-            this.getFirstOreDictionary("ingotMithril"),
-            0x5A89A8,
-            0xA7FFFF,
-            SpawnType.NONE);
+        mithrilChicken = addChicken("MithrilChicken", nextID(), "MithrilChicken", 0x5A89A8, 0xA7FFFF, SpawnType.NONE)
+            .setLayString("ore:ingotMithril")
+            .setLang("en_US", "Mithril Chicken")
+            .setLang("ja_JP", "ミスリルのニワトリ");
+        allChickens.add(mithrilChicken);
 
-        signalumChicken = addChicken(
-            allChickens,
-            "SignalumChicken",
-            this.nextID(),
-            "SignalumChicken.png",
-            this.getFirstOreDictionary("ingotSignalum"),
-            0xFFA424,
-            0xC63200,
-            SpawnType.NONE);
+        signalumChicken = addChicken("SignalumChicken", nextID(), "SignalumChicken", 0xFFA424, 0xC63200, SpawnType.NONE)
+            .setLayString("ore:ingotSignalum")
+            .setLang("en_US", "Signalum Chicken")
+            .setLang("ja_JP", "シグナルムのニワトリ");
+        allChickens.add(signalumChicken);
 
         return allChickens;
     }

@@ -57,6 +57,10 @@ public class ChickenConfig {
     @Config.RangeFloat(min = 1)
     public static float roostSpeed;
 
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean updateMissing;
+
     public static int getChickenStackLimit() {
         return MathHelper.clamp_int(chickenStackLimit, 1, 64);
     }

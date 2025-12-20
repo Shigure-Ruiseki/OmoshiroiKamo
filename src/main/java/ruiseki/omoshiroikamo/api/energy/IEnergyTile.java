@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.energy;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.common.util.BlockPos;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 
 public interface IEnergyTile {
 

@@ -13,6 +13,9 @@ import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 @Config(modid = LibMisc.MOD_ID, configSubDirectory = LibMisc.MOD_ID, category = "general")
 public class GeneralConfig {
 
+    @Config.DefaultBoolean(false)
+    public static boolean enableDebug;
+
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(GeneralConfig.class);
         ItemConfigs.registerConfig();

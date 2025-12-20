@@ -434,7 +434,7 @@ public class BackPackContainer extends ModularContainer {
         return super.transferItem(fromSlot, fromStack);
     }
 
-    private void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack, ItemStack toStack) {
+    protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack, ItemStack toStack) {
         boolean isBackpackSlot = toSlot instanceof ModularBackpackSlot;
         if (isBackpackSlot && handler.canVoid(fromStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
             fromStack.stackSize = 0;
@@ -482,7 +482,7 @@ public class BackPackContainer extends ModularContainer {
         }
     }
 
-    private ItemStack handleQuickCraft(int slotId, int mouseButton, int mode, EntityPlayer player) {
+    protected ItemStack handleQuickCraft(int slotId, int mouseButton, int mode, EntityPlayer player) {
 
         InventoryPlayer inv = player.inventory;
         ItemStack held = inv.getItemStack();

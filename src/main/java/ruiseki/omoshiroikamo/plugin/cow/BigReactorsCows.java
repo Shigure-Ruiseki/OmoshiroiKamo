@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.cow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -17,18 +18,24 @@ public class BigReactorsCows extends BaseCowHandler {
     }
 
     @Override
-    public List<CowsRegistryItem> registerCows(List<CowsRegistryItem> allCows) {
+    public List<CowsRegistryItem> registerCows() {
+        List<CowsRegistryItem> allCows = new ArrayList<>();
 
-        yelloriumCow = tryAddCow(allCows, "YelloriumCow", 500, "yellorium", 0xE5FF00, 0xA6A600, SpawnType.NORMAL);
+        yelloriumCow = addCow("YelloriumCow", 500, 0xE5FF00, 0xA6A600, SpawnType.NORMAL).setFluidString("yellorium")
+            .setLang("en_US", "Yellorium Cow")
+            .setLang("ja_JP", "イエローリウム牛");
+        allCows.add(yelloriumCow);
 
-        cyaniteCow = tryAddCow(allCows, "CyaniteCow", 501, "cyanite", 0x66CCFF, 0x3399CC, SpawnType.NORMAL);
+        cyaniteCow = addCow("CyaniteCow", 501, 0x66CCFF, 0x3399CC, SpawnType.NORMAL).setFluidString("cyanite")
+            .setLang("en_US", "Cyanite Cow")
+            .setLang("ja_JP", "シアナイト牛");
+        allCows.add(cyaniteCow);
 
-        steamCow = tryAddCow(allCows, "SteamCow", 502, "steam", 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL);
+        steamCow = addCow("SteamCow", 502, 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL).setFluidString("steam")
+            .setLang("en_US", "Steam Cow")
+            .setLang("ja_JP", "スチーム牛");
+        allCows.add(steamCow);
+
         return allCows;
-    }
-
-    @Override
-    public void registerAllParents(List<CowsRegistryItem> allCows) {
-
     }
 }

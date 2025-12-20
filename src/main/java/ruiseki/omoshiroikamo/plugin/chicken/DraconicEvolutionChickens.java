@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -8,8 +9,8 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 
 public class DraconicEvolutionChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem draconiumChicken = null;
-    public static ChickensRegistryItem draconiumAwakenedChicken = null;
+    public static ChickensRegistryItem draconiumChicken;
+    public static ChickensRegistryItem draconiumAwakenedChicken;
 
     public DraconicEvolutionChickens() {
         super("DraconicEvolution", "Draconic Evolution", "textures/entity/draconic/");
@@ -17,26 +18,30 @@ public class DraconicEvolutionChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
+
         draconiumChicken = addChicken(
-            allChickens,
             "DraconiumChicken",
             this.nextID(),
-            "DraconiumChicken.png",
-            this.getFirstOreDictionary("ingotDraconium"),
+            "DraconiumChicken",
             0x301549,
             0x1a0c27,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotDraconium")
+                .setLang("en_US", "Draconium Chicken")
+                .setLang("ja_JP", "ドラコニウムのニワトリ");
+        allChickens.add(draconiumChicken);
 
         draconiumAwakenedChicken = addChicken(
-            allChickens,
             "DraconiumAwakenedChicken",
             this.nextID(),
-            "DraconiumAwakenedChicken.png",
-            this.getFirstOreDictionary("nuggetDraconiumAwakened"),
+            "DraconiumAwakenedChicken",
             0xcc440c,
             0x9c691a,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:nuggetDraconiumAwakened")
+                .setLang("en_US", "Awakened Draconium Chicken")
+                .setLang("ja_JP", "覚醒ドラコニウムのニワトリ");
+        allChickens.add(draconiumAwakenedChicken);
 
         return allChickens;
     }

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.Item;
@@ -11,13 +12,13 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class ActuallyAdditionsChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem blackQuartzChicken = null;
-    public static ChickensRegistryItem voidCrystalChicken = null;
-    public static ChickensRegistryItem palisCrystalChicken = null;
-    public static ChickensRegistryItem enoriCrystalChicken = null;
-    public static ChickensRegistryItem restoniaCrystalChicken = null;
-    public static ChickensRegistryItem emeradicCrystalChicken = null;
-    public static ChickensRegistryItem diamantineCrystalChicken = null;
+    public static ChickensRegistryItem blackQuartzChicken;
+    public static ChickensRegistryItem voidCrystalChicken;
+    public static ChickensRegistryItem palisCrystalChicken;
+    public static ChickensRegistryItem enoriCrystalChicken;
+    public static ChickensRegistryItem restoniaCrystalChicken;
+    public static ChickensRegistryItem emeradicCrystalChicken;
+    public static ChickensRegistryItem diamantineCrystalChicken;
 
     public ActuallyAdditionsChickens() {
         super("ActuallyAdditions", "Actually Additions", "textures/entity/chicken/actuallyadditions/");
@@ -25,83 +26,92 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
         Item itemCrystal = InitItems.itemCrystal;
+
         ItemStack restoniaCrystal = new ItemStack(itemCrystal, 1, 0);
         restoniaCrystalChicken = addChicken(
-            allChickens,
             "RestoniaCrystalChicken",
             this.nextID(),
-            "RestoniaCrystalChicken.png",
-            restoniaCrystal,
+            "RestoniaCrystalChicken",
             0xCA0000,
             0x8C0000,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayItem(restoniaCrystal)
+                .setLang("en_US", "Restonia Crystal Chicken")
+                .setLang("ja_JP", "レストニアクリスタルのニワトリ");
+        allChickens.add(restoniaCrystalChicken);
 
         ItemStack palisCrystal = new ItemStack(itemCrystal, 1, 1);
         palisCrystalChicken = addChicken(
-            allChickens,
             "PalisCrystalChicken",
             this.nextID(),
-            "PalisCrystalChicken.png",
-            palisCrystal,
+            "PalisCrystalChicken",
             0x0E0E84,
             0x000048,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayItem(palisCrystal)
+                .setLang("en_US", "Palis Crystal Chicken")
+                .setLang("ja_JP", "パリスクリスタルのニワトリ");
+        allChickens.add(palisCrystalChicken);
 
         ItemStack diamantineCrystal = new ItemStack(itemCrystal, 1, 2);
         diamantineCrystalChicken = addChicken(
-            allChickens,
             "DiamantineCrystalChicken",
             this.nextID(),
-            "DiamantineCrystalChicken.png",
-            diamantineCrystal,
+            "DiamantineCrystalChicken",
             0xAFB1FF,
             0x797CE5,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayItem(diamantineCrystal)
+                .setLang("en_US", "Diamantine Crystal Chicken")
+                .setLang("ja_JP", "ディアマンティンクリスタルのニワトリ");
+        allChickens.add(diamantineCrystalChicken);
 
         ItemStack voidCrystal = new ItemStack(itemCrystal, 1, 3);
         voidCrystalChicken = addChicken(
-            allChickens,
             "VoidCrystalChicken",
             this.nextID(),
-            "VoidCrystalChicken.png",
-            voidCrystal,
+            "VoidCrystalChicken",
             0x1F1F1F,
             0x000000,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayItem(voidCrystal)
+                .setLang("en_US", "Void Crystal Chicken")
+                .setLang("ja_JP", "ヴォイドクリスタルのニワトリ");
+        allChickens.add(voidCrystalChicken);
 
         ItemStack emeradicCrystal = new ItemStack(itemCrystal, 1, 4);
         emeradicCrystalChicken = addChicken(
-            allChickens,
             "EmeradicCrystalChicken",
             this.nextID(),
-            "EmeradicCrystalChicken.png",
-            emeradicCrystal,
+            "EmeradicCrystalChicken",
             0x06D306,
             0x159A0E,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayItem(emeradicCrystal)
+                .setLang("en_US", "Emeradic Crystal Chicken")
+                .setLang("ja_JP", "エメラディッククリスタルのニワトリ");
+        allChickens.add(emeradicCrystalChicken);
 
         ItemStack enoriCrystal = new ItemStack(itemCrystal, 1, 5);
         enoriCrystalChicken = addChicken(
-            allChickens,
             "EnoriCrystalChicken",
             this.nextID(),
-            "EnoriCrystalChicken.png",
-            enoriCrystal,
+            "EnoriCrystalChicken",
             0xECE3FF,
             0xB5B5B5,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayItem(enoriCrystal)
+                .setLang("en_US", "Enori Crystal Chicken")
+                .setLang("ja_JP", "エノリクリスタルのニワトリ");
+        allChickens.add(enoriCrystalChicken);
 
         blackQuartzChicken = addChicken(
-            allChickens,
             "BlackQuartzChicken",
             this.nextID(),
-            "BlackQuartzChicken.png",
-            this.getFirstOreDictionary("gemQuartzBlack"),
+            "BlackQuartzChicken",
             0x1F1F1F,
             0x535353,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:gemQuartzBlack")
+                .setLang("en_US", "Black Quartz Chicken")
+                .setLang("ja_JP", "ブラッククォーツのニワトリ");
+        allChickens.add(blackQuartzChicken);
 
         return allChickens;
     }

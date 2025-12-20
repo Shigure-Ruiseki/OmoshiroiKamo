@@ -15,6 +15,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import makamys.mclib.core.MCLib;
 import makamys.mclib.core.MCLibModules;
+import ruiseki.omoshiroikamo.common.init.MobOreDicts;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModEntity;
@@ -23,7 +24,6 @@ import ruiseki.omoshiroikamo.common.init.ModRecipes;
 import ruiseki.omoshiroikamo.common.init.OKWorldGenerator;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.common.util.OreDictUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.plugin.compat.BaubleExpandedCompat;
 import ruiseki.omoshiroikamo.plugin.compat.EtFuturumCompat;
@@ -42,18 +42,18 @@ public class CommonProxy {
     public void onConstruction(FMLConstructionEvent event) {
         if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
             Logger.info(
-                LibMisc.MOD_ID
-                    + " is in snapshot mode. Disabling update checker... Other features may also be different.");
+                "{} is in snapshot mode. Disabling update checker... Other features may also be different.",
+                LibMisc.MOD_ID);
         }
         MCLib.init();
     }
 
     public void preInit(FMLPreInitializationEvent event) {
-
+        Logger.setPhase("PREINIT");
         ModBlocks.preInit();
         ModItems.preInit();
         ModEntity.preInit();
-        OreDictUtils.preInit();
+        MobOreDicts.preInit();
         ModAchievements.preInit();
         OKWorldGenerator.preInit();
 
@@ -61,11 +61,12 @@ public class CommonProxy {
 
         if (!LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
             MCLibModules.updateCheckAPI.submitModTask(LibMisc.MOD_ID, LibMisc.VERSION, LibMisc.VERSION_URL);
-            Logger.info("Submitting update check for " + LibMisc.MOD_ID + " version " + LibMisc.VERSION);
+            Logger.info("Submitting update check for {} version {}", LibMisc.MOD_ID, LibMisc.VERSION);
         }
     }
 
     public void init(FMLInitializationEvent event) {
+        Logger.setPhase("INIT");
         FMLCommonHandler.instance()
             .bus()
             .register(tickTimer);
@@ -80,6 +81,8 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
+        Logger.setPhase("POSTINIT");
+        ModEntity.postInit();
         StructureCompat.postInit();
         BaubleExpandedCompat.postInit();
     }

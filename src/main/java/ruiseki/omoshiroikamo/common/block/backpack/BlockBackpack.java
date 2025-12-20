@@ -36,12 +36,12 @@ import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.common.block.ItemBlockBauble;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.common.entity.EntityBackpack;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockColor {

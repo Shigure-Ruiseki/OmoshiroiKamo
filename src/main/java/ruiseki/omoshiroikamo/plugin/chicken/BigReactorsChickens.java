@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -7,11 +8,11 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class BigReactorsChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem yelloriumChicken = null;
-    public static ChickensRegistryItem cyaniteChicken = null;
-    public static ChickensRegistryItem blutoniumChicken = null;
-    public static ChickensRegistryItem ludicriteChicken = null;
-    public static ChickensRegistryItem graphiteChicken = null;
+    public static ChickensRegistryItem yelloriumChicken;
+    public static ChickensRegistryItem cyaniteChicken;
+    public static ChickensRegistryItem blutoniumChicken;
+    public static ChickensRegistryItem ludicriteChicken;
+    public static ChickensRegistryItem graphiteChicken;
 
     public BigReactorsChickens() {
         super("BigReactors", "Big Reactors", "textures/entity/chicken/bigreactors/");
@@ -19,56 +20,63 @@ public class BigReactorsChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
+
         yelloriumChicken = addChicken(
-            allChickens,
             "YelloriumChicken",
             this.nextID(),
-            "YelloriumChicken.png",
-            this.getFirstOreDictionary("ingotYellorium"),
+            "YelloriumChicken",
             0xA5B700,
             0xD7EF00,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotYellorium")
+                .setLang("en_US", "Yellorium Chicken")
+                .setLang("ja_JP", "イエロリウムのニワトリ");
+        allChickens.add(yelloriumChicken);
 
         graphiteChicken = addChicken(
-            allChickens,
             "GraphiteChicken",
             this.nextID(),
-            "GraphiteChicken.png",
-            this.getFirstOreDictionary("ingotGraphite"),
+            "GraphiteChicken",
             0x41453F,
             0x595959,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotGraphite")
+                .setLang("en_US", "Graphite Chicken")
+                .setLang("ja_JP", "グラファイトのニワトリ");
+        allChickens.add(graphiteChicken);
 
         cyaniteChicken = addChicken(
-            allChickens,
             "CyaniteChicken",
             this.nextID(),
-            "CyaniteChicken.png",
-            this.getFirstOreDictionary("ingotCyanite"),
+            "CyaniteChicken",
             0x0068B4,
             0x5CAFDB,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotCyanite")
+                .setLang("en_US", "Cyanite Chicken")
+                .setLang("ja_JP", "シアナイトのニワトリ");
+        allChickens.add(cyaniteChicken);
 
         blutoniumChicken = addChicken(
-            allChickens,
             "BlutoniumChicken",
             this.nextID(),
-            "BlutoniumChicken.png",
-            this.getFirstOreDictionary("ingotBlutonium"),
+            "BlutoniumChicken",
             0x4642D6,
             0xf5fcf1,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotBlutonium")
+                .setLang("en_US", "Blutonium Chicken")
+                .setLang("ja_JP", "ブルトニウムのニワトリ");
+        allChickens.add(blutoniumChicken);
 
         ludicriteChicken = addChicken(
-            allChickens,
             "LudicriteChicken",
             this.nextID(),
-            "LudicriteChicken.png",
-            this.getFirstOreDictionary("ingotLudicrite"),
+            "LudicriteChicken",
             0xC63BE5,
             0xF27CFF,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotLudicrite")
+                .setLang("en_US", "Ludicrite Chicken")
+                .setLang("ja_JP", "ルディクライトのニワトリ");
+        allChickens.add(ludicriteChicken);
 
         return allChickens;
     }

@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.common.init;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useChicken;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useCow;
+import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDeepMobLearning;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
 
 import net.minecraft.block.material.Material;
@@ -16,6 +17,7 @@ import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
 import ruiseki.omoshiroikamo.common.block.cow.BlockStall;
+import ruiseki.omoshiroikamo.common.block.deepMobLearning.BlockLootFabricator;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockAlabasterStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockBasaltStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockCrystal;
@@ -113,7 +115,11 @@ public enum ModBlocks {
     STALL(useCow, BlockStall.create()),
     ROOST(useChicken, BlockRoost.create()),
     BREEDER(useChicken, BlockBreeder.create()),
-    ROOST_COLLECTOR(useChicken, BlockRoostCollector.create()),;
+    ROOST_COLLECTOR(useChicken, BlockRoostCollector.create()),
+
+    LOOT_FABRICATOR(useDeepMobLearning, BlockLootFabricator.create()),
+    //
+    ;
 
     public static final ModBlocks[] VALUES = values();
 
@@ -123,9 +129,9 @@ public enum ModBlocks {
                 try {
                     block.get()
                         .init();
-                    Logger.info("Successfully initialized " + block.name());
+                    Logger.info("Successfully initialized {}", block.name());
                 } catch (Exception e) {
-                    Logger.error("Failed to initialize block: +" + block.name());
+                    Logger.error("Failed to initialize block: +{}", block.name());
                 }
             }
         }

@@ -13,7 +13,7 @@
         "Ruiseki"
       ],
       "credits": "",
-      "logoFile": "assets/${modId}/textures/logo.png",
+      "logoFile": "assets/${modId}/pack.png",
       "screenshots": [],
       "requiredMods": [],
       "dependencies": [],

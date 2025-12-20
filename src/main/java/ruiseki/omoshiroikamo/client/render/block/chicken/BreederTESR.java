@@ -46,7 +46,7 @@ public class BreederTESR extends TileEntitySpecialRenderer {
     private void renderChicken(TEBreeder tile, int slotIndex, double xOffset, double yOffset, double zOffset,
         float rotation) {
         DataChicken chicken = tile.getChickenData(slotIndex);
-        if (chicken != null && chicken.getItems() != null) {
+        if (chicken != null && chicken.getItem() != null) {
             GL11.glPushMatrix();
 
             // Positioning
@@ -59,7 +59,7 @@ public class BreederTESR extends TileEntitySpecialRenderer {
             // Rotation
             GL11.glRotatef(rotation, 0F, 1F, 0F);
 
-            ResourceLocation CHICKEN_TEXTURE = chicken.getItems()
+            ResourceLocation CHICKEN_TEXTURE = chicken.getItem()
                 .getTexture();
             Minecraft.getMinecraft().renderEngine.bindTexture(CHICKEN_TEXTURE);
 

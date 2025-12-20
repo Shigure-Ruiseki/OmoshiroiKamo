@@ -27,6 +27,7 @@ import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.entity.RenderCowsCow;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
 import ruiseki.omoshiroikamo.client.util.TextureGenerator;
+import ruiseki.omoshiroikamo.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.common.block.chicken.TEBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
 import ruiseki.omoshiroikamo.common.block.cow.TEStall;
@@ -76,13 +77,13 @@ public class ClientProxy extends CommonProxy {
         if (ItemConfigs.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());
         }
-
-        TextureGenerator.generateCustomChickenTextures();
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
+        TextureGenerator.generateCustomChickenTextures();
+        TextureLoader.loadFromConfig(LibMisc.MOD_ID, LibMisc.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
     }
 
     public EntityPlayer getClientPlayer() {

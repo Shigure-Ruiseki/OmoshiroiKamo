@@ -27,7 +27,7 @@ public class AdvancedVoidUpgradeWidget extends AdvancedExpandedTabWidget<Advance
         super(
             slotIndex,
             wrapper,
-            new ItemStack(ModItems.ADVANCED_VOID_UPGRADE.get()),
+            new ItemStack(ModItems.ADVANCED_VOID_UPGRADE.getItem()),
             "gui.advanced_void_settings",
             "adv_common_filter",
             6,

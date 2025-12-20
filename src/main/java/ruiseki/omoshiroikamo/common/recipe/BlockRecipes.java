@@ -47,7 +47,7 @@ public class BlockRecipes {
                     'C',
                     "ingotIron",
                     'B',
-                    ModBlocks.BACKPACK_BASE.get()).withInt(UPGRADE_SLOTS, BackpackConfig.ironUpgradeSlots)
+                    ModBlocks.BACKPACK_BASE.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.ironUpgradeSlots)
                         .withInt(BACKPACK_SLOTS, BackpackConfig.ironBackpackSlots)
                         .allowNBTFrom(ModBlocks.BACKPACK_BASE.newItemStack())
                         .allowAllTags());
@@ -62,7 +62,7 @@ public class BlockRecipes {
                     'C',
                     "ingotGold",
                     'B',
-                    ModBlocks.BACKPACK_IRON.get()).withInt(UPGRADE_SLOTS, BackpackConfig.goldUpgradeSlots)
+                    ModBlocks.BACKPACK_IRON.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.goldUpgradeSlots)
                         .withInt(BACKPACK_SLOTS, BackpackConfig.goldBackpackSlots)
                         .allowNBTFrom(ModBlocks.BACKPACK_IRON.newItemStack())
                         .allowAllTags());
@@ -77,7 +77,7 @@ public class BlockRecipes {
                     'C',
                     "gemDiamond",
                     'B',
-                    ModBlocks.BACKPACK_GOLD.get()).withInt(UPGRADE_SLOTS, BackpackConfig.diamondUpgradeSlots)
+                    ModBlocks.BACKPACK_GOLD.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.diamondUpgradeSlots)
                         .withInt(BACKPACK_SLOTS, BackpackConfig.diamondBackpackSlots)
                         .allowNBTFrom(ModBlocks.BACKPACK_GOLD.newItemStack())
                         .allowAllTags());
@@ -94,7 +94,7 @@ public class BlockRecipes {
                     'C',
                     "blockObsidian",
                     'B',
-                    ModBlocks.BACKPACK_DIAMOND.get()).withInt(UPGRADE_SLOTS, BackpackConfig.obsidianUpgradeSlots)
+                    ModBlocks.BACKPACK_DIAMOND.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.obsidianUpgradeSlots)
                         .withInt(BACKPACK_SLOTS, BackpackConfig.obsidianBackpackSlots)
                         .allowNBTFrom(ModBlocks.BACKPACK_DIAMOND.newItemStack())
                         .allowAllTags());
@@ -148,7 +148,7 @@ public class BlockRecipes {
             // Hardened Stone
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.BLOCK_HARDENED_STONE.get(),
+                    ModBlocks.BLOCK_HARDENED_STONE.getItem(),
                     "SCS",
                     "CSC",
                     "SCS",
@@ -158,13 +158,13 @@ public class BlockRecipes {
                     "cobblestone"));
 
             // Hardened Stone
-            GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_HARDENED_STONE.get(), "stoneHardened"));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_HARDENED_STONE.getItem(), "stoneHardened"));
 
             // Basalt
-            GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_BASALT.get(), "stoneBasalt"));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_BASALT.getItem(), "stoneBasalt"));
 
             // Alabaster
-            GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_ALABASTER.get(), "stoneAlabaster"));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(ModBlocks.BLOCK_ALABASTER.getItem(), "stoneAlabaster"));
 
             // Structure T1
             GameRegistry.addRecipe(
@@ -438,7 +438,7 @@ public class BlockRecipes {
                     'R',
                     "dustRedstone",
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.SOLAR_CELL.newItemStack(1, 0),
@@ -452,7 +452,7 @@ public class BlockRecipes {
                     'R',
                     "dustRedstone",
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.SOLAR_CELL.newItemStack(1, 0),
@@ -466,7 +466,7 @@ public class BlockRecipes {
                     'R',
                     "dustRedstone",
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
 
             // Solar Cell T2
             GameRegistry.addRecipe(
@@ -480,7 +480,7 @@ public class BlockRecipes {
                     'I',
                     ModBlocks.SOLAR_CELL.newItemStack(1, 0),
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
 
             // Solar Cell T3
             GameRegistry.addRecipe(
@@ -494,7 +494,7 @@ public class BlockRecipes {
                     'I',
                     ModBlocks.SOLAR_CELL.newItemStack(1, 1),
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
 
             // Solar Cell T4
             GameRegistry.addRecipe(
@@ -508,7 +508,7 @@ public class BlockRecipes {
                     'I',
                     ModBlocks.SOLAR_CELL.newItemStack(1, 2),
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
 
             // Solar Cell T5
             GameRegistry.addRecipe(
@@ -522,7 +522,7 @@ public class BlockRecipes {
                     'I',
                     ModBlocks.SOLAR_CELL.newItemStack(1, 3),
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
 
             // Solar Cell T6
             GameRegistry.addRecipe(
@@ -536,7 +536,7 @@ public class BlockRecipes {
                     'I',
                     ModBlocks.SOLAR_CELL.newItemStack(1, 4),
                     'C',
-                    ModItems.PHOTOVOLTAIC_CELL.get()));
+                    ModItems.PHOTOVOLTAIC_CELL.getItem()));
 
             // Solar Array Tier 1
             GameRegistry.addRecipe(
@@ -638,7 +638,7 @@ public class BlockRecipes {
                     'B',
                     "stoneBasalt",
                     'c',
-                    ModBlocks.LASER_CORE.get()));
+                    ModBlocks.LASER_CORE.getItem()));
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0),
@@ -654,7 +654,7 @@ public class BlockRecipes {
                     'B',
                     "stoneAlabaster",
                     'c',
-                    ModBlocks.LASER_CORE.get()));
+                    ModBlocks.LASER_CORE.getItem()));
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, 0),
@@ -670,7 +670,7 @@ public class BlockRecipes {
                     'B',
                     "stoneHardened",
                     'c',
-                    ModBlocks.LASER_CORE.get()));
+                    ModBlocks.LASER_CORE.getItem()));
 
             // Quantum Ore T2
             GameRegistry.addRecipe(
@@ -768,7 +768,7 @@ public class BlockRecipes {
                     'B',
                     "stoneBasalt",
                     'c',
-                    ModBlocks.LASER_CORE.get()));
+                    ModBlocks.LASER_CORE.getItem()));
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0),
@@ -784,7 +784,7 @@ public class BlockRecipes {
                     'B',
                     "stoneAlabaster",
                     'c',
-                    ModBlocks.LASER_CORE.get()));
+                    ModBlocks.LASER_CORE.getItem()));
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, 0),
@@ -800,7 +800,7 @@ public class BlockRecipes {
                     'B',
                     "stoneHardened",
                     'c',
-                    ModBlocks.LASER_CORE.get()));
+                    ModBlocks.LASER_CORE.getItem()));
 
             // Quantum Res T2
             GameRegistry.addRecipe(
@@ -894,9 +894,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 0),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     Blocks.beacon));
             GameRegistry.addRecipe(
@@ -910,9 +910,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 0),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     Blocks.beacon));
             GameRegistry.addRecipe(
@@ -926,9 +926,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 0),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     Blocks.beacon));
 
@@ -942,9 +942,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 1),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     ModBlocks.QUANTUM_BEACON.newItemStack(1, 0)));
 
@@ -958,9 +958,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 2),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     ModBlocks.QUANTUM_BEACON.newItemStack(1, 1)));
 
@@ -974,9 +974,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 3),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     ModBlocks.QUANTUM_BEACON.newItemStack(1, 2)));
 
@@ -990,9 +990,9 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 4),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     ModBlocks.QUANTUM_BEACON.newItemStack(1, 3)));
 
@@ -1006,30 +1006,31 @@ public class BlockRecipes {
                     'C',
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 5),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'B',
                     ModBlocks.QUANTUM_BEACON.newItemStack(1, 4)));
 
             // Clear Lens
-            GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.LENS.get(), "G G", "GGG", "G G", 'G', "blockGlass"));
+            GameRegistry
+                .addRecipe(new ShapedOreRecipe(ModBlocks.LENS.getItem(), "G G", "GGG", "G G", 'G', "blockGlass"));
 
             // Color Lens
             for (int i = 0; i < DYE_ORE_NAMES.length; i++) {
                 GameRegistry.addRecipe(
                     new ShapelessOreRecipe(
                         ModBlocks.COLORED_LENS.newItemStack(1, i),
-                        ModBlocks.LENS.get(),
+                        ModBlocks.LENS.getItem(),
                         DYE_ORE_NAMES[i]));
-                GameRegistry
-                    .addRecipe(new ShapelessOreRecipe(ModBlocks.LENS.get(), ModBlocks.COLORED_LENS.newItemStack(1, i)));
+                GameRegistry.addRecipe(
+                    new ShapelessOreRecipe(ModBlocks.LENS.getItem(), ModBlocks.COLORED_LENS.newItemStack(1, i)));
             }
 
             // Laser Core
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.LASER_CORE.get(),
+                    ModBlocks.LASER_CORE.getItem(),
                     "GRG",
                     "I I",
                     "GRG",
@@ -1043,7 +1044,7 @@ public class BlockRecipes {
             // Null Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     "IGI",
                     "GSG",
                     "IGI",
@@ -1057,32 +1058,32 @@ public class BlockRecipes {
             // Piezo Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_PIEZO.get(),
+                    ModBlocks.MODIFIER_PIEZO.getItem(),
                     "RMR",
                     "MNM",
                     "IMI",
                     'R',
                     "blockRedstone",
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'I',
                     "blockIron"));
 
             // Speed Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_SPEED.get(),
+                    ModBlocks.MODIFIER_SPEED.getItem(),
                     "RCR",
                     "MNM",
                     "RcR",
                     'R',
                     "blockRedstone",
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'C',
                     ModItems.CRYSTAL.newItemStack(1, 1),
                     'c',
@@ -1091,7 +1092,7 @@ public class BlockRecipes {
             // Accuracy Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_ACCURACY.get(),
+                    ModBlocks.MODIFIER_ACCURACY.getItem(),
                     "DCD",
                     "MNM",
                     "DcD",
@@ -1100,9 +1101,9 @@ public class BlockRecipes {
                     'c',
                     ModItems.CRYSTAL.newItemStack(1, 3),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get(),
+                    ModBlocks.MODIFIER_NULL.getItem(),
                     'D',
                     "blockDiamond"));
 
@@ -1110,14 +1111,14 @@ public class BlockRecipes {
             if (!LibMods.EtFuturum.isLoaded()) {
                 GameRegistry.addRecipe(
                     new ShapedOreRecipe(
-                        ModBlocks.MODIFIER_FLIGHT.get(),
+                        ModBlocks.MODIFIER_FLIGHT.getItem(),
                         "PFP",
                         "MNM",
                         "LfL",
                         'P',
                         Blocks.sticky_piston,
                         'M',
-                        ModBlocks.BLOCK_MICA.get(),
+                        ModBlocks.BLOCK_MICA.getItem(),
                         'F',
                         ModItems.CRYSTAL.newItemStack(1, 4),
                         'f',
@@ -1125,13 +1126,13 @@ public class BlockRecipes {
                         'L',
                         "itemLeather",
                         'N',
-                        ModBlocks.MODIFIER_NULL.get()));
+                        ModBlocks.MODIFIER_NULL.getItem()));
             }
 
             // Night Vision Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_NIGHT_VISION.get(),
+                    ModBlocks.MODIFIER_NIGHT_VISION.getItem(),
                     "ECE",
                     "MNM",
                     "EcE",
@@ -1142,14 +1143,14 @@ public class BlockRecipes {
                     'c',
                     ModItems.CRYSTAL.newItemStack(1, 3),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Strength Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_STRENGTH.get(),
+                    ModBlocks.MODIFIER_STRENGTH.getItem(),
                     "SCS",
                     "MNM",
                     "ScS",
@@ -1160,14 +1161,14 @@ public class BlockRecipes {
                     'S',
                     Items.diamond_sword,
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Water Breathing Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_WATER_BREATHING.get(),
+                    ModBlocks.MODIFIER_WATER_BREATHING.getItem(),
                     "PCP",
                     "MNM",
                     "PcP",
@@ -1178,14 +1179,14 @@ public class BlockRecipes {
                     'P',
                     new ItemStack(Items.potionitem, 1, 8205),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Regeneration Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_REGENERATION.get(),
+                    ModBlocks.MODIFIER_REGENERATION.getItem(),
                     "ACA",
                     "MNM",
                     "ACA",
@@ -1194,16 +1195,16 @@ public class BlockRecipes {
                     'C',
                     ModItems.CRYSTAL.newItemStack(1, 3),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Fire Resistance Modifier
             ItemStack fireprot4Book = new ItemStack(Items.enchanted_book);
             fireprot4Book.addEnchantment(Enchantment.fireProtection, 4);
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_FIRE_RESISTANCE.get(),
+                    ModBlocks.MODIFIER_FIRE_RESISTANCE.getItem(),
                     "CPC",
                     "PNP",
                     "MPM",
@@ -1212,14 +1213,14 @@ public class BlockRecipes {
                     'C',
                     ModItems.CRYSTAL.newItemStack(1, 2),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Jump Boost Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_JUMP_BOOST.get(),
+                    ModBlocks.MODIFIER_JUMP_BOOST.getItem(),
                     "BCB",
                     "MNM",
                     "BcB",
@@ -1230,16 +1231,16 @@ public class BlockRecipes {
                     'c',
                     ModItems.CRYSTAL.newItemStack(1, 3),
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Resistance Modifier
             ItemStack prot4Book = new ItemStack(Items.enchanted_book);
             prot4Book.addEnchantment(Enchantment.protection, 4);
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_RESISTANCE.get(),
+                    ModBlocks.MODIFIER_RESISTANCE.getItem(),
                     "CPC",
                     "ONO",
                     "MPM",
@@ -1250,14 +1251,14 @@ public class BlockRecipes {
                     'P',
                     prot4Book,
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Haste Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_HASTE.get(),
+                    ModBlocks.MODIFIER_HASTE.getItem(),
                     "PCP",
                     "MNM",
                     "PcP",
@@ -1268,14 +1269,14 @@ public class BlockRecipes {
                     'P',
                     Items.golden_pickaxe,
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Saturation Modifier
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.MODIFIER_SATURATION.get(),
+                    ModBlocks.MODIFIER_SATURATION.getItem(),
                     "ACA",
                     "MNM",
                     "AcA",
@@ -1286,9 +1287,9 @@ public class BlockRecipes {
                     'A',
                     Items.golden_carrot,
                     'M',
-                    ModBlocks.BLOCK_MICA.get(),
+                    ModBlocks.BLOCK_MICA.getItem(),
                     'N',
-                    ModBlocks.MODIFIER_NULL.get()));
+                    ModBlocks.MODIFIER_NULL.getItem()));
 
             // Machine Base Basalt
             GameRegistry.addRecipe(
@@ -1373,7 +1374,7 @@ public class BlockRecipes {
             // Roost
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.ROOST.get(),
+                    ModBlocks.ROOST.getItem(),
                     "WWW",
                     "W W",
                     "HHH",
@@ -1385,7 +1386,7 @@ public class BlockRecipes {
             // Breeder
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.BREEDER.get(),
+                    ModBlocks.BREEDER.getItem(),
                     "WWW",
                     "WSW",
                     "HHH",
@@ -1399,7 +1400,7 @@ public class BlockRecipes {
             // Roost Collector
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.ROOST_COLLECTOR.get(),
+                    ModBlocks.ROOST_COLLECTOR.getItem(),
                     "WCW",
                     "WHW",
                     "WOW",
@@ -1418,7 +1419,7 @@ public class BlockRecipes {
             // Stall
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModBlocks.STALL.get(),
+                    ModBlocks.STALL.getItem(),
                     "B B",
                     "BHB",
                     "GGG",

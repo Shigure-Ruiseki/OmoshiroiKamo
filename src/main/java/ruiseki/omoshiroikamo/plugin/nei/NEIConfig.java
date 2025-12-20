@@ -22,7 +22,7 @@ public class NEIConfig implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
-        Logger.info("Loading NeiConfig: " + getName());
+        Logger.info("Loading NeiConfig: {}", getName());
         if (BackportConfigs.useEnvironmentalTech) {
             registerHandler(new QuantumOreExtractorRecipeHandler());
             registerHandler(new QuantumResExtractorRecipeHandler());

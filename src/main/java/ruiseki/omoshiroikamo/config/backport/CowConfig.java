@@ -47,6 +47,10 @@ public class CowConfig {
     @Config.RangeInt(min = 1)
     public static int maxStrengthStat;
 
+    @Config.DefaultBoolean(false)
+    @Config.RequiresMcRestart
+    public static boolean updateMissing;
+
     public static int getMaxGrowthStat() {
         return Math.max(1, maxGrowthStat);
     }

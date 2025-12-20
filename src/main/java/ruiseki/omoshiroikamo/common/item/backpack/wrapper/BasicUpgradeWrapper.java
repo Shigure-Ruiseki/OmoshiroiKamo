@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.handler.UpgradeItemStackHandler;
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
 
 public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFilterable, IToggleable {
 

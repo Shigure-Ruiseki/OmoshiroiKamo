@@ -1,8 +1,7 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
@@ -15,350 +14,238 @@ public class MetalsChickens extends BaseChickenHandler {
         this.setStartID(200);
     }
 
-    public static ChickensRegistryItem brassChicken = null;
-    public static ChickensRegistryItem cupronickelChicken = null;
-    public static ChickensRegistryItem electrumChicken = null;
-    public static ChickensRegistryItem invarChicken = null;
-    public static ChickensRegistryItem bronzeChicken = null;
-    public static ChickensRegistryItem copperChicken = null;
-    public static ChickensRegistryItem leadChicken = null;
-    public static ChickensRegistryItem nickelChicken = null;
-    public static ChickensRegistryItem platinumChicken = null;
-    public static ChickensRegistryItem silverOreChicken = null;
-    public static ChickensRegistryItem tinChicken = null;
-    public static ChickensRegistryItem zincChicken = null;
-    public static ChickensRegistryItem steelChicken = null;
-    public static ChickensRegistryItem siliconChicken = null;
-    public static ChickensRegistryItem sulfurChicken = null;
-    public static ChickensRegistryItem saltpeterChicken = null;
-    public static ChickensRegistryItem aluminumChicken = null;
-    public static ChickensRegistryItem amberChicken = null;
-    public static ChickensRegistryItem amethystChicken = null;
-    public static ChickensRegistryItem malachiteChicken = null;
-    public static ChickensRegistryItem peridotChicken = null;
-    public static ChickensRegistryItem rubyChicken = null;
-    public static ChickensRegistryItem sapphireChicken = null;
-    public static ChickensRegistryItem tanzaniteChicken = null;
-    public static ChickensRegistryItem topazChicken = null;
-    public static ChickensRegistryItem garnetChicken = null;
-    public static ChickensRegistryItem saltChicken = null;
-    public static ChickensRegistryItem rubberChicken = null;
-    public static ChickensRegistryItem uraniumChicken = null;
+    public static ChickensRegistryItem brassChicken;
+    public static ChickensRegistryItem cupronickelChicken;
+    public static ChickensRegistryItem electrumChicken;
+    public static ChickensRegistryItem invarChicken;
+    public static ChickensRegistryItem bronzeChicken;
+    public static ChickensRegistryItem copperChicken;
+    public static ChickensRegistryItem leadChicken;
+    public static ChickensRegistryItem nickelChicken;
+    public static ChickensRegistryItem platinumChicken;
+    public static ChickensRegistryItem silverOreChicken;
+    public static ChickensRegistryItem tinChicken;
+    public static ChickensRegistryItem zincChicken;
+    public static ChickensRegistryItem steelChicken;
+    public static ChickensRegistryItem siliconChicken;
+    public static ChickensRegistryItem sulfurChicken;
+    public static ChickensRegistryItem saltpeterChicken;
+    public static ChickensRegistryItem aluminumChicken;
+    public static ChickensRegistryItem amberChicken;
+    public static ChickensRegistryItem amethystChicken;
+    public static ChickensRegistryItem malachiteChicken;
+    public static ChickensRegistryItem peridotChicken;
+    public static ChickensRegistryItem rubyChicken;
+    public static ChickensRegistryItem sapphireChicken;
+    public static ChickensRegistryItem tanzaniteChicken;
+    public static ChickensRegistryItem topazChicken;
+    public static ChickensRegistryItem garnetChicken;
+    public static ChickensRegistryItem saltChicken;
+    public static ChickensRegistryItem rubberChicken;
+    public static ChickensRegistryItem uraniumChicken;
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
-        invarChicken = addChicken(
-            allChickens,
-            "InvarChicken",
-            this.nextID(),
-            "InvarChicken.png",
-            this.getFirstOreDictionary("ingotInvar"),
-            0x989585,
-            0xd1ccb6,
-            SpawnType.NONE);
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
 
-        bronzeChicken = addChicken(
-            allChickens,
-            "BronzeChicken",
-            this.nextID(),
-            "BronzeChicken.png",
-            this.getFirstOreDictionary("ingotBronze"),
-            0x9a6731,
-            0xf6a44e,
-            SpawnType.NONE);
+        invarChicken = addChicken("InvarChicken", nextID(), "InvarChicken", 0x989585, 0xd1ccb6, SpawnType.NONE)
+            .setLayString("ore:ingotInvar")
+            .setLang("en_US", "Invar Chicken")
+            .setLang("ja_JP", "インバーのニワトリ");
+        allChickens.add(invarChicken);
 
-        zincChicken = addChicken(
-            allChickens,
-            "ZincChicken",
-            this.nextID(),
-            "ZincChicken.png",
-            this.getFirstOreDictionary("ingotZinc"),
-            0xb7b7b7,
-            0x868686,
-            SpawnType.NONE);
+        bronzeChicken = addChicken("BronzeChicken", nextID(), "BronzeChicken", 0x9a6731, 0xf6a44e, SpawnType.NONE)
+            .setLayString("ore:ingotBronze")
+            .setLang("en_US", "Bronze Chicken")
+            .setLang("ja_JP", "ブロンズのニワトリ");
+        allChickens.add(bronzeChicken);
 
-        tinChicken = addChicken(
-            allChickens,
-            "TinChicken",
-            this.nextID(),
-            "TinChicken.png",
-            this.getFirstOreDictionary("ingotTin"),
-            0xfff7ee,
-            0xbbb1a7,
-            SpawnType.NONE);
-        // TODO
-        steelChicken = addChicken(
-            allChickens,
-            "SteelChicken",
-            this.nextID(),
-            "SteelChicken.png",
-            this.getFirstOreDictionary("ingotSteel"),
-            0xd3e1e3,
-            0x8e9799,
-            SpawnType.NONE);
+        zincChicken = addChicken("ZincChicken", nextID(), "ZincChicken", 0xb7b7b7, 0x868686, SpawnType.NONE)
+            .setLayString("ore:ingotZinc")
+            .setLang("en_US", "Zinc Chicken")
+            .setLang("ja_JP", "亜鉛のニワトリ");
+        allChickens.add(zincChicken);
 
-        silverOreChicken = addChicken(
-            allChickens,
-            "SilverChicken",
-            this.nextID(),
-            "SilverChicken.png",
-            this.getFirstOreDictionary("ingotSilver"),
-            0xbebebe,
-            0xffffff,
-            SpawnType.NONE);
+        tinChicken = addChicken("TinChicken", nextID(), "TinChicken", 0xfff7ee, 0xbbb1a7, SpawnType.NONE)
+            .setLayString("ore:ingotTin")
+            .setLang("en_US", "Tin Chicken")
+            .setLang("ja_JP", "スズのニワトリ");
+        allChickens.add(tinChicken);
 
-        platinumChicken = addChicken(
-            allChickens,
-            "PlatinumChicken",
-            this.nextID(),
-            "PlatinumChicken.png",
-            this.getFirstOreDictionary("ingotPlatinum"),
-            0xffffff,
-            0x8d9a96,
-            SpawnType.NONE);
+        steelChicken = addChicken("SteelChicken", nextID(), "SteelChicken", 0xd3e1e3, 0x8e9799, SpawnType.NONE)
+            .setLayString("ore:ingotSteel")
+            .setLang("en_US", "Steel Chicken")
+            .setLang("ja_JP", "鋼鉄のニワトリ");
+        allChickens.add(steelChicken);
 
-        nickelChicken = addChicken(
-            allChickens,
-            "NickelChicken",
-            this.nextID(),
-            "NickelChicken.png",
-            this.getFirstOreDictionary("ingotNickel"),
-            0xefffec,
-            0xa2b69f,
-            SpawnType.NONE);
+        silverOreChicken = addChicken("SilverChicken", nextID(), "SilverChicken", 0xbebebe, 0xffffff, SpawnType.NONE)
+            .setLayString("ore:ingotSilver")
+            .setLang("en_US", "Silver Chicken")
+            .setLang("ja_JP", "銀のニワトリ");
+        allChickens.add(silverOreChicken);
 
-        leadChicken = addChicken(
-            allChickens,
-            "LeadChicken",
-            this.nextID(),
-            "LeadChicken.png",
-            this.getFirstOreDictionary("ingotLead"),
-            0x777777,
-            0x383838,
-            SpawnType.NONE);
+        platinumChicken = addChicken("PlatinumChicken", nextID(), "PlatinumChicken", 0xffffff, 0x8d9a96, SpawnType.NONE)
+            .setLayString("ore:ingotPlatinum")
+            .setLang("en_US", "Platinum Chicken")
+            .setLang("ja_JP", "プラチナのニワトリ");
+        allChickens.add(platinumChicken);
 
-        copperChicken = addChicken(
-            allChickens,
-            "CopperChicken",
-            this.nextID(),
-            "CopperChicken.png",
-            this.getFirstOreDictionary("ingotCopper"),
-            0xc06a48,
-            0xff9d76,
-            SpawnType.NONE);
+        nickelChicken = addChicken("NickelChicken", nextID(), "NickelChicken", 0xefffec, 0xa2b69f, SpawnType.NONE)
+            .setLayString("ore:ingotNickel")
+            .setLang("en_US", "Nickel Chicken")
+            .setLang("ja_JP", "ニッケルのニワトリ");
+        allChickens.add(nickelChicken);
 
-        brassChicken = addChicken(
-            allChickens,
-            "BrassChicken",
-            this.nextID(),
-            "BrassChicken.png",
-            this.getFirstOreDictionary("ingotBrass"),
-            0xa99340,
-            0xffe377,
-            SpawnType.NONE);
+        leadChicken = addChicken("LeadChicken", nextID(), "LeadChicken", 0x777777, 0x383838, SpawnType.NONE)
+            .setLayString("ore:ingotLead")
+            .setLang("en_US", "Lead Chicken")
+            .setLang("ja_JP", "鉛のニワトリ");
+        allChickens.add(leadChicken);
+
+        copperChicken = addChicken("CopperChicken", nextID(), "CopperChicken", 0xc06a48, 0xff9d76, SpawnType.NONE)
+            .setLayString("ore:ingotCopper")
+            .setLang("en_US", "Copper Chicken")
+            .setLang("ja_JP", "銅のニワトリ");
+        allChickens.add(copperChicken);
+
+        brassChicken = addChicken("BrassChicken", nextID(), "BrassChicken", 0xa99340, 0xffe377, SpawnType.NONE)
+            .setLayString("ore:ingotBrass")
+            .setLang("en_US", "Brass Chicken")
+            .setLang("ja_JP", "真鍮のニワトリ");
+        allChickens.add(brassChicken);
 
         cupronickelChicken = addChicken(
-            allChickens,
             "CupronickelChicken",
-            this.nextID(),
-            "CupronickelChicken.png",
-            this.getFirstOreDictionary("ingotCupronickel"),
+            nextID(),
+            "CupronickelChicken",
             0xd8ccb4,
             0x98896c,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotCupronickel")
+                .setLang("en_US", "Cupronickel Chicken")
+                .setLang("ja_JP", "白銅のニワトリ");
+        allChickens.add(cupronickelChicken);
 
-        electrumChicken = addChicken(
-            allChickens,
-            "ElectrumChicken",
-            this.nextID(),
-            "ElectrumChicken.png",
-            this.getFirstOreDictionary("ingotElectrum"),
-            0xfff2b1,
-            0xd4be50,
-            SpawnType.NONE);
+        electrumChicken = addChicken("ElectrumChicken", nextID(), "ElectrumChicken", 0xfff2b1, 0xd4be50, SpawnType.NONE)
+            .setLayString("ore:ingotElectrum")
+            .setLang("en_US", "Electrum Chicken")
+            .setLang("ja_JP", "エレクトラムのニワトリ");
+        allChickens.add(electrumChicken);
 
-        siliconChicken = addChicken(
-            allChickens,
-            "SiliconChicken",
-            this.nextID(),
-            "SiliconChicken.png",
-            this.getFirstOreDictionary("itemSilicon"),
-            0x5f706b,
-            0x424242,
-            SpawnType.NONE);
+        siliconChicken = addChicken("SiliconChicken", nextID(), "SiliconChicken", 0x5f706b, 0x424242, SpawnType.NONE)
+            .setLayString("ore:itemSilicon")
+            .setLang("en_US", "Silicon Chicken")
+            .setLang("ja_JP", "シリコンのニワトリ");
+        allChickens.add(siliconChicken);
 
-        sulfurChicken = addChicken(
-            allChickens,
-            "SulfurChicken",
-            this.nextID(),
-            "SulfurChicken.png",
-            this.getFirstOreDictionary("dustSulfur"),
-            0xFFE782,
-            0xAD9326,
-            SpawnType.NONE);
+        sulfurChicken = addChicken("SulfurChicken", nextID(), "SulfurChicken", 0xFFE782, 0xAD9326, SpawnType.NONE)
+            .setLayString("ore:dustSulfur")
+            .setLang("en_US", "Sulfur Chicken")
+            .setLang("ja_JP", "硫黄のニワトリ");
+        allChickens.add(sulfurChicken);
 
         saltpeterChicken = addChicken(
-            allChickens,
             "SaltpeterChicken",
-            this.nextID(),
-            "SaltpeterChicken.png",
-            this.getFirstOreDictionary("dustSaltpeter"),
+            nextID(),
+            "SaltpeterChicken",
             0xDDD6D6,
             0xAC9E9D,
-            SpawnType.NONE);
-
-        ItemStack ingotAlu = this.getFirstOreDictionary("ingotAluminum");
-        if (ingotAlu == null) {
-            ingotAlu = this.getFirstOreDictionary("ingotAluminium");
-        }
+            SpawnType.NONE).setLayString("ore:dustSaltpeter")
+                .setLang("en_US", "Saltpeter Chicken")
+                .setLang("ja_JP", "硝石のニワトリ");
+        allChickens.add(saltpeterChicken);
 
         aluminumChicken = addChicken(
-            allChickens,
             "AluminiumChicken",
-            this.nextID(),
-            "AluminiumChicken.png",
-            ingotAlu,
+            nextID(),
+            "AluminiumChicken",
             0xd3dddc,
             0xcbd7d6,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotAluminum|ingotAluminium")
+                .setLang("en_US", "Aluminium Chicken")
+                .setLang("ja_JP", "アルミニウムのニワトリ");
+        allChickens.add(aluminumChicken);
 
-        amberChicken = addChicken(
-            allChickens,
-            "AmberChicken",
-            this.nextID(),
-            "AmberChicken.png",
-            this.getFirstOreDictionary("gemAmber"),
-            0xFFAD21,
-            0x7F5113,
-            SpawnType.NONE);
+        amberChicken = addChicken("AmberChicken", nextID(), "AmberChicken", 0xFFAD21, 0x7F5113, SpawnType.NONE)
+            .setLayString("ore:gemAmber")
+            .setLang("en_US", "Amber Chicken")
+            .setLang("ja_JP", "琥珀のニワトリ");
+        allChickens.add(amberChicken);
 
-        amethystChicken = addChicken(
-            allChickens,
-            "AmethystChicken",
-            this.nextID(),
-            "AmethystChicken.png",
-            this.getFirstOreDictionary("gemAmethyst"),
-            0xE051ED,
-            0x841D8E,
-            SpawnType.NONE);
+        amethystChicken = addChicken("AmethystChicken", nextID(), "AmethystChicken", 0xE051ED, 0x841D8E, SpawnType.NONE)
+            .setLayString("ore:gemAmethyst")
+            .setLang("en_US", "Amethyst Chicken")
+            .setLang("ja_JP", "アメジストのニワトリ");
+        allChickens.add(amethystChicken);
 
         malachiteChicken = addChicken(
-            allChickens,
             "MalachiteChicken",
-            this.nextID(),
-            "MalachiteChicken.png",
-            this.getFirstOreDictionary("gemMalachite"),
+            nextID(),
+            "MalachiteChicken",
             0x29B17F,
             0x085F50,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:gemMalachite")
+                .setLang("en_US", "Malachite Chicken")
+                .setLang("ja_JP", "マラカイトのニワトリ");
+        allChickens.add(malachiteChicken);
 
-        peridotChicken = addChicken(
-            allChickens,
-            "PeridotChicken",
-            this.nextID(),
-            "PeridotChicken.png",
-            this.getFirstOreDictionary("gemPeridot"),
-            0x6CA127,
-            0x29430B,
-            SpawnType.NONE);
+        peridotChicken = addChicken("PeridotChicken", nextID(), "PeridotChicken", 0x6CA127, 0x29430B, SpawnType.NONE)
+            .setLayString("ore:gemPeridot")
+            .setLang("en_US", "Peridot Chicken")
+            .setLang("ja_JP", "ペリドットのニワトリ");
+        allChickens.add(peridotChicken);
 
-        rubyChicken = addChicken(
-            allChickens,
-            "RubyChicken",
-            this.nextID(),
-            "RubyChicken.png",
-            this.getFirstOreDictionary("gemRuby"),
-            0xB7002E,
-            0x5A0116,
-            SpawnType.NONE);
+        rubyChicken = addChicken("RubyChicken", nextID(), "RubyChicken", 0xB7002E, 0x5A0116, SpawnType.NONE)
+            .setLayString("ore:gemRuby")
+            .setLang("en_US", "Ruby Chicken")
+            .setLang("ja_JP", "ルビーのニワトリ");
+        allChickens.add(rubyChicken);
 
-        sapphireChicken = addChicken(
-            allChickens,
-            "SapphireChicken",
-            this.nextID(),
-            "SapphireChicken.png",
-            this.getFirstOreDictionary("gemSapphire"),
-            0x19689A,
-            0x0D4565,
-            SpawnType.NONE);
+        sapphireChicken = addChicken("SapphireChicken", nextID(), "SapphireChicken", 0x19689A, 0x0D4565, SpawnType.NONE)
+            .setLayString("ore:gemSapphire")
+            .setLang("en_US", "Sapphire Chicken")
+            .setLang("ja_JP", "サファイアのニワトリ");
+        allChickens.add(sapphireChicken);
 
         tanzaniteChicken = addChicken(
-            allChickens,
             "TanzaniteChicken",
-            this.nextID(),
-            "TanzaniteChicken.png",
-            this.getFirstOreDictionary("gemTanzanite"),
+            nextID(),
+            "TanzaniteChicken",
             0x7310C0,
             0x5A007F,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:gemTanzanite")
+                .setLang("en_US", "Tanzanite Chicken")
+                .setLang("ja_JP", "タンザナイトのニワトリ");
+        allChickens.add(tanzaniteChicken);
 
-        topazChicken = addChicken(
-            allChickens,
-            "TopazChicken",
-            this.nextID(),
-            "TopazChicken.png",
-            this.getFirstOreDictionary("gemTopaz"),
-            0xD64D00,
-            0x7C3400,
-            SpawnType.NONE);
+        topazChicken = addChicken("TopazChicken", nextID(), "TopazChicken", 0xD64D00, 0x7C3400, SpawnType.NONE)
+            .setLayString("ore:gemTopaz")
+            .setLang("en_US", "Topaz Chicken")
+            .setLang("ja_JP", "トパーズのニワトリ");
+        allChickens.add(topazChicken);
 
-        ItemStack gemGarnet = this.getFirstOreDictionary("gemGarnet");
-        if (gemGarnet == null) {
-            gemGarnet = this.getFirstOreDictionary("gemRedGarnet"); // TechReborn
-        }
+        garnetChicken = addChicken("GarnetChicken", nextID(), "GarnetChicken", 0xA45962, 0x44171A, SpawnType.NONE)
+            .setLayString("ore:gemGarnet|gemRedGarnet")
+            .setLang("en_US", "Garnet Chicken")
+            .setLang("ja_JP", "ガーネットのニワトリ");
+        allChickens.add(garnetChicken);
 
-        garnetChicken = addChicken(
-            allChickens,
-            "GarnetChicken",
-            this.nextID(),
-            "GarnetChicken.png",
-            gemGarnet,
-            0xA45962,
-            0x44171A,
-            SpawnType.NONE);
+        saltChicken = addChicken("SaltChicken", nextID(), "SaltChicken", 0xEAE8DA, 0xDBD9CC, SpawnType.NONE)
+            .setLayString("ore:itemSalt|dustSalt|foodSalt")
+            .setLang("en_US", "Salt Chicken")
+            .setLang("ja_JP", "塩のニワトリ");
+        allChickens.add(saltChicken);
 
-        ItemStack itemSalt = this.getFirstOreDictionary("itemSalt");
-        if (itemSalt == null) {
-            itemSalt = this.getFirstOreDictionary("dustSalt");
-        }
-        if (itemSalt == null) {
-            itemSalt = this.getFirstOreDictionary("foodSalt");
-        }
+        rubberChicken = addChicken("RubberChicken", nextID(), "RubberChicken", 0x895D02, 0x4E3209, SpawnType.NONE)
+            .setLayString("ore:itemRubber|materialRubber")
+            .setLang("en_US", "Rubber Chicken")
+            .setLang("ja_JP", "ゴムのニワトリ");
+        allChickens.add(rubberChicken);
 
-        saltChicken = addChicken(
-            allChickens,
-            "SaltChicken",
-            this.nextID(),
-            "SaltChicken.png",
-            itemSalt,
-            0xEAE8DA,
-            0xDBD9CC,
-            SpawnType.NONE);
-
-        ItemStack itemRubber = this.getFirstOreDictionary("itemRubber");
-        if (itemRubber == null) {
-            itemRubber = this.getFirstOreDictionary("materialRubber");
-        }
-
-        rubberChicken = addChicken(
-            allChickens,
-            "RubberChicken",
-            this.nextID(),
-            "RubberChicken.png",
-            itemRubber,
-            0x895D02,
-            0x4E3209,
-            SpawnType.NONE);
-
-        uraniumChicken = addChicken(
-            allChickens,
-            "UraniumChicken",
-            this.nextID(),
-            "UraniumChicken.png",
-            this.getFirstOreDictionary("ingotUranium"),
-            0x91d76d,
-            0x9ce26c,
-            SpawnType.NONE);
+        uraniumChicken = addChicken("UraniumChicken", nextID(), "UraniumChicken", 0x91d76d, 0x9ce26c, SpawnType.NONE)
+            .setLayString("ore:ingotUranium")
+            .setLang("en_US", "Uranium Chicken")
+            .setLang("ja_JP", "ウランのニワトリ");
+        allChickens.add(uraniumChicken);
 
         return allChickens;
     }

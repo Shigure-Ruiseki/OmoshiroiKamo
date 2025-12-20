@@ -21,6 +21,7 @@ public class ItemOK extends Item {
         setCreativeTab(OKCreativeTab.MULTIBLOCK);
         setCreativeTab(OKCreativeTab.BACKPACK);
         setCreativeTab(OKCreativeTab.CHICKEN_COW);
+        setCreativeTab(OKCreativeTab.DEEP_MOB_LEARNING);
     }
 
     public ItemOK(String name) {

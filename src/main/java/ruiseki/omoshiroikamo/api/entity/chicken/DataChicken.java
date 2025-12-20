@@ -16,9 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.init.ModItems;
-import ruiseki.omoshiroikamo.common.util.BlockPos;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
@@ -66,14 +66,14 @@ public class DataChicken {
     /**
      * @return The numeric type ID of this chicken
      */
-    public int getType() {
+    public int getId() {
         return chicken.getId();
     }
 
     /**
      * @return The registry item for this chicken
      */
-    public ChickensRegistryItem getItems() {
+    public ChickensRegistryItem getItem() {
         return chicken;
     }
 
@@ -128,9 +128,7 @@ public class DataChicken {
         if (other == null) {
             return false;
         }
-        return getType() == other.getType() && growth == other.growth
-            && gain == other.gain
-            && strength == other.strength;
+        return getId() == other.getId() && growth == other.growth && gain == other.gain && strength == other.strength;
     }
 
     /**
@@ -146,7 +144,7 @@ public class DataChicken {
     public EntityChickensChicken buildEntity(World world) {
         EntityChickensChicken entity = new EntityChickensChicken(world);
         entity.readEntityFromNBT(createTagCompound());
-        entity.setType(getType());
+        entity.setType(getId());
         return entity;
     }
 
@@ -158,7 +156,7 @@ public class DataChicken {
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
         entity.setStatsAnalyzed(true);
-        entity.setType(getType());
+        entity.setType(getId());
         pos.world.spawnEntityInWorld(entity);
     }
 
@@ -166,9 +164,9 @@ public class DataChicken {
      * @return A spawn egg ItemStack representing this chicken
      */
     public ItemStack buildStack() {
-        ItemStack stack = ModItems.CHICKEN.newItemStack(1, getType());
+        ItemStack stack = ModItems.CHICKEN.newItemStack(1, getId());
         NBTTagCompound tag = createTagCompound();
-        tag.setInteger(TYPE_NBT, getType());
+        tag.setInteger(TYPE_NBT, getId());
         stack.setTagCompound(tag);
         return stack;
     }
@@ -189,7 +187,7 @@ public class DataChicken {
      * @return A spawn egg as if caught from the world
      */
     public ItemStack buildCaughtFromStack() {
-        return new ItemStack(ModItems.CHICKEN.get(), 1, getType());
+        return new ItemStack(ModItems.CHICKEN.getItem(), 1, getId());
     }
 
     /**
@@ -319,14 +317,14 @@ public class DataChicken {
      * @return True if ItemStack is a chicken spawn egg
      */
     public static boolean isChicken(ItemStack stack) {
-        return stack != null && stack.getItem() == ModItems.CHICKEN.get();
+        return stack != null && stack.getItem() == ModItems.CHICKEN.getItem();
     }
 
     @Override
     public String toString() {
         return "DataChicken [name=" + getName()
             + " type="
-            + getType()
+            + getId()
             + ", gain="
             + gain
             + ", growth="

@@ -15,6 +15,7 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.entity.BaseRegistry;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 
 /**
  * Central registry for all {@link ChickensRegistryItem} instances.
@@ -63,6 +64,11 @@ public class ChickensRegistry extends BaseRegistry<ChickensRegistryItem> {
     @Nullable
     public ChickensRegistryItem getSmartChicken() {
         return items.get(smartChicken.getId());
+    }
+
+    @EventBusSubscriber.Condition
+    public static boolean shouldSubscribe() {
+        return BackportConfigs.useChicken;
     }
 
     /**

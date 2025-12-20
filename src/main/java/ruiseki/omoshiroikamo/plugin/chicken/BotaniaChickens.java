@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.plugin.chicken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
@@ -7,9 +8,9 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class BotaniaChickens extends BaseChickenHandler {
 
-    public static ChickensRegistryItem elementiumChicken = null;
-    public static ChickensRegistryItem manasteelChicken = null;
-    public static ChickensRegistryItem terrasteelChicken = null;
+    public static ChickensRegistryItem elementiumChicken;
+    public static ChickensRegistryItem manasteelChicken;
+    public static ChickensRegistryItem terrasteelChicken;
 
     public BotaniaChickens() {
         super("Botania", "Botania", "textures/entity/chicken/botania/");
@@ -17,36 +18,41 @@ public class BotaniaChickens extends BaseChickenHandler {
     }
 
     @Override
-    public List<ChickensRegistryItem> registerChickens(List<ChickensRegistryItem> allChickens) {
+    public List<ChickensRegistryItem> registerChickens() {
+        List<ChickensRegistryItem> allChickens = new ArrayList<>();
+
         terrasteelChicken = addChicken(
-            allChickens,
             "TerrasteelChicken",
             this.nextID(),
-            "TerrasteelChicken.png",
-            this.getFirstOreDictionary("ingotTerrasteel"),
+            "TerrasteelChicken",
             0x3ff123,
             0xf5fcf1,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotTerrasteel")
+                .setLang("en_US", "Terrasteel Chicken")
+                .setLang("ja_JP", "テラースチールのニワトリ");
+        allChickens.add(terrasteelChicken);
 
         manasteelChicken = addChicken(
-            allChickens,
             "ManasteelChicken",
             this.nextID(),
-            "ManasteelChicken.png",
-            this.getFirstOreDictionary("ingotManasteel"),
+            "ManasteelChicken",
             0x69d7ff,
             0x002c4b,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:ingotManasteel")
+                .setLang("en_US", "Manasteel Chicken")
+                .setLang("ja_JP", "マナスチールのニワトリ");
+        allChickens.add(manasteelChicken);
 
         elementiumChicken = addChicken(
-            allChickens,
             "ElementiumChicken",
             this.nextID(),
-            "ElementiumChicken.png",
-            this.getFirstOreDictionary("nuggetElvenElementium"),
+            "ElementiumChicken",
             0xf655f3,
             0xb407b7,
-            SpawnType.NONE);
+            SpawnType.NONE).setLayString("ore:nuggetElvenElementium")
+                .setLang("en_US", "Elementium Chicken")
+                .setLang("ja_JP", "エレメンティウムのニワトリ");
+        allChickens.add(elementiumChicken);
 
         return allChickens;
     }

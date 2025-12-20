@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.common.item.backpack.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.common.util.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 
 public class AdvancedMagnetUpgradeWrapper extends AdvancedPickupUpgradeWrapper implements IMagnetUpgrade {
 

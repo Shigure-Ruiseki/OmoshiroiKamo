@@ -647,21 +647,6 @@ public class BackpackPanel extends ModularPanel {
         }
     }
 
-    private void rebuildBackpackInventory() {
-
-        if (backpackInvRow != null) {
-            remove(backpackInvRow);
-            backpackInvRow = null;
-            backpackInvCol = null;
-        }
-
-        addBackpackInventorySlots();
-
-        if (searchBarWidget != null) {
-            searchBarWidget.onInventoryRebuilt();
-        }
-    }
-
     @Override
     public void postDraw(ModularGuiContext context, boolean transformed) {
         super.postDraw(context, transformed);

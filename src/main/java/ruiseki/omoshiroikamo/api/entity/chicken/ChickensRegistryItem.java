@@ -31,8 +31,13 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      * The item this chicken lays periodically.
      */
     private ItemStack layItem;
+    private String layString;
 
+    private int tintColor = 0xFFFFFF;
     private ResourceLocation textureOverlay;
+
+    private String iconName;
+    private String iconOverlayName;
 
     /**
      * Creates a new chicken registry item.
@@ -40,24 +45,11 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      * @param id         unique numeric ID
      * @param entityName registry and localization name
      * @param texture    entity texture
-     * @param layItem    the item this chicken lays
      * @param bgColor    background color for JEI/GUI
      * @param fgColor    foreground color for JEI/GUI
      */
-    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem, int bgColor,
-        int fgColor) {
-        this(id, entityName, texture, layItem, bgColor, fgColor, null, null);
-    }
-
-    private int tintColor = 0xFFFFFF;
-
-    public int getTintColor() {
-        return tintColor;
-    }
-
-    public ChickensRegistryItem setTintColor(int tintColor) {
-        this.tintColor = tintColor;
-        return this;
+    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor) {
+        this(id, entityName, texture, bgColor, fgColor, null, null);
     }
 
     /**
@@ -66,10 +58,9 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      * @param parent1 chicken parent 1 (nullable)
      * @param parent2 chicken parent 2 (nullable)
      */
-    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, ItemStack layItem, int bgColor,
-        int fgColor, @Nullable ChickensRegistryItem parent1, @Nullable ChickensRegistryItem parent2) {
+    public ChickensRegistryItem(int id, String entityName, ResourceLocation texture, int bgColor, int fgColor,
+        @Nullable ChickensRegistryItem parent1, @Nullable ChickensRegistryItem parent2) {
         super(id, entityName, texture, bgColor, fgColor, parent1, parent2);
-        this.layItem = layItem;
     }
 
     /**
@@ -83,6 +74,11 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
         return this;
     }
 
+    public ChickensRegistryItem setLayString(String layString) {
+        this.layString = layString;
+        return this;
+    }
+
     public ChickensRegistryItem setTextureOverlay(ResourceLocation textureOverlay) {
         this.textureOverlay = textureOverlay;
         return this;
@@ -92,8 +88,14 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
         return this.textureOverlay;
     }
 
-    private String iconName;
-    private String iconOverlayName;
+    public int getTintColor() {
+        return tintColor;
+    }
+
+    public ChickensRegistryItem setTintColor(int tintColor) {
+        this.tintColor = tintColor;
+        return this;
+    }
 
     public ChickensRegistryItem setIconName(String iconName) {
         this.iconName = iconName;
@@ -150,5 +152,13 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      */
     public boolean isDye(int dyeMetadata) {
         return layItem.getItem() == Items.dye && layItem.getItemDamage() == dyeMetadata;
+    }
+
+    public ItemStack getLayItem() {
+        return layItem;
+    }
+
+    public String getLayString() {
+        return layString;
     }
 }
