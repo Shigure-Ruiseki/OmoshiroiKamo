@@ -209,6 +209,16 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         return AxisAlignedBB.getBoundingBox(xCoord, 0, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
     }
 
+    /**
+     * Increase the max render distance to match vanilla Beacon (256 blocks).
+     * This prevents the beam from disappearing when the player is far away.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 65536.0D; // 256 * 256
+    }
+
     public abstract IFocusableRegistry getRegistry();
 
     @Override
