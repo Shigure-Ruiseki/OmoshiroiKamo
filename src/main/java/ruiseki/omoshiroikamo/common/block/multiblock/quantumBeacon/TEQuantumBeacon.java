@@ -228,7 +228,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getLocation().getTileEntity();
+        TileEntity tileEntity = getPos().getTileEntity();
         if (tileEntity instanceof TEQuantumBeaconT1) {
             player.triggerAchievement(ModAchievements.ASSEMBLE_NANO_BOT_BEACON_T1.get());
         }

@@ -160,11 +160,6 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
     }
 
     @Override
-    public TileEntity getTileEntity() {
-        return this;
-    }
-
-    @Override
     public float getProgress() {
         return getCurrentProgress();
     }

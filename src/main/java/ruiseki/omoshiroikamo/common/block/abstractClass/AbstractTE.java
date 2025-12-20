@@ -170,7 +170,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     }
 
     @Override
-    public BlockPos getLocation() {
+    public BlockPos getPos() {
         return new BlockPos(xCoord, yCoord, zCoord, worldObj);
     }
 

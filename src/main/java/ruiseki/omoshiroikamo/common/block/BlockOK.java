@@ -72,9 +72,7 @@ public class BlockOK extends Block {
     public TileEntity createTileEntity(World world, int metadata) {
         if (teClass != null) {
             try {
-                TileEntityOK te = teClass.newInstance();
-                te.init();
-                return te;
+                return teClass.newInstance();
             } catch (Exception e) {
                 Logger.error("Could not create tile entity for block " + name + " for class " + teClass);
             }

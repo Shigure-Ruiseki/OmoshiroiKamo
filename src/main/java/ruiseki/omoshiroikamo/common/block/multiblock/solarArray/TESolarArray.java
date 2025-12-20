@@ -107,7 +107,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getLocation().getTileEntity();
+        TileEntity tileEntity = getPos().getTileEntity();
         if (tileEntity instanceof TESolarArrayT1) {
             player.triggerAchievement(ModAchievements.ASSEMBLE_SOLAR_ARRAY_T1.get());
         }

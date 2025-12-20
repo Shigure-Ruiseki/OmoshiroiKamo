@@ -63,12 +63,13 @@ public class EnergyStorage implements IEnergyStorage {
         if (this.energy > capacity) {
             this.energy = capacity;
         }
-
+        onEnergyChanged();
     }
 
     public void setMaxTransfer(int maxTransfer) {
         this.setMaxReceive(maxTransfer);
         this.setMaxExtract(maxTransfer);
+        onEnergyChanged();
     }
 
     public void setEnergyStored(int energy) {
@@ -78,7 +79,7 @@ public class EnergyStorage implements IEnergyStorage {
         } else if (this.energy < 0) {
             this.energy = 0;
         }
-
+        onEnergyChanged();
     }
 
     public void modifyEnergyStored(int energy) {
@@ -88,13 +89,14 @@ public class EnergyStorage implements IEnergyStorage {
         } else if (this.energy < 0) {
             this.energy = 0;
         }
-
+        onEnergyChanged();
     }
 
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int energyReceived = Math.min(this.capacity - this.energy, Math.min(this.maxReceive, maxReceive));
         if (!simulate) {
             this.energy += energyReceived;
+            onEnergyChanged();
         }
 
         return energyReceived;
@@ -104,9 +106,15 @@ public class EnergyStorage implements IEnergyStorage {
         int energyExtracted = Math.min(this.energy, Math.min(this.maxExtract, maxExtract));
         if (!simulate) {
             this.energy -= energyExtracted;
+            onEnergyChanged();
         }
 
         return energyExtracted;
+    }
+
+    public void voidEnergy(int energy) {
+        this.energy -= Math.min(this.energy, energy);
+        onEnergyChanged();
     }
 
     public int getEnergyStored() {
@@ -116,4 +124,6 @@ public class EnergyStorage implements IEnergyStorage {
     public int getMaxEnergyStored() {
         return this.capacity;
     }
+
+    public void onEnergyChanged() {}
 }

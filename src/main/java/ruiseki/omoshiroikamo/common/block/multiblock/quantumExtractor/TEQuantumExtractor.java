@@ -84,7 +84,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getLocation().getTileEntity();
+        TileEntity tileEntity = getPos().getTileEntity();
         if (tileEntity instanceof TEQuantumOreExtractorT1) {
             player.triggerAchievement(ModAchievements.ASSEMBLE_VOID_ORE_MINER_T1.get());
         }

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.common.block.deepMobLearning;
+package ruiseki.omoshiroikamo.common.block.deepMobLearning.lootFabricator;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

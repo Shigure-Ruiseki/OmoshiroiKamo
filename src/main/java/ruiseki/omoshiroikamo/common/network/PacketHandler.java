@@ -17,16 +17,11 @@ public class PacketHandler {
 
     public static void init() {
 
-        PacketHandler.INSTANCE
-            .registerMessage(PacketProgress.class, PacketProgress.class, PacketHandler.nextID(), Side.CLIENT);
-        PacketHandler.INSTANCE
-            .registerMessage(PacketEnergy.class, PacketEnergy.class, PacketHandler.nextID(), Side.CLIENT);
-        PacketHandler.INSTANCE
-            .registerMessage(PacketFluidTanks.class, PacketFluidTanks.class, PacketHandler.nextID(), Side.CLIENT);
-        PacketHandler.INSTANCE
-            .registerMessage(PacketStall.class, PacketStall.class, PacketHandler.nextID(), Side.CLIENT);
-        PacketHandler.INSTANCE
-            .registerMessage(PacketNBBClientFlight.class, PacketNBBClientFlight.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketProgress.class, PacketProgress.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketEnergy.class, PacketEnergy.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketFluidTanks.class, PacketFluidTanks.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketStall.class, PacketStall.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketNBBClientFlight.class, PacketNBBClientFlight.class, nextID(), Side.CLIENT);
 
     }
 

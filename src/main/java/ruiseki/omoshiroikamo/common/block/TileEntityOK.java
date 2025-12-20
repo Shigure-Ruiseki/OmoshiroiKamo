@@ -8,11 +8,12 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.common.network.PacketProgress;
 
-public abstract class TileEntityOK extends TileEntity {
+public abstract class TileEntityOK extends TileEntity implements IOKTile {
 
     private final int checkOffset = (int) (Math.random() * 20);
     protected final boolean isProgressTile;
@@ -117,19 +118,10 @@ public abstract class TileEntityOK extends TileEntity {
         }
     }
 
-    /**
-     * Called directly after the TE is constructed. This is the place to call non-final methods.
-     * <p>
-     * Note: This will not be called when the TE is loaded from the save. Hook into the nbt methods for that.
-     */
-    public void init() {}
+    private BlockPos cachedPos = null;
 
-    private BlockPos cachedLocation = null;
-
-    public BlockPos getLocation() {
-        return cachedLocation == null || !cachedLocation.equals(xCoord, yCoord, zCoord)
-            ? (cachedLocation = new BlockPos(xCoord, yCoord, zCoord, worldObj))
-            : cachedLocation;
+    public BlockPos getPos() {
+        return cachedPos == null || !cachedPos.equals(this) ? (cachedPos = new BlockPos(this)) : cachedPos;
     }
 
     /**
@@ -150,5 +142,10 @@ public abstract class TileEntityOK extends TileEntity {
      */
     protected boolean shouldDoWorkThisTick(int interval, int offset) {
         return (worldObj.getTotalWorldTime() + checkOffset + offset) % interval == 0;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
     }
 }

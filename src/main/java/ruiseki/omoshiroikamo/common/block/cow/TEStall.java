@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.common.block.cow;
 import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -61,7 +60,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         cowIsChild = cow.isChild();
 
         cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
-        getLocation().markBlockForUpdate();
+        getPos().markBlockForUpdate();
         resetMaxProgress();
     }
 
@@ -90,7 +89,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         progressPercent = 0;
 
         cachedCowDesc = null;
-        getLocation().markBlockForUpdate();
+        getPos().markBlockForUpdate();
     }
 
     @Override
@@ -282,10 +281,5 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
             cowNBT = root.getCompoundTag("cowNBT");
             cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
         }
-    }
-
-    @Override
-    public TileEntity getTileEntity() {
-        return this;
     }
 }

@@ -8,48 +8,46 @@ import com.google.common.reflect.TypeToken;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 
 public abstract class MessageTileEntity<T extends TileEntity> implements IMessage {
 
-    protected int x;
-    protected int y;
-    protected int z;
+    protected BlockPos pos;
 
     protected MessageTileEntity() {}
 
     protected MessageTileEntity(T tile) {
-        x = tile.xCoord;
-        y = tile.yCoord;
-        z = tile.zCoord;
+        this.pos = new BlockPos(tile);
     }
 
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        buf.writeLong(pos.toLong());
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        pos = BlockPos.fromLong(buf.readLong());
     }
 
     @SuppressWarnings("unchecked")
-    protected T getTileEntity(World worldObj) {
-        if (worldObj == null) {
+    protected T getTileEntity(World world) {
+        if (world == null || pos == null) {
             return null;
         }
-        TileEntity te = worldObj.getTileEntity(x, y, z);
+
+        TileEntity te = pos.getTileEntity(world);
+
         if (te == null) {
             return null;
         }
+
         TypeToken<?> teType = TypeToken.of(getClass())
             .resolveType(MessageTileEntity.class.getTypeParameters()[0]);
+
         if (teType.isAssignableFrom(te.getClass())) {
             return (T) te;
         }
+
         return null;
     }
 

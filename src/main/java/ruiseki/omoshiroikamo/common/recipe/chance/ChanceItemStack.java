@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 public class ChanceItemStack {
 
     public final ItemStack stack;
-    public final float chance; // từ 0.0f đến 1.0f
+    public final float chance; // 0.0f to 1.0f
 
     public ChanceItemStack(ItemStack stack, float chance) {
         this.stack = stack;

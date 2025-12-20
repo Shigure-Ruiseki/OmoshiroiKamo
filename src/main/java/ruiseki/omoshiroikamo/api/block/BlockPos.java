@@ -7,6 +7,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.common.base.Strings;
 import com.gtnewhorizon.gtnhlib.blockpos.IWorldReferent;
@@ -83,6 +84,10 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         return getWorld().getTileEntity(getX(), getY(), getZ());
     }
 
+    public TileEntity getTileEntity(World world) {
+        return world.getTileEntity(getX(), getY(), getZ());
+    }
+
     public BiomeGenBase getBiomeGen() {
         return getWorld().getBiomeGenForCoords(getX(), getZ());
     }
@@ -93,6 +98,10 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
 
     public boolean equals(int x, int y, int z) {
         return x == getX() && y == getY() && z == getZ();
+    }
+
+    public boolean equals(TileEntity tile) {
+        return tile.xCoord == getX() && tile.yCoord == getY() && tile.zCoord == getZ();
     }
 
     @Override
@@ -132,5 +141,37 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
 
     public BlockPos withZ(final int z) {
         return getZ() == z ? this : new BlockPos(getX(), getY(), z);
+    }
+
+    public BlockPos add(ForgeDirection d) {
+        add(d.offsetX, d.offsetY, d.offsetZ);
+        return this;
+    }
+
+    public BlockPos sub(ForgeDirection d) {
+        sub(d.offsetX, d.offsetY, d.offsetZ);
+        return this;
+    }
+
+    public long toLong() {
+        return ((long) (getX() & 0x3FFFFFF) << 38) | ((long) (getZ() & 0x3FFFFFF) << 12) | ((long) (getY() & 0xFFF));
+    }
+
+    public static BlockPos fromLong(long packed) {
+        int x = (int) (packed >> 38);
+        int y = (int) (packed & 0xFFF);
+        int z = (int) ((packed >> 12) & 0x3FFFFFF);
+
+        if (x >= 0x2000000) x -= 0x4000000;
+        if (z >= 0x2000000) z -= 0x4000000;
+        if (y >= 0x800) y -= 0x1000;
+
+        return new BlockPos(x, y, z);
+    }
+
+    public static BlockPos fromLong(long packed, World world) {
+        BlockPos pos = fromLong(packed);
+        pos.world = world;
+        return pos;
     }
 }

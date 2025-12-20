@@ -7,7 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -299,11 +298,6 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     @Override
     public boolean isActive() {
         return isFullChickens() && hasFreeOutputSlot() && isFullSeeds();
-    }
-
-    @Override
-    public TileEntity getTileEntity() {
-        return this;
     }
 
     @Override

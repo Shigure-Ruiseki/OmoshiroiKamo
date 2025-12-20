@@ -1,11 +1,10 @@
 package ruiseki.omoshiroikamo.api.client;
 
-import net.minecraft.tileentity.TileEntity;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.block.IOKTile;
 
-public interface IProgressTile {
+public interface IProgressTile extends IOKTile {
 
     float getProgress();
 
@@ -16,6 +15,4 @@ public interface IProgressTile {
      */
     @SideOnly(Side.CLIENT)
     void setProgress(float progress);
-
-    TileEntity getTileEntity();
 }
