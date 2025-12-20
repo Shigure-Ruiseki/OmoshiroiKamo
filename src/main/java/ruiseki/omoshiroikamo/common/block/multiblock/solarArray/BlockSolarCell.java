@@ -6,9 +6,11 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -21,6 +23,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 public class BlockSolarCell extends BlockOK implements IMBBlock {
 
@@ -146,5 +149,20 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
         }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+            super.addInformation(stack, player, tooltip, advanced);
+            int tier = stack.getItemDamage();
+            int cellEnergy = getCellEnergy(tier);
+            tooltip.add(StatCollector.translateToLocalFormatted("tooltip.solar.cell.power", cellEnergy));
+        }
+
+        private int getCellEnergy(int cellTier) {
+            int base = EnvironmentalConfig.solarArrayConfig.cellGen;
+            float multiplier = EnvironmentalConfig.solarArrayConfig.cellMul;
+            return (int) Math.round(base * Math.pow(multiplier, cellTier));
+        }
     }
+
 }

@@ -12,12 +12,14 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
 public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> implements IWailaBlockInfoProvider {
@@ -96,6 +98,33 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> impleme
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+            super.addInformation(stack, player, tooltip, advanced);
+            int tier = stack.getItemDamage() + 1;
+            int peakEnergy = getPeakEnergy(tier);
+            tooltip.add(StatCollector.translateToLocalFormatted("tooltip.solar.array.peak", peakEnergy));
+        }
+
+        private int getPeakEnergy(int tier) {
+            switch (tier) {
+                case 1:
+                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier1;
+                case 2:
+                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier2;
+                case 3:
+                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier3;
+                case 4:
+                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier4;
+                case 5:
+                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier5;
+                case 6:
+                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier6;
+                default:
+                    return 0;
+            }
         }
     }
 
