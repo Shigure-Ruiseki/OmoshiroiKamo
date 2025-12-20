@@ -31,11 +31,11 @@ public class NEICompat {
         if (BackportConfigs.useEnvironmentalTech) {
             for (int i = 0; i <= 5; i++) { // Environmental Tech usually defaults to 6 tiers (1-6)
                 String oreId = ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + i;
-                sendHandler(oreId, 48, 8);
+                sendHandler(oreId, "Void Ore Miner Tier " + (i + 1), 48, 8);
                 sendCatalyst(oreId, ModBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i));
 
                 String resId = ModObject.blockQuantumResExtractor.getRegistryName() + ".tier" + i;
-                sendHandler(resId, 48, 8);
+                sendHandler(resId, "Void Resource Miner Tier " + (i + 1), 48, 8);
                 sendCatalyst(resId, ModBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i));
             }
         }

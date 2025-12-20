@@ -22,9 +22,12 @@ import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
 public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     protected final int tier;
+    // Displayed tier can differ from handler tier when tier0 delegates usage for higher tiers
+    private int displayTier;
 
     public VoidMinerRecipeHandler(int tier) {
         this.tier = tier;
+        this.displayTier = tier + 1;
         Logger.info("Chlorine VoidMinerRecipeHandler tier=" + tier);
     }
 
@@ -40,7 +43,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return getMinerNameBase(); // No tier - one handler covers all
+        // Show tiered name so each NEI tab is unique and clear
+        return getMinerNameBase() + " Tier " + (displayTier);
     }
 
     @Override
@@ -71,6 +75,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public void loadAllRecipes() {
+        // Ensure display name matches this handler's own tier when listing all recipes
+        this.displayTier = this.tier + 1;
         Logger.info("[loadAllRecipes] tier=" + tier + " called");
         IFocusableRegistry registry = getRegistry();
         List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
@@ -95,6 +101,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public void loadCraftingRecipes(ItemStack item) {
+        this.displayTier = this.tier + 1;
         arecipes.clear();
         super.loadCraftingRecipes(item);
         IFocusableRegistry registry = getRegistry();
@@ -137,6 +144,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             }
             Logger.info(
                     "[loadUsageRecipes] isMiner: inputTier=" + inputTier + ", handler.tier=" + this.tier);
+            // Use input tier for display so the tab shows the correct tier number
+            this.displayTier = inputTier + 1;
             IFocusableRegistry tierRegistry = getRegistry(inputTier);
             if (tierRegistry != null) {
                 List<WeightedStackBase> unfocusedList = tierRegistry.getUnFocusedList();
