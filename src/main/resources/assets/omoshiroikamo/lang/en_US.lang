@@ -553,3 +553,17 @@ tooltip.modifier.speed.effect=§a+30% Mining Speed§r
 tooltip.modifier.speed.penalty=§c+50% Energy Cost§r
 tooltip.modifier.accuracy.effect=§a+18% Focus Boost§r  
 tooltip.modifier.accuracy.penalty=§c-10% Mining Speed§r
+tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
+
+#Beacon Modifiers
+tooltip.modifier.flight.effect=§bCreative Flight§r
+tooltip.modifier.night_vision.effect=§bNight Vision§r
+tooltip.modifier.haste.effect=§bHaste§r
+tooltip.modifier.strength.effect=§bStrength§r
+tooltip.modifier.regeneration.effect=§bRegeneration§r
+tooltip.modifier.resistance.effect=§bResistance§r
+tooltip.modifier.saturation.effect=§bSaturation§r
+tooltip.modifier.jump_boost.effect=§bJump Boost§r
+tooltip.modifier.fire_resistance.effect=§bFire Resistance§r
+tooltip.modifier.water_breathing.effect=§bWater Breathing§r
+tooltip.modifier.beacon.energy=§7Uses 128 RF/t per effect§r
