@@ -103,95 +103,240 @@ public class QuantumExtractorRecipes {
 
     private static FocusableHandler.FocusableList getDefaultOreList() {
         FocusableHandler.FocusableList defaults = new FocusableHandler.FocusableList();
+
+        // ========== COMMON (All Tiers) ==========
         defaults.addEntry(new FocusableHandler.FocusableOre("oreCoal", EnumDye.BLACK, 1000));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreIron", EnumDye.WHITE, 750));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreQuartz", EnumDye.WHITE, 560, -1));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreRedstone", EnumDye.RED, 515));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreLapis", EnumDye.BLUE, 343));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreGold", EnumDye.YELLOW, 311));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreDiamond", EnumDye.CYAN, 218));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreEmerald", EnumDye.LIME, 156));
-        defaults.addEntry(new FocusableHandler.FocusableOre("glowstone", EnumDye.YELLOW, 234, -1));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreCopper", EnumDye.ORANGE, 584));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreTin", EnumDye.GRAY, 602));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreSilver", EnumDye.SILVER, 381));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreLead", EnumDye.PURPLE, 500));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAluminum", EnumDye.WHITE, 422));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreUranium", EnumDye.GREEN, 140));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreYellorite", EnumDye.YELLOW, 156));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreCertusQuartz", EnumDye.LIGHT_BLUE, 187));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreChargedCertusQuartz", EnumDye.LIGHT_BLUE, 109));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreCinnabar", EnumDye.BROWN, 190));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAmber", EnumDye.ORANGE, 184));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreNickel", EnumDye.GRAY, 232));
-        defaults.addEntry(new FocusableHandler.FocusableOre("orePlatinum", EnumDye.LIGHT_BLUE, 150));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreMithril", EnumDye.LIGHT_BLUE, 169));
-        // defaults.addEntry(new FocusableHandler.FocusableOre("oreClathrateOilSand",
-        // EnumDye.BLACK, 128));
-        // defaults.addEntry(new FocusableHandler.FocusableOre("oreClathrateOilShale",
-        // EnumDye.BLACK, 120));
-        // defaults.addEntry(new FocusableHandler.FocusableOre("oreClathrateEnder",
-        // EnumDye.GREEN, 118));
-        // defaults.addEntry(new FocusableHandler.FocusableOre("oreClathrateGlowstone",
-        // EnumDye.YELLOW, 145));
-        // defaults.addEntry(new FocusableHandler.FocusableOre("oreClathrateRedstone",
-        // EnumDye.RED, 137));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreSulfur", EnumDye.YELLOW, 222));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreNiter", EnumDye.WHITE, 244));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreFirestone", EnumDye.RED, 113));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreCobalt", EnumDye.BLUE, 163, -1));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreArdite", EnumDye.ORANGE, 159, -1));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreApatite", EnumDye.LIGHT_BLUE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreDraconium", EnumDye.PURPLE, 142));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreGraphite", EnumDye.BLACK, 190));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreQuartzBlack", EnumDye.BLACK, 290));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreMagnesium", EnumDye.WHITE, 233));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreLithium", EnumDye.WHITE, 201));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreThorium", EnumDye.BLACK, 222));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreBoron", EnumDye.SILVER, 199));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreResonating", EnumDye.BROWN, 177));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreZinc", EnumDye.PINK, 186));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreIridium", EnumDye.WHITE, 157));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreTungsten", EnumDye.BLACK, 192));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreOsmium", EnumDye.LIGHT_BLUE, 251));
+        defaults.addEntry(new FocusableHandler.FocusableOre("oreQuartz", EnumDye.WHITE, 560, -1));
+        defaults.addEntry(new FocusableHandler.FocusableOre("glowstone", EnumDye.YELLOW, 234, -1));
         defaults.addEntry(new FocusableHandler.FocusableOre("oreSalt", EnumDye.WHITE, 160));
-        defaults.addEntry(new FocusableHandler.FocusableBlock("rftools:dimensional_shard_ore", 0, EnumDye.WHITE, 127));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreBrainstone", EnumDye.LIME, 223));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreTitaniumIron", EnumDye.WHITE, 223));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreSilicon", EnumDye.PURPLE, 333));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreRuby", EnumDye.RED, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("orePeridot", EnumDye.GREEN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreTopaz", EnumDye.ORANGE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreTanzanite", EnumDye.PURPLE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreMalachite", EnumDye.CYAN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreSapphire", EnumDye.BLUE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreGarnet", EnumDye.ORANGE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreHeliodore", EnumDye.YELLOW, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreBeryl", EnumDye.GREEN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreIndicolite", EnumDye.GREEN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAquamarine", EnumDye.BLUE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreIolite", EnumDye.PURPLE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAmethyst", EnumDye.PURPLE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAgate", EnumDye.PINK, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreMorganite", EnumDye.PINK, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreOnyx", EnumDye.BLACK, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreOpal", EnumDye.WHITE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreCarnelian", EnumDye.RED, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreSpinel", EnumDye.BROWN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreCitrine", EnumDye.BROWN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreJasper", EnumDye.YELLOW, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreGoldenBeryl", EnumDye.YELLOW, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreMoldavite", EnumDye.GREEN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreTurquoise", EnumDye.CYAN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreMoonstone", EnumDye.CYAN, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreBlueTopaz", EnumDye.BLUE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreVioletSapphire", EnumDye.PURPLE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreLepidolite", EnumDye.PURPLE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAmetrine", EnumDye.PURPLE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreBlackDiamond", EnumDye.BLACK, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreAlexandrite", EnumDye.WHITE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreChaos", EnumDye.WHITE, 200));
-        defaults.addEntry(new FocusableHandler.FocusableOre("oreEnderEssence", EnumDye.GREEN, 200));
+        defaults.addEntry(new FocusableHandler.FocusableOre("oreGraphite", EnumDye.BLACK, 190));
+        defaults.addEntry(new FocusableHandler.FocusableOre("oreNiter", EnumDye.WHITE, 244));
+        defaults.addEntry(new FocusableHandler.FocusableOre("oreSulfur", EnumDye.YELLOW, 222));
+        defaults.addEntry(new FocusableHandler.FocusableOre("oreQuartzBlack", EnumDye.BLACK, 290));
+
+        // ========== TIER 3+ (Slightly Rare) ==========
+        // Tier weights: [0, 0, W, W, W, W]
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreRedstone", EnumDye.RED, new double[] { 0, 0, 515, 515, 515, 515 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreLapis", EnumDye.BLUE, new double[] { 0, 0, 343, 343, 343, 343 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreGold", EnumDye.YELLOW, new double[] { 0, 0, 311, 311, 311, 311 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreSilver", EnumDye.SILVER, new double[] { 0, 0, 381, 381, 381, 381 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreLead", EnumDye.PURPLE, new double[] { 0, 0, 500, 500, 500, 500 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreAluminum", EnumDye.WHITE, new double[] { 0, 0, 422, 422, 422, 422 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreNickel", EnumDye.GRAY, new double[] { 0, 0, 232, 232, 232, 232 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreZinc", EnumDye.PINK, new double[] { 0, 0, 186, 186, 186, 186 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreCertusQuartz",
+                EnumDye.LIGHT_BLUE,
+                new double[] { 0, 0, 187, 187, 187, 187 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreApatite",
+                EnumDye.LIGHT_BLUE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreOsmium",
+                EnumDye.LIGHT_BLUE,
+                new double[] { 0, 0, 251, 251, 251, 251 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreYellorite",
+                EnumDye.YELLOW,
+                new double[] { 0, 0, 156, 156, 156, 156 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreCinnabar", EnumDye.BROWN, new double[] { 0, 0, 190, 190, 190, 190 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreAmber", EnumDye.ORANGE, new double[] { 0, 0, 184, 184, 184, 184 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreBoron", EnumDye.SILVER, new double[] { 0, 0, 199, 199, 199, 199 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreThorium", EnumDye.BLACK, new double[] { 0, 0, 222, 222, 222, 222 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreLithium", EnumDye.WHITE, new double[] { 0, 0, 201, 201, 201, 201 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreMagnesium",
+                EnumDye.WHITE,
+                new double[] { 0, 0, 233, 233, 233, 233 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreResonating",
+                EnumDye.BROWN,
+                new double[] { 0, 0, 177, 177, 177, 177 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreSilicon", EnumDye.PURPLE, new double[] { 0, 0, 333, 333, 333, 333 }));
+
+        // Gems (Tier 3+)
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreRuby", EnumDye.RED, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("orePeridot", EnumDye.GREEN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreTopaz", EnumDye.ORANGE, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreTanzanite",
+                EnumDye.PURPLE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreMalachite", EnumDye.CYAN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreSapphire", EnumDye.BLUE, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreGarnet", EnumDye.ORANGE, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreHeliodore",
+                EnumDye.YELLOW,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreBeryl", EnumDye.GREEN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreIndicolite",
+                EnumDye.GREEN,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreAquamarine",
+                EnumDye.BLUE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreIolite", EnumDye.PURPLE, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreAmethyst",
+                EnumDye.PURPLE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreAgate", EnumDye.PINK, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreMorganite", EnumDye.PINK, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreOnyx", EnumDye.BLACK, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreOpal", EnumDye.WHITE, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreCarnelian", EnumDye.RED, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreSpinel", EnumDye.BROWN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreCitrine", EnumDye.BROWN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreJasper", EnumDye.YELLOW, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreGoldenBeryl",
+                EnumDye.YELLOW,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreMoldavite",
+                EnumDye.GREEN,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreTurquoise", EnumDye.CYAN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreMoonstone", EnumDye.CYAN, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreBlueTopaz", EnumDye.BLUE, new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreVioletSapphire",
+                EnumDye.PURPLE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreLepidolite",
+                EnumDye.PURPLE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreAmetrine",
+                EnumDye.PURPLE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreBlackDiamond",
+                EnumDye.BLACK,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreAlexandrite",
+                EnumDye.WHITE,
+                new double[] { 0, 0, 200, 200, 200, 200 }));
+
+        // ========== TIER 5+ (Rare) ==========
+        // Tier weights: [0, 0, 0, 0, W, W]
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreDiamond", EnumDye.CYAN, new double[] { 0, 0, 0, 0, 218, 218 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreEmerald", EnumDye.LIME, new double[] { 0, 0, 0, 0, 156, 156 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "orePlatinum",
+                EnumDye.LIGHT_BLUE,
+                new double[] { 0, 0, 0, 0, 150, 150 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreMithril", EnumDye.LIGHT_BLUE, new double[] { 0, 0, 0, 0, 169, 169 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreUranium", EnumDye.GREEN, new double[] { 0, 0, 0, 0, 140, 140 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreChargedCertusQuartz",
+                EnumDye.LIGHT_BLUE,
+                new double[] { 0, 0, 0, 0, 109, 109 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreCobalt",
+                EnumDye.BLUE,
+                new double[] { 0, 0, 0, 0, 163, 163 },
+                null,
+                -1));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre(
+                "oreArdite",
+                EnumDye.ORANGE,
+                new double[] { 0, 0, 0, 0, 159, 159 },
+                null,
+                -1));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreFirestone", EnumDye.RED, new double[] { 0, 0, 0, 0, 113, 113 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreDraconium", EnumDye.PURPLE, new double[] { 0, 0, 0, 0, 142, 142 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreBrainstone", EnumDye.LIME, new double[] { 0, 0, 0, 0, 223, 223 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableBlock(
+                "rftools:dimensional_shard_ore",
+                0,
+                EnumDye.WHITE,
+                new double[] { 0, 0, 0, 0, 127, 127 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreTungsten", EnumDye.BLACK, new double[] { 0, 0, 0, 0, 192, 192 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreTitaniumIron", EnumDye.WHITE, new double[] { 0, 0, 0, 0, 223, 223 }));
+
+        // ========== TIER 6 ONLY (Very Rare) ==========
+        // Tier weights: [0, 0, 0, 0, 0, W]
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreIridium", EnumDye.WHITE, new double[] { 0, 0, 0, 0, 0, 157 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreChaos", EnumDye.WHITE, new double[] { 0, 0, 0, 0, 0, 200 }));
+        defaults.addEntry(
+            new FocusableHandler.FocusableOre("oreEnderEssence", EnumDye.GREEN, new double[] { 0, 0, 0, 0, 0, 200 }));
 
         // Crystal 0
         defaults.addEntry(
