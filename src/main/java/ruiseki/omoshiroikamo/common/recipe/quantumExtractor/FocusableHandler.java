@@ -137,10 +137,54 @@ public class FocusableHandler {
             return;
         }
 
+        // If no dimension filter, use simple loading (for legacy arrays)
+        if (dimId == Integer.MIN_VALUE) {
+            list.getEntries()
+                .stream()
+                .filter(Objects::nonNull)
+                .forEach(entry -> {
+                    WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
+                    if (wsb != null) {
+                        registry.addResource(wsb, entry.getFocusColor());
+                    }
+                });
+            return;
+        }
+
+        // 3-pass loading with specificity priority:
+        // Pass 1: dimensions.length == 1 (most specific)
+        // Pass 2: dimensions.length > 1 (multi-dimension)
+        // Pass 3: dimensions == null (fallback)
+
+        // Pass 1: Single dimension entries (most specific)
         list.getEntries()
             .stream()
             .filter(Objects::nonNull)
-            .filter(entry -> dimId == Integer.MIN_VALUE || entry.isValidForDimension(dimId))
+            .filter(entry -> entry.getDimensionSpecificity() == 1 && entry.isValidForDimension(dimId))
+            .forEach(entry -> {
+                WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
+                if (wsb != null) {
+                    registry.addResource(wsb, entry.getFocusColor());
+                }
+            });
+
+        // Pass 2: Multi-dimension entries
+        list.getEntries()
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(entry -> entry.getDimensionSpecificity() > 1 && entry.isValidForDimension(dimId))
+            .forEach(entry -> {
+                WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
+                if (wsb != null) {
+                    registry.addResource(wsb, entry.getFocusColor());
+                }
+            });
+
+        // Pass 3: Fallback entries (no dimension restriction)
+        list.getEntries()
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(entry -> entry.getDimensionSpecificity() == 0)
             .forEach(entry -> {
                 WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
                 if (wsb != null) {
@@ -217,6 +261,19 @@ public class FocusableHandler {
                 if (dim == dimId) return true;
             }
             return false;
+        }
+
+        /**
+         * Returns the specificity level of dimension settings.
+         * 0 = no dimension restriction (fallback)
+         * 1 = single dimension (most specific)
+         * >1 = multi-dimension
+         */
+        public int getDimensionSpecificity() {
+            if (dimensions == null || dimensions.length == 0) {
+                return 0;
+            }
+            return dimensions.length;
         }
 
         protected double getWeightForTier(int tier) {
