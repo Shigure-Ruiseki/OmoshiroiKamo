@@ -571,3 +571,7 @@ tooltip.modifier.beacon.energy=§7Uses 128 RF/t per effect§r
 #Solar Tooltips
 tooltip.solar.cell.power=§aPeak Output: %d RF/t§r
 tooltip.solar.array.peak=§aMax Output: %d RF/t§r
+
+#Miner Tooltips
+tooltip.miner.speed=§aCycle Time: %.1fs§r
+tooltip.miner.energy=§7Energy Cost: %d RF§r

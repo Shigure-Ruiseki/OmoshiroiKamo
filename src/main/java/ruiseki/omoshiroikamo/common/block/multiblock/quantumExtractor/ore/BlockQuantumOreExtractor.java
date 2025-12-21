@@ -12,6 +12,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -19,6 +20,7 @@ import ruiseki.omoshiroikamo.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 import ruiseki.omoshiroikamo.plugin.waila.IWailaBlockInfoProvider;
 
 public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExtractor>
@@ -105,6 +107,57 @@ public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExt
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+            super.addInformation(stack, player, tooltip, advanced);
+            int tier = stack.getItemDamage() + 1;
+            int tickDuration = getTickDuration(tier);
+            int energyCost = getEnergyCost(tier);
+            float seconds = tickDuration / 20.0f;
+            tooltip.add(StatCollector.translateToLocalFormatted("tooltip.miner.speed", seconds));
+            tooltip.add(StatCollector.translateToLocalFormatted("tooltip.miner.energy", energyCost));
+        }
+
+        private int getTickDuration(int tier) {
+            EnvironmentalConfig.QuantumExtractorConfig cfg = EnvironmentalConfig.quantumExtractorConfig;
+            switch (tier) {
+                case 1:
+                    return cfg.tickOreTier1;
+                case 2:
+                    return cfg.tickOreTier2;
+                case 3:
+                    return cfg.tickOreTier3;
+                case 4:
+                    return cfg.tickOreTier4;
+                case 5:
+                    return cfg.tickOreTier5;
+                case 6:
+                    return cfg.tickOreTier6;
+                default:
+                    return 0;
+            }
+        }
+
+        private int getEnergyCost(int tier) {
+            EnvironmentalConfig.QuantumExtractorConfig cfg = EnvironmentalConfig.quantumExtractorConfig;
+            switch (tier) {
+                case 1:
+                    return cfg.energyCostOreTier1;
+                case 2:
+                    return cfg.energyCostOreTier2;
+                case 3:
+                    return cfg.energyCostOreTier3;
+                case 4:
+                    return cfg.energyCostOreTier4;
+                case 5:
+                    return cfg.energyCostOreTier5;
+                case 6:
+                    return cfg.energyCostOreTier6;
+                default:
+                    return 0;
+            }
         }
 
     }
