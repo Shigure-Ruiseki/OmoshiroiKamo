@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 
 public class ModelRegistryItem {
@@ -64,7 +65,6 @@ public class ModelRegistryItem {
     @Setter
     protected ItemStack pristineMatter;
     @Getter
-    @Setter
     protected ItemStack livingMatter;
 
     @Getter
@@ -145,5 +145,40 @@ public class ModelRegistryItem {
         LivingRegistryItem livingMatter = LivingRegistry.INSTANCE.getByName(key);
         setLivingMatter(livingMatter);
         return this;
+    }
+
+    public boolean hasLootItem(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+
+        if (lootItems != null) {
+            for (ItemStack loot : lootItems) {
+                if (loot == null) continue;
+
+                if (ItemUtils.areStacksEqual(loot, stack)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public int getLootItemIndex(ItemStack stack) {
+        if (stack == null || lootItems == null || lootItems.isEmpty()) {
+            return -1;
+        }
+
+        for (int i = 0; i < lootItems.size(); i++) {
+            ItemStack loot = lootItems.get(i);
+            if (loot == null) continue;
+
+            if (ItemUtils.areStacksEqual(loot, stack)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

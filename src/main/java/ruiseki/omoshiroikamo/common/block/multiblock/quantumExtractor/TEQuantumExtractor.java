@@ -21,7 +21,6 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
@@ -55,7 +54,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     private long lastBeamUpdateTick = 0L;
 
     public TEQuantumExtractor() {
-        this.energyStorage = new EnergyStorage(1000000);
+        energyStorage.setEnergyStorage(1000000);
         this.output = new ItemStackHandler(4);
 
         this.allSlots = new int[output.getSlots()];

@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.drawable.AdaptableUITexture;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 
@@ -21,6 +22,27 @@ public final class MGuiTextures {
     public static final UITexture ROOST_SLOT = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/slot/roost_slot")
         .imageSize(18, 18)
+        .build();
+
+    public static final UITexture EMPTY_SLOT = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/slot/empty_slot")
+        .imageSize(18, 18)
+        .build();
+
+    public static final AdaptableUITexture DML_INVENTORY_TEXTURE = (AdaptableUITexture) UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/deepMobLearning/player_inventory")
+        .imageSize(256, 256)
+        .xy(0, 0, 177, 91)
+        .adaptable(4)
+        .tiled()
+        .build();
+
+    public static final AdaptableUITexture DML_INVENTORY_SLOT = (AdaptableUITexture) UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/deepMobLearning/player_inventory")
+        .imageSize(256, 256)
+        .xy(8, 8, 18, 18)
+        .adaptable(1)
+        .tiled()
         .build();
 
     private static final ResourceLocation GUI_CONTROLS = new ResourceLocation(LibMisc.MOD_ID, "gui/gui_controls.png");

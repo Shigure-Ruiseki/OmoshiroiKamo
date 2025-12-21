@@ -11,7 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
@@ -29,7 +28,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     protected ModifierHandler modifierHandler = new ModifierHandler();
 
     public TEQuantumBeacon(int eBuffSize) {
-        this.energyStorage = new EnergyStorage(eBuffSize);
+        this.energyStorage.setEnergyStorage(eBuffSize);
     }
 
     @Override

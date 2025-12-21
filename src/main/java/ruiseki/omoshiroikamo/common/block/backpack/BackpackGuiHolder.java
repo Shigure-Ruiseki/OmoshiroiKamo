@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.backpack;
 
-import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.ceilDiv;
+import static ruiseki.omoshiroikamo.common.util.MathUtils.ceilDiv;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

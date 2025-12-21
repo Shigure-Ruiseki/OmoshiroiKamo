@@ -13,20 +13,24 @@ import ruiseki.omoshiroikamo.api.block.BlockPos;
 public abstract class MessageTileEntity<T extends TileEntity> implements IMessage {
 
     protected BlockPos pos;
+    protected int dimension;
 
     protected MessageTileEntity() {}
 
     protected MessageTileEntity(T tile) {
         this.pos = new BlockPos(tile);
+        this.dimension = tile.getWorldObj().provider.dimensionId;
     }
 
     public void toBytes(ByteBuf buf) {
         buf.writeLong(pos.toLong());
+        buf.writeInt(dimension);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         pos = BlockPos.fromLong(buf.readLong());
+        dimension = buf.readInt();
     }
 
     @SuppressWarnings("unchecked")

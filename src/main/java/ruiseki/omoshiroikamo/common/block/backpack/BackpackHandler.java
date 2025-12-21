@@ -693,8 +693,4 @@ public class BackpackHandler implements IItemHandlerModifiable {
         }
     }
 
-    public static int ceilDiv(int a, int b) {
-        return (a + b - 1) / b;
-    }
-
 }

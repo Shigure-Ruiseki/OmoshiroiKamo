@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.network;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -39,7 +40,11 @@ public class PacketStall extends MessageTileEntity<TEStall> implements IMessageH
 
     @Override
     public IMessage onMessage(PacketStall message, MessageContext ctx) {
-        TEStall tile = message.getTileEntity(OmoshiroiKamo.proxy.getClientWorld());
+        EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
+        TEStall tile = message.getTileEntity(player.worldObj);
+        if (tile == null) {
+            return null;
+        }
         if (message.nbtRoot.hasKey("tank")) {
             NBTTagCompound tankRoot = message.nbtRoot.getCompoundTag("tank");
             tile.tank.readFromNBT(tankRoot);

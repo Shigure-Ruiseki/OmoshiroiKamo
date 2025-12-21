@@ -176,4 +176,15 @@ public final class ItemNBTUtils {
         NBTTagCompound nbt = getNBT(stack).getCompoundTag(tag);
         return new ArrayList<>(nbt.func_150296_c());
     }
+
+    public static NBTTagCompound stackToNbt(ItemStack stack) {
+        NBTTagCompound tag = new NBTTagCompound();
+        stack.writeToNBT(tag);
+        return tag;
+    }
+
+    public static ItemStack nbtToStack(NBTTagCompound tag) {
+        return ItemStack.loadItemStackFromNBT(tag);
+    }
+
 }

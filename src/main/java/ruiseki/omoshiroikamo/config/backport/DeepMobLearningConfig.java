@@ -10,22 +10,13 @@ import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 @Config(modid = LibMisc.MOD_ID, category = "general.backports.deepMobLearning", configSubDirectory = LibMisc.MOD_ID)
 public class DeepMobLearningConfig {
 
-    @Config.Comment("Main Data Model Settings")
-    public static final DataModelConfig dataModelConfig = new DataModelConfig();
-
     @Config.DefaultBoolean(false)
     @Config.RequiresMcRestart
     public static boolean updateMissing;
 
-    @Config.LangKey(LibResources.CONFIG + "dataModelConfig")
-    public static class DataModelConfig {
+    @Config.DefaultInt(256)
+    public static int lootFabricatorRfCost;
 
-        @Config.DefaultIntList({ 1, 4, 10, 18 })
-        @Config.RangeInt(min = 1)
-        public int[] killMultiplier;
-
-        @Config.DefaultIntList({ 6, 12, 30, 50 })
-        @Config.RangeInt(min = 1)
-        public int[] killsToTier;
-    }
+    @Config.DefaultInt(51)
+    public static int lootFabricatorPrecessingTime;
 }

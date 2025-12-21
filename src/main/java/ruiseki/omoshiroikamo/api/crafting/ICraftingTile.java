@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.api.crafting;
 
-import ruiseki.omoshiroikamo.api.block.IOKTile;
+import ruiseki.omoshiroikamo.api.client.IProgressTile;
 
-public interface ICraftingTile extends IOKTile {
+public interface ICraftingTile extends IProgressTile {
 
     CraftingState getCraftingState();
 

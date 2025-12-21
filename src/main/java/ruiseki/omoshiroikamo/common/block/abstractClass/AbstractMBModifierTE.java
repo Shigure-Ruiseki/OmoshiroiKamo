@@ -14,9 +14,10 @@ import com.mojang.authlib.GameProfile;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
-public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
+public abstract class AbstractMBModifierTE extends AbstractEnergyTE implements IProgressTile {
 
     protected GameProfile player;
     @Getter
@@ -39,26 +40,14 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
     }
 
     @SuppressWarnings("unchecked")
-    protected boolean structureCheck(String piece, int offsetX, int offsetY, int offsetZ) {
-        boolean valid = getStructureDefinition().check(
-            this,
-            piece,
-            worldObj,
-            getExtendedFacing(),
-            xCoord,
-            yCoord,
-            zCoord,
-            offsetX,
-            offsetY,
-            offsetZ,
-            false);
+    protected boolean structureCheck(String piece, int ox, int oy, int oz) {
+        boolean valid = getStructureDefinition()
+            .check(this, piece, worldObj, getExtendedFacing(), xCoord, yCoord, zCoord, ox, oy, oz, false);
 
-        if (valid) {
-            if (!isFormed) {
-                isFormed = true;
-                onFormed();
-            }
-        } else {
+        if (valid && !isFormed) {
+            isFormed = true;
+            onFormed();
+        } else if (!valid && isFormed) {
             isFormed = false;
             clearStructureParts();
         }
@@ -80,32 +69,46 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
 
     @Override
     public void doUpdate() {
-        if (!structureCheck(
+        if (!shouldDoWorkThisTick(20) && isFormed) {
+            super.doUpdate();
+            return;
+        }
+
+        boolean valid = structureCheck(
             getStructurePieceName(),
             getOffSet()[getTier() - 1][0],
             getOffSet()[getTier() - 1][1],
-            getOffSet()[getTier() - 1][2]) && !shouldDoWorkThisTick(20)) {
-            return;
-        }
+            getOffSet()[getTier() - 1][2]);
+
+        if (!valid) return;
+
         super.doUpdate();
     }
 
     public void machineTick() {
-        if (this.canProcess()) {
-            if (this.currentProgress < this.currentDuration) {
-                this.isProcessing = true;
-                this.onProcessTick();
-                ++this.currentProgress;
-            } else {
-                this.onProcessComplete();
-                this.currentDuration = this.getCurrentProcessDuration();
-                this.currentProgress = 0;
-                this.isProcessing = false;
-            }
-        } else {
-            this.currentProgress = 0;
-            this.isProcessing = false;
+        if (!canProcess()) {
+            resetProcess();
+            return;
         }
+
+        if (!isProcessing) {
+            currentDuration = getCurrentProcessDuration();
+            currentProgress = 0;
+            isProcessing = true;
+        }
+
+        if (++currentProgress >= currentDuration) {
+            onProcessComplete();
+            resetProcess();
+        } else {
+            onProcessTick();
+        }
+    }
+
+    private void resetProcess() {
+        currentProgress = 0;
+        currentDuration = 0;
+        isProcessing = false;
     }
 
     public abstract int getBaseDuration();
@@ -129,31 +132,34 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
         if (duration < this.getMinDuration()) {
             return this.getMinDuration();
         } else {
-            return duration > this.getMaxDuration() ? this.getMaxDuration() : duration;
+            return Math.min(duration, this.getMaxDuration());
         }
     }
 
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        root.setBoolean("processing", this.isProcessing);
-        root.setInteger("curr_dur", this.currentDuration);
-        root.setInteger("curr_prog", this.currentProgress);
-        root.setBoolean("isFormed", this.isFormed);
+        NBTTagCompound multiblock = new NBTTagCompound();
+        multiblock.setBoolean("processing", this.isProcessing);
+        multiblock.setInteger("curr_dur", this.currentDuration);
+        multiblock.setInteger("curr_prog", this.currentProgress);
+        multiblock.setBoolean("isFormed", this.isFormed);
         if (this.player != null) {
-            root.setTag("profile", PlayerUtils.proifleToNBT(this.player));
+            multiblock.setTag("profile", PlayerUtils.proifleToNBT(this.player));
         }
+        root.setTag("multiblock", multiblock);
     }
 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        this.isProcessing = root.getBoolean("processing");
-        this.currentDuration = root.getInteger("curr_dur");
-        this.currentProgress = root.getInteger("curr_prog");
-        this.isFormed = root.getBoolean("isFormed");
-        if (root.hasKey("profile")) {
-            this.player = PlayerUtils.profileFromNBT(root.getCompoundTag("profile"));
+        NBTTagCompound multiblock = root.getCompoundTag("multiblock");
+        this.isProcessing = multiblock.getBoolean("processing");
+        this.currentDuration = multiblock.getInteger("curr_dur");
+        this.currentProgress = multiblock.getInteger("curr_prog");
+        this.isFormed = multiblock.getBoolean("isFormed");
+        if (multiblock.hasKey("profile")) {
+            this.player = PlayerUtils.profileFromNBT(multiblock.getCompoundTag("profile"));
         } else {
             this.player = null;
         }
@@ -197,16 +203,14 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE {
     }
 
     @Override
-    public boolean processTasks(boolean redstoneCheckPassed) {
-        if (redstoneCheckPassed) {
-            if (this.isFormed) {
-                this.machineTick();
-            } else {
-                this.isProcessing = false;
-            }
+    public boolean processTasks(boolean redstone) {
+        if (!redstone || !isFormed) {
+            isProcessing = false;
+            return false;
         }
 
-        return false;
+        machineTick();
+        return isProcessing;
     }
 
 }

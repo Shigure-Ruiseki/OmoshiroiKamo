@@ -1,37 +1,51 @@
 package ruiseki.omoshiroikamo.common.block.abstractClass;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.nbt.NBTTagCompound;
 
+import lombok.Getter;
 import ruiseki.omoshiroikamo.api.crafting.CraftingState;
 import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
-import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
-import ruiseki.omoshiroikamo.common.network.PacketCraftingState;
-import ruiseki.omoshiroikamo.common.network.PacketHandler;
 
-public abstract class AbstractMachine extends AbstractTE implements IEnergySink, ICraftingTile {
+/*
+ * IDLE
+ * │
+ * │ (canStartCrafting)
+ * ▼
+ * CRAFTING
+ * │ per tick:
+ * │ - consume energy
+ * │ - +progress
+ * │
+ * │ (progress >= duration)
+ * ▼
+ * FINISH
+ * │
+ * ▼
+ * RESET → IDLE
+ */
+public abstract class AbstractMachine extends AbstractEnergyTE implements ICraftingTile {
 
-    protected final EnergyStorage energyStorage;
-
+    @Getter
     private CraftingState craftingState = CraftingState.IDLE;
     protected boolean crafting = false;
     protected int craftingProgress = 0;
 
-    public AbstractMachine(int energyCapacity, int energyMaxReceive) {
-        this.energyStorage = new EnergyStorage(energyCapacity, energyMaxReceive) {
+    public AbstractMachine() {
+        super();
+    }
 
-            @Override
-            public void onEnergyChanged() {
-                markDirty();
-            }
-        };
+    public AbstractMachine(int energyCapacity) {
+        super(energyCapacity);
+    }
+
+    public AbstractMachine(int energyCapacity, int energyMaxReceive) {
+        super(energyCapacity, energyMaxReceive);
     }
 
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
-
         if (this.worldObj.isRemote) {
-            return false;
+            return super.processTasks(redstoneCheckPassed);
         }
 
         if (!crafting && canStartCrafting()) {
@@ -43,14 +57,18 @@ public abstract class AbstractMachine extends AbstractTE implements IEnergySink,
             advanceCraftingProgress();
         }
 
-        CraftingState newCraftingState = updateCraftingState();
-        if (craftingState != newCraftingState) {
-            craftingState = newCraftingState;
-            PacketHandler.sendToAllAround(new PacketCraftingState(this), this);
+        syncCraftingState();
+
+        return super.processTasks(redstoneCheckPassed);
+    }
+
+    protected void syncCraftingState() {
+        CraftingState newState = updateCraftingState();
+        if (craftingState != newState) {
+            craftingState = newState;
+            // PacketHandler.sendToAllAround(new PacketCraftingState(this), this);
             markDirty();
         }
-
-        return false;
     }
 
     protected void startCrafting() {
@@ -90,49 +108,54 @@ public abstract class AbstractMachine extends AbstractTE implements IEnergySink,
         return (float) craftingProgress / getCraftingDuration();
     }
 
-    public boolean isCrafting() {
-        return crafting;
-    }
-
     public boolean hasEnergyForCrafting() {
         return energyStorage.getEnergyStored() >= getCraftingEnergyCost();
     }
 
     public abstract int getCraftingEnergyCost();
 
-    @Override
-    public int getEnergyStored() {
-        return energyStorage.getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return energyStorage.getMaxEnergyStored();
-    }
-
     protected abstract CraftingState updateCraftingState();
-
-    public CraftingState getCraftingState() {
-        return craftingState;
-    }
 
     public void setCraftingState(CraftingState newState) {
         craftingState = newState;
-        sendBlockUpdate();
+        requestRenderUpdate();
+    }
+
+    public boolean isCrafting() {
+        return crafting;
     }
 
     @Override
-    public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
-        return energyStorage.receiveEnergy(amount, simulate);
+    public float getProgress() {
+        if (!crafting || getCraftingDuration() <= 0) {
+            return 0.0f;
+        }
+        return (float) craftingProgress / (float) getCraftingDuration();
     }
 
     @Override
-    public void setEnergyStored(int stored) {
-        energyStorage.setEnergyStored(stored);
+    public void setProgress(float progress) {
+        if (worldObj != null && worldObj.isRemote) {
+            craftingProgress = Math.round(progress * getCraftingDuration());
+        }
     }
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection forgeDirection) {
-        return true;
+    public void writeCommon(NBTTagCompound root) {
+        super.writeCommon(root);
+
+        NBTTagCompound craftingTag = new NBTTagCompound();
+        craftingTag.setBoolean("isCrafting", crafting);
+        craftingTag.setInteger("progress", craftingProgress);
+        root.setTag("crafting", craftingTag);
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
+
+        NBTTagCompound craftingTag = root.getCompoundTag("crafting");
+        crafting = craftingTag.getBoolean("isCrafting");
+        craftingProgress = craftingTag.getInteger("progress");
     }
 }

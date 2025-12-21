@@ -44,7 +44,7 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
             if (isProgressTile && !worldObj.isRemote) {
                 int curScaled = getProgressScaled(16);
                 if (++ticksSinceLastProgressUpdate >= getProgressUpdateFreq() || curScaled != lastProgressScaled) {
-                    sendTaskProgressPacket();
+                    requestProgressSync();
                     lastProgressScaled = curScaled;
                 }
             }
@@ -62,14 +62,11 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
         return (int) (tile.getProgress() * scale);
     }
 
-    protected void doUpdate() {
+    protected void doUpdate() {}
 
-    }
-
-    protected void sendTaskProgressPacket() {
-        if (isProgressTile) {
-            PacketHandler.sendToAllAround(new PacketProgress((IProgressTile) this), this);
-        }
+    protected void requestProgressSync() {
+        if (!isProgressTile || worldObj.isRemote) return;
+        PacketHandler.sendToAllAround(new PacketProgress((IProgressTile) this), this);
         ticksSinceLastProgressUpdate = 0;
     }
 
@@ -112,16 +109,22 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
 
     protected abstract void readCommon(NBTTagCompound root);
 
-    protected void updateBlock() {
-        if (worldObj != null) {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-    }
-
     private BlockPos cachedPos = null;
 
+    @Override
     public BlockPos getPos() {
-        return cachedPos == null || !cachedPos.equals(this) ? (cachedPos = new BlockPos(this)) : cachedPos;
+        if (cachedPos == null || cachedPos.getX() != xCoord
+            || cachedPos.getY() != yCoord
+            || cachedPos.getZ() != zCoord
+            || cachedPos.getWorld() != worldObj) {
+            cachedPos = new BlockPos(this);
+        }
+        return cachedPos;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
     }
 
     /**
@@ -142,10 +145,5 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
      */
     protected boolean shouldDoWorkThisTick(int interval, int offset) {
         return (worldObj.getTotalWorldTime() + checkOffset + offset) % interval == 0;
-    }
-
-    @Override
-    public TileEntity getTileEntity() {
-        return this;
     }
 }

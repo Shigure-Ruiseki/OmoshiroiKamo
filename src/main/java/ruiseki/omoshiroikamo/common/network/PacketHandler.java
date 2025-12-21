@@ -20,7 +20,11 @@ public class PacketHandler {
         INSTANCE.registerMessage(PacketProgress.class, PacketProgress.class, PacketHandler.nextID(), Side.CLIENT);
         INSTANCE.registerMessage(PacketEnergy.class, PacketEnergy.class, PacketHandler.nextID(), Side.CLIENT);
         INSTANCE.registerMessage(PacketFluidTanks.class, PacketFluidTanks.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketCraftingState.class, PacketCraftingState.class, nextID(), Side.CLIENT);
+
         INSTANCE.registerMessage(PacketStall.class, PacketStall.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketLootFabricator.class, PacketLootFabricator.class, nextID(), Side.CLIENT);
+
         INSTANCE.registerMessage(PacketNBBClientFlight.class, PacketNBBClientFlight.class, nextID(), Side.CLIENT);
 
     }
