@@ -125,10 +125,14 @@ public class FocusableHandler {
     }
 
     public static void loadIntoRegistry(FocusableList list, IFocusableRegistry registry) {
-        loadIntoRegistry(list, registry, -1);
+        loadIntoRegistry(list, registry, -1, Integer.MIN_VALUE);
     }
 
     public static void loadIntoRegistry(FocusableList list, IFocusableRegistry registry, int tier) {
+        loadIntoRegistry(list, registry, tier, Integer.MIN_VALUE);
+    }
+
+    public static void loadIntoRegistry(FocusableList list, IFocusableRegistry registry, int tier, int dimId) {
         if (list == null || registry == null) {
             return;
         }
@@ -136,6 +140,7 @@ public class FocusableHandler {
         list.getEntries()
             .stream()
             .filter(Objects::nonNull)
+            .filter(entry -> dimId == Integer.MIN_VALUE || entry.isValidForDimension(dimId))
             .forEach(entry -> {
                 WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
                 if (wsb != null) {
@@ -180,6 +185,7 @@ public class FocusableHandler {
         protected double[] weights;
         protected double[] focusedWeights;
         protected boolean isOreDict;
+        protected int[] dimensions; // null or empty = all dimensions
 
         public abstract WeightedStackBase getRegistryEntry();
 
@@ -201,6 +207,16 @@ public class FocusableHandler {
             boolean hasFocusedWeight = focusedWeights != null && tier < focusedWeights.length
                 && focusedWeights[tier] > 0;
             return hasWeight || hasFocusedWeight;
+        }
+
+        public boolean isValidForDimension(int dimId) {
+            if (dimensions == null || dimensions.length == 0) {
+                return true; // null or empty = all dimensions
+            }
+            for (int dim : dimensions) {
+                if (dim == dimId) return true;
+            }
+            return false;
         }
 
         protected double getWeightForTier(int tier) {
@@ -260,17 +276,27 @@ public class FocusableHandler {
             this(oreName, color, new double[] { weight, weight, weight, weight, weight, weight });
         }
 
+        public FocusableOre(String oreName, EnumDye color, double weight, int... dimensions) {
+            this(oreName, color, new double[] { weight, weight, weight, weight, weight, weight }, null, dimensions);
+        }
+
         public FocusableOre(String oreName, EnumDye color, double[] weights) {
             this(oreName, color, weights, null);
         }
 
         public FocusableOre(String oreName, EnumDye color, double[] weights, double[] focusedWeights) {
+            this(oreName, color, weights, focusedWeights, (int[]) null);
+        }
+
+        public FocusableOre(String oreName, EnumDye color, double[] weights, double[] focusedWeights,
+            int... dimensions) {
             this.id = oreName;
             this.meta = 0;
             this.focusColor = EnumFocusColor.getFromDye(color);
             this.weights = weights;
             this.focusedWeights = focusedWeights != null ? focusedWeights : multiply(weights, 5.0);
             this.isOreDict = true;
+            this.dimensions = dimensions;
         }
 
         @Override
@@ -364,6 +390,11 @@ public class FocusableHandler {
 
         public FocusableBlock(String id, int meta, EnumDye color, double weight) {
             super(id, meta, color, weight, false);
+        }
+
+        public FocusableBlock(String id, int meta, EnumDye color, double weight, int... dimensions) {
+            super(id, meta, color, weight, false);
+            this.dimensions = dimensions;
         }
 
         public FocusableBlock(String id, int meta, EnumDye color, double weight, boolean isOreDict) {

@@ -35,6 +35,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore.TEQuan
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.TEQuantumResExtractorT4;
 import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
+import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
 
 public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements IEnergySink, ISidedInventory {
@@ -219,7 +220,23 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         return 65536.0D; // 256 * 256
     }
 
-    public abstract IFocusableRegistry getRegistry();
+    /**
+     * Returns true if this extractor is an Ore Extractor.
+     * Override in subclass to return false for Resource Extractors.
+     */
+    protected boolean isOreExtractor() {
+        return true;
+    }
+
+    public IFocusableRegistry getRegistry() {
+        int dimId = this.worldObj.provider.dimensionId;
+        int tier = getTier() - 1; // getTier() returns 1-6, array is 0-5
+        if (isOreExtractor()) {
+            return QuantumExtractorRecipes.getOreRegistry(tier, dimId);
+        } else {
+            return QuantumExtractorRecipes.getResRegistry(tier, dimId);
+        }
+    }
 
     @Override
     public void onProcessComplete() {

@@ -6,9 +6,7 @@ import static ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.ore
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
-import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
 import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 public class TEQuantumOreExtractorT6 extends TEQuantumExtractor {
@@ -25,11 +23,6 @@ public class TEQuantumOreExtractorT6 extends TEQuantumExtractor {
     @Override
     public int[][] getOffSet() {
         return TIER_OFFSET;
-    }
-
-    @Override
-    public IFocusableRegistry getRegistry() {
-        return QuantumExtractorRecipes.oreRegistry[5];
     }
 
     @Override
