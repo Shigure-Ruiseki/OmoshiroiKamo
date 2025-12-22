@@ -46,6 +46,17 @@ public class StructureValidator {
     }
 
     /**
+     * Build a human-readable layer label.
+     * e.g., "Layer 0 (controller)" or "Layer 2" if name is missing.
+     */
+    private String getLayerLabel(int index, String name) {
+        if (name != null && !name.isEmpty()) {
+            return "Layer " + index + " (\"" + name + "\")";
+        }
+        return "Layer " + index;
+    }
+
+    /**
      * Validate every structure in the loader.
      *
      * @return true if any errors are found
@@ -83,20 +94,23 @@ public class StructureValidator {
         // Use the first layer as the size baseline
         Layer firstLayer = entry.layers.get(0);
         if (firstLayer.rows == null || firstLayer.rows.isEmpty()) {
-            addError("[" + name + "] Layer 0 has no rows");
+            String layerLabel = getLayerLabel(0, firstLayer.name);
+            addError("[" + name + "] " + layerLabel + " has no rows");
             return true;
         }
 
         int expectedDepth = firstLayer.rows.size();
         int expectedWidth = firstLayer.rows.get(0)
-            .length();
+                .length();
 
         // Validate each layer
         for (int layerIndex = 0; layerIndex < entry.layers.size(); layerIndex++) {
             Layer layer = entry.layers.get(layerIndex);
 
+            String layerLabel = getLayerLabel(layerIndex, layer.name);
+
             if (layer.rows == null || layer.rows.isEmpty()) {
-                addError("[" + name + "] Layer " + layerIndex + " has no rows");
+                addError("[" + name + "] " + layerLabel + " has no rows");
                 hasErrors = true;
                 continue;
             }
@@ -104,13 +118,8 @@ public class StructureValidator {
             // Confirm layer height matches baseline
             if (layer.rows.size() != expectedDepth) {
                 addError(
-                    "[" + name
-                        + "] Layer "
-                        + layerIndex
-                        + " has "
-                        + layer.rows.size()
-                        + " rows, expected "
-                        + expectedDepth);
+                        "[" + name + "] " + layerLabel + " has " + layer.rows.size()
+                                + " rows, expected " + expectedDepth);
                 hasErrors = true;
             }
 
@@ -119,15 +128,8 @@ public class StructureValidator {
                 String row = layer.rows.get(rowIndex);
                 if (row.length() != expectedWidth) {
                     addError(
-                        "[" + name
-                            + "] Layer "
-                            + layerIndex
-                            + " row "
-                            + rowIndex
-                            + " has length "
-                            + row.length()
-                            + ", expected "
-                            + expectedWidth);
+                            "[" + name + "] " + layerLabel + " row " + rowIndex
+                                    + " has length " + row.length() + ", expected " + expectedWidth);
                     hasErrors = true;
                 }
 
@@ -144,15 +146,8 @@ public class StructureValidator {
                     BlockMapping mapping = loader.getMapping(name, symbol);
                     if (mapping == null) {
                         addError(
-                            "[" + name
-                                + "] Unknown symbol '"
-                                + symbol
-                                + "' at layer "
-                                + layerIndex
-                                + " row "
-                                + rowIndex
-                                + " pos "
-                                + charIndex);
+                                "[" + name + "] Unknown symbol '" + symbol + "' at "
+                                        + layerLabel + " row " + rowIndex + " col " + charIndex);
                         hasErrors = true;
                     }
                 }
@@ -172,7 +167,8 @@ public class StructureValidator {
     public boolean validateBlockIds(String name) {
         boolean hasErrors = false;
         StructureEntry entry = loader.getStructureEntry(name);
-        if (entry == null) return false;
+        if (entry == null)
+            return false;
 
         // Validate default mappings
         Map<Character, BlockMapping> defaultMappings = loader.getDefaultMappings();
@@ -187,7 +183,7 @@ public class StructureValidator {
             for (Map.Entry<String, Object> mapEntry : entry.mappings.entrySet()) {
                 if (mapEntry.getValue() instanceof BlockMapping) {
                     char symbol = mapEntry.getKey()
-                        .charAt(0);
+                            .charAt(0);
                     if (!validateBlockMapping(name, symbol, (BlockMapping) mapEntry.getValue())) {
                         hasErrors = true;
                     }
@@ -202,7 +198,8 @@ public class StructureValidator {
      * Validate a block mapping entry.
      */
     private boolean validateBlockMapping(String structureName, char symbol, BlockMapping mapping) {
-        if (mapping == null) return true;
+        if (mapping == null)
+            return true;
 
         // Single-block mappings
         if (mapping.block != null && !mapping.block.isEmpty()) {
@@ -220,7 +217,8 @@ public class StructureValidator {
                     BlockResolver.ResolvedBlock resolved = BlockResolver.resolve(blockEntry.id);
                     if (resolved == null && !"air".equalsIgnoreCase(blockEntry.id)) {
                         addError(
-                            "[" + structureName + "] Invalid block ID for symbol '" + symbol + "': " + blockEntry.id);
+                                "[" + structureName + "] Invalid block ID for symbol '" + symbol + "': "
+                                        + blockEntry.id);
                         return false;
                     }
                 }

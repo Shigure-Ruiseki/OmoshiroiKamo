@@ -27,7 +27,7 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 public class DefaultStructureGenerator {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-        .create();
+            .create();
 
     /**
      * Generate or update all structure JSON files, filling in missing entries.
@@ -58,23 +58,23 @@ public class DefaultStructureGenerator {
         Map<String, Map<String, Object>> required = new LinkedHashMap<>();
         required.put("default", createDefaultMappings("oreMiner"));
         required.put(
-            "oreExtractorTier1",
-            createStructureEntry("oreExtractorTier1", QuantumOreExtractorShapes.SHAPE_TIER_1));
+                "oreExtractorTier1",
+                createStructureEntry("oreExtractorTier1", QuantumOreExtractorShapes.SHAPE_TIER_1));
         required.put(
-            "oreExtractorTier2",
-            createStructureEntry("oreExtractorTier2", QuantumOreExtractorShapes.SHAPE_TIER_2));
+                "oreExtractorTier2",
+                createStructureEntry("oreExtractorTier2", QuantumOreExtractorShapes.SHAPE_TIER_2));
         required.put(
-            "oreExtractorTier3",
-            createStructureEntry("oreExtractorTier3", QuantumOreExtractorShapes.SHAPE_TIER_3));
+                "oreExtractorTier3",
+                createStructureEntry("oreExtractorTier3", QuantumOreExtractorShapes.SHAPE_TIER_3));
         required.put(
-            "oreExtractorTier4",
-            createStructureEntry("oreExtractorTier4", QuantumOreExtractorShapes.SHAPE_TIER_4));
+                "oreExtractorTier4",
+                createStructureEntry("oreExtractorTier4", QuantumOreExtractorShapes.SHAPE_TIER_4));
         required.put(
-            "oreExtractorTier5",
-            createStructureEntry("oreExtractorTier5", QuantumOreExtractorShapes.SHAPE_TIER_5));
+                "oreExtractorTier5",
+                createStructureEntry("oreExtractorTier5", QuantumOreExtractorShapes.SHAPE_TIER_5));
         required.put(
-            "oreExtractorTier6",
-            createStructureEntry("oreExtractorTier6", QuantumOreExtractorShapes.SHAPE_TIER_6));
+                "oreExtractorTier6",
+                createStructureEntry("oreExtractorTier6", QuantumOreExtractorShapes.SHAPE_TIER_6));
 
         updateConfigWithMissing(file, required, "Ore Miner");
     }
@@ -86,23 +86,23 @@ public class DefaultStructureGenerator {
         Map<String, Map<String, Object>> required = new LinkedHashMap<>();
         required.put("default", createDefaultMappings("resMiner"));
         required.put(
-            "resExtractorTier1",
-            createStructureEntry("resExtractorTier1", QuantumResExtractorShapes.SHAPE_TIER_1));
+                "resExtractorTier1",
+                createStructureEntry("resExtractorTier1", QuantumResExtractorShapes.SHAPE_TIER_1));
         required.put(
-            "resExtractorTier2",
-            createStructureEntry("resExtractorTier2", QuantumResExtractorShapes.SHAPE_TIER_2));
+                "resExtractorTier2",
+                createStructureEntry("resExtractorTier2", QuantumResExtractorShapes.SHAPE_TIER_2));
         required.put(
-            "resExtractorTier3",
-            createStructureEntry("resExtractorTier3", QuantumResExtractorShapes.SHAPE_TIER_3));
+                "resExtractorTier3",
+                createStructureEntry("resExtractorTier3", QuantumResExtractorShapes.SHAPE_TIER_3));
         required.put(
-            "resExtractorTier4",
-            createStructureEntry("resExtractorTier4", QuantumResExtractorShapes.SHAPE_TIER_4));
+                "resExtractorTier4",
+                createStructureEntry("resExtractorTier4", QuantumResExtractorShapes.SHAPE_TIER_4));
         required.put(
-            "resExtractorTier5",
-            createStructureEntry("resExtractorTier5", QuantumResExtractorShapes.SHAPE_TIER_5));
+                "resExtractorTier5",
+                createStructureEntry("resExtractorTier5", QuantumResExtractorShapes.SHAPE_TIER_5));
         required.put(
-            "resExtractorTier6",
-            createStructureEntry("resExtractorTier6", QuantumResExtractorShapes.SHAPE_TIER_6));
+                "resExtractorTier6",
+                createStructureEntry("resExtractorTier6", QuantumResExtractorShapes.SHAPE_TIER_6));
 
         updateConfigWithMissing(file, required, "Resource Miner");
     }
@@ -152,7 +152,8 @@ public class DefaultStructureGenerator {
             try (FileReader reader = new FileReader(file)) {
                 JsonReader jsonReader = new JsonReader(reader);
                 jsonReader.setLenient(true);
-                Type listType = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+                Type listType = new TypeToken<ArrayList<Map<String, Object>>>() {
+                }.getType();
                 List<Map<String, Object>> loaded = GSON.fromJson(jsonReader, listType);
                 if (loaded != null) {
                     existing.addAll(loaded);
@@ -165,7 +166,8 @@ public class DefaultStructureGenerator {
         } else {
             // Ensure parent directories exist
             File parent = file.getParentFile();
-            if (parent != null && !parent.exists()) parent.mkdirs();
+            if (parent != null && !parent.exists())
+                parent.mkdirs();
         }
 
         // If loading failed and the file existed, back it up before recreating
@@ -181,7 +183,8 @@ public class DefaultStructureGenerator {
         List<String> existingNames = new ArrayList<>();
         for (Map<String, Object> entry : existing) {
             Object name = entry.get("name");
-            if (name != null) existingNames.add(name.toString());
+            if (name != null)
+                existingNames.add(name.toString());
         }
 
         // Add any missing entries
@@ -228,7 +231,7 @@ public class DefaultStructureGenerator {
             // Controller
             Map<String, Object> controller = new LinkedHashMap<>();
             String controllerBlock = "oreMiner".equals(machineType) ? "omoshiroikamo:quantum_ore_extractor:0"
-                : "omoshiroikamo:quantum_res_extractor:0";
+                    : "omoshiroikamo:quantum_res_extractor:0";
             controller.put("block", controllerBlock);
             controller.put("max", 1);
             mappings.put("Q", controller);
@@ -296,6 +299,23 @@ public class DefaultStructureGenerator {
             controller.put("block", "omoshiroikamo:quantum_beacon:0");
             controller.put("max", 1);
             mappings.put("Q", controller);
+
+            // Beacon modifiers (all types)
+            Map<String, Object> modifier = new LinkedHashMap<>();
+            List<Map<String, Object>> modBlocks = new ArrayList<>();
+            String[] beaconModifiers = {
+                    "modifier_null", "modifier_fire_resistance", "modifier_flight",
+                    "modifier_night_vision", "modifier_water_breathing", "modifier_strength",
+                    "modifier_haste", "modifier_regeneration", "modifier_saturation",
+                    "modifier_resistance", "modifier_jump_boost", "modifier_speed"
+            };
+            for (String mod : beaconModifiers) {
+                Map<String, Object> m = new LinkedHashMap<>();
+                m.put("id", "omoshiroikamo:" + mod + ":0");
+                modBlocks.add(m);
+            }
+            modifier.put("blocks", modBlocks);
+            mappings.put("A", modifier);
         }
 
         entry.put("mappings", mappings);

@@ -71,9 +71,14 @@ public class ItemStructureWand extends ItemOK {
     }
 
     @Override
-    public boolean onEntitySwing(EntityPlayer player, ItemStack stack) {
-        if (player.worldObj.isRemote) {
-            return false;
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote) {
+            return stack;
+        }
+
+        // Only trigger when sneaking in air (not aiming at a block)
+        if (!player.isSneaking()) {
+            return stack;
         }
 
         NBTTagCompound nbt = getOrCreateNBT(stack);
@@ -83,7 +88,7 @@ public class ItemStructureWand extends ItemOK {
                 new ChatComponentText(
                     EnumChatFormatting.RED
                         + "[OmoshiroiKamo] Please set both positions first! (Right-click for pos1, Shift+Right-click for pos2)"));
-            return false;
+            return stack;
         }
 
         // Dimension guard
@@ -92,7 +97,7 @@ public class ItemStructureWand extends ItemOK {
             player.addChatMessage(
                 new ChatComponentText(
                     EnumChatFormatting.RED + "[OmoshiroiKamo] Selection is in a different dimension!"));
-            return false;
+            return stack;
         }
 
         // Stage the selection
@@ -113,7 +118,7 @@ public class ItemStructureWand extends ItemOK {
             new ChatComponentText(
                 EnumChatFormatting.YELLOW + "Use: " + EnumChatFormatting.WHITE + "/ok wand save <name>"));
 
-        return false;
+        return stack;
     }
 
     private void showSelectionInfo(EntityPlayer player, NBTTagCompound nbt) {
