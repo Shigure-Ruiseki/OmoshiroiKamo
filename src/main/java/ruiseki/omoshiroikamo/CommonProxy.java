@@ -137,5 +137,11 @@ public class CommonProxy {
                 onClientTick();
             }
         }
+
+        @SubscribeEvent
+        public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+            StructureManager.getInstance()
+                .notifyPlayerIfNeeded(event.player);
+        }
     }
 }

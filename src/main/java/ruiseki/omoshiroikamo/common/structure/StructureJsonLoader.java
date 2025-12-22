@@ -39,6 +39,23 @@ public class StructureJsonLoader {
     /** パース済みの形状（name -> String[][]） */
     private Map<String, String[][]> parsedShapes = new HashMap<>();
 
+    /** 収集されたエラーリスト */
+    private List<String> errors = new ArrayList<>();
+
+    /**
+     * エラーリストを取得
+     */
+    public List<String> getErrors() {
+        return new ArrayList<>(errors);
+    }
+
+    /**
+     * エラーを追加
+     */
+    private void addError(String error) {
+        errors.add(error);
+    }
+
     /**
      * JSONファイルをロード
      */
@@ -49,11 +66,39 @@ public class StructureJsonLoader {
         }
 
         try (FileReader reader = new FileReader(file)) {
-            JsonArray array = new JsonParser().parse(reader)
-                .getAsJsonArray();
+            JsonElement rootElement = new JsonParser().parse(reader);
+
+            // 空ファイルや不正な形式のチェック
+            if (rootElement == null || rootElement.isJsonNull()) {
+                Logger.warn("Structure file is empty or null: " + file.getName());
+                return false;
+            }
+
+            if (!rootElement.isJsonArray()) {
+                Logger.warn("Structure file is not a JSON array: " + file.getName());
+                return false;
+            }
+
+            JsonArray array = rootElement.getAsJsonArray();
+            if (array.size() == 0) {
+                Logger.warn("Structure file contains empty array: " + file.getName());
+                return false;
+            }
 
             for (JsonElement element : array) {
+                if (element == null || !element.isJsonObject()) {
+                    Logger.warn("Invalid entry in structure file (not an object): " + file.getName());
+                    continue;
+                }
+
                 JsonObject obj = element.getAsJsonObject();
+
+                if (!obj.has("name") || obj.get("name")
+                    .isJsonNull()) {
+                    Logger.warn("Structure entry missing 'name' field: " + file.getName());
+                    continue;
+                }
+
                 String name = obj.get("name")
                     .getAsString();
 
@@ -69,7 +114,7 @@ public class StructureJsonLoader {
                 }
             }
 
-            Logger.info("Loaded structure file: " + file.getName());
+            Logger.info("Loaded structure file: " + file.getName() + " (" + structureCache.size() + " structures)");
             return true;
 
         } catch (Exception e) {
@@ -218,19 +263,29 @@ public class StructureJsonLoader {
         }
 
         StructureEntry entry = structureCache.get(structureName);
-        if (entry == null || entry.layers == null) {
+        if (entry == null || entry.layers == null || entry.layers.isEmpty()) {
             return null;
         }
 
-        // レイヤーからString[][]を構築
-        String[][] shape = new String[entry.layers.size()][];
-        for (int i = 0; i < entry.layers.size(); i++) {
-            Layer layer = entry.layers.get(i);
-            shape[i] = layer.rows.toArray(new String[0]);
-        }
+        try {
+            // レイヤーからString[][]を構築
+            String[][] shape = new String[entry.layers.size()][];
+            for (int i = 0; i < entry.layers.size(); i++) {
+                Layer layer = entry.layers.get(i);
+                if (layer == null || layer.rows == null) {
+                    // 不正なレイヤーがある場合は空配列で対応
+                    shape[i] = new String[0];
+                } else {
+                    shape[i] = layer.rows.toArray(new String[0]);
+                }
+            }
 
-        parsedShapes.put(structureName, shape);
-        return shape;
+            parsedShapes.put(structureName, shape);
+            return shape;
+        } catch (Exception e) {
+            Logger.error("Failed to parse structure shape: " + structureName, e);
+            return null;
+        }
     }
 
     /**

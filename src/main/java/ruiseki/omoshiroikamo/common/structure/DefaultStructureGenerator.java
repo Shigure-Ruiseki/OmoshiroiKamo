@@ -142,25 +142,39 @@ public class DefaultStructureGenerator {
     /**
      * 既存JSONファイルを読み込み、欠けているエントリを追加
      */
-    @SuppressWarnings("unchecked")
     private static void updateConfigWithMissing(File file, Map<String, Map<String, Object>> required, String typeName) {
         List<Map<String, Object>> existing = new ArrayList<>();
+        boolean fileExisted = file.exists();
+        boolean loadFailed = false;
 
         // 既存ファイルを読み込む
-        if (file.exists()) {
+        if (fileExisted) {
             try (FileReader reader = new FileReader(file)) {
                 JsonReader jsonReader = new JsonReader(reader);
                 jsonReader.setLenient(true);
                 Type listType = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
                 List<Map<String, Object>> loaded = GSON.fromJson(jsonReader, listType);
-                if (loaded != null) existing.addAll(loaded);
+                if (loaded != null) {
+                    existing.addAll(loaded);
+                }
             } catch (Exception e) {
                 Logger.error("Failed to read existing structure config: " + file.getName(), e);
+                loadFailed = true;
+                // 読み込み失敗時は新規作成として扱う
             }
         } else {
             // フォルダ作成
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) parent.mkdirs();
+        }
+
+        // 読み込み失敗かつファイルが存在する場合は、バックアップを取って新規作成
+        if (loadFailed && fileExisted) {
+            File backup = new File(file.getAbsolutePath() + ".backup");
+            if (file.renameTo(backup)) {
+                Logger.warn("Corrupted config backed up to: " + backup.getName());
+            }
+            fileExisted = false;
         }
 
         // 既存エントリの名前を取得
@@ -182,15 +196,15 @@ public class DefaultStructureGenerator {
         }
 
         // 変更があれば書き込み
-        if (updated) {
-            writeJson(file, existing);
-            Logger.info("Updated " + typeName + " config with missing entries: " + String.join(", ", addedEntries));
-        } else if (!file.exists()) {
-            // 新規作成
-            writeJson(file, new ArrayList<>(required.values()));
-            Logger.info("Generated " + typeName + " structure file: " + file.getName());
+        if (updated || !fileExisted) {
+            writeJson(file, existing.isEmpty() ? new ArrayList<>(required.values()) : existing);
+            if (!fileExisted) {
+                Logger.info("Generated " + typeName + " structure file: " + file.getName());
+            } else {
+                Logger.info("Updated " + typeName + " config with missing entries: " + String.join(", ", addedEntries));
+            }
         } else {
-            Logger.info("No new entries to add to " + typeName + " config");
+            Logger.debug("No new entries to add to " + typeName + " config");
         }
     }
 
