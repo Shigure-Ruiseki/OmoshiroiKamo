@@ -167,6 +167,10 @@ public class EnvironmentalConfig {
         @Config.DefaultInt(1)
         @Config.RangeInt(min = 1)
         public int minTickResTier6;
+
+        @Config.Comment("Additional blocks to allow in the miner's path to void (e.g., \"OmoshiroiKamo:LASER_CORE:0\")")
+        @Config.DefaultStringList({})
+        public String[] pathToVoidWhitelist;
     }
 
     @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")

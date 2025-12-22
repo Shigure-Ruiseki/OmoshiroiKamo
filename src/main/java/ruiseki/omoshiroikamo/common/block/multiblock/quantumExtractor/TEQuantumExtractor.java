@@ -37,6 +37,7 @@ import ruiseki.omoshiroikamo.common.init.ModAchievements;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.recipe.quantumExtractor.QuantumExtractorRecipes;
 import ruiseki.omoshiroikamo.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements IEnergySink, ISidedInventory {
 
@@ -159,7 +160,8 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
                 || block == Blocks.stained_glass_pane
                 || block == ModBlocks.LASER_CORE.get()
                 || block == ModBlocks.LENS.get()
-                || block == ModBlocks.COLORED_LENS.get()) {
+                || block == ModBlocks.COLORED_LENS.get()
+                || isBlockInPathWhitelist(block, worldObj.getBlockMetadata(xCoord, y, zCoord))) {
                 if (y == 0) {
                     return true;
                 }
@@ -171,6 +173,56 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if the given block matches any entry in the path-to-void whitelist.
+     * Supports formats: "modid:blockname" or "modid:blockname:meta"
+     */
+    private boolean isBlockInPathWhitelist(Block block, int meta) {
+        String[] whitelist = EnvironmentalConfig.quantumExtractorConfig.pathToVoidWhitelist;
+        if (whitelist == null || whitelist.length == 0) {
+            return false;
+        }
+
+        String blockName = Block.blockRegistry.getNameForObject(block);
+        if (blockName == null) {
+            return false;
+        }
+
+        for (String entry : whitelist) {
+            if (entry == null || entry.isEmpty()) {
+                continue;
+            }
+
+            // Check if entry has metadata specified (modid:block:meta)
+            int lastColon = entry.lastIndexOf(':');
+            int firstColon = entry.indexOf(':');
+
+            if (lastColon > firstColon && lastColon < entry.length() - 1) {
+                // Format: modid:blockname:meta
+                String entryMeta = entry.substring(lastColon + 1);
+                String entryBlockId = entry.substring(0, lastColon);
+
+                try {
+                    int expectedMeta = Integer.parseInt(entryMeta);
+                    if (blockName.equals(entryBlockId) && meta == expectedMeta) {
+                        return true;
+                    }
+                } catch (NumberFormatException e) {
+                    // If meta is not a number, treat whole string as block ID
+                    if (blockName.equals(entry)) {
+                        return true;
+                    }
+                }
+            } else {
+                // Format: modid:blockname (any meta)
+                if (blockName.equals(entry)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @SideOnly(Side.CLIENT)
