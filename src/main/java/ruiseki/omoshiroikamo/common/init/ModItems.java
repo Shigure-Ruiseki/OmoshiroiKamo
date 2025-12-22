@@ -42,6 +42,7 @@ import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDataModelBlank;
 import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDeepLearner;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemCrystal;
+import ruiseki.omoshiroikamo.common.item.multiblock.ItemStructureWand;
 import ruiseki.omoshiroikamo.common.item.trait.ItemAnalyzer;
 import ruiseki.omoshiroikamo.common.item.trait.ItemSyringe;
 import ruiseki.omoshiroikamo.common.util.Logger;
@@ -87,6 +88,8 @@ public enum ModItems {
     DEEP_LEARNER(useDeepMobLearning, new ItemDeepLearner()),
     DATA_MODEL(useDeepMobLearning, new ItemDataModel()),
     DATA_MODEL_BLANK(useDeepMobLearning, new ItemDataModelBlank()),
+
+    STRUCTURE_WAND(true, new ItemStructureWand()),
     //
     ;
 

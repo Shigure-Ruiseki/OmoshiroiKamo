@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 
@@ -19,6 +20,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
+import ruiseki.omoshiroikamo.client.handler.StructureWandRenderer;
 import ruiseki.omoshiroikamo.client.render.block.chicken.BreederTESR;
 import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.cow.StallTESR;
@@ -58,6 +60,9 @@ public class ClientProxy extends CommonProxy {
         FMLCommonHandler.instance()
             .bus()
             .register(KeyHandler.instance);
+
+        // Structure Wand Renderer (範囲可視化)
+        MinecraftForge.EVENT_BUS.register(StructureWandRenderer.INSTANCE);
 
         if (BackportConfigs.useEnvironmentalTech) {
             ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumExtractor.class, new QuantumExtractorTESR());

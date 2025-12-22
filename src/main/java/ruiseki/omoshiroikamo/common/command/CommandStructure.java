@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
 import ruiseki.omoshiroikamo.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.common.structure.StructureScanner;
+import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 /**
@@ -56,6 +57,9 @@ public class CommandStructure extends CommandBase {
                 break;
             case "scan":
                 scanStructure(sender, args);
+                break;
+            case "wand":
+                handleWandCommand(sender, args);
                 break;
             default:
                 sendUsage(sender);
@@ -207,5 +211,125 @@ public class CommandStructure extends CommandBase {
                 EnumChatFormatting.WHITE + "  /ok scan <name> <x1> <y1> <z1> <x2> <y2> <z2>"
                     + EnumChatFormatting.GRAY
                     + " - Scan area to JSON"));
+        sender.addChatMessage(
+            new ChatComponentText(
+                EnumChatFormatting.WHITE + "  /ok wand save <name>"
+                    + EnumChatFormatting.GRAY
+                    + " - Save wand selection to JSON"));
+    }
+
+    private void handleWandCommand(ICommandSender sender, String[] args) {
+        if (!(sender instanceof EntityPlayer)) {
+            sender.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + "[OmoshiroiKamo] This command can only be used by players!"));
+            return;
+        }
+
+        if (args.length < 2) {
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok wand save <name>"));
+            return;
+        }
+
+        EntityPlayer player = (EntityPlayer) sender;
+        String subAction = args[1].toLowerCase();
+
+        switch (subAction) {
+            case "save":
+                saveWandSelection(player, args);
+                break;
+            case "clear":
+                clearWandSelection(player);
+                break;
+            default:
+                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok wand save <name>"));
+                break;
+        }
+    }
+
+    private void saveWandSelection(EntityPlayer player, String[] args) {
+        if (args.length < 3) {
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok wand save <name>"));
+            return;
+        }
+
+        String name = args[2];
+
+        WandSelectionManager.PendingScan pending = WandSelectionManager.getInstance()
+            .getPendingScan(player.getUniqueID());
+
+        if (pending == null) {
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + "[OmoshiroiKamo] No pending scan! Use the Structure Wand first."));
+            return;
+        }
+
+        // ディメンションチェック
+        if (pending.dimensionId != player.worldObj.provider.dimensionId) {
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + "[OmoshiroiKamo] Selection is in a different dimension!"));
+            return;
+        }
+
+        // サイズチェック
+        int blockCount = pending.getBlockCount();
+        if (blockCount > 32768) {
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + "[OmoshiroiKamo] Area too large! Max 32768 blocks, got " + blockCount));
+            return;
+        }
+
+        player.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Scanning " + blockCount + " blocks..."));
+
+        // configディレクトリを取得
+        File configDir = new File(
+            FMLCommonHandler.instance()
+                .getMinecraftServerInstance()
+                .getFile("."),
+            "config/" + LibMisc.MOD_ID);
+
+        // スキャン実行
+        StructureScanner.ScanResult result = StructureScanner.scan(
+            player.worldObj,
+            name,
+            pending.pos1.posX,
+            pending.pos1.posY,
+            pending.pos1.posZ,
+            pending.pos2.posX,
+            pending.pos2.posY,
+            pending.pos2.posZ,
+            configDir);
+
+        if (result.success) {
+            player
+                .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] " + result.message));
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.GRAY + "File: config/omoshiroikamo/structures/scanned_" + name + ".json"));
+
+            // 仮保存をクリア
+            WandSelectionManager.getInstance()
+                .clearPendingScan(player.getUniqueID());
+        } else {
+            player.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.RED + "[OmoshiroiKamo] Scan failed: " + result.message));
+        }
+    }
+
+    private void clearWandSelection(EntityPlayer player) {
+        if (WandSelectionManager.getInstance()
+            .hasPendingScan(player.getUniqueID())) {
+            WandSelectionManager.getInstance()
+                .clearPendingScan(player.getUniqueID());
+            player.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Wand selection cleared."));
+        } else {
+            player.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.GRAY + "[OmoshiroiKamo] No pending selection to clear."));
+        }
     }
 }
