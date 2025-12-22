@@ -15,27 +15,27 @@ import net.minecraft.world.World;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 /**
- * ワールド内の構造をスキャンしてJSONに変換するユーティリティ
+ * Utility that scans a structure in the world and converts it to JSON.
  */
 public class StructureScanner {
 
-    // シンボルに使用する文字（順番に割り当て）
+    // Characters used for symbols, assigned in order
     private static final String SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
-     * 指定範囲をスキャンしてJSONファイルに保存
+     * Scan the specified region and save it as a JSON file.
      *
-     * @param world     ワールド
-     * @param name      構造体名
-     * @param x1,       y1, z1 開始座標
-     * @param x2,       y2, z2 終了座標
-     * @param configDir 設定ディレクトリ
-     * @return 成功時true
+     * @param world     world instance
+     * @param name      structure name
+     * @param x1,       y1, z1 start coordinates
+     * @param x2,       y2, z2 end coordinates
+     * @param configDir configuration directory
+     * @return true on success
      */
     public static ScanResult scan(World world, String name, int x1, int y1, int z1, int x2, int y2, int z2,
         File configDir) {
 
-        // 座標を正規化（小さい方を開始点に）
+        // Normalize coordinates (smallest becomes the start point)
         int minX = Math.min(x1, x2);
         int minY = Math.min(y1, y2);
         int minZ = Math.min(z1, z2);
@@ -43,16 +43,16 @@ public class StructureScanner {
         int maxY = Math.max(y1, y2);
         int maxZ = Math.max(z1, z2);
 
-        // ブロック→シンボルのマッピング
+        // Block -> symbol mapping
         Map<String, Character> blockToSymbol = new LinkedHashMap<>();
         Map<Character, String> symbolToBlock = new LinkedHashMap<>();
         int symbolIndex = 0;
 
-        // レイヤー（Y軸ごと）
+        // Layers grouped by Y level
         List<List<String>> layers = new ArrayList<>();
         int overflowCount = 0;
 
-        // 上から下にスキャン（既存のJSON形式に合わせる）
+        // Scan from top to bottom to match the existing JSON format
         for (int y = maxY; y >= minY; y--) {
             List<String> layer = new ArrayList<>();
 
@@ -63,27 +63,27 @@ public class StructureScanner {
                     Block block = world.getBlock(x, y, z);
                     int meta = world.getBlockMetadata(x, y, z);
 
-                    // 空気ブロックはスペースとして出力（チェックしない）
+                    // Output air blocks as spaces and skip further checks
                     String blockName = Block.blockRegistry.getNameForObject(block);
                     if (blockName == null || "minecraft:air".equals(blockName)) {
                         row.append(' ');
                         continue;
                     }
 
-                    // ブロックIDを取得
+                    // Build the block ID
                     String blockId = getBlockId(block, meta);
 
-                    // シンボルを割り当て
+                    // Assign a symbol
                     Character symbol = blockToSymbol.get(blockId);
                     if (symbol == null) {
                         if (symbolIndex < SYMBOLS.length()) {
-                            // シンボル割り当て可能
+                            // Symbol can be assigned
                             symbol = SYMBOLS.charAt(symbolIndex++);
                             blockToSymbol.put(blockId, symbol);
                             symbolToBlock.put(symbol, blockId);
                             row.append(symbol);
                         } else {
-                            // シンボル溢れ：ブロックIDを{}で直接記述
+                            // Symbol overflow: embed the block ID in braces
                             row.append("{")
                                 .append(blockId)
                                 .append("}");
@@ -100,7 +100,7 @@ public class StructureScanner {
             layers.add(layer);
         }
 
-        // JSONを生成
+        // Build JSON content
         StringBuilder json = new StringBuilder();
         json.append("[\n");
         json.append("  {\n");
@@ -108,7 +108,7 @@ public class StructureScanner {
             .append(name)
             .append("\",\n");
 
-        // レイヤー
+        // Layers
         json.append("    \"layers\": [\n");
         for (int i = 0; i < layers.size(); i++) {
             List<String> layer = layers.get(i);
@@ -126,7 +126,7 @@ public class StructureScanner {
         }
         json.append("    ],\n");
 
-        // マッピング
+        // Mappings
         json.append("    \"mappings\": {\n");
         int count = 0;
         for (Map.Entry<Character, String> entry : symbolToBlock.entrySet()) {
@@ -143,7 +143,7 @@ public class StructureScanner {
         json.append("  }\n");
         json.append("]\n");
 
-        // ファイルに保存
+        // Save to disk
         File structuresDir = new File(configDir, "structures");
         if (!structuresDir.exists()) {
             structuresDir.mkdirs();
@@ -168,8 +168,8 @@ public class StructureScanner {
     }
 
     /**
-     * ブロックIDを文字列で取得
-     * 注意: 空気ブロックはこのメソッドに到達する前にスペースとして処理される
+     * Build the block ID string.
+     * Note: air blocks are handled as spaces before reaching this method.
      */
     private static String getBlockId(Block block, int meta) {
         String blockName = Block.blockRegistry.getNameForObject(block);
@@ -177,7 +177,7 @@ public class StructureScanner {
             return "unknown:block:0";
         }
 
-        // メタデータが0の場合は省略可能
+        // Metadata 0 can be omitted
         if (meta == 0) {
             return blockName;
         }
@@ -186,7 +186,7 @@ public class StructureScanner {
     }
 
     /**
-     * スキャン結果
+     * Scan result container.
      */
     public static class ScanResult {
 

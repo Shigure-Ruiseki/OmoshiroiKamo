@@ -7,14 +7,14 @@ import java.util.UUID;
 import net.minecraft.util.ChunkCoordinates;
 
 /**
- * プレイヤーごとのWand選択範囲を管理するマネージャー
+ * Manages wand selection areas per player.
  */
 public class WandSelectionManager {
 
     private static final WandSelectionManager INSTANCE = new WandSelectionManager();
 
     /**
-     * プレイヤーごとの仮保存スキャンデータ
+     * Temporarily stored scan data per player.
      */
     private final Map<UUID, PendingScan> pendingScans = new HashMap<>();
 
@@ -25,35 +25,35 @@ public class WandSelectionManager {
     }
 
     /**
-     * 仮保存スキャンデータを設定
+     * Save pending scan data.
      */
     public void setPendingScan(UUID playerId, ChunkCoordinates pos1, ChunkCoordinates pos2, int dimensionId) {
         pendingScans.put(playerId, new PendingScan(pos1, pos2, dimensionId));
     }
 
     /**
-     * 仮保存スキャンデータを取得
+     * Get pending scan data.
      */
     public PendingScan getPendingScan(UUID playerId) {
         return pendingScans.get(playerId);
     }
 
     /**
-     * 仮保存スキャンデータをクリア
+     * Clear pending scan data.
      */
     public void clearPendingScan(UUID playerId) {
         pendingScans.remove(playerId);
     }
 
     /**
-     * 仮保存スキャンデータがあるかどうか
+     * Whether pending scan data exists.
      */
     public boolean hasPendingScan(UUID playerId) {
         return pendingScans.containsKey(playerId);
     }
 
     /**
-     * 仮保存スキャンデータ
+     * Pending scan payload.
      */
     public static class PendingScan {
 

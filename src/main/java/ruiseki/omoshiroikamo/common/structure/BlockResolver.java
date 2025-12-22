@@ -5,22 +5,22 @@ import net.minecraft.block.Block;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
- * ブロックID文字列からBlockオブジェクトを解決するユーティリティ
+ * Utility for resolving Block objects from block ID strings.
  */
 public class BlockResolver {
 
     /**
-     * "mod:block:meta" 形式の文字列からBlockとmetaを解決
-     * 
-     * @param blockId "mod:block:meta" 形式（例: "minecraft:iron_block:0"）
-     * @return 解決結果、失敗時はnull
+     * Resolve a block and metadata from a "mod:block:meta" string.
+     *
+     * @param blockId identifier such as "minecraft:iron_block:0"
+     * @return resolved result, or null on failure
      */
     public static ResolvedBlock resolve(String blockId) {
         if (blockId == null || blockId.isEmpty()) {
             return null;
         }
 
-        // "air" の特別処理
+        // Special handling for "air"
         if ("air".equalsIgnoreCase(blockId)) {
             return new ResolvedBlock(null, 0, true);
         }
@@ -56,7 +56,7 @@ public class BlockResolver {
     }
 
     /**
-     * 解決されたブロック情報
+     * Resolved block information.
      */
     public static class ResolvedBlock {
 

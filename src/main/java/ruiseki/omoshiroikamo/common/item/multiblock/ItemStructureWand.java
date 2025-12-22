@@ -16,10 +16,10 @@ import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
 
 /**
- * 構造スキャン用の杖アイテム
- * 右クリック: ポジション1を設定
- * Shift+右クリック: ポジション2を設定
- * 左クリック（空気）: スキャン範囲を仮保存
+ * Wand item used for structure scanning.
+ * Right-click: set position 1
+ * Shift + Right-click: set position 2
+ * Left-click in air: store the selection for scanning
  */
 public class ItemStructureWand extends ItemOK {
 
@@ -49,18 +49,18 @@ public class ItemStructureWand extends ItemOK {
         NBTTagCompound nbt = getOrCreateNBT(stack);
 
         if (player.isSneaking()) {
-            // Shift+右クリック: ポジション2を設定
+            // Shift + right-click: set position 2
             setPos2(nbt, x, y, z, world.provider.dimensionId);
             player.addChatMessage(
                 new ChatComponentText(
                     EnumChatFormatting.GREEN + "[OmoshiroiKamo] Position 2 set: (" + x + ", " + y + ", " + z + ")"));
 
-            // 両方設定されていたらブロック数を表示
+            // When both points are set, show block count
             if (hasPos1(nbt) && hasPos2(nbt)) {
                 showSelectionInfo(player, nbt);
             }
         } else {
-            // 右クリック: ポジション1を設定
+            // Right-click: set position 1
             setPos1(nbt, x, y, z, world.provider.dimensionId);
             player.addChatMessage(
                 new ChatComponentText(
@@ -86,7 +86,7 @@ public class ItemStructureWand extends ItemOK {
             return false;
         }
 
-        // ディメンションチェック
+        // Dimension guard
         int dim = nbt.getInteger(NBT_DIMENSION);
         if (dim != player.worldObj.provider.dimensionId) {
             player.addChatMessage(
@@ -95,7 +95,7 @@ public class ItemStructureWand extends ItemOK {
             return false;
         }
 
-        // 仮保存
+        // Stage the selection
         ChunkCoordinates pos1 = getPos1(nbt);
         ChunkCoordinates pos2 = getPos2(nbt);
 
@@ -218,7 +218,7 @@ public class ItemStructureWand extends ItemOK {
     }
 
     /**
-     * NBTからポジション1を取得（クライアントサイドレンダリング用）
+     * Read position 1 from NBT (client-side rendering helper).
      */
     public static ChunkCoordinates getPos1FromStack(ItemStack stack) {
         if (stack == null || stack.getTagCompound() == null) return null;
@@ -228,7 +228,7 @@ public class ItemStructureWand extends ItemOK {
     }
 
     /**
-     * NBTからポジション2を取得（クライアントサイドレンダリング用）
+     * Read position 2 from NBT (client-side rendering helper).
      */
     public static ChunkCoordinates getPos2FromStack(ItemStack stack) {
         if (stack == null || stack.getTagCompound() == null) return null;
@@ -238,7 +238,7 @@ public class ItemStructureWand extends ItemOK {
     }
 
     /**
-     * NBTからディメンションを取得（クライアントサイドレンダリング用）
+     * Read the dimension from NBT (client-side rendering helper).
      */
     public static int getDimensionFromStack(ItemStack stack) {
         if (stack == null || stack.getTagCompound() == null) return 0;

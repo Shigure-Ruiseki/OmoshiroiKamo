@@ -22,7 +22,7 @@ import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.SolarArrayShapes
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 /**
- * デフォルト構造体JSONファイルを生成・更新
+ * Generates and updates default structure JSON files.
  */
 public class DefaultStructureGenerator {
 
@@ -30,7 +30,7 @@ public class DefaultStructureGenerator {
         .create();
 
     /**
-     * 全ての構造体JSONを生成または更新（欠けているエントリを追加）
+     * Generate or update all structure JSON files, filling in missing entries.
      */
     public static void generateAllIfMissing(File configDir) {
         File structuresDir = new File(configDir, "structures");
@@ -52,7 +52,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * Ore Miner JSONを更新（欠けているエントリを追加）
+     * Update the Ore Miner JSON, adding any missing entries.
      */
     private static void updateOreMinerJson(File file) {
         Map<String, Map<String, Object>> required = new LinkedHashMap<>();
@@ -80,7 +80,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * Resource Miner JSONを更新
+     * Update the Resource Miner JSON.
      */
     private static void updateResMinerJson(File file) {
         Map<String, Map<String, Object>> required = new LinkedHashMap<>();
@@ -108,7 +108,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * Solar Array JSONを更新
+     * Update the Solar Array JSON.
      */
     private static void updateSolarArrayJson(File file) {
         Map<String, Map<String, Object>> required = new LinkedHashMap<>();
@@ -124,7 +124,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * Quantum Beacon JSONを更新
+     * Update the Quantum Beacon JSON.
      */
     private static void updateBeaconJson(File file) {
         Map<String, Map<String, Object>> required = new LinkedHashMap<>();
@@ -140,14 +140,14 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * 既存JSONファイルを読み込み、欠けているエントリを追加
+     * Load an existing JSON file and append any missing entries.
      */
     private static void updateConfigWithMissing(File file, Map<String, Map<String, Object>> required, String typeName) {
         List<Map<String, Object>> existing = new ArrayList<>();
         boolean fileExisted = file.exists();
         boolean loadFailed = false;
 
-        // 既存ファイルを読み込む
+        // Read the existing file if it is present
         if (fileExisted) {
             try (FileReader reader = new FileReader(file)) {
                 JsonReader jsonReader = new JsonReader(reader);
@@ -160,15 +160,15 @@ public class DefaultStructureGenerator {
             } catch (Exception e) {
                 Logger.error("Failed to read existing structure config: " + file.getName(), e);
                 loadFailed = true;
-                // 読み込み失敗時は新規作成として扱う
+                // On failure, treat as a fresh file
             }
         } else {
-            // フォルダ作成
+            // Ensure parent directories exist
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) parent.mkdirs();
         }
 
-        // 読み込み失敗かつファイルが存在する場合は、バックアップを取って新規作成
+        // If loading failed and the file existed, back it up before recreating
         if (loadFailed && fileExisted) {
             File backup = new File(file.getAbsolutePath() + ".backup");
             if (file.renameTo(backup)) {
@@ -177,14 +177,14 @@ public class DefaultStructureGenerator {
             fileExisted = false;
         }
 
-        // 既存エントリの名前を取得
+        // Collect existing entry names
         List<String> existingNames = new ArrayList<>();
         for (Map<String, Object> entry : existing) {
             Object name = entry.get("name");
             if (name != null) existingNames.add(name.toString());
         }
 
-        // 欠けているエントリを追加
+        // Add any missing entries
         boolean updated = false;
         List<String> addedEntries = new ArrayList<>();
         for (Map.Entry<String, Map<String, Object>> req : required.entrySet()) {
@@ -195,7 +195,7 @@ public class DefaultStructureGenerator {
             }
         }
 
-        // 変更があれば書き込み
+        // Write back when there are changes
         if (updated || !fileExisted) {
             writeJson(file, existing.isEmpty() ? new ArrayList<>(required.values()) : existing);
             if (!fileExisted) {
@@ -209,7 +209,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * デフォルトマッピングオブジェクトを作成
+     * Build the default mapping object for a given machine type.
      */
     private static Map<String, Object> createDefaultMappings(String machineType) {
         Map<String, Object> entry = new LinkedHashMap<>();
@@ -217,15 +217,15 @@ public class DefaultStructureGenerator {
 
         Map<String, Object> mappings = new LinkedHashMap<>();
 
-        // 共通マッピング
+        // Shared mappings
         mappings.put("_", "air");
         mappings.put("F", "omoshiroikamo:basalt_structure:0");
         mappings.put("P", "omoshiroikamo:machine_base:0");
         mappings.put("C", "omoshiroikamo:laser_core:0");
 
-        // マシンタイプ別のマッピング
+        // Machine-specific mappings
         if ("oreMiner".equals(machineType) || "resMiner".equals(machineType)) {
-            // コントローラー
+            // Controller
             Map<String, Object> controller = new LinkedHashMap<>();
             String controllerBlock = "oreMiner".equals(machineType) ? "omoshiroikamo:quantum_ore_extractor:0"
                 : "omoshiroikamo:quantum_res_extractor:0";
@@ -233,7 +233,7 @@ public class DefaultStructureGenerator {
             controller.put("max", 1);
             mappings.put("Q", controller);
 
-            // レンズ
+            // Lens
             Map<String, Object> lens = new LinkedHashMap<>();
             List<Map<String, Object>> lensBlocks = new ArrayList<>();
             Map<String, Object> normalLens = new LinkedHashMap<>();
@@ -247,7 +247,7 @@ public class DefaultStructureGenerator {
             lens.put("blocks", lensBlocks);
             mappings.put("L", lens);
 
-            // モディファイア
+            // Modifiers
             Map<String, Object> modifier = new LinkedHashMap<>();
             List<Map<String, Object>> modBlocks = new ArrayList<>();
             Map<String, Object> nullMod = new LinkedHashMap<>();
@@ -268,7 +268,7 @@ public class DefaultStructureGenerator {
             controller.put("max", 1);
             mappings.put("Q", controller);
 
-            // ソーラーセル
+            // Solar cells
             Map<String, Object> cell = new LinkedHashMap<>();
             List<Map<String, Object>> cellBlocks = new ArrayList<>();
             for (int i = 0; i <= 5; i++) {
@@ -279,7 +279,7 @@ public class DefaultStructureGenerator {
             cell.put("blocks", cellBlocks);
             mappings.put("G", cell);
 
-            // モディファイア
+            // Modifiers
             Map<String, Object> modifier = new LinkedHashMap<>();
             List<Map<String, Object>> modBlocks = new ArrayList<>();
             Map<String, Object> nullMod = new LinkedHashMap<>();
@@ -303,7 +303,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * 構造体エントリを作成
+     * Build a structure entry from a name and shape.
      */
     private static Map<String, Object> createStructureEntry(String name, String[][] shape) {
         Map<String, Object> entry = new LinkedHashMap<>();
@@ -329,7 +329,7 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * JSONファイルに書き出し
+     * Write JSON data to a file.
      */
     private static void writeJson(File file, Object data) {
         try (FileWriter writer = new FileWriter(file)) {

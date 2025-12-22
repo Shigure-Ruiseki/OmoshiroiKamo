@@ -5,10 +5,10 @@ import ruiseki.omoshiroikamo.common.structure.StructureManager;
 public class QuantumOreExtractorShapes {
 
     /**
-     * 指定したTierの形状を取得（カスタム形状対応）
-     * 
-     * @param tier Tier番号 (1-6)
-     * @return 形状配列、カスタム形状がない場合はデフォルト
+     * Retrieve the shape for the given tier, honoring custom overrides.
+     *
+     * @param tier tier number (1-6)
+     * @return shape array; defaults are used when no custom shape exists
      */
     public static String[][] getShape(int tier) {
         String[][] custom = StructureManager.getOreMinerShape(tier);
@@ -19,7 +19,7 @@ public class QuantumOreExtractorShapes {
     }
 
     /**
-     * デフォルト形状を取得
+     * Get the default shape for the given tier.
      */
     public static String[][] getDefaultShape(int tier) {
         switch (tier) {

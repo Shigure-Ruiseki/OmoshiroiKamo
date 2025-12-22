@@ -23,41 +23,41 @@ import ruiseki.omoshiroikamo.common.structure.StructureDefinitionData.StructureE
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 /**
- * 構造体JSONファイルのロードとパース
+ * Loads and parses structure JSON files.
  */
 public class StructureJsonLoader {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
         .create();
 
-    /** デフォルトマッピング（全構造体で共有） */
+    /** Default mappings shared across all structures. */
     private Map<Character, BlockMapping> defaultMappings = new HashMap<>();
 
-    /** 構造体定義のキャッシュ（name -> StructureEntry） */
+    /** Cached structure definitions (name -> StructureEntry). */
     private Map<String, StructureEntry> structureCache = new HashMap<>();
 
-    /** パース済みの形状（name -> String[][]） */
+    /** Parsed shapes (name -> String[][]). */
     private Map<String, String[][]> parsedShapes = new HashMap<>();
 
-    /** 収集されたエラーリスト */
+    /** Collected error list. */
     private List<String> errors = new ArrayList<>();
 
     /**
-     * エラーリストを取得
+     * Get a copy of the error list.
      */
     public List<String> getErrors() {
         return new ArrayList<>(errors);
     }
 
     /**
-     * エラーを追加
+     * Add an error entry.
      */
     private void addError(String error) {
         errors.add(error);
     }
 
     /**
-     * JSONファイルをロード
+     * Load a JSON file.
      */
     public boolean loadFromFile(File file) {
         if (!file.exists()) {
@@ -68,7 +68,7 @@ public class StructureJsonLoader {
         try (FileReader reader = new FileReader(file)) {
             JsonElement rootElement = new JsonParser().parse(reader);
 
-            // 空ファイルや不正な形式のチェック
+            // Basic sanity checks
             if (rootElement == null || rootElement.isJsonNull()) {
                 Logger.warn("Structure file is empty or null: " + file.getName());
                 return false;
@@ -103,10 +103,10 @@ public class StructureJsonLoader {
                     .getAsString();
 
                 if ("default".equals(name)) {
-                    // デフォルトマッピングをパース
+                    // Parse default mappings
                     parseDefaultMappings(obj);
                 } else {
-                    // 構造体エントリをパース
+                    // Parse a structure entry
                     StructureEntry entry = parseStructureEntry(obj);
                     if (entry != null) {
                         structureCache.put(name, entry);
@@ -124,7 +124,7 @@ public class StructureJsonLoader {
     }
 
     /**
-     * デフォルトマッピングをパース
+     * Parse the default mappings.
      */
     private void parseDefaultMappings(JsonObject obj) {
         if (!obj.has("mappings")) return;
@@ -141,14 +141,14 @@ public class StructureJsonLoader {
     }
 
     /**
-     * 構造体エントリをパース
+     * Parse a structure entry.
      */
     private StructureEntry parseStructureEntry(JsonObject obj) {
         StructureEntry entry = new StructureEntry();
         entry.name = obj.get("name")
             .getAsString();
 
-        // レイヤーをパース
+        // Parse layers
         if (obj.has("layers")) {
             entry.layers = new ArrayList<>();
             JsonArray layersArray = obj.getAsJsonArray("layers");
@@ -160,7 +160,7 @@ public class StructureJsonLoader {
             }
         }
 
-        // マッピングをパース（オプション）
+        // Parse mappings (optional)
         if (obj.has("mappings")) {
             entry.mappings = new HashMap<>();
             JsonObject mappingsObj = obj.getAsJsonObject("mappings");
@@ -173,7 +173,7 @@ public class StructureJsonLoader {
     }
 
     /**
-     * レイヤーをパース
+     * Parse a single layer definition.
      */
     private Layer parseLayer(JsonObject obj) {
         Layer layer = new Layer();
@@ -192,24 +192,24 @@ public class StructureJsonLoader {
     }
 
     /**
-     * ブロックマッピングをパース（文字列 or オブジェクト形式）
+     * Parse a block mapping (string or object form).
      */
     private BlockMapping parseBlockMapping(JsonElement element) {
         BlockMapping mapping = new BlockMapping();
 
         if (element.isJsonPrimitive()) {
-            // 単純な文字列形式: "mod:block:meta"
+            // Simple string form: "mod:block:meta"
             mapping.block = element.getAsString();
         } else if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
 
-            // 単一ブロック形式: { "block": "...", "max": 1 }
+            // Single block form: { "block": "...", "max": 1 }
             if (obj.has("block")) {
                 mapping.block = obj.get("block")
                     .getAsString();
             }
 
-            // 複数候補形式: { "blocks": [...] }
+            // Multiple choice form: { "blocks": [...] }
             if (obj.has("blocks")) {
                 mapping.blocks = new ArrayList<>();
                 JsonArray blocksArray = obj.getAsJsonArray("blocks");
@@ -232,13 +232,13 @@ public class StructureJsonLoader {
     }
 
     /**
-     * 個別ブロックエントリをパース
+     * Parse an individual block entry.
      */
     private BlockEntry parseBlockEntry(JsonElement element) {
         BlockEntry entry = new BlockEntry();
 
         if (element.isJsonPrimitive()) {
-            // 単純な文字列: "mod:block:meta"
+            // Simple string: "mod:block:meta"
             entry.id = element.getAsString();
         } else if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
@@ -254,10 +254,10 @@ public class StructureJsonLoader {
     }
 
     /**
-     * 構造体名からString[][]形状を取得
+     * Retrieve the String[][] shape for the given structure name.
      */
     public String[][] getShape(String structureName) {
-        // キャッシュ確認
+        // Check cache first
         if (parsedShapes.containsKey(structureName)) {
             return parsedShapes.get(structureName);
         }
@@ -268,12 +268,12 @@ public class StructureJsonLoader {
         }
 
         try {
-            // レイヤーからString[][]を構築
+            // Build the String[][] from layers
             String[][] shape = new String[entry.layers.size()][];
             for (int i = 0; i < entry.layers.size(); i++) {
                 Layer layer = entry.layers.get(i);
                 if (layer == null || layer.rows == null) {
-                    // 不正なレイヤーがある場合は空配列で対応
+                    // If a malformed layer exists, fall back to an empty array
                     shape[i] = new String[0];
                 } else {
                     shape[i] = layer.rows.toArray(new String[0]);
@@ -289,10 +289,10 @@ public class StructureJsonLoader {
     }
 
     /**
-     * シンボルからマッピングを取得（構造体固有 > デフォルト）
+     * Resolve a mapping from a symbol (structure-specific overrides defaults).
      */
     public BlockMapping getMapping(String structureName, char symbol) {
-        // 構造体固有マッピングを確認
+        // Check structure-specific mappings first
         StructureEntry entry = structureCache.get(structureName);
         if (entry != null && entry.mappings != null) {
             Object mapping = entry.mappings.get(String.valueOf(symbol));
@@ -301,12 +301,12 @@ public class StructureJsonLoader {
             }
         }
 
-        // デフォルトマッピングを返す
+        // Fallback to default mapping
         return defaultMappings.get(symbol);
     }
 
     /**
-     * JSONファイルに書き出し
+     * Write structures back to a JSON file.
      */
     public static void writeToFile(File file, List<StructureEntry> entries) throws IOException {
         try (FileWriter writer = new FileWriter(file)) {
@@ -314,24 +314,24 @@ public class StructureJsonLoader {
         }
     }
 
-    // ========== バリデーション用ヘルパーメソッド ==========
+    // ========== Validation helper methods ==========
 
     /**
-     * 構造体名のセットを取得
+     * Get the set of structure names.
      */
     public java.util.Set<String> getStructureNames() {
         return structureCache.keySet();
     }
 
     /**
-     * 構造体エントリを取得
+     * Get a structure entry by name.
      */
     public StructureEntry getStructureEntry(String name) {
         return structureCache.get(name);
     }
 
     /**
-     * デフォルトマッピングを取得
+     * Get a copy of the default mappings.
      */
     public Map<Character, BlockMapping> getDefaultMappings() {
         return new HashMap<>(defaultMappings);

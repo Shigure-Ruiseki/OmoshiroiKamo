@@ -10,14 +10,14 @@ import ruiseki.omoshiroikamo.common.structure.StructureDefinitionData.Layer;
 import ruiseki.omoshiroikamo.common.structure.StructureDefinitionData.StructureEntry;
 
 /**
- * 構造体定義のバリデーション
+ * Validation logic for structure definitions.
  */
 public class StructureValidator {
 
-    /** 収集されたエラーリスト */
+    /** Collected validation errors. */
     private final List<String> errors = new ArrayList<>();
 
-    /** バリデーション対象のローダー */
+    /** Loader to validate against. */
     private final StructureJsonLoader loader;
 
     public StructureValidator(StructureJsonLoader loader) {
@@ -25,30 +25,30 @@ public class StructureValidator {
     }
 
     /**
-     * エラーリストを取得
+     * Get a copy of the error list.
      */
     public List<String> getErrors() {
         return new ArrayList<>(errors);
     }
 
     /**
-     * エラーがあるか
+     * Whether any errors were collected.
      */
     public boolean hasErrors() {
         return !errors.isEmpty();
     }
 
     /**
-     * エラーを追加
+     * Add a validation error.
      */
     private void addError(String error) {
         errors.add(error);
     }
 
     /**
-     * 全構造体をバリデーション
+     * Validate every structure in the loader.
      *
-     * @return エラーがあればtrue
+     * @return true if any errors are found
      */
     public boolean validateAll() {
         boolean hasErrors = false;
@@ -66,11 +66,11 @@ public class StructureValidator {
     }
 
     /**
-     * 構造体をバリデーション
+     * Validate a single structure entry.
      *
-     * @param name  構造体名
-     * @param entry 構造体エントリ
-     * @return エラーがあればtrue
+     * @param name  structure name
+     * @param entry structure entry
+     * @return true if errors are found
      */
     public boolean validateStructure(String name, StructureEntry entry) {
         boolean hasErrors = false;
@@ -80,7 +80,7 @@ public class StructureValidator {
             return true;
         }
 
-        // レイヤーサイズの基準を取得（最初のレイヤーから）
+        // Use the first layer as the size baseline
         Layer firstLayer = entry.layers.get(0);
         if (firstLayer.rows == null || firstLayer.rows.isEmpty()) {
             addError("[" + name + "] Layer 0 has no rows");
@@ -91,7 +91,7 @@ public class StructureValidator {
         int expectedWidth = firstLayer.rows.get(0)
             .length();
 
-        // 各レイヤーをバリデーション
+        // Validate each layer
         for (int layerIndex = 0; layerIndex < entry.layers.size(); layerIndex++) {
             Layer layer = entry.layers.get(layerIndex);
 
@@ -101,7 +101,7 @@ public class StructureValidator {
                 continue;
             }
 
-            // レイヤーサイズの一致を確認
+            // Confirm layer height matches baseline
             if (layer.rows.size() != expectedDepth) {
                 addError(
                     "[" + name
@@ -114,7 +114,7 @@ public class StructureValidator {
                 hasErrors = true;
             }
 
-            // 各行の長さを確認（長方形）
+            // Confirm each row length is consistent (rectangular)
             for (int rowIndex = 0; rowIndex < layer.rows.size(); rowIndex++) {
                 String row = layer.rows.get(rowIndex);
                 if (row.length() != expectedWidth) {
@@ -131,16 +131,16 @@ public class StructureValidator {
                     hasErrors = true;
                 }
 
-                // シンボルマッピングを確認
+                // Verify symbol mappings
                 for (int charIndex = 0; charIndex < row.length(); charIndex++) {
                     char symbol = row.charAt(charIndex);
 
-                    // スペースはスキップ（何もチェックしない）
+                    // Skip spaces
                     if (symbol == ' ') {
                         continue;
                     }
 
-                    // マッピングが存在するか確認
+                    // Ensure a mapping exists
                     BlockMapping mapping = loader.getMapping(name, symbol);
                     if (mapping == null) {
                         addError(
@@ -163,18 +163,18 @@ public class StructureValidator {
     }
 
     /**
-     * マッピングされたブロックIDが有効か検証
-     * 注意: この検証はゲームがロード済みの状態でのみ正しく動作する
+     * Validate that mapped block IDs resolve correctly.
+     * Note: this requires the game to be fully loaded.
      *
-     * @param name 構造体名
-     * @return エラーがあればtrue
+     * @param name structure name
+     * @return true if errors are found
      */
     public boolean validateBlockIds(String name) {
         boolean hasErrors = false;
         StructureEntry entry = loader.getStructureEntry(name);
         if (entry == null) return false;
 
-        // デフォルトマッピングを検証
+        // Validate default mappings
         Map<Character, BlockMapping> defaultMappings = loader.getDefaultMappings();
         for (Map.Entry<Character, BlockMapping> mapEntry : defaultMappings.entrySet()) {
             if (!validateBlockMapping(name, mapEntry.getKey(), mapEntry.getValue())) {
@@ -182,7 +182,7 @@ public class StructureValidator {
             }
         }
 
-        // 構造体固有マッピングを検証
+        // Validate structure-specific mappings
         if (entry.mappings != null) {
             for (Map.Entry<String, Object> mapEntry : entry.mappings.entrySet()) {
                 if (mapEntry.getValue() instanceof BlockMapping) {
@@ -199,12 +199,12 @@ public class StructureValidator {
     }
 
     /**
-     * ブロックマッピングを検証
+     * Validate a block mapping entry.
      */
     private boolean validateBlockMapping(String structureName, char symbol, BlockMapping mapping) {
         if (mapping == null) return true;
 
-        // 単一ブロックの場合
+        // Single-block mappings
         if (mapping.block != null && !mapping.block.isEmpty()) {
             BlockResolver.ResolvedBlock resolved = BlockResolver.resolve(mapping.block);
             if (resolved == null && !"air".equalsIgnoreCase(mapping.block)) {
@@ -213,7 +213,7 @@ public class StructureValidator {
             }
         }
 
-        // 複数ブロックの場合
+        // Multi-block mappings
         if (mapping.blocks != null) {
             for (BlockEntry blockEntry : mapping.blocks) {
                 if (blockEntry.id != null) {

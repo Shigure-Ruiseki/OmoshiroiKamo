@@ -18,7 +18,7 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 /**
- * 構造体システムのエラーを収集・通知するコレクター
+ * Collector that gathers and reports structure-system errors.
  */
 public class StructureErrorCollector {
 
@@ -38,20 +38,20 @@ public class StructureErrorCollector {
     }
 
     /**
-     * 設定ディレクトリを設定
+     * Configure the directory where error files are written.
      */
     public void setConfigDir(File configDir) {
         this.configDir = configDir;
     }
 
     /**
-     * エラーを収集
+     * Collect an error instance.
      */
     public void collect(StructureException e) {
         errors.add(e);
         Logger.error("[Structure] " + e.getFormattedMessage());
 
-        // 原因がある場合はスタックトレースも出力
+        // Log the underlying cause when present
         if (e.getCause() != null) {
             Logger.error(
                 "Caused by: " + e.getCause()
@@ -60,41 +60,41 @@ public class StructureErrorCollector {
     }
 
     /**
-     * 文字列からエラーを収集（簡易版）
+     * Collect an error from basic fields (lightweight helper).
      */
     public void collect(StructureException.ErrorType type, String fileName, String message) {
         collect(new StructureException(type, fileName, message));
     }
 
     /**
-     * エラーがあるかどうか
+     * Whether any errors have been recorded.
      */
     public boolean hasErrors() {
         return !errors.isEmpty();
     }
 
     /**
-     * エラー数を取得
+     * Return the total error count.
      */
     public int getErrorCount() {
         return errors.size();
     }
 
     /**
-     * エラーリストを取得（コピー）
+     * Get a copy of the error list.
      */
     public List<StructureException> getErrors() {
         return new ArrayList<>(errors);
     }
 
     /**
-     * エラーをクリア
+     * Clear all recorded errors.
      */
     public void clear() {
         errors.clear();
         notifiedPlayers.clear();
 
-        // エラーファイルも削除
+        // Remove the persisted error file
         if (configDir != null) {
             File errorsFile = new File(configDir, "structures/errors.txt");
             if (errorsFile.exists()) {
@@ -104,7 +104,7 @@ public class StructureErrorCollector {
     }
 
     /**
-     * エラーをファイルに書き出し
+     * Write errors to disk.
      */
     public void writeToFile() {
         if (errors.isEmpty() || configDir == null) return;
@@ -124,7 +124,7 @@ public class StructureErrorCollector {
                 StructureException e = errors.get(i);
                 writer.println((i + 1) + ". " + e.getFormattedMessage());
 
-                // ファイル情報
+                // File information
                 if (e.getFileName() != null) {
                     writer.println("   File: " + e.getFileName());
                 }
@@ -132,7 +132,7 @@ public class StructureErrorCollector {
                     writer.println("   Entry: " + e.getEntryName());
                 }
 
-                // 原因
+                // Cause
                 if (e.getCause() != null) {
                     writer.println(
                         "   Cause: " + e.getCause()
@@ -160,7 +160,7 @@ public class StructureErrorCollector {
     }
 
     /**
-     * プレイヤーにエラーを通知（ログイン時）
+     * Notify a player about errors on login.
      */
     public void notifyPlayer(EntityPlayer player) {
         if (!hasErrors()) return;
@@ -170,7 +170,7 @@ public class StructureErrorCollector {
 
         notifiedPlayers.add(playerName);
 
-        // ヘッダー
+        // Header
         player.addChatMessage(
             new ChatComponentText(
                 EnumChatFormatting.RED + "[OmoshiroiKamo] "
@@ -179,7 +179,7 @@ public class StructureErrorCollector {
                     + errors.size()
                     + " error(s)!"));
 
-        // エラータイプの概要
+        // Summary by error type
         long parseErrors = errors.stream()
             .filter(e -> e.getType() == StructureException.ErrorType.PARSE_ERROR)
             .count();
@@ -199,13 +199,13 @@ public class StructureErrorCollector {
             player.addChatMessage(new ChatComponentText(summary.toString()));
         }
 
-        // ファイルパス
+        // File path hint
         player.addChatMessage(
             new ChatComponentText(EnumChatFormatting.GRAY + "Check: config/omoshiroikamo/structures/errors.txt"));
     }
 
     /**
-     * エラーサマリーを取得
+     * Build a human-readable error summary.
      */
     public String getSummary() {
         if (errors.isEmpty()) return "No errors";
@@ -214,7 +214,7 @@ public class StructureErrorCollector {
         sb.append(errors.size())
             .append(" error(s): ");
 
-        // タイプ別にカウント
+        // Count by error type
         int[] counts = new int[StructureException.ErrorType.values().length];
         for (StructureException e : errors) {
             counts[e.getType()

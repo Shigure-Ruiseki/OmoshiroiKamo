@@ -56,7 +56,7 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         Logger.setPhase("PREINIT");
 
-        // カスタム構造体システムを初期化
+        // Initialize the custom structure system
         StructureManager.getInstance()
             .initialize(
                 event.getModConfigurationDirectory()

@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JSON構造定義のデータクラス群
+ * Data classes representing the JSON structure definitions.
  */
 public class StructureDefinitionData {
 
     /**
-     * JSONファイル全体を表す（配列形式）
+     * Represents the entire JSON file (array form).
      */
     public static class StructureFile {
 
@@ -17,62 +17,62 @@ public class StructureDefinitionData {
     }
 
     /**
-     * 1つの構造体エントリ（default または 具体的な構造体）
+     * One structure entry (either "default" or a concrete structure).
      */
     public static class StructureEntry {
 
-        /** 構造体名（"default" または "oreExtractorTier1" など） */
+        /** Structure name ("default" or e.g. "oreExtractorTier1"). */
         public String name;
 
-        /** レイヤー配列（defaultの場合はnull） */
+        /** Layer array (null for default entries). */
         public List<Layer> layers;
 
-        /** ブロックマッピング */
+        /** Block mappings. */
         public Map<String, Object> mappings;
     }
 
     /**
-     * 1つのレイヤー（名前付き）
+     * A named layer within a structure.
      */
     public static class Layer {
 
-        /** レイヤー名（"controller", "core", "base" など） */
+        /** Layer name (e.g., "controller", "core", "base"). */
         public String name;
 
-        /** 行の配列（各行は文字列） */
+        /** Rows within the layer (each row is a string). */
         public List<String> rows;
     }
 
     /**
-     * ブロックマッピングエントリ（単一ブロック or 複数候補）
+     * A block mapping entry (single block or multiple candidates).
      */
     public static class BlockMapping {
 
-        /** 単一ブロックの場合のID */
+        /** ID when mapping to a single block. */
         public String block;
 
-        /** 複数候補の場合のリスト */
+        /** Candidate list when multiple blocks are allowed. */
         public List<BlockEntry> blocks;
 
-        /** シンボル全体の最小数（オプション） */
+        /** Minimum count across the symbol (optional). */
         public Integer min;
 
-        /** シンボル全体の最大数（オプション） */
+        /** Maximum count across the symbol (optional). */
         public Integer max;
     }
 
     /**
-     * 個別ブロックエントリ（複数候補内の1つ）
+     * An individual block entry (one candidate).
      */
     public static class BlockEntry {
 
-        /** ブロックID（mod:block:meta 形式、*でany meta） */
+        /** Block ID in mod:block:meta form (* allows any meta). */
         public String id;
 
-        /** このブロックの最小数 */
+        /** Minimum count for this block. */
         public Integer min;
 
-        /** このブロックの最大数 */
+        /** Maximum count for this block. */
         public Integer max;
     }
 }

@@ -16,11 +16,11 @@ import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 /**
- * 構造体管理コマンド
+ * Structure management command.
  * Usage:
- * /ok reload - 設定を再読み込み
- * /ok status - 状態を表示
- * /ok scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - 範囲をスキャン
+ * /ok reload - reload configuration
+ * /ok status - show current status
+ * /ok scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - scan a region
  */
 public class CommandStructure extends CommandBase {
 
@@ -143,7 +143,7 @@ public class CommandStructure extends CommandBase {
             return;
         }
 
-        // ワールドを取得
+        // Resolve the target world
         World world = null;
         if (sender instanceof EntityPlayer) {
             world = ((EntityPlayer) sender).worldObj;
@@ -158,7 +158,7 @@ public class CommandStructure extends CommandBase {
             return;
         }
 
-        // サイズチェック
+        // Size guard
         int sizeX = Math.abs(x2 - x1) + 1;
         int sizeY = Math.abs(y2 - y1) + 1;
         int sizeZ = Math.abs(z2 - z1) + 1;
@@ -174,14 +174,14 @@ public class CommandStructure extends CommandBase {
             new ChatComponentText(
                 EnumChatFormatting.YELLOW + "Scanning " + sizeX + "x" + sizeY + "x" + sizeZ + " area..."));
 
-        // configディレクトリを取得
+        // Locate the config directory
         File configDir = new File(
             FMLCommonHandler.instance()
                 .getMinecraftServerInstance()
                 .getFile("."),
             "config/" + LibMisc.MOD_ID);
 
-        // スキャン実行
+        // Execute the scan
         StructureScanner.ScanResult result = StructureScanner.scan(world, name, x1, y1, z1, x2, y2, z2, configDir);
 
         if (result.success) {
@@ -265,7 +265,7 @@ public class CommandStructure extends CommandBase {
             return;
         }
 
-        // ディメンションチェック
+        // Dimension guard
         if (pending.dimensionId != player.worldObj.provider.dimensionId) {
             player.addChatMessage(
                 new ChatComponentText(
@@ -273,7 +273,7 @@ public class CommandStructure extends CommandBase {
             return;
         }
 
-        // サイズチェック
+        // Size guard
         int blockCount = pending.getBlockCount();
         if (blockCount > 32768) {
             player.addChatMessage(
@@ -285,14 +285,14 @@ public class CommandStructure extends CommandBase {
         player.addChatMessage(
             new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Scanning " + blockCount + " blocks..."));
 
-        // configディレクトリを取得
+        // Locate the config directory
         File configDir = new File(
             FMLCommonHandler.instance()
                 .getMinecraftServerInstance()
                 .getFile("."),
             "config/" + LibMisc.MOD_ID);
 
-        // スキャン実行
+        // Execute the scan
         StructureScanner.ScanResult result = StructureScanner.scan(
             player.worldObj,
             name,
@@ -311,7 +311,7 @@ public class CommandStructure extends CommandBase {
                 new ChatComponentText(
                     EnumChatFormatting.GRAY + "File: config/omoshiroikamo/structures/scanned_" + name + ".json"));
 
-            // 仮保存をクリア
+            // Clear the pending selection
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
         } else {

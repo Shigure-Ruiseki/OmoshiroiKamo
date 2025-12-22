@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 /**
- * カスタムストラクチャーシステムのメインマネージャー
+ * Main manager for the custom structure system.
  */
 public class StructureManager {
 
@@ -24,7 +24,7 @@ public class StructureManager {
     private File configDir;
     private boolean initialized = false;
 
-    /** 既に警告を出した構造体名（ログスパム防止） */
+    /** Names that have already triggered a warning (prevents log spam). */
     private final Set<String> warnedStructures = new HashSet<>();
 
     private StructureManager() {}
@@ -37,21 +37,21 @@ public class StructureManager {
     }
 
     /**
-     * 初期化済みかどうか
+     * Whether initialization is complete.
      */
     public boolean isInitialized() {
         return initialized;
     }
 
     /**
-     * エラーがあるかどうか
+     * Whether any errors were collected.
      */
     public boolean hasErrors() {
         return errorCollector.hasErrors();
     }
 
     /**
-     * 初期化（PreInitで呼び出し）
+     * Initialize during PreInit.
      */
     public void initialize(File minecraftDir) {
         if (initialized) return;
@@ -62,20 +62,20 @@ public class StructureManager {
                 configDir.mkdirs();
             }
 
-            // エラーコレクターにconfigDirを設定
+            // Configure the error collector
             errorCollector.setConfigDir(configDir);
             errorCollector.clear();
 
-            // デフォルトJSONを生成
+            // Generate default JSON files if needed
             DefaultStructureGenerator.generateAllIfMissing(configDir);
 
-            // JSONファイルをロード
+            // Load JSON files
             loadStructureFile("ore_miner");
             loadStructureFile("res_miner");
             loadStructureFile("solar_array");
             loadStructureFile("quantum_beacon");
 
-            // エラーがあればファイルに書き出し
+            // Persist errors if any were found
             if (errorCollector.hasErrors()) {
                 errorCollector.writeToFile();
             }
@@ -91,14 +91,14 @@ public class StructureManager {
     }
 
     /**
-     * プレイヤーにエラーを通知（ログイン時に呼び出す）
+     * Notify a player about configuration errors (called on login).
      */
     public void notifyPlayerIfNeeded(EntityPlayer player) {
         errorCollector.notifyPlayer(player);
     }
 
     /**
-     * 構造体JSONファイルをロード
+     * Load a single structure JSON file.
      */
     private void loadStructureFile(String name) {
         try {
@@ -108,7 +108,7 @@ public class StructureManager {
             if (loader.loadFromFile(file)) {
                 loaders.put(name, loader);
 
-                // 構造体バリデーション
+                // Validate the structure definitions
                 StructureValidator validator = new StructureValidator(loader);
                 if (validator.validateAll()) {
                     for (String error : validator.getErrors()) {
@@ -116,7 +116,7 @@ public class StructureManager {
                     }
                 }
 
-                // ローダーのエラーを収集（パースエラー）
+                // Collect loader errors (parse failures)
                 for (String error : loader.getErrors()) {
                     errorCollector.collect(StructureException.ErrorType.PARSE_ERROR, name + ".json", error);
                 }
@@ -129,14 +129,14 @@ public class StructureManager {
     }
 
     /**
-     * 構造体の形状を取得
-     * 
-     * @param fileKey       ファイルキー（"ore_miner", "res_miner" など）
-     * @param structureName 構造体名（"oreExtractorTier1" など）
-     * @return String[][] 形状、見つからない場合はnull
+     * Fetch a structure shape.
+     *
+     * @param fileKey       file key ("ore_miner", "res_miner", ...)
+     * @param structureName structure name ("oreExtractorTier1", ...)
+     * @return String[][] shape, or null if not found
      */
     public String[][] getShape(String fileKey, String structureName) {
-        // 初期化前はnullを返す（デフォルト形状を使用させる）
+        // Return null before initialization so default shapes are used
         if (!initialized) {
             return null;
         }
@@ -156,7 +156,7 @@ public class StructureManager {
     }
 
     /**
-     * 同じ警告を繰り返し出さないようにする
+     * Prevents repeating the same warning.
      */
     private void warnOnce(String key, String message) {
         if (!warnedStructures.contains(key)) {
@@ -166,7 +166,7 @@ public class StructureManager {
     }
 
     /**
-     * ブロックマッピングを取得
+     * Retrieve a block mapping for a symbol.
      */
     public BlockMapping getMapping(String fileKey, String structureName, char symbol) {
         if (!initialized) return null;
@@ -179,7 +179,7 @@ public class StructureManager {
     }
 
     /**
-     * ファイルを再読み込み
+     * Reload all structure files.
      */
     public void reload() {
         loaders.clear();
@@ -201,37 +201,37 @@ public class StructureManager {
     }
 
     /**
-     * エラーコレクターを取得
+     * Access the shared error collector.
      */
     public StructureErrorCollector getErrorCollector() {
         return errorCollector;
     }
 
-    // ===== 便利メソッド =====
+    // ===== Convenience helpers =====
 
     /**
-     * Ore Miner の形状を取得
+     * Get an Ore Miner shape for the given tier.
      */
     public static String[][] getOreMinerShape(int tier) {
         return getInstance().getShape("ore_miner", "oreExtractorTier" + tier);
     }
 
     /**
-     * Resource Miner の形状を取得
+     * Get a Resource Miner shape for the given tier.
      */
     public static String[][] getResMinerShape(int tier) {
         return getInstance().getShape("res_miner", "resExtractorTier" + tier);
     }
 
     /**
-     * Solar Array の形状を取得
+     * Get a Solar Array shape for the given tier.
      */
     public static String[][] getSolarArrayShape(int tier) {
         return getInstance().getShape("solar_array", "solarArrayTier" + tier);
     }
 
     /**
-     * Quantum Beacon の形状を取得
+     * Get a Quantum Beacon shape for the given tier.
      */
     public static String[][] getBeaconShape(int tier) {
         return getInstance().getShape("quantum_beacon", "beaconTier" + tier);

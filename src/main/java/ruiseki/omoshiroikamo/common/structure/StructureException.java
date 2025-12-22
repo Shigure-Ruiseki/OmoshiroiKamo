@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.common.structure;
 
 /**
- * 構造体設定のエラーを表すカスタム例外
+ * Custom exception representing structure configuration errors.
  */
 public class StructureException extends RuntimeException {
 
@@ -12,7 +12,7 @@ public class StructureException extends RuntimeException {
     private final String entryName;
 
     /**
-     * エラータイプ
+     * Error categories.
      */
     public enum ErrorType {
 
@@ -39,7 +39,7 @@ public class StructureException extends RuntimeException {
     }
 
     /**
-     * 基本コンストラクタ
+     * Base constructor.
      */
     public StructureException(ErrorType type, String message) {
         super(message);
@@ -49,7 +49,7 @@ public class StructureException extends RuntimeException {
     }
 
     /**
-     * ファイル情報付きコンストラクタ
+     * Constructor with file context.
      */
     public StructureException(ErrorType type, String fileName, String message) {
         super(message);
@@ -59,7 +59,7 @@ public class StructureException extends RuntimeException {
     }
 
     /**
-     * 全情報付きコンストラクタ
+     * Constructor with file and entry context.
      */
     public StructureException(ErrorType type, String fileName, String entryName, String message) {
         super(message);
@@ -69,7 +69,7 @@ public class StructureException extends RuntimeException {
     }
 
     /**
-     * 原因付きコンストラクタ
+     * Constructor with a cause.
      */
     public StructureException(ErrorType type, String message, Throwable cause) {
         super(message, cause);
@@ -79,7 +79,7 @@ public class StructureException extends RuntimeException {
     }
 
     /**
-     * 全情報+原因付きコンストラクタ
+     * Constructor with full context and a cause.
      */
     public StructureException(ErrorType type, String fileName, String entryName, String message, Throwable cause) {
         super(message, cause);
@@ -101,7 +101,7 @@ public class StructureException extends RuntimeException {
     }
 
     /**
-     * フォーマット済みのエラーメッセージを取得
+     * Build a formatted error message.
      */
     public String getFormattedMessage() {
         StringBuilder sb = new StringBuilder();
@@ -122,7 +122,7 @@ public class StructureException extends RuntimeException {
         return sb.toString();
     }
 
-    // ===== ファクトリーメソッド =====
+    // ===== Factory methods =====
 
     public static StructureException fileNotFound(String fileName) {
         return new StructureException(ErrorType.FILE_NOT_FOUND, fileName, "Structure file not found: " + fileName);

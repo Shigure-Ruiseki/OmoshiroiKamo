@@ -15,14 +15,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemStructureWand;
 
 /**
- * Structure Wand の選択範囲を半透明の水色枠で描画するレンダラー
+ * Renders the Structure Wand selection with a translucent cyan outline.
  */
 @SideOnly(Side.CLIENT)
 public class StructureWandRenderer {
 
     public static final StructureWandRenderer INSTANCE = new StructureWandRenderer();
 
-    // 半透明水色 (RGB: 0, 200, 255 / Alpha: 0.3)
+    // Translucent cyan (RGB: 0, 200, 255 / Alpha: 0.3)
     private static final float COLOR_R = 0.0f;
     private static final float COLOR_G = 0.78f;
     private static final float COLOR_B = 1.0f;
@@ -38,28 +38,28 @@ public class StructureWandRenderer {
 
         if (player == null) return;
 
-        // プレイヤーが杖を持っているかチェック
+        // Ensure the player is holding the wand
         ItemStack heldItem = player.getHeldItem();
         if (heldItem == null || !(heldItem.getItem() instanceof ItemStructureWand)) {
             return;
         }
 
-        // ポジションを取得
+        // Retrieve stored positions
         ChunkCoordinates pos1 = ItemStructureWand.getPos1FromStack(heldItem);
         ChunkCoordinates pos2 = ItemStructureWand.getPos2FromStack(heldItem);
 
-        // ディメンションチェック
+        // Dimension check
         int dim = ItemStructureWand.getDimensionFromStack(heldItem);
         if (dim != player.worldObj.provider.dimensionId) {
             return;
         }
 
-        // pos1のみ設定されている場合は点を描画
+        // Draw a single point when only pos1 is set
         if (pos1 != null && pos2 == null) {
-            renderPoint(pos1, event.partialTicks, player, 0.0f, 0.78f, 1.0f); // 水色
+            renderPoint(pos1, event.partialTicks, player, 0.0f, 0.78f, 1.0f); // Cyan point
         }
 
-        // 両方設定されている場合は枠を描画
+        // Draw full box when both positions are set
         if (pos1 != null && pos2 != null) {
             renderBox(pos1, pos2, event.partialTicks, player);
         }
@@ -87,7 +87,7 @@ public class StructureWandRenderer {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glLineWidth(3.0f);
 
-        // 辺を描画
+        // Draw edges
         GL11.glColor4f(r, g, b, COLOR_A_EDGE);
         drawBoxEdges(minX, minY, minZ, maxX, maxY, maxZ);
 
@@ -100,7 +100,7 @@ public class StructureWandRenderer {
         double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
         double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
 
-        // ブロック座標からレンダリング座標に変換（+1してブロックの端まで含める）
+        // Convert block coordinates to render coordinates (+1 to include block edges)
         double minX = Math.min(pos1.posX, pos2.posX) - px;
         double minY = Math.min(pos1.posY, pos2.posY) - py;
         double minZ = Math.min(pos1.posZ, pos2.posZ) - pz;
@@ -117,11 +117,11 @@ public class StructureWandRenderer {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-        // 面を半透明で描画
+        // Render faces with transparency
         GL11.glColor4f(COLOR_R, COLOR_G, COLOR_B, COLOR_A_FACE);
         drawBoxFaces(minX, minY, minZ, maxX, maxY, maxZ);
 
-        // 辺を描画
+        // Draw edges
         GL11.glLineWidth(2.0f);
         GL11.glColor4f(COLOR_R, COLOR_G, COLOR_B, COLOR_A_EDGE);
         drawBoxEdges(minX, minY, minZ, maxX, maxY, maxZ);

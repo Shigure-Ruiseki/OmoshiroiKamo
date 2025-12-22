@@ -61,7 +61,7 @@ public class ClientProxy extends CommonProxy {
             .bus()
             .register(KeyHandler.instance);
 
-        // Structure Wand Renderer (範囲可視化)
+        // Structure Wand renderer (visualizes selection bounds)
         MinecraftForge.EVENT_BUS.register(StructureWandRenderer.INSTANCE);
 
         if (BackportConfigs.useEnvironmentalTech) {
