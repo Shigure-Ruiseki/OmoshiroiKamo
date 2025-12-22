@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.common.block.deepMobLearning.lootFabricator;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -25,7 +26,11 @@ import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemPristineMatter;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.config.backport.DeepMobLearningConfig;
 
-public class TELootFabricator extends AbstractMachine implements IEnergySink {
+public class TELootFabricator extends AbstractMachine implements IEnergySink, ISidedInventory {
+
+    private static final int INPUT_SLOT = 0;
+    private static final int OUTPUT_START = 1;
+    private static final int OUTPUT_SIZE = 16;
 
     public final ItemHandlerPristineMatter input = new ItemHandlerPristineMatter() {
 
@@ -187,5 +192,121 @@ public class TELootFabricator extends AbstractMachine implements IEnergySink {
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return new LootFabricatorPanel(this, data, syncManager, settings);
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 1 + OUTPUT_SIZE;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        if (slot == INPUT_SLOT) {
+            return input.getStackInSlot(0);
+        }
+
+        int out = slot - OUTPUT_START;
+        if (out >= 0 && out < OUTPUT_SIZE) {
+            return output.getStackInSlot(out);
+        }
+
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int count) {
+        ItemStack stack = getStackInSlot(slot);
+        if (stack == null) return null;
+
+        if (stack.stackSize <= count) {
+            setInventorySlotContents(slot, null);
+            return stack;
+        }
+
+        ItemStack split = stack.splitStack(count);
+        markDirty();
+        return split;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        ItemStack stack = getStackInSlot(slot);
+        if (stack != null) {
+            setInventorySlotContents(slot, null);
+        }
+        return stack;
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        if (slot == INPUT_SLOT) {
+            input.setStackInSlot(0, stack);
+        } else {
+            int out = slot - OUTPUT_START;
+            if (out >= 0 && out < OUTPUT_SIZE) {
+                output.setStackInSlot(out, stack);
+            }
+        }
+        markDirty();
+    }
+
+    @Override
+    public String getInventoryName() {
+        return this.getMachineName();
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return canPlayerAccess(player);
+    }
+
+    @Override
+    public void openInventory() {
+
+    }
+
+    @Override
+    public void closeInventory() {
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return slot == INPUT_SLOT && stack != null && stack.getItem() instanceof ItemPristineMatter;
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side) {
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+
+        if (dir == ForgeDirection.DOWN) {
+            int[] out = new int[OUTPUT_SIZE];
+            for (int i = 0; i < OUTPUT_SIZE; i++) {
+                out[i] = OUTPUT_START + i;
+            }
+            return out;
+        }
+
+        return new int[] { INPUT_SLOT };
+    }
+
+    @Override
+    public boolean canInsertItem(int slot, ItemStack stack, int side) {
+        return slot == INPUT_SLOT && stack != null && stack.getItem() instanceof ItemPristineMatter;
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+        return slot >= OUTPUT_START;
     }
 }

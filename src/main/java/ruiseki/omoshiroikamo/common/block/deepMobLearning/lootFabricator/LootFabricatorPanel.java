@@ -13,18 +13,20 @@ import org.jetbrains.annotations.Nullable;
 import com.cleanroommc.modularui.api.ITheme;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.drawable.AdaptableUITexture;
-import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.FloatSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.google.common.collect.ImmutableList;
@@ -33,6 +35,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.client.gui.modularui2.base.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.syncHandler.LootFabSH;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.common.util.MathUtils;
@@ -52,6 +55,22 @@ public class LootFabricatorPanel extends ModularPanel {
         .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
         .imageSize(256, 256)
         .xy(0, 83, 7, 71)
+        .adaptable(1)
+        .tiled()
+        .build();
+
+    public static final AdaptableUITexture PROGRESS_BAR = (AdaptableUITexture) UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
+        .imageSize(256, 256)
+        .xy(7, 83, 6, 35)
+        .adaptable(1)
+        .tiled()
+        .build();
+
+    public static final AdaptableUITexture ERROR_BAR = (AdaptableUITexture) UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/deepMobLearning/loot_fabricator")
+        .imageSize(256, 256)
+        .xy(13, 83, 6, 35)
         .adaptable(1)
         .tiled()
         .build();
@@ -133,6 +152,8 @@ public class LootFabricatorPanel extends ModularPanel {
     private final ButtonPageSelect nextPageButton;
     private final ButtonPageSelect prevPageButton;
     private final ButtonItemDeselect deselectButton;
+    private ProgressWidget processBar;
+    private ProgressWidget errorBar;
 
     private CraftingError craftingError = CraftingError.NONE;
 
@@ -155,17 +176,12 @@ public class LootFabricatorPanel extends ModularPanel {
 
         this.panelSyncHandler = new LootFabSH(tileEntity);
         this.syncManager.syncValue("loot_fab_wrapper", this.panelSyncHandler);
-        syncManager.syncValue(
-            "currentOutputItemPage",
-            new IntSyncValue(this::getCurrentOutputItemPage, this::setCurrentOutputItemPage));
-
-        IntSyncValue energySyncer = new IntSyncValue(tileEntity::getEnergyStored);
-        IntSyncValue maxEnergySyncer = new IntSyncValue(tileEntity::getMaxEnergyStored);
-        syncManager.syncValue("energySyncer", energySyncer);
-        syncManager.syncValue("maxEnergySyncer", maxEnergySyncer);
+        syncManager.syncValue("itemPageSyncer", new IntSyncValue(this::getCurrentOutputItemPage));
+        syncManager.syncValue("energySyncer", new IntSyncValue(tileEntity::getEnergyStored));
+        syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
+        syncManager.syncValue("processSyncer", new FloatSyncValue(tileEntity::getProgress));
 
         deselectButton = new ButtonItemDeselect(this).pos(77, 5);
-
         prevPageButton = new ButtonPageSelect(Direction.PREV, this).pos(12, 66);
         nextPageButton = new ButtonPageSelect(Direction.NEXT, this).pos(43, 66);
 
@@ -173,8 +189,43 @@ public class LootFabricatorPanel extends ModularPanel {
             .child(prevPageButton)
             .child(nextPageButton);
 
-        initOutputSelectButtons();
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                int x = 15 + col * (OUTPUT_SELECT_BUTTON_SIZE + OUTPUT_SELECT_LIST_GUTTER);
+                int y = 8 + row * (OUTPUT_SELECT_BUTTON_SIZE + OUTPUT_SELECT_LIST_GUTTER);
 
+                ButtonItemSelect button = new ButtonItemSelect(this).pos(x, y);
+                outputSelectButtons.add(button);
+                this.child(button);
+            }
+        }
+
+        processBar = new ProgressWidget()
+            .value(new DoubleSyncValue(() -> Math.min(1.0, Math.max(0.0, tileEntity.getProgress()))))
+            .texture(null, PROGRESS_BAR, 35)
+            .direction(ProgressWidget.Direction.UP)
+            .size(6, 35)
+            .pos(83, 23)
+            .tooltipAutoUpdate(true)
+            .tooltipDynamic(tooltip -> {
+                tooltip.addLine(LibMisc.LANG.localize("gui.progress", tileEntity.getProgress() * 100f));
+                tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
+            });
+        processBar.setEnabled(false);
+
+        errorBar = new ProgressWidget().value(new DoubleSyncValue(() -> 1.0f))
+            .texture(null, ERROR_BAR, 35)
+            .size(6, 35)
+            .pos(83, 23)
+            .tooltipAutoUpdate(true)
+            .tooltipDynamic(tooltip -> {
+                tooltip.addLine(getErrorTooltip());
+                tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
+            });
+        errorBar.setEnabled(false);
+
+        this.child(processBar);
+        this.child(errorBar);
         this.child(
             new ProgressWidget()
                 .value(
@@ -182,8 +233,15 @@ public class LootFabricatorPanel extends ModularPanel {
                 .texture(null, ENERGY_BAR, 71)
                 .direction(ProgressWidget.Direction.UP)
                 .size(7, 71)
-                .direction(ProgressWidget.Direction.UP)
-                .pos(3, 6));
+                .pos(3, 6)
+                .tooltipAutoUpdate(true)
+                .tooltipDynamic(tooltip -> {
+                    tooltip.addLine(tileEntity.getEnergyStored() + "/" + tileEntity.getMaxEnergyStored() + " RF");
+                    tooltip.addLine(
+                        LibMisc.LANG
+                            .localize("gui.loot_fabricator.tooltip.crafting_cost", tileEntity.getCraftingEnergyCost()));
+                    tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
+                }));
 
         this.child(
             new ItemSlot().background(EMPTY_SLOT)
@@ -191,6 +249,17 @@ public class LootFabricatorPanel extends ModularPanel {
                 .slot(new ModularSlot(tileEntity.input, 0).slotGroup("input"))
                 .pos(77, 61));
         syncManager.registerSlotGroup("input", 1, true);
+
+        this.child(
+            SlotGroupWidget.builder()
+                .matrix("OOOO", "OOOO", "OOOO", "OOOO")
+                .key(
+                    'O',
+                    index -> new ItemSlot().background(EMPTY_SLOT)
+                        .hoverBackground(EMPTY_SLOT)
+                        .slot(new ModularSlot(tileEntity.output, index).accessibility(false, true)))
+                .build()
+                .pos(99, 6));
 
         syncManager.onClientTick(this::updateLootItem);
     }
@@ -215,6 +284,11 @@ public class LootFabricatorPanel extends ModularPanel {
         } else {
             craftingError = CraftingError.NONE;
         }
+
+        boolean hasError = craftingError != CraftingError.NONE;
+
+        processBar.setEnabled(!hasError);
+        errorBar.setEnabled(hasError);
     }
 
     private void resetOutputData() {
@@ -281,28 +355,29 @@ public class LootFabricatorPanel extends ModularPanel {
         nextPageButton.setEnabled(enabled);
     }
 
-    private void initOutputSelectButtons() {
-        int startX = 15;
-        int startY = 8;
-
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                int x = startX + col * (OUTPUT_SELECT_BUTTON_SIZE + OUTPUT_SELECT_LIST_GUTTER);
-                int y = startY + row * (OUTPUT_SELECT_BUTTON_SIZE + OUTPUT_SELECT_LIST_GUTTER);
-
-                ButtonItemSelect button = new ButtonItemSelect(this).pos(x, y);
-                outputSelectButtons.add(button);
-                this.child(button);
-            }
-        }
-    }
-
     private void changePage(int delta) {
         if (totalOutputItemPages <= 0) return;
 
         currentOutputItemPage = (currentOutputItemPage + delta + totalOutputItemPages) % totalOutputItemPages;
 
         updateOutputSelectButtons();
+    }
+
+    private String getErrorTooltip() {
+        switch (craftingError) {
+            case REDSTONE:
+                return LibMisc.LANG.localize("gui.loot_fabricator.error.redstone");
+            case NO_PRISTINE:
+                return LibMisc.LANG.localize("gui.loot_fabricator.error.no_pristine");
+            case NO_OUTPUT_SELECTED:
+                return LibMisc.LANG.localize("gui.loot_fabricator.error.no_output_selected");
+            case OUTPUT_FULL:
+                return LibMisc.LANG.localize("gui.loot_fabricator.error.output_full");
+            case NO_ENERGY:
+                return LibMisc.LANG.localize("gui.loot_fabricator.error.no_energy");
+            default:
+                return "";
+        }
     }
 
     public static class ButtonItemSelect extends ButtonWidget<ButtonItemSelect> {
@@ -315,7 +390,7 @@ public class LootFabricatorPanel extends ModularPanel {
         private boolean selected = false;
 
         public ButtonItemSelect(LootFabricatorPanel panel) {
-            size(18, 18);
+            size(18);
             setEnabled(false);
             onMousePressed(btn -> {
                 if (btn == 0 && this.index >= 0) {
@@ -331,7 +406,11 @@ public class LootFabricatorPanel extends ModularPanel {
 
         public void setItem(int index, ItemStack stack, boolean selected) {
             this.index = index;
-            overlay(new ItemDrawable(stack));
+            if (stack == null || stack.getItem() == null) {
+                overlay(new ItemStackDrawable());
+            } else {
+                overlay(new ItemStackDrawable(stack));
+            }
             setSelected(selected);
             setEnabled(stack != null);
         }
@@ -348,6 +427,34 @@ public class LootFabricatorPanel extends ModularPanel {
             IDrawable bg = getCurrentBackground(context.getTheme(), widgetTheme);
             if (bg != null && selected) {
                 bg.draw(context, 0, 0, 18, 18, widgetTheme.getTheme());
+            }
+        }
+    }
+
+    public static class ButtonItemDeselect extends ButtonWidget<ButtonItemDeselect> {
+
+        public ButtonItemDeselect(LootFabricatorPanel panel) {
+            size(18);
+            setDisplayStack(panel.outputItem);
+            onMousePressed(btn -> {
+                if (btn == 0) {
+                    panel.setOutputItem(-1);
+                    panel.panelSyncHandler.syncToServer(
+                        LootFabSH.UPDATE_OUTPUT_ITEM,
+                        buffer -> { buffer.writeItemStackToBuffer(panel.outputItem); });
+                    return true;
+                }
+                return false;
+            });
+            background(EMPTY_SLOT);
+            hoverBackground(EMPTY_SLOT);
+        }
+
+        public void setDisplayStack(ItemStack stack) {
+            if (stack == null || stack.getItem() == null) {
+                overlay(new ItemStackDrawable());
+            } else {
+                overlay(new ItemStackDrawable(stack));
             }
         }
     }
@@ -388,31 +495,6 @@ public class LootFabricatorPanel extends ModularPanel {
                 return false;
             });
         }
-    }
-
-    public static class ButtonItemDeselect extends ButtonWidget<ButtonItemDeselect> {
-
-        public ButtonItemDeselect(LootFabricatorPanel panel) {
-            size(18);
-            setDisplayStack(panel.outputItem);
-            onMousePressed(btn -> {
-                if (btn == 0) {
-                    panel.setOutputItem(-1);
-                    panel.panelSyncHandler.syncToServer(
-                        LootFabSH.UPDATE_OUTPUT_ITEM,
-                        buffer -> { buffer.writeItemStackToBuffer(panel.outputItem); });
-                    return true;
-                }
-                return false;
-            });
-        }
-
-        public void setDisplayStack(ItemStack stack) {
-            overlay(new ItemDrawable(stack));
-        }
-
-        @Override
-        public void drawBackground(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {}
     }
 
     @Override

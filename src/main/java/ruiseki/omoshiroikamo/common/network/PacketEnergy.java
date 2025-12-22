@@ -24,13 +24,13 @@ public class PacketEnergy implements IMessage, IMessageHandler<PacketEnergy, IMe
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(storedEnergy);
         buf.writeLong(pos.toLong());
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf) {
         storedEnergy = buf.readInt();
         pos = BlockPos.fromLong(buf.readLong());
     }

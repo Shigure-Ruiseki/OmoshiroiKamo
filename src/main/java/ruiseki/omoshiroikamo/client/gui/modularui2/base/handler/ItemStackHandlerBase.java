@@ -71,16 +71,24 @@ public class ItemStackHandlerBase extends ItemStackHandler {
             return false;
         }
 
+        int remaining = stack.stackSize;
+
         for (int i = 0; i < getSlots(); i++) {
             ItemStack slotStack = getStackInSlot(i);
+
             if (slotStack == null) {
-                return true;
+                remaining -= Math.min(stack.getMaxStackSize(), remaining);
             }
 
-            if (ItemUtils.areStacksEqual(slotStack, stack)) {
-                if (slotStack.stackSize < slotStack.getMaxStackSize()) {
-                    return true;
+            else if (ItemUtils.areStacksEqual(slotStack, stack)) {
+                int space = slotStack.getMaxStackSize() - slotStack.stackSize;
+                if (space > 0) {
+                    remaining -= Math.min(space, remaining);
                 }
+            }
+
+            if (remaining <= 0) {
+                return true;
             }
         }
 

@@ -19,6 +19,7 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData> {
 
@@ -64,8 +65,9 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     }
 
     public String getMachineName() {
-        return this.worldObj.getBlock(xCoord, yCoord, zCoord)
-            .getUnlocalizedName();
+        return LibMisc.LANG.localize(
+            this.worldObj.getBlock(xCoord, yCoord, zCoord)
+                .getUnlocalizedName());
     }
 
     public abstract boolean isActive();

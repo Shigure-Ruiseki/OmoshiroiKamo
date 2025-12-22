@@ -35,7 +35,7 @@ option.omoshiroikamo.grownTime=Grown Time
 #IO
 
 gui.powerMonitor.of=of
-
+gui.progress=Progress: %.2f%%
 
 # Backpack Gui Elements
 container.backpack=Backpack
@@ -161,6 +161,15 @@ gui.learner_info_tile=Information
 gui.learner_model_tier=Model Tier: %s
 gui.learner_model_defeated=Defeated: %d
 gui.learner_model_defeated_more=Defeated %d more to reach %s
+
+gui.loot_fabricator.tooltip.crafting_cost=Operational cost: %d RF/t
+gui.loot_fabricator.tooltip.deselect=Click to deselect output item
+
+gui.loot_fabricator.error.no_energy=Not enough energy for crafting
+gui.loot_fabricator.error.redstone=Machine disabled by redstone signal
+gui.loot_fabricator.error.no_pristine=No Pristine Matter in input buffer
+gui.loot_fabricator.error.no_output_selected=No output item selected
+gui.loot_fabricator.error.output_full=Output buffer full
 
 #Display
 
