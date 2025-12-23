@@ -10,7 +10,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 public class OriginalModels extends BaseModelHandler {

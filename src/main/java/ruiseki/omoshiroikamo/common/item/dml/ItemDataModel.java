@@ -15,10 +15,10 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.entity.model.DataModel;
-import ruiseki.omoshiroikamo.api.entity.model.DataModelExperience;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistry;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModelExperience;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.KeyboardUtils;

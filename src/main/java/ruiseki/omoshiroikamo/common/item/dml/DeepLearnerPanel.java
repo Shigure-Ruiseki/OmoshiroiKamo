@@ -40,9 +40,9 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.api.entity.model.DataModel;
-import ruiseki.omoshiroikamo.api.entity.model.DataModelExperience;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModelExperience;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;

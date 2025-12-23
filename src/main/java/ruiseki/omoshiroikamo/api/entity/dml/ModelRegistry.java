@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.entity.model;
+package ruiseki.omoshiroikamo.api.entity.dml;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,21 +6,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LivingRegistry {
+public class ModelRegistry {
 
-    public static final LivingRegistry INSTANCE = new LivingRegistry();
+    /**
+     * Global registry instance.
+     */
+    public static final ModelRegistry INSTANCE = new ModelRegistry();
 
-    public LivingRegistry() {}
+    public ModelRegistry() {}
 
-    protected final Map<Integer, LivingRegistryItem> items = new HashMap<>();
+    protected final Map<Integer, ModelRegistryItem> items = new HashMap<>();
 
-    public void register(LivingRegistryItem entity) {
+    public void register(ModelRegistryItem entity) {
         validate(entity);
         items.put(entity.getId(), entity);
     }
 
-    protected void validate(LivingRegistryItem entity) {
-        for (LivingRegistryItem item : items.values()) {
+    protected void validate(ModelRegistryItem entity) {
+        for (ModelRegistryItem item : items.values()) {
             if (entity.getId() == item.getId()) {
                 throw new RuntimeException(
                     "Duplicated ID [" + entity
@@ -33,12 +36,12 @@ public class LivingRegistry {
         }
     }
 
-    public LivingRegistryItem getByType(int id) {
+    public ModelRegistryItem getByType(int id) {
         return items.get(id);
     }
 
-    public LivingRegistryItem getByName(String key) {
-        for (LivingRegistryItem item : items.values()) {
+    public ModelRegistryItem getByName(String key) {
+        for (ModelRegistryItem item : items.values()) {
             if (item.getDisplayName()
                 .equalsIgnoreCase(key)) {
                 return item;
@@ -47,9 +50,9 @@ public class LivingRegistry {
         return null;
     }
 
-    public Collection<LivingRegistryItem> getItems() {
-        List<LivingRegistryItem> result = new ArrayList<>();
-        for (LivingRegistryItem t : items.values()) {
+    public Collection<ModelRegistryItem> getItems() {
+        List<ModelRegistryItem> result = new ArrayList<>();
+        for (ModelRegistryItem t : items.values()) {
             if (t.isEnabled()) {
                 result.add(t);
             }

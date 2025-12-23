@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.entity.model.LivingRegistry;
-import ruiseki.omoshiroikamo.api.entity.model.LivingRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.KeyboardUtils;

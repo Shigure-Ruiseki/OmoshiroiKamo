@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.plugin.dml;
 import java.util.ArrayList;
 import java.util.List;
 
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 
 public class BaseModels extends BaseModelHandler {
 

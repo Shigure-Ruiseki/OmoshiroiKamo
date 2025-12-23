@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.client.gui.modularui2.base.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.syncHandler.LootFabSH;

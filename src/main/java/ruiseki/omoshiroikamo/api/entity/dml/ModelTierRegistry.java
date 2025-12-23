@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.entity.model;
+package ruiseki.omoshiroikamo.api.entity.dml;
 
 import java.util.ArrayList;
 import java.util.Collection;

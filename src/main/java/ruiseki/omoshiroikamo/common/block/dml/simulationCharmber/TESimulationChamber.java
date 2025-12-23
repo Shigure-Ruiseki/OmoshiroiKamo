@@ -16,8 +16,8 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.crafting.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
-import ruiseki.omoshiroikamo.api.entity.model.DataModel;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.client.gui.modularui2.base.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.handler.ItemHandlerDataModel;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.handler.ItemHandlerPolymerClay;

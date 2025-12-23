@@ -29,7 +29,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.entity.model.DataModel;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.common.util.StringAnimator;
 import ruiseki.omoshiroikamo.common.util.StringUtils;

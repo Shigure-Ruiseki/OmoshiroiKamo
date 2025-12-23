@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-import ruiseki.omoshiroikamo.api.entity.model.LivingRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;

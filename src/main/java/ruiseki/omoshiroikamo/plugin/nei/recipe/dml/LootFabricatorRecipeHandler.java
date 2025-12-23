@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistry;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.common.block.dml.lootFabricator.BlockLootFabricator;
 import ruiseki.omoshiroikamo.common.init.ModItems;

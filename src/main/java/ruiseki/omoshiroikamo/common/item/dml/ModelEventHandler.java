@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ruiseki.omoshiroikamo.api.entity.model.DataModel;
+import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 
 @EventBusSubscriber

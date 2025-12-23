@@ -14,10 +14,10 @@ import com.cleanroommc.modularui.utils.Color;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistry;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
-import ruiseki.omoshiroikamo.api.entity.model.ModelTierRegistry;
-import ruiseki.omoshiroikamo.api.entity.model.ModelTierRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.common.block.dml.simulationCharmber.BlockSimulationChamber;
 import ruiseki.omoshiroikamo.common.init.ModItems;

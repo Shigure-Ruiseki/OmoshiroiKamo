@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistry;
-import ruiseki.omoshiroikamo.api.entity.model.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.client.gui.modularui2.base.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.common.item.dml.ItemPristineMatter;
 
