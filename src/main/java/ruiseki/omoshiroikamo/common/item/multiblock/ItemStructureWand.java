@@ -9,11 +9,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
+import ruiseki.omoshiroikamo.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
 
 /**
@@ -54,7 +56,7 @@ public class ItemStructureWand extends ItemOK {
             if (!hasPos1(nbt)) {
                 player.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED + "[OmoshiroiKamo] Set Position 1 first! (Right-click a block)"));
+                        EnumChatFormatting.RED + StatCollector.translateToLocal("chat.wand.set_pos1_first")));
                 return true;
             }
 
@@ -65,11 +67,13 @@ public class ItemStructureWand extends ItemOK {
             int sizeZ = Math.abs(z - pos1.posZ) + 1;
             int blockCount = sizeX * sizeY * sizeZ;
 
-            if (blockCount > 1000000) {
+            if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
                 player.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED + "[OmoshiroiKamo] Area too large! Max 1,000,000 blocks, got "
-                            + blockCount));
+                        EnumChatFormatting.RED + StatCollector.translateToLocalFormatted(
+                            "chat.wand.area_too_large",
+                            String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
+                            String.format("%,d", blockCount))));
                 player.addChatMessage(
                     new ChatComponentText(EnumChatFormatting.GRAY + "Selection: " + sizeX + "x" + sizeY + "x" + sizeZ));
                 return true;
@@ -78,7 +82,7 @@ public class ItemStructureWand extends ItemOK {
             setPos2(nbt, x, y, z, world.provider.dimensionId);
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GREEN + "[OmoshiroiKamo] Position 2 set: (" + x + ", " + y + ", " + z + ")"));
+                    EnumChatFormatting.GREEN + StatCollector.translateToLocalFormatted("chat.wand.pos2_set", x, y, z)));
 
             // Automatically prepare scan when both positions are set
             ChunkCoordinates pos2 = new ChunkCoordinates(x, y, z);
@@ -88,19 +92,21 @@ public class ItemStructureWand extends ItemOK {
 
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GREEN + "[OmoshiroiKamo] Scan ready! (" + blockCount + " blocks)"));
+                    EnumChatFormatting.GREEN
+                        + StatCollector.translateToLocalFormatted("chat.wand.scan_ready", blockCount)));
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.YELLOW + "Use: " + EnumChatFormatting.WHITE + "/ok wand save <name>"));
+                    EnumChatFormatting.YELLOW + StatCollector.translateToLocal("chat.wand.use_save_command")));
         } else {
             // Right-click: set position 1 (clears position 2)
             setPos1(nbt, x, y, z, world.provider.dimensionId);
             clearPos2(nbt);
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.AQUA + "[OmoshiroiKamo] Position 1 set: (" + x + ", " + y + ", " + z + ")"));
-            player
-                .addChatMessage(new ChatComponentText(EnumChatFormatting.GRAY + "Shift+Right-click to set Position 2"));
+                    EnumChatFormatting.AQUA + StatCollector.translateToLocalFormatted("chat.wand.pos1_set", x, y, z)));
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.GRAY + StatCollector.translateToLocal("chat.wand.shift_right")));
         }
 
         return true;
@@ -133,7 +139,7 @@ public class ItemStructureWand extends ItemOK {
                 .clearPendingScan(player.getUniqueID());
 
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] All positions cleared."));
+                new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("chat.wand.cleared")));
             return true; // Cancel the swing animation
         }
 
@@ -146,24 +152,30 @@ public class ItemStructureWand extends ItemOK {
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
         NBTTagCompound nbt = stack.getTagCompound();
         if (nbt == null) {
-            tooltip.add(EnumChatFormatting.GRAY + "Right-click: Set Position 1");
-            tooltip.add(EnumChatFormatting.GRAY + "Shift+Right-click: Set Position 2 & Prepare");
-            tooltip.add(EnumChatFormatting.GRAY + "Shift+Left-click: Clear all positions");
+            tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("tooltip.wand.right_click"));
+            tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("tooltip.wand.shift_right_click"));
+            tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("tooltip.wand.shift_left_click"));
             return;
         }
 
         if (hasPos1(nbt)) {
             ChunkCoordinates pos1 = getPos1(nbt);
-            tooltip.add(EnumChatFormatting.AQUA + "Pos1: (" + pos1.posX + ", " + pos1.posY + ", " + pos1.posZ + ")");
+            tooltip.add(
+                EnumChatFormatting.AQUA
+                    + StatCollector.translateToLocalFormatted("tooltip.wand.pos1", pos1.posX, pos1.posY, pos1.posZ));
         } else {
-            tooltip.add(EnumChatFormatting.GRAY + "Pos1: Not set");
+            tooltip
+                .add(EnumChatFormatting.GRAY + "Pos1: " + StatCollector.translateToLocal("tooltip.wand.pos_not_set"));
         }
 
         if (hasPos2(nbt)) {
             ChunkCoordinates pos2 = getPos2(nbt);
-            tooltip.add(EnumChatFormatting.GREEN + "Pos2: (" + pos2.posX + ", " + pos2.posY + ", " + pos2.posZ + ")");
+            tooltip.add(
+                EnumChatFormatting.GREEN
+                    + StatCollector.translateToLocalFormatted("tooltip.wand.pos2", pos2.posX, pos2.posY, pos2.posZ));
         } else {
-            tooltip.add(EnumChatFormatting.GRAY + "Pos2: Not set");
+            tooltip
+                .add(EnumChatFormatting.GRAY + "Pos2: " + StatCollector.translateToLocal("tooltip.wand.pos_not_set"));
         }
 
         if (hasPos1(nbt) && hasPos2(nbt)) {
@@ -172,12 +184,14 @@ public class ItemStructureWand extends ItemOK {
             int sizeX = Math.abs(pos2.posX - pos1.posX) + 1;
             int sizeY = Math.abs(pos2.posY - pos1.posY) + 1;
             int sizeZ = Math.abs(pos2.posZ - pos1.posZ) + 1;
-            tooltip.add(EnumChatFormatting.YELLOW + "Size: " + sizeX + "x" + sizeY + "x" + sizeZ);
+            tooltip.add(
+                EnumChatFormatting.YELLOW
+                    + StatCollector.translateToLocalFormatted("tooltip.wand.size", sizeX, sizeY, sizeZ));
         }
 
         // Always show clear instruction when positions are set
         if (hasPos1(nbt) || hasPos2(nbt)) {
-            tooltip.add(EnumChatFormatting.DARK_GRAY + "Shift+Left-click to clear");
+            tooltip.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal("tooltip.wand.shift_left_clear"));
         }
     }
 
