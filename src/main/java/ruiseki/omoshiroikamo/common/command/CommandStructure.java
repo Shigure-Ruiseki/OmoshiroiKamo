@@ -275,10 +275,11 @@ public class CommandStructure extends CommandBase {
 
         // Size guard
         int blockCount = pending.getBlockCount();
-        if (blockCount > 32768) {
+        if (blockCount > 1000000) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] Area too large! Max 32768 blocks, got " + blockCount));
+                    EnumChatFormatting.RED + "[OmoshiroiKamo] Area too large! Max 1,000,000 blocks, got "
+                        + blockCount));
             return;
         }
 

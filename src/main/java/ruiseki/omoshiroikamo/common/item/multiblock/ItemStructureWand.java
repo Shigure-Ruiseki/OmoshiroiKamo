@@ -58,21 +58,33 @@ public class ItemStructureWand extends ItemOK {
                 return true;
             }
 
+            // Check block count limit before setting pos2
+            ChunkCoordinates pos1 = getPos1(nbt);
+            int sizeX = Math.abs(x - pos1.posX) + 1;
+            int sizeY = Math.abs(y - pos1.posY) + 1;
+            int sizeZ = Math.abs(z - pos1.posZ) + 1;
+            int blockCount = sizeX * sizeY * sizeZ;
+
+            if (blockCount > 1000000) {
+                player.addChatMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.RED + "[OmoshiroiKamo] Area too large! Max 1,000,000 blocks, got "
+                            + blockCount));
+                player.addChatMessage(
+                    new ChatComponentText(EnumChatFormatting.GRAY + "Selection: " + sizeX + "x" + sizeY + "x" + sizeZ));
+                return true;
+            }
+
             setPos2(nbt, x, y, z, world.provider.dimensionId);
             player.addChatMessage(
                 new ChatComponentText(
                     EnumChatFormatting.GREEN + "[OmoshiroiKamo] Position 2 set: (" + x + ", " + y + ", " + z + ")"));
 
             // Automatically prepare scan when both positions are set
-            ChunkCoordinates pos1 = getPos1(nbt);
             ChunkCoordinates pos2 = new ChunkCoordinates(x, y, z);
 
             WandSelectionManager.getInstance()
                 .setPendingScan(player.getUniqueID(), pos1, pos2, world.provider.dimensionId);
-
-            int blockCount = WandSelectionManager.getInstance()
-                .getPendingScan(player.getUniqueID())
-                .getBlockCount();
 
             player.addChatMessage(
                 new ChatComponentText(
