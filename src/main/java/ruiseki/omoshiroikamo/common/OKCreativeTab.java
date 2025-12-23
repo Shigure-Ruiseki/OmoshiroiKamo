@@ -141,6 +141,7 @@ public abstract class OKCreativeTab extends CreativeTabs {
 
             addBlock(ModBlocks.LOOT_FABRICATOR.get());
             addBlock(ModBlocks.SIMULATION_CHAMBER.get());
+            addBlock(ModBlocks.TRIAL_KEYSTONE.get());
 
             addItem(ModItems.DEEP_LEARNER.getItem());
             addItem(ModItems.CREATIVE_MODEL_LEARNER.getItem());

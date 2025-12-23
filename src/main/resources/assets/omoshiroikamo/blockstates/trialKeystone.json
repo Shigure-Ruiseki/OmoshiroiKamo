@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "meta=0": { "model": "omoshiroikamo:block/trialKeystone", "y": 270 },
+    "meta=1": { "model": "omoshiroikamo:block/trialKeystone", "y": 90 },
+    "meta=2": { "model": "omoshiroikamo:block/trialKeystone", "y": 0 },
+    "meta=3": { "model": "omoshiroikamo:block/trialKeystone", "y": 180 }
+  }
+}

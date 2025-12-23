@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import ruiseki.omoshiroikamo.common.block.deepMobLearning.simulationCharmber.SimulationChamberPanel;
+import lombok.Getter;
 
-public class StringAnimator {
+public class StringAnimator<K> {
 
-    private final LinkedHashMap<SimulationChamberPanel.AnimatedString, AnimatedString> strings;
-    private final List<SimulationChamberPanel.AnimatedString> keys;
+    private final LinkedHashMap<K, AnimatedString> strings = new LinkedHashMap<>();
+    private final List<K> keys = new ArrayList<>();
+
     private int currentStringIndex;
     private float totalDuration;
     private boolean finished;
 
     public StringAnimator() {
-        strings = new LinkedHashMap<>();
-        keys = new ArrayList<>();
         finished = false;
         currentStringIndex = 0;
         totalDuration = 0;
@@ -29,18 +28,18 @@ public class StringAnimator {
             .forEach(AnimatedString::reset);
     }
 
-    public void addString(SimulationChamberPanel.AnimatedString key, String string) {
+    public void addString(K key, String string) {
         addString(key, string, 1, false);
     }
 
-    public void addString(SimulationChamberPanel.AnimatedString key, String string, float speed, boolean loop) {
+    public void addString(K key, String string, float speed, boolean loop) {
         AnimatedString newString = new AnimatedString(string, speed, loop);
         strings.put(key, newString);
         keys.add(key);
         totalDuration += newString.getDuration();
     }
 
-    public void setString(SimulationChamberPanel.AnimatedString key, String string) {
+    public void setString(K key, String string) {
         AnimatedString oldString = strings.get(key);
         AnimatedString newString = new AnimatedString(string, oldString.getSpeed(), oldString.isLoop());
         strings.replace(key, newString);
@@ -95,12 +94,16 @@ public class StringAnimator {
     public static class AnimatedString {
 
         private final String string; // The string to animate
+        @Getter
         private final float speed; // Speed of animation (in ticks/letter)
+        @Getter
         private final float duration; // Duration of animation (in ticks)
         private final float formattedLength; // Length of string when not counting MC formatting characters (e.g. "�d")
+        @Getter
         private final boolean loop; // Does the animation loop?
 
         private float position; // Current position (in ticks)
+        @Getter
         private boolean finished; // Has animation finished?
 
         /**
@@ -164,22 +167,6 @@ public class StringAnimator {
                 }
             }
             return string.substring(0, endIndex);
-        }
-
-        public float getSpeed() {
-            return speed;
-        }
-
-        public float getDuration() {
-            return duration;
-        }
-
-        public boolean isFinished() {
-            return finished;
-        }
-
-        public boolean isLoop() {
-            return loop;
         }
 
         public void reset() {

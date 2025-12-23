@@ -24,7 +24,6 @@ public class PacketHandler {
         INSTANCE.registerMessage(PacketCraftingState.class, PacketCraftingState.class, nextID(), Side.CLIENT);
 
         INSTANCE.registerMessage(PacketStall.class, PacketStall.class, PacketHandler.nextID(), Side.CLIENT);
-        INSTANCE.registerMessage(PacketLootFabricator.class, PacketLootFabricator.class, nextID(), Side.SERVER);
 
         INSTANCE.registerMessage(PacketNBBClientFlight.class, PacketNBBClientFlight.class, nextID(), Side.CLIENT);
 

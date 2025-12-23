@@ -82,13 +82,17 @@ public class SimulationChamberPanel extends ModularPanel {
     private static final int BLINKING_CURSOR_SPEED = 16;
     private static final int ROW_SPACING = 12;
 
-    private final StringAnimator progressAnimator = new StringAnimator(); // Used to display simulation progress
-    private final StringAnimator emptyDisplayAnimator = new StringAnimator(); // Used to display empty screen ("blinking
-                                                                              // cursor")
-    private final StringAnimator dataModelErrorAnimator = new StringAnimator(); // Used to display error messages
-                                                                                // relating to data model
-    private final StringAnimator simulationErrorAnimator = new StringAnimator(); // Used to display other errors (no
-                                                                                 // polymer/energy, output full)
+    private final StringAnimator<AnimatedString> progressAnimator = new StringAnimator<>(); // Used to display
+                                                                                            // simulation progress
+    private final StringAnimator<AnimatedString> emptyDisplayAnimator = new StringAnimator<>(); // Used to display empty
+                                                                                                // screen ("blinking //
+                                                                                                // cursor")
+    private final StringAnimator<AnimatedString> dataModelErrorAnimator = new StringAnimator<>(); // Used to display
+                                                                                                  // error messages
+    // relating to data model
+    private final StringAnimator<AnimatedString> simulationErrorAnimator = new StringAnimator<>(); // Used to display
+                                                                                                   // other errors (no
+    // polymer/energy, output full)
 
     private ItemStack dataModel;
 
