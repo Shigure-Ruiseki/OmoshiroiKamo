@@ -17,6 +17,8 @@ import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHand
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.dml.LootFabricatorRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.dml.SimulationChamberRecipeHandler;
 
 public class NEICompat {
 
@@ -89,6 +91,13 @@ public class NEICompat {
 
         if (BackportConfigs.useBackpack) {
             sendCatalyst("crafting", ModItems.CRAFTING_UPGRADE.newItemStack());
+        }
+
+        if (BackportConfigs.useDML) {
+            sendHandler(LootFabricatorRecipeHandler.UID, ModBlocks.LOOT_FABRICATOR.newItemStack(), 48, 8);
+            sendCatalyst(LootFabricatorRecipeHandler.UID, ModBlocks.LOOT_FABRICATOR.newItemStack());
+            sendHandler(SimulationChamberRecipeHandler.UID, ModBlocks.SIMULATION_CHAMBER.newItemStack(), 48, 8);
+            sendCatalyst(SimulationChamberRecipeHandler.UID, ModBlocks.SIMULATION_CHAMBER.newItemStack());
         }
 
         Logger.info("Loaded IMCForNEI");

@@ -439,7 +439,7 @@ public class ItemRecipes {
                     Items.stick));
         }
 
-        if (BackportConfigs.useDeepMobLearning) {
+        if (BackportConfigs.useDML) {
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModItems.DATA_MODEL_BLANK.newItemStack(1),

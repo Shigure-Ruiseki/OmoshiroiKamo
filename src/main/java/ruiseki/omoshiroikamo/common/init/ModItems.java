@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.common.init;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useChicken;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useCow;
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDeepMobLearning;
+import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDML;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
 
 import net.minecraft.item.Item;
@@ -36,15 +36,15 @@ import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
 import ruiseki.omoshiroikamo.common.item.chicken.ItemSolidXp;
 import ruiseki.omoshiroikamo.common.item.cow.ItemCowHalter;
 import ruiseki.omoshiroikamo.common.item.cow.ItemCowSpawnEgg;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemCreativeModelLearner;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDataModel;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDataModelBlank;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDeepLearner;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemLivingMatter;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemPolymerClay;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemPristineMatter;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemSootCoveredPlate;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemSootCoveredRedstone;
+import ruiseki.omoshiroikamo.common.item.dml.ItemCreativeModelLearner;
+import ruiseki.omoshiroikamo.common.item.dml.ItemDataModel;
+import ruiseki.omoshiroikamo.common.item.dml.ItemDataModelBlank;
+import ruiseki.omoshiroikamo.common.item.dml.ItemDeepLearner;
+import ruiseki.omoshiroikamo.common.item.dml.ItemLivingMatter;
+import ruiseki.omoshiroikamo.common.item.dml.ItemPolymerClay;
+import ruiseki.omoshiroikamo.common.item.dml.ItemPristineMatter;
+import ruiseki.omoshiroikamo.common.item.dml.ItemSootCoveredPlate;
+import ruiseki.omoshiroikamo.common.item.dml.ItemSootCoveredRedstone;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemCrystal;
 import ruiseki.omoshiroikamo.common.item.trait.ItemAnalyzer;
@@ -90,15 +90,15 @@ public enum ModItems {
 
     SYRINGE(useCow, new ItemSyringe()),
 
-    DEEP_LEARNER(useDeepMobLearning, new ItemDeepLearner()),
-    CREATIVE_MODEL_LEARNER(useDeepMobLearning, new ItemCreativeModelLearner()),
-    DATA_MODEL(useDeepMobLearning, new ItemDataModel()),
-    DATA_MODEL_BLANK(useDeepMobLearning, new ItemDataModelBlank()),
-    PRISTINE_MATTER(useDeepMobLearning, new ItemPristineMatter()),
-    LIVING_MATTER(useDeepMobLearning, new ItemLivingMatter()),
-    POLYMER_CLAY(useDeepMobLearning, new ItemPolymerClay()),
-    SOOT_COVERED_PLATE(useDeepMobLearning, new ItemSootCoveredPlate()),
-    SOOT_COVERED_REDSTONE(useDeepMobLearning, new ItemSootCoveredRedstone()),
+    DEEP_LEARNER(useDML, new ItemDeepLearner()),
+    CREATIVE_MODEL_LEARNER(useDML, new ItemCreativeModelLearner()),
+    DATA_MODEL(useDML, new ItemDataModel()),
+    DATA_MODEL_BLANK(useDML, new ItemDataModelBlank()),
+    PRISTINE_MATTER(useDML, new ItemPristineMatter()),
+    LIVING_MATTER(useDML, new ItemLivingMatter()),
+    POLYMER_CLAY(useDML, new ItemPolymerClay()),
+    SOOT_COVERED_PLATE(useDML, new ItemSootCoveredPlate()),
+    SOOT_COVERED_REDSTONE(useDML, new ItemSootCoveredRedstone()),
 
     ;
     // spotless: on

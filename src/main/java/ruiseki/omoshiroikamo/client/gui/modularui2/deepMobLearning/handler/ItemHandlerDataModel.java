@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.client.gui.modularui2.deepMobLearning.handler;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.client.gui.modularui2.base.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDataModel;
+import ruiseki.omoshiroikamo.common.item.dml.ItemDataModel;
 
 public class ItemHandlerDataModel extends ItemStackHandlerBase {
 
