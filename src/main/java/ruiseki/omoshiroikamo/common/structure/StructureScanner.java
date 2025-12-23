@@ -20,7 +20,9 @@ import ruiseki.omoshiroikamo.common.util.Logger;
 public class StructureScanner {
 
     // Characters used for symbols, assigned in order
-    private static final String SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    // Excludes reserved symbols: Q (Controller), _ (mandatory air)
+    // Space is output for air blocks
+    private static final String SYMBOLS = "ABCDEFGHIJKLMNOPRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
      * Scan the specified region and save it as a JSON file.

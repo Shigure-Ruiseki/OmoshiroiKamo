@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
@@ -27,7 +28,8 @@ public class StructureRegistrationUtils {
 
     // Reserved symbols that are handled specially and should not be overridden by
     // JSON
-    private static final String RESERVED_SYMBOLS = "QF ~";
+    // Q = Controller (must be exactly 1), space = any, _ = mandatory air
+    private static final String RESERVED_SYMBOLS = "Q _";
 
     /**
      * Registers a single tier of a multiblock structure.
@@ -54,6 +56,14 @@ public class StructureRegistrationUtils {
         String[][] shape, String shapeName, Block controllerBlock, int tier,
         Consumer<StructureDefinition.Builder<T>> elementAdder) {
 
+        // Validate: Q must appear exactly once
+        int qCount = countSymbolInShape(shape, 'Q');
+        if (qCount == 0) {
+            Logger.error("Structure " + shapeName + " has no controller 'Q'!");
+        } else if (qCount > 1) {
+            Logger.error("Structure " + shapeName + " has " + qCount + " controllers 'Q'! Must be exactly 1.");
+        }
+
         StructureDefinition.Builder<T> builder = StructureDefinition.builder();
 
         // Add Shape
@@ -70,6 +80,9 @@ public class StructureRegistrationUtils {
                 ofBlock(ModBlocks.BASALT_STRUCTURE.get(), tier - 1),
                 ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), tier - 1),
                 ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), tier - 1)));
+
+        // Add Air element ('_') - mandatory air block
+        builder.addElement('_', ofBlock(Blocks.air, 0));
 
         // Add Custom Elements
         if (elementAdder != null) {
@@ -105,6 +118,14 @@ public class StructureRegistrationUtils {
         Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
         Block controllerBlock, int tier, Consumer<StructureDefinition.Builder<T>> elementAdder) {
 
+        // Validate: Q must appear exactly once
+        int qCount = countSymbolInShape(shape, 'Q');
+        if (qCount == 0) {
+            Logger.error("Structure " + shapeName + " has no controller 'Q'!");
+        } else if (qCount > 1) {
+            Logger.error("Structure " + shapeName + " has " + qCount + " controllers 'Q'! Must be exactly 1.");
+        }
+
         StructureDefinition.Builder<T> builder = StructureDefinition.builder();
 
         // Add Shape
@@ -120,6 +141,9 @@ public class StructureRegistrationUtils {
                 ofBlock(ModBlocks.BASALT_STRUCTURE.get(), tier - 1),
                 ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), tier - 1),
                 ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), tier - 1)));
+
+        // Add Air element ('_') - mandatory air block
+        builder.addElement('_', ofBlock(Blocks.air, 0));
 
         // Add dynamic mappings from JSON (skip reserved symbols)
         if (dynamicMappings != null) {
@@ -194,5 +218,28 @@ public class StructureRegistrationUtils {
             "Unknown mapping type: " + mapping.getClass()
                 .getName());
         return null;
+    }
+
+    /**
+     * Count occurrences of a symbol in a shape array.
+     */
+    private static int countSymbolInShape(String[][] shape, char symbol) {
+        int count = 0;
+        if (shape != null) {
+            for (String[] layer : shape) {
+                if (layer != null) {
+                    for (String row : layer) {
+                        if (row != null) {
+                            for (int i = 0; i < row.length(); i++) {
+                                if (row.charAt(i) == symbol) {
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return count;
     }
 }
