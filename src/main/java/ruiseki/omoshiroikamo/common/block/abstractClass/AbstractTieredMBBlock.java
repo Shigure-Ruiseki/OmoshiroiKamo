@@ -10,6 +10,7 @@ public abstract class AbstractTieredMBBlock<T extends AbstractMBModifierTE> exte
     private final Class<? extends TileEntity>[] teClasses;
 
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     protected AbstractTieredMBBlock(String name, Class<? extends TileEntity>... teClasses) {
         super(name, (Class<T>) teClasses[0]);
         this.teClasses = teClasses;

@@ -22,7 +22,6 @@ import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.render.block.chicken.BreederTESR;
 import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.cow.StallTESR;
-import ruiseki.omoshiroikamo.client.render.block.deepMobLearning.TESRTrialKeystone;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
 import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.entity.RenderCowsCow;
@@ -32,7 +31,6 @@ import ruiseki.omoshiroikamo.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.common.block.chicken.TEBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
 import ruiseki.omoshiroikamo.common.block.cow.TEStall;
-import ruiseki.omoshiroikamo.common.block.deepMobLearning.trialKeystone.TETrialKeystone;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
 import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
@@ -74,10 +72,6 @@ public class ClientProxy extends CommonProxy {
         if (BackportConfigs.useCow) {
             ClientRegistry.bindTileEntitySpecialRenderer(TEStall.class, new StallTESR());
             RenderingRegistry.registerEntityRenderingHandler(EntityCowsCow.class, new RenderCowsCow());
-        }
-
-        if (BackportConfigs.useDeepMobLearning) {
-            ClientRegistry.bindTileEntitySpecialRenderer(TETrialKeystone.class, new TESRTrialKeystone());
         }
 
         if (ItemConfigs.renderPufferFish) {
