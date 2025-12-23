@@ -43,6 +43,8 @@ import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemDeepLearner;
 import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemLivingMatter;
 import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemPolymerClay;
 import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemPristineMatter;
+import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemSootCoveredPlate;
+import ruiseki.omoshiroikamo.common.item.deepMobLearning.ItemSootCoveredRedstone;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemCrystal;
 import ruiseki.omoshiroikamo.common.item.trait.ItemAnalyzer;
@@ -95,6 +97,8 @@ public enum ModItems {
     PRISTINE_MATTER(useDeepMobLearning, new ItemPristineMatter()),
     LIVING_MATTER(useDeepMobLearning, new ItemLivingMatter()),
     POLYMER_CLAY(useDeepMobLearning, new ItemPolymerClay()),
+    SOOT_COVERED_PLATE(useDeepMobLearning, new ItemSootCoveredPlate()),
+    SOOT_COVERED_REDSTONE(useDeepMobLearning, new ItemSootCoveredRedstone()),
 
     ;
     // spotless: on

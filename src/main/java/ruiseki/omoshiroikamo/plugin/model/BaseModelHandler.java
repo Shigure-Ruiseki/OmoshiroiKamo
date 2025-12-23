@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.model.LivingRegistry;
 import ruiseki.omoshiroikamo.api.entity.model.LivingRegistryItem;
@@ -75,6 +76,7 @@ public abstract class BaseModelHandler {
         String livingMatter;
         DeepLearnerDisplay deepLearnerDisplay;
         ItemJson[] lootItems;
+        ItemJson[] craftingIngredients;
         String[] associatedMobs;
         String extraTooltip;
         Map<String, String> lang;
@@ -207,6 +209,19 @@ public abstract class BaseModelHandler {
                             model.setLootItems(loot);
                         }
 
+                        if (data.craftingIngredients != null && data.craftingIngredients.length > 0) {
+                            List<ItemStack> crafting = ItemJson.resolveListItemStack(data.craftingIngredients);
+
+                            Object[] recipe = new Object[crafting.size() + 1];
+                            recipe[0] = ModItems.DATA_MODEL_BLANK.newItemStack(1);
+
+                            for (int i = 0; i < crafting.size(); i++) {
+                                recipe[i + 1] = crafting.get(i);
+                            }
+
+                            GameRegistry.addShapelessRecipe(ModItems.DATA_MODEL.newItemStack(1, data.id), recipe);
+                        }
+
                         model.setLivingMatter(livingMatter);
 
                         model.setPristineMatter(ModItems.PRISTINE_MATTER.newItemStack(1, model.getId()));
@@ -330,6 +345,20 @@ public abstract class BaseModelHandler {
                     lootList.add(item);
                 }
             }
+        }
+
+        List<ItemJson> craftingList = new ArrayList<>();
+        if (model.getCraftingStrings() != null) {
+            for (String string : model.getCraftingStrings()) {
+                ItemJson item = ItemJson.parseItemString(string);
+                if (item != null) {
+                    craftingList.add(item);
+                }
+            }
+        }
+
+        if (!craftingList.isEmpty()) {
+            json.craftingIngredients = craftingList.toArray(new ItemJson[0]);
         }
 
         if (!lootList.isEmpty()) {

@@ -41,6 +41,11 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
     }
 
     @Override
+    public int damageDropped(int meta) {
+        return 0;
+    }
+
+    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);

@@ -141,6 +141,7 @@ public abstract class OKCreativeTab extends CreativeTabs {
 
             addBlock(ModBlocks.LOOT_FABRICATOR.get());
             addBlock(ModBlocks.SIMULATION_CHAMBER.get());
+            addBlock(ModBlocks.MACHINE_CASING.get());
 
             addItem(ModItems.DEEP_LEARNER.getItem());
             addItem(ModItems.CREATIVE_MODEL_LEARNER.getItem());
@@ -149,6 +150,8 @@ public abstract class OKCreativeTab extends CreativeTabs {
             addItem(ModItems.PRISTINE_MATTER.getItem());
             addItem(ModItems.LIVING_MATTER.getItem());
             addItem(ModItems.POLYMER_CLAY.getItem());
+            addItem(ModItems.SOOT_COVERED_PLATE.getItem());
+            addItem(ModItems.SOOT_COVERED_REDSTONE.getItem());
         }
     };
 

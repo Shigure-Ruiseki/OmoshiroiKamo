@@ -204,6 +204,9 @@ gui.simulation_chamber.tooltip.model_missing=Machine is missing a data model
 gui.simulation_chamber.tooltip.model_cannot_simulate=Cannot run simulation at current data model tier
 gui.simulation_chamber.tooltip.sim_cost=Simulation with current data model uses %d RF/t
 
+gui.button_page_select.next=Next page
+gui.button_page_select.prev=Previous page
+
 #Display
 
 power.rf=RF
@@ -266,17 +269,6 @@ tooltip.colored_egg.l1=Throw it to have a chance to spawn the chicken.
 tooltip.analyzer.l1=Use it on chickens to determine their stats.
 tooltip.analyzer.l2= - "Which day of the week do chickens hate most? Fry-day!"
 
-tooltip.trial_key.attunement_message=%s was attuned to: %s
-tooltip.trial_key.cannot_attune_message=Can't attune the %s - there is no Trial for %s
-tooltip.trial_key.attunement=Attuned to: %s
-tooltip.trial_key.tier=Tier: %s
-tooltip.trial_key.affixes=Affixes: %s
-tooltip.trial_key.no_affixes=Trial has no affixes
-tooltip.trial_key.affixes_faulty=Faulty level trials have no affixes.
-tooltip.trial_key.affix_info=Read more about each affix in the Guidebook
-tooltip.trial_key.not_attuned=Currently not attuned
-tooltip.trial_key.available_attunements=Available attunements:
-
 tooltip.data_model.type=Type: %s
 tooltip.data_model.tier=Tier: %s
 tooltip.data_model.data_collected=Data collected: %s/%s
@@ -291,6 +283,7 @@ tooltip.living_matter.xp=Experience per item: %s
 
 tooltip.pristine_matter.loot_items=Available loot items:
 
+tooltip.soot_covered_redstone=Crafted by crushing %s against a %s (%s)
 #ACHIEVEMENT
 
 achievement.omoshiroikamo.craft_assembler=Ready To Assemble
@@ -433,6 +426,8 @@ item.creativeModelLearner.name=Creative Model Learner
 item.dataModelBlank.name=Blank Data Model
 item.deepLearner.name=§bDeep Learner§r
 item.polymerClay.name=Polymer Clay
+item.sootCoveredRedstone.name=Soot-covered Redstone
+item.sootCoveredPlate.name=Soot-covered Plate
 
 #Block
 
@@ -569,7 +564,7 @@ tile.stall.name=Stall
 
 tile.lootFabricator.name=Loot Fabricator
 tile.simulationChamber.name=Simulation Chamber
-tile.trialKeystone.name=Trial Keystone
+tile.machineCasing.name=Machine Casing
 
 #ENTITY
 

@@ -25,7 +25,6 @@ public class ModelRegistryItem {
     protected String pristineTexture;
 
     @Getter
-    @Setter
     protected int simulationRFCost;
 
     @Getter
@@ -60,6 +59,9 @@ public class ModelRegistryItem {
     protected List<ItemStack> lootItems;
     @Getter
     protected String[] lootStrings;
+
+    @Getter
+    protected String[] craftingStrings;
 
     @Getter
     @Setter
@@ -99,6 +101,16 @@ public class ModelRegistryItem {
 
     public ModelRegistryItem setLootItems(List<ItemStack> lootItems) {
         this.lootItems = lootItems;
+        return this;
+    }
+
+    public ModelRegistryItem setCraftingStrings(String[] craftingStrings) {
+        this.craftingStrings = craftingStrings;
+        return this;
+    }
+
+    public ModelRegistryItem setSimulationRFCost(int simulationRFCost) {
+        this.simulationRFCost = simulationRFCost;
         return this;
     }
 

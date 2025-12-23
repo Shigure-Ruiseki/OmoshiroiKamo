@@ -6,9 +6,12 @@ import java.util.Map;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -64,5 +67,18 @@ public class ItemPristineMatter extends ItemOK {
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta) {
         return icons.get(meta);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+        ModelRegistryItem model = ModelRegistry.INSTANCE.getByType(stack.getItemDamage());
+        if (model != null) {
+            list.add(
+                ChatFormatting.AQUA + LibMisc.LANG.localize("tooltip.pristine_matter.loot_items")
+                    + ChatFormatting.RESET);
+            for (ItemStack lootStack : model.getLootItems()) {
+                list.add(lootStack.getDisplayName());
+            }
+        }
     }
 }

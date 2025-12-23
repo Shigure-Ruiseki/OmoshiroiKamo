@@ -182,8 +182,10 @@ public class LootFabricatorPanel extends ModularPanel {
         syncManager.syncValue("processSyncer", new FloatSyncValue(tileEntity::getProgress));
 
         deselectButton = new ButtonItemDeselect(this).pos(77, 5);
-        prevPageButton = new ButtonPageSelect(Direction.PREV, this).pos(12, 66);
-        nextPageButton = new ButtonPageSelect(Direction.NEXT, this).pos(43, 66);
+        prevPageButton = new ButtonPageSelect(Direction.PREV, this).pos(12, 66)
+            .tooltip(tooltip -> tooltip.addLine(LibMisc.LANG.localize("gui.button_page_select.prev")));
+        nextPageButton = new ButtonPageSelect(Direction.NEXT, this).pos(43, 66)
+            .tooltip(tooltip -> tooltip.addLine(LibMisc.LANG.localize("gui.button_page_select.prev")));
 
         this.child(deselectButton)
             .child(prevPageButton)

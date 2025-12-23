@@ -6,6 +6,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
@@ -438,6 +439,47 @@ public class ItemRecipes {
                     Items.stick));
         }
 
+        if (BackportConfigs.useDeepMobLearning) {
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.DATA_MODEL_BLANK.newItemStack(1),
+                    "CEC",
+                    "RSR",
+                    "CGC",
+                    'E',
+                    Items.repeater,
+                    'R',
+                    ModItems.SOOT_COVERED_REDSTONE.getItem(),
+                    'G',
+                    "ingotGold",
+                    'C',
+                    "gemLapis",
+                    'S',
+                    "stone"));
+
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.POLYMER_CLAY.newItemStack(16),
+                    "GC ",
+                    "CDC",
+                    " CI",
+                    'I',
+                    "ingotIron",
+                    'G',
+                    "ingotGold",
+                    'D',
+                    "gemLapis",
+                    'C',
+                    "itemClay"));
+
+            GameRegistry.addRecipe(
+                new ShapelessOreRecipe(
+                    ModItems.SOOT_COVERED_PLATE.newItemStack(8),
+                    ModItems.SOOT_COVERED_REDSTONE.getItem(),
+                    "blockObsidian",
+                    "blockObsidian",
+                    "blockObsidian"));
+        }
     }
 
 }
