@@ -7,9 +7,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import ruiseki.omoshiroikamo.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
@@ -69,7 +71,7 @@ public class CommandStructure extends CommandBase {
 
     private void reloadStructures(ICommandSender sender) {
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading structure configurations..."));
+            new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("command.ok.reloading")));
 
         try {
             StructureManager.getInstance()
@@ -82,38 +84,50 @@ public class CommandStructure extends CommandBase {
                     .getErrorCount();
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED + "[OmoshiroiKamo] Reload completed with " + errorCount + " error(s)!"));
+                        EnumChatFormatting.RED
+                            + StatCollector.translateToLocalFormatted("command.ok.reload_errors", errorCount)));
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.GRAY + "Check: config/omoshiroikamo/structures/errors.txt"));
+                        EnumChatFormatting.GRAY + StatCollector.translateToLocal("command.ok.reload_check_file")));
             } else {
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.GREEN + "[OmoshiroiKamo] Structure configurations reloaded successfully!"));
+                        EnumChatFormatting.GREEN + StatCollector.translateToLocal("command.ok.reload_success")));
             }
         } catch (Exception e) {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "[OmoshiroiKamo] Reload failed: " + e.getMessage()));
+                new ChatComponentText(
+                    EnumChatFormatting.RED
+                        + StatCollector.translateToLocalFormatted("command.ok.reload_failed", e.getMessage())));
         }
     }
 
     private void showStatus(ICommandSender sender) {
         StructureManager manager = StructureManager.getInstance();
 
-        sender
-            .addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "=== OmoshiroiKamo Structure Status ==="));
-
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "Initialized: "
-                    + (manager.isInitialized() ? EnumChatFormatting.GREEN + "Yes" : EnumChatFormatting.RED + "No")));
+                EnumChatFormatting.AQUA + StatCollector.translateToLocal("command.ok.status_header")));
+
+        String initialized = manager.isInitialized()
+            ? EnumChatFormatting.GREEN + StatCollector.translateToLocal("command.ok.status_yes")
+            : EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.status_no");
+        sender.addChatMessage(
+            new ChatComponentText(
+                EnumChatFormatting.WHITE + StatCollector.translateToLocal("command.ok.status_initialized")
+                    + initialized));
 
         if (manager.hasErrors()) {
             String summary = manager.getErrorCollector()
                 .getSummary();
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Errors: " + summary));
+            sender.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.status_errors") + summary));
         } else {
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Errors: None"));
+            sender.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.GREEN + StatCollector.translateToLocal("command.ok.status_errors")
+                        + StatCollector.translateToLocal("command.ok.status_none")));
         }
     }
 
@@ -121,9 +135,11 @@ public class CommandStructure extends CommandBase {
         // /ok scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
         if (args.length < 8) {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok scan <name> <x1> <y1> <z1> <x2> <y2> <z2>"));
+                new ChatComponentText(
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.scan_usage")));
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GRAY + "Example: /ok scan myStructure 0 64 0 10 70 10"));
+                new ChatComponentText(
+                    EnumChatFormatting.GRAY + StatCollector.translateToLocal("command.ok.scan_example")));
             return;
         }
 
@@ -139,7 +155,9 @@ public class CommandStructure extends CommandBase {
             z2 = parseInt(sender, args[7]);
         } catch (Exception e) {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "Invalid coordinates: " + e.getMessage()));
+                new ChatComponentText(
+                    EnumChatFormatting.RED
+                        + StatCollector.translateToLocalFormatted("command.ok.scan_invalid_coords", e.getMessage())));
             return;
         }
 
@@ -154,7 +172,9 @@ public class CommandStructure extends CommandBase {
         }
 
         if (world == null) {
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Could not get world instance"));
+            sender.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.scan_no_world")));
             return;
         }
 
@@ -164,15 +184,20 @@ public class CommandStructure extends CommandBase {
         int sizeZ = Math.abs(z2 - z1) + 1;
         int totalBlocks = sizeX * sizeY * sizeZ;
 
-        if (totalBlocks > 10000) {
+        if (totalBlocks > StructureConstants.MAX_COMMAND_SCAN_BLOCKS) {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "Area too large! Max 10000 blocks, got " + totalBlocks));
+                new ChatComponentText(
+                    EnumChatFormatting.RED + StatCollector.translateToLocalFormatted(
+                        "command.ok.scan_area_too_large",
+                        StructureConstants.MAX_COMMAND_SCAN_BLOCKS,
+                        totalBlocks)));
             return;
         }
 
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.YELLOW + "Scanning " + sizeX + "x" + sizeY + "x" + sizeZ + " area..."));
+                EnumChatFormatting.YELLOW
+                    + StatCollector.translateToLocalFormatted("command.ok.scan_scanning", sizeX, sizeY, sizeZ)));
 
         // Locate the config directory
         File configDir = new File(
@@ -189,45 +214,45 @@ public class CommandStructure extends CommandBase {
                 .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] " + result.message));
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GRAY + "File: config/omoshiroikamo/structures/custom/" + name + ".json"));
+                    EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted("command.ok.scan_file", name)));
         } else {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "[OmoshiroiKamo] Scan failed: " + result.message));
+                new ChatComponentText(
+                    EnumChatFormatting.RED
+                        + StatCollector.translateToLocalFormatted("command.ok.scan_failed", result.message)));
         }
     }
 
     private void sendUsage(ICommandSender sender) {
-        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Usage:"));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  /ok reload"
-                    + EnumChatFormatting.GRAY
-                    + " - Reload structure configurations"));
+                EnumChatFormatting.YELLOW + StatCollector.translateToLocal("command.ok.usage_title")));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  /ok status" + EnumChatFormatting.GRAY + " - Show current status"));
+                EnumChatFormatting.WHITE + "  " + StatCollector.translateToLocal("command.ok.usage_reload")));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  /ok scan <name> <x1> <y1> <z1> <x2> <y2> <z2>"
-                    + EnumChatFormatting.GRAY
-                    + " - Scan area to JSON"));
+                EnumChatFormatting.WHITE + "  " + StatCollector.translateToLocal("command.ok.usage_status")));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  /ok wand save <name>"
-                    + EnumChatFormatting.GRAY
-                    + " - Save wand selection to JSON"));
+                EnumChatFormatting.WHITE + "  " + StatCollector.translateToLocal("command.ok.usage_scan")));
+        sender.addChatMessage(
+            new ChatComponentText(
+                EnumChatFormatting.WHITE + "  " + StatCollector.translateToLocal("command.ok.usage_wand_save")));
     }
 
     private void handleWandCommand(ICommandSender sender, String[] args) {
         if (!(sender instanceof EntityPlayer)) {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] This command can only be used by players!"));
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.wand_players_only")));
             return;
         }
 
         if (args.length < 2) {
-            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok wand save <name>"));
+            sender.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.wand_usage")));
             return;
         }
 
@@ -242,14 +267,18 @@ public class CommandStructure extends CommandBase {
                 clearWandSelection(player);
                 break;
             default:
-                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok wand save <name>"));
+                sender.addChatMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.wand_usage")));
                 break;
         }
     }
 
     private void saveWandSelection(EntityPlayer player, String[] args) {
         if (args.length < 3) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Usage: /ok wand save <name>"));
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.wand_usage")));
             return;
         }
 
@@ -261,7 +290,7 @@ public class CommandStructure extends CommandBase {
         if (pending == null) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] No pending scan! Use the Structure Wand first."));
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.wand_no_pending")));
             return;
         }
 
@@ -269,22 +298,26 @@ public class CommandStructure extends CommandBase {
         if (pending.dimensionId != player.worldObj.provider.dimensionId) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] Selection is in a different dimension!"));
+                    EnumChatFormatting.RED + StatCollector.translateToLocal("command.ok.wand_different_dimension")));
             return;
         }
 
         // Size guard
         int blockCount = pending.getBlockCount();
-        if (blockCount > 1000000) {
+        if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] Area too large! Max 1,000,000 blocks, got "
-                        + blockCount));
+                    EnumChatFormatting.RED + StatCollector.translateToLocalFormatted(
+                        "chat.wand.area_too_large",
+                        String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
+                        String.format("%,d", blockCount))));
             return;
         }
 
         player.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Scanning " + blockCount + " blocks..."));
+            new ChatComponentText(
+                EnumChatFormatting.YELLOW
+                    + StatCollector.translateToLocalFormatted("command.ok.wand_scanning", blockCount)));
 
         // Locate the config directory
         File configDir = new File(
@@ -310,7 +343,11 @@ public class CommandStructure extends CommandBase {
                 .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] " + result.message));
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GRAY + "File: config/omoshiroikamo/structures/custom/" + name + ".json"));
+                    EnumChatFormatting.GRAY + "File: config/"
+                        + LibMisc.MOD_ID
+                        + "/structures/custom/"
+                        + name
+                        + ".json"));
 
             // Clear the pending selection
             WandSelectionManager.getInstance()
@@ -327,10 +364,12 @@ public class CommandStructure extends CommandBase {
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Wand selection cleared."));
+                new ChatComponentText(
+                    EnumChatFormatting.GREEN + StatCollector.translateToLocalFormatted("command.ok.wand_cleared")));
         } else {
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GRAY + "[OmoshiroiKamo] No pending selection to clear."));
+                new ChatComponentText(
+                    EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted("command.ok.wand_no_selection")));
         }
     }
 }

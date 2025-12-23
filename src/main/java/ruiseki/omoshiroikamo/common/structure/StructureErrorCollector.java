@@ -16,6 +16,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 
 /**
  * Collector that gathers and reports structure-system errors.
@@ -201,7 +202,8 @@ public class StructureErrorCollector {
 
         // File path hint
         player.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.GRAY + "Check: config/omoshiroikamo/structures/errors.txt"));
+            new ChatComponentText(
+                EnumChatFormatting.GRAY + "Check: config/" + LibMisc.MOD_ID + "/structures/errors.txt"));
     }
 
     /**

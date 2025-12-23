@@ -5,6 +5,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
@@ -81,14 +84,14 @@ public class StructureWandRenderer {
      */
     private ChunkCoordinates getLookTarget(EntityPlayer player) {
         double reachDistance = StructureConstants.WAND_PREVIEW_REACH;
-        net.minecraft.util.Vec3 startVec = player.getPosition(1.0F);
-        net.minecraft.util.Vec3 lookVec = player.getLookVec();
-        net.minecraft.util.Vec3 endVec = startVec
+        Vec3 startVec = player.getPosition(1.0F);
+        Vec3 lookVec = player.getLookVec();
+        Vec3 endVec = startVec
             .addVector(lookVec.xCoord * reachDistance, lookVec.yCoord * reachDistance, lookVec.zCoord * reachDistance);
 
-        net.minecraft.util.MovingObjectPosition mop = player.worldObj.rayTraceBlocks(startVec, endVec);
+        MovingObjectPosition mop = player.worldObj.rayTraceBlocks(startVec, endVec);
 
-        if (mop != null && mop.typeOfHit == net.minecraft.util.MovingObjectPosition.MovingObjectType.BLOCK) {
+        if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
             return new ChunkCoordinates(mop.blockX, mop.blockY, mop.blockZ);
         }
 

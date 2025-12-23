@@ -183,8 +183,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public IUsageHandler getUsageAndCatalystHandler(String inputId, Object... ingredients) {
-        // For miner blocks, skip catalyst short-circuit and use our tier-aware usage
-        // handler
+        // For miner blocks, skip catalyst short-circuit and use our tier-aware usage handler
         if ("item".equals(inputId) && ingredients.length > 0 && ingredients[0] instanceof ItemStack stack) {
             Item minerItem = Item.getItemFromBlock(getMinerBlock());
             if (stack.getItem() == minerItem) {
