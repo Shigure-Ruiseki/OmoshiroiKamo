@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock.quantumBeacon;
 
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlockAnyMeta;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
 import static ruiseki.omoshiroikamo.plugin.structureLib.StructureLibUtils.ofBlockAdderWithPos;
 
@@ -77,26 +76,25 @@ public class QuantumBeaconStructure {
     }
 
     private static <T extends TEQuantumBeacon> void addCommonElements(StructureDefinition.Builder<T> builder) {
-        builder.addElement('P', ofBlockAnyMeta(ModBlocks.MACHINE_BASE.get(), 0))
-            .addElement(
-                'A',
-                ofChain(
-                    ofBlockAdderWithPos(
-                        (t, b, m, x, y, z) -> t.addToMachine(b, m, x, y, z),
-                        ModBlocks.MODIFIER_NULL.get(),
-                        0),
-                    ofBlock(ModBlocks.MODIFIER_NULL.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_FIRE_RESISTANCE.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_FLIGHT.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_NIGHT_VISION.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_WATER_BREATHING.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_STRENGTH.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_HASTE.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_REGENERATION.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_SATURATION.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_RESISTANCE.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_JUMP_BOOST.get(), 0),
-                    ofBlock(ModBlocks.MODIFIER_SPEED.get(), 0)));
+        builder.addElement(
+            'A',
+            ofChain(
+                ofBlockAdderWithPos(
+                    (t, b, m, x, y, z) -> t.addToMachine(b, m, x, y, z),
+                    ModBlocks.MODIFIER_NULL.get(),
+                    0),
+                ofBlock(ModBlocks.MODIFIER_NULL.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_FIRE_RESISTANCE.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_FLIGHT.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_NIGHT_VISION.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_WATER_BREATHING.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_STRENGTH.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_HASTE.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_REGENERATION.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_SATURATION.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_RESISTANCE.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_JUMP_BOOST.get(), 0),
+                ofBlock(ModBlocks.MODIFIER_SPEED.get(), 0)));
     }
 
 }

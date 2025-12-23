@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.common.util.Logger;
 
 /**
  * Utility for resolving Block objects from block ID strings
@@ -59,6 +60,7 @@ public class BlockResolver {
 
         Block block = GameRegistry.findBlock(modId, blockName);
         if (block == null) {
+            Logger.warn("BlockResolver: Block not found - " + modId + ":" + blockName);
             return null;
         }
 

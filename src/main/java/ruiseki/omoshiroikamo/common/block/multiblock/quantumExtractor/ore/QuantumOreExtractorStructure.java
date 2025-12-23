@@ -81,8 +81,7 @@ public class QuantumOreExtractorStructure {
     }
 
     private static <T extends TEQuantumExtractor> void addCommonElements(StructureDefinition.Builder<T> builder) {
-        builder.addElement('C', ofBlock(ModBlocks.LASER_CORE.get(), 0))
-            .addElement('P', ofBlockAnyMeta(ModBlocks.MACHINE_BASE.get(), 0))
+        builder
             .addElement(
                 'L',
                 ofChain(

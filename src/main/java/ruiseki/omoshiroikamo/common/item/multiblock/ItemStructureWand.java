@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.common.item.multiblock;
 
 import java.util.List;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,8 +19,8 @@ import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
 /**
  * Wand item used for structure scanning.
  * Right-click: set position 1
- * Shift + Right-click: set position 2
- * Left-click in air: store the selection for scanning
+ * Shift + Right-click: set position 2 and prepare scan
+ * Shift + Left-click: clear all positions
  */
 public class ItemStructureWand extends ItemOK {
 
@@ -49,101 +50,82 @@ public class ItemStructureWand extends ItemOK {
         NBTTagCompound nbt = getOrCreateNBT(stack);
 
         if (player.isSneaking()) {
-            // Shift + right-click: set position 2
+            // Shift + right-click: set position 2 and prepare scan
+            if (!hasPos1(nbt)) {
+                player.addChatMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.RED + "[OmoshiroiKamo] Set Position 1 first! (Right-click a block)"));
+                return true;
+            }
+
             setPos2(nbt, x, y, z, world.provider.dimensionId);
             player.addChatMessage(
                 new ChatComponentText(
                     EnumChatFormatting.GREEN + "[OmoshiroiKamo] Position 2 set: (" + x + ", " + y + ", " + z + ")"));
 
-            // When both points are set, show block count
-            if (hasPos1(nbt) && hasPos2(nbt)) {
-                showSelectionInfo(player, nbt);
-            }
+            // Automatically prepare scan when both positions are set
+            ChunkCoordinates pos1 = getPos1(nbt);
+            ChunkCoordinates pos2 = new ChunkCoordinates(x, y, z);
+
+            WandSelectionManager.getInstance()
+                .setPendingScan(player.getUniqueID(), pos1, pos2, world.provider.dimensionId);
+
+            int blockCount = WandSelectionManager.getInstance()
+                .getPendingScan(player.getUniqueID())
+                .getBlockCount();
+
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.GREEN + "[OmoshiroiKamo] Scan ready! (" + blockCount + " blocks)"));
+            player.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.YELLOW + "Use: " + EnumChatFormatting.WHITE + "/ok wand save <name>"));
         } else {
-            // Right-click: set position 1
+            // Right-click: set position 1 (clears position 2)
             setPos1(nbt, x, y, z, world.provider.dimensionId);
+            clearPos2(nbt);
             player.addChatMessage(
                 new ChatComponentText(
                     EnumChatFormatting.AQUA + "[OmoshiroiKamo] Position 1 set: (" + x + ", " + y + ", " + z + ")"));
+            player
+                .addChatMessage(new ChatComponentText(EnumChatFormatting.GRAY + "Shift+Right-click to set Position 2"));
         }
 
         return true;
     }
 
+    /**
+     * Handle left-click (swing) action.
+     * Shift + Left-click: clear all positions.
+     */
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (world.isRemote) {
-            return stack;
+    public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
+        if (!(entityLiving instanceof EntityPlayer)) {
+            return false;
         }
 
-        // Only trigger when sneaking in air (not aiming at a block)
-        if (!player.isSneaking()) {
-            return stack;
+        EntityPlayer player = (EntityPlayer) entityLiving;
+
+        if (player.worldObj.isRemote) {
+            return false;
         }
 
-        NBTTagCompound nbt = getOrCreateNBT(stack);
+        if (player.isSneaking()) {
+            // Shift + Left-click: clear all positions
+            NBTTagCompound nbt = getOrCreateNBT(stack);
+            clearPos1(nbt);
+            clearPos2(nbt);
 
-        if (!hasPos1(nbt) || !hasPos2(nbt)) {
+            // Also clear pending scan
+            WandSelectionManager.getInstance()
+                .clearPendingScan(player.getUniqueID());
+
             player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED
-                        + "[OmoshiroiKamo] Please set both positions first! (Right-click for pos1, Shift+Right-click for pos2)"));
-            return stack;
+                new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] All positions cleared."));
+            return true; // Cancel the swing animation
         }
 
-        // Dimension guard
-        int dim = nbt.getInteger(NBT_DIMENSION);
-        if (dim != player.worldObj.provider.dimensionId) {
-            player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] Selection is in a different dimension!"));
-            return stack;
-        }
-
-        // Stage the selection
-        ChunkCoordinates pos1 = getPos1(nbt);
-        ChunkCoordinates pos2 = getPos2(nbt);
-
-        WandSelectionManager.getInstance()
-            .setPendingScan(player.getUniqueID(), pos1, pos2, dim);
-
-        int blockCount = WandSelectionManager.getInstance()
-            .getPendingScan(player.getUniqueID())
-            .getBlockCount();
-
-        player.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.GREEN + "[OmoshiroiKamo] Scan area ready! (" + blockCount + " blocks)"));
-        player.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.YELLOW + "Use: " + EnumChatFormatting.WHITE + "/ok wand save <name>"));
-
-        return stack;
-    }
-
-    private void showSelectionInfo(EntityPlayer player, NBTTagCompound nbt) {
-        ChunkCoordinates pos1 = getPos1(nbt);
-        ChunkCoordinates pos2 = getPos2(nbt);
-
-        int sizeX = Math.abs(pos2.posX - pos1.posX) + 1;
-        int sizeY = Math.abs(pos2.posY - pos1.posY) + 1;
-        int sizeZ = Math.abs(pos2.posZ - pos1.posZ) + 1;
-        int totalBlocks = sizeX * sizeY * sizeZ;
-
-        player.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.GRAY + "Selection: "
-                    + sizeX
-                    + "x"
-                    + sizeY
-                    + "x"
-                    + sizeZ
-                    + " ("
-                    + totalBlocks
-                    + " blocks)"));
-        player.addChatMessage(
-            new ChatComponentText(
-                EnumChatFormatting.GRAY + "Left-click to prepare scan, then use /ok wand save <name>"));
+        return false;
     }
 
     @Override
@@ -153,8 +135,8 @@ public class ItemStructureWand extends ItemOK {
         NBTTagCompound nbt = stack.getTagCompound();
         if (nbt == null) {
             tooltip.add(EnumChatFormatting.GRAY + "Right-click: Set Position 1");
-            tooltip.add(EnumChatFormatting.GRAY + "Shift+Right-click: Set Position 2");
-            tooltip.add(EnumChatFormatting.GRAY + "Left-click: Prepare scan");
+            tooltip.add(EnumChatFormatting.GRAY + "Shift+Right-click: Set Position 2 & Prepare");
+            tooltip.add(EnumChatFormatting.GRAY + "Shift+Left-click: Clear all positions");
             return;
         }
 
@@ -204,6 +186,20 @@ public class ItemStructureWand extends ItemOK {
         nbt.setInteger(NBT_POS2_Z, z);
         nbt.setBoolean(NBT_HAS_POS2, true);
         nbt.setInteger(NBT_DIMENSION, dim);
+    }
+
+    private void clearPos1(NBTTagCompound nbt) {
+        nbt.removeTag(NBT_POS1_X);
+        nbt.removeTag(NBT_POS1_Y);
+        nbt.removeTag(NBT_POS1_Z);
+        nbt.setBoolean(NBT_HAS_POS1, false);
+    }
+
+    private void clearPos2(NBTTagCompound nbt) {
+        nbt.removeTag(NBT_POS2_X);
+        nbt.removeTag(NBT_POS2_Y);
+        nbt.removeTag(NBT_POS2_Z);
+        nbt.setBoolean(NBT_HAS_POS2, false);
     }
 
     private boolean hasPos1(NBTTagCompound nbt) {

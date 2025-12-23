@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock;
 
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
 import java.util.ArrayList;
@@ -18,10 +17,11 @@ import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 
 import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMBModifierTE;
-import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.structure.BlockResolver;
 import ruiseki.omoshiroikamo.common.structure.StructureDefinitionData.BlockEntry;
 import ruiseki.omoshiroikamo.common.structure.StructureDefinitionData.BlockMapping;
+import ruiseki.omoshiroikamo.common.structure.StructureException;
+import ruiseki.omoshiroikamo.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
 public class StructureRegistrationUtils {
@@ -72,15 +72,6 @@ public class StructureRegistrationUtils {
         // Add Controller ('Q') - Meta is usually tier - 1
         builder.addElement('Q', ofBlock(controllerBlock, tier - 1));
 
-        // Add Structure Frames ('F') - Meta is usually tier - 1
-        // Used by all 4 structures: Basalt, Hardened, Alabaster
-        builder.addElement(
-            'F',
-            ofChain(
-                ofBlock(ModBlocks.BASALT_STRUCTURE.get(), tier - 1),
-                ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), tier - 1),
-                ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), tier - 1)));
-
         // Add Air element ('_') - mandatory air block
         builder.addElement('_', ofBlock(Blocks.air, 0));
 
@@ -121,9 +112,17 @@ public class StructureRegistrationUtils {
         // Validate: Q must appear exactly once
         int qCount = countSymbolInShape(shape, 'Q');
         if (qCount == 0) {
-            Logger.error("Structure " + shapeName + " has no controller 'Q'!");
+            String error = "Structure " + shapeName + " has no controller 'Q'!";
+            Logger.error(error);
+            StructureManager.getInstance()
+                .getErrorCollector()
+                .collect(StructureException.ErrorType.VALIDATION_ERROR, shapeName, error);
         } else if (qCount > 1) {
-            Logger.error("Structure " + shapeName + " has " + qCount + " controllers 'Q'! Must be exactly 1.");
+            String error = "Structure " + shapeName + " has " + qCount + " controllers 'Q'! Must be exactly 1.";
+            Logger.error(error);
+            StructureManager.getInstance()
+                .getErrorCollector()
+                .collect(StructureException.ErrorType.VALIDATION_ERROR, shapeName, error);
         }
 
         StructureDefinition.Builder<T> builder = StructureDefinition.builder();
@@ -133,14 +132,6 @@ public class StructureRegistrationUtils {
 
         // Add Controller ('Q') - Meta is usually tier - 1
         builder.addElement('Q', ofBlock(controllerBlock, tier - 1));
-
-        // Add Structure Frames ('F') - Meta is usually tier - 1
-        builder.addElement(
-            'F',
-            ofChain(
-                ofBlock(ModBlocks.BASALT_STRUCTURE.get(), tier - 1),
-                ofBlock(ModBlocks.HARDENED_STRUCTURE.get(), tier - 1),
-                ofBlock(ModBlocks.ALABASTER_STRUCTURE.get(), tier - 1)));
 
         // Add Air element ('_') - mandatory air block
         builder.addElement('_', ofBlock(Blocks.air, 0));
@@ -158,8 +149,12 @@ public class StructureRegistrationUtils {
                 IStructureElement<T> element = createElementFromMapping(entry.getValue());
                 if (element != null) {
                     builder.addElement(symbol, element);
+                } else {
+                    Logger.warn("Failed to create element for symbol '" + symbol + "' in structure " + shapeName);
                 }
             }
+        } else {
+            Logger.warn("Structure " + shapeName + ": dynamicMappings is null!");
         }
 
         // Add Custom Elements (can override dynamic mappings)
@@ -181,6 +176,7 @@ public class StructureRegistrationUtils {
      * Supports:
      * - Simple string: "mod:block:meta"
      * - BlockMapping object with blocks list
+     * - Map object (from JSON parsing)
      */
     @SuppressWarnings("unchecked")
     private static <T> IStructureElement<T> createElementFromMapping(Object mapping) {
@@ -211,6 +207,42 @@ public class StructureRegistrationUtils {
                     }
                 }
                 return BlockResolver.createChainElement(blockStrings);
+            }
+        }
+
+        // Handle raw Map from JSON (Gson LinkedTreeMap)
+        if (mapping instanceof Map) {
+            Map<String, Object> mapData = (Map<String, Object>) mapping;
+
+            // Single block: { "block": "mod:block:meta" }
+            if (mapData.containsKey("block")) {
+                Object blockObj = mapData.get("block");
+                if (blockObj instanceof String) {
+                    return BlockResolver.createElement((String) blockObj);
+                }
+            }
+
+            // Multiple blocks: { "blocks": [...] }
+            if (mapData.containsKey("blocks")) {
+                Object blocksObj = mapData.get("blocks");
+                if (blocksObj instanceof List) {
+                    List<?> blocksList = (List<?>) blocksObj;
+                    List<String> blockStrings = new ArrayList<>();
+                    for (Object item : blocksList) {
+                        if (item instanceof Map) {
+                            Map<String, Object> blockItem = (Map<String, Object>) item;
+                            Object idObj = blockItem.get("id");
+                            if (idObj instanceof String) {
+                                blockStrings.add((String) idObj);
+                            }
+                        } else if (item instanceof String) {
+                            blockStrings.add((String) item);
+                        }
+                    }
+                    if (!blockStrings.isEmpty()) {
+                        return BlockResolver.createChainElement(blockStrings);
+                    }
+                }
             }
         }
 

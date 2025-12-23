@@ -225,6 +225,12 @@ public class StructureManager {
         // Re-register structures with StructureLib using updated shapes
         StructureCompat.reload();
 
+        // Write errors again after StructureCompat.reload() (Q validation errors are
+        // added there)
+        if (errorCollector.hasErrors()) {
+            errorCollector.writeToFile();
+        }
+
         Logger.info(
             "StructureManager reloaded"
                 + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : ""));
