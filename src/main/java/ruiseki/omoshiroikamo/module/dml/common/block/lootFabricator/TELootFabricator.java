@@ -19,10 +19,10 @@ import ruiseki.omoshiroikamo.api.crafting.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.client.gui.modularui2.base.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractMachineTE;
-import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 

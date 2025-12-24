@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber;
 
-import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.DML_INVENTORY_TEXTURE;
-import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.EMPTY_SLOT;
+import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.DML_INVENTORY_TEXTURE;
+import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.EMPTY_SLOT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,9 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
-import ruiseki.omoshiroikamo.common.util.StringAnimator;
-import ruiseki.omoshiroikamo.common.util.StringUtils;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
+import ruiseki.omoshiroikamo.core.common.util.StringUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 
 public class SimulationChamberPanel extends ModularPanel {

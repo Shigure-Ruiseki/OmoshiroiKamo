@@ -8,7 +8,7 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
@@ -17,8 +17,8 @@ import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
 public class MemorySettingWidget extends ExpandedTabWidget {
 
     private static final List<CyclicVariantButtonWidget.Variant> RESPECT_NBT_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.ignore_nbt"), MGuiTextures.IGNORE_NBT_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.match_nbt"), MGuiTextures.MATCH_NBT_ICON));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.ignore_nbt"), GuiTextures.IGNORE_NBT_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.match_nbt"), GuiTextures.MATCH_NBT_ICON));
 
     private final BackpackPanel panel;
     private final BackpackSettingPanel settingPanel;
@@ -27,7 +27,7 @@ public class MemorySettingWidget extends ExpandedTabWidget {
     private final CyclicVariantButtonWidget respectNBTButton;
 
     public MemorySettingWidget(BackpackPanel panel, BackpackSettingPanel settingPanel, TabWidget parentTabWidget) {
-        super(2, MGuiTextures.BRAIN_ICON, "gui.backpack.memory_settings", 80, ExpandDirection.RIGHT);
+        super(2, GuiTextures.BRAIN_ICON, "gui.backpack.memory_settings", 80, ExpandDirection.RIGHT);
 
         this.panel = panel;
         this.settingPanel = settingPanel;
@@ -39,7 +39,7 @@ public class MemorySettingWidget extends ExpandedTabWidget {
             .childPadding(2);
 
         ButtonWidget<?> memorizeAllButton = new ButtonWidget<>().size(20)
-            .overlay(MGuiTextures.ALL_FOUR_SLOT_ICON)
+            .overlay(GuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
                     var wrapper = panel.getHandler();
@@ -63,7 +63,7 @@ public class MemorySettingWidget extends ExpandedTabWidget {
                     .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
         ButtonWidget<?> unmemorizeAllButton = new ButtonWidget<>().size(20)
-            .overlay(MGuiTextures.NONE_FOUR_SLOT_ICON)
+            .overlay(GuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
                     var wrapper = panel.getHandler();

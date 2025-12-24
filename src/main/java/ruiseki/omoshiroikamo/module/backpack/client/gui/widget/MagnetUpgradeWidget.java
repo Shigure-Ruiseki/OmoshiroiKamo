@@ -6,7 +6,7 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.MagnetUpgradeWrapper;
@@ -14,16 +14,16 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.MagnetUpgradeWr
 public class MagnetUpgradeWidget extends BasicExpandedTabWidget<MagnetUpgradeWrapper> {
 
     private static final List<CyclicVariantButtonWidget.Variant> EXP_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.exp_magnet"), MGuiTextures.EXP_MAGNET_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.exp_magnet"), GuiTextures.EXP_MAGNET_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.ignore_exp_magnet"),
-            MGuiTextures.IGNORE_EXP_MAGNET_ICON));
+            GuiTextures.IGNORE_EXP_MAGNET_ICON));
 
     private static final List<CyclicVariantButtonWidget.Variant> ITEM_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.item_magnet"), MGuiTextures.ITEM_MAGNET_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.item_magnet"), GuiTextures.ITEM_MAGNET_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.ignore_item_magnet"),
-            MGuiTextures.IGNORE_ITEM_MAGNET_ICON));
+            GuiTextures.IGNORE_ITEM_MAGNET_ICON));
 
     @Getter
     private final CyclicVariantButtonWidget itemButton;

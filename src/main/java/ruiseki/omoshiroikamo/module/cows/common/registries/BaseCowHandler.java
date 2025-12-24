@@ -24,11 +24,11 @@ import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.json.FluidJson;
 import ruiseki.omoshiroikamo.api.json.JsonUtils;
-import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
-import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 // Refactor base on OriginalChicken by Chlorine0808
 public abstract class BaseCowHandler {

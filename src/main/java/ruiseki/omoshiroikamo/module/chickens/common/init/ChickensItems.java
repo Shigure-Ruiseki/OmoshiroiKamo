@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemAnalyzer;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemChickenCatcher;

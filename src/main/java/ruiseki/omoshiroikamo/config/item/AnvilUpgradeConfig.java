@@ -2,8 +2,8 @@ package ruiseki.omoshiroikamo.config.item;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main anvil upgrade settings")
 @Config.LangKey(LibResources.CONFIG + "anvilUpgradeConfig")

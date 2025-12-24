@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 
 public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 

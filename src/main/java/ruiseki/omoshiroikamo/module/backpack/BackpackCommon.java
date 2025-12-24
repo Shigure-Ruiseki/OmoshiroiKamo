@@ -11,6 +11,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackRecipes;
+import ruiseki.omoshiroikamo.module.backpack.integration.bauble.BackpackBaubleCompat;
 
 public class BackpackCommon implements IModuleCommon {
 
@@ -33,6 +34,7 @@ public class BackpackCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         BackpackBlocks.preInit();
         BackpackItems.preInit();
+        BackpackBaubleCompat.preInit();
     }
 
     @Override
@@ -42,7 +44,7 @@ public class BackpackCommon implements IModuleCommon {
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-
+        BackpackBaubleCompat.postInit();
     }
 
     @Override

@@ -33,8 +33,8 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
@@ -91,10 +91,10 @@ public class BackpackPanel extends ModularPanel {
     private static final List<CyclicVariantButtonWidget.Variant> SORT_TYPE_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(
             IKey.lang(LibMisc.LANG.localize("gui.backpack.sort_by_name")),
-            MGuiTextures.SMALL_A_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_mod_id"), MGuiTextures.SMALL_M_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_count"), MGuiTextures.SMALL_1_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_ore_dict"), MGuiTextures.SMALL_O_ICON));
+            GuiTextures.SMALL_A_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_mod_id"), GuiTextures.SMALL_M_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_count"), GuiTextures.SMALL_1_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_ore_dict"), GuiTextures.SMALL_O_ICON));
 
     public static BackpackPanel defaultPanel(PanelSyncManager syncManager, UISettings settings, EntityPlayer player,
         TileEntity tileEntity, BackpackHandler handler, int width, int height, Integer slotIndex) {
@@ -230,8 +230,8 @@ public class BackpackPanel extends ModularPanel {
     public void addSortingButtons() {
 
         ShiftButtonWidget sortButton = new ShiftButtonWidget(
-            MGuiTextures.SOLID_DOWN_ARROW_ICON,
-            MGuiTextures.SOLID_UP_ARROW_ICON).top(4)
+            GuiTextures.SOLID_DOWN_ARROW_ICON,
+            GuiTextures.SOLID_UP_ARROW_ICON).top(4)
                 .right(21)
                 .size(12)
                 .setEnabledIf(w -> !settingPanel.isPanelOpen())
@@ -281,8 +281,8 @@ public class BackpackPanel extends ModularPanel {
 
     public void addTransferButtons() {
         ShiftButtonWidget transferToPlayerButton = new ShiftButtonWidget(
-            MGuiTextures.DOT_DOWN_ARROW_ICON,
-            MGuiTextures.SOLID_DOWN_ARROW_ICON).top(19 + backpackSlotsHeight)
+            GuiTextures.DOT_DOWN_ARROW_ICON,
+            GuiTextures.SOLID_DOWN_ARROW_ICON).top(19 + backpackSlotsHeight)
                 .right(21)
                 .size(12)
                 .setEnabledIf(shiftButtonWidget -> !settingPanel.isPanelOpen())
@@ -314,8 +314,8 @@ public class BackpackPanel extends ModularPanel {
                 });
 
         ShiftButtonWidget transferToBackpackButton = new ShiftButtonWidget(
-            MGuiTextures.DOT_UP_ARROW_ICON,
-            MGuiTextures.SOLID_UP_ARROW_ICON).top(19 + backpackSlotsHeight)
+            GuiTextures.DOT_UP_ARROW_ICON,
+            GuiTextures.SOLID_UP_ARROW_ICON).top(19 + backpackSlotsHeight)
                 .right(7)
                 .size(12)
                 .setEnabledIf(shiftButtonWidget -> !settingPanel.isPanelOpen())

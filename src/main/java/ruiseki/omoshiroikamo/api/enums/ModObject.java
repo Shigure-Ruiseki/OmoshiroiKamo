@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.enums;
 
 import net.minecraft.block.Block;
 
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public enum ModObject {
 

@@ -12,10 +12,10 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.common.util.handler.NetherPopulateHandler;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
+import ruiseki.omoshiroikamo.core.common.handler.NetherPopulateHandler;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class ModCows {

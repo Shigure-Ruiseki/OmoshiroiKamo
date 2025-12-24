@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.block.BlockOK;
-import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
+import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 
 public enum BackpackBlocks {

@@ -9,7 +9,7 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetTheme;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.BackpackSettingWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.MemorySettingWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.SortingSettingWidget;
@@ -37,21 +37,21 @@ public class BackpackSettingPanel extends ModularPanel {
             tooltip -> tooltip.addLine(IKey.lang("gui.backpack.backpack_settings"))
                 .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
         backpackTab.setExpandedWidget(new BackpackSettingWidget(parent, this, backpackTab));
-        backpackTab.setTabIcon(MGuiTextures.BACKPACK_ICON);
+        backpackTab.setTabIcon(GuiTextures.BACKPACK_ICON);
 
         memoryTab = new TabWidget(2, ExpandDirection.RIGHT);
         memoryTab.tooltipStatic(
             tooltip -> tooltip.addLine(IKey.lang("gui.backpack.memory_settings"))
                 .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
         memoryTab.setExpandedWidget(new MemorySettingWidget(parent, this, memoryTab));
-        memoryTab.setTabIcon(MGuiTextures.BRAIN_ICON);
+        memoryTab.setTabIcon(GuiTextures.BRAIN_ICON);
 
         sortTab = new TabWidget(3, ExpandDirection.RIGHT);
         sortTab.tooltipStatic(
             tooltip -> tooltip.addLine(IKey.lang("gui.backpack.sorting_settings"))
                 .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
         sortTab.setExpandedWidget(new SortingSettingWidget(parent, this, sortTab));
-        sortTab.setTabIcon(MGuiTextures.NO_SORT_ICON);
+        sortTab.setTabIcon(GuiTextures.NO_SORT_ICON);
 
         child(backpackTab).child(memoryTab)
             .child(sortTab);

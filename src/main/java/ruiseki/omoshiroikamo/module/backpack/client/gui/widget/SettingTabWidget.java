@@ -4,19 +4,18 @@ import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.Interactable;
-import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.drawable.TabTexture;
 import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.widget.Widget;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 
 public class SettingTabWidget extends Widget<SettingTabWidget> implements Interactable {
 
-    public static final TabTexture TAB_TEXTURE = GuiTextures.TAB_RIGHT;
+    public static final TabTexture TAB_TEXTURE = com.cleanroommc.modularui.drawable.GuiTextures.TAB_RIGHT;
 
     public SettingTabWidget() {
         size(TAB_TEXTURE.getWidth(), TAB_TEXTURE.getHeight()).right(-TAB_TEXTURE.getWidth() + 4)
@@ -72,9 +71,9 @@ public class SettingTabWidget extends Widget<SettingTabWidget> implements Intera
         BackpackPanel panel = (BackpackPanel) getPanel();
         if (panel.getSettingPanel()
             .isPanelOpen()) {
-            MGuiTextures.BACK_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
+            GuiTextures.BACK_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
         } else {
-            MGuiTextures.SETTING_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
+            GuiTextures.SETTING_ICON.draw(context, 8, 6, 16, 16, widgetTheme.getTheme());
         }
     }
 }

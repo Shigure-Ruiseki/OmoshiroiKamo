@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.cows.common.item.ItemCowHalter;
 import ruiseki.omoshiroikamo.module.cows.common.item.ItemCowSpawnEgg;
 

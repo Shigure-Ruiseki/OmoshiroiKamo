@@ -12,7 +12,7 @@ import org.joml.Vector3d;
 
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.item.ItemOK;
+import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 
 public class ItemChickenCatcher extends ItemOK {
 

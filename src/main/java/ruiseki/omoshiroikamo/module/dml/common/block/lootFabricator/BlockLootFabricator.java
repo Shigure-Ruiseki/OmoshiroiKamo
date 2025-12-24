@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 
 public class BlockLootFabricator extends AbstractBlock<TELootFabricator> {
 

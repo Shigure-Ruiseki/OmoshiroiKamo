@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
-import ruiseki.omoshiroikamo.common.util.Logger;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public class ModModels {
 

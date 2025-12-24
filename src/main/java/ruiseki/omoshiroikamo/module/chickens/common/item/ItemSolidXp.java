@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.item.ItemOK;
+import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 
 public class ItemSolidXp extends ItemOK {
 

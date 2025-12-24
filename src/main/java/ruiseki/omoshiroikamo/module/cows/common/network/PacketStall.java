@@ -8,8 +8,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.common.network.MessageTileEntity;
-import ruiseki.omoshiroikamo.common.network.PacketUtil;
+import ruiseki.omoshiroikamo.core.common.network.MessageTileEntity;
+import ruiseki.omoshiroikamo.core.common.network.PacketUtil;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 
 public class PacketStall extends MessageTileEntity<TEStall> implements IMessageHandler<PacketStall, IMessage> {

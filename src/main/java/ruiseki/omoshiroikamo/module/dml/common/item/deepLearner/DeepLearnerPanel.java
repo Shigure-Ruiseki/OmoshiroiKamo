@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.dml.common.item.deepLearner;
 
-import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.DML_INVENTORY_TEXTURE;
+import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.DML_INVENTORY_TEXTURE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModelExperience;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;

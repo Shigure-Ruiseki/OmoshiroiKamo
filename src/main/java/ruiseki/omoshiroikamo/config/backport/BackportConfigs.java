@@ -4,8 +4,8 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main Backport settings")
 @Config.LangKey(LibResources.CONFIG + "backportConfig")
@@ -18,7 +18,7 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useEnvironmentalTech;
+    public static boolean useMultiBlock;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

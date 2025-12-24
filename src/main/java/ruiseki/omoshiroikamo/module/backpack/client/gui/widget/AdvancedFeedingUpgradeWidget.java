@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
@@ -18,17 +18,17 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
     private static final List<CyclicVariantButtonWidget.Variant> HUNGER_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.complete_hunger"),
-            MGuiTextures.COMPLETE_HUNGER_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.half_hunger"), MGuiTextures.HALF_HUNGER_ICON),
+            GuiTextures.COMPLETE_HUNGER_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.half_hunger"), GuiTextures.HALF_HUNGER_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.immediate_hunger"),
-            MGuiTextures.IMMEDIATE_HUNGER_ICON));
+            GuiTextures.IMMEDIATE_HUNGER_ICON));
 
     private static final List<CyclicVariantButtonWidget.Variant> HEART_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.consider_health"), MGuiTextures.HALF_HEART_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.consider_health"), GuiTextures.HALF_HEART_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.ignore_health"),
-            MGuiTextures.IGNORE_HALF_HEART_ICON));
+            GuiTextures.IGNORE_HALF_HEART_ICON));
 
     @Getter
     private final CyclicVariantButtonWidget hungerButton;

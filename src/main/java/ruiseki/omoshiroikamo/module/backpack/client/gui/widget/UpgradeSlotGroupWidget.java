@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 
-import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.TOGGLE_DISABLE_ICON;
-import static ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures.TOGGLE_ENABLE_ICON;
+import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.TOGGLE_DISABLE_ICON;
+import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.TOGGLE_ENABLE_ICON;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
 
 import lombok.Setter;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IToggleable;

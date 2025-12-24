@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.dml.common.item;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.item.ItemOK;
+import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 
 public class ItemDataModelBlank extends ItemOK {
 

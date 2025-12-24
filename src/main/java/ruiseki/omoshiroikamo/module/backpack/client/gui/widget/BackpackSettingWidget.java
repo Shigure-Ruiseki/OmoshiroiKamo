@@ -6,7 +6,7 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
@@ -20,21 +20,21 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
     private final TabWidget parentTabWidget;
 
     private static final List<CyclicVariantButtonWidget.Variant> KEEP_TAB_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.keep_tab"), MGuiTextures.KEEP_TAB_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.not_keep_tab"), MGuiTextures.NOT_KEEP_TAB_ICON));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.keep_tab"), GuiTextures.KEEP_TAB_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.not_keep_tab"), GuiTextures.NOT_KEEP_TAB_ICON));
 
     private static final List<CyclicVariantButtonWidget.Variant> SEARCH_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.unlock_search"), MGuiTextures.UNLOCK_SEARCH_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.lock_search"), MGuiTextures.LOCK_SEARCH_ICON));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.unlock_search"), GuiTextures.UNLOCK_SEARCH_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.lock_search"), GuiTextures.LOCK_SEARCH_ICON));
 
     private static final List<CyclicVariantButtonWidget.Variant> LOCK_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.lock_backpack"), MGuiTextures.LOCK_BACKPACK_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.lock_backpack"), GuiTextures.LOCK_BACKPACK_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.unlock_backpack"),
-            MGuiTextures.UNLOCK_BACKPACK_ICON));
+            GuiTextures.UNLOCK_BACKPACK_ICON));
 
     public BackpackSettingWidget(BackpackPanel panel, BackpackSettingPanel settingPanel, TabWidget parentTabWidget) {
-        super(2, MGuiTextures.BACKPACK_ICON, "gui.backpack.backpack_settings", 80, TabWidget.ExpandDirection.RIGHT);
+        super(2, GuiTextures.BACKPACK_ICON, "gui.backpack.backpack_settings", 80, TabWidget.ExpandDirection.RIGHT);
 
         this.panel = panel;
         this.handler = panel.getHandler();

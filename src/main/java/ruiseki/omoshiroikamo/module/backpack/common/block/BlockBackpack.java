@@ -37,10 +37,10 @@ import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.common.block.ItemBlockBauble;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractTE;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.common.block.ItemBlockBauble;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 

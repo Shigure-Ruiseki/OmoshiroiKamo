@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -18,8 +17,8 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
 public class TERoost extends TERoostBase {
@@ -88,8 +87,8 @@ public class TERoost extends TERoostBase {
                         .matrix("I  OOO")
                         .key(
                             'I',
-                            index -> new ItemSlot().background(MGuiTextures.ROOST_SLOT)
-                                .hoverBackground(MGuiTextures.ROOST_SLOT)
+                            index -> new ItemSlot().background(GuiTextures.ROOST_SLOT)
+                                .hoverBackground(GuiTextures.ROOST_SLOT)
                                 .slot(
                                     new ModularSlot(inv, index).slotGroup("input")
                                         .filter(stack -> isItemValidForSlot(index, stack))))
@@ -107,7 +106,7 @@ public class TERoost extends TERoostBase {
                         })
                         .topRel(0.25f)
                         .leftRel(0.375f)
-                        .texture(GuiTextures.PROGRESS_ARROW, 20)));
+                        .texture(com.cleanroommc.modularui.drawable.GuiTextures.PROGRESS_ARROW, 20)));
         panel.bindPlayerInventory();
         return panel;
     }

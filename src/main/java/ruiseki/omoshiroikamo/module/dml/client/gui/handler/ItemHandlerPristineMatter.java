@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.client.gui.modularui2.base.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 
 public abstract class ItemHandlerPristineMatter extends ItemStackHandlerBase {

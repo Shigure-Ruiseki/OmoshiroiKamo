@@ -21,7 +21,7 @@ import com.cleanroommc.modularui.utils.Platform;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 
 public class ItemBackpackUIFactory extends AbstractUIFactory<PlayerInventoryGuiData> {

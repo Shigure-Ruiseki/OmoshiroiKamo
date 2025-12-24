@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.init.ModItems;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
@@ -20,6 +18,8 @@ import ruiseki.omoshiroikamo.module.cows.common.init.CowsBlocks;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsItems;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLBlocks;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
 
 public abstract class OKCreativeTab extends CreativeTabs {
 
@@ -62,49 +62,49 @@ public abstract class OKCreativeTab extends CreativeTabs {
 
         @Override
         public ItemStack getIconItemStack() {
-            return new ItemStack(ModBlocks.QUANTUM_ORE_EXTRACTOR.get());
+            return new ItemStack(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.getBlock());
         }
 
         @Override
         public void displayAllReleventItems(List<ItemStack> list) {
             this.list = list;
 
-            addBlock(ModBlocks.BLOCK_MICA.get());
-            addBlock(ModBlocks.BLOCK_HARDENED_STONE.get());
-            addBlock(ModBlocks.BLOCK_ALABASTER.get());
-            addBlock(ModBlocks.BLOCK_BASALT.get());
-            addBlock(ModBlocks.QUANTUM_ORE_EXTRACTOR.get());
-            addBlock(ModBlocks.QUANTUM_RES_EXTRACTOR.get());
-            addBlock(ModBlocks.QUANTUM_BEACON.get());
-            addBlock(ModBlocks.SOLAR_ARRAY.get());
-            addBlock(ModBlocks.SOLAR_CELL.get());
-            addBlock(ModBlocks.HARDENED_STRUCTURE.get());
-            addBlock(ModBlocks.ALABASTER_STRUCTURE.get());
-            addBlock(ModBlocks.BASALT_STRUCTURE.get());
-            addBlock(ModBlocks.MACHINE_BASE.get());
-            addBlock(ModBlocks.LASER_CORE.get());
-            addBlock(ModBlocks.COLORED_LENS.get());
-            addBlock(ModBlocks.LENS.get());
-            addBlock(ModBlocks.MODIFIER_NULL.get());
-            addBlock(ModBlocks.MODIFIER_PIEZO.get());
-            addBlock(ModBlocks.MODIFIER_SPEED.get());
-            addBlock(ModBlocks.MODIFIER_ACCURACY.get());
-            addBlock(ModBlocks.MODIFIER_RESISTANCE.get());
-            addBlock(ModBlocks.MODIFIER_REGENERATION.get());
-            addBlock(ModBlocks.MODIFIER_NIGHT_VISION.get());
-            addBlock(ModBlocks.MODIFIER_FLIGHT.get());
-            addBlock(ModBlocks.MODIFIER_JUMP_BOOST.get());
-            addBlock(ModBlocks.MODIFIER_HASTE.get());
-            addBlock(ModBlocks.MODIFIER_STRENGTH.get());
-            addBlock(ModBlocks.MODIFIER_WATER_BREATHING.get());
-            addBlock(ModBlocks.MODIFIER_SATURATION.get());
-            addBlock(ModBlocks.MODIFIER_FIRE_RESISTANCE.get());
-            addBlock(ModBlocks.BLOCK_CRYSTAL.get());
+            addBlock(MultiBlockBlocks.BLOCK_MICA.getBlock());
+            addBlock(MultiBlockBlocks.BLOCK_HARDENED_STONE.getBlock());
+            addBlock(MultiBlockBlocks.BLOCK_ALABASTER.getBlock());
+            addBlock(MultiBlockBlocks.BLOCK_BASALT.getBlock());
+            addBlock(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.getBlock());
+            addBlock(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.getBlock());
+            addBlock(MultiBlockBlocks.QUANTUM_BEACON.getBlock());
+            addBlock(MultiBlockBlocks.SOLAR_ARRAY.getBlock());
+            addBlock(MultiBlockBlocks.SOLAR_CELL.getBlock());
+            addBlock(MultiBlockBlocks.HARDENED_STRUCTURE.getBlock());
+            addBlock(MultiBlockBlocks.ALABASTER_STRUCTURE.getBlock());
+            addBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock());
+            addBlock(MultiBlockBlocks.MACHINE_BASE.getBlock());
+            addBlock(MultiBlockBlocks.LASER_CORE.getBlock());
+            addBlock(MultiBlockBlocks.COLORED_LENS.getBlock());
+            addBlock(MultiBlockBlocks.LENS.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_NULL.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_PIEZO.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_SPEED.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_ACCURACY.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_RESISTANCE.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_REGENERATION.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_NIGHT_VISION.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_FLIGHT.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_JUMP_BOOST.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_HASTE.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_STRENGTH.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_WATER_BREATHING.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_SATURATION.getBlock());
+            addBlock(MultiBlockBlocks.MODIFIER_FIRE_RESISTANCE.getBlock());
+            addBlock(MultiBlockBlocks.BLOCK_CRYSTAL.getBlock());
 
-            addItem(ModItems.CRYSTAL.getItem());
-            addItem(ModItems.ASSEMBLER.getItem());
-            addItem(ModItems.STABILIZED_ENDER_PEAR.getItem());
-            addItem(ModItems.PHOTOVOLTAIC_CELL.getItem());
+            addItem(MultiBlockItems.CRYSTAL.getItem());
+            addItem(MultiBlockItems.ASSEMBLER.getItem());
+            addItem(MultiBlockItems.STABILIZED_ENDER_PEAR.getItem());
+            addItem(MultiBlockItems.PHOTOVOLTAIC_CELL.getItem());
         }
     };
 
@@ -178,12 +178,12 @@ public abstract class OKCreativeTab extends CreativeTabs {
     public void displayAllReleventItems(List<ItemStack> list) {
         this.list = list;
 
-        for (ModItems item : ModItems.values()) {
+        for (MultiBlockItems item : MultiBlockItems.values()) {
             addItem(item.getItem());
         }
 
-        for (ModBlocks block : ModBlocks.values()) {
-            addBlock(block.get());
+        for (MultiBlockBlocks block : MultiBlockBlocks.values()) {
+            addBlock(block.getBlock());
         }
     }
 

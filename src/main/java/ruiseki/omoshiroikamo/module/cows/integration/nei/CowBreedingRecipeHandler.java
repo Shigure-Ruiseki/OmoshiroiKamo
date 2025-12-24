@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack;
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsItems;
-import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
 
 public class CowBreedingRecipeHandler extends RecipeHandlerBase {
 

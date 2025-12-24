@@ -19,9 +19,9 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
-import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 
 @EventBusSubscriber
@@ -32,7 +32,7 @@ public class BackpackEventHandler {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.useEnvironmentalTech;
+        return BackportConfigs.useMultiBlock;
     }
 
     @SubscribeEvent

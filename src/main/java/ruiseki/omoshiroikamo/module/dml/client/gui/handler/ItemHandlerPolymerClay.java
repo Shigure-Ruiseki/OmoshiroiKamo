@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.dml.client.gui.handler;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.base.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPolymerClay;
 
 public class ItemHandlerPolymerClay extends ItemStackHandlerBase {

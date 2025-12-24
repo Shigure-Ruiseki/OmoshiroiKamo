@@ -3,4 +3,4 @@
 package ruiseki.omoshiroikamo.api.energy;
 
 import cpw.mods.fml.common.API;
-import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;

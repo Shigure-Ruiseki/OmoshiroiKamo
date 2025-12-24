@@ -9,10 +9,10 @@ import net.minecraftforge.fluids.FluidStack;
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.common.util.lib.LibResources;
+import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
+import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsItems;
-import ruiseki.omoshiroikamo.plugin.nei.PositionedFluidTank;
-import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
 
 public class CowMilkingRecipeHandler extends RecipeHandlerBase {
 

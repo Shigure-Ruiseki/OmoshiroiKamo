@@ -16,11 +16,11 @@ import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.common.network.PacketProgress;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
+import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
 

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFilterUpgradeWrapper;
@@ -17,9 +17,9 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFilterUpgrade;
 public class AdvancedFilterUpgradeWidget extends AdvancedExpandedTabWidget<AdvancedFilterUpgradeWrapper> {
 
     private static final List<CyclicVariantButtonWidget.Variant> FILTER_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input_output"), MGuiTextures.IN_OUT_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input"), MGuiTextures.IN_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.output"), MGuiTextures.OUT_ICON));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input_output"), GuiTextures.IN_OUT_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input"), GuiTextures.IN_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.output"), GuiTextures.OUT_ICON));
 
     @Getter
     private final CyclicVariantButtonWidget filterButton;

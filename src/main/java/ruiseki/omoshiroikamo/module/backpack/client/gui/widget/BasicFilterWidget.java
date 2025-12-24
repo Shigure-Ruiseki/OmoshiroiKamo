@@ -10,7 +10,7 @@ import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.FilterSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IBasicFilterable;
@@ -18,8 +18,8 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IBasicFilterabl
 public class BasicFilterWidget extends ParentWidget<BasicFilterWidget> {
 
     private static final List<CyclicVariantButtonWidget.Variant> FILTER_TYPE_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.whitelist"), MGuiTextures.CHECK_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.blacklist"), MGuiTextures.CROSS_ICON));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.whitelist"), GuiTextures.CHECK_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.blacklist"), GuiTextures.CROSS_ICON));
 
     @Getter
     private final CyclicVariantButtonWidget filterTypeButton;

@@ -11,7 +11,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackInventoryHelper;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
@@ -22,12 +22,12 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrad
 public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgradeWrapper> {
 
     private static final List<CyclicVariantButtonWidget.Variant> INTO_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.into_backpack"), MGuiTextures.INTO_BACKPACK),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.into_inventory"), MGuiTextures.INTO_INVENTORY));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.into_backpack"), GuiTextures.INTO_BACKPACK),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.into_inventory"), GuiTextures.INTO_INVENTORY));
 
     private static final List<CyclicVariantButtonWidget.Variant> USED_BACKPACK_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.used_backpack"), MGuiTextures.USED_BACKPACK),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.unused_backpack"), MGuiTextures.UNUSED_BACKPACK));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.used_backpack"), GuiTextures.USED_BACKPACK),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.unused_backpack"), GuiTextures.UNUSED_BACKPACK));
 
     private final CraftingUpgradeWrapper wrapper;
 
@@ -58,8 +58,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
             .child(craftingDesButton)
             .child(usedBackpackButton);
 
-        ShiftButtonWidget rotated = new ShiftButtonWidget(MGuiTextures.ROTATED_RIGHT, MGuiTextures.ROTATED_LEFT)
-            .size(16)
+        ShiftButtonWidget rotated = new ShiftButtonWidget(GuiTextures.ROTATED_RIGHT, GuiTextures.ROTATED_LEFT).size(16)
             .onMousePressed(button -> {
                 if (button == 0) {
                     Interactable.playButtonClickSound();
@@ -73,7 +72,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                 return false;
             });
 
-        ShiftButtonWidget grid = new ShiftButtonWidget(MGuiTextures.BALANCE, MGuiTextures.SPREAD).size(16)
+        ShiftButtonWidget grid = new ShiftButtonWidget(GuiTextures.BALANCE, GuiTextures.SPREAD).size(16)
             .onMousePressed(button -> {
                 if (button == 0) {
                     Interactable.playButtonClickSound();
@@ -91,7 +90,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                 return false;
             });
 
-        ButtonWidget<?> clear = new ButtonWidget<>().overlay(MGuiTextures.CLEAR)
+        ButtonWidget<?> clear = new ButtonWidget<>().overlay(GuiTextures.CLEAR)
             .size(16)
             .onMousePressed(button -> {
                 if (button == 0) {
