@@ -294,7 +294,9 @@ public class DefaultStructureGenerator {
             mappings.put("A", modifier);
 
         } else if ("beacon".equals(machineType)) {
-            // Beacon does NOT use P or C
+            // Beacon does NOT use C
+            mappings.put("P", "omoshiroikamo:machineBase:0");
+
             Map<String, Object> controller = new LinkedHashMap<>();
             controller.put("block", "omoshiroikamo:quantumBeacon:0");
             controller.put("max", 1);

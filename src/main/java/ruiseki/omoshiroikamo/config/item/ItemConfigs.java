@@ -31,4 +31,9 @@ public class ItemConfigs {
 
     @Config.DefaultBoolean(true)
     public static boolean renderArmor;
+
+    @Config.Comment("The maximum reach distance for structure wand preview rendering")
+    @Config.DefaultFloat(16.0f)
+    @Config.RangeFloat(min = 0.0f, max = 1024.0f)
+    public static float wandPreviewReach;
 }

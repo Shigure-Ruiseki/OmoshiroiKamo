@@ -9,8 +9,5 @@ public final class StructureConstants {
     public static final int MAX_WAND_SCAN_BLOCKS = 1_000_000;
     public static final int MAX_COMMAND_SCAN_BLOCKS = 10_000;
 
-    // Wand rendering
-    public static final double WAND_PREVIEW_REACH = 64.0;
-
     private StructureConstants() {}
 }

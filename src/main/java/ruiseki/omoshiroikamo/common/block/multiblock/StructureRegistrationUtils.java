@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.common.block.multiblock;
 
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
@@ -73,7 +73,7 @@ public class StructureRegistrationUtils {
         builder.addElement('Q', ofBlock(controllerBlock, tier - 1));
 
         // Add Air element ('_') - mandatory air block
-        builder.addElement('_', ofBlock(Blocks.air, 0));
+        builder.addElement('_', isAir());
 
         // Add Custom Elements
         if (elementAdder != null) {
@@ -134,7 +134,7 @@ public class StructureRegistrationUtils {
         builder.addElement('Q', ofBlock(controllerBlock, tier - 1));
 
         // Add Air element ('_') - mandatory air block
-        builder.addElement('_', ofBlock(Blocks.air, 0));
+        builder.addElement('_', isAir());
 
         // Add dynamic mappings from JSON (skip reserved symbols)
         if (dynamicMappings != null) {

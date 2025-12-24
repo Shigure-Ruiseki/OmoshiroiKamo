@@ -16,7 +16,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemStructureWand;
-import ruiseki.omoshiroikamo.common.structure.StructureConstants;
+import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 
 /**
  * Renders the Structure Wand selection with a translucent cyan outline.
@@ -83,7 +83,7 @@ public class StructureWandRenderer {
      * Get the block position the player is looking at.
      */
     private ChunkCoordinates getLookTarget(EntityPlayer player) {
-        double reachDistance = StructureConstants.WAND_PREVIEW_REACH;
+        double reachDistance = ItemConfigs.wandPreviewReach;
         Vec3 startVec = player.getPosition(1.0F);
         Vec3 lookVec = player.getLookVec();
         Vec3 endVec = startVec
