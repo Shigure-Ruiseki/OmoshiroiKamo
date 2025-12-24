@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.init;
 
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useChicken;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useCow;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDML;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
@@ -28,12 +27,6 @@ import ruiseki.omoshiroikamo.common.item.backpack.ItemPickupUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
 import ruiseki.omoshiroikamo.common.item.backpack.ItemVoidUpgrade;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemChicken;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenCatcher;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemChickenSpawnEgg;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemColoredEgg;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemLiquidEgg;
-import ruiseki.omoshiroikamo.common.item.chicken.ItemSolidXp;
 import ruiseki.omoshiroikamo.common.item.cow.ItemCowHalter;
 import ruiseki.omoshiroikamo.common.item.cow.ItemCowSpawnEgg;
 import ruiseki.omoshiroikamo.common.item.dml.ItemCreativeModelLearner;
@@ -48,7 +41,6 @@ import ruiseki.omoshiroikamo.common.item.dml.ItemSootCoveredRedstone;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemCrystal;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemStructureWand;
-import ruiseki.omoshiroikamo.common.item.trait.ItemAnalyzer;
 import ruiseki.omoshiroikamo.common.item.trait.ItemSyringe;
 import ruiseki.omoshiroikamo.common.util.Logger;
 
@@ -79,13 +71,6 @@ public enum ModItems {
     PHOTOVOLTAIC_CELL(useEnvironmentalTech, new ItemOK().setName(ModObject.itemPhotovoltaicCell)
         .setTextureName("photovoltaic_cell")),
 
-    ANALYZER(useChicken || useCow, new ItemAnalyzer()),
-    CHICKEN_CATCHER(useChicken, new ItemChickenCatcher()),
-    CHICKEN_SPAWN_EGG(useChicken, new ItemChickenSpawnEgg()),
-    CHICKEN(useChicken, new ItemChicken()),
-    COLORED_EGG(useChicken, new ItemColoredEgg()),
-    LIQUID_EGG(useChicken, new ItemLiquidEgg()),
-    SOLID_XP(useChicken, new ItemSolidXp()),
     COW_HALTER(useCow, new ItemCowHalter()),
     COW_SPAWN_EGG(useCow, new ItemCowSpawnEgg()),
 

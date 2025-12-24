@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.entity.chicken;
 
-import static ruiseki.omoshiroikamo.plugin.chicken.BaseChickens.smartChicken;
+import static ruiseki.omoshiroikamo.module.chickens.registries.BaseChickens.smartChicken;
 
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
@@ -14,8 +14,8 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.entity.BaseRegistry;
-import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 
 /**
  * Central registry for all {@link ChickensRegistryItem} instances.

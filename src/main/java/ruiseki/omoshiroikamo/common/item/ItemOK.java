@@ -8,8 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.OKCreativeTab;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.OKCreativeTab;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public class ItemOK extends Item {

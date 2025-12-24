@@ -13,10 +13,11 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenBreedingRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenDropsRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
+import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
+import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
+import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenLayingRecipeHandler;
+import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenThrowsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.dml.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.dml.SimulationChamberRecipeHandler;
 
@@ -55,7 +56,7 @@ public class NEICompat {
                 16,
                 64,
                 6);
-            sendCatalyst(ChickenLayingRecipeHandler.UID, ModBlocks.ROOST.newItemStack());
+            sendCatalyst(ChickenLayingRecipeHandler.UID, ChickensBlocks.ROOST.newItemStack());
 
             sendHandlerImage(
                 ChickenBreedingRecipeHandler.UID,
@@ -66,7 +67,7 @@ public class NEICompat {
                 16,
                 64,
                 6);
-            sendCatalyst(ChickenBreedingRecipeHandler.UID, ModBlocks.BREEDER.newItemStack());
+            sendCatalyst(ChickenBreedingRecipeHandler.UID, ChickensBlocks.BREEDER.newItemStack());
 
             sendHandlerImage(
                 ChickenDropsRecipeHandler.UID,

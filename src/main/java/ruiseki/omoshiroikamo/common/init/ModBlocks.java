@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.common.init;
 
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useChicken;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useCow;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDML;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
@@ -13,9 +12,6 @@ import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
 import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
-import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
-import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
-import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
 import ruiseki.omoshiroikamo.common.block.cow.BlockStall;
 import ruiseki.omoshiroikamo.common.block.dml.BlockMachineCasing;
 import ruiseki.omoshiroikamo.common.block.dml.lootFabricator.BlockLootFabricator;
@@ -117,9 +113,6 @@ public enum ModBlocks {
     BLOCK_CRYSTAL(useEnvironmentalTech, BlockCrystal.create()),
 
     STALL(useCow, BlockStall.create()),
-    ROOST(useChicken, BlockRoost.create()),
-    BREEDER(useChicken, BlockBreeder.create()),
-    ROOST_COLLECTOR(useChicken, BlockRoostCollector.create()),
 
     LOOT_FABRICATOR(useDML, BlockLootFabricator.create()),
     SIMULATION_CHAMBER(useDML, BlockSimulationChamber.create()),

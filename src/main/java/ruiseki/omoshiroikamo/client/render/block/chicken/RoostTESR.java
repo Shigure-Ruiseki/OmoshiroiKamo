@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
-import ruiseki.omoshiroikamo.client.models.ModelChickensChicken;
-import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
+import ruiseki.omoshiroikamo.module.chickens.client.model.ModelChickensChicken;
+import ruiseki.omoshiroikamo.module.chickens.common.block.TERoost;
 
 @SideOnly(Side.CLIENT)
 public class RoostTESR extends TileEntitySpecialRenderer {

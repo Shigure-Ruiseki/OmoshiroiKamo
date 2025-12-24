@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.common.recipe;
 
-import static ruiseki.omoshiroikamo.api.enums.EnumDye.DYE_ORE_NAMES;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -389,41 +387,6 @@ public class ItemRecipes {
                     "blockObsidian",
                     'B',
                     ModBlocks.HARDENED_STRUCTURE.newItemStack(1, 1)));
-        }
-        if (BackportConfigs.useChicken) {
-
-            // Colored Egg
-            for (int i = 0; i < DYE_ORE_NAMES.length; i++) {
-                GameRegistry.addRecipe(
-                    new ShapedOreRecipe(
-                        ModItems.COLORED_EGG.newItemStack(1, i),
-                        "DDD",
-                        "DED",
-                        "DDD",
-                        'E',
-                        Items.egg,
-                        'D',
-                        DYE_ORE_NAMES[i]));
-            }
-
-            // Analyzer
-            GameRegistry.addShapelessRecipe(ModItems.ANALYZER.newItemStack(), Items.stick, Items.compass);
-
-            // Chicken Catcher
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModItems.CHICKEN_CATCHER.newItemStack(),
-                    " E ",
-                    " S ",
-                    " F ",
-                    'E',
-                    Items.egg,
-                    'S',
-                    "stickWood",
-                    'F',
-                    Items.feather));
-
-            GameRegistry.addSmelting(ModItems.CHICKEN.getItem(), new ItemStack(Items.cooked_chicken), 0.35f);
         }
 
         if (BackportConfigs.useCow) {

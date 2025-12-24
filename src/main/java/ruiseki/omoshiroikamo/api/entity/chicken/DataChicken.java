@@ -17,12 +17,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
+import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 /**
  * Represents all data for a chicken entity in the mod, including stats,
@@ -164,7 +164,7 @@ public class DataChicken {
      * @return A spawn egg ItemStack representing this chicken
      */
     public ItemStack buildStack() {
-        ItemStack stack = ModItems.CHICKEN.newItemStack(1, getId());
+        ItemStack stack = ChickensItems.CHICKEN.newItemStack(1, getId());
         NBTTagCompound tag = createTagCompound();
         tag.setInteger(TYPE_NBT, getId());
         stack.setTagCompound(tag);
@@ -187,7 +187,7 @@ public class DataChicken {
      * @return A spawn egg as if caught from the world
      */
     public ItemStack buildCaughtFromStack() {
-        return new ItemStack(ModItems.CHICKEN.getItem(), 1, getId());
+        return new ItemStack(ChickensItems.CHICKEN.getItem(), 1, getId());
     }
 
     /**
@@ -317,7 +317,7 @@ public class DataChicken {
      * @return True if ItemStack is a chicken spawn egg
      */
     public static boolean isChicken(ItemStack stack) {
-        return stack != null && stack.getItem() == ModItems.CHICKEN.getItem();
+        return stack != null && stack.getItem() == ChickensItems.CHICKEN.getItem();
     }
 
     @Override

@@ -1369,51 +1369,6 @@ public class BlockRecipes {
                     ModBlocks.BLOCK_CRYSTAL.newItemStack(1, 1)));
         }
 
-        if (BackportConfigs.useChicken) {
-
-            // Roost
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.ROOST.getItem(),
-                    "WWW",
-                    "W W",
-                    "HHH",
-                    'W',
-                    "plankWood",
-                    'H',
-                    Blocks.hay_block));
-
-            // Breeder
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.BREEDER.getItem(),
-                    "WWW",
-                    "WSW",
-                    "HHH",
-                    'W',
-                    "plankWood",
-                    'S',
-                    Items.wheat_seeds,
-                    'H',
-                    Blocks.hay_block));
-
-            // Roost Collector
-            GameRegistry.addRecipe(
-                new ShapedOreRecipe(
-                    ModBlocks.ROOST_COLLECTOR.getItem(),
-                    "WCW",
-                    "WHW",
-                    "WOW",
-                    'W',
-                    "plankWood",
-                    'C',
-                    Items.egg,
-                    'O',
-                    "chestWood",
-                    'H',
-                    "blockHopper"));
-        }
-
         if (BackportConfigs.useCow) {
 
             // Stall

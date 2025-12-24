@@ -21,24 +21,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.handler.StructureWandRenderer;
-import ruiseki.omoshiroikamo.client.render.block.chicken.BreederTESR;
-import ruiseki.omoshiroikamo.client.render.block.chicken.RoostTESR;
 import ruiseki.omoshiroikamo.client.render.block.cow.StallTESR;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
-import ruiseki.omoshiroikamo.client.render.entity.RenderChickensChicken;
 import ruiseki.omoshiroikamo.client.render.entity.RenderCowsCow;
 import ruiseki.omoshiroikamo.client.render.item.pufferfish.PufferFishRenderer;
-import ruiseki.omoshiroikamo.client.util.TextureGenerator;
 import ruiseki.omoshiroikamo.client.util.TextureLoader;
-import ruiseki.omoshiroikamo.common.block.chicken.TEBreeder;
-import ruiseki.omoshiroikamo.common.block.chicken.TERoost;
 import ruiseki.omoshiroikamo.common.block.cow.TEStall;
 import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.TEQuantumExtractor;
-import ruiseki.omoshiroikamo.common.entity.chicken.EntityChickensChicken;
 import ruiseki.omoshiroikamo.common.entity.cow.EntityCowsCow;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
+import ruiseki.omoshiroikamo.core.ModuleManager;
 
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
@@ -50,6 +44,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         ModelRegistry.registerModid(LibMisc.MOD_ID);
+        ModuleManager.preInitClient(event);
         MGuiFactories.init();
     }
 
@@ -64,14 +59,10 @@ public class ClientProxy extends CommonProxy {
         // Structure Wand renderer (visualizes selection bounds)
         MinecraftForge.EVENT_BUS.register(StructureWandRenderer.INSTANCE);
 
+        ModuleManager.initClient(event);
+
         if (BackportConfigs.useEnvironmentalTech) {
             ClientRegistry.bindTileEntitySpecialRenderer(TEQuantumExtractor.class, new QuantumExtractorTESR());
-        }
-
-        if (BackportConfigs.useChicken) {
-            ClientRegistry.bindTileEntitySpecialRenderer(TERoost.class, new RoostTESR());
-            ClientRegistry.bindTileEntitySpecialRenderer(TEBreeder.class, new BreederTESR());
-            RenderingRegistry.registerEntityRenderingHandler(EntityChickensChicken.class, new RenderChickensChicken());
         }
 
         if (BackportConfigs.useCow) {
@@ -87,7 +78,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        TextureGenerator.generateCustomChickenTextures();
+        ModuleManager.postInitClient(event);
         TextureLoader.loadFromConfig(LibMisc.MOD_ID, LibMisc.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
     }
 
