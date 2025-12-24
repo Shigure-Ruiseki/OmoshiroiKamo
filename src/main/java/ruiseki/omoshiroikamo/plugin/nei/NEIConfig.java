@@ -15,8 +15,10 @@ import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenLayingRecipeHandle
 import ruiseki.omoshiroikamo.plugin.nei.recipe.chicken.ChickenThrowsRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.cow.CowBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.cow.CowMilkingRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.QuantumOreExtractorRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.recipe.voidMiner.QuantumResExtractorRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.dml.LootFabricatorRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.dml.SimulationChamberRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.quantumExtractor.QuantumOreExtractorRecipeHandler;
+import ruiseki.omoshiroikamo.plugin.nei.recipe.quantumExtractor.QuantumResExtractorRecipeHandler;
 
 @SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
@@ -51,6 +53,11 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.useBackpack) {
             API.registerGuiOverlay(BackpackGuiContainer.class, "crafting", new BackpackPositioner());
             API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
+        }
+
+        if (BackportConfigs.useDML) {
+            registerHandler(new LootFabricatorRecipeHandler());
+            registerHandler(new SimulationChamberRecipeHandler());
         }
     }
 

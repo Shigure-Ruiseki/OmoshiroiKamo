@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.common.init;
 
 import ruiseki.omoshiroikamo.plugin.chicken.ModChickens;
 import ruiseki.omoshiroikamo.plugin.cow.ModCows;
-import ruiseki.omoshiroikamo.plugin.model.ModModels;
+import ruiseki.omoshiroikamo.plugin.dml.ModModels;
 
 public class ModEntity {
 

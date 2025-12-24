@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.common.init;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useChicken;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useCow;
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDeepMobLearning;
+import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDML;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
 
 import net.minecraft.block.material.Material;
@@ -17,9 +17,9 @@ import ruiseki.omoshiroikamo.common.block.chicken.BlockBreeder;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoost;
 import ruiseki.omoshiroikamo.common.block.chicken.BlockRoostCollector;
 import ruiseki.omoshiroikamo.common.block.cow.BlockStall;
-import ruiseki.omoshiroikamo.common.block.deepMobLearning.BlockMachineCasing;
-import ruiseki.omoshiroikamo.common.block.deepMobLearning.lootFabricator.BlockLootFabricator;
-import ruiseki.omoshiroikamo.common.block.deepMobLearning.simulationCharmber.BlockSimulationChamber;
+import ruiseki.omoshiroikamo.common.block.dml.BlockMachineCasing;
+import ruiseki.omoshiroikamo.common.block.dml.lootFabricator.BlockLootFabricator;
+import ruiseki.omoshiroikamo.common.block.dml.simulationCharmber.BlockSimulationChamber;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockAlabasterStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockBasaltStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockCrystal;
@@ -121,9 +121,9 @@ public enum ModBlocks {
     BREEDER(useChicken, BlockBreeder.create()),
     ROOST_COLLECTOR(useChicken, BlockRoostCollector.create()),
 
-    LOOT_FABRICATOR(useDeepMobLearning, BlockLootFabricator.create()),
-    SIMULATION_CHAMBER(useDeepMobLearning, BlockSimulationChamber.create()),
-    MACHINE_CASING(useDeepMobLearning, BlockMachineCasing.create()),
+    LOOT_FABRICATOR(useDML, BlockLootFabricator.create()),
+    SIMULATION_CHAMBER(useDML, BlockSimulationChamber.create()),
+    MACHINE_CASING(useDML, BlockMachineCasing.create()),
 
     ;
     // spotless: on

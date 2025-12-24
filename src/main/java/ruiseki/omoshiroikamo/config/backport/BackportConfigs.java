@@ -30,7 +30,7 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useDeepMobLearning;
+    public static boolean useDML;
 
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(BackportConfigs.class);
@@ -38,6 +38,6 @@ public class BackportConfigs {
         ConfigurationManager.registerConfig(ChickenConfig.class);
         ConfigurationManager.registerConfig(CowConfig.class);
         ConfigurationManager.registerConfig(BackpackConfig.class);
-        ConfigurationManager.registerConfig(DeepMobLearningConfig.class);
+        ConfigurationManager.registerConfig(DMLConfig.class);
     }
 }

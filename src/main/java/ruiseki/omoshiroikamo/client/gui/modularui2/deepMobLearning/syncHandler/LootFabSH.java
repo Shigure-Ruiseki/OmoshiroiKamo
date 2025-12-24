@@ -7,7 +7,7 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
-import ruiseki.omoshiroikamo.common.block.deepMobLearning.lootFabricator.TELootFabricator;
+import ruiseki.omoshiroikamo.common.block.dml.lootFabricator.TELootFabricator;
 
 public class LootFabSH extends SyncHandler {
 

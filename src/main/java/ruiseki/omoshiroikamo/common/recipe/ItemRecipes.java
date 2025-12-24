@@ -439,10 +439,28 @@ public class ItemRecipes {
                     Items.stick));
         }
 
-        if (BackportConfigs.useDeepMobLearning) {
+        if (BackportConfigs.useDML) {
+
+            // Deep Learner
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
-                    ModItems.DATA_MODEL_BLANK.newItemStack(1),
+                    ModItems.DEEP_LEARNER.newItemStack(),
+                    "ORO",
+                    "RSR",
+                    "ODO",
+                    'O',
+                    ModItems.SOOT_COVERED_PLATE.getItem(),
+                    'D',
+                    ModItems.SOOT_COVERED_REDSTONE.getItem(),
+                    'S',
+                    Blocks.glass_pane,
+                    'R',
+                    Items.repeater));
+
+            // Data Model Blank
+            GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                    ModItems.DATA_MODEL_BLANK.newItemStack(),
                     "CEC",
                     "RSR",
                     "CGC",
@@ -457,6 +475,7 @@ public class ItemRecipes {
                     'S',
                     "stone"));
 
+            // Polymer Clay
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModItems.POLYMER_CLAY.newItemStack(16),
@@ -472,6 +491,7 @@ public class ItemRecipes {
                     'C',
                     "itemClay"));
 
+            // Soot Covered Plate
             GameRegistry.addRecipe(
                 new ShapelessOreRecipe(
                     ModItems.SOOT_COVERED_PLATE.newItemStack(8),

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,6 +22,8 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 
 public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements IRecipeHandlerBase {
+
+    public final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
     @Override
     public void prepare() {}

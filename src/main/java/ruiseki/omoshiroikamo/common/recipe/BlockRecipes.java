@@ -1432,7 +1432,7 @@ public class BlockRecipes {
 
         }
 
-        if (BackportConfigs.useDeepMobLearning) {
+        if (BackportConfigs.useDML) {
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     ModBlocks.MACHINE_CASING.getItem(),
