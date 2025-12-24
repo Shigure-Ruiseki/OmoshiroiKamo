@@ -44,7 +44,7 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE implements I
         clearStructureParts();
 
         boolean valid = getStructureDefinition()
-                .check(this, piece, worldObj, getExtendedFacing(), xCoord, yCoord, zCoord, ox, oy, oz, false);
+            .check(this, piece, worldObj, getExtendedFacing(), xCoord, yCoord, zCoord, ox, oy, oz, false);
 
         if (valid && !isFormed) {
             isFormed = true;
@@ -76,13 +76,12 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE implements I
         }
 
         boolean valid = structureCheck(
-                getStructurePieceName(),
-                getOffSet()[getTier() - 1][0],
-                getOffSet()[getTier() - 1][1],
-                getOffSet()[getTier() - 1][2]);
+            getStructurePieceName(),
+            getOffSet()[getTier() - 1][0],
+            getOffSet()[getTier() - 1][1],
+            getOffSet()[getTier() - 1][2]);
 
-        if (!valid)
-            return;
+        if (!valid) return;
 
         super.doUpdate();
     }

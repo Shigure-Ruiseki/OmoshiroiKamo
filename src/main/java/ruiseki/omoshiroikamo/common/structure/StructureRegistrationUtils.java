@@ -53,8 +53,8 @@ public class StructureRegistrationUtils {
      * @return The built IStructureDefinition.
      */
     public static <T extends AbstractMBModifierTE> IStructureDefinition<T> registerTier(Class<T> tileClass,
-            String[][] shape, String shapeName, Block controllerBlock, int tier,
-            Consumer<StructureDefinition.Builder<T>> elementAdder) {
+        String[][] shape, String shapeName, Block controllerBlock, int tier,
+        Consumer<StructureDefinition.Builder<T>> elementAdder) {
 
         // Validate: Q must appear exactly once
         int qCount = countSymbolInShape(shape, 'Q');
@@ -106,8 +106,8 @@ public class StructureRegistrationUtils {
      * @return The built IStructureDefinition.
      */
     public static <T extends AbstractMBModifierTE> IStructureDefinition<T> registerTierWithDynamicMappings(
-            Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
-            Block controllerBlock, int tier, Consumer<StructureDefinition.Builder<T>> elementAdder) {
+        Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
+        Block controllerBlock, int tier, Consumer<StructureDefinition.Builder<T>> elementAdder) {
 
         // Validate: Q must appear exactly once
         int qCount = countSymbolInShape(shape, 'Q');
@@ -115,14 +115,14 @@ public class StructureRegistrationUtils {
             String error = "Structure " + shapeName + " has no controller 'Q'!";
             Logger.error(error);
             StructureManager.getInstance()
-                    .getErrorCollector()
-                    .collect(StructureException.ErrorType.VALIDATION_ERROR, shapeName, error);
+                .getErrorCollector()
+                .collect(StructureException.ErrorType.VALIDATION_ERROR, shapeName, error);
         } else if (qCount > 1) {
             String error = "Structure " + shapeName + " has " + qCount + " controllers 'Q'! Must be exactly 1.";
             Logger.error(error);
             StructureManager.getInstance()
-                    .getErrorCollector()
-                    .collect(StructureException.ErrorType.VALIDATION_ERROR, shapeName, error);
+                .getErrorCollector()
+                .collect(StructureException.ErrorType.VALIDATION_ERROR, shapeName, error);
         }
 
         StructureDefinition.Builder<T> builder = StructureDefinition.builder();
@@ -247,8 +247,8 @@ public class StructureRegistrationUtils {
         }
 
         Logger.warn(
-                "Unknown mapping type: " + mapping.getClass()
-                        .getName());
+            "Unknown mapping type: " + mapping.getClass()
+                .getName());
         return null;
     }
 

@@ -155,13 +155,13 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
             Block block = worldObj.getBlock(xCoord, y, zCoord);
 
             if (block.isAir(worldObj, xCoord, y, zCoord) || block == Blocks.glass
-                    || block == Blocks.stained_glass
-                    || block == Blocks.glass_pane
-                    || block == Blocks.stained_glass_pane
-                    || block == ModBlocks.LASER_CORE.get()
-                    || block == ModBlocks.LENS.get()
-                    || block == ModBlocks.COLORED_LENS.get()
-                    || isBlockInPathWhitelist(block, worldObj.getBlockMetadata(xCoord, y, zCoord))) {
+                || block == Blocks.stained_glass
+                || block == Blocks.glass_pane
+                || block == Blocks.stained_glass_pane
+                || block == ModBlocks.LASER_CORE.get()
+                || block == ModBlocks.LENS.get()
+                || block == ModBlocks.COLORED_LENS.get()
+                || isBlockInPathWhitelist(block, worldObj.getBlockMetadata(xCoord, y, zCoord))) {
                 if (y == 0) {
                     return true;
                 }
@@ -295,7 +295,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     public void onProcessComplete() {
         if (!this.possibleResults.isEmpty()) {
             WeightedStackBase result = (WeightedStackBase) WeightedRandom
-                    .getRandomItem(this.rand, this.possibleResults);
+                .getRandomItem(this.rand, this.possibleResults);
             if (result == null) {
                 return;
             }
@@ -318,7 +318,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
 
             TileEntity adjacent = this.getWorldObj()
-                    .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+                .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
             transfer.push(this, side, adjacent);
             transfer.transfer();
 
@@ -361,25 +361,25 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
                 int meta = lens.getBlockMetadata();
                 this.focusColor = ((BlockColoredLens) block).getFocusColor(meta);
                 this.possibleResults.addAll(
-                        this.getRegistry()
-                                .getFocusedList(this.focusColor, this.focusBoostModifier));
+                    this.getRegistry()
+                        .getFocusedList(this.focusColor, this.focusBoostModifier));
             } else {
                 if (lens.getBlockMetadata() == 1) {
                     this.focusColor = EnumDye.CRYSTAL;
                     this.possibleResults.addAll(
-                            this.getRegistry()
-                                    .getFocusedList(this.focusColor, this.focusBoostModifier));
+                        this.getRegistry()
+                            .getFocusedList(this.focusColor, this.focusBoostModifier));
                 } else {
                     this.focusColor = null;
                     this.possibleResults.addAll(
-                            this.getRegistry()
-                                    .getUnFocusedList());
+                        this.getRegistry()
+                            .getUnFocusedList());
                 }
             }
         } else {
             this.possibleResults.addAll(
-                    this.getRegistry()
-                            .getUnFocusedList());
+                this.getRegistry()
+                    .getUnFocusedList());
         }
 
         if (getEnergyStored() < getEnergyCostPerTick()) {
@@ -394,7 +394,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     public int getEnergyCostPerTick() {
         if (this.modifierHandler.hasAttribute("energycost")) {
             int e = (int) ((float) this.getEnergyCostPerDuration()
-                    * this.modifierHandler.getAttributeMultiplier("energycost"));
+                * this.modifierHandler.getAttributeMultiplier("energycost"));
             return Math.max(1, e / Math.max(1, this.getCurrentProcessDuration()));
         }
         return Math.max(1, this.getEnergyCostPerDuration() / Math.max(1, this.getCurrentProcessDuration()));
@@ -490,12 +490,10 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     }
 
     @Override
-    public void openInventory() {
-    }
+    public void openInventory() {}
 
     @Override
-    public void closeInventory() {
-    }
+    public void closeInventory() {}
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
