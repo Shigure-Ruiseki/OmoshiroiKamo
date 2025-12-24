@@ -580,10 +580,10 @@ neiintegration.chance.never=検討します
 neiintegration.chance.lessThan1=<1%
 
 #Modifier Tooltips
-tooltip.modifier.speed.effect=§a+30% 採掘速度§r
-tooltip.modifier.speed.penalty=§c+50% エネルギー消費§r
-tooltip.modifier.accuracy.effect=§a+18% 精度ブースト§r  
-tooltip.modifier.accuracy.penalty=§c-10% 採掘速度§r
+tooltip.modifier.speed.effect=§a採掘速度 1.3倍§r
+tooltip.modifier.speed.penalty=§c消費エネルギー 1.5倍§r
+tooltip.modifier.accuracy.effect=§aレンズ精度 1.18倍§r
+tooltip.modifier.accuracy.penalty=§c採掘速度 0.9倍§r, §c消費エネルギー 1.05倍§r
 tooltip.modifier.piezo.effect=§a雨天時発電ボーナス§r
 
 #Beacon Modifiers

@@ -23,7 +23,7 @@ public class BlockModifierAccuracy extends BlockModifier {
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
         list.add(ModifierAttribute.ACCURACY.getAttribute());
-        list.add(new AttributeEnergyCost(0.5F));
+        list.add(new AttributeEnergyCost(1.05F));
         list.add(new AttributeSpeed(-0.295F)); // 10% slower per modifier (0.9x speed)
     }
 

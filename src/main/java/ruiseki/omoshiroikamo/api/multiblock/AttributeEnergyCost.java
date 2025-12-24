@@ -8,8 +8,10 @@ public class AttributeEnergyCost implements IModifierAttribute {
         this(1.0F);
     }
 
-    public AttributeEnergyCost(float factor) {
-        this.factor = factor;
+    public AttributeEnergyCost(float multiplier) {
+        // Store the natural log of the multiplier
+        // This allows totalFactor to be the sum of logs, so exp(total) is the product
+        this.factor = (float) Math.log(multiplier);
     }
 
     public String getAttributeName() {
@@ -21,6 +23,7 @@ public class AttributeEnergyCost implements IModifierAttribute {
     }
 
     public float getMultiplier(float totalModificationFactor) {
-        return (float) Math.pow(1.12, (double) totalModificationFactor);
+        // exp(sum of logs) = product of multipliers
+        return (float) Math.exp(totalModificationFactor);
     }
 }

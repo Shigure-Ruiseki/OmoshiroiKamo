@@ -42,7 +42,19 @@ All code has been rewritten, and all textures are original.
 - Solar Array (Generate Energy From Sun)
 - Quantum Beacon (Give Multieffect by Energy)
 - Extractor NEI integration
-- Colored Laser
+- Colored laser
+- Dimension-specific ore mining (NEI WIP)
+- Customizable structures
+
+### Custom Structure (WIP Modular Machinery backport)
+- JSON Custom structures
+- JSON Error handling
+- JSON Symbol mapping
+- Structure in-game reload
+- Structure in-game scan by command or Structure wand
+- Structure NEI integration (in-game reload-able)
+- [See CUSTOM_STRUCTURES.md for details](./CUSTOM_STRUCTURES.md)
+
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
 
