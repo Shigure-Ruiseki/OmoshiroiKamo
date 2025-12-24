@@ -83,8 +83,7 @@ public class CommandStructure extends CommandBase {
                     .getErrorCount();
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED
-                            + LibMisc.LANG.localizeFormatted("command.ok.reload_errors", errorCount)));
+                        EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.reload_errors", errorCount)));
                 sender.addChatMessage(
                     new ChatComponentText(
                         EnumChatFormatting.GRAY + LibMisc.LANG.localize("command.ok.reload_check_file")));
@@ -96,8 +95,7 @@ public class CommandStructure extends CommandBase {
         } catch (Exception e) {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED
-                        + LibMisc.LANG.localizeFormatted("command.ok.reload_failed", e.getMessage())));
+                    EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.reload_failed", e.getMessage())));
         }
     }
 
@@ -151,8 +149,7 @@ public class CommandStructure extends CommandBase {
         } catch (Exception e) {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED
-                        + LibMisc.LANG.localizeFormatted("command.ok.scan_invalid_coords", e.getMessage())));
+                    EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.scan_invalid_coords", e.getMessage())));
             return;
         }
 
@@ -181,7 +178,7 @@ public class CommandStructure extends CommandBase {
         if (totalBlocks > StructureConstants.MAX_COMMAND_SCAN_BLOCKS) {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localizeFormatted(
+                    EnumChatFormatting.RED + LibMisc.LANG.localize(
                         "command.ok.scan_area_too_large",
                         StructureConstants.MAX_COMMAND_SCAN_BLOCKS,
                         totalBlocks)));
@@ -190,8 +187,7 @@ public class CommandStructure extends CommandBase {
 
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.YELLOW
-                    + LibMisc.LANG.localizeFormatted("command.ok.scan_scanning", sizeX, sizeY, sizeZ)));
+                EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.scan_scanning", sizeX, sizeY, sizeZ)));
 
         // Locate the config directory
         File configDir = new File(
@@ -207,12 +203,11 @@ public class CommandStructure extends CommandBase {
             sender
                 .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] " + result.message));
             sender.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.GRAY + LibMisc.LANG.localizeFormatted("command.ok.scan_file", name)));
+                new ChatComponentText(EnumChatFormatting.GRAY + LibMisc.LANG.localize("command.ok.scan_file", name)));
         } else {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localizeFormatted("command.ok.scan_failed", result.message)));
+                    EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.scan_failed", result.message)));
         }
     }
 
@@ -291,7 +286,7 @@ public class CommandStructure extends CommandBase {
         if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localizeFormatted(
+                    EnumChatFormatting.RED + LibMisc.LANG.localize(
                         "chat.wand.area_too_large",
                         String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
                         String.format("%,d", blockCount))));
@@ -300,7 +295,7 @@ public class CommandStructure extends CommandBase {
 
         player.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.YELLOW + LibMisc.LANG.localizeFormatted("command.ok.wand_scanning", blockCount)));
+                EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.wand_scanning", blockCount)));
 
         // Locate the config directory
         File configDir = new File(
@@ -347,12 +342,10 @@ public class CommandStructure extends CommandBase {
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
             player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.GREEN + LibMisc.LANG.localizeFormatted("command.ok.wand_cleared")));
+                new ChatComponentText(EnumChatFormatting.GREEN + LibMisc.LANG.localize("command.ok.wand_cleared")));
         } else {
             player.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.GRAY + LibMisc.LANG.localizeFormatted("command.ok.wand_no_selection")));
+                new ChatComponentText(EnumChatFormatting.GRAY + LibMisc.LANG.localize("command.ok.wand_no_selection")));
         }
     }
 }

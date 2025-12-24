@@ -17,6 +17,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.common.structure.WandSelectionManager;
+import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 
 /**
  * Wand item used for structure scanning.
@@ -37,7 +39,7 @@ public class ItemStructureWand extends ItemOK {
     private static final String NBT_DIMENSION = "dimension";
 
     public ItemStructureWand() {
-        super("structure_wand");
+        super(ModObject.itemStructureWand);
         setMaxStackSize(1);
     }
 
@@ -56,7 +58,7 @@ public class ItemStructureWand extends ItemOK {
             if (!hasPos1(nbt)) {
                 player.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED + StatCollector.translateToLocal("chat.wand.set_pos1_first")));
+                        EnumChatFormatting.RED + LibMisc.LANG.localize("chat.wand.set_pos1_first")));
                 return true;
             }
 
@@ -70,7 +72,7 @@ public class ItemStructureWand extends ItemOK {
             if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
                 player.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED + StatCollector.translateToLocalFormatted(
+                        EnumChatFormatting.RED + LibMisc.LANG.localize(
                             "chat.wand.area_too_large",
                             String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
                             String.format("%,d", blockCount))));
@@ -82,7 +84,7 @@ public class ItemStructureWand extends ItemOK {
             setPos2(nbt, x, y, z, world.provider.dimensionId);
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GREEN + StatCollector.translateToLocalFormatted("chat.wand.pos2_set", x, y, z)));
+                    EnumChatFormatting.GREEN + LibMisc.LANG.localize("chat.wand.pos2_set", x, y, z)));
 
             // Automatically prepare scan when both positions are set
             ChunkCoordinates pos2 = new ChunkCoordinates(x, y, z);
@@ -93,20 +95,20 @@ public class ItemStructureWand extends ItemOK {
             player.addChatMessage(
                 new ChatComponentText(
                     EnumChatFormatting.GREEN
-                        + StatCollector.translateToLocalFormatted("chat.wand.scan_ready", blockCount)));
+                        + LibMisc.LANG.localize("chat.wand.scan_ready", blockCount)));
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.YELLOW + StatCollector.translateToLocal("chat.wand.use_save_command")));
+                    EnumChatFormatting.YELLOW + LibMisc.LANG.localize("chat.wand.use_save_command")));
         } else {
             // Right-click: set position 1 (clears position 2)
             setPos1(nbt, x, y, z, world.provider.dimensionId);
             clearPos2(nbt);
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.AQUA + StatCollector.translateToLocalFormatted("chat.wand.pos1_set", x, y, z)));
+                    EnumChatFormatting.AQUA + LibMisc.LANG.localize("chat.wand.pos1_set", x, y, z)));
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GRAY + StatCollector.translateToLocal("chat.wand.shift_right")));
+                    EnumChatFormatting.GRAY + LibMisc.LANG.localize("chat.wand.shift_right")));
         }
 
         return true;
@@ -139,7 +141,7 @@ public class ItemStructureWand extends ItemOK {
                 .clearPendingScan(player.getUniqueID());
 
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("chat.wand.cleared")));
+                new ChatComponentText(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("chat.wand.cleared")));
             return true; // Cancel the swing animation
         }
 
@@ -152,9 +154,9 @@ public class ItemStructureWand extends ItemOK {
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
         NBTTagCompound nbt = stack.getTagCompound();
         if (nbt == null) {
-            tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("tooltip.wand.right_click"));
-            tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("tooltip.wand.shift_right_click"));
-            tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("tooltip.wand.shift_left_click"));
+            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.wand.right_click"));
+            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.wand.shift_right_click"));
+            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.wand.shift_left_click"));
             return;
         }
 
@@ -162,20 +164,20 @@ public class ItemStructureWand extends ItemOK {
             ChunkCoordinates pos1 = getPos1(nbt);
             tooltip.add(
                 EnumChatFormatting.AQUA
-                    + StatCollector.translateToLocalFormatted("tooltip.wand.pos1", pos1.posX, pos1.posY, pos1.posZ));
+                    + LibMisc.LANG.localize("tooltip.wand.pos1", pos1.posX, pos1.posY, pos1.posZ));
         } else {
             tooltip
-                .add(EnumChatFormatting.GRAY + "Pos1: " + StatCollector.translateToLocal("tooltip.wand.pos_not_set"));
+                .add(EnumChatFormatting.GRAY + "Pos1: " + LibMisc.LANG.localize("tooltip.wand.pos_not_set"));
         }
 
         if (hasPos2(nbt)) {
             ChunkCoordinates pos2 = getPos2(nbt);
             tooltip.add(
                 EnumChatFormatting.GREEN
-                    + StatCollector.translateToLocalFormatted("tooltip.wand.pos2", pos2.posX, pos2.posY, pos2.posZ));
+                    + LibMisc.LANG.localize("tooltip.wand.pos2", pos2.posX, pos2.posY, pos2.posZ));
         } else {
             tooltip
-                .add(EnumChatFormatting.GRAY + "Pos2: " + StatCollector.translateToLocal("tooltip.wand.pos_not_set"));
+                .add(EnumChatFormatting.GRAY + "Pos2: " + LibMisc.LANG.localize("tooltip.wand.pos_not_set"));
         }
 
         if (hasPos1(nbt) && hasPos2(nbt)) {
@@ -186,12 +188,12 @@ public class ItemStructureWand extends ItemOK {
             int sizeZ = Math.abs(pos2.posZ - pos1.posZ) + 1;
             tooltip.add(
                 EnumChatFormatting.YELLOW
-                    + StatCollector.translateToLocalFormatted("tooltip.wand.size", sizeX, sizeY, sizeZ));
+                    + LibMisc.LANG.localize("tooltip.wand.size", sizeX, sizeY, sizeZ));
         }
 
         // Always show clear instruction when positions are set
         if (hasPos1(nbt) || hasPos2(nbt)) {
-            tooltip.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal("tooltip.wand.shift_left_clear"));
+            tooltip.add(EnumChatFormatting.DARK_GRAY + LibMisc.LANG.localize("tooltip.wand.shift_left_clear"));
         }
     }
 
