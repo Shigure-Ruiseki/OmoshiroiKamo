@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
@@ -40,6 +41,13 @@ public class ItemStructureWand extends ItemOK {
     public ItemStructureWand() {
         super(ModObject.itemStructureWand);
         setMaxStackSize(1);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        // Use vanilla stick texture
+        this.itemIcon = Items.stick.getIconFromDamage(0);
     }
 
     @Override

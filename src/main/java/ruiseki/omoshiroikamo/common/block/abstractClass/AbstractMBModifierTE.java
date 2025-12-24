@@ -98,11 +98,11 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE implements I
             isProcessing = true;
         }
 
+        onProcessTick();
+
         if (++currentProgress >= currentDuration) {
             onProcessComplete();
             resetProcess();
-        } else {
-            onProcessTick();
         }
     }
 
