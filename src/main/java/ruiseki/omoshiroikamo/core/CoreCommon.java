@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
+import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
@@ -31,6 +32,8 @@ public class CoreCommon implements IModuleCommon {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        CoreItems.preInit();
+
         // Initialize the custom structure system
         StructureManager.getInstance()
             .initialize(
