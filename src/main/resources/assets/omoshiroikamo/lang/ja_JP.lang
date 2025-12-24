@@ -431,7 +431,7 @@ item.polymerClay.name=ポリマークレイ
 item.sootCoveredRedstone.name=煤まみれのレッドストーン
 item.sootCoveredPlate.name=煤まみれのプレート
 
-item.StructureWand.name=ストラクチャーワンド
+item.structureWand.name=ストラクチャーワンド
 
 #Block
 
