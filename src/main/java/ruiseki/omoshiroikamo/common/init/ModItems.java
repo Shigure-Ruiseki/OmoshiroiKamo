@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.common.init;
 
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useDML;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
 
 import net.minecraft.item.Item;
@@ -11,54 +9,14 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedFeedingUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedFilterUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedMagnetUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedPickupUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemAdvancedVoidUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemCraftingUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemEverlastingUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemFeedingUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemFilterUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemInceptionUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemMagnetUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemPickupUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemUpgrade;
-import ruiseki.omoshiroikamo.common.item.backpack.ItemVoidUpgrade;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemAssembler;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemCrystal;
 import ruiseki.omoshiroikamo.common.item.multiblock.ItemStructureWand;
 import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemCreativeModelLearner;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModelBlank;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemLivingMatter;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemPolymerClay;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemSootCoveredPlate;
-import ruiseki.omoshiroikamo.module.dml.common.item.ItemSootCoveredRedstone;
-import ruiseki.omoshiroikamo.module.dml.common.item.deepLearner.ItemDeepLearner;
 
 public enum ModItems {
 
     // spotless: off
-
-    BASE_UPGRADE(useBackpack, new ItemUpgrade<>()),
-    STACK_UPGRADE(useBackpack, new ItemStackUpgrade()),
-    CRAFTING_UPGRADE(useBackpack, new ItemCraftingUpgrade()),
-    MAGNET_UPGRADE(useBackpack, new ItemMagnetUpgrade()),
-    ADVANCED_MAGNET_UPGRADE(useBackpack, new ItemAdvancedMagnetUpgrade()),
-    FEEDING_UPGRADE(useBackpack, new ItemFeedingUpgrade()),
-    ADVANCED_FEEDING_UPGRADE(useBackpack, new ItemAdvancedFeedingUpgrade()),
-    PICKUP_UPGRADE(useBackpack, new ItemPickupUpgrade()),
-    ADVANCED_PICKUP_UPGRADE(useBackpack, new ItemAdvancedPickupUpgrade()),
-    VOID_UPGRADE(useBackpack, new ItemVoidUpgrade()),
-    ADVANCED_VOID_UPGRADE(useBackpack, new ItemAdvancedVoidUpgrade()),
-    EVERLASTING_UPGRADE(useBackpack, new ItemEverlastingUpgrade()),
-    INCEPTION_UPGRADE(useBackpack, new ItemInceptionUpgrade()),
-    FILTER_UPGRADE(useBackpack, new ItemFilterUpgrade()),
-    ADVANCED_FILTER_UPGRADE(useBackpack, new ItemAdvancedFilterUpgrade()),
 
     CRYSTAL(useEnvironmentalTech, new ItemCrystal()),
     ASSEMBLER(useEnvironmentalTech, new ItemAssembler()),
@@ -66,16 +24,6 @@ public enum ModItems {
         .setTextureName("ender_stabilized")),
     PHOTOVOLTAIC_CELL(useEnvironmentalTech, new ItemOK().setName(ModObject.itemPhotovoltaicCell)
         .setTextureName("photovoltaic_cell")),
-
-    DEEP_LEARNER(useDML, new ItemDeepLearner()),
-    CREATIVE_MODEL_LEARNER(useDML, new ItemCreativeModelLearner()),
-    DATA_MODEL(useDML, new ItemDataModel()),
-    DATA_MODEL_BLANK(useDML, new ItemDataModelBlank()),
-    PRISTINE_MATTER(useDML, new ItemPristineMatter()),
-    LIVING_MATTER(useDML, new ItemLivingMatter()),
-    POLYMER_CLAY(useDML, new ItemPolymerClay()),
-    SOOT_COVERED_PLATE(useDML, new ItemSootCoveredPlate()),
-    SOOT_COVERED_REDSTONE(useDML, new ItemSootCoveredRedstone()),
 
     STRUCTURE_WAND(true, new ItemStructureWand()),
     //

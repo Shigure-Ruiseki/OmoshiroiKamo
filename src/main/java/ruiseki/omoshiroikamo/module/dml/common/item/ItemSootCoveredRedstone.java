@@ -17,11 +17,11 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.item.ItemOK;
 import ruiseki.omoshiroikamo.common.util.KeyboardUtils;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 @EventBusSubscriber
 public class ItemSootCoveredRedstone extends ItemOK {
@@ -63,7 +63,7 @@ public class ItemSootCoveredRedstone extends ItemOK {
         Vec3 hitVec = Vec3.createVectorHelper(event.x + 0.5, event.y + 0.5, event.z + 0.5);
 
         if (!event.world.isRemote) {
-            ItemStack output = ModItems.SOOT_COVERED_REDSTONE.newItemStack();
+            ItemStack output = DMLItems.SOOT_COVERED_REDSTONE.newItemStack();
 
             EntityItem entityItem = new EntityItem(event.world, hitVec.xCoord, hitVec.yCoord, hitVec.zCoord, output);
 

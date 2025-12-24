@@ -1,8 +1,6 @@
 package ruiseki.omoshiroikamo.common.recipe;
 
 import static ruiseki.omoshiroikamo.api.enums.EnumDye.DYE_ORE_NAMES;
-import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.BACKPACK_SLOTS;
-import static ruiseki.omoshiroikamo.common.block.backpack.BackpackHandler.UPGRADE_SLOTS;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
@@ -12,136 +10,14 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
-import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 
 public class BlockRecipes {
 
     public static void init() {
-        if (BackportConfigs.useBackpack) {
-            // Leather Backpack
-            GameRegistry.addRecipe(
-                new NBTShapedOreRecipe(
-                    ModBlocks.BACKPACK_BASE.newItemStack(),
-                    "SLS",
-                    "SCS",
-                    "LLL",
-                    'S',
-                    new ItemStack(Items.string, 1, 0),
-                    'L',
-                    "itemLeather",
-                    'C',
-                    new ItemStack(Blocks.chest, 1, 0)));
-
-            // Iron Backpack
-            GameRegistry.addRecipe(
-                new NBTShapedOreRecipe(
-                    ModBlocks.BACKPACK_IRON.newItemStack(),
-                    "CCC",
-                    "CBC",
-                    "CCC",
-                    'C',
-                    "ingotIron",
-                    'B',
-                    ModBlocks.BACKPACK_BASE.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.ironUpgradeSlots)
-                        .withInt(BACKPACK_SLOTS, BackpackConfig.ironBackpackSlots)
-                        .allowNBTFrom(ModBlocks.BACKPACK_BASE.newItemStack())
-                        .allowAllTags());
-
-            // Gold Backpack
-            GameRegistry.addRecipe(
-                new NBTShapedOreRecipe(
-                    ModBlocks.BACKPACK_GOLD.newItemStack(),
-                    "CCC",
-                    "CBC",
-                    "CCC",
-                    'C',
-                    "ingotGold",
-                    'B',
-                    ModBlocks.BACKPACK_IRON.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.goldUpgradeSlots)
-                        .withInt(BACKPACK_SLOTS, BackpackConfig.goldBackpackSlots)
-                        .allowNBTFrom(ModBlocks.BACKPACK_IRON.newItemStack())
-                        .allowAllTags());
-
-            // Diamond Backpack
-            GameRegistry.addRecipe(
-                new NBTShapedOreRecipe(
-                    ModBlocks.BACKPACK_DIAMOND.newItemStack(),
-                    "CCC",
-                    "CBC",
-                    "CCC",
-                    'C',
-                    "gemDiamond",
-                    'B',
-                    ModBlocks.BACKPACK_GOLD.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.diamondUpgradeSlots)
-                        .withInt(BACKPACK_SLOTS, BackpackConfig.diamondBackpackSlots)
-                        .allowNBTFrom(ModBlocks.BACKPACK_GOLD.newItemStack())
-                        .allowAllTags());
-
-            // Obsidian Backpack
-            GameRegistry.addRecipe(
-                new NBTShapedOreRecipe(
-                    ModBlocks.BACKPACK_OBSIDIAN.newItemStack(),
-                    "CSC",
-                    "SBS",
-                    "CSC",
-                    'S',
-                    "itemNetherStar",
-                    'C',
-                    "blockObsidian",
-                    'B',
-                    ModBlocks.BACKPACK_DIAMOND.getItem()).withInt(UPGRADE_SLOTS, BackpackConfig.obsidianUpgradeSlots)
-                        .withInt(BACKPACK_SLOTS, BackpackConfig.obsidianBackpackSlots)
-                        .allowNBTFrom(ModBlocks.BACKPACK_DIAMOND.newItemStack())
-                        .allowAllTags());
-
-            BackpackDyeRecipes recipes = new BackpackDyeRecipes();
-            for (int i = 0; i < 16; i++) {
-                for (int j = 0; j < 16; j++) {
-                    String accentOre = EnumDye.DYE_ORE_NAMES[i];
-                    String mainOre = EnumDye.DYE_ORE_NAMES[j];
-                    int accentColor = EnumDye.fromIndex(i)
-                        .getColor();
-                    int mainColor = EnumDye.fromIndex(j)
-                        .getColor();
-
-                    recipes.registerDyeRecipes(
-                        ModBlocks.BACKPACK_BASE.newItemStack(),
-                        accentOre,
-                        mainOre,
-                        accentColor,
-                        mainColor);
-                    recipes.registerDyeRecipes(
-                        ModBlocks.BACKPACK_IRON.newItemStack(),
-                        accentOre,
-                        mainOre,
-                        accentColor,
-                        mainColor);
-                    recipes.registerDyeRecipes(
-                        ModBlocks.BACKPACK_GOLD.newItemStack(),
-                        accentOre,
-                        mainOre,
-                        accentColor,
-                        mainColor);
-                    recipes.registerDyeRecipes(
-                        ModBlocks.BACKPACK_DIAMOND.newItemStack(),
-                        accentOre,
-                        mainOre,
-                        accentColor,
-                        mainColor);
-                    recipes.registerDyeRecipes(
-                        ModBlocks.BACKPACK_OBSIDIAN.newItemStack(),
-                        accentOre,
-                        mainOre,
-                        accentColor,
-                        mainColor);
-                }
-            }
-        }
 
         if (BackportConfigs.useEnvironmentalTech) {
 

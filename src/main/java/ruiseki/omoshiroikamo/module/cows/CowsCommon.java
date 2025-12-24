@@ -39,8 +39,8 @@ public class CowsCommon implements IModuleCommon {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        CowsRecipes.init();
         ModCows.init();
+        CowsRecipes.init();
     }
 
     @Override

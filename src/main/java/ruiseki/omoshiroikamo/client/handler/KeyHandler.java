@@ -14,11 +14,11 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
-import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 
 public class KeyHandler {
 

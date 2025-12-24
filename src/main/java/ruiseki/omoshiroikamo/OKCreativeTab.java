@@ -12,6 +12,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsBlocks;
@@ -25,34 +27,34 @@ public abstract class OKCreativeTab extends CreativeTabs {
 
         @Override
         public ItemStack getIconItemStack() {
-            return new ItemStack(ModBlocks.BACKPACK_BASE.get());
+            return new ItemStack(BackpackBlocks.BACKPACK_BASE.getBlock());
         }
 
         @Override
         public void displayAllReleventItems(List<ItemStack> list) {
             this.list = list;
 
-            addBlock(ModBlocks.BACKPACK_BASE.get());
-            addBlock(ModBlocks.BACKPACK_IRON.get());
-            addBlock(ModBlocks.BACKPACK_GOLD.get());
-            addBlock(ModBlocks.BACKPACK_DIAMOND.get());
-            addBlock(ModBlocks.BACKPACK_OBSIDIAN.get());
+            addBlock(BackpackBlocks.BACKPACK_BASE.getBlock());
+            addBlock(BackpackBlocks.BACKPACK_IRON.getBlock());
+            addBlock(BackpackBlocks.BACKPACK_GOLD.getBlock());
+            addBlock(BackpackBlocks.BACKPACK_DIAMOND.getBlock());
+            addBlock(BackpackBlocks.BACKPACK_OBSIDIAN.getBlock());
 
-            addItem(ModItems.BASE_UPGRADE.getItem());
-            addItem(ModItems.STACK_UPGRADE.getItem());
-            addItem(ModItems.MAGNET_UPGRADE.getItem());
-            addItem(ModItems.ADVANCED_MAGNET_UPGRADE.getItem());
-            addItem(ModItems.FEEDING_UPGRADE.getItem());
-            addItem(ModItems.ADVANCED_FEEDING_UPGRADE.getItem());
-            addItem(ModItems.PICKUP_UPGRADE.getItem());
-            addItem(ModItems.ADVANCED_PICKUP_UPGRADE.getItem());
-            addItem(ModItems.EVERLASTING_UPGRADE.getItem());
-            addItem(ModItems.INCEPTION_UPGRADE.getItem());
-            addItem(ModItems.FILTER_UPGRADE.getItem());
-            addItem(ModItems.ADVANCED_FILTER_UPGRADE.getItem());
-            addItem(ModItems.VOID_UPGRADE.getItem());
-            addItem(ModItems.ADVANCED_VOID_UPGRADE.getItem());
-            addItem(ModItems.CRAFTING_UPGRADE.getItem());
+            addItem(BackpackItems.BASE_UPGRADE.getItem());
+            addItem(BackpackItems.STACK_UPGRADE.getItem());
+            addItem(BackpackItems.MAGNET_UPGRADE.getItem());
+            addItem(BackpackItems.ADVANCED_MAGNET_UPGRADE.getItem());
+            addItem(BackpackItems.FEEDING_UPGRADE.getItem());
+            addItem(BackpackItems.ADVANCED_FEEDING_UPGRADE.getItem());
+            addItem(BackpackItems.PICKUP_UPGRADE.getItem());
+            addItem(BackpackItems.ADVANCED_PICKUP_UPGRADE.getItem());
+            addItem(BackpackItems.EVERLASTING_UPGRADE.getItem());
+            addItem(BackpackItems.INCEPTION_UPGRADE.getItem());
+            addItem(BackpackItems.FILTER_UPGRADE.getItem());
+            addItem(BackpackItems.ADVANCED_FILTER_UPGRADE.getItem());
+            addItem(BackpackItems.VOID_UPGRADE.getItem());
+            addItem(BackpackItems.ADVANCED_VOID_UPGRADE.getItem());
+            addItem(BackpackItems.CRAFTING_UPGRADE.getItem());
         }
     };
 

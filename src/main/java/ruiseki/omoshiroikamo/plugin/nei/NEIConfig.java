@@ -2,11 +2,13 @@ package ruiseki.omoshiroikamo.plugin.nei;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
-import ruiseki.omoshiroikamo.client.gui.modularui2.backpack.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
+import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
+import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackPositioner;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenLayingRecipeHandler;
@@ -15,8 +17,6 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowBreedingRecipeHandle
 import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
-import ruiseki.omoshiroikamo.plugin.nei.overlay.BackpackOverlay;
-import ruiseki.omoshiroikamo.plugin.nei.positioner.BackpackPositioner;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.quantumExtractor.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.plugin.nei.recipe.quantumExtractor.QuantumResExtractorRecipeHandler;
 

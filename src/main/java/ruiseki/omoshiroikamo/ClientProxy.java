@@ -17,7 +17,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.client.gui.modularui2.MGuiFactories;
 import ruiseki.omoshiroikamo.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.client.handler.StructureWandRenderer;
 import ruiseki.omoshiroikamo.client.render.block.quantumExtractor.QuantumExtractorTESR;
@@ -28,6 +27,7 @@ import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.ModuleManager;
+import ruiseki.omoshiroikamo.module.backpack.BackpackClient;
 import ruiseki.omoshiroikamo.module.chickens.ChickensClient;
 import ruiseki.omoshiroikamo.module.cows.CowsClient;
 import ruiseki.omoshiroikamo.module.dml.DMLClient;
@@ -46,9 +46,9 @@ public class ClientProxy extends CommonProxy {
         ModuleManager.register(new ChickensClient());
         ModuleManager.register(new CowsClient());
         ModuleManager.register(new DMLClient());
+        ModuleManager.register(new BackpackClient());
 
         ModuleManager.preInitClient(event);
-        MGuiFactories.init();
     }
 
     @Override

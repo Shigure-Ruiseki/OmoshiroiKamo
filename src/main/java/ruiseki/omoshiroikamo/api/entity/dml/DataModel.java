@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 public class DataModel {
 
@@ -27,7 +27,7 @@ public class DataModel {
     private DataModel() {}
 
     public static boolean isModel(ItemStack stack) {
-        return stack != null && stack.getItem() == ModItems.DATA_MODEL.getItem();
+        return stack != null && stack.getItem() == DMLItems.DATA_MODEL.getItem();
     }
 
     public static ModelRegistryItem getDataFromStack(ItemStack stack) {

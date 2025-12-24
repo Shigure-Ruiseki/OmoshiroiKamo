@@ -13,9 +13,9 @@ import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 import ruiseki.omoshiroikamo.plugin.nei.RecipeHandlerBase;
 
@@ -62,7 +62,7 @@ public class LootFabricatorRecipeHandler extends RecipeHandlerBase {
         for (ModelRegistryItem model : list) {
             for (ItemStack lootItem : model.getLootItems()) {
                 arecipes.add(
-                    new CachedLootFabricatorRecipe(ModItems.PRISTINE_MATTER.newItemStack(1, model.getId()), lootItem));
+                    new CachedLootFabricatorRecipe(DMLItems.PRISTINE_MATTER.newItemStack(1, model.getId()), lootItem));
             }
         }
     }

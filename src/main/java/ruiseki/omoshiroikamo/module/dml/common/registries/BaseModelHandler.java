@@ -26,12 +26,12 @@ import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.json.ItemJson;
 import ruiseki.omoshiroikamo.api.json.JsonUtils;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.plugin.ModCompatInformation;
 
 // Refactor base on OriginalChicken by Chlorine0808
@@ -213,18 +213,18 @@ public abstract class BaseModelHandler {
                             List<ItemStack> crafting = ItemJson.resolveListItemStack(data.craftingIngredients);
 
                             Object[] recipe = new Object[crafting.size() + 1];
-                            recipe[0] = ModItems.DATA_MODEL_BLANK.newItemStack(1);
+                            recipe[0] = DMLItems.DATA_MODEL_BLANK.newItemStack(1);
 
                             for (int i = 0; i < crafting.size(); i++) {
                                 recipe[i + 1] = crafting.get(i);
                             }
 
-                            GameRegistry.addShapelessRecipe(ModItems.DATA_MODEL.newItemStack(1, data.id), recipe);
+                            GameRegistry.addShapelessRecipe(DMLItems.DATA_MODEL.newItemStack(1, data.id), recipe);
                         }
 
                         model.setLivingMatter(livingMatter);
 
-                        model.setPristineMatter(ModItems.PRISTINE_MATTER.newItemStack(1, model.getId()));
+                        model.setPristineMatter(DMLItems.PRISTINE_MATTER.newItemStack(1, model.getId()));
 
                         model.setAssociatedMobs(data.associatedMobs);
                         model.setAssociatedMobsClasses(associatedEntityClasses);

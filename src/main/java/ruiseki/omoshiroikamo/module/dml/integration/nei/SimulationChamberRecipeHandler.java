@@ -19,10 +19,10 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber.BlockSimulationChamber;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemLivingMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPolymerClay;
@@ -81,7 +81,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
         for (ModelRegistryItem model : list) {
             ItemStack pristine = model.getPristineMatter();
             ItemStack living = model.getLivingMatter();
-            ItemStack modelStack = ModItems.DATA_MODEL.newItemStack(1, model.getId());
+            ItemStack modelStack = DMLItems.DATA_MODEL.newItemStack(1, model.getId());
             arecipes.add(new CachedSimulationChamberRecipe(pristine, living, modelStack));
         }
     }
@@ -104,7 +104,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
             if ((isPristine && ItemUtils.areStacksEqual(result, pristine))
                 || (isLiving && ItemUtils.areStacksEqual(result, living))) {
 
-                ItemStack modelStack = ModItems.DATA_MODEL.newItemStack(1, model.getId());
+                ItemStack modelStack = DMLItems.DATA_MODEL.newItemStack(1, model.getId());
 
                 arecipes.add(new CachedSimulationChamberRecipe(pristine, living, modelStack));
             }
@@ -133,7 +133,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
             if (model != null) {
                 ItemStack pristine = model.getPristineMatter();
                 ItemStack living = model.getLivingMatter();
-                ItemStack modelStack = ModItems.DATA_MODEL.newItemStack(1, model.getId());
+                ItemStack modelStack = DMLItems.DATA_MODEL.newItemStack(1, model.getId());
 
                 arecipes.add(new CachedSimulationChamberRecipe(pristine, living, modelStack));
             }
@@ -156,7 +156,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
         public List<PositionedStack> getIngredients() {
             ArrayList<PositionedStack> stacks = new ArrayList<>();
             stacks.add(new PositionedStack(model, 29, 12));
-            stacks.add(new PositionedStack(ModItems.POLYMER_CLAY.newItemStack(), 53, 12));
+            stacks.add(new PositionedStack(DMLItems.POLYMER_CLAY.newItemStack(), 53, 12));
             return stacks;
         }
 

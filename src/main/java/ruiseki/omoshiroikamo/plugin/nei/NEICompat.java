@@ -7,12 +7,12 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.init.ModBlocks;
-import ruiseki.omoshiroikamo.common.init.ModItems;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.common.util.lib.LibMods;
 import ruiseki.omoshiroikamo.common.util.lib.LibResources;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
@@ -92,7 +92,7 @@ public class NEICompat {
         }
 
         if (BackportConfigs.useBackpack) {
-            sendCatalyst("crafting", ModItems.CRAFTING_UPGRADE.newItemStack());
+            sendCatalyst("crafting", BackpackItems.CRAFTING_UPGRADE.newItemStack());
         }
 
         if (BackportConfigs.useDML) {

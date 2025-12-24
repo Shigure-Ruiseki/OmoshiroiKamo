@@ -30,6 +30,7 @@ import ruiseki.omoshiroikamo.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.common.util.Logger;
 import ruiseki.omoshiroikamo.common.util.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.ModuleManager;
+import ruiseki.omoshiroikamo.module.backpack.BackpackCommon;
 import ruiseki.omoshiroikamo.module.chickens.ChickensCommon;
 import ruiseki.omoshiroikamo.module.cows.CowsCommon;
 import ruiseki.omoshiroikamo.module.dml.DMLCommon;
@@ -63,8 +64,7 @@ public class CommonProxy {
         ModuleManager.register(new ChickensCommon());
         ModuleManager.register(new CowsCommon());
         ModuleManager.register(new DMLCommon());
-
-        ModuleManager.preInitCommon(event);
+        ModuleManager.register(new BackpackCommon());
 
         // Initialize the custom structure system
         StructureManager.getInstance()
@@ -77,6 +77,8 @@ public class CommonProxy {
         MobOreDicts.preInit();
         ModAchievements.preInit();
         OKWorldGenerator.preInit();
+
+        ModuleManager.preInitCommon(event);
 
         BaubleExpandedCompat.preInit();
 

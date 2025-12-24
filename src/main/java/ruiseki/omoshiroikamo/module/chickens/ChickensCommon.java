@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensRecipes;
 import ruiseki.omoshiroikamo.module.chickens.registries.ModChickens;
 
 public class ChickensCommon implements IModuleCommon {
@@ -39,6 +40,7 @@ public class ChickensCommon implements IModuleCommon {
     @Override
     public void init(FMLInitializationEvent event) {
         ModChickens.init();
+        ChickensRecipes.init();
     }
 
     @Override

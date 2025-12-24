@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.common.init.ModItems;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 public class ModelRegistryItem {
 
@@ -149,7 +149,7 @@ public class ModelRegistryItem {
     }
 
     public ModelRegistryItem setLivingMatter(LivingRegistryItem livingMatter) {
-        this.livingMatter = ModItems.LIVING_MATTER.newItemStack(1, livingMatter.getId());
+        this.livingMatter = DMLItems.LIVING_MATTER.newItemStack(1, livingMatter.getId());
         return this;
     }
 

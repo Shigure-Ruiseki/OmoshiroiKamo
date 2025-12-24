@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.common.init;
 
-import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useBackpack;
 import static ruiseki.omoshiroikamo.config.backport.BackportConfigs.useEnvironmentalTech;
 
 import net.minecraft.block.material.Material;
@@ -9,7 +8,6 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.common.block.BlockOK;
-import ruiseki.omoshiroikamo.common.block.backpack.BlockBackpack;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockAlabasterStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockBasaltStructure;
 import ruiseki.omoshiroikamo.common.block.multiblock.base.BlockCrystal;
@@ -38,37 +36,10 @@ import ruiseki.omoshiroikamo.common.block.multiblock.quantumExtractor.res.BlockQ
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarArray;
 import ruiseki.omoshiroikamo.common.block.multiblock.solarArray.BlockSolarCell;
 import ruiseki.omoshiroikamo.common.util.Logger;
-import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 
 public enum ModBlocks {
 
     // spotless: off
-
-    BACKPACK_BASE(useBackpack,
-        BlockBackpack.create(
-            ModObject.backpackLeather.unlocalisedName,
-            BackpackConfig.leatherBackpackSlots,
-            BackpackConfig.leatherUpgradeSlots)),
-    BACKPACK_IRON(useBackpack,
-        BlockBackpack.create(
-            ModObject.blockBackpackIron.unlocalisedName,
-            BackpackConfig.ironBackpackSlots,
-            BackpackConfig.ironUpgradeSlots)),
-    BACKPACK_GOLD(useBackpack,
-        BlockBackpack.create(
-            ModObject.blockBackpackGold.unlocalisedName,
-            BackpackConfig.goldBackpackSlots,
-            BackpackConfig.goldUpgradeSlots)),
-    BACKPACK_DIAMOND(useBackpack,
-        BlockBackpack.create(
-            ModObject.blockBackpackDiamond.unlocalisedName,
-            BackpackConfig.diamondBackpackSlots,
-            BackpackConfig.diamondUpgradeSlots)),
-    BACKPACK_OBSIDIAN(useBackpack,
-        BlockBackpack.create(
-            ModObject.blockBackpackObsidian.unlocalisedName,
-            BackpackConfig.obsidianBackpackSlots,
-            BackpackConfig.obsidianUpgradeSlots)),
 
     BLOCK_MICA(useEnvironmentalTech,
         new BlockOK(ModObject.blockMica.unlocalisedName, Material.rock).setTextureName("mica")),
