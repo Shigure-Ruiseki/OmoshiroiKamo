@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.nei.recipe.quantumExtractor;
+package ruiseki.omoshiroikamo.module.multiblock.integration.nei;
 
 import net.minecraft.block.Block;
 
@@ -8,47 +8,47 @@ import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecipes;
 
-public class QuantumResExtractorRecipeHandler extends VoidMinerRecipeHandler {
+public class QuantumOreExtractorRecipeHandler extends VoidMinerRecipeHandler {
 
-    public QuantumResExtractorRecipeHandler(int tier) {
+    public QuantumOreExtractorRecipeHandler(int tier) {
         super(tier);
     }
 
     @Override
     public TemplateRecipeHandler newInstance() {
-        return new QuantumResExtractorRecipeHandler(tier);
+        return new QuantumOreExtractorRecipeHandler(tier);
     }
 
     @Override
     protected IFocusableRegistry getRegistry() {
-        return QuantumExtractorRecipes.resRegistry[tier];
+        return QuantumExtractorRecipes.oreRegistry[tier];
     }
 
     @Override
     protected IFocusableRegistry getRegistry(int tierArg) {
         if (tierArg >= 0 && tierArg < QuantumExtractorRecipes.MAX_TIER) {
-            return QuantumExtractorRecipes.resRegistry[tierArg];
+            return QuantumExtractorRecipes.oreRegistry[tierArg];
         }
         return null;
     }
 
     @Override
     protected Block getMinerBlock() {
-        return MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.getBlock();
+        return MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.getBlock();
     }
 
     @Override
     protected String getMinerNameBase() {
-        return "Void Resource Miner";
+        return "Void Ore Miner";
     }
 
     @Override
     protected String getRecipeIdBase() {
-        return String.valueOf(ModObject.blockQuantumResExtractor.getRegistryName());
+        return String.valueOf(ModObject.blockQuantumOreExtractor.getRegistryName());
     }
 
     @Override
     protected VoidMinerRecipeHandler createForTier(int tier) {
-        return new QuantumResExtractorRecipeHandler(tier);
+        return new QuantumOreExtractorRecipeHandler(tier);
     }
 }

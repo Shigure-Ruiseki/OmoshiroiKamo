@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.integration.nei.recipe.quantumExtractor;
+package ruiseki.omoshiroikamo.module.multiblock.integration.nei;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     protected abstract IFocusableRegistry getRegistry(int tier);
 
-    // Factory for spawning the handler of a specific tier (used when delegating usage requests)
+    // Factory for spawning the handler of a specific tier
+    // used when delegating usage requests
     protected abstract VoidMinerRecipeHandler createForTier(int tier);
 
     protected abstract Block getMinerBlock();
@@ -107,7 +108,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
         if (isMiner) {
             int inputTier = ingredient.getItemDamage();
-            // Only process when the handler tier matches the item tier so the correct tab/catalyst is used
+            // Only process when the handler tier matches the item tier
             if (inputTier != this.tier) {
                 return;
             }
@@ -166,7 +167,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             Item minerItem = Item.getItemFromBlock(getMinerBlock());
             if (stack.getItem() == minerItem) {
                 int inputTier = stack.getItemDamage();
-                // Only the matching tier handler should respond; others return null to avoid duplicate tabs
+                // Only the matching tier handler should respond
+                // others return null to avoid duplicate tabs
                 if (inputTier != this.tier) {
                     return null;
                 }
@@ -183,7 +185,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public IUsageHandler getUsageAndCatalystHandler(String inputId, Object... ingredients) {
-        // For miner blocks, skip catalyst short-circuit and use our tier-aware usage handler
+        // For miner blocks, skip catalyst and use our tier-aware usage handler
         if ("item".equals(inputId) && ingredients.length > 0 && ingredients[0] instanceof ItemStack stack) {
             Item minerItem = Item.getItemFromBlock(getMinerBlock());
             if (stack.getItem() == minerItem) {
