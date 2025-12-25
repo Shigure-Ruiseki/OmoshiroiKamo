@@ -31,8 +31,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     protected abstract IFocusableRegistry getRegistry(int tier);
 
-    // Factory for spawning the handler of a specific tier (used when delegating
-    // usage requests)
+    // Factory for spawning the handler of a specific tier 
+    // used when delegating usage requests
     protected abstract VoidMinerRecipeHandler createForTier(int tier);
 
     protected abstract Block getMinerBlock();
