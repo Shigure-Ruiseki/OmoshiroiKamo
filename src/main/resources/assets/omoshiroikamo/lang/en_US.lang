@@ -476,6 +476,7 @@ tile.modifierSaturation.name=Saturation Modifier
 tile.modifierResistance.name=Resistance Modifier
 tile.modifierJumpBoost.name=Jump Boost Modifier
 tile.modifierFireResistance.name=Fire Resistance Modifier
+tile.modifierLuck.name=Luck Modifier
 
 tile.lens.tier_1.name=Clear Lens
 tile.lens.tier_2.name=Crystal Lens
@@ -585,6 +586,8 @@ tooltip.modifier.speed.penalty=§cEnergy Cost 1.5x§r
 tooltip.modifier.accuracy.effect=§aFocus 1.18x§r
 tooltip.modifier.accuracy.penalty=§cMining Speed 0.9x§r, §cEnergy Cost 1.05x§r
 tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
+tooltip.modifier.luck.effect=§aDouble Output +10%§r
+tooltip.modifier.luck.penalty=§cEnergy Cost 1.25x§r
 
 #Beacon Modifiers
 tooltip.modifier.flight.effect=§bCreative Flight§r

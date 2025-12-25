@@ -110,7 +110,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
         BlockPos pos = new BlockPos(x, y, z, worldObj);
         if ((block == MultiBlockBlocks.COLORED_LENS.getBlock() || block == MultiBlockBlocks.LENS.getBlock())
-            && lens != pos) {
+                && lens != pos) {
             lens = new BlockPos(x, y, z, worldObj);
             return true;
         }
@@ -156,13 +156,13 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
             Block block = worldObj.getBlock(xCoord, y, zCoord);
 
             if (block.isAir(worldObj, xCoord, y, zCoord) || block == Blocks.glass
-                || block == Blocks.stained_glass
-                || block == Blocks.glass_pane
-                || block == Blocks.stained_glass_pane
-                || block == MultiBlockBlocks.LASER_CORE.getBlock()
-                || block == MultiBlockBlocks.LENS.getBlock()
-                || block == MultiBlockBlocks.COLORED_LENS.getBlock()
-                || isBlockInPathWhitelist(block, worldObj.getBlockMetadata(xCoord, y, zCoord))) {
+                    || block == Blocks.stained_glass
+                    || block == Blocks.glass_pane
+                    || block == Blocks.stained_glass_pane
+                    || block == MultiBlockBlocks.LASER_CORE.getBlock()
+                    || block == MultiBlockBlocks.LENS.getBlock()
+                    || block == MultiBlockBlocks.COLORED_LENS.getBlock()
+                    || isBlockInPathWhitelist(block, worldObj.getBlockMetadata(xCoord, y, zCoord))) {
                 if (y == 0) {
                     return true;
                 }
@@ -296,7 +296,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     public void onProcessComplete() {
         if (!this.possibleResults.isEmpty()) {
             WeightedStackBase result = (WeightedStackBase) WeightedRandom
-                .getRandomItem(this.rand, this.possibleResults);
+                    .getRandomItem(this.rand, this.possibleResults);
             if (result == null) {
                 return;
             }
@@ -308,6 +308,19 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
             ItemStack clone = resultStack.copy();
             clone.stackSize = 1;
+
+            // Apply Luck Modifier: chance for bonus output
+            // 10% per modifier, additive (e.g., 20 modifiers = 200% = guaranteed +2 items)
+            float luckChance = modifierHandler.getAttributeMultiplier("luck");
+            if (luckChance > 0) {
+                int guaranteedBonus = (int) luckChance; // 200% -> +2 guaranteed
+                float remainingChance = luckChance - guaranteedBonus; // e.g., 0.25 for 225%
+                clone.stackSize = 1 + guaranteedBonus;
+                if (remainingChance > 0 && this.rand.nextFloat() < remainingChance) {
+                    clone.stackSize++;
+                }
+            }
+
             ItemHandlerHelper.insertItem(this.output, clone, false);
             this.extract();
         }
@@ -319,7 +332,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
 
             TileEntity adjacent = this.getWorldObj()
-                .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
+                    .getTileEntity(this.xCoord + side.offsetX, this.yCoord + side.offsetY, this.zCoord + side.offsetZ);
             transfer.push(this, side, adjacent);
             transfer.transfer();
 
@@ -362,25 +375,25 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
                 int meta = lens.getBlockMetadata();
                 this.focusColor = ((BlockColoredLens) block).getFocusColor(meta);
                 this.possibleResults.addAll(
-                    this.getRegistry()
-                        .getFocusedList(this.focusColor, this.focusBoostModifier));
+                        this.getRegistry()
+                                .getFocusedList(this.focusColor, this.focusBoostModifier));
             } else {
                 if (lens.getBlockMetadata() == 1) {
                     this.focusColor = EnumDye.CRYSTAL;
                     this.possibleResults.addAll(
-                        this.getRegistry()
-                            .getFocusedList(this.focusColor, this.focusBoostModifier));
+                            this.getRegistry()
+                                    .getFocusedList(this.focusColor, this.focusBoostModifier));
                 } else {
                     this.focusColor = null;
                     this.possibleResults.addAll(
-                        this.getRegistry()
-                            .getUnFocusedList());
+                            this.getRegistry()
+                                    .getUnFocusedList());
                 }
             }
         } else {
             this.possibleResults.addAll(
-                this.getRegistry()
-                    .getUnFocusedList());
+                    this.getRegistry()
+                            .getUnFocusedList());
         }
 
         if (getEnergyStored() < getEnergyCostPerTick()) {
@@ -395,7 +408,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     public int getEnergyCostPerTick() {
         if (this.modifierHandler.hasAttribute("energycost")) {
             int e = (int) ((float) this.getEnergyCostPerDuration()
-                * this.modifierHandler.getAttributeMultiplier("energycost"));
+                    * this.modifierHandler.getAttributeMultiplier("energycost"));
             return Math.max(1, e / Math.max(1, this.getCurrentProcessDuration()));
         }
         return Math.max(1, this.getEnergyCostPerDuration() / Math.max(1, this.getCurrentProcessDuration()));
@@ -491,10 +504,12 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory() {
+    }
 
     @Override
-    public void closeInventory() {}
+    public void closeInventory() {
+    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {

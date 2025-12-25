@@ -476,6 +476,7 @@ tile.modifierSaturation.name=飽和モディファイア
 tile.modifierResistance.name=耐性モディファイア
 tile.modifierJumpBoost.name=跳躍力上昇モディファイア
 tile.modifierFireResistance.name=火炎耐性モディファイア
+tile.modifierLuck.name=ラックモディファイア
 
 tile.lens.tier_1.name=クリアレンズ
 tile.lens.tier_2.name=クリスタルレンズ
@@ -585,6 +586,8 @@ tooltip.modifier.speed.penalty=§c消費エネルギー 1.5倍§r
 tooltip.modifier.accuracy.effect=§aレンズ精度 1.18倍§r
 tooltip.modifier.accuracy.penalty=§c採掘速度 0.9倍§r, §c消費エネルギー 1.05倍§r
 tooltip.modifier.piezo.effect=§a雨天時発電ボーナス§r
+tooltip.modifier.luck.effect=§aダブルアウトプット +10%§r
+tooltip.modifier.luck.penalty=§c消費エネルギー 1.25倍§r
 
 #Beacon Modifiers
 tooltip.modifier.flight.effect=§bクリエイティブ飛行§r
