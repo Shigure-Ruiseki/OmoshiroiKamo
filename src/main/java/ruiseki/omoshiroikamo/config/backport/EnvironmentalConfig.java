@@ -181,6 +181,31 @@ public class EnvironmentalConfig {
         @Config.DefaultFloat(1.25f)
         @Config.RangeFloat(min = 1.0f, max = 1000.0f)
         public float luckModifierEnergyCost;
+
+        @Config.Comment("Speed Modifier: Speed multiplier base (0.7 = 30% faster per modifier)")
+        @Config.DefaultFloat(0.7f)
+        @Config.RangeFloat(min = 0.1f, max = 1.0f)
+        public float speedModifierMultiplier;
+
+        @Config.Comment("Speed Modifier: Energy cost multiplier per modifier (1.5 = 50% more energy)")
+        @Config.DefaultFloat(1.5f)
+        @Config.RangeFloat(min = 1.0f, max = 1000.0f)
+        public float speedModifierEnergyCost;
+
+        @Config.Comment("Accuracy Modifier: Focus multiplier per modifier (1.18 = 18% better focus)")
+        @Config.DefaultFloat(1.18f)
+        @Config.RangeFloat(min = 1.0f, max = 100.0f)
+        public float accuracyModifierMultiplier;
+
+        @Config.Comment("Accuracy Modifier: Energy cost multiplier per modifier (1.05 = 5% more energy)")
+        @Config.DefaultFloat(1.05f)
+        @Config.RangeFloat(min = 1.0f, max = 1000.0f)
+        public float accuracyModifierEnergyCost;
+
+        @Config.Comment("Accuracy Modifier: Speed penalty per modifier (0.9 = 10% slower)")
+        @Config.DefaultFloat(0.9f)
+        @Config.RangeFloat(min = 0.1f, max = 1.0f)
+        public float accuracyModifierSpeedPenalty;
     }
 
     @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")

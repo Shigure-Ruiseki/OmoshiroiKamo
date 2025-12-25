@@ -581,10 +581,10 @@ neiintegration.chance.never=Never
 neiintegration.chance.lessThan1=<1%
 
 #Modifier Tooltips
-tooltip.modifier.speed.effect=§aMining Speed 1.3x§r
-tooltip.modifier.speed.penalty=§cEnergy Cost 1.5x§r
-tooltip.modifier.accuracy.effect=§aFocus 1.18x§r
-tooltip.modifier.accuracy.penalty=§cMining Speed 0.9x§r, §cEnergy Cost 1.05x§r
+tooltip.modifier.speed.effect=§aMining Speed %.2fx§r
+tooltip.modifier.speed.penalty=§cEnergy Cost %.2fx§r
+tooltip.modifier.accuracy.effect=§aFocus %.2fx§r
+tooltip.modifier.accuracy.penalty=§cMining Speed %.2fx§r, §cEnergy Cost %.2fx§r
 tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
 tooltip.modifier.luck.effect=§aDouble Output +%d%%§r
 tooltip.modifier.luck.penalty=§cEnergy Cost %.2fx§r

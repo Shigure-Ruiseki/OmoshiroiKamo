@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 public class AttributeSpeed implements IModifierAttribute {
 
@@ -19,7 +20,8 @@ public class AttributeSpeed implements IModifierAttribute {
     }
 
     public float getMultiplier(float totalModificationFactor) {
-        return (float) Math.pow(0.7, (double) totalModificationFactor);
+        float base = EnvironmentalConfig.quantumExtractorConfig.speedModifierMultiplier;
+        return (float) Math.pow(base, (double) totalModificationFactor);
     }
 
     public float getModificationFactor() {

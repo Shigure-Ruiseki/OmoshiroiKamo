@@ -7,6 +7,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
@@ -23,7 +24,8 @@ public class BlockModifierSpeed extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(new AttributeEnergyCost(1.5F));
+        float energyCost = EnvironmentalConfig.quantumExtractorConfig.speedModifierEnergyCost;
+        list.add(new AttributeEnergyCost(energyCost));
         list.add(ModifierAttribute.SPEED.getAttribute());
         list.add(ModifierAttribute.P_SPEED.getAttribute());
         list.add(new AttributeEnergyCostFixed(16));
@@ -31,9 +33,12 @@ public class BlockModifierSpeed extends BlockModifier {
 
     @Override
     public List<String> getTooltipLines() {
+        float speedMultiplier = EnvironmentalConfig.quantumExtractorConfig.speedModifierMultiplier;
+        float energyCost = EnvironmentalConfig.quantumExtractorConfig.speedModifierEnergyCost;
+
         List<String> list = new ArrayList<>();
-        list.add(LibMisc.LANG.localize("tooltip.modifier.speed.effect"));
-        list.add(LibMisc.LANG.localize("tooltip.modifier.speed.penalty"));
+        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.speed.effect"), speedMultiplier));
+        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.speed.penalty"), energyCost));
         return list;
     }
 }
