@@ -20,12 +20,12 @@ public class FilterSlotSH extends ItemSlotSH {
 
     @Override
     public void readOnServer(int id, PacketBuffer buf) throws IOException {
-        super.readOnServer(id, buf);
         if (id == SYNC_ITEM_SIMPLE) {
             ItemStack itemStack = NetworkUtils.readItemStack(buf);
             this.getSlot()
                 .putStack(itemStack);
         }
+        super.readOnServer(id, buf);
     }
 
     public void updateFromClient(ItemStack stack) {

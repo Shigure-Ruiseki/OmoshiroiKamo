@@ -17,13 +17,13 @@ public class BackpackSlotSH extends ItemSlotSH {
     public static final int UPDATE_SET_SLOT_LOCK = 8;
     public static final int UPDATE_UNSET_SLOT_LOCK = 9;
 
-    private final BackpackHandler handler;
-    private final BackpackPanel panel;
+    public final BackpackHandler handler;
+    public final BackpackPanel panel;
 
-    public BackpackSlotSH(BackpackPanel panel, BackpackHandler handler, ModularSlot slot) {
+    public BackpackSlotSH(ModularSlot slot, BackpackHandler handler, BackpackPanel panel) {
         super(slot);
-        this.panel = panel;
         this.handler = handler;
+        this.panel = panel;
     }
 
     @Override
@@ -51,6 +51,6 @@ public class BackpackSlotSH extends ItemSlotSH {
                 super.readOnServer(id, buf);
                 break;
         }
-        handler.writeToItem();
+        handler.syncToServer();
     }
 }

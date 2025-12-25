@@ -7,15 +7,19 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 public class BackpackInventoryHelper {
 
@@ -345,4 +349,22 @@ public class BackpackInventoryHelper {
                 break;
         }
     }
+
+    public static ItemStack getQuickDrawStack(IInventory inventory, ItemStack wanted, InventoryType type) {
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            ItemStack backpackStack = inventory.getStackInSlot(i);
+            if (backpackStack == null || backpackStack.stackSize <= 0) continue;
+            if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) continue;
+
+            BackpackHandler handler = new BackpackHandler(backpackStack.copy(), null, backpack);
+            ItemStack extracted = handler.extractItem(wanted, wanted.getMaxStackSize(), false);
+
+            if (extracted != null && extracted.stackSize > 0) {
+                PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
+                return extracted;
+            }
+        }
+        return null;
+    }
+
 }

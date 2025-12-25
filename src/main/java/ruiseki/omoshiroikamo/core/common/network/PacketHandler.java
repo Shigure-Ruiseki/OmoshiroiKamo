@@ -10,6 +10,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketQuickDraw;
 import ruiseki.omoshiroikamo.module.cows.common.network.PacketStall;
 
 public class PacketHandler {
@@ -28,6 +30,8 @@ public class PacketHandler {
 
         INSTANCE.registerMessage(PacketClientFlight.class, PacketClientFlight.class, nextID(), Side.CLIENT);
 
+        INSTANCE.registerMessage(PacketBackpackNBT.class, PacketBackpackNBT.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketQuickDraw.class, PacketQuickDraw.class, nextID(), Side.SERVER);
     }
 
     private static int ID = 0;
