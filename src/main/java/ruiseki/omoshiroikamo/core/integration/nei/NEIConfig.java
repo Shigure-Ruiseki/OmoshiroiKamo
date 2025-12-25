@@ -4,8 +4,6 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.integration.nei.recipe.quantumExtractor.QuantumOreExtractorRecipeHandler;
-import ruiseki.omoshiroikamo.core.integration.nei.recipe.quantumExtractor.QuantumResExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
@@ -19,6 +17,8 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
+import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
+import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
 
 @SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
