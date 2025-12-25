@@ -586,8 +586,8 @@ tooltip.modifier.speed.penalty=§c消費エネルギー 1.5倍§r
 tooltip.modifier.accuracy.effect=§aレンズ精度 1.18倍§r
 tooltip.modifier.accuracy.penalty=§c採掘速度 0.9倍§r, §c消費エネルギー 1.05倍§r
 tooltip.modifier.piezo.effect=§a雨天時発電ボーナス§r
-tooltip.modifier.luck.effect=§aダブルアウトプット +10%§r
-tooltip.modifier.luck.penalty=§c消費エネルギー 1.25倍§r
+tooltip.modifier.luck.effect=§aダブルアウトプット +%d%%§r
+tooltip.modifier.luck.penalty=§c消費エネルギー %.2f倍§r
 
 #Beacon Modifiers
 tooltip.modifier.flight.effect=§bクリエイティブ飛行§r

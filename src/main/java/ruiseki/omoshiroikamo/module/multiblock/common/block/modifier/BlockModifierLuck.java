@@ -5,6 +5,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class BlockModifierLuck extends BlockModifier {
@@ -20,15 +21,20 @@ public class BlockModifierLuck extends BlockModifier {
 
     @Override
     public void addAttributes(List<IModifierAttribute> list) {
-        list.add(new AttributeLuck(0.1F)); // 10% double output chance
-        list.add(new AttributeEnergyCost(1.25F)); // 1.25x energy cost
+        float bonusChance = EnvironmentalConfig.quantumExtractorConfig.luckModifierBonusChance;
+        float energyCost = EnvironmentalConfig.quantumExtractorConfig.luckModifierEnergyCost;
+        list.add(new AttributeLuck(bonusChance));
+        list.add(new AttributeEnergyCost(energyCost));
     }
 
     @Override
     public List<String> getTooltipLines() {
+        float bonusChance = EnvironmentalConfig.quantumExtractorConfig.luckModifierBonusChance;
+        float energyCost = EnvironmentalConfig.quantumExtractorConfig.luckModifierEnergyCost;
+
         List<String> list = new ArrayList<>();
-        list.add(LibMisc.LANG.localize("tooltip.modifier.luck.effect"));
-        list.add(LibMisc.LANG.localize("tooltip.modifier.luck.penalty"));
+        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.luck.effect"), (int) (bonusChance * 100)));
+        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.luck.penalty"), energyCost));
         return list;
     }
 }

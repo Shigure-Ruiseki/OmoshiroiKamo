@@ -171,6 +171,16 @@ public class EnvironmentalConfig {
         @Config.Comment("Additional blocks to allow in the miner's path to void (e.g., \"OmoshiroiKamo:LASER_CORE:0\")")
         @Config.DefaultStringList({})
         public String[] pathToVoidWhitelist;
+
+        @Config.Comment("Luck Modifier: Chance to get bonus output per modifier (0.1 = 10%)")
+        @Config.DefaultFloat(0.1f)
+        @Config.RangeFloat(min = 0.01f, max = 63.0f)
+        public float luckModifierBonusChance;
+
+        @Config.Comment("Luck Modifier: Energy cost multiplier per modifier (1.25 = 25% more energy)")
+        @Config.DefaultFloat(1.25f)
+        @Config.RangeFloat(min = 1.0f, max = 1000.0f)
+        public float luckModifierEnergyCost;
     }
 
     @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")

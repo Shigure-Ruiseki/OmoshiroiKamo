@@ -586,8 +586,8 @@ tooltip.modifier.speed.penalty=§cEnergy Cost 1.5x§r
 tooltip.modifier.accuracy.effect=§aFocus 1.18x§r
 tooltip.modifier.accuracy.penalty=§cMining Speed 0.9x§r, §cEnergy Cost 1.05x§r
 tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
-tooltip.modifier.luck.effect=§aDouble Output +10%§r
-tooltip.modifier.luck.penalty=§cEnergy Cost 1.25x§r
+tooltip.modifier.luck.effect=§aDouble Output +%d%%§r
+tooltip.modifier.luck.penalty=§cEnergy Cost %.2fx§r
 
 #Beacon Modifiers
 tooltip.modifier.flight.effect=§bCreative Flight§r

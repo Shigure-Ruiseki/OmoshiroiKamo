@@ -319,6 +319,8 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
                 if (remainingChance > 0 && this.rand.nextFloat() < remainingChance) {
                     clone.stackSize++;
                 }
+                // Cap at max stack size
+                clone.stackSize = Math.min(clone.stackSize, clone.getMaxStackSize());
             }
 
             ItemHandlerHelper.insertItem(this.output, clone, false);
