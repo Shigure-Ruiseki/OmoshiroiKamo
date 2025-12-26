@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "eTWorldGenConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "general.backports.multiblock.woldGen",
+    category = "woldGen",
     configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
     filename = "worldgen")
 public class MultiblockWorldGenConfig {

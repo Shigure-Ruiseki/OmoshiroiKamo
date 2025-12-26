@@ -11,8 +11,9 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "chickenConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "general.backports.chicken",
-    configSubDirectory = LibMisc.MOD_ID + "/chicken", filename = "chicken")
+    category = "chicken",
+    configSubDirectory = LibMisc.MOD_ID + "/chicken",
+    filename = "chicken")
 public class ChickenConfig {
 
     @Config.DefaultBoolean(true)

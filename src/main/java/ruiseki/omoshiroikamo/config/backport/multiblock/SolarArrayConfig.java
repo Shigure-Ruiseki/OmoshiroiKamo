@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "general.backports.multiblock.solar",
+    category = "solar",
     configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
     filename = "solararray")
 public class SolarArrayConfig {

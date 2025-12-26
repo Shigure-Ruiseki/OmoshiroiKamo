@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "quantumBeaconConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "general.backports.multiblock.beacon",
+    category = "beacon",
     configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
     filename = "beacon")
 public class QuantumBeaconConfig {

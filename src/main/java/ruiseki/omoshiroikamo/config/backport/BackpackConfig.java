@@ -9,8 +9,9 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "backpackConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "general.backports.backpack",
-    configSubDirectory = LibMisc.MOD_ID + "/backpack", filename = "backpack")
+    category = "backpack",
+    configSubDirectory = LibMisc.MOD_ID + "/backpack",
+    filename = "backpack")
 public class BackpackConfig {
 
     @Config.Comment("Main Magnet Settings")

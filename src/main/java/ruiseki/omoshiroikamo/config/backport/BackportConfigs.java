@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main Backport settings")
 @Config.LangKey(LibResources.CONFIG + "backportConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.backports", configSubDirectory = LibMisc.MOD_ID, filename = "backports")
+@Config(modid = LibMisc.MOD_ID, category = "backports", configSubDirectory = LibMisc.MOD_ID, filename = "backports")
 public class BackportConfigs {
 
     @Config.DefaultBoolean(true)

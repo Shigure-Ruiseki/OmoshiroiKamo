@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "quantumExtractorConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "general.backports.multiblock.extractor",
+    category = "extractor",
     configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
     filename = "extractor")
 public class QuantumExtractorConfig {
