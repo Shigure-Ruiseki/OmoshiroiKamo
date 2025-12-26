@@ -35,7 +35,7 @@ public class TESolarArrayT2 extends TESolarArray {
     }
 
     public static int getEnergyGen() {
-        return SolarArrayConfig.peakEnergyTier2;
+        return SolarArrayConfig.tierEnergy.tier2;
     }
 
     @Override

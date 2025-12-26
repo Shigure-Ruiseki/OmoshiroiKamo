@@ -172,8 +172,8 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
     }
 
     public int getCellEnergy(int cellTier) {
-        int base = SolarArrayConfig.cellGen;
-        float multiplier = SolarArrayConfig.cellMul;
+        int base = SolarArrayConfig.cellSettings.baseGeneration;
+        float multiplier = SolarArrayConfig.cellSettings.tierMultiplier;
         return (int) Math.round(base * Math.pow(multiplier, cellTier));
     }
 
