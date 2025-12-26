@@ -12,7 +12,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config(
     modid = LibMisc.MOD_ID,
     category = "general.backports.chicken",
-    configSubDirectory = LibMisc.MOD_ID + "/chicken")
+    configSubDirectory = LibMisc.MOD_ID + "/chicken", filename = "chicken")
 public class ChickenConfig {
 
     @Config.DefaultBoolean(true)

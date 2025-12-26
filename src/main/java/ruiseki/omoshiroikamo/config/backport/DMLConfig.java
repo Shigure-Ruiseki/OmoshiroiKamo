@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config(
     modid = LibMisc.MOD_ID,
     category = "general.backports.deepMobLearning",
-    configSubDirectory = LibMisc.MOD_ID + "/dml")
+    configSubDirectory = LibMisc.MOD_ID + "/dml", filename = "dml")
 public class DMLConfig {
 
     @Config.DefaultBoolean(false)

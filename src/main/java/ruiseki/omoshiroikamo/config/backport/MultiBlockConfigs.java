@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main Multiblock Settings")
 @Config.LangKey(LibResources.CONFIG + "multiblockConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.backports.multiblock", configSubDirectory = LibMisc.MOD_ID)
+@Config(modid = LibMisc.MOD_ID, category = "general.backports.multiblock", configSubDirectory = LibMisc.MOD_ID, filename = "multiblock")
 public class MultiBlockConfigs {
 
     public static void registerConfig() throws ConfigException {

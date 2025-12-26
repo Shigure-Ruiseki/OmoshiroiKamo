@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main Cows Settings")
 @Config.LangKey(LibResources.CONFIG + "cowConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.backports.cow", configSubDirectory = LibMisc.MOD_ID + "/cow")
+@Config(modid = LibMisc.MOD_ID, category = "general.backports.cow", configSubDirectory = LibMisc.MOD_ID + "/cow", filename = "cow")
 public class CowConfig {
 
     @Config.DefaultBoolean(true)
