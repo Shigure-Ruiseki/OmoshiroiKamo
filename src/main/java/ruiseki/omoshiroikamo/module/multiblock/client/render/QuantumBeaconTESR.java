@@ -52,7 +52,7 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
             OpenGlHelper.glBlendFunc(770, 1, 1, 0);
 
             float worldTime = (float) beacon.getWorldObj()
-                    .getTotalWorldTime() + partialTicks;
+                .getTotalWorldTime() + partialTicks;
             float textureOffset = -worldTime * 0.2F - (float) MathHelper.floor_float(-worldTime * 0.1F);
 
             int beaconX = beacon.xCoord;
@@ -68,9 +68,9 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
             for (int relY = 1; relY < 256 - beaconY; relY++) {
                 int worldY = beaconY + relY;
                 Block block = beacon.getWorldObj()
-                        .getBlock(beaconX, worldY, beaconZ);
+                    .getBlock(beaconX, worldY, beaconZ);
                 int meta = beacon.getWorldObj()
-                        .getBlockMetadata(beaconX, worldY, beaconZ);
+                    .getBlockMetadata(beaconX, worldY, beaconZ);
 
                 float[] newColor = null;
 
@@ -89,7 +89,7 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
                 else if (block == MultiBlockBlocks.LENS.getBlock() && meta == 1) {
                     int color = EnumDye.CRYSTAL.getColor();
                     newColor = new float[] { ((color >> 16) & 0xFF) / 255.0f, ((color >> 8) & 0xFF) / 255.0f,
-                            (color & 0xFF) / 255.0f };
+                        (color & 0xFF) / 255.0f };
                 }
 
                 // If we found a colored block, render the previous segment and start a new one
@@ -98,16 +98,16 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
                     int segmentEnd = relY - 1;
                     if (segmentEnd > segmentStart) {
                         renderBeamSegment(
-                                tessellator,
-                                x,
-                                y,
-                                z,
-                                worldTime,
-                                textureOffset,
-                                beamProgress,
-                                segmentStart,
-                                segmentEnd - segmentStart,
-                                currentColor);
+                            tessellator,
+                            x,
+                            y,
+                            z,
+                            worldTime,
+                            textureOffset,
+                            beamProgress,
+                            segmentStart,
+                            segmentEnd - segmentStart,
+                            currentColor);
                     }
 
                     // First colored block: overwrite color entirely
@@ -117,7 +117,7 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
                         isFirstColoredBlock = false;
                     } else {
                         currentColor = new float[] { (currentColor[0] + newColor[0]) / 2.0f,
-                                (currentColor[1] + newColor[1]) / 2.0f, (currentColor[2] + newColor[2]) / 2.0f };
+                            (currentColor[1] + newColor[1]) / 2.0f, (currentColor[2] + newColor[2]) / 2.0f };
                     }
                     // Start the new segment from the colored block itself
                     segmentStart = relY - 1;
@@ -129,16 +129,16 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
                     int finalSegmentHeight = finalSegmentEnd - segmentStart;
                     if (finalSegmentHeight > 0) {
                         renderBeamSegment(
-                                tessellator,
-                                x,
-                                y,
-                                z,
-                                worldTime,
-                                textureOffset,
-                                beamProgress,
-                                segmentStart,
-                                finalSegmentHeight,
-                                currentColor);
+                            tessellator,
+                            x,
+                            y,
+                            z,
+                            worldTime,
+                            textureOffset,
+                            beamProgress,
+                            segmentStart,
+                            finalSegmentHeight,
+                            currentColor);
                     }
                     GL11.glEnable(GL11.GL_LIGHTING);
                     GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -151,16 +151,16 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
             int finalHeight = (256 - beaconY) - segmentStart;
             if (finalHeight > 0) {
                 renderBeamSegment(
-                        tessellator,
-                        x,
-                        y,
-                        z,
-                        worldTime,
-                        textureOffset,
-                        beamProgress,
-                        segmentStart,
-                        finalHeight,
-                        currentColor);
+                    tessellator,
+                    x,
+                    y,
+                    z,
+                    worldTime,
+                    textureOffset,
+                    beamProgress,
+                    segmentStart,
+                    finalHeight,
+                    currentColor);
             }
 
             GL11.glEnable(GL11.GL_LIGHTING);
@@ -170,7 +170,7 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
     }
 
     private void renderBeamSegment(Tessellator tessellator, double x, double y, double z, float worldTime,
-            float textureOffset, float beamProgress, int yOffset, int height, float[] color) {
+        float textureOffset, float beamProgress, int yOffset, int height, float[] color) {
         double d3 = (double) worldTime * 0.025D * -1.5D;
         double beamWidth = 0.2D;
 
