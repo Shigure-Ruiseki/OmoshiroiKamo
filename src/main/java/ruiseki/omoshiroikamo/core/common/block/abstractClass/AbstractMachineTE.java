@@ -31,6 +31,7 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
     private CraftingState craftingState = CraftingState.IDLE;
     protected boolean crafting = false;
     protected int craftingProgress = 0;
+    private int currentCraftingDuration = 0;
 
     public static String CRAFTING_TAG = "crafting";
 
@@ -77,6 +78,7 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
 
     protected void startCrafting() {
         crafting = true;
+        currentCraftingDuration = getCraftingDuration();
         markDirty();
     }
 
@@ -135,16 +137,16 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
 
     @Override
     public float getProgress() {
-        if (!crafting || getCraftingDuration() <= 0) {
+        if (!crafting || currentCraftingDuration <= 0) {
             return 0.0f;
         }
-        return (float) craftingProgress / (float) getCraftingDuration();
+        return (float) craftingProgress / (float) currentCraftingDuration;
     }
 
     @Override
     public void setProgress(float progress) {
         if (worldObj != null && worldObj.isRemote) {
-            craftingProgress = Math.round(progress * getCraftingDuration());
+            craftingProgress = Math.round(progress * currentCraftingDuration);
         }
     }
 
@@ -155,6 +157,7 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         NBTTagCompound craftingTag = new NBTTagCompound();
         craftingTag.setBoolean("isCrafting", crafting);
         craftingTag.setInteger("progress", craftingProgress);
+        craftingTag.setInteger("cDuration", currentCraftingDuration);
         root.setTag(CRAFTING_TAG, craftingTag);
     }
 
@@ -165,5 +168,6 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         NBTTagCompound craftingTag = root.getCompoundTag(CRAFTING_TAG);
         crafting = craftingTag.getBoolean("isCrafting");
         craftingProgress = craftingTag.getInteger("progress");
+        currentCraftingDuration = craftingTag.getInteger("cDuration");
     }
 }

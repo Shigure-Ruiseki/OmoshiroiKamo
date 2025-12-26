@@ -5,6 +5,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
+import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -26,6 +27,7 @@ public class BlockModifierAccuracy extends BlockModifier {
         float energyCost = QuantumExtractorConfig.modifiers.accuracyEnergyCost;
         list.add(ModifierAttribute.ACCURACY.getAttribute());
         list.add(new AttributeEnergyCost(energyCost));
+        list.add(new AttributeEnergyCostFixed(16));
         list.add(new AttributeSpeedPenalty());
     }
 

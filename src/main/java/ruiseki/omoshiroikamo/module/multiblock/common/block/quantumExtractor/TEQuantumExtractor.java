@@ -31,7 +31,6 @@ import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT1;
@@ -414,7 +413,6 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         float multiplier = modifierHandler.hasAttribute("energycost")
             ? modifierHandler.getAttributeMultiplier("energycost")
             : 1.0F;
-        Logger.info("Duration: {}", duration);
 
         return Math.max(1, (int) (base * multiplier) / duration);
     }
@@ -423,7 +421,6 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     public float getSpeedMultiplier() {
         float speed = modifierHandler.getAttributeMultiplier("speed");
         float speedP = modifierHandler.getAttributeMultiplier("speed_p");
-        Logger.info(modifierHandler.toString());
         return speed * speedP;
     }
 
