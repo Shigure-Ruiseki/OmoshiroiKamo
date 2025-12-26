@@ -344,7 +344,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
      * is true)
      */
     public boolean canSeeSky() {
-        if (!QuantumBeaconConfig.requireSky) {
+        if (!QuantumBeaconConfig.general.requireSky) {
             return true;
         }
         return worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord);
@@ -356,7 +356,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
      */
     @SideOnly(Side.CLIENT)
     public float getBeamProgress() {
-        if (!QuantumBeaconConfig.enableBeam || !isFormed() || !canSeeSky()) {
+        if (!QuantumBeaconConfig.general.enableBeam || !isFormed() || !canSeeSky()) {
             beamProgress = 0f;
             return 0f;
         }
