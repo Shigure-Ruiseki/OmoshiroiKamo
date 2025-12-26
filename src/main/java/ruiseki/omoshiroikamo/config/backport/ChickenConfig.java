@@ -9,7 +9,11 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main Chicken Settings")
 @Config.LangKey(LibResources.CONFIG + "chickenConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.backports.chicken", configSubDirectory = LibMisc.MOD_ID)
+@Config(
+    modid = LibMisc.MOD_ID,
+    category = "chicken",
+    configSubDirectory = LibMisc.MOD_ID + "/chicken",
+    filename = "chicken")
 public class ChickenConfig {
 
     @Config.DefaultBoolean(true)

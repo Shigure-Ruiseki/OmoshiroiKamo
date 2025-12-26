@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumExtractorConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
@@ -107,17 +107,17 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
         private int getTickDuration(int tier) {
             switch (tier) {
                 case 1:
-                    return QuantumExtractorConfig.tickResTier1;
+                    return QuantumExtractorConfig.resMiner.getTick(1);
                 case 2:
-                    return QuantumExtractorConfig.tickResTier2;
+                    return QuantumExtractorConfig.resMiner.getTick(2);
                 case 3:
-                    return QuantumExtractorConfig.tickResTier3;
+                    return QuantumExtractorConfig.resMiner.getTick(3);
                 case 4:
-                    return QuantumExtractorConfig.tickResTier4;
+                    return QuantumExtractorConfig.resMiner.getTick(4);
                 case 5:
-                    return QuantumExtractorConfig.tickResTier5;
+                    return QuantumExtractorConfig.resMiner.getTick(5);
                 case 6:
-                    return QuantumExtractorConfig.tickResTier6;
+                    return QuantumExtractorConfig.resMiner.getTick(6);
                 default:
                     return 0;
             }
@@ -126,17 +126,17 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
         private int getEnergyCost(int tier) {
             switch (tier) {
                 case 1:
-                    return QuantumExtractorConfig.energyCostResTier1;
+                    return QuantumExtractorConfig.resMiner.getEnergyCost(1);
                 case 2:
-                    return QuantumExtractorConfig.energyCostResTier2;
+                    return QuantumExtractorConfig.resMiner.getEnergyCost(2);
                 case 3:
-                    return QuantumExtractorConfig.energyCostResTier3;
+                    return QuantumExtractorConfig.resMiner.getEnergyCost(3);
                 case 4:
-                    return QuantumExtractorConfig.energyCostResTier4;
+                    return QuantumExtractorConfig.resMiner.getEnergyCost(4);
                 case 5:
-                    return QuantumExtractorConfig.energyCostResTier5;
+                    return QuantumExtractorConfig.resMiner.getEnergyCost(5);
                 case 6:
-                    return QuantumExtractorConfig.energyCostResTier6;
+                    return QuantumExtractorConfig.resMiner.getEnergyCost(6);
                 default:
                     return 0;
             }

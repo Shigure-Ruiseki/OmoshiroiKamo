@@ -7,6 +7,8 @@ creativetab.okDeepMobLearner=OK Deep Mob Learning
 
 #Config
 
+config.generalConfig=General Settings
+
 config.itemConfig=Item Settings
 
 config.blockConfig=Block Settings
@@ -15,9 +17,20 @@ config.backportConfig=Backport Settings
 
 config.multiblockConfig=MultiBlock Settings
 config.quantumExtractorConfig=Quantum Extractor Settings
+config.oreMinerConfig=Ore Miner
+config.resMinerConfig=Resource Miner
+config.extractorModifiers=Modifiers
 config.quantumBeaconConfig=Quantum Beacon Settings
+config.beaconGeneral=General
+config.beaconEffectLevels=Effect Levels
+config.beaconRange=Range Settings
 config.solarArrayConfig=Solar Array Settings
+config.solarTierEnergy=Peak Energy per Tier
+config.solarCellSettings=Cell Settings
 config.eTWorldGenConfig=World Generation Settings
+config.hardenedStoneGen=Hardened Stone
+config.alabasterGen=Alabaster
+config.basaltGen=Basalt
 
 config.chickenConfig=Chicken Settings
 

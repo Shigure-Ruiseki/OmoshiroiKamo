@@ -6,7 +6,7 @@ import static ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumBeaconConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class TEQuantumBeaconT1 extends TEQuantumBeacon {
@@ -19,34 +19,34 @@ public class TEQuantumBeaconT1 extends TEQuantumBeacon {
     protected int maxPotionLevel(String attribute) {
         QuantumBeaconConfig.BeaconTierConfig config = QuantumBeaconConfig.tier1;
         if (attribute == ModifierAttribute.P_SATURATION.getAttributeName()) {
-            return config.saturationLevel;
+            return config.getSaturationLevel();
         }
         if (attribute == ModifierAttribute.P_SPEED.getAttributeName()) {
-            return config.speedLevel;
+            return config.getSpeedLevel();
         }
         if (attribute == ModifierAttribute.P_HASTE.getAttributeName()) {
-            return config.hasteLevel;
+            return config.getHasteLevel();
         }
         if (attribute == ModifierAttribute.P_STRENGTH.getAttributeName()) {
-            return config.strengthLevel;
+            return config.getStrengthLevel();
         }
         if (attribute == ModifierAttribute.P_REGEN.getAttributeName()) {
-            return config.regenerationLevel;
+            return config.getRegenerationLevel();
         }
         if (attribute == ModifierAttribute.P_RESISTANCE.getAttributeName()) {
-            return config.resistanceLevel;
+            return config.getResistanceLevel();
         }
         if (attribute == ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName()) {
-            return config.fireResistanceLevel;
+            return config.getFireResistanceLevel();
         }
         if (attribute == ModifierAttribute.P_WATER_BREATHING.getAttributeName()) {
-            return config.waterBreathingLevel;
+            return config.getWaterBreathingLevel();
         }
         if (attribute == ModifierAttribute.P_NIGHT_VISION.getAttributeName()) {
-            return config.nightVisionLevel;
+            return config.getNightVisionLevel();
         }
         if (attribute == ModifierAttribute.P_JUMP_BOOST.getAttributeName()) {
-            return config.jumpBoostLevel;
+            return config.getJumpBoostLevel();
         }
         return 0;
     }

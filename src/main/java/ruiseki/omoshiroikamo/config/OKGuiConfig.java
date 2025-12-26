@@ -10,7 +10,6 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 public class OKGuiConfig extends SimpleGuiConfig {
 
     public OKGuiConfig(GuiScreen parent) throws ConfigException {
-        super(parent, LibMisc.MOD_ID, LibMisc.MOD_NAME, GeneralConfig.class);
+        super(parent, LibMisc.MOD_ID, LibMisc.MOD_NAME);
     }
-
 }

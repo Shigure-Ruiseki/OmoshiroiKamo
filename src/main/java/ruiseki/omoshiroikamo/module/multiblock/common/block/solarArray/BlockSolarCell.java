@@ -20,7 +20,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.config.backport.muliblock.SolarArrayConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -159,8 +159,8 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
         }
 
         private int getCellEnergy(int cellTier) {
-            int base = SolarArrayConfig.cellGen;
-            float multiplier = SolarArrayConfig.cellMul;
+            int base = SolarArrayConfig.cellSettings.baseGeneration;
+            float multiplier = SolarArrayConfig.cellSettings.tierMultiplier;
             return (int) Math.round(base * Math.pow(multiplier, cellTier));
         }
     }

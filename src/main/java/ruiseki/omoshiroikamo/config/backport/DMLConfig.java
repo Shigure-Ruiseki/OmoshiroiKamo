@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Main Deep Mob Learning Settings")
 @Config.LangKey(LibResources.CONFIG + "deepMobLearningConfig")
-@Config(modid = LibMisc.MOD_ID, category = "general.backports.deepMobLearning", configSubDirectory = LibMisc.MOD_ID)
+@Config(modid = LibMisc.MOD_ID, category = "dml", configSubDirectory = LibMisc.MOD_ID + "/dml", filename = "dml")
 public class DMLConfig {
 
     @Config.DefaultBoolean(false)

@@ -72,7 +72,7 @@ public class QuantumExtractorRecipes {
     }
 
     private static void loadOreConfig() {
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/ore.json");
+        File file = new File("config/" + LibMisc.MOD_ID + "/multiblock/oreList.json");
 
         if (file.exists()) {
             cachedOreList = FocusableHandler.loadListFromJson(file);
@@ -88,7 +88,7 @@ public class QuantumExtractorRecipes {
     }
 
     private static void loadResConfig() {
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/res.json");
+        File file = new File("config/" + LibMisc.MOD_ID + "/multiblock/resourceList.json");
 
         if (file.exists()) {
             cachedResList = FocusableHandler.loadListFromJson(file);

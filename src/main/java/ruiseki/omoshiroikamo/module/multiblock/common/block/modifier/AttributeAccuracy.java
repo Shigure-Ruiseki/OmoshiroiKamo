@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumExtractorConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 
 public class AttributeAccuracy implements IModifierAttribute {
 
@@ -24,8 +24,8 @@ public class AttributeAccuracy implements IModifierAttribute {
     }
 
     public float getMultiplier(float totalModificationFactor) {
-        float base = QuantumExtractorConfig.accuracyModifierMultiplier;
-        float maxMultiplier = QuantumExtractorConfig.accuracyModifierMaxMultiplier;
+        float base = QuantumExtractorConfig.modifiers.accuracyMultiplier;
+        float maxMultiplier = QuantumExtractorConfig.modifiers.accuracyMaxMultiplier;
         float result = (float) Math.pow(base, (double) totalModificationFactor);
         return Math.min(maxMultiplier, result);
     }

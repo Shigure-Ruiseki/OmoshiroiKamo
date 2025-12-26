@@ -14,6 +14,7 @@ import com.mojang.authlib.GameProfile;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.crafting.CraftingState;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 
 public abstract class AbstractMBModifierTE extends AbstractMachineTE {

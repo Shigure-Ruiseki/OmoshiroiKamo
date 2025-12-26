@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.api.enums.ExtractorType;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumExtractorConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
@@ -421,7 +421,13 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     @Override
     public float getSpeedMultiplier() {
-        return this.modifierHandler.hasAttribute("speed") ? this.modifierHandler.getAttributeMultiplier("speed") : 1.0F;
+        float speed = this.modifierHandler.hasAttribute("speed")
+            ? this.modifierHandler.getAttributeMultiplier("speed")
+            : 1.0F;
+
+        Logger.info(modifierHandler.toString());
+
+        return speed;
     }
 
     @Override

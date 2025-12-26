@@ -18,9 +18,9 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumBeaconConfig.BeaconTierConfig;
-import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumBeaconConfig.BeaconTierRangeConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig.BeaconTierConfig;
+import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig.BeaconTierRangeConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
@@ -99,16 +99,16 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
                 BeaconTierConfig config = getTierConfig(stack.getItemDamage());
                 list.add(EnumChatFormatting.GOLD + LibMisc.LANG.localize("tooltip.beacon.effect_list"));
 
-                addEffectLine(list, "speed", config.speedLevel);
-                addEffectLine(list, "haste", config.hasteLevel);
-                addEffectLine(list, "strength", config.strengthLevel);
-                addEffectLine(list, "resistance", config.resistanceLevel);
-                addEffectLine(list, "regeneration", config.regenerationLevel);
-                addEffectLine(list, "saturation", config.saturationLevel);
-                addEffectLine(list, "jump_boost", config.jumpBoostLevel);
-                addEffectLine(list, "night_vision", config.nightVisionLevel);
-                addEffectLine(list, "water_breathing", config.waterBreathingLevel);
-                addEffectLine(list, "fire_resistance", config.fireResistanceLevel);
+                addEffectLine(list, "speed", config.getSpeedLevel());
+                addEffectLine(list, "haste", config.getHasteLevel());
+                addEffectLine(list, "strength", config.getStrengthLevel());
+                addEffectLine(list, "resistance", config.getResistanceLevel());
+                addEffectLine(list, "regeneration", config.getRegenerationLevel());
+                addEffectLine(list, "saturation", config.getSaturationLevel());
+                addEffectLine(list, "jump_boost", config.getJumpBoostLevel());
+                addEffectLine(list, "night_vision", config.getNightVisionLevel());
+                addEffectLine(list, "water_breathing", config.getWaterBreathingLevel());
+                addEffectLine(list, "fire_resistance", config.getFireResistanceLevel());
 
             } else {
                 // Range information
