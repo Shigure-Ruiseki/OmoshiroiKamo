@@ -12,6 +12,9 @@ public class WailaUtils {
     }
 
     public static String getCraftingState(ICraftingTile tile) {
-       return LibMisc.LANG.localize("gui.craftingState.", tile.getCraftingState().getName());
+        return LibMisc.LANG.localize(
+            "gui.craftingState.",
+            tile.getCraftingState()
+                .getName());
     }
 }

@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,9 +18,6 @@ import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.TELootFabricator;
-
-import java.util.List;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
