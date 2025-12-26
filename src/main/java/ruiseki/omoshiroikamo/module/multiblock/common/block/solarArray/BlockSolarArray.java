@@ -15,7 +15,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
@@ -105,17 +105,17 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> impleme
         private int getPeakEnergy(int tier) {
             switch (tier) {
                 case 1:
-                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier1;
+                    return SolarArrayConfig.peakEnergyTier1;
                 case 2:
-                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier2;
+                    return SolarArrayConfig.peakEnergyTier2;
                 case 3:
-                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier3;
+                    return SolarArrayConfig.peakEnergyTier3;
                 case 4:
-                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier4;
+                    return SolarArrayConfig.peakEnergyTier4;
                 case 5:
-                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier5;
+                    return SolarArrayConfig.peakEnergyTier5;
                 case 6:
-                    return EnvironmentalConfig.solarArrayConfig.peakEnergyTier6;
+                    return SolarArrayConfig.peakEnergyTier6;
                 default:
                     return 0;
             }

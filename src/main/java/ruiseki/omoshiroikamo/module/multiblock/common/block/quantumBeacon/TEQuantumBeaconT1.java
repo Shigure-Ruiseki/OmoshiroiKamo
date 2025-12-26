@@ -6,6 +6,7 @@ import static ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class TEQuantumBeaconT1 extends TEQuantumBeacon {
@@ -16,35 +17,36 @@ public class TEQuantumBeaconT1 extends TEQuantumBeacon {
 
     @Override
     protected int maxPotionLevel(String attribute) {
+        QuantumBeaconConfig.BeaconTierConfig config = QuantumBeaconConfig.tier1;
         if (attribute == ModifierAttribute.P_SATURATION.getAttributeName()) {
-            return 0;
+            return config.saturationLevel;
         }
         if (attribute == ModifierAttribute.P_SPEED.getAttributeName()) {
-            return 1;
+            return config.speedLevel;
         }
         if (attribute == ModifierAttribute.P_HASTE.getAttributeName()) {
-            return 1;
+            return config.hasteLevel;
         }
         if (attribute == ModifierAttribute.P_STRENGTH.getAttributeName()) {
-            return 1;
+            return config.strengthLevel;
         }
         if (attribute == ModifierAttribute.P_REGEN.getAttributeName()) {
-            return 1;
+            return config.regenerationLevel;
         }
         if (attribute == ModifierAttribute.P_RESISTANCE.getAttributeName()) {
-            return 1;
+            return config.resistanceLevel;
         }
         if (attribute == ModifierAttribute.P_FIRE_RESISTANCE.getAttributeName()) {
-            return 1;
+            return config.fireResistanceLevel;
         }
         if (attribute == ModifierAttribute.P_WATER_BREATHING.getAttributeName()) {
-            return 1;
+            return config.waterBreathingLevel;
         }
         if (attribute == ModifierAttribute.P_NIGHT_VISION.getAttributeName()) {
-            return 1;
+            return config.nightVisionLevel;
         }
         if (attribute == ModifierAttribute.P_JUMP_BOOST.getAttributeName()) {
-            return 1;
+            return config.jumpBoostLevel;
         }
         return 0;
     }

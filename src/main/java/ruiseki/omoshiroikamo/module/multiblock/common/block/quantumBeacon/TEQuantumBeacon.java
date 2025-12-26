@@ -8,16 +8,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
+import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
+import ruiseki.omoshiroikamo.module.multiblock.common.handler.QuantumBeaconEventHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;
 
@@ -25,6 +30,16 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
 
     private final List<BlockPos> modifiers = new ArrayList<>();
     protected ModifierHandler modifierHandler = new ModifierHandler();
+
+    /**
+     * Tracks whether this Beacon granted flight to the player (to avoid conflicts
+     * with other mods)
+     */
+    private boolean wasFlightGrantedByBeacon = false;
+
+    // Beam rendering state
+    private float beamProgress = 0.0F;
+    private long lastBeamUpdateTick = 0L;
 
     public TEQuantumBeacon(int eBuffSize) {
         this.energyStorage.setEnergyStorage(eBuffSize);
@@ -45,18 +60,45 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     protected void clearStructureParts() {
         modifiers.clear();
         modifierHandler = new ModifierHandler();
-        disablePlayerFlight();
+        // Note: Do not call disablePlayerFlight here
+        // Structure check runs every 20 ticks, calling it every time would cause toggle
+        // issues
+        // Flight is disabled in doUpdate() when the structure actually breaks
     }
 
     private void disablePlayerFlight() {
+        // Do nothing if Beacon hasn't granted flight (don't steal flight from other
+        // mods)
+        if (!wasFlightGrantedByBeacon) {
+            return;
+        }
+        wasFlightGrantedByBeacon = false;
+
         if (player == null || worldObj.isRemote) {
             return;
         }
+
+        // Remove from global tracking (prevents re-granting on dimension change)
+        QuantumBeaconEventHandler.unregisterFlightGranted(player.getId());
+
         EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
         if (plr != null && !plr.capabilities.isCreativeMode) {
             plr.capabilities.allowFlying = false;
+            if (plr.capabilities.isFlying) {
+                plr.capabilities.isFlying = false;
+            }
             plr.sendPlayerAbilities();
             PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
+        }
+    }
+
+    @Override
+    public void doUpdate() {
+        boolean wasFormed = isFormed;
+        super.doUpdate();
+        // Only disable flight when the structure breaks
+        if (wasFormed && !isFormed) {
+            disablePlayerFlight();
         }
     }
 
@@ -87,19 +129,74 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         return block instanceof IModifierBlock;
     }
 
+    /**
+     * Check if the player is within the Beacon's effect range
+     */
+    private boolean isPlayerInRange(EntityPlayer plr) {
+        int tier = getTier();
+        QuantumBeaconConfig.BeaconTierRangeConfig rangeConfig = QuantumBeaconConfig.getRangeConfig(tier);
+
+        int horizontalRange = rangeConfig.horizontalRange;
+        int upwardRange = rangeConfig.upwardRange;
+        int downwardRange = rangeConfig.downwardRange;
+
+        double dx = Math.abs(plr.posX - (xCoord + 0.5));
+        double dz = Math.abs(plr.posZ - (zCoord + 0.5));
+        double dy = plr.posY - yCoord;
+
+        // Check horizontal range (X and Z)
+        if (dx > horizontalRange || dz > horizontalRange) {
+            return false;
+        }
+
+        // Check vertical range (upward and downward)
+        if (dy > upwardRange || dy < -downwardRange) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the tier of this Beacon (1-6)
+     */
+    public abstract int getTier();
+
     private void addPlayerEffects() {
-        if (player == null || !PlayerUtils.doesPlayerExist(worldObj, player.getId())) return;
+        if (player == null) return;
+
+        // If player doesn't exist in this world (left chunk, etc.)
+        // Reset the flight flag (will be re-granted when player returns)
+        if (!PlayerUtils.doesPlayerExist(worldObj, player.getId())) {
+            wasFlightGrantedByBeacon = false;
+            return;
+        }
 
         EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
-        if (plr == null) return;
+        if (plr == null) {
+            wasFlightGrantedByBeacon = false;
+            return;
+        }
+
+        // Check if player is within effect range
+        if (!isPlayerInRange(plr)) {
+            // Out of range: disable flight immediately if we granted it
+            if (wasFlightGrantedByBeacon) {
+                disablePlayerFlight();
+            }
+            return;
+        }
 
         int potionDuration = getBaseDuration() * 2 + 300;
 
         int energyCost = (int) (modifierHandler.getAttributeMultiplier("energycost_fixed") * getBaseDuration());
-        if (getEnergyStored() < energyCost && !plr.capabilities.isCreativeMode) return;
+        boolean hasEnergy = plr.capabilities.isCreativeMode || getEnergyStored() >= energyCost;
+
+        // Check flight first, explicitly disable if energy is insufficient
+        updatePlayerFlight(energyCost);
+        if (!hasEnergy) return;
 
         setEnergyStored(getEnergyStored() - energyCost);
-        updatePlayerFlight();
         applyPotionEffects(plr, potionDuration);
     }
 
@@ -131,7 +228,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         }
     }
 
-    private void updatePlayerFlight() {
+    private void updatePlayerFlight(int energyCost) {
         if (player == null || worldObj.isRemote) return;
 
         EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
@@ -139,26 +236,35 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
 
         boolean hasFlightModifier = modifierHandler
             .hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
-        boolean enoughEnergy = getEnergyStored()
-            >= (int) (modifierHandler.getAttributeMultiplier("energycost_fixed") * getBaseDuration());
+        boolean enoughEnergy = getEnergyStored() >= energyCost;
         boolean shouldHaveFlight = hasFlightModifier && enoughEnergy;
 
-        if (plr.capabilities.allowFlying == shouldHaveFlight) return;
-
-        plr.capabilities.allowFlying = shouldHaveFlight;
-
-        if (!shouldHaveFlight && plr.capabilities.isFlying) {
-            plr.capabilities.isFlying = false;
+        // Grant flight if Beacon should provide it
+        if (shouldHaveFlight) {
+            if (!plr.capabilities.allowFlying) {
+                plr.capabilities.allowFlying = true;
+                plr.sendPlayerAbilities();
+                PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), true), plr);
+            }
+            wasFlightGrantedByBeacon = true;
+            // Register in global tracking (for re-granting after dimension change)
+            QuantumBeaconEventHandler
+                .registerFlightGranted(player.getId(), worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
         }
-
-        plr.sendPlayerAbilities();
-        PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), shouldHaveFlight), plr);
-
-        if (shouldHaveFlight && !plr.capabilities.isCreativeMode) {
-            setEnergyStored(
-                getEnergyStored()
-                    - (int) (modifierHandler.getAttributeMultiplier("energycost_fixed") * getBaseDuration()));
+        // Revoke flight only if Beacon was granting it and should no longer
+        else if (wasFlightGrantedByBeacon) {
+            wasFlightGrantedByBeacon = false;
+            // Remove from global tracking
+            QuantumBeaconEventHandler.unregisterFlightGranted(player.getId());
+            plr.capabilities.allowFlying = false;
+            if (plr.capabilities.isFlying) {
+                plr.capabilities.isFlying = false;
+            }
+            plr.sendPlayerAbilities();
+            PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
         }
+        // If shouldHaveFlight=false and wasFlightGrantedByBeacon=false, do nothing
+        // (another mod may have granted flight)
     }
 
     protected abstract int maxPotionLevel(String var1);
@@ -229,6 +335,70 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
         return energyStorage.receiveEnergy(maxReceive, simulate);
+    }
+
+    // ========== Beam Rendering Methods ==========
+
+    /**
+     * Check if the Beacon can see the sky (required for beam to show if requireSky
+     * is true)
+     */
+    public boolean canSeeSky() {
+        if (!QuantumBeaconConfig.requireSky) {
+            return true;
+        }
+        return worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord);
+    }
+
+    /**
+     * Get the current beam progress for rendering.
+     * Only shows beam when formed, has energy, and can see sky.
+     */
+    @SideOnly(Side.CLIENT)
+    public float getBeamProgress() {
+        if (!QuantumBeaconConfig.enableBeam || !isFormed() || !canSeeSky()) {
+            beamProgress = 0f;
+            return 0f;
+        }
+
+        long now = this.worldObj.getTotalWorldTime();
+        int ticksPassed = (int) (now - this.lastBeamUpdateTick);
+        this.lastBeamUpdateTick = now;
+
+        if (ticksPassed > 1) {
+            beamProgress -= (float) ticksPassed / 40.0F;
+            if (beamProgress < 0f) {
+                beamProgress = 0f;
+            }
+        }
+
+        beamProgress += 0.025F;
+        if (beamProgress > 1.0F) {
+            beamProgress = 1.0F;
+        }
+        return beamProgress;
+    }
+
+    /**
+     * Override the render bounding box to include the entire beam (from beacon to
+     * build height).
+     * This prevents frustum culling from hiding the beam when the player is not
+     * looking at the beacon.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+        return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, 256, zCoord + 1);
+    }
+
+    /**
+     * Increase the max render distance to match vanilla Beacon (256 blocks).
+     * This prevents the beam from disappearing when the player is far away.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 65536.0D; // 256 * 256
     }
 
 }

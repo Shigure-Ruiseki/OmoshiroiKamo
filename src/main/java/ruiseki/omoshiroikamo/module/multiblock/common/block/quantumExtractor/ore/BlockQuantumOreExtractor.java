@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
@@ -99,40 +99,38 @@ public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExt
         }
 
         private int getTickDuration(int tier) {
-            EnvironmentalConfig.QuantumExtractorConfig cfg = EnvironmentalConfig.quantumExtractorConfig;
             switch (tier) {
                 case 1:
-                    return cfg.tickOreTier1;
+                    return QuantumExtractorConfig.tickOreTier1;
                 case 2:
-                    return cfg.tickOreTier2;
+                    return QuantumExtractorConfig.tickOreTier2;
                 case 3:
-                    return cfg.tickOreTier3;
+                    return QuantumExtractorConfig.tickOreTier3;
                 case 4:
-                    return cfg.tickOreTier4;
+                    return QuantumExtractorConfig.tickOreTier4;
                 case 5:
-                    return cfg.tickOreTier5;
+                    return QuantumExtractorConfig.tickOreTier5;
                 case 6:
-                    return cfg.tickOreTier6;
+                    return QuantumExtractorConfig.tickOreTier6;
                 default:
                     return 0;
             }
         }
 
         private int getEnergyCost(int tier) {
-            EnvironmentalConfig.QuantumExtractorConfig cfg = EnvironmentalConfig.quantumExtractorConfig;
             switch (tier) {
                 case 1:
-                    return cfg.energyCostOreTier1;
+                    return QuantumExtractorConfig.energyCostOreTier1;
                 case 2:
-                    return cfg.energyCostOreTier2;
+                    return QuantumExtractorConfig.energyCostOreTier2;
                 case 3:
-                    return cfg.energyCostOreTier3;
+                    return QuantumExtractorConfig.energyCostOreTier3;
                 case 4:
-                    return cfg.energyCostOreTier4;
+                    return QuantumExtractorConfig.energyCostOreTier4;
                 case 5:
-                    return cfg.energyCostOreTier5;
+                    return QuantumExtractorConfig.energyCostOreTier5;
                 case 6:
-                    return cfg.energyCostOreTier6;
+                    return QuantumExtractorConfig.energyCostOreTier6;
                 default:
                     return 0;
             }

@@ -8,12 +8,14 @@ import java.util.stream.Collectors;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeTotalLevel;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.AttributeAccuracy;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.AttributeLuck;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.AttributeSpeed;
 
 public enum ModifierAttribute {
 
     SPEED(new AttributeSpeed()),
     ACCURACY(new AttributeAccuracy()),
+    LUCK(new AttributeLuck()),
     PIEZO(new AttributeTotalLevel("piezo")),
     E_FLIGHT_CREATIVE(new AttributeTotalLevel("e_flight_creative")),
     P_NIGHT_VISION(new AttributeTotalLevel("p_night_vision")),

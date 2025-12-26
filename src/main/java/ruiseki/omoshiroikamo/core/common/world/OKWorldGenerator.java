@@ -11,7 +11,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.MultiblockWorldGenConfig;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public class OKWorldGenerator implements IWorldGenerator {
@@ -19,13 +19,13 @@ public class OKWorldGenerator implements IWorldGenerator {
     public static final OKWorldGenerator INSTANCE = new OKWorldGenerator();
     private final WorldGenMinable hardened_stone = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_HARDENED_STONE.getBlock(),
-        EnvironmentalConfig.worldGenConfig.hardenedStoneNodeSize);
+        MultiblockWorldGenConfig.hardenedStoneNodeSize);
     private final WorldGenMinable alabaster = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_ALABASTER.getBlock(),
-        EnvironmentalConfig.worldGenConfig.alabasterNodeSize);
+        MultiblockWorldGenConfig.alabasterNodeSize);
     private final WorldGenMinable basalt = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_BASALT.getBlock(),
-        EnvironmentalConfig.worldGenConfig.basaltNodeSize);
+        MultiblockWorldGenConfig.basaltNodeSize);
 
     public static void preInit() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
@@ -38,40 +38,40 @@ public class OKWorldGenerator implements IWorldGenerator {
 
             if (BackportConfigs.useMultiBlock) {
 
-                if (EnvironmentalConfig.worldGenConfig.enableHardenedStoneGeneration) {
+                if (MultiblockWorldGenConfig.enableHardenedStoneGeneration) {
                     this.runGeneration(
                         this.hardened_stone,
                         world,
                         random,
                         chunkX,
                         chunkZ,
-                        EnvironmentalConfig.worldGenConfig.hardenedStoneNodes,
-                        EnvironmentalConfig.worldGenConfig.hardenedStoneMinHeight,
-                        EnvironmentalConfig.worldGenConfig.hardenedStoneMaxHeight);
+                        MultiblockWorldGenConfig.hardenedStoneNodes,
+                        MultiblockWorldGenConfig.hardenedStoneMinHeight,
+                        MultiblockWorldGenConfig.hardenedStoneMaxHeight);
                 }
 
-                if (EnvironmentalConfig.worldGenConfig.enableAlabasterGeneration) {
+                if (MultiblockWorldGenConfig.enableAlabasterGeneration) {
                     this.runGeneration(
                         this.alabaster,
                         world,
                         random,
                         chunkX,
                         chunkZ,
-                        EnvironmentalConfig.worldGenConfig.alabasterNodes,
-                        EnvironmentalConfig.worldGenConfig.alabasterMinHeight,
-                        EnvironmentalConfig.worldGenConfig.alabasterMaxHeight);
+                        MultiblockWorldGenConfig.alabasterNodes,
+                        MultiblockWorldGenConfig.alabasterMinHeight,
+                        MultiblockWorldGenConfig.alabasterMaxHeight);
                 }
 
-                if (EnvironmentalConfig.worldGenConfig.enableBasaltGeneration) {
+                if (MultiblockWorldGenConfig.enableBasaltGeneration) {
                     this.runGeneration(
                         this.basalt,
                         world,
                         random,
                         chunkX,
                         chunkZ,
-                        EnvironmentalConfig.worldGenConfig.basaltNodes,
-                        EnvironmentalConfig.worldGenConfig.basaltMinHeight,
-                        EnvironmentalConfig.worldGenConfig.basaltMaxHeight);
+                        MultiblockWorldGenConfig.basaltNodes,
+                        MultiblockWorldGenConfig.basaltMinHeight,
+                        MultiblockWorldGenConfig.basaltMaxHeight);
                 }
             }
 

@@ -347,7 +347,7 @@ achievement.omoshiroikamo.craft_modifier_water_breathing.desc=水中呼吸モデ
 achievement.omoshiroikamo.craft_modifier_regen=誰がっ！毒ガスでっ！HP回復するんだよっ！
 achievement.omoshiroikamo.craft_modifier_regen.desc=再生モディファイアを作成する
 achievement.omoshiroikamo.craft_modifier_saturation=リンゴちゃん、今日もよろしくね！
-achievement.omoshiroikamo.craft_modifier_saturation.desc=飽和モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_saturation.desc=満腹モディファイアを作成する
 
 #KeyBinding
 
@@ -469,6 +469,7 @@ tile.machineBase.alabaster_machine_base.name=マシンベース
 tile.modifierNull.name=空のモディファイア
 tile.modifierAccuracy.name=精度モディファイア
 tile.modifierSpeed.name=スピードモディファイア
+tile.modifierLuck.name=ラックモディファイア
 tile.modifierPiezo.name=ピエゾモディファイア
 tile.modifierFlight.name=飛行モディファイア
 tile.modifierNightVision.name=暗視モディファイア
@@ -476,7 +477,7 @@ tile.modifierHaste.name=採掘速度上昇モディファイア
 tile.modifierStrength.name=攻撃力上昇モディファイア
 tile.modifierWaterBreathing.name=水中呼吸モディファイア
 tile.modifierRegeneration.name=再生モディファイア
-tile.modifierSaturation.name=飽和モディファイア
+tile.modifierSaturation.name=満腹モディファイア
 tile.modifierResistance.name=耐性モディファイア
 tile.modifierJumpBoost.name=跳躍力上昇モディファイア
 tile.modifierFireResistance.name=火炎耐性モディファイア
@@ -584,11 +585,13 @@ neiintegration.chance.never=検討します
 neiintegration.chance.lessThan1=<1%
 
 #Modifier Tooltips
-tooltip.modifier.speed.effect=§a採掘速度 1.3倍§r
-tooltip.modifier.speed.penalty=§c消費エネルギー 1.5倍§r
-tooltip.modifier.accuracy.effect=§aレンズ精度 1.18倍§r
-tooltip.modifier.accuracy.penalty=§c採掘速度 0.9倍§r, §c消費エネルギー 1.05倍§r
+tooltip.modifier.speed.effect=§a採掘速度 %.2f倍§r
+tooltip.modifier.speed.penalty=§c消費エネルギー %.2f倍§r
+tooltip.modifier.accuracy.effect=§aレンズ精度 %.2f倍§r
+tooltip.modifier.accuracy.penalty=§c採掘速度 %.2f倍§r, §c消費エネルギー %.2f倍§r
 tooltip.modifier.piezo.effect=§a雨天時発電ボーナス§r
+tooltip.modifier.luck.effect=§aダブルアウトプット +%d%%§r
+tooltip.modifier.luck.penalty=§c消費エネルギー %.2f倍§r
 
 #Beacon Modifiers
 tooltip.modifier.flight.effect=§bクリエイティブ飛行§r
@@ -601,7 +604,25 @@ tooltip.modifier.saturation.effect=§b満腹§r
 tooltip.modifier.jump_boost.effect=§b跳躍力上昇§r
 tooltip.modifier.fire_resistance.effect=§b火炎耐性§r
 tooltip.modifier.water_breathing.effect=§b水中呼吸§r
-tooltip.modifier.beacon.energy=§7効果ごとに 128 RF/t 消費§r
+tooltip.modifier.beacon.energy=§7効果ごとに %d RF/t 消費§r
+
+#Beacon Effect Tooltip
+tooltip.beacon.shift_for_effects=§eSHIFT§rを押すと効果一覧を表示
+tooltip.beacon.effect_list=利用可能な効果:
+tooltip.beacon.effect.speed=移動速度上昇
+tooltip.beacon.effect.haste=採掘速度上昇
+tooltip.beacon.effect.strength=攻撃力上昇
+tooltip.beacon.effect.resistance=耐性
+tooltip.beacon.effect.regeneration=再生
+tooltip.beacon.effect.saturation=満腹
+tooltip.beacon.effect.jump_boost=跳躍力上昇
+tooltip.beacon.effect.night_vision=暗視
+tooltip.beacon.effect.water_breathing=水中呼吸
+tooltip.beacon.effect.fire_resistance=火炎耐性
+tooltip.beacon.range=効果範囲:
+tooltip.beacon.range.horizontal=横方向
+tooltip.beacon.range.upward=上方向
+tooltip.beacon.range.downward=下方向
 
 #Solar Tooltips
 tooltip.solar.cell.power=§aピーク出力: %d RF/t§r
