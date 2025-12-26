@@ -223,63 +223,6 @@ public class EnvironmentalConfig {
         public float luckModifierMaxBonus;
     }
 
-    @Config.Comment("Quantum Beacon Modifier Settings")
-    public static final BeaconConfig beaconConfig = new BeaconConfig();
-
-    @Config.LangKey(LibResources.CONFIG + "beaconConfig")
-    public static class BeaconConfig {
-
-        @Config.Comment("Flight Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(2048)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int flightEnergyCost;
-
-        @Config.Comment("Haste Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(512)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int hasteEnergyCost;
-
-        @Config.Comment("Regeneration Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(1024)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int regenerationEnergyCost;
-
-        @Config.Comment("Jump Boost Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int jumpBoostEnergyCost;
-
-        @Config.Comment("Night Vision Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int nightVisionEnergyCost;
-
-        @Config.Comment("Resistance Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(512)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int resistanceEnergyCost;
-
-        @Config.Comment("Saturation Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(2048)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int saturationEnergyCost;
-
-        @Config.Comment("Strength Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int strengthEnergyCost;
-
-        @Config.Comment("Water Breathing Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int waterBreathingEnergyCost;
-
-        @Config.Comment("Fire Resistance Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
-        public int fireResistanceEnergyCost;
-    }
-
     @Config.LangKey(LibResources.CONFIG + "solarArrayConfig")
     public static class SolarArrayConfig {
 
