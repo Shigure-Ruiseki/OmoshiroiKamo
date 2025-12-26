@@ -39,6 +39,10 @@ gui.progress=Progress: %.2f%%
 gui.efficiency=Efficiency: %.2f%%
 gui.sunlightBlocked=Sky Blocked!
 
+gui.craftingState.idle=Idle
+gui.craftingState.running=Processing
+gui.craftingState.error=Error
+
 # Backpack Gui Elements
 container.backpack=Backpack
 

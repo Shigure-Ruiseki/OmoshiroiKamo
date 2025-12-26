@@ -39,6 +39,10 @@ gui.progress=進捗: %.2f%%
 gui.efficiency=効率: %.2f%%
 gui.sunlightBlocked=空が見えない！
 
+gui.craftingState.idle=待機中
+gui.craftingState.running=稼働中
+gui.craftingState.error=エラー
+
 # Backpack Gui Elements
 container.backpack=バックパック
 

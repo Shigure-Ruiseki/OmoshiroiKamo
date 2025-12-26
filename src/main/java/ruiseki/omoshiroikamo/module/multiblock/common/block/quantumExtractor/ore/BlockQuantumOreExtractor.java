@@ -82,11 +82,6 @@ public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExt
 
     }
 
-    @Override
-    public int getDefaultDisplayMask(World world, int x, int y, int z) {
-        return 0;
-    }
-
     public static class ItemBlockQuantumOreExtractor extends ItemBlockOK {
 
         public ItemBlockQuantumOreExtractor(Block block) {
