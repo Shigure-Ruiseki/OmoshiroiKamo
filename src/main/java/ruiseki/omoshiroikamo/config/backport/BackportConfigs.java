@@ -33,7 +33,6 @@ public class BackportConfigs {
     public static boolean useDML;
 
     public static void registerConfig() throws ConfigException {
-        ConfigurationManager.registerConfig(MultiBlockConfigs.class);
         ConfigurationManager.registerConfig(BackportConfigs.class);
         MultiBlockConfigs.registerConfig();
         ConfigurationManager.registerConfig(ChickenConfig.class);

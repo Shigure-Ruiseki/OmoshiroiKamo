@@ -14,35 +14,76 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
     filename = "solararray")
 public class SolarArrayConfig {
 
-    @Config.DefaultInt(2000)
-    @Config.RangeInt(min = 0)
-    public static int peakEnergyTier1;
+    @Config.Comment("Peak energy output per tier (RF/t)")
+    @Config.LangKey(LibResources.CONFIG + "solarTierEnergy")
+    public static final TierEnergy tierEnergy = new TierEnergy();
 
-    @Config.DefaultInt(12800)
-    @Config.RangeInt(min = 0)
-    public static int peakEnergyTier2;
+    @Config.Comment("Solar cell generation settings")
+    @Config.LangKey(LibResources.CONFIG + "solarCellSettings")
+    public static final CellSettings cellSettings = new CellSettings();
 
-    @Config.DefaultInt(64190)
-    @Config.RangeInt(min = 0)
-    public static int peakEnergyTier3;
+    public static class TierEnergy {
 
-    @Config.DefaultInt(212301)
-    @Config.RangeInt(min = 0)
-    public static int peakEnergyTier4;
+        @Config.Comment("Tier 1 peak energy output (RF/t)")
+        @Config.DefaultInt(2000)
+        @Config.RangeInt(min = 0)
+        public int tier1;
 
-    @Config.DefaultInt(634282)
-    @Config.RangeInt(min = 0)
-    public static int peakEnergyTier5;
+        @Config.Comment("Tier 2 peak energy output (RF/t)")
+        @Config.DefaultInt(12800)
+        @Config.RangeInt(min = 0)
+        public int tier2;
 
-    @Config.DefaultInt(1771965)
-    @Config.RangeInt(min = 0)
-    public static int peakEnergyTier6;
+        @Config.Comment("Tier 3 peak energy output (RF/t)")
+        @Config.DefaultInt(64190)
+        @Config.RangeInt(min = 0)
+        public int tier3;
 
-    @Config.DefaultInt(60)
-    @Config.RangeInt(min = 0)
-    public static int cellGen;
+        @Config.Comment("Tier 4 peak energy output (RF/t)")
+        @Config.DefaultInt(212301)
+        @Config.RangeInt(min = 0)
+        public int tier4;
 
-    @Config.DefaultFloat(1.3f)
-    @Config.RangeFloat(min = 1f)
-    public static float cellMul;
+        @Config.Comment("Tier 5 peak energy output (RF/t)")
+        @Config.DefaultInt(634282)
+        @Config.RangeInt(min = 0)
+        public int tier5;
+
+        @Config.Comment("Tier 6 peak energy output (RF/t)")
+        @Config.DefaultInt(1771965)
+        @Config.RangeInt(min = 0)
+        public int tier6;
+
+        public int get(int tier) {
+            switch (tier) {
+                case 1:
+                    return tier1;
+                case 2:
+                    return tier2;
+                case 3:
+                    return tier3;
+                case 4:
+                    return tier4;
+                case 5:
+                    return tier5;
+                case 6:
+                    return tier6;
+                default:
+                    return tier1;
+            }
+        }
+    }
+
+    public static class CellSettings {
+
+        @Config.Comment("Base energy generation per cell (RF/t)")
+        @Config.DefaultInt(60)
+        @Config.RangeInt(min = 0)
+        public int baseGeneration;
+
+        @Config.Comment("Multiplier per cell tier")
+        @Config.DefaultFloat(1.3f)
+        @Config.RangeFloat(min = 1f)
+        public float tierMultiplier;
+    }
 }
