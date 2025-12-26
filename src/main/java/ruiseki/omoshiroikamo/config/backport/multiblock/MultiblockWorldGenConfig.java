@@ -10,7 +10,8 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config(
     modid = LibMisc.MOD_ID,
     category = "general.backports.multiblock.woldGen",
-    configSubDirectory = LibMisc.MOD_ID + "/environmentaltech")
+    configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
+    filename = "worldgen")
 public class MultiblockWorldGenConfig {
 
     @Config.DefaultBoolean(true)

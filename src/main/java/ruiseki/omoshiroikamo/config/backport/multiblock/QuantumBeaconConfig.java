@@ -10,7 +10,8 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config(
     modid = LibMisc.MOD_ID,
     category = "general.backports.multiblock.beacon",
-    configSubDirectory = LibMisc.MOD_ID + "/environmentaltech")
+    configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
+    filename = "beacon")
 public class QuantumBeaconConfig {
 
     @Config.Comment("If true, the beacon requires clear sky above to function and show beam")

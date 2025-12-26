@@ -10,7 +10,8 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config(
     modid = LibMisc.MOD_ID,
     category = "general.backports.multiblock.solar",
-    configSubDirectory = LibMisc.MOD_ID + "/environmentaltech")
+    configSubDirectory = LibMisc.MOD_ID + "/environmentaltech",
+    filename = "solararray")
 public class SolarArrayConfig {
 
     @Config.DefaultInt(2000)
