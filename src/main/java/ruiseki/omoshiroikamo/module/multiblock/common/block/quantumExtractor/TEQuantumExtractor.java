@@ -28,7 +28,7 @@ import ruiseki.omoshiroikamo.api.enums.ExtractorType;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
@@ -181,7 +181,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
      * Supports formats: "modid:blockname" or "modid:blockname:meta"
      */
     private boolean isBlockInPathWhitelist(Block block, int meta) {
-        String[] whitelist = EnvironmentalConfig.quantumExtractorConfig.pathToVoidWhitelist;
+        String[] whitelist = QuantumExtractorConfig.pathToVoidWhitelist;
         if (whitelist == null || whitelist.length == 0) {
             return false;
         }
@@ -308,6 +308,21 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
             ItemStack clone = resultStack.copy();
             clone.stackSize = 1;
+
+            // Apply Luck Modifier: chance for bonus output
+            // 10% per modifier, additive (e.g., 20 modifiers = 200% = guaranteed +2 items)
+            float luckChance = modifierHandler.getAttributeMultiplier("luck");
+            if (luckChance > 0) {
+                int guaranteedBonus = (int) luckChance; // 200% -> +2 guaranteed
+                float remainingChance = luckChance - guaranteedBonus; // e.g., 0.25 for 225%
+                clone.stackSize = 1 + guaranteedBonus;
+                if (remainingChance > 0 && this.rand.nextFloat() < remainingChance) {
+                    clone.stackSize++;
+                }
+                // Cap at max stack size
+                clone.stackSize = Math.min(clone.stackSize, clone.getMaxStackSize());
+            }
+
             ItemHandlerHelper.insertItem(this.output, clone, false);
             this.extract();
         }

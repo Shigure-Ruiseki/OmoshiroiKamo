@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySource;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
@@ -172,8 +172,8 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
     }
 
     public int getCellEnergy(int cellTier) {
-        int base = EnvironmentalConfig.solarArrayConfig.cellGen;
-        float multiplier = EnvironmentalConfig.solarArrayConfig.cellMul;
+        int base = SolarArrayConfig.cellGen;
+        float multiplier = SolarArrayConfig.cellMul;
         return (int) Math.round(base * Math.pow(multiplier, cellTier));
     }
 

@@ -103,8 +103,13 @@ public class QuantumResExtractorStructure {
                         (t, b, m, x, y, z) -> t.addToMachine(b, m, x, y, z),
                         MultiBlockBlocks.MODIFIER_SPEED.getBlock(),
                         0),
+                    ofBlockAdderWithPos(
+                        (t, b, m, x, y, z) -> t.addToMachine(b, m, x, y, z),
+                        MultiBlockBlocks.MODIFIER_LUCK.getBlock(),
+                        0),
                     ofBlock(MultiBlockBlocks.MODIFIER_NULL.getBlock(), 0),
                     ofBlock(MultiBlockBlocks.MODIFIER_ACCURACY.getBlock(), 0),
-                    ofBlock(MultiBlockBlocks.MODIFIER_SPEED.getBlock(), 0)));
+                    ofBlock(MultiBlockBlocks.MODIFIER_SPEED.getBlock(), 0),
+                    ofBlock(MultiBlockBlocks.MODIFIER_LUCK.getBlock(), 0)));
     }
 }

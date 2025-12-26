@@ -6,11 +6,9 @@ import static ruiseki.omoshiroikamo.module.multiblock.common.block.solarArray.So
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.SolarArrayConfig;
 
 public class TESolarArrayT2 extends TESolarArray {
-
-    public static EnvironmentalConfig.SolarArrayConfig config = EnvironmentalConfig.solarArrayConfig;
 
     public TESolarArrayT2() {
         super(getEnergyGen());
@@ -37,7 +35,7 @@ public class TESolarArrayT2 extends TESolarArray {
     }
 
     public static int getEnergyGen() {
-        return config.peakEnergyTier2;
+        return SolarArrayConfig.peakEnergyTier2;
     }
 
     @Override

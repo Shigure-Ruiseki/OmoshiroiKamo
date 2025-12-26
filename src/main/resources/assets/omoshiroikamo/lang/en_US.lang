@@ -8,22 +8,26 @@ creativetab.okDeepMobLearner=OK Deep Mob Learning
 #Config
 
 config.itemConfig=Item Settings
-config.anvilUpgradeConfig=Anvil Upgrade Settings
 
 config.blockConfig=Block Settings
 
 config.backportConfig=Backport Settings
-config.environmentalConfig=Environmental Tech Settings
+
+config.multiblockConfig=MultiBlock Settings
 config.quantumExtractorConfig=Quantum Extractor Settings
+config.quantumBeaconConfig=Quantum Beacon Settings
 config.solarArrayConfig=Solar Array Settings
 config.eTWorldGenConfig=World Generation Settings
+
 config.chickenConfig=Chicken Settings
+
 config.cowConfig=Cow Settings
+
 config.backpackConfig=Backpack Settings
 config.feedingConfig=Feeding Settings
 config.magnetConfig=Magnet Settings
+
 config.deepMobLearningConfig=Deep Mob Learning Settings
-config.dataModelConfig=Data Model Settings
 
 config.energyConfig=Energy Settings
 
@@ -465,6 +469,7 @@ tile.machineBase.alabaster_machine_base.name=Machine Base
 tile.modifierNull.name=Null Modifier
 tile.modifierAccuracy.name=Accuracy Modifier
 tile.modifierSpeed.name=Speed Modifier
+tile.modifierLuck.name=Luck Modifier
 tile.modifierPiezo.name=Piezo Modifier
 tile.modifierFlight.name=Flight Modifier
 tile.modifierNightVision.name=Night Vision Modifier
@@ -580,11 +585,13 @@ neiintegration.chance.never=Never
 neiintegration.chance.lessThan1=<1%
 
 #Modifier Tooltips
-tooltip.modifier.speed.effect=§aMining Speed 1.3x§r
-tooltip.modifier.speed.penalty=§cEnergy Cost 1.5x§r
-tooltip.modifier.accuracy.effect=§aFocus 1.18x§r
-tooltip.modifier.accuracy.penalty=§cMining Speed 0.9x§r, §cEnergy Cost 1.05x§r
+tooltip.modifier.speed.effect=§aMining Speed %.2fx§r
+tooltip.modifier.speed.penalty=§cEnergy Cost %.2fx§r
+tooltip.modifier.accuracy.effect=§aFocus %.2fx§r
+tooltip.modifier.accuracy.penalty=§cMining Speed %.2fx§r, §cEnergy Cost %.2fx§r
 tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
+tooltip.modifier.luck.effect=§aDouble Output +%d%%§r
+tooltip.modifier.luck.penalty=§cEnergy Cost %.2fx§r
 
 #Beacon Modifiers
 tooltip.modifier.flight.effect=§bCreative Flight§r
@@ -597,7 +604,25 @@ tooltip.modifier.saturation.effect=§bSaturation§r
 tooltip.modifier.jump_boost.effect=§bJump Boost§r
 tooltip.modifier.fire_resistance.effect=§bFire Resistance§r
 tooltip.modifier.water_breathing.effect=§bWater Breathing§r
-tooltip.modifier.beacon.energy=§7Uses 128 RF/t per effect§r
+tooltip.modifier.beacon.energy=§7Uses %d RF/t per effect§r
+
+#Beacon Effect Tooltip
+tooltip.beacon.shift_for_effects=Hold §eSHIFT§r for effect list
+tooltip.beacon.effect_list=Available Effects:
+tooltip.beacon.effect.speed=Speed
+tooltip.beacon.effect.haste=Haste
+tooltip.beacon.effect.strength=Strength
+tooltip.beacon.effect.resistance=Resistance
+tooltip.beacon.effect.regeneration=Regeneration
+tooltip.beacon.effect.saturation=Saturation
+tooltip.beacon.effect.jump_boost=Jump Boost
+tooltip.beacon.effect.night_vision=Night Vision
+tooltip.beacon.effect.water_breathing=Water Breathing
+tooltip.beacon.effect.fire_resistance=Fire Resistance
+tooltip.beacon.range=Effect Range:
+tooltip.beacon.range.horizontal=Horizontal
+tooltip.beacon.range.upward=Upward
+tooltip.beacon.range.downward=Downward
 
 #Solar Tooltips
 tooltip.solar.cell.power=§aPeak Output: %d RF/t§r

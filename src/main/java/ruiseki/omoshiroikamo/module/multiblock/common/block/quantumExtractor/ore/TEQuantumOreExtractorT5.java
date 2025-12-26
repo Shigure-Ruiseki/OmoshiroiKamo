@@ -7,12 +7,10 @@ import static ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtrac
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.enums.ExtractorType;
-import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
+import ruiseki.omoshiroikamo.config.backport.muliblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
 
 public class TEQuantumOreExtractorT5 extends TEQuantumExtractor {
-
-    public static EnvironmentalConfig.QuantumExtractorConfig config = EnvironmentalConfig.quantumExtractorConfig;
 
     public TEQuantumOreExtractorT5() {}
 
@@ -43,20 +41,20 @@ public class TEQuantumOreExtractorT5 extends TEQuantumExtractor {
 
     @Override
     public int getEnergyCostPerDuration() {
-        return config.energyCostOreTier5;
+        return QuantumExtractorConfig.energyCostOreTier5;
     }
 
     @Override
     public int getBaseDuration() {
-        return config.tickOreTier5;
+        return QuantumExtractorConfig.tickOreTier5;
     }
 
     public int getMinDuration() {
-        return config.minTickOreTier5;
+        return QuantumExtractorConfig.minTickOreTier5;
     }
 
     @Override
     public int getMaxDuration() {
-        return config.tickOreTier5;
+        return QuantumExtractorConfig.tickOreTier5;
     }
 }

@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifi
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierFlight;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierHaste;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierJumpBoost;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierLuck;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierNightVision;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierPiezo;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.BlockModifierRegeneration;
@@ -69,6 +70,7 @@ public enum MultiBlockBlocks {
     MODIFIER_RESISTANCE(BlockModifierResistance.create()),
     MODIFIER_JUMP_BOOST(BlockModifierJumpBoost.create()),
     MODIFIER_FIRE_RESISTANCE(BlockModifierFireResistance.create()),
+    MODIFIER_LUCK(BlockModifierLuck.create()),
     MODIFIER_NULL(BlockModifierCore.create()),
     BLOCK_CRYSTAL(BlockCrystal.create()),
 
