@@ -615,6 +615,10 @@ tooltip.beacon.effect.jump_boost=Jump Boost
 tooltip.beacon.effect.night_vision=Night Vision
 tooltip.beacon.effect.water_breathing=Water Breathing
 tooltip.beacon.effect.fire_resistance=Fire Resistance
+tooltip.beacon.range=Effect Range:
+tooltip.beacon.range.horizontal=Horizontal
+tooltip.beacon.range.upward=Upward
+tooltip.beacon.range.downward=Downward
 
 #Solar Tooltips
 tooltip.solar.cell.power=§aPeak Output: %d RF/t§r

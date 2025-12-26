@@ -67,6 +67,62 @@ public class QuantumBeaconConfig {
         public int fireResistanceEnergyCost;
     }
 
+    @Config.Comment("Beacon Effect Range Settings for each Tier")
+    public static final BeaconTierRangeConfig range1 = new BeaconTierRangeConfig(30, 512, 20);
+    public static final BeaconTierRangeConfig range2 = new BeaconTierRangeConfig(50, 512, 30);
+    public static final BeaconTierRangeConfig range3 = new BeaconTierRangeConfig(70, 512, 40);
+    public static final BeaconTierRangeConfig range4 = new BeaconTierRangeConfig(90, 512, 50);
+    public static final BeaconTierRangeConfig range5 = new BeaconTierRangeConfig(110, 512, 60);
+    public static final BeaconTierRangeConfig range6 = new BeaconTierRangeConfig(130, 512, 70);
+
+    @Config.LangKey(LibResources.CONFIG + "beaconTierRangeConfig")
+    public static class BeaconTierRangeConfig {
+
+        @Config.Comment("Horizontal range (blocks) - X and Z direction")
+        @Config.RangeInt(min = 0, max = 1000)
+        public int horizontalRange;
+
+        @Config.Comment("Upward range (blocks) - positive Y direction")
+        @Config.RangeInt(min = 0, max = 1000)
+        public int upwardRange;
+
+        @Config.Comment("Downward range (blocks) - negative Y direction")
+        @Config.RangeInt(min = 0, max = 1000)
+        public int downwardRange;
+
+        public BeaconTierRangeConfig() {
+            this(30, 512, 20);
+        }
+
+        public BeaconTierRangeConfig(int horizontalRange, int upwardRange, int downwardRange) {
+            this.horizontalRange = horizontalRange;
+            this.upwardRange = upwardRange;
+            this.downwardRange = downwardRange;
+        }
+    }
+
+    /**
+     * Get the range config for a given tier
+     */
+    public static BeaconTierRangeConfig getRangeConfig(int tier) {
+        switch (tier) {
+            case 1:
+                return range1;
+            case 2:
+                return range2;
+            case 3:
+                return range3;
+            case 4:
+                return range4;
+            case 5:
+                return range5;
+            case 6:
+                return range6;
+            default:
+                return range1;
+        }
+    }
+
     @Config.Comment("Tier 1 Beacon Effect Level Limits")
     public static final BeaconTierConfig tier1 = new BeaconTierConfig(
         0, // saturation

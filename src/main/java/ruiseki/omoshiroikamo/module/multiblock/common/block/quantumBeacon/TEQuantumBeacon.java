@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
+import ruiseki.omoshiroikamo.config.backport.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -121,6 +122,39 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         return block instanceof IModifierBlock;
     }
 
+    /**
+     * Check if the player is within the Beacon's effect range
+     */
+    private boolean isPlayerInRange(EntityPlayer plr) {
+        int tier = getTier();
+        QuantumBeaconConfig.BeaconTierRangeConfig rangeConfig = QuantumBeaconConfig.getRangeConfig(tier);
+
+        int horizontalRange = rangeConfig.horizontalRange;
+        int upwardRange = rangeConfig.upwardRange;
+        int downwardRange = rangeConfig.downwardRange;
+
+        double dx = Math.abs(plr.posX - (xCoord + 0.5));
+        double dz = Math.abs(plr.posZ - (zCoord + 0.5));
+        double dy = plr.posY - yCoord;
+
+        // Check horizontal range (X and Z)
+        if (dx > horizontalRange || dz > horizontalRange) {
+            return false;
+        }
+
+        // Check vertical range (upward and downward)
+        if (dy > upwardRange || dy < -downwardRange) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the tier of this Beacon (1-6)
+     */
+    public abstract int getTier();
+
     private void addPlayerEffects() {
         if (player == null) return;
 
@@ -134,6 +168,15 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
         EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
         if (plr == null) {
             wasFlightGrantedByBeacon = false;
+            return;
+        }
+
+        // Check if player is within effect range
+        if (!isPlayerInRange(plr)) {
+            // Out of range: disable flight immediately if we granted it
+            if (wasFlightGrantedByBeacon) {
+                disablePlayerFlight();
+            }
             return;
         }
 

@@ -18,6 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.config.backport.QuantumBeaconConfig.BeaconTierConfig;
+import ruiseki.omoshiroikamo.config.backport.QuantumBeaconConfig.BeaconTierRangeConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -97,7 +98,31 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
                 addEffectLine(list, "night_vision", config.nightVisionLevel);
                 addEffectLine(list, "water_breathing", config.waterBreathingLevel);
                 addEffectLine(list, "fire_resistance", config.fireResistanceLevel);
+
             } else {
+                // Range information
+                int tier = stack.getItemDamage() + 1;
+                BeaconTierRangeConfig rangeConfig = QuantumBeaconConfig.getRangeConfig(tier);
+                list.add("");
+                list.add(EnumChatFormatting.GOLD + LibMisc.LANG.localize("tooltip.beacon.range"));
+                list.add(
+                    "  " + EnumChatFormatting.AQUA
+                        + LibMisc.LANG.localize("tooltip.beacon.range.horizontal")
+                        + ": "
+                        + EnumChatFormatting.WHITE
+                        + rangeConfig.horizontalRange);
+                list.add(
+                    "  " + EnumChatFormatting.AQUA
+                        + LibMisc.LANG.localize("tooltip.beacon.range.upward")
+                        + ": "
+                        + EnumChatFormatting.WHITE
+                        + rangeConfig.upwardRange);
+                list.add(
+                    "  " + EnumChatFormatting.AQUA
+                        + LibMisc.LANG.localize("tooltip.beacon.range.downward")
+                        + ": "
+                        + EnumChatFormatting.WHITE
+                        + rangeConfig.downwardRange);
                 list.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.beacon.shift_for_effects"));
             }
         }
