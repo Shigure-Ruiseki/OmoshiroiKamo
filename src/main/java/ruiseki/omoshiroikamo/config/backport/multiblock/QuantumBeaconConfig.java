@@ -80,12 +80,12 @@ public class QuantumBeaconConfig {
     }
 
     @Config.Comment("Beacon Effect Range Settings for each Tier")
-    public static final BeaconTierRangeConfig range1 = new BeaconTierRangeConfig(30, 512, 20);
-    public static final BeaconTierRangeConfig range2 = new BeaconTierRangeConfig(50, 512, 30);
-    public static final BeaconTierRangeConfig range3 = new BeaconTierRangeConfig(70, 512, 40);
-    public static final BeaconTierRangeConfig range4 = new BeaconTierRangeConfig(90, 512, 50);
-    public static final BeaconTierRangeConfig range5 = new BeaconTierRangeConfig(110, 512, 60);
-    public static final BeaconTierRangeConfig range6 = new BeaconTierRangeConfig(130, 512, 70);
+    public static final BeaconTierRangeConfig rangeTier1 = new BeaconTierRangeConfig(30, 512, 20);
+    public static final BeaconTierRangeConfig rangeTier2 = new BeaconTierRangeConfig(50, 512, 30);
+    public static final BeaconTierRangeConfig rangeTier3 = new BeaconTierRangeConfig(70, 512, 40);
+    public static final BeaconTierRangeConfig rangeTier4 = new BeaconTierRangeConfig(90, 512, 50);
+    public static final BeaconTierRangeConfig rangeTier5 = new BeaconTierRangeConfig(110, 512, 60);
+    public static final BeaconTierRangeConfig rangeTier6 = new BeaconTierRangeConfig(130, 512, 70);
 
     @Config.LangKey(LibResources.CONFIG + "beaconTierRangeConfig")
     public static class BeaconTierRangeConfig {
@@ -119,19 +119,19 @@ public class QuantumBeaconConfig {
     public static BeaconTierRangeConfig getRangeConfig(int tier) {
         switch (tier) {
             case 1:
-                return range1;
+                return rangeTier1;
             case 2:
-                return range2;
+                return rangeTier2;
             case 3:
-                return range3;
+                return rangeTier3;
             case 4:
-                return range4;
+                return rangeTier4;
             case 5:
-                return range5;
+                return rangeTier5;
             case 6:
-                return range6;
+                return rangeTier6;
             default:
-                return range1;
+                return rangeTier1;
         }
     }
 
