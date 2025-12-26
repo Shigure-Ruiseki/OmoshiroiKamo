@@ -9,6 +9,7 @@ import ruiseki.omoshiroikamo.config.block.BlockConfigs;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.LangKey(LibResources.CONFIG + "generalConfig")
 @Config(modid = LibMisc.MOD_ID, configSubDirectory = LibMisc.MOD_ID, category = "general")
