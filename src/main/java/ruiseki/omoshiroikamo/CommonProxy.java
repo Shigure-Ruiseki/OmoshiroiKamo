@@ -31,6 +31,7 @@ import ruiseki.omoshiroikamo.module.backpack.BackpackCommon;
 import ruiseki.omoshiroikamo.module.chickens.ChickensCommon;
 import ruiseki.omoshiroikamo.module.cows.CowsCommon;
 import ruiseki.omoshiroikamo.module.dml.DMLCommon;
+import ruiseki.omoshiroikamo.module.machinery.MachineryCommon;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockCommon;
 
 public class CommonProxy {
@@ -60,6 +61,7 @@ public class CommonProxy {
         ModuleManager.register(new DMLCommon());
         ModuleManager.register(new BackpackCommon());
         ModuleManager.register(new MultiBlockCommon());
+        ModuleManager.register(new MachineryCommon());
 
         ModuleManager.preInitCommon(event);
 
