@@ -206,6 +206,21 @@ public class EnvironmentalConfig {
         @Config.DefaultFloat(0.9f)
         @Config.RangeFloat(min = 0.1f, max = 1.0f)
         public float accuracyModifierSpeedPenalty;
+
+        @Config.Comment("Speed Modifier: Minimum speed multiplier (0.1 = processing time can be reduced to 10% at most)")
+        @Config.DefaultFloat(0.1f)
+        @Config.RangeFloat(min = 0.01f, max = 1.0f)
+        public float speedModifierMinMultiplier;
+
+        @Config.Comment("Accuracy Modifier: Maximum focus multiplier (5.0 = focus can be increased by 5x at most)")
+        @Config.DefaultFloat(5.0f)
+        @Config.RangeFloat(min = 1.0f, max = 100.0f)
+        public float accuracyModifierMaxMultiplier;
+
+        @Config.Comment("Luck Modifier: Maximum bonus chance (3.0 = 300% = guaranteed 3 bonus items at most)")
+        @Config.DefaultFloat(3.0f)
+        @Config.RangeFloat(min = 0.1f, max = 63.0f)
+        public float luckModifierMaxBonus;
     }
 
     @Config.Comment("Quantum Beacon Modifier Settings")

@@ -465,6 +465,7 @@ tile.machineBase.alabaster_machine_base.name=Machine Base
 tile.modifierNull.name=Null Modifier
 tile.modifierAccuracy.name=Accuracy Modifier
 tile.modifierSpeed.name=Speed Modifier
+tile.modifierLuck.name=Luck Modifier
 tile.modifierPiezo.name=Piezo Modifier
 tile.modifierFlight.name=Flight Modifier
 tile.modifierNightVision.name=Night Vision Modifier
@@ -476,7 +477,6 @@ tile.modifierSaturation.name=Saturation Modifier
 tile.modifierResistance.name=Resistance Modifier
 tile.modifierJumpBoost.name=Jump Boost Modifier
 tile.modifierFireResistance.name=Fire Resistance Modifier
-tile.modifierLuck.name=Luck Modifier
 
 tile.lens.tier_1.name=Clear Lens
 tile.lens.tier_2.name=Crystal Lens

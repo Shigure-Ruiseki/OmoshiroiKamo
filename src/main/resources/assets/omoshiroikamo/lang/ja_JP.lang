@@ -343,7 +343,7 @@ achievement.omoshiroikamo.craft_modifier_water_breathing.desc=水中呼吸モデ
 achievement.omoshiroikamo.craft_modifier_regen=誰がっ！毒ガスでっ！HP回復するんだよっ！
 achievement.omoshiroikamo.craft_modifier_regen.desc=再生モディファイアを作成する
 achievement.omoshiroikamo.craft_modifier_saturation=リンゴちゃん、今日もよろしくね！
-achievement.omoshiroikamo.craft_modifier_saturation.desc=飽和モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_saturation.desc=満腹モディファイアを作成する
 
 #KeyBinding
 
@@ -465,6 +465,7 @@ tile.machineBase.alabaster_machine_base.name=マシンベース
 tile.modifierNull.name=空のモディファイア
 tile.modifierAccuracy.name=精度モディファイア
 tile.modifierSpeed.name=スピードモディファイア
+tile.modifierLuck.name=ラックモディファイア
 tile.modifierPiezo.name=ピエゾモディファイア
 tile.modifierFlight.name=飛行モディファイア
 tile.modifierNightVision.name=暗視モディファイア
@@ -472,11 +473,10 @@ tile.modifierHaste.name=採掘速度上昇モディファイア
 tile.modifierStrength.name=攻撃力上昇モディファイア
 tile.modifierWaterBreathing.name=水中呼吸モディファイア
 tile.modifierRegeneration.name=再生モディファイア
-tile.modifierSaturation.name=飽和モディファイア
+tile.modifierSaturation.name=満腹モディファイア
 tile.modifierResistance.name=耐性モディファイア
 tile.modifierJumpBoost.name=跳躍力上昇モディファイア
 tile.modifierFireResistance.name=火炎耐性モディファイア
-tile.modifierLuck.name=ラックモディファイア
 
 tile.lens.tier_1.name=クリアレンズ
 tile.lens.tier_2.name=クリスタルレンズ

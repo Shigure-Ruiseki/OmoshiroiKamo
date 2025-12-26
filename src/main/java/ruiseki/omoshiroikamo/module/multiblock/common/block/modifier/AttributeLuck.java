@@ -1,17 +1,18 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
+import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 
 /**
  * Luck attribute for Miner modifiers.
- * Provides a chance for double output (additive: +10% per modifier).
+ * Provides a chance for bonus output (additive: configurable % per modifier).
  */
 public class AttributeLuck implements IModifierAttribute {
 
     private float modificationFactor;
 
     public AttributeLuck() {
-        this(0.1F); // 10% per modifier
+        this(EnvironmentalConfig.quantumExtractorConfig.luckModifierBonusChance);
     }
 
     public AttributeLuck(float modificationFactor) {
@@ -30,7 +31,8 @@ public class AttributeLuck implements IModifierAttribute {
 
     @Override
     public float getMultiplier(float totalModificationFactor) {
-        // Additive: 1 modifier = 0.1 (10%), 2 modifiers = 0.2 (20%), etc.
-        return totalModificationFactor;
+        // Additive: total factor is directly returned, clamped to max
+        float maxBonus = EnvironmentalConfig.quantumExtractorConfig.luckModifierMaxBonus;
+        return Math.min(maxBonus, totalModificationFactor);
     }
 }
