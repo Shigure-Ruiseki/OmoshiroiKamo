@@ -7,6 +7,8 @@ creativetab.okDeepMobLearner=OK Deep Mob Learning
 
 #Config
 
+config.generalConfig=General Settings
+
 config.itemConfig=Item Settings
 
 config.blockConfig=Block Settings

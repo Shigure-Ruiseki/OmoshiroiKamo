@@ -16,10 +16,6 @@ public class QuantumExtractorRecipes {
 
     public static final int MAX_TIER = 6;
 
-    // Legacy: kept for backward compatibility with existing code that references these directly
-    public static IFocusableRegistry[] oreRegistry = new IFocusableRegistry[MAX_TIER];
-    public static IFocusableRegistry[] resRegistry = new IFocusableRegistry[MAX_TIER];
-
     // Dimension-aware registries (lazy-initialized)
     private static final Map<Integer, IFocusableRegistry[]> oreRegistryByDim = new HashMap<>();
     private static final Map<Integer, IFocusableRegistry[]> resRegistryByDim = new HashMap<>();
@@ -72,7 +68,7 @@ public class QuantumExtractorRecipes {
     }
 
     private static void loadOreConfig() {
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/ore.json");
+        File file = new File("config/" + LibMisc.MOD_ID + "/multiblock/oreList.json");
 
         if (file.exists()) {
             cachedOreList = FocusableHandler.loadListFromJson(file);
@@ -88,7 +84,7 @@ public class QuantumExtractorRecipes {
     }
 
     private static void loadResConfig() {
-        File file = new File("config/" + LibMisc.MOD_ID + "/quantumExtractor/res.json");
+        File file = new File("config/" + LibMisc.MOD_ID + "/multiblock/resourceList.json");
 
         if (file.exists()) {
             cachedResList = FocusableHandler.loadListFromJson(file);

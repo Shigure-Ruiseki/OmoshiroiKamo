@@ -7,21 +7,29 @@ creativetab.okDeepMobLearner=OK モブラーニング
 
 #Config
 
+config.generalConfig=一般設定
+
 config.itemConfig=アイテム設定
 config.anvilUpgradeConfig=金床アップグレードの設定
 
 config.blockConfig=ブロック設定
 
 config.backportConfig=バックポート設定
-config.environmentalConfig=Environmental Techの設定
+
+config.multiblockConfig=マルチブロックの設定
 config.quantumExtractorConfig=クアンタムエクストラクターの設定
+config.quantumBeaconConfig=クアンタムビーコンの設定
 config.solarArrayConfig=ソーラーアレイの設定
 config.eTWorldGenConfig=ワールド生成の設定
+
 config.chickenConfig=ニワトリの設定
+
 config.cowConfig=ウシの設定
+
 config.backpackConfig=バックパックの設定
 config.feedingConfig=自動食事アップグレードの設定
 config.magnetConfig=マグネットアップグレードの設定
+
 config.deepMobLearningConfig=モブラーニングの設定
 config.dataModelConfig=データモデルの設定
 
