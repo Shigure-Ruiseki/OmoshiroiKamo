@@ -3,6 +3,6 @@
     "meta=0": { "model": "omoshiroikamo:block/stall", "y": 270 },
     "meta=1": { "model": "omoshiroikamo:block/stall", "y": 90 },
     "meta=2": { "model": "omoshiroikamo:block/stall", "y": 0 },
-    "meta=3": { "model": "omoshiroikamo:block/stall", "y": 190 }
+    "meta=3": { "model": "omoshiroikamo:block/stall", "y": 180 }
   }
 }

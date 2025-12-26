@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
@@ -93,15 +94,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TEStall stall) {
-
-            float progress = stall.getProgress();
-
-            if (progress > 0) {
-                float percent = Math.max(0f, progress);
-                tooltip.add(LibMisc.LANG.localize("gui.progress", percent));
-            } else {
-                tooltip.add(LibMisc.LANG.localize("gui.progress", 0f));
-            }
+            tooltip.add(WailaUtils.getProgress(stall));
 
             FluidStack stored = stall.tank.getFluid();
             if (!(stored == null || stored.getFluid() == null)) {

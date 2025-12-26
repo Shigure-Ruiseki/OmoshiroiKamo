@@ -37,8 +37,6 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
     @Getter
     private int maxProgress;
 
-    private float progressPercent;
-
     @Getter
     private int cowType;
     private int cowGain;
@@ -86,7 +84,6 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
 
         progress = 0;
         maxProgress = 0;
-        progressPercent = 0;
 
         cachedCowDesc = null;
         getPos().markBlockForUpdate();
@@ -94,12 +91,19 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
 
     @Override
     public float getProgress() {
-        return progressPercent;
+        if (maxProgress <= 0) return 0f;
+        return (float) progress / (float) maxProgress;
     }
 
     @Override
     public void setProgress(float percent) {
-        progressPercent = percent;
+        if (maxProgress <= 0) {
+            progress = 0;
+            return;
+        }
+
+        percent = Math.max(0f, Math.min(1f, percent));
+        progress = Math.round(percent * maxProgress);
     }
 
     @Override
@@ -122,7 +126,6 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         maxProgress = Math.max(1, (int) (baseTime * growthFactor) * 2);
 
         progress = 0;
-        progressPercent = 0;
     }
 
     @Override
@@ -137,8 +140,6 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         }
 
         progress++;
-        progressPercent = (progress * 100f) / maxProgress;
-
         if (progress < maxProgress) {
             return false;
         }

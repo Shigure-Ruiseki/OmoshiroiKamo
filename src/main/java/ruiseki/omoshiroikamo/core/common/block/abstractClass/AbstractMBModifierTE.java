@@ -168,12 +168,23 @@ public abstract class AbstractMBModifierTE extends AbstractEnergyTE implements I
 
     @Override
     public float getProgress() {
-        return getCurrentProgress();
+        int max = getCurrentProcessDuration();
+        if (!isProcessing || max <= 0) {
+            return 0f;
+        }
+        return (float) getCurrentProgress() / (float) max;
     }
 
     @Override
     public void setProgress(float progress) {
-        setCurrentProgress((int) progress);
+        int max = getCurrentProcessDuration();
+        if (max <= 0) {
+            setCurrentProgress(0);
+            return;
+        }
+
+        progress = Math.max(0f, Math.min(1f, progress));
+        setCurrentProgress(Math.round(progress * max));
     }
 
     public void setPlayer(EntityPlayer plr) {

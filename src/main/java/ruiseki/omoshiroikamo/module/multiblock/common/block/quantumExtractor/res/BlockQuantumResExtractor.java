@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.config.backport.EnvironmentalConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
 
@@ -69,15 +70,7 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof TEQuantumExtractor extractor) {
-            int progress = (int) extractor.getProgress();
-            int duration = extractor.getCurrentProcessDuration();
-
-            if (duration > 0) {
-                float percent = Math.max(0f, (progress / (float) duration) * 100f);
-                tooltip.add(LibMisc.LANG.localize("gui.progress", percent));
-            } else {
-                tooltip.add(LibMisc.LANG.localize("gui.progress", 0f));
-            }
+            tooltip.add(WailaUtils.getProgress(extractor));
         }
 
     }
