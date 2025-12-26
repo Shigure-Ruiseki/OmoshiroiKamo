@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
@@ -26,6 +27,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
@@ -40,6 +42,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IPickupUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 public class BackpackHandler implements IItemHandlerModifiable {
 
@@ -108,6 +111,12 @@ public class BackpackHandler implements IItemHandlerModifiable {
     public static final String MAIN_COLOR = "MainColor";
     @Getter
     public static final String ACCENT_COLOR = "AccentColor";
+    @Getter
+    @Setter
+    public Integer slotIndex;
+    @Getter
+    @Setter
+    public InventoryType type;
 
     public BackpackHandler(ItemStack backpack, TileEntity tile) {
         this(backpack, tile, 120, 7);
@@ -139,7 +148,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
             @Override
             protected void onContentsChanged(int slots) {
                 super.onContentsChanged(slots);
-                writeToItem();
+                syncToServer();
             }
         };
 
@@ -148,7 +157,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
-                writeToItem();
+                syncToServer();
             }
         };
 
@@ -519,24 +528,6 @@ public class BackpackHandler implements IItemHandlerModifiable {
         return false;
     }
 
-    public <T> Map<Integer, T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
-        Map<Integer, T> result = new HashMap<>();
-
-        for (int i = 0; i < upgradeSlots; i++) {
-            ItemStack stack = upgradeHandler.getStackInSlot(i);
-            if (stack == null) continue;
-
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-            if (wrapper == null) continue;
-
-            if (capabilityClass.isAssignableFrom(wrapper.getClass())) {
-                result.put(i, capabilityClass.cast(wrapper));
-            }
-        }
-
-        return result;
-    }
-
     public boolean canImportant() {
 
         for (ItemStack stack : upgradeHandler.getStacks()) {
@@ -556,6 +547,10 @@ public class BackpackHandler implements IItemHandlerModifiable {
     }
 
     // ---------- ITEM STACK ----------
+    public NBTTagCompound getTagCompound() {
+        return backpack.getTagCompound();
+    }
+
     public void writeToItem() {
         if (backpack == null) {
             return;
@@ -694,4 +689,28 @@ public class BackpackHandler implements IItemHandlerModifiable {
         }
     }
 
+    public <T> Map<Integer, T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
+        Map<Integer, T> result = new HashMap<>();
+
+        for (int i = 0; i < upgradeSlots; i++) {
+            ItemStack stack = upgradeHandler.getStackInSlot(i);
+            if (stack == null) continue;
+
+            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            if (wrapper == null) continue;
+
+            if (capabilityClass.isAssignableFrom(wrapper.getClass())) {
+                result.put(i, capabilityClass.cast(wrapper));
+            }
+        }
+
+        return result;
+    }
+
+    public void syncToServer() {
+        writeToItem();
+        if (type != null) {
+            PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
+        }
+    }
 }

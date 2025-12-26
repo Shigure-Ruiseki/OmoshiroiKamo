@@ -64,6 +64,11 @@ public class UpgradeSlotUpdateGroup {
         for (int i = 0; i < 9; i++) {
             ModularFilterSlot slot = new ModularFilterSlot(commonFilterStackHandler.getDelegatedStackHandler(), i);
             slot.slotGroup("common_filters_" + slotIndex);
+            slot.changeListener((newItem, onlyAmountChanged, client, init) -> {
+                if (client) {
+                    handler.syncToServer();
+                }
+            });
 
             syncManager.syncValue("common_filter_" + slotIndex, i, new FilterSlotSH(slot));
 
@@ -82,6 +87,11 @@ public class UpgradeSlotUpdateGroup {
                 advancedCommonFilterStackHandler.getDelegatedStackHandler(),
                 i);
             slot.slotGroup("adv_common_filters_" + slotIndex);
+            slot.changeListener((newItem, onlyAmountChanged, client, init) -> {
+                if (client) {
+                    handler.syncToServer();
+                }
+            });
 
             syncManager.syncValue("adv_common_filter_" + slotIndex, i, new FilterSlotSH(slot));
 
@@ -95,6 +105,11 @@ public class UpgradeSlotUpdateGroup {
         for (int i = 0; i < 9; i++) {
             ModularFilterSlot slot = new ModularFilterSlot(commonFilterStackHandler.getDelegatedStackHandler(), i);
             slot.slotGroup("feeding_filters_" + slotIndex);
+            slot.changeListener((newItem, onlyAmountChanged, client, init) -> {
+                if (client) {
+                    handler.syncToServer();
+                }
+            });
 
             syncManager.syncValue("feeding_filter_" + slotIndex, i, new FoodFilterSlotSH(slot));
 
@@ -110,6 +125,11 @@ public class UpgradeSlotUpdateGroup {
                 advancedCommonFilterStackHandler.getDelegatedStackHandler(),
                 i);
             slot.slotGroup("adv_feeding_filters_" + slotIndex);
+            slot.changeListener((newItem, onlyAmountChanged, client, init) -> {
+                if (client) {
+                    handler.syncToServer();
+                }
+            });
 
             syncManager.syncValue("adv_feeding_filter_" + slotIndex, i, new FoodFilterSlotSH(slot));
 
@@ -190,6 +210,10 @@ public class UpgradeSlotUpdateGroup {
                 i);
             slot.slotGroup("crafting_workbench_slot_" + slotIndex)
                 .changeListener((newItem, onlyAmountChanged, client, init) -> {
+                    if (client) {
+                        handler.syncToServer();
+                    }
+
                     if (client) return;
                     boolean empty = true;
                     for (ModularCraftingMatrixSlot craftingMatrixSlot : craftingMatrixSlots) {

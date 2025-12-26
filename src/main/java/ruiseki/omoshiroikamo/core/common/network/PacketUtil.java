@@ -1,51 +1,48 @@
 package ruiseki.omoshiroikamo.core.common.network;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.cleanroommc.modularui.ModularUI;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.api.client.IContainerWithTileEntity;
 
 public class PacketUtil {
 
-    public static NBTTagCompound readNBTTagCompound(ByteBuf dataIn) {
+    public static NBTTagCompound readNBTTagCompound(ByteBuf buf) {
         try {
-            short size = dataIn.readShort();
-            if (size < 0) {
-                return null;
-            } else {
-                byte[] buffer = new byte[size];
-                dataIn.readBytes(buffer);
-                return CompressedStreamTools.func_152457_a(buffer, NBTSizeTracker.field_152451_a);
-            }
+            short size = buf.readShort();
+            if (size < 0) return null;
+
+            byte[] data = new byte[size];
+            buf.readBytes(data);
+            return CompressedStreamTools.func_152457_a(data, NBTSizeTracker.field_152451_a);
         } catch (IOException e) {
             FMLCommonHandler.instance()
-                .raiseException(e, "Custom Packet", true);
+                .raiseException(e, "PacketUtil.readNBTTagCompound", true);
             return null;
         }
     }
 
-    public static void writeNBTTagCompound(NBTTagCompound compound, ByteBuf dataout) {
+    public static void writeNBTTagCompound(@Nullable NBTTagCompound nbt, ByteBuf buf) {
         try {
-            if (compound == null) {
-                dataout.writeShort(-1);
-            } else {
-                byte[] buf = CompressedStreamTools.compress(compound);
-                dataout.writeShort((short) buf.length);
-                dataout.writeBytes(buf);
+            if (nbt == null) {
+                buf.writeShort(-1);
+                return;
             }
+            byte[] data = CompressedStreamTools.compress(nbt);
+            buf.writeShort(data.length);
+            buf.writeBytes(data);
         } catch (IOException e) {
             FMLCommonHandler.instance()
-                .raiseException(e, "PacketUtil.readTileEntityPacket.writeNBTTagCompound", true);
+                .raiseException(e, "PacketUtil.writeNBTTagCompound", true);
         }
     }
 
@@ -61,23 +58,62 @@ public class PacketUtil {
         buf.writeBytes(arr);
     }
 
-    public static boolean isInvalidPacketForGui(MessageContext ctx, TileEntity receivedTile, Class<?> messageClass) {
-        if (receivedTile == null) {
-            // Invalid, but not harmful
-            return true;
+    public static void writeStringSafe(ByteBuf buf, @Nullable String str) {
+        writeStringSafe(buf, str, Short.MAX_VALUE, false);
+    }
+
+    public static void writeStringSafe(ByteBuf buf, @Nullable String str, int maxBytes, boolean crash) {
+        maxBytes = Math.min(maxBytes, Short.MAX_VALUE);
+        if (str == null) {
+            writeVarInt(buf, Short.MAX_VALUE + 1);
+            return;
         }
-        if (ctx.side == Side.CLIENT) {
-            return false;
+
+        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+        if (bytes.length > maxBytes) {
+            if (crash) {
+                throw new IllegalArgumentException("String too long: " + bytes.length + " > max " + maxBytes);
+            }
+            byte[] tmp = new byte[maxBytes];
+            System.arraycopy(bytes, 0, tmp, 0, maxBytes);
+            bytes = tmp;
+            ModularUI.LOGGER.warn("Warning! Synced string exceeds max length: {}", str);
         }
-        EntityPlayer player = ctx.getServerHandler().playerEntity;
-        Container container = player.openContainer;
-        if (!(container instanceof IContainerWithTileEntity)) {
-            return true;
+
+        writeVarInt(buf, bytes.length);
+        buf.writeBytes(bytes);
+    }
+
+    @Nullable
+    public static String readStringSafe(ByteBuf buf) {
+        int length = readVarInt(buf);
+        if (length > Short.MAX_VALUE) return null;
+
+        String s = buf.toString(buf.readerIndex(), length, StandardCharsets.UTF_8);
+        buf.readerIndex(buf.readerIndex() + length);
+        return s;
+    }
+
+    public static void writeVarInt(ByteBuf buf, int value) {
+        while ((value & 0xFFFFFF80) != 0L) {
+            buf.writeByte((value & 0x7F) | 0x80);
+            value >>>= 7;
         }
-        TileEntity expectedTile = ((IContainerWithTileEntity) container).getTileEntity();
-        if (receivedTile != expectedTile) {
-            return true;
-        }
-        return false;
+        buf.writeByte(value & 0x7F);
+    }
+
+    public static int readVarInt(ByteBuf buf) {
+        int numRead = 0;
+        int result = 0;
+        byte read;
+
+        do {
+            read = buf.readByte();
+            result |= (read & 0x7F) << (7 * numRead);
+            numRead++;
+            if (numRead > 5) throw new RuntimeException("VarInt too big");
+        } while ((read & 0x80) != 0);
+
+        return result;
     }
 }

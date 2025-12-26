@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackPackets;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackRecipes;
 import ruiseki.omoshiroikamo.module.backpack.integration.bauble.BackpackBaubleCompat;
 
@@ -40,6 +41,7 @@ public class BackpackCommon implements IModuleCommon {
     @Override
     public void init(FMLInitializationEvent event) {
         BackpackRecipes.init();
+        BackpackPackets.init();
     }
 
     @Override

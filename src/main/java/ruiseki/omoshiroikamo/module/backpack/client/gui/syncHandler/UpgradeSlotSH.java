@@ -38,18 +38,17 @@ public class UpgradeSlotSH extends ItemSlotSH {
     public static final int UPDATE_CRAFTING_G = 16;
     public static final int UPDATE_CRAFTING_C = 17;
 
-    private final BackpackHandler handler;
-    private final BackpackPanel panel;
+    public final BackpackHandler handler;
+    public final BackpackPanel panel;
 
-    public UpgradeSlotSH(BackpackPanel panel, BackpackHandler handler, ModularSlot slot) {
+    public UpgradeSlotSH(ModularSlot slot, BackpackHandler handler, BackpackPanel panel) {
         super(slot);
-        this.panel = panel;
         this.handler = handler;
+        this.panel = panel;
     }
 
     @Override
     public void readOnServer(int id, PacketBuffer buf) throws IOException {
-
         switch (id) {
             case UPDATE_UPGRADE_TAB_STATE:
                 updateTabState(buf);
@@ -87,12 +86,11 @@ public class UpgradeSlotSH extends ItemSlotSH {
             case UPDATE_CRAFTING_C:
                 updateClear(buf);
                 break;
-
             default:
                 super.readOnServer(id, buf);
                 break;
         }
-        handler.writeToItem();
+        handler.syncToServer();
     }
 
     private void updateTabState(PacketBuffer buf) {

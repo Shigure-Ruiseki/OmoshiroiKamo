@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsBlocks;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsItems;
+import ruiseki.omoshiroikamo.module.cows.common.init.CowsPackets;
 import ruiseki.omoshiroikamo.module.cows.common.init.CowsRecipes;
 import ruiseki.omoshiroikamo.module.cows.common.registries.ModCows;
 
@@ -41,6 +42,7 @@ public class CowsCommon implements IModuleCommon {
     public void init(FMLInitializationEvent event) {
         ModCows.init();
         CowsRecipes.init();
+        CowsPackets.init();
     }
 
     @Override
