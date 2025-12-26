@@ -14,6 +14,8 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 import org.joml.Vector3d;
 
+import com.cleanroommc.modularui.factory.inventory.InventoryType;
+import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -21,8 +23,10 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 @EventBusSubscriber
 public class BackpackEventHandler {
@@ -49,10 +53,12 @@ public class BackpackEventHandler {
         if (LibMods.Baubles.isLoaded()) {
             IInventory baublesInventory = BaublesUtils.instance()
                 .getBaubles(player);
-            stack = attemptPickup(baublesInventory, stack);
+            stack = attemptPickup(baublesInventory, stack, InventoryTypes.BAUBLES);
         }
 
-        stack = attemptPickup(inventory, stack);
+        if (stack == null) {
+            stack = attemptPickup(inventory, stack, InventoryTypes.PLAYER);
+        }
 
         if (stack == null || stack.stackSize <= 0) {
             event.item.setDead();
@@ -86,7 +92,7 @@ public class BackpackEventHandler {
 
     }
 
-    private static ItemStack attemptPickup(IInventory targetInventory, ItemStack stack) {
+    private static ItemStack attemptPickup(IInventory targetInventory, ItemStack stack, InventoryType type) {
 
         for (int i = 0; i < targetInventory.getSizeInventory(); i++) {
             ItemStack backpackStack = targetInventory.getStackInSlot(i);
@@ -106,9 +112,7 @@ public class BackpackEventHandler {
 
             stack = handler.insertItem(stack, false);
 
-            backpackStack.setTagCompound(
-                handler.getBackpack()
-                    .getTagCompound());
+            PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             if (stack == null) {
                 break;
             }
@@ -151,15 +155,15 @@ public class BackpackEventHandler {
         if (LibMods.Baubles.isLoaded()) {
             IInventory baublesInventory = BaublesUtils.instance()
                 .getBaubles(player);
-            result = attemptFeed(player, baublesInventory);
+            result = attemptFeed(player, baublesInventory, InventoryTypes.BAUBLES);
         }
 
         if (!result) {
-            attemptFeed(player, player.inventory);
+            attemptFeed(player, player.inventory, InventoryTypes.PLAYER);
         }
     }
 
-    public static boolean attemptFeed(EntityPlayer player, IInventory searchInventory) {
+    public static boolean attemptFeed(EntityPlayer player, IInventory searchInventory, InventoryType type) {
         int size = searchInventory.getSizeInventory();
 
         for (int i = 0; i < size; i++) {
@@ -186,9 +190,7 @@ public class BackpackEventHandler {
 
             feedingStack.onFoodEaten(player.worldObj, player);
 
-            stack.setTagCompound(
-                handler.getBackpack()
-                    .getTagCompound());
+            PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             return true;
         }
 

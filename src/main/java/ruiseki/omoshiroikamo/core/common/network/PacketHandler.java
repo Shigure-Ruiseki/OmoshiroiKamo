@@ -10,7 +10,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.cows.common.network.PacketStall;
 
 public class PacketHandler {
 
@@ -22,12 +21,10 @@ public class PacketHandler {
         INSTANCE.registerMessage(PacketProgress.class, PacketProgress.class, PacketHandler.nextID(), Side.CLIENT);
         INSTANCE.registerMessage(PacketEnergy.class, PacketEnergy.class, PacketHandler.nextID(), Side.CLIENT);
         INSTANCE.registerMessage(PacketFluidTanks.class, PacketFluidTanks.class, PacketHandler.nextID(), Side.CLIENT);
-        INSTANCE.registerMessage(PacketCraftingState.class, PacketCraftingState.class, nextID(), Side.CLIENT);
-
-        INSTANCE.registerMessage(PacketStall.class, PacketStall.class, PacketHandler.nextID(), Side.CLIENT);
-
-        INSTANCE.registerMessage(PacketClientFlight.class, PacketClientFlight.class, nextID(), Side.CLIENT);
-
+        INSTANCE
+            .registerMessage(PacketCraftingState.class, PacketCraftingState.class, PacketHandler.nextID(), Side.CLIENT);
+        INSTANCE
+            .registerMessage(PacketClientFlight.class, PacketClientFlight.class, PacketHandler.nextID(), Side.CLIENT);
     }
 
     private static int ID = 0;

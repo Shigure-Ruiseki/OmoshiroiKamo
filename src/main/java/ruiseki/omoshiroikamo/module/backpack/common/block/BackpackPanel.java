@@ -96,18 +96,6 @@ public class BackpackPanel extends ModularPanel {
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_count"), GuiTextures.SMALL_1_ICON),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_ore_dict"), GuiTextures.SMALL_O_ICON));
 
-    public static BackpackPanel defaultPanel(PanelSyncManager syncManager, UISettings settings, EntityPlayer player,
-        TileEntity tileEntity, BackpackHandler handler, int width, int height, Integer slotIndex) {
-        BackpackPanel panel = new BackpackPanel(player, tileEntity, syncManager, settings, handler, width, height);
-
-        panel.settings.customContainer(() -> new BackPackContainer(handler, slotIndex));
-
-        syncManager.bindPlayerInventory(player);
-        panel.bindPlayerInventory();
-
-        return panel;
-    }
-
     @Getter
     private final EntityPlayer player;
     @Getter
@@ -168,19 +156,20 @@ public class BackpackPanel extends ModularPanel {
         this.size(this.width, this.height);
         this.backpackSlotsHeight = this.height - 115;
 
-        this.backpackSyncHandler = new BackpackSH(new PlayerMainInvWrapper(player.inventory), this.handler);
+        this.backpackSyncHandler = new BackpackSH(new PlayerMainInvWrapper(player.inventory), this.handler, this);
         this.syncManager.syncValue("backpack_wrapper", this.backpackSyncHandler);
 
         this.backpackSlotSyncHandlers = new BackpackSlotSH[this.handler.getBackpackSlots()];
         for (int i = 0; i < this.handler.getBackpackSlots(); i++) {
             ModularBackpackSlot modularBackpackSlot = new ModularBackpackSlot(this.handler, i);
+            modularBackpackSlot.slotGroup("backpack_inventory");
             modularBackpackSlot.changeListener((lastStack, currentStack, isClient, init) -> {
-                if (isClient && !currentStack) {
+                if (isClient) {
                     searchBarWidget.research();
+                    handler.syncToServer();
                 }
             });
-            modularBackpackSlot.slotGroup("backpack_inventory");
-            BackpackSlotSH syncHandler = new BackpackSlotSH(this, this.handler, modularBackpackSlot);
+            BackpackSlotSH syncHandler = new BackpackSlotSH(modularBackpackSlot, this.handler, this);
             this.syncManager.syncValue("backpack", i, syncHandler);
             this.backpackSlotSyncHandlers[i] = syncHandler;
         }
@@ -194,10 +183,11 @@ public class BackpackPanel extends ModularPanel {
         for (int i = 0; i < this.handler.getUpgradeSlots(); i++) {
             ModularUpgradeSlot modularUpgradeSlot = new ModularUpgradeSlot(this.handler, i, this);
             modularUpgradeSlot.slotGroup("upgrade_inventory");
-            UpgradeSlotSH syncHandler = new UpgradeSlotSH(this, this.handler, modularUpgradeSlot);
+            UpgradeSlotSH syncHandler = new UpgradeSlotSH(modularUpgradeSlot, this.handler, this);
             modularUpgradeSlot.changeListener((lastStack, currentStack, isClient, init) -> {
                 if (isClient) {
                     updateUpgradeWidgets();
+                    handler.syncToServer();
                 }
             });
             this.syncManager.syncValue("upgrades", i, syncHandler);
@@ -208,6 +198,11 @@ public class BackpackPanel extends ModularPanel {
 
         settingPanel = this.syncManager
             .panel("setting_panel", (syncManager1, syncHandler) -> new BackpackSettingPanel(this), true);
+
+        this.settings.customContainer(() -> new BackPackContainer(handler, handler.slotIndex));
+
+        syncManager.bindPlayerInventory(player);
+        this.bindPlayerInventory();
     }
 
     public void modifyPlayerSlot(PanelSyncManager syncManager, InventoryType inventoryType, int slotIndex,

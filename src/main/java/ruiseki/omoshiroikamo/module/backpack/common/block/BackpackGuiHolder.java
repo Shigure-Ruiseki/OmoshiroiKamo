@@ -4,16 +4,12 @@ import static ruiseki.omoshiroikamo.core.common.util.MathUtils.ceilDiv;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
-import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
@@ -43,18 +39,13 @@ public abstract class BackpackGuiHolder {
         int width = 6 + Math.max(minWidth, Math.min(maxWidth, screenWidth / 4));
         int height = 115 + colSize * ItemSlot.SIZE;
 
-        return BackpackPanel.defaultPanel(
-            syncManager,
-            settings,
-            player,
-            tileEntity,
-            handler,
-            width,
-            height,
-            type == InventoryTypes.PLAYER ? backpackSlotIndex : null);
+        if (backpackSlotIndex != null) handler.setSlotIndex(backpackSlotIndex);
+        if (type != null) handler.setType(type);
+
+        return new BackpackPanel(player, tileEntity, syncManager, settings, handler, width, height);
     }
 
-    protected void addCommonWidgets(BackpackPanel panel, EntityPlayer player) {
+    protected void addCommonWidgets(BackpackPanel panel) {
         panel.addSortingButtons();
         panel.addTransferButtons();
         panel.addBackpackInventorySlots();
@@ -75,7 +66,7 @@ public abstract class BackpackGuiHolder {
         public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
             TileEntity tileEntity = data.getTileEntity();
             BackpackPanel panel = createPanel(syncManager, settings, data.getPlayer(), tileEntity, null, null);
-            addCommonWidgets(panel, data.getPlayer());
+            addCommonWidgets(panel);
             return panel;
         }
     }
@@ -96,36 +87,8 @@ public abstract class BackpackGuiHolder {
                 null,
                 data.getInventoryType(),
                 data.getSlotIndex());
-            addCommonWidgets(panel, data.getPlayer());
+            addCommonWidgets(panel);
             panel.modifyPlayerSlot(syncManager, data.getInventoryType(), data.getSlotIndex(), data.getPlayer());
-
-            syncManager.onCommonTick(() -> {
-                ItemStack used = data.getUsedItemStack();
-                if (used != null) {
-                    used.setTagCompound(
-                        handler.getBackpack()
-                            .getTagCompound());
-                }
-            });
-
-            syncManager.addCloseListener(player -> {
-                if (!(player instanceof EntityPlayerMP)) {
-                    return;
-                }
-
-                ItemStack used = data.getUsedItemStack();
-                NBTTagCompound tag = handler.getBackpack()
-                    .getTagCompound();
-
-                if (used != null) {
-                    used.setTagCompound(tag);
-                } else {
-                    ItemStack slotStack = player.inventory.getStackInSlot(data.getSlotIndex());
-                    if (slotStack != null) {
-                        slotStack.setTagCompound(tag);
-                    }
-                }
-            });
 
             return panel;
         }
