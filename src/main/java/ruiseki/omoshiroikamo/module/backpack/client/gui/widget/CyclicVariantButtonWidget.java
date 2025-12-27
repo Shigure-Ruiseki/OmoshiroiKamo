@@ -15,13 +15,13 @@ import lombok.Setter;
 
 public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonWidget> {
 
-    private final List<Variant> variants;
+    protected final List<Variant> variants;
     private int iconOffset = 2;
     private int iconSize = 16;
     private final IntConsumer mousePressedUpdater;
 
     @Getter
-    private int index;
+    protected int index;
     @Getter
     @Setter
     private boolean inEffect = true;

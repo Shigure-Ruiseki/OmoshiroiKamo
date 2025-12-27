@@ -128,11 +128,11 @@ public final class GuiTextures {
     public static final UITexture SMALL_1_ICON = icon("small_1", 36, 144, 12, 12);
     public static final UITexture SMALL_O_ICON = icon("small_ore_dict", 64, 144, 12, 12);
 
-    private static UITexture icon(String name, int x, int y) {
+    public static UITexture icon(String name, int x, int y) {
         return icon(name, x, y, 16, 16);
     }
 
-    private static UITexture icon(String name, int x, int y, int w, int h) {
+    public static UITexture icon(String name, int x, int y, int w, int h) {
         return UITexture.builder()
             .location(ICON_LOCATION)
             .imageSize(256, 256)

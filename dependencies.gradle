@@ -35,7 +35,7 @@
  */
 dependencies {
 
-    implementation("com.github.GTNewHorizons:GTNHLib:0.8.33:dev")
+    implementation("com.github.GTNewHorizons:GTNHLib:0.8.34:dev")
     implementation("com.github.GTNewHorizons:StructureLib:1.4.23:dev")
     implementation("com.github.GTNewHorizons:ModularUI2:2.3.24-1.7.10:dev")
 
