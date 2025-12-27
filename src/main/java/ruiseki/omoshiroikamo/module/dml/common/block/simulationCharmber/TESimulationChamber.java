@@ -21,7 +21,6 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
-import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerDataModel;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPolymerClay;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
@@ -130,19 +129,10 @@ public class TESimulationChamber extends AbstractMachineTE implements IEnergySin
 
     @Override
     protected CraftingState updateCraftingState() {
-        CraftingState state;
+        if (!hasDataModel()) return CraftingState.IDLE;
+        else if (!canContinueCrafting() || (!this.isCrafting() && !canStartCrafting())) return CraftingState.ERROR;
 
-        if (!hasDataModel()) {
-            state = CraftingState.IDLE;
-        } else if (!canContinueCrafting() || (!this.isCrafting() && !canStartCrafting())) {
-            state = CraftingState.ERROR;
-        } else {
-            state = CraftingState.RUNNING;
-        }
-
-        BlockStateUtils.setCraftingState(worldObj, xCoord, yCoord, zCoord, state);
-
-        return state;
+        return CraftingState.RUNNING;
     }
 
     @Override

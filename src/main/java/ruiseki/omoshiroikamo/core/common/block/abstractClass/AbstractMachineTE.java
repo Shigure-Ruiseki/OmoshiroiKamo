@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.crafting.CraftingState;
 import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
+import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.common.network.PacketCraftingState;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 
@@ -71,6 +72,11 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         CraftingState newState = updateCraftingState();
         if (craftingState != newState) {
             craftingState = newState;
+
+            if (worldObj != null && !worldObj.isRemote) {
+                BlockStateUtils.setCraftingState(worldObj, xCoord, yCoord, zCoord, craftingState);
+            }
+
             PacketHandler.sendToAllAround(new PacketCraftingState(this), this);
             markDirty();
         }
@@ -101,7 +107,9 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
             finishCrafting();
         }
 
-        markDirty();
+        if (shouldDoWorkThisTick(20)) {
+            markDirty();
+        }
     }
 
     protected abstract int getCraftingDuration();
@@ -158,6 +166,7 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         craftingTag.setBoolean("isCrafting", crafting);
         craftingTag.setInteger("progress", craftingProgress);
         craftingTag.setInteger("cDuration", currentCraftingDuration);
+        craftingTag.setInteger("craftingState", craftingState.ordinal());
         root.setTag(CRAFTING_TAG, craftingTag);
     }
 
@@ -169,5 +178,6 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         crafting = craftingTag.getBoolean("isCrafting");
         craftingProgress = craftingTag.getInteger("progress");
         currentCraftingDuration = craftingTag.getInteger("cDuration");
+        craftingState = CraftingState.values()[craftingTag.getInteger("craftingState")];
     }
 }
