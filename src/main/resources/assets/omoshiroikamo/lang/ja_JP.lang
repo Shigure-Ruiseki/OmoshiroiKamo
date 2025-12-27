@@ -62,6 +62,12 @@ gui.craftingState.idle=待機中
 gui.craftingState.running=稼働中
 gui.craftingState.error=エラー
 
+gui.redstone_mode.always_on=常にオン
+gui.redstone_mode.high_on=レッドストーン信号でオン
+gui.redstone_mode.high_off=レッドストーン信号でオフ
+gui.redstone_mode.always_off=常にオフ
+
+
 # Backpack Gui Elements
 container.backpack=バックパック
 

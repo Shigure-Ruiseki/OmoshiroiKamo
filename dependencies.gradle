@@ -35,7 +35,7 @@
  */
 dependencies {
 
-    implementation("com.github.GTNewHorizons:GTNHLib:0.8.33:dev")
+    implementation("com.github.GTNewHorizons:GTNHLib:0.8.34:dev")
     implementation("com.github.GTNewHorizons:StructureLib:1.4.23:dev")
     implementation("com.github.GTNewHorizons:ModularUI2:2.3.24-1.7.10:dev")
 
@@ -64,7 +64,7 @@ dependencies {
     compileOnly("curse.maven:actually-additions-228404:2274681")
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
     compileOnly("curse.maven:avaritia-233785:2519595")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:twilightforest:2.7.15:dev")
+    compileOnly("com.github.GTNewHorizons:twilightforest:2.7.15:dev")
 
     compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-716-GTNH:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:Chisel:2.17.0-GTNH:dev") { transitive = false }

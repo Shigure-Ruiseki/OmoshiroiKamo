@@ -1,0 +1,6 @@
+{
+  "parent": "omoshiroikamo:block/lootFabricatorIdle",
+  "textures": {
+    "front": "omoshiroikamo:block/loot_fabricator_running"
+  }
+}

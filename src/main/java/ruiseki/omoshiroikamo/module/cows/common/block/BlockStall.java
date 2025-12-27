@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +16,6 @@ import net.minecraftforge.fluids.FluidStack;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -41,13 +39,6 @@ public class BlockStall extends AbstractBlock<TEStall> {
     @Override
     public boolean isOpaqueCube() {
         return false;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
-        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
-        world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
     }
 
     @Override

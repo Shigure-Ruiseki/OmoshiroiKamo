@@ -4,12 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
+import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.module.chickens.client.model.ModelChickensChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.block.TERoost;
 
@@ -31,7 +33,8 @@ public class RoostTESR extends TileEntitySpecialRenderer {
             GL11.glPushMatrix();
             GL11.glTranslated(x + 0.5, y, z + 0.5);
 
-            GL11.glRotatef(getRotationAngle(tile.getFacing()), 0F, 1F, 0F);
+            ForgeDirection facing = tile.getFacing();
+            GL11.glRotatef(BlockStateUtils.getFacingAngle(facing), 0F, 1F, 0F);
 
             ResourceLocation CHICKEN_TEXTURE = chicken.getItem()
                 .getTexture();
@@ -46,19 +49,5 @@ public class RoostTESR extends TileEntitySpecialRenderer {
             GL11.glPopMatrix();
         }
 
-    }
-
-    private float getRotationAngle(int facing) {
-        switch (facing) {
-            case 0:
-                return 270;
-            case 1:
-                return 90f;
-            case 2:
-                return 0f;
-            case 3:
-                return 180f;
-        }
-        return 0f;
     }
 }

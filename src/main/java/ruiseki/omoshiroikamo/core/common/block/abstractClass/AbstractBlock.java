@@ -1,5 +1,10 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import static net.minecraftforge.common.util.ForgeDirection.EAST;
+import static net.minecraftforge.common.util.ForgeDirection.NORTH;
+import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
+import static net.minecraftforge.common.util.ForgeDirection.WEST;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -16,6 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 
 public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
@@ -29,6 +35,12 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     protected AbstractBlock(String name, Class<T> teClass) {
         this(name, teClass, Material.iron);
+    }
+
+    @Override
+    public void init() {
+        BlockStateUtils.registerFacingProp(this.getClass());
+        super.init();
     }
 
     @Override
@@ -71,20 +83,22 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
         int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
         te.readFromItemStack(stack);
-        te.setFacing(getFacingForHeading(heading));
-        if (world.isRemote) {
-            return;
-        }
         world.markBlockForUpdate(x, y, z);
+        ForgeDirection facing = getDirectionForHeading(heading);
+        BlockStateUtils.setFacingProp(world, x, y, z, facing);
     }
 
-    protected int getFacingForHeading(int heading) {
-        int[] map = { 2, 0, 3, 1 };
-        return map[heading];
+    private ForgeDirection getDirectionForHeading(int heading) {
+        return switch (heading) {
+            case 0 -> NORTH;
+            case 1 -> SOUTH;
+            case 2 -> WEST;
+            case 3 -> EAST;
+            default -> NORTH;
+        };
     }
 
     @Override

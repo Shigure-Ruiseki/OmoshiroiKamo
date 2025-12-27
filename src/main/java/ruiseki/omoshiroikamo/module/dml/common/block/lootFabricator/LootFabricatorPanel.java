@@ -21,7 +21,9 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.FloatSyncValue;
+import com.cleanroommc.modularui.value.sync.GenericSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -35,11 +37,12 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.core.common.util.MathUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.dml.client.gui.syncHandler.LootFabSH;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
+import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeButton;
 
 public class LootFabricatorPanel extends ModularPanel {
 
@@ -132,9 +135,6 @@ public class LootFabricatorPanel extends ModularPanel {
     @Getter
     private final UISettings settings;
 
-    @Getter
-    public final LootFabSH panelSyncHandler;
-
     private ModelRegistryItem pristineMatterData;
 
     private ImmutableList<ItemStack> lootItemList;
@@ -160,6 +160,7 @@ public class LootFabricatorPanel extends ModularPanel {
     private static final int ITEMS_PER_PAGE = 9;
     private static final int OUTPUT_SELECT_LIST_GUTTER = 1;
     private static final int OUTPUT_SELECT_BUTTON_SIZE = 18;
+    private GenericSyncValue<ItemStack> outputSyncer;
 
     public LootFabricatorPanel(TELootFabricator tileEntity, PosGuiData data, PanelSyncManager syncManager,
         UISettings settings) {
@@ -174,12 +175,18 @@ public class LootFabricatorPanel extends ModularPanel {
 
         this.outputItem = tileEntity.getOutputItem();
 
-        this.panelSyncHandler = new LootFabSH(tileEntity);
-        this.syncManager.syncValue("loot_fab_wrapper", this.panelSyncHandler);
         syncManager.syncValue("itemPageSyncer", new IntSyncValue(this::getCurrentOutputItemPage));
         syncManager.syncValue("energySyncer", new IntSyncValue(tileEntity::getEnergyStored));
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
-        syncManager.syncValue("processSyncer", new FloatSyncValue(tileEntity::getProgress));
+        FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
+        syncManager.syncValue("processSyncer", processSyncer);
+        outputSyncer = GenericSyncValue.forItem(tileEntity::getOutputItem, tileEntity::setOutputItem);
+        syncManager.syncValue("outputSyncer", outputSyncer);
+        EnumSyncValue<RedstoneMode> redstoneModeSyncer = new EnumSyncValue<>(
+            RedstoneMode.class,
+            tileEntity::getRedstoneMode,
+            tileEntity::setRedstoneMode);
+        syncManager.syncValue("redstoneModeSyncer", redstoneModeSyncer);
 
         deselectButton = new ButtonItemDeselect(this).pos(77, 5);
         prevPageButton = new ButtonPageSelect(Direction.PREV, this).pos(12, 66)
@@ -203,7 +210,7 @@ public class LootFabricatorPanel extends ModularPanel {
         }
 
         processBar = new ProgressWidget()
-            .value(new DoubleSyncValue(() -> Math.min(1.0, Math.max(0.0, tileEntity.getProgress()))))
+            .value(new DoubleSyncValue(processSyncer::getDoubleValue, processSyncer::setDoubleValue))
             .texture(null, PROGRESS_BAR, 35)
             .direction(ProgressWidget.Direction.UP)
             .size(6, 35)
@@ -251,6 +258,10 @@ public class LootFabricatorPanel extends ModularPanel {
                 .slot(new ModularSlot(tileEntity.input, 0).slotGroup("input"))
                 .pos(77, 61));
         syncManager.registerSlotGroup("input", 1, true);
+
+        this.child(
+            new RedstoneModeButton(redstoneModeSyncer).pos(-21, 0)
+                .excludeAreaInRecipeViewer());
 
         this.child(
             SlotGroupWidget.builder()
@@ -353,7 +364,7 @@ public class LootFabricatorPanel extends ModularPanel {
         }
 
         deselectButton.setDisplayStack(outputItem);
-        tileEntity.setOutputItem(outputItem);
+        outputSyncer.setValue(outputItem);
     }
 
     private void setPageButtonsEnabled(boolean enabled) {
@@ -401,9 +412,6 @@ public class LootFabricatorPanel extends ModularPanel {
             onMousePressed(btn -> {
                 if (btn == 0 && this.index >= 0) {
                     panel.setOutputItem(this.index);
-                    panel.panelSyncHandler.syncToServer(
-                        LootFabSH.UPDATE_OUTPUT_ITEM,
-                        buffer -> { buffer.writeItemStackToBuffer(panel.outputItem); });
                     return true;
                 }
                 return false;
@@ -445,9 +453,6 @@ public class LootFabricatorPanel extends ModularPanel {
             onMousePressed(btn -> {
                 if (btn == 0) {
                     panel.setOutputItem(-1);
-                    panel.panelSyncHandler.syncToServer(
-                        LootFabSH.UPDATE_OUTPUT_ITEM,
-                        buffer -> { buffer.writeItemStackToBuffer(panel.outputItem); });
                     return true;
                 }
                 return false;

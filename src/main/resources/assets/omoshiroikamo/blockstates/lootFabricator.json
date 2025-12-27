@@ -1,8 +1,16 @@
 {
   "variants": {
-    "meta=0": { "model": "omoshiroikamo:block/lootFabricator", "y": 270 },
-    "meta=1": { "model": "omoshiroikamo:block/lootFabricator", "y": 90 },
-    "meta=2": { "model": "omoshiroikamo:block/lootFabricator", "y": 0 },
-    "meta=3": { "model": "omoshiroikamo:block/lootFabricator", "y": 180 }
+    "meta=0": { "model": "omoshiroikamo:block/lootFabricatorIdle", "y": 270 },
+    "meta=1": { "model": "omoshiroikamo:block/lootFabricatorIdle", "y": 90 },
+    "meta=2": { "model": "omoshiroikamo:block/lootFabricatorIdle", "y": 0 },
+    "meta=3": { "model": "omoshiroikamo:block/lootFabricatorIdle", "y": 180 },
+    "meta=4": { "model": "omoshiroikamo:block/lootFabricatorRunning", "y": 270 },
+    "meta=5": { "model": "omoshiroikamo:block/lootFabricatorRunning", "y": 90 },
+    "meta=6": { "model": "omoshiroikamo:block/lootFabricatorRunning", "y": 0 },
+    "meta=7": { "model": "omoshiroikamo:block/lootFabricatorRunning", "y": 180 },
+    "meta=8": { "model": "omoshiroikamo:block/lootFabricatorError", "y": 270 },
+    "meta=9": { "model": "omoshiroikamo:block/lootFabricatorError", "y": 90 },
+    "meta=10": { "model": "omoshiroikamo:block/lootFabricatorError", "y": 0 },
+    "meta=11": { "model": "omoshiroikamo:block/lootFabricatorError", "y": 180 }
   }
 }

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -33,7 +34,7 @@ public abstract class AbstractTieredMBBlock<T extends AbstractMBModifierTE> exte
         GameRegistry.registerBlock(this, getItemBlockClass(), name);
     }
 
-    protected abstract Class<? extends net.minecraft.item.ItemBlock> getItemBlockClass();
+    protected abstract Class<? extends ItemBlock> getItemBlockClass();
 
     @Override
     public TileEntity createTileEntity(World world, int meta) {

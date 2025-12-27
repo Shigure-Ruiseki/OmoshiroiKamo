@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -16,7 +15,7 @@ import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
@@ -27,6 +26,12 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
     public static BlockSimulationChamber create() {
         return new BlockSimulationChamber();
+    }
+
+    @Override
+    public void init() {
+        BlockStateUtils.registerCraftingStateProp(this.getClass());
+        super.init();
     }
 
     @Override
@@ -47,13 +52,6 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
     @Override
     public int damageDropped(int meta) {
         return 0;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
-        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
-        world.setBlockMetadataWithNotify(x, y, z, te.getFacing(), 2);
     }
 
     @Override

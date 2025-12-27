@@ -20,6 +20,7 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.FloatSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
@@ -30,10 +31,12 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
+import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
 import ruiseki.omoshiroikamo.core.common.util.StringUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
+import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeButton;
 
 public class SimulationChamberPanel extends ModularPanel {
 
@@ -81,6 +84,7 @@ public class SimulationChamberPanel extends ModularPanel {
     private static final int REDSTONE_DEACTIVATED_LINE_LENGTH = 28;
     private static final int BLINKING_CURSOR_SPEED = 16;
     private static final int ROW_SPACING = 12;
+    private FloatSyncValue processSyncer;
 
     private final StringAnimator<AnimatedString> progressAnimator = new StringAnimator<>(); // Used to display
                                                                                             // simulation progress
@@ -129,7 +133,13 @@ public class SimulationChamberPanel extends ModularPanel {
 
         syncManager.syncValue("energySyncer", new IntSyncValue(tileEntity::getEnergyStored));
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
-        syncManager.syncValue("processSyncer", new FloatSyncValue(tileEntity::getProgress));
+        processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
+        syncManager.syncValue("processSyncer", processSyncer);
+        EnumSyncValue<RedstoneMode> redstoneModeSyncer = new EnumSyncValue<>(
+            RedstoneMode.class,
+            tileEntity::getRedstoneMode,
+            tileEntity::setRedstoneMode);
+        syncManager.syncValue("redstoneModeSyncer", redstoneModeSyncer);
 
         this.child(new ProgressWidget().value(new DoubleSyncValue(() -> {
             if (!tileEntity.hasDataModel()) return 0.0;
@@ -188,6 +198,10 @@ public class SimulationChamberPanel extends ModularPanel {
                             .localize("gui.simulation_chamber.tooltip.sim_cost", tileEntity.getCraftingEnergyCost()));
                     tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
                 }));
+
+        this.child(
+            new RedstoneModeButton(redstoneModeSyncer).pos(-20, 20)
+                .excludeAreaInRecipeViewer());
 
         this.child(
             new ItemSlot().slot(new ModularSlot(tileEntity.inputDataModel, 0))
@@ -376,8 +390,7 @@ public class SimulationChamberPanel extends ModularPanel {
             simulationErrorAnimator.advance(advanceAmount);
             strings = simulationErrorAnimator.getCurrentStrings();
         } else {
-            float relativeProgress = tileEntity.getRelativeCraftingProgress();
-            progressAnimator.goToRelativePosition(relativeProgress);
+            progressAnimator.goToRelativePosition(processSyncer.getFloatValue());
             strings = progressAnimator.getCurrentStrings();
         }
 

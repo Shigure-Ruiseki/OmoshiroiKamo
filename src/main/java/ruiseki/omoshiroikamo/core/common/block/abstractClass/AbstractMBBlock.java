@@ -67,7 +67,6 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof AbstractMBModifierTE blockModifierTE) {
             if (player instanceof EntityPlayer) {
@@ -78,14 +77,4 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
 
     @Override
     protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    protected int getFacingForHeading(int heading) {
-        // The default implementation maps some headings to UP(1) or DOWN(0),
-        // which causes the multiblock structure check to rotate vertically and fail
-        // when placed from East/West directions.
-        // We force NORTH(2) here to ensure the structure is always checked consistently
-        // in a horizontal orientation, regardless of how the player places the block.
-        return 2;
-    }
 }

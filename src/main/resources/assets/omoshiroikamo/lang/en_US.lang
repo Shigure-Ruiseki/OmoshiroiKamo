@@ -52,13 +52,18 @@ option.omoshiroikamo.grownTime=Grown Time
 #Gui
 
 gui.powerMonitor.of=of
-gui.progress=Progress: %.2f%%
-gui.efficiency=Efficiency: %.2f%%
+gui.progress=Progress: %.1f%%
+gui.efficiency=Efficiency: %.1f%%
 gui.sunlightBlocked=Sky Blocked!
 
 gui.craftingState.idle=Idle
 gui.craftingState.running=Processing
 gui.craftingState.error=Error
+
+gui.redstone_mode.always_on=Always on
+gui.redstone_mode.high_on=On with redstone signal
+gui.redstone_mode.high_off=Off with redstone signal
+gui.redstone_mode.always_off=Always off
 
 # Backpack Gui Elements
 container.backpack=Backpack
