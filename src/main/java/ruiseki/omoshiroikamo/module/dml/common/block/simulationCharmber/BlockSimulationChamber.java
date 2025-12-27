@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -16,7 +15,6 @@ import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
