@@ -139,44 +139,20 @@ public class TEMachineController extends AbstractMBModifierTE {
             return;
         }
 
-        // Use simple check when no structure definition
-        if (!shouldDoWorkThisTick(20) && isFormed) {
-            // processTasks is called by TileEntityOK.updateEntity, so just return
+        // Check structure every 20 ticks (1 second)
+        if (!shouldDoWorkThisTick(20)) {
             return;
         }
 
-        // Periodic structure validation
-        if (!isFormed) {
-            trySimpleFormStructure();
-        } else {
-            // Revalidate structure periodically
-            if (!validateSimpleStructure()) {
-                isFormed = false;
-                clearStructureParts();
-            }
-        }
-    }
+        // Always re-scan structure to update IO ports
+        boolean wasFormed = isFormed;
+        boolean nowFormed = trySimpleFormStructure();
 
-    /**
-     * Validate the simple 3x3x3 structure is still intact.
-     */
-    private boolean validateSimpleStructure() {
-        int casingCount = 0;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    if (dx == 0 && dy == 0 && dz == 0) continue;
-                    Block block = worldObj.getBlock(xCoord + dx, yCoord + dy, zCoord + dz);
-                    if (block == MachineryBlocks.MACHINE_CASING.getBlock()
-                        || block == MachineryBlocks.ITEM_INPUT_PORT.getBlock()
-                        || block == MachineryBlocks.ITEM_OUTPUT_PORT.getBlock()
-                        || block == MachineryBlocks.ENERGY_INPUT_PORT.getBlock()) {
-                        casingCount++;
-                    }
-                }
-            }
+        // If structure was broken, clear parts
+        if (wasFormed && !nowFormed) {
+            isFormed = false;
+            clearStructureParts();
         }
-        return casingCount >= 26;
     }
 
     @Override
@@ -202,6 +178,10 @@ public class TEMachineController extends AbstractMBModifierTE {
         }
 
         if (isFormed) {
+            // If IO ports are empty, re-check structure to populate them
+            if (itemInputPorts.isEmpty() && itemOutputPorts.isEmpty() && energyInputPorts.isEmpty()) {
+                trySimpleFormStructure();
+            }
             player.addChatComponentMessage(
                 new ChatComponentText(
                     "[Machine] Status: " + getCraftingState().name()
@@ -214,11 +194,15 @@ public class TEMachineController extends AbstractMBModifierTE {
         } else {
             // Trigger structure check manually
             setPlayer(player);
-            boolean success = structureCheck(
-                getStructurePieceName(),
-                getOffSet()[getTier() - 1][0],
-                getOffSet()[getTier() - 1][1],
-                getOffSet()[getTier() - 1][2]);
+
+            boolean success = false;
+            if (STRUCTURE_DEFINITION != null) {
+                success = structureCheck(
+                    getStructurePieceName(),
+                    getOffSet()[getTier() - 1][0],
+                    getOffSet()[getTier() - 1][1],
+                    getOffSet()[getTier() - 1][2]);
+            }
 
             if (success) {
                 player.addChatComponentMessage(new ChatComponentText("[Machine] Structure formed successfully!"));
@@ -236,18 +220,16 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     /**
      * Simple 3x3x3 structure check for MVP testing.
+     * Controller is on the front face (Z=0), structure extends behind (Z+1 to Z+3)
      */
     private boolean trySimpleFormStructure() {
         clearStructureParts();
 
         int casingCount = 0;
+        // Check 3x3x3 area behind the controller (Z+1 to Z+3)
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    if (dx == 0 && dy == 0 && dz == 0) {
-                        continue;
-                    }
-
+                for (int dz = 1; dz <= 3; dz++) {
                     int checkX = xCoord + dx;
                     int checkY = yCoord + dy;
                     int checkZ = zCoord + dz;
@@ -265,7 +247,7 @@ public class TEMachineController extends AbstractMBModifierTE {
             }
         }
 
-        if (casingCount >= 26) {
+        if (casingCount >= 27) {
             isFormed = true;
             onFormed();
             return true;
