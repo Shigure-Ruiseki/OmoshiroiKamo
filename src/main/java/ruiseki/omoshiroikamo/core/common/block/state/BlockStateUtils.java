@@ -19,21 +19,22 @@ import ruiseki.omoshiroikamo.api.crafting.CraftingState;
 
 public class BlockStateUtils {
 
-    public static void registerFacingProp(Class<? extends Block> clazz) {
+    public static final DirectionBlockProperty FACING = DirectionBlockProperty.facing(0b0011, dir -> switch (dir) {
+        case SOUTH -> 0;
+        case EAST -> 1;
+        case NORTH -> 2;
+        case WEST -> 3;
+        default -> 0;
+    }, meta -> switch (meta & 0b0011) {
+        case 0 -> SOUTH;
+        case 1 -> EAST;
+        case 2 -> NORTH;
+        case 3 -> WEST;
+        default -> NORTH;
+    });
 
-        registerProperty(clazz, DirectionBlockProperty.facing(0b11, dir -> switch (dir) {
-            case SOUTH -> 0;
-            case EAST -> 1;
-            case NORTH -> 2;
-            case WEST -> 3;
-            default -> 0;
-        }, meta -> switch (meta) {
-            case 0 -> SOUTH;
-            case 1 -> EAST;
-            case 2 -> NORTH;
-            case 3 -> WEST;
-            default -> NORTH;
-        }));
+    public static void registerFacingProp(Class<? extends Block> clazz) {
+        registerProperty(clazz, FACING);
     }
 
     public static void setFacingProp(World world, int x, int y, int z, ForgeDirection facing) {
@@ -58,7 +59,7 @@ public class BlockStateUtils {
         };
     }
 
-    public static final IntegerBlockProperty CRAFTING_STATE = IntegerBlockProperty.meta("craftingState", 0b11, 0);
+    public static final IntegerBlockProperty CRAFTING_STATE = IntegerBlockProperty.meta("craftingState", 0b1100, 2);
 
     public static void registerCraftingStateProp(Class<? extends Block> clazz) {
         registerProperty(clazz, CRAFTING_STATE);

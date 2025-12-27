@@ -15,6 +15,7 @@ import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
@@ -25,6 +26,12 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
     public static BlockSimulationChamber create() {
         return new BlockSimulationChamber();
+    }
+
+    @Override
+    public void init() {
+        BlockStateUtils.registerCraftingStateProp(this.getClass());
+        super.init();
     }
 
     @Override
