@@ -7,7 +7,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
-import ruiseki.omoshiroikamo.module.machinery.client.MachineryClient;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 
 /**
@@ -36,9 +35,10 @@ public class MachineryCommon implements IModuleCommon {
         MachineryBlocks.preInit();
 
         // Client-side texture generation setup
+        // MachineryClient implements IModuleClient and is called by the module loader
         if (event.getSide()
             .isClient()) {
-            MachineryClient.preInit();
+            new MachineryClient().preInit(event);
         }
     }
 

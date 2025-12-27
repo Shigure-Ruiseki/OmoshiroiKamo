@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.machinery.client;
+package ruiseki.omoshiroikamo.module.machinery.client.util;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -122,10 +123,10 @@ public class MachineryTextureGenerator {
             try {
                 // Create combined texture sprite
                 CombinedTextureSprite sprite = new CombinedTextureSprite(
-                    name,
-                    request.baseTexture,
-                    request.overlayTexture,
-                    request.tintColor);
+                        name,
+                        request.baseTexture,
+                        request.overlayTexture,
+                        request.tintColor);
 
                 // Register the sprite with the texture map
                 textureMap.setTextureEntry(LibMisc.MOD_ID + ":generated/" + name, sprite);
@@ -187,21 +188,20 @@ public class MachineryTextureGenerator {
         }
 
         @Override
-        public boolean hasCustomLoader(net.minecraft.client.resources.IResourceManager manager,
-            ResourceLocation location) {
+        public boolean hasCustomLoader(IResourceManager manager, ResourceLocation location) {
             return true;
         }
 
         @Override
-        public boolean load(net.minecraft.client.resources.IResourceManager manager, ResourceLocation location) {
+        public boolean load(IResourceManager manager, ResourceLocation location) {
             try {
                 // Load base and overlay textures
                 ResourceLocation baseLoc = new ResourceLocation(
-                    LibMisc.MOD_ID,
-                    TEXTURE_PREFIX + baseTexturePath + ".png");
+                        LibMisc.MOD_ID,
+                        TEXTURE_PREFIX + baseTexturePath + ".png");
                 ResourceLocation overlayLoc = new ResourceLocation(
-                    LibMisc.MOD_ID,
-                    TEXTURE_PREFIX + overlayTexturePath + ".png");
+                        LibMisc.MOD_ID,
+                        TEXTURE_PREFIX + overlayTexturePath + ".png");
 
                 BufferedImage baseImage = readTexture(baseLoc);
                 BufferedImage overlayImage = readTexture(overlayLoc);
@@ -228,10 +228,16 @@ public class MachineryTextureGenerator {
                 int[] pixels = new int[width * height];
                 combined.getRGB(0, 0, width, height, pixels, 0, width);
 
-                // Set up frame data
-                int[][] frameData = new int[1][];
-                frameData[0] = pixels;
-                this.framesTextureData.add(frameData[0]);
+                // Set up frame data - framesTextureData is List<int[][]>
+                // Each element is mipmap levels array where [0] = base, [1..n] = mipmap levels
+                // We need at least 5 levels (base + 4 mipmaps) to avoid
+                // ArrayIndexOutOfBoundsException
+                // Minecraft will regenerate mipmaps, but needs the array structure
+                int mipmapLevels = 5;
+                int[][] frame = new int[mipmapLevels][];
+                frame[0] = pixels; // Base texture
+                // Other levels left null - Minecraft will generate them
+                this.framesTextureData.add(frame);
 
                 this.width = width;
                 this.height = height;
@@ -257,7 +263,8 @@ public class MachineryTextureGenerator {
             for (int i = 0; i < pixels.length; i++) {
                 int p = pixels[i];
                 int a = (p >> 24) & 0xFF;
-                if (a == 0) continue;
+                if (a == 0)
+                    continue;
 
                 int r = (p >> 16) & 0xFF;
                 int g = (p >> 8) & 0xFF;
@@ -278,9 +285,10 @@ public class MachineryTextureGenerator {
         private BufferedImage readTexture(ResourceLocation loc) {
             try {
                 IResource res = Minecraft.getMinecraft()
-                    .getResourceManager()
-                    .getResource(loc);
-                if (res == null) return null;
+                        .getResourceManager()
+                        .getResource(loc);
+                if (res == null)
+                    return null;
                 try (InputStream stream = res.getInputStream()) {
                     return ImageIO.read(stream);
                 }

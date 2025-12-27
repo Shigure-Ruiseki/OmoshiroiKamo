@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.module.machinery.client.MachineryTextureGenerator;
+import ruiseki.omoshiroikamo.module.machinery.client.util.MachineryTextureGenerator;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemOutputPort;
 
 /**
