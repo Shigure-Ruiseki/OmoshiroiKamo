@@ -160,7 +160,7 @@ public class LootFabricatorPanel extends ModularPanel {
     private static final int ITEMS_PER_PAGE = 9;
     private static final int OUTPUT_SELECT_LIST_GUTTER = 1;
     private static final int OUTPUT_SELECT_BUTTON_SIZE = 18;
-    private float lastProgress = -1f;
+    private GenericSyncValue<ItemStack> outputSyncer;
 
     public LootFabricatorPanel(TELootFabricator tileEntity, PosGuiData data, PanelSyncManager syncManager,
         UISettings settings) {
@@ -180,8 +180,8 @@ public class LootFabricatorPanel extends ModularPanel {
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
         FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
         syncManager.syncValue("processSyncer", processSyncer);
-        syncManager
-            .syncValue("outputSyncer", GenericSyncValue.forItem(tileEntity::getOutputItem, tileEntity::setOutputItem));
+        outputSyncer = GenericSyncValue.forItem(tileEntity::getOutputItem, tileEntity::setOutputItem);
+        syncManager.syncValue("outputSyncer", outputSyncer);
         EnumSyncValue<RedstoneMode> redstoneModeSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             tileEntity::getRedstoneMode,
@@ -364,7 +364,7 @@ public class LootFabricatorPanel extends ModularPanel {
         }
 
         deselectButton.setDisplayStack(outputItem);
-        tileEntity.setOutputItem(outputItem);
+        outputSyncer.setValue(outputItem);
     }
 
     private void setPageButtonsEnabled(boolean enabled) {
