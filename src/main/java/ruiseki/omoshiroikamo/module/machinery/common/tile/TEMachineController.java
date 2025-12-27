@@ -177,14 +177,18 @@ public class TEMachineController extends AbstractMBModifierTE {
             return;
         }
 
-        if (isFormed) {
-            // If IO ports are empty, re-check structure to populate them
-            if (itemInputPorts.isEmpty() && itemOutputPorts.isEmpty() && energyInputPorts.isEmpty()) {
-                trySimpleFormStructure();
-            }
+        // Always re-scan structure on click for instant feedback
+        setPlayer(player);
+        boolean wasFormed = isFormed;
+        boolean nowFormed = trySimpleFormStructure();
+
+        if (nowFormed) {
+            String status = wasFormed ? "Status" : "Structure formed";
             player.addChatComponentMessage(
                 new ChatComponentText(
-                    "[Machine] Status: " + getCraftingState().name()
+                    "[Machine] " + status
+                        + ": "
+                        + getCraftingState().name()
                         + " | Item Inputs: "
                         + itemInputPorts.size()
                         + " | Item Outputs: "
@@ -192,29 +196,8 @@ public class TEMachineController extends AbstractMBModifierTE {
                         + " | Energy Inputs: "
                         + energyInputPorts.size()));
         } else {
-            // Trigger structure check manually
-            setPlayer(player);
-
-            boolean success = false;
-            if (STRUCTURE_DEFINITION != null) {
-                success = structureCheck(
-                    getStructurePieceName(),
-                    getOffSet()[getTier() - 1][0],
-                    getOffSet()[getTier() - 1][1],
-                    getOffSet()[getTier() - 1][2]);
-            }
-
-            if (success) {
-                player.addChatComponentMessage(new ChatComponentText("[Machine] Structure formed successfully!"));
-            } else {
-                // For MVP without proper structure definition, use simple check
-                if (trySimpleFormStructure()) {
-                    player.addChatComponentMessage(new ChatComponentText("[Machine] Structure formed successfully!"));
-                } else {
-                    player.addChatComponentMessage(
-                        new ChatComponentText("[Machine] Invalid structure. Check block placement."));
-                }
-            }
+            player.addChatComponentMessage(
+                new ChatComponentText("[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
         }
     }
 
