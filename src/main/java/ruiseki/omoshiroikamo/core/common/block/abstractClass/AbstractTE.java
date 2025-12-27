@@ -22,35 +22,86 @@ import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
+/**
+ * Base class for tile entities in Omoshiroi Kamo mod.
+ * <p>
+ * Provides common functionality such as:
+ * <ul>
+ * <li>Redstone handling</li>
+ * <li>Client-side synchronization</li>
+ * <li>GUI handling via ModularUI</li>
+ * <li>Interaction with ItemStacks for saving/loading</li>
+ * </ul>
+ */
 public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData> {
 
-    // Client sync monitoring
+    /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
+
+    /** Last known active state (for client sync). */
     protected boolean lastActive;
+
+    /** Ticks since last active state change. */
     protected int ticksSinceActiveChanged = 0;
+
+    /** Randomly toggled for visual updates. */
     protected boolean isDirty = false;
 
+    /** Redstone mode of the machine (ALWAYS_ON, PULSE, etc.). */
     @Getter
     protected RedstoneMode redstoneMode = RedstoneMode.ALWAYS_ON;
+
+    /** Current redstone power state. */
     @Setter
     protected boolean redstonePowered = false;
+
+    /** Current redstone power level (0-15). */
     @Setter
     protected int redstoneLevel = 0;
+
+    /** Flag indicating if redstone state needs updating. */
     protected boolean redstoneStateDirty = true;
 
+    /** Flag indicating that neighbor blocks need notification. */
     protected boolean notifyNeighbours = false;
 
+    /** NBT tag name for inventory data. */
     public static String INVENTORY_TAG = "inventory";
 
+    /**
+     * Returns the facing direction of the tile entity based on block state.
+     *
+     * @return facing direction
+     */
     public ForgeDirection getFacing() {
         return BlockStateUtils.getFacingProp(worldObj, xCoord, yCoord, zCoord);
     }
 
+    /**
+     * Called when a player right-clicks the block.
+     *
+     * @param world  the world
+     * @param player the player
+     * @param side   the side of the block clicked
+     * @param hitX   local hit X coordinate
+     * @param hitY   local hit Y coordinate
+     * @param hitZ   local hit Z coordinate
+     * @return true if the block handled the activation
+     */
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
         return false;
     }
 
+    /**
+     * Handles neighbor block changes, updates redstone state, and flags neighbor notification.
+     *
+     * @param world the world
+     * @param x     x-coordinate
+     * @param y     y-coordinate
+     * @param z     z-coordinate
+     * @param block neighbor block that changed
+     */
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         int oldLevel = redstoneLevel;
         redstoneLevel = world.getStrongestIndirectPower(x, y, z);
@@ -63,25 +114,55 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         }
     }
 
+    /**
+     * Returns the localized machine name based on block type.
+     *
+     * @return machine name
+     */
     public String getMachineName() {
         return LibMisc.LANG.localize(
             this.worldObj.getBlock(xCoord, yCoord, zCoord)
                 .getUnlocalizedName());
     }
 
+    /**
+     * Returns whether the machine is currently active.
+     *
+     * @return true if active
+     */
     public abstract boolean isActive();
 
+    /**
+     * Checks if the machine is allowed to operate based on redstone mode.
+     *
+     * @return true if machine is redstone active
+     */
     public boolean isRedstoneActive() {
         return RedstoneMode.isActive(redstoneMode, redstonePowered);
     }
 
+    /**
+     * Sets the redstone mode and forces client update.
+     *
+     * @param mode new redstone mode
+     */
     public void setRedstoneMode(RedstoneMode mode) {
         redstoneMode = mode;
         forceClientUpdate = true;
     }
 
+    /**
+     * Processes machine tasks. Called each tick.
+     *
+     * @param redstoneCheckPassed true if redstone allows operation
+     * @return true if the tile entity performed tasks
+     */
     public abstract boolean processTasks(boolean redstoneCheckPassed);
 
+    /**
+     * Updates the tile entity each tick.
+     * Handles client sync, redstone changes, task processing, and neighbor notifications.
+     */
     @Override
     public void doUpdate() {
         if (worldObj.isRemote) {
@@ -110,6 +191,10 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         }
     }
 
+    /**
+     * Updates the client-side state for visual representation.
+     * Handles active state changes and dirty toggling for animations.
+     */
     public void updateEntityClient() {
         if (isActive() != lastActive) {
             ticksSinceActiveChanged++;

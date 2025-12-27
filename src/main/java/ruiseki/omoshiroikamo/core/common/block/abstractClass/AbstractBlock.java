@@ -84,6 +84,9 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
+        te.readFromItemStack(stack);
+        world.markBlockForUpdate(x, y, z);
         ForgeDirection facing = getDirectionForHeading(heading);
         BlockStateUtils.setFacingProp(world, x, y, z, facing);
     }

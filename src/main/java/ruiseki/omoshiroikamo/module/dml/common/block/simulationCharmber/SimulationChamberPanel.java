@@ -376,7 +376,7 @@ public class SimulationChamberPanel extends ModularPanel {
             simulationErrorAnimator.advance(advanceAmount);
             strings = simulationErrorAnimator.getCurrentStrings();
         } else {
-            float relativeProgress = tileEntity.getRelativeCraftingProgress();
+            float relativeProgress = tileEntity.getProgress();
             progressAnimator.goToRelativePosition(relativeProgress);
             strings = progressAnimator.getCurrentStrings();
         }
