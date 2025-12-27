@@ -5,9 +5,6 @@ import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 /**
  * Machine Casing - basic structural block for Modular Machinery.
  * Used as the main building block for machine structures.
- * 
- * TODO: Texture required -
- * assets/omoshiroikamo/textures/blocks/machinery/machine_casing.png
  */
 public class BlockMachineCasing extends BlockOK {
 
@@ -23,6 +20,6 @@ public class BlockMachineCasing extends BlockOK {
 
     @Override
     public String getTextureName() {
-        return "machinery/machine_casing";
+        return "modular_machine_casing";
     }
 }

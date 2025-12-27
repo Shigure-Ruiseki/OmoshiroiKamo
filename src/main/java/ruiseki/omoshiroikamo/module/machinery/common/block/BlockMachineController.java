@@ -12,9 +12,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * Machine Controller - the brain of a Modular Machinery structure.
  * This block is mapped to the 'Q' symbol in structure definitions.
  * When right-clicked, it validates and forms the multiblock structure.
- * 
- * TODO: Texture required -
- * assets/omoshiroikamo/textures/blocks/machinery/machine_controller.png
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> {
 
