@@ -16,7 +16,8 @@ import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
  * ▼
  * CRAFTING
  * │ per tick:
- * │ - consume energy
+ * │ - onCrafting
+ * │   - consume energy (optional)
  * │ - +progress
  * │
  * │ (progress >= duration)
