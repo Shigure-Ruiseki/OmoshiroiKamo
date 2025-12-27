@@ -196,34 +196,96 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
             return false;
         }
 
-        if (!isChild() && milkTank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME
-            && stack.getItem() instanceof IFluidContainerItem) {
-            FluidStack milkToDrain = milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-            if (milkToDrain.amount == 1000) {
-                ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(milkToDrain, stack);
-                worldObj.playSoundAtEntity(this, "mob.cow.milking", 1.0F, 1.0F);
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
-                syncMilkFluid();
-                return true;
-            }
+        if (tryMilking(player, stack)) {
+            return true;
         }
 
-        if (!(player instanceof FakePlayer)) {
-
-            if (this.isChild() && isBreedingItem(stack)) {
-                --stack.stackSize;
-                this.addGrowth((int) ((-this.getGrowingAge() / 20.0F) * 0.1F));
-                return true;
-            }
-
-            if (isBreedingItem(stack) && this.getGrowingAge() == 0 && !this.isInLove()) {
-                --stack.stackSize;
-                this.func_146082_f(player);
-                return true;
-            }
+        if (player instanceof FakePlayer) {
+            return handleBucketOrSuper(player, stack);
         }
 
+        if (this.isChild() && isBreedingItem(stack)) {
+            --stack.stackSize;
+            this.addGrowth((int) ((-this.getGrowingAge() / 20.0F) * 0.1F));
+            return true;
+        }
+
+        if (isBreedingItem(stack) && this.getGrowingAge() == 0 && !this.isInLove()) {
+            --stack.stackSize;
+            this.func_146082_f(player);
+            return true;
+        }
+
+        return handleBucketOrSuper(player, stack);
+    }
+
+    private boolean handleBucketOrSuper(EntityPlayer player, ItemStack stack) {
+        if (stack.getItem() == Items.bucket) {
+            return false;
+        }
         return super.interact(player);
+    }
+
+    private boolean tryMilking(EntityPlayer player, ItemStack stack) {
+        if (isChild() || milkTank.getFluidAmount() < FluidContainerRegistry.BUCKET_VOLUME) {
+            return false;
+        }
+
+        if (FluidContainerRegistry.isEmptyContainer(stack)) {
+            return tryFillContainer(player, stack);
+        }
+
+        if (stack.getItem() instanceof IFluidContainerItem) {
+            return tryFillFluidContainerItem(player, stack);
+        }
+
+        return false;
+    }
+
+    private boolean tryFillContainer(EntityPlayer player, ItemStack stack) {
+        FluidStack milkToDrain = milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, false);
+        if (milkToDrain == null || milkToDrain.amount < FluidContainerRegistry.BUCKET_VOLUME) {
+            return false;
+        }
+
+        ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(milkToDrain, stack);
+        if (filledContainer == null) {
+            return false;
+        }
+
+        milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+        worldObj.playSoundAtEntity(this, "mob.cow.milking", 1.0F, 1.0F);
+
+        if (stack.stackSize == 1) {
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, filledContainer);
+        } else {
+            --stack.stackSize;
+            if (!player.inventory.addItemStackToInventory(filledContainer)) {
+                player.dropPlayerItemWithRandomChoice(filledContainer, false);
+            }
+        }
+
+        syncMilkFluid();
+        return true;
+    }
+
+    private boolean tryFillFluidContainerItem(EntityPlayer player, ItemStack stack) {
+        IFluidContainerItem container = (IFluidContainerItem) stack.getItem();
+        FluidStack milkToDrain = milkTank.drain(FluidContainerRegistry.BUCKET_VOLUME, false);
+
+        if (milkToDrain == null || milkToDrain.amount < FluidContainerRegistry.BUCKET_VOLUME) {
+            return false;
+        }
+
+        int filled = container.fill(stack, milkToDrain, true);
+        if (filled <= 0) {
+            return false;
+        }
+
+        milkTank.drain(filled, true);
+        worldObj.playSoundAtEntity(this, "mob.cow.milking", 1.0F, 1.0F);
+        syncMilkFluid();
+        return true;
     }
 
     @Override
