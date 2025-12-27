@@ -9,6 +9,9 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
  * Item Input Port TileEntity.
  * Holds a single slot for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
+ * 
+ * TODO: Texture required -
+ * assets/omoshiroikamo/textures/blocks/machinery/item_input_port.png
  */
 public class TEItemInputPort extends AbstractStorageTE {
 

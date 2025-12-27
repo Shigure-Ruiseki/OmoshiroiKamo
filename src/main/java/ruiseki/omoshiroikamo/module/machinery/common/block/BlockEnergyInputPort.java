@@ -1,31 +1,29 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
+import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEEnergyInputPort;
 
 /**
  * Energy Input Port - accepts RF energy for machine processing.
  * Can be placed at IO slot positions in machine structures.
+ * 
+ * TODO: Texture required -
+ * assets/omoshiroikamo/textures/blocks/machinery/energy_input_port.png
  */
-public class BlockEnergyInputPort extends Block implements ITileEntityProvider {
+public class BlockEnergyInputPort extends BlockOK {
 
-    public BlockEnergyInputPort() {
-        super(Material.iron);
-        setBlockName("energyInputPort");
-        setBlockTextureName("omoshiroikamo:machinery/energy_input_port");
+    protected BlockEnergyInputPort() {
+        super("modularEnergyInput", TEEnergyInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
-        setCreativeTab(CreativeTabs.tabRedstone);
+    }
+
+    public static BlockEnergyInputPort create() {
+        return new BlockEnergyInputPort();
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
-        return new TEEnergyInputPort();
+    public BlockOK setTextureName(String texture) {
+        return super.setTextureName("machinery/energy_input_port");
     }
 }

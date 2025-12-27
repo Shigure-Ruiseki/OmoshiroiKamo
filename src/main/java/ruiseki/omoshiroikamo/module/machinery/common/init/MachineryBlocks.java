@@ -1,52 +1,70 @@
 package ruiseki.omoshiroikamo.module.machinery.common.init;
 
-import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEEnergyInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Block registration for the Machinery module.
+ * Uses enum pattern consistent with other modules.
  */
-public class MachineryBlocks {
+public enum MachineryBlocks {
 
-    public static Block MACHINE_CASING;
-    public static Block MACHINE_CONTROLLER;
-    public static Block ITEM_INPUT_PORT;
-    public static Block ITEM_OUTPUT_PORT;
-    public static Block ENERGY_INPUT_PORT;
+    // spotless: off
+
+    MACHINE_CASING(BlockMachineCasing.create()),
+    MACHINE_CONTROLLER(BlockMachineController.create()),
+    ITEM_INPUT_PORT(BlockItemInputPort.create()),
+    ITEM_OUTPUT_PORT(BlockItemOutputPort.create()),
+    ENERGY_INPUT_PORT(BlockEnergyInputPort.create()),
+
+    ;
+    // spotless: on
+
+    public static final MachineryBlocks[] VALUES = values();
 
     public static void preInit() {
-        // Machine Casing
-        MACHINE_CASING = new BlockMachineCasing();
-        GameRegistry.registerBlock(MACHINE_CASING, "machineCasing");
+        for (MachineryBlocks block : VALUES) {
+            try {
+                block.getBlock()
+                    .init();
+                Logger.info("Successfully initialized {}", block.name());
+            } catch (Exception e) {
+                Logger.error("Failed to initialize block: +{}", block.name());
+            }
+        }
+    }
 
-        // Machine Controller
-        MACHINE_CONTROLLER = new BlockMachineController();
-        GameRegistry.registerBlock(MACHINE_CONTROLLER, "machineController");
-        GameRegistry.registerTileEntity(TEMachineController.class, "omoshiroikamo:machineController");
+    private final BlockOK block;
 
-        // Item Input Port
-        ITEM_INPUT_PORT = new BlockItemInputPort();
-        GameRegistry.registerBlock(ITEM_INPUT_PORT, "itemInputPort");
-        GameRegistry.registerTileEntity(TEItemInputPort.class, "omoshiroikamo:itemInputPort");
+    MachineryBlocks(BlockOK block) {
+        this.block = block;
+    }
 
-        // Item Output Port
-        ITEM_OUTPUT_PORT = new BlockItemOutputPort();
-        GameRegistry.registerBlock(ITEM_OUTPUT_PORT, "itemOutputPort");
-        GameRegistry.registerTileEntity(TEItemOutputPort.class, "omoshiroikamo:itemOutputPort");
+    public BlockOK getBlock() {
+        return block;
+    }
 
-        // Energy Input Port
-        ENERGY_INPUT_PORT = new BlockEnergyInputPort();
-        GameRegistry.registerBlock(ENERGY_INPUT_PORT, "energyInputPort");
-        GameRegistry.registerTileEntity(TEEnergyInputPort.class, "omoshiroikamo:energyInputPort");
+    public Item getItem() {
+        return Item.getItemFromBlock(block);
+    }
+
+    public ItemStack newItemStack() {
+        return newItemStack(1);
+    }
+
+    public ItemStack newItemStack(int count) {
+        return newItemStack(count, 0);
+    }
+
+    public ItemStack newItemStack(int count, int meta) {
+        return new ItemStack(this.getBlock(), count, meta);
     }
 }

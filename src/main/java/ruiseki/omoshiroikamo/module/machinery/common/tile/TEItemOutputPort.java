@@ -9,6 +9,9 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
  * Item Output Port TileEntity.
  * Holds a single slot for outputting processed items from machines.
  * Extends AbstractStorageTE to leverage existing inventory management system.
+ * 
+ * TODO: Texture required -
+ * assets/omoshiroikamo/textures/blocks/machinery/item_output_port.png
  */
 public class TEItemOutputPort extends AbstractStorageTE {
 

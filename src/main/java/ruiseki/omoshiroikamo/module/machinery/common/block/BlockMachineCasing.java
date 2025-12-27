@@ -1,21 +1,28 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
+import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 
 /**
  * Machine Casing - basic structural block for Modular Machinery.
  * Used as the main building block for machine structures.
+ * 
+ * TODO: Texture required -
+ * assets/omoshiroikamo/textures/blocks/machinery/machine_casing.png
  */
-public class BlockMachineCasing extends Block {
+public class BlockMachineCasing extends BlockOK {
 
-    public BlockMachineCasing() {
-        super(Material.iron);
-        setBlockName("machineCasing");
-        setBlockTextureName("omoshiroikamo:machinery/machine_casing");
+    protected BlockMachineCasing() {
+        super("modularMachineCasing");
         setHardness(5.0F);
         setResistance(10.0F);
-        setCreativeTab(CreativeTabs.tabRedstone);
+    }
+
+    public static BlockMachineCasing create() {
+        return new BlockMachineCasing();
+    }
+
+    @Override
+    public BlockOK setTextureName(String texture) {
+        return super.setTextureName("machinery/machine_casing");
     }
 }

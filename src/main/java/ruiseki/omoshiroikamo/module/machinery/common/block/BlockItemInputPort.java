@@ -1,31 +1,29 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
+import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemInputPort;
 
 /**
  * Item Input Port - accepts items for machine processing.
  * Can be placed at IO slot positions in machine structures.
+ * 
+ * TODO: Texture required -
+ * assets/omoshiroikamo/textures/blocks/machinery/item_input_port.png
  */
-public class BlockItemInputPort extends Block implements ITileEntityProvider {
+public class BlockItemInputPort extends BlockOK {
 
-    public BlockItemInputPort() {
-        super(Material.iron);
-        setBlockName("itemInputPort");
-        setBlockTextureName("omoshiroikamo:machinery/item_input_port");
+    protected BlockItemInputPort() {
+        super("modularItemInput", TEItemInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
-        setCreativeTab(CreativeTabs.tabRedstone);
+    }
+
+    public static BlockItemInputPort create() {
+        return new BlockItemInputPort();
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
-        return new TEItemInputPort();
+    public BlockOK setTextureName(String texture) {
+        return super.setTextureName("machinery/item_input_port");
     }
 }
