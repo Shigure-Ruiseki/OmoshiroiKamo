@@ -324,22 +324,38 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             EnumDye filterDye = null;
             int meta = ingredient.getItemDamage();
             if (item == clearLens && meta == 1) {
+                // Crystal Lens
                 filterDye = EnumDye.CRYSTAL;
             } else if (item == coloredLens) {
                 BlockColoredLens lensBlock = (BlockColoredLens) Block.getBlockFromItem(coloredLens);
                 filterDye = lensBlock.getFocusColor(meta);
             }
+            // Note: Clear Lens (meta 0) keeps filterDye = null
 
-            List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
-            for (WeightedStackBase ws : unfocusedList) {
+            // Get items and sort by probability
+            List<WeightedStackBase> allItems = new ArrayList<>(registry.getUnFocusedList());
+
+            // Filter: only show items that have this lens as their bonus lens
+            List<WeightedStackBase> bonusItems = new ArrayList<>();
+            for (WeightedStackBase ws : allItems) {
                 ItemStack output = ws.getMainStack();
                 if (output != null) {
                     EnumDye preferred = registry.getPrioritizedLens(output);
-                    boolean isMatch = (filterDye == null) || (preferred == filterDye);
-                    if (isMatch) {
-                        arecipes.add(new CachedVoidRecipe(ws, registry, tier, filterDimension));
+                    if (filterDye == null) {
+                        // Clear Lens: show all items
+                        bonusItems.add(ws);
+                    } else if (preferred == filterDye) {
+                        // Colored/Crystal: only show items that benefit from this lens
+                        bonusItems.add(ws);
                     }
                 }
+            }
+
+            // Sort by probability (highest first)
+            bonusItems.sort((a, b) -> Double.compare(b.realWeight, a.realWeight));
+
+            for (WeightedStackBase ws : bonusItems) {
+                arecipes.add(new CachedVoidRecipe(ws, registry, tier, filterDimension));
             }
         } else {
             // Check if this is a dimension catalyst
