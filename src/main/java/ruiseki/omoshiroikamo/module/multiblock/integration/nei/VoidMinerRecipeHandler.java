@@ -103,7 +103,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        // Show tiered name + dimension filter so each NEI tab is unique and clear
+        // Keep stable name format to avoid flickering on hover
         String dimName = NEIDimensionConfig.getDisplayName(filterDimension);
         return getMinerNameBase() + " T" + (tier + 1) + " [" + dimName + "]";
     }
@@ -216,6 +216,15 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     @Override
     public String getGuiTexture() {
         return LibResources.GUI_NEI_BLANK;
+    }
+
+    @Override
+    public int recipiesPerPage() {
+        // Lens bonus view shows compact item list, so more items per page
+        if (currentViewMode == ViewMode.LENS_BONUS) {
+            return 12;
+        }
+        return 6; // Default for detailed views
     }
 
     @Override
@@ -354,8 +363,12 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             // Sort by probability (highest first)
             bonusItems.sort((a, b) -> Double.compare(b.realWeight, a.realWeight));
 
-            for (WeightedStackBase ws : bonusItems) {
-                arecipes.add(new CachedVoidRecipe(ws, registry, tier, filterDimension));
+            // Group items into grids (16 items per grid: 8 columns × 2 rows)
+            final int ITEMS_PER_GRID = 16;
+            for (int i = 0; i < bonusItems.size(); i += ITEMS_PER_GRID) {
+                int end = Math.min(i + ITEMS_PER_GRID, bonusItems.size());
+                List<WeightedStackBase> gridItems = bonusItems.subList(i, end);
+                arecipes.add(new CachedLensGridRecipe(new ArrayList<>(gridItems)));
             }
         } else {
             // Check if this is a dimension catalyst
@@ -426,39 +439,75 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             this.dimensionId = dimId;
             ItemStack outputStack = ws.getMainStack();
 
-            // Layout: Left side for main icon, right side for compact recipe row
-            // Left area (0-35): Main icon
-            // Right area (36-160): [Catalyst][Lens+%][Item][BonusLens+%]
+            // Layout positions adjusted: more centered, below header
+            // Y=14 to avoid overlapping with header (was Y=6)
+            final int ITEM_Y = 14;
 
-            // 1. Dimension Catalyst (compact, right side start)
-            ItemStack catalystIcon = NEIDimensionConfig.getCatalystStack(dimId);
-            if (catalystIcon == null) {
-                catalystIcon = new ItemStack(getMinerBlock(), 1, tier);
+            switch (currentViewMode) {
+                case LENS_BONUS:
+                    // Lens view: Show only output item (simple list)
+                    this.output = new PositionedStack(outputStack, 5, ITEM_Y);
+                    break;
+
+                case ITEM_DETAIL:
+                    // Item detail: Show [Catalyst][Lens+%][Item][BonusLens+%]
+                    // More centered layout
+                    ItemStack catalystIcon = NEIDimensionConfig.getCatalystStack(dimId);
+                    if (catalystIcon == null) {
+                        catalystIcon = new ItemStack(getMinerBlock(), 1, tier);
+                    }
+                    this.input.add(new PositionedStack(catalystIcon, 5, ITEM_Y));
+
+                    PositionedStackAdv clearLens = new PositionedStackAdv(
+                        MultiBlockBlocks.LENS.newItemStack(1, 0),
+                        30,
+                        ITEM_Y);
+                    clearLens.setChance((float) (ws.realWeight / 100.0f));
+                    clearLens.setTextYOffset(10);
+                    clearLens.setTextColor(0x000000);
+                    this.input.add(clearLens);
+
+                    this.output = new PositionedStack(outputStack, 60, ITEM_Y);
+
+                    addBonusLens(ws, registry, outputStack, 90, ITEM_Y);
+                    break;
+
+                case DIMENSION:
+                default:
+                    // Dimension view: [Catalyst][Lens+%][Item][BonusLens+%]
+                    ItemStack dimCatalyst = NEIDimensionConfig.getCatalystStack(dimId);
+                    if (dimCatalyst == null) {
+                        dimCatalyst = new ItemStack(getMinerBlock(), 1, tier);
+                    }
+                    this.input.add(new PositionedStack(dimCatalyst, 5, ITEM_Y));
+
+                    PositionedStackAdv dimLens = new PositionedStackAdv(
+                        MultiBlockBlocks.LENS.newItemStack(1, 0),
+                        30,
+                        ITEM_Y);
+                    dimLens.setChance((float) (ws.realWeight / 100.0f));
+                    dimLens.setTextYOffset(10);
+                    dimLens.setTextColor(0x000000);
+                    this.input.add(dimLens);
+
+                    this.output = new PositionedStack(outputStack, 60, ITEM_Y);
+
+                    addBonusLens(ws, registry, outputStack, 90, ITEM_Y);
+                    break;
             }
-            this.input.add(new PositionedStack(catalystIcon, 40, 6));
+        }
 
-            // 2. Clear Lens + Probability
-            PositionedStackAdv clearLensStack = new PositionedStackAdv(MultiBlockBlocks.LENS.newItemStack(1, 0), 60, 6);
-            clearLensStack.setChance((float) (ws.realWeight / 100.0f));
-            clearLensStack.setTextYOffset(10);
-            clearLensStack.setTextColor(0x000000);
-            this.input.add(clearLensStack);
-
-            // 3. Output Item
-            this.output = new PositionedStack(outputStack, 90, 6);
-
-            // 4. Bonus Lens (Right) + Probability
+        private void addBonusLens(WeightedStackBase ws, IFocusableRegistry registry, ItemStack outputStack, int x,
+            int y) {
             EnumDye preferred = registry.getPrioritizedLens(outputStack);
             if (preferred != null) {
                 ItemStack lensStack;
                 if (preferred == EnumDye.CRYSTAL) {
                     lensStack = MultiBlockBlocks.LENS.newItemStack(1, 1);
                 } else {
-                    int lensMeta = preferred.ordinal();
-                    lensStack = MultiBlockBlocks.COLORED_LENS.newItemStack(1, lensMeta);
+                    lensStack = MultiBlockBlocks.COLORED_LENS.newItemStack(1, preferred.ordinal());
                 }
 
-                // Calculate chance
                 List<WeightedStackBase> focusedList = registry.getFocusedList(preferred, 1.0f);
                 double focusedChance = 0;
                 for (WeightedStackBase fws : focusedList) {
@@ -468,11 +517,11 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                     }
                 }
 
-                PositionedStackAdv bonusLensStack = new PositionedStackAdv(lensStack, 120, 6);
-                bonusLensStack.setChance((float) (focusedChance / 100.0f));
-                bonusLensStack.setTextYOffset(10);
-                bonusLensStack.setTextColor(0x000000);
-                this.input.add(bonusLensStack);
+                PositionedStackAdv bonusLens = new PositionedStackAdv(lensStack, x, y);
+                bonusLens.setChance((float) (focusedChance / 100.0f));
+                bonusLens.setTextYOffset(10);
+                bonusLens.setTextColor(0x000000);
+                this.input.add(bonusLens);
             }
         }
 
@@ -489,6 +538,57 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         @Override
         public PositionedStack getResult() {
             return output;
+        }
+    }
+
+    /**
+     * Grid layout recipe for lens bonus view.
+     * Displays multiple items in a grid format.
+     */
+    public class CachedLensGridRecipe extends CachedBaseRecipe {
+
+        private List<PositionedStack> items;
+
+        // Grid configuration: 8 items per row, 2 rows
+        private static final int ITEMS_PER_ROW = 8;
+        private static final int ITEM_SPACING = 18;
+        private static final int START_X = 5;
+        private static final int START_Y = 14;
+
+        public CachedLensGridRecipe(List<WeightedStackBase> weightedItems) {
+            this.items = new ArrayList<>();
+            int x = START_X;
+            int y = START_Y;
+            int col = 0;
+
+            for (WeightedStackBase ws : weightedItems) {
+                ItemStack stack = ws.getMainStack();
+                if (stack != null) {
+                    PositionedStackAdv posStack = new PositionedStackAdv(stack, x, y);
+                    posStack.setChance((float) (ws.realWeight / 100.0f));
+                    posStack.setTextYOffset(10);
+                    posStack.setTextColor(0x000000);
+                    this.items.add(posStack);
+                }
+                col++;
+                if (col >= ITEMS_PER_ROW) {
+                    col = 0;
+                    x = START_X;
+                    y += ITEM_SPACING;
+                } else {
+                    x += ITEM_SPACING;
+                }
+            }
+        }
+
+        @Override
+        public List<PositionedStack> getIngredients() {
+            return items;
+        }
+
+        @Override
+        public PositionedStack getResult() {
+            return null; // No single result for grid
         }
     }
 }
