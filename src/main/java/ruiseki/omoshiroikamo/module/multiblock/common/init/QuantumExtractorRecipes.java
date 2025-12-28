@@ -49,6 +49,75 @@ public class QuantumExtractorRecipes {
         return resRegistryByDim.computeIfAbsent(dimId, QuantumExtractorRecipes::createResRegistryForDim)[tier];
     }
 
+    /**
+     * Special dimension ID for "Common" filter in NEI.
+     * Shows only ores with dimensions == null (no dimension restriction).
+     */
+    public static final int NEI_DIMENSION_COMMON = Integer.MIN_VALUE + 1;
+
+    // NEI-specific registries for "Common only" filter
+    private static IFocusableRegistry[] neiCommonOreRegistry;
+    private static IFocusableRegistry[] neiCommonResRegistry;
+
+    /**
+     * Get ore registry for NEI display with dimension filter.
+     * 
+     * @param tier  The miner tier
+     * @param dimId The dimension ID, or NEI_DIMENSION_COMMON for common-only ores
+     * @return Registry containing appropriate ores with correct probability
+     *         calculation
+     */
+    public static IFocusableRegistry getOreRegistryForNEI(int tier, int dimId) {
+        if (dimId == NEI_DIMENSION_COMMON) {
+            if (neiCommonOreRegistry == null) {
+                neiCommonOreRegistry = createCommonOnlyOreRegistry();
+            }
+            return neiCommonOreRegistry[tier];
+        }
+        return getOreRegistry(tier, dimId);
+    }
+
+    /**
+     * Get resource registry for NEI display with dimension filter.
+     */
+    public static IFocusableRegistry getResRegistryForNEI(int tier, int dimId) {
+        if (dimId == NEI_DIMENSION_COMMON) {
+            if (neiCommonResRegistry == null) {
+                neiCommonResRegistry = createCommonOnlyResRegistry();
+            }
+            return neiCommonResRegistry[tier];
+        }
+        return getResRegistry(tier, dimId);
+    }
+
+    /**
+     * Creates registry containing only common ores (dimensions == null).
+     */
+    private static IFocusableRegistry[] createCommonOnlyOreRegistry() {
+        IFocusableRegistry[] registries = new IFocusableRegistry[MAX_TIER];
+        for (int tier = 0; tier < MAX_TIER; tier++) {
+            registries[tier] = new FocusableRegistry();
+            if (cachedOreList != null) {
+                FocusableHandler.loadCommonOnlyIntoRegistry(cachedOreList, registries[tier], tier);
+            }
+        }
+        return registries;
+    }
+
+    /**
+     * Creates registry containing only common resources (dimensions == null).
+     */
+    private static IFocusableRegistry[] createCommonOnlyResRegistry() {
+        IFocusableRegistry[] registries = new IFocusableRegistry[MAX_TIER];
+        for (int tier = 0; tier < MAX_TIER; tier++) {
+            registries[tier] = new FocusableRegistry();
+            if (cachedResList != null) {
+                FocusableHandler.loadCommonOnlyIntoRegistry(cachedResList, registries[tier], tier);
+            }
+        }
+        return registries;
+    }
+
     private static IFocusableRegistry[] createOreRegistryForDim(int dimId) {
         IFocusableRegistry[] registries = new IFocusableRegistry[MAX_TIER];
         for (int tier = 0; tier < MAX_TIER; tier++) {

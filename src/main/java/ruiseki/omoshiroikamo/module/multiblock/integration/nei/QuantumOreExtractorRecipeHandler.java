@@ -33,6 +33,14 @@ public class QuantumOreExtractorRecipeHandler extends VoidMinerRecipeHandler {
     }
 
     @Override
+    protected IFocusableRegistry getRegistryForNEI(int tierArg, int dimId) {
+        if (tierArg >= 0 && tierArg < QuantumExtractorRecipes.MAX_TIER) {
+            return QuantumExtractorRecipes.getOreRegistryForNEI(tierArg, dimId);
+        }
+        return null;
+    }
+
+    @Override
     protected Block getMinerBlock() {
         return MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.getBlock();
     }

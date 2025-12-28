@@ -23,6 +23,15 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     protected final int tier;
 
+    /**
+     * Current dimension filter for NEI display. Uses NEI_DIMENSION_COMMON by
+     * default.
+     */
+    protected int filterDimension = ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecipes.NEI_DIMENSION_COMMON;
+
+    /** Current text filter for ore name search */
+    protected String filterText = "";
+
     public VoidMinerRecipeHandler(int tier) {
         this.tier = tier;
     }
@@ -30,6 +39,16 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     protected abstract IFocusableRegistry getRegistry();
 
     protected abstract IFocusableRegistry getRegistry(int tier);
+
+    /**
+     * Get registry for NEI display with dimension filter applied.
+     * 
+     * @param tier  The miner tier
+     * @param dimId The dimension ID for filter
+     * @return Registry containing ores available in that dimension with correct
+     *         probability
+     */
+    protected abstract IFocusableRegistry getRegistryForNEI(int tier, int dimId);
 
     // Factory for spawning the handler of a specific tier
     // used when delegating usage requests
@@ -70,21 +89,41 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public void loadAllRecipes() {
-        IFocusableRegistry registry = getRegistry();
+        // Use filtered registry for NEI display
+        IFocusableRegistry registry = getRegistryForNEI(tier, filterDimension);
+        if (registry == null) {
+            registry = getRegistry();
+        }
         List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
         for (WeightedStackBase ws : unfocusedList) {
             ItemStack output = ws.getMainStack();
-            if (output != null) {
+            if (output != null && matchesTextFilter(output)) {
                 arecipes.add(new CachedVoidRecipe(ws, registry, tier));
             }
         }
+    }
+
+    /**
+     * Check if the item matches the current text filter.
+     */
+    protected boolean matchesTextFilter(ItemStack stack) {
+        if (filterText == null || filterText.isEmpty()) {
+            return true;
+        }
+        String displayName = stack.getDisplayName()
+            .toLowerCase();
+        return displayName.contains(filterText.toLowerCase());
     }
 
     @Override
     public void loadCraftingRecipes(ItemStack item) {
         arecipes.clear();
         super.loadCraftingRecipes(item);
-        IFocusableRegistry registry = getRegistry();
+        // Use filtered registry for correct probability calculation
+        IFocusableRegistry registry = getRegistryForNEI(tier, filterDimension);
+        if (registry == null) {
+            registry = getRegistry();
+        }
         List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
 
         for (WeightedStackBase ws : unfocusedList) {
