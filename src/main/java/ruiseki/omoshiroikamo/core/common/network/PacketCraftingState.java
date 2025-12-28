@@ -39,6 +39,7 @@ public class PacketCraftingState implements IMessage, IMessageHandler<PacketCraf
     @Override
     public IMessage onMessage(PacketCraftingState message, MessageContext ctx) {
         EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
+        if (player == null) return null;
         TileEntity tile = player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
         if (tile instanceof ICraftingTile te) {
             te.setCraftingState(message.craftingState);

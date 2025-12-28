@@ -8,9 +8,6 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
  * Energy Input Port TileEntity.
  * Accepts RF energy for machine processing.
  * Extends AbstractEnergyTE to leverage existing energy management system.
- * 
- * TODO: Texture required -
- * assets/omoshiroikamo/textures/blocks/machinery/energy_input_port.png
  */
 public class TEEnergyInputPort extends AbstractEnergyTE {
 
@@ -38,7 +35,7 @@ public class TEEnergyInputPort extends AbstractEnergyTE {
 
     /**
      * Extract energy for machine processing.
-     * 
+     *
      * @param amount requested amount
      * @return amount actually extracted
      */

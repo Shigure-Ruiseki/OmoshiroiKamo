@@ -4,30 +4,51 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemInputPort;
+import org.jetbrains.annotations.Nullable;
+
+import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT1;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT2;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT3;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT4;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT5;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT6;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT7;
 
 /**
  * Item Input Port - accepts items for machine processing.
  * Can be placed at IO slot positions in machine structures.
  * Uses JSON model with base + overlay textures via GTNHLib.
- * 
  * TODO List:
- * - Implement GUI for viewing/managing stored items
- * - Add filter support for specific item types
- * - Implement hopper-style auto-pull from adjacent inventories
- * - Support for different tiers with varying slot counts
- * - Add redstone control mode (ignore, high, low, pulse)
+ * - Add filter support for specific item types (should filter with pipe)
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving items
  */
-public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
+public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
 
     protected BlockItemInputPort() {
-        super("modularItemInput", TEItemInputPort.class);
+        super(
+            ModObject.blockModularItemInput.unlocalisedName,
+            TEItemInputPortT1.class,
+            TEItemInputPortT2.class,
+            TEItemInputPortT3.class,
+            TEItemInputPortT4.class,
+            TEItemInputPortT5.class,
+            TEItemInputPortT6.class,
+            TEItemInputPortT7.class);
         setHardness(5.0F);
         setResistance(10.0F);
     }
@@ -42,6 +63,31 @@ public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
     }
 
     @Override
+    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+        // TODO: Add Tier Color
+        return -1;
+    }
+
+    @Override
+    public Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockInputPort.class;
+    }
+
+    @Override
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        list.add(new ItemStack(itemIn, 1, 0));
+        list.add(new ItemStack(itemIn, 1, 1));
+        list.add(new ItemStack(itemIn, 1, 2));
+        list.add(new ItemStack(itemIn, 1, 3));
+        list.add(new ItemStack(itemIn, 1, 4));
+        list.add(new ItemStack(itemIn, 1, 5));
+        list.add(new ItemStack(itemIn, 1, 6));
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
+
+    @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
     }
@@ -51,5 +97,23 @@ public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
         // TODO: Display current item count and types in slots
         // TODO: Show filter status if enabled
         // TODO: Show connected machine name if part of structure
+    }
+
+    public static class ItemBlockInputPort extends ItemBlockOK {
+
+        public ItemBlockInputPort(Block block) {
+            super(block, block);
+        }
+
+        @Override
+        public String getUnlocalizedName(ItemStack stack) {
+            int tier = stack.getItemDamage() + 1;
+            return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+            // TODO: Add tooltips
+        }
     }
 }

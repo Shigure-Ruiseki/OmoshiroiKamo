@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.module.backpack.BackpackClient;
 import ruiseki.omoshiroikamo.module.chickens.ChickensClient;
 import ruiseki.omoshiroikamo.module.cows.CowsClient;
 import ruiseki.omoshiroikamo.module.dml.DMLClient;
+import ruiseki.omoshiroikamo.module.machinery.MachineryClient;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockClient;
 
 @SuppressWarnings("unused")
@@ -36,6 +37,7 @@ public class ClientProxy extends CommonProxy {
         ModuleManager.register(new DMLClient());
         ModuleManager.register(new BackpackClient());
         ModuleManager.register(new MultiBlockClient());
+        ModuleManager.register(new MachineryClient());
 
         ModuleManager.preInitClient(event);
     }

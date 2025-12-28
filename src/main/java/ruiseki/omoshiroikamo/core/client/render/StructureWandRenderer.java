@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.client.handler;
+package ruiseki.omoshiroikamo.core.client.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,19 +12,18 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
 
+import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.common.item.ItemStructureWand;
 
 /**
  * Renders the Structure Wand selection with a translucent cyan outline.
  */
-@SideOnly(Side.CLIENT)
+@EventBusSubscriber(side = Side.CLIENT)
 public class StructureWandRenderer {
-
-    public static final StructureWandRenderer INSTANCE = new StructureWandRenderer();
 
     // Translucent cyan (RGB: 0, 200, 255 / Alpha: 0.3)
     private static final float COLOR_R = 0.0f;
@@ -36,7 +35,7 @@ public class StructureWandRenderer {
     private StructureWandRenderer() {}
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
+    public static void onRenderWorldLast(RenderWorldLastEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.thePlayer;
 
@@ -82,7 +81,7 @@ public class StructureWandRenderer {
     /**
      * Get the block position the player is looking at.
      */
-    private ChunkCoordinates getLookTarget(EntityPlayer player) {
+    private static ChunkCoordinates getLookTarget(EntityPlayer player) {
         double reachDistance = ItemConfigs.wandPreviewReach;
         Vec3 startVec = player.getPosition(1.0F);
         Vec3 lookVec = player.getLookVec();
@@ -102,7 +101,7 @@ public class StructureWandRenderer {
      * Render a preview box with a pulsing orange color.
      * Used when showing the potential selection area before confirming.
      */
-    private void renderPreviewBox(ChunkCoordinates pos1, ChunkCoordinates lookTarget, float partialTicks,
+    private static void renderPreviewBox(ChunkCoordinates pos1, ChunkCoordinates lookTarget, float partialTicks,
         EntityPlayer player) {
         double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
@@ -143,7 +142,8 @@ public class StructureWandRenderer {
         GL11.glPopMatrix();
     }
 
-    private void renderPoint(ChunkCoordinates pos, float partialTicks, EntityPlayer player, float r, float g, float b) {
+    private static void renderPoint(ChunkCoordinates pos, float partialTicks, EntityPlayer player, float r, float g,
+        float b) {
         double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
         double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
@@ -173,7 +173,8 @@ public class StructureWandRenderer {
         GL11.glPopMatrix();
     }
 
-    private void renderBox(ChunkCoordinates pos1, ChunkCoordinates pos2, float partialTicks, EntityPlayer player) {
+    private static void renderBox(ChunkCoordinates pos1, ChunkCoordinates pos2, float partialTicks,
+        EntityPlayer player) {
         double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
         double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
@@ -208,7 +209,7 @@ public class StructureWandRenderer {
         GL11.glPopMatrix();
     }
 
-    private void drawBoxFaces(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+    private static void drawBoxFaces(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         Tessellator tessellator = Tessellator.instance;
 
         // Bottom
@@ -260,7 +261,7 @@ public class StructureWandRenderer {
         tessellator.draw();
     }
 
-    private void drawBoxEdges(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+    private static void drawBoxEdges(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_LINES);
 

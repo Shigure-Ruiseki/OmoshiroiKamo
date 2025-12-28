@@ -327,7 +327,7 @@ public class TESimulationChamber extends AbstractMachineTE implements IEnergySin
 
     @Override
     public String getInventoryName() {
-        return getMachineName();
+        return getLocalizedName();
     }
 
     @Override

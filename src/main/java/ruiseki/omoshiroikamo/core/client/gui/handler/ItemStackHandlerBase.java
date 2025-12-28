@@ -95,6 +95,16 @@ public class ItemStackHandlerBase extends ItemStackHandler {
         return false;
     }
 
+    public boolean hasEmptySlot() {
+        for (int i = 0; i < getSlots(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int addItemToAvailableSlots(ItemStack stack) {
         if (stack == null || stack.stackSize <= 0) {
             return 0;

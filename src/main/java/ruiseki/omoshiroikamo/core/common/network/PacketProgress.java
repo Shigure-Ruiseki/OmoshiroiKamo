@@ -41,6 +41,7 @@ public class PacketProgress implements IMessageHandler<PacketProgress, IMessage>
     @Override
     public IMessage onMessage(PacketProgress message, MessageContext ctx) {
         EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
+        if (player == null) return null;
         TileEntity tile = player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
         if (tile instanceof IProgressTile) {
             ((IProgressTile) tile).setProgress(message.progress);

@@ -119,10 +119,13 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
      *
      * @return machine name
      */
-    public String getMachineName() {
-        return LibMisc.LANG.localize(
-            this.worldObj.getBlock(xCoord, yCoord, zCoord)
-                .getUnlocalizedName());
+    public String getLocalizedName() {
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".name");
+    }
+
+    public String getUnlocalizedName() {
+        return this.worldObj.getBlock(xCoord, yCoord, zCoord)
+            .getUnlocalizedName();
     }
 
     /**

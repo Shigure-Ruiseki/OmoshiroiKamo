@@ -18,9 +18,4 @@ public class LibResources {
     public static final String GUI_CHICKEN_DROPS = PREFIX_GUI + "nei/chicken/drops.png";
     public static final String GUI_CHICKEN_THROWS = PREFIX_GUI + "nei/chicken/throws.png";
     public static final String GUI_SLOT = PREFIX_GUI + "nei/slot.png";
-
-    public static final String KEY_LEVEL_COST = "level_cost";
-    public static final String KEY_UNLOC_NAME = "unlocalized_name";
-    public static final String KEY_UPGRADE_PREFIX = LibMisc.MOD_ID + ".mana.upgrade.";
-    public static final String KEY_UPGRADE_ITEM = "upgradeItem";
 }

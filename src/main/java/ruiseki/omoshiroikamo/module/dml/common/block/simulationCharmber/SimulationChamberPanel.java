@@ -36,7 +36,7 @@ import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
 import ruiseki.omoshiroikamo.core.common.util.StringUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
-import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeButton;
+import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 
 public class SimulationChamberPanel extends ModularPanel {
 
@@ -200,7 +200,7 @@ public class SimulationChamberPanel extends ModularPanel {
                 }));
 
         this.child(
-            new RedstoneModeButton(redstoneModeSyncer).pos(-20, 20)
+            new RedstoneModeWidget(redstoneModeSyncer).pos(-20, 20)
                 .excludeAreaInRecipeViewer());
 
         this.child(

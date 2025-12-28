@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
+package ruiseki.omoshiroikamo.core.client.gui.widget;
 
 import com.cleanroommc.modularui.drawable.AdaptableUITexture;
 import com.cleanroommc.modularui.drawable.UITexture;
@@ -7,7 +7,6 @@ import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.widgets.TextWidget;
 
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 
 public class TileWidget extends TextWidget<TileWidget> {
 
@@ -19,13 +18,10 @@ public class TileWidget extends TextWidget<TileWidget> {
         .tiled()
         .build();
 
-    public TileWidget(BackpackPanel panel) {
-        super(
-            panel.getHandler()
-                .getDisplayName());
+    public TileWidget(String text) {
+        super(text);
         this.padding(5, 5, 3, 1);
         pos(4, -12);
-        maxWidth(panel.getWidth());
     }
 
     @Override

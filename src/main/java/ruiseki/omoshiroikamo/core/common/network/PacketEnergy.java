@@ -38,6 +38,7 @@ public class PacketEnergy implements IMessage, IMessageHandler<PacketEnergy, IMe
     @Override
     public IMessage onMessage(PacketEnergy message, MessageContext ctx) {
         EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
+        if (player == null) return null;
         TileEntity tile = player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
         if (tile instanceof IEnergyTile te) {
             te.setEnergyStored(message.storedEnergy);

@@ -116,6 +116,10 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         return world.getBlockMetadata(getX(), getY(), getZ());
     }
 
+    public BlockPos offset(ForgeDirection side) {
+        return new BlockPos(getX() + side.offsetX, getY() + side.offsetY, getZ() + side.offsetZ, getWorld());
+    }
+
     public boolean equals(int x, int y, int z) {
         return x == getX() && y == getY() && z == getZ();
     }

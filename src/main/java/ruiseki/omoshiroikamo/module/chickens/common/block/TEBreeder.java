@@ -5,7 +5,6 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -23,7 +22,6 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
-import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
@@ -51,11 +49,6 @@ public class TEBreeder extends TERoostBase {
     public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y,
         int z) {
         return oldBlock != newBlock;
-    }
-
-    @Override
-    public String getMachineName() {
-        return ModObject.blockBreeder.unlocalisedName;
     }
 
     @Override
@@ -106,7 +99,7 @@ public class TEBreeder extends TERoostBase {
         panel.child(
             Flow.column()
                 .child(
-                    IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
+                    IKey.str(getLocalizedName())
                         .asWidget()
                         .margin(6, 0, 5, 0)
                         .align(Alignment.TopLeft))
