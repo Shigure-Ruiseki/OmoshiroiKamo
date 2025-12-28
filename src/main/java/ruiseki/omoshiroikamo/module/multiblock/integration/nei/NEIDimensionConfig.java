@@ -10,10 +10,13 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +40,9 @@ public class NEIDimensionConfig {
 
     private static DimensionList dimensionList;
 
+    /** Quick lookup from catalyst stack to dimension id (supports wildcard meta). */
+    private static final Map<StackKey, Integer> catalystLookup = new HashMap<>();
+
     public static void init() {
         File file = new File(CONFIG_PATH);
         if (file.exists()) {
@@ -45,12 +51,12 @@ public class NEIDimensionConfig {
             dimensionList = getDefaults();
             saveToJson(file, dimensionList);
         }
+
+        rebuildCatalystLookup();
     }
 
     public static List<DimensionEntry> getDimensions() {
-        if (dimensionList == null) {
-            init();
-        }
+        ensureLoaded();
         return dimensionList.getDimensions();
     }
 
@@ -87,16 +93,13 @@ public class NEIDimensionConfig {
     }
 
     public static ItemStack getCatalystStack(int dimId) {
+        ensureLoaded();
         DimensionEntry entry = getByDimensionId(dimId);
         if (entry == null) {
             return null;
         }
-        Item item = GameData.getItemRegistry()
-            .getObject(entry.catalystItem);
-        if (item == null) {
-            return null;
-        }
-        return new ItemStack(item, 1, entry.catalystMeta);
+        ItemStack stack = createCatalystStack(entry);
+        return stack != null ? stack.copy() : null;
     }
 
     /**
@@ -109,19 +112,77 @@ public class NEIDimensionConfig {
         if (stack == null) {
             return DIMENSION_COMMON;
         }
-        String itemName = GameData.getItemRegistry()
-            .getNameForObject(stack.getItem());
-        if (itemName == null) {
-            return DIMENSION_COMMON;
-        }
-        int meta = stack.getItemDamage();
+        ensureLoaded();
 
-        for (DimensionEntry entry : getDimensions()) {
-            if (entry.catalystItem.equals(itemName) && entry.catalystMeta == meta) {
-                return entry.id;
+        for (Map.Entry<StackKey, Integer> entry : catalystLookup.entrySet()) {
+            if (entry.getKey()
+                .matches(stack)) {
+                return entry.getValue();
             }
         }
         return DIMENSION_COMMON;
+    }
+
+    private static void ensureLoaded() {
+        if (dimensionList == null) {
+            init();
+        }
+        if (catalystLookup.isEmpty()) {
+            rebuildCatalystLookup();
+        }
+    }
+
+    /** Build the catalyst lookup map from the current dimension list. */
+    private static void rebuildCatalystLookup() {
+        catalystLookup.clear();
+        if (dimensionList == null) {
+            return;
+        }
+
+        for (DimensionEntry entry : dimensionList.getDimensions()) {
+            ItemStack stack = createCatalystStack(entry);
+            if (stack != null) {
+                catalystLookup.put(new StackKey(stack), entry.id);
+            }
+        }
+    }
+
+    /**
+     * Create an ItemStack from a dimension entry, accepting the legacy
+     * "modid:item:meta" format and supporting wildcard metadata (-1).
+     */
+    private static ItemStack createCatalystStack(DimensionEntry entry) {
+        if (entry == null || entry.catalystItem == null) {
+            return null;
+        }
+
+        String itemName = entry.catalystItem;
+        int meta = entry.catalystMeta;
+
+        // Legacy support: allow meta suffix in the item name (e.g. "minecraft:log:1")
+        int lastColon = itemName.lastIndexOf(':');
+        if (lastColon > 0) {
+            String tail = itemName.substring(lastColon + 1);
+            try {
+                int parsedMeta = Integer.parseInt(tail);
+                itemName = itemName.substring(0, lastColon);
+                meta = parsedMeta;
+            } catch (NumberFormatException ignored) {
+                // Not a numeric suffix, keep original itemName/meta
+            }
+        }
+
+        Item item = GameData.getItemRegistry()
+            .getObject(itemName);
+        if (item == null) {
+            return null;
+        }
+
+        if (meta < 0) {
+            meta = OreDictionary.WILDCARD_VALUE;
+        }
+
+        return new ItemStack(item, 1, meta);
     }
 
     private static DimensionList loadFromJson(File file) {
@@ -178,6 +239,39 @@ public class NEIDimensionConfig {
             this.name = name;
             this.catalystItem = catalystItem;
             this.catalystMeta = catalystMeta;
+        }
+    }
+
+    /**
+     * Lightweight key for comparing catalyst stacks, honoring wildcard metadata.
+     */
+    private static class StackKey {
+
+        private final Item item;
+        private final int meta;
+
+        StackKey(ItemStack stack) {
+            this.item = stack.getItem();
+            this.meta = stack.getItemDamage();
+        }
+
+        boolean matches(ItemStack other) {
+            if (other == null) return false;
+            if (other.getItem() != item) return false;
+            int otherMeta = other.getItemDamage();
+            return meta == OreDictionary.WILDCARD_VALUE || meta == otherMeta;
+        }
+
+        @Override
+        public int hashCode() {
+            return item.hashCode() * 31 + meta;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (!(obj instanceof StackKey other)) return false;
+            return item == other.item && meta == other.meta;
         }
     }
 }

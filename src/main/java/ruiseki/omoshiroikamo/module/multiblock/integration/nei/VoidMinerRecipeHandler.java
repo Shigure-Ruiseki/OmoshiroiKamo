@@ -418,11 +418,24 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public IUsageHandler getUsageAndCatalystHandler(String inputId, Object... ingredients) {
-        // For miner blocks, skip catalyst and use our tier-aware usage handler
+        // For miner blocks and dimension catalysts, use our custom usage handler
+        // This ensures proper dimension filtering for catalysts (instead of
+        // parent's loadCraftingRecipes which ignores our dimension filter)
         if ("item".equals(inputId) && ingredients.length > 0 && ingredients[0] instanceof ItemStack stack) {
             Item minerItem = Item.getItemFromBlock(getMinerBlock());
             if (stack.getItem() == minerItem) {
                 return getUsageHandler(inputId, ingredients);
+            }
+
+            // Check if this is a dimension catalyst
+            int catalystDimension = NEIDimensionConfig.getDimensionForCatalyst(stack);
+            if (catalystDimension != NEIDimensionConfig.DIMENSION_COMMON) {
+                // Use loadUsageRecipes to apply proper dimension filtering
+                VoidMinerRecipeHandler handler = createForTier(tier);
+                if (handler != null) {
+                    handler.loadUsageRecipes(stack);
+                    return handler.numRecipes() > 0 ? handler : null;
+                }
             }
         }
         return super.getUsageAndCatalystHandler(inputId, ingredients);
