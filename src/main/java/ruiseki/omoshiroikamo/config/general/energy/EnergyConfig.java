@@ -18,4 +18,13 @@ public class EnergyConfig {
 
     @Config.DefaultBoolean(true)
     public static boolean ic2Capability;
+
+    @Config.DefaultInt(4)
+    public static int ic2SinkTier;
+
+    @Config.DefaultInt(4)
+    public static int ic2SourceTier;
+
+    @Config.DefaultInt(4)
+    public static int rftToEU;
 }

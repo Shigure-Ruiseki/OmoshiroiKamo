@@ -1,10 +1,19 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import cpw.mods.fml.common.Optional;
+import ic2.api.energy.EnergyNet;
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
+import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 
@@ -21,6 +30,11 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
 
     /** Internal energy storage instance. */
     protected EnergyStorage energyStorage;
+
+    @Getter
+    @Setter
+    public boolean useIC2Compat = false;
+    public boolean ic2Registered = false;
 
     /** NBT tag name for energy-related data. */
     public static String ENERGY_TAG = "energy";
@@ -98,6 +112,69 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     @Override
     public int getMaxEnergyStored() {
         return energyStorage.getMaxEnergyStored();
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public void register() {
+        if(!worldObj.isRemote)
+        {
+            TileEntity registered = EnergyNet.instance.getTileEntity(worldObj, xCoord, yCoord, zCoord);
+
+            if(registered != this)
+            {
+                if(registered instanceof IEnergyTile)
+                {
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile)registered));
+                }
+                else if(registered == null)
+                {
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+                    ic2Registered = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public void deregister() {
+        if(!worldObj.isRemote)
+        {
+            TileEntity registered = EnergyNet.instance.getTileEntity(worldObj, xCoord, yCoord, zCoord);
+
+            if(registered instanceof IEnergyTile)
+            {
+                MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile)registered));
+            }
+        }
+    }
+
+    @Override
+    public void doUpdate() {
+        if(!ic2Registered && EnergyConfig.ic2Capability)
+        {
+            register();
+        }
+        super.doUpdate();
+    }
+
+    @Override
+    public void onChunkUnload() {
+        if(EnergyConfig.ic2Capability)
+        {
+            deregister();
+        }
+        super.onChunkUnload();
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if(EnergyConfig.ic2Capability)
+        {
+            deregister();
+        }
     }
 
     @Override
