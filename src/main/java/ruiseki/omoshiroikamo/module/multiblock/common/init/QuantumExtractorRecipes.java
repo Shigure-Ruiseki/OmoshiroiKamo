@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.item.ItemStack;
+
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
@@ -172,6 +174,54 @@ public class QuantumExtractorRecipes {
         for (int tier = 0; tier < MAX_TIER; tier++) {
             FocusableHandler.loadIntoRegistry(cachedResList, resRegistry[tier], tier);
         }
+    }
+
+    /**
+     * Find the first dimension ID for a given ore item.
+     * Returns the first dimension from the item's config, or NEI_DIMENSION_COMMON
+     * if none.
+     */
+    public static int findFirstOreDimension(ItemStack stack) {
+        if (cachedOreList == null || stack == null) {
+            return NEI_DIMENSION_COMMON;
+        }
+        for (FocusableHandler.FocusableEntry entry : cachedOreList.getEntries()) {
+            ItemStack entryStack = entry.getRegistryEntry() != null ? entry.getRegistryEntry()
+                .getMainStack() : null;
+            if (entryStack != null && ItemStack.areItemStacksEqual(entryStack, stack)) {
+                // Found matching entry, return first dimension
+                int[] dims = entry.getDimensions();
+                if (dims != null && dims.length > 0) {
+                    return dims[0];
+                }
+                return NEI_DIMENSION_COMMON;
+            }
+        }
+        return NEI_DIMENSION_COMMON;
+    }
+
+    /**
+     * Find the first dimension ID for a given resource item.
+     * Returns the first dimension from the item's config, or NEI_DIMENSION_COMMON
+     * if none.
+     */
+    public static int findFirstResDimension(ItemStack stack) {
+        if (cachedResList == null || stack == null) {
+            return NEI_DIMENSION_COMMON;
+        }
+        for (FocusableHandler.FocusableEntry entry : cachedResList.getEntries()) {
+            ItemStack entryStack = entry.getRegistryEntry() != null ? entry.getRegistryEntry()
+                .getMainStack() : null;
+            if (entryStack != null && ItemStack.areItemStacksEqual(entryStack, stack)) {
+                // Found matching entry, return first dimension
+                int[] dims = entry.getDimensions();
+                if (dims != null && dims.length > 0) {
+                    return dims[0];
+                }
+                return NEI_DIMENSION_COMMON;
+            }
+        }
+        return NEI_DIMENSION_COMMON;
     }
 
     private static FocusableHandler.FocusableList getDefaultOreList() {

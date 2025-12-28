@@ -211,8 +211,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     public void loadCraftingRecipes(ItemStack item) {
         arecipes.clear();
         super.loadCraftingRecipes(item);
-        // When searching for a specific item, use unfiltered registry
-        // to show the recipe regardless of current dimension filter
+        // When searching for a specific item, find its correct dimension
+        filterDimension = findFirstDimension(item);
         IFocusableRegistry registry = getRegistry();
         List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
 
@@ -223,6 +223,12 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             }
         }
     }
+
+    /**
+     * Find the first dimension ID for a given item.
+     * Subclasses override this to use the appropriate registry (ore vs resource).
+     */
+    protected abstract int findFirstDimension(ItemStack item);
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {

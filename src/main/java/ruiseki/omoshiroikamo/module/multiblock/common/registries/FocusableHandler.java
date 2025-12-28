@@ -285,6 +285,14 @@ public class FocusableHandler {
         }
 
         /**
+         * Get the dimensions array for this entry.
+         * Returns null or empty if this entry is valid for all dimensions.
+         */
+        public int[] getDimensions() {
+            return dimensions;
+        }
+
+        /**
          * Returns the specificity level of dimension settings.
          * 0 = no dimension restriction (fallback)
          * 1 = single dimension (most specific)
