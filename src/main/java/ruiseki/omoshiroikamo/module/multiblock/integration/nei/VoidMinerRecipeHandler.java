@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -15,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
@@ -33,9 +35,15 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     /**
      * Current dimension filter for NEI display. Uses DIMENSION_COMMON by default.
-     * Static so it persists across handler instances when GUI is reopened.
+     * Static so it persists across handler instances.
      */
     protected static int filterDimension = NEIDimensionConfig.DIMENSION_COMMON;
+
+    /**
+     * Flag indicating the dimension was manually changed by user.
+     * When true, automatic dimension detection is skipped.
+     */
+    protected static boolean manualDimensionChange = false;
 
     /** Current text filter for ore name search */
     protected String filterText = "";
@@ -128,8 +136,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
         if (offset != null && recipe == 0) {
             // Calculate relative position within the recipe area
-            int recipeX = ((net.minecraft.client.gui.inventory.GuiContainer) gui).guiLeft + offset.x;
-            int recipeY = ((net.minecraft.client.gui.inventory.GuiContainer) gui).guiTop + offset.y;
+            int recipeX = ((GuiContainer) gui).guiLeft + offset.x;
+            int recipeY = ((GuiContainer) gui).guiTop + offset.y;
             int relX = mouse.x - recipeX;
             int relY = mouse.y - recipeY;
 
@@ -157,14 +165,15 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         }
 
         filterDimension = dimIds.get(currentIndex);
+        // Set flag to prevent automatic dimension detection from overwriting
+        manualDimensionChange = true;
 
         // Reload recipes with new filter
         arecipes.clear();
         loadAllRecipes();
 
         // Reopen the NEI GUI to properly refresh the page
-        // This is the proper way to update recipes in NEI's architecture
-        codechicken.nei.recipe.GuiCraftingRecipe.openRecipeGui(getRecipeID());
+        GuiCraftingRecipe.openRecipeGui(getRecipeID());
     }
 
     @Override
@@ -218,14 +227,20 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public void loadCraftingRecipes(ItemStack item) {
+        // Skip automatic dimension detection if user manually changed the dimension
+        if (!manualDimensionChange) {
+            // Find which dimension this item belongs to
+            int itemDimension = findFirstDimension(item);
+            // Only update filter if a specific dimension was found
+            if (itemDimension != NEIDimensionConfig.DIMENSION_COMMON) {
+                filterDimension = itemDimension;
+            }
+        }
+        // Reset the manual change flag after use
+        manualDimensionChange = false;
+
         arecipes.clear();
         super.loadCraftingRecipes(item);
-
-        // Find which dimension this item belongs to and auto-set filter
-        // This sets filterDimension to the first dimension found (or DIMENSION_COMMON
-        // if no specific dimension)
-        int itemDimension = findFirstDimension(item);
-        filterDimension = itemDimension;
 
         // Use the dimension-aware registry for accurate probability display
         IFocusableRegistry registry = getRegistryForNEI(tier, filterDimension);
