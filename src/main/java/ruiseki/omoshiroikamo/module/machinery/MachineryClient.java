@@ -6,6 +6,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
@@ -23,8 +24,7 @@ public class MachineryClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        // TODO: Add config option
-        return true;
+        return BackportConfigs.useMachinery;
     }
 
     @Override

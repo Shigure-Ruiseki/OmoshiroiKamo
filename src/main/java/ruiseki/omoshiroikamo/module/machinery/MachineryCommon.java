@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 
 /**
@@ -23,8 +24,7 @@ public class MachineryCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        // TODO: Add config option
-        return true;
+        return BackportConfigs.useMachinery;
     }
 
     @Override
