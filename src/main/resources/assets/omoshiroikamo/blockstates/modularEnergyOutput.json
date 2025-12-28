@@ -1,0 +1,10 @@
+{
+    "variants": {
+      "meta=0": {"model": "omoshiroikamo:block/modular/energy/modularEnergyOutputT1"},
+      "meta=1": {"model": "omoshiroikamo:block/modular/energy/modularEnergyOutputT2"},
+      "meta=2": {"model": "omoshiroikamo:block/modular/energy/modularEnergyOutputT3"},
+      "meta=3": {"model": "omoshiroikamo:block/modular/energy/modularEnergyOutputT4"},
+      "meta=4": {"model": "omoshiroikamo:block/modular/energy/modularEnergyOutputT5"},
+      "meta=5": {"model": "omoshiroikamo:block/modular/energy/modularEnergyOutputT6"}
+    }
+}

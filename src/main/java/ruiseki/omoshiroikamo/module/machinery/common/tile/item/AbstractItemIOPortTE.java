@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
@@ -60,6 +61,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     public void setSideIO(ForgeDirection side, IO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
+        Logger.info(getSideIO(side).name());
     }
 
     @Override

@@ -1,7 +1,10 @@
 {
     "variants": {
-        "": {
-            "model": "omoshiroikamo:block/modularItemInput"
-        }
+      "meta=0": {"model": "omoshiroikamo:block/modular/item/modularItemInputT1"},
+      "meta=1": {"model": "omoshiroikamo:block/modular/item/modularItemInputT2"},
+      "meta=2": {"model": "omoshiroikamo:block/modular/item/modularItemInputT3"},
+      "meta=3": {"model": "omoshiroikamo:block/modular/item/modularItemInputT4"},
+      "meta=4": {"model": "omoshiroikamo:block/modular/item/modularItemInputT5"},
+      "meta=5": {"model": "omoshiroikamo:block/modular/item/modularItemInputT6"}
     }
 }

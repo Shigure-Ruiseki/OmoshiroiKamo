@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
  * Extends AbstractMBModifierTE to leverage existing structure validation and
  * crafting logic.
  * Corresponds to the 'Q' symbol in structure definitions.
- * 
+ *
  * TODO: This class already extends AbstractMBModifierTE which provides:
  * - CraftingState management (via AbstractMachineTE)
  * - RedstoneMode support (via AbstractEnergyTE)
@@ -91,6 +91,11 @@ public class TEMachineController extends AbstractMBModifierTE {
             }
             return true;
         } else if (block == MachineryBlocks.ENERGY_INPUT_PORT.getBlock()) {
+            if (!energyInputPorts.contains(pos)) {
+                energyInputPorts.add(pos);
+            }
+            return true;
+        } else if (block == MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock()) {
             if (!energyInputPorts.contains(pos)) {
                 energyInputPorts.add(pos);
             }
@@ -222,7 +227,8 @@ public class TEMachineController extends AbstractMBModifierTE {
                         casingCount++;
                     } else if (block == MachineryBlocks.ITEM_INPUT_PORT.getBlock()
                         || block == MachineryBlocks.ITEM_OUTPUT_PORT.getBlock()
-                        || block == MachineryBlocks.ENERGY_INPUT_PORT.getBlock()) {
+                        || block == MachineryBlocks.ENERGY_INPUT_PORT.getBlock()
+                        || block == MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock()) {
                             addToMachine(block, 0, checkX, checkY, checkZ);
                             casingCount++;
                         }

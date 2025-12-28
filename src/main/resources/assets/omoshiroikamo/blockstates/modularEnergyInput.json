@@ -1,7 +1,10 @@
 {
     "variants": {
-        "": {
-            "model": "omoshiroikamo:block/modularEnergyInput"
-        }
+      "meta=0": {"model": "omoshiroikamo:block/modular/energy/modularEnergyInputT1"},
+      "meta=1": {"model": "omoshiroikamo:block/modular/energy/modularEnergyInputT2"},
+      "meta=2": {"model": "omoshiroikamo:block/modular/energy/modularEnergyInputT3"},
+      "meta=3": {"model": "omoshiroikamo:block/modular/energy/modularEnergyInputT4"},
+      "meta=4": {"model": "omoshiroikamo:block/modular/energy/modularEnergyInputT5"},
+      "meta=5": {"model": "omoshiroikamo:block/modular/energy/modularEnergyInputT6"}
     }
 }

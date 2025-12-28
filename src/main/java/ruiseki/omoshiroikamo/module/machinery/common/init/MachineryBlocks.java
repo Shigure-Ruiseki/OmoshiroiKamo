@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
@@ -24,6 +25,7 @@ public enum MachineryBlocks {
     ITEM_INPUT_PORT(BlockItemInputPort.create()),
     ITEM_OUTPUT_PORT(BlockItemOutputPort.create()),
     ENERGY_INPUT_PORT(BlockEnergyInputPort.create()),
+    ENERGY_OUTPUT_PORT(BlockEnergyOutputPort.create()),
 
     ;
     // spotless: on

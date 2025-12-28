@@ -41,9 +41,9 @@ public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
                 if (!getSideIO(direction).canOutput()) {
                     continue;
                 }
-                TileEntity source = getPos().offset(direction)
+                TileEntity sink = getPos().offset(direction)
                     .getTileEntity(worldObj);
-                transfer.push(this, direction, source);
+                transfer.push(this, direction, sink);
                 transfer.transfer();
             }
         }

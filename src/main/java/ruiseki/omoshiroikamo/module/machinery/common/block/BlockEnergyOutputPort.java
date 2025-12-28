@@ -19,40 +19,46 @@ import org.jetbrains.annotations.Nullable;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT6;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT2;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT3;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT4;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT5;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT6;
 
 /**
- * Item Input Port - accepts items for machine processing.
+ * Energy Input Port - accepts energy (RF) for machine processing.
  * Can be placed at IO slot positions in machine structures.
  * Uses JSON model with base + overlay textures via GTNHLib.
+ *
  * TODO List:
- * - Add filter support for specific item types (should filter with pipe)
+ * - Implement RF energy storage and transfer
+ * - Add GUI for viewing energy level
+ * - Support for different tiers with varying capacity/transfer rate
+ * - Add visual indicator for energy level (texture animation or overlay)
  * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving items
+ * - Add comparator output for energy monitoring
+ * - Support EU (IC2) input mode (configurable)
+ * - Add Tesla coil-style wireless energy input
  */
-public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
+public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPort> {
 
-    protected BlockItemInputPort() {
+    protected BlockEnergyOutputPort() {
         super(
-            ModObject.blockModularItemInput.unlocalisedName,
-            TEItemInputPortT1.class,
-            TEItemInputPortT2.class,
-            TEItemInputPortT3.class,
-            TEItemInputPortT4.class,
-            TEItemInputPortT5.class,
-            TEItemInputPortT6.class);
+            ModObject.blockModularEnergyOutput.unlocalisedName,
+            TEEnergyOutputPortT1.class,
+            TEEnergyOutputPortT2.class,
+            TEEnergyOutputPortT3.class,
+            TEEnergyOutputPortT4.class,
+            TEEnergyOutputPortT5.class,
+            TEEnergyOutputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
     }
 
-    public static BlockItemInputPort create() {
-        return new BlockItemInputPort();
+    public static BlockEnergyOutputPort create() {
+        return new BlockEnergyOutputPort();
     }
 
     @Override
@@ -67,8 +73,8 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
     }
 
     @Override
-    public Class<? extends ItemBlock> getItemBlockClass() {
-        return ItemBlockItemInputPort.class;
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockEnergyInputPort.class;
     }
 
     @Override
@@ -91,14 +97,14 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
 
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        // TODO: Display current item count and types in slots
-        // TODO: Show filter status if enabled
+        // TODO: Display current RF stored / max capacity
+        // TODO: Show energy transfer rate
         // TODO: Show connected machine name if part of structure
     }
 
-    public static class ItemBlockItemInputPort extends ItemBlockOK {
+    public static class ItemBlockEnergyInputPort extends ItemBlockOK {
 
-        public ItemBlockItemInputPort(Block block) {
+        public ItemBlockEnergyInputPort(Block block) {
             super(block, block);
         }
 
