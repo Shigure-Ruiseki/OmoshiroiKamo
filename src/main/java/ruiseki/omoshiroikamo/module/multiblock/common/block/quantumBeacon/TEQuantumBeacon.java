@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierT
 import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.handler.QuantumBeaconEventHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
@@ -47,8 +48,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IE
     }
 
     @Override
-    public String getMachineName() {
-        return "nanoBotBeacon";
+    public String getLocalizedName() {
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override

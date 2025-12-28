@@ -32,6 +32,7 @@ import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT1;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT4;
@@ -69,8 +70,8 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     }
 
     @Override
-    public String getMachineName() {
-        return "quantumExtractor";
+    public String getLocalizedName() {
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
@@ -491,7 +492,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     @Override
     public String getInventoryName() {
-        return getMachineName();
+        return getLocalizedName();
     }
 
     @Override

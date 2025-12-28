@@ -14,30 +14,30 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import org.jetbrains.annotations.Nullable;
+
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.AbstractItemInputPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT6;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT7;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT1;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT2;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT3;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT4;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT5;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT6;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT7;
 
 /**
  * Item Input Port - accepts items for machine processing.
  * Can be placed at IO slot positions in machine structures.
  * Uses JSON model with base + overlay textures via GTNHLib.
- *
  * TODO List:
- * - Implement GUI for viewing/managing stored items
  * - Add filter support for specific item types (should filter with pipe)
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving items
  */
-public class BlockItemInputPort extends AbstractTieredBlock<AbstractItemInputPortTE> {
+public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
 
     protected BlockItemInputPort() {
         super(
@@ -58,9 +58,9 @@ public class BlockItemInputPort extends AbstractTieredBlock<AbstractItemInputPor
     }
 
     @Override
-    public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
-        // TODO: Add Tier Color / Auto Pull Mode
-        return super.colorMultiplier(worldIn, x, y, z);
+    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+        // TODO: Add Tier Color
+        return -1;
     }
 
     @Override
@@ -81,11 +81,6 @@ public class BlockItemInputPort extends AbstractTieredBlock<AbstractItemInputPor
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    public String getTextureName() {
-        return "modular_machine_casing";
-    }
 
     @Override
     public int getRenderType() {

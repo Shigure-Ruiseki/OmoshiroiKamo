@@ -56,6 +56,7 @@ public enum ModObject {
     blockMachineCasing,
 
     blockModularItemInput,
+    blockModularItemOutput,
 
     itemBackPack,
     itemUpgrade,

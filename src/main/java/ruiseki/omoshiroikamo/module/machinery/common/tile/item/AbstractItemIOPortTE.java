@@ -1,12 +1,11 @@
-package ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput;
+package ruiseki.omoshiroikamo.module.machinery.common.tile.item;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -15,13 +14,13 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
+import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 /**
@@ -29,14 +28,14 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
  */
-public abstract class AbstractItemInputPortTE extends AbstractStorageTE implements ISidedIO {
+public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements ISidedIO {
 
-    private final IO[] sides = new IO[6];
+    protected final IO[] sides = new IO[6];
 
-    public AbstractItemInputPortTE(int numInputs) {
-        super(new SlotDefinition().setItemSlots(numInputs, 0));
+    public AbstractItemIOPortTE(int numInputs, int numOutput) {
+        super(new SlotDefinition().setItemSlots(numInputs, numOutput));
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.INPUT;
+            sides[i] = IO.NONE;
         }
     }
 
@@ -45,23 +44,11 @@ public abstract class AbstractItemInputPortTE extends AbstractStorageTE implemen
         return false;
     }
 
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return slotDefinition.isInputSlot(slot);
-    }
+    public abstract int getTier();
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
-        if (!canInput(dir)) {
-            return false;
-        }
-        return super.canInsertItem(slot, itemstack, side);
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
-        return false;
+    public String getLocalizedName() {
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
@@ -73,30 +60,6 @@ public abstract class AbstractItemInputPortTE extends AbstractStorageTE implemen
     public void setSideIO(ForgeDirection side, IO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
-        Logger.info(getSideIO(side).name());
-    }
-
-    @Override
-    public IO getIOLimit() {
-        return IO.INPUT;
-    }
-
-    @Override
-    public boolean processTasks(boolean redstoneChecksPassed) {
-        if (isRedstoneActive() && inv.hasEmptySlot()) {
-            ItemTransfer transfer = new ItemTransfer();
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-                if (!getSideIO(direction).canInput()) {
-                    continue;
-                }
-                TileEntity source = getPos().offset(direction)
-                    .getTileEntity(worldObj);
-                transfer.pull(this, direction, source);
-                transfer.transfer();
-            }
-        }
-
-        return super.processTasks(redstoneChecksPassed);
     }
 
     @Override
@@ -140,8 +103,9 @@ public abstract class AbstractItemInputPortTE extends AbstractStorageTE implemen
         syncManager.syncValue("redstoneSyncer", redstoneSyncer);
 
         panel.child(
-            new RedstoneModeWidget(redstoneSyncer).pos(-20, 0)
-                .size(18));
+            new RedstoneModeWidget(redstoneSyncer).pos(-20, 2)
+                .size(18)
+                .excludeAreaInRecipeViewer());
 
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
@@ -165,13 +129,21 @@ public abstract class AbstractItemInputPortTE extends AbstractStorageTE implemen
             .alignX(0.5f)
             .topRel(0.15f);
 
+        panel.child(new TileWidget(this.getLocalizedName()));
+
+        panel.child(
+            IKey.lang(data.getPlayer().inventory.getInventoryName())
+                .asWidget()
+                .pos(8, 20 + rows * 18));
+
         for (int i = 0; i < slots; i++) {
             int x = (i % cols) * 18;
             int y = (i / cols) * 18;
             widget.child(
-                new ItemSlot().slot(new ModularSlot(inv, i))
+                new ItemSlot().slot(new ModularSlot(inv, i).slotGroup("inv"))
                     .pos(x, y));
         }
+        syncManager.registerSlotGroup("inv", slots, true);
 
         panel.child(widget);
 

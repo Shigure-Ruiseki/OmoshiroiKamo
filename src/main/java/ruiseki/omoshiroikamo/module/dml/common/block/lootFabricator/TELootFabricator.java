@@ -252,7 +252,7 @@ public class TELootFabricator extends AbstractMachineTE implements IEnergySink, 
 
     @Override
     public String getInventoryName() {
-        return this.getMachineName();
+        return this.getLocalizedName();
     }
 
     @Override

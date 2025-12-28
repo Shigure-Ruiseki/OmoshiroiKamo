@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.chickens.common.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -21,7 +20,6 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
@@ -70,11 +68,6 @@ public class TERoostCollector extends AbstractStorageTE {
     }
 
     @Override
-    public String getMachineName() {
-        return ModObject.blockRoostCollector.unlocalisedName;
-    }
-
-    @Override
     public boolean isActive() {
         return false;
     }
@@ -109,7 +102,7 @@ public class TERoostCollector extends AbstractStorageTE {
         panel.child(
             Flow.column()
                 .child(
-                    IKey.str(StatCollector.translateToLocal("tile." + getMachineName() + ".name"))
+                    IKey.str(getLocalizedName())
                         .asWidget()
                         .margin(6, 0, 5, 0)
                         .align(Alignment.TopLeft))

@@ -172,7 +172,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
 
     @Override
     public String getInventoryName() {
-        return getMachineName();
+        return getLocalizedName();
     }
 
     @Override

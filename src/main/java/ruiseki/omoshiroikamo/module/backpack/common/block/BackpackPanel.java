@@ -34,6 +34,7 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackSlot;
@@ -58,7 +59,6 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.SettingTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ShiftButtonWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.UpgradeSlotGroupWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.VoidUpgradeWidget;
@@ -420,7 +420,7 @@ public class BackpackPanel extends ModularPanel {
     }
 
     public void addTexts() {
-        child(new TileWidget(this));
+        child(new TileWidget(handler.getDisplayName()).maxWidth(width));
         child(
             IKey.lang(this.player.inventory.getInventoryName())
                 .asWidget()

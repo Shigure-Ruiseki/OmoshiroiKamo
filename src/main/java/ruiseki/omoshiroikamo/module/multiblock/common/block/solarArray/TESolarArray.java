@@ -16,11 +16,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySource;
-import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
@@ -39,8 +39,8 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IEner
     }
 
     @Override
-    public String getMachineName() {
-        return ModObject.blockSolarArray.unlocalisedName;
+    public String getLocalizedName() {
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
