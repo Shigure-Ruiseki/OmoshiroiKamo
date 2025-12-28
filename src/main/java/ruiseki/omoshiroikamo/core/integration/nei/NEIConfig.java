@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.integration.nei;
 
+import net.minecraft.item.ItemStack;
+
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
@@ -17,6 +19,7 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
+import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
 
@@ -36,6 +39,15 @@ public class NEIConfig implements IConfigureNEI {
                 QuantumResExtractorRecipeHandler res = new QuantumResExtractorRecipeHandler(i);
                 registerHandler(res);
                 API.addRecipeCatalyst(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), res.getRecipeID());
+
+                // Register dimension catalysts to left tab for easy comparison
+                for (NEIDimensionConfig.DimensionEntry dim : NEIDimensionConfig.getDimensions()) {
+                    ItemStack catalyst = NEIDimensionConfig.getCatalystStack(dim.id);
+                    if (catalyst != null) {
+                        API.addRecipeCatalyst(catalyst, ore.getRecipeID());
+                        API.addRecipeCatalyst(catalyst, res.getRecipeID());
+                    }
+                }
             }
         }
         if (BackportConfigs.useChicken) {
