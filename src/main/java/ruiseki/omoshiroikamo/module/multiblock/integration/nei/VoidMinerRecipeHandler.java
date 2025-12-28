@@ -45,6 +45,22 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
      */
     protected static boolean manualDimensionChange = false;
 
+    /** View mode for different display layouts */
+    public enum ViewMode {
+        /** Show dimension's item list (default, Miner/Catalyst Usage) */
+        DIMENSION,
+        /** Show item's dimension list with probabilities (Item Crafting) */
+        ITEM_DETAIL,
+        /** Show lens bonus target items (Lens Usage) */
+        LENS_BONUS
+    }
+
+    /** Current view mode */
+    protected static ViewMode currentViewMode = ViewMode.DIMENSION;
+
+    /** Item being displayed in ITEM_DETAIL mode */
+    protected static ItemStack detailItem = null;
+
     /** Current text filter for ore name search */
     protected String filterText = "";
 
