@@ -58,6 +58,11 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
     }
 
     @Override
+    public String getTextureName() {
+        return "modular_machine_casing";
+    }
+
+    @Override
     public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
         // TODO: Add Tier Color
         return -1;

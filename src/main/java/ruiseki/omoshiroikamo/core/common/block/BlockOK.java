@@ -92,9 +92,7 @@ public class BlockOK extends Block {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        if (!(getRenderType() == JSON_ISBRH_ID)) {
-            blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
-        }
+        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
     }
 
     /* Subclass Helpers */
