@@ -117,8 +117,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     public void drawForeground(int recipe) {
         super.drawForeground(recipe);
         // Only draw on the first recipe
-        if (recipe != 0)
-            return;
+        if (recipe != 0) return;
 
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -140,7 +139,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                 ItemStack catalyst = NEIDimensionConfig.getCatalystStack(filterDimension);
                 if (catalyst != null) {
                     GuiContainerManager
-                            .drawItem(HEADER_RECT.x + fr.getStringWidth(dimName) + 4, HEADER_RECT.y - 2, catalyst);
+                        .drawItem(HEADER_RECT.x + fr.getStringWidth(dimName) + 4, HEADER_RECT.y - 2, catalyst);
                 }
                 break;
 
@@ -185,8 +184,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     private void cycleDimension(GuiRecipe<?> gui, boolean forward) {
         List<Integer> dimIds = NEIDimensionConfig.getDimensionIds();
         int currentIndex = dimIds.indexOf(filterDimension);
-        if (currentIndex < 0)
-            currentIndex = 0;
+        if (currentIndex < 0) currentIndex = 0;
 
         if (forward) {
             currentIndex = (currentIndex + 1) % dimIds.size();
@@ -266,7 +264,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             return true;
         }
         String displayName = stack.getDisplayName()
-                .toLowerCase();
+            .toLowerCase();
         return displayName.contains(filterText.toLowerCase());
     }
 
@@ -281,8 +279,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         // Show all dimensions where this item can be mined
         for (int dimId : NEIDimensionConfig.getDimensionIds()) {
             IFocusableRegistry dimRegistry = getRegistryForNEI(tier, dimId);
-            if (dimRegistry == null)
-                continue;
+            if (dimRegistry == null) continue;
 
             // Search for this item in this dimension's list
             for (WeightedStackBase ws : dimRegistry.getUnFocusedList()) {
@@ -314,12 +311,10 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             filterDimension = NEIDimensionConfig.DIMENSION_COMMON;
 
             int inputTier = ingredient.getItemDamage();
-            if (inputTier != this.tier)
-                return;
+            if (inputTier != this.tier) return;
 
             IFocusableRegistry tierRegistry = getRegistryForNEI(inputTier, filterDimension);
-            if (tierRegistry == null)
-                tierRegistry = getRegistry(inputTier);
+            if (tierRegistry == null) tierRegistry = getRegistry(inputTier);
             if (tierRegistry != null) {
                 List<WeightedStackBase> unfocusedList = new ArrayList<>(tierRegistry.getUnFocusedList());
                 unfocusedList.sort((a, b) -> Double.compare(b.realWeight, a.realWeight));
@@ -417,17 +412,6 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                     return handler.numRecipes() > 0 ? handler : null;
                 }
             }
-
-            // Check if this is a dimension catalyst - all tiers respond
-            int catalystDimension = NEIDimensionConfig.getDimensionForCatalyst(stack);
-            if (catalystDimension != NEIDimensionConfig.DIMENSION_COMMON) {
-                // Create handler for this tier and load recipes with dimension filter
-                VoidMinerRecipeHandler handler = createForTier(this.tier);
-                if (handler != null) {
-                    handler.loadUsageRecipes(stack);
-                    return handler.numRecipes() > 0 ? handler : null;
-                }
-            }
         }
         return super.getUsageHandler(inputId, ingredients);
     }
@@ -475,9 +459,9 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                     this.input.add(new PositionedStack(catalystIcon, 25, ITEM_Y));
 
                     PositionedStackAdv clearLens = new PositionedStackAdv(
-                            MultiBlockBlocks.LENS.newItemStack(1, 0),
-                            50,
-                            ITEM_Y);
+                        MultiBlockBlocks.LENS.newItemStack(1, 0),
+                        50,
+                        ITEM_Y);
                     clearLens.setChance((float) (ws.realWeight / 100.0f));
                     clearLens.setTextYOffset(10);
                     clearLens.setTextColor(0x000000);
@@ -498,9 +482,9 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                     this.input.add(new PositionedStack(dimCatalyst, 25, ITEM_Y));
 
                     PositionedStackAdv dimLens = new PositionedStackAdv(
-                            MultiBlockBlocks.LENS.newItemStack(1, 0),
-                            50,
-                            ITEM_Y);
+                        MultiBlockBlocks.LENS.newItemStack(1, 0),
+                        50,
+                        ITEM_Y);
                     dimLens.setChance((float) (ws.realWeight / 100.0f));
                     dimLens.setTextYOffset(10);
                     dimLens.setTextColor(0x000000);
@@ -514,7 +498,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         }
 
         private void addBonusLens(WeightedStackBase ws, IFocusableRegistry registry, ItemStack outputStack, int x,
-                int y) {
+            int y) {
             EnumDye preferred = registry.getPrioritizedLens(outputStack);
             if (preferred != null) {
                 ItemStack lensStack;
@@ -580,7 +564,6 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             for (WeightedStackBase ws : weightedItems) {
                 ItemStack stack = ws.getMainStack();
                 if (stack != null) {
-                    // Use regular PositionedStack (no probability display)
                     this.items.add(new PositionedStack(stack, x, y));
                 }
                 col++;
