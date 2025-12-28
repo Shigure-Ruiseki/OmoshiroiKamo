@@ -10,12 +10,12 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
-import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
@@ -103,53 +103,63 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        // Keep stable name format to avoid flickering on hover
-        String dimName = NEIDimensionConfig.getDisplayName(filterDimension);
+        // Prefer the first recipe's dimension (if available) so tab name matches what
+        // is shown
+        int dimId = filterDimension;
+        if (!arecipes.isEmpty() && arecipes.get(0) instanceof CachedVoidRecipe first) {
+            dimId = first.getDimensionId();
+        }
+        String dimName = NEIDimensionConfig.getDisplayName(dimId);
         return getMinerNameBase() + " T" + (tier + 1) + " [" + dimName + "]";
     }
 
     // --- UI Drawing ---
 
     /** Rectangle for header info area */
-    private static final Rectangle HEADER_RECT = new Rectangle(5, 0, 150, 12);
+    private static final Rectangle HEADER_RECT = new Rectangle(5, 10, 150, 12);
 
     @Override
     public void drawForeground(int recipe) {
         super.drawForeground(recipe);
-        // Only draw on the first recipe
-        if (recipe != 0) return;
 
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
         GL11.glDisable(GL11.GL_LIGHTING);
 
-        switch (currentViewMode) {
-            case ITEM_DETAIL:
-                // Show item name in header
-                if (detailItem != null) {
-                    String itemName = detailItem.getDisplayName();
-                    fr.drawString(itemName, HEADER_RECT.x, HEADER_RECT.y + 2, 0x404040);
-                }
-                break;
+        // Get the cached recipe to access dimension info
+        if (recipe >= 0 && recipe < arecipes.size()) {
+            CachedRecipe cached = arecipes.get(recipe);
+            if (cached instanceof CachedVoidRecipe voidRecipe) {
+                // Draw dimension name above catalyst icon (position X=25, Y=14 - text above at
+                // Y=4)
+                String dimName = NEIDimensionConfig.getDisplayName(voidRecipe.getDimensionId());
+                fr.drawString(dimName, 25, 4, 0x404040);
+            }
+        }
 
-            case DIMENSION:
-                // Show current dimension name in header
-                String dimName = NEIDimensionConfig.getDisplayName(filterDimension);
-                fr.drawString(dimName, HEADER_RECT.x, HEADER_RECT.y + 2, 0x404040);
-                // Draw catalyst icon
-                ItemStack catalyst = NEIDimensionConfig.getCatalystStack(filterDimension);
-                if (catalyst != null) {
-                    GuiContainerManager
-                        .drawItem(HEADER_RECT.x + fr.getStringWidth(dimName) + 4, HEADER_RECT.y - 2, catalyst);
-                }
-                break;
+        // Draw mode-specific header on first recipe only
+        if (recipe == 0) {
+            switch (currentViewMode) {
+                case ITEM_DETAIL:
+                    // // Show item name in header
+                    // if (detailItem != null) {
+                    // String itemName = detailItem.getDisplayName();
+                    // fr.drawString(itemName, HEADER_RECT.x, HEADER_RECT.y + 2, 0x404040);
+                    // }
+                    break;
 
-            case LENS_BONUS:
-                // Show lens name in header
-                if (detailItem != null) {
-                    String lensName = detailItem.getDisplayName() + " Bonus";
-                    fr.drawString(lensName, HEADER_RECT.x, HEADER_RECT.y + 2, 0x404040);
-                }
-                break;
+                case LENS_BONUS:
+                    // Show lens name in header
+                    if (detailItem != null) {
+                        String lensName = detailItem.getDisplayName() + " Bonus";
+                        fr.drawString(lensName, HEADER_RECT.x, HEADER_RECT.y + 2, 0x404040);
+                    }
+                    break;
+
+                case DIMENSION:
+                default:
+                    // Dimension mode header is handled per-recipe above
+                    break;
+            }
         }
     }
 
@@ -225,6 +235,21 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             return 12;
         }
         return 6; // Default for detailed views
+    }
+
+    /**
+     * Set a custom display name for an ItemStack via NBT.
+     */
+    protected static void setDisplayName(ItemStack stack, String name) {
+        if (stack == null || name == null) return;
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        NBTTagCompound display = stack.getTagCompound()
+            .getCompoundTag("display");
+        display.setString("Name", name);
+        stack.getTagCompound()
+            .setTag("display", display);
     }
 
     @Override
@@ -453,8 +478,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             ItemStack outputStack = ws.getMainStack();
 
             // Layout positions adjusted: more centered, below header
-            // Y=14 to avoid overlapping with header (was Y=6)
-            final int ITEM_Y = 14;
+            // Kept comfortably below the header to avoid overlap
+            final int ITEM_Y = 22;
 
             switch (currentViewMode) {
                 case LENS_BONUS:
@@ -543,6 +568,10 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             this(ws, registry, tier, filterDimension);
         }
 
+        public int getDimensionId() {
+            return dimensionId;
+        }
+
         @Override
         public List<PositionedStack> getIngredients() {
             return input;
@@ -566,7 +595,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         private static final int ITEMS_PER_ROW = 8;
         private static final int ITEM_SPACING = 18;
         private static final int START_X = 5;
-        private static final int START_Y = 14;
+        private static final int START_Y = 22;
 
         public CachedLensGridRecipe(List<WeightedStackBase> weightedItems) {
             this.items = new ArrayList<>();

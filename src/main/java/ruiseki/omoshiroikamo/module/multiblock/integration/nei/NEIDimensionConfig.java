@@ -40,7 +40,9 @@ public class NEIDimensionConfig {
 
     private static DimensionList dimensionList;
 
-    /** Quick lookup from catalyst stack to dimension id (supports wildcard meta). */
+    /**
+     * Quick lookup from catalyst stack to dimension id (supports wildcard meta).
+     */
     private static final Map<StackKey, Integer> catalystLookup = new HashMap<>();
 
     public static void init() {
