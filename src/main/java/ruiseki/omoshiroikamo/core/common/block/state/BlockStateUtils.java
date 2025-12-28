@@ -45,8 +45,14 @@ public class BlockStateUtils {
     }
 
     public static ForgeDirection getFacingProp(World world, int x, int y, int z) {
-        BlockState state = getBlockState(world, x, y, z);
-        return state.getPropertyValue("facing");
+        try {
+            BlockState state = getBlockState(world, x, y, z);
+            if (state != null) {
+                ForgeDirection facing = state.getPropertyValue("facing");
+                return facing != null ? facing : NORTH;
+            }
+        } catch (Exception e) {}
+        return NORTH;
     }
 
     public static float getFacingAngle(ForgeDirection facing) {
