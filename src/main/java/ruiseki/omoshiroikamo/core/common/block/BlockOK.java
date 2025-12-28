@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.core.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
