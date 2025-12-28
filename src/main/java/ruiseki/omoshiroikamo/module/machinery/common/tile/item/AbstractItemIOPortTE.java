@@ -96,7 +96,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("input_port_gui");
+        ModularPanel panel = new ModularPanel("item_port_gui");
 
         EnumSyncValue<RedstoneMode> redstoneSyncer = new EnumSyncValue<>(
             RedstoneMode.class,

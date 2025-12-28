@@ -8,12 +8,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
+import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 /**
  * Extends AbstractEnergyTE to leverage existing energy management system.
@@ -97,7 +100,19 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("energy_gui");
+        ModularPanel panel = new ModularPanel("energy_port_gui");
+
+        EnumSyncValue<RedstoneMode> redstoneSyncer = new EnumSyncValue<>(
+            RedstoneMode.class,
+            this::getRedstoneMode,
+            this::setRedstoneMode);
+        syncManager.syncValue("redstoneSyncer", redstoneSyncer);
+
+        panel.child(
+            new RedstoneModeWidget(redstoneSyncer).pos(-20, 2)
+                .size(18)
+                .excludeAreaInRecipeViewer());
+
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
 

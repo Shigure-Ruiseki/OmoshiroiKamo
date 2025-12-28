@@ -14,17 +14,10 @@ public class ItemConfigs {
 
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(ItemConfigs.class);
-        ConfigurationManager.registerConfig(AnvilUpgradeConfig.class);
     }
 
     @Config.DefaultBoolean(true)
     public static boolean renderPufferFish;
-
-    @Config.DefaultBoolean(true)
-    public static boolean renderDurabilityBar;
-
-    @Config.DefaultBoolean(true)
-    public static boolean renderChargeBar;
 
     @Config.DefaultBoolean(true)
     public static boolean renderBaubles;

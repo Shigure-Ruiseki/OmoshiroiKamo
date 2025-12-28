@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
+import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.OKCreativeTab;
@@ -90,7 +91,9 @@ public class BlockOK extends Block {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
+        if (getRenderType() != ModelISBRH.JSON_ISBRH_ID) {
+            blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
+        }
     }
 
     /* Subclass Helpers */

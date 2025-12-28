@@ -23,11 +23,6 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     }
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        return canInput(from);
-    }
-
-    @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
         if (isRedstoneActive()) {
             EnergyTransfer transfer = new EnergyTransfer();
@@ -47,6 +42,9 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
 
     @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
+        if (!isRedstoneActive() || !canInput(side)) {
+            return 0;
+        }
         return energyStorage.receiveEnergy(amount, simulate);
     }
 }

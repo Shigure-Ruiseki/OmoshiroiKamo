@@ -152,14 +152,6 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     }
 
     @Override
-    public void validate() {
-        super.validate();
-        if (!ic2Registered && EnergyConfig.ic2Capability) {
-            register();
-        }
-    }
-
-    @Override
     public void onChunkUnload() {
         if (EnergyConfig.ic2Capability) {
             deregister();
