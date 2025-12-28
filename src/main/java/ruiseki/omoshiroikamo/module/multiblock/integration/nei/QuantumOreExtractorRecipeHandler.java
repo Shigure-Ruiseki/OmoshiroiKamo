@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.module.multiblock.integration.nei;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -59,10 +58,5 @@ public class QuantumOreExtractorRecipeHandler extends VoidMinerRecipeHandler {
     @Override
     protected VoidMinerRecipeHandler createForTier(int tier) {
         return new QuantumOreExtractorRecipeHandler(tier);
-    }
-
-    @Override
-    protected int findFirstDimension(ItemStack item) {
-        return QuantumExtractorRecipes.findFirstOreDimension(item);
     }
 }
