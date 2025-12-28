@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.core;
 
 import net.minecraft.init.Items;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
 
 import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 
@@ -15,7 +14,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
-import ruiseki.omoshiroikamo.core.client.handler.StructureWandRenderer;
 import ruiseki.omoshiroikamo.core.client.render.PufferFishRenderer;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -43,9 +41,6 @@ public class CoreClient implements IModuleClient {
         FMLCommonHandler.instance()
             .bus()
             .register(KeyHandler.instance);
-
-        // Structure Wand renderer (visualizes selection bounds)
-        MinecraftForge.EVENT_BUS.register(StructureWandRenderer.INSTANCE);
 
         if (ItemConfigs.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());

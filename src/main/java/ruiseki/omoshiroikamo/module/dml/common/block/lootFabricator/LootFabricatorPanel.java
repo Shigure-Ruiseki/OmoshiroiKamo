@@ -42,7 +42,7 @@ import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.core.common.util.MathUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
-import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeButton;
+import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
 
 public class LootFabricatorPanel extends ModularPanel {
 
@@ -260,7 +260,7 @@ public class LootFabricatorPanel extends ModularPanel {
         syncManager.registerSlotGroup("input", 1, true);
 
         this.child(
-            new RedstoneModeButton(redstoneModeSyncer).pos(-21, 0)
+            new RedstoneModeWidget(redstoneModeSyncer).pos(-21, 0)
                 .excludeAreaInRecipeViewer());
 
         this.child(

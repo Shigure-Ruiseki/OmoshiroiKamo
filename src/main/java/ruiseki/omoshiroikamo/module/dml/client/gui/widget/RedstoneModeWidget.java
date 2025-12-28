@@ -10,10 +10,11 @@ import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 
 import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
+import ruiseki.omoshiroikamo.core.client.gui.widget.RedstoneModeBaseWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
 
-public class RedstoneModeButton extends CyclicVariantButtonWidget {
+public class RedstoneModeWidget extends RedstoneModeBaseWidget {
 
     public static final UITexture ALWAYS_ON = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/deepMobLearning/buttons/button_redstone")
@@ -72,14 +73,8 @@ public class RedstoneModeButton extends CyclicVariantButtonWidget {
     private static final List<UITexture> HOVER_TEXTURES = Arrays
         .asList(HOVER_ALWAYS_ON, HOVER_HIGH_ON, HOVER_HIGH_OFF, HOVER_ALWAYS_OFF);
 
-    public RedstoneModeButton(EnumSyncValue<RedstoneMode> syncValue) {
-        super(
-            VARIANTS,
-            syncValue.getValue()
-                .getIndex(),
-            0,
-            18,
-            value -> { syncValue.setValue(RedstoneMode.byIndex(value)); });
+    public RedstoneModeWidget(EnumSyncValue<RedstoneMode> syncValue) {
+        super(VARIANTS, 0, 18, syncValue);
         size(18);
     }
 

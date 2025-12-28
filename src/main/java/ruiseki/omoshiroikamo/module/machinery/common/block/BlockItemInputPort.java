@@ -9,14 +9,21 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemInputPort;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.AbstractItemInputPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT1;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT2;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT3;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT4;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT5;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT6;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.itemInput.TEItemInputPortT7;
 
 /**
  * Item Input Port - accepts items for machine processing.
@@ -25,17 +32,22 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEItemInputPort;
  *
  * TODO List:
  * - Implement GUI for viewing/managing stored items
- * - Add filter support for specific item types
- * - Implement hopper-style auto-pull from adjacent inventories
- * - Support for different tiers with varying slot counts
- * - Add redstone control mode (ignore, high, low, pulse)
+ * - Add filter support for specific item types (should filter with pipe)
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving items
  */
-public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
+public class BlockItemInputPort extends AbstractTieredBlock<AbstractItemInputPortTE> {
 
     protected BlockItemInputPort() {
-        super("modularItemInput", TEItemInputPort.class);
+        super(
+            ModObject.blockModularItemInput.unlocalisedName,
+            TEItemInputPortT1.class,
+            TEItemInputPortT2.class,
+            TEItemInputPortT3.class,
+            TEItemInputPortT4.class,
+            TEItemInputPortT5.class,
+            TEItemInputPortT6.class,
+            TEItemInputPortT7.class);
         setHardness(5.0F);
         setResistance(10.0F);
     }
@@ -45,9 +57,13 @@ public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockInputPort.class, name);
-        GameRegistry.registerTileEntity(teClass, name + "TileEntity");
+    public void registerBlockColor() {
+        // TODO: Add Tier Color
+    }
+
+    @Override
+    public Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockInputPort.class;
     }
 
     @Override
@@ -70,27 +86,6 @@ public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        switch (metadata) {
-            case 0:
-                return new TEItemInputPort(1);
-            case 1:
-                return new TEItemInputPort(4);
-            case 2:
-                return new TEItemInputPort(6);
-            case 3:
-                return new TEItemInputPort(9);
-            case 4:
-                return new TEItemInputPort(12);
-            case 5:
-                return new TEItemInputPort(16);
-            case 6:
-                return new TEItemInputPort(32);
-        }
-        return null;
-    }
-
-    @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
     }
@@ -106,6 +101,17 @@ public class BlockItemInputPort extends AbstractBlock<TEItemInputPort> {
 
         public ItemBlockInputPort(Block block) {
             super(block, block);
+        }
+
+        @Override
+        public String getUnlocalizedName(ItemStack stack) {
+            int tier = stack.getItemDamage() + 1;
+            return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+            // TODO: Add tooltips
         }
     }
 }

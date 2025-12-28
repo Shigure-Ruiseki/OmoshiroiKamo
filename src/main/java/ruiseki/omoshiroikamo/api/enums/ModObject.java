@@ -55,6 +55,8 @@ public enum ModObject {
     blockSimulationChamber,
     blockMachineCasing,
 
+    blockModularItemInput,
+
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,
@@ -100,7 +102,9 @@ public enum ModObject {
     itemSootCoveredPlate,
     itemSootCoveredRedstone,
 
-    itemStructureWand
+    itemStructureWand,
+
+    itemWrench
 
     ;
     // spotless: on

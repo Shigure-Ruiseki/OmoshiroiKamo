@@ -9,7 +9,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
 import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
@@ -19,13 +18,14 @@ import com.gtnewhorizon.gtnhlib.item.InventoryItemSource;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.network.PacketFluidTanks;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 
 public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory, CapabilityProvider {
 
     protected final SlotDefinition slotDefinition;
-    public ItemStackHandler inv;
+    public ItemStackHandlerBase inv;
     private final int[] allSlots;
     public SmartTank[] fluidTanks;
     protected boolean tanksDirty = false;
@@ -33,7 +33,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     public AbstractStorageTE(SlotDefinition slotDefinition) {
         this.slotDefinition = slotDefinition;
 
-        inv = new ItemStackHandler(slotDefinition.getItemSlots()) {
+        inv = new ItemStackHandlerBase(slotDefinition.getItemSlots()) {
 
             @Override
             protected void onContentsChanged(int slot) {

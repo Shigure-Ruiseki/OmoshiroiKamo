@@ -9,6 +9,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryPackets;
 
 /**
  * Modular Machinery Backport module entry point.
@@ -33,12 +35,13 @@ public class MachineryCommon implements IModuleCommon {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         MachineryBlocks.preInit();
-        // Client-side initialization is handled by MachineryClient via IModuleClient
+        MachineryItems.preInit();
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         // TODO: Register recipes
+        MachineryPackets.init();
     }
 
     @Override

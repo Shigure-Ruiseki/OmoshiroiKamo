@@ -8,13 +8,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.cleanroommc.modularui.utils.item.ItemStackHandler;
-
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -33,7 +32,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         super(new SlotDefinition().setItemSlots(3, 3));
 
         // Override inv to enforce slot limits specific to chickens
-        this.inv = new ItemStackHandler(slotDefinition.getItemSlots()) {
+        this.inv = new ItemStackHandlerBase(slotDefinition.getItemSlots()) {
 
             @Override
             protected void onContentsChanged(int slot) {
