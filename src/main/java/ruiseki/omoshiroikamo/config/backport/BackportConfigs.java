@@ -32,6 +32,10 @@ public class BackportConfigs {
     @Config.RequiresMcRestart
     public static boolean useDML;
 
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
+    public static boolean useMachinery;
+
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(BackportConfigs.class);
         MultiBlockConfigs.registerConfig();
