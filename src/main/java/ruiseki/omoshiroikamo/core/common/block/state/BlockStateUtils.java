@@ -51,10 +51,10 @@ public class BlockStateUtils {
 
     public static float getFacingAngle(ForgeDirection facing) {
         return switch (facing) {
-            case SOUTH -> 270f;
-            case WEST -> 90f;
-            case NORTH -> 0f;
-            case EAST -> 180f;
+            case SOUTH -> 90f; //OK 90 not 0, 180, 270
+            case EAST -> 180f; //OK 90 not 180
+            case NORTH -> 0f; //OK 0
+            case WEST -> 270f; //not 0, 90, 180, 270 ←??????????
             default -> 0f;
         };
     }
