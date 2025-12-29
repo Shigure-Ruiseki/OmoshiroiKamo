@@ -83,12 +83,6 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
     @Override
     public abstract boolean canRecieveManaFromBursts();
 
-    public void onWanded(EntityPlayer player, ItemStack wand) {
-        if (player == null) return;
-
-        worldObj.playSoundAtEntity(player, "botania:ding", 0.11F, 1F);
-    }
-
     public void renderHUD(Minecraft mc, ScaledResolution res) {
         String name = getLocalizedName();
         int color = 0x4444FF;

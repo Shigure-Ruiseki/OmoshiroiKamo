@@ -38,7 +38,7 @@ import vazkii.botania.api.wand.IWandable;
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockManaInputPort extends AbstractTieredBlock<AbstractTE> implements IWandHUD, IWandable {
+public class BlockManaInputPort extends AbstractTieredBlock<AbstractTE> implements IWandHUD {
 
     protected BlockManaInputPort() {
         super(ModObject.blockModularManaInput.unlocalisedName, TEManaInputPortT1.class);
@@ -91,12 +91,6 @@ public class BlockManaInputPort extends AbstractTieredBlock<AbstractTE> implemen
     @Override
     public void renderHUD(Minecraft mc, ScaledResolution res, World world, int x, int y, int z) {
         ((AbstractManaPortTE) world.getTileEntity(x, y, z)).renderHUD(mc, res);
-    }
-
-    @Override
-    public boolean onUsedByWand(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, int side) {
-        ((AbstractManaPortTE) world.getTileEntity(x, y, z)).onWanded(player, stack);
-        return true;
     }
 
     public static class ItemBlockManaInputPort extends ItemBlockOK {
