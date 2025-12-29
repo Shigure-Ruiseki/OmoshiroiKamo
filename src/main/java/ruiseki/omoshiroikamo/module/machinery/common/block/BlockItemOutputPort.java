@@ -102,7 +102,6 @@ public class BlockItemOutputPort extends AbstractTieredBlock<TEItemOutputPort> {
     @Override
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         // TODO: Display current output item count
-        // TODO: Show connected machine name if part of structure
         // TODO: Show auto-push status
     }
 

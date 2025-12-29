@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.redstone;
+package ruiseki.omoshiroikamo.api.enums;
 
 import com.google.common.collect.ImmutableList;
 

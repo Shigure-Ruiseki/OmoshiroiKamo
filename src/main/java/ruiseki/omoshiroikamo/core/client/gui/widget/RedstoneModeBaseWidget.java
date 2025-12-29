@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 
-import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
+import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
 
 public class RedstoneModeBaseWidget extends CyclicVariantButtonWidget {

@@ -31,6 +31,7 @@ public class TEMachineController extends AbstractMBModifierTE {
     private final List<BlockPos> itemInputPorts = new ArrayList<>();
     private final List<BlockPos> itemOutputPorts = new ArrayList<>();
     private final List<BlockPos> energyInputPorts = new ArrayList<>();
+    private final List<BlockPos> energyOutputPorts = new ArrayList<>();
 
     // Structure definition (will be loaded from JSON in Phase 1)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
@@ -74,6 +75,7 @@ public class TEMachineController extends AbstractMBModifierTE {
         itemInputPorts.clear();
         itemOutputPorts.clear();
         energyInputPorts.clear();
+        energyOutputPorts.clear();
     }
 
     @Override
@@ -96,8 +98,8 @@ public class TEMachineController extends AbstractMBModifierTE {
             }
             return true;
         } else if (block == MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock()) {
-            if (!energyInputPorts.contains(pos)) {
-                energyInputPorts.add(pos);
+            if (!energyOutputPorts.contains(pos)) {
+                energyOutputPorts.add(pos);
             }
             return true;
         }
@@ -199,7 +201,9 @@ public class TEMachineController extends AbstractMBModifierTE {
                         + " | Item Outputs: "
                         + itemOutputPorts.size()
                         + " | Energy Inputs: "
-                        + energyInputPorts.size()));
+                        + energyInputPorts.size()
+                        + " | Energy Outputs: "
+                        + energyOutputPorts.size()));
         } else {
             player.addChatComponentMessage(
                 new ChatComponentText("[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));

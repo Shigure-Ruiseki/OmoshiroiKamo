@@ -15,9 +15,9 @@ import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import ruiseki.omoshiroikamo.api.io.ISidedIO;
+import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
-import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
+import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
  */
-public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements ISidedIO {
+public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort {
 
     protected final IO[] sides = new IO[6];
 

@@ -98,7 +98,6 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         // TODO: Display current RF stored / max capacity
         // TODO: Show energy transfer rate
-        // TODO: Show connected machine name if part of structure
     }
 
     public static class ItemBlockEnergyOutputPort extends ItemBlockOK {

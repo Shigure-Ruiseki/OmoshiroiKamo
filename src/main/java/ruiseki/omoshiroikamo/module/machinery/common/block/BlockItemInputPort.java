@@ -103,7 +103,6 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> {
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         // TODO: Display current item count and types in slots
         // TODO: Show filter status if enabled
-        // TODO: Show connected machine name if part of structure
     }
 
     public static class ItemBlockItemInputPort extends ItemBlockOK {

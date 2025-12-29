@@ -31,7 +31,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
-import ruiseki.omoshiroikamo.api.redstone.RedstoneMode;
+import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
 import ruiseki.omoshiroikamo.core.common.util.StringUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
