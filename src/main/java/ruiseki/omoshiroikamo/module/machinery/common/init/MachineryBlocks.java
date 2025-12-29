@@ -46,7 +46,7 @@ public enum MachineryBlocks {
     public static void preInit() {
         for (MachineryBlocks block : VALUES) {
             if (block.block == null) {
-                continue; // Skip blocks that weren't initialized (e.g., ME port without AE2)
+                continue;
             }
             try {
                 block.getBlock()
@@ -58,7 +58,8 @@ public enum MachineryBlocks {
         }
     }
 
-    private BlockOK block;
+    private final boolean enabled;
+    private final BlockOK block;
 
     MachineryBlocks(BlockOK block) {
         this.enabled = true;
