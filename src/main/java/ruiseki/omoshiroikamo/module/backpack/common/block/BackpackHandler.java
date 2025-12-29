@@ -143,9 +143,23 @@ public class BackpackHandler implements IItemHandlerModifiable {
         this.searchBackpack = true;
         this.keepTab = true;
 
-        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this);
+        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
-        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots);
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                writeToItem();
+            }
+        };
+
+        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                writeToItem();
+            }
+        };
 
         readFromItem();
     }

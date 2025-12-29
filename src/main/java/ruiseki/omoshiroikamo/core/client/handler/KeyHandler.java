@@ -21,6 +21,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -117,6 +118,15 @@ public class KeyHandler {
         if (item == null) return;
 
         ItemStack wanted = new ItemStack(item, 1, meta);
+
+        boolean haveItem = false;
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            ItemStack stack = player.inventory.getStackInSlot(i);
+            if (stack != null && ItemUtils.areStacksEqual(stack, wanted)) {
+                haveItem = true;
+            }
+        }
+        if (haveItem) return;
 
         ItemStack result = null;
         if (LibMods.Baubles.isLoaded()) {

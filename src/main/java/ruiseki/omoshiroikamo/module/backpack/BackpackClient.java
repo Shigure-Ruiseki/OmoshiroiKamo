@@ -7,10 +7,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
+import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackGuiOpener;
 
 @SideOnly(Side.CLIENT)
 public class BackpackClient implements IModuleClient {
+
+    private BackpackGuiOpener backpackGuiOpener;
 
     @Override
     public String getId() {
@@ -29,7 +33,9 @@ public class BackpackClient implements IModuleClient {
 
     @Override
     public void init(FMLInitializationEvent event) {
-
+        if (LibMods.NotEnoughItems.isLoaded()) {
+            backpackGuiOpener = new BackpackGuiOpener();
+        }
     }
 
     @Override

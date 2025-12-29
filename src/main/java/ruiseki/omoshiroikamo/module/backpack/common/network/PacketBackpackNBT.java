@@ -48,7 +48,7 @@ public class PacketBackpackNBT implements IMessage, IMessageHandler<PacketBackpa
     public IMessage onMessage(PacketBackpackNBT message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         InventoryType type = InventoryType.getFromId(message.typeId);
-        if (type == null) return null;
+        if (type == null || message.nbt == null) return null;
 
         ItemStack stack = null;
         if (type == InventoryTypes.PLAYER) {

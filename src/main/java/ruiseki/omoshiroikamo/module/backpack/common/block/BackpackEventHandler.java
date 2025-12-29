@@ -1,18 +1,29 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
+import static codechicken.lib.gui.GuiDraw.getMousePosition;
+
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 import org.joml.Vector3d;
+import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
@@ -23,8 +34,10 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
@@ -288,5 +301,44 @@ public class BackpackEventHandler {
 
     public static Vector3d fromEntityCenter(Entity e) {
         return new Vector3d(e.posX, e.posY - e.yOffset + e.height / 2.0, e.posZ);
+    }
+
+    public static void openBackpack() {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (!(mc.currentScreen instanceof GuiContainer gui)) return;
+        if (!KeyHandler.instance.keyOpenBackpack.isPressed()) return;
+
+        if (!(gui instanceof GuiInventory || gui instanceof GuiContainerCreative)) return;
+
+        Point mousePos = getMousePosition();
+        Slot slot = gui.getSlotAtPosition(mousePos.x, mousePos.y);
+        if (slot == null || !slot.getHasStack()) return;
+
+        ItemStack stack = slot.getStack();
+        if (!(stack.getItem() instanceof BlockBackpack.ItemBackpack)) return;
+
+        MGuiFactories.playerInventory()
+            .openFromPlayerInventoryClient(slot.getSlotIndex());
+    }
+
+    public static Point getMousePosition() {
+        return getMousePosition(Mouse.getX(), Mouse.getY());
+    }
+
+    public static Point getMousePosition(int eventX, int eventY) {
+        Dimension size = displaySize();
+        Dimension res = displayRes();
+        return new Point(eventX * size.width / res.width, size.height - eventY * size.height / res.height - 1);
+    }
+
+    public static Dimension displaySize() {
+        Minecraft mc = Minecraft.getMinecraft();
+        ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        return new Dimension(res.getScaledWidth(), res.getScaledHeight());
+    }
+
+    public static Dimension displayRes() {
+        Minecraft mc = Minecraft.getMinecraft();
+        return new Dimension(mc.displayWidth, mc.displayHeight);
     }
 }

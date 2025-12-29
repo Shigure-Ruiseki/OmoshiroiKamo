@@ -359,8 +359,8 @@ public class BackpackInventoryHelper {
             BackpackHandler handler = new BackpackHandler(backpackStack.copy(), null, backpack);
             ItemStack extracted = handler.extractItem(wanted, wanted.getMaxStackSize(), false);
 
+            PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             if (extracted != null && extracted.stackSize > 0) {
-                PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
                 return extracted;
             }
         }
