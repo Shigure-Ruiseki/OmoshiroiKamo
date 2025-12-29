@@ -15,8 +15,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaOutputPort;
 
 /**
  * Block registration for the Machinery module.
@@ -34,8 +32,9 @@ public enum MachineryBlocks {
     FLUID_OUTPUT_PORT(BlockFluidOutputPort.create()),
     ENERGY_INPUT_PORT(BlockEnergyInputPort.create()),
     ENERGY_OUTPUT_PORT(BlockEnergyOutputPort.create()),
-    /** ME Output Port - only registered when AE2 is loaded */
-    ITEM_OUTPUT_PORT_ME(null),
+    MANA_INPUT_PORT(LibMods.Botania.isLoaded(), BlockManaInputPort.create()),
+    MANA_OUTPUT_PORT(LibMods.Botania.isLoaded(), BlockManaOutputPort.create()),
+    ITEM_OUTPUT_PORT_ME(LibMods.AppliedEnergistics2.isLoaded(), BlockItemOutputPortME.create()),
 
     ;
     // spotless: on
@@ -43,12 +42,6 @@ public enum MachineryBlocks {
     public static final MachineryBlocks[] VALUES = values();
 
     public static void preInit() {
-        // Initialize ME Output Port only if AE2 is loaded
-        if (LibMods.AppliedEnergistics2.isLoaded()) {
-            ITEM_OUTPUT_PORT_ME.block = BlockItemOutputPortME.create();
-            Logger.info("AE2 detected - ME Output Port enabled");
-        }
-
         for (MachineryBlocks block : VALUES) {
             if (block.block == null) {
                 continue; // Skip blocks that weren't initialized (e.g., ME port without AE2)

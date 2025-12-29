@@ -20,13 +20,13 @@ import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
-import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IFluidPort;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
-public abstract class AbstractFluidPortTE extends AbstractTE implements IModularPort, IFluidHandler {
+public abstract class AbstractFluidPortTE extends AbstractTE implements IFluidPort, IFluidHandler {
 
     protected final IO[] sides = new IO[6];
 

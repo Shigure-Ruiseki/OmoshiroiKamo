@@ -1,8 +1,9 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.mana.input;
 
+import ruiseki.omoshiroikamo.api.modular.IInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 
-public abstract class TEManaInputPort extends AbstractManaPortTE {
+public abstract class TEManaInputPort extends AbstractManaPortTE implements IInputPort {
 
     protected TEManaInputPort(int manaCapacity, int manaMaxReceive) {
         super(manaCapacity, manaMaxReceive);

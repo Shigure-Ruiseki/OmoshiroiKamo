@@ -4,9 +4,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.fluid.FluidTransfer;
+import ruiseki.omoshiroikamo.api.modular.IOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
-public abstract class TEFluidOutputPort extends AbstractFluidPortTE {
+public abstract class TEFluidOutputPort extends AbstractFluidPortTE implements IOutputPort {
 
     public TEFluidOutputPort(int fluidCapacity) {
         super(fluidCapacity);

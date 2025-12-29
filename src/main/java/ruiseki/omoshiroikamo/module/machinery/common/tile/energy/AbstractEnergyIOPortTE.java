@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
-import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IEnergyPort;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
@@ -40,7 +40,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;
 /**
  * Extends AbstractEnergyTE to leverage existing energy management system.
  */
-public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IModularPort {
+public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IEnergyPort {
 
     protected final IO[] sides = new IO[6];
 

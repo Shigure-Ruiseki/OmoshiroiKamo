@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import ruiseki.omoshiroikamo.api.mana.ManaStorage;
-import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IManaPort;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import vazkii.botania.api.mana.IManaPool;
@@ -23,7 +23,7 @@ import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.common.core.handler.ManaNetworkHandler;
 
 // Mana Port doesn't have Side Config because mana will transfer directly
-public abstract class AbstractManaPortTE extends AbstractTE implements IModularPort, ISparkAttachable, IManaPool {
+public abstract class AbstractManaPortTE extends AbstractTE implements IManaPort, ISparkAttachable, IManaPool {
 
     protected ManaStorage manaStorage;
 
