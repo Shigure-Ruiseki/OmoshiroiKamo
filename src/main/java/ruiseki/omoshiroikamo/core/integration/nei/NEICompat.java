@@ -33,12 +33,15 @@ public class NEICompat {
 
     public static void IMCSender() {
         if (BackportConfigs.useMultiBlock) {
-            for (int i = 0; i <= 5; i++) { // Environmental Tech usually defaults to 6 tiers (1-6)
+            // Register Ore Extractor handlers
+            for (int i = 0; i <= 5; i++) {
                 String oreId = ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + i;
                 ItemStack oreStack = MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i);
                 sendHandler(oreId, oreStack, 48, 8);
                 sendCatalyst(oreId, oreStack);
-
+            }
+            // Register Res Extractor handlers
+            for (int i = 0; i <= 5; i++) {
                 String resId = ModObject.blockQuantumResExtractor.getRegistryName() + ".tier" + i;
                 ItemStack resStack = MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i);
                 sendHandler(resId, resStack, 48, 8);

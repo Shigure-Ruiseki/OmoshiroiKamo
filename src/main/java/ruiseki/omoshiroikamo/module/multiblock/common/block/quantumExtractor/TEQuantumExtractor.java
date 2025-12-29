@@ -313,7 +313,8 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
             // Apply Luck Modifier: chance for bonus output
             // 10% per modifier, additive (e.g., 20 modifiers = 200% = guaranteed +2 items)
-            float luckChance = modifierHandler.getAttributeMultiplier("luck");
+            // Luck is additive, so default is 0.0 (no bonus without modifiers)
+            float luckChance = modifierHandler.getAttributeMultiplier("luck", 0.0F);
             if (luckChance > 0) {
                 int guaranteedBonus = (int) luckChance; // 200% -> +2 guaranteed
                 float remainingChance = luckChance - guaranteedBonus; // e.g., 0.25 for 225%

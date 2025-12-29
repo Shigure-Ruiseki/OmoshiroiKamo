@@ -4,8 +4,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.item.ItemStack;
+
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
+import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -16,7 +19,8 @@ public class QuantumExtractorRecipes {
 
     public static final int MAX_TIER = 6;
 
-    // Legacy: kept for backward compatibility with existing code that references these directly
+    // Legacy: kept for backward compatibility with existing code
+    // that references these directly
     public static IFocusableRegistry[] oreRegistry = new IFocusableRegistry[MAX_TIER];
     public static IFocusableRegistry[] resRegistry = new IFocusableRegistry[MAX_TIER];
 
@@ -47,6 +51,76 @@ public class QuantumExtractorRecipes {
 
     public static IFocusableRegistry getResRegistry(int tier, int dimId) {
         return resRegistryByDim.computeIfAbsent(dimId, QuantumExtractorRecipes::createResRegistryForDim)[tier];
+    }
+
+    /**
+     * Special dimension ID for "Common" filter in NEI.
+     * Shows only ores with dimensions == null (no dimension restriction).
+     * Must match NEIDimensionConfig.DIMENSION_COMMON
+     */
+    public static final int NEI_DIMENSION_COMMON = Integer.MIN_VALUE;
+
+    // NEI-specific registries for "Common only" filter
+    private static IFocusableRegistry[] neiCommonOreRegistry;
+    private static IFocusableRegistry[] neiCommonResRegistry;
+
+    /**
+     * Get ore registry for NEI display with dimension filter.
+     * 
+     * @param tier  The miner tier
+     * @param dimId The dimension ID, or NEI_DIMENSION_COMMON for common-only ores
+     * @return Registry containing appropriate ores with correct probability
+     *         calculation
+     */
+    public static IFocusableRegistry getOreRegistryForNEI(int tier, int dimId) {
+        if (dimId == NEI_DIMENSION_COMMON) {
+            if (neiCommonOreRegistry == null) {
+                neiCommonOreRegistry = createCommonOnlyOreRegistry();
+            }
+            return neiCommonOreRegistry[tier];
+        }
+        return getOreRegistry(tier, dimId);
+    }
+
+    /**
+     * Get resource registry for NEI display with dimension filter.
+     */
+    public static IFocusableRegistry getResRegistryForNEI(int tier, int dimId) {
+        if (dimId == NEI_DIMENSION_COMMON) {
+            if (neiCommonResRegistry == null) {
+                neiCommonResRegistry = createCommonOnlyResRegistry();
+            }
+            return neiCommonResRegistry[tier];
+        }
+        return getResRegistry(tier, dimId);
+    }
+
+    /**
+     * Creates registry containing only common ores (dimensions == null).
+     */
+    private static IFocusableRegistry[] createCommonOnlyOreRegistry() {
+        IFocusableRegistry[] registries = new IFocusableRegistry[MAX_TIER];
+        for (int tier = 0; tier < MAX_TIER; tier++) {
+            registries[tier] = new FocusableRegistry();
+            if (cachedOreList != null) {
+                FocusableHandler.loadCommonOnlyIntoRegistry(cachedOreList, registries[tier], tier);
+            }
+        }
+        return registries;
+    }
+
+    /**
+     * Creates registry containing only common resources (dimensions == null).
+     */
+    private static IFocusableRegistry[] createCommonOnlyResRegistry() {
+        IFocusableRegistry[] registries = new IFocusableRegistry[MAX_TIER];
+        for (int tier = 0; tier < MAX_TIER; tier++) {
+            registries[tier] = new FocusableRegistry();
+            if (cachedResList != null) {
+                FocusableHandler.loadCommonOnlyIntoRegistry(cachedResList, registries[tier], tier);
+            }
+        }
+        return registries;
     }
 
     private static IFocusableRegistry[] createOreRegistryForDim(int dimId) {
@@ -101,6 +175,74 @@ public class QuantumExtractorRecipes {
         for (int tier = 0; tier < MAX_TIER; tier++) {
             FocusableHandler.loadIntoRegistry(cachedResList, resRegistry[tier], tier);
         }
+    }
+
+    /**
+     * Find the first dimension ID for a given ore item.
+     * Returns the first dimension from the item's config, or NEI_DIMENSION_COMMON
+     * if none.
+     */
+    public static int findFirstOreDimension(ItemStack stack) {
+        if (cachedOreList == null || stack == null) {
+            return NEI_DIMENSION_COMMON;
+        }
+        for (FocusableHandler.FocusableEntry entry : cachedOreList.getEntries()) {
+            // Try all tiers to find a matching entry (since some items are tier-restricted)
+            ItemStack entryStack = null;
+            for (int tier = 0; tier < MAX_TIER && entryStack == null; tier++) {
+                WeightedStackBase wsb = entry.getRegistryEntry(tier);
+                if (wsb != null) {
+                    entryStack = wsb.getMainStack();
+                }
+            }
+            if (entryStack != null && areStacksSameItem(entryStack, stack)) {
+                // Found matching entry, return first dimension
+                int[] dims = entry.getDimensions();
+                if (dims != null && dims.length > 0) {
+                    return dims[0];
+                }
+                return NEI_DIMENSION_COMMON;
+            }
+        }
+        return NEI_DIMENSION_COMMON;
+    }
+
+    /**
+     * Check if two stacks are the same item (ignoring stack size and NBT).
+     */
+    private static boolean areStacksSameItem(ItemStack a, ItemStack b) {
+        if (a == null || b == null) return false;
+        return a.getItem() == b.getItem() && a.getItemDamage() == b.getItemDamage();
+    }
+
+    /**
+     * Find the first dimension ID for a given resource item.
+     * Returns the first dimension from the item's config, or NEI_DIMENSION_COMMON
+     * if none.
+     */
+    public static int findFirstResDimension(ItemStack stack) {
+        if (cachedResList == null || stack == null) {
+            return NEI_DIMENSION_COMMON;
+        }
+        for (FocusableHandler.FocusableEntry entry : cachedResList.getEntries()) {
+            // Try all tiers to find a matching entry (since some items are tier-restricted)
+            ItemStack entryStack = null;
+            for (int tier = 0; tier < MAX_TIER && entryStack == null; tier++) {
+                WeightedStackBase wsb = entry.getRegistryEntry(tier);
+                if (wsb != null) {
+                    entryStack = wsb.getMainStack();
+                }
+            }
+            if (entryStack != null && areStacksSameItem(entryStack, stack)) {
+                // Found matching entry, return first dimension
+                int[] dims = entry.getDimensions();
+                if (dims != null && dims.length > 0) {
+                    return dims[0];
+                }
+                return NEI_DIMENSION_COMMON;
+            }
+        }
+        return NEI_DIMENSION_COMMON;
     }
 
     private static FocusableHandler.FocusableList getDefaultOreList() {

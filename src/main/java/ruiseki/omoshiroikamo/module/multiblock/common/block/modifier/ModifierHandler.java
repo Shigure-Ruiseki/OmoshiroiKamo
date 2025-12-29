@@ -66,6 +66,10 @@ public class ModifierHandler {
     }
 
     public float getAttributeMultiplier(String attributeName) {
+        return getAttributeMultiplier(attributeName, 1.0F);
+    }
+
+    public float getAttributeMultiplier(String attributeName, float defaultValue) {
         return attributeTotals.entrySet()
             .stream()
             .filter(
@@ -73,7 +77,7 @@ public class ModifierHandler {
                     .equalsIgnoreCase(attributeName))
             .map(Map.Entry::getValue)
             .findFirst()
-            .orElse(1.0F);
+            .orElse(defaultValue);
     }
 
     @Override
