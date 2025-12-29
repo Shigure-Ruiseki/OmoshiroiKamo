@@ -38,6 +38,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * 
  * TODO: Prevent from opening GUI
  * TODO: Drop cached items when break
+ * TODO: Implement IWailaTileInfoProvider
  */
 public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyable, IActionHost {
 
@@ -65,13 +66,6 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     @Override
     public int getTier() {
         return 0; // No tier for ME version
-    }
-
-    // ========== Allow item insertion ==========
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return true; // Accept items from adjacent machines
     }
 
     // ========== IGridProxyable Implementation ==========

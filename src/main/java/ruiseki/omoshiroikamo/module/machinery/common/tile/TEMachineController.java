@@ -10,6 +10,11 @@ import net.minecraft.util.ChatComponentText;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.modular.IEnergyPort;
+import ruiseki.omoshiroikamo.api.modular.IInputPort;
+import ruiseki.omoshiroikamo.api.modular.IItemPort;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IOutputPort;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 
@@ -82,22 +87,22 @@ public class TEMachineController extends AbstractMBModifierTE {
     protected boolean addToMachine(Block block, int meta, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z, worldObj);
 
-        if (block == MachineryBlocks.ITEM_INPUT_PORT.getBlock()) {
+        if (block instanceof IItemPort && block instanceof IInputPort) {
             if (!itemInputPorts.contains(pos)) {
                 itemInputPorts.add(pos);
             }
             return true;
-        } else if (block == MachineryBlocks.ITEM_OUTPUT_PORT.getBlock()) {
+        } else if (block instanceof IItemPort && block instanceof IOutputPort) {
             if (!itemOutputPorts.contains(pos)) {
                 itemOutputPorts.add(pos);
             }
             return true;
-        } else if (block == MachineryBlocks.ENERGY_INPUT_PORT.getBlock()) {
+        } else if (block instanceof IEnergyPort && block instanceof IInputPort) {
             if (!energyInputPorts.contains(pos)) {
                 energyInputPorts.add(pos);
             }
             return true;
-        } else if (block == MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock()) {
+        } else if (block instanceof IEnergyPort && block instanceof IOutputPort) {
             if (!energyOutputPorts.contains(pos)) {
                 energyOutputPorts.add(pos);
             }
@@ -229,13 +234,10 @@ public class TEMachineController extends AbstractMBModifierTE {
 
                     if (block == MachineryBlocks.MACHINE_CASING.getBlock()) {
                         casingCount++;
-                    } else if (block == MachineryBlocks.ITEM_INPUT_PORT.getBlock()
-                        || block == MachineryBlocks.ITEM_OUTPUT_PORT.getBlock()
-                        || block == MachineryBlocks.ENERGY_INPUT_PORT.getBlock()
-                        || block == MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock()) {
-                            addToMachine(block, 0, checkX, checkY, checkZ);
-                            casingCount++;
-                        }
+                    } else if (block instanceof IModularPort) {
+                        addToMachine(block, 0, checkX, checkY, checkZ);
+                        casingCount++;
+                    }
                 }
             }
         }
