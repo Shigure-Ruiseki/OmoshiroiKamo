@@ -115,7 +115,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     // --- UI Drawing ---
 
     /** Rectangle for header info area */
-    private static final Rectangle HEADER_RECT = new Rectangle(5, 10, 150, 12);
+    private static final Rectangle HEADER_RECT = new Rectangle(5, 2, 150, 12);
 
     @Override
     public void drawForeground(int recipe) {
@@ -223,11 +223,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public int recipiesPerPage() {
-        // Lens bonus view shows compact item list, so more items per page
-        if (currentViewMode == ViewMode.LENS_BONUS) {
-            return 1;
-        }
-        return 6; // Default for detailed views
+        return 6;
     }
 
     @Override
@@ -371,12 +367,12 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
             // Sort by probability (highest first)
             bonusItems.sort((a, b) -> Double.compare(b.realWeight, a.realWeight));
 
-            // Group items into pages (80 items per page: 8 columns × 10 rows)
-            final int ITEMS_PER_PAGE = 80;
-            for (int i = 0; i < bonusItems.size(); i += ITEMS_PER_PAGE) {
-                int end = Math.min(i + ITEMS_PER_PAGE, bonusItems.size());
-                List<WeightedStackBase> pageItems = bonusItems.subList(i, end);
-                arecipes.add(new CachedLensGridRecipe(new ArrayList<>(pageItems)));
+            // Group items into grids (16 items per grid: 8 columns × 2 rows)
+            final int ITEMS_PER_GRID = 16;
+            for (int i = 0; i < bonusItems.size(); i += ITEMS_PER_GRID) {
+                int end = Math.min(i + ITEMS_PER_GRID, bonusItems.size());
+                List<WeightedStackBase> gridItems = bonusItems.subList(i, end);
+                arecipes.add(new CachedLensGridRecipe(new ArrayList<>(gridItems)));
             }
         } else {
             // Check if this is a dimension catalyst
@@ -455,7 +451,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
             // Layout positions adjusted: more centered, below header
             // Kept comfortably below the header to avoid overlap
-            final int ITEM_Y = 22;
+            final int ITEM_Y = 18;
 
             switch (currentViewMode) {
                 case LENS_BONUS:
@@ -559,7 +555,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         private static final int ITEMS_PER_ROW = 8;
         private static final int ITEM_SPACING = 18;
         private static final int START_X = 5;
-        private static final int START_Y = 22;
+        private static final int START_Y = 14;
 
         public CachedLensGridRecipe(List<WeightedStackBase> weightedItems) {
             this.items = new ArrayList<>();
