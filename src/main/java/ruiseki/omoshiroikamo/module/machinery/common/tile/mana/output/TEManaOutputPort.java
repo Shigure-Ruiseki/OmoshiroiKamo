@@ -9,11 +9,6 @@ public abstract class TEManaOutputPort extends AbstractManaPortTE {
     }
 
     @Override
-    public IO getIOLimit() {
-        return IO.OUTPUT;
-    }
-
-    @Override
     public boolean canRecieveManaFromBursts() {
         return false;
     }

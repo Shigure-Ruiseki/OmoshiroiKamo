@@ -46,8 +46,8 @@ public class BlockManaOutputPort extends AbstractTieredBlock<TEManaOutputPort> i
         setResistance(10.0F);
     }
 
-    public static BlockManaInputPort create() {
-        return new BlockManaInputPort();
+    public static BlockManaOutputPort create() {
+        return new BlockManaOutputPort();
     }
 
     @Override

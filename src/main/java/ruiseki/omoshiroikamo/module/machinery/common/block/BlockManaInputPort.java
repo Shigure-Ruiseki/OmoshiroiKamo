@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -86,6 +87,11 @@ public class BlockManaInputPort extends AbstractTieredBlock<TEManaInputPort> imp
     public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
         // TODO: Display current Mana stored / max capacity
         // TODO: Show mana transfer rate
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof AbstractManaPortTE te) {
+            tooltip.add(te.getLocalizedName());
+            tooltip.add(String.valueOf(te.getCurrentMana()));
+        }
     }
 
     @Override

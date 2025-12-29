@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.api.mana.ManaStorage;
 import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.ManaNetworkEvent;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
@@ -22,7 +23,7 @@ import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.common.core.handler.ManaNetworkHandler;
 
 // Mana Port doesn't have Side Config because mana will transfer directly
-public abstract class AbstractManaPortTE extends AbstractTE implements IModularPort, ISparkAttachable {
+public abstract class AbstractManaPortTE extends AbstractTE implements IModularPort, ISparkAttachable, IManaPool {
 
     protected ManaStorage manaStorage;
 
@@ -54,7 +55,11 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public void recieveMana(int amount) {
-        manaStorage.receiveMana(amount, false);
+        if (amount >= 0) {
+            manaStorage.receiveMana(amount, false);
+        } else {
+            manaStorage.extractMana(-amount, false);
+        }
     }
 
     @Override
@@ -95,6 +100,11 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
+    }
+
+    @Override
+    public boolean isOutputtingPower() {
+        return false;
     }
 
     @Override
