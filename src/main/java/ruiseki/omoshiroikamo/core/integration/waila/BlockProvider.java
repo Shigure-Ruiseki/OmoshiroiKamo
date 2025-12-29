@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -54,10 +53,14 @@ public class BlockProvider implements IWailaDataProvider {
         int x = pos.blockX, y = pos.blockY, z = pos.blockZ;
         World world = accessor.getWorld();
         Block block = world.getBlock(x, y, z);
-        Item item = Item.getItemFromBlock(block);
+        TileEntity tile = accessor.getTileEntity();
 
         if (block instanceof IWailaBlockInfoProvider info) {
             info.getWailaInfo(currenttip, player, world, pos.blockX, pos.blockY, pos.blockZ);
+        }
+
+        if (tile instanceof IWailaTileInfoProvider info) {
+            info.getWailaInfo(itemStack, currenttip, accessor, config);
         }
 
         return currenttip;
@@ -70,14 +73,15 @@ public class BlockProvider implements IWailaDataProvider {
     }
 
     @Override
-    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x,
+    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x,
         int y, int z) {
-        if (te instanceof IWailaNBTProvider) {
-            ((IWailaNBTProvider) te).getData(tag);
+        if (tile instanceof IWailaNBTProvider te) {
+            te.getData(tag);
         }
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
-        tag.setInteger("z", z);
+
+        if (tile instanceof IWailaTileInfoProvider te) {
+            te.getWailaNBTData(player, tile, tag, world, x, y, z);
+        }
         return tag;
     }
 }

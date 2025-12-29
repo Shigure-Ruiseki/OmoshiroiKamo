@@ -1,9 +1,13 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -16,10 +20,13 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import lombok.Getter;
 import lombok.Setter;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
+import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
@@ -33,7 +40,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
  * <li>Interaction with ItemStacks for saving/loading</li>
  * </ul>
  */
-public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData> {
+public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData>, IWailaTileInfoProvider {
 
     /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
@@ -251,6 +258,16 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         writeToItemStack(stack);
     }
 
+    public void requestClientSync() {
+        if (worldObj.isRemote) return;
+        requestRenderUpdate();
+        forceClientUpdate = true;
+    }
+
+    public void requestRenderUpdate() {
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
     public void openGui(EntityPlayer player) {
         if (!worldObj.isRemote) {
             GuiFactories.tileEntity()
@@ -263,13 +280,15 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         return new ModularPanel("base");
     }
 
-    public void requestClientSync() {
-        if (worldObj.isRemote) return;
-        requestRenderUpdate();
-        forceClientUpdate = true;
+    @Override
+    public void getWailaInfo(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+
     }
 
-    public void requestRenderUpdate() {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    @Override
+    public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y,
+        int z) {
+
     }
 }
