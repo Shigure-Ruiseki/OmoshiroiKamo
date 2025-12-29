@@ -193,6 +193,27 @@ public class FocusableHandler {
             });
     }
 
+    /**
+     * Load only common entries (dimensions == null) into the registry.
+     * Used for NEI "Common" filter display.
+     */
+    public static void loadCommonOnlyIntoRegistry(FocusableList list, IFocusableRegistry registry, int tier) {
+        if (list == null || registry == null) {
+            return;
+        }
+
+        list.getEntries()
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(entry -> entry.getDimensionSpecificity() == 0) // Only entries with no dimension restriction
+            .forEach(entry -> {
+                WeightedStackBase wsb = tier >= 0 ? entry.getRegistryEntry(tier) : entry.getRegistryEntry();
+                if (wsb != null) {
+                    registry.addResource(wsb, entry.getFocusColor());
+                }
+            });
+    }
+
     // ------------------------------
     // Focusable List
     // ------------------------------
@@ -261,6 +282,14 @@ public class FocusableHandler {
                 if (dim == dimId) return true;
             }
             return false;
+        }
+
+        /**
+         * Get the dimensions array for this entry.
+         * Returns null or empty if this entry is valid for all dimensions.
+         */
+        public int[] getDimensions() {
+            return dimensions;
         }
 
         /**

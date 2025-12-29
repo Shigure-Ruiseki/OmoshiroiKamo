@@ -1,13 +1,23 @@
 package ruiseki.omoshiroikamo.module.multiblock.integration.nei;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import org.lwjgl.opengl.GL11;
+
+import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiCraftingRecipe;
+import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
@@ -23,6 +33,37 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     protected final int tier;
 
+    /**
+     * Current dimension filter for NEI display. Uses DIMENSION_COMMON by default.
+     * Static so it persists across handler instances.
+     */
+    protected static int filterDimension = NEIDimensionConfig.DIMENSION_COMMON;
+
+    /**
+     * Flag indicating the dimension was manually changed by user.
+     * When true, automatic dimension detection is skipped.
+     */
+    protected static boolean manualDimensionChange = false;
+
+    /** View mode for different display layouts */
+    public enum ViewMode {
+        /** Show dimension's item list (default, Miner/Catalyst Usage) */
+        DIMENSION,
+        /** Show item's dimension list with probabilities (Item Crafting) */
+        ITEM_DETAIL,
+        /** Show lens bonus target items (Lens Usage) */
+        LENS_BONUS
+    }
+
+    /** Current view mode */
+    protected static ViewMode currentViewMode = ViewMode.DIMENSION;
+
+    /** Item being displayed in ITEM_DETAIL mode */
+    protected static ItemStack detailItem = null;
+
+    /** Current text filter for ore name search */
+    protected String filterText = "";
+
     public VoidMinerRecipeHandler(int tier) {
         this.tier = tier;
     }
@@ -30,6 +71,16 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     protected abstract IFocusableRegistry getRegistry();
 
     protected abstract IFocusableRegistry getRegistry(int tier);
+
+    /**
+     * Get registry for NEI display with dimension filter applied.
+     * 
+     * @param tier  The miner tier
+     * @param dimId The dimension ID for filter
+     * @return Registry containing ores available in that dimension with correct
+     *         probability
+     */
+    protected abstract IFocusableRegistry getRegistryForNEI(int tier, int dimId);
 
     // Factory for spawning the handler of a specific tier
     // used when delegating usage requests
@@ -41,10 +92,122 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     protected abstract String getRecipeIdBase();
 
+    /**
+     * Find the first dimension ID where this item can be mined.
+     * Used for automatic dimension filter when viewing crafting recipes.
+     * 
+     * @param stack The item to search for
+     * @return The dimension ID, or NEIDimensionConfig.DIMENSION_COMMON if not found
+     */
+    protected abstract int findFirstDimension(ItemStack stack);
+
     @Override
     public String getRecipeName() {
-        // Show tiered name so each NEI tab is unique and clear
-        return getMinerNameBase() + " Tier " + (tier + 1);
+        // Prefer the first recipe's dimension (if available) so tab name matches what
+        // is shown
+        int dimId = filterDimension;
+        if (!arecipes.isEmpty() && arecipes.get(0) instanceof CachedVoidRecipe first) {
+            dimId = first.getDimensionId();
+        }
+        String dimName = NEIDimensionConfig.getDisplayName(dimId);
+        return getMinerNameBase() + " T" + (tier + 1) + " [" + dimName + "]";
+    }
+
+    // --- UI Drawing ---
+
+    /** Rectangle for header info area */
+    private static final Rectangle HEADER_RECT = new Rectangle(5, 2, 150, 12);
+    /** Text color for header and dimension names */
+    private static final int HEADER_TEXT_COLOR = 0x404040;
+    /** Dimension name text position (above catalyst icon) */
+    private static final int DIM_NAME_X = 25;
+    private static final int DIM_NAME_Y = 4;
+
+    @Override
+    public void drawForeground(int recipe) {
+        super.drawForeground(recipe);
+
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+        GL11.glDisable(GL11.GL_LIGHTING);
+
+        // Get the cached recipe to access dimension info
+        if (recipe >= 0 && recipe < arecipes.size()) {
+            CachedRecipe cached = arecipes.get(recipe);
+            if (cached instanceof CachedVoidRecipe voidRecipe) {
+                // Draw dimension name above catalyst icon
+                String dimName = NEIDimensionConfig.getDisplayName(voidRecipe.getDimensionId());
+                fr.drawString(dimName, DIM_NAME_X, DIM_NAME_Y, HEADER_TEXT_COLOR);
+            }
+        }
+
+        // Draw mode-specific header on first recipe only
+        if (recipe == 0) {
+            switch (currentViewMode) {
+
+                case LENS_BONUS:
+                    // Show lens name in header
+                    if (detailItem != null) {
+                        String lensName = detailItem.getDisplayName() + " Bonus";
+                        fr.drawString(lensName, HEADER_RECT.x, HEADER_RECT.y + 2, HEADER_TEXT_COLOR);
+                    }
+                    break;
+
+                case ITEM_DETAIL:
+                case DIMENSION:
+                default:
+                    // Dimension mode header is handled per-recipe above
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
+        // Only handle clicks in DIMENSION mode (for dimension cycling)
+        if (currentViewMode != ViewMode.DIMENSION) {
+            return super.mouseClicked(gui, button, recipe);
+        }
+
+        Point mouse = GuiDraw.getMousePosition();
+        Point offset = gui.getRecipePosition(recipe);
+
+        if (offset != null && recipe == 0) {
+            int recipeX = ((GuiContainer) gui).guiLeft + offset.x;
+            int recipeY = ((GuiContainer) gui).guiTop + offset.y;
+            int relX = mouse.x - recipeX;
+            int relY = mouse.y - recipeY;
+
+            if (HEADER_RECT.contains(relX, relY)) {
+                cycleDimension(gui, button == 0);
+                return true;
+            }
+        }
+
+        return super.mouseClicked(gui, button, recipe);
+    }
+
+    /**
+     * Cycle to the next/previous dimension filter and reload recipes.
+     */
+    private void cycleDimension(GuiRecipe<?> gui, boolean forward) {
+        List<Integer> dimIds = NEIDimensionConfig.getDimensionIds();
+        int currentIndex = dimIds.indexOf(filterDimension);
+        if (currentIndex < 0) currentIndex = 0;
+
+        if (forward) {
+            currentIndex = (currentIndex + 1) % dimIds.size();
+        } else {
+            currentIndex = (currentIndex - 1 + dimIds.size()) % dimIds.size();
+        }
+
+        filterDimension = dimIds.get(currentIndex);
+        manualDimensionChange = true;
+
+        // Reload recipes with new dimension
+        arecipes.clear();
+        loadAllRecipes();
+
+        GuiCraftingRecipe.openRecipeGui(getRecipeID());
     }
 
     @Override
@@ -64,33 +227,84 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     }
 
     @Override
+    public int recipiesPerPage() {
+        return 6;
+    }
+
+    @Override
     public void loadTransferRects() {
         this.addTransferRect(0, 0, 0, 0);
     }
 
     @Override
     public void loadAllRecipes() {
-        IFocusableRegistry registry = getRegistry();
-        List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
+        // Set dimension view mode
+        currentViewMode = ViewMode.DIMENSION;
+        detailItem = null;
+
+        // Use filtered registry for NEI display
+        IFocusableRegistry registry = getRegistryForNEI(tier, filterDimension);
+        if (registry == null) {
+            registry = getRegistry();
+        }
+
+        addSortedRecipes(registry, tier, filterDimension, true);
+    }
+
+    /**
+     * Add recipes from registry to arecipes list, sorted by probability (highest
+     * first).
+     *
+     * @param registry    The registry to get items from
+     * @param recipeTier  The tier for the CachedVoidRecipe
+     * @param dimId       The dimension ID for the CachedVoidRecipe
+     * @param applyFilter Whether to apply text filter matching
+     */
+    protected void addSortedRecipes(IFocusableRegistry registry, int recipeTier, int dimId, boolean applyFilter) {
+        List<WeightedStackBase> unfocusedList = new ArrayList<>(registry.getUnFocusedList());
+        unfocusedList.sort((a, b) -> Double.compare(b.realWeight, a.realWeight));
+
         for (WeightedStackBase ws : unfocusedList) {
             ItemStack output = ws.getMainStack();
-            if (output != null) {
-                arecipes.add(new CachedVoidRecipe(ws, registry, tier));
+            if (output != null && (!applyFilter || matchesTextFilter(output))) {
+                arecipes.add(new CachedVoidRecipe(ws, registry, recipeTier, dimId));
             }
         }
     }
 
+    /**
+     * Check if the item matches the current text filter.
+     */
+    protected boolean matchesTextFilter(ItemStack stack) {
+        if (filterText == null || filterText.isEmpty()) {
+            return true;
+        }
+        String displayName = stack.getDisplayName()
+            .toLowerCase();
+        return displayName.contains(filterText.toLowerCase());
+    }
+
     @Override
     public void loadCraftingRecipes(ItemStack item) {
-        arecipes.clear();
-        super.loadCraftingRecipes(item);
-        IFocusableRegistry registry = getRegistry();
-        List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
+        // Set item detail view mode
+        currentViewMode = ViewMode.ITEM_DETAIL;
+        detailItem = item.copy();
 
-        for (WeightedStackBase ws : unfocusedList) {
-            ItemStack output = ws.getMainStack();
-            if (output != null && ItemUtils.areStacksEqual(output, item)) {
-                arecipes.add(new CachedVoidRecipe(ws, registry, tier));
+        arecipes.clear();
+
+        // Show all dimensions where this item can be mined
+        for (int dimId : NEIDimensionConfig.getDimensionIds()) {
+            IFocusableRegistry dimRegistry = getRegistryForNEI(tier, dimId);
+            if (dimRegistry == null) continue;
+
+            // Search for this item in this dimension's list
+            for (WeightedStackBase ws : dimRegistry.getUnFocusedList()) {
+                ItemStack output = ws.getMainStack();
+                if (output != null && ItemUtils.areStacksEqual(output, item)) {
+                    // Found! Add a recipe for this dimension
+                    arecipes.add(new CachedVoidRecipe(ws, dimRegistry, tier, dimId));
+                    break; // Only add once per dimension
+                }
             }
         }
     }
@@ -107,55 +321,76 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         boolean isMiner = (item == Item.getItemFromBlock(getMinerBlock()));
 
         if (isMiner) {
+            // Miner Usage: Show all items in Common dimension
+            currentViewMode = ViewMode.DIMENSION;
+            detailItem = null;
+            filterDimension = NEIDimensionConfig.DIMENSION_COMMON;
+
             int inputTier = ingredient.getItemDamage();
-            // Only process when the handler tier matches the item tier
-            if (inputTier != this.tier) {
-                return;
-            }
-            IFocusableRegistry tierRegistry = getRegistry(inputTier);
+            if (inputTier != this.tier) return;
+
+            IFocusableRegistry tierRegistry = getRegistryForNEI(inputTier, filterDimension);
+            if (tierRegistry == null) tierRegistry = getRegistry(inputTier);
             if (tierRegistry != null) {
-                List<WeightedStackBase> unfocusedList = tierRegistry.getUnFocusedList();
-                int before = arecipes.size();
-                for (WeightedStackBase ws : unfocusedList) {
-                    ItemStack output = ws.getMainStack();
-                    if (output != null) {
-                        arecipes.add(new CachedVoidRecipe(ws, tierRegistry, inputTier));
-                    }
-                }
+                addSortedRecipes(tierRegistry, inputTier, filterDimension, false);
             }
         } else if (isLens) {
-            // Filter by lens
-            EnumDye filterDye = null; // null means clear/no lens
-            int meta = ingredient.getItemDamage();
+            // Lens Usage: Show items that benefit from this lens
+            currentViewMode = ViewMode.LENS_BONUS;
+            detailItem = ingredient.copy();
 
+            EnumDye filterDye = null;
+            int meta = ingredient.getItemDamage();
             if (item == clearLens && meta == 1) {
+                // Crystal Lens
                 filterDye = EnumDye.CRYSTAL;
             } else if (item == coloredLens) {
                 BlockColoredLens lensBlock = (BlockColoredLens) Block.getBlockFromItem(coloredLens);
                 filterDye = lensBlock.getFocusColor(meta);
             }
+            // Note: Clear Lens (meta 0) keeps filterDye = null
 
-            List<WeightedStackBase> unfocusedList = registry.getUnFocusedList();
-            for (WeightedStackBase ws : unfocusedList) {
+            // Get items and sort by probability
+            List<WeightedStackBase> allItems = new ArrayList<>(registry.getUnFocusedList());
+
+            // Filter: only show items that have this lens as their bonus lens
+            List<WeightedStackBase> bonusItems = new ArrayList<>();
+            for (WeightedStackBase ws : allItems) {
                 ItemStack output = ws.getMainStack();
                 if (output != null) {
-                    // Check if this recipe uses the lens
                     EnumDye preferred = registry.getPrioritizedLens(output);
-                    boolean isMatch = false;
-
                     if (filterDye == null) {
-                        // Clear lens usage - shows for ALL items since clear lens is default
-                        isMatch = true;
-                    } else {
-                        // Colored lens usage - shows only if this item matches the lens
-                        if (preferred == filterDye) {
-                            isMatch = true;
-                        }
+                        // Clear Lens: show all items
+                        bonusItems.add(ws);
+                    } else if (preferred == filterDye) {
+                        // Colored/Crystal: only show items that benefit from this lens
+                        bonusItems.add(ws);
                     }
+                }
+            }
 
-                    if (isMatch) {
-                        arecipes.add(new CachedVoidRecipe(ws, registry, tier));
-                    }
+            // Sort by probability (highest first)
+            bonusItems.sort((a, b) -> Double.compare(b.realWeight, a.realWeight));
+
+            // Group items into grids (16 items per grid: 8 columns × 2 rows)
+            final int ITEMS_PER_GRID = 16;
+            for (int i = 0; i < bonusItems.size(); i += ITEMS_PER_GRID) {
+                int end = Math.min(i + ITEMS_PER_GRID, bonusItems.size());
+                List<WeightedStackBase> gridItems = bonusItems.subList(i, end);
+                arecipes.add(new CachedLensGridRecipe(new ArrayList<>(gridItems)));
+            }
+        } else {
+            // Check if this is a dimension catalyst
+            int catalystDimension = NEIDimensionConfig.getDimensionForCatalyst(ingredient);
+            if (catalystDimension != NEIDimensionConfig.DIMENSION_COMMON) {
+                // Catalyst Usage: Show items for that dimension
+                currentViewMode = ViewMode.DIMENSION;
+                detailItem = null;
+                filterDimension = catalystDimension;
+
+                IFocusableRegistry dimRegistry = getRegistryForNEI(tier, catalystDimension);
+                if (dimRegistry != null) {
+                    addSortedRecipes(dimRegistry, tier, catalystDimension, false);
                 }
             }
         }
@@ -185,11 +420,24 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public IUsageHandler getUsageAndCatalystHandler(String inputId, Object... ingredients) {
-        // For miner blocks, skip catalyst and use our tier-aware usage handler
+        // For miner blocks and dimension catalysts, use our custom usage handler
+        // This ensures proper dimension filtering for catalysts (instead of
+        // parent's loadCraftingRecipes which ignores our dimension filter)
         if ("item".equals(inputId) && ingredients.length > 0 && ingredients[0] instanceof ItemStack stack) {
             Item minerItem = Item.getItemFromBlock(getMinerBlock());
             if (stack.getItem() == minerItem) {
                 return getUsageHandler(inputId, ingredients);
+            }
+
+            // Check if this is a dimension catalyst
+            int catalystDimension = NEIDimensionConfig.getDimensionForCatalyst(stack);
+            if (catalystDimension != NEIDimensionConfig.DIMENSION_COMMON) {
+                // Use loadUsageRecipes to apply proper dimension filtering
+                VoidMinerRecipeHandler handler = createForTier(tier);
+                if (handler != null) {
+                    handler.loadUsageRecipes(stack);
+                    return handler.numRecipes() > 0 ? handler : null;
+                }
             }
         }
         return super.getUsageAndCatalystHandler(inputId, ingredients);
@@ -197,43 +445,81 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     public class CachedVoidRecipe extends CachedBaseRecipe {
 
+        // === Layout Constants ===
+        /** Item row Y position */
+        private static final int ITEM_Y = 18;
+        /** X positions for layout: [Catalyst][Lens][Output][BonusLens] */
+        private static final int CATALYST_X = 25;
+        private static final int LENS_X = 50;
+        private static final int OUTPUT_X = 80;
+        private static final int BONUS_LENS_X = 110;
+        /** Lens simple view (LENS_BONUS mode) */
+        private static final int LENS_VIEW_X = 5;
+        /** Text styling */
+        private static final int TEXT_Y_OFFSET = 10;
+        private static final int TEXT_COLOR = 0x000000;
+
         private List<PositionedStack> input;
         private PositionedStack output;
+        private int dimensionId;
 
-        public CachedVoidRecipe(WeightedStackBase ws, IFocusableRegistry registry, int tier) {
+        public CachedVoidRecipe(WeightedStackBase ws, IFocusableRegistry registry, int tier, int dimId) {
             this.input = new ArrayList<>();
+            this.dimensionId = dimId;
             ItemStack outputStack = ws.getMainStack();
 
-            // 1. Miner Icon (Far Left)
-            this.input.add(new PositionedStack(new ItemStack(getMinerBlock(), 1, tier), 4, 16));
+            switch (currentViewMode) {
+                case LENS_BONUS:
+                    // Lens view: Show only output item (simple list)
+                    this.output = new PositionedStack(outputStack, LENS_VIEW_X, ITEM_Y);
+                    break;
 
-            // 2. Clear Lens (Left Center) + Probability
-            PositionedStackAdv clearLensStack = new PositionedStackAdv(
-                MultiBlockBlocks.LENS.newItemStack(1, 0),
-                40,
-                16);
-            clearLensStack.setChance((float) (ws.realWeight / 100.0f));
-            clearLensStack.setTextYOffset(10); // Draw below
-            clearLensStack.setTextColor(0x000000);
-            clearLensStack.setLabel("Clear");
-            clearLensStack.setLabelColor(0x000000);
-            this.input.add(clearLensStack);
+                case ITEM_DETAIL:
+                case DIMENSION:
+                default:
+                    // Both views: [Catalyst][Lens+%][Item][BonusLens+%]
+                    setupCatalystLensLayout(ws, registry, tier, dimId, outputStack);
+                    break;
+            }
+        }
 
-            // 3. Output Item (Center) skip percentage display
-            this.output = new PositionedStack(outputStack, 84, 16);
+        /**
+         * Setup the common layout for ITEM_DETAIL and DIMENSION view modes.
+         * Layout: [Catalyst][Lens+%][Item][BonusLens+%]
+         */
+        private void setupCatalystLensLayout(WeightedStackBase ws, IFocusableRegistry registry, int tier, int dimId,
+            ItemStack outputStack) {
+            // Catalyst icon
+            ItemStack catalyst = NEIDimensionConfig.getCatalystStack(dimId);
+            if (catalyst == null) {
+                catalyst = new ItemStack(getMinerBlock(), 1, tier);
+            }
+            this.input.add(new PositionedStack(catalyst, CATALYST_X, ITEM_Y));
 
-            // 4. Bonus Lens (Right) + Probability
+            // Clear lens with probability
+            PositionedStackAdv lens = new PositionedStackAdv(MultiBlockBlocks.LENS.newItemStack(1, 0), LENS_X, ITEM_Y);
+            lens.setChance((float) (ws.realWeight / 100.0f));
+            lens.setTextYOffset(TEXT_Y_OFFSET);
+            lens.setTextColor(TEXT_COLOR);
+            this.input.add(lens);
+
+            // Output item
+            this.output = new PositionedStack(outputStack, OUTPUT_X, ITEM_Y);
+
+            // Bonus lens if applicable
+            addBonusLens(ws, registry, outputStack);
+        }
+
+        private void addBonusLens(WeightedStackBase ws, IFocusableRegistry registry, ItemStack outputStack) {
             EnumDye preferred = registry.getPrioritizedLens(outputStack);
             if (preferred != null) {
                 ItemStack lensStack;
                 if (preferred == EnumDye.CRYSTAL) {
                     lensStack = MultiBlockBlocks.LENS.newItemStack(1, 1);
                 } else {
-                    int lensMeta = preferred.ordinal();
-                    lensStack = MultiBlockBlocks.COLORED_LENS.newItemStack(1, lensMeta);
+                    lensStack = MultiBlockBlocks.COLORED_LENS.newItemStack(1, preferred.ordinal());
                 }
 
-                // Calculate chance
                 List<WeightedStackBase> focusedList = registry.getFocusedList(preferred, 1.0f);
                 double focusedChance = 0;
                 for (WeightedStackBase fws : focusedList) {
@@ -243,17 +529,21 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                     }
                 }
 
-                PositionedStackAdv bonusLensStack = new PositionedStackAdv(lensStack, 128, 16);
-                bonusLensStack.setChance((float) (focusedChance / 100.0f));
-                bonusLensStack.setTextYOffset(10); // Draw below
-                bonusLensStack.setTextColor(0x000000);
-                // Set color label
-                String colorName = preferred.getName();
-                colorName = Character.toUpperCase(colorName.charAt(0)) + colorName.substring(1);
-                bonusLensStack.setLabel(colorName);
-                bonusLensStack.setLabelColor(0x000000);
-                this.input.add(bonusLensStack);
+                PositionedStackAdv bonusLens = new PositionedStackAdv(lensStack, BONUS_LENS_X, ITEM_Y);
+                bonusLens.setChance((float) (focusedChance / 100.0f));
+                bonusLens.setTextYOffset(TEXT_Y_OFFSET);
+                bonusLens.setTextColor(TEXT_COLOR);
+                this.input.add(bonusLens);
             }
+        }
+
+        /** Legacy constructor for backwards compatibility */
+        public CachedVoidRecipe(WeightedStackBase ws, IFocusableRegistry registry, int tier) {
+            this(ws, registry, tier, filterDimension);
+        }
+
+        public int getDimensionId() {
+            return dimensionId;
         }
 
         @Override
@@ -264,6 +554,53 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
         @Override
         public PositionedStack getResult() {
             return output;
+        }
+    }
+
+    /**
+     * Grid layout recipe for lens bonus view.
+     * Displays multiple items in a grid format.
+     */
+    public class CachedLensGridRecipe extends CachedBaseRecipe {
+
+        private List<PositionedStack> items;
+
+        // Grid configuration: 8 items per row, 2 rows
+        private static final int ITEMS_PER_ROW = 8;
+        private static final int ITEM_SPACING = 18;
+        private static final int START_X = 5;
+        private static final int START_Y = 14;
+
+        public CachedLensGridRecipe(List<WeightedStackBase> weightedItems) {
+            this.items = new ArrayList<>();
+            int x = START_X;
+            int y = START_Y;
+            int col = 0;
+
+            for (WeightedStackBase ws : weightedItems) {
+                ItemStack stack = ws.getMainStack();
+                if (stack != null) {
+                    this.items.add(new PositionedStack(stack, x, y));
+                }
+                col++;
+                if (col >= ITEMS_PER_ROW) {
+                    col = 0;
+                    x = START_X;
+                    y += ITEM_SPACING;
+                } else {
+                    x += ITEM_SPACING;
+                }
+            }
+        }
+
+        @Override
+        public List<PositionedStack> getIngredients() {
+            return items;
+        }
+
+        @Override
+        public PositionedStack getResult() {
+            return null; // No single result for grid
         }
     }
 }
