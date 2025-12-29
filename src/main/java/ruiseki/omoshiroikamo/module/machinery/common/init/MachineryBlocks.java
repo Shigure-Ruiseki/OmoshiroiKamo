@@ -5,10 +5,12 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 
@@ -26,6 +28,8 @@ public enum MachineryBlocks {
     ITEM_OUTPUT_PORT(BlockItemOutputPort.create()),
     ENERGY_INPUT_PORT(BlockEnergyInputPort.create()),
     ENERGY_OUTPUT_PORT(BlockEnergyOutputPort.create()),
+    /** ME Output Port - only registered when AE2 is loaded */
+    ITEM_OUTPUT_PORT_ME(null),
 
     ;
     // spotless: on
@@ -33,10 +37,19 @@ public enum MachineryBlocks {
     public static final MachineryBlocks[] VALUES = values();
 
     public static void preInit() {
+        // Initialize ME Output Port only if AE2 is loaded
+        if (LibMods.AppliedEnergistics2.isLoaded()) {
+            ITEM_OUTPUT_PORT_ME.block = BlockItemOutputPortME.create();
+            Logger.info("AE2 detected - ME Output Port enabled");
+        }
+
         for (MachineryBlocks block : VALUES) {
+            if (block.block == null) {
+                continue; // Skip blocks that weren't initialized (e.g., ME port without AE2)
+            }
             try {
                 block.getBlock()
-                    .init();
+                        .init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());
@@ -44,7 +57,7 @@ public enum MachineryBlocks {
         }
     }
 
-    private final BlockOK block;
+    private BlockOK block;
 
     MachineryBlocks(BlockOK block) {
         this.block = block;
@@ -55,7 +68,7 @@ public enum MachineryBlocks {
     }
 
     public Item getItem() {
-        return Item.getItemFromBlock(block);
+        return block != null ? Item.getItemFromBlock(block) : null;
     }
 
     public ItemStack newItemStack() {
@@ -67,6 +80,10 @@ public enum MachineryBlocks {
     }
 
     public ItemStack newItemStack(int count, int meta) {
-        return new ItemStack(this.getBlock(), count, meta);
+        return block != null ? new ItemStack(this.getBlock(), count, meta) : null;
+    }
+
+    public boolean isAvailable() {
+        return block != null;
     }
 }

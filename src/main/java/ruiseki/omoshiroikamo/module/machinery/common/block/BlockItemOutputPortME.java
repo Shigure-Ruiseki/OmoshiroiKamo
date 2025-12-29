@@ -1,0 +1,116 @@
+package ruiseki.omoshiroikamo.module.machinery.common.block;
+
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+
+import org.jetbrains.annotations.Nullable;
+
+import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortME;
+
+/**
+ * ME Item Output Port - outputs items directly to AE2 ME Network.
+ * Requires Applied Energistics 2 to be loaded.
+ * Uses JSON model with base + overlay textures via GTNHLib.
+ */
+public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortME> {
+
+    protected BlockItemOutputPortME() {
+        super(ModObject.blockModularItemOutputME.unlocalisedName, TEItemOutputPortME.class);
+        setHardness(5.0F);
+        setResistance(10.0F);
+    }
+
+    public static BlockItemOutputPortME create() {
+        return new BlockItemOutputPortME();
+    }
+
+    @Override
+    public String getTextureName() {
+        return "modular_machine_casing"; // TODO: Add texture
+    }
+
+    @Override
+    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+        return -1; // No tint
+    }
+
+    @Override
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockItemOutputPortME.class;
+    }
+
+    @Override
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        // Only one tier for ME version
+        list.add(new ItemStack(itemIn, 1, 0));
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, player, stack);
+    }
+
+    @Override
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
+        // No special drop handling
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        // TODO: Flush remaining cached items before breaking
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    @Override
+    public int getRenderType() {
+        return JSON_ISBRH_ID;
+    }
+
+    @Override
+    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TEItemOutputPortME meTile) {
+            if (meTile.isActive()) {
+                tooltip.add("§aConnected to ME Network");
+            } else if (meTile.isPowered()) {
+                tooltip.add("§eNo Channel Available");
+            } else {
+                tooltip.add("§cNot Connected");
+            }
+        }
+    }
+
+    public static class ItemBlockItemOutputPortME extends ItemBlockOK {
+
+        public ItemBlockItemOutputPortME(Block block) {
+            super(block, block);
+        }
+
+        @Override
+        public String getUnlocalizedName(ItemStack stack) {
+            return super.getUnlocalizedName() + ".me";
+        }
+
+        @Override
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+            list.add("§7Outputs items directly to ME Network");
+            list.add("§7Requires an ME channel");
+        }
+    }
+}
