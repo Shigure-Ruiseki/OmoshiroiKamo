@@ -609,6 +609,13 @@ tile.lootFabricator.name=ルートファブリケーター
 tile.simulationChamber.name=シミュレーションチャンバー
 tile.machineCasing.name=マシンケーシング
 
+#ME Output Bus
+tile.modularItemOutputME.me.name=MEアイテム出力バス
+waila.me.online=装置はオンラインです
+waila.me.no_channel=装置でチャンネルが見つかりません
+waila.me.offline=装置はオフラインです
+tooltip.me_output.desc=アイテムを直接MEネットワークに出力する
+
 #ENTITY
 
 #NEI INTEGRATION

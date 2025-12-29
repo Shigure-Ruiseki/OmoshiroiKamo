@@ -5,6 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
 /**
@@ -46,6 +47,11 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
         }
 
         return super.processTasks(redstoneChecksPassed);
+    }
+
+    @Override
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.INPUT;
     }
 
     @Override

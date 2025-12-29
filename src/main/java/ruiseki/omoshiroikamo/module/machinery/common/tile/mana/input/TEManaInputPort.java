@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.mana.input;
 
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 
 public abstract class TEManaInputPort extends AbstractManaPortTE {
@@ -11,5 +12,10 @@ public abstract class TEManaInputPort extends AbstractManaPortTE {
     @Override
     public boolean canRecieveManaFromBursts() {
         return true;
+    }
+
+    @Override
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.INPUT;
     }
 }

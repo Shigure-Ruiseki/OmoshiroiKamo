@@ -607,6 +607,13 @@ tile.lootFabricator.name=Loot Fabricator
 tile.simulationChamber.name=Simulation Chamber
 tile.machineCasing.name=Machine Casing
 
+#ME Output Bus
+tile.modularItemOutputME.me.name=ME Item Output Bus
+waila.me.online=Device Online
+waila.me.no_channel=Device Missing Channel
+waila.me.offline=Device Offline
+tooltip.me_output.desc=Outputs items directly to ME Network
+
 #ENTITY
 
 #NEI INTEGRATION

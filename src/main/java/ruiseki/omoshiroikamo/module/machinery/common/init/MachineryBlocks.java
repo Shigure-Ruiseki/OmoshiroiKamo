@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort;
@@ -35,6 +36,7 @@ public enum MachineryBlocks {
     ENERGY_OUTPUT_PORT(BlockEnergyOutputPort.create()),
     MANA_INPUT_PORT(LibMods.Botania.isLoaded(), BlockManaInputPort.create()),
     MANA_OUTPUT_PORT(LibMods.Botania.isLoaded(), BlockManaOutputPort.create()),
+    ITEM_OUTPUT_PORT_ME(LibMods.AppliedEnergistics2.isLoaded(), BlockItemOutputPortME.create()),
 
     ;
     // spotless: on
@@ -43,14 +45,15 @@ public enum MachineryBlocks {
 
     public static void preInit() {
         for (MachineryBlocks block : VALUES) {
-            if (block.isEnabled()) {
-                try {
-                    block.getBlock()
-                        .init();
-                    Logger.info("Successfully initialized {}", block.name());
-                } catch (Exception e) {
-                    Logger.error("Failed to initialize block: +{}", block.name());
-                }
+            if (block.block == null) {
+                continue;
+            }
+            try {
+                block.getBlock()
+                    .init();
+                Logger.info("Successfully initialized {}", block.name());
+            } catch (Exception e) {
+                Logger.error("Failed to initialize block: +{}", block.name());
             }
         }
     }
@@ -77,7 +80,7 @@ public enum MachineryBlocks {
     }
 
     public Item getItem() {
-        return Item.getItemFromBlock(block);
+        return block != null ? Item.getItemFromBlock(block) : null;
     }
 
     public ItemStack newItemStack() {
@@ -89,6 +92,10 @@ public enum MachineryBlocks {
     }
 
     public ItemStack newItemStack(int count, int meta) {
-        return new ItemStack(this.getBlock(), count, meta);
+        return block != null ? new ItemStack(this.getBlock(), count, meta) : null;
+    }
+
+    public boolean isAvailable() {
+        return block != null;
     }
 }

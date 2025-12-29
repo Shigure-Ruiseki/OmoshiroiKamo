@@ -12,7 +12,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import ruiseki.omoshiroikamo.api.mana.ManaStorage;
-import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import vazkii.botania.api.mana.IManaPool;
@@ -174,4 +175,12 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
         super.readCommon(root);
         manaStorage.readFromNBT(root);
     }
+
+    @Override
+    public IPortType.Type getPortType() {
+        return IPortType.Type.MANA;
+    }
+
+    @Override
+    public abstract IPortType.Direction getPortDirection();
 }

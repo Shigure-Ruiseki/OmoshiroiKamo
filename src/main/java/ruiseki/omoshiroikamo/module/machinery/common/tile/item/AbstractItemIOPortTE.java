@@ -17,7 +17,8 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.io.SlotDefinition;
-import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -46,6 +47,14 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     }
 
     public abstract int getTier();
+
+    @Override
+    public IPortType.Type getPortType() {
+        return IPortType.Type.ITEM;
+    }
+
+    @Override
+    public abstract IPortType.Direction getPortDirection();
 
     @Override
     public String getLocalizedName() {
@@ -151,4 +160,5 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
         return panel;
     }
+
 }

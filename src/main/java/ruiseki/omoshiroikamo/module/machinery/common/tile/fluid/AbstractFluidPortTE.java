@@ -20,7 +20,8 @@ import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
-import ruiseki.omoshiroikamo.api.multiblock.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -48,6 +49,14 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
     }
 
     public abstract int getTier();
+
+    @Override
+    public IPortType.Type getPortType() {
+        return IPortType.Type.FLUID;
+    }
+
+    @Override
+    public abstract IPortType.Direction getPortDirection();
 
     @Override
     public String getLocalizedName() {

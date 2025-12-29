@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Loader;
 public enum LibMods {
 
     ActuallyAdditions("ActuallyAdditions"),
+    AppliedEnergistics2("appliedenergistics2"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
     BigReactors("BigReactors"),

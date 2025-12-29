@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.modular.IModularBlock;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
@@ -39,7 +41,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInp
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockFluidInputPort extends AbstractTieredBlock<TEFluidInputPort> {
+public class BlockFluidInputPort extends AbstractTieredBlock<TEFluidInputPort> implements IModularBlock {
 
     protected BlockFluidInputPort() {
         super(
@@ -116,5 +118,15 @@ public class BlockFluidInputPort extends AbstractTieredBlock<TEFluidInputPort> {
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             // TODO: Add tooltips
         }
+    }
+
+    @Override
+    public IPortType.Type getPortType() {
+        return IPortType.Type.FLUID;
+    }
+
+    @Override
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.INPUT;
     }
 }

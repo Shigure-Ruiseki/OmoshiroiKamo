@@ -63,6 +63,7 @@ public enum ModObject {
     blockModularFluidOutput,
     blockModularManaInput,
     blockModularManaOutput,
+    blockModularItemOutputME,
 
     itemBackPack,
     itemUpgrade,

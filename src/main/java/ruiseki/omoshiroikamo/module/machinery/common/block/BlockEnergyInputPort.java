@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.modular.IModularBlock;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
@@ -38,7 +40,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyI
  * - Implement BlockColor tinting for machine color customization
  * - Add Tesla coil-style wireless energy input
  */
-public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort> {
+public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort> implements IModularBlock {
 
     protected BlockEnergyInputPort() {
         super(
@@ -70,7 +72,7 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
 
     @Override
     protected Class<? extends ItemBlock> getItemBlockClass() {
-        return ItemBlockEnergyOutputPort.class;
+        return ItemBlockEnergyInputPort.class;
     }
 
     @Override
@@ -100,9 +102,9 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
         // TODO: Show energy transfer rate
     }
 
-    public static class ItemBlockEnergyOutputPort extends ItemBlockOK {
+    public static class ItemBlockEnergyInputPort extends ItemBlockOK {
 
-        public ItemBlockEnergyOutputPort(Block block) {
+        public ItemBlockEnergyInputPort(Block block) {
             super(block, block);
         }
 
@@ -116,5 +118,15 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             // TODO: Add tooltips
         }
+    }
+
+    @Override
+    public IPortType.Type getPortType() {
+        return IPortType.Type.ENERGY;
+    }
+
+    @Override
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.INPUT;
     }
 }

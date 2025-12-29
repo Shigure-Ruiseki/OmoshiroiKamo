@@ -6,11 +6,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
- * Item Input Port TileEntity.
- * Holds slots for inputting items into machine processing.
+ * Item Output Port TileEntity.
+ * Holds slots for outputting items from machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
  */
 public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
@@ -79,5 +80,10 @@ public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
         }
 
         return false;
+    }
+
+    @Override
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.OUTPUT;
     }
 }
