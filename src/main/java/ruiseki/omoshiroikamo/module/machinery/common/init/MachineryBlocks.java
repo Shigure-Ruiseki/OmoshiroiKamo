@@ -49,7 +49,7 @@ public enum MachineryBlocks {
             }
             try {
                 block.getBlock()
-                        .init();
+                    .init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());

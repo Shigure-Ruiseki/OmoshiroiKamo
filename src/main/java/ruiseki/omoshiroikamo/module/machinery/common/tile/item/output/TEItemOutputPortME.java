@@ -43,8 +43,8 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     private AENetworkProxy gridProxy;
     private BaseActionSource requestSource;
     private final IItemList<IAEItemStack> itemCache = AEApi.instance()
-            .storage()
-            .createItemList();
+        .storage()
+        .createItemList();
 
     private long lastOutputTick = 0;
     private long tickCounter = 0;
@@ -71,11 +71,7 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     @Override
     public AENetworkProxy getProxy() {
         if (gridProxy == null && worldObj != null) {
-            gridProxy = new AENetworkProxy(
-                    this,
-                    "proxy",
-                    getVisualItemStack(),
-                    true);
+            gridProxy = new AENetworkProxy(this, "proxy", getVisualItemStack(), true);
             gridProxy.setFlags(GridFlags.REQUIRE_CHANNEL);
             // Use complementOf to exclude UNKNOWN
             gridProxy.setValidSides(EnumSet.complementOf(EnumSet.of(ForgeDirection.UNKNOWN)));
@@ -146,9 +142,9 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
             if (stack != null && stack.stackSize > 0) {
                 // Add to cache
                 itemCache.add(
-                        AEApi.instance()
-                                .storage()
-                                .createItemStack(stack.copy()));
+                    AEApi.instance()
+                        .storage()
+                        .createItemStack(stack.copy()));
                 setInventorySlotContents(i, null);
             }
         }
@@ -172,17 +168,12 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         AENetworkProxy proxy = getProxy();
         try {
             IMEMonitor<IAEItemStack> storage = proxy.getStorage()
-                    .getItemInventory();
+                .getItemInventory();
 
             for (IAEItemStack s : itemCache) {
-                if (s.getStackSize() == 0)
-                    continue;
+                if (s.getStackSize() == 0) continue;
 
-                IAEItemStack rest = Platform.poweredInsert(
-                        proxy.getEnergy(),
-                        storage,
-                        s,
-                        getRequest());
+                IAEItemStack rest = Platform.poweredInsert(proxy.getEnergy(), storage, s, getRequest());
 
                 if (rest != null && rest.getStackSize() > 0) {
                     s.setStackSize(rest.getStackSize());
@@ -212,8 +203,7 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     public void doUpdate() {
         super.doUpdate();
 
-        if (worldObj.isRemote)
-            return;
+        if (worldObj.isRemote) return;
 
         // Initialize proxy on first tick
         if (!proxyReady && getProxy() != null) {
@@ -247,11 +237,10 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         // Save cached items
         NBTTagList items = new NBTTagList();
         for (IAEItemStack s : itemCache) {
-            if (s.getStackSize() == 0)
-                continue;
+            if (s.getStackSize() == 0) continue;
             NBTTagCompound tag = new NBTTagCompound();
             s.getItemStack()
-                    .writeToNBT(tag);
+                .writeToNBT(tag);
             tag.setLong("count", s.getStackSize());
             items.appendTag(tag);
         }
