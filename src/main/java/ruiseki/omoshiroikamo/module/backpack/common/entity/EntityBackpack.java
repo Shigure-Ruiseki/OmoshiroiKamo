@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.core.common.entity.EntityImmortalItem;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public class EntityBackpack extends EntityImmortalItem {
 

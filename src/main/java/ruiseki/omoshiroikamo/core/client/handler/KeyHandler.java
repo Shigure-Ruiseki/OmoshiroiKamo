@@ -21,14 +21,15 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackInventoryHelper;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketQuickDraw;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class KeyHandler {
 
@@ -118,15 +119,24 @@ public class KeyHandler {
 
         ItemStack wanted = new ItemStack(item, 1, meta);
 
+        boolean haveItem = false;
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            ItemStack stack = player.inventory.getStackInSlot(i);
+            if (stack != null && ItemUtils.areStacksEqual(stack, wanted)) {
+                haveItem = true;
+            }
+        }
+        if (haveItem) return;
+
         ItemStack result = null;
         if (LibMods.Baubles.isLoaded()) {
             IInventory baublesInventory = BaublesUtils.instance()
                 .getBaubles(player);
-            result = BackpackInventoryHelper.getQuickDrawStack(baublesInventory, wanted, InventoryTypes.BAUBLES);
+            result = BackpackInventoryUtils.getQuickDrawStack(baublesInventory, wanted, InventoryTypes.BAUBLES);
         }
 
         if (result == null) {
-            result = BackpackInventoryHelper.getQuickDrawStack(player.inventory, wanted, InventoryTypes.PLAYER);
+            result = BackpackInventoryUtils.getQuickDrawStack(player.inventory, wanted, InventoryTypes.PLAYER);
         }
 
         if (result != null && mc.theWorld.isRemote) {

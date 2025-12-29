@@ -62,6 +62,7 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.UpgradeSlotGroupWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.UpgradeSlotUpdateGroup;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.VoidUpgradeWidget;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFilterUpgradeWrapper;
@@ -77,6 +78,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.MagnetUpgradeWr
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.VoidUpgradeWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class BackpackPanel extends ModularPanel {
 
@@ -235,7 +237,7 @@ public class BackpackPanel extends ModularPanel {
                         Interactable.playButtonClickSound();
                         boolean reverse = !Interactable.hasShiftDown();
 
-                        BackpackInventoryHelper.sortInventory(handler, reverse);
+                        BackpackInventoryUtils.sortInventory(handler, reverse);
 
                         backpackSyncHandler.syncToServer(BackpackSH.UPDATE_SORT_INV, buf -> {
                             for (int i = 0; i < handler.getBackpackSlots(); i++) {

@@ -8,9 +8,9 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public class BackpackSettingWidget extends ExpandedTabWidget {
 

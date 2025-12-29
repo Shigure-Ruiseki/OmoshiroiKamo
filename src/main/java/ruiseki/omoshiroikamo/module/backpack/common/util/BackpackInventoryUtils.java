@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.common.block;
+package ruiseki.omoshiroikamo.module.backpack.common.util;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -18,10 +18,13 @@ import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
-public class BackpackInventoryHelper {
+public class BackpackInventoryUtils {
 
     public static void sortInventory(BackpackHandler handler, boolean reverse) {
         for (int i = 0; i < handler.getBackpackSlots() - 1; i++) {
@@ -359,8 +362,8 @@ public class BackpackInventoryHelper {
             BackpackHandler handler = new BackpackHandler(backpackStack.copy(), null, backpack);
             ItemStack extracted = handler.extractItem(wanted, wanted.getMaxStackSize(), false);
 
+            PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             if (extracted != null && extracted.stackSize > 0) {
-                PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
                 return extracted;
             }
         }

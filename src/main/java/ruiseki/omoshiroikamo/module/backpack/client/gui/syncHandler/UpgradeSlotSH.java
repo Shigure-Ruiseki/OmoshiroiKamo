@@ -9,9 +9,8 @@ import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackInventoryHelper;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IBasicFilterable;
@@ -22,6 +21,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IToggleable;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class UpgradeSlotSH extends ItemSlotSH {
 
@@ -226,7 +226,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
 
         boolean clockwise = buf.readBoolean();
         ItemStackHandler stackHandler = upgradeWrapper.getStorage();
-        BackpackInventoryHelper.rotated(stackHandler, clockwise);
+        BackpackInventoryUtils.rotated(stackHandler, clockwise);
     }
 
     public void updateGrid(PacketBuffer buf) {
@@ -239,9 +239,9 @@ public class UpgradeSlotSH extends ItemSlotSH {
         boolean balance = buf.readBoolean();
         ItemStackHandler stackHandler = upgradeWrapper.getStorage();
         if (balance) {
-            BackpackInventoryHelper.balance(stackHandler);
+            BackpackInventoryUtils.balance(stackHandler);
         } else {
-            BackpackInventoryHelper.spread(stackHandler);
+            BackpackInventoryUtils.spread(stackHandler);
         }
     }
 
@@ -253,7 +253,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
         }
 
         int ordinal = buf.readInt();
-        BackpackInventoryHelper.clear(panel, upgradeWrapper.getStorage(), ordinal);
+        BackpackInventoryUtils.clear(panel, upgradeWrapper.getStorage(), ordinal);
     }
 
 }

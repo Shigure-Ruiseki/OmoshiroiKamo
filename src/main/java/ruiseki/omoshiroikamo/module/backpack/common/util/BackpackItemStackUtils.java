@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.common.block;
+package ruiseki.omoshiroikamo.module.backpack.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 
-public class BackpackItemStackHelper {
+public class BackpackItemStackUtils {
 
     public static NBTTagCompound saveAllSlotsExtended(NBTTagCompound nbt, List<ItemStack> inventory) {
         NBTTagList list = new NBTTagList();

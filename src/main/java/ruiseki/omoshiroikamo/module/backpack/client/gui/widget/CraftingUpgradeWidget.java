@@ -13,11 +13,11 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackInventoryHelper;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgradeWrapper> {
 
@@ -64,7 +64,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                     Interactable.playButtonClickSound();
                     boolean clockwise = !Interactable.hasShiftDown();
 
-                    BackpackInventoryHelper.rotated(wrapper.getStorage(), clockwise);
+                    BackpackInventoryUtils.rotated(wrapper.getStorage(), clockwise);
                     getSlotSyncHandler()
                         .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING_R, buf -> { buf.writeBoolean(clockwise); });
                     return true;
@@ -79,9 +79,9 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                     boolean balance = !Interactable.hasShiftDown();
 
                     if (balance) {
-                        BackpackInventoryHelper.balance(wrapper.getStorage());
+                        BackpackInventoryUtils.balance(wrapper.getStorage());
                     } else {
-                        BackpackInventoryHelper.spread(wrapper.getStorage());
+                        BackpackInventoryUtils.spread(wrapper.getStorage());
                     }
                     getSlotSyncHandler()
                         .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING_G, buf -> { buf.writeBoolean(balance); });
@@ -96,7 +96,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
                 if (button == 0) {
                     Interactable.playButtonClickSound();
 
-                    BackpackInventoryHelper.clear(
+                    BackpackInventoryUtils.clear(
                         panel,
                         wrapper.getStorage(),
                         wrapper.getCraftingDes()

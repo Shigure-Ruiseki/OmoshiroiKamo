@@ -18,7 +18,7 @@ import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
 
 public class ModularCraftingSlot extends ModularCraftingMatrixSlot {

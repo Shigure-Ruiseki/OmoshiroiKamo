@@ -8,9 +8,9 @@ import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackInventoryHelper;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class BackpackSH extends SyncHandler {
 
@@ -83,21 +83,21 @@ public class BackpackSH extends SyncHandler {
     }
 
     public void transferToBackpack(boolean transferMatched) {
-        BackpackInventoryHelper.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
     }
 
     public void transferToBackpack(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        BackpackInventoryHelper.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(boolean transferMatched) {
-        BackpackInventoryHelper.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        BackpackInventoryHelper.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
     }
 
     public void updateBackpack(PacketBuffer buf) throws IOException {

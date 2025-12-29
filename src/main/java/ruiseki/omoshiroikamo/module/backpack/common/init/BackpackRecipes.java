@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.common.init;
 
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler.BACKPACK_SLOTS;
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler.UPGRADE_SLOTS;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.BACKPACK_SLOTS;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.UPGRADE_SLOTS;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.common.init;
 
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler.ACCENT_COLOR;
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler.MAIN_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.ACCENT_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.MAIN_COLOR;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.common.block;
+package ruiseki.omoshiroikamo.module.backpack.common.handler;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 @EventBusSubscriber

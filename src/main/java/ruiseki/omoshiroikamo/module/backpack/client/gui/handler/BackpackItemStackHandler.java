@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public class BackpackItemStackHandler extends UpgradeItemStackHandler {
 

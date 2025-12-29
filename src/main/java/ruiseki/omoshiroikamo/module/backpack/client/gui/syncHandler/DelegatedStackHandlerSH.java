@@ -9,7 +9,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.DelegatedItemHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IStorageUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;

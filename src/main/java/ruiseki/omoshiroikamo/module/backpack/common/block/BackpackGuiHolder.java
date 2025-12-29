@@ -15,6 +15,8 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+
 public abstract class BackpackGuiHolder {
 
     protected final BackpackHandler handler;

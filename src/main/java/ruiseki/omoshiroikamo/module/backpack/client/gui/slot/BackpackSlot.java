@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.slot;
 
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackItemStackHelper.getTooltipLower;
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackItemStackHelper.matchesAllTerms;
+import static ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils.getTooltipLower;
+import static ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils.matchesAllTerms;
 
 import java.util.List;
 
@@ -41,8 +41,8 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public class BackpackSlot extends ItemSlot {
 

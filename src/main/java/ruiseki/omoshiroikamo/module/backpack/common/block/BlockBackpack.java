@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
 import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler.ACCENT_COLOR;
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackHandler.MAIN_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.ACCENT_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.MAIN_COLOR;
 
 import java.util.List;
 
@@ -42,6 +42,7 @@ import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockColor {
 
