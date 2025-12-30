@@ -11,8 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
@@ -67,13 +68,13 @@ public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExt
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tile = world.getTileEntity(x, y, z);
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        TileEntity tile = accessor.getTileEntity();
         if (tile instanceof TEQuantumExtractor te) {
             tooltip.add(WailaUtils.getCraftingState(te));
             tooltip.add(WailaUtils.getProgress(te));
         }
-
     }
 
     public static class ItemBlockQuantumOreExtractor extends ItemBlockOK {

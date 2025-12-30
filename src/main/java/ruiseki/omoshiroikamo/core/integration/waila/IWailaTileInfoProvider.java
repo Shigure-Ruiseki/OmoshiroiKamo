@@ -13,7 +13,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 
 public interface IWailaTileInfoProvider {
 
-    void getWailaInfo(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+    void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config);
 
     void getWailaNBTData(final EntityPlayerMP player, final TileEntity tile, final NBTTagCompound tag,

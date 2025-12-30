@@ -5,8 +5,11 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -15,7 +18,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * This block is mapped to the 'Q' symbol in structure definitions.
  * When right-clicked, it validates and forms the multiblock structure.
  * Uses JSON model with base + overlay textures via GTNHLib.
- * 
+ *
  * TODO List:
  * - Implement GUI for machine management and status display
  * - Add structure detection and validation logic
@@ -69,7 +72,8 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
         // TODO: Display machine name and type
         // TODO: Show current state (Idle, Working, Error)
         // TODO: Show crafting progress percentage

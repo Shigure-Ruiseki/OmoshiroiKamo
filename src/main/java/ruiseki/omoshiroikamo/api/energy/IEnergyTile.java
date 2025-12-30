@@ -17,6 +17,8 @@ public interface IEnergyTile extends IOKTile, IEnergyStorage, ic2.api.energy.til
 
     void setEnergyStored(int stored);
 
+    int getEnergyTransfer();
+
     boolean canConnectEnergy(ForgeDirection var1);
 
     @Optional.Method(modid = "IC2")
