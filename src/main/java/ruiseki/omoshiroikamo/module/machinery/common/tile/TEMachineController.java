@@ -2,15 +2,17 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
@@ -29,11 +31,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
  */
 public class TEMachineController extends AbstractMBModifierTE {
 
-    // IO port positions tracked during structure formation
-    private final List<BlockPos> itemInputPorts = new ArrayList<>();
-    private final List<BlockPos> itemOutputPorts = new ArrayList<>();
-    private final List<BlockPos> energyInputPorts = new ArrayList<>();
-    private final List<BlockPos> energyOutputPorts = new ArrayList<>();
+    // IO ports tracked during structure formation (TileEntity instances, not
+    // positions)
+    private final List<IModularPort> inputPorts = new ArrayList<>();
+    private final List<IModularPort> outputPorts = new ArrayList<>();
 
     // Structure definition (will be loaded from JSON in Phase 1)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
@@ -74,59 +75,39 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     @Override
     protected void clearStructureParts() {
-        itemInputPorts.clear();
-        itemOutputPorts.clear();
-        energyInputPorts.clear();
-        energyOutputPorts.clear();
+        inputPorts.clear();
+        outputPorts.clear();
     }
 
     @Override
     protected boolean addToMachine(Block block, int meta, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x, y, z, worldObj);
-
-        if (!(block instanceof IModularBlock modular)) {
+        TileEntity te = worldObj.getTileEntity(x, y, z);
+        if (te == null || !(te instanceof IModularPort port)) {
             return false;
         }
 
-        IPortType.Type type = modular.getPortType();
-        IPortType.Direction direction = modular.getPortDirection();
+        IPortType.Direction direction = port.getPortDirection();
 
-        switch (type) {
-            case ITEM:
-                if (direction == IPortType.Direction.INPUT) {
-                    if (!itemInputPorts.contains(pos)) {
-                        itemInputPorts.add(pos);
-                    }
-                    return true;
-                }
-                if (direction == IPortType.Direction.OUTPUT) {
-                    if (!itemOutputPorts.contains(pos)) {
-                        itemOutputPorts.add(pos);
-                    }
-                    return true;
-                }
-                break;
+        return switch (direction) {
+            case INPUT -> addIfAbsent(inputPorts, port);
+            case OUTPUT -> addIfAbsent(outputPorts, port);
+            case BOTH -> {
+                addIfAbsent(inputPorts, port);
+                addIfAbsent(outputPorts, port);
+                yield true;
+            }
+            default -> false;
+        };
+    }
 
-            case ENERGY:
-                if (direction == IPortType.Direction.INPUT) {
-                    if (!energyInputPorts.contains(pos)) {
-                        energyInputPorts.add(pos);
-                    }
-                    return true;
-                }
-                if (direction == IPortType.Direction.OUTPUT) {
-                    if (!energyOutputPorts.contains(pos)) {
-                        energyOutputPorts.add(pos);
-                    }
-                    return true;
-                }
-                break;
-
-            default:
-                // Other port types are currently ignored in the simple structure check.
-                break;
+    /**
+     * Add port to list if not already present.
+     */
+    private boolean addIfAbsent(List<IModularPort> list, IModularPort port) {
+        if (!list.contains(port)) {
+            list.add(port);
+            return true;
         }
-
         return false;
     }
 
@@ -219,17 +200,60 @@ public class TEMachineController extends AbstractMBModifierTE {
                     "[Machine] " + status
                         + ": "
                         + getCraftingState().name()
-                        + " | Item Inputs: "
-                        + itemInputPorts.size()
-                        + " | Item Outputs: "
-                        + itemOutputPorts.size()
-                        + " | Energy Inputs: "
-                        + energyInputPorts.size()
-                        + " | Energy Outputs: "
-                        + energyOutputPorts.size()));
+                        + " | Inputs: "
+                        + inputPorts.size()
+                        + " | Outputs: "
+                        + outputPorts.size()));
+
+            // Display port type counts
+            sendPortTypeCounts(player, "Input", inputPorts);
+            sendPortTypeCounts(player, "Output", outputPorts);
+
+            // Display port coordinates
+            sendPortDetails(player, inputPorts, outputPorts);
         } else {
             player.addChatComponentMessage(
                 new ChatComponentText("[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
+        }
+    }
+
+    /**
+     * Send port type counts to player chat.
+     */
+    private void sendPortTypeCounts(EntityPlayer player, String label, List<IModularPort> ports) {
+        StringBuilder sb = new StringBuilder("  " + label + " Ports: ");
+        for (IPortType.Type type : IPortType.Type.values()) {
+            if (type == IPortType.Type.NONE) continue;
+            long count = ports.stream()
+                .filter(p -> p.getPortType() == type)
+                .count();
+            if (count > 0) {
+                sb.append(type.name())
+                    .append("=")
+                    .append(count)
+                    .append(" ");
+            }
+        }
+        player.addChatComponentMessage(new ChatComponentText(sb.toString()));
+    }
+
+    /**
+     * Send port coordinate details to player chat.
+     */
+    private void sendPortDetails(EntityPlayer player, List<IModularPort> inputs, List<IModularPort> outputs) {
+        for (IModularPort port : inputs) {
+            TileEntity te = (TileEntity) port;
+            player.addChatComponentMessage(
+                new ChatComponentText(
+                    "  [IN] " + port.getPortType()
+                        .name() + " @ (" + te.xCoord + ", " + te.yCoord + ", " + te.zCoord + ")"));
+        }
+        for (IModularPort port : outputs) {
+            TileEntity te = (TileEntity) port;
+            player.addChatComponentMessage(
+                new ChatComponentText(
+                    "  [OUT] " + port.getPortType()
+                        .name() + " @ (" + te.xCoord + ", " + te.yCoord + ", " + te.zCoord + ")"));
         }
     }
 
@@ -271,15 +295,44 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // ========== Getters ==========
 
-    public List<BlockPos> getItemInputPorts() {
-        return itemInputPorts;
+    /**
+     * Get all input ports.
+     */
+    public List<IModularPort> getInputPorts() {
+        return inputPorts;
     }
 
-    public List<BlockPos> getItemOutputPorts() {
-        return itemOutputPorts;
+    /**
+     * Get all output ports.
+     */
+    public List<IModularPort> getOutputPorts() {
+        return outputPorts;
     }
 
-    public List<BlockPos> getEnergyInputPorts() {
-        return energyInputPorts;
+    /**
+     * Get input ports filtered by type.
+     */
+    public List<IModularPort> getInputPorts(IPortType.Type type) {
+        return inputPorts.stream()
+            .filter(p -> p.getPortType() == type)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get output ports filtered by type.
+     */
+    public List<IModularPort> getOutputPorts(IPortType.Type type) {
+        return outputPorts.stream()
+            .filter(p -> p.getPortType() == type)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get valid ports (filters out invalid TileEntities).
+     */
+    public <T extends IModularPort> List<T> validPorts(List<T> ports) {
+        return ports.stream()
+            .filter(p -> p != null && !((net.minecraft.tileentity.TileEntity) p).isInvalid())
+            .collect(Collectors.toList());
     }
 }
