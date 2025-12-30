@@ -62,23 +62,22 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
 
     @Override
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        // Only one tier for ME version
         list.add(new ItemStack(itemIn, 1, 0));
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
-    }
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        // No special drop handling
-    }
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        // TODO: Flush remaining cached items before breaking
+        dropStacks(world, x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEItemOutputPortME me) {
+            me.dropCachedItems();
+        }
         super.breakBlock(world, x, y, z, block, meta);
     }
 
