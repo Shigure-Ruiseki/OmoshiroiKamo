@@ -1,5 +1,7 @@
 {
     "variants": {
-      "": {"model": "omoshiroikamo:block/modular/modularFluidOutputME"}
+      "": {
+        "model": "omoshiroikamo:block/modular/modularFluidOutputME"
+      }
     }
 }
