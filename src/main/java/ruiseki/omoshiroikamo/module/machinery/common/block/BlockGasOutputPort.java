@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -19,10 +20,12 @@ import org.jetbrains.annotations.Nullable;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT2;
@@ -40,7 +43,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutput
  * - Add visual indicator for mana level (texture animation or overlay)
  * - Add model and textures
  * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving mana
+ * - Add animation/particle effects when receiving gas
  */
 public class BlockGasOutputPort extends AbstractTieredBlock<TEGasOutputPort> implements IModularBlock {
 
@@ -101,7 +104,10 @@ public class BlockGasOutputPort extends AbstractTieredBlock<TEGasOutputPort> imp
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        // TODO: Display current Gas stored / max capacity
+        TileEntity tileEntity = accessor.getTileEntity();
+        if (tileEntity instanceof IGasHandler handler) {
+            tooltip.addAll(WailaUtils.getGasTooltip(handler));
+        }
     }
 
     public static class ItemBlockGasOutputPort extends ItemBlockOK {

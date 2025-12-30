@@ -18,8 +18,9 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
-import mekanism.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
+import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
+import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
@@ -157,6 +158,11 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
+    public GasTankInfo[] getTankInfo(ForgeDirection from) {
+        return new GasTankInfo[] { tank.getInfo() };
+    }
+
+    @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
         openGui(player);
@@ -205,9 +211,9 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
 
         column.child(
             IKey.dynamic(
-                () -> this.tank.getGas()
+                () -> this.tank.getGas() != null ? this.tank.getGas()
                     .getGas()
-                    .getLocalizedName())
+                    .getLocalizedName() : "")
                 .asWidget());
 
         panel.child(column);

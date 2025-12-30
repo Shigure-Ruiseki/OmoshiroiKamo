@@ -11,6 +11,8 @@ import mcp.mobius.waila.api.SpecialChars;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
+import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
+import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class WailaUtils {
@@ -31,31 +33,56 @@ public class WailaUtils {
     }
 
     public static List<String> getTankTooltip(IFluidHandler handler) {
-        if (handler == null) return null;
-        List<String> list = new ArrayList<>();
-        FluidTankInfo[] tanks = getFluidInfos(handler);
-        for (FluidTankInfo tank : tanks) {
-            if (tank != null) {
-                boolean isEmpty = tank.fluid == null;
+        if (handler == null) return new ArrayList<>();
 
-                list.add(
-                    SpecialChars.getRenderString(
-                        "waila.fluid",
-                        isEmpty ? "EMPTYFLUID"
-                            : tank.fluid.getFluid()
-                                .getName(),
-                        isEmpty ? "EMPTYFLUID" : tank.fluid.getLocalizedName(),
-                        String.valueOf(isEmpty ? 0 : tank.fluid.amount),
-                        String.valueOf(tank.capacity)));
-            }
+        List<String> list = new ArrayList<>();
+        FluidTankInfo[] tanks = handler.getTankInfo(ForgeDirection.UNKNOWN);
+
+        if (tanks == null) return list;
+
+        for (FluidTankInfo tank : tanks) {
+            if (tank == null) continue;
+
+            boolean empty = tank.fluid == null;
+
+            list.add(
+                SpecialChars.getRenderString(
+                    "waila.fluid",
+                    empty ? "EMPTYFLUID"
+                        : tank.fluid.getFluid()
+                            .getName(),
+                    empty ? "EMPTYFLUID" : tank.fluid.getLocalizedName(),
+                    String.valueOf(empty ? 0 : tank.fluid.amount),
+                    String.valueOf(tank.capacity)));
         }
         return list;
     }
 
-    public static FluidTankInfo[] getFluidInfos(IFluidHandler handler) {
-        if (handler == null) return new FluidTankInfo[0];
+    public static List<String> getGasTooltip(IGasHandler handler) {
+        if (handler == null) return new ArrayList<>();
 
-        FluidTankInfo[] infos = handler.getTankInfo(ForgeDirection.UNKNOWN);
-        return infos != null ? infos : new FluidTankInfo[0];
+        List<String> list = new ArrayList<>();
+        GasTankInfo[] tanks = handler.getTankInfo(ForgeDirection.UNKNOWN);
+
+        if (tanks == null) return list;
+
+        for (GasTankInfo tank : tanks) {
+            if (tank == null) continue;
+
+            boolean empty = tank.gas == null;
+
+            list.add(
+                SpecialChars.getRenderString(
+                    "waila.fluid",
+                    empty ? "EMPTYFLUID"
+                        : tank.gas.getGas()
+                            .getName(),
+                    empty ? "EMPTYFLUID"
+                        : tank.gas.getGas()
+                            .getLocalizedName(),
+                    String.valueOf(empty ? 0 : tank.gas.amount),
+                    String.valueOf(tank.capacity)));
+        }
+        return list;
     }
 }
