@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
@@ -33,6 +34,7 @@ public enum MachineryBlocks {
     ITEM_INPUT_PORT(BlockItemInputPort.create()),
     ITEM_OUTPUT_PORT(BlockItemOutputPort.create()),
     ITEM_OUTPUT_PORT_ME(LibMods.AppliedEnergistics2.isLoaded(), BlockItemOutputPortME.create()),
+    FLUID_OUTPUT_PORT_ME(LibMods.AE2FluidCrafting.isLoaded(), BlockFluidOutputPortME.create()),
     FLUID_INPUT_PORT(BlockFluidInputPort.create()),
     FLUID_OUTPUT_PORT(BlockFluidOutputPort.create()),
     ENERGY_INPUT_PORT(BlockEnergyInputPort.create()),

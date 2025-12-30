@@ -1,0 +1,6 @@
+{
+    "parent": "omoshiroikamo:block/modular/mana/modularManaOutputT1",
+    "textures": {
+        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_manaoutput_2"
+    }
+}

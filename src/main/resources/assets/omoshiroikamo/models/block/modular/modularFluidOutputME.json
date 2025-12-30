@@ -4,7 +4,7 @@
     "textures": {
         "particle": "omoshiroikamo:block/modularmachineryOverlay/base_modularports",
         "base": "omoshiroikamo:block/modularmachineryOverlay/base_modularports",
-        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_energyoutput_1"
+        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_fluidoutput_me"
     },
     "elements": [
         {
