@@ -3,8 +3,6 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.energy;
 import java.util.Arrays;
 import java.util.List;
 
-import cpw.mods.fml.common.Optional;
-import mekanism.api.lasers.ILaserReceptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;

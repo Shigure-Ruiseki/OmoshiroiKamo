@@ -1,10 +1,10 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input;
 
-import cpw.mods.fml.common.Optional;
-import mekanism.api.lasers.ILaserReceptor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.common.Optional;
+import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -14,9 +14,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
  * Energy Input Port TileEntity.
  * Accepts RF energy for machine processing.
  */
-@Optional.InterfaceList({
-    @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism"),
-})
+@Optional.InterfaceList({ @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism"), })
 public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IEnergySink, ILaserReceptor {
 
     public TEEnergyInputPort(int energyCapacity, int energyMaxReceive) {
@@ -69,7 +67,7 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
 
     @Override
     public void receiveLaserEnergy(double amount, ForgeDirection from) {
-        this.receiveEnergy(from,(int) amount, false);
+        this.receiveEnergy(from, (int) amount, false);
     }
 
     @Override
