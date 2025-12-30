@@ -10,7 +10,6 @@ creativetab.okDeepMobLearner=OK モブラーニング
 config.generalConfig=一般設定
 
 config.itemConfig=アイテム設定
-config.anvilUpgradeConfig=金床アップグレードの設定
 
 config.blockConfig=ブロック設定
 
@@ -42,7 +41,6 @@ config.feedingConfig=自動食事アップグレードの設定
 config.magnetConfig=マグネットアップグレードの設定
 
 config.deepMobLearningConfig=モブラーニングの設定
-config.dataModelConfig=データモデルの設定
 
 config.energyConfig=エネルギーの設定
 
@@ -70,6 +68,7 @@ gui.redstone_mode.always_off=常にオフ
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
 gui.energy_transfer=転送量: %s RF/t
+gui.mana_info=%d マナ
 
 #Modular Machinery
 

@@ -107,7 +107,7 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
         IWailaConfigHandler config) {
         TileEntity tileEntity = accessor.getTileEntity();
         if (!config.getConfig("IFluidHandler") && tileEntity instanceof IFluidHandler handler) {
-            tooltip.addAll(WailaUtils.getTankTooltip(handler));
+            tooltip.addAll(WailaUtils.getFluidTooltip(handler));
         }
     }
 

@@ -68,6 +68,7 @@ gui.redstone_mode.always_off=Always off
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
 gui.energy_transfer=Transfer: %s RF/t
+gui.mana_info=%d Mana
 
 
 #Modular Machinery

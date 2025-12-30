@@ -3,10 +3,13 @@ package ruiseki.omoshiroikamo.core.integration.waila;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import cpw.mods.fml.common.registry.GameData;
 import mcp.mobius.waila.api.SpecialChars;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
@@ -14,25 +17,26 @@ import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import vazkii.botania.api.mana.IManaBlock;
 
 public class WailaUtils {
 
-    public static String getProgress(IProgressTile tile) {
-        float progress = tile.getProgress();
+    public static String getProgress(IProgressTile handler) {
+        float progress = handler.getProgress();
         return LibMisc.LANG.localize("gui.progress", progress * 100);
     }
 
-    public static String getCraftingState(ICraftingTile tile) {
+    public static String getCraftingState(ICraftingTile handler) {
         return LibMisc.LANG.localize(
-            "gui.craftingState." + tile.getCraftingState()
+            "gui.craftingState." + handler.getCraftingState()
                 .getName());
     }
 
-    public static String getEnergyTransfer(IEnergyTile tile) {
-        return LibMisc.LANG.localize("gui.energy_transfer", tile.getEnergyTransfer());
+    public static String getEnergyTransfer(IEnergyTile handler) {
+        return LibMisc.LANG.localize("gui.energy_transfer", handler.getEnergyTransfer());
     }
 
-    public static List<String> getTankTooltip(IFluidHandler handler) {
+    public static List<String> getFluidTooltip(IFluidHandler handler) {
         if (handler == null) return new ArrayList<>();
 
         List<String> list = new ArrayList<>();
@@ -85,4 +89,34 @@ public class WailaUtils {
         }
         return list;
     }
+
+    public static String getManaToolTip(IManaBlock handler) {
+        return LibMisc.LANG.localize("gui.mana_info", handler.getCurrentMana());
+    }
+
+    public static String getInventoryTooltip(IInventory inv) {
+        String renderStr = "";
+        if (inv == null) return null;
+
+        int index = 1;
+        for (int i = 0; i < inv.getSizeInventory(); i++) {
+            ItemStack stack = inv.getStackInSlot(i);
+
+            if (stack == null || stack.getItem() == null) {
+                continue;
+            }
+            String name = GameData.getItemRegistry()
+                .getNameForObject(stack.getItem());
+            renderStr += SpecialChars.getRenderString(
+                "waila.stack",
+                String.valueOf(index),
+                name,
+                String.valueOf(stack.stackSize),
+                String.valueOf(stack.getItemDamage()));
+
+        }
+
+        return renderStr;
+    }
+
 }

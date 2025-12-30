@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -26,9 +27,11 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.output.TEManaOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.output.TEManaOutputPortT1;
+import vazkii.botania.api.mana.IManaBlock;
 import vazkii.botania.api.wand.IWandHUD;
 
 /**
@@ -89,7 +92,10 @@ public class BlockManaOutputPort extends AbstractTieredBlock<TEManaOutputPort> i
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        // TODO: Display current Mana stored / max capacity
+        TileEntity tileEntity = accessor.getTileEntity();
+        if (tileEntity instanceof IManaBlock handler) {
+            tooltip.add(WailaUtils.getManaToolTip(handler));
+        }
     }
 
     @Override
