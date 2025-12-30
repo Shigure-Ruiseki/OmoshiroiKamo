@@ -27,8 +27,8 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
 
     protected final IO[] sides = new IO[6];
 
-    private final SmartGasTank tank;
-    private boolean tankDirty = false;
+    protected final SmartGasTank tank;
+    protected boolean tankDirty = false;
 
     public AbstractGasPortTE(int gasCapacity) {
         tank = new SmartGasTank(gasCapacity) {
@@ -136,6 +136,16 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
             tankDirty = true;
         }
         return res;
+    }
+
+    @Override
+    public int receiveGas(ForgeDirection from, GasStack gasStack) {
+        return this.receiveGas(from, gasStack, true);
+    }
+
+    @Override
+    public GasStack drawGas(ForgeDirection from, int amount) {
+        return this.drawGas(from, amount, true);
     }
 
     @Override

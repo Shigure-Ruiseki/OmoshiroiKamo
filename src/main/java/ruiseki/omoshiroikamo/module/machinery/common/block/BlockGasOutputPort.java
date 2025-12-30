@@ -21,13 +21,13 @@ import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT6;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT1;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT2;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT3;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT4;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT5;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT6;
 
 /**
  * Mana Output Port - accepts mana for machine processing.
@@ -40,17 +40,17 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOu
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockGasOutputPort extends AbstractTieredBlock<TEFluidOutputPort> implements IModularBlock {
+public class BlockGasOutputPort extends AbstractTieredBlock<TEGasOutputPort> implements IModularBlock {
 
     protected BlockGasOutputPort() {
         super(
             ModObject.blockModularGasOutput.unlocalisedName,
-            TEFluidOutputPortT1.class,
-            TEFluidOutputPortT2.class,
-            TEFluidOutputPortT3.class,
-            TEFluidOutputPortT4.class,
-            TEFluidOutputPortT5.class,
-            TEFluidOutputPortT6.class);
+            TEGasOutputPortT1.class,
+            TEGasOutputPortT2.class,
+            TEGasOutputPortT3.class,
+            TEGasOutputPortT4.class,
+            TEGasOutputPortT5.class,
+            TEGasOutputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
     }

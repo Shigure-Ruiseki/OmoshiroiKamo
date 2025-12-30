@@ -21,13 +21,13 @@ import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT6;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT1;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT2;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT3;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT4;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT5;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT6;
 
 /**
  * Mana Input Port - accepts mana for machine processing.
@@ -40,17 +40,17 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInp
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockGasInputPort extends AbstractTieredBlock<TEFluidInputPort> implements IModularBlock {
+public class BlockGasInputPort extends AbstractTieredBlock<TEGasInputPort> implements IModularBlock {
 
     protected BlockGasInputPort() {
         super(
             ModObject.blockModularGasInput.unlocalisedName,
-            TEFluidInputPortT1.class,
-            TEFluidInputPortT2.class,
-            TEFluidInputPortT3.class,
-            TEFluidInputPortT4.class,
-            TEFluidInputPortT5.class,
-            TEFluidInputPortT6.class);
+            TEGasInputPortT1.class,
+            TEGasInputPortT2.class,
+            TEGasInputPortT3.class,
+            TEGasInputPortT4.class,
+            TEGasInputPortT5.class,
+            TEGasInputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
     }
