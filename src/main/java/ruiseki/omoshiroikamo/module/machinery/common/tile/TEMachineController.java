@@ -6,8 +6,12 @@ import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
@@ -16,6 +20,9 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
  * Machine Controller TileEntity - manages a Modular Machinery multiblock.
@@ -328,11 +335,162 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     /**
+     * Get input ports filtered by type and cast to the specific port class.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends IModularPort> List<T> getTypedInputPorts(IPortType.Type type, Class<T> portClass) {
+        return inputPorts.stream()
+            .filter(p -> p.getPortType() == type)
+            .filter(portClass::isInstance)
+            .map(p -> (T) p)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get output ports filtered by type and cast to the specific port class.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends IModularPort> List<T> getTypedOutputPorts(IPortType.Type type, Class<T> portClass) {
+        return outputPorts.stream()
+            .filter(p -> p.getPortType() == type)
+            .filter(portClass::isInstance)
+            .map(p -> (T) p)
+            .collect(Collectors.toList());
+    }
+
+    /**
      * Get valid ports (filters out invalid TileEntities).
      */
     public <T extends IModularPort> List<T> validPorts(List<T> ports) {
         return ports.stream()
             .filter(p -> p != null && !((net.minecraft.tileentity.TileEntity) p).isInvalid())
             .collect(Collectors.toList());
+    }
+
+    // ========== Item IO Helpers ==========
+
+    /**
+     * Get all items stored in input item ports.
+     */
+    public List<ItemStack> getStoredInputItems() {
+        List<ItemStack> items = new ArrayList<>();
+        for (AbstractItemIOPortTE port : getTypedInputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
+            for (int i = 0; i < port.getSizeInventory(); i++) {
+                ItemStack stack = port.getStackInSlot(i);
+                if (stack != null) {
+                    items.add(stack.copy());
+                }
+            }
+        }
+        return items;
+    }
+
+    /**
+     * Insert items into output item ports.
+     * 
+     * @return remainder that couldn't be inserted
+     */
+    public List<ItemStack> insertOutputItems(List<ItemStack> items) {
+        List<ItemStack> remainder = new ArrayList<>();
+        for (ItemStack stack : items) {
+            ItemStack remaining = stack.copy();
+            for (AbstractItemIOPortTE port : getTypedOutputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
+                remaining = insertItemToPort(port, remaining);
+                if (remaining == null || remaining.stackSize == 0) {
+                    break;
+                }
+            }
+            if (remaining != null && remaining.stackSize > 0) {
+                remainder.add(remaining);
+            }
+        }
+        return remainder;
+    }
+
+    private ItemStack insertItemToPort(AbstractItemIOPortTE port, ItemStack stack) {
+        if (stack == null) return null;
+        ItemStack remaining = stack.copy();
+        for (int i = 0; i < port.getSizeInventory() && remaining.stackSize > 0; i++) {
+            ItemStack existing = port.getStackInSlot(i);
+            if (existing == null) {
+                port.setInventorySlotContents(i, remaining.copy());
+                return null;
+            } else if (existing.isItemEqual(remaining) && ItemStack.areItemStackTagsEqual(existing, remaining)) {
+                int space = existing.getMaxStackSize() - existing.stackSize;
+                int transfer = Math.min(space, remaining.stackSize);
+                existing.stackSize += transfer;
+                remaining.stackSize -= transfer;
+                port.setInventorySlotContents(i, existing);
+            }
+        }
+        return remaining.stackSize > 0 ? remaining : null;
+    }
+
+    // ========== Fluid IO Helpers ==========
+
+    /**
+     * Get all fluids stored in input fluid ports.
+     */
+    public List<FluidStack> getStoredInputFluids() {
+        List<FluidStack> fluids = new ArrayList<>();
+        for (AbstractFluidPortTE port : getTypedInputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
+            FluidTankInfo[] info = port.getTankInfo(ForgeDirection.UNKNOWN);
+            for (FluidTankInfo tankInfo : info) {
+                if (tankInfo.fluid != null && tankInfo.fluid.amount > 0) {
+                    fluids.add(tankInfo.fluid.copy());
+                }
+            }
+        }
+        return fluids;
+    }
+
+    /**
+     * Fill fluid into output fluid ports.
+     * 
+     * @return amount that was actually filled
+     */
+    public int fillOutputFluid(FluidStack fluid) {
+        if (fluid == null || fluid.amount <= 0) return 0;
+        int remaining = fluid.amount;
+        for (AbstractFluidPortTE port : getTypedOutputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
+            FluidStack toFill = fluid.copy();
+            toFill.amount = remaining;
+            int filled = port.fill(ForgeDirection.UNKNOWN, toFill, true);
+            remaining -= filled;
+            if (remaining <= 0) break;
+        }
+        return fluid.amount - remaining;
+    }
+
+    // ========== Energy IO Helpers ==========
+
+    /**
+     * Get total energy stored in input energy ports.
+     */
+    public int getStoredInputEnergy() {
+        int total = 0;
+        for (AbstractEnergyIOPortTE port : getTypedInputPorts(IPortType.Type.ENERGY, AbstractEnergyIOPortTE.class)) {
+            total += port.getEnergyStored();
+        }
+        return total;
+    }
+
+    /**
+     * Extract energy from input energy ports.
+     * 
+     * @return amount actually extracted
+     */
+    public int extractInputEnergy(int amount, boolean simulate) {
+        int remaining = amount;
+        for (AbstractEnergyIOPortTE port : getTypedInputPorts(IPortType.Type.ENERGY, AbstractEnergyIOPortTE.class)) {
+            int available = port.getEnergyStored();
+            int toExtract = Math.min(available, remaining);
+            if (!simulate && toExtract > 0) {
+                port.extractEnergy(toExtract);
+            }
+            remaining -= toExtract;
+            if (remaining <= 0) break;
+        }
+        return amount - remaining;
     }
 }
