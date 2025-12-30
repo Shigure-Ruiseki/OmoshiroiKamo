@@ -9,8 +9,12 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.DoubleValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -18,11 +22,15 @@ import mekanism.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
+/*
+ * Mekanism Handle Push/Pull itself so skip Auto PushPull
+ */
 public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler {
 
     protected final IO[] sides = new IO[6];
@@ -157,13 +165,17 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("fluid_port");
+        ModularPanel panel = new ModularPanel("gas_port");
 
         EnumSyncValue<RedstoneMode> redstoneSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             this::getRedstoneMode,
             this::setRedstoneMode);
         syncManager.syncValue("redstoneSyncer", redstoneSyncer);
+
+        IntSyncValue gasSyncer = new IntSyncValue(tank::getStored, tank::setAmount);
+        syncManager.syncValue("gasSyncer", gasSyncer);
+        syncManager.syncValue("maxGasSyncer", new IntSyncValue(tank::getMaxGas));
 
         panel.child(
             new RedstoneModeWidget(redstoneSyncer).pos(-20, 2)
@@ -176,6 +188,29 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
             IKey.lang(data.getPlayer().inventory.getInventoryName())
                 .asWidget()
                 .pos(8, 72));
+
+        Column column = (Column) new Column().coverChildren()
+            .childPadding(2)
+            .alignX(0.5f)
+            .topRel(0.15f);
+
+        column.child(
+            new ProgressWidget().value(new DoubleValue((double) this.tank.getStored() / this.tank.getMaxGas()))
+                .texture(GuiTextures.BASIC_BAR, 64)
+                .size(64, 16));
+
+        column.child(
+            IKey.dynamic(() -> this.tank.getStored() + "/" + this.tank.getMaxGas())
+                .asWidget());
+
+        column.child(
+            IKey.dynamic(
+                () -> this.tank.getGas()
+                    .getGas()
+                    .getLocalizedName())
+                .asWidget());
+
+        panel.child(column);
 
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
