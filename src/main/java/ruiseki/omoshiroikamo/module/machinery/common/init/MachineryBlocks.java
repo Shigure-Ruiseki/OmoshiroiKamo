@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME;
@@ -37,6 +38,7 @@ public enum MachineryBlocks {
     MANA_INPUT_PORT(LibMods.Botania.isLoaded(), BlockManaInputPort.create()),
     MANA_OUTPUT_PORT(LibMods.Botania.isLoaded(), BlockManaOutputPort.create()),
     ITEM_OUTPUT_PORT_ME(LibMods.AppliedEnergistics2.isLoaded(), BlockItemOutputPortME.create()),
+    FLUID_OUTPUT_PORT_ME(LibMods.AE2FluidCrafting.isLoaded(), BlockFluidOutputPortME.create()),
 
     ;
     // spotless: on

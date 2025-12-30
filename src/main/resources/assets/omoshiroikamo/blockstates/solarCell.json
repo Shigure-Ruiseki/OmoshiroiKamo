@@ -1,6 +1,7 @@
 {
     "variants": {
         "": {
-          "model": "omoshiroikamo:block/solar"}
+          "model": "omoshiroikamo:block/solar"
+        }
     }
 }
