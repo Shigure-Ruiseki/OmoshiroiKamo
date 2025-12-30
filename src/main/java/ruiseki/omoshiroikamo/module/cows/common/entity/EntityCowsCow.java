@@ -38,7 +38,7 @@ import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.api.fluid.SmartTank;
+import ruiseki.omoshiroikamo.api.storage.SmartTank;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaEntityInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;

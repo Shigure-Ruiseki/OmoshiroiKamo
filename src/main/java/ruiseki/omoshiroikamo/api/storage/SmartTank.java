@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.fluid;
+package ruiseki.omoshiroikamo.api.storage;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;

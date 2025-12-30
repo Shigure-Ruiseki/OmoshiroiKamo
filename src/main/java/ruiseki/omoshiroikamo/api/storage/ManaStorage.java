@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.mana;
+package ruiseki.omoshiroikamo.api.storage;
 
 import net.minecraft.nbt.NBTTagCompound;
 
