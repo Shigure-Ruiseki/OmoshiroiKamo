@@ -14,23 +14,6 @@ public abstract class TEGasInputPort extends AbstractGasPortTE {
     }
 
     @Override
-    public boolean processTasks(boolean redstoneCheckPassed) {
-        if (isRedstoneActive() && !tank.isFull()) {
-            // FluidTransfer transfer = new FluidTransfer();
-            // for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-            // if (!getSideIO(direction).canInput()) {
-            // continue;
-            // }
-            // TileEntity source = getPos().offset(direction)
-            // .getTileEntity(worldObj);
-            // transfer.pull(this, direction, source);
-            // transfer.transfer();
-            // }
-        }
-        return super.processTasks(redstoneCheckPassed);
-    }
-
-    @Override
     public Direction getPortDirection() {
         return Direction.INPUT;
     }

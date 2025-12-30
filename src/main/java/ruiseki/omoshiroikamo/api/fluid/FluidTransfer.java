@@ -20,13 +20,11 @@ public class FluidTransfer {
     @Getter
     protected FluidSink sink;
     @Setter
-    protected int maxFluidPerTransfer = Integer.MAX_VALUE;
+    protected int maxPerTransfer = Integer.MAX_VALUE;
     @Setter
     protected int maxTotalTransferred = Integer.MAX_VALUE;
     @Getter
-    protected int totalFluidTransferred = 0;
-    @Getter
-    protected int prevFluidTransferred = 0;
+    protected int transferredThisTick = 0;
 
     // --- Set source ---
     public void source(FluidSource source) {
@@ -76,7 +74,7 @@ public class FluidTransfer {
             return 0;
         }
 
-        int maxTransfer = Math.min(maxFluidPerTransfer, maxTotalTransferred - totalFluidTransferred);
+        int maxTransfer = Math.min(maxPerTransfer, maxTotalTransferred - transferredThisTick);
         if (maxTransfer <= 0) {
             return 0;
         }
@@ -113,8 +111,7 @@ public class FluidTransfer {
                 source.extract(actualTransferStack, true);
                 int insertedAmount = sink.insert(actualTransferStack, true);
 
-                prevFluidTransferred = insertedAmount;
-                totalFluidTransferred += insertedAmount;
+                transferredThisTick += insertedAmount;
 
                 return insertedAmount;
             }
