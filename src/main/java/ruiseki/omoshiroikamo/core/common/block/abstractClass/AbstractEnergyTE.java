@@ -110,6 +110,11 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     }
 
     @Override
+    public int getEnergyTransfer() {
+        return energyStorage.getMaxReceive();
+    }
+
+    @Override
     @Optional.Method(modid = "IC2")
     public void register() {
         if (!worldObj.isRemote) {

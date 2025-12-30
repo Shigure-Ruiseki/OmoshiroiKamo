@@ -69,6 +69,7 @@ gui.redstone_mode.always_off=常にオフ
 
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
+gui.energy_transfer=転送量: %s RF/t
 
 #Modular Machinery
 
