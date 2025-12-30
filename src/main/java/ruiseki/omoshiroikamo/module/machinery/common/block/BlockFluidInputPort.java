@@ -11,8 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +26,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT2;
@@ -102,7 +105,10 @@ public class BlockFluidInputPort extends AbstractTieredBlock<TEFluidInputPort> i
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        // TODO: Display current Fluid stored / max capacity
+        TileEntity tileEntity = accessor.getTileEntity();
+        if (!config.getConfig("IFluidHandler") && tileEntity instanceof IFluidHandler handler) {
+            tooltip.addAll(WailaUtils.getTankTooltip(handler));
+        }
     }
 
     public static class ItemBlockFluidInputPort extends ItemBlockOK {
