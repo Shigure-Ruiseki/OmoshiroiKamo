@@ -8,6 +8,7 @@ public enum LibMods {
 
     ActuallyAdditions("ActuallyAdditions"),
     AppliedEnergistics2("appliedenergistics2"),
+    AE2FluidCrafting("ae2fc"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
     BigReactors("BigReactors"),

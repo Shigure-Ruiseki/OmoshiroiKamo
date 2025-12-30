@@ -38,7 +38,7 @@ public enum MachineryBlocks {
     MANA_INPUT_PORT(LibMods.Botania.isLoaded(), BlockManaInputPort.create()),
     MANA_OUTPUT_PORT(LibMods.Botania.isLoaded(), BlockManaOutputPort.create()),
     ITEM_OUTPUT_PORT_ME(LibMods.AppliedEnergistics2.isLoaded(), BlockItemOutputPortME.create()),
-    FLUID_OUTPUT_PORT_ME(LibMods.AppliedEnergistics2.isLoaded(), BlockFluidOutputPortME.create()),
+    FLUID_OUTPUT_PORT_ME(LibMods.AE2FluidCrafting.isLoaded(), BlockFluidOutputPortME.create()),
 
     ;
     // spotless: on
