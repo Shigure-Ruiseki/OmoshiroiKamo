@@ -4,7 +4,7 @@
     "textures": {
         "particle": "omoshiroikamo:block/modular_machine_casing",
         "base": "omoshiroikamo:block/modular_machine_casing",
-        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_itemoutput_me"
+        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_fluidoutput_me"
     },
     "elements": [
         {
