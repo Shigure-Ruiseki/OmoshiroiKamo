@@ -327,6 +327,7 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
 
     // dropStack when break
     public void dropCachedItems() {
+        flushCachedStack();
         if (worldObj == null || worldObj.isRemote) return;
 
         for (IAEItemStack aeStack : itemCache) {

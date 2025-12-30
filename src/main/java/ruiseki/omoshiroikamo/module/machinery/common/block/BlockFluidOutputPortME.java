@@ -67,18 +67,17 @@ public class BlockFluidOutputPortME extends AbstractTieredBlock<TEFluidOutputPor
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
-    }
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        // No special drop handling
-    }
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        // TODO: Flush remaining cached fluids before breaking
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEFluidOutputPortME me) {
+            me.flushCachedStack();
+        }
         super.breakBlock(world, x, y, z, block, meta);
     }
 
@@ -90,6 +89,7 @@ public class BlockFluidOutputPortME extends AbstractTieredBlock<TEFluidOutputPor
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
+        tooltip.clear();
         TileEntity te = accessor.getTileEntity();
         if (te instanceof TEFluidOutputPortME meTile) {
             if (meTile.isActive()) {
