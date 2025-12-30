@@ -16,8 +16,8 @@ import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
+import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.storage.SmartGasTank;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -179,11 +179,6 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
 
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
-
-        // panel.child(
-        // new FluidSlot().alignX(0.5f)
-        // .topRel(0.15f)
-        // .syncHandler(SyncHandlers.fluidSlot(this.tank)));
 
         return panel;
     }

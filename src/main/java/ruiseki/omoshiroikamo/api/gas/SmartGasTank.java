@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.storage;
+package ruiseki.omoshiroikamo.api.gas;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -6,7 +6,7 @@ import crazypants.enderio.conduit.gas.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
 
-public class SmartGasTank extends GasTank {
+public class SmartGasTank extends GasTank implements IGasTank {
 
     private int capacity;
 
@@ -143,6 +143,11 @@ public class SmartGasTank extends GasTank {
 
     public boolean isEmpty() {
         return stored == null || stored.amount == 0;
+    }
+
+    @Override
+    public GasTankInfo getInfo() {
+        return new GasTankInfo(this);
     }
 
     protected void onContentsChanged() {}
