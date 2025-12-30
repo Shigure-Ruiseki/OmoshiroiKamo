@@ -1,7 +1,5 @@
 {
     "variants": {
-        "": {
-            "model": "omoshiroikamo:block/modular/modularMachineController"
-        }
+      "": {"model": "omoshiroikamo:block/modular/modularMachineController"}
     }
 }

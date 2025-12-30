@@ -1,22 +1,10 @@
 {
     "variants": {
-        "meta=0": {
-            "model": "omoshiroikamo:block/modular/mana/modularManaOutputT1"
-        },
-        "meta=1": {
-            "model": "omoshiroikamo:block/modular/mana/modularManaOutputT2"
-        },
-        "meta=2": {
-            "model": "omoshiroikamo:block/modular/mana/modularManaOutputT3"
-        },
-        "meta=3": {
-            "model": "omoshiroikamo:block/modular/mana/modularManaOutputT4"
-        },
-        "meta=4": {
-            "model": "omoshiroikamo:block/modular/mana/modularManaOutputT5"
-        },
-        "meta=5": {
-            "model": "omoshiroikamo:block/modular/mana/modularManaOutputT6"
-        }
+      "meta=0": {"model": "omoshiroikamo:block/modular/mana/modularManaOutputT1"},
+      "meta=1": {"model": "omoshiroikamo:block/modular/mana/modularManaOutputT2"},
+      "meta=2": {"model": "omoshiroikamo:block/modular/mana/modularManaOutputT3"},
+      "meta=3": {"model": "omoshiroikamo:block/modular/mana/modularManaOutputT4"},
+      "meta=4": {"model": "omoshiroikamo:block/modular/mana/modularManaOutputT5"},
+      "meta=5": {"model": "omoshiroikamo:block/modular/mana/modularManaOutputT6"}
     }
 }
