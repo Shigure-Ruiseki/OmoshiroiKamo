@@ -1,41 +1,45 @@
-package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid;
+package ruiseki.omoshiroikamo.module.machinery.common.tile.gas;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.DoubleValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.value.sync.SyncHandlers;
-import com.cleanroommc.modularui.widgets.slot.FluidSlot;
+import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
 
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
+import mekanism.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
-import ruiseki.omoshiroikamo.api.fluid.SmartTank;
+import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
-public abstract class AbstractFluidPortTE extends AbstractTE implements IModularPort, IFluidHandler {
+/*
+ * Mekanism Handle Push/Pull itself so skip Auto PushPull
+ */
+public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler {
 
     protected final IO[] sides = new IO[6];
 
-    protected SmartTank tank;
-    private boolean tankDirty = false;
+    protected final SmartGasTank tank;
+    protected boolean tankDirty = false;
 
-    public AbstractFluidPortTE(int fluidCapacity) {
-        tank = new SmartTank(fluidCapacity) {
+    public AbstractGasPortTE(int gasCapacity) {
+        tank = new SmartGasTank(gasCapacity) {
 
             @Override
             protected void onContentsChanged() {
@@ -52,7 +56,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
 
     @Override
     public Type getPortType() {
-        return IPortType.Type.FLUID;
+        return Type.GAS;
     }
 
     @Override
@@ -82,23 +86,12 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
-        int[] sideData = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sideData[i] = sides[i].ordinal();
-        }
-        root.setIntArray("sideIO", sideData);
         tank.writeCommon(root);
     }
 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        if (root.hasKey("sideIO")) {
-            int[] sideData = root.getIntArray("sideIO");
-            for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
-            }
-        }
         tank.readCommon(root);
     }
 
@@ -111,65 +104,56 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
         return false;
     }
 
-    @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-        if (!canFill(from)) {
-            return 0;
-        }
-        int res = tank.fill(resource, doFill);
-        if (res > 0 && doFill) {
-            tankDirty = true;
-        }
-        return res;
-    }
-
-    @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-        if (!canDrain(from)) {
-            return null;
-        }
-        FluidStack res = tank.drain(resource, doDrain);
-        if (res != null && res.amount > 0 && doDrain) {
-            tankDirty = true;
-        }
-        return res;
-    }
-
-    @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-        if (!canDrain(from)) {
-            return null;
-        }
-        FluidStack res = tank.drain(maxDrain, doDrain);
-        if (res != null && res.amount > 0 && doDrain) {
-            tankDirty = true;
-        }
-        return res;
-    }
-
-    public boolean canFill(ForgeDirection from) {
+    public boolean canReceiveGas(ForgeDirection from) {
         return canInput(from) && isRedstoneActive();
     }
 
     @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid) {
-        return canFill(from) && fluid != null
-            && (tank.getFluidAmount() > 0 && tank.getFluid()
-                .getFluidID() == fluid.getID() || tank.getFluidAmount() == 0);
+    public boolean canReceiveGas(ForgeDirection from, Gas gas) {
+        return canReceiveGas(from) && tank.canReceive(gas);
     }
 
-    public boolean canDrain(ForgeDirection from) {
+    @Override
+    public int receiveGas(ForgeDirection forgeDirection, GasStack gasStack, boolean doTransfer) {
+        if (!canReceiveGas(forgeDirection)) {
+            return 0;
+        }
+        int res = tank.receive(gasStack, doTransfer);
+        if (res > 0 && doTransfer) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    public boolean canDrawGas(ForgeDirection from) {
         return canOutput(from) && isRedstoneActive();
     }
 
     @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid) {
-        return canDrain(from) && tank.canDrainFluidType(fluid);
+    public boolean canDrawGas(ForgeDirection from, Gas gas) {
+        return canDrawGas(from) && tank.canDraw(gas);
     }
 
     @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-        return new FluidTankInfo[] { tank.getInfo() };
+    public GasStack drawGas(ForgeDirection forgeDirection, int amount, boolean doTransfer) {
+        if (!canDrawGas(forgeDirection)) {
+            return null;
+        }
+        GasStack res = tank.draw(amount, doTransfer);
+        if (res != null && res.amount > 0 && doTransfer) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    @Override
+    public int receiveGas(ForgeDirection from, GasStack gasStack) {
+        return this.receiveGas(from, gasStack, true);
+    }
+
+    @Override
+    public GasStack drawGas(ForgeDirection from, int amount) {
+        return this.drawGas(from, amount, true);
     }
 
     @Override
@@ -181,13 +165,17 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("fluid_port");
+        ModularPanel panel = new ModularPanel("gas_port");
 
         EnumSyncValue<RedstoneMode> redstoneSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
             this::getRedstoneMode,
             this::setRedstoneMode);
         syncManager.syncValue("redstoneSyncer", redstoneSyncer);
+
+        IntSyncValue gasSyncer = new IntSyncValue(tank::getStored, tank::setAmount);
+        syncManager.syncValue("gasSyncer", gasSyncer);
+        syncManager.syncValue("maxGasSyncer", new IntSyncValue(tank::getMaxGas));
 
         panel.child(
             new RedstoneModeWidget(redstoneSyncer).pos(-20, 2)
@@ -201,13 +189,31 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
                 .asWidget()
                 .pos(8, 72));
 
+        Column column = (Column) new Column().coverChildren()
+            .childPadding(2)
+            .alignX(0.5f)
+            .topRel(0.15f);
+
+        column.child(
+            new ProgressWidget().value(new DoubleValue((double) this.tank.getStored() / this.tank.getMaxGas()))
+                .texture(GuiTextures.BASIC_BAR, 64)
+                .size(64, 16));
+
+        column.child(
+            IKey.dynamic(() -> this.tank.getStored() + "/" + this.tank.getMaxGas())
+                .asWidget());
+
+        column.child(
+            IKey.dynamic(
+                () -> this.tank.getGas()
+                    .getGas()
+                    .getLocalizedName())
+                .asWidget());
+
+        panel.child(column);
+
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
-
-        panel.child(
-            new FluidSlot().alignX(0.5f)
-                .topRel(0.15f)
-                .syncHandler(SyncHandlers.fluidSlot(this.tank)));
 
         return panel;
     }

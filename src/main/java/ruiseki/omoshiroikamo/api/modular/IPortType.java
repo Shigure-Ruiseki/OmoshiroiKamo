@@ -7,6 +7,7 @@ public interface IPortType {
         FLUID,
         ENERGY,
         MANA,
+        GAS,
         NONE
     }
 
