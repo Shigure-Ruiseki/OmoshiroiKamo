@@ -5,5 +5,4 @@ package ruiseki.omoshiroikamo.api.modular;
  * Implemented by blocks that can be part of a modular machine structure.
  */
 public interface IModularBlock extends IPortType {
-
 }

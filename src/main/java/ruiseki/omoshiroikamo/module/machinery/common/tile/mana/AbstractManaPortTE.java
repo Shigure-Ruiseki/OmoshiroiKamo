@@ -7,6 +7,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -16,6 +17,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.ManaNetworkEvent;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
@@ -183,4 +185,9 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public abstract IPortType.Direction getPortDirection();
+
+    @Override
+    public ResourceLocation getPortOverlay() {
+        return new ResourceLocation(LibResources.PREFIX_BLOCK + "modularmachineryOverlay/overlay_io_mode.png");
+    }
 }

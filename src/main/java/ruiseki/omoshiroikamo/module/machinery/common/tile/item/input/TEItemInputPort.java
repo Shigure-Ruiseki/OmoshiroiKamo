@@ -6,7 +6,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
@@ -58,7 +57,7 @@ public abstract class TEItemInputPort extends AbstractItemIOPortTE {
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
+    public Direction getPortDirection() {
+        return Direction.INPUT;
     }
 }
