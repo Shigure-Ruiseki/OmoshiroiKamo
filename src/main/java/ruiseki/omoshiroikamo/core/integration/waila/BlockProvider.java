@@ -56,11 +56,11 @@ public class BlockProvider implements IWailaDataProvider {
         TileEntity tile = accessor.getTileEntity();
 
         if (block instanceof IWailaBlockInfoProvider info) {
-            info.getWailaInfo(currenttip, player, world, pos.blockX, pos.blockY, pos.blockZ);
+            info.getWailaInfo(currenttip, itemStack, accessor, config);
         }
 
         if (tile instanceof IWailaTileInfoProvider info) {
-            info.getWailaInfo(itemStack, currenttip, accessor, config);
+            info.getWailaInfo(currenttip, itemStack, accessor, config);
         }
 
         return currenttip;

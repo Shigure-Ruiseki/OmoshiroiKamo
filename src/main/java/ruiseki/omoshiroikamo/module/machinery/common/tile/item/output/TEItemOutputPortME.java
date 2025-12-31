@@ -2,10 +2,12 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.item.output;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.AEApi;
@@ -24,6 +26,7 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
@@ -35,10 +38,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * QuantumExtractor)
  * 2. Periodically flushes internal slots to ME cache
  * 3. Then flushes ME cache to ME Network
- * 
- * TODO: Prevent from opening GUI
- * TODO: Drop cached items when break
- * TODO: Implement IWailaTileInfoProvider
  */
 public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyable, IActionHost {
 
@@ -317,5 +316,30 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         if (gridProxy != null) {
             gridProxy.onChunkUnload();
         }
+    }
+
+    // super to enable openGui
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        return false;
+    }
+
+    // dropStack when break
+    public void dropCachedItems() {
+        flushCachedStack();
+        if (worldObj == null || worldObj.isRemote) return;
+
+        for (IAEItemStack aeStack : itemCache) {
+            if (aeStack == null || aeStack.getStackSize() <= 0) continue;
+
+            ItemStack stack = aeStack.getItemStack();
+            if (stack == null) continue;
+            stack.stackSize = (int) aeStack.getStackSize();
+
+            AbstractBlock.dropStack(worldObj, xCoord, yCoord, zCoord, stack);
+        }
+
+        itemCache.resetStatus();
     }
 }

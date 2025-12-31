@@ -51,12 +51,12 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
     public abstract int getTier();
 
     @Override
-    public IPortType.Type getPortType() {
+    public Type getPortType() {
         return IPortType.Type.FLUID;
     }
 
     @Override
-    public abstract IPortType.Direction getPortDirection();
+    public abstract Direction getPortDirection();
 
     @Override
     public String getLocalizedName() {

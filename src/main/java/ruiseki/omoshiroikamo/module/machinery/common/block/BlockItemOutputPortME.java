@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -60,23 +62,22 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
 
     @Override
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        // Only one tier for ME version
         list.add(new ItemStack(itemIn, 1, 0));
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
-    }
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        // No special drop handling
-    }
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        // TODO: Flush remaining cached items before breaking
+        dropStacks(world, x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEItemOutputPortME me) {
+            me.dropCachedItems();
+        }
         super.breakBlock(world, x, y, z, block, meta);
     }
 
@@ -86,8 +87,9 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        TileEntity te = accessor.getTileEntity();
         if (te instanceof TEItemOutputPortME meTile) {
             if (meTile.isActive()) {
                 tooltip.add("§a" + StatCollector.translateToLocal("waila.me.online"));

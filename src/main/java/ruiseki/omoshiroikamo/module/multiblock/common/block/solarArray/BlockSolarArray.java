@@ -12,8 +12,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
@@ -66,8 +67,9 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> impleme
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        TileEntity te = accessor.getTileEntity();
         if (te instanceof TESolarArray solar) {
             tooltip.add(WailaUtils.getCraftingState(solar));
             float efficiency = solar.calculateLightRatio();
@@ -77,11 +79,6 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> impleme
                 tooltip.add(LibMisc.LANG.localize("gui.efficiency", efficiency * 100));
             }
         }
-    }
-
-    @Override
-    public int getDefaultDisplayMask(World world, int x, int y, int z) {
-        return 0;
     }
 
     public static class ItemBlockSolarArray extends ItemBlockOK {

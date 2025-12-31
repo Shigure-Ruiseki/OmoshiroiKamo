@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -65,18 +67,17 @@ public class BlockFluidOutputPortME extends AbstractTieredBlock<TEFluidOutputPor
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, player, stack);
-    }
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        // No special drop handling
-    }
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        // TODO: Flush remaining cached fluids before breaking
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEFluidOutputPortME me) {
+            me.flushCachedStack();
+        }
         super.breakBlock(world, x, y, z, block, meta);
     }
 
@@ -86,8 +87,10 @@ public class BlockFluidOutputPortME extends AbstractTieredBlock<TEFluidOutputPor
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        tooltip.clear();
+        TileEntity te = accessor.getTileEntity();
         if (te instanceof TEFluidOutputPortME meTile) {
             if (meTile.isActive()) {
                 tooltip.add("§a" + StatCollector.translateToLocal("waila.me.online"));

@@ -2,10 +2,12 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -35,9 +37,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * 1. Receives fluids via IFluidHandler (from adjacent machines)
  * 2. Periodically flushes internal tank to ME cache
  * 3. Then flushes ME cache to ME Network
- * 
- * TODO: Prevent from opening GUI
- * TODO: Implement IWailaTileInfoProvider
  */
 public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxyable, IActionHost {
 
@@ -155,7 +154,7 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
 
     // ========== ME Network Transfer ==========
 
-    protected void flushCachedStack() {
+    public void flushCachedStack() {
         if (!isActive() || fluidCache.isEmpty()) {
             return;
         }
@@ -311,5 +310,11 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
         if (gridProxy != null) {
             gridProxy.onChunkUnload();
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        return false;
     }
 }

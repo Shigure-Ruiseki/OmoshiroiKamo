@@ -281,7 +281,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     }
 
     @Override
-    public void getWailaInfo(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
 
     }

@@ -8,20 +8,25 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT2;
@@ -102,9 +107,13 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> imp
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, EntityPlayer player, World world, int x, int y, int z) {
-        // TODO: Display current item count and types in slots
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
         // TODO: Show filter status if enabled
+        TileEntity tileEntity = accessor.getTileEntity();
+        if (tileEntity instanceof IInventory handler) {
+            tooltip.add(WailaUtils.getInventoryTooltip(handler));
+        }
     }
 
     public static class ItemBlockItemInputPort extends ItemBlockOK {
