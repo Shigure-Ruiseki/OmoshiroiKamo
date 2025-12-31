@@ -24,11 +24,11 @@ import ruiseki.omoshiroikamo.api.item.BaublesUtils;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.common.network.PacketQuickDraw;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.network.PacketQuickDraw;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class KeyHandler {

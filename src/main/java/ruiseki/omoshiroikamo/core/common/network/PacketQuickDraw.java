@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.common.network;
+package ruiseki.omoshiroikamo.core.common.network;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -8,7 +8,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.core.common.network.PacketUtil;
 
 public class PacketQuickDraw implements IMessage, IMessageHandler<PacketQuickDraw, IMessage> {
 
