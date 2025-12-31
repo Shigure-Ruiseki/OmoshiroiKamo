@@ -10,6 +10,9 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.energy.tile.IEnergyTile;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySource;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 
 /**
@@ -18,7 +21,7 @@ import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
  * It implements IC2's IEnergySink and IEnergySource interfaces
  * and delegates to our IOKEnergyTile implementation.
  */
-public class IC2EnergyAdapter implements IOKEnergySink, IOKEnergySource {
+public class IC2EnergyAdapter implements IEnergySink, IEnergySource {
 
     private final IOKEnergyTile energyTile;
     private final TileEntity tileEntity;
@@ -37,13 +40,13 @@ public class IC2EnergyAdapter implements IOKEnergySink, IOKEnergySource {
         TileEntity existing = EnergyNet.instance
             .getTileEntity(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 
-        if (existing != this) {
+        if (existing != null && existing != tileEntity) {
             if (existing instanceof IEnergyTile) {
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) existing));
             }
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-            registered = true;
         }
+        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+        registered = true;
     }
 
     public void deregister() {

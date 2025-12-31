@@ -27,14 +27,6 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     }
 
     @Override
-    public double getDemandedEnergy() {
-        if (!isUseIC2Compat()) {
-            return 0;
-        }
-        return IOKEnergySink.super.getDemandedEnergy();
-    }
-
-    @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
         if (isRedstoneActive()) {
             EnergyTransfer transfer = new EnergyTransfer();
