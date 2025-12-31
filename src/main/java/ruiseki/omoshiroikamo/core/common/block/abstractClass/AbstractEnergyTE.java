@@ -9,6 +9,7 @@ import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.integration.IC2.IC2EUHelper;
 
 /**
  * Abstract base class for tile entities that store and manage energy.
@@ -112,7 +113,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     @Override
     public void register() {
         if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
-            IC2EnergyHelper.register(this);
+            IC2EUHelper.register(this);
             ic2Registered = true;
         }
     }
@@ -120,7 +121,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     @Override
     public void deregister() {
         if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
-            IC2EnergyHelper.deregister(this);
+            IC2EUHelper.deregister(this);
         }
     }
 

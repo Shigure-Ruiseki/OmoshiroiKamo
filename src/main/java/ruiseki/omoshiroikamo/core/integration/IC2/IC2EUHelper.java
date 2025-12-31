@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.block.abstractClass;
+package ruiseki.omoshiroikamo.core.integration.IC2;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -9,11 +9,11 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 
 /**
- * Helper class for IC2 energy integration.
+ * Helper class for IC2 EU integration.
  * This class is separated to prevent ClassNotFoundError when IC2 is not
  * present.
  */
-public class IC2EnergyHelper {
+public class IC2EUHelper {
 
     public static void register(TileEntity tile) {
         if (tile.getWorldObj().isRemote) return;
