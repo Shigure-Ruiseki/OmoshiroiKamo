@@ -4,7 +4,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Optional;
-import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -13,9 +12,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
 /**
  * Energy Input Port TileEntity.
  * Accepts RF energy for machine processing.
+ * Also supports Mekanism laser energy when Mekanism is present.
  */
-@Optional.InterfaceList({ @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism"), })
-public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink, ILaserReceptor {
+@Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism")
+public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink {
 
     public TEEnergyInputPort(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
@@ -57,12 +57,12 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
         return energyStorage.receiveEnergy(amount, simulate);
     }
 
-    @Override
+    @Optional.Method(modid = "Mekanism")
     public void receiveLaserEnergy(double amount, ForgeDirection from) {
         this.receiveEnergy(from, (int) amount, false);
     }
 
-    @Override
+    @Optional.Method(modid = "Mekanism")
     public boolean canLasersDig() {
         return false;
     }
