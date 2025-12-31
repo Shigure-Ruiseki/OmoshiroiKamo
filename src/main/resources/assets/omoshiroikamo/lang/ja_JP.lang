@@ -69,6 +69,14 @@ gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
 gui.energy_transfer=転送量: %s RF/t
 gui.mana_info=%d マナ
+gui.io.input=入力
+gui.io.output=出力
+gui.io.both=入出力
+gui.io.none=なし
+gui.io.isActivated=有効
+gui.io.enabled=有効
+gui.io.disabled=無効
+
 
 #Modular Machinery
 
