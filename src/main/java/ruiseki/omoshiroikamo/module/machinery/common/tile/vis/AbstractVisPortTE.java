@@ -26,8 +26,6 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
         this.maxVisPerAspect = maxVisPerAspect;
     }
 
-    // ========== Vis Storage Methods ==========
-
     public int addVis(Aspect aspect, int amount) {
         if (!isPrimalAspect(aspect)) return amount;
 
@@ -79,23 +77,16 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
             || aspect == Aspect.ENTROPY;
     }
 
-    // ========== VisNetHandler Registration ==========
-    // Note: Direct registration with VisNetHandler.sources requires TileVisNode.
+    // Direct registration with VisNetHandler.sources requires TileVisNode.
     // This implementation stores Vis locally for recipe integration.
-    // Future: Consider extending TileVisNode if direct Vis Relay integration is
-    // needed.
 
     protected void registerAsVisSource() {
-        // No-op: Direct VisNet registration not supported without TileVisNode
-        // inheritance
         registeredAsSource = true;
     }
 
     protected void unregisterAsVisSource() {
         registeredAsSource = false;
     }
-
-    // ========== IModularPort Implementation ==========
 
     @Override
     public IO getSideIO(ForgeDirection side) {

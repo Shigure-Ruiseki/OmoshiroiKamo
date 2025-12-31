@@ -25,8 +25,6 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
         this.maxCapacityPerAspect = maxCapacityPerAspect;
     }
 
-    // ========== IAspectContainer Implementation ==========
-
     @Override
     public AspectList getAspects() {
         return aspects;
@@ -107,8 +105,6 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
         return aspects.getAmount(tag);
     }
 
-    // ========== IModularPort Implementation ==========
-
     @Override
     public IO getSideIO(ForgeDirection side) {
         return IO.BOTH;
@@ -130,8 +126,6 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     @Override
     public abstract IPortType.Direction getPortDirection();
 
-    // ========== Utility Methods ==========
-
     public int getTotalEssentiaAmount() {
         int total = 0;
         for (Aspect aspect : aspects.getAspects()) {
@@ -150,8 +144,6 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     public String getLocalizedName() {
         return LibMisc.LANG.localize(getUnlocalizedName() + ".name");
     }
-
-    // ========== NBT Persistence ==========
 
     @Override
     public void writeCommon(NBTTagCompound root) {
@@ -174,7 +166,6 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         maxCapacityPerAspect = root.getInteger("maxCapacity");
-
         aspects = new AspectList();
         NBTTagList aspectList = root.getTagList("aspects", 10);
         for (int i = 0; i < aspectList.tagCount(); i++) {

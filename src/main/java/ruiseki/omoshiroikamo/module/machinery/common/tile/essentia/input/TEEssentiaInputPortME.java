@@ -33,8 +33,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         super();
     }
 
-    // ========== AE2 Grid Integration ==========
-
     @Override
     public AENetworkProxy getProxy() {
         if (gridProxy == null) {
@@ -79,8 +77,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     public IGridNode getActionableNode() {
         return getProxy().getNode();
     }
-
-    // ========== Essentia Extraction from ME ==========
 
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
@@ -127,8 +123,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         }
     }
 
-    // ========== NBT ==========
-
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
@@ -142,8 +136,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         super.readCommon(root);
         getProxy().readFromNBT(root);
     }
-
-    // ========== Lifecycle ==========
 
     @Override
     public void validate() {

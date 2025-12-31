@@ -22,8 +22,6 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
         super(DEFAULT_CAPACITY);
     }
 
-    // ========== IEssentiaTransport Implementation ==========
-
     @Override
     public boolean isConnectable(ForgeDirection face) {
         return true;
@@ -91,8 +89,6 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
         return false;
     }
 
-    // ========== Active Essentia Drawing ==========
-
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
         if (!worldObj.isRemote && shouldDoWorkThisTick(10)) {
@@ -127,8 +123,6 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
             }
         }
     }
-
-    // ========== IModularPort ==========
 
     @Override
     public IPortType.Direction getPortDirection() {
