@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.vis.input;
 
-import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
@@ -28,7 +27,6 @@ public class TEVisInputPort extends AbstractVisPortTE {
     /**
      * Draw vis from nearby Vis Relay network.
      */
-    @Optional.Method(modid = "Thaumcraft")
     private void drawVisFromNetwork() {
         // Request vis from the network for each primal aspect
         Aspect[] primals = { Aspect.AIR, Aspect.WATER, Aspect.FIRE, Aspect.EARTH, Aspect.ORDER, Aspect.ENTROPY };

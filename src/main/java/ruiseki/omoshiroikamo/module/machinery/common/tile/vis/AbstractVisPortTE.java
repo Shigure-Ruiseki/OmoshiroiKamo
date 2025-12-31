@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
@@ -17,7 +16,6 @@ import thaumcraft.api.aspects.AspectList;
  * Stores Vis as AspectList (primal aspects).
  * Registers directly with VisNetHandler instead of extending TileVisNode.
  */
-@Optional.Interface(iface = "thaumcraft.api.visnet.IVisNode", modid = "Thaumcraft")
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 
     protected AspectList visStored = new AspectList();

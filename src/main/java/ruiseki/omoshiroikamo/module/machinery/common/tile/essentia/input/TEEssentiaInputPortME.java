@@ -16,7 +16,6 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
-import cpw.mods.fml.common.Optional;
 import thaumcraft.api.aspects.Aspect;
 import thaumicenergistics.api.grid.IEssentiaGrid;
 import thaumicenergistics.api.storage.IAspectStack;
@@ -37,7 +36,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     // ========== AE2 Grid Integration ==========
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public AENetworkProxy getProxy() {
         if (gridProxy == null) {
             gridProxy = new AENetworkProxy(this, "proxy", getVisualItemStack(), true);
@@ -47,44 +45,37 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         return gridProxy;
     }
 
-    @Optional.Method(modid = "appliedenergistics2")
     private ItemStack getVisualItemStack() {
         // Return a visual representation - use bedrock as placeholder
         return new ItemStack(Blocks.bedrock);
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public DimensionalCoord getLocation() {
         return new DimensionalCoord(this);
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void gridChanged() {
         // Handle grid changes if needed
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public AECableType getCableConnectionType(ForgeDirection dir) {
         return AECableType.SMART;
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void securityBreak() {
         worldObj.func_147480_a(xCoord, yCoord, zCoord, true);
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public IGridNode getGridNode(ForgeDirection dir) {
         return getProxy().getNode();
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public IGridNode getActionableNode() {
         return getProxy().getNode();
     }
@@ -99,7 +90,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         return super.processTasks(redstoneCheckPassed);
     }
 
-    @Optional.Method(modid = "thaumicenergistics")
     private void extractEssentiaFromME() {
         try {
             if (gridProxy == null || !gridProxy.isReady()) {
@@ -140,7 +130,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     // ========== NBT ==========
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
         if (gridProxy != null) {
@@ -149,7 +138,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         getProxy().readFromNBT(root);
@@ -158,7 +146,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     // ========== Lifecycle ==========
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void validate() {
         super.validate();
         if (!proxyInitialized) {
@@ -168,7 +155,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void invalidate() {
         super.invalidate();
         if (gridProxy != null) {
@@ -177,7 +163,6 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
-    @Optional.Method(modid = "appliedenergistics2")
     public void onChunkUnload() {
         super.onChunkUnload();
         if (gridProxy != null) {
