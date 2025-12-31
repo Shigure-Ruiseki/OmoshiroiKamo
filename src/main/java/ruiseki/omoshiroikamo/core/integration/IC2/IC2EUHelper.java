@@ -1,43 +1,77 @@
 package ruiseki.omoshiroikamo.core.integration.IC2;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 
 /**
- * Helper class for IC2 EU integration.
- * This class is separated to prevent ClassNotFoundError when IC2 is not
- * present.
+ * Helper class for IC2 energy integration.
+ * This class is only loaded when IC2 is present.
+ * It provides methods to create and manage IC2EnergyAdapter instances.
  */
 public class IC2EUHelper {
 
-    public static void register(TileEntity tile) {
-        if (tile.getWorldObj().isRemote) return;
+    /**
+     * Creates a new IC2EnergyAdapter for the given tile.
+     * 
+     * @param energyTile the energy tile to adapt
+     * @param tileEntity the underlying tile entity
+     * @return the adapter instance
+     */
+    public static IC2EnergyAdapter createAdapter(IEnergyTile energyTile, TileEntity tileEntity) {
+        return new IC2EnergyAdapter(energyTile, tileEntity);
+    }
 
-        TileEntity registered = EnergyNet.instance
-            .getTileEntity(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
-
-        if (registered != tile) {
-            if (registered instanceof IEnergyTile) {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) registered));
-            } else if (registered == null && tile instanceof IEnergyTile) {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile));
-            }
+    /**
+     * Registers an adapter with the IC2 energy network.
+     * 
+     * @param adapter the adapter to register
+     */
+    public static void register(IC2EnergyAdapter adapter) {
+        if (adapter != null) {
+            adapter.register();
         }
     }
 
+    /**
+     * Deregisters an adapter from the IC2 energy network.
+     * 
+     * @param adapter the adapter to deregister
+     */
+    public static void deregister(IC2EnergyAdapter adapter) {
+        if (adapter != null) {
+            adapter.deregister();
+        }
+    }
+
+    /**
+     * Registers a tile entity with the IC2 energy network.
+     * Creates an adapter internally.
+     * 
+     * @param tile the tile entity to register
+     */
+    public static void register(TileEntity tile) {
+        if (tile.getWorldObj().isRemote) return;
+
+        if (tile instanceof IEnergyTile) {
+            IC2EnergyAdapter adapter = createAdapter((IEnergyTile) tile, tile);
+            adapter.register();
+        }
+    }
+
+    /**
+     * Deregisters a tile entity from the IC2 energy network.
+     * 
+     * @param tile the tile entity to deregister
+     */
     public static void deregister(TileEntity tile) {
         if (tile.getWorldObj().isRemote) return;
 
-        TileEntity registered = EnergyNet.instance
-            .getTileEntity(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
-
-        if (registered instanceof IEnergyTile) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) registered));
+        // Note: This simple implementation creates a new adapter just to deregister.
+        // For proper tracking, the adapter should be stored in the tile entity.
+        if (tile instanceof IEnergyTile) {
+            IC2EnergyAdapter adapter = createAdapter((IEnergyTile) tile, tile);
+            adapter.deregister();
         }
     }
 }

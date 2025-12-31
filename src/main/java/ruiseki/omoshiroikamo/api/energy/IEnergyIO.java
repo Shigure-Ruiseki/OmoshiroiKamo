@@ -1,21 +1,21 @@
 package ruiseki.omoshiroikamo.api.energy;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
-import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 
-@Optional.InterfaceList({ @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
-    @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2"),
-    @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHLib") })
-public interface IEnergyIO extends IEnergyHandler, IEnergyTile, IEnergySink, IEnergySource {
+/**
+ * Interface for tile entities that can both receive and provide energy.
+ * IC2 integration is handled separately by IC2EnergyAdapter.
+ */
+@Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHLib")
+public interface IEnergyIO extends IEnergyHandler, IEnergySink, IEnergySource {
 
+    @Override
     int receiveEnergy(ForgeDirection side, int amount, boolean simulate);
 
+    @Override
     int extractEnergy(ForgeDirection side, int amount, boolean simulate);
 
     @Override
@@ -28,51 +28,5 @@ public interface IEnergyIO extends IEnergyHandler, IEnergyTile, IEnergySink, IEn
     @Optional.Method(modid = "CoFHLib")
     default int getMaxEnergyStored(ForgeDirection forgeDirection) {
         return getMaxEnergyStored();
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default double getDemandedEnergy() {
-        int missing = getMaxEnergyStored() - getEnergyStored();
-        return Math.max(0, missing * EnergyConfig.rftToEU);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default int getSinkTier() {
-        return EnergyConfig.ic2SinkTier;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default double injectEnergy(ForgeDirection direction, double amount, double voltage) {
-        int rf = (int) (amount * EnergyConfig.rftToEU);
-        int accepted = receiveEnergy(direction, rf, false);
-        return amount - ((double) accepted / EnergyConfig.rftToEU);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default boolean acceptsEnergyFrom(TileEntity tileEntity, ForgeDirection forgeDirection) {
-        return canConnectEnergy(forgeDirection);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default int getSourceTier() {
-        return EnergyConfig.ic2SourceTier;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default double getOfferedEnergy() {
-        return (double) getEnergyStored() / EnergyConfig.rftToEU;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    default void drawEnergy(double amount) {
-        int rf = (int) (amount / EnergyConfig.rftToEU);
-        extractEnergy(ForgeDirection.UNKNOWN, rf, false);
     }
 }

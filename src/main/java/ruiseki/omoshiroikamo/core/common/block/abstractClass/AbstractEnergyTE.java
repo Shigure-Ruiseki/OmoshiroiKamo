@@ -25,6 +25,10 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     /** Internal energy storage instance. */
     protected EnergyStorage energyStorage;
 
+    /** IC2 adapter instance (null if IC2 is not loaded). */
+    private Object ic2Adapter;
+
+    /** Flag indicating if IC2 registration was attempted. */
     public boolean ic2Registered = false;
 
     /** NBT tag name for energy-related data. */
@@ -113,15 +117,16 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     @Override
     public void register() {
         if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
-            IC2EUHelper.register(this);
+            ic2Adapter = IC2EUHelper.createAdapter(this, this);
+            IC2EUHelper.register((ruiseki.omoshiroikamo.core.integration.IC2.IC2EnergyAdapter) ic2Adapter);
             ic2Registered = true;
         }
     }
 
     @Override
     public void deregister() {
-        if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
-            IC2EUHelper.deregister(this);
+        if (!worldObj.isRemote && Loader.isModLoaded("IC2") && ic2Adapter != null) {
+            IC2EUHelper.deregister((ruiseki.omoshiroikamo.core.integration.IC2.IC2EnergyAdapter) ic2Adapter);
         }
     }
 
