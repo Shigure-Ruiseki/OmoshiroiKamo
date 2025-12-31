@@ -188,6 +188,7 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public ResourceLocation getPortOverlay() {
-        return new ResourceLocation(LibResources.PREFIX_BLOCK + "modularmachineryOverlay/overlay_io_mode.png");
+//        Always active not needed
+        return null;
     }
 }
