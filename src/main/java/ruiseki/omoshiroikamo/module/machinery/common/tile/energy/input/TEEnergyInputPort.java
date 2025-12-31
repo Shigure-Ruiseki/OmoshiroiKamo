@@ -54,6 +54,12 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
         return IPortType.Direction.INPUT;
     }
 
+    // Always allow input regardless of side IO setting
+    @Override
+    public boolean canInput(ForgeDirection side) {
+        return true;
+    }
+
     @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
         if (!isRedstoneActive() || !canInput(side)) {

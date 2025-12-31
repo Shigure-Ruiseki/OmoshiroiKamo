@@ -61,4 +61,10 @@ public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implemen
     public IPortType.Direction getPortDirection() {
         return IPortType.Direction.OUTPUT;
     }
+
+    // Always allow output regardless of side IO setting
+    @Override
+    public boolean canOutput(ForgeDirection side) {
+        return true;
+    }
 }

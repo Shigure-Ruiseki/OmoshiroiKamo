@@ -1,17 +1,18 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
@@ -170,6 +171,79 @@ public class TEMachineController extends AbstractMBModifierTE {
         if (wasFormed && !nowFormed) {
             isFormed = false;
             clearStructureParts();
+        }
+
+        // Test recipe: 64 Coal + 10000mb Water -> 1 Diamond
+        if (isFormed) {
+            tryTestRecipe();
+        }
+    }
+
+    /**
+     * Test recipe: 64 Coal + 10000mb Water -> 1 Diamond
+     */
+    private void tryTestRecipe() {
+        // 1. Check for required coal (64 total across all input ports)
+        int totalCoal = 0;
+        for (ItemStack stack : getStoredInputItems()) {
+            if (stack.getItem() == Items.coal) {
+                totalCoal += stack.stackSize;
+            }
+        }
+        if (totalCoal < 64) {
+            return;
+        }
+
+        // 2. Check for required water (10000mb total)
+        int totalWater = 0;
+        for (FluidStack fluid : getStoredInputFluids()) {
+            if (fluid.getFluid() == FluidRegistry.WATER) {
+                totalWater += fluid.amount;
+            }
+        }
+        if (totalWater < 10000) {
+            return;
+        }
+
+        // 3. Check if output has space (simulate)
+        ItemStack diamond = new ItemStack(Items.diamond, 1);
+        List<ItemStack> remainder = insertOutputItems(Collections.singletonList(diamond.copy()));
+        if (!remainder.isEmpty()) {
+            return; // No space for output
+        }
+
+        // Diamond was already inserted, now consume inputs
+        System.out.println("[TestRecipe] Consuming: 64 coal, 10000mb water -> 1 diamond");
+        consumeCoal(64);
+        drainWater(10000);
+    }
+
+    private void consumeCoal(int amount) {
+        int remaining = amount;
+        for (AbstractItemIOPortTE port : getTypedInputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
+            for (int i = 0; i < port.getSizeInventory() && remaining > 0; i++) {
+                ItemStack stack = port.getStackInSlot(i);
+                if (stack != null && stack.getItem() == Items.coal) {
+                    int consume = Math.min(stack.stackSize, remaining);
+                    stack.stackSize -= consume;
+                    remaining -= consume;
+                    if (stack.stackSize <= 0) {
+                        port.setInventorySlotContents(i, null);
+                    }
+                }
+            }
+        }
+    }
+
+    private void drainWater(int amount) {
+        int remaining = amount;
+        for (AbstractFluidPortTE port : getTypedInputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
+            // Use internal drain to bypass side IO checks
+            FluidStack drained = port.internalDrain(remaining, true);
+            if (drained != null) {
+                remaining -= drained.amount;
+            }
+            if (remaining <= 0) break;
         }
     }
 
@@ -434,11 +508,9 @@ public class TEMachineController extends AbstractMBModifierTE {
     public List<FluidStack> getStoredInputFluids() {
         List<FluidStack> fluids = new ArrayList<>();
         for (AbstractFluidPortTE port : getTypedInputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
-            FluidTankInfo[] info = port.getTankInfo(ForgeDirection.UNKNOWN);
-            for (FluidTankInfo tankInfo : info) {
-                if (tankInfo.fluid != null && tankInfo.fluid.amount > 0) {
-                    fluids.add(tankInfo.fluid.copy());
-                }
+            FluidStack stored = port.getStoredFluid();
+            if (stored != null && stored.amount > 0) {
+                fluids.add(stored.copy());
             }
         }
         return fluids;
@@ -455,7 +527,8 @@ public class TEMachineController extends AbstractMBModifierTE {
         for (AbstractFluidPortTE port : getTypedOutputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
             FluidStack toFill = fluid.copy();
             toFill.amount = remaining;
-            int filled = port.fill(ForgeDirection.UNKNOWN, toFill, true);
+            // Use internal fill to bypass side IO checks
+            int filled = port.internalFill(toFill, true);
             remaining -= filled;
             if (remaining <= 0) break;
         }

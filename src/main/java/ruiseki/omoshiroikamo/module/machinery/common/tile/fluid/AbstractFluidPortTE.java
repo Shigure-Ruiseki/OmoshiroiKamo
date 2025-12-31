@@ -172,6 +172,48 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
         return new FluidTankInfo[] { tank.getInfo() };
     }
 
+    // ========== Internal Access for Machine Controller ==========
+
+    /**
+     * Internal drain for machine controller (bypasses side IO checks).
+     */
+    public FluidStack internalDrain(FluidStack resource, boolean doDrain) {
+        FluidStack res = tank.drain(resource, doDrain);
+        if (res != null && res.amount > 0 && doDrain) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    /**
+     * Internal drain for machine controller (bypasses side IO checks).
+     */
+    public FluidStack internalDrain(int maxDrain, boolean doDrain) {
+        FluidStack res = tank.drain(maxDrain, doDrain);
+        if (res != null && res.amount > 0 && doDrain) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    /**
+     * Internal fill for machine controller (bypasses side IO checks).
+     */
+    public int internalFill(FluidStack resource, boolean doFill) {
+        int res = tank.fill(resource, doFill);
+        if (res > 0 && doFill) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    /**
+     * Get the fluid stack stored in this port (for controller polling).
+     */
+    public FluidStack getStoredFluid() {
+        return tank.getFluid();
+    }
+
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
