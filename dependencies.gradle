@@ -39,6 +39,8 @@ dependencies {
     implementation("com.github.GTNewHorizons:StructureLib:1.4.23:dev")
     implementation("com.github.GTNewHorizons:ModularUI2:2.3.24-1.7.10:dev")
 
+    api('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
+
     devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.2-GTNH:dev')
     devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.2:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.40-GTNH:dev")
@@ -52,6 +54,7 @@ dependencies {
     devOnlyNonPublishable("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.38-gtnh:dev") { transitive = false }
     devOnlyNonPublishable("curse.maven:mekanism-268560:2475797")
 
+    compileOnly("com.github.GTNewHorizons:ThaumicEnergistics:1.7.14-GTNH:dev") { transitive = false }
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
     runtimeOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:WAILAPlugins:0.7.2:dev") { transitive = false }

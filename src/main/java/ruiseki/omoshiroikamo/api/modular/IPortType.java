@@ -8,6 +8,8 @@ public interface IPortType {
         ENERGY,
         MANA,
         GAS,
+        ESSENTIA,
+        VIS,
         NONE
     }
 
