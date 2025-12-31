@@ -1,14 +1,9 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.Optional;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
+import cpw.mods.fml.common.Loader;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
@@ -115,31 +110,17 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile
     }
 
     @Override
-    @Optional.Method(modid = "IC2")
     public void register() {
-        if (!worldObj.isRemote) {
-            TileEntity registered = EnergyNet.instance.getTileEntity(worldObj, xCoord, yCoord, zCoord);
-
-            if (registered != this) {
-                if (registered instanceof IEnergyTile) {
-                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) registered));
-                } else if (registered == null) {
-                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-                    ic2Registered = true;
-                }
-            }
+        if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
+            IC2EnergyHelper.register(this);
+            ic2Registered = true;
         }
     }
 
     @Override
-    @Optional.Method(modid = "IC2")
     public void deregister() {
-        if (!worldObj.isRemote) {
-            TileEntity registered = EnergyNet.instance.getTileEntity(worldObj, xCoord, yCoord, zCoord);
-
-            if (registered instanceof IEnergyTile) {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) registered));
-            }
+        if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
+            IC2EnergyHelper.deregister(this);
         }
     }
 
