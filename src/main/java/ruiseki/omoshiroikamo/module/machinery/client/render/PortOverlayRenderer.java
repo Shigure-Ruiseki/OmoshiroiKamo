@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -54,8 +53,7 @@ public class PortOverlayRenderer {
 
             TileEntity te = (TileEntity) obj;
 
-            if (player.getDistanceSq(te.xCoord + 0.5, te.yCoord + 0.5, te.zCoord + 0.5) > 64 * 64)
-                continue;
+            if (player.getDistanceSq(te.xCoord + 0.5, te.yCoord + 0.5, te.zCoord + 0.5) > 64 * 64) continue;
 
             for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
                 drawPortFace(port, te.xCoord, te.yCoord, te.zCoord, side, t);
@@ -74,7 +72,9 @@ public class PortOverlayRenderer {
         if (port.getSideIO(side) == ISidedIO.IO.NONE) return;
 
         if (port.getPortOverlay() == null) return;
-        Minecraft.getMinecraft().getTextureManager().bindTexture(port.getPortOverlay());
+        Minecraft.getMinecraft()
+            .getTextureManager()
+            .bindTexture(port.getPortOverlay());
 
         float o = 0.0075f;
 

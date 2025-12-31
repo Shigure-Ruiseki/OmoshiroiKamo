@@ -321,7 +321,7 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
 
     @Override
     public ResourceLocation getPortOverlay() {
-//        Always active not needed
+        // Always active not needed
         return null;
     }
 }

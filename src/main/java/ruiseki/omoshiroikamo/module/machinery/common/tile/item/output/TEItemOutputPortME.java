@@ -346,7 +346,7 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
 
     @Override
     public ResourceLocation getPortOverlay() {
-//        Always active not needed
+        // Always active not needed
         return null;
     }
 }

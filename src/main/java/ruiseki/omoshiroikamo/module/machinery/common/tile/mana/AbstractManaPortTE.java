@@ -17,7 +17,6 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.ManaNetworkEvent;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
@@ -188,7 +187,7 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public ResourceLocation getPortOverlay() {
-//        Always active not needed
+        // Always active not needed
         return null;
     }
 }
