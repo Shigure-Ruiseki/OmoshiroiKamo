@@ -75,8 +75,4 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.36") { transitive = false }
     compileOnly files("libs/neverenoughanimations-v1.0.6-1-7-10.8+91c551807b-dirty-dev.jar")
     annotationProcessor('org.projectlombok:lombok:1.18.30')
-
-    shadowImplementation('com.github.makamys:MCLib:0.3.7.7') {
-        exclude group: "codechicken"
-    }
 }

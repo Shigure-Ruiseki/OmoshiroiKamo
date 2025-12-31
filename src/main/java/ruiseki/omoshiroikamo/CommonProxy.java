@@ -44,12 +44,6 @@ public class CommonProxy {
 
     public void onConstruction(FMLConstructionEvent event) {
         ModuleManager.onConstruction(event);
-        if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
-            Logger.info(
-                "{} is in snapshot mode. Disabling update checker... Other features may also be different.",
-                LibMisc.MOD_ID);
-        }
-        MCLib.init();
     }
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -64,11 +58,6 @@ public class CommonProxy {
         ModuleManager.register(new MachineryCommon());
 
         ModuleManager.preInitCommon(event);
-
-        if (!LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
-            MCLibModules.updateCheckAPI.submitModTask(LibMisc.MOD_ID, LibMisc.VERSION, LibMisc.VERSION_URL);
-            Logger.info("Submitting update check for {} version {}", LibMisc.MOD_ID, LibMisc.VERSION);
-        }
     }
 
     public void init(FMLInitializationEvent event) {
