@@ -17,7 +17,6 @@ import thaumcraft.api.aspects.IAspectContainer;
  * Abstract base class for Essentia ports.
  * Stores multiple Aspects using AspectList.
  */
-@Optional.Interface(iface = "thaumcraft.api.aspects.IAspectContainer", modid = "Thaumcraft")
 public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer {
 
     protected AspectList aspects = new AspectList();

@@ -14,7 +14,6 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * Essentia Input Port - absorbs Essentia from nearby containers using suction.
  * Implements IEssentiaTransport to connect with Essentia Tubes.
  */
-@Optional.Interface(iface = "thaumcraft.api.aspects.IEssentiaTransport", modid = "Thaumcraft")
 public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEssentiaTransport {
 
     private static final int DEFAULT_CAPACITY = 64;

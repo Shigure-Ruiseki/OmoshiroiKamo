@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.machinery.common.block.port.essentia;
+package ruiseki.omoshiroikamo.module.machinery.common.block;
 
 import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 

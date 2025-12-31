@@ -20,6 +20,11 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
 
 /**
  * Block registration for the Machinery module.
@@ -43,6 +48,11 @@ public enum MachineryBlocks {
     MANA_OUTPUT_PORT(LibMods.Botania.isLoaded(), BlockManaOutputPort.create()),
     GAS_INPUT_PORT(LibMods.Mekanism.isLoaded(), BlockGasInputPort.create()),
     GAS_OUTPUT_PORT(LibMods.Mekanism.isLoaded(), BlockGasOutputPort.create()),
+    VIS_INPUT_PORT(LibMods.Thaumcraft.isLoaded(), BlockVisInputPort.create()),
+    VIS_OUTPUT_PORT(LibMods.Thaumcraft.isLoaded(), BlockVisOutputPort.create()),
+    ESSENTIA_INPUT_PORT(LibMods.Thaumcraft.isLoaded(), BlockEssentiaInputPort.create()),
+    ESSENTIA_OUTPUT_PORT(LibMods.Thaumcraft.isLoaded(), BlockEssentiaOutputPort.create()),
+    ESSENTIA_INPUT_PORT_ME(LibMods.ThaumicEnergistics.isLoaded(), BlockEssentiaInputPortME.create()),
 
     ;
     // spotless: on

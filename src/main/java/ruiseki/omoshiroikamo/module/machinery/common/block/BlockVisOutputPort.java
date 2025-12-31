@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.machinery.common.block.port.essentia;
+package ruiseki.omoshiroikamo.module.machinery.common.block;
 
 import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
@@ -21,22 +21,21 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output.TEVisOutputPort;
 
 /**
- * Essentia Input Port block - absorbs Essentia from nearby Thaumcraft
- * containers.
+ * Vis Output Port block - provides Vis to Thaumcraft Vis Relay network.
  */
-public class BlockEssentiaInputPort extends AbstractTieredBlock<TEEssentiaInputPort> implements IModularBlock {
+public class BlockVisOutputPort extends AbstractTieredBlock<TEVisOutputPort> implements IModularBlock {
 
-    protected BlockEssentiaInputPort() {
-        super(ModObject.blockModularEssentiaInput.unlocalisedName, TEEssentiaInputPort.class);
+    protected BlockVisOutputPort() {
+        super(ModObject.blockModularVisOutput.unlocalisedName, TEVisOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
     }
 
-    public static BlockEssentiaInputPort create() {
-        return new BlockEssentiaInputPort();
+    public static BlockVisOutputPort create() {
+        return new BlockVisOutputPort();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class BlockEssentiaInputPort extends AbstractTieredBlock<TEEssentiaInputP
 
     @Override
     protected Class<? extends ItemBlock> getItemBlockClass() {
-        return ItemBlockEssentiaInputPort.class;
+        return ItemBlockVisOutputPort.class;
     }
 
     @Override
@@ -72,17 +71,17 @@ public class BlockEssentiaInputPort extends AbstractTieredBlock<TEEssentiaInputP
 
     @Override
     public IPortType.Type getPortType() {
-        return IPortType.Type.ESSENTIA;
+        return IPortType.Type.VIS;
     }
 
     @Override
     public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
+        return IPortType.Direction.OUTPUT;
     }
 
-    public static class ItemBlockEssentiaInputPort extends ItemBlockOK {
+    public static class ItemBlockVisOutputPort extends ItemBlockOK {
 
-        public ItemBlockEssentiaInputPort(Block block) {
+        public ItemBlockVisOutputPort(Block block) {
             super(block, block);
         }
 

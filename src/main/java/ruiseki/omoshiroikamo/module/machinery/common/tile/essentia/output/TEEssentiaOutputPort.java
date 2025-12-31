@@ -15,9 +15,7 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
  * for Tubes.
  */
-@Optional.InterfaceList({
-        @Optional.Interface(iface = "thaumcraft.api.aspects.IEssentiaTransport", modid = "Thaumcraft"),
-        @Optional.Interface(iface = "thaumcraft.api.aspects.IAspectSource", modid = "Thaumcraft") })
+
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
 
     private static final int DEFAULT_CAPACITY = 64;
