@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
  * Accepts RF energy for machine processing.
  */
 @Optional.InterfaceList({ @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism"), })
-public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IEnergySink, ILaserReceptor {
+public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink, ILaserReceptor {
 
     public TEEnergyInputPort(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
@@ -31,7 +31,7 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
         if (!isUseIC2Compat()) {
             return 0;
         }
-        return IEnergySink.super.getDemandedEnergy();
+        return IOKEnergySink.super.getDemandedEnergy();
     }
 
     @Override

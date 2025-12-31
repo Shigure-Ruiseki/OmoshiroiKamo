@@ -10,7 +10,7 @@ import cpw.mods.fml.common.Optional;
  * IC2 integration is handled separately by IC2EnergyAdapter.
  */
 @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHLib")
-public interface IEnergyIO extends IEnergyHandler, IEnergySink, IEnergySource {
+public interface IOKEnergyIO extends IEnergyHandler, IOKEnergySink, IOKEnergySource {
 
     @Override
     int receiveEnergy(ForgeDirection side, int amount, boolean simulate);

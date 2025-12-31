@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Loader;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -17,7 +17,7 @@ import ruiseki.omoshiroikamo.core.integration.IC2.IC2EUHelper;
  * Handles energy storage, synchronization with clients, and basic energy API for
  * interaction with other energy-capable tiles.
  */
-public abstract class AbstractEnergyTE extends AbstractTE implements IEnergyTile {
+public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTile {
 
     /** Last known energy stored, used for periodic client synchronization. */
     private int lastSyncPowerStored;

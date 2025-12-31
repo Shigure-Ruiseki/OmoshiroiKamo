@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.api.block.IOKTile;
  * Base interface for tile entities that store and manage energy.
  * IC2 integration is handled separately by IC2EnergyAdapter.
  */
-public interface IEnergyTile extends IOKTile {
+public interface IOKEnergyTile extends IOKTile {
 
     int getEnergyStored();
 

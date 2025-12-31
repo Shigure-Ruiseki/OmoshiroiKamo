@@ -18,7 +18,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.common.Optional;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.crafting.CraftingState;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 
-public class TELootFabricator extends AbstractMachineTE implements IEnergySink, ISidedInventory {
+public class TELootFabricator extends AbstractMachineTE implements IOKEnergySink, ISidedInventory {
 
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_START = 1;

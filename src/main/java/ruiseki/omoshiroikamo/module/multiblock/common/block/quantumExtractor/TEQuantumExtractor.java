@@ -23,7 +23,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ExtractorType;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
@@ -41,7 +41,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievement
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecipes;
 
-public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements IEnergySink, ISidedInventory {
+public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements IOKEnergySink, ISidedInventory {
 
     protected ItemStackHandler output;
     protected final int[] allSlots;

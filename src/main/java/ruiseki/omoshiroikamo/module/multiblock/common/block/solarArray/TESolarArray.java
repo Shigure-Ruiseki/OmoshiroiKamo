@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.IEnergySource;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
@@ -25,7 +25,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHan
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
-public abstract class TESolarArray extends AbstractMBModifierTE implements IEnergySource {
+public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEnergySource {
 
     private int lastCollectionValue = -1;
     private static final int CHECK_INTERVAL = 100;

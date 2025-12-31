@@ -16,15 +16,15 @@ import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
  * Adapter class for IC2 energy integration.
  * This class is only loaded when IC2 is present.
  * It implements IC2's IEnergySink and IEnergySource interfaces
- * and delegates to our IEnergyTile implementation.
+ * and delegates to our IOKEnergyTile implementation.
  */
-public class IC2EnergyAdapter implements IEnergySink, IEnergySource {
+public class IC2EnergyAdapter implements IOKEnergySink, IOKEnergySource {
 
-    private final ruiseki.omoshiroikamo.api.energy.IEnergyTile energyTile;
+    private final IOKEnergyTile energyTile;
     private final TileEntity tileEntity;
     private boolean registered = false;
 
-    public IC2EnergyAdapter(ruiseki.omoshiroikamo.api.energy.IEnergyTile energyTile, TileEntity tileEntity) {
+    public IC2EnergyAdapter(IOKEnergyTile energyTile, TileEntity tileEntity) {
         this.energyTile = energyTile;
         this.tileEntity = tileEntity;
     }
@@ -72,10 +72,10 @@ public class IC2EnergyAdapter implements IEnergySink, IEnergySource {
 
     @Override
     public double injectEnergy(ForgeDirection direction, double amount, double voltage) {
-        if (!(energyTile instanceof ruiseki.omoshiroikamo.api.energy.IEnergySink)) {
+        if (!(energyTile instanceof IOKEnergySink)) {
             return amount;
         }
-        ruiseki.omoshiroikamo.api.energy.IEnergySink sink = (ruiseki.omoshiroikamo.api.energy.IEnergySink) energyTile;
+        IOKEnergySink sink = (IOKEnergySink) energyTile;
 
         int rf = (int) (amount / EnergyConfig.rftToEU);
         int accepted = sink.receiveEnergy(direction, rf, false);
@@ -96,10 +96,10 @@ public class IC2EnergyAdapter implements IEnergySink, IEnergySource {
 
     @Override
     public void drawEnergy(double amount) {
-        if (!(energyTile instanceof ruiseki.omoshiroikamo.api.energy.IEnergySource)) {
+        if (!(energyTile instanceof IOKEnergySource)) {
             return;
         }
-        ruiseki.omoshiroikamo.api.energy.IEnergySource source = (ruiseki.omoshiroikamo.api.energy.IEnergySource) energyTile;
+        IOKEnergySource source = (IOKEnergySource) energyTile;
 
         int rf = (int) (amount / EnergyConfig.rftToEU);
         source.extractEnergy(ForgeDirection.UNKNOWN, rf, false);

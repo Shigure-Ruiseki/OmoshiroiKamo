@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.core.integration.IC2;
 
 import net.minecraft.tileentity.TileEntity;
 
-import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 
 /**
  * Helper class for IC2 energy integration.
@@ -18,7 +18,7 @@ public class IC2EUHelper {
      * @param tileEntity the underlying tile entity
      * @return the adapter instance
      */
-    public static IC2EnergyAdapter createAdapter(IEnergyTile energyTile, TileEntity tileEntity) {
+    public static IC2EnergyAdapter createAdapter(IOKEnergyTile energyTile, TileEntity tileEntity) {
         return new IC2EnergyAdapter(energyTile, tileEntity);
     }
 
@@ -53,8 +53,8 @@ public class IC2EUHelper {
     public static void register(TileEntity tile) {
         if (tile.getWorldObj().isRemote) return;
 
-        if (tile instanceof IEnergyTile) {
-            IC2EnergyAdapter adapter = createAdapter((IEnergyTile) tile, tile);
+        if (tile instanceof IOKEnergyTile) {
+            IC2EnergyAdapter adapter = createAdapter((IOKEnergyTile) tile, tile);
             adapter.register();
         }
     }
@@ -69,8 +69,8 @@ public class IC2EUHelper {
 
         // Note: This simple implementation creates a new adapter just to deregister.
         // For proper tracking, the adapter should be stored in the tile entity.
-        if (tile instanceof IEnergyTile) {
-            IC2EnergyAdapter adapter = createAdapter((IEnergyTile) tile, tile);
+        if (tile instanceof IOKEnergyTile) {
+            IC2EnergyAdapter adapter = createAdapter((IOKEnergyTile) tile, tile);
             adapter.deregister();
         }
     }
