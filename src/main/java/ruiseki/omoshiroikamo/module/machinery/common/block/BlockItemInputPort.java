@@ -135,12 +135,12 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> imp
     }
 
     @Override
-    public IPortType.Type getPortType() {
+    public Type getPortType() {
         return IPortType.Type.ITEM;
     }
 
     @Override
     public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
+        return Direction.INPUT;
     }
 }

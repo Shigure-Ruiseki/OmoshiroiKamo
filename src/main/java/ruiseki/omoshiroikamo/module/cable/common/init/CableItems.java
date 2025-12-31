@@ -1,28 +1,23 @@
-package ruiseki.omoshiroikamo.core.common.init;
+package ruiseki.omoshiroikamo.module.cable.common.init;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.common.item.ItemStructureWand;
-import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
-public enum CoreItems {
+public enum CableItems {
 
     // spotless: off
-
-    STRUCTURE_WAND(new ItemStructureWand()),
-    WRENCH(new ItemWrench()),
 
     ;
     // spotless: on
 
-    public static final CoreItems[] VALUES = values();
+    public static final CableItems[] VALUES = values();
 
     public static void preInit() {
-        for (CoreItems item : VALUES) {
+        for (CableItems item : VALUES) {
             try {
                 GameRegistry.registerItem(item.getItem(), item.getName());
                 Logger.info("Successfully initialized " + item.name());
@@ -35,7 +30,7 @@ public enum CoreItems {
     @Getter
     private final Item item;
 
-    CoreItems(Item item) {
+    CableItems(Item item) {
         this.item = item;
     }
 
@@ -55,4 +50,5 @@ public enum CoreItems {
     public ItemStack newItemStack(int count, int meta) {
         return new ItemStack(this.getItem(), count, meta);
     }
+
 }

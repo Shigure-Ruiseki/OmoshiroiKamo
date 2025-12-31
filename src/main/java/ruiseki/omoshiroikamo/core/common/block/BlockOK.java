@@ -131,7 +131,7 @@ public class BlockOK extends Block {
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z,
         @Nullable EntityPlayer player) {
-        return getNBTDrop(world, x, y, z, teClass != null ? getTileEntityEio(world, x, y, z) : null);
+        return getNBTDrop(world, x, y, z, teClass != null ? getTileEntityOK(world, x, y, z) : null);
     }
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, @Nullable TileEntityOK te) {
@@ -144,7 +144,7 @@ public class BlockOK extends Block {
     protected void processDrop(World world, int x, int y, int z, @Nullable TileEntityOK te, ItemStack drop) {}
 
     @SuppressWarnings("null")
-    protected @Nullable TileEntityOK getTileEntityEio(IBlockAccess world, int x, int y, int z) {
+    protected @Nullable TileEntityOK getTileEntityOK(IBlockAccess world, int x, int y, int z) {
         if (teClass != null) {
             TileEntity te = world.getTileEntity(x, y, z);
             if (teClass.isInstance(te)) { // no need to null-check teClass here, it was checked 2 lines above and is

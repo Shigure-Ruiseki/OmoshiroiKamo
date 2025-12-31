@@ -7,7 +7,6 @@ import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
 /**
@@ -53,8 +52,8 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
+    public Direction getPortDirection() {
+        return Direction.INPUT;
     }
 
     @Override
