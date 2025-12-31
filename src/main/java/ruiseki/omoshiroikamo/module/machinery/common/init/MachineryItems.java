@@ -6,13 +6,10 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.machinery.common.item.ItemWrench;
 
 public enum MachineryItems {
 
     // spotless: off
-
-    WRENCH(new ItemWrench()),
 
     ;
     // spotless: on

@@ -51,6 +51,7 @@ dependencies {
     devOnlyNonPublishable("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-772-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.38-gtnh:dev") { transitive = false }
     devOnlyNonPublishable("curse.maven:mekanism-268560:2475797")
+    devOnlyNonPublishable("curse.maven:ezstorage-new-1215307:7226301")
 
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
     runtimeOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')

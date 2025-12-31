@@ -100,8 +100,4 @@ public enum MachineryBlocks {
     public ItemStack newItemStack(int count, int meta) {
         return block != null ? new ItemStack(this.getBlock(), count, meta) : null;
     }
-
-    public boolean isAvailable() {
-        return block != null;
-    }
 }
