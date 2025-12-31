@@ -107,7 +107,7 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
             }
 
             IEssentiaGrid essentiaGrid = gridProxy.getGrid()
-                    .getCache(IEssentiaGrid.class);
+                .getCache(IEssentiaGrid.class);
             if (essentiaGrid == null) {
                 return;
             }
@@ -124,8 +124,7 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
 
                         if (toExtract > 0) {
                             long extracted = essentiaGrid
-                                    .extractEssentia(aspect, toExtract, Actionable.MODULATE, new MachineSource(this),
-                                            true);
+                                .extractEssentia(aspect, toExtract, Actionable.MODULATE, new MachineSource(this), true);
                             if (extracted > 0) {
                                 addToContainer(aspect, (int) extracted);
                             }

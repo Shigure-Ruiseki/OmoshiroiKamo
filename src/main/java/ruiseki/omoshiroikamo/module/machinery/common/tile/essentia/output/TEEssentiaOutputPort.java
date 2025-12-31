@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;

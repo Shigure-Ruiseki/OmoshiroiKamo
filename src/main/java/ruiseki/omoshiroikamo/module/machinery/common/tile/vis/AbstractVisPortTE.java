@@ -31,8 +31,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     // ========== Vis Storage Methods ==========
 
     public int addVis(Aspect aspect, int amount) {
-        if (!isPrimalAspect(aspect))
-            return amount;
+        if (!isPrimalAspect(aspect)) return amount;
 
         int current = visStored.getAmount(aspect);
         int space = maxVisPerAspect - current;
@@ -76,10 +75,10 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     private boolean isPrimalAspect(Aspect aspect) {
         return aspect == Aspect.AIR || aspect == Aspect.WATER
-                || aspect == Aspect.FIRE
-                || aspect == Aspect.EARTH
-                || aspect == Aspect.ORDER
-                || aspect == Aspect.ENTROPY;
+            || aspect == Aspect.FIRE
+            || aspect == Aspect.EARTH
+            || aspect == Aspect.ORDER
+            || aspect == Aspect.ENTROPY;
     }
 
     // ========== VisNetHandler Registration ==========
@@ -106,8 +105,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
-    }
+    public void setSideIO(ForgeDirection side, IO state) {}
 
     @Override
     public boolean isActive() {

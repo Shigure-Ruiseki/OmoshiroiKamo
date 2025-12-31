@@ -8,6 +8,9 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPortME;
@@ -22,9 +25,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
 
 /**
  * Block registration for the Machinery module.

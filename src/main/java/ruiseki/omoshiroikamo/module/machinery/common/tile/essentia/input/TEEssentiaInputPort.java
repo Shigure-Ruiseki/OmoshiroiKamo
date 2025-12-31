@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.Optional;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.ThaumcraftApiHelper;
