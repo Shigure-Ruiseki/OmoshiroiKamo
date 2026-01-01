@@ -145,6 +145,28 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         return other instanceof BlockPos;
     }
 
+    public static int compareBlockPos(BlockPos pos1, BlockPos pos2) {
+        int compX = Integer.compare(pos1.getX(), pos2.getX());
+        if (compX == 0) {
+            int compY = Integer.compare(pos1.getY(), pos2.getY());
+            if (compY == 0) {
+                return Integer.compare(pos1.getZ(), pos2.getZ());
+            }
+            return compY;
+        }
+        return compX;
+    }
+
+    public boolean isLoaded(World world) {
+        if (world == null) return false;
+
+        int x = getX();
+        int y = getY();
+        int z = getZ();
+
+        return world.blockExists(x, y, z);
+    }
+
     @Override
     public int hashCode() {
         final int PRIME = 59;

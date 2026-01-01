@@ -5,11 +5,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.block.ICable;
-import ruiseki.omoshiroikamo.api.block.ICableProps;
+import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 
-public class TECable extends AbstractTE implements ICableProps {
+public class TECable extends AbstractTE implements ICable {
 
     protected final boolean[] connections = new boolean[6];
 
