@@ -1,23 +1,36 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergySink;
+import ic2.api.energy.tile.IEnergySource;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.core.integration.IC2.IC2EUHelper;
 
 /**
  * Abstract base class for tile entities that store and manage energy.
  * <p>
  * Handles energy storage, synchronization with clients, and basic energy API for
  * interaction with other energy-capable tiles.
+ * <p>
+ * IC2 integration is handled via @Optional.Interface annotations, which allow
+ * the class to implement IC2 interfaces only when IC2 is present at runtime.
  */
-public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTile {
+@Optional.InterfaceList({
+        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
+        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2")
+})
+public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTile, IEnergySink, IEnergySource {
 
     /** Last known energy stored, used for periodic client synchronization. */
     private int lastSyncPowerStored;
@@ -25,10 +38,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     /** Internal energy storage instance. */
     protected EnergyStorage energyStorage;
 
-    /** IC2 adapter instance (null if IC2 is not loaded). */
-    private Object ic2Adapter;
-
-    /** Flag indicating if IC2 registration was attempted. */
+    /** Flag indicating if IC2 registration was completed. */
     public boolean ic2Registered = false;
 
     /** NBT tag name for energy-related data. */
@@ -116,18 +126,30 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
 
     @Override
     public void register() {
-        if (!worldObj.isRemote && Loader.isModLoaded("IC2")) {
-            ic2Adapter = IC2EUHelper.createAdapter(this, this);
-            IC2EUHelper.register((ruiseki.omoshiroikamo.core.integration.IC2.IC2EnergyAdapter) ic2Adapter);
-            ic2Registered = true;
+        if (!worldObj.isRemote && Loader.isModLoaded("IC2") && EnergyConfig.ic2Capability) {
+            registerIC2();
         }
     }
 
     @Override
     public void deregister() {
-        if (!worldObj.isRemote && Loader.isModLoaded("IC2") && ic2Adapter != null) {
-            IC2EUHelper.deregister((ruiseki.omoshiroikamo.core.integration.IC2.IC2EnergyAdapter) ic2Adapter);
+        if (!worldObj.isRemote && Loader.isModLoaded("IC2") && ic2Registered) {
+            deregisterIC2();
         }
+    }
+
+    @Optional.Method(modid = "IC2")
+    private void registerIC2() {
+        if (ic2Registered)
+            return;
+        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+        ic2Registered = true;
+    }
+
+    @Optional.Method(modid = "IC2")
+    private void deregisterIC2() {
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+        ic2Registered = false;
     }
 
     @Override
@@ -153,6 +175,64 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
             deregister();
         }
     }
+
+    // ==================== IC2 IEnergySink ====================
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public double getDemandedEnergy() {
+        int missing = getMaxEnergyStored() - getEnergyStored();
+        return Math.max(0, missing * EnergyConfig.rftToEU);
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public int getSinkTier() {
+        return EnergyConfig.ic2SinkTier;
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public double injectEnergy(ForgeDirection direction, double amount, double voltage) {
+        int rf = (int) (amount / EnergyConfig.rftToEU);
+        int accepted = energyStorage.receiveEnergy(rf, false);
+        return amount - (accepted * EnergyConfig.rftToEU);
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
+        return canConnectEnergy(direction);
+    }
+
+    // ==================== IC2 IEnergySource ====================
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public double getOfferedEnergy() {
+        return getEnergyStored() * EnergyConfig.rftToEU;
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public void drawEnergy(double amount) {
+        int rf = (int) (amount / EnergyConfig.rftToEU);
+        energyStorage.extractEnergy(rf, false);
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public int getSourceTier() {
+        return EnergyConfig.ic2SourceTier;
+    }
+
+    @Override
+    @Optional.Method(modid = "IC2")
+    public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
+        return canConnectEnergy(direction);
+    }
+
+    // ==================== NBT ====================
 
     @Override
     public void writeCommon(NBTTagCompound root) {
