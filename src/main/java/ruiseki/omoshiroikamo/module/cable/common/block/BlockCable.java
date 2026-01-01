@@ -1,11 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.block;
 
-import com.enderio.core.client.render.BoundingBox;
-import com.enderio.core.common.util.Util;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import crazypants.enderio.conduit.RaytraceResult;
-import crazypants.enderio.conduit.geom.CollidableComponent;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -18,18 +15,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-
-import net.minecraftforge.common.util.ForgeDirection;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlockCable extends BlockOK {
 
@@ -39,7 +33,7 @@ public class BlockCable extends BlockOK {
         super(ModObject.blockCable.unlocalisedName, TECable.class);
         float min = 6f / 16f;
         float max = 10f / 16f;
-        setBlockBounds(min, max, min, max, min, max);
+        setBlockBounds(min, min, min, max, max, max);
     }
 
     @Override
@@ -103,55 +97,91 @@ public class BlockCable extends BlockOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collider) {
-
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof TECable cable)) return;
 
+        for (AxisAlignedBB part : getCableParts(cable)) {
+            AxisAlignedBB worldBox = part.getOffsetBoundingBox(x, y, z);
+            if (mask.intersectsWith(worldBox)) {
+                list.add(worldBox);
+            }
+        }
+    }
+
+    @Override
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 startVec, Vec3 endVec) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (!(te instanceof TECable cable)) return super.collisionRayTrace(world, x, y, z, startVec, endVec);
+
+        MovingObjectPosition closestHit = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (AxisAlignedBB part : getCableParts(cable)) {
+            AxisAlignedBB worldBox = part.getOffsetBoundingBox(x, y, z);
+            MovingObjectPosition mop = worldBox.calculateIntercept(startVec, endVec);
+
+            if (mop != null) {
+                double dist = startVec.distanceTo(mop.hitVec);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestHit = new MovingObjectPosition(x, y, z, mop.sideHit, mop.hitVec);
+                }
+            }
+        }
+
+        return closestHit != null ? closestHit : super.collisionRayTrace(world, x, y, z, startVec, endVec);
+    }
+
+    private List<AxisAlignedBB> getCableParts(TECable cable) {
+        List<AxisAlignedBB> parts = new ArrayList<>();
         float min = 6f / 16f;
         float max = 10f / 16f;
 
-        // Center
-        this.setBlockBounds(min, min, min, max, max, max);
-        super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
+        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
 
-        // WEST
-        if (cable.isConnected(ForgeDirection.WEST)) {
-            this.setBlockBounds(0f, min, min, min, max, max);
-            super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
-        }
+        if (cable.isConnected(ForgeDirection.WEST))
+            parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
+        if (cable.isConnected(ForgeDirection.EAST))
+            parts.add(AxisAlignedBB.getBoundingBox(max, min, min, 1f, max, max));
+        if (cable.isConnected(ForgeDirection.DOWN))
+            parts.add(AxisAlignedBB.getBoundingBox(min, 0f, min, max, min, max));
+        if (cable.isConnected(ForgeDirection.UP)) parts.add(AxisAlignedBB.getBoundingBox(min, max, min, max, 1f, max));
+        if (cable.isConnected(ForgeDirection.NORTH))
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, 0f, max, max, min));
+        if (cable.isConnected(ForgeDirection.SOUTH))
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1f));
 
-        // EAST
-        if (cable.isConnected(ForgeDirection.EAST)) {
-            this.setBlockBounds(max, min, min, 1f, max, max);
-            super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
-        }
-
-        // DOWN
-        if (cable.isConnected(ForgeDirection.DOWN)) {
-            this.setBlockBounds(min, 0f, min, max, min, max);
-            super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
-        }
-
-        // UP
-        if (cable.isConnected(ForgeDirection.UP)) {
-            this.setBlockBounds(min, max, min, max, 1f, max);
-            super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
-        }
-
-        // NORTH
-        if (cable.isConnected(ForgeDirection.NORTH)) {
-            this.setBlockBounds(min, min, 0f, max, max, min);
-            super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
-        }
-
-        // SOUTH
-        if (cable.isConnected(ForgeDirection.SOUTH)) {
-            this.setBlockBounds(min, min, max, max, max, 1f);
-            super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
-        }
-
-        // reset
-        setBlockBounds(0, 0, 0, 1, 1, 1);
+        return parts;
     }
 
+    @Override
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (!(te instanceof TECable cable)) return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        if (player == null) return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+
+        Vec3 start = PlayerUtils.getEyePosition(player);
+        Vec3 look = player.getLookVec();
+        Vec3 end = start.addVector(look.xCoord * 5, look.yCoord * 5, look.zCoord * 5);
+
+        AxisAlignedBB closestBox = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (AxisAlignedBB part : getCableParts(cable)) {
+            AxisAlignedBB worldBox = part.getOffsetBoundingBox(x, y, z);
+            MovingObjectPosition mop = worldBox.calculateIntercept(start, end);
+
+            if (mop != null) {
+                double dist = start.distanceTo(mop.hitVec);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestBox = worldBox;
+                }
+            }
+        }
+
+        return closestBox != null ? closestBox : super.getSelectedBoundingBoxFromPool(world, x, y, z);
+    }
 }

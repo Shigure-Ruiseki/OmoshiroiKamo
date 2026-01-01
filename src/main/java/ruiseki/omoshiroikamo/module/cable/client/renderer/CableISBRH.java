@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.module.cable.client.renderer;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -12,9 +14,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.ICable;
-import ruiseki.omoshiroikamo.api.block.ICableProps;
 import ruiseki.omoshiroikamo.module.cable.common.block.BlockCable;
-import ruiseki.omoshiroikamo.module.cable.common.block.TECable;
 
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = false)
@@ -22,13 +22,11 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
 
     public static final CableISBRH INSTANCE = new CableISBRH();
 
-    public CableISBRH(float conduitScale) {}
-
     public CableISBRH() {}
 
     @Override
-    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
-                                    Block block, int modelId, RenderBlocks renderer) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+        RenderBlocks renderer) {
 
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof ICable cable)) return false;
@@ -85,7 +83,7 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
     }
 
     @Override
-    public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {}
+    public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {}
 
     @Override
     public int getRenderId() {

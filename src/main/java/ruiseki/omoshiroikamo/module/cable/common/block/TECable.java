@@ -1,10 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.ICable;
@@ -58,9 +56,7 @@ public class TECable extends AbstractTE implements ICableProps {
 
         TileEntity te = worldObj.getTileEntity(x, y, z);
 
-        boolean shouldConnect =
-            te instanceof ICable &&
-                ((ICable) te).canConnect(this, dir.getOpposite());
+        boolean shouldConnect = te instanceof ICable && ((ICable) te).canConnect(this, dir.getOpposite());
 
         boolean isConnected = connections[dir.ordinal()];
 
@@ -102,7 +98,6 @@ public class TECable extends AbstractTE implements ICableProps {
             }
         }
     }
-
 
     @Override
     public ItemStack getItemStack() {
