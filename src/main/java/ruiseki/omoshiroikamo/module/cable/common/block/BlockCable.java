@@ -96,7 +96,8 @@ public class BlockCable extends BlockOK {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collider) {
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> list,
+        Entity collider) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof TECable cable)) return;
 
