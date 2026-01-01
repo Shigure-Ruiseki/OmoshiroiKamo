@@ -51,11 +51,11 @@ dependencies {
     devOnlyNonPublishable('com.github.GTNewHorizons:Mobs-Info:0.5.7-GTNH:dev')
     devOnlyNonPublishable("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-772-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.38-gtnh:dev") { transitive = false }
-    devOnlyNonPublishable("curse.maven:mekanism-268560:2475797")
+    devOnlyNonPublishable("com.github.Thorfusion:Mekanism-Community-Edition:9.10.46:DEV")
     devOnlyNonPublishable("com.github.GTNewHorizons:ThaumicEnergistics:1.7.14-GTNH:dev") { transitive = false }
 
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
-    runtimeOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
+    devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:WAILAPlugins:0.7.2:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.7.27:dev") { transitive = false }
 
@@ -70,7 +70,7 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
     compileOnly("curse.maven:avaritia-233785:2519595")
     compileOnly("com.github.GTNewHorizons:twilightforest:2.7.15:dev")
-    compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
+    devOnlyNonPublishable('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     compileOnly("com.github.GTNewHorizons:Chisel:2.17.0-GTNH:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
     compileOnly('org.jetbrains:annotations:26.0.1')
