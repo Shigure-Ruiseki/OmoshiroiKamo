@@ -3,7 +3,9 @@ package ruiseki.omoshiroikamo.core.common.util;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import org.apache.commons.lang3.StringUtils;
@@ -104,5 +106,19 @@ public class PlayerUtils {
         }
 
         return new GameProfile(uuid, name);
+    }
+
+    public static Vec3 getEyePosition(EntityPlayer player) {
+        Vec3 v = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
+        if (player.worldObj.isRemote) {
+            // take into account any eye changes done by mods.
+            v.yCoord += player.getEyeHeight() - player.getDefaultEyeHeight();
+        } else {
+            v.yCoord += player.getEyeHeight();
+            if (player instanceof EntityPlayerMP && player.isSneaking()) {
+                v.yCoord -= 0.08;
+            }
+        }
+        return v;
     }
 }

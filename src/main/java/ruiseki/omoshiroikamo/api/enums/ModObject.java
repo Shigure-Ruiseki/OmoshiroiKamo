@@ -68,6 +68,8 @@ public enum ModObject {
     blockModularGasInput,
     blockModularGasOutput,
 
+    blockCable,
+
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,

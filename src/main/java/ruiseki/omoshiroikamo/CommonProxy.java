@@ -111,6 +111,10 @@ public class CommonProxy {
         return serverTickCount;
     }
 
+    public double getReachDistanceForPlayer(EntityPlayer entityPlayer) {
+        return 5;
+    }
+
     public final class TickTimer {
 
         @SubscribeEvent
