@@ -46,15 +46,11 @@ public class BlockManaInputPort extends AbstractPortBlock<TEManaInputPort> imple
         super(ModObject.blockModularManaInput.unlocalisedName, TEManaInputPortT1.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockManaInputPort create() {
         return new BlockManaInputPort();
-    }
-
-    @Override
-    public String getTextureName() {
-        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

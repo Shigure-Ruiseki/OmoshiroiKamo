@@ -56,15 +56,11 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> i
             TEEnergyInputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockEnergyInputPort create() {
         return new BlockEnergyInputPort();
-    }
-
-    @Override
-    public String getTextureName() {
-        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

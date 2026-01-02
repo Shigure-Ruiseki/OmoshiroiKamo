@@ -57,15 +57,11 @@ public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> imple
             TEItemInputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockItemInputPort create() {
         return new BlockItemInputPort();
-    }
-
-    @Override
-    public String getTextureName() {
-        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

@@ -56,15 +56,11 @@ public class BlockGasInputPort extends AbstractPortBlock<TEGasInputPort> impleme
             TEGasInputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockGasInputPort create() {
         return new BlockGasInputPort();
-    }
-
-    @Override
-    public String getTextureName() {
-        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

@@ -56,15 +56,11 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> i
             TEFluidOutputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockFluidOutputPort create() {
         return new BlockFluidOutputPort();
-    }
-
-    @Override
-    public String getTextureName() {
-        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

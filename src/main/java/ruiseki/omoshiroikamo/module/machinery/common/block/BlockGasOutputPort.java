@@ -56,15 +56,11 @@ public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> imple
             TEGasOutputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockGasOutputPort create() {
         return new BlockGasOutputPort();
-    }
-
-    @Override
-    public String getTextureName() {
-        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override
