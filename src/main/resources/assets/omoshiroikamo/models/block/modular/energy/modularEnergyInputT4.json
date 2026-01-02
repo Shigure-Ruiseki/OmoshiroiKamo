@@ -1,6 +1,0 @@
-{
-  "parent": "omoshiroikamo:block/modular/energy/modularEnergyInputT1",
-    "textures": {
-        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_energyinput_4"
-    }
-}

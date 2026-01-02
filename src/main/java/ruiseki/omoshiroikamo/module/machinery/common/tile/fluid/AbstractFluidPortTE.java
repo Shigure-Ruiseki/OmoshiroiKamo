@@ -102,6 +102,9 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
             }
         }
         tank.readCommon(root);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override

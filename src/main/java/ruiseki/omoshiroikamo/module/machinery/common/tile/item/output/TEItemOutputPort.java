@@ -2,11 +2,13 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.item.output;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
@@ -83,7 +85,18 @@ public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+            return IconRegistry.getIcon("overlay_itemoutput_" + getTier());
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }

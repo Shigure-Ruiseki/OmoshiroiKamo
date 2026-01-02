@@ -1,6 +1,0 @@
-{
-    "parent": "omoshiroikamo:block/modular/item/modularItemInputT1",
-    "textures": {
-        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_iteminput_4"
-    }
-}

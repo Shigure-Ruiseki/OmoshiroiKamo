@@ -1,12 +1,15 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
 /**
@@ -52,11 +55,6 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     }
 
     @Override
-    public Direction getPortDirection() {
-        return Direction.INPUT;
-    }
-
-    @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
         if (!isRedstoneActive() || !canInput(side)) {
             return 0;
@@ -72,5 +70,21 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     @Override
     public boolean canLasersDig() {
         return false;
+    }
+
+    @Override
+    public Direction getPortDirection() {
+        return Direction.INPUT;
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+            return IconRegistry.getIcon("overlay_energyinput_" + getTier());
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }
