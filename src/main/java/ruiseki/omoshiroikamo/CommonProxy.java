@@ -16,8 +16,6 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import makamys.mclib.core.MCLib;
-import makamys.mclib.core.MCLibModules;
 import ruiseki.omoshiroikamo.core.CoreCommon;
 import ruiseki.omoshiroikamo.core.ModuleManager;
 import ruiseki.omoshiroikamo.core.common.command.CommandOK;
@@ -26,8 +24,8 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.NEICompat;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.BackpackCommon;
+import ruiseki.omoshiroikamo.module.cable.CableCommon;
 import ruiseki.omoshiroikamo.module.chickens.ChickensCommon;
 import ruiseki.omoshiroikamo.module.cows.CowsCommon;
 import ruiseki.omoshiroikamo.module.dml.DMLCommon;
@@ -44,12 +42,6 @@ public class CommonProxy {
 
     public void onConstruction(FMLConstructionEvent event) {
         ModuleManager.onConstruction(event);
-        if (LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
-            Logger.info(
-                "{} is in snapshot mode. Disabling update checker... Other features may also be different.",
-                LibMisc.MOD_ID);
-        }
-        MCLib.init();
     }
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -61,14 +53,10 @@ public class CommonProxy {
         ModuleManager.register(new DMLCommon());
         ModuleManager.register(new BackpackCommon());
         ModuleManager.register(new MultiBlockCommon());
+        ModuleManager.register(new CableCommon());
         ModuleManager.register(new MachineryCommon());
 
         ModuleManager.preInitCommon(event);
-
-        if (!LibMisc.SNAPSHOT_BUILD && !LibMisc.DEV_ENVIRONMENT) {
-            MCLibModules.updateCheckAPI.submitModTask(LibMisc.MOD_ID, LibMisc.VERSION, LibMisc.VERSION_URL);
-            Logger.info("Submitting update check for {} version {}", LibMisc.MOD_ID, LibMisc.VERSION);
-        }
     }
 
     public void init(FMLInitializationEvent event) {

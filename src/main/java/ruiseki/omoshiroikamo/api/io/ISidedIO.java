@@ -20,6 +20,11 @@ public interface ISidedIO extends IOKTile {
         public boolean canOutput() {
             return this == OUTPUT || this == BOTH;
         }
+
+        public String getName() {
+            return "gui.io." + this.name()
+                .toLowerCase();
+        }
     }
 
     default IO getIOLimit() {

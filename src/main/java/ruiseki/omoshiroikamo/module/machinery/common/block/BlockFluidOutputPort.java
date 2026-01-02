@@ -12,8 +12,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import org.jetbrains.annotations.Nullable;
@@ -21,11 +23,12 @@ import org.jetbrains.annotations.Nullable;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT1;
@@ -109,6 +112,13 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
         if (!config.getConfig("IFluidHandler") && tileEntity instanceof IFluidHandler handler) {
             tooltip.addAll(WailaUtils.getFluidTooltip(handler));
         }
+        if (tileEntity instanceof ISidedIO io) {
+            Vec3 hit = WailaUtils.getLocalHit(accessor);
+            if (hit == null) return;
+            ForgeDirection side = ItemWrench
+                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
+            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
+        }
     }
 
     public static class ItemBlockFluidOutputPort extends ItemBlockOK {
@@ -130,12 +140,12 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.FLUID;
+    public Type getPortType() {
+        return Type.FLUID;
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
     }
 }

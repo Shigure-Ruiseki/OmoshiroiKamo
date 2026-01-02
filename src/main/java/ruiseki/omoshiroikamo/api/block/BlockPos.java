@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -104,15 +105,15 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         getWorld().markBlockForUpdate(getX(), getY(), getZ());
     }
 
-    public TileEntity getTileEntity(World world) {
+    public TileEntity getTileEntity(IBlockAccess world) {
         return world.getTileEntity(getX(), getY(), getZ());
     }
 
-    public Block getBlock(World world) {
+    public Block getBlock(IBlockAccess world) {
         return world.getBlock(getX(), getY(), getZ());
     }
 
-    public int getBlockMetadata(World world) {
+    public int getBlockMetadata(IBlockAccess world) {
         return world.getBlockMetadata(getX(), getY(), getZ());
     }
 

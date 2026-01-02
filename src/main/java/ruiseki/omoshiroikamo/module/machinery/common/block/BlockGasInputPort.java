@@ -12,8 +12,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -21,10 +23,12 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
+import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input.TEGasInputPortT1;
@@ -107,6 +111,13 @@ public class BlockGasInputPort extends AbstractTieredBlock<TEGasInputPort> imple
         TileEntity tileEntity = accessor.getTileEntity();
         if (tileEntity instanceof IGasHandler handler) {
             tooltip.addAll(WailaUtils.getGasTooltip(handler));
+        }
+        if (tileEntity instanceof ISidedIO io) {
+            Vec3 hit = WailaUtils.getLocalHit(accessor);
+            if (hit == null) return;
+            ForgeDirection side = ItemWrench
+                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
+            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
         }
     }
 

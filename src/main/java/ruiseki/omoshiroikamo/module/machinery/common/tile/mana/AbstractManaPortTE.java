@@ -7,6 +7,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -183,4 +184,10 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public abstract IPortType.Direction getPortDirection();
+
+    @Override
+    public ResourceLocation getPortOverlay() {
+        // Always active not needed
+        return null;
+    }
 }

@@ -5,17 +5,21 @@ import java.util.List;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import cpw.mods.fml.common.registry.GameData;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
+import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import vazkii.botania.api.mana.IManaBlock;
 
@@ -117,6 +121,24 @@ public class WailaUtils {
         }
 
         return renderStr;
+    }
+
+    public static String getSideIOTooltip(ISidedIO handler, ForgeDirection direction) {
+        if (handler == null) return null;
+        ISidedIO.IO io = handler.getSideIO(direction);
+        return LibMisc.LANG.localize(io.getName());
+    }
+
+    public static Vec3 getLocalHit(IWailaDataAccessor accessor) {
+        if (accessor == null) return null;
+
+        MovingObjectPosition mop = accessor.getPosition();
+        if (mop == null || mop.hitVec == null) return null;
+
+        return Vec3.createVectorHelper(
+            mop.hitVec.xCoord - mop.blockX,
+            mop.hitVec.yCoord - mop.blockY,
+            mop.hitVec.zCoord - mop.blockZ);
     }
 
 }

@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -25,6 +26,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 public abstract class AbstractFluidPortTE extends AbstractTE implements IModularPort, IFluidHandler {
@@ -210,5 +212,10 @@ public abstract class AbstractFluidPortTE extends AbstractTE implements IModular
                 .syncHandler(SyncHandlers.fluidSlot(this.tank)));
 
         return panel;
+    }
+
+    @Override
+    public ResourceLocation getPortOverlay() {
+        return new ResourceLocation(LibResources.PREFIX_BLOCK + "modularmachineryOverlay/overlay_io_mode.png");
     }
 }

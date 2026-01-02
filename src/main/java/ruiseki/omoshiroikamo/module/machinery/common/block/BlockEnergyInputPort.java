@@ -12,20 +12,23 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT1;
@@ -108,6 +111,13 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
         if (te instanceof AbstractEnergyTE energyTE) {
             tooltip.add(WailaUtils.getEnergyTransfer(energyTE));
         }
+        if (te instanceof ISidedIO io) {
+            Vec3 hit = WailaUtils.getLocalHit(accessor);
+            if (hit == null) return;
+            ForgeDirection side = ItemWrench
+                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
+            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
+        }
     }
 
     public static class ItemBlockEnergyInputPort extends ItemBlockOK {
@@ -129,12 +139,12 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.ENERGY;
+    public Type getPortType() {
+        return Type.ENERGY;
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
+    public Direction getPortDirection() {
+        return Direction.INPUT;
     }
 }

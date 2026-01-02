@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.core.ModuleManager;
 import ruiseki.omoshiroikamo.core.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.BackpackClient;
+import ruiseki.omoshiroikamo.module.cable.CableClient;
 import ruiseki.omoshiroikamo.module.chickens.ChickensClient;
 import ruiseki.omoshiroikamo.module.cows.CowsClient;
 import ruiseki.omoshiroikamo.module.dml.DMLClient;
@@ -37,6 +38,7 @@ public class ClientProxy extends CommonProxy {
         ModuleManager.register(new DMLClient());
         ModuleManager.register(new BackpackClient());
         ModuleManager.register(new MultiBlockClient());
+        ModuleManager.register(new CableClient());
         ModuleManager.register(new MachineryClient());
 
         ModuleManager.preInitClient(event);
