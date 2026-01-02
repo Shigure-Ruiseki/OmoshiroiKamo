@@ -5,5 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public interface ISidedTexture {
 
-    default IIcon getTexture(ForgeDirection side, int renderPass) { return null; }
+    default IIcon getTexture(ForgeDirection side, int renderPass) {
+        return null;
+    }
 }

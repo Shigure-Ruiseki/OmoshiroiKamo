@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
@@ -56,7 +57,6 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
         return baseIcon;
     }
-
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {

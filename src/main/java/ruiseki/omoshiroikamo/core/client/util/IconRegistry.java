@@ -1,9 +1,10 @@
 package ruiseki.omoshiroikamo.core.client.util;
 
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
+
+import gnu.trove.map.TMap;
+import gnu.trove.map.hash.THashMap;
 
 public class IconRegistry {
 
