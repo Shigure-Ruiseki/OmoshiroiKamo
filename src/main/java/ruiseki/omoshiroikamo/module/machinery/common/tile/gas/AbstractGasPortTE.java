@@ -89,13 +89,27 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
+        int[] sideData = new int[6];
+        for (int i = 0; i < 6; i++) {
+            sideData[i] = sides[i].ordinal();
+        }
+        root.setIntArray("sideIO", sideData);
         tank.writeCommon(root);
     }
 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
+        if (root.hasKey("sideIO")) {
+            int[] sideData = root.getIntArray("sideIO");
+            for (int i = 0; i < 6 && i < sideData.length; i++) {
+                sides[i] = IO.values()[sideData[i]];
+            }
+        }
         tank.readCommon(root);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override

@@ -1,35 +1,30 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
-
-import org.jetbrains.annotations.Nullable;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT2;
@@ -45,11 +40,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOu
  *
  * TODO List:
  * - Add visual indicator for mana level (texture animation or overlay)
- * - Add model and textures
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort> implements IModularBlock {
+public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> implements IModularBlock {
 
     protected BlockFluidOutputPort() {
         super(
@@ -62,6 +56,7 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
             TEFluidOutputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockFluidOutputPort create() {
@@ -69,14 +64,25 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
     }
 
     @Override
-    public String getTextureName() {
-        return "modular_machine_casing";
-    }
-
-    @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        // TODO: Add Tier Color
-        return -1;
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_1"));
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_2",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_2"));
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_3",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_3"));
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_4",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_4"));
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_5",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_5"));
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_6",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_6"));
     }
 
     @Override
@@ -95,17 +101,6 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
-    }
-
-    @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity tileEntity = accessor.getTileEntity();
@@ -121,7 +116,7 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
         }
     }
 
-    public static class ItemBlockFluidOutputPort extends ItemBlockOK {
+    public static class ItemBlockFluidOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockFluidOutputPort(Block block) {
             super(block, block);
@@ -131,6 +126,11 @@ public class BlockFluidOutputPort extends AbstractTieredBlock<TEFluidOutputPort>
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_fluidoutput_" + tier);
         }
 
         @Override
