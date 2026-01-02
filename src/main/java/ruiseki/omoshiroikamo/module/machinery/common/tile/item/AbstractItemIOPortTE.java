@@ -96,6 +96,9 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
                 sides[i] = IO.values()[sideData[i]];
             }
         }
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override

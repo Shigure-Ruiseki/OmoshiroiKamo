@@ -69,7 +69,7 @@ public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implemen
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) == IO.INPUT) {
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
             return IconRegistry.getIcon("overlay_energyoutput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

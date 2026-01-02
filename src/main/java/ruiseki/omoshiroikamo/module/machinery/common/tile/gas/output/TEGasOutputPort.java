@@ -28,7 +28,7 @@ public abstract class TEGasOutputPort extends AbstractGasPortTE {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) == IO.INPUT) {
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
             return IconRegistry.getIcon("overlay_gasoutput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

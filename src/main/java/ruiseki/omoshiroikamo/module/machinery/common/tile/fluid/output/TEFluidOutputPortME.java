@@ -333,7 +333,7 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) == IO.INPUT) {
+        if (renderPass == 1) {
             return IconRegistry.getIcon("overlay_fluidoutput_me");
         }
         return AbstractPortBlock.baseIcon;

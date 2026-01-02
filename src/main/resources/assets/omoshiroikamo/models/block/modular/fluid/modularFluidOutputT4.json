@@ -1,6 +1,0 @@
-{
-    "parent": "omoshiroikamo:block/modular/fluid/modularFluidOutputT1",
-    "textures": {
-        "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_fluidoutput_4"
-    }
-}

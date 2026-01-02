@@ -42,7 +42,7 @@ public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME>
 
     @Override
     public String getTextureName() {
-        return "modular_machine_casing";
+        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

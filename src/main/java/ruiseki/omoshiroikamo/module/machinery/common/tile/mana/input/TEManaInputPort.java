@@ -28,7 +28,7 @@ public abstract class TEManaInputPort extends AbstractManaPortTE {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) == IO.INPUT) {
+        if (renderPass == 1) {
             return IconRegistry.getIcon("overlay_manainput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

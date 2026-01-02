@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T> implements IModularBlock {
 
     public int renderPass;
+    public static int renderId;
     public static IIcon baseIcon;
 
     @SafeVarargs
@@ -54,10 +55,9 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-        ISidedTexture tile = (ISidedTexture) world.getTileEntity(x, y, z);
-
-        if (renderPass == 1 && tile != null) {
-            return tile.getTexture(ForgeDirection.getOrientation(side), renderPass);
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (renderPass == 1 && tile instanceof ISidedTexture sided) {
+            return sided.getTexture(ForgeDirection.getOrientation(side), renderPass);
         }
 
         return baseIcon;
@@ -67,6 +67,11 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     public void registerBlockIcons(IIconRegister reg) {
         baseIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
         registerPortOverlays(reg);
+    }
+
+    @Override
+    public int getRenderType() {
+        return renderId;
     }
 
     public abstract void registerPortOverlays(IIconRegister reg);

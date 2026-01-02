@@ -65,7 +65,7 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> imp
 
     @Override
     public String getTextureName() {
-        return "modular_machine_casing";
+        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override
@@ -124,7 +124,7 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> imp
     public static class ItemBlockFluidInputPort extends AbstractPortItemBlock {
 
         public ItemBlockFluidInputPort(Block block) {
-            super(block);
+            super(block, block);
         }
 
         @Override

@@ -358,7 +358,7 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) == IO.INPUT) {
+        if (renderPass == 1) {
             return IconRegistry.getIcon("overlay_itemoutput_me");
         }
         return AbstractPortBlock.baseIcon;

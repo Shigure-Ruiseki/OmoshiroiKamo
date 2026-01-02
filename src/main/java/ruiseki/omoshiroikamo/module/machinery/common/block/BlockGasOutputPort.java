@@ -64,7 +64,7 @@ public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> imple
 
     @Override
     public String getTextureName() {
-        return "modular_machine_casing";
+        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override

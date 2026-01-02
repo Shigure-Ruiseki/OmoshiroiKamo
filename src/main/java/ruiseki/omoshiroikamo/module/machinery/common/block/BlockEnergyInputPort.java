@@ -64,7 +64,7 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> i
 
     @Override
     public String getTextureName() {
-        return "modular_machine_casing";
+        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override
@@ -123,7 +123,7 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> i
     public static class ItemBlockEnergyInputPort extends AbstractPortItemBlock {
 
         public ItemBlockEnergyInputPort(Block block) {
-            super(block);
+            super(block, block);
         }
 
         @Override

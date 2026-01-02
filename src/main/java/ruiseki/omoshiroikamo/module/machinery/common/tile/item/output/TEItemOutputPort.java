@@ -94,7 +94,7 @@ public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) == IO.INPUT) {
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
             return IconRegistry.getIcon("overlay_itemoutput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

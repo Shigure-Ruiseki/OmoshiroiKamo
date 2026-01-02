@@ -64,7 +64,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> i
 
     @Override
     public String getTextureName() {
-        return "modular_machine_casing";
+        return "modularmachineryOverlay/base_modularports";
     }
 
     @Override
