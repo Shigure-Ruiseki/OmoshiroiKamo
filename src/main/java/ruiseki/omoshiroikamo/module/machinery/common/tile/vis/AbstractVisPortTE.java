@@ -38,8 +38,6 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     public abstract IO getIOLimit();
 
-    // ========== Vis Storage Methods ==========
-
     public int addVis(Aspect aspect, int amount) {
         if (!isPrimalAspect(aspect)) return amount;
 
@@ -91,8 +89,6 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
             || aspect == Aspect.ENTROPY;
     }
 
-    // ========== VisNetHandler Registration ==========
-
     protected void registerAsVisSource() {
         registeredAsSource = true;
     }
@@ -129,8 +125,6 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     public String getLocalizedName() {
         return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
-
-    // ========== NBT ==========
 
     @Override
     public void writeCommon(NBTTagCompound root) {

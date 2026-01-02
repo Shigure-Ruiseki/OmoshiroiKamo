@@ -97,29 +97,29 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
             if (essentiaGrid == null) {
                 return;
             }
-
             // Try to extract essentia from ME network
             for (IAspectStack stack : essentiaGrid.getEssentiaList()) {
-                if (stack != null && stack.getAspect() != null) {
-                    Aspect aspect = stack.getAspect();
-                    long available = stack.getStackSize();
-
-                    if (available > 0) {
-                        int space = maxCapacityPerAspect - aspects.getAmount(aspect);
-                        int toExtract = (int) Math.min(available, Math.min(space, 8));
-
-                        if (toExtract > 0) {
-                            long extracted = essentiaGrid
-                                .extractEssentia(aspect, toExtract, Actionable.MODULATE, new MachineSource(this), true);
-                            if (extracted > 0) {
-                                addToContainer(aspect, (int) extracted);
-                            }
-                        }
-                    }
+                if (!(stack != null && stack.getAspect() != null)) {
+                    continue;
+                }
+                Aspect aspect = stack.getAspect();
+                long available = stack.getStackSize();
+                if (available <= 0) {
+                    continue;
+                }
+                int space = maxCapacityPerAspect - aspects.getAmount(aspect);
+                int toExtract = (int) Math.min(available, Math.min(space, 8));
+                if (toExtract <= 0) {
+                    continue;
+                }
+                long extracted = essentiaGrid
+                    .extractEssentia(aspect, toExtract, Actionable.MODULATE, new MachineSource(this), true);
+                if (extracted > 0) {
+                    addToContainer(aspect, (int) extracted);
                 }
             }
         } catch (Exception e) {
-            // Grid not ready or ThE not installed
+            // Grid not ready
         }
     }
 

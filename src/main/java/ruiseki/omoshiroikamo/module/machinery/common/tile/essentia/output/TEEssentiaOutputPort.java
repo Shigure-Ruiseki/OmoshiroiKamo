@@ -36,15 +36,11 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
         return IO.OUTPUT;
     }
 
-    // ========== Processing ==========
-
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
         // Output port is passive - essentia is pulled by other devices
         return false;
     }
-
-    // ========== IEssentiaTransport Implementation ==========
 
     @Override
     public boolean isConnectable(ForgeDirection face) {
@@ -115,8 +111,6 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
     public boolean renderExtendedTube() {
         return false;
     }
-
-    // ========== IModularPort ==========
 
     @Override
     public IPortType.Direction getPortDirection() {

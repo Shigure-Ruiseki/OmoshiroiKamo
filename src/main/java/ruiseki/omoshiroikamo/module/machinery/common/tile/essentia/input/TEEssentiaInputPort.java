@@ -107,29 +107,29 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
         return false;
     }
 
-    /**
-     * Actively draw essentia from adjacent IEssentiaTransport blocks.
-     */
+    // Actively draw essentia from adjacent IEssentiaTransport blocks.
     private void drawEssentiaFromNeighbors() {
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             TileEntity te = ThaumcraftApiHelper.getConnectableTile(worldObj, xCoord, yCoord, zCoord, dir);
-            if (te instanceof IEssentiaTransport) {
-                IEssentiaTransport source = (IEssentiaTransport) te;
-                ForgeDirection opposite = dir.getOpposite();
-
-                if (source.canOutputTo(opposite)) {
-                    Aspect aspect = source.getEssentiaType(opposite);
-                    if (aspect != null && source.getEssentiaAmount(opposite) > 0) {
-                        int suction = source.getSuctionAmount(opposite);
-                        if (suction < SUCTION_AMOUNT) {
-                            // We have higher suction, pull essentia
-                            int taken = source.takeEssentia(aspect, 1, opposite);
-                            if (taken > 0) {
-                                addToContainer(aspect, taken);
-                            }
-                        }
-                    }
-                }
+            if (!(te instanceof IEssentiaTransport)) {
+                continue;
+            }
+            IEssentiaTransport source = (IEssentiaTransport) te;
+            ForgeDirection opposite = dir.getOpposite();
+            if (!(source.canOutputTo(opposite))) {
+                continue;
+            }
+            Aspect aspect = source.getEssentiaType(opposite);
+            if (aspect != null && source.getEssentiaAmount(opposite) <= 0) {
+                continue;
+            }
+            int suction = source.getSuctionAmount(opposite);
+            if (suction >= SUCTION_AMOUNT) {
+                continue;
+            }
+            int taken = source.takeEssentia(aspect, 1, opposite);
+            if (taken > 0) {
+                addToContainer(aspect, taken);
             }
         }
     }
