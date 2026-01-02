@@ -15,15 +15,29 @@ import thaumcraft.api.aspects.IAspectContainer;
 /**
  * Abstract base class for Essentia ports.
  * Stores multiple Aspects using AspectList.
+ *
+ * TODO: Use sides array in canInputFrom/canOutputTo
+ * TODO: Add tiered blocks/TEs (currently fixed at Tier 1)
+ * TODO: Implement TEEssentiaOutputPortME (export Essentia to ME network)
  */
 public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer {
 
+    protected final IO[] sides = new IO[6];
     protected AspectList aspects = new AspectList();
     protected int maxCapacityPerAspect;
 
     public AbstractEssentiaPortTE(int maxCapacityPerAspect) {
         this.maxCapacityPerAspect = maxCapacityPerAspect;
+        for (int i = 0; i < 6; i++) {
+            sides[i] = IO.NONE;
+        }
     }
+
+    public abstract int getTier();
+
+    public abstract IO getIOLimit();
+
+    // ========== IAspectContainer Implementation ==========
 
     @Override
     public AspectList getAspects() {
@@ -52,7 +66,7 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
             markDirty();
         }
 
-        return amount - toAdd; // Return leftover
+        return amount - toAdd;
     }
 
     @Override
@@ -68,13 +82,11 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     @Override
     @Deprecated
     public boolean takeFromContainer(AspectList ot) {
-        // Check if all aspects are available
         for (Aspect aspect : ot.getAspects()) {
             if (aspect != null && aspects.getAmount(aspect) < ot.getAmount(aspect)) {
                 return false;
             }
         }
-        // Remove all
         for (Aspect aspect : ot.getAspects()) {
             if (aspect != null) {
                 aspects.reduce(aspect, ot.getAmount(aspect));
@@ -107,15 +119,18 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     @Override
     public IO getSideIO(ForgeDirection side) {
-        return IO.BOTH;
+        return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {}
+    public void setSideIO(ForgeDirection side, IO state) {
+        sides[side.ordinal()] = state;
+        requestRenderUpdate();
+    }
 
     @Override
     public boolean isActive() {
-        return false;
+        return getTotalEssentiaAmount() > 0;
     }
 
     @Override
@@ -125,6 +140,13 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     @Override
     public abstract IPortType.Direction getPortDirection();
+
+    @Override
+    public String getLocalizedName() {
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+    }
+
+    // ========== Utility Methods ==========
 
     public int getTotalEssentiaAmount() {
         int total = 0;
@@ -140,15 +162,18 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
         return maxCapacityPerAspect;
     }
 
-    @Override
-    public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".name");
-    }
+    // ========== NBT ==========
 
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
         root.setInteger("maxCapacity", maxCapacityPerAspect);
+
+        int[] sideData = new int[6];
+        for (int i = 0; i < 6; i++) {
+            sideData[i] = sides[i].ordinal();
+        }
+        root.setIntArray("sideIO", sideData);
 
         NBTTagList aspectList = new NBTTagList();
         for (Aspect aspect : aspects.getAspects()) {
@@ -166,6 +191,14 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         maxCapacityPerAspect = root.getInteger("maxCapacity");
+
+        if (root.hasKey("sideIO")) {
+            int[] sideData = root.getIntArray("sideIO");
+            for (int i = 0; i < 6 && i < sideData.length; i++) {
+                sides[i] = IO.values()[sideData[i]];
+            }
+        }
+
         aspects = new AspectList();
         NBTTagList aspectList = root.getTagList("aspects", 10);
         for (int i = 0; i < aspectList.tagCount(); i++) {

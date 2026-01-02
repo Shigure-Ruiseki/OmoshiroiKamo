@@ -23,6 +23,16 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
     }
 
     @Override
+    public int getTier() {
+        return 1;
+    }
+
+    @Override
+    public IO getIOLimit() {
+        return IO.INPUT;
+    }
+
+    @Override
     public boolean isConnectable(ForgeDirection face) {
         return true;
     }

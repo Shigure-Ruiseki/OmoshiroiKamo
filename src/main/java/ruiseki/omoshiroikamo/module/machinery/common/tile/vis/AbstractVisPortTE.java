@@ -14,17 +14,31 @@ import thaumcraft.api.aspects.AspectList;
 /**
  * Abstract base class for Vis ports.
  * Stores Vis as AspectList (primal aspects).
- * Registers directly with VisNetHandler instead of extending TileVisNode.
+ *
+ * TODO: Use sides array or remove if unnecessary
+ * TODO: Add tiered blocks/TEs (currently fixed at Tier 1)
+ * TODO: Register with VisNetHandler.sources (may require TileVisNode
+ * inheritance)
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 
+    protected final IO[] sides = new IO[6];
     protected AspectList visStored = new AspectList();
     protected int maxVisPerAspect;
     protected boolean registeredAsSource = false;
 
     public AbstractVisPortTE(int maxVisPerAspect) {
         this.maxVisPerAspect = maxVisPerAspect;
+        for (int i = 0; i < 6; i++) {
+            sides[i] = IO.NONE;
+        }
     }
+
+    public abstract int getTier();
+
+    public abstract IO getIOLimit();
+
+    // ========== Vis Storage Methods ==========
 
     public int addVis(Aspect aspect, int amount) {
         if (!isPrimalAspect(aspect)) return amount;
@@ -77,8 +91,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
             || aspect == Aspect.ENTROPY;
     }
 
-    // Direct registration with VisNetHandler.sources requires TileVisNode.
-    // This implementation stores Vis locally for recipe integration.
+    // ========== VisNetHandler Registration ==========
 
     protected void registerAsVisSource() {
         registeredAsSource = true;
@@ -90,11 +103,14 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public IO getSideIO(ForgeDirection side) {
-        return IO.BOTH;
+        return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {}
+    public void setSideIO(ForgeDirection side, IO state) {
+        sides[side.ordinal()] = state;
+        requestRenderUpdate();
+    }
 
     @Override
     public boolean isActive() {
@@ -111,7 +127,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".name");
+        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     // ========== NBT ==========
@@ -120,6 +136,12 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
         root.setInteger("maxVis", maxVisPerAspect);
+
+        int[] sideData = new int[6];
+        for (int i = 0; i < 6; i++) {
+            sideData[i] = sides[i].ordinal();
+        }
+        root.setIntArray("sideIO", sideData);
 
         NBTTagList visList = new NBTTagList();
         for (Aspect aspect : visStored.getAspects()) {
@@ -137,6 +159,13 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
         maxVisPerAspect = root.getInteger("maxVis");
+
+        if (root.hasKey("sideIO")) {
+            int[] sideData = root.getIntArray("sideIO");
+            for (int i = 0; i < 6 && i < sideData.length; i++) {
+                sides[i] = IO.values()[sideData[i]];
+            }
+        }
 
         visStored = new AspectList();
         NBTTagList visList = root.getTagList("visStored", 10);

@@ -17,6 +17,16 @@ public class TEVisOutputPort extends AbstractVisPortTE {
     }
 
     @Override
+    public int getTier() {
+        return 1;
+    }
+
+    @Override
+    public IO getIOLimit() {
+        return IO.OUTPUT;
+    }
+
+    @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
         // Output port is passive - vis is consumed via consumeVis method
         return false;

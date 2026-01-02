@@ -17,6 +17,16 @@ public class TEVisInputPort extends AbstractVisPortTE {
     }
 
     @Override
+    public int getTier() {
+        return 1;
+    }
+
+    @Override
+    public IO getIOLimit() {
+        return IO.INPUT;
+    }
+
+    @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
         if (!worldObj.isRemote && shouldDoWorkThisTick(10)) {
             drawVisFromNetwork();

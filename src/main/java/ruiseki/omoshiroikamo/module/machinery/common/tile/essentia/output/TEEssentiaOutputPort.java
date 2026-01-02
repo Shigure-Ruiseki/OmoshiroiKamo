@@ -13,6 +13,8 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * Tubes.
  * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
  * for Tubes.
+ *
+ * TODO: Create TEEssentiaOutputPortME subclass (export Essentia to ME network)
  */
 
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
@@ -22,6 +24,16 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
 
     public TEEssentiaOutputPort() {
         super(DEFAULT_CAPACITY);
+    }
+
+    @Override
+    public int getTier() {
+        return 1;
+    }
+
+    @Override
+    public IO getIOLimit() {
+        return IO.OUTPUT;
     }
 
     // ========== Processing ==========
