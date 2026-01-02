@@ -5,6 +5,7 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -24,12 +26,14 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT2;
@@ -48,7 +52,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyI
  * - Implement BlockColor tinting for machine color customization
  * - Add Tesla coil-style wireless energy input
  */
-public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort> implements IModularBlock {
+public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> implements IModularBlock {
 
     protected BlockEnergyInputPort() {
         super(
@@ -73,9 +77,13 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        // TODO: Add Tier Color
-        return -1;
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon("overlay_energyinput_1", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_1"));
+        IconRegistry.addIcon("overlay_energyinput_2", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_2"));
+        IconRegistry.addIcon("overlay_energyinput_3", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_3"));
+        IconRegistry.addIcon("overlay_energyinput_4", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_4"));
+        IconRegistry.addIcon("overlay_energyinput_5", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_5"));
+        IconRegistry.addIcon("overlay_energyinput_6", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_6"));
     }
 
     @Override
@@ -91,17 +99,6 @@ public class BlockEnergyInputPort extends AbstractTieredBlock<TEEnergyInputPort>
         list.add(new ItemStack(itemIn, 1, 3));
         list.add(new ItemStack(itemIn, 1, 4));
         list.add(new ItemStack(itemIn, 1, 5));
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override

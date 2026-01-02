@@ -5,6 +5,7 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,12 +25,14 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT2;
@@ -48,7 +51,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergy
  * - Implement BlockColor tinting for machine color customization
  * - Add Tesla coil-style wireless energy input
  */
-public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPort> implements IModularBlock {
+public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort> implements IModularBlock {
 
     protected BlockEnergyOutputPort() {
         super(
@@ -73,9 +76,13 @@ public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPor
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        // TODO: Add Tier Color
-        return -1;
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon("overlay_energyoutput_1", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_1"));
+        IconRegistry.addIcon("overlay_energyoutput_2", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_2"));
+        IconRegistry.addIcon("overlay_energyoutput_3", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_3"));
+        IconRegistry.addIcon("overlay_energyoutput_4", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_4"));
+        IconRegistry.addIcon("overlay_energyoutput_5", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_5"));
+        IconRegistry.addIcon("overlay_energyoutput_6", reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_6"));
     }
 
     @Override
@@ -91,17 +98,6 @@ public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPor
         list.add(new ItemStack(itemIn, 1, 3));
         list.add(new ItemStack(itemIn, 1, 4));
         list.add(new ItemStack(itemIn, 1, 5));
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override
