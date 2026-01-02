@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -20,10 +21,10 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT2;
@@ -119,7 +120,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> i
         }
     }
 
-    public static class ItemBlockFluidOutputPort extends ItemBlockOK {
+    public static class ItemBlockFluidOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockFluidOutputPort(Block block) {
             super(block, block);
@@ -129,6 +130,11 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> i
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_fluidoutput_" + tier);
         }
 
         @Override

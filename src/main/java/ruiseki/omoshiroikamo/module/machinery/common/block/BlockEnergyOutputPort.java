@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -19,11 +20,11 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT2;
@@ -119,16 +120,21 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
         }
     }
 
-    public static class ItemBlockEnergyOutputPort extends ItemBlockOK {
+    public static class ItemBlockEnergyOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockEnergyOutputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_energyoutput_" + tier);
         }
 
         @Override

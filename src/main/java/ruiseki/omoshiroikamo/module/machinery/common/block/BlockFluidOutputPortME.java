@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -18,8 +19,8 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortME;
 
 /**
@@ -87,7 +88,17 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
         }
     }
 
-    public static class ItemBlockFluidOutputPortME extends ItemBlockOK {
+    @Override
+    public Type getPortType() {
+        return Type.FLUID;
+    }
+
+    @Override
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
+    }
+
+    public static class ItemBlockFluidOutputPortME extends AbstractPortItemBlock {
 
         public ItemBlockFluidOutputPortME(Block block) {
             super(block, block);
@@ -99,18 +110,13 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
         }
 
         @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_fluidoutput_me");
+        }
+
+        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             list.add("§7" + StatCollector.translateToLocal("tooltip.me_fluid_output.desc"));
         }
-    }
-
-    @Override
-    public Type getPortType() {
-        return Type.FLUID;
-    }
-
-    @Override
-    public Direction getPortDirection() {
-        return Direction.OUTPUT;
     }
 }

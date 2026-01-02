@@ -48,6 +48,11 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     }
 
     @Override
+    public IIcon getIcon(int side, int meta) {
+        return baseIcon;
+    }
+
+    @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
         ISidedTexture tile = (ISidedTexture) world.getTileEntity(x, y, z);
 

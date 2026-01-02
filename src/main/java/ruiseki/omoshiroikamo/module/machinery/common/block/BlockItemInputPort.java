@@ -1,24 +1,20 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.jetbrains.annotations.Nullable;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -26,11 +22,11 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT2;
@@ -48,7 +44,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInput
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving items
  */
-public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> implements IModularBlock {
+public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> implements IModularBlock {
 
     protected BlockItemInputPort() {
         super(
@@ -73,9 +69,25 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> imp
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        // TODO: Add Tier Color
-        return -1;
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_iteminput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_1"));
+        IconRegistry.addIcon(
+            "overlay_iteminput_2",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_2"));
+        IconRegistry.addIcon(
+            "overlay_iteminput_3",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_3"));
+        IconRegistry.addIcon(
+            "overlay_iteminput_4",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_4"));
+        IconRegistry.addIcon(
+            "overlay_iteminput_5",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_5"));
+        IconRegistry.addIcon(
+            "overlay_iteminput_6",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_6"));
     }
 
     @Override
@@ -94,20 +106,9 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> imp
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         dropStacks(world, x, y, z);
         super.breakBlock(world, x, y, z, block, meta);
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override
@@ -127,7 +128,7 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> imp
         }
     }
 
-    public static class ItemBlockItemInputPort extends ItemBlockOK {
+    public static class ItemBlockItemInputPort extends AbstractPortItemBlock {
 
         public ItemBlockItemInputPort(Block block) {
             super(block, block);
@@ -137,6 +138,11 @@ public class BlockItemInputPort extends AbstractTieredBlock<TEItemInputPort> imp
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_iteminput_" + tier);
         }
 
         @Override

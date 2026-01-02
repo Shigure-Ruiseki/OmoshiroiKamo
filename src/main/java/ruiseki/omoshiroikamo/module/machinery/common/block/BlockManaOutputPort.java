@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,19 +15,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import org.jetbrains.annotations.Nullable;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.output.TEManaOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.output.TEManaOutputPortT1;
@@ -44,7 +44,7 @@ import vazkii.botania.api.wand.IWandHUD;
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockManaOutputPort extends AbstractTieredBlock<TEManaOutputPort> implements IModularBlock, IWandHUD {
+public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> implements IModularBlock, IWandHUD {
 
     protected BlockManaOutputPort() {
         super(ModObject.blockModularManaOutput.unlocalisedName, TEManaOutputPortT1.class);
@@ -62,9 +62,10 @@ public class BlockManaOutputPort extends AbstractTieredBlock<TEManaOutputPort> i
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        // TODO: Add Tier Color
-        return -1;
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_manaoutput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_manaoutput_1"));
     }
 
     @Override
@@ -102,7 +103,7 @@ public class BlockManaOutputPort extends AbstractTieredBlock<TEManaOutputPort> i
         ((AbstractManaPortTE) world.getTileEntity(x, y, z)).renderHUD(mc, res);
     }
 
-    public static class ItemBlockManaOutputPort extends ItemBlockOK {
+    public static class ItemBlockManaOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockManaOutputPort(Block block) {
             super(block, block);
@@ -112,6 +113,11 @@ public class BlockManaOutputPort extends AbstractTieredBlock<TEManaOutputPort> i
         public String getUnlocalizedName(ItemStack stack) {
             int tier = stack.getItemDamage() + 1;
             return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_manaoutput_" + tier);
         }
 
         @Override
