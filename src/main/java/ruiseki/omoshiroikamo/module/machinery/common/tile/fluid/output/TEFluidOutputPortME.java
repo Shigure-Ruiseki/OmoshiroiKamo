@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -320,12 +319,6 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
         return false;
-    }
-
-    @Override
-    public ResourceLocation getPortOverlay() {
-        // Always active not needed
-        return null;
     }
 
     @Override

@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
@@ -28,7 +28,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.handler.QuantumBeaconEvent
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;
 
-public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IEnergySink {
+public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IOKEnergySink {
 
     private final List<BlockPos> modifiers = new ArrayList<>();
     protected ModifierHandler modifierHandler = new ModifierHandler();

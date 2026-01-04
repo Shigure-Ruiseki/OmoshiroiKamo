@@ -7,7 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -15,9 +15,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
 /**
  * Energy Input Port TileEntity.
  * Accepts RF energy for machine processing.
+ * Also supports Mekanism laser energy when Mekanism is present.
  */
-@Optional.InterfaceList({ @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism"), })
-public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IEnergySink, ILaserReceptor {
+@Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism")
+public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink, ILaserReceptor {
 
     public TEEnergyInputPort(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
@@ -26,14 +27,6 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     @Override
     public IO getIOLimit() {
         return IO.INPUT;
-    }
-
-    @Override
-    public double getDemandedEnergy() {
-        if (!isUseIC2Compat()) {
-            return 0;
-        }
-        return IEnergySink.super.getDemandedEnergy();
     }
 
     @Override
@@ -63,11 +56,16 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     }
 
     @Override
-    public void receiveLaserEnergy(double amount, ForgeDirection from) {
-        this.receiveEnergy(from, (int) amount, false);
+    @Optional.Method(modid = "Mekanism")
+    public void receiveLaserEnergy(double amount, ForgeDirection side) {
+        if (!isRedstoneActive() || !canInput(side)) {
+            return;
+        }
+        this.receiveEnergy(side, (int) amount, false);
     }
 
     @Override
+    @Optional.Method(modid = "Mekanism")
     public boolean canLasersDig() {
         return false;
     }

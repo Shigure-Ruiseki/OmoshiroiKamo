@@ -134,8 +134,10 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      */
     @Override
     public void doUpdate() {
+        // Always call super first to ensure IC2 registration and energy sync
+        super.doUpdate();
+
         if (!shouldDoWorkThisTick(20) && isFormed) {
-            super.doUpdate();
             return;
         }
 
@@ -146,8 +148,6 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
             getOffSet()[getTier() - 1][2]);
 
         if (!valid) return;
-
-        super.doUpdate();
     }
 
     /**

@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T> implements IModularBlock {
 
@@ -69,6 +70,8 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     }
 
     public abstract void registerPortOverlays(IIconRegister reg);
+
+    protected abstract Class<? extends AbstractPortItemBlock> getItemBlockClass();
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}

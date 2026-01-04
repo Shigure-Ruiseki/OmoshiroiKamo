@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -61,7 +60,7 @@ public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> imp
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockManaOutputPort.class;
     }
 

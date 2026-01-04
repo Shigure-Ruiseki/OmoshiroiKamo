@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -15,21 +14,19 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import cpw.mods.fml.common.Optional;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.crafting.CraftingState;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
-import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 
-public class TELootFabricator extends AbstractMachineTE implements IEnergySink, ISidedInventory {
+public class TELootFabricator extends AbstractMachineTE implements IOKEnergySink, ISidedInventory {
 
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_START = 1;
@@ -305,32 +302,5 @@ public class TELootFabricator extends AbstractMachineTE implements IEnergySink, 
     @Override
     public boolean canExtractItem(int slot, ItemStack stack, int side) {
         return slot >= OUTPUT_START;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public double getDemandedEnergy() {
-        int missing = getMaxEnergyStored() - getEnergyStored();
-        return Math.max(0, missing * EnergyConfig.rftToEU);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public int getSinkTier() {
-        return EnergyConfig.ic2SinkTier;
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public double injectEnergy(ForgeDirection direction, double amount, double voltage) {
-        int rf = (int) (amount * EnergyConfig.rftToEU);
-        int accepted = receiveEnergy(direction, rf, false);
-        return amount - ((double) accepted / EnergyConfig.rftToEU);
-    }
-
-    @Override
-    @Optional.Method(modid = "IC2")
-    public boolean acceptsEnergyFrom(TileEntity tileEntity, ForgeDirection forgeDirection) {
-        return canConnectEnergy(forgeDirection);
     }
 }

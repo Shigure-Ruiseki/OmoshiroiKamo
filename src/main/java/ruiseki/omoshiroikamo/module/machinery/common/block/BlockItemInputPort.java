@@ -8,7 +8,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -87,7 +86,7 @@ public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> imple
     }
 
     @Override
-    public Class<? extends ItemBlock> getItemBlockClass() {
+    public Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockItemInputPort.class;
     }
 
