@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -27,8 +28,10 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 
 /**
  * ME Output Port - outputs items directly to AE2 ME Network.
@@ -348,5 +351,16 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     public ResourceLocation getPortOverlay() {
         // Always active not needed
         return null;
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1) {
+            return IconRegistry.getIcon("overlay_itemoutput_me");
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }
