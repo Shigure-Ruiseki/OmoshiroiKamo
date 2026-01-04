@@ -1,37 +1,31 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output.TEEssentiaOutputPort;
 
 /**
  * Essentia Output Port block - provides Essentia to Infusion Altar and Tubes.
  */
-public class BlockEssentiaOutputPort extends AbstractTieredBlock<TEEssentiaOutputPort> implements IModularBlock {
+public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputPort> implements IModularBlock {
 
     protected BlockEssentiaOutputPort() {
         super(ModObject.blockModularEssentiaOutput.unlocalisedName, TEEssentiaOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockEssentiaOutputPort create() {
@@ -39,17 +33,14 @@ public class BlockEssentiaOutputPort extends AbstractTieredBlock<TEEssentiaOutpu
     }
 
     @Override
-    public String getTextureName() {
-        return "modular_machine_casing";
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_essentiaoutput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_essentiaoutput_1"));
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        return -1;
-    }
-
-    @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockEssentiaOutputPort.class;
     }
 
@@ -59,27 +50,16 @@ public class BlockEssentiaOutputPort extends AbstractTieredBlock<TEEssentiaOutpu
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
+    public Type getPortType() {
+        return Type.ESSENTIA;
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.ESSENTIA;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
     }
 
-    @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
-    }
-
-    public static class ItemBlockEssentiaOutputPort extends ItemBlockOK {
+    public static class ItemBlockEssentiaOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockEssentiaOutputPort(Block block) {
             super(block, block);
@@ -87,7 +67,13 @@ public class BlockEssentiaOutputPort extends AbstractTieredBlock<TEEssentiaOutpu
 
         @Override
         public String getUnlocalizedName(ItemStack stack) {
-            return super.getUnlocalizedName();
+            int tier = stack.getItemDamage() + 1;
+            return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_essentiaoutput_" + tier);
         }
     }
 }

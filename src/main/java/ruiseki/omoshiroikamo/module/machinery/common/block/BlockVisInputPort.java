@@ -1,37 +1,31 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.input.TEVisInputPort;
 
 /**
  * Vis Input Port block - receives Vis from Thaumcraft Vis Relay network.
  */
-public class BlockVisInputPort extends AbstractTieredBlock<TEVisInputPort> implements IModularBlock {
+public class BlockVisInputPort extends AbstractPortBlock<TEVisInputPort> implements IModularBlock {
 
     protected BlockVisInputPort() {
         super(ModObject.blockModularVisInput.unlocalisedName, TEVisInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockVisInputPort create() {
@@ -44,12 +38,14 @@ public class BlockVisInputPort extends AbstractTieredBlock<TEVisInputPort> imple
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        return -1;
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_visoutput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_visoutput_1"));
     }
 
     @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockVisInputPort.class;
     }
 
@@ -59,27 +55,16 @@ public class BlockVisInputPort extends AbstractTieredBlock<TEVisInputPort> imple
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
+    public Type getPortType() {
+        return Type.VIS;
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.VIS;
+    public Direction getPortDirection() {
+        return Direction.INPUT;
     }
 
-    @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
-    }
-
-    public static class ItemBlockVisInputPort extends ItemBlockOK {
+    public static class ItemBlockVisInputPort extends AbstractPortItemBlock {
 
         public ItemBlockVisInputPort(Block block) {
             super(block, block);
@@ -87,7 +72,13 @@ public class BlockVisInputPort extends AbstractTieredBlock<TEVisInputPort> imple
 
         @Override
         public String getUnlocalizedName(ItemStack stack) {
-            return super.getUnlocalizedName();
+            int tier = stack.getItemDamage() + 1;
+            return super.getUnlocalizedName() + ".tier_" + tier;
+        }
+
+        @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_visinput_" + tier);
         }
     }
 }

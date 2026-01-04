@@ -1,6 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output;
 
+import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
 
@@ -75,5 +80,16 @@ public class TEVisOutputPort extends AbstractVisPortTE {
     @Override
     public IPortType.Direction getPortDirection() {
         return IPortType.Direction.OUTPUT;
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+            return IconRegistry.getIcon("overlay_visoutput_" + getTier());
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }

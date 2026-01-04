@@ -2,14 +2,12 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.vis;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 
@@ -173,10 +171,5 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
                 visStored.add(aspect, amount);
             }
         }
-    }
-
-    @Override
-    public ResourceLocation getPortOverlay() {
-        return new ResourceLocation(LibResources.PREFIX_BLOCK + "modularmachineryOverlay/overlay_io_mode.png");
     }
 }

@@ -1,8 +1,10 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output;
 
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectSource;
@@ -113,7 +115,18 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+            return IconRegistry.getIcon("overlay_essentiaoutput_" + getTier());
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }

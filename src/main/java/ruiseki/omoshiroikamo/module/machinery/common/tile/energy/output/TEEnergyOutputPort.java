@@ -26,12 +26,6 @@ public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implemen
     }
 
     @Override
-    public boolean canOutput(ForgeDirection side) {
-        IO io = getSideIO(side);
-        return io != IO.INPUT;
-    }
-
-    @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
         if (isRedstoneActive()) {
             EnergyTransfer transfer = new EnergyTransfer();

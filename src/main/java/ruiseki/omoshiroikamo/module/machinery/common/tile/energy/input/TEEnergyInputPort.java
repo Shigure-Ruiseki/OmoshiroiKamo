@@ -5,6 +5,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Optional;
+import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
@@ -17,7 +18,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
  * Also supports Mekanism laser energy when Mekanism is present.
  */
 @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism")
-public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink {
+public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink, ILaserReceptor {
 
     public TEEnergyInputPort(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
@@ -26,12 +27,6 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     @Override
     public IO getIOLimit() {
         return IO.INPUT;
-    }
-
-    @Override
-    public boolean canInput(ForgeDirection side) {
-        IO io = getSideIO(side);
-        return io != IO.OUTPUT;
     }
 
     @Override
@@ -60,11 +55,16 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
         return energyStorage.receiveEnergy(amount, simulate);
     }
 
+    @Override
     @Optional.Method(modid = "Mekanism")
-    public void receiveLaserEnergy(double amount, ForgeDirection from) {
-        this.receiveEnergy(from, (int) amount, false);
+    public void receiveLaserEnergy(double amount, ForgeDirection side) {
+        if (!isRedstoneActive() || !canInput(side)) {
+            return;
+        }
+        this.receiveEnergy(side, (int) amount, false);
     }
 
+    @Override
     @Optional.Method(modid = "Mekanism")
     public boolean canLasersDig() {
         return false;

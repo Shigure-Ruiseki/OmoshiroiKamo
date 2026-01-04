@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.config.Actionable;
@@ -16,6 +17,8 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import thaumcraft.api.aspects.Aspect;
 import thaumicenergistics.api.grid.IEssentiaGrid;
 import thaumicenergistics.api.storage.IAspectStack;
@@ -160,5 +163,16 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         if (gridProxy != null) {
             gridProxy.onChunkUnload();
         }
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+            return IconRegistry.getIcon("overlay_essentiainput_me");
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }
