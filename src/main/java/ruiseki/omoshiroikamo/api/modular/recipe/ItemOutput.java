@@ -43,7 +43,13 @@ public class ItemOutput implements IRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ITEM) continue;
-            if (!(port instanceof AbstractItemIOPortTE itemPort)) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractItemIOPortTE)) {
+                throw new IllegalStateException(
+                    "ITEM OUTPUT port must be AbstractItemIOPortTE, got: " + port.getClass()
+                        .getName());
+            }
+            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
 
             for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);

@@ -39,52 +39,40 @@ public class ItemInput implements IRecipeInput {
 
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
-        int found = 0;
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.ITEM) continue;
-            if (!(port instanceof AbstractItemIOPortTE itemPort)) continue;
-
-            for (int i = 0; i < itemPort.getSizeInventory(); i++) {
-                ItemStack stack = itemPort.getStackInSlot(i);
-                if (stack != null && stacksMatch(stack, required)) {
-                    found += stack.stackSize;
-                }
-            }
-        }
-
-        if (found < required.stackSize) {
-            return false;
-        }
-
-        if (!simulate) {
-            consumeFromPorts(ports);
-        }
-        return true;
-    }
-
-    private void consumeFromPorts(List<IModularPort> ports) {
         int remaining = required.stackSize;
+
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ITEM) continue;
-            if (!(port instanceof AbstractItemIOPortTE itemPort)) continue;
+            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
+            if (!(port instanceof AbstractItemIOPortTE)) {
+                throw new IllegalStateException(
+                    "ITEM INPUT port must be AbstractItemIOPortTE, got: " + port.getClass()
+                        .getName());
+            }
+            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
 
             for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack != null && stacksMatch(stack, required)) {
                     int consume = Math.min(stack.stackSize, remaining);
-                    stack.stackSize -= consume;
-                    remaining -= consume;
-                    if (stack.stackSize <= 0) {
-                        itemPort.setInventorySlotContents(i, null);
+                    if (!simulate) {
+                        stack.stackSize -= consume;
+                        if (stack.stackSize <= 0) {
+                            itemPort.setInventorySlotContents(i, null);
+                        }
                     }
+                    remaining -= consume;
                 }
             }
         }
+
+        return remaining <= 0;
     }
 
     private boolean stacksMatch(ItemStack a, ItemStack b) {
         if (a == null || b == null) return false;
         if (a.getItem() != b.getItem()) return false;
+        // 32767 is wildcard
         if (b.getItemDamage() != 32767 && a.getItemDamage() != b.getItemDamage()) return false;
         return true;
     }

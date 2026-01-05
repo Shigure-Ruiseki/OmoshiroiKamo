@@ -30,40 +30,29 @@ public class FluidInput implements IRecipeInput {
 
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
-        int found = 0;
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.FLUID) continue;
-            if (!(port instanceof AbstractFluidPortTE fluidPort)) continue;
-
-            FluidStack stored = fluidPort.getStoredFluid();
-            if (stored != null && stored.isFluidEqual(required)) {
-                found += stored.amount;
-            }
-        }
-
-        if (found < required.amount) {
-            return false;
-        }
-
-        if (!simulate) {
-            consumeFromPorts(ports);
-        }
-        return true;
-    }
-
-    private void consumeFromPorts(List<IModularPort> ports) {
         int remaining = required.amount;
+
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.FLUID) continue;
-            if (!(port instanceof AbstractFluidPortTE fluidPort)) continue;
+            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
+            if (!(port instanceof AbstractFluidPortTE)) {
+                throw new IllegalStateException(
+                    "FLUID INPUT port must be AbstractFluidPortTE, got: " + port.getClass()
+                        .getName());
+            }
+            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
 
             FluidStack stored = fluidPort.getStoredFluid();
             if (stored != null && stored.isFluidEqual(required)) {
                 int drain = Math.min(stored.amount, remaining);
-                fluidPort.internalDrain(drain, true);
+                if (!simulate) {
+                    fluidPort.internalDrain(drain, true);
+                }
                 remaining -= drain;
             }
             if (remaining <= 0) break;
         }
+
+        return remaining <= 0;
     }
 }

@@ -35,14 +35,17 @@ public class FluidOutput implements IRecipeOutput {
         int remaining = output.amount;
 
         for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.FLUID)
-                continue;
-            if (!(port instanceof AbstractFluidPortTE fluidPort))
-                continue;
+            if (port.getPortType() != IPortType.Type.FLUID) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractFluidPortTE)) {
+                throw new IllegalStateException(
+                    "FLUID OUTPUT port must be AbstractFluidPortTE, got: " + port.getClass()
+                        .getName());
+            }
+            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
 
             FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
-            if (tankInfo == null || tankInfo.length == 0)
-                continue;
+            if (tankInfo == null || tankInfo.length == 0) continue;
 
             int tankCapacity = tankInfo[0].capacity;
             FluidStack stored = fluidPort.getStoredFluid();
@@ -56,8 +59,7 @@ public class FluidOutput implements IRecipeOutput {
                 }
                 remaining -= fill;
             }
-            if (remaining <= 0)
-                break;
+            if (remaining <= 0) break;
         }
 
         return remaining <= 0;
