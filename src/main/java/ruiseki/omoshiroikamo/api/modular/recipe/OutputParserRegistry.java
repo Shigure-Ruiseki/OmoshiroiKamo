@@ -1,0 +1,46 @@
+package ruiseki.omoshiroikamo.api.modular.recipe;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+import com.google.gson.JsonObject;
+
+/**
+ * Registry for output parsers.
+ * Uses Factory + Registry pattern for extensibility.
+ */
+public class OutputParserRegistry {
+
+    private static final Map<String, Function<JsonObject, IRecipeOutput>> parsers = new HashMap<>();
+
+    static {
+        register("item", ItemOutput::fromJson);
+        register("fluid", FluidOutput::fromJson);
+    }
+
+    /**
+     * Register a parser for a specific JSON key.
+     * 
+     * @param key    The JSON key that identifies this output type (e.g., "item",
+     *               "fluid")
+     * @param parser Function that creates IRecipeOutput from JsonObject
+     */
+    public static void register(String key, Function<JsonObject, IRecipeOutput> parser) {
+        parsers.put(key, parser);
+    }
+
+    /**
+     * Parse a JsonObject into an IRecipeOutput.
+     * Determines type by checking which key is present.
+     */
+    public static IRecipeOutput parse(JsonObject json) {
+        for (Map.Entry<String, Function<JsonObject, IRecipeOutput>> entry : parsers.entrySet()) {
+            if (json.has(entry.getKey())) {
+                return entry.getValue()
+                    .apply(json);
+            }
+        }
+        throw new IllegalArgumentException("Unknown output type in JSON: " + json);
+    }
+}

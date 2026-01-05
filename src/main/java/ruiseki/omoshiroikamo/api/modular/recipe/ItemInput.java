@@ -5,8 +5,12 @@ import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import com.google.gson.JsonObject;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
@@ -75,5 +79,29 @@ public class ItemInput implements IRecipeInput {
         // 32767 is wildcard
         if (b.getItemDamage() != 32767 && a.getItemDamage() != b.getItemDamage()) return false;
         return true;
+    }
+
+    /**
+     * Create ItemInput from JSON.
+     * Format: { "item": "modid:itemname", "amount": 64, "meta": 0 }
+     */
+    public static ItemInput fromJson(JsonObject json) {
+        String itemId = json.get("item")
+            .getAsString();
+        int amount = json.has("amount") ? json.get("amount")
+            .getAsInt() : 1;
+        int meta = json.has("meta") ? json.get("meta")
+            .getAsInt() : 0;
+
+        String[] parts = itemId.split(":");
+        String modId = parts[0];
+        String itemName = parts[1];
+
+        Item item = GameRegistry.findItem(modId, itemName);
+        if (item == null) {
+            Logger.warn("Unknown item in recipe: {}", itemId);
+            return null;
+        }
+        return new ItemInput(new ItemStack(item, amount, meta));
     }
 }
