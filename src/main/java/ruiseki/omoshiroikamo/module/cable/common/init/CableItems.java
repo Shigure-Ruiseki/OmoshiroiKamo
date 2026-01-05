@@ -1,0 +1,54 @@
+package ruiseki.omoshiroikamo.module.cable.common.init;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import lombok.Getter;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
+
+public enum CableItems {
+
+    // spotless: off
+
+    ;
+    // spotless: on
+
+    public static final CableItems[] VALUES = values();
+
+    public static void preInit() {
+        for (CableItems item : VALUES) {
+            try {
+                GameRegistry.registerItem(item.getItem(), item.getName());
+                Logger.info("Successfully initialized " + item.name());
+            } catch (Exception e) {
+                Logger.error("Failed to initialize item: +" + item.name());
+            }
+        }
+    }
+
+    @Getter
+    private final Item item;
+
+    CableItems(Item item) {
+        this.item = item;
+    }
+
+    public String getName() {
+        return getItem().getUnlocalizedName()
+            .replace("item.", "");
+    }
+
+    public ItemStack newItemStack() {
+        return newItemStack(1);
+    }
+
+    public ItemStack newItemStack(int count) {
+        return newItemStack(count, 0);
+    }
+
+    public ItemStack newItemStack(int count, int meta) {
+        return new ItemStack(this.getItem(), count, meta);
+    }
+
+}

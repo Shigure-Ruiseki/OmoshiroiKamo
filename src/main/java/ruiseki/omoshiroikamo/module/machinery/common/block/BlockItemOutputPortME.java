@@ -1,31 +1,25 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import org.jetbrains.annotations.Nullable;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortME;
 
 /**
@@ -33,12 +27,13 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutp
  * Requires Applied Energistics 2 to be loaded.
  * Uses JSON model with base + overlay textures via GTNHLib.
  */
-public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortME> implements IModularBlock {
+public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME> implements IModularBlock {
 
     protected BlockItemOutputPortME() {
         super(ModObject.blockModularItemOutputME.unlocalisedName, TEItemOutputPortME.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockItemOutputPortME create() {
@@ -46,17 +41,14 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
     }
 
     @Override
-    public String getTextureName() {
-        return "modular_machine_casing";
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_itemoutput_me",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_me"));
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        return -1; // No tint
-    }
-
-    @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockItemOutputPortME.class;
     }
 
@@ -66,12 +58,6 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         dropStacks(world, x, y, z);
         TileEntity tileEntity = world.getTileEntity(x, y, z);
@@ -79,11 +65,6 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
             me.dropCachedItems();
         }
         super.breakBlock(world, x, y, z, block, meta);
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override
@@ -101,7 +82,7 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
         }
     }
 
-    public static class ItemBlockItemOutputPortME extends ItemBlockOK {
+    public static class ItemBlockItemOutputPortME extends AbstractPortItemBlock {
 
         public ItemBlockItemOutputPortME(Block block) {
             super(block, block);
@@ -113,18 +94,23 @@ public class BlockItemOutputPortME extends AbstractTieredBlock<TEItemOutputPortM
         }
 
         @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_itemoutput_me");
+        }
+
+        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             list.add("§7" + StatCollector.translateToLocal("tooltip.me_output.desc"));
         }
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.ITEM;
+    public Type getPortType() {
+        return Type.ITEM;
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
     }
 }

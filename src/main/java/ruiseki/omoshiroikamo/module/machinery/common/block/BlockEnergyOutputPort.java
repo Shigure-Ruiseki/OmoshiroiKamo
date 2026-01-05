@@ -1,32 +1,29 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT2;
@@ -45,7 +42,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergy
  * - Implement BlockColor tinting for machine color customization
  * - Add Tesla coil-style wireless energy input
  */
-public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPort> implements IModularBlock {
+public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort> implements IModularBlock {
 
     protected BlockEnergyOutputPort() {
         super(
@@ -58,6 +55,7 @@ public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPor
             TEEnergyOutputPortT6.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        setTextureName("modularmachineryOverlay/base_modularports");
     }
 
     public static BlockEnergyOutputPort create() {
@@ -65,18 +63,29 @@ public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPor
     }
 
     @Override
-    public String getTextureName() {
-        return "modular_machine_casing";
+    public void registerPortOverlays(IIconRegister reg) {
+        IconRegistry.addIcon(
+            "overlay_energyoutput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_1"));
+        IconRegistry.addIcon(
+            "overlay_energyoutput_2",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_2"));
+        IconRegistry.addIcon(
+            "overlay_energyoutput_3",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_3"));
+        IconRegistry.addIcon(
+            "overlay_energyoutput_4",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_4"));
+        IconRegistry.addIcon(
+            "overlay_energyoutput_5",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_5"));
+        IconRegistry.addIcon(
+            "overlay_energyoutput_6",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_6"));
     }
 
     @Override
-    public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
-        // TODO: Add Tier Color
-        return -1;
-    }
-
-    @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
+    protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockEnergyOutputPort.class;
     }
 
@@ -91,26 +100,22 @@ public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPor
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
-    }
-
-    @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity te = accessor.getTileEntity();
         if (te instanceof AbstractEnergyTE energyTE) {
             tooltip.add(WailaUtils.getEnergyTransfer(energyTE));
         }
+        if (te instanceof ISidedIO io) {
+            Vec3 hit = WailaUtils.getLocalHit(accessor);
+            if (hit == null) return;
+            ForgeDirection side = ItemWrench
+                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
+            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
+        }
     }
 
-    public static class ItemBlockEnergyOutputPort extends ItemBlockOK {
+    public static class ItemBlockEnergyOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockEnergyOutputPort(Block block) {
             super(block, block);
@@ -123,18 +128,23 @@ public class BlockEnergyOutputPort extends AbstractTieredBlock<TEEnergyOutputPor
         }
 
         @Override
+        public IIcon getOverlayIcon(int tier) {
+            return IconRegistry.getIcon("overlay_energyoutput_" + tier);
+        }
+
+        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             // TODO: Add tooltips
         }
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.ENERGY;
+    public Type getPortType() {
+        return Type.ENERGY;
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
     }
 }

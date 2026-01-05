@@ -56,7 +56,7 @@ public class EnergyUtils {
             }
         }
 
-        if (obj instanceof IEnergySource provider) {
+        if (obj instanceof IOKEnergySource provider) {
             EnergySource source = new OKEnergySource(provider, side);
 
             if (source != null) {
@@ -103,7 +103,7 @@ public class EnergyUtils {
             }
         }
 
-        if (obj instanceof IEnergySink receiver) {
+        if (obj instanceof IOKEnergySink receiver) {
             EnergySink source = new OKEnergySink(receiver, side);
 
             if (source != null) {
@@ -138,7 +138,7 @@ public class EnergyUtils {
             return energyIO;
         }
 
-        if (obj instanceof IEnergyIO ioHandler) {
+        if (obj instanceof IOKEnergyIO ioHandler) {
             return new OKEnergyIO(ioHandler, side);
         }
 

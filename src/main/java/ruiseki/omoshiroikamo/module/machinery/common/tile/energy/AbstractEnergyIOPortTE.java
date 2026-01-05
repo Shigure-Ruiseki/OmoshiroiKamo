@@ -128,6 +128,9 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
         }
         energyMode = EnergyMode.byIndex(root.getInteger("energyMode"));
         useIC2Compat = root.getBoolean("useIC2");
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override

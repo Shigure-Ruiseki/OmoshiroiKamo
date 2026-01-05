@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.item.ItemStructureWand;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public enum CoreItems {
@@ -13,6 +14,7 @@ public enum CoreItems {
     // spotless: off
 
     STRUCTURE_WAND(new ItemStructureWand()),
+    WRENCH(new ItemWrench()),
 
     ;
     // spotless: on

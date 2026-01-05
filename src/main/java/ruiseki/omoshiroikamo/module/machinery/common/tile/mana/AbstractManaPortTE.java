@@ -183,4 +183,5 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public abstract IPortType.Direction getPortDirection();
+
 }

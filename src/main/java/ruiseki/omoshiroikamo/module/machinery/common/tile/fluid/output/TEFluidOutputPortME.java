@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,7 +28,9 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 
 /**
  * ME Fluid Output Port - outputs fluids directly to AE2 ME Network.
@@ -316,5 +319,16 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
         return false;
+    }
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int renderPass) {
+        if (renderPass == 0) {
+            return AbstractPortBlock.baseIcon;
+        }
+        if (renderPass == 1) {
+            return IconRegistry.getIcon("overlay_fluidoutput_me");
+        }
+        return AbstractPortBlock.baseIcon;
     }
 }
