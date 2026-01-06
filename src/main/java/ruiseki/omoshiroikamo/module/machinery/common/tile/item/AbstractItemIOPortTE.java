@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -22,9 +21,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 /**
@@ -72,7 +69,6 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     public void setSideIO(ForgeDirection side, IO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
-        Logger.info(getSideIO(side).name());
     }
 
     @Override
@@ -95,6 +91,9 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
             for (int i = 0; i < 6 && i < sideData.length; i++) {
                 sides[i] = IO.values()[sideData[i]];
             }
+        }
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 
@@ -161,11 +160,6 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
         panel.child(widget);
 
         return panel;
-    }
-
-    @Override
-    public ResourceLocation getPortOverlay() {
-        return new ResourceLocation(LibResources.PREFIX_BLOCK + "modularmachineryOverlay/overlay_io_mode.png");
     }
 
 }

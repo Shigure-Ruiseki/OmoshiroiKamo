@@ -17,7 +17,7 @@ import mcp.mobius.waila.api.SpecialChars;
 import ruiseki.omoshiroikamo.api.block.ICraftingTile;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
-import ruiseki.omoshiroikamo.api.energy.IEnergyTile;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -36,7 +36,7 @@ public class WailaUtils {
                 .getName());
     }
 
-    public static String getEnergyTransfer(IEnergyTile handler) {
+    public static String getEnergyTransfer(IOKEnergyTile handler) {
         return LibMisc.LANG.localize("gui.energy_transfer", handler.getEnergyTransfer());
     }
 

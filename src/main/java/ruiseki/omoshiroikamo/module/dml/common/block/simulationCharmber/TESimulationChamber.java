@@ -15,7 +15,7 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.block.CraftingState;
-import ruiseki.omoshiroikamo.api.energy.IEnergySink;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
@@ -26,7 +26,7 @@ import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPolymerCla
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPolymerClay;
 
-public class TESimulationChamber extends AbstractMachineTE implements IEnergySink, ISidedInventory {
+public class TESimulationChamber extends AbstractMachineTE implements IOKEnergySink, ISidedInventory {
 
     private static final int SLOT_DATA_MODEL = 0;
     private static final int SLOT_POLYMER = 1;

@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.gas;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -28,7 +27,6 @@ import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 /*
@@ -89,13 +87,27 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
+        int[] sideData = new int[6];
+        for (int i = 0; i < 6; i++) {
+            sideData[i] = sides[i].ordinal();
+        }
+        root.setIntArray("sideIO", sideData);
         tank.writeCommon(root);
     }
 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
+        if (root.hasKey("sideIO")) {
+            int[] sideData = root.getIntArray("sideIO");
+            for (int i = 0; i < 6 && i < sideData.length; i++) {
+                sides[i] = IO.values()[sideData[i]];
+            }
+        }
         tank.readCommon(root);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override
@@ -226,8 +238,4 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
         return panel;
     }
 
-    @Override
-    public ResourceLocation getPortOverlay() {
-        return new ResourceLocation(LibResources.PREFIX_BLOCK + "modularmachineryOverlay/overlay_io_mode.png");
-    }
 }

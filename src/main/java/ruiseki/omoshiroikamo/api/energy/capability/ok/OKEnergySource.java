@@ -2,15 +2,15 @@ package ruiseki.omoshiroikamo.api.energy.capability.ok;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.energy.IEnergySource;
+import ruiseki.omoshiroikamo.api.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.api.energy.capability.EnergySource;
 
 public class OKEnergySource implements EnergySource {
 
-    private final IEnergySource provider;
+    private final IOKEnergySource provider;
     private final ForgeDirection side;
 
-    public OKEnergySource(IEnergySource provider, ForgeDirection side) {
+    public OKEnergySource(IOKEnergySource provider, ForgeDirection side) {
         this.provider = provider;
         this.side = side;
     }
