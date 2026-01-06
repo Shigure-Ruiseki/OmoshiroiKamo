@@ -5,7 +5,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
-import ruiseki.omoshiroikamo.module.cable.client.renderer.CableISBRH;
+import ruiseki.omoshiroikamo.module.cable.client.render.CableISBRH;
 import ruiseki.omoshiroikamo.module.cable.common.cable.BlockCable;
 
 public class CableClient implements IModuleClient {

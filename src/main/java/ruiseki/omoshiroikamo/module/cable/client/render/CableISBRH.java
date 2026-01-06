@@ -1,9 +1,10 @@
-package ruiseki.omoshiroikamo.module.cable.client.renderer;
+package ruiseki.omoshiroikamo.module.cable.client.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -16,6 +17,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICable;
+import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.cable.common.cable.BlockCable;
 
@@ -90,6 +92,19 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
         if (cable.hasVisualConnection(ForgeDirection.EAST)) {
             renderer.setRenderBounds(max, min, min, 1.0, max, max);
             renderer.renderStandardBlock(block, x, y, z);
+        }
+
+        // PARTS
+        for (ICablePart part : cable.getParts()) {
+            AxisAlignedBB bb = part.getCollisionBox();
+            if (bb == null) continue;
+
+            IIcon icon = part.getIcon();
+
+            renderer.setOverrideBlockTexture(icon);
+            renderer.setRenderBounds(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+            renderer.renderStandardBlock(block, x, y, z);
+            renderer.clearOverrideBlockTexture();
         }
 
         return true;

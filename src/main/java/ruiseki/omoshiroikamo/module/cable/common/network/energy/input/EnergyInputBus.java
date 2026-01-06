@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network.energy.input;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.cable.ICable;
@@ -93,5 +94,10 @@ public class EnergyInputBus implements IEnergyPart {
             case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
             default -> null;
         };
+    }
+
+    @Override
+    public IIcon getIcon() {
+        return null;
     }
 }

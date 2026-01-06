@@ -7,6 +7,11 @@ import net.minecraft.util.IIcon;
 
 public class RenderUtils {
 
+    public static void renderCube(Tessellator t, double minX, double minY, double minZ, double maxX, double maxY,
+        double maxZ, IIcon icon) {
+        renderCube(t, minX, minY, minZ, maxX, maxY, maxZ, icon);
+    }
+
     public static void renderCube(Tessellator t, float minX, float minY, float minZ, float maxX, float maxY, float maxZ,
         IIcon icon) {
 
