@@ -13,7 +13,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.mojang.authlib.GameProfile;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.crafting.CraftingState;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 
 /**

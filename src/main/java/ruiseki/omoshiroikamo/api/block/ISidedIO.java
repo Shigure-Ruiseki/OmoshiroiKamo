@@ -1,8 +1,6 @@
-package ruiseki.omoshiroikamo.api.io;
+package ruiseki.omoshiroikamo.api.block;
 
 import net.minecraftforge.common.util.ForgeDirection;
-
-import ruiseki.omoshiroikamo.api.block.IOKTile;
 
 public interface ISidedIO extends IOKTile {
 

@@ -9,8 +9,10 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -86,6 +88,14 @@ public class CommonProxy {
 
     public void serverStarted(FMLServerStartedEvent event) {
         ModuleManager.serverStarted(event);
+    }
+
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        ModuleManager.onServerAboutToStart(event);
+    }
+
+    public void onServerStopped(FMLServerStoppedEvent event) {
+        ModuleManager.onServerStopped(event);
     }
 
     public World getEntityWorld() {

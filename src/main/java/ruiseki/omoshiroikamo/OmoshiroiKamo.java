@@ -10,8 +10,10 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -65,5 +67,15 @@ public class OmoshiroiKamo {
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
         proxy.onConstruction(event);
+    }
+
+    @EventHandler
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        proxy.onServerAboutToStart(event);
+    }
+
+    @EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event) {
+        proxy.onServerStopped(event);
     }
 }

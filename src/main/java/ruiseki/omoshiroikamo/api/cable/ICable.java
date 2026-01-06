@@ -1,16 +1,21 @@
 package ruiseki.omoshiroikamo.api.cable;
 
 import java.util.Collection;
+import java.util.Map;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import ruiseki.omoshiroikamo.api.block.IOKTile;
+import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
-public interface ICable extends IOKTile, IFluidHandler {
+public interface ICable extends IOKTile {
 
-    // ===== Part management =====
+    // Part
 
     ICablePart getPart(ForgeDirection side);
 
@@ -22,7 +27,7 @@ public interface ICable extends IOKTile, IFluidHandler {
 
     Collection<ICablePart> getParts();
 
-    // ===== Connection management =====
+    // Connection
 
     boolean canConnect(TileEntity other, ForgeDirection side);
 
@@ -32,7 +37,31 @@ public interface ICable extends IOKTile, IFluidHandler {
 
     void disconnect(ForgeDirection side);
 
-    void reconnect(ForgeDirection side);
+    void connect(ForgeDirection side);
 
     void destroy();
+
+    boolean hasVisualConnection(ForgeDirection side);
+
+    // Events
+
+    boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side, float hitX,
+        float hitY, float hitZ);
+
+    void onNeighborBlockChange(Block blockId);
+
+    void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ);
+
+    void onBlockRemoved();
+
+    void dirty();
+
+    World getWorld();
+
+    // Network
+    Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> getNetworks();
+
+    <T extends ICablePart> AbstractCableNetwork<T> getNetwork(Class<T> partType);
+
+    <T extends ICablePart> void setNetworks(Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> networks);
 }

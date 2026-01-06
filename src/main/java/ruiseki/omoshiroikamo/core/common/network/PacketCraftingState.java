@@ -9,8 +9,8 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.crafting.CraftingState;
-import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
+import ruiseki.omoshiroikamo.api.block.ICraftingTile;
 
 public class PacketCraftingState implements IMessage, IMessageHandler<PacketCraftingState, IMessage> {
 

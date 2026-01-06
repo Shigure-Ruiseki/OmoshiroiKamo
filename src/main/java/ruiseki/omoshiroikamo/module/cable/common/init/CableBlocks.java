@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.cable.common.block.BlockCable;
+import ruiseki.omoshiroikamo.module.cable.common.cable.BlockCable;
 
 public enum CableBlocks {
 

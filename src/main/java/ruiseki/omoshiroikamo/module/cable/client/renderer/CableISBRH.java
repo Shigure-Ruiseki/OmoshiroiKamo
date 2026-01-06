@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
-import ruiseki.omoshiroikamo.module.cable.common.block.BlockCable;
+import ruiseki.omoshiroikamo.module.cable.common.cable.BlockCable;
 
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = false)
@@ -37,7 +37,6 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         RenderUtils.renderCube(tess, min, min, min, max, max, max, icon);
-
         RenderUtils.renderCube(tess, min, min, 0.0f, max, max, min, icon);
         RenderUtils.renderCube(tess, min, min, max, max, max, 1.0f, icon);
         GL11.glPopMatrix();
@@ -58,37 +57,37 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
         renderer.renderStandardBlock(block, x, y, z);
 
         // UP (+Y)
-        if (cable.isConnected(ForgeDirection.UP)) {
+        if (cable.hasVisualConnection(ForgeDirection.UP)) {
             renderer.setRenderBounds(min, max, min, max, 1.0, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // DOWN (-Y)
-        if (cable.isConnected(ForgeDirection.DOWN)) {
+        if (cable.hasVisualConnection(ForgeDirection.DOWN)) {
             renderer.setRenderBounds(min, 0.0, min, max, min, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // NORTH (-Z)
-        if (cable.isConnected(ForgeDirection.NORTH)) {
+        if (cable.hasVisualConnection(ForgeDirection.NORTH)) {
             renderer.setRenderBounds(min, min, 0.0, max, max, min);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // SOUTH (+Z)
-        if (cable.isConnected(ForgeDirection.SOUTH)) {
+        if (cable.hasVisualConnection(ForgeDirection.SOUTH)) {
             renderer.setRenderBounds(min, min, max, max, max, 1.0);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // WEST (-X)
-        if (cable.isConnected(ForgeDirection.WEST)) {
+        if (cable.hasVisualConnection(ForgeDirection.WEST)) {
             renderer.setRenderBounds(0.0, min, min, min, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // EAST (+X)
-        if (cable.isConnected(ForgeDirection.EAST)) {
+        if (cable.hasVisualConnection(ForgeDirection.EAST)) {
             renderer.setRenderBounds(max, min, min, 1.0, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }

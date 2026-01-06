@@ -6,10 +6,13 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.input.ItemEnergyInputBus;
 
 public enum CableItems {
 
     // spotless: off
+
+    ENERGY_INPUT_BUS(new ItemEnergyInputBus()),
 
     ;
     // spotless: on

@@ -19,7 +19,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
-import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;

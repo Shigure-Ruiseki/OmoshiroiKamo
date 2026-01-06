@@ -117,9 +117,9 @@ public enum ModObject {
 
     itemStructureWand,
 
-    itemWrench
+    itemWrench,
 
-    ;
+    itemEnergyInputBus;
     // spotless: on
 
     public final String unlocalisedName;

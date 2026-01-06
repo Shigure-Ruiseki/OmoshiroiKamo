@@ -15,7 +15,7 @@ import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
 import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 
-import ruiseki.omoshiroikamo.api.crafting.CraftingState;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
 
 public class BlockStateUtils {
 

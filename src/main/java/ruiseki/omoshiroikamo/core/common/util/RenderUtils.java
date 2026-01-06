@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 
@@ -55,5 +57,14 @@ public class RenderUtils {
         t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxZ * du, v0 + maxY * dv);
 
         t.draw();
+    }
+
+    public static void renderInventoryCube(RenderBlocks renderer, Block block, int metadata) {
+        renderer.renderFaceYNeg(block, 0, 0, 0, block.getIcon(0, metadata));
+        renderer.renderFaceYPos(block, 0, 0, 0, block.getIcon(1, metadata));
+        renderer.renderFaceZNeg(block, 0, 0, 0, block.getIcon(2, metadata));
+        renderer.renderFaceZPos(block, 0, 0, 0, block.getIcon(3, metadata));
+        renderer.renderFaceXNeg(block, 0, 0, 0, block.getIcon(4, metadata));
+        renderer.renderFaceXPos(block, 0, 0, 0, block.getIcon(5, metadata));
     }
 }
