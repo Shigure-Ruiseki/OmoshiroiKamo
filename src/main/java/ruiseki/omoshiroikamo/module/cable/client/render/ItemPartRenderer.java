@@ -44,8 +44,7 @@ public class ItemPartRenderer implements IItemRenderer {
         tess.setColorOpaque_F(brightness, brightness, brightness);
 
         int light = 0xF000F0; // max light
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
-            (light >> 16) & 0xFFFF, light & 0xFFFF);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (light >> 16) & 0xFFFF, light & 0xFFFF);
 
         switch (type) {
             case INVENTORY:
