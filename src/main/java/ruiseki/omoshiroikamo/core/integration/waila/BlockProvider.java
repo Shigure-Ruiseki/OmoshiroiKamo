@@ -29,30 +29,36 @@ public class BlockProvider implements IWailaDataProvider {
     public static final BlockProvider INSTANCE = new BlockProvider();
 
     public static void load(IWailaRegistrar registrar) {
+        registrar.registerStackProvider(INSTANCE, BlockOK.class);
+        registrar.registerHeadProvider(INSTANCE, BlockOK.class);
         registrar.registerBodyProvider(INSTANCE, BlockOK.class);
+        registrar.registerTailProvider(INSTANCE, BlockOK.class);
         registrar.registerNBTProvider(INSTANCE, TileEntityOK.class);
     }
 
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        TileEntity tile = accessor.getTileEntity();
+        if (tile instanceof IWailaTileInfoProvider provider) {
+            return provider.getWailaStack(accessor, config);
+        }
         return null;
     }
 
     @Override
     public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
+        TileEntity tile = accessor.getTileEntity();
+        if (tile instanceof IWailaTileInfoProvider provider) {
+            provider.getWailaHead(itemStack, currenttip, accessor, config);
+        }
         return currenttip;
     }
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-
-        EntityPlayer player = accessor.getPlayer();
-        MovingObjectPosition pos = accessor.getPosition();
-        int x = pos.blockX, y = pos.blockY, z = pos.blockZ;
-        World world = accessor.getWorld();
-        Block block = world.getBlock(x, y, z);
+        Block block = accessor.getBlock();
         TileEntity tile = accessor.getTileEntity();
 
         if (block instanceof IWailaBlockInfoProvider info) {
@@ -69,6 +75,10 @@ public class BlockProvider implements IWailaDataProvider {
     @Override
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
+        TileEntity tile = accessor.getTileEntity();
+        if (tile instanceof IWailaTileInfoProvider provider) {
+            provider.getWailaTail(itemStack, currenttip, accessor, config);
+        }
         return currenttip;
     }
 

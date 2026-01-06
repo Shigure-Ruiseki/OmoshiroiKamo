@@ -124,7 +124,10 @@ public enum ModObject {
 
     itemWrench,
 
-    itemEnergyInputBus;
+    itemEnergyInputBus,
+    itemEnergyOutputBus,
+
+    ;
     // spotless: on
 
     public final String unlocalisedName;

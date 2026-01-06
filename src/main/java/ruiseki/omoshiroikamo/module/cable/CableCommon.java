@@ -10,14 +10,12 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
-import ruiseki.omoshiroikamo.module.cable.common.conduit.ConduitNetworkTickHandler;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableBlocks;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.CableNetworkTickHandler;
 
 public class CableCommon implements IModuleCommon {
 
-    public static ConduitNetworkTickHandler conduitNetworkTickHandler = null;
     public static CableNetworkTickHandler cableNetworkTickHandler = null;
 
     @Override
@@ -62,10 +60,6 @@ public class CableCommon implements IModuleCommon {
     }
 
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-        conduitNetworkTickHandler = new ConduitNetworkTickHandler();
-        FMLCommonHandler.instance()
-            .bus()
-            .register(conduitNetworkTickHandler);
         cableNetworkTickHandler = new CableNetworkTickHandler();
         FMLCommonHandler.instance()
             .bus()
@@ -73,10 +67,6 @@ public class CableCommon implements IModuleCommon {
     }
 
     public void onServerStopped(FMLServerStoppedEvent event) {
-        FMLCommonHandler.instance()
-            .bus()
-            .unregister(conduitNetworkTickHandler);
-        conduitNetworkTickHandler = null;
         FMLCommonHandler.instance()
             .bus()
             .unregister(cableNetworkTickHandler);

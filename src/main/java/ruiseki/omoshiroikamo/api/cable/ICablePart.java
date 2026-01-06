@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.api.cable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.relauncher.Side;
@@ -19,6 +19,8 @@ public interface ICablePart {
     Class<? extends ICablePart> getBasePartType();
 
     ForgeDirection getSide();
+
+    void setSide(ForgeDirection side);
 
     void setCable(ICable cable, ForgeDirection side);
 
@@ -39,7 +41,7 @@ public interface ICablePart {
     AxisAlignedBB getCollisionBox();
 
     @SideOnly(Side.CLIENT)
-    IIcon getIcon();
+    ResourceLocation getIcon();
 
     default AbstractCableNetwork<?> getNetwork() {
         ICable cable = getCable();

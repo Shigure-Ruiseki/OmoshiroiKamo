@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,6 +15,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
@@ -40,6 +42,7 @@ public class BlockCable extends BlockOK {
     @Override
     public void registerBlockIcons(IIconRegister reg) {
         blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + "cable/cable");
+        IconRegistry.addIcon("energy_input_bus", reg.registerIcon(LibResources.PREFIX_MOD + "cable/energy_input_bus"));
     }
 
     @Override
@@ -98,6 +101,26 @@ public class BlockCable extends BlockOK {
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof ICable bundle)) return false;
         return bundle.onBlockActivated(world, x, y, z, player, ForgeDirection.getOrientation(side), hitX, hitY, hitZ);
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (!(te instanceof TECable cable)) return super.getPickBlock(target, world, x, y, z);
+
+        EntityPlayer player = null;
+        if (target != null && target.entityHit instanceof EntityPlayer) {
+            player = (EntityPlayer) target.entityHit;
+        }
+
+        if (player != null) {
+            TECable.CableHit hit = cable.rayTraceCable(player);
+            if (hit != null && hit.type == TECable.CableHit.Type.PART && hit.part != null) {
+                return hit.part.getItemStack();
+            }
+        }
+
+        return new ItemStack(this);
     }
 
     @Override

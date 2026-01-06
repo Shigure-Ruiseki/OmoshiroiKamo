@@ -458,6 +458,18 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
         }
     }
 
+    @Override
+    public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        EntityPlayer player = accessor.getPlayer();
+        CableHit hit = rayTraceCable(player);
+
+        if (hit != null && hit.type == CableHit.Type.PART && hit.part != null) {
+            return hit.part.getItemStack();
+        }
+
+        return null;
+    }
+
     private AxisAlignedBB getCoreBox() {
         float min = 6f / 16f;
         float max = 10f / 16f;
@@ -479,7 +491,7 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
         };
     }
 
-    private CableHit rayTraceCable(EntityPlayer player) {
+    public CableHit rayTraceCable(EntityPlayer player) {
         Vec3 start = PlayerUtils.getEyePosition(player);
         Vec3 end = start
             .addVector(player.getLookVec().xCoord * 5, player.getLookVec().yCoord * 5, player.getLookVec().zCoord * 5);
@@ -537,7 +549,7 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
         return best;
     }
 
-    private static class CableHit {
+    public static class CableHit {
 
         enum Type {
             PART,

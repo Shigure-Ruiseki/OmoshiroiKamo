@@ -1,15 +1,16 @@
 package ruiseki.omoshiroikamo.core.common.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderUtils {
 
     public static void renderCube(Tessellator t, double minX, double minY, double minZ, double maxX, double maxY,
         double maxZ, IIcon icon) {
-        renderCube(t, minX, minY, minZ, maxX, maxY, maxZ, icon);
+        renderCube(t, (float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ, icon);
     }
 
     public static void renderCube(Tessellator t, float minX, float minY, float minZ, float maxX, float maxY, float maxZ,
@@ -22,8 +23,6 @@ public class RenderUtils {
 
         float du = u1 - u0;
         float dv = v1 - v0;
-
-        t.startDrawingQuads();
 
         // ==== DOWN (Y-) ====
         t.addVertexWithUV(minX, minY, maxZ, u0 + minX * du, v0 + maxZ * dv);
@@ -61,15 +60,17 @@ public class RenderUtils {
         t.addVertexWithUV(maxX, maxY, minZ, u0 + minZ * du, v0 + maxY * dv);
         t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxZ * du, v0 + maxY * dv);
 
-        t.draw();
     }
 
-    public static void renderInventoryCube(RenderBlocks renderer, Block block, int metadata) {
-        renderer.renderFaceYNeg(block, 0, 0, 0, block.getIcon(0, metadata));
-        renderer.renderFaceYPos(block, 0, 0, 0, block.getIcon(1, metadata));
-        renderer.renderFaceZNeg(block, 0, 0, 0, block.getIcon(2, metadata));
-        renderer.renderFaceZPos(block, 0, 0, 0, block.getIcon(3, metadata));
-        renderer.renderFaceXNeg(block, 0, 0, 0, block.getIcon(4, metadata));
-        renderer.renderFaceXPos(block, 0, 0, 0, block.getIcon(5, metadata));
+    public static TextureManager engine() {
+        return Minecraft.getMinecraft().renderEngine;
+    }
+
+    public static void bindTexture(String string) {
+        engine().bindTexture(new ResourceLocation(string));
+    }
+
+    public static void bindTexture(ResourceLocation tex) {
+        engine().bindTexture(tex);
     }
 }

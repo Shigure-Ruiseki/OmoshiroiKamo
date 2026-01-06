@@ -1,18 +1,17 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.energy.input;
+package ruiseki.omoshiroikamo.module.cable.common.network.energy.output;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class EnergyInputBus implements IEnergyPart {
+public class EnergyOutputBus implements IEnergyPart {
 
     private ICable cable;
     private ForgeDirection side;
@@ -25,7 +24,7 @@ public class EnergyInputBus implements IEnergyPart {
 
     @Override
     public String getId() {
-        return "energy_input_bus";
+        return "energy_output_bus";
     }
 
     @Override
@@ -76,7 +75,7 @@ public class EnergyInputBus implements IEnergyPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ENERGY_INPUT_BUS.newItemStack();
+        return CableItems.ENERGY_OUTPUT_BUS.newItemStack();
     }
 
     @Override
@@ -104,6 +103,6 @@ public class EnergyInputBus implements IEnergyPart {
 
     @Override
     public ResourceLocation getIcon() {
-        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/energy_input_bus.png");
+        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/energy_output_bus.png");
     }
 }

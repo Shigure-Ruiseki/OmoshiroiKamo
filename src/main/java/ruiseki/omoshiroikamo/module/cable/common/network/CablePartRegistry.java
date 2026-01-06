@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.input.EnergyInputBus;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.EnergyOutputBus;
 
 public class CablePartRegistry {
 
@@ -13,6 +14,7 @@ public class CablePartRegistry {
 
     static {
         CablePartRegistry.register("energy_input_bus", EnergyInputBus::new);
+        CablePartRegistry.register("energy_output_bus", EnergyOutputBus::new);
     }
 
     public static void register(String id, Supplier<? extends ICablePart> factory) {
