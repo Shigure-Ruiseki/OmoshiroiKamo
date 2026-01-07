@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.util.ManaStorage;
@@ -109,12 +110,12 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
-        return IO.BOTH;
+    public EnumIO getSideIO(ForgeDirection side) {
+        return EnumIO.BOTH;
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {}
+    public void setSideIO(ForgeDirection side, EnumIO state) {}
 
     @Override
     public boolean isActive() {

@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
@@ -22,7 +23,7 @@ import thaumcraft.api.aspects.AspectList;
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 
-    protected final IO[] sides = new IO[6];
+    protected final EnumIO[] sides = new EnumIO[6];
     protected AspectList visStored = new AspectList();
     protected int maxVisPerAspect;
     protected boolean registeredAsSource = false;
@@ -30,13 +31,13 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     public AbstractVisPortTE(int maxVisPerAspect) {
         this.maxVisPerAspect = maxVisPerAspect;
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.NONE;
+            sides[i] = EnumIO.NONE;
         }
     }
 
     public abstract int getTier();
 
-    public abstract IO getIOLimit();
+    public abstract EnumIO getIOLimit();
 
     public int addVis(Aspect aspect, int amount) {
         if (!isPrimalAspect(aspect)) return amount;
@@ -98,12 +99,12 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
+    public EnumIO getSideIO(ForgeDirection side) {
         return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
+    public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
     }
@@ -157,7 +158,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
+                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
 

@@ -99,8 +99,8 @@ public class BlockCable extends BlockOK {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
         float hitY, float hitZ) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (!(te instanceof ICable bundle)) return false;
-        return bundle.onBlockActivated(world, x, y, z, player, ForgeDirection.getOrientation(side), hitX, hitY, hitZ);
+        if (!(te instanceof ICable cable)) return false;
+        return cable.onBlockActivated(world, x, y, z, player, ForgeDirection.getOrientation(side), hitX, hitY, hitZ);
     }
 
     @Override

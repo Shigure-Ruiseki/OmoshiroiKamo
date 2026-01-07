@@ -2,54 +2,35 @@ package ruiseki.omoshiroikamo.api.block;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
+
 public interface ISidedIO extends IOKTile {
 
-    enum IO {
-
-        NONE,
-        INPUT,
-        OUTPUT,
-        BOTH;
-
-        public boolean canInput() {
-            return this == INPUT || this == BOTH;
-        }
-
-        public boolean canOutput() {
-            return this == OUTPUT || this == BOTH;
-        }
-
-        public String getName() {
-            return "gui.io." + this.name()
-                .toLowerCase();
-        }
+    default EnumIO getIOLimit() {
+        return EnumIO.BOTH;
     }
 
-    default IO getIOLimit() {
-        return IO.BOTH;
-    }
+    EnumIO getSideIO(ForgeDirection side);
 
-    IO getSideIO(ForgeDirection side);
-
-    void setSideIO(ForgeDirection side, IO state);
+    void setSideIO(ForgeDirection side, EnumIO state);
 
     default void toggleSide(ForgeDirection side) {
-        IO limit = getIOLimit();
-        IO current = getSideIO(side);
+        EnumIO limit = getIOLimit();
+        EnumIO current = getSideIO(side);
 
-        IO next;
+        EnumIO next;
         switch (current) {
             case NONE:
-                next = limit.canInput() ? IO.INPUT : limit.canOutput() ? IO.OUTPUT : IO.NONE;
+                next = limit.canInput() ? EnumIO.INPUT : limit.canOutput() ? EnumIO.OUTPUT : EnumIO.NONE;
                 break;
 
             case INPUT:
-                next = limit.canOutput() ? IO.OUTPUT : IO.NONE;
+                next = limit.canOutput() ? EnumIO.OUTPUT : EnumIO.NONE;
                 break;
 
             case OUTPUT:
             default:
-                next = IO.NONE;
+                next = EnumIO.NONE;
                 break;
         }
 

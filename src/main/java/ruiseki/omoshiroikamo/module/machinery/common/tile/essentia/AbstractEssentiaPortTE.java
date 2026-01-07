@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
@@ -22,20 +23,20 @@ import thaumcraft.api.aspects.IAspectContainer;
  */
 public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer {
 
-    protected final IO[] sides = new IO[6];
+    protected final EnumIO[] sides = new EnumIO[6];
     protected AspectList aspects = new AspectList();
     protected int maxCapacityPerAspect;
 
     public AbstractEssentiaPortTE(int maxCapacityPerAspect) {
         this.maxCapacityPerAspect = maxCapacityPerAspect;
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.NONE;
+            sides[i] = EnumIO.NONE;
         }
     }
 
     public abstract int getTier();
 
-    public abstract IO getIOLimit();
+    public abstract EnumIO getIOLimit();
 
     @Override
     public AspectList getAspects() {
@@ -116,12 +117,12 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
+    public EnumIO getSideIO(ForgeDirection side) {
         return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
+    public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
     }
@@ -189,7 +190,7 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
+                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
 

@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
@@ -27,8 +28,8 @@ public class TEVisOutputPort extends AbstractVisPortTE {
     }
 
     @Override
-    public IO getIOLimit() {
-        return IO.OUTPUT;
+    public EnumIO getIOLimit() {
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class TEVisOutputPort extends AbstractVisPortTE {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+        if (renderPass == 1 && getSideIO(side) != EnumIO.NONE) {
             return IconRegistry.getIcon("overlay_visoutput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

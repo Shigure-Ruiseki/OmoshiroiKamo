@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
@@ -43,7 +44,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;
  */
 public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IModularPort {
 
-    protected final IO[] sides = new IO[6];
+    protected final EnumIO[] sides = new EnumIO[6];
 
     @Getter
     @Setter
@@ -56,7 +57,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.NONE;
+            sides[i] = EnumIO.NONE;
         }
     }
 
@@ -93,12 +94,12 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
+    public EnumIO getSideIO(ForgeDirection side) {
         return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
+    public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
     }
@@ -123,7 +124,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
+                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
         energyMode = EnergyMode.byIndex(root.getInteger("energyMode"));

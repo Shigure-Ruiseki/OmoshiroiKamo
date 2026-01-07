@@ -1,21 +1,20 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.output;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.cable.ICable;
+import cofh.api.energy.IEnergyReceiver;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class EnergyOutputBus implements IEnergyPart {
-
-    private ICable cable;
-    private ForgeDirection side;
+public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -29,29 +28,8 @@ public class EnergyOutputBus implements IEnergyPart {
     }
 
     @Override
-    public ICable getCable() {
-        return cable;
-    }
-
-    @Override
     public Class<? extends ICablePart> getBasePartType() {
         return IEnergyPart.class;
-    }
-
-    @Override
-    public ForgeDirection getSide() {
-        return side;
-    }
-
-    @Override
-    public void setSide(ForgeDirection side) {
-        this.side = side;
-    }
-
-    @Override
-    public void setCable(ICable cable, ForgeDirection side) {
-        this.cable = cable;
-        setSide(side);
     }
 
     @Override
@@ -66,7 +44,31 @@ public class EnergyOutputBus implements IEnergyPart {
 
     @Override
     public void doUpdate() {
+        tickCounter++;
+        if (tickCounter < TICK_INTERVAL) return;
+        tickCounter = 0;
 
+        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
+
+        int limit = getTransferLimit();
+
+        for (IEnergyPart iFace : network.interfaces) {
+            if (limit <= 0) break;
+
+            int canPull = iFace.pullEnergy(limit, true);
+            if (canPull <= 0) continue;
+
+            int canPush = pushEnergy(canPull, true);
+            if (canPush <= 0) continue;
+
+            int pulled = iFace.pullEnergy(canPush, false);
+            if (pulled <= 0) continue;
+
+            pushEnergy(pulled, false);
+
+            limit -= pulled;
+        }
     }
 
     @Override
@@ -80,13 +82,8 @@ public class EnergyOutputBus implements IEnergyPart {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag) {
-
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-
+    public EnumIO getIO() {
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -105,5 +102,23 @@ public class EnergyOutputBus implements IEnergyPart {
     @Override
     public ResourceLocation getIcon() {
         return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/energy_output_bus.png");
+    }
+
+    @Override
+    public int pushEnergy(int amount, boolean simulate) {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyReceiver h)) return 0;
+
+        return h.receiveEnergy(side.getOpposite(), amount, simulate);
+    }
+
+    @Override
+    public int pullEnergy(int amount, boolean simulate) {
+        return 0;
+    }
+
+    @Override
+    public int getTransferLimit() {
+        return Integer.MAX_VALUE;
     }
 }

@@ -17,6 +17,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.block.SlotDefinition;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
@@ -31,12 +32,12 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  */
 public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort {
 
-    protected final IO[] sides = new IO[6];
+    protected final EnumIO[] sides = new EnumIO[6];
 
     public AbstractItemIOPortTE(int numInputs, int numOutput) {
         super(new SlotDefinition().setItemSlots(numInputs, numOutput));
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.NONE;
+            sides[i] = EnumIO.NONE;
         }
     }
 
@@ -61,12 +62,12 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
+    public EnumIO getSideIO(ForgeDirection side) {
         return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
+    public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
     }
@@ -89,7 +90,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
+                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
         if (worldObj != null) {

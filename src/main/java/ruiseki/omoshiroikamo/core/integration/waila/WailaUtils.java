@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.api.block.ICraftingTile;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -125,7 +126,7 @@ public class WailaUtils {
 
     public static String getSideIOTooltip(ISidedIO handler, ForgeDirection direction) {
         if (handler == null) return null;
-        ISidedIO.IO io = handler.getSideIO(direction);
+        EnumIO io = handler.getSideIO(direction);
         return LibMisc.LANG.localize(io.getName());
     }
 

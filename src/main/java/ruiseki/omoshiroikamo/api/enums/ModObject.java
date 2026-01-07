@@ -124,6 +124,7 @@ public enum ModObject {
 
     itemWrench,
 
+    itemEnergyInterfaceBus,
     itemEnergyInputBus,
     itemEnergyOutputBus,
 

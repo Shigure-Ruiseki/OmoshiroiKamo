@@ -1,21 +1,20 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.input;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.cable.ICable;
+import cofh.api.energy.IEnergyProvider;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class EnergyInputBus implements IEnergyPart {
-
-    private ICable cable;
-    private ForgeDirection side;
+public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -29,29 +28,8 @@ public class EnergyInputBus implements IEnergyPart {
     }
 
     @Override
-    public ICable getCable() {
-        return cable;
-    }
-
-    @Override
     public Class<? extends ICablePart> getBasePartType() {
         return IEnergyPart.class;
-    }
-
-    @Override
-    public ForgeDirection getSide() {
-        return side;
-    }
-
-    @Override
-    public void setSide(ForgeDirection side) {
-        this.side = side;
-    }
-
-    @Override
-    public void setCable(ICable cable, ForgeDirection side) {
-        this.cable = cable;
-        setSide(side);
     }
 
     @Override
@@ -67,6 +45,28 @@ public class EnergyInputBus implements IEnergyPart {
     @Override
     public void doUpdate() {
 
+        tickCounter++;
+        if (tickCounter < TICK_INTERVAL) return;
+        tickCounter = 0;
+
+        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
+
+        int remaining = pullEnergy(getTransferLimit(), true);
+        if (remaining <= 0) return;
+
+        for (IEnergyPart iFace : network.interfaces) {
+            if (remaining <= 0) break;
+
+            int canPush = iFace.pushEnergy(remaining, true);
+            if (canPush <= 0) continue;
+
+            int pulled = pullEnergy(canPush, false);
+            if (pulled <= 0) break;
+
+            iFace.pushEnergy(pulled, false);
+            remaining -= pulled;
+        }
     }
 
     @Override
@@ -80,18 +80,13 @@ public class EnergyInputBus implements IEnergyPart {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag) {
-
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-
+    public EnumIO getIO() {
+        return EnumIO.INPUT;
     }
 
     @Override
     public AxisAlignedBB getCollisionBox() {
-        return switch (side) {
+        return switch (getSide()) {
             case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
             case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
             case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
@@ -105,5 +100,23 @@ public class EnergyInputBus implements IEnergyPart {
     @Override
     public ResourceLocation getIcon() {
         return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/energy_input_bus.png");
+    }
+
+    @Override
+    public int pushEnergy(int amount, boolean simulate) {
+        return 0;
+    }
+
+    @Override
+    public int pullEnergy(int amount, boolean simulate) {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyProvider h)) return 0;
+
+        return h.extractEnergy(getSide().getOpposite(), amount, simulate);
+    }
+
+    @Override
+    public int getTransferLimit() {
+        return Integer.MAX_VALUE;
     }
 }

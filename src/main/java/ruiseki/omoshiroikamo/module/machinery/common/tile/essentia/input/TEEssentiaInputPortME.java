@@ -17,6 +17,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import thaumcraft.api.aspects.Aspect;
@@ -170,7 +171,7 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+        if (renderPass == 1 && getSideIO(side) != EnumIO.NONE) {
             return IconRegistry.getIcon("overlay_essentiainput_me");
         }
         return AbstractPortBlock.baseIcon;

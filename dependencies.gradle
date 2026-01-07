@@ -56,6 +56,8 @@ dependencies {
     devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
 
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
+    runtimeOnlyNonPublishable('curse.maven:thermal-foundation-222880:2388752')
+    runtimeOnlyNonPublishable('curse.maven:thermal-expansion-69163:2388758')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:WAILAPlugins:0.7.2:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.7.27:dev") { transitive = false }
 
@@ -63,7 +65,6 @@ dependencies {
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('com.github.GTNewHorizons:Mobs-Info:0.5.7-GTNH:dev')
     compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.6-GTNH:dev")
-    compileOnly('curse.maven:thermal-foundation-222880:2388752')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
     compileOnly("curse.maven:big-reactors-241994:2282591")
     compileOnly("com.github.GTNewHorizons:Draconic-Evolution:1.5.2-GTNH:dev")

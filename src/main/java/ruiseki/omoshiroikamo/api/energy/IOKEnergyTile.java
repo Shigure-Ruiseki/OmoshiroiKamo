@@ -20,7 +20,7 @@ public interface IOKEnergyTile extends IOKTile {
 
     boolean canConnectEnergy(ForgeDirection var1);
 
-    void register();
+    default void register() {}
 
-    void deregister();
+    default void deregister() {}
 }

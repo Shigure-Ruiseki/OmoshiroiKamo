@@ -19,6 +19,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
@@ -34,7 +35,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  */
 public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler {
 
-    protected final IO[] sides = new IO[6];
+    protected final EnumIO[] sides = new EnumIO[6];
 
     protected final SmartGasTank tank;
     protected boolean tankDirty = false;
@@ -49,7 +50,7 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
             }
         };
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.NONE;
+            sides[i] = EnumIO.NONE;
         }
     }
 
@@ -74,12 +75,12 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
+    public EnumIO getSideIO(ForgeDirection side) {
         return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
+    public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
         requestRenderUpdate();
     }
@@ -101,7 +102,7 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
+                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
         tank.readCommon(root);

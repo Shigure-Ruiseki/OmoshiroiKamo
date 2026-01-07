@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -30,13 +31,13 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
+import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 
-public class TECable extends TileEntityOK implements ICable, ICustomCollision, IWailaTileInfoProvider {
+public class TECable extends AbstractTE implements ICable, ICustomCollision, IWailaTileInfoProvider {
 
     protected final EnumSet<ForgeDirection> connections = EnumSet.noneOf(ForgeDirection.class);
 
@@ -264,7 +265,24 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side,
         float hitX, float hitY, float hitZ) {
 
-        return false;
+        if (world.isRemote) {
+            return true;
+        }
+
+        // === HIT INFO ===
+        CableHit hit = this.rayTraceCable(player);
+        if (hit != null && hit.type == CableHit.Type.PART) {
+            player.addChatMessage(new ChatComponentText("[Part]\n" + hit.part.toString()));
+            return true;
+        }
+
+        // === NETWORK INFO ===
+        for (AbstractCableNetwork<?> net : this.getNetworks()
+            .values()) {
+            player.addChatMessage(new ChatComponentText("[Network]\n" + net.toString()));
+        }
+
+        return true;
     }
 
     @Override
@@ -311,8 +329,12 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
     }
 
     @Override
-    protected void doUpdate() {
-        super.doUpdate();
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public boolean processTasks(boolean redstoneCheckPassed) {
 
         if (!worldObj.isRemote && needsNetworkRebuild) {
             CableUtils.rebuildNetworks(this);
@@ -323,7 +345,7 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
             conduit.doUpdate();
         }
 
-        if (worldObj.isRemote && clientUpdated) updateClient();
+        return worldObj.isRemote && clientUpdated;
     }
 
     @Override
@@ -340,12 +362,6 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
             }
             networks.clear();
         }
-    }
-
-    private void updateClient() {
-        if (!clientUpdated) return;
-        clientUpdated = false;
-        if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -370,41 +386,6 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
         for (final AxisAlignedBB bx : this.getSelectedBoundingBoxesFromPool(w, x, y, z, e, false)) {
             out.add(AxisAlignedBB.getBoundingBox(bx.minX, bx.minY, bx.minZ, bx.maxX, bx.maxY, bx.maxZ));
         }
-    }
-
-    public Iterable<AxisAlignedBB> getCableParts() {
-        List<AxisAlignedBB> parts = new ArrayList<>();
-
-        float min = 6f / 16f;
-        float max = 10f / 16f;
-
-        // core
-        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
-
-        if (hasVisualConnection(ForgeDirection.WEST))
-            parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
-
-        if (hasVisualConnection(ForgeDirection.EAST))
-            parts.add(AxisAlignedBB.getBoundingBox(max, min, min, 1f, max, max));
-
-        if (hasVisualConnection(ForgeDirection.DOWN))
-            parts.add(AxisAlignedBB.getBoundingBox(min, 0f, min, max, min, max));
-
-        if (hasVisualConnection(ForgeDirection.UP))
-            parts.add(AxisAlignedBB.getBoundingBox(min, max, min, max, 1f, max));
-
-        if (hasVisualConnection(ForgeDirection.NORTH))
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, 0f, max, max, min));
-
-        if (hasVisualConnection(ForgeDirection.SOUTH))
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1f));
-
-        for (ICablePart part : this.parts.values()) {
-            AxisAlignedBB bb = part.getCollisionBox();
-            if (bb != null) parts.add(bb);
-        }
-
-        return parts;
     }
 
     @Override
@@ -547,6 +528,41 @@ public class TECable extends TileEntityOK implements ICable, ICustomCollision, I
         }
 
         return best;
+    }
+
+    public Iterable<AxisAlignedBB> getCableParts() {
+        List<AxisAlignedBB> parts = new ArrayList<>();
+
+        float min = 6f / 16f;
+        float max = 10f / 16f;
+
+        // core
+        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+
+        if (hasVisualConnection(ForgeDirection.WEST))
+            parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
+
+        if (hasVisualConnection(ForgeDirection.EAST))
+            parts.add(AxisAlignedBB.getBoundingBox(max, min, min, 1f, max, max));
+
+        if (hasVisualConnection(ForgeDirection.DOWN))
+            parts.add(AxisAlignedBB.getBoundingBox(min, 0f, min, max, min, max));
+
+        if (hasVisualConnection(ForgeDirection.UP))
+            parts.add(AxisAlignedBB.getBoundingBox(min, max, min, max, 1f, max));
+
+        if (hasVisualConnection(ForgeDirection.NORTH))
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, 0f, max, max, min));
+
+        if (hasVisualConnection(ForgeDirection.SOUTH))
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1f));
+
+        for (ICablePart part : this.parts.values()) {
+            AxisAlignedBB bb = part.getCollisionBox();
+            if (bb != null) parts.add(bb);
+        }
+
+        return parts;
     }
 
     public static class CableHit {
