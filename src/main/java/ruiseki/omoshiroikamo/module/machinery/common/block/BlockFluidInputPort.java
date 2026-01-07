@@ -83,6 +83,9 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> imp
         IconRegistry.addIcon(
             "overlay_fluidinput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_6"));
+        IconRegistry.addIcon(
+            "overlay_fluidinput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

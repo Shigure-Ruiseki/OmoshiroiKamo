@@ -82,6 +82,8 @@ public class BlockGasInputPort extends AbstractPortBlock<TEGasInputPort> impleme
         IconRegistry.addIcon(
             "overlay_gasinput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasinput_6"));
+        IconRegistry
+            .addIcon("overlay_gasinput_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

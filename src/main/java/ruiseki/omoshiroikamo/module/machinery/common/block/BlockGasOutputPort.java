@@ -65,23 +65,26 @@ public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> imple
     @Override
     public void registerPortOverlays(IIconRegister reg) {
         IconRegistry.addIcon(
-            "overlay_itemoutput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_1"));
+            "overlay_gasoutput_1",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasoutput_1"));
         IconRegistry.addIcon(
-            "overlay_itemoutput_2",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_2"));
+            "overlay_gasoutput_2",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasoutput_2"));
         IconRegistry.addIcon(
-            "overlay_itemoutput_3",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_3"));
+            "overlay_gasoutput_3",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasoutput_3"));
         IconRegistry.addIcon(
-            "overlay_itemoutput_4",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_4"));
+            "overlay_gasoutput_4",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasoutput_4"));
         IconRegistry.addIcon(
-            "overlay_itemoutput_5",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_5"));
+            "overlay_gasoutput_5",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasoutput_5"));
         IconRegistry.addIcon(
-            "overlay_itemoutput_6",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_6"));
+            "overlay_gasoutput_6",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_gasoutput_6"));
+        IconRegistry.addIcon(
+            "overlay_gasoutput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override
