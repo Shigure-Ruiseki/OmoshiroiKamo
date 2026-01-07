@@ -2,12 +2,11 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.json.FluidJson;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -66,16 +65,17 @@ public class FluidInput implements IRecipeInput {
      * Format: { "fluid": "water", "amount": 10000 }
      */
     public static FluidInput fromJson(JsonObject json) {
-        String fluidName = json.get("fluid")
+        FluidJson fluidJson = new FluidJson();
+        fluidJson.name = json.get("fluid")
             .getAsString();
-        int amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 0;
+        fluidJson.amount = json.has("amount") ? json.get("amount")
+            .getAsInt() : 1000;
 
-        Fluid fluid = FluidRegistry.getFluid(fluidName);
-        if (fluid == null) {
-            Logger.warn("Unknown fluid in recipe: {}", fluidName);
+        FluidStack stack = FluidJson.resolveFluidStack(fluidJson);
+        if (stack == null) {
+            Logger.warn("Unknown fluid in recipe: {}", fluidJson.name);
             return null;
         }
-        return new FluidInput(new FluidStack(fluid, amount));
+        return new FluidInput(stack);
     }
 }

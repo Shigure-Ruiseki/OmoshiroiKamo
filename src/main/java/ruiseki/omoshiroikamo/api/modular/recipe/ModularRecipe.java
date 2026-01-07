@@ -107,6 +107,20 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return true;
     }
 
+    /**
+     * Check if all input requirements can be met (convenience method).
+     */
+    public boolean matchesInput(List<IModularPort> inputPorts) {
+        return processInputs(inputPorts, true);
+    }
+
+    /**
+     * Check if all outputs can be placed (convenience method).
+     */
+    public boolean canOutput(List<IModularPort> outputPorts) {
+        return processOutputs(outputPorts, true);
+    }
+
     private List<IModularPort> filterByType(List<IModularPort> ports, IPortType.Type type) {
         List<IModularPort> filtered = new ArrayList<>();
         for (IModularPort port : ports) {

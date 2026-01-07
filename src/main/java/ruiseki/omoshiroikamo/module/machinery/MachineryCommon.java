@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery;
 
+import java.io.File;
+
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -11,6 +13,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryPackets;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 /**
  * Modular Machinery Backport module entry point.
@@ -18,6 +21,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryPackets;
  * definitions.
  */
 public class MachineryCommon implements IModuleCommon {
+
+    private static File configDir;
 
     @Override
     public String getId() {
@@ -34,6 +39,7 @@ public class MachineryCommon implements IModuleCommon {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        configDir = event.getModConfigurationDirectory();
         MachineryBlocks.preInit();
         MachineryItems.preInit();
     }
@@ -45,11 +51,18 @@ public class MachineryCommon implements IModuleCommon {
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event) {}
+    public void postInit(FMLPostInitializationEvent event) {
+        RecipeLoader.getInstance()
+            .loadAll(configDir);
+    }
 
     @Override
     public void serverLoad(FMLServerStartingEvent event) {}
 
     @Override
     public void serverStarted(FMLServerStartedEvent event) {}
+
+    public static File getConfigDir() {
+        return configDir;
+    }
 }

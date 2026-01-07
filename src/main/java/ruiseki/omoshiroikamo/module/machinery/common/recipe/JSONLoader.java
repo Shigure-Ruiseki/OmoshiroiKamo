@@ -89,8 +89,8 @@ public class JSONLoader {
      */
     public static ModularRecipe parseRecipe(JsonObject json, String group) {
         try {
-            String name = json.has("name") ? json.get("name")
-                .getAsString() : null;
+            // TODO: name field for future use
+            // String name = json.has("name") ? json.get("name").getAsString() : null;
             int duration = json.get("duration")
                 .getAsInt();
             int priority = json.has("priority") ? json.get("priority")

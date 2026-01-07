@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.json.ItemJson;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -89,24 +89,29 @@ public class ItemOutput implements IRecipeOutput {
     /**
      * Create ItemOutput from JSON.
      * Format: { "item": "modid:itemname", "amount": 1, "meta": 0 }
+     * Or OreDictionary: { "item": "ore:ingotIron", "amount": 1 }
      */
     public static ItemOutput fromJson(JsonObject json) {
+        ItemJson itemJson = new ItemJson();
         String itemId = json.get("item")
             .getAsString();
-        int amount = json.has("amount") ? json.get("amount")
+
+        if (itemId.startsWith("ore:")) {
+            itemJson.ore = itemId.substring(4);
+        } else {
+            itemJson.name = itemId;
+        }
+
+        itemJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1;
-        int meta = json.has("meta") ? json.get("meta")
+        itemJson.meta = json.has("meta") ? json.get("meta")
             .getAsInt() : 0;
 
-        String[] parts = itemId.split(":");
-        String modId = parts[0];
-        String itemName = parts[1];
-
-        Item item = GameRegistry.findItem(modId, itemName);
-        if (item == null) {
+        ItemStack stack = ItemJson.resolveItemStack(itemJson);
+        if (stack == null) {
             Logger.warn("Unknown item in recipe: {}", itemId);
             return null;
         }
-        return new ItemOutput(new ItemStack(item, amount, meta));
+        return new ItemOutput(stack);
     }
 }
