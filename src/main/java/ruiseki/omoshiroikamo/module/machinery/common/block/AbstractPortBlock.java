@@ -19,7 +19,9 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T> implements IModularBlock {
 
-    public int renderPass;
+    // Render pass stored per-thread to stay thread-safe
+    // under multi-threaded chunk builds
+    private static final ThreadLocal<Integer> RENDER_PASS = ThreadLocal.withInitial(() -> 0);
     public static IIcon baseIcon;
 
     @SafeVarargs
@@ -34,7 +36,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     public boolean canRenderInPass(int pass) {
-        renderPass = pass;
+        RENDER_PASS.set(pass);
         return pass < 2;
     }
 
@@ -56,8 +58,9 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (renderPass == 1 && tile instanceof ISidedTexture sided) {
-            return sided.getTexture(ForgeDirection.getOrientation(side), renderPass);
+        int pass = RENDER_PASS.get();
+        if (pass == 1 && tile instanceof ISidedTexture sided) {
+            return sided.getTexture(ForgeDirection.getOrientation(side), pass);
         }
 
         return baseIcon;
