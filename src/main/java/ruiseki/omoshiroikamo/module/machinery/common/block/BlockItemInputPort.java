@@ -83,6 +83,10 @@ public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> imple
         IconRegistry.addIcon(
             "overlay_iteminput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_iteminput_6"));
+        // Fallback/disabled overlay for faces where IO is blocked
+        IconRegistry.addIcon(
+            "overlay_iteminput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override
