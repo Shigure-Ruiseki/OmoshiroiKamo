@@ -45,7 +45,7 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
     @Override
     public void doUpdate() {
         tickCounter++;
-        if (tickCounter < TICK_INTERVAL) return;
+        if (tickCounter < tickInterval) return;
         tickCounter = 0;
 
         EnergyNetwork network = (EnergyNetwork) getNetwork();
@@ -54,6 +54,7 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         int limit = getTransferLimit();
 
         for (IEnergyPart iFace : network.interfaces) {
+            if (iFace.getChannel() != this.getChannel()) continue;
             if (limit <= 0) break;
 
             int canPull = iFace.pullEnergy(limit, true);
@@ -121,4 +122,36 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
     public int getTransferLimit() {
         return Integer.MAX_VALUE;
     }
+
+    @Override
+    public int receiveEnergy(int amount, boolean simulate) {
+        return 0;
+    }
+
+    @Override
+    public int extractEnergy(int amount, boolean simulate) {
+        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return 0;
+
+        int remaining = Math.min(amount, getTransferLimit());
+        int extracted = 0;
+
+        for (IEnergyPart iFace : network.interfaces) {
+            if (iFace.getChannel() != this.getChannel()) continue;
+            if (remaining <= 0) break;
+
+            if (iFace == this) continue;
+
+            int canPull = iFace.pullEnergy(remaining, true);
+            if (canPull <= 0) continue;
+
+            int pulled = simulate ? canPull : iFace.pullEnergy(canPull, false);
+
+            extracted += pulled;
+            remaining -= pulled;
+        }
+
+        return extracted;
+    }
+
 }

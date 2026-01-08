@@ -13,7 +13,10 @@ public abstract class AbstractPart implements ICablePart {
     protected ForgeDirection side;
 
     protected int tickCounter = 0;
-    protected int TICK_INTERVAL = 20;
+    protected int tickInterval = 20;
+
+    protected int priority = 0;
+    protected int channel = 0;
 
     @Override
     public ICable getCable() {
@@ -39,20 +42,55 @@ public abstract class AbstractPart implements ICablePart {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         tag.setInteger("TickCounter", tickCounter);
-        tag.setInteger("TICK_INTERVAL", TICK_INTERVAL);
+        tag.setInteger("TICK_INTERVAL", this.tickInterval);
+        tag.setInteger("priority", priority);
+        tag.setInteger("channel", channel);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        tickCounter = tag.getInteger("TickCounter");
-        TICK_INTERVAL = tag.getInteger("TICK_INTERVAL");
+        this.tickCounter = tag.getInteger("TickCounter");
+        this.tickInterval = tag.getInteger("TICK_INTERVAL");
+        this.priority = tag.getInteger("priority");
+        this.channel = tag.getInteger("channel");
+    }
+
+    @Override
+    public int getTickInterval() {
+        return this.tickInterval;
+    }
+
+    @Override
+    public void setTickInterval(int tickInterval) {
+        this.tickInterval = tickInterval;
     }
 
     @Override
     public TileEntity getTargetTE() {
-        if (cable == null || side == null) return null;
-        return cable.getPos()
-            .offset(side)
-            .getTileEntity(cable.getWorld());
+        if (this.cable == null || this.side == null) return null;
+        return this.cable.getPos()
+            .offset(this.side)
+            .getTileEntity(this.cable.getWorld());
     }
+
+    @Override
+    public int getPriority() {
+        return this.priority;
+    }
+
+    @Override
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public int getChannel() {
+        return this.channel;
+    }
+
+    @Override
+    public void setChannel(int channel) {
+        this.channel = channel;
+    }
+
 }

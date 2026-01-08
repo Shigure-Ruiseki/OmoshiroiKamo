@@ -44,6 +44,18 @@ public interface ICablePart {
 
     TileEntity getTargetTE();
 
+    int getTickInterval();
+
+    void setTickInterval(int tickInterval);
+
+    int getPriority();
+
+    void setPriority(int priority);
+
+    int getChannel();
+
+    void setChannel(int chanel);
+
     AxisAlignedBB getCollisionBox();
 
     @SideOnly(Side.CLIENT)

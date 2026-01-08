@@ -47,8 +47,12 @@ public class EnergyNetwork extends AbstractCableNetwork<IEnergyPart> {
             switch (part.getIO()) {
                 case INPUT -> inputs.add(part);
                 case OUTPUT -> outputs.add(part);
-                case NONE -> interfaces.add(part);
+                case BOTH -> interfaces.add(part);
             }
         }
+
+        inputs.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+        interfaces.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+        outputs.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
     }
 }

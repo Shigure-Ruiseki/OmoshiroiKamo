@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +12,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
@@ -44,7 +44,9 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public void doUpdate() {}
+    public void doUpdate() {
+
+    }
 
     @Override
     public void onChunkUnload() {
@@ -57,18 +59,8 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag) {
-
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-
-    }
-
-    @Override
     public EnumIO getIO() {
-        return EnumIO.NONE;
+        return EnumIO.BOTH;
     }
 
     @Override
@@ -109,4 +101,59 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     public int getTransferLimit() {
         return 1000;
     }
+
+    @Override
+    public int receiveEnergy(int amount, boolean simulate) {
+        if (amount <= 0) return 0;
+
+        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return 0;
+
+        int remaining = Math.min(amount, getTransferLimit());
+        int accepted = 0;
+
+        for (IEnergyPart iFace : network.interfaces) {
+            if (iFace == this) continue;
+            if (iFace.getChannel() != this.getChannel()) continue;
+
+            if (remaining <= 0) break;
+
+            int canPush = iFace.pushEnergy(remaining, true);
+            if (canPush <= 0) continue;
+
+            int pushed = simulate ? canPush : iFace.pushEnergy(canPush, false);
+
+            accepted += pushed;
+            remaining -= pushed;
+        }
+
+        return accepted;
+    }
+
+    @Override
+    public int extractEnergy(int amount, boolean simulate) {
+        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return 0;
+
+        int remaining = Math.min(amount, getTransferLimit());
+        int extracted = 0;
+
+        for (IEnergyPart iFace : network.interfaces) {
+            if (iFace == this) continue;
+            if (iFace.getChannel() != this.getChannel()) continue;
+
+            if (remaining <= 0) break;
+
+            int canPull = iFace.pullEnergy(remaining, true);
+            if (canPull <= 0) continue;
+
+            int pulled = simulate ? canPull : iFace.pullEnergy(canPull, false);
+
+            extracted += pulled;
+            remaining -= pulled;
+        }
+
+        return extracted;
+    }
+
 }

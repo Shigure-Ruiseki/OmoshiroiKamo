@@ -31,11 +31,13 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class TECable extends AbstractTE implements ICable, ICustomCollision, IWailaTileInfoProvider {
 
@@ -472,6 +474,41 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
         };
     }
 
+    public Iterable<AxisAlignedBB> getCableParts() {
+        List<AxisAlignedBB> parts = new ArrayList<>();
+
+        float min = 6f / 16f;
+        float max = 10f / 16f;
+
+        // core
+        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+
+        if (hasVisualConnection(ForgeDirection.WEST))
+            parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
+
+        if (hasVisualConnection(ForgeDirection.EAST))
+            parts.add(AxisAlignedBB.getBoundingBox(max, min, min, 1f, max, max));
+
+        if (hasVisualConnection(ForgeDirection.DOWN))
+            parts.add(AxisAlignedBB.getBoundingBox(min, 0f, min, max, min, max));
+
+        if (hasVisualConnection(ForgeDirection.UP))
+            parts.add(AxisAlignedBB.getBoundingBox(min, max, min, max, 1f, max));
+
+        if (hasVisualConnection(ForgeDirection.NORTH))
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, 0f, max, max, min));
+
+        if (hasVisualConnection(ForgeDirection.SOUTH))
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1f));
+
+        for (ICablePart part : this.parts.values()) {
+            AxisAlignedBB bb = part.getCollisionBox();
+            if (bb != null) parts.add(bb);
+        }
+
+        return parts;
+    }
+
     public CableHit rayTraceCable(EntityPlayer player) {
         Vec3 start = PlayerUtils.getEyePosition(player);
         Vec3 end = start
@@ -530,39 +567,67 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
         return best;
     }
 
-    public Iterable<AxisAlignedBB> getCableParts() {
-        List<AxisAlignedBB> parts = new ArrayList<>();
+    @Override
+    public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
+        if (amount <= 0) return 0;
 
-        float min = 6f / 16f;
-        float max = 10f / 16f;
+        ICablePart part = getPart(side);
+        if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
+        if (!(part instanceof IEnergyPart energyPart)) return 0;
 
-        // core
-        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+        if (!energyPart.getIO()
+            .canInput()) return 0;
 
-        if (hasVisualConnection(ForgeDirection.WEST))
-            parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
+        int limit = energyPart.getTransferLimit();
+        int toTransfer = Math.min(amount, limit);
 
-        if (hasVisualConnection(ForgeDirection.EAST))
-            parts.add(AxisAlignedBB.getBoundingBox(max, min, min, 1f, max, max));
+        return energyPart.receiveEnergy(toTransfer, simulate);
+    }
 
-        if (hasVisualConnection(ForgeDirection.DOWN))
-            parts.add(AxisAlignedBB.getBoundingBox(min, 0f, min, max, min, max));
+    @Override
+    public int extractEnergy(ForgeDirection side, int amount, boolean simulate) {
+        if (amount <= 0) return 0;
 
-        if (hasVisualConnection(ForgeDirection.UP))
-            parts.add(AxisAlignedBB.getBoundingBox(min, max, min, max, 1f, max));
+        ICablePart part = getPart(side);
+        if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
+        if (!(part instanceof IEnergyPart energyPart)) return 0;
 
-        if (hasVisualConnection(ForgeDirection.NORTH))
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, 0f, max, max, min));
+        if (!energyPart.getIO()
+            .canOutput()) return 0;
 
-        if (hasVisualConnection(ForgeDirection.SOUTH))
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1f));
+        int limit = energyPart.getTransferLimit();
+        int toTransfer = Math.min(amount, limit);
 
-        for (ICablePart part : this.parts.values()) {
-            AxisAlignedBB bb = part.getCollisionBox();
-            if (bb != null) parts.add(bb);
-        }
+        return energyPart.extractEnergy(toTransfer, simulate);
+    }
 
-        return parts;
+    @Override
+    public int getEnergyStored() {
+        // NO OP
+        return 0;
+    }
+
+    @Override
+    public int getMaxEnergyStored() {
+        // NO OP
+        return 0;
+    }
+
+    @Override
+    public void setEnergyStored(int stored) {
+        // NO OP
+    }
+
+    @Override
+    public int getEnergyTransfer() {
+        // NO OP
+        return 0;
+    }
+
+    @Override
+    public boolean canConnectEnergy(ForgeDirection from) {
+        ICablePart part = getPart(from);
+        return part instanceof IEnergyPart energy && energy.getIO() != EnumIO.NONE;
     }
 
     public static class CableHit {
@@ -574,8 +639,8 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
         }
 
         final Type type;
-        final ForgeDirection side; // PART hoặc CONNECTION
-        final ICablePart part; // chỉ PART
+        final ForgeDirection side;
+        final ICablePart part;
         final AxisAlignedBB box;
         final Vec3 hitVec;
 
