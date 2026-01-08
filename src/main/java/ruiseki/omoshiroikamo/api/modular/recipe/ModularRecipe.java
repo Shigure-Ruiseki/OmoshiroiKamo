@@ -13,14 +13,14 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
  */
 public class ModularRecipe implements Comparable<ModularRecipe> {
 
-    private final String machineType;
+    private final String recipeGroup;
     private final int duration;
     private final int priority;
     private final List<IRecipeInput> inputs;
     private final List<IRecipeOutput> outputs;
 
     private ModularRecipe(Builder builder) {
-        this.machineType = builder.machineType;
+        this.recipeGroup = builder.recipeGroup;
         this.duration = builder.duration;
         this.priority = builder.priority;
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
@@ -29,8 +29,8 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     // ========== Getters ==========
 
-    public String getMachineType() {
-        return machineType;
+    public String getRecipeGroup() {
+        return recipeGroup;
     }
 
     public int getDuration() {
@@ -137,14 +137,14 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     public static class Builder {
 
-        private String machineType;
+        private String recipeGroup;
         private int duration = 100;
         private int priority = 0;
         private List<IRecipeInput> inputs = new ArrayList<>();
         private List<IRecipeOutput> outputs = new ArrayList<>();
 
-        public Builder machineType(String machineType) {
-            this.machineType = machineType;
+        public Builder recipeGroup(String recipeGroup) {
+            this.recipeGroup = recipeGroup;
             return this;
         }
 
@@ -169,8 +169,8 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         }
 
         public ModularRecipe build() {
-            if (machineType == null || machineType.isEmpty()) {
-                throw new IllegalStateException("Recipe machineType is required");
+            if (recipeGroup == null || recipeGroup.isEmpty()) {
+                throw new IllegalStateException("Recipe recipeGroup is required");
             }
             if (inputs.isEmpty()) {
                 throw new IllegalStateException("Recipe must have at least one input");

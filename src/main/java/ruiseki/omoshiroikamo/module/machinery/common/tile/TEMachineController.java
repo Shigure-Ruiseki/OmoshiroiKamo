@@ -1,17 +1,16 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
@@ -19,8 +18,11 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
@@ -39,17 +41,20 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  */
 public class TEMachineController extends AbstractMBModifierTE {
 
-    // IO ports tracked during structure formation (TileEntity instances, not
-    // positions)
+    // IO ports tracked during structure formation
     private final List<IModularPort> inputPorts = new ArrayList<>();
     private final List<IModularPort> outputPorts = new ArrayList<>();
 
-    // Structure definition (will be loaded from JSON in Phase 1)
+    // Recipe processing
+    private final ProcessAgent processAgent = new ProcessAgent();
+    // TODO: recipeGroup will be obtained from GUI blueprint in future
+    private String recipeGroup = "default";
+
+    // Structure definition (will be loaded from JSON)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
 
-    // Structure offsets per tier (currently only tier 1)
-    private static final int[][] OFFSETS = { { 1, 1, 1 } // Tier 1 offset
-    };
+    // Structure offsets per tier
+    private static final int[][] OFFSETS = { { 1, 1, 1 } };
 
     public TEMachineController() {
         super();
@@ -153,148 +158,117 @@ public class TEMachineController extends AbstractMBModifierTE {
     @Override
     public void doUpdate() {
         if (STRUCTURE_DEFINITION != null) {
-            // Use parent's structure check
             super.doUpdate();
             return;
         }
 
-        // Check structure every 20 ticks (1 second)
+        // Check structure every 20 ticks
         if (!shouldDoWorkThisTick(20)) {
+            // Still process recipe every tick if running
+            if (isFormed && processAgent.isRunning()) {
+                processRecipe();
+            }
             return;
         }
 
-        // Always re-scan structure to update IO ports
+        // Re-scan structure
         boolean wasFormed = isFormed;
         boolean nowFormed = trySimpleFormStructure();
 
-        // If structure was broken, clear parts
         if (wasFormed && !nowFormed) {
             isFormed = false;
             clearStructureParts();
+            processAgent.abort();
         }
 
-        // Test recipe: 64 Coal + 10000mb Water -> 1 Diamond
+        // Process recipes when formed
         if (isFormed) {
-            tryTestRecipe();
+            processRecipe();
         }
     }
 
     /**
-     * Test recipe: 64 Coal + 10000mb Water -> 1 Diamond
+     * Process recipe using ProcessAgent.
      */
-    private void tryTestRecipe() {
-        // 1. Check for required coal (64 total across all input ports)
-        int totalCoal = 0;
-        for (ItemStack stack : getStoredInputItems()) {
-            if (stack.getItem() == Items.coal) {
-                totalCoal += stack.stackSize;
-            }
-        }
-        if (totalCoal < 64) {
+    private void processRecipe() {
+        // Try to output if waiting
+        if (processAgent.isWaitingForOutput()) {
+            processAgent.tryOutput(outputPorts);
             return;
         }
 
-        // 2. Check for required water (10000mb total)
-        int totalWater = 0;
-        for (FluidStack fluid : getStoredInputFluids()) {
-            if (fluid.getFluid() == FluidRegistry.WATER) {
-                totalWater += fluid.amount;
-            }
-        }
-        if (totalWater < 10000) {
+        // Tick if running
+        if (processAgent.isRunning()) {
+            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
+            processAgent.tick(energyPorts);
             return;
         }
 
-        // 3. Check if output has space (simulate)
-        ItemStack diamond = new ItemStack(Items.diamond, 1);
-        List<ItemStack> remainder = insertOutputItems(Collections.singletonList(diamond.copy()));
-        if (!remainder.isEmpty()) {
-            return; // No space for output
-        }
-
-        // Diamond was already inserted, now consume inputs
-        System.out.println("[TestRecipe] Consuming: 64 coal, 10000mb water -> 1 diamond");
-        consumeCoal(64);
-        drainWater(10000);
-    }
-
-    private void consumeCoal(int amount) {
-        int remaining = amount;
-        for (AbstractItemIOPortTE port : getTypedInputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
-            for (int i = 0; i < port.getSizeInventory() && remaining > 0; i++) {
-                ItemStack stack = port.getStackInSlot(i);
-                if (stack != null && stack.getItem() == Items.coal) {
-                    int consume = Math.min(stack.stackSize, remaining);
-                    stack.stackSize -= consume;
-                    remaining -= consume;
-                    if (stack.stackSize <= 0) {
-                        port.setInventorySlotContents(i, null);
-                    }
-                }
-            }
-        }
-    }
-
-    private void drainWater(int amount) {
-        int remaining = amount;
-        for (AbstractFluidPortTE port : getTypedInputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
-            // Use internal drain to bypass side IO checks
-            FluidStack drained = port.internalDrain(remaining, true);
-            if (drained != null) {
-                remaining -= drained.amount;
-            }
-            if (remaining <= 0) break;
+        // Try to start new recipe
+        ModularRecipe recipe = RecipeLoader.getInstance()
+            .findMatch(new String[] { recipeGroup }, inputPorts);
+        if (recipe != null) {
+            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
+            processAgent.start(recipe, inputPorts, energyPorts);
         }
     }
 
     @Override
     protected void finishCrafting() {
-        // TODO: Implement recipe output
         resetCrafting();
     }
 
     @Override
     public int getCraftingEnergyCost() {
-        // TODO: Get from current recipe
-        return 100;
+        return 0; // Energy is managed by ProcessAgent
     }
-
-    // ========== Player Interaction ==========
 
     /**
      * Called when a player right-clicks the controller block.
      */
     public void onRightClick(EntityPlayer player) {
-        if (worldObj.isRemote) {
-            return;
-        }
+        if (worldObj.isRemote) return;
 
-        // Always re-scan structure on click for instant feedback
         setPlayer(player);
         boolean wasFormed = isFormed;
         boolean nowFormed = trySimpleFormStructure();
 
         if (nowFormed) {
             String status = wasFormed ? "Status" : "Structure formed";
-            player.addChatComponentMessage(
-                new ChatComponentText(
-                    "[Machine] " + status
-                        + ": "
-                        + getCraftingState().name()
-                        + " | Inputs: "
-                        + inputPorts.size()
-                        + " | Outputs: "
-                        + outputPorts.size()));
 
-            // Display port type counts
+            // Display progress info
+            if (processAgent.isRunning()) {
+                int progress = processAgent.getProgress();
+                int max = processAgent.getMaxProgress();
+                int percent = (int) (processAgent.getProgressPercent() * 100);
+                player.addChatComponentMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.GREEN + "[Machine] Processing: "
+                            + progress
+                            + "/"
+                            + max
+                            + " ("
+                            + percent
+                            + "%)"));
+            } else if (processAgent.isWaitingForOutput()) {
+                player.addChatComponentMessage(
+                    new ChatComponentText(EnumChatFormatting.YELLOW + "[Machine] Waiting for output space..."));
+            } else {
+                player.addChatComponentMessage(
+                    new ChatComponentText(
+                        "[Machine] " + status
+                            + " | Inputs: "
+                            + inputPorts.size()
+                            + " | Outputs: "
+                            + outputPorts.size()));
+            }
+
             sendPortTypeCounts(player, "Input", inputPorts);
             sendPortTypeCounts(player, "Output", outputPorts);
-
-            // Display port coordinates
-            sendPortDetails(player, inputPorts, outputPorts);
         } else {
             player.addChatComponentMessage(
-                new ChatComponentText("[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
+                new ChatComponentText(
+                    EnumChatFormatting.RED + "[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
         }
     }
 
@@ -550,8 +524,6 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     /**
      * Extract energy from input energy ports.
-     * 
-     * @return amount actually extracted
      */
     public int extractInputEnergy(int amount, boolean simulate) {
         int remaining = amount;
@@ -565,5 +537,26 @@ public class TEMachineController extends AbstractMBModifierTE {
             if (remaining <= 0) break;
         }
         return amount - remaining;
+    }
+
+    // ========== NBT Persistence ==========
+
+    @Override
+    public void writeCommon(NBTTagCompound nbt) {
+        super.writeCommon(nbt);
+        nbt.setString("recipeGroup", recipeGroup);
+        NBTTagCompound agentNbt = new NBTTagCompound();
+        processAgent.writeToNBT(agentNbt);
+        nbt.setTag("processAgent", agentNbt);
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound nbt) {
+        super.readCommon(nbt);
+        recipeGroup = nbt.getString("recipeGroup");
+        if (recipeGroup.isEmpty()) recipeGroup = "default";
+        if (nbt.hasKey("processAgent")) {
+            processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
+        }
     }
 }

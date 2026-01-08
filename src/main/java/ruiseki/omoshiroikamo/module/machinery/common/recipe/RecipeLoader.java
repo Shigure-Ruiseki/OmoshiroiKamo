@@ -46,7 +46,7 @@ public class RecipeLoader {
 
         List<ModularRecipe> recipes = JSONLoader.loadRecipes(recipesDir);
         for (ModularRecipe recipe : recipes) {
-            String group = recipe.getMachineType();
+            String group = recipe.getRecipeGroup();
             recipesByGroup.computeIfAbsent(group, k -> new ArrayList<>())
                 .add(recipe);
         }

@@ -97,7 +97,7 @@ public class JSONLoader {
                 .getAsInt() : 0;
 
             ModularRecipe.Builder builder = ModularRecipe.builder()
-                .machineType(group)
+                .recipeGroup(group)
                 .duration(duration)
                 .priority(priority);
 
