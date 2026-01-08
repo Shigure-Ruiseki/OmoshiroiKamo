@@ -39,7 +39,9 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  * - Energy capability system (via AbstractEnergyTE)
  * Ensure we don't duplicate these existing systems.
  * TODO: PortManager refactoring
- * TODO: GUI
+ * TODO: GUI implimentation
+ * TODO: NEI integration
+ * TODO: Other port types
  */
 public class TEMachineController extends AbstractMBModifierTE {
 
@@ -156,8 +158,7 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     /**
-     * Override doUpdate to use simple structure check when STRUCTURE_DEFINITION is
-     * null.
+     * Override doUpdate to use structure check when STRUCTURE_DEFINITION is null.
      */
     @Override
     public void doUpdate() {

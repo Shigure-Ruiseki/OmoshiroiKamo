@@ -23,6 +23,10 @@ public class EnergyInput implements IRecipeInput {
         this.perTick = perTick;
     }
 
+    public EnergyInput(int amount) {
+        this(amount, true);
+    }
+
     public int getAmount() {
         return amount;
     }
@@ -70,8 +74,8 @@ public class EnergyInput implements IRecipeInput {
     public static EnergyInput fromJson(JsonObject json) {
         int amount = json.get("energy")
             .getAsInt();
-        boolean perTick = json.has("perTick") && json.get("perTick")
-            .getAsBoolean();
+        boolean perTick = json.has("perTick") ? json.get("perTick")
+            .getAsBoolean() : true;
         return new EnergyInput(amount, perTick);
     }
 }

@@ -16,8 +16,13 @@ public class InputParserRegistry {
 
     static {
         register("item", ItemInput::fromJson);
+        register("ore", ItemInput::fromJson);
         register("fluid", FluidInput::fromJson);
         register("energy", EnergyInput::fromJson);
+        register("mana", ManaInput::fromJson);
+        register("gas", GasInput::fromJson);
+        register("essentia", EssentiaInput::fromJson);
+        register("vis", VisInput::fromJson);
     }
 
     /**

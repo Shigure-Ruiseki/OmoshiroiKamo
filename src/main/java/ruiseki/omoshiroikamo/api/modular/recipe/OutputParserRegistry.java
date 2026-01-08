@@ -17,6 +17,10 @@ public class OutputParserRegistry {
     static {
         register("item", ItemOutput::fromJson);
         register("fluid", FluidOutput::fromJson);
+        register("mana", ManaOutput::fromJson);
+        register("gas", GasOutput::fromJson);
+        register("essentia", EssentiaOutput::fromJson);
+        register("vis", VisOutput::fromJson);
     }
 
     /**
