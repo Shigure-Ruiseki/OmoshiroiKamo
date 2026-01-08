@@ -15,7 +15,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     private final String machineType;
     private final int duration;
-    private final int energyPerTick;
     private final int priority;
     private final List<IRecipeInput> inputs;
     private final List<IRecipeOutput> outputs;
@@ -23,7 +22,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
     private ModularRecipe(Builder builder) {
         this.machineType = builder.machineType;
         this.duration = builder.duration;
-        this.energyPerTick = builder.energyPerTick;
         this.priority = builder.priority;
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
@@ -37,15 +35,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     public int getDuration() {
         return duration;
-    }
-
-    /**
-     * TODO: This field is currently unused. Energy is calculated from EnergyInput
-     * instances in ProcessAgent.
-     * Consider removing or using for validation/documentation.
-     */
-    public int getEnergyPerTick() {
-        return energyPerTick;
     }
 
     public int getPriority() {
@@ -150,7 +139,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
         private String machineType;
         private int duration = 100;
-        private int energyPerTick = 0;
         private int priority = 0;
         private List<IRecipeInput> inputs = new ArrayList<>();
         private List<IRecipeOutput> outputs = new ArrayList<>();
@@ -162,11 +150,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
         public Builder duration(int duration) {
             this.duration = duration;
-            return this;
-        }
-
-        public Builder energyPerTick(int energyPerTick) {
-            this.energyPerTick = energyPerTick;
             return this;
         }
 

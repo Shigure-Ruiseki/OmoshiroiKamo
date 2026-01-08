@@ -45,28 +45,34 @@ public class ProcessAgent {
      * Consumes inputs immediately if successful.
      * Caches outputs in NBT.
      */
-    public boolean start(ModularRecipe recipe, List<IModularPort> inputPorts) {
+    public boolean start(ModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
         if (running) return false;
 
-        // Check if all inputs are available (simulate first)
+        // Check if all non-energy inputs are available
         for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) continue;
-            if (!input.process(inputPorts, true)) {
+            if (input instanceof EnergyInput) {
+                EnergyInput energyInput = (EnergyInput) input;
+                if (energyInput.isPerTick()) continue;
+                if (!energyInput.process(energyPorts, true)) {
+                    return false;
+                }
+            } else if (!input.process(inputPorts, true)) {
                 return false;
             }
         }
 
         // Actually consume inputs
-        for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) continue;
-            input.process(inputPorts, false);
-        }
-
-        // Calculate energy per tick
         energyPerTick = 0;
         for (IRecipeInput input : recipe.getInputs()) {
             if (input instanceof EnergyInput) {
-                energyPerTick += ((EnergyInput) input).getAmount();
+                EnergyInput energyInput = (EnergyInput) input;
+                if (energyInput.isPerTick()) {
+                    energyPerTick += energyInput.getAmount();
+                } else {
+                    energyInput.process(energyPorts, false);
+                }
+            } else {
+                input.process(inputPorts, false);
             }
         }
 
