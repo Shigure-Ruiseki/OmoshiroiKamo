@@ -11,8 +11,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
 /**
  * Recipe input requirement for energy.
  * Can be per-tick consumption or completion-time consumption.
- * TODO: Currently all energy is consumed per-tick. Implement completion-time
- * mode if needed.
+ * TODO: Implement completion-time mode if needed.
  */
 public class EnergyInput implements IRecipeInput {
 
@@ -67,7 +66,6 @@ public class EnergyInput implements IRecipeInput {
 
     /**
      * Create EnergyInput from JSON.
-     * Format: { "energy": 100, "perTick": true }
      */
     public static EnergyInput fromJson(JsonObject json) {
         int amount = json.get("energy")

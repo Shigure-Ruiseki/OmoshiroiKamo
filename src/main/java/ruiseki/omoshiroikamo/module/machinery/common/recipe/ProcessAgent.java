@@ -1,13 +1,20 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 
 /**
@@ -16,13 +23,18 @@ import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
  */
 public class ProcessAgent {
 
-    private ModularRecipe currentRecipe;
     private int progress;
+    private int maxProgress;
+    private int energyPerTick;
     private boolean running;
     private boolean waitingForOutput;
 
-    // Energy consumption tracking
-    private int energyPerTick;
+    // Cached outputs for NBT persistence
+    private List<ItemStack> cachedItemOutputs = new ArrayList<>();
+    private List<FluidStack> cachedFluidOutputs = new ArrayList<>();
+
+    // Transient reference to current recipe
+    private transient ModularRecipe currentRecipe;
 
     public ProcessAgent() {
         reset();
@@ -31,18 +43,14 @@ public class ProcessAgent {
     /**
      * Attempt to start processing a recipe.
      * Consumes inputs immediately if successful.
-     * 
-     * @return true if recipe started successfully
+     * Caches outputs in NBT.
      */
     public boolean start(ModularRecipe recipe, List<IModularPort> inputPorts) {
         if (running) return false;
 
         // Check if all inputs are available (simulate first)
         for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) {
-                // Energy is consumed per-tick, not at start
-                continue;
-            }
+            if (input instanceof EnergyInput) continue;
             if (!input.process(inputPorts, true)) {
                 return false;
             }
@@ -50,9 +58,7 @@ public class ProcessAgent {
 
         // Actually consume inputs
         for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) {
-                continue;
-            }
+            if (input instanceof EnergyInput) continue;
             input.process(inputPorts, false);
         }
 
@@ -60,12 +66,25 @@ public class ProcessAgent {
         energyPerTick = 0;
         for (IRecipeInput input : recipe.getInputs()) {
             if (input instanceof EnergyInput) {
-                EnergyInput energyInput = (EnergyInput) input;
-                energyPerTick += energyInput.getAmount();
+                energyPerTick += ((EnergyInput) input).getAmount();
+            }
+        }
+
+        // Cache outputs in NBT
+        cachedItemOutputs.clear();
+        cachedFluidOutputs.clear();
+        for (IRecipeOutput output : recipe.getOutputs()) {
+            if (output instanceof ItemOutput) {
+                ItemStack stack = ((ItemOutput) output).getOutput();
+                cachedItemOutputs.add(stack.copy());
+            } else if (output instanceof FluidOutput) {
+                FluidStack stack = ((FluidOutput) output).getOutput();
+                cachedFluidOutputs.add(stack.copy());
             }
         }
 
         currentRecipe = recipe;
+        maxProgress = recipe.getDuration();
         progress = 0;
         running = true;
         waitingForOutput = false;
@@ -75,37 +94,26 @@ public class ProcessAgent {
 
     /**
      * Process one tick.
-     * 
-     * @return the result of this tick
      */
     public TickResult tick(List<IModularPort> energyPorts) {
         if (!running) return TickResult.IDLE;
 
-        // If waiting for output space, don't consume energy
         if (waitingForOutput) {
             return TickResult.WAITING_OUTPUT;
         }
 
-        // Try to consume energy
+        // Consume energy per tick
         if (energyPerTick > 0) {
-            // TODO: Consider refactoring to avoid iterating twice
-            // Currently we check availability then consume in EnergyInput.process
-
-            // Simplified: use EnergyInput to consume
-            for (IRecipeInput input : currentRecipe.getInputs()) {
-                if (input instanceof EnergyInput) {
-                    if (!input.process(energyPorts, false)) {
-                        return TickResult.NO_ENERGY;
-                    }
-                }
+            // Create temporary EnergyInput for consumption
+            EnergyInput energyReq = new EnergyInput(energyPerTick, true);
+            if (!energyReq.process(energyPorts, false)) {
+                return TickResult.NO_ENERGY;
             }
         }
 
-        // Advance progress
         progress++;
 
-        // Check if completed
-        if (progress >= currentRecipe.getDuration()) {
+        if (progress >= maxProgress) {
             waitingForOutput = true;
             return TickResult.READY_OUTPUT;
         }
@@ -114,26 +122,33 @@ public class ProcessAgent {
     }
 
     /**
-     * Attempt to output the results.
-     * 
-     * @return true if outputs were successfully placed
+     * Attempt to output the cached results.
+     * Uses cached outputs.
      */
     public boolean tryOutput(List<IModularPort> outputPorts) {
         if (!waitingForOutput) return false;
 
+        // Create temporary output objects from cached data
+        List<IRecipeOutput> outputs = new ArrayList<>();
+        for (ItemStack stack : cachedItemOutputs) {
+            outputs.add(new ItemOutput(stack.copy()));
+        }
+        for (FluidStack stack : cachedFluidOutputs) {
+            outputs.add(new FluidOutput(stack.copy()));
+        }
+
         // Check if all outputs can be placed (simulate)
-        for (IRecipeOutput output : currentRecipe.getOutputs()) {
+        for (IRecipeOutput output : outputs) {
             if (!output.process(outputPorts, true)) {
                 return false;
             }
         }
 
         // Actually place outputs
-        for (IRecipeOutput output : currentRecipe.getOutputs()) {
+        for (IRecipeOutput output : outputs) {
             output.process(outputPorts, false);
         }
 
-        // Reset for next recipe
         reset();
         return true;
     }
@@ -149,9 +164,12 @@ public class ProcessAgent {
     private void reset() {
         currentRecipe = null;
         progress = 0;
+        maxProgress = 0;
         running = false;
         waitingForOutput = false;
         energyPerTick = 0;
+        cachedItemOutputs.clear();
+        cachedFluidOutputs.clear();
     }
 
     // Getters
@@ -167,8 +185,8 @@ public class ProcessAgent {
         return progress;
     }
 
-    public int getDuration() {
-        return currentRecipe != null ? currentRecipe.getDuration() : 0;
+    public int getMaxProgress() {
+        return maxProgress;
     }
 
     public ModularRecipe getCurrentRecipe() {
@@ -176,36 +194,61 @@ public class ProcessAgent {
     }
 
     public float getProgressPercent() {
-        if (currentRecipe == null || currentRecipe.getDuration() == 0) return 0;
-        return (float) progress / currentRecipe.getDuration();
+        if (maxProgress == 0) return 0;
+        return (float) progress / maxProgress;
     }
 
     // NBT persistence
-    // TODO: Recipe restoration requires Controller to look up recipe by machineType
-    // and re-find matching recipe
-    // Consider storing recipe identifier or input signature for restoration
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("progress", progress);
+        nbt.setInteger("maxProgress", maxProgress);
+        nbt.setInteger("energyPerTick", energyPerTick);
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
-        nbt.setInteger("energyPerTick", energyPerTick);
+
+        if (running) {
+            NBTTagList itemList = new NBTTagList();
+            for (ItemStack stack : cachedItemOutputs) {
+                itemList.appendTag(stack.writeToNBT(new NBTTagCompound()));
+            }
+            nbt.setTag("itemOutputs", itemList);
+
+            NBTTagList fluidList = new NBTTagList();
+            for (FluidStack stack : cachedFluidOutputs) {
+                fluidList.appendTag(stack.writeToNBT(new NBTTagCompound()));
+            }
+            nbt.setTag("fluidOutputs", fluidList);
+        }
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
         progress = nbt.getInteger("progress");
+        maxProgress = nbt.getInteger("maxProgress");
+        energyPerTick = nbt.getInteger("energyPerTick");
         running = nbt.getBoolean("running");
         waitingForOutput = nbt.getBoolean("waitingForOutput");
-        energyPerTick = nbt.getInteger("energyPerTick");
+
+        cachedItemOutputs.clear();
+        cachedFluidOutputs.clear();
+
+        if (running) {
+            NBTTagList itemList = nbt.getTagList("itemOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < itemList.tagCount(); i++) {
+                cachedItemOutputs.add(ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)));
+            }
+
+            NBTTagList fluidList = nbt.getTagList("fluidOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < fluidList.tagCount(); i++) {
+                cachedFluidOutputs.add(FluidStack.loadFluidStackFromNBT(fluidList.getCompoundTagAt(i)));
+            }
+        }
     }
 
-    /**
-     * Result of a tick operation.
-     */
     public enum TickResult {
-        IDLE, // Not running
-        CONTINUE, // Processing continues
-        NO_ENERGY, // Paused due to insufficient energy
-        READY_OUTPUT, // Completed, waiting for output space
-        WAITING_OUTPUT // Still waiting for output space
+        IDLE,
+        CONTINUE,
+        NO_ENERGY,
+        READY_OUTPUT,
+        WAITING_OUTPUT
     }
 }
