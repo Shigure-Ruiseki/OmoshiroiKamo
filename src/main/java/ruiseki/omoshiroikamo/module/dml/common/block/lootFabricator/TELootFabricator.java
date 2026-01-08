@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -26,7 +27,8 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 
-public class TELootFabricator extends AbstractMachineTE implements IOKEnergySink, ISidedInventory {
+public class TELootFabricator extends AbstractMachineTE
+    implements IOKEnergySink, ISidedInventory, IGuiHolder<PosGuiData> {
 
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_START = 1;

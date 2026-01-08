@@ -11,12 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
-import com.cleanroommc.modularui.factory.PosGuiData;
-import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +35,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
  * <li>Interaction with ItemStacks for saving/loading</li>
  * </ul>
  */
-public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData>, IWailaTileInfoProvider {
+public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoProvider {
 
     /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
@@ -273,11 +268,6 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
             GuiFactories.tileEntity()
                 .open(player, xCoord, yCoord, zCoord);
         }
-    }
-
-    @Override
-    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new ModularPanel("base");
     }
 
     @Override

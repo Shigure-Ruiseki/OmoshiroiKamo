@@ -5,10 +5,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+
 import cofh.api.energy.IEnergyProvider;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
@@ -78,6 +85,11 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     @Override
     public ItemStack getItemStack() {
         return CableItems.ENERGY_INPUT_BUS.newItemStack();
+    }
+
+    @Override
+    public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return new ModularPanel("energy_input_bus");
     }
 
     @Override

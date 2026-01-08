@@ -26,6 +26,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
@@ -35,11 +40,14 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
+import ruiseki.omoshiroikamo.module.cable.client.gui.CableGuiFactories;
+import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class TECable extends AbstractTE implements ICable, ICustomCollision, IWailaTileInfoProvider {
+public class TECable extends AbstractTE
+    implements ICable, ICustomCollision, IWailaTileInfoProvider, IGuiHolder<PosSideGuiData> {
 
     protected final EnumSet<ForgeDirection> connections = EnumSet.noneOf(ForgeDirection.class);
 
@@ -84,8 +92,13 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
 
     @Override
     public void readCommon(NBTTagCompound tag) {
-        connections.clear();
-        parts.clear();
+
+        boolean isClient = worldObj != null && worldObj.isRemote;
+
+        if (!isClient) {
+            connections.clear();
+            parts.clear();
+        }
 
         // connections
         int[] dirs = tag.getIntArray("connections");
@@ -116,10 +129,6 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
         }
 
         needsNetworkRebuild = true;
-
-        if (worldObj != null && worldObj.isRemote) {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
     }
 
     @Override
@@ -266,22 +275,27 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side,
         float hitX, float hitY, float hitZ) {
-
         if (world.isRemote) {
             return true;
         }
 
-        // === HIT INFO ===
         CableHit hit = this.rayTraceCable(player);
         if (hit != null && hit.type == CableHit.Type.PART) {
-            player.addChatMessage(new ChatComponentText("[Part]\n" + hit.part.toString()));
+            ICablePart part = getPart(hit.side);
+
+            if (part != null) {
+                player.addChatMessage(new ChatComponentText("[Part]\n" + part));
+
+                CableGuiFactories.tileEntity()
+                    .open(player, x, y, z, hit.side);
+            }
+
             return true;
         }
 
-        // === NETWORK INFO ===
         for (AbstractCableNetwork<?> net : this.getNetworks()
             .values()) {
-            player.addChatMessage(new ChatComponentText("[Network]\n" + net.toString()));
+            player.addChatMessage(new ChatComponentText("[Network]\n" + net));
         }
 
         return true;
@@ -572,6 +586,7 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
         if (amount <= 0) return 0;
 
         ICablePart part = getPart(side);
+        if (part == null) return 0;
         if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
         if (!(part instanceof IEnergyPart energyPart)) return 0;
 
@@ -589,6 +604,7 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
         if (amount <= 0) return 0;
 
         ICablePart part = getPart(side);
+        if (part == null) return 0;
         if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
         if (!(part instanceof IEnergyPart energyPart)) return 0;
 
@@ -628,6 +644,12 @@ public class TECable extends AbstractTE implements ICable, ICustomCollision, IWa
     public boolean canConnectEnergy(ForgeDirection from) {
         ICablePart part = getPart(from);
         return part instanceof IEnergyPart energy && energy.getIO() != EnumIO.NONE;
+    }
+
+    @Override
+    public ModularPanel buildUI(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        ICablePart part = getPart(data.getSide());
+        return part.partPanel(data, syncManager, settings);
     }
 
     public static class CableHit {

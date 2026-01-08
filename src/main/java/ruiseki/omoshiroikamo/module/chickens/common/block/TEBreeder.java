@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -27,7 +28,7 @@ import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
-public class TEBreeder extends TERoostBase {
+public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
 
     public TEBreeder() {}
 

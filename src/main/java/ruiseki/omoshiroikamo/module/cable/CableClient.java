@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.api.cable.ICablePartItem;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
+import ruiseki.omoshiroikamo.module.cable.client.gui.CableGuiFactories;
 import ruiseki.omoshiroikamo.module.cable.client.render.CableISBRH;
 import ruiseki.omoshiroikamo.module.cable.client.render.ItemPartRenderer;
 import ruiseki.omoshiroikamo.module.cable.client.render.PartTESR;
@@ -30,6 +31,7 @@ public class CableClient implements IModuleClient {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        CableGuiFactories.preInit();
 
     }
 

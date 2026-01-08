@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -30,7 +31,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
  */
-public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort {
+public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData> {
 
     protected final EnumIO[] sides = new EnumIO[6];
 

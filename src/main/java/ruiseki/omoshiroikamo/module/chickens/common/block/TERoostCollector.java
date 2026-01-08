@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -25,7 +26,7 @@ import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
-public class TERoostCollector extends AbstractStorageTE {
+public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<PosGuiData> {
 
     private int searchOffset = 0;
 

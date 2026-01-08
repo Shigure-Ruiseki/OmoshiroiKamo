@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.chickens.common.block;
 
 import net.minecraft.item.ItemStack;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -20,7 +21,7 @@ import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
-public class TERoost extends TERoostBase {
+public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
 
     public TERoost() {}
 

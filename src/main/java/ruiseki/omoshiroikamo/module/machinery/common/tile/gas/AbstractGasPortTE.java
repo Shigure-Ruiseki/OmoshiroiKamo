@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -33,7 +34,8 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
 /*
  * Mekanism Handle Push/Pull itself so skip Auto PushPull
  */
-public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler {
+public abstract class AbstractGasPortTE extends AbstractTE
+    implements IModularPort, IGasHandler, IGuiHolder<PosGuiData> {
 
     protected final EnumIO[] sides = new EnumIO[6];
 

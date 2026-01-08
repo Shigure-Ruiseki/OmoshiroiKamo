@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -28,7 +29,8 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
-public abstract class AbstractFluidPortTE extends AbstractTE implements IModularPort, IFluidHandler {
+public abstract class AbstractFluidPortTE extends AbstractTE
+    implements IModularPort, IFluidHandler, IGuiHolder<PosGuiData> {
 
     protected final EnumIO[] sides = new EnumIO[6];
 

@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.factory.PosGuiData;
@@ -42,7 +43,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;
 /**
  * Extends AbstractEnergyTE to leverage existing energy management system.
  */
-public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IModularPort {
+public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IModularPort, IGuiHolder<PosGuiData> {
 
     protected final EnumIO[] sides = new EnumIO[6];
 
