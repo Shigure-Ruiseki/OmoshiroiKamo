@@ -88,13 +88,8 @@ public class ProcessAgent {
 
         // Try to consume energy
         if (energyPerTick > 0) {
-            int remaining = energyPerTick;
-            for (IModularPort port : energyPorts) {
-                if (remaining <= 0) break;
-                // Check available energy first
-                // For now, use the EnergyInput.process with simulate
-                // This is simplified; actual implementation may need direct access
-            }
+            // TODO: Consider refactoring to avoid iterating twice
+            // Currently we check availability then consume in EnergyInput.process
 
             // Simplified: use EnergyInput to consume
             for (IRecipeInput input : currentRecipe.getInputs()) {
@@ -186,12 +181,14 @@ public class ProcessAgent {
     }
 
     // NBT persistence
+    // TODO: Recipe restoration requires Controller to look up recipe by machineType
+    // and re-find matching recipe
+    // Consider storing recipe identifier or input signature for restoration
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("progress", progress);
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
         nbt.setInteger("energyPerTick", energyPerTick);
-        // Note: Recipe reference needs to be restored separately by Controller
     }
 
     public void readFromNBT(NBTTagCompound nbt) {

@@ -11,6 +11,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
 /**
  * Recipe input requirement for energy.
  * Can be per-tick consumption or completion-time consumption.
+ * TODO: Currently all energy is consumed per-tick. Implement completion-time
+ * mode if needed.
  */
 public class EnergyInput implements IRecipeInput {
 

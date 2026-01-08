@@ -88,8 +88,6 @@ public class ItemOutput implements IRecipeOutput {
 
     /**
      * Create ItemOutput from JSON.
-     * Format: { "item": "modid:itemname", "amount": 1, "meta": 0 }
-     * Or OreDictionary: { "item": "ore:ingotIron", "amount": 1 }
      */
     public static ItemOutput fromJson(JsonObject json) {
         ItemJson itemJson = new ItemJson();

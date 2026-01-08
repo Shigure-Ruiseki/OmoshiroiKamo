@@ -39,6 +39,11 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return duration;
     }
 
+    /**
+     * TODO: This field is currently unused. Energy is calculated from EnergyInput
+     * instances in ProcessAgent.
+     * Consider removing or using for validation/documentation.
+     */
     public int getEnergyPerTick() {
         return energyPerTick;
     }

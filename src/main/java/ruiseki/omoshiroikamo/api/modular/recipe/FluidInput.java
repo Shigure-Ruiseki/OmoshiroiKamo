@@ -62,7 +62,6 @@ public class FluidInput implements IRecipeInput {
 
     /**
      * Create FluidInput from JSON.
-     * Format: { "fluid": "water", "amount": 10000 }
      */
     public static FluidInput fromJson(JsonObject json) {
         FluidJson fluidJson = new FluidJson();

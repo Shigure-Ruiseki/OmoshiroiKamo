@@ -83,8 +83,6 @@ public class ItemInput implements IRecipeInput {
 
     /**
      * Create ItemInput from JSON.
-     * Format: { "item": "modid:itemname", "amount": 64, "meta": 0 }
-     * Or OreDictionary: { "item": "ore:ingotIron", "amount": 64 }
      */
     public static ItemInput fromJson(JsonObject json) {
         ItemJson itemJson = new ItemJson();

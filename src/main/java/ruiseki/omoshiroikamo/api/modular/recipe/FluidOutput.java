@@ -71,7 +71,6 @@ public class FluidOutput implements IRecipeOutput {
 
     /**
      * Create FluidOutput from JSON.
-     * Format: { "fluid": "water", "amount": 1000 }
      */
     public static FluidOutput fromJson(JsonObject json) {
         FluidJson fluidJson = new FluidJson();

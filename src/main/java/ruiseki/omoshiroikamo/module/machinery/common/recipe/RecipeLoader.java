@@ -61,6 +61,7 @@ public class RecipeLoader {
 
     /**
      * Reload recipes (for hot-reload command).
+     * TODO: Implement /omoshiroikamo reload command to call this method.
      */
     public void reload(File configDir) {
         Logger.info("Reloading recipes...");
