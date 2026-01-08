@@ -38,6 +38,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  * - RedstoneMode support (via AbstractEnergyTE)
  * - Energy capability system (via AbstractEnergyTE)
  * Ensure we don't duplicate these existing systems.
+ * TODO: PortManager refactoring
+ * TODO: GUI
  */
 public class TEMachineController extends AbstractMBModifierTE {
 
@@ -125,25 +127,27 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     // ========== Crafting Configuration ==========
+    // TODO: These methods are inherited from AbstractMBModifierTE but unused
+    // Consider removing or refactoring the parent class.
 
     @Override
     public int getBaseDuration() {
-        return 100; // 5 seconds base
+        return 100;
     }
 
     @Override
     public int getMinDuration() {
-        return 20; // 1 second minimum
+        return 20;
     }
 
     @Override
     public int getMaxDuration() {
-        return 1200; // 1 minute maximum
+        return 1200;
     }
 
     @Override
     public float getSpeedMultiplier() {
-        return 1.0f; // No speed modifiers yet
+        return 1.0f;
     }
 
     @Override
