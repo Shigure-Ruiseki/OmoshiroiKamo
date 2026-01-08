@@ -12,23 +12,26 @@ import thaumcraft.api.aspects.Aspect;
 
 /**
  * Recipe output for Vis.
+ * JSON specifies Vis units, internally stored as centiVis (100 centivis = 1 vis).
  */
 public class VisOutput implements IRecipeOutput {
 
     private final String aspectTag;
-    private final int amount;
+    // Amount in centiVis
+    private final int amountCentiVis;
 
-    public VisOutput(String aspectTag, int amount) {
+    public VisOutput(String aspectTag, int amountCentiVis) {
         this.aspectTag = aspectTag;
-        this.amount = amount;
+        this.amountCentiVis = amountCentiVis;
     }
 
     public String getAspectTag() {
         return aspectTag;
     }
 
+    // Amount in centiVis
     public int getAmount() {
-        return amount;
+        return amountCentiVis;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class VisOutput implements IRecipeOutput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return false;
 
-        int remaining = amount;
+        int remaining = amountCentiVis;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.VIS) continue;
@@ -51,7 +54,6 @@ public class VisOutput implements IRecipeOutput {
             AbstractVisPortTE visPort = (AbstractVisPortTE) port;
             // addVis returns the amount that could NOT be added
             int notAdded = visPort.addVis(aspect, remaining);
-            int added = remaining - notAdded;
             remaining = notAdded;
             if (remaining <= 0) break;
         }
@@ -59,16 +61,20 @@ public class VisOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
+    /**
+     * Create VisOutput from JSON.
+     * JSON "amount" is in centiVis.
+     */
     public static VisOutput fromJson(JsonObject json) {
         String aspectTag = json.get("vis")
             .getAsString();
-        int amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 1;
+        int centiVis = json.has("amount") ? json.get("amount")
+            .getAsInt() : 100;
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) {
             Logger.warn("Unknown aspect in recipe: {}", aspectTag);
             return null;
         }
-        return new VisOutput(aspectTag, amount);
+        return new VisOutput(aspectTag, centiVis);
     }
 }

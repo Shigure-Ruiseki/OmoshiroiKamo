@@ -11,23 +11,26 @@ import thaumcraft.api.aspects.Aspect;
 
 /**
  * Recipe input requirement for Vis.
+ * JSON specifies Vis units, internally stored as centiVis (100 centivis = 1 vis).
  */
 public class VisInput implements IRecipeInput {
 
     private final String aspectTag;
-    private final int amount;
+    // Amount in centiVis
+    private final int amountCentiVis;
 
-    public VisInput(String aspectTag, int amount) {
+    public VisInput(String aspectTag, int amountCentiVis) {
         this.aspectTag = aspectTag;
-        this.amount = amount;
+        this.amountCentiVis = amountCentiVis;
     }
 
     public String getAspectTag() {
         return aspectTag;
     }
 
+    // Amount in centiVis
     public int getAmount() {
-        return amount;
+        return amountCentiVis;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class VisInput implements IRecipeInput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return false;
 
-        int remaining = amount;
+        int remaining = amountCentiVis;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.VIS) continue;
@@ -62,11 +65,15 @@ public class VisInput implements IRecipeInput {
         return remaining <= 0;
     }
 
+    /**
+     * Create VisInput from JSON.
+     * JSON "amount" is in centiVis.
+     */
     public static VisInput fromJson(JsonObject json) {
         String aspectTag = json.get("vis")
             .getAsString();
-        int amount = json.get("amount")
+        int centiVis = json.get("amount")
             .getAsInt();
-        return new VisInput(aspectTag, amount);
+        return new VisInput(aspectTag, centiVis);
     }
 }
