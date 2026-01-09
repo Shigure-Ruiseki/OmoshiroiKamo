@@ -251,6 +251,65 @@ public class TEMachineController extends AbstractMBModifierTE {
         }
     }
 
+    /**
+     * Diagnose why no recipe is currently running.
+     * Returns an error message if an issue is found, or null if everything is OK.
+     */
+    private String diagnoseRecipeIssue() {
+        // Check if there are any recipes for this group
+        List<ModularRecipe> recipes = RecipeLoader.getInstance()
+            .getRecipes(recipeGroup);
+        if (recipes.isEmpty()) {
+            return "No recipes registered for group: " + recipeGroup;
+        }
+
+        // Check if we have required port types
+        if (inputPorts.isEmpty()) {
+            return "No input ports connected";
+        }
+        if (outputPorts.isEmpty()) {
+            return "No output ports connected";
+        }
+
+        // Try to find what's missing for each recipe
+        for (ModularRecipe recipe : recipes) {
+            StringBuilder missingInputs = new StringBuilder();
+            StringBuilder missingOutputs = new StringBuilder();
+
+            // Check inputs
+            for (var input : recipe.getInputs()) {
+                if (!input.process(inputPorts, true)) {
+                    if (missingInputs.length() > 0) missingInputs.append(", ");
+                    missingInputs.append(
+                        input.getPortType()
+                            .name());
+                }
+            }
+
+            // If inputs are OK, check outputs
+            if (missingInputs.length() == 0) {
+                for (var output : recipe.getOutputs()) {
+                    if (!output.process(outputPorts, true)) {
+                        if (missingOutputs.length() > 0) missingOutputs.append(", ");
+                        missingOutputs.append(
+                            output.getPortType()
+                                .name());
+                    }
+                }
+
+                if (missingOutputs.length() > 0) {
+                    return "Output full or missing: " + missingOutputs;
+                }
+
+                // All inputs/outputs OK but recipe not starting - check energy
+                return "Energy required";
+            }
+        }
+
+        // Generic message - inputs don't match any recipe
+        return "No matching recipe found";
+    }
+
     @Override
     protected void finishCrafting() {
         resetCrafting();
@@ -292,13 +351,20 @@ public class TEMachineController extends AbstractMBModifierTE {
                 player.addChatComponentMessage(
                     new ChatComponentText(EnumChatFormatting.YELLOW + "[Machine] Waiting for output space..."));
             } else {
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        "[Machine] " + status
-                            + " | Inputs: "
-                            + inputPorts.size()
-                            + " | Outputs: "
-                            + outputPorts.size()));
+                // IDLE - try to diagnose why no recipe is running
+                String diagnosisMsg = diagnoseRecipeIssue();
+                if (diagnosisMsg != null) {
+                    player.addChatComponentMessage(
+                        new ChatComponentText(EnumChatFormatting.YELLOW + "[Machine] " + diagnosisMsg));
+                } else {
+                    player.addChatComponentMessage(
+                        new ChatComponentText(
+                            "[Machine] " + status
+                                + " | Inputs: "
+                                + inputPorts.size()
+                                + " | Outputs: "
+                                + outputPorts.size()));
+                }
             }
 
             sendPortTypeCounts(player, "Input", inputPorts);
