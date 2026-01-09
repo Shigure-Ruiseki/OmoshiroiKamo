@@ -128,6 +128,10 @@ public enum ModObject {
     itemEnergyInputBus,
     itemEnergyOutputBus,
 
+    itemItemInterfaceBus,
+    itemItemInputBus,
+    itemItemOutputBus,
+
     ;
     // spotless: on
 

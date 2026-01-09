@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.energy;
+package ruiseki.omoshiroikamo.module.cable.common.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
