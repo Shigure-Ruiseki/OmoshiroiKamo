@@ -240,8 +240,8 @@ public class TECable extends AbstractTE
         parts.clear();
 
         // 2. Networks cleanup
-        if (networks != null) {
-            for (AbstractCableNetwork<?> net : networks.values()) {
+        if (networks != null && !networks.isEmpty()) {
+            for (AbstractCableNetwork<?> net : new ArrayList<>(networks.values())) {
                 net.destroyNetwork();
             }
             networks.clear();
