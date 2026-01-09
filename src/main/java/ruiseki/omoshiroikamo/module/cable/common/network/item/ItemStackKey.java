@@ -23,8 +23,7 @@ public final class ItemStackKey {
         return new ItemStackKey(
             stack.getItem(),
             stack.getItemDamage(),
-            stack.hasTagCompound() ? stack.getTagCompound() : null
-        );
+            stack.hasTagCompound() ? stack.getTagCompound() : null);
     }
 
     private int computeHash() {
@@ -50,4 +49,3 @@ public final class ItemStackKey {
         return hash;
     }
 }
-

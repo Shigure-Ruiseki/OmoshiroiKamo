@@ -64,7 +64,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
     @Override
     public void doUpdate() {
-        if (cable.getWorld().getTotalWorldTime() % 20 != 0) return;
+        if (cable.getWorld()
+            .getTotalWorldTime() % 20 != 0) return;
 
         int hash = calcInventoryHash();
         if (hash != lastHash) {
@@ -179,7 +180,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
                 hash = 31 * hash + Item.getIdFromItem(s.getItem());
                 hash = 31 * hash + s.getItemDamage();
                 if (s.hasTagCompound()) {
-                    hash = 31 * hash + s.getTagCompound().hashCode();
+                    hash = 31 * hash + s.getTagCompound()
+                        .hashCode();
                 }
             }
         }
@@ -213,13 +215,11 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     }
 
     private ItemStack copyIdentity(ItemStack src) {
-        ItemStack copy = new ItemStack(
-            src.getItem(),
-            src.stackSize,
-            src.getItemDamage()
-        );
+        ItemStack copy = new ItemStack(src.getItem(), src.stackSize, src.getItemDamage());
         if (src.hasTagCompound()) {
-            copy.setTagCompound((NBTTagCompound) src.getTagCompound().copy());
+            copy.setTagCompound(
+                (NBTTagCompound) src.getTagCompound()
+                    .copy());
         }
         return copy;
     }

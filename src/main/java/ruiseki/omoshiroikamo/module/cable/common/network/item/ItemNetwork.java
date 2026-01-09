@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
@@ -20,6 +19,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
     public ItemNetwork() {
         super(IItemPart.class);
     }
+
     @Override
     public void doNetworkTick() {
         super.doNetworkTick();

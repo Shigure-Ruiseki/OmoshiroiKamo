@@ -72,7 +72,9 @@ public interface ICablePart {
     ResourceLocation getIcon();
 
     @SideOnly(Side.CLIENT)
-    default ResourceLocation getBackIcon() {return getIcon();}
+    default ResourceLocation getBackIcon() {
+        return getIcon();
+    }
 
     default AbstractCableNetwork<?> getNetwork() {
         ICable cable = getCable();

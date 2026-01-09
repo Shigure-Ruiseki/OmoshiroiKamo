@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
+import java.util.Collections;
+import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -20,9 +23,6 @@ import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
-
-import java.util.Collections;
-import java.util.Map;
 
 public class CableTerminal extends AbstractPart {
 
@@ -66,7 +66,6 @@ public class CableTerminal extends AbstractPart {
             cachedView = net.getItemIndexSnapshot();
         }
     }
-
 
     @Override
     public void onChunkUnload() {
@@ -127,7 +126,9 @@ public class CableTerminal extends AbstractPart {
         if (map.isEmpty()) return "<empty>";
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Items[").append(map.size()).append("]:\n");
+        sb.append("Items[")
+            .append(map.size())
+            .append("]:\n");
 
         for (Map.Entry<ItemStackKey, Integer> e : map.entrySet()) {
             sb.append(" - ")
@@ -145,7 +146,6 @@ public class CableTerminal extends AbstractPart {
         ItemNetwork net = getItemNetwork();
         int ver = net != null ? net.getIndexVersion() : -1;
 
-        return "CableTerminal{ver=" + ver + ", cached=" + lastNetworkVersion + "} "
-            + formatItemMap(cachedView);
+        return "CableTerminal{ver=" + ver + ", cached=" + lastNetworkVersion + "} " + formatItemMap(cachedView);
     }
 }
