@@ -212,7 +212,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
     @Override
     public boolean canTubeConnect(ForgeDirection side) {
         // Allow connection on any side that has IO enabled
-        return getSideIO(side) != IO.NONE;
+        return getSideIO(side) != EnumIO.NONE;
     }
 
     @Override
