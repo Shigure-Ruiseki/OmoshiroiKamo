@@ -19,9 +19,9 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
+import mekanism.api.gas.ITubeConnection;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import mekanism.api.gas.ITubeConnection;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
@@ -35,7 +35,8 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
 /*
  * Mekanism Handle Push/Pull itself so skip Auto PushPull
  */
-public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler, ITubeConnection, IGuiHolder<PosGuiData> {
+public abstract class AbstractGasPortTE extends AbstractTE
+    implements IModularPort, IGasHandler, ITubeConnection, IGuiHolder<PosGuiData> {
 
     protected final EnumIO[] sides = new EnumIO[6];
 
