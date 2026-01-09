@@ -45,7 +45,8 @@ public class GasInput implements IRecipeInput {
             if (!(port instanceof AbstractGasPortTE)) continue;
 
             AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
-            GasStack drawn = gasPort.drawGas(net.minecraftforge.common.util.ForgeDirection.UNKNOWN, remaining, false);
+            // Use internalDrawGas to bypass side IO checks
+            GasStack drawn = gasPort.internalDrawGas(remaining, false);
             if (drawn != null && drawn.amount > 0) {
                 // Check if gas type matches (null gasName = any gas)
                 if (gasName == null || gasName.isEmpty()
@@ -53,7 +54,7 @@ public class GasInput implements IRecipeInput {
                         .getName()
                         .equals(gasName)) {
                     if (!simulate) {
-                        gasPort.drawGas(net.minecraftforge.common.util.ForgeDirection.UNKNOWN, drawn.amount, true);
+                        gasPort.internalDrawGas(drawn.amount, true);
                     }
                     remaining -= drawn.amount;
                 }

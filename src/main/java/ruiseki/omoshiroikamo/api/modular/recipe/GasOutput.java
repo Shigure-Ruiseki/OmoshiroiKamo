@@ -2,8 +2,6 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
-import net.minecraftforge.common.util.ForgeDirection;
-
 import com.google.gson.JsonObject;
 
 import mekanism.api.gas.Gas;
@@ -54,7 +52,8 @@ public class GasOutput implements IRecipeOutput {
 
             AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
             GasStack insertStack = new GasStack(gas, remaining);
-            int accepted = gasPort.receiveGas(ForgeDirection.UNKNOWN, insertStack, !simulate);
+            // Use internalReceiveGas to bypass side IO checks
+            int accepted = gasPort.internalReceiveGas(insertStack, !simulate);
             remaining -= accepted;
             if (remaining <= 0) break;
         }

@@ -18,6 +18,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
+import mekanism.api.gas.ITubeConnection;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
@@ -32,7 +33,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
 /*
  * Mekanism Handle Push/Pull itself so skip Auto PushPull
  */
-public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler {
+public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler, ITubeConnection {
 
     protected final IO[] sides = new IO[6];
 
@@ -167,6 +168,28 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
         return res;
     }
 
+    /**
+     * Internal draw for machine controller (bypasses side IO checks).
+     */
+    public GasStack internalDrawGas(int amount, boolean doTransfer) {
+        GasStack res = tank.draw(amount, doTransfer);
+        if (res != null && res.amount > 0 && doTransfer) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    /**
+     * Internal receive for machine controller (bypasses side IO checks).
+     */
+    public int internalReceiveGas(GasStack gasStack, boolean doTransfer) {
+        int res = tank.receive(gasStack, doTransfer);
+        if (res > 0 && doTransfer) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
     @Override
     public int receiveGas(ForgeDirection from, GasStack gasStack) {
         return this.receiveGas(from, gasStack, true);
@@ -180,6 +203,13 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
     @Override
     public GasTankInfo[] getTankInfo(ForgeDirection from) {
         return new GasTankInfo[] { tank.getInfo() };
+    }
+
+    // ITubeConnection - allows Mekanism cables to connect
+    @Override
+    public boolean canTubeConnect(ForgeDirection side) {
+        // Allow connection on any side that has IO enabled
+        return getSideIO(side) != IO.NONE;
     }
 
     @Override
