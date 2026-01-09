@@ -177,10 +177,10 @@ public class EnergyUtils {
     public static EnergyIO wrapCoFHEnergy(Object obj, ForgeDirection side) {
 
         try {
-            // IEnergyReceiver
-            Class<?> receiverClass = Class.forName("cofh.api.energy.IEnergyReceiver");
-            if (receiverClass.isInstance(obj)) {
-                return new CoFHEnergyReceiver((IEnergyReceiver) obj, side);
+            // IEnergyHandler
+            Class<?> handlerClass = Class.forName("cofh.api.energy.IEnergyHandler");
+            if (handlerClass.isInstance(obj)) {
+                return new CoFHEnergyHandler((IEnergyHandler) obj, side);
             }
         } catch (ClassNotFoundException ignored) {}
 
@@ -193,10 +193,10 @@ public class EnergyUtils {
         } catch (ClassNotFoundException ignored) {}
 
         try {
-            // IEnergyHandler
-            Class<?> handlerClass = Class.forName("cofh.api.energy.IEnergyHandler");
-            if (handlerClass.isInstance(obj)) {
-                return new CoFHEnergyHandler((IEnergyHandler) obj, side);
+            // IEnergyReceiver
+            Class<?> receiverClass = Class.forName("cofh.api.energy.IEnergyReceiver");
+            if (receiverClass.isInstance(obj)) {
+                return new CoFHEnergyReceiver((IEnergyReceiver) obj, side);
             }
         } catch (ClassNotFoundException ignored) {}
 

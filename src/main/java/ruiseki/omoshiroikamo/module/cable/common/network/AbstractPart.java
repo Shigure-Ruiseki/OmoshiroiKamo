@@ -93,4 +93,8 @@ public abstract class AbstractPart implements ICablePart {
         this.channel = channel;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

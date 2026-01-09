@@ -70,7 +70,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         for (IItemPart iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.pull(this.getTargetTE(), side.getOpposite(), iFace.getTargetTE());
+            transfer.pull(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
             transfer.transfer();
         }
 
@@ -83,7 +83,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ITEM_INPUT_BUS.newItemStack();
+        return CableItems.ITEM_OUTPUT_BUS.newItemStack();
     }
 
     @Override

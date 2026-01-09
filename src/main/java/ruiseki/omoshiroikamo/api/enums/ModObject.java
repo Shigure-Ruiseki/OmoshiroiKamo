@@ -132,7 +132,7 @@ public enum ModObject {
     itemItemInputBus,
     itemItemOutputBus,
 
-    ;
+    itemCableTerminal,;
     // spotless: on
 
     public final String unlocalisedName;

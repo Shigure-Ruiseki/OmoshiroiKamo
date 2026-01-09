@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.ItemEnerg
 import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemItemInputBus;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemItemInterfaceBus;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutputBus;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemCableTerminal;
 
 public enum CableItems {
 
@@ -23,6 +24,7 @@ public enum CableItems {
     ITEM_INTERFACE_BUS(new ItemItemInterfaceBus()),
     ITEM_INPUT_BUS(new ItemItemInputBus()),
     ITEM_OUTPUT_BUS(new ItemItemOutputBus()),
+    CABLE_TERMINAL(new ItemCableTerminal()),
 
     ;
     // spotless: on

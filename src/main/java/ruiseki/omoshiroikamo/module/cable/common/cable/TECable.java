@@ -286,7 +286,7 @@ public class TECable extends AbstractTE
             ICablePart part = getPart(hit.side);
 
             if (part != null) {
-                player.addChatMessage(new ChatComponentText("[Part]\n" + part));
+                player.addChatMessage(new ChatComponentText("[Part] " + part));
 
                 CableGuiFactories.tileEntity()
                     .open(player, x, y, z, hit.side);
@@ -297,7 +297,7 @@ public class TECable extends AbstractTE
 
         for (AbstractCableNetwork<?> net : this.getNetworks()
             .values()) {
-            player.addChatMessage(new ChatComponentText("[Network]\n" + net));
+            player.addChatMessage(new ChatComponentText("[Network] " + net));
         }
 
         return true;

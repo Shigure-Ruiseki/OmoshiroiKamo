@@ -20,8 +20,8 @@ public class EnergyNetwork extends AbstractCableNetwork<IEnergyPart> {
         super.doNetworkTick();
 
         if (parts.isEmpty()) return;
-        inputs = new ArrayList<>();
         interfaces = new ArrayList<>();
+        inputs = new ArrayList<>();
         outputs = new ArrayList<>();
 
         for (IEnergyPart part : parts) {

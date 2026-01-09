@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.input;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,8 +16,8 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import cofh.api.energy.IEnergyProvider;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
@@ -65,21 +64,14 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
         EnergyNetwork network = (EnergyNetwork) getNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
-        int remaining = pullEnergy(getTransferLimit(), true);
-        if (remaining <= 0) return;
+        EnergyTransfer transfer = new EnergyTransfer();
+        transfer.setMaxEnergyPerTransfer(getTransferLimit());
 
         for (IEnergyPart iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
-            if (remaining <= 0) break;
 
-            int canPush = iFace.pushEnergy(remaining, true);
-            if (canPush <= 0) continue;
-
-            int pulled = pullEnergy(canPush, false);
-            if (pulled <= 0) break;
-
-            iFace.pushEnergy(pulled, false);
-            remaining -= pulled;
+            transfer.push(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
+            transfer.transfer();
         }
     }
 
@@ -172,46 +164,13 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public int pushEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
-    @Override
-    public int pullEnergy(int amount, boolean simulate) {
-        TileEntity te = getTargetTE();
-        if (!(te instanceof IEnergyProvider h)) return 0;
-
-        return h.extractEnergy(getSide().getOpposite(), amount, simulate);
-    }
-
-    @Override
     public int getTransferLimit() {
         return Integer.MAX_VALUE;
     }
 
     @Override
     public int receiveEnergy(int amount, boolean simulate) {
-        if (amount <= 0) return 0;
-
-        EnergyNetwork network = (EnergyNetwork) getNetwork();
-        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return 0;
-
-        int remaining = Math.min(amount, getTransferLimit());
-        int accepted = 0;
-
-        for (IEnergyPart iFace : network.interfaces) {
-            if (iFace.getChannel() != this.getChannel()) continue;
-            if (remaining <= 0) break;
-            int canPush = iFace.pushEnergy(remaining, true);
-            if (canPush <= 0) continue;
-
-            int pushed = simulate ? canPush : iFace.pushEnergy(canPush, false);
-
-            accepted += pushed;
-            remaining -= pushed;
-        }
-
-        return accepted;
+        return 0;
     }
 
     @Override

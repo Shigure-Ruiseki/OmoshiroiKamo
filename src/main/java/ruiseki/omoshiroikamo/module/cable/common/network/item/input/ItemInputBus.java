@@ -70,7 +70,7 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
         for (IItemPart iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.push(this.getTargetTE(), side.getOpposite(), iFace.getTargetTE());
+            transfer.push(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
             transfer.transfer();
         }
 

@@ -86,6 +86,7 @@ public final class CableUtils {
         for (ICable cable : cluster.cables) {
             for (ICablePart part : cable.getParts()) {
                 Class<? extends ICablePart> type = part.getBasePartType();
+                if (type == null) continue;
 
                 AbstractCableNetwork<?> net = newNetworks.computeIfAbsent(type, CableNetworkRegistry::create);
 
