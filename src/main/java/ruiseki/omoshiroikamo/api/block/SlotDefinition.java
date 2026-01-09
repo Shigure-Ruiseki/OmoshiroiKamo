@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.io;
+package ruiseki.omoshiroikamo.api.block;
 
 public class SlotDefinition {
 

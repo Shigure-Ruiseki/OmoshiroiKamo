@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.enums;
+package ruiseki.omoshiroikamo.api.block;
 
 import com.google.common.collect.ImmutableList;
 

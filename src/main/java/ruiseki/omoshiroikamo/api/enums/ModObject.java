@@ -73,6 +73,8 @@ public enum ModObject {
     blockModularVisInput,
     blockModularVisOutput,
 
+    blockCable,
+
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,
@@ -120,7 +122,11 @@ public enum ModObject {
 
     itemStructureWand,
 
-    itemWrench
+    itemWrench,
+
+    itemEnergyInterfaceBus,
+    itemEnergyInputBus,
+    itemEnergyOutputBus,
 
     ;
     // spotless: on

@@ -107,7 +107,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     @Override
     public void onBlockAdded(World world, int x, int y, int z) {
-        super.onBlockAdded(world, x, y, z);
         world.markBlockForUpdate(x, y, z);
     }
 

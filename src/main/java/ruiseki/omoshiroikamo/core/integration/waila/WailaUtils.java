@@ -14,12 +14,13 @@ import net.minecraftforge.fluids.IFluidHandler;
 import cpw.mods.fml.common.registry.GameData;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
+import ruiseki.omoshiroikamo.api.block.ICraftingTile;
+import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
-import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
-import ruiseki.omoshiroikamo.api.io.ISidedIO;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import vazkii.botania.api.mana.IManaBlock;
 
@@ -125,7 +126,7 @@ public class WailaUtils {
 
     public static String getSideIOTooltip(ISidedIO handler, ForgeDirection direction) {
         if (handler == null) return null;
-        ISidedIO.IO io = handler.getSideIO(direction);
+        EnumIO io = handler.getSideIO(direction);
         return LibMisc.LANG.localize(io.getName());
     }
 

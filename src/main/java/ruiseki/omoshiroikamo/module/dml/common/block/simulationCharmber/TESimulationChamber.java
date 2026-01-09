@@ -9,12 +9,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import ruiseki.omoshiroikamo.api.crafting.CraftingState;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
@@ -26,7 +27,8 @@ import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPolymerCla
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPolymerClay;
 
-public class TESimulationChamber extends AbstractMachineTE implements IOKEnergySink, ISidedInventory {
+public class TESimulationChamber extends AbstractMachineTE
+    implements IOKEnergySink, ISidedInventory, IGuiHolder<PosGuiData> {
 
     private static final int SLOT_DATA_MODEL = 0;
     private static final int SLOT_POLYMER = 1;

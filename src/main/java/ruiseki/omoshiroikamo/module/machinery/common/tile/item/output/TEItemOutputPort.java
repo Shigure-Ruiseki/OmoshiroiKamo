@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
@@ -23,8 +24,8 @@ public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
     }
 
     @Override
-    public IO getIOLimit() {
-        return IO.OUTPUT;
+    public EnumIO getIOLimit() {
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -94,7 +95,7 @@ public abstract class TEItemOutputPort extends AbstractItemIOPortTE {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+        if (renderPass == 1 && getSideIO(side) != EnumIO.NONE) {
             return IconRegistry.getIcon("overlay_itemoutput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

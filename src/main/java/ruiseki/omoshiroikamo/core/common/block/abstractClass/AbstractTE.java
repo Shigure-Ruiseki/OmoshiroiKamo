@@ -11,18 +11,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
-import com.cleanroommc.modularui.factory.PosGuiData;
-import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import lombok.Getter;
 import lombok.Setter;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
@@ -40,7 +35,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
  * <li>Interaction with ItemStacks for saving/loading</li>
  * </ul>
  */
-public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosGuiData>, IWailaTileInfoProvider {
+public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoProvider {
 
     /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
@@ -65,6 +60,9 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
     /** Current redstone power level (0-15). */
     @Setter
     protected int redstoneLevel = 0;
+
+    /** Cached redstone result */
+    protected boolean redstoneCheckPassed = true;
 
     /** Flag indicating if redstone state needs updating. */
     protected boolean redstoneStateDirty = true;
@@ -148,7 +146,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
      * @return true if machine is redstone active
      */
     public boolean isRedstoneActive() {
-        return RedstoneMode.isActive(redstoneMode, redstonePowered);
+        return redstoneCheckPassed;
     }
 
     /**
@@ -157,8 +155,12 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
      * @param mode new redstone mode
      */
     public void setRedstoneMode(RedstoneMode mode) {
-        redstoneMode = mode;
-        forceClientUpdate = true;
+        if (redstoneMode != mode) {
+            redstoneMode = mode;
+            redstoneStateDirty = true;
+            forceClientUpdate = true;
+            notifyNeighbours = true;
+        }
     }
 
     /**
@@ -181,14 +183,15 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         }
 
         boolean requiresClientSync = forceClientUpdate;
-        boolean prevRedCheck = isRedstoneActive();
+        boolean prevRedCheck = redstoneCheckPassed;
 
         if (redstoneStateDirty) {
+            redstoneCheckPassed = RedstoneMode.isActive(redstoneMode, redstonePowered);
             redstoneStateDirty = false;
         }
 
         requiresClientSync |= prevRedCheck != isRedstoneActive();
-        requiresClientSync |= processTasks(isRedstoneActive());
+        requiresClientSync |= processTasks(redstoneCheckPassed);
 
         if (requiresClientSync) {
             requestRenderUpdate();
@@ -241,6 +244,7 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
         redstoneLevel = redstoneTag.getInteger("level");
         redstonePowered = redstoneTag.getBoolean("powered");
         redstoneMode = RedstoneMode.byIndex(redstoneTag.getInteger("mode"));
+        redstoneStateDirty = true;
     }
 
     public void readFromItemStack(ItemStack stack) {
@@ -273,11 +277,6 @@ public abstract class AbstractTE extends TileEntityOK implements IGuiHolder<PosG
             GuiFactories.tileEntity()
                 .open(player, xCoord, yCoord, zCoord);
         }
-    }
-
-    @Override
-    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new ModularPanel("base");
     }
 
     @Override
