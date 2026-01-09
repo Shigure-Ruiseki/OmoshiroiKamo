@@ -75,11 +75,17 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
 
     @Override
     public IO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return IO.NONE;
+        }
         return sides[side.ordinal()];
     }
 
     @Override
     public void setSideIO(ForgeDirection side, IO state) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return;
+        }
         sides[side.ordinal()] = state;
         requestRenderUpdate();
     }

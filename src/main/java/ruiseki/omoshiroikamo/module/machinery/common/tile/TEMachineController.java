@@ -53,6 +53,8 @@ public class TEMachineController extends AbstractMBModifierTE {
     private final ProcessAgent processAgent = new ProcessAgent();
     // TODO: recipeGroup will be obtained from GUI blueprint in future
     private String recipeGroup = "default";
+    // Look-ahead: next recipe cached during current processing
+    private transient ModularRecipe nextRecipe = null;
 
     // Structure definition (will be loaded from JSON)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
@@ -193,25 +195,56 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     /**
-     * Process recipe using ProcessAgent.
+     * Process recipe using ProcessAgent with look-ahead optimization.
+     * Searches for the next recipe during current recipe processing,
+     * enabling zero-tick delay between recipe completions.
      */
     private void processRecipe() {
         // Try to output if waiting
         if (processAgent.isWaitingForOutput()) {
-            processAgent.tryOutput(outputPorts);
+            if (processAgent.tryOutput(outputPorts)) {
+                // Output succeeded, try to start next recipe immediately
+                startNextRecipe();
+            }
             return;
         }
 
-        // Tick if running
+        // If running, tick and look-ahead search for next recipe
         if (processAgent.isRunning()) {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            processAgent.tick(energyPorts);
+            ProcessAgent.TickResult result = processAgent.tick(energyPorts);
+
+            // Look-ahead: search for next recipe while processing (only once)
+            if (nextRecipe == null) {
+                nextRecipe = RecipeLoader.getInstance()
+                    .findMatch(new String[] { recipeGroup }, inputPorts);
+            }
+
+            // If complete, immediately try to output and start next
+            if (result == ProcessAgent.TickResult.READY_OUTPUT) {
+                if (processAgent.tryOutput(outputPorts)) {
+                    startNextRecipe();
+                }
+            }
             return;
         }
 
-        // Try to start new recipe
-        ModularRecipe recipe = RecipeLoader.getInstance()
-            .findMatch(new String[] { recipeGroup }, inputPorts);
+        // IDLE: Try to start new recipe
+        startNextRecipe();
+    }
+
+    /**
+     * Start the next recipe, using cached look-ahead result if available.
+     */
+    private void startNextRecipe() {
+        // Use cached recipe if available, otherwise search
+        ModularRecipe recipe = nextRecipe;
+        if (recipe == null) {
+            recipe = RecipeLoader.getInstance()
+                .findMatch(new String[] { recipeGroup }, inputPorts);
+        }
+        nextRecipe = null; // Clear cache
+
         if (recipe != null) {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
             processAgent.start(recipe, inputPorts, energyPorts);

@@ -83,17 +83,27 @@ public class ItemInput implements IRecipeInput {
 
     /**
      * Create ItemInput from JSON.
+     * Supports "item" key for direct items, "ore" key for OreDict.
      */
     public static ItemInput fromJson(JsonObject json) {
         ItemJson itemJson = new ItemJson();
-        String itemId = json.get("item")
-            .getAsString();
 
-        // Check for ore dictionary format
-        if (itemId.startsWith("ore:")) {
-            itemJson.ore = itemId.substring(4);
+        // Check for ore dictionary key first
+        if (json.has("ore")) {
+            itemJson.ore = json.get("ore")
+                .getAsString();
+        } else if (json.has("item")) {
+            String itemId = json.get("item")
+                .getAsString();
+            // Check for ore: prefix format
+            if (itemId.startsWith("ore:")) {
+                itemJson.ore = itemId.substring(4);
+            } else {
+                itemJson.name = itemId;
+            }
         } else {
-            itemJson.name = itemId;
+            Logger.warn("ItemInput requires 'item' or 'ore' key: {}", json);
+            return null;
         }
 
         itemJson.amount = json.has("amount") ? json.get("amount")
@@ -103,7 +113,7 @@ public class ItemInput implements IRecipeInput {
 
         ItemStack stack = ItemJson.resolveItemStack(itemJson);
         if (stack == null) {
-            Logger.warn("Unknown item in recipe: {}", itemId);
+            Logger.warn("Unknown item in recipe: {}", json);
             return null;
         }
         return new ItemInput(stack);
