@@ -61,6 +61,9 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
     @Setter
     protected int redstoneLevel = 0;
 
+    /** Cached redstone result */
+    protected boolean redstoneCheckPassed = true;
+
     /** Flag indicating if redstone state needs updating. */
     protected boolean redstoneStateDirty = true;
 
@@ -143,7 +146,7 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
      * @return true if machine is redstone active
      */
     public boolean isRedstoneActive() {
-        return RedstoneMode.isActive(redstoneMode, redstonePowered);
+        return redstoneCheckPassed;
     }
 
     /**
@@ -152,8 +155,12 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
      * @param mode new redstone mode
      */
     public void setRedstoneMode(RedstoneMode mode) {
-        redstoneMode = mode;
-        forceClientUpdate = true;
+        if (redstoneMode != mode) {
+            redstoneMode = mode;
+            redstoneStateDirty = true;
+            forceClientUpdate = true;
+            notifyNeighbours = true;
+        }
     }
 
     /**
@@ -176,14 +183,15 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
         }
 
         boolean requiresClientSync = forceClientUpdate;
-        boolean prevRedCheck = isRedstoneActive();
+        boolean prevRedCheck = redstoneCheckPassed;
 
         if (redstoneStateDirty) {
+            redstoneCheckPassed = RedstoneMode.isActive(redstoneMode, redstonePowered);
             redstoneStateDirty = false;
         }
 
         requiresClientSync |= prevRedCheck != isRedstoneActive();
-        requiresClientSync |= processTasks(isRedstoneActive());
+        requiresClientSync |= processTasks(redstoneCheckPassed);
 
         if (requiresClientSync) {
             requestRenderUpdate();
@@ -236,6 +244,7 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
         redstoneLevel = redstoneTag.getInteger("level");
         redstonePowered = redstoneTag.getBoolean("powered");
         redstoneMode = RedstoneMode.byIndex(redstoneTag.getInteger("mode"));
+        redstoneStateDirty = true;
     }
 
     public void readFromItemStack(ItemStack stack) {

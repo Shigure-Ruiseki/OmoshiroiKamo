@@ -31,6 +31,8 @@ public final class CableUtils {
     }
 
     public static void joinCables(ICable cable, ForgeDirection dir) {
+        if (cable.isConnected(dir)) return;
+
         TileEntity te = cable.getTileEntity();
         if (te == null) return;
 
@@ -64,6 +66,7 @@ public final class CableUtils {
     }
 
     private static void rebuildCluster(CableCluster cluster) {
+        if (cluster.cables.isEmpty()) return;
 
         Set<AbstractCableNetwork<?>> destroyed = new HashSet<>();
 
@@ -80,7 +83,6 @@ public final class CableUtils {
         }
 
         Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> newNetworks = new HashMap<>();
-
         for (ICable cable : cluster.cables) {
             for (ICablePart part : cable.getParts()) {
                 Class<? extends ICablePart> type = part.getBasePartType();

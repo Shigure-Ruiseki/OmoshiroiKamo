@@ -13,7 +13,7 @@ public abstract class AbstractPart implements ICablePart {
     protected ForgeDirection side;
 
     protected int tickCounter = 0;
-    protected int tickInterval = 20;
+    protected int tickInterval = 1;
 
     protected int priority = 0;
     protected int channel = 0;

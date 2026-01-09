@@ -16,25 +16,6 @@ public class EnergyNetwork extends AbstractCableNetwork<IEnergyPart> {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("EnergyNetwork{");
-        sb.append("parts=")
-            .append(parts.size())
-            .append(", [");
-
-        boolean first = true;
-        for (IEnergyPart part : parts) {
-            if (!first) sb.append(", ");
-            first = false;
-
-            sb.append(part.toString());
-        }
-
-        sb.append("]}");
-        return sb.toString();
-    }
-
-    @Override
     public void doNetworkTick() {
         super.doNetworkTick();
 

@@ -7,9 +7,15 @@ import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.SyncHandlers;
+import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cofh.api.energy.IEnergyProvider;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
@@ -89,7 +95,57 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new ModularPanel("energy_input_bus");
+        syncManager.syncValue("tickSyncer", SyncHandlers.intNumber(this::getTickInterval, this::setTickInterval));
+        syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
+        syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
+
+        ModularPanel panel = new ModularPanel("energy_input_bus");
+
+        Row sideRow = new Row();
+        sideRow.height(20);
+        sideRow.child(
+            IKey.lang("gui.cable.side")
+                .asWidget());
+        sideRow.child(
+            new TextFieldWidget().value(new StringValue(getSide().name()))
+                .right(0));
+
+        Row tickRow = new Row();
+        tickRow.height(20);
+        tickRow.child(
+            IKey.lang("gui.cable.tick")
+                .asWidget());
+        tickRow.child(
+            new TextFieldWidget().syncHandler("tickSyncer")
+                .right(0));
+
+        Row priorityRow = new Row();
+        priorityRow.height(20);
+        priorityRow.child(
+            IKey.lang("gui.cable.priority")
+                .asWidget());
+        priorityRow.child(
+            new TextFieldWidget().syncHandler("prioritySyncer")
+                .right(0));
+
+        Row channelRow = new Row();
+        channelRow.height(20);
+        channelRow.child(
+            IKey.lang("gui.cable.channel")
+                .asWidget());
+        channelRow.child(
+            new TextFieldWidget().syncHandler("channelSyncer")
+                .right(0));
+
+        Column col = new Column();
+        col.padding(7)
+            .child(sideRow)
+            .child(tickRow)
+            .child(priorityRow)
+            .child(channelRow);
+        panel.child(col);
+
+        return panel;
     }
 
     @Override

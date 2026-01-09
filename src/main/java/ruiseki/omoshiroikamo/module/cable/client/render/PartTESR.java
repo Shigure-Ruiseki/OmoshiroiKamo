@@ -16,7 +16,7 @@ import ruiseki.omoshiroikamo.module.cable.common.cable.TECable;
 public class PartTESR extends TileEntitySpecialRenderer {
 
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks) {
         if (!(tile instanceof TECable cable)) return;
 
         GL11.glPushMatrix();
@@ -49,10 +49,10 @@ public class PartTESR extends TileEntitySpecialRenderer {
         t.startDrawingQuads();
 
         // DOWN (Y-)
-        t.addVertexWithUV(minX, minY, maxZ, u0 + minX * 16 * du, v0 + maxZ * 16 * dv);
-        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * 16 * du, v0 + maxZ * 16 * dv);
-        t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * 16 * du, v0 + minZ * 16 * dv);
         t.addVertexWithUV(minX, minY, minZ, u0 + minX * 16 * du, v0 + minZ * 16 * dv);
+        t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * 16 * du, v0 + minZ * 16 * dv);
+        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * 16 * du, v0 + maxZ * 16 * dv);
+        t.addVertexWithUV(minX, minY, maxZ, u0 + minX * 16 * du, v0 + maxZ * 16 * dv);
 
         // UP (Y+)
         t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * 16 * du, v0 + maxZ * 16 * dv);

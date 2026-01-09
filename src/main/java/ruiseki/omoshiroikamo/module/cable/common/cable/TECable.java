@@ -26,10 +26,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -47,7 +51,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
-    implements ICable, ICustomCollision, IWailaTileInfoProvider, IGuiHolder<PosSideGuiData> {
+    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<PosSideGuiData> {
 
     protected final EnumSet<ForgeDirection> connections = EnumSet.noneOf(ForgeDirection.class);
 
@@ -93,20 +97,15 @@ public class TECable extends AbstractTE
     @Override
     public void readCommon(NBTTagCompound tag) {
 
-        boolean isClient = worldObj != null && worldObj.isRemote;
-
-        if (!isClient) {
-            connections.clear();
-            parts.clear();
-        }
-
         // connections
+        connections.clear();
         int[] dirs = tag.getIntArray("connections");
         for (int i : dirs) {
             connections.add(ForgeDirection.values()[i]);
         }
 
         // parts
+        parts.clear();
         if (tag.hasKey("Parts")) {
             NBTTagCompound partsTag = tag.getCompoundTag("Parts");
 
@@ -129,6 +128,9 @@ public class TECable extends AbstractTE
         }
 
         needsNetworkRebuild = true;
+        if (worldObj != null && worldObj.isRemote) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override
@@ -351,7 +353,6 @@ public class TECable extends AbstractTE
 
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
-
         if (!worldObj.isRemote && needsNetworkRebuild) {
             CableUtils.rebuildNetworks(this);
             needsNetworkRebuild = false;
@@ -650,6 +651,11 @@ public class TECable extends AbstractTE
     public ModularPanel buildUI(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ICablePart part = getPart(data.getSide());
         return part.partPanel(data, syncManager, settings);
+    }
+
+    @Override
+    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
+        return null;
     }
 
     public static class CableHit {
