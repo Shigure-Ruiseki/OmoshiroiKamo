@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.fluid.FluidTransfer;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
@@ -16,8 +17,8 @@ public abstract class TEFluidOutputPort extends AbstractFluidPortTE {
     }
 
     @Override
-    public IO getIOLimit() {
-        return IO.OUTPUT;
+    public EnumIO getIOLimit() {
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -48,7 +49,7 @@ public abstract class TEFluidOutputPort extends AbstractFluidPortTE {
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
-            if (getSideIO(side) != IO.NONE) {
+            if (getSideIO(side) != EnumIO.NONE) {
                 return IconRegistry.getIcon("overlay_fluidoutput_" + getTier());
             }
             return IconRegistry.getIcon("overlay_fluidoutput_disabled");

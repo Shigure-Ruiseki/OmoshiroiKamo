@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -18,8 +19,9 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import mekanism.api.gas.ITubeConnection;
-import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
@@ -33,9 +35,9 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
 /*
  * Mekanism Handle Push/Pull itself so skip Auto PushPull
  */
-public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler, ITubeConnection {
+public abstract class AbstractGasPortTE extends AbstractTE implements IModularPort, IGasHandler, ITubeConnection, IGuiHolder<PosGuiData> {
 
-    protected final IO[] sides = new IO[6];
+    protected final EnumIO[] sides = new EnumIO[6];
 
     protected final SmartGasTank tank;
     protected boolean tankDirty = false;
@@ -50,7 +52,7 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
             }
         };
         for (int i = 0; i < 6; i++) {
-            sides[i] = IO.NONE;
+            sides[i] = EnumIO.NONE;
         }
     }
 
@@ -75,15 +77,15 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public IO getSideIO(ForgeDirection side) {
+    public EnumIO getSideIO(ForgeDirection side) {
         if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
-            return IO.NONE;
+            return EnumIO.NONE;
         }
         return sides[side.ordinal()];
     }
 
     @Override
-    public void setSideIO(ForgeDirection side, IO state) {
+    public void setSideIO(ForgeDirection side, EnumIO state) {
         if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
             return;
         }
@@ -108,7 +110,7 @@ public abstract class AbstractGasPortTE extends AbstractTE implements IModularPo
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = IO.values()[sideData[i]];
+                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
         tank.readCommon(root);

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.crafting;
+package ruiseki.omoshiroikamo.api.block;
 
 import java.util.HashMap;
 import java.util.Map;

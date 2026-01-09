@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
@@ -37,8 +38,8 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
     }
 
     @Override
-    public IO getIOLimit() {
-        return IO.OUTPUT;
+    public EnumIO getIOLimit() {
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -127,7 +128,7 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) != IO.NONE) {
+        if (renderPass == 1 && getSideIO(side) != EnumIO.NONE) {
             return IconRegistry.getIcon("overlay_essentiaoutput_" + getTier());
         }
         return AbstractPortBlock.baseIcon;

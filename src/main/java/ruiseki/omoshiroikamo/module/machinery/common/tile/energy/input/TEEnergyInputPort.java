@@ -8,6 +8,7 @@ import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -25,8 +26,8 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     }
 
     @Override
-    public IO getIOLimit() {
-        return IO.INPUT;
+    public EnumIO getIOLimit() {
+        return EnumIO.INPUT;
     }
 
     @Override
@@ -81,7 +82,7 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
-            if (getSideIO(side) != IO.NONE) {
+            if (getSideIO(side) != EnumIO.NONE) {
                 return IconRegistry.getIcon("overlay_energyinput_" + getTier());
             }
             return IconRegistry.getIcon("overlay_energyinput_disabled");

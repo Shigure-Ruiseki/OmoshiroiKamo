@@ -7,8 +7,10 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 
@@ -47,6 +49,14 @@ public final class ModuleManager {
 
     public static void serverStarted(FMLServerStartedEvent e) {
         for (IModuleCommon m : COMMON) if (m.isEnabled()) m.serverStarted(e);
+    }
+
+    public static void onServerAboutToStart(FMLServerAboutToStartEvent e) {
+        for (IModuleCommon m : COMMON) if (m.isEnabled()) m.onServerAboutToStart(e);
+    }
+
+    public static void onServerStopped(FMLServerStoppedEvent e) {
+        for (IModuleCommon m : COMMON) if (m.isEnabled()) m.onServerStopped(e);
     }
 
     public static void preInitClient(FMLPreInitializationEvent e) {

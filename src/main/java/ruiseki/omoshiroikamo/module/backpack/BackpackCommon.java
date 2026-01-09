@@ -4,8 +4,10 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
@@ -56,6 +58,16 @@ public class BackpackCommon implements IModuleCommon {
 
     @Override
     public void serverStarted(FMLServerStartedEvent event) {
+
+    }
+
+    @Override
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+
+    }
+
+    @Override
+    public void onServerStopped(FMLServerStoppedEvent event) {
 
     }
 }

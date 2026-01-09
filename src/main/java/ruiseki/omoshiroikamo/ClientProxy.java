@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -69,6 +70,14 @@ public class ClientProxy extends CommonProxy {
     @Override
     public long getTickCount() {
         return clientTickCount;
+    }
+
+    @Override
+    public double getReachDistanceForPlayer(EntityPlayer entityPlayer) {
+        if (entityPlayer instanceof EntityPlayerMP) {
+            return ((EntityPlayerMP) entityPlayer).theItemInWorldManager.getBlockReachDistance();
+        }
+        return super.getReachDistanceForPlayer(entityPlayer);
     }
 
     @Override

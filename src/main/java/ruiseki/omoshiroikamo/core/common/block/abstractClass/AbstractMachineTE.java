@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 import net.minecraft.nbt.NBTTagCompound;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.crafting.CraftingState;
-import ruiseki.omoshiroikamo.api.crafting.ICraftingTile;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
+import ruiseki.omoshiroikamo.api.block.ICraftingTile;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.common.network.PacketCraftingState;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
