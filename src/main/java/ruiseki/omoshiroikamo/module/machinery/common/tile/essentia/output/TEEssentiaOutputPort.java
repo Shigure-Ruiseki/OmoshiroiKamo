@@ -17,6 +17,9 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * for Tubes.
  *
  * TODO: Create TEEssentiaOutputPortME subclass (export Essentia to ME network)
+ * TODO: Implement active push to adjacent Essentia Jars (processTasks should
+ * actively push essentia to nearby IAspectContainer blocks like Essentia Jars,
+ * instead of relying on pull-based IEssentiaTransport)
  */
 
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
