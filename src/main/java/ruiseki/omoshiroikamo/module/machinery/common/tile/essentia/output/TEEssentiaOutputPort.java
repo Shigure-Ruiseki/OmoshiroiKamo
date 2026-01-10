@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -8,6 +9,7 @@ import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 import thaumcraft.api.aspects.IAspectSource;
 import thaumcraft.api.aspects.IEssentiaTransport;
 
@@ -18,9 +20,6 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * for Tubes.
  *
  * TODO: Create TEEssentiaOutputPortME subclass (export Essentia to ME network)
- * TODO: Implement active push to adjacent Essentia Jars (processTasks should
- * actively push essentia to nearby IAspectContainer blocks like Essentia Jars,
- * instead of relying on pull-based IEssentiaTransport)
  */
 
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
@@ -44,7 +43,59 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
 
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
-        // Output port is passive - essentia is pulled by other devices
+        if (worldObj.isRemote) return false;
+        if (!shouldDoWorkThisTick(10)) return false;
+        if (getTotalEssentiaAmount() <= 0) return false;
+
+        // Try to push essentia to adjacent blocks
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (getTotalEssentiaAmount() <= 0) break;
+
+            int nx = xCoord + dir.offsetX;
+            int ny = yCoord + dir.offsetY;
+            int nz = zCoord + dir.offsetZ;
+            TileEntity te = worldObj.getTileEntity(nx, ny, nz);
+            if (te == null) continue;
+
+            // Try IEssentiaTransport first (tubes, jars)
+            if (te instanceof IEssentiaTransport) {
+                IEssentiaTransport target = (IEssentiaTransport) te;
+                ForgeDirection opposite = dir.getOpposite();
+
+                if (!target.canInputFrom(opposite)) continue;
+
+                // Active push - push any aspect we have
+                for (Aspect aspect : aspects.getAspects()) {
+                    if (aspect == null) continue;
+                    int available = aspects.getAmount(aspect);
+                    if (available <= 0) continue;
+
+                    int pushed = target.addEssentia(aspect, 1, opposite);
+                    if (pushed > 0) {
+                        takeFromContainer(aspect, pushed);
+                        return true; // Did work
+                    }
+                }
+            }
+            // Try IAspectContainer (jars, etc.)
+            else if (te instanceof IAspectContainer) {
+                IAspectContainer container = (IAspectContainer) te;
+
+                for (Aspect aspect : aspects.getAspects()) {
+                    if (aspect == null) continue;
+                    int available = aspects.getAmount(aspect);
+                    if (available <= 0) continue;
+
+                    if (container.doesContainerAccept(aspect)) {
+                        int leftover = container.addToContainer(aspect, 1);
+                        if (leftover == 0) {
+                            takeFromContainer(aspect, 1);
+                            return true; // Did work
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
