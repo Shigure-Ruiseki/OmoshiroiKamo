@@ -41,11 +41,11 @@ import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
+import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.module.cable.client.gui.CableGuiFactories;
-import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
@@ -288,7 +288,7 @@ public class TECable extends AbstractTE
             if (part != null) {
                 player.addChatMessage(new ChatComponentText("[Part] " + part));
 
-                CableGuiFactories.tileEntity()
+                OKGuiFactories.tileEntity()
                     .open(player, x, y, z, hit.side);
             }
 

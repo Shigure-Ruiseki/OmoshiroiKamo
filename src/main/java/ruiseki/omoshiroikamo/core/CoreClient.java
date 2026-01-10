@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.core.client.render.PufferFishRenderer;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -33,6 +34,7 @@ public class CoreClient implements IModuleClient {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         ModelRegistry.registerModid(LibMisc.MOD_ID);
+        OKGuiFactories.preInit();
     }
 
     @Override
