@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -13,7 +14,15 @@ import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.client.render.ItemPortRenderer;
+import ruiseki.omoshiroikamo.module.machinery.client.render.PortOverlayTESR;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 
 /**
  * Client-side module for Machinery.
@@ -41,7 +50,14 @@ public class MachineryClient implements IModuleClient {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        // TODO: Register TESRs and entity renderers if needed
+        var overlayTesr = new PortOverlayTESR();
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractEssentiaPortTE.class, overlayTesr);
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractEnergyIOPortTE.class, overlayTesr);
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractItemIOPortTE.class, overlayTesr);
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractFluidPortTE.class, overlayTesr);
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractGasPortTE.class, overlayTesr);
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractVisPortTE.class, overlayTesr);
+        ClientRegistry.bindTileEntitySpecialRenderer(AbstractManaPortTE.class, overlayTesr);
     }
 
     @Override

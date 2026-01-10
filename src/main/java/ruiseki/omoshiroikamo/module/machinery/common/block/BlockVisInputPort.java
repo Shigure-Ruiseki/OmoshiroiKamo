@@ -42,6 +42,8 @@ public class BlockVisInputPort extends AbstractPortBlock<TEVisInputPort> impleme
         IconRegistry.addIcon(
             "overlay_visoutput_1",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_visoutput_1"));
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

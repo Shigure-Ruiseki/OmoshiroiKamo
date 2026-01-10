@@ -37,7 +37,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     @Override
     public boolean canRenderInPass(int pass) {
         RENDER_PASS.set(pass);
-        return pass < 2;
+        return pass == 0; // render only solid pass; overlays are TESR-driven
     }
 
     @Override

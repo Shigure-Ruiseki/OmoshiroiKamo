@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
@@ -157,6 +158,14 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     public int getMaxCapacityPerAspect() {
         return maxCapacityPerAspect;
+    }
+
+    /**
+     * Overlay icon used for client-side TESR rendering.
+     * Default null means no overlay.
+     */
+    public IIcon getOverlayIcon(ForgeDirection side) {
+        return null;
     }
 
     @Override
