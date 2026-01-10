@@ -69,6 +69,10 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
         return visStored.getAmount(aspect);
     }
 
+    public int getMaxVisPerAspect() {
+        return maxVisPerAspect;
+    }
+
     public AspectList getAllVis() {
         return visStored;
     }

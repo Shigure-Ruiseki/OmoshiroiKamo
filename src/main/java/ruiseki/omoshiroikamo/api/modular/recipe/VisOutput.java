@@ -52,9 +52,18 @@ public class VisOutput implements IRecipeOutput {
             if (!(port instanceof AbstractVisPortTE)) continue;
 
             AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-            // addVis returns the amount that could NOT be added
-            int notAdded = visPort.addVis(aspect, remaining);
-            remaining = notAdded;
+            // Check available space
+            int currentAmount = visPort.getVisAmount(aspect);
+            int maxCapacity = visPort.getMaxVisPerAspect();
+            int space = maxCapacity - currentAmount;
+
+            if (space > 0) {
+                int toAdd = Math.min(remaining, space);
+                if (!simulate) {
+                    visPort.addVis(aspect, toAdd);
+                }
+                remaining -= toAdd;
+            }
             if (remaining <= 0) break;
         }
 

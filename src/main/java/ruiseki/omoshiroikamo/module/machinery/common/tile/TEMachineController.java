@@ -312,24 +312,36 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     /**
      * Diagnose which output types are blocked when waiting for output.
+     * Uses cached output types from ProcessAgent (works after relog).
      */
     private String diagnoseBlockedOutputs() {
+        // Try to use recipe first
         ModularRecipe recipe = processAgent.getCurrentRecipe();
-        if (recipe == null) {
-            return "Unknown (no recipe)";
-        }
-
-        StringBuilder blocked = new StringBuilder();
-        for (var output : recipe.getOutputs()) {
-            if (!output.process(outputPorts, true)) {
-                if (blocked.length() > 0) blocked.append(", ");
-                blocked.append(
-                    output.getPortType()
-                        .name());
+        if (recipe != null) {
+            StringBuilder blocked = new StringBuilder();
+            for (var output : recipe.getOutputs()) {
+                if (!output.process(outputPorts, true)) {
+                    if (blocked.length() > 0) blocked.append(", ");
+                    blocked.append(
+                        output.getPortType()
+                            .name());
+                }
             }
+            return blocked.length() > 0 ? blocked.toString() : "Unknown";
         }
 
-        return blocked.length() > 0 ? blocked.toString() : "Unknown";
+        // Fallback: use cached output types (works after relog)
+        java.util.Set<IPortType.Type> cachedTypes = processAgent.getCachedOutputTypes();
+        if (cachedTypes.isEmpty()) {
+            return "Unknown (no cached outputs)";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (IPortType.Type type : cachedTypes) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(type.name());
+        }
+        return sb.toString() + " (from cache)";
     }
 
     @Override

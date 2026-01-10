@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
@@ -238,6 +239,21 @@ public class ProcessAgent {
 
     public ModularRecipe getCurrentRecipe() {
         return currentRecipe;
+    }
+
+    /**
+     * Get a list of output types that are currently cached
+     * Used for diagnosis when currentRecipe is null.
+     */
+    public java.util.Set<IPortType.Type> getCachedOutputTypes() {
+        java.util.Set<IPortType.Type> types = new java.util.HashSet<>();
+        if (!cachedItemOutputs.isEmpty()) types.add(IPortType.Type.ITEM);
+        if (!cachedFluidOutputs.isEmpty()) types.add(IPortType.Type.FLUID);
+        if (!cachedManaOutputs.isEmpty()) types.add(IPortType.Type.MANA);
+        if (!cachedGasOutputs.isEmpty()) types.add(IPortType.Type.GAS);
+        if (!cachedEssentiaOutputs.isEmpty()) types.add(IPortType.Type.ESSENTIA);
+        if (!cachedVisOutputs.isEmpty()) types.add(IPortType.Type.VIS);
+        return types;
     }
 
     public float getProgressPercent() {
