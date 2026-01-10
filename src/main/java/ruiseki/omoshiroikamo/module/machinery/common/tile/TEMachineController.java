@@ -55,6 +55,8 @@ public class TEMachineController extends AbstractMBModifierTE {
     private String recipeGroup = "default";
     // Look-ahead: next recipe cached during current processing
     private transient ModularRecipe nextRecipe = null;
+    // Recipe version at the time nextRecipe was cached (for invalidation on reload)
+    private transient int cachedRecipeVersion = -1;
 
     // Structure definition (will be loaded from JSON)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
@@ -218,6 +220,8 @@ public class TEMachineController extends AbstractMBModifierTE {
             if (nextRecipe == null) {
                 nextRecipe = RecipeLoader.getInstance()
                     .findMatch(new String[] { recipeGroup }, inputPorts);
+                cachedRecipeVersion = RecipeLoader.getInstance()
+                    .getRecipeVersion();
             }
 
             // If complete, immediately try to output and start next
@@ -237,6 +241,12 @@ public class TEMachineController extends AbstractMBModifierTE {
      * Start the next recipe, using cached look-ahead result if available.
      */
     private void startNextRecipe() {
+        // Invalidate cache if recipes were reloaded
+        if (cachedRecipeVersion != RecipeLoader.getInstance()
+            .getRecipeVersion()) {
+            nextRecipe = null;
+        }
+
         // Use cached recipe if available, otherwise search
         ModularRecipe recipe = nextRecipe;
         if (recipe == null) {

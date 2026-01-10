@@ -127,8 +127,44 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     @Override
     public int compareTo(ModularRecipe other) {
-        // Higher priority comes first (descending order)
-        return Integer.compare(other.priority, this.priority);
+        // 1. Higher priority comes first (descending order)
+        int priorityCompare = Integer.compare(other.priority, this.priority);
+        if (priorityCompare != 0) return priorityCompare;
+
+        // 2. More input types comes first (descending order)
+        int thisInputTypes = countDistinctInputTypes();
+        int otherInputTypes = other.countDistinctInputTypes();
+        int inputTypeCompare = Integer.compare(otherInputTypes, thisInputTypes);
+        if (inputTypeCompare != 0) return inputTypeCompare;
+
+        // 3. Larger item stack count comes first (descending order)
+        int thisItemCount = getTotalItemInputCount();
+        int otherItemCount = other.getTotalItemInputCount();
+        return Integer.compare(otherItemCount, thisItemCount);
+    }
+
+    /**
+     * Count distinct input port types (ITEM, FLUID, GAS, etc.)
+     */
+    private int countDistinctInputTypes() {
+        java.util.Set<IPortType.Type> types = new java.util.HashSet<>();
+        for (IRecipeInput input : inputs) {
+            types.add(input.getPortType());
+        }
+        return types.size();
+    }
+
+    /**
+     * Get total item input stack count requirement.
+     */
+    private int getTotalItemInputCount() {
+        int total = 0;
+        for (IRecipeInput input : inputs) {
+            if (input instanceof ItemInput) {
+                total += ((ItemInput) input).getRequired().stackSize;
+            }
+        }
+        return total;
     }
 
     public static Builder builder() {

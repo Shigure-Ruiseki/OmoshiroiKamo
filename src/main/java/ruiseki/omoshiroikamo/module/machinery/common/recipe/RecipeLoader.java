@@ -22,6 +22,9 @@ public class RecipeLoader {
     // Group name -> sorted recipe list (by priority descending)
     private final Map<String, List<ModularRecipe>> recipesByGroup = new HashMap<>();
 
+    // Version number incremented on each reload to invalidate cached recipes
+    private int recipeVersion = 0;
+
     private RecipeLoader() {}
 
     public static RecipeLoader getInstance() {
@@ -29,6 +32,13 @@ public class RecipeLoader {
             instance = new RecipeLoader();
         }
         return instance;
+    }
+
+    /**
+     * Get current recipe version. Use to check if cached recipes are stale.
+     */
+    public int getRecipeVersion() {
+        return recipeVersion;
     }
 
     /**
@@ -64,6 +74,7 @@ public class RecipeLoader {
      */
     public void reload(File configDir) {
         Logger.info("Reloading recipes...");
+        recipeVersion++;
         loadAll(configDir);
     }
 
