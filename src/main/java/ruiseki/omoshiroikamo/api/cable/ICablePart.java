@@ -16,7 +16,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
+import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
 public interface ICablePart {
@@ -70,6 +70,11 @@ public interface ICablePart {
 
     @SideOnly(Side.CLIENT)
     ResourceLocation getIcon();
+
+    @SideOnly(Side.CLIENT)
+    default ResourceLocation getBackIcon() {
+        return getIcon();
+    }
 
     default AbstractCableNetwork<?> getNetwork() {
         ICable cable = getCable();

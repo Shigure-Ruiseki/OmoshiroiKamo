@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -28,63 +29,86 @@ public class PartTESR extends TileEntitySpecialRenderer {
             AxisAlignedBB bb = part.getCollisionBox();
             if (bb == null) continue;
 
-            RenderUtils.bindTexture(part.getIcon());
-            renderCubeWithCollisionBB(bb, tess);
+            renderCubeWithCollisionBB(bb, tess, part);
         }
 
         GL11.glPopMatrix();
     }
 
-    private void renderCubeWithCollisionBB(AxisAlignedBB bb, Tessellator t) {
+    private void bindFaceTexture(ICablePart part, ForgeDirection face) {
+        ForgeDirection side = part.getSide();
 
-        double epsilon = 0.0001;
+        if (face == side) {
+            RenderUtils.bindTexture(part.getIcon());
+        } else if (face == side.getOpposite()) {
+            RenderUtils.bindTexture(part.getBackIcon());
+        } else {
+            RenderUtils.bindTexture(part.getIcon());
+        }
+    }
 
-        double minX = bb.minX - epsilon, minY = bb.minY - epsilon, minZ = bb.minZ - epsilon;
-        double maxX = bb.maxX + epsilon, maxY = bb.maxY + epsilon, maxZ = bb.maxZ + epsilon;
+    private void renderCubeWithCollisionBB(AxisAlignedBB bb, Tessellator t, ICablePart part) {
 
-        double u0 = 0.0, v0 = 0.0;
+        double eps = 0.0001;
+
+        double minX = bb.minX - eps, minY = bb.minY - eps, minZ = bb.minZ - eps;
+        double maxX = bb.maxX + eps, maxY = bb.maxY + eps, maxZ = bb.maxZ + eps;
+
         double du = 1.0 / 16.0;
         double dv = 1.0 / 16.0;
 
+        // DOWN
+        bindFaceTexture(part, ForgeDirection.DOWN);
         t.startDrawingQuads();
+        t.addVertexWithUV(minX, minY, minZ, minX * 16 * du, minZ * 16 * dv);
+        t.addVertexWithUV(maxX, minY, minZ, maxX * 16 * du, minZ * 16 * dv);
+        t.addVertexWithUV(maxX, minY, maxZ, maxX * 16 * du, maxZ * 16 * dv);
+        t.addVertexWithUV(minX, minY, maxZ, minX * 16 * du, maxZ * 16 * dv);
+        t.draw();
 
-        // DOWN (Y-)
-        t.addVertexWithUV(minX, minY, minZ, u0 + minX * 16 * du, v0 + minZ * 16 * dv);
-        t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * 16 * du, v0 + minZ * 16 * dv);
-        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * 16 * du, v0 + maxZ * 16 * dv);
-        t.addVertexWithUV(minX, minY, maxZ, u0 + minX * 16 * du, v0 + maxZ * 16 * dv);
+        // UP
+        bindFaceTexture(part, ForgeDirection.UP);
+        t.startDrawingQuads();
+        t.addVertexWithUV(minX, maxY, maxZ, minX * 16 * du, maxZ * 16 * dv);
+        t.addVertexWithUV(maxX, maxY, maxZ, maxX * 16 * du, maxZ * 16 * dv);
+        t.addVertexWithUV(maxX, maxY, minZ, maxX * 16 * du, minZ * 16 * dv);
+        t.addVertexWithUV(minX, maxY, minZ, minX * 16 * du, minZ * 16 * dv);
+        t.draw();
 
-        // UP (Y+)
-        t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * 16 * du, v0 + maxZ * 16 * dv);
-        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxX * 16 * du, v0 + maxZ * 16 * dv);
-        t.addVertexWithUV(maxX, maxY, minZ, u0 + maxX * 16 * du, v0 + minZ * 16 * dv);
-        t.addVertexWithUV(minX, maxY, minZ, u0 + minX * 16 * du, v0 + minZ * 16 * dv);
+        // NORTH
+        bindFaceTexture(part, ForgeDirection.NORTH);
+        t.startDrawingQuads();
+        t.addVertexWithUV(maxX, minY, minZ, maxX * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(minX, minY, minZ, minX * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(minX, maxY, minZ, minX * 16 * du, maxY * 16 * dv);
+        t.addVertexWithUV(maxX, maxY, minZ, maxX * 16 * du, maxY * 16 * dv);
+        t.draw();
 
-        // NORTH (-Z)
-        t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(minX, minY, minZ, u0 + minX * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(minX, maxY, minZ, u0 + minX * 16 * du, v0 + maxY * 16 * dv);
-        t.addVertexWithUV(maxX, maxY, minZ, u0 + maxX * 16 * du, v0 + maxY * 16 * dv);
+        // SOUTH
+        bindFaceTexture(part, ForgeDirection.SOUTH);
+        t.startDrawingQuads();
+        t.addVertexWithUV(minX, minY, maxZ, minX * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(maxX, minY, maxZ, maxX * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(maxX, maxY, maxZ, maxX * 16 * du, maxY * 16 * dv);
+        t.addVertexWithUV(minX, maxY, maxZ, minX * 16 * du, maxY * 16 * dv);
+        t.draw();
 
-        // SOUTH (+Z)
-        t.addVertexWithUV(minX, minY, maxZ, u0 + minX * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxX * 16 * du, v0 + maxY * 16 * dv);
-        t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * 16 * du, v0 + maxY * 16 * dv);
+        // WEST
+        bindFaceTexture(part, ForgeDirection.WEST);
+        t.startDrawingQuads();
+        t.addVertexWithUV(minX, minY, minZ, minZ * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(minX, minY, maxZ, maxZ * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(minX, maxY, maxZ, maxZ * 16 * du, maxY * 16 * dv);
+        t.addVertexWithUV(minX, maxY, minZ, minZ * 16 * du, maxY * 16 * dv);
+        t.draw();
 
-        // WEST (-X)
-        t.addVertexWithUV(minX, minY, minZ, u0 + minZ * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(minX, minY, maxZ, u0 + maxZ * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(minX, maxY, maxZ, u0 + maxZ * 16 * du, v0 + maxY * 16 * dv);
-        t.addVertexWithUV(minX, maxY, minZ, u0 + minZ * 16 * du, v0 + maxY * 16 * dv);
-
-        // EAST (+X)
-        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxZ * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(maxX, minY, minZ, u0 + minZ * 16 * du, v0 + minY * 16 * dv);
-        t.addVertexWithUV(maxX, maxY, minZ, u0 + minZ * 16 * du, v0 + maxY * 16 * dv);
-        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxZ * 16 * du, v0 + maxY * 16 * dv);
-
+        // EAST
+        bindFaceTexture(part, ForgeDirection.EAST);
+        t.startDrawingQuads();
+        t.addVertexWithUV(maxX, minY, maxZ, maxZ * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(maxX, minY, minZ, minZ * 16 * du, minY * 16 * dv);
+        t.addVertexWithUV(maxX, maxY, minZ, minZ * 16 * du, maxY * 16 * dv);
+        t.addVertexWithUV(maxX, maxY, maxZ, maxZ * 16 * du, maxY * 16 * dv);
         t.draw();
     }
-
 }

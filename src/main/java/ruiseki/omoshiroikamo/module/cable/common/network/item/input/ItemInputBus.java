@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.energy.input;
+package ruiseki.omoshiroikamo.module.cable.common.network.item.input;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -15,18 +15,18 @@ import com.cleanroommc.modularui.value.sync.SyncHandlers;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
+import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
-import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
-public class EnergyInputBus extends AbstractPart implements IEnergyPart {
+public class ItemInputBus extends AbstractPart implements IItemPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -36,12 +36,12 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public String getId() {
-        return "energy_input_bus";
+        return "item_input_bus";
     }
 
     @Override
     public Class<? extends ICablePart> getBasePartType() {
-        return IEnergyPart.class;
+        return IItemPart.class;
     }
 
     @Override
@@ -61,18 +61,19 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
         if (tickCounter < tickInterval) return;
         tickCounter = 0;
 
-        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        ItemNetwork network = (ItemNetwork) getNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
-        EnergyTransfer transfer = new EnergyTransfer();
-        transfer.setMaxEnergyPerTransfer(getTransferLimit());
+        ItemTransfer transfer = new ItemTransfer();
+        transfer.setMaxItemsPerTransfer(getTransferLimit());
 
-        for (IEnergyPart iFace : network.interfaces) {
+        for (IItemPart iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
             transfer.push(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
             transfer.transfer();
         }
+
     }
 
     @Override
@@ -82,7 +83,7 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ENERGY_INPUT_BUS.newItemStack();
+        return CableItems.ITEM_INPUT_BUS.newItemStack();
     }
 
     @Override
@@ -91,7 +92,7 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
         syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
         syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
 
-        ModularPanel panel = new ModularPanel("energy_input_bus");
+        ModularPanel panel = new ModularPanel("item_input_bus");
 
         Row sideRow = new Row();
         sideRow.height(20);
@@ -160,22 +161,11 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public ResourceLocation getIcon() {
-        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/energy_input_bus.png");
+        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/item_input_bus.png");
     }
 
     @Override
     public int getTransferLimit() {
         return Integer.MAX_VALUE;
     }
-
-    @Override
-    public int receiveEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
-    @Override
-    public int extractEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
 }

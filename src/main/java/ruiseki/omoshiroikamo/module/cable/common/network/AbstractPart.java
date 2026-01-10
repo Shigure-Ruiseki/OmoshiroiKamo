@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.energy;
+package ruiseki.omoshiroikamo.module.cable.common.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -93,4 +93,8 @@ public abstract class AbstractPart implements ICablePart {
         this.channel = channel;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

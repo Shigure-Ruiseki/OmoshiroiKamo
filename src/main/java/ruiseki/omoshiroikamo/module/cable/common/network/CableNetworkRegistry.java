@@ -6,6 +6,8 @@ import java.util.Map;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
 public final class CableNetworkRegistry {
 
@@ -17,6 +19,7 @@ public final class CableNetworkRegistry {
 
     static {
         CableNetworkRegistry.register(IEnergyPart.class, EnergyNetwork::new);
+        CableNetworkRegistry.register(IItemPart.class, ItemNetwork::new);
     }
 
     @SuppressWarnings("unchecked")
