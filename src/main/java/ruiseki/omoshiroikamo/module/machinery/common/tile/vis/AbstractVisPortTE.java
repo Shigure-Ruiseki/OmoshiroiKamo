@@ -20,6 +20,7 @@ import thaumcraft.api.aspects.AspectList;
  * TODO: Add tiered blocks/TEs (currently fixed at Tier 1)
  * TODO: Register with VisNetHandler.sources (may require TileVisNode
  * inheritance)
+ * TODO: All sides should be IN, OUT like mana port
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 
@@ -153,7 +154,13 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        maxVisPerAspect = root.getInteger("maxVis");
+        // Only load if saved, otherwise keep constructor default
+        if (root.hasKey("maxVis")) {
+            int savedMax = root.getInteger("maxVis");
+            if (savedMax > 0) {
+                maxVisPerAspect = savedMax;
+            }
+        }
 
         if (root.hasKey("sideIO")) {
             int[] sideData = root.getIntArray("sideIO");

@@ -310,6 +310,28 @@ public class TEMachineController extends AbstractMBModifierTE {
         return "No matching recipe found";
     }
 
+    /**
+     * Diagnose which output types are blocked when waiting for output.
+     */
+    private String diagnoseBlockedOutputs() {
+        ModularRecipe recipe = processAgent.getCurrentRecipe();
+        if (recipe == null) {
+            return "Unknown (no recipe)";
+        }
+
+        StringBuilder blocked = new StringBuilder();
+        for (var output : recipe.getOutputs()) {
+            if (!output.process(outputPorts, true)) {
+                if (blocked.length() > 0) blocked.append(", ");
+                blocked.append(
+                    output.getPortType()
+                        .name());
+            }
+        }
+
+        return blocked.length() > 0 ? blocked.toString() : "Unknown";
+    }
+
     @Override
     protected void finishCrafting() {
         resetCrafting();
@@ -333,8 +355,16 @@ public class TEMachineController extends AbstractMBModifierTE {
         if (nowFormed) {
             String status = wasFormed ? "Status" : "Structure formed";
 
-            // Display progress info
-            if (processAgent.isRunning()) {
+            // Display progress info - check waitingForOutput FIRST (it can be true while
+            // running)
+            if (processAgent.isWaitingForOutput()) {
+                // Diagnose which outputs are blocked
+                String blockedOutputs = diagnoseBlockedOutputs();
+                player.addChatComponentMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.YELLOW + "[Machine] Complete (100%) - Waiting for output space: "
+                            + blockedOutputs));
+            } else if (processAgent.isRunning()) {
                 int progress = processAgent.getProgress();
                 int max = processAgent.getMaxProgress();
                 int percent = (int) (processAgent.getProgressPercent() * 100);
@@ -347,9 +377,6 @@ public class TEMachineController extends AbstractMBModifierTE {
                             + " ("
                             + percent
                             + "%)"));
-            } else if (processAgent.isWaitingForOutput()) {
-                player.addChatComponentMessage(
-                    new ChatComponentText(EnumChatFormatting.YELLOW + "[Machine] Waiting for output space..."));
             } else {
                 // IDLE - try to diagnose why no recipe is running
                 String diagnosisMsg = diagnoseRecipeIssue();

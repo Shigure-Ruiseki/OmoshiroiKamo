@@ -253,18 +253,57 @@ public class ProcessAgent {
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
 
-        if (running) {
+        if (running || waitingForOutput) {
+            // Item outputs
             NBTTagList itemList = new NBTTagList();
             for (ItemStack stack : cachedItemOutputs) {
                 itemList.appendTag(stack.writeToNBT(new NBTTagCompound()));
             }
             nbt.setTag("itemOutputs", itemList);
 
+            // Fluid outputs
             NBTTagList fluidList = new NBTTagList();
             for (FluidStack stack : cachedFluidOutputs) {
                 fluidList.appendTag(stack.writeToNBT(new NBTTagCompound()));
             }
             nbt.setTag("fluidOutputs", fluidList);
+
+            // Mana outputs (just integers)
+            int[] manaArray = new int[cachedManaOutputs.size()];
+            for (int i = 0; i < cachedManaOutputs.size(); i++) {
+                manaArray[i] = cachedManaOutputs.get(i);
+            }
+            nbt.setIntArray("manaOutputs", manaArray);
+
+            // Gas outputs [gasName, amount]
+            NBTTagList gasList = new NBTTagList();
+            for (String[] gas : cachedGasOutputs) {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("gas", gas[0]);
+                tag.setString("amount", gas[1]);
+                gasList.appendTag(tag);
+            }
+            nbt.setTag("gasOutputs", gasList);
+
+            // Essentia outputs [aspectTag, amount]
+            NBTTagList essentiaList = new NBTTagList();
+            for (String[] essentia : cachedEssentiaOutputs) {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("aspect", essentia[0]);
+                tag.setString("amount", essentia[1]);
+                essentiaList.appendTag(tag);
+            }
+            nbt.setTag("essentiaOutputs", essentiaList);
+
+            // Vis outputs [aspectTag, amountCentiVis]
+            NBTTagList visList = new NBTTagList();
+            for (String[] vis : cachedVisOutputs) {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("aspect", vis[0]);
+                tag.setString("amount", vis[1]);
+                visList.appendTag(tag);
+            }
+            nbt.setTag("visOutputs", visList);
         }
     }
 
@@ -275,18 +314,52 @@ public class ProcessAgent {
         running = nbt.getBoolean("running");
         waitingForOutput = nbt.getBoolean("waitingForOutput");
 
+        // Clear all caches
         cachedItemOutputs.clear();
         cachedFluidOutputs.clear();
+        cachedManaOutputs.clear();
+        cachedGasOutputs.clear();
+        cachedEssentiaOutputs.clear();
+        cachedVisOutputs.clear();
 
-        if (running) {
+        if (running || waitingForOutput) {
+            // Item outputs
             NBTTagList itemList = nbt.getTagList("itemOutputs", Constants.NBT.TAG_COMPOUND);
             for (int i = 0; i < itemList.tagCount(); i++) {
                 cachedItemOutputs.add(ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)));
             }
 
+            // Fluid outputs
             NBTTagList fluidList = nbt.getTagList("fluidOutputs", Constants.NBT.TAG_COMPOUND);
             for (int i = 0; i < fluidList.tagCount(); i++) {
                 cachedFluidOutputs.add(FluidStack.loadFluidStackFromNBT(fluidList.getCompoundTagAt(i)));
+            }
+
+            // Mana outputs
+            int[] manaArray = nbt.getIntArray("manaOutputs");
+            for (int mana : manaArray) {
+                cachedManaOutputs.add(mana);
+            }
+
+            // Gas outputs
+            NBTTagList gasList = nbt.getTagList("gasOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < gasList.tagCount(); i++) {
+                NBTTagCompound tag = gasList.getCompoundTagAt(i);
+                cachedGasOutputs.add(new String[] { tag.getString("gas"), tag.getString("amount") });
+            }
+
+            // Essentia outputs
+            NBTTagList essentiaList = nbt.getTagList("essentiaOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < essentiaList.tagCount(); i++) {
+                NBTTagCompound tag = essentiaList.getCompoundTagAt(i);
+                cachedEssentiaOutputs.add(new String[] { tag.getString("aspect"), tag.getString("amount") });
+            }
+
+            // Vis outputs
+            NBTTagList visList = nbt.getTagList("visOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < visList.tagCount(); i++) {
+                NBTTagCompound tag = visList.getCompoundTagAt(i);
+                cachedVisOutputs.add(new String[] { tag.getString("aspect"), tag.getString("amount") });
             }
         }
     }
