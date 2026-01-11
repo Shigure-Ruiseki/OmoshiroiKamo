@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,8 +25,12 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IQueries;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemKey;
 
-public class ItemInterfaceBus extends AbstractPart implements IItemPart {
+import java.util.Map;
+
+public class ItemInterfaceBus extends AbstractPart implements IItemPart, IQueries {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -63,6 +69,19 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
     @Override
     public ItemStack getItemStack() {
         return CableItems.ITEM_INTERFACE_BUS.newItemStack();
+    }
+
+    public void collectItems(Map<ItemKey, Long> db) {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return;
+
+        for (int i = 0; i < inv.getSizeInventory(); i++) {
+            ItemStack stack = inv.getStackInSlot(i);
+            if (stack == null || stack.stackSize <= 0) continue;
+
+            ItemKey key = new ItemKey(stack);
+            db.merge(key, (long) stack.stackSize, Long::sum);
+        }
     }
 
     @Override

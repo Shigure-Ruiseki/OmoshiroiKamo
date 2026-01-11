@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.PacketItemDataBase;
 
 public class PacketHandler {
 
@@ -25,6 +26,8 @@ public class PacketHandler {
             .registerMessage(PacketCraftingState.class, PacketCraftingState.class, PacketHandler.nextID(), Side.CLIENT);
         INSTANCE
             .registerMessage(PacketClientFlight.class, PacketClientFlight.class, PacketHandler.nextID(), Side.CLIENT);
+
+        INSTANCE.registerMessage(PacketItemDataBase.class, PacketItemDataBase.class, PacketHandler.nextID(), Side.CLIENT);
 
         PacketHandler.INSTANCE
             .registerMessage(PacketQuickDraw.class, PacketQuickDraw.class, PacketHandler.nextID(), Side.SERVER);

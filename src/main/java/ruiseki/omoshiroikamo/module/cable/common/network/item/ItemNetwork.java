@@ -1,11 +1,15 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
+
+    private final Map<ItemKey, Long> itemDB = new HashMap<>();
 
     public List<IItemPart> inputs;
     public List<IItemPart> interfaces;
@@ -22,6 +26,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         if (parts.isEmpty()) return;
 
         rebuildPartLists();
+        rebuildDatabase();
     }
 
     private void rebuildPartLists() {
@@ -40,5 +45,18 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         inputs.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
         interfaces.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
         outputs.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+    }
+
+    private void rebuildDatabase() {
+        itemDB.clear();
+
+        for (IItemPart part : interfaces) {
+            if (part instanceof IQueries queries)
+                queries.collectItems(itemDB);
+        }
+    }
+
+    public Map<ItemKey, Long> getItemDB() {
+        return itemDB;
     }
 }

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -13,9 +14,15 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ClientItemDatabase;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.PacketItemDataBase;
 
 public class CableTerminal extends AbstractPart {
 
@@ -25,7 +32,9 @@ public class CableTerminal extends AbstractPart {
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     @Override
-    public void doUpdate() {}
+    public void doUpdate() {
+
+    }
 
     @Override
     public void onChunkUnload() {
@@ -34,6 +43,10 @@ public class CableTerminal extends AbstractPart {
 
     @Override
     public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager sync, UISettings settings) {
+        if (getItemNetwork() != null) {
+            PacketHandler.sendTo(new PacketItemDataBase(getItemNetwork().getItemDB()), (EntityPlayerMP) data.getPlayer());
+        }
+        Logger.info(ClientItemDatabase.INSTANCE.toString());
         return new ModularPanel("cable_terminal");
     }
 
@@ -88,5 +101,9 @@ public class CableTerminal extends AbstractPart {
     @Override
     public ResourceLocation getBackIcon() {
         return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/terminal_back.png");
+    }
+
+    public ItemNetwork getItemNetwork() {
+        return (ItemNetwork) getCable().getNetwork(IItemPart.class);
     }
 }
