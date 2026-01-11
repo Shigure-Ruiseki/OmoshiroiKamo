@@ -25,6 +25,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     @SafeVarargs
     protected AbstractPortBlock(String name, Class<? extends TileEntity>... teClasses) {
         super(name, teClasses);
+        this.useNeighborBrightness = true; // Use brightness from neighboring blocks
     }
 
     @Override
