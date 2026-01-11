@@ -18,9 +18,6 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
@@ -44,7 +41,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
  * 2. Periodically flushes internal tank to ME cache
  * 3. Then flushes ME cache to ME Network
  */
-public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxyable, IActionHost, IGridTickable {
+public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxyable, IActionHost {
 
     private static final int TANK_CAPACITY = 16000; // 16 buckets
     private static final long CACHE_CAPACITY = 64000; // 64 buckets before forced flush
@@ -230,32 +227,20 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
 
     @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
-        // Processing is now handled by IGridTickable.tickingRequest()
-        moveToCache();
-        return false;
-    }
-
-    // ========== IGridTickable Implementation ==========
-
-    @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(5, 40, !hasFluidsToProcess(), false);
-    }
-
-    @Override
-    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
-        moveToCache();
-        long cached = getCachedAmount();
-        if (cached > 0) {
-            flushCachedStack();
-            return TickRateModulation.FASTER;
+        // Only process every 10 ticks to reduce overhead
+        if (!shouldDoWorkThisTick(10)) {
+            return false;
         }
-        return hasFluidsToProcess() ? TickRateModulation.URGENT : TickRateModulation.SLEEP;
-    }
 
-    private boolean hasFluidsToProcess() {
-        if (cachedFluidAmount > 0) return true;
-        return tank.getFluid() != null && tank.getFluid().amount > 0;
+        // Move fluids from tank to cache
+        moveToCache();
+
+        // Flush cache to ME network if there are cached fluids
+        if (cachedFluidAmount > 0) {
+            flushCachedStack();
+        }
+
+        return false;
     }
     // ========== NBT Handling ==========
 

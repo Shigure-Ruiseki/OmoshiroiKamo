@@ -17,9 +17,6 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
@@ -45,7 +42,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
  * 2. Periodically flushes internal slots to ME cache
  * 3. Then flushes ME cache to ME Network
  */
-public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyable, IActionHost, IGridTickable {
+public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyable, IActionHost {
 
     private static final int BUFFER_SLOTS = 63;
     private static final long CACHE_CAPACITY = 1600;
@@ -233,42 +230,21 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         }
     }
 
-    // ========== IGridTickable Implementation ==========
-
     @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        // Request ticks every 5-40 ticks depending on activity
-        return new TickingRequest(5, 40, !hasItemsToProcess(), false);
-    }
+    public boolean processTasks(boolean redstoneChecksPassed) {
+        // Only process every 10 ticks to reduce overhead
+        if (!shouldDoWorkThisTick(10)) {
+            return false;
+        }
 
-    @Override
-    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
         // Move items from physical slots to cache
         moveToCache();
 
-        // Flush cache to ME network if needed
-        long cached = getCachedAmount();
-        if (cached > 0) {
+        // Flush cache to ME network if there are cached items
+        if (cachedItemCount > 0) {
             flushCachedStack();
-            return TickRateModulation.FASTER; // More work to do
         }
 
-        return hasItemsToProcess() ? TickRateModulation.URGENT : TickRateModulation.SLEEP;
-    }
-
-    private boolean hasItemsToProcess() {
-        if (cachedItemCount > 0) return true;
-        for (int i = 0; i < getSizeInventory(); i++) {
-            if (getStackInSlot(i) != null) return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean processTasks(boolean redstoneChecksPassed) {
-        // Processing is now handled by IGridTickable.tickingRequest()
-        // Only move items to cache here for items that arrive between grid ticks
-        moveToCache();
         return false;
     }
 
