@@ -1,42 +1,65 @@
 package ruiseki.omoshiroikamo.module.cable.client.render;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.cable.common.cable.TECable;
 
+@SideOnly(Side.CLIENT)
 public class PartTESR extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks) {
         if (!(tile instanceof TECable cable)) return;
 
+        var parts = cable.getParts();
+        if (parts.isEmpty()) return;
+
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
 
         Tessellator tess = TessellatorManager.get();
 
-        for (ICablePart part : cable.getParts()) {
+        // Group parts by texture to minimize texture bind calls
+        Map<ResourceLocation, List<AxisAlignedBB>> partsByTexture = new HashMap<>();
+        for (ICablePart part : parts) {
             AxisAlignedBB bb = part.getCollisionBox();
             if (bb == null) continue;
+            ResourceLocation icon = part.getIcon();
+            if (icon == null) continue;
 
-            RenderUtils.bindTexture(part.getIcon());
-            renderCubeWithCollisionBB(bb, tess);
+            partsByTexture.computeIfAbsent(icon, k -> new ArrayList<>())
+                .add(bb);
+        }
+
+        // Render each texture group with a single bind
+        for (Map.Entry<ResourceLocation, List<AxisAlignedBB>> entry : partsByTexture.entrySet()) {
+            RenderUtils.bindTexture(entry.getKey());
+            for (AxisAlignedBB bb : entry.getValue()) {
+                renderCubeWithCollisionBB(bb, tess);
+            }
         }
 
         GL11.glPopMatrix();
     }
 
     private void renderCubeWithCollisionBB(AxisAlignedBB bb, Tessellator t) {
-
         double epsilon = 0.0001;
 
         double minX = bb.minX - epsilon, minY = bb.minY - epsilon, minZ = bb.minZ - epsilon;

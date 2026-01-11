@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +18,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
+import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
@@ -23,10 +26,12 @@ import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.handler.QuantumBeaconEventHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IOKEnergySink {
 
@@ -42,6 +47,13 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     // Beam rendering state
     private float beamProgress = 0.0F;
     private long lastBeamUpdateTick = 0L;
+
+    // Beam segment cache for optimized rendering
+    @SideOnly(Side.CLIENT)
+    private List<BeamSegment> cachedBeamSegments;
+    @SideOnly(Side.CLIENT)
+    private long lastSegmentCacheTick = 0L;
+    private static final int SEGMENT_CACHE_INTERVAL = 10; // Update every 10 ticks
 
     public TEQuantumBeacon(int eBuffSize) {
         this.energyStorage.setEnergyStorage(eBuffSize);
@@ -409,6 +421,107 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared() {
         return 65536.0D; // 256 * 256
+    }
+
+    /**
+     * Get cached beam segments for rendering.
+     * Segments are recalculated every SEGMENT_CACHE_INTERVAL ticks to reduce
+     * per-frame overhead.
+     * 
+     * @return List of beam segments with color information
+     */
+    @SideOnly(Side.CLIENT)
+    public List<BeamSegment> getBeamSegments() {
+        if (worldObj == null) {
+            return Collections.emptyList();
+        }
+
+        long now = worldObj.getTotalWorldTime();
+        if (cachedBeamSegments != null && (now - lastSegmentCacheTick) < SEGMENT_CACHE_INTERVAL) {
+            return cachedBeamSegments;
+        }
+
+        lastSegmentCacheTick = now;
+        cachedBeamSegments = calculateBeamSegments();
+        return cachedBeamSegments;
+    }
+
+    /**
+     * Calculate beam segments by scanning blocks above the beacon.
+     * This extracts the color scanning logic from the TESR.
+     */
+    @SideOnly(Side.CLIENT)
+    private List<BeamSegment> calculateBeamSegments() {
+        List<BeamSegment> segments = new ArrayList<>();
+
+        // Current color (start with white)
+        float[] currentColor = new float[] { 1.0f, 1.0f, 1.0f };
+        int segmentStart = 0;
+        boolean isFirstColoredBlock = true;
+
+        // Scan upward from beacon
+        for (int relY = 1; relY < 256 - yCoord; relY++) {
+            int worldY = yCoord + relY;
+            Block block = worldObj.getBlock(xCoord, worldY, zCoord);
+            int meta = worldObj.getBlockMetadata(xCoord, worldY, zCoord);
+
+            float[] newColor = null;
+
+            // Check for stained glass (block and pane)
+            if (block == Blocks.stained_glass || block == Blocks.stained_glass_pane) {
+                newColor = EntitySheep.fleeceColorTable[meta];
+            }
+            // Check for BlockColoredLens
+            else if (block == MultiBlockBlocks.COLORED_LENS.getBlock()) {
+                int fleeceIndex = 15 - meta;
+                if (fleeceIndex >= 0 && fleeceIndex < 16) {
+                    newColor = EntitySheep.fleeceColorTable[fleeceIndex];
+                }
+            }
+            // Check for BlockLens with crystal meta
+            else if (block == MultiBlockBlocks.LENS.getBlock() && meta == 1) {
+                int color = EnumDye.CRYSTAL.getColor();
+                newColor = new float[] { ((color >> 16) & 0xFF) / 255.0f, ((color >> 8) & 0xFF) / 255.0f,
+                    (color & 0xFF) / 255.0f };
+            }
+
+            // If we found a colored block, create the previous segment and start a new one
+            if (newColor != null) {
+                int segmentEnd = relY - 1;
+                if (segmentEnd > segmentStart) {
+                    segments.add(new BeamSegment(segmentStart, segmentEnd - segmentStart, currentColor));
+                }
+
+                // First colored block: overwrite color entirely
+                // Subsequent colored blocks: blend with current color
+                if (isFirstColoredBlock) {
+                    currentColor = new float[] { newColor[0], newColor[1], newColor[2] };
+                    isFirstColoredBlock = false;
+                } else {
+                    currentColor = new float[] { (currentColor[0] + newColor[0]) / 2.0f,
+                        (currentColor[1] + newColor[1]) / 2.0f, (currentColor[2] + newColor[2]) / 2.0f };
+                }
+                segmentStart = relY - 1;
+            }
+
+            // Stop at opaque blocks
+            if (block.isOpaqueCube()) {
+                int finalSegmentEnd = relY;
+                int finalSegmentHeight = finalSegmentEnd - segmentStart;
+                if (finalSegmentHeight > 0) {
+                    segments.add(new BeamSegment(segmentStart, finalSegmentHeight, currentColor));
+                }
+                return segments;
+            }
+        }
+
+        // Render the final segment to build height
+        int finalHeight = (256 - yCoord) - segmentStart;
+        if (finalHeight > 0) {
+            segments.add(new BeamSegment(segmentStart, finalHeight, currentColor));
+        }
+
+        return segments;
     }
 
 }

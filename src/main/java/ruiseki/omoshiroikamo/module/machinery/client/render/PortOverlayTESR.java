@@ -14,19 +14,24 @@ import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 
 /**
- * Generic port overlay TESR: depth-free, cutout overlays so other effects (e.g.
- * Thaumcraft orbs)
- * stay visible. Reuses render pass 1 textures from ISidedTexture implementors.
+ * Reuses render pass 1 textures from ISidedTexture implementors.
  */
 public class PortOverlayTESR extends TileEntitySpecialRenderer {
 
     private static final float EPS = 0.0025f;
     private static final float OFFSET_FACTOR = -1.0f;
     private static final float OFFSET_UNITS = -200.0f;
+    private static final double MAX_RENDER_DISTANCE_SQ = 64 * 64; // 64 blocks
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks) {
         if (!(tile instanceof ISidedTexture sided)) {
+            return;
+        }
+
+        // Skip rendering if too far away
+        double distSq = x * x + y * y + z * z;
+        if (distSq > MAX_RENDER_DISTANCE_SQ) {
             return;
         }
 
@@ -47,15 +52,16 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
 
-        // Render overlay as cutout: no lighting, no blending; alpha test keeps edges,
-        // avoids face-dependent tint.
+        // Render overlay as cutout: no lighting, no blending; alpha test keeps edges
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-        GL11.glDepthMask(false);
+        // Keep depth test and depth mask enabled for proper occlusion
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-        GL11.glPolygonOffset(OFFSET_FACTOR, OFFSET_UNITS);
+        GL11.glPolygonOffset(-1.0f, -1.0f); // Slight offset to prevent z-fighting with base block
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_CULL_FACE); // show both sides so top/bottom overlays don't vanish
 
@@ -63,8 +69,6 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
 
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-        // Fullbright but slightly dimmed color to avoid overexposure; ensures no dark
-        // overlays.
         t.setBrightness(0x00F000F0);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         t.setColorOpaque_F(0.8F, 0.8F, 0.8F);

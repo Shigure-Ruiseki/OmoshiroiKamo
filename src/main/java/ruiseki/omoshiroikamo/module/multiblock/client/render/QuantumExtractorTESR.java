@@ -1,11 +1,10 @@
 package ruiseki.omoshiroikamo.module.multiblock.client.render;
 
-import net.minecraft.block.Block;
+import java.util.List;
+
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -14,9 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
-import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 @SideOnly(Side.CLIENT)
 public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
@@ -51,106 +49,9 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
                 .getTotalWorldTime() + partialTicks;
             float textureOffset = -worldTime * 0.2F - (float) MathHelper.floor_float(-worldTime * 0.1F);
 
-            int minerX = miner.xCoord;
-            int minerY = miner.yCoord;
-            int minerZ = miner.zCoord;
-
-            // Current color (start with white)
-            float[] currentColor = new float[] { 1.0f, 1.0f, 1.0f };
-            int segmentStart = 0;
-            boolean isFirstColoredBlock = true; // First colored block overwrites, subsequent ones blend
-
-            // Scan downward and render segments with different colors
-            for (int relY = 1; relY <= minerY; relY++) {
-                int worldY = minerY - relY;
-                Block block = miner.getWorldObj()
-                    .getBlock(minerX, worldY, minerZ);
-                int meta = miner.getWorldObj()
-                    .getBlockMetadata(minerX, worldY, minerZ);
-
-                float[] newColor = null;
-
-                // Check for stained glass (block and pane)
-                if (block == Blocks.stained_glass || block == Blocks.stained_glass_pane) {
-                    // stained_glass meta: 0=white, 1=orange, ..., 15=black
-                    // fleeceColorTable index matches this order
-                    newColor = EntitySheep.fleeceColorTable[meta];
-                }
-                // Check for BlockColoredLens
-                else if (block == MultiBlockBlocks.COLORED_LENS.getBlock()) {
-                    // EnumDye ordinal: 0=black, ..., 15=white (reversed from stained_glass)
-                    // Convert to fleeceColorTable index
-                    int fleeceIndex = 15 - meta;
-                    if (fleeceIndex >= 0 && fleeceIndex < 16) {
-                        newColor = EntitySheep.fleeceColorTable[fleeceIndex];
-                    }
-                }
-                // Check for BlockLens with crystal meta
-                else if (block == MultiBlockBlocks.LENS.getBlock() && meta == 1) {
-                    int color = EnumDye.CRYSTAL.getColor();
-                    newColor = new float[] { ((color >> 16) & 0xFF) / 255.0f, ((color >> 8) & 0xFF) / 255.0f,
-                        (color & 0xFF) / 255.0f };
-                }
-
-                // If we found a colored block, render the previous segment and start a new one
-                if (newColor != null) {
-                    // Render segment from segmentStart to current position with currentColor
-                    // Color starts at the same Y as the glass block (relY - 1, not relY)
-                    int segmentEnd = relY - 1;
-                    if (segmentEnd > segmentStart) {
-                        renderBeamSegment(
-                            tessellator,
-                            x,
-                            y,
-                            z,
-                            worldTime,
-                            textureOffset,
-                            beamProgress,
-                            segmentStart,
-                            segmentEnd - segmentStart,
-                            currentColor);
-                    }
-
-                    // First colored block: overwrite color entirely
-                    // Subsequent colored blocks: blend with current color
-                    if (isFirstColoredBlock) {
-                        currentColor = new float[] { newColor[0], newColor[1], newColor[2] };
-                        isFirstColoredBlock = false;
-                    } else {
-                        currentColor = new float[] { (currentColor[0] + newColor[0]) / 2.0f,
-                            (currentColor[1] + newColor[1]) / 2.0f, (currentColor[2] + newColor[2]) / 2.0f };
-                    }
-                    segmentStart = segmentEnd;
-                }
-
-                // Stop at bedrock - render final segment up to bedrock and exit
-                if (block == Blocks.bedrock) {
-                    int bedrockSegmentEnd = relY - 1; // Stop at the block above bedrock
-                    int bedrockSegmentHeight = bedrockSegmentEnd - segmentStart;
-                    if (bedrockSegmentHeight > 0) {
-                        renderBeamSegment(
-                            tessellator,
-                            x,
-                            y,
-                            z,
-                            worldTime,
-                            textureOffset,
-                            beamProgress,
-                            segmentStart,
-                            bedrockSegmentHeight,
-                            currentColor);
-                    }
-                    // Exit early - beam stops at bedrock
-                    GL11.glEnable(GL11.GL_LIGHTING);
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
-                    GL11.glDepthMask(true);
-                    return;
-                }
-            }
-
-            // Render the final segment (only reached if no bedrock was hit)
-            int finalHeight = minerY - segmentStart;
-            if (finalHeight > 0) {
+            // Use cached beam segments instead of scanning every frame
+            List<BeamSegment> segments = miner.getBeamSegments();
+            for (BeamSegment segment : segments) {
                 renderBeamSegment(
                     tessellator,
                     x,
@@ -159,9 +60,9 @@ public class QuantumExtractorTESR extends TileEntitySpecialRenderer {
                     worldTime,
                     textureOffset,
                     beamProgress,
-                    segmentStart,
-                    finalHeight,
-                    currentColor);
+                    segment.startY,
+                    segment.height,
+                    segment.color);
             }
 
             GL11.glEnable(GL11.GL_LIGHTING);

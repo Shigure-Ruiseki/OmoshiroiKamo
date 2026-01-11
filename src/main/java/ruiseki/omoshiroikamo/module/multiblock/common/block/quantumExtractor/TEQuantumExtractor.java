@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ISidedInventory;
@@ -33,6 +34,7 @@ import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT1;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT4;
@@ -58,6 +60,20 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     private float beamProgress = 0.0F;
     private long lastBeamUpdateTick = 0L;
+
+    // Beam segment cache for optimized rendering
+    @SideOnly(Side.CLIENT)
+    private List<BeamSegment> cachedBeamSegments;
+    @SideOnly(Side.CLIENT)
+    private long lastSegmentCacheTick = 0L;
+    private static final int SEGMENT_CACHE_INTERVAL = 10; // Update every 10 ticks
+
+    // Path clear cache
+    @SideOnly(Side.CLIENT)
+    private boolean cachedPathClear = false;
+    @SideOnly(Side.CLIENT)
+    private long lastPathCheckTick = 0L;
+    private static final int PATH_CHECK_INTERVAL = 10; // Update every 10 ticks
 
     public TEQuantumExtractor() {
         energyStorage.setEnergyStorage(1000000);
@@ -229,7 +245,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     @SideOnly(Side.CLIENT)
     public float getBeamProgress() {
-        if (!isPathToVoidClear()) {
+        if (!getCachedPathClear()) {
             beamProgress = 0f;
             return 0f;
         }
@@ -253,6 +269,24 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     }
 
     /**
+     * Get cached path clear status.
+     * Rechecked every PATH_CHECK_INTERVAL ticks.
+     */
+    @SideOnly(Side.CLIENT)
+    private boolean getCachedPathClear() {
+        if (worldObj == null) {
+            return false;
+        }
+
+        long now = worldObj.getTotalWorldTime();
+        if ((now - lastPathCheckTick) >= PATH_CHECK_INTERVAL) {
+            lastPathCheckTick = now;
+            cachedPathClear = isPathToVoidClear();
+        }
+        return cachedPathClear;
+    }
+
+    /**
      * Override the render bounding box to include the entire beam (from miner to
      * Y=0).
      * This prevents frustum culling from hiding the beam when the player is not
@@ -272,6 +306,107 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared() {
         return 65536.0D; // 256 * 256
+    }
+
+    /**
+     * Get cached beam segments for rendering.
+     * Segments are recalculated every SEGMENT_CACHE_INTERVAL ticks to reduce
+     * per-frame overhead.
+     * 
+     * @return List of beam segments with color information
+     */
+    @SideOnly(Side.CLIENT)
+    public List<BeamSegment> getBeamSegments() {
+        if (worldObj == null) {
+            return Collections.emptyList();
+        }
+
+        long now = worldObj.getTotalWorldTime();
+        if (cachedBeamSegments != null && (now - lastSegmentCacheTick) < SEGMENT_CACHE_INTERVAL) {
+            return cachedBeamSegments;
+        }
+
+        lastSegmentCacheTick = now;
+        cachedBeamSegments = calculateBeamSegments();
+        return cachedBeamSegments;
+    }
+
+    /**
+     * Calculate beam segments by scanning blocks below the extractor.
+     * This extracts the color scanning logic from the TESR.
+     */
+    @SideOnly(Side.CLIENT)
+    private List<BeamSegment> calculateBeamSegments() {
+        List<BeamSegment> segments = new ArrayList<>();
+
+        // Current color (start with white)
+        float[] currentColor = new float[] { 1.0f, 1.0f, 1.0f };
+        int segmentStart = 0;
+        boolean isFirstColoredBlock = true;
+
+        // Scan downward from extractor
+        for (int relY = 1; relY <= yCoord; relY++) {
+            int worldY = yCoord - relY;
+            Block block = worldObj.getBlock(xCoord, worldY, zCoord);
+            int meta = worldObj.getBlockMetadata(xCoord, worldY, zCoord);
+
+            float[] newColor = null;
+
+            // Check for stained glass (block and pane)
+            if (block == Blocks.stained_glass || block == Blocks.stained_glass_pane) {
+                newColor = EntitySheep.fleeceColorTable[meta];
+            }
+            // Check for BlockColoredLens
+            else if (block == MultiBlockBlocks.COLORED_LENS.getBlock()) {
+                int fleeceIndex = 15 - meta;
+                if (fleeceIndex >= 0 && fleeceIndex < 16) {
+                    newColor = EntitySheep.fleeceColorTable[fleeceIndex];
+                }
+            }
+            // Check for BlockLens with crystal meta
+            else if (block == MultiBlockBlocks.LENS.getBlock() && meta == 1) {
+                int color = EnumDye.CRYSTAL.getColor();
+                newColor = new float[] { ((color >> 16) & 0xFF) / 255.0f, ((color >> 8) & 0xFF) / 255.0f,
+                    (color & 0xFF) / 255.0f };
+            }
+
+            // If we found a colored block, create the previous segment and start a new one
+            if (newColor != null) {
+                int segmentEnd = relY - 1;
+                if (segmentEnd > segmentStart) {
+                    segments.add(new BeamSegment(segmentStart, segmentEnd - segmentStart, currentColor));
+                }
+
+                // First colored block: overwrite color entirely
+                // Subsequent colored blocks: blend with current color
+                if (isFirstColoredBlock) {
+                    currentColor = new float[] { newColor[0], newColor[1], newColor[2] };
+                    isFirstColoredBlock = false;
+                } else {
+                    currentColor = new float[] { (currentColor[0] + newColor[0]) / 2.0f,
+                        (currentColor[1] + newColor[1]) / 2.0f, (currentColor[2] + newColor[2]) / 2.0f };
+                }
+                segmentStart = segmentEnd;
+            }
+
+            // Stop at bedrock - render final segment up to bedrock and exit
+            if (block == Blocks.bedrock) {
+                int bedrockSegmentEnd = relY - 1;
+                int bedrockSegmentHeight = bedrockSegmentEnd - segmentStart;
+                if (bedrockSegmentHeight > 0) {
+                    segments.add(new BeamSegment(segmentStart, bedrockSegmentHeight, currentColor));
+                }
+                return segments;
+            }
+        }
+
+        // Render the final segment (only reached if no bedrock was hit)
+        int finalHeight = yCoord - segmentStart;
+        if (finalHeight > 0) {
+            segments.add(new BeamSegment(segmentStart, finalHeight, currentColor));
+        }
+
+        return segments;
     }
 
     /**

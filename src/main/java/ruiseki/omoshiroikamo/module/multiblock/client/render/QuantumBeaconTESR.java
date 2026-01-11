@@ -1,11 +1,10 @@
 package ruiseki.omoshiroikamo.module.multiblock.client.render;
 
-import net.minecraft.block.Block;
+import java.util.List;
+
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -14,9 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.TEQuantumBeacon;
-import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 /**
  * Renders an upward beacon beam for the Quantum Beacon.
@@ -55,101 +53,9 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
                 .getTotalWorldTime() + partialTicks;
             float textureOffset = -worldTime * 0.2F - (float) MathHelper.floor_float(-worldTime * 0.1F);
 
-            int beaconX = beacon.xCoord;
-            int beaconY = beacon.yCoord;
-            int beaconZ = beacon.zCoord;
-
-            // Current color (start with white)
-            float[] currentColor = new float[] { 1.0f, 1.0f, 1.0f };
-            int segmentStart = 0;
-            boolean isFirstColoredBlock = true;
-
-            // Scan upward and render segments with different colors
-            for (int relY = 1; relY < 256 - beaconY; relY++) {
-                int worldY = beaconY + relY;
-                Block block = beacon.getWorldObj()
-                    .getBlock(beaconX, worldY, beaconZ);
-                int meta = beacon.getWorldObj()
-                    .getBlockMetadata(beaconX, worldY, beaconZ);
-
-                float[] newColor = null;
-
-                // Check for stained glass (block and pane)
-                if (block == Blocks.stained_glass || block == Blocks.stained_glass_pane) {
-                    newColor = EntitySheep.fleeceColorTable[meta];
-                }
-                // Check for BlockColoredLens
-                else if (block == MultiBlockBlocks.COLORED_LENS.getBlock()) {
-                    int fleeceIndex = 15 - meta;
-                    if (fleeceIndex >= 0 && fleeceIndex < 16) {
-                        newColor = EntitySheep.fleeceColorTable[fleeceIndex];
-                    }
-                }
-                // Check for BlockLens with crystal meta
-                else if (block == MultiBlockBlocks.LENS.getBlock() && meta == 1) {
-                    int color = EnumDye.CRYSTAL.getColor();
-                    newColor = new float[] { ((color >> 16) & 0xFF) / 255.0f, ((color >> 8) & 0xFF) / 255.0f,
-                        (color & 0xFF) / 255.0f };
-                }
-
-                // If we found a colored block, render the previous segment and start a new one
-                if (newColor != null) {
-                    // End the previous segment just before this colored block
-                    int segmentEnd = relY - 1;
-                    if (segmentEnd > segmentStart) {
-                        renderBeamSegment(
-                            tessellator,
-                            x,
-                            y,
-                            z,
-                            worldTime,
-                            textureOffset,
-                            beamProgress,
-                            segmentStart,
-                            segmentEnd - segmentStart,
-                            currentColor);
-                    }
-
-                    // First colored block: overwrite color entirely
-                    // Subsequent colored blocks: blend with current color
-                    if (isFirstColoredBlock) {
-                        currentColor = new float[] { newColor[0], newColor[1], newColor[2] };
-                        isFirstColoredBlock = false;
-                    } else {
-                        currentColor = new float[] { (currentColor[0] + newColor[0]) / 2.0f,
-                            (currentColor[1] + newColor[1]) / 2.0f, (currentColor[2] + newColor[2]) / 2.0f };
-                    }
-                    // Start the new segment from the colored block itself
-                    segmentStart = relY - 1;
-                }
-
-                // Stop at opaque blocks
-                if (block.isOpaqueCube()) {
-                    int finalSegmentEnd = relY;
-                    int finalSegmentHeight = finalSegmentEnd - segmentStart;
-                    if (finalSegmentHeight > 0) {
-                        renderBeamSegment(
-                            tessellator,
-                            x,
-                            y,
-                            z,
-                            worldTime,
-                            textureOffset,
-                            beamProgress,
-                            segmentStart,
-                            finalSegmentHeight,
-                            currentColor);
-                    }
-                    GL11.glEnable(GL11.GL_LIGHTING);
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
-                    GL11.glDepthMask(true);
-                    return;
-                }
-            }
-
-            // Render the final segment to build height
-            int finalHeight = (256 - beaconY) - segmentStart;
-            if (finalHeight > 0) {
+            // Use cached beam segments instead of scanning every frame
+            List<BeamSegment> segments = beacon.getBeamSegments();
+            for (BeamSegment segment : segments) {
                 renderBeamSegment(
                     tessellator,
                     x,
@@ -158,9 +64,9 @@ public class QuantumBeaconTESR extends TileEntitySpecialRenderer {
                     worldTime,
                     textureOffset,
                     beamProgress,
-                    segmentStart,
-                    finalHeight,
-                    currentColor);
+                    segment.startY,
+                    segment.height,
+                    segment.color);
             }
 
             GL11.glEnable(GL11.GL_LIGHTING);
