@@ -16,10 +16,6 @@ import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 @SideOnly(Side.CLIENT)
 public class StallTESR extends TileEntitySpecialRenderer {
 
-    /**
-     * Cache for cow entity rendering per TileEntity.
-     * Uses a simple approach: cache is invalidated when cow presence changes.
-     */
     private static class CowRenderCache {
 
         EntityCowsCow cachedCow;
@@ -33,8 +29,6 @@ public class StallTESR extends TileEntitySpecialRenderer {
         }
     }
 
-    // Single cache per TESR instance (one TESR per TE type)
-    // For multiple stalls, we use TE's worldObj to detect changes
     private CowRenderCache renderCache = new CowRenderCache();
 
     @Override
@@ -45,14 +39,13 @@ public class StallTESR extends TileEntitySpecialRenderer {
 
         boolean hasCow = tile.hasCow();
         if (!hasCow || tile.getMaxProgress() == 0) {
-            // Clear cache if cow was removed
+
             if (renderCache.hadCow && !hasCow) {
                 renderCache.invalidate();
             }
             return;
         }
 
-        // Get or update cached cow entity
         EntityCowsCow cow = getCachedCow(tile);
         if (cow == null) {
             return;
@@ -69,16 +62,9 @@ public class StallTESR extends TileEntitySpecialRenderer {
         GL11.glPopMatrix();
     }
 
-    /**
-     * Get cached cow entity, creating a new one only when necessary.
-     * The cache is invalidated when the TE position changes (different stall)
-     * or when cow data changes.
-     */
     private EntityCowsCow getCachedCow(TEStall tile) {
-        // Simple cache key based on TE position
         int tileHashCode = tile.xCoord ^ (tile.yCoord << 8) ^ (tile.zCoord << 16);
 
-        // Check if we need to refresh the cache
         if (renderCache.cachedCow == null || renderCache.cachedHashCode != tileHashCode) {
             renderCache.cachedCow = tile.getCow(tile.getWorldObj());
             renderCache.cachedHashCode = tileHashCode;
@@ -88,10 +74,6 @@ public class StallTESR extends TileEntitySpecialRenderer {
         return renderCache.cachedCow;
     }
 
-    /**
-     * Force cache invalidation when cow data changes.
-     * Should be called from TileEntity when cow is set/removed.
-     */
     public void invalidateCache() {
         renderCache.invalidate();
     }

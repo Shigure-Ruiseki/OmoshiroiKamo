@@ -197,7 +197,7 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     /**
-     * Process recipe using ProcessAgent with look-ahead optimization.
+     * Process recipe using ProcessAgent.
      * Searches for the next recipe during current recipe processing,
      * enabling zero-tick delay between recipe completions.
      */
@@ -237,9 +237,6 @@ public class TEMachineController extends AbstractMBModifierTE {
         startNextRecipe();
     }
 
-    /**
-     * Start the next recipe, using cached look-ahead result if available.
-     */
     private void startNextRecipe() {
         // Invalidate cache if recipes were reloaded
         if (cachedRecipeVersion != RecipeLoader.getInstance()
@@ -263,7 +260,7 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     /**
      * Diagnose why no recipe is currently running.
-     * Returns an error message if an issue is found, or null if everything is OK.
+     * Returns an error message.
      */
     private String diagnoseRecipeIssue() {
         // Check if there are any recipes for this group
@@ -311,7 +308,7 @@ public class TEMachineController extends AbstractMBModifierTE {
                     return "Output full or missing: " + missingOutputs;
                 }
 
-                // All inputs/outputs OK but recipe not starting - check energy
+                // All inputs/outputs OK but recipe not starting - check energy (fallback)
                 return "Energy required";
             }
         }
@@ -322,7 +319,7 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     /**
      * Diagnose which output types are blocked when waiting for output.
-     * Uses cached output types from ProcessAgent (works after relog).
+     * Uses cached output types from ProcessAgent.
      */
     private String diagnoseBlockedOutputs() {
         // Try to use recipe first
@@ -340,7 +337,7 @@ public class TEMachineController extends AbstractMBModifierTE {
             return blocked.length() > 0 ? blocked.toString() : "Unknown";
         }
 
-        // Fallback: use cached output types (works after relog)
+        // Fallback: use cached output types
         java.util.Set<IPortType.Type> cachedTypes = processAgent.getCachedOutputTypes();
         if (cachedTypes.isEmpty()) {
             return "Unknown (no cached outputs)";
@@ -364,9 +361,6 @@ public class TEMachineController extends AbstractMBModifierTE {
         return 0; // Energy is managed by ProcessAgent
     }
 
-    /**
-     * Called when a player right-clicks the controller block.
-     */
     public void onRightClick(EntityPlayer player) {
         if (worldObj.isRemote) return;
 
@@ -377,8 +371,7 @@ public class TEMachineController extends AbstractMBModifierTE {
         if (nowFormed) {
             String status = wasFormed ? "Status" : "Structure formed";
 
-            // Display progress info - check waitingForOutput FIRST (it can be true while
-            // running)
+            // Display progress info
             if (processAgent.isWaitingForOutput()) {
                 // Diagnose which outputs are blocked
                 String blockedOutputs = diagnoseBlockedOutputs();
@@ -425,9 +418,6 @@ public class TEMachineController extends AbstractMBModifierTE {
         }
     }
 
-    /**
-     * Send port type counts to player chat.
-     */
     private void sendPortTypeCounts(EntityPlayer player, String label, List<IModularPort> ports) {
         StringBuilder sb = new StringBuilder("  " + label + " Ports: ");
         for (IPortType.Type type : IPortType.Type.values()) {
@@ -445,9 +435,6 @@ public class TEMachineController extends AbstractMBModifierTE {
         player.addChatComponentMessage(new ChatComponentText(sb.toString()));
     }
 
-    /**
-     * Send port coordinate details to player chat.
-     */
     private void sendPortDetails(EntityPlayer player, List<IModularPort> inputs, List<IModularPort> outputs) {
         for (IModularPort port : inputs) {
             TileEntity te = (TileEntity) port;
@@ -473,7 +460,7 @@ public class TEMachineController extends AbstractMBModifierTE {
         clearStructureParts();
 
         int casingCount = 0;
-        // Check 3x3x3 area behind the controller (Z+1 to Z+3)
+        // Check 3x3x3 area behind the controller
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 for (int dz = 1; dz <= 3; dz++) {
@@ -503,41 +490,26 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // ========== Getters ==========
 
-    /**
-     * Get all input ports.
-     */
     public List<IModularPort> getInputPorts() {
         return inputPorts;
     }
 
-    /**
-     * Get all output ports.
-     */
     public List<IModularPort> getOutputPorts() {
         return outputPorts;
     }
 
-    /**
-     * Get input ports filtered by type.
-     */
     public List<IModularPort> getInputPorts(IPortType.Type type) {
         return inputPorts.stream()
             .filter(p -> p.getPortType() == type)
             .collect(Collectors.toList());
     }
 
-    /**
-     * Get output ports filtered by type.
-     */
     public List<IModularPort> getOutputPorts(IPortType.Type type) {
         return outputPorts.stream()
             .filter(p -> p.getPortType() == type)
             .collect(Collectors.toList());
     }
 
-    /**
-     * Get input ports filtered by type and cast to the specific port class.
-     */
     @SuppressWarnings("unchecked")
     public <T extends IModularPort> List<T> getTypedInputPorts(IPortType.Type type, Class<T> portClass) {
         return inputPorts.stream()
@@ -547,9 +519,6 @@ public class TEMachineController extends AbstractMBModifierTE {
             .collect(Collectors.toList());
     }
 
-    /**
-     * Get output ports filtered by type and cast to the specific port class.
-     */
     @SuppressWarnings("unchecked")
     public <T extends IModularPort> List<T> getTypedOutputPorts(IPortType.Type type, Class<T> portClass) {
         return outputPorts.stream()
@@ -559,9 +528,6 @@ public class TEMachineController extends AbstractMBModifierTE {
             .collect(Collectors.toList());
     }
 
-    /**
-     * Get valid ports (filters out invalid TileEntities).
-     */
     public <T extends IModularPort> List<T> validPorts(List<T> ports) {
         return ports.stream()
             .filter(p -> p != null && !((net.minecraft.tileentity.TileEntity) p).isInvalid())
@@ -570,9 +536,6 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // ========== Item IO Helpers ==========
 
-    /**
-     * Get all items stored in input item ports.
-     */
     public List<ItemStack> getStoredInputItems() {
         List<ItemStack> items = new ArrayList<>();
         for (AbstractItemIOPortTE port : getTypedInputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
@@ -629,9 +592,6 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // ========== Fluid IO Helpers ==========
 
-    /**
-     * Get all fluids stored in input fluid ports.
-     */
     public List<FluidStack> getStoredInputFluids() {
         List<FluidStack> fluids = new ArrayList<>();
         for (AbstractFluidPortTE port : getTypedInputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
@@ -664,9 +624,6 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // ========== Energy IO Helpers ==========
 
-    /**
-     * Get total energy stored in input energy ports.
-     */
     public int getStoredInputEnergy() {
         int total = 0;
         for (AbstractEnergyIOPortTE port : getTypedInputPorts(IPortType.Type.ENERGY, AbstractEnergyIOPortTE.class)) {
@@ -675,9 +632,6 @@ public class TEMachineController extends AbstractMBModifierTE {
         return total;
     }
 
-    /**
-     * Extract energy from input energy ports.
-     */
     public int extractInputEnergy(int amount, boolean simulate) {
         int remaining = amount;
         for (AbstractEnergyIOPortTE port : getTypedInputPorts(IPortType.Type.ENERGY, AbstractEnergyIOPortTE.class)) {

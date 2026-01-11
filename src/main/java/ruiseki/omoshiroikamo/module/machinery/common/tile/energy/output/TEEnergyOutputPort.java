@@ -12,8 +12,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
 /**
- * Energy Input Port TileEntity.
- * Accepts RF energy for machine processing.
+ * Energy Output Port TileEntity.
+ * RF energy output for machine processing.
  */
 public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEnergySource {
 
@@ -71,9 +71,8 @@ public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implemen
         return AbstractPortBlock.baseIcon;
     }
 
-    // Always allow output regardless of side IO setting
     @Override
     public boolean canOutput(ForgeDirection side) {
-        return true;
+        return getSideIO(side).canOutput();
     }
 }

@@ -14,9 +14,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
-/**
- * Recipe output for fluids.
- */
 public class FluidOutput implements IRecipeOutput {
 
     private final FluidStack output;
@@ -69,9 +66,6 @@ public class FluidOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
-    /**
-     * Create FluidOutput from JSON.
-     */
     public static FluidOutput fromJson(JsonObject json) {
         FluidJson fluidJson = new FluidJson();
         fluidJson.name = json.get("fluid")

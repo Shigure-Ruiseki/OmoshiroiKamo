@@ -13,9 +13,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-/**
- * Recipe output for items.
- */
 public class ItemOutput implements IRecipeOutput {
 
     private final ItemStack output;
@@ -44,17 +41,17 @@ public class ItemOutput implements IRecipeOutput {
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
         int remaining = output.stackSize;
-
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ITEM) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+
             if (!(port instanceof AbstractItemIOPortTE)) {
                 throw new IllegalStateException(
                     "ITEM OUTPUT port must be AbstractItemIOPortTE, got: " + port.getClass()
                         .getName());
             }
-            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
 
+            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
             for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack == null) {
@@ -86,25 +83,19 @@ public class ItemOutput implements IRecipeOutput {
         return ItemStack.areItemStackTagsEqual(a, b);
     }
 
-    /**
-     * Create ItemOutput from JSON.
-     */
     public static ItemOutput fromJson(JsonObject json) {
         ItemJson itemJson = new ItemJson();
         String itemId = json.get("item")
             .getAsString();
-
         if (itemId.startsWith("ore:")) {
             itemJson.ore = itemId.substring(4);
         } else {
             itemJson.name = itemId;
         }
-
         itemJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1;
         itemJson.meta = json.has("meta") ? json.get("meta")
             .getAsInt() : 0;
-
         ItemStack stack = ItemJson.resolveItemStack(itemJson);
         if (stack == null) {
             Logger.warn("Unknown item in recipe: {}", itemId);

@@ -8,9 +8,6 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 
-/**
- * Recipe output for Mana.
- */
 public class ManaOutput implements IRecipeOutput {
 
     private final int amount;

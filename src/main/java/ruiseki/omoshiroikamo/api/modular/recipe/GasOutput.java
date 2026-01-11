@@ -12,9 +12,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
-/**
- * Recipe output for Gas.
- */
 public class GasOutput implements IRecipeOutput {
 
     private final String gasName;

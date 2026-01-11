@@ -22,6 +22,7 @@ public class RoostTESR extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks) {
+
         if (!(te instanceof TERoost tile)) {
             return;
         }

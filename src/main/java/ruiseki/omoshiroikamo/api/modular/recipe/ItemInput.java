@@ -13,9 +13,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-/**
- * Recipe input requirement for items.
- */
 public class ItemInput implements IRecipeInput {
 
     private final ItemStack required;
@@ -81,21 +78,14 @@ public class ItemInput implements IRecipeInput {
         return true;
     }
 
-    /**
-     * Create ItemInput from JSON.
-     * Supports "item" key for direct items, "ore" key for OreDict.
-     */
     public static ItemInput fromJson(JsonObject json) {
         ItemJson itemJson = new ItemJson();
-
-        // Check for ore dictionary key first
         if (json.has("ore")) {
             itemJson.ore = json.get("ore")
                 .getAsString();
         } else if (json.has("item")) {
             String itemId = json.get("item")
                 .getAsString();
-            // Check for ore: prefix format
             if (itemId.startsWith("ore:")) {
                 itemJson.ore = itemId.substring(4);
             } else {

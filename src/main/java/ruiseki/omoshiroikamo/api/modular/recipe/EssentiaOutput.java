@@ -10,9 +10,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
 
-/**
- * Recipe output for Essentia.
- */
 public class EssentiaOutput implements IRecipeOutput {
 
     private final String aspectTag;

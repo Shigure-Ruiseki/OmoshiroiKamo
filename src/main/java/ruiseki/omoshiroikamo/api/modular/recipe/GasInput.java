@@ -9,9 +9,6 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
-/**
- * Recipe input requirement for Gas.
- */
 public class GasInput implements IRecipeInput {
 
     private final String gasName;

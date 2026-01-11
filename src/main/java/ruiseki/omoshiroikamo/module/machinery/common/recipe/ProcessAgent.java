@@ -22,10 +22,6 @@ import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
 
-/**
- * Manages the processing of a single recipe.
- * Handles tick-by-tick progression, energy consumption, and output generation.
- */
 public class ProcessAgent {
 
     private int progress;
@@ -34,31 +30,23 @@ public class ProcessAgent {
     private boolean running;
     private boolean waitingForOutput;
 
-    // Cached outputs for NBT persistence
     private List<ItemStack> cachedItemOutputs = new ArrayList<>();
     private List<FluidStack> cachedFluidOutputs = new ArrayList<>();
-    // Simple outputs (amount only, no complex data)
+
     private List<Integer> cachedManaOutputs = new ArrayList<>();
     private List<String[]> cachedGasOutputs = new ArrayList<>(); // [gasName, amount]
     private List<String[]> cachedEssentiaOutputs = new ArrayList<>(); // [aspectTag, amount]
     private List<String[]> cachedVisOutputs = new ArrayList<>(); // [aspectTag, amountCentiVis]
 
-    // Transient reference to current recipe
     private transient ModularRecipe currentRecipe;
 
     public ProcessAgent() {
         reset();
     }
 
-    /**
-     * Attempt to start processing a recipe.
-     * Consumes inputs immediately if successful.
-     * Caches outputs in NBT.
-     */
     public boolean start(ModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
         if (running) return false;
 
-        // Check if all non-energy inputs are available
         for (IRecipeInput input : recipe.getInputs()) {
             if (input instanceof EnergyInput) {
                 EnergyInput energyInput = (EnergyInput) input;
@@ -71,7 +59,6 @@ public class ProcessAgent {
             }
         }
 
-        // Actually consume inputs
         energyPerTick = 0;
         for (IRecipeInput input : recipe.getInputs()) {
             if (input instanceof EnergyInput) {
@@ -86,7 +73,6 @@ public class ProcessAgent {
             }
         }
 
-        // Cache outputs in NBT
         cachedItemOutputs.clear();
         cachedFluidOutputs.clear();
         cachedManaOutputs.clear();
@@ -124,9 +110,6 @@ public class ProcessAgent {
         return true;
     }
 
-    /**
-     * Process one tick.
-     */
     public TickResult tick(List<IModularPort> energyPorts) {
         if (!running) return TickResult.IDLE;
 
@@ -134,9 +117,7 @@ public class ProcessAgent {
             return TickResult.WAITING_OUTPUT;
         }
 
-        // Consume energy per tick
         if (energyPerTick > 0) {
-            // Create temporary EnergyInput for consumption
             EnergyInput energyReq = new EnergyInput(energyPerTick, true);
             if (!energyReq.process(energyPorts, false)) {
                 return TickResult.NO_ENERGY;
@@ -153,14 +134,9 @@ public class ProcessAgent {
         return TickResult.CONTINUE;
     }
 
-    /**
-     * Attempt to output the cached results.
-     * Uses cached outputs.
-     */
     public boolean tryOutput(List<IModularPort> outputPorts) {
         if (!waitingForOutput) return false;
 
-        // Create temporary output objects from cached data
         List<IRecipeOutput> outputs = new ArrayList<>();
         for (ItemStack stack : cachedItemOutputs) {
             outputs.add(new ItemOutput(stack.copy()));
@@ -181,14 +157,12 @@ public class ProcessAgent {
             outputs.add(new VisOutput(visData[0], Integer.parseInt(visData[1])));
         }
 
-        // Check if all outputs can be placed (simulate)
         for (IRecipeOutput output : outputs) {
             if (!output.process(outputPorts, true)) {
                 return false;
             }
         }
 
-        // Actually place outputs
         for (IRecipeOutput output : outputs) {
             output.process(outputPorts, false);
         }
@@ -197,10 +171,6 @@ public class ProcessAgent {
         return true;
     }
 
-    /**
-     * Abort the current recipe.
-     * Note: Consumed inputs are not refunded.
-     */
     public void abort() {
         reset();
     }
@@ -220,7 +190,6 @@ public class ProcessAgent {
         cachedVisOutputs.clear();
     }
 
-    // Getters
     public boolean isRunning() {
         return running;
     }
@@ -243,7 +212,6 @@ public class ProcessAgent {
 
     /**
      * Get a list of output types that are currently cached
-     * Used for diagnosis when currentRecipe is null.
      */
     public java.util.Set<IPortType.Type> getCachedOutputTypes() {
         java.util.Set<IPortType.Type> types = new java.util.HashSet<>();
@@ -261,7 +229,6 @@ public class ProcessAgent {
         return (float) progress / maxProgress;
     }
 
-    // NBT persistence
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("progress", progress);
         nbt.setInteger("maxProgress", maxProgress);

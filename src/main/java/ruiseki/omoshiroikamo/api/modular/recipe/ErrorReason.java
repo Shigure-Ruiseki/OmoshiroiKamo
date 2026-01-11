@@ -1,8 +1,5 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-/**
- * Represents the reason why a machine is in an error state.
- */
 public enum ErrorReason {
 
     NONE("none"),

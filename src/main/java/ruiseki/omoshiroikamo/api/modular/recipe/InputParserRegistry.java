@@ -6,10 +6,6 @@ import java.util.function.Function;
 
 import com.google.gson.JsonObject;
 
-/**
- * Registry for input parsers.
- * Uses Factory + Registry pattern for extensibility.
- */
 public class InputParserRegistry {
 
     private static final Map<String, Function<JsonObject, IRecipeInput>> parsers = new HashMap<>();

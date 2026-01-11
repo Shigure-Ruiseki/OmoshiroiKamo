@@ -7,10 +7,6 @@ import java.util.List;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
-/**
- * Represents a recipe for a modular machine.
- * Recipes are immutable and created via the Builder pattern.
- */
 public class ModularRecipe implements Comparable<ModularRecipe> {
 
     private final String recipeGroup;
@@ -26,8 +22,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
     }
-
-    // ========== Getters ==========
 
     public String getRecipeGroup() {
         return recipeGroup;
@@ -49,8 +43,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return outputs;
     }
 
-    // ========== Recipe Logic ==========
-
     /**
      * Check if all input requirements are met by the given ports.
      *
@@ -59,14 +51,14 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
      * @return true if all inputs are satisfied
      */
     public boolean processInputs(List<IModularPort> inputPorts, boolean simulate) {
-        // First check all inputs can be satisfied
+
         for (IRecipeInput input : inputs) {
             List<IModularPort> filtered = filterByType(inputPorts, input.getPortType());
             if (!input.process(filtered, true)) {
                 return false;
             }
         }
-        // If not simulating, actually consume
+
         if (!simulate) {
             for (IRecipeInput input : inputs) {
                 List<IModularPort> filtered = filterByType(inputPorts, input.getPortType());
@@ -84,14 +76,14 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
      * @return true if all outputs can be inserted
      */
     public boolean processOutputs(List<IModularPort> outputPorts, boolean simulate) {
-        // First check all outputs can be inserted
+
         for (IRecipeOutput output : outputs) {
             List<IModularPort> filtered = filterByType(outputPorts, output.getPortType());
             if (!output.process(filtered, true)) {
                 return false;
             }
         }
-        // If not simulating, actually produce
+
         if (!simulate) {
             for (IRecipeOutput output : outputs) {
                 List<IModularPort> filtered = filterByType(outputPorts, output.getPortType());
@@ -101,16 +93,10 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return true;
     }
 
-    /**
-     * Check if all input requirements can be met (convenience method).
-     */
     public boolean matchesInput(List<IModularPort> inputPorts) {
         return processInputs(inputPorts, true);
     }
 
-    /**
-     * Check if all outputs can be placed (convenience method).
-     */
     public boolean canOutput(List<IModularPort> outputPorts) {
         return processOutputs(outputPorts, true);
     }
@@ -127,25 +113,22 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     @Override
     public int compareTo(ModularRecipe other) {
-        // 1. Higher priority comes first (descending order)
+        // 1. Higher priority comes first
         int priorityCompare = Integer.compare(other.priority, this.priority);
         if (priorityCompare != 0) return priorityCompare;
 
-        // 2. More input types comes first (descending order)
+        // 2. More input types comes first
         int thisInputTypes = countDistinctInputTypes();
         int otherInputTypes = other.countDistinctInputTypes();
         int inputTypeCompare = Integer.compare(otherInputTypes, thisInputTypes);
         if (inputTypeCompare != 0) return inputTypeCompare;
 
-        // 3. Larger item stack count comes first (descending order)
+        // 3. Larger item stack count comes first
         int thisItemCount = getTotalItemInputCount();
         int otherItemCount = other.getTotalItemInputCount();
         return Integer.compare(otherItemCount, thisItemCount);
     }
 
-    /**
-     * Count distinct input port types (ITEM, FLUID, GAS, etc.)
-     */
     private int countDistinctInputTypes() {
         java.util.Set<IPortType.Type> types = new java.util.HashSet<>();
         for (IRecipeInput input : inputs) {
@@ -154,9 +137,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return types.size();
     }
 
-    /**
-     * Get total item input stack count requirement.
-     */
     private int getTotalItemInputCount() {
         int total = 0;
         for (IRecipeInput input : inputs) {

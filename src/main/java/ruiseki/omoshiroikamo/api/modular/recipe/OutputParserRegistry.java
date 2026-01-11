@@ -6,10 +6,6 @@ import java.util.function.Function;
 
 import com.google.gson.JsonObject;
 
-/**
- * Registry for output parsers.
- * Uses Factory + Registry pattern for extensibility.
- */
 public class OutputParserRegistry {
 
     private static final Map<String, Function<JsonObject, IRecipeOutput>> parsers = new HashMap<>();
@@ -34,10 +30,6 @@ public class OutputParserRegistry {
         parsers.put(key, parser);
     }
 
-    /**
-     * Parse a JsonObject into an IRecipeOutput.
-     * Determines type by checking which key is present.
-     */
     public static IRecipeOutput parse(JsonObject json) {
         for (Map.Entry<String, Function<JsonObject, IRecipeOutput>> entry : parsers.entrySet()) {
             if (json.has(entry.getKey())) {

@@ -29,13 +29,11 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
             return;
         }
 
-        // Skip rendering if too far away
         double distSq = x * x + y * y + z * z;
         if (distSq > MAX_RENDER_DISTANCE_SQ) {
             return;
         }
 
-        // Collect overlays first; early-return if nothing to draw.
         IIcon[] icons = new IIcon[6];
         boolean hasAny = false;
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
@@ -52,12 +50,10 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
 
-        // Render overlay as cutout: no lighting, no blending; alpha test keeps edges
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-        // Keep depth test and depth mask enabled for proper occlusion
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);

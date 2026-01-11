@@ -171,9 +171,6 @@ public abstract class AbstractGasPortTE extends AbstractTE
         return res;
     }
 
-    /**
-     * Internal draw for machine controller (bypasses side IO checks).
-     */
     public GasStack internalDrawGas(int amount, boolean doTransfer) {
         GasStack res = tank.draw(amount, doTransfer);
         if (res != null && res.amount > 0 && doTransfer) {
@@ -182,9 +179,6 @@ public abstract class AbstractGasPortTE extends AbstractTE
         return res;
     }
 
-    /**
-     * Internal receive for machine controller (bypasses side IO checks).
-     */
     public int internalReceiveGas(GasStack gasStack, boolean doTransfer) {
         int res = tank.receive(gasStack, doTransfer);
         if (res > 0 && doTransfer) {
@@ -211,7 +205,6 @@ public abstract class AbstractGasPortTE extends AbstractTE
     // ITubeConnection - allows Mekanism cables to connect
     @Override
     public boolean canTubeConnect(ForgeDirection side) {
-        // Allow connection on any side that has IO enabled
         return getSideIO(side) != EnumIO.NONE;
     }
 

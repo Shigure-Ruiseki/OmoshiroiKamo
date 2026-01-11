@@ -9,9 +9,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
 
-/**
- * Recipe input requirement for Essentia.
- */
 public class EssentiaInput implements IRecipeInput {
 
     private final String aspectTag;

@@ -10,14 +10,9 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
 
-/**
- * Recipe output for Vis.
- * JSON specifies Vis units, internally stored as centiVis (100 centivis = 1 vis).
- */
 public class VisOutput implements IRecipeOutput {
 
     private final String aspectTag;
-    // Amount in centiVis
     private final int amountCentiVis;
 
     public VisOutput(String aspectTag, int amountCentiVis) {
@@ -29,7 +24,6 @@ public class VisOutput implements IRecipeOutput {
         return aspectTag;
     }
 
-    // Amount in centiVis
     public int getAmount() {
         return amountCentiVis;
     }
@@ -70,10 +64,6 @@ public class VisOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
-    /**
-     * Create VisOutput from JSON.
-     * JSON "amount" is in centiVis.
-     */
     public static VisOutput fromJson(JsonObject json) {
         String aspectTag = json.get("vis")
             .getAsString();

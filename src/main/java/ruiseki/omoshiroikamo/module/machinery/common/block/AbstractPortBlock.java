@@ -19,8 +19,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T> implements IModularBlock {
 
-    // Render pass stored per-thread to stay thread-safe
-    // under multi-threaded chunk builds
     private static final ThreadLocal<Integer> RENDER_PASS = ThreadLocal.withInitial(() -> 0);
     public static IIcon baseIcon;
 

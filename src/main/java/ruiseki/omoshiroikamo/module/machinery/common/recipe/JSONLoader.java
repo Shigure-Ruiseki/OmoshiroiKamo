@@ -18,10 +18,6 @@ import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.OutputParserRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
-/**
- * Loads recipe definitions from JSON files.
- * Uses Registry pattern for extensible input/output parsing.
- */
 public class JSONLoader {
 
     /**
@@ -58,9 +54,6 @@ public class JSONLoader {
         return recipes;
     }
 
-    /**
-     * Load recipes from a single JSON file.
-     */
     public static List<ModularRecipe> loadRecipeFile(File file) throws IOException {
         List<ModularRecipe> recipes = new ArrayList<>();
 
@@ -84,13 +77,8 @@ public class JSONLoader {
         return recipes;
     }
 
-    /**
-     * Parse a single recipe from JSON.
-     */
     public static ModularRecipe parseRecipe(JsonObject json, String group) {
         try {
-            // TODO: name field for future use
-            // String name = json.has("name") ? json.get("name").getAsString() : null;
             int duration = json.get("duration")
                 .getAsInt();
             int priority = json.has("priority") ? json.get("priority")
@@ -101,7 +89,6 @@ public class JSONLoader {
                 .duration(duration)
                 .priority(priority);
 
-            // Parse inputs
             JsonArray inputs = json.getAsJsonArray("inputs");
             for (JsonElement inputElem : inputs) {
                 IRecipeInput input = InputParserRegistry.parse(inputElem.getAsJsonObject());
@@ -110,7 +97,6 @@ public class JSONLoader {
                 }
             }
 
-            // Parse outputs
             JsonArray outputs = json.getAsJsonArray("outputs");
             for (JsonElement outputElem : outputs) {
                 IRecipeOutput output = OutputParserRegistry.parse(outputElem.getAsJsonObject());

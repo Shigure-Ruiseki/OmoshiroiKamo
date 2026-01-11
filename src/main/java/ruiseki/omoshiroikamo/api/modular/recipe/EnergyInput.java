@@ -9,7 +9,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
 /**
- * Recipe input requirement for energy.
  * perTick=true: Energy consumed every tick during processing.
  * perTick=false: Energy consumed once at recipe start.
  */
@@ -68,9 +67,6 @@ public class EnergyInput implements IRecipeInput {
         return remaining <= 0;
     }
 
-    /**
-     * Create EnergyInput from JSON.
-     */
     public static EnergyInput fromJson(JsonObject json) {
         int amount = json.get("energy")
             .getAsInt();

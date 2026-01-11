@@ -81,9 +81,6 @@ public class TileVisBridge extends TileVisNode {
         }
     }
 
-    /**
-     * Absorb Vis from adjacent Vis Output Port in the configured direction.
-     */
     private void absorbFromOutputPort() {
         if (absorptionDirection == ForgeDirection.UNKNOWN) return;
 
@@ -173,9 +170,6 @@ public class TileVisBridge extends TileVisNode {
         nbt.setTag("storedVis", aspectList);
     }
 
-    /**
-     * Stagger work ticks to spread load across different TEs.
-     */
     protected boolean shouldDoWorkThisTick(int interval) {
         return shouldDoWorkThisTick(interval, 0);
     }
@@ -184,16 +178,10 @@ public class TileVisBridge extends TileVisNode {
         return (worldObj.getTotalWorldTime() + checkOffset + offset) % interval == 0;
     }
 
-    /**
-     * Check if player can access this tile entity.
-     */
     public boolean canPlayerAccess(EntityPlayer player) {
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
 
-    /**
-     * Called when a neighbor block changes.
-     */
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         neighborChanged = true;
     }
