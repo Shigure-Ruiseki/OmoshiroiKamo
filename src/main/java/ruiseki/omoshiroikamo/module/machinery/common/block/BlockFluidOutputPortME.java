@@ -112,6 +112,8 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
         @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             list.add("§7" + StatCollector.translateToLocal("tooltip.me_fluid_output.desc"));
+            list.add("§e" + StatCollector.translateToLocal("tooltip.me_output.wip"));
+            list.add("§c" + StatCollector.translateToLocal("tooltip.me_output.lag_warning"));
         }
     }
 }
