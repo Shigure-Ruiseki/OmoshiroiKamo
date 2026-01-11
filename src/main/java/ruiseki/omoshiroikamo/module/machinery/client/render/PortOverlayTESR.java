@@ -23,7 +23,7 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
     private static final float EPS = 0.001f;
     private static final double MAX_RENDER_DISTANCE_SQ = 64 * 64; // 64 blocks
 
-    // Vanilla side shading multipliers (applied by block renderer)
+    // Vanilla side shading multipliers
     private static final float[] SIDE_SHADING = { 0.5f, // DOWN (Y-)
         1.0f, // UP (Y+)
         0.8f, // NORTH (Z-)
@@ -78,30 +78,26 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
         bindTexture(TextureMap.locationBlocksTexture);
 
         Tessellator t = Tessellator.instance;
+        t.startDrawingQuads();
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             IIcon icon = icons[dir.ordinal()];
             if (icon == null) continue;
 
-            // Get adjacent block position
-            int adjacentX = bx + dir.offsetX;
-            int adjacentY = by + dir.offsetY;
-            int adjacentZ = bz + dir.offsetZ;
-            Block adjacentBlock = world.getBlock(adjacentX, adjacentY, adjacentZ);
+            // Get adjacent position
+            int ax = bx + dir.offsetX;
+            int ay = by + dir.offsetY;
+            int az = bz + dir.offsetZ;
 
-            // Skip rendering if adjacent block is opaque (face wouldn't be visible anyway)
-            if (adjacentBlock.isOpaqueCube()) {
-                continue;
-            }
+            // Skip if adjacent block is opaque
+            Block adjacentBlock = world.getBlock(ax, ay, az);
+            if (adjacentBlock.isOpaqueCube()) continue;
 
-            // Get brightness from adjacent block position
-            int brightness = world.getLightBrightnessForSkyBlocks(adjacentX, adjacentY, adjacentZ, 0);
-
-            // Render each face separately with correct brightness and side shading
-            t.startDrawingQuads();
+            // Set brightness for this face from adjacent block position
+            int brightness = world.getLightBrightnessForSkyBlocks(ax, ay, az, 0);
             t.setBrightness(brightness);
 
-            // Apply side shading to match vanilla block rendering
+            // Apply side shading
             float shade = SIDE_SHADING[dir.ordinal()];
             t.setColorOpaque_F(shade, shade, shade);
 
@@ -127,9 +123,9 @@ public class PortOverlayTESR extends TileEntitySpecialRenderer {
                 default:
                     break;
             }
-
-            t.draw();
         }
+
+        t.draw();
 
         GL11.glPopAttrib();
         GL11.glPopMatrix();
