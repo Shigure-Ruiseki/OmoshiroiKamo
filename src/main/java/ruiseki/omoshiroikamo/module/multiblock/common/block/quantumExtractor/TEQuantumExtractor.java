@@ -246,26 +246,9 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     @SideOnly(Side.CLIENT)
     public float getBeamProgress() {
         if (!getCachedPathClear()) {
-            beamProgress = 0f;
             return 0f;
         }
-
-        long now = this.worldObj.getTotalWorldTime();
-        int ticksPassed = (int) (now - this.lastBeamUpdateTick);
-        this.lastBeamUpdateTick = now;
-
-        if (ticksPassed > 1) {
-            beamProgress -= (float) ticksPassed / 40.0F;
-            if (beamProgress < 0f) {
-                beamProgress = 0f;
-            }
-        }
-
-        beamProgress += 0.025F;
-        if (beamProgress > 1.0F) {
-            beamProgress = 1.0F;
-        }
-        return beamProgress;
+        return 1.0F;
     }
 
     /**
@@ -295,7 +278,8 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return AxisAlignedBB.getBoundingBox(xCoord, 0, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+        return AxisAlignedBB
+            .getBoundingBox(xCoord, Double.NEGATIVE_INFINITY, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
     }
 
     /**

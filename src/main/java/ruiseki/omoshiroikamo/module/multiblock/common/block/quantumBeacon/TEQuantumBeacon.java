@@ -26,7 +26,7 @@ import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
+import ruiseki.omoshiroikamo.module.multiblock.client.render.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.handler.QuantumBeaconEventHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
@@ -372,33 +372,12 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         return worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord);
     }
 
-    /**
-     * Get the current beam progress for rendering.
-     * Only shows beam when formed, has energy, and can see sky.
-     */
     @SideOnly(Side.CLIENT)
     public float getBeamProgress() {
         if (!QuantumBeaconConfig.general.enableBeam || !isFormed() || !canSeeSky()) {
-            beamProgress = 0f;
             return 0f;
         }
-
-        long now = this.worldObj.getTotalWorldTime();
-        int ticksPassed = (int) (now - this.lastBeamUpdateTick);
-        this.lastBeamUpdateTick = now;
-
-        if (ticksPassed > 1) {
-            beamProgress -= (float) ticksPassed / 40.0F;
-            if (beamProgress < 0f) {
-                beamProgress = 0f;
-            }
-        }
-
-        beamProgress += 0.025F;
-        if (beamProgress > 1.0F) {
-            beamProgress = 1.0F;
-        }
-        return beamProgress;
+        return 1.0F;
     }
 
     /**
@@ -410,7 +389,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, 256, zCoord + 1);
+        return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, Double.POSITIVE_INFINITY, zCoord + 1);
     }
 
     /**
