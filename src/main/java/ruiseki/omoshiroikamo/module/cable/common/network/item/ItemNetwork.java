@@ -1,18 +1,18 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.energy;
+package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
-public class EnergyNetwork extends AbstractCableNetwork<IEnergyPart> {
+public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
 
-    public List<IEnergyPart> inputs;
-    public List<IEnergyPart> interfaces;
-    public List<IEnergyPart> outputs;
+    public List<IItemPart> inputs;
+    public List<IItemPart> interfaces;
+    public List<IItemPart> outputs;
 
-    public EnergyNetwork() {
-        super(IEnergyPart.class);
+    public ItemNetwork() {
+        super(IItemPart.class);
     }
 
     @Override
@@ -20,11 +20,16 @@ public class EnergyNetwork extends AbstractCableNetwork<IEnergyPart> {
         super.doNetworkTick();
 
         if (parts.isEmpty()) return;
-        interfaces = new ArrayList<>();
+
+        rebuildPartLists();
+    }
+
+    private void rebuildPartLists() {
         inputs = new ArrayList<>();
+        interfaces = new ArrayList<>();
         outputs = new ArrayList<>();
 
-        for (IEnergyPart part : parts) {
+        for (IItemPart part : parts) {
             switch (part.getIO()) {
                 case INPUT -> inputs.add(part);
                 case OUTPUT -> outputs.add(part);

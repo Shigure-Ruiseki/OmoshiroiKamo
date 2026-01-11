@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.output;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,13 +16,13 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import cofh.api.energy.IEnergyReceiver;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
@@ -64,25 +63,16 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         EnergyNetwork network = (EnergyNetwork) getNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
-        int limit = getTransferLimit();
+        EnergyTransfer transfer = new EnergyTransfer();
+        transfer.setMaxEnergyPerTransfer(getTransferLimit());
 
         for (IEnergyPart iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
-            if (limit <= 0) break;
 
-            int canPull = iFace.pullEnergy(limit, true);
-            if (canPull <= 0) continue;
-
-            int canPush = pushEnergy(canPull, true);
-            if (canPush <= 0) continue;
-
-            int pulled = iFace.pullEnergy(canPush, false);
-            if (pulled <= 0) continue;
-
-            pushEnergy(pulled, false);
-
-            limit -= pulled;
+            transfer.pull(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
+            transfer.transfer();
         }
+
     }
 
     @Override
@@ -174,19 +164,6 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public int pushEnergy(int amount, boolean simulate) {
-        TileEntity te = getTargetTE();
-        if (!(te instanceof IEnergyReceiver h)) return 0;
-
-        return h.receiveEnergy(side.getOpposite(), amount, simulate);
-    }
-
-    @Override
-    public int pullEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
-    @Override
     public int getTransferLimit() {
         return Integer.MAX_VALUE;
     }
@@ -201,25 +178,7 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         EnergyNetwork network = (EnergyNetwork) getNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return 0;
 
-        int remaining = Math.min(amount, getTransferLimit());
-        int extracted = 0;
-
-        for (IEnergyPart iFace : network.interfaces) {
-            if (iFace.getChannel() != this.getChannel()) continue;
-            if (remaining <= 0) break;
-
-            if (iFace == this) continue;
-
-            int canPull = iFace.pullEnergy(remaining, true);
-            if (canPull <= 0) continue;
-
-            int pulled = simulate ? canPull : iFace.pullEnergy(canPull, false);
-
-            extracted += pulled;
-            remaining -= pulled;
-        }
-
-        return extracted;
+        return 0;
     }
 
 }

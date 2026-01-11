@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.data;
+package ruiseki.omoshiroikamo.core.client.gui.data;
 
 import java.util.Objects;
 

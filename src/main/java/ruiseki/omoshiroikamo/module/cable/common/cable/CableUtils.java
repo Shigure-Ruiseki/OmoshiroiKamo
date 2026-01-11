@@ -72,8 +72,8 @@ public final class CableUtils {
 
         for (ICable cable : cluster.cables) {
             Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> nets = cable.getNetworks();
-            if (nets != null) {
-                for (AbstractCableNetwork<?> net : nets.values()) {
+            if (nets != null && !nets.isEmpty()) {
+                for (AbstractCableNetwork<?> net : new ArrayList<>(nets.values())) {
                     if (net != null && destroyed.add(net)) {
                         net.destroyNetwork();
                     }
@@ -86,6 +86,7 @@ public final class CableUtils {
         for (ICable cable : cluster.cables) {
             for (ICablePart part : cable.getParts()) {
                 Class<? extends ICablePart> type = part.getBasePartType();
+                if (type == null) continue;
 
                 AbstractCableNetwork<?> net = newNetworks.computeIfAbsent(type, CableNetworkRegistry::create);
 

@@ -41,11 +41,11 @@ import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
+import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.module.cable.client.gui.CableGuiFactories;
-import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
@@ -240,8 +240,8 @@ public class TECable extends AbstractTE
         parts.clear();
 
         // 2. Networks cleanup
-        if (networks != null) {
-            for (AbstractCableNetwork<?> net : networks.values()) {
+        if (networks != null && !networks.isEmpty()) {
+            for (AbstractCableNetwork<?> net : new ArrayList<>(networks.values())) {
                 net.destroyNetwork();
             }
             networks.clear();
@@ -286,9 +286,9 @@ public class TECable extends AbstractTE
             ICablePart part = getPart(hit.side);
 
             if (part != null) {
-                player.addChatMessage(new ChatComponentText("[Part]\n" + part));
+                player.addChatMessage(new ChatComponentText("[Part] " + part));
 
-                CableGuiFactories.tileEntity()
+                OKGuiFactories.tileEntity()
                     .open(player, x, y, z, hit.side);
             }
 
@@ -297,7 +297,7 @@ public class TECable extends AbstractTE
 
         for (AbstractCableNetwork<?> net : this.getNetworks()
             .values()) {
-            player.addChatMessage(new ChatComponentText("[Network]\n" + net));
+            player.addChatMessage(new ChatComponentText("[Network] " + net));
         }
 
         return true;

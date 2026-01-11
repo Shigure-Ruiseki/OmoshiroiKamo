@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.factory;
+package ruiseki.omoshiroikamo.core.client.gui.factory;
 
 import java.util.Objects;
 
@@ -14,14 +14,14 @@ import com.cleanroommc.modularui.factory.AbstractUIFactory;
 import com.cleanroommc.modularui.factory.GuiManager;
 import com.cleanroommc.modularui.network.NetworkUtils;
 
+import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.cable.client.gui.data.PosSideGuiData;
 
-public class TEPartUIFactory extends AbstractUIFactory<PosSideGuiData> {
+public class TESideFactory extends AbstractUIFactory<PosSideGuiData> {
 
-    public static final TEPartUIFactory INSTANCE = new TEPartUIFactory();
+    public static final TESideFactory INSTANCE = new TESideFactory();
 
-    private TEPartUIFactory() {
+    private TESideFactory() {
         super(LibResources.PREFIX_MOD + "cable_part_tile");
     }
 
