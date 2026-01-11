@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -14,20 +14,13 @@ import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.client.render.ItemPortRenderer;
-import ruiseki.omoshiroikamo.module.machinery.client.render.PortOverlayTESR;
+import ruiseki.omoshiroikamo.module.machinery.client.render.PortOverlayISBRH;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 
 /**
  * Client-side module for Machinery.
  * Handles renderers and other client-only features.
- * Texture rendering is handled via JSON models and GTNHLib JSON_ISBRH.
+ * Port overlays are rendered via ISBRH for optimal performance.
  */
 @SideOnly(Side.CLIENT)
 public class MachineryClient implements IModuleClient {
@@ -45,24 +38,19 @@ public class MachineryClient implements IModuleClient {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         Logger.info("MachineryClient: Pre-init complete");
-        // JSON models are automatically loaded by GTNHLib
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        var overlayTesr = new PortOverlayTESR();
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractEssentiaPortTE.class, overlayTesr);
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractEnergyIOPortTE.class, overlayTesr);
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractItemIOPortTE.class, overlayTesr);
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractFluidPortTE.class, overlayTesr);
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractGasPortTE.class, overlayTesr);
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractVisPortTE.class, overlayTesr);
-        ClientRegistry.bindTileEntitySpecialRenderer(AbstractManaPortTE.class, overlayTesr);
+        // Register ISBRH for port overlays (much faster than TESR)
+        AbstractPortBlock.portRendererId = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(PortOverlayISBRH.INSTANCE);
+        Logger.info("MachineryClient: Registered PortOverlayISBRH with ID " + AbstractPortBlock.portRendererId);
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-        // Post-initialization if needed
+        // Register item renderers for port blocks
         for (Object obj : Block.blockRegistry) {
             Block block = (Block) obj;
             if (block instanceof AbstractPortBlock<?>) {
