@@ -79,7 +79,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override
@@ -176,6 +176,36 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         return new FluidTankInfo[] { tank.getInfo() };
+    }
+
+    // ========== Internal Access for Machine Controller ==========
+
+    public FluidStack internalDrain(FluidStack resource, boolean doDrain) {
+        FluidStack res = tank.drain(resource, doDrain);
+        if (res != null && res.amount > 0 && doDrain) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    public FluidStack internalDrain(int maxDrain, boolean doDrain) {
+        FluidStack res = tank.drain(maxDrain, doDrain);
+        if (res != null && res.amount > 0 && doDrain) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    public int internalFill(FluidStack resource, boolean doFill) {
+        int res = tank.fill(resource, doFill);
+        if (res > 0 && doFill) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    public FluidStack getStoredFluid() {
+        return tank.getFluid();
     }
 
     @Override

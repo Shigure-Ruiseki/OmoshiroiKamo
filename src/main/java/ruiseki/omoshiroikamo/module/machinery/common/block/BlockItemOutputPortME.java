@@ -101,6 +101,8 @@ public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME>
         @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             list.add("§7" + StatCollector.translateToLocal("tooltip.me_output.desc"));
+            list.add("§e" + StatCollector.translateToLocal("tooltip.me_output.wip"));
+            list.add("§c" + StatCollector.translateToLocal("tooltip.me_output.lag_warning"));
         }
     }
 

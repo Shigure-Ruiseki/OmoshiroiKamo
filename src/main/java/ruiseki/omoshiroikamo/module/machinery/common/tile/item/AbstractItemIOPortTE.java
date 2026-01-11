@@ -70,7 +70,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override

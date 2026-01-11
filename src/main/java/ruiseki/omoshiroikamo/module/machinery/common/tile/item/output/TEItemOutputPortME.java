@@ -57,6 +57,13 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     private long tickCounter = 0;
     private boolean proxyReady = false;
 
+    // Cached item count for fast lookup (avoid iterating itemCache every tick)
+    private long cachedItemCount = 0;
+
+    // Tick interval for moveToCache to avoid scanning slots every tick
+    private static final int MOVE_TO_CACHE_INTERVAL = 5;
+    private long lastMoveToCacheTick = 0;
+
     // Client-synced status for Waila
     private boolean clientIsActive = false;
     private boolean clientIsPowered = false;
@@ -144,22 +151,19 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         for (int i = 0; i < getSizeInventory(); i++) {
             ItemStack stack = getStackInSlot(i);
             if (stack != null && stack.stackSize > 0) {
-                // Add to cache
-                itemCache.add(
-                    AEApi.instance()
-                        .storage()
-                        .createItemStack(stack.copy()));
+                // Add to cache and update count
+                IAEItemStack aeStack = AEApi.instance()
+                    .storage()
+                    .createItemStack(stack.copy());
+                itemCache.add(aeStack);
+                cachedItemCount += stack.stackSize;
                 setInventorySlotContents(i, null);
             }
         }
     }
 
     protected long getCachedAmount() {
-        long amount = 0;
-        for (IAEItemStack item : itemCache) {
-            amount += item.getStackSize();
-        }
-        return amount;
+        return cachedItemCount;
     }
 
     // ========== ME Network Transfer ==========
@@ -177,12 +181,15 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
             for (IAEItemStack s : itemCache) {
                 if (s.getStackSize() == 0) continue;
 
+                long before = s.getStackSize();
                 IAEItemStack rest = Platform.poweredInsert(proxy.getEnergy(), storage, s, getRequest());
 
                 if (rest != null && rest.getStackSize() > 0) {
+                    cachedItemCount -= (before - rest.getStackSize());
                     s.setStackSize(rest.getStackSize());
                     continue;
                 }
+                cachedItemCount -= before;
                 s.setStackSize(0);
             }
         } catch (final GridAccessException e) {
@@ -225,17 +232,20 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
 
     @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
-        tickCounter = worldObj.getTotalWorldTime();
+        // Only process every 10 ticks to reduce overhead
+        if (!shouldDoWorkThisTick(10)) {
+            return false;
+        }
 
-        // Step 1: Move items from physical slots to cache
+        // Move items from physical slots to cache
         moveToCache();
 
-        // Step 2: Flush cache to ME network periodically
-        if (tickCounter > lastOutputTick + 20 || getCachedAmount() >= CACHE_CAPACITY) {
+        // Flush cache to ME network if there are cached items
+        if (cachedItemCount > 0) {
             flushCachedStack();
         }
 
-        return false; // Don't call super - we don't push to adjacent blocks
+        return false;
     }
 
     // ========== NBT Handling ==========
@@ -244,22 +254,24 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
 
-        // Sync ME status to client (for Waila)
-        AENetworkProxy proxy = getProxy();
-        root.setBoolean("meActive", proxy != null && proxy.isActive());
-        root.setBoolean("mePowered", proxy != null && proxy.isPowered());
+        // Sync ME status to client (for Waila) - use cached values to avoid AE2 calls
+        // These are updated in processTasks, not here
+        root.setBoolean("meActive", proxyReady);
+        root.setBoolean("mePowered", proxyReady);
 
-        // Save cached items
-        NBTTagList items = new NBTTagList();
-        for (IAEItemStack s : itemCache) {
-            if (s.getStackSize() == 0) continue;
-            NBTTagCompound tag = new NBTTagCompound();
-            s.getItemStack()
-                .writeToNBT(tag);
-            tag.setLong("count", s.getStackSize());
-            items.appendTag(tag);
+        // Only save cached items that have content
+        if (cachedItemCount > 0) {
+            NBTTagList items = new NBTTagList();
+            for (IAEItemStack s : itemCache) {
+                if (s.getStackSize() == 0) continue;
+                NBTTagCompound tag = new NBTTagCompound();
+                s.getItemStack()
+                    .writeToNBT(tag);
+                tag.setLong("count", s.getStackSize());
+                items.appendTag(tag);
+            }
+            root.setTag("cachedItems", items);
         }
-        root.setTag("cachedItems", items);
 
         // Save proxy state
         if (gridProxy != null) {

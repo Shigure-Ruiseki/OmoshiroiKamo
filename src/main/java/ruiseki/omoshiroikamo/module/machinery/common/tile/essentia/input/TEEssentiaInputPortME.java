@@ -167,12 +167,20 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
+    public IIcon getOverlayIcon(ForgeDirection side) {
+        if (getSideIO(side) == EnumIO.NONE) {
+            return IconRegistry.getIcon("overlay_port_disabled");
+        }
+        return IconRegistry.getIcon("overlay_essentiainput_me");
+    }
+
+    @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) != EnumIO.NONE) {
-            return IconRegistry.getIcon("overlay_essentiainput_me");
+        if (renderPass == 1) {
+            return getOverlayIcon(side);
         }
         return AbstractPortBlock.baseIcon;
     }

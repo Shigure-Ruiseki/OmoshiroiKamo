@@ -82,6 +82,9 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> i
         IconRegistry.addIcon(
             "overlay_fluidoutput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidoutput_6"));
+        IconRegistry.addIcon(
+            "overlay_fluidoutput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

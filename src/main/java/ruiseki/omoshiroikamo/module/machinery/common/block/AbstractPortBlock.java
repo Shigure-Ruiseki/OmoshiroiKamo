@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
-import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
@@ -19,23 +18,25 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T> implements IModularBlock {
 
-    public int renderPass;
+    /** Render ID for ISBRH, set during client init */
+    public static int portRendererId = -1;
+
     public static IIcon baseIcon;
 
     @SafeVarargs
     protected AbstractPortBlock(String name, Class<? extends TileEntity>... teClasses) {
         super(name, teClasses);
+        this.useNeighborBrightness = true;
     }
 
     @Override
-    public int getRenderBlockPass() {
-        return 1;
+    public int getRenderType() {
+        return portRendererId;
     }
 
     @Override
-    public boolean canRenderInPass(int pass) {
-        renderPass = pass;
-        return pass < 2;
+    public boolean renderAsNormalBlock() {
+        return false;
     }
 
     @Override
@@ -55,11 +56,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (renderPass == 1 && tile instanceof ISidedTexture sided) {
-            return sided.getTexture(ForgeDirection.getOrientation(side), renderPass);
-        }
-
+        // Always return base icon - overlays are rendered by ISBRH
         return baseIcon;
     }
 

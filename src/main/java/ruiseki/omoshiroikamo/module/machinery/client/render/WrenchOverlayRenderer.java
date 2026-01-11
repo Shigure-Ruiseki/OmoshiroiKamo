@@ -72,7 +72,7 @@ public class WrenchOverlayRenderer {
 
         float min = 0f;
         float max = 1f;
-        float o = 0.002f;
+        float o = 0.005f;
 
         switch (side) {
             case UP -> {
@@ -130,7 +130,7 @@ public class WrenchOverlayRenderer {
 
         float min = 0.15f;
         float max = 0.85f;
-        float o = 0.002f;
+        float o = 0.005f;
 
         t.startDrawing(GL11.GL_LINE_LOOP);
 
@@ -184,7 +184,7 @@ public class WrenchOverlayRenderer {
         GL11.glLineWidth(2.5f);
         GL11.glColor4f(1f, 1f, 1f, 1f);
 
-        float o = 0.002f;
+        float o = 0.005f;
 
         t.startDrawing(GL11.GL_LINES);
 

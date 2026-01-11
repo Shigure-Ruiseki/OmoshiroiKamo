@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -8,12 +9,12 @@ import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 import thaumcraft.api.aspects.IAspectSource;
 import thaumcraft.api.aspects.IEssentiaTransport;
 
 /**
- * Essentia Output Port - provides Essentia to Infusion Altar and Essentia
- * Tubes.
+ * Provides Essentia to Infusion Altar and Essentia Tubes.
  * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
  * for Tubes.
  *
@@ -41,7 +42,59 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
 
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
-        // Output port is passive - essentia is pulled by other devices
+        if (worldObj.isRemote) return false;
+        if (!shouldDoWorkThisTick(10)) return false;
+        if (getTotalEssentiaAmount() <= 0) return false;
+
+        // Try to push essentia to adjacent blocks
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (getTotalEssentiaAmount() <= 0) break;
+
+            int nx = xCoord + dir.offsetX;
+            int ny = yCoord + dir.offsetY;
+            int nz = zCoord + dir.offsetZ;
+            TileEntity te = worldObj.getTileEntity(nx, ny, nz);
+            if (te == null) continue;
+
+            // Try IEssentiaTransport first (tubes, jars)
+            if (te instanceof IEssentiaTransport) {
+                IEssentiaTransport target = (IEssentiaTransport) te;
+                ForgeDirection opposite = dir.getOpposite();
+
+                if (!target.canInputFrom(opposite)) continue;
+
+                // Active push - push any aspect we have
+                for (Aspect aspect : aspects.getAspects()) {
+                    if (aspect == null) continue;
+                    int available = aspects.getAmount(aspect);
+                    if (available <= 0) continue;
+
+                    int pushed = target.addEssentia(aspect, 1, opposite);
+                    if (pushed > 0) {
+                        takeFromContainer(aspect, pushed);
+                        return true; // Did work
+                    }
+                }
+            }
+            // Try IAspectContainer (jars, etc.)
+            else if (te instanceof IAspectContainer) {
+                IAspectContainer container = (IAspectContainer) te;
+
+                for (Aspect aspect : aspects.getAspects()) {
+                    if (aspect == null) continue;
+                    int available = aspects.getAmount(aspect);
+                    if (available <= 0) continue;
+
+                    if (container.doesContainerAccept(aspect)) {
+                        int leftover = container.addToContainer(aspect, 1);
+                        if (leftover == 0) {
+                            takeFromContainer(aspect, 1);
+                            return true; // Did work
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -121,12 +174,20 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
     }
 
     @Override
+    public IIcon getOverlayIcon(ForgeDirection side) {
+        if (getSideIO(side) == EnumIO.NONE) {
+            return IconRegistry.getIcon("overlay_port_disabled");
+        }
+        return IconRegistry.getIcon("overlay_essentiaoutput_" + getTier());
+    }
+
+    @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
-        if (renderPass == 1 && getSideIO(side) != EnumIO.NONE) {
-            return IconRegistry.getIcon("overlay_essentiaoutput_" + getTier());
+        if (renderPass == 1) {
+            return getOverlayIcon(side);
         }
         return AbstractPortBlock.baseIcon;
     }

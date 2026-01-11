@@ -181,6 +181,7 @@ public enum MachineryBlocks {
                 .create();
             ESSENTIA_OUTPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort
                 .create();
+            ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisBridge.create();
         }
     }
 

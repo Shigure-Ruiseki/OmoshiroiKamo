@@ -29,6 +29,12 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
         setTextureName("modularmachineryOverlay/base_modularports");
     }
 
+    @Override
+    public boolean canRenderInPass(int pass) {
+        super.canRenderInPass(pass); // keep render-pass thread local in sync
+        return pass == 0; // suppress block render pass 1; TESR handles overlay
+    }
+
     public static BlockEssentiaInputPort create() {
         return new BlockEssentiaInputPort();
     }
@@ -38,6 +44,8 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
         IconRegistry.addIcon(
             "overlay_essentiainput_1",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_essentiainput_1"));
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override
