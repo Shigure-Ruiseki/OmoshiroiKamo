@@ -53,7 +53,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     @Getter
     @Setter
-    public boolean useIC2Compat = false;
+    public boolean useIC2Compat = true;
 
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
@@ -132,6 +132,56 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
         useIC2Compat = root.getBoolean("useIC2");
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public void doUpdate() {
+        if (!ic2Registered && useIC2Compat && EnergyConfig.ic2Capability) {
+            register();
+        } else if (ic2Registered && !useIC2Compat) {
+            deregister();
+        }
+
+        if (worldObj.isRemote) {
+            updateEntityClient();
+            return;
+        }
+
+        boolean requiresClientSync = forceClientUpdate;
+        boolean prevRedCheck = redstoneCheckPassed;
+
+        if (redstoneStateDirty) {
+            redstoneCheckPassed = RedstoneMode.isActive(redstoneMode, redstonePowered);
+            redstoneStateDirty = false;
+        }
+
+        requiresClientSync |= prevRedCheck != isRedstoneActive();
+        requiresClientSync |= processTasks(redstoneCheckPassed);
+
+        if (requiresClientSync) {
+            requestRenderUpdate();
+            markDirty();
+        }
+
+        if (notifyNeighbours) {
+            worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+            notifyNeighbours = false;
+        }
+    }
+
+    @Override
+    public void onChunkUnload() {
+        if (useIC2Compat) {
+            deregister();
+        }
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (useIC2Compat) {
+            deregister();
         }
     }
 
