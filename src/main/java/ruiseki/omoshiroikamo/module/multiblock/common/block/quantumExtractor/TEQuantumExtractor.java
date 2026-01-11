@@ -34,7 +34,7 @@ import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
+import ruiseki.omoshiroikamo.module.multiblock.client.render.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT1;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.TEQuantumOreExtractorT4;

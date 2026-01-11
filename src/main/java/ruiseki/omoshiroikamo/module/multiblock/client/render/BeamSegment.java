@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.multiblock.common.block;
+package ruiseki.omoshiroikamo.module.multiblock.client.render;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

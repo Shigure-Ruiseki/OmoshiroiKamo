@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.module.multiblock.common.block.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.TEQuantumBeacon;
 
 /**
