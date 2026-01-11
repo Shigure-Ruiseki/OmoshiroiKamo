@@ -125,7 +125,7 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override

@@ -202,6 +202,9 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
             worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
             notifyNeighbours = false;
         }
+
+        // Process throttled render updates
+        processRenderUpdates();
     }
 
     /**
@@ -262,14 +265,44 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
         writeToItemStack(stack);
     }
 
+    /** Cooldown for render updates to prevent excessive chunk rebuilds */
+    private int renderUpdateCooldown = 0;
+    private static final int RENDER_UPDATE_INTERVAL = 20; // Only update every 20 ticks
+    private boolean pendingRenderUpdate = false;
+
     public void requestClientSync() {
         if (worldObj.isRemote) return;
         requestRenderUpdate();
         forceClientUpdate = true;
     }
 
+    /**
+     * Request a render update with throttling to prevent excessive chunk rebuilds.
+     * Updates are limited to once every RENDER_UPDATE_INTERVAL ticks.
+     */
     public void requestRenderUpdate() {
+        pendingRenderUpdate = true;
+    }
+
+    public void forceRenderUpdate() {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        pendingRenderUpdate = false;
+        renderUpdateCooldown = RENDER_UPDATE_INTERVAL;
+    }
+
+    /**
+     * Called during doUpdate to process pending render updates.
+     * Should be called from subclass doUpdate() implementations.
+     */
+    protected void processRenderUpdates() {
+        if (renderUpdateCooldown > 0) {
+            renderUpdateCooldown--;
+        }
+        if (pendingRenderUpdate && renderUpdateCooldown <= 0) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            pendingRenderUpdate = false;
+            renderUpdateCooldown = RENDER_UPDATE_INTERVAL;
+        }
     }
 
     public void openGui(EntityPlayer player) {

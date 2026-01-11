@@ -111,7 +111,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override

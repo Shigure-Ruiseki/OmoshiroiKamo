@@ -79,7 +79,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override

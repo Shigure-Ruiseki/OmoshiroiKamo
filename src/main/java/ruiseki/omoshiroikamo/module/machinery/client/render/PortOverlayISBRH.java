@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 
 /**
  * ISBRH for rendering port overlays.
- * Much more efficient than TESR as it only renders when chunk is rebuilt.
+ * Optimized for performance - only renders when chunk is rebuilt.
  */
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = false)
@@ -30,15 +30,6 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
     public static final PortOverlayISBRH INSTANCE = new PortOverlayISBRH();
 
     private static final float EPS = 0.003f;
-
-    // Vanilla side shading multipliers
-    private static final float[] SIDE_SHADING = { 0.5f, // DOWN (Y-)
-        1.0f, // UP (Y+)
-        0.8f, // NORTH (Z-)
-        0.8f, // SOUTH (Z+)
-        0.6f, // WEST (X-)
-        0.6f // EAST (X+)
-    };
 
     private PortOverlayISBRH() {}
 
@@ -53,8 +44,15 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 
+        // Enable proper lighting for inventory
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_LIGHT1);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+
         tess.startDrawingQuads();
-        // Render base cube
+        tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
+        tess.setNormal(0.0F, 1.0F, 0.0F);
         ruiseki.omoshiroikamo.core.common.util.RenderUtils.renderCube(tess, 0, 0, 0, 1, 1, 1, baseIcon);
         tess.draw();
 
@@ -65,98 +63,104 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
 
-        // 1. Render base block using standard rendering
+        // Render base block
         renderer.renderStandardBlock(block, x, y, z);
 
-        // 2. Render overlay from tile entity
+        // Get tile entity for overlay textures
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof ISidedTexture sided)) {
             return true;
         }
 
+        // Pre-calculate brightness once from block position (optimization)
+        int baseBrightness = block.getMixedBrightnessForBlock(world, x, y, z);
+
         Tessellator t = Tessellator.instance;
 
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+        // Render overlays for each direction
+        for (int i = 0; i < 6; i++) {
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
             IIcon icon = sided.getTexture(dir, 1);
             if (icon == null) continue;
 
-            // Get adjacent position
+            // Check if adjacent block is opaque
             int ax = x + dir.offsetX;
             int ay = y + dir.offsetY;
             int az = z + dir.offsetZ;
+            if (world.getBlock(ax, ay, az)
+                .isOpaqueCube()) continue;
 
-            // Skip if adjacent block is opaque
-            Block adjacentBlock = world.getBlock(ax, ay, az);
-            if (adjacentBlock.isOpaqueCube()) continue;
+            // Set brightness and color
+            t.setBrightness(baseBrightness);
 
-            // Get brightness from adjacent block position
-            int brightness = block.getMixedBrightnessForBlock(world, ax, ay, az);
-            t.setBrightness(brightness);
-
-            // Apply side shading
-            float shade = SIDE_SHADING[dir.ordinal()];
+            // Inline side shading for performance
+            float shade;
+            switch (i) {
+                case 0:
+                    shade = 0.5f;
+                    break; // DOWN
+                case 1:
+                    shade = 1.0f;
+                    break; // UP
+                case 2:
+                case 3:
+                    shade = 0.8f;
+                    break; // NORTH/SOUTH
+                default:
+                    shade = 0.6f;
+                    break; // WEST/EAST
+            }
             t.setColorOpaque_F(shade, shade, shade);
 
-            // Render overlay face with slight offset to prevent z-fighting
-            renderOverlayFace(t, x, y, z, dir, icon);
+            // Inline face rendering for performance
+            float u0 = icon.getMinU();
+            float u1 = icon.getMaxU();
+            float v0 = icon.getMinV();
+            float v1 = icon.getMaxV();
+
+            switch (dir) {
+                case DOWN:
+                    t.addVertexWithUV(x, y - EPS, z, u0, v0);
+                    t.addVertexWithUV(x + 1, y - EPS, z, u1, v0);
+                    t.addVertexWithUV(x + 1, y - EPS, z + 1, u1, v1);
+                    t.addVertexWithUV(x, y - EPS, z + 1, u0, v1);
+                    break;
+                case UP:
+                    t.addVertexWithUV(x, y + 1 + EPS, z + 1, u0, v1);
+                    t.addVertexWithUV(x + 1, y + 1 + EPS, z + 1, u1, v1);
+                    t.addVertexWithUV(x + 1, y + 1 + EPS, z, u1, v0);
+                    t.addVertexWithUV(x, y + 1 + EPS, z, u0, v0);
+                    break;
+                case NORTH:
+                    t.addVertexWithUV(x + 1, y, z - EPS, u1, v1);
+                    t.addVertexWithUV(x, y, z - EPS, u0, v1);
+                    t.addVertexWithUV(x, y + 1, z - EPS, u0, v0);
+                    t.addVertexWithUV(x + 1, y + 1, z - EPS, u1, v0);
+                    break;
+                case SOUTH:
+                    t.addVertexWithUV(x, y, z + 1 + EPS, u0, v1);
+                    t.addVertexWithUV(x + 1, y, z + 1 + EPS, u1, v1);
+                    t.addVertexWithUV(x + 1, y + 1, z + 1 + EPS, u1, v0);
+                    t.addVertexWithUV(x, y + 1, z + 1 + EPS, u0, v0);
+                    break;
+                case WEST:
+                    t.addVertexWithUV(x - EPS, y, z, u0, v1);
+                    t.addVertexWithUV(x - EPS, y, z + 1, u1, v1);
+                    t.addVertexWithUV(x - EPS, y + 1, z + 1, u1, v0);
+                    t.addVertexWithUV(x - EPS, y + 1, z, u0, v0);
+                    break;
+                case EAST:
+                    t.addVertexWithUV(x + 1 + EPS, y, z + 1, u1, v1);
+                    t.addVertexWithUV(x + 1 + EPS, y, z, u0, v1);
+                    t.addVertexWithUV(x + 1 + EPS, y + 1, z, u0, v0);
+                    t.addVertexWithUV(x + 1 + EPS, y + 1, z + 1, u1, v0);
+                    break;
+                default:
+                    break;
+            }
         }
 
         return true;
-    }
-
-    private void renderOverlayFace(Tessellator t, int x, int y, int z, ForgeDirection dir, IIcon icon) {
-        float u0 = icon.getMinU();
-        float u1 = icon.getMaxU();
-        float v0 = icon.getMinV();
-        float v1 = icon.getMaxV();
-
-        float minX = x;
-        float minY = y;
-        float minZ = z;
-        float maxX = x + 1;
-        float maxY = y + 1;
-        float maxZ = z + 1;
-
-        switch (dir) {
-            case DOWN:
-                t.addVertexWithUV(minX, minY - EPS, minZ, u0, v0);
-                t.addVertexWithUV(maxX, minY - EPS, minZ, u1, v0);
-                t.addVertexWithUV(maxX, minY - EPS, maxZ, u1, v1);
-                t.addVertexWithUV(minX, minY - EPS, maxZ, u0, v1);
-                break;
-            case UP:
-                t.addVertexWithUV(minX, maxY + EPS, maxZ, u0, v1);
-                t.addVertexWithUV(maxX, maxY + EPS, maxZ, u1, v1);
-                t.addVertexWithUV(maxX, maxY + EPS, minZ, u1, v0);
-                t.addVertexWithUV(minX, maxY + EPS, minZ, u0, v0);
-                break;
-            case NORTH:
-                t.addVertexWithUV(maxX, minY, minZ - EPS, u1, v1);
-                t.addVertexWithUV(minX, minY, minZ - EPS, u0, v1);
-                t.addVertexWithUV(minX, maxY, minZ - EPS, u0, v0);
-                t.addVertexWithUV(maxX, maxY, minZ - EPS, u1, v0);
-                break;
-            case SOUTH:
-                t.addVertexWithUV(minX, minY, maxZ + EPS, u0, v1);
-                t.addVertexWithUV(maxX, minY, maxZ + EPS, u1, v1);
-                t.addVertexWithUV(maxX, maxY, maxZ + EPS, u1, v0);
-                t.addVertexWithUV(minX, maxY, maxZ + EPS, u0, v0);
-                break;
-            case WEST:
-                t.addVertexWithUV(minX - EPS, minY, minZ, u0, v1);
-                t.addVertexWithUV(minX - EPS, minY, maxZ, u1, v1);
-                t.addVertexWithUV(minX - EPS, maxY, maxZ, u1, v0);
-                t.addVertexWithUV(minX - EPS, maxY, minZ, u0, v0);
-                break;
-            case EAST:
-                t.addVertexWithUV(maxX + EPS, minY, maxZ, u1, v1);
-                t.addVertexWithUV(maxX + EPS, minY, minZ, u0, v1);
-                t.addVertexWithUV(maxX + EPS, maxY, minZ, u0, v0);
-                t.addVertexWithUV(maxX + EPS, maxY, maxZ, u1, v0);
-                break;
-            default:
-                break;
-        }
     }
 
     @Override

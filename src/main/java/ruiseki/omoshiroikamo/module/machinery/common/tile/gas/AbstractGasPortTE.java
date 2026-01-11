@@ -91,7 +91,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
             return;
         }
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override

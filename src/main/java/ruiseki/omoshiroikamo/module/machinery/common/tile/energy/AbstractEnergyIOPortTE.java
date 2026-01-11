@@ -102,7 +102,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override
@@ -168,6 +168,9 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
             worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
             notifyNeighbours = false;
         }
+
+        // Process throttled render updates
+        processRenderUpdates();
     }
 
     @Override
