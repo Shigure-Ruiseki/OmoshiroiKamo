@@ -3,25 +3,30 @@ package ruiseki.omoshiroikamo.module.cable.common.network.item;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientItemDatabase {
+public class ItemIndexClient {
 
-    public static final ClientItemDatabase INSTANCE = new ClientItemDatabase();
-    public Map<ItemKey, Long> db = new HashMap<>();
+    public static final ItemIndexClient INSTANCE = new ItemIndexClient();
 
-    public void update(Map<ItemKey, Long> newDB) {
+    public Map<ItemStackKey, Integer> db = new HashMap<>();
+    private int version = 0;
+
+    public void update(Map<ItemStackKey, Integer> newDB) {
         db.clear();
         db.putAll(newDB);
+        version++;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("ClientItemDatabase{\n");
 
-        for (Map.Entry<ItemKey, Long> e : db.entrySet()) {
+        for (var e : db.entrySet()) {
             sb.append("  ")
-                .append(
-                    e.getKey()
-                        .toString())
+                .append(e.getKey())
                 .append(" x")
                 .append(e.getValue())
                 .append("\n");
@@ -30,5 +35,4 @@ public class ClientItemDatabase {
         sb.append("}");
         return sb.toString();
     }
-
 }

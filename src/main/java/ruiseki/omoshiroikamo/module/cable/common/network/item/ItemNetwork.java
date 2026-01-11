@@ -9,7 +9,9 @@ import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
 
-    private final Map<ItemKey, Long> itemDB = new HashMap<>();
+    private final ItemIndex index = new ItemIndex();
+    private int indexVersion = 0;
+    private boolean dirty = true;
 
     public List<IItemPart> inputs;
     public List<IItemPart> interfaces;
@@ -26,7 +28,10 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         if (parts.isEmpty()) return;
 
         rebuildPartLists();
-        rebuildDatabase();
+
+        if (dirty) {
+            rebuildIndex();
+        }
     }
 
     private void rebuildPartLists() {
@@ -47,16 +52,32 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         outputs.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
     }
 
-    private void rebuildDatabase() {
-        itemDB.clear();
-
-        for (IItemPart part : interfaces) {
-            if (part instanceof IQueries queries)
-                queries.collectItems(itemDB);
-        }
+    public void markDirty() {
+        dirty = true;
     }
 
-    public Map<ItemKey, Long> getItemDB() {
-        return itemDB;
+    private void rebuildIndex() {
+        index.clear();
+
+        for (IItemPart part : parts) {
+            if (part instanceof IItemQueryable q) {
+                q.collectItems(index);
+            }
+        }
+
+        indexVersion++;
+        dirty = false;
+    }
+
+    public int getIndexVersion() {
+        return indexVersion;
+    }
+
+    public Map<ItemStackKey, Integer> getItemIndexView() {
+        return index.view();
+    }
+
+    public Map<ItemStackKey, Integer> getItemIndexSnapshot() {
+        return index.snapshot();
     }
 }

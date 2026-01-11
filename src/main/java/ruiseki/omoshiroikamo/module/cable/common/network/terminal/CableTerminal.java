@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
-import net.minecraft.entity.player.EntityPlayerMP;
+import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -14,15 +15,16 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
+import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ClientItemDatabase;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.PacketItemDataBase;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.PacketItemIndex;
 
 public class CableTerminal extends AbstractPart {
 
@@ -43,11 +45,46 @@ public class CableTerminal extends AbstractPart {
 
     @Override
     public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager sync, UISettings settings) {
-        if (getItemNetwork() != null) {
-            PacketHandler.sendTo(new PacketItemDataBase(getItemNetwork().getItemDB()), (EntityPlayerMP) data.getPlayer());
+        ItemNetwork net = getItemNetwork();
+        if (net != null) {
+            PacketHandler.INSTANCE.sendToAll(
+                new PacketItemIndex(net.getItemIndexSnapshot())
+            );
         }
-        Logger.info(ClientItemDatabase.INSTANCE.toString());
-        return new ModularPanel("cable_terminal");
+
+        ModularPanel panel = new ModularPanel("cable_terminal");
+        buildItemGrid(panel, ItemIndexClient.INSTANCE.db);
+        return panel;
+    }
+
+
+    private void buildItemGrid(ModularPanel panel, Map<ItemStackKey, Integer> db) {
+        panel.removeAll();
+
+        int columns = 9;
+        int slotSize = 18;
+        int padding = 2;
+
+        int index = 0;
+        for (var e : db.entrySet()) {
+            ItemStackKey key = e.getKey();
+            int amount = e.getValue();
+
+            ItemStack stack = key.toStack(amount);
+
+            int col = index % columns;
+            int row = index / columns;
+
+            panel.child(
+                new ItemStackDrawable()
+                    .setItem(stack)
+                    .asWidget()
+                    .pos(col * (slotSize + padding), row * (slotSize + padding))
+                    .size(slotSize, slotSize)
+            );
+
+            index++;
+        }
     }
 
     @Override

@@ -1,7 +1,12 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
+import java.util.Map;
+
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -25,18 +30,19 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.IQueries;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
-import java.util.Map;
-
-public class ItemInterfaceBus extends AbstractPart implements IItemPart, IQueries {
+public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
 
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
+
+    private int lastHash = 0;
 
     @Override
     public String getId() {
@@ -59,7 +65,16 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IQuerie
     }
 
     @Override
-    public void doUpdate() {}
+    public void doUpdate() {
+        if (cable.getWorld()
+            .getTotalWorldTime() % 20 != 0) return;
+
+        int hash = calcInventoryHash();
+        if (hash != lastHash) {
+            lastHash = hash;
+            markNetworkDirty();
+        }
+    }
 
     @Override
     public void onChunkUnload() {
@@ -71,16 +86,66 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IQuerie
         return CableItems.ITEM_INTERFACE_BUS.newItemStack();
     }
 
-    public void collectItems(Map<ItemKey, Long> db) {
+    private int calcInventoryHash() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return 0;
+
+        int hash = 1;
+        int[] slots = getAccessibleSlots(inv);
+
+        for (int slot : slots) {
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s != null) {
+                hash = 31 * hash + Item.getIdFromItem(s.getItem());
+                hash = 31 * hash + s.getItemDamage();
+                if (s.hasTagCompound()) {
+                    hash = 31 * hash + s.getTagCompound()
+                        .hashCode();
+                }
+            }
+        }
+        return hash;
+    }
+
+
+    private int[] getAccessibleSlots(IInventory inv) {
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
+        }
+
+        int size = inv.getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) slots[i] = i;
+        return slots;
+    }
+
+    private ItemStack copyIdentity(ItemStack src) {
+        ItemStack copy = new ItemStack(src.getItem(), src.stackSize, src.getItemDamage());
+        if (src.hasTagCompound()) {
+            copy.setTagCompound(
+                (NBTTagCompound) src.getTagCompound()
+                    .copy());
+        }
+        return copy;
+    }
+
+    private void markNetworkDirty() {
+        ItemNetwork net = (ItemNetwork) getNetwork();
+        if (net != null) net.markDirty();
+    }
+
+    @Override
+    public void collectItems(ItemIndex index) {
         TileEntity te = getTargetTE();
         if (!(te instanceof IInventory inv)) return;
 
-        for (int i = 0; i < inv.getSizeInventory(); i++) {
-            ItemStack stack = inv.getStackInSlot(i);
-            if (stack == null || stack.stackSize <= 0) continue;
+        int[] slots = getAccessibleSlots(inv);
 
-            ItemKey key = new ItemKey(stack);
-            db.merge(key, (long) stack.stackSize, Long::sum);
+        for (int slot : slots) {
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s != null && s.stackSize > 0) {
+                index.add(s);
+            }
         }
     }
 

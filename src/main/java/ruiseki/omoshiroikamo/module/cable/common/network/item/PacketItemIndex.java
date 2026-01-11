@@ -13,24 +13,27 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 
-public class PacketItemDataBase implements IMessage, IMessageHandler<PacketItemDataBase, IMessage> {
+public class PacketItemIndex implements IMessage, IMessageHandler<PacketItemIndex, IMessage> {
 
-    public Map<ItemKey, Long> db = new HashMap<>();
+    private Map<ItemStackKey, Integer> items = new HashMap<>();
 
-    public PacketItemDataBase() {}
+    public PacketItemIndex() {}
 
-    public PacketItemDataBase(Map<ItemKey, Long> db) {
-        this.db.putAll(db);
+    public PacketItemIndex(Map<ItemStackKey, Integer> snapshot) {
+        this.items.putAll(snapshot);
     }
 
+    // ---------- encode ----------
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(db.size());
-        for (var e : db.entrySet()) {
-            ItemKey k = e.getKey();
+        buf.writeInt(items.size());
+
+        for (var e : items.entrySet()) {
+            ItemStackKey k = e.getKey();
+
             buf.writeInt(Item.getIdFromItem(k.item));
             buf.writeInt(k.meta);
-            buf.writeLong(e.getValue());
+            buf.writeInt(e.getValue());
 
             buf.writeBoolean(k.tag != null);
             if (k.tag != null) {
@@ -39,15 +42,16 @@ public class PacketItemDataBase implements IMessage, IMessageHandler<PacketItemD
         }
     }
 
+    // ---------- decode ----------
     @Override
     public void fromBytes(ByteBuf buf) {
-        db.clear();
+        items.clear();
         int size = buf.readInt();
 
         for (int i = 0; i < size; i++) {
             Item item = Item.getItemById(buf.readInt());
             int meta = buf.readInt();
-            long amount = buf.readLong();
+            int amount = buf.readInt();
 
             NBTTagCompound tag = null;
             if (buf.readBoolean()) {
@@ -55,15 +59,16 @@ public class PacketItemDataBase implements IMessage, IMessageHandler<PacketItemD
             }
 
             ItemStack stack = new ItemStack(item, 1, meta);
-            stack.setTagCompound(tag);
+            if (tag != null) stack.setTagCompound(tag);
 
-            db.put(new ItemKey(stack), amount);
+            items.put(ItemStackKey.of(stack), amount);
         }
     }
 
+    // ---------- handle ----------
     @Override
-    public IMessage onMessage(PacketItemDataBase message, MessageContext ctx) {
-        ClientItemDatabase.INSTANCE.update(message.db);
+    public IMessage onMessage(PacketItemIndex message, MessageContext ctx) {
+        ItemIndexClient.INSTANCE.update(message.items);
         return null;
     }
 }
