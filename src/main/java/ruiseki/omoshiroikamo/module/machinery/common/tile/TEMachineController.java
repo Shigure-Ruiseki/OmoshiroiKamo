@@ -150,8 +150,14 @@ public class TEMachineController extends AbstractMBModifierTE {
     // TODO: These methods are inherited from AbstractMBModifierTE but unused
     // Consider removing or refactoring the parent class.
 
+    // Field to store validation error message
+    private String lastValidationError = "";
+
     @Override
     protected boolean structureCheck(String piece, int ox, int oy, int oz) {
+        // Clear previous error
+        lastValidationError = "";
+
         boolean valid = super.structureCheck(piece, ox, oy, oz);
 
         if (valid && isFormed) {
@@ -160,6 +166,14 @@ public class TEMachineController extends AbstractMBModifierTE {
                 isFormed = false;
                 clearStructureParts();
                 return false;
+            }
+        } else if (!valid) {
+            // If super check failed, we don't know exactly why (StructureLib doesn't tell
+            // us easily),
+            // but usually it means blocks don't match.
+            // We could try to give a hint if custom structure is set.
+            if (customStructureName != null) {
+                lastValidationError = "Block mismatch or incomplete structure.";
             }
         }
 
@@ -181,19 +195,19 @@ public class TEMachineController extends AbstractMBModifierTE {
 
         StructureDefinitionData.Requirements req = entry.requirements;
 
-        if (!checkPortRequirement(req.itemInput, IPortType.Type.ITEM, true)) return false;
-        if (!checkPortRequirement(req.itemOutput, IPortType.Type.ITEM, false)) return false;
-        if (!checkPortRequirement(req.fluidInput, IPortType.Type.FLUID, true)) return false;
-        if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false)) return false;
-        if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true)) return false;
-        if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false)) return false;
+        if (!checkPortRequirement(req.itemInput, IPortType.Type.ITEM, true, "Item Input")) return false;
+        if (!checkPortRequirement(req.itemOutput, IPortType.Type.ITEM, false, "Item Output")) return false;
+        if (!checkPortRequirement(req.fluidInput, IPortType.Type.FLUID, true, "Fluid Input")) return false;
+        if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false, "Fluid Output")) return false;
+        if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true, "Energy Input")) return false;
+        if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false, "Energy Output")) return false;
         // Add other port types as needed
 
         return true;
     }
 
     private boolean checkPortRequirement(StructureDefinitionData.PortRequirement req, IPortType.Type type,
-        boolean isInput) {
+        boolean isInput, String label) {
         if (req == null) return true;
 
         long count;
@@ -208,11 +222,11 @@ public class TEMachineController extends AbstractMBModifierTE {
         }
 
         if (req.min != null && count < req.min) {
-            // Missing ports
+            lastValidationError = "Missing " + label + " Port. Need at least " + req.min + ", found " + count;
             return false;
         }
         if (req.max != null && count > req.max) {
-            // Too many ports
+            lastValidationError = "Too many " + label + " Ports. Max " + req.max + ", found " + count;
             return false;
         }
 
@@ -449,13 +463,16 @@ public class TEMachineController extends AbstractMBModifierTE {
 
         setPlayer(player);
         boolean wasFormed = isFormed;
-        boolean nowFormed = trySimpleFormStructure();
 
-        if (nowFormed) {
-            String status = wasFormed ? "Status" : "Structure formed";
+        // Always try to form if not formed
+        if (!isFormed) {
+            trySimpleFormStructure();
+        }
 
-            // Display progress info
+        if (isFormed) {
+            String status = "Idle";
             if (processAgent.isWaitingForOutput()) {
+                status = "Waiting for Output";
                 // Diagnose which outputs are blocked
                 String blockedOutputs = diagnoseBlockedOutputs();
                 player.addChatComponentMessage(
@@ -465,7 +482,7 @@ public class TEMachineController extends AbstractMBModifierTE {
             } else if (processAgent.isRunning()) {
                 int progress = processAgent.getProgress();
                 int max = processAgent.getMaxProgress();
-                int percent = (int) (processAgent.getProgressPercent() * 100);
+                String percent = String.format("%.1f", (float) progress / max * 100);
                 player.addChatComponentMessage(
                     new ChatComponentText(
                         EnumChatFormatting.GREEN + "[Machine] Processing: "
@@ -492,12 +509,19 @@ public class TEMachineController extends AbstractMBModifierTE {
                 }
             }
 
+            // Always show port details when clicking controller
             sendPortTypeCounts(player, "Input", inputPorts);
             sendPortTypeCounts(player, "Output", outputPorts);
         } else {
-            player.addChatComponentMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + "[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
+            if (lastValidationError != null && !lastValidationError.isEmpty()) {
+                player.addChatComponentMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.RED + "[Machine] Structure Invalid: " + lastValidationError));
+            } else {
+                player.addChatComponentMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.RED + "[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
+            }
         }
     }
 
@@ -766,6 +790,14 @@ public class TEMachineController extends AbstractMBModifierTE {
     public void setCustomStructureName(String name) {
         this.customStructureName = name;
         updateRecipeGroupFromStructure();
+
+        // Reset structure state
+        this.isFormed = false;
+        clearStructureParts();
+
+        // Notify client
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     /**
