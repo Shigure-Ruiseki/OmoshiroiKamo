@@ -8,16 +8,21 @@ public class ItemIndexClient {
     public static final ItemIndexClient INSTANCE = new ItemIndexClient();
 
     public Map<ItemStackKey, Integer> db = new HashMap<>();
-    private int version = 0;
+    private int serverVersion = -1;
 
-    public void update(Map<ItemStackKey, Integer> newDB) {
+    public void update(Map<ItemStackKey, Integer> newDB, int serverVersion) {
         db.clear();
         db.putAll(newDB);
-        version++;
+        this.serverVersion = serverVersion;
     }
 
-    public int getVersion() {
-        return version;
+    public void destroy() {
+        db.clear();
+        this.serverVersion = -1;
+    }
+
+    public int getServerVersion() {
+        return serverVersion;
     }
 
     @Override

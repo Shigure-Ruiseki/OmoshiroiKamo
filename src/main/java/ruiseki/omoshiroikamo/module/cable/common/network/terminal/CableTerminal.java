@@ -16,15 +16,14 @@ import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexSyncHandler;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.PacketItemIndex;
 
 public class CableTerminal extends AbstractPart {
 
@@ -44,46 +43,91 @@ public class CableTerminal extends AbstractPart {
     }
 
     @Override
-    public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager sync, UISettings settings) {
-        ItemNetwork net = getItemNetwork();
-        if (net != null) {
-            PacketHandler.INSTANCE.sendToAll(
-                new PacketItemIndex(net.getItemIndexSnapshot())
-            );
-        }
-
+    public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        ItemIndexClient.INSTANCE.destroy();
         ModularPanel panel = new ModularPanel("cable_terminal");
-        buildItemGrid(panel, ItemIndexClient.INSTANCE.db);
+
+        ItemNetwork net = getItemNetwork();
+        ItemIndexSyncHandler sh = new ItemIndexSyncHandler(() -> net);
+
+        syncManager.syncValue("cable_terminal_sh", sh);
+
+        buildItemGrid(panel);
+
+        final int[] lastVersion = { -1 };
+
+        syncManager.onClientTick(() -> {
+            int v = ItemIndexClient.INSTANCE.getServerVersion();
+
+            if (lastVersion[0] == -1) {
+                lastVersion[0] = v;
+                updateGrid(ItemIndexClient.INSTANCE.db);
+                return;
+            }
+
+            if (cable.getWorld()
+                .getWorldTime() % 20 != 0) return;
+
+            if (v != lastVersion[0]) {
+                lastVersion[0] = v;
+                updateGrid(ItemIndexClient.INSTANCE.db);
+            }
+        });
+
+        syncManager.onServerTick(() -> {
+            if (!syncManager.isClient() && net != null) {
+                int clientV = ItemIndexClient.INSTANCE.getServerVersion();
+                int serverV = net.getIndexVersion();
+                if (clientV != serverV) {
+                    sh.requestSync();
+                }
+            }
+        });
+
         return panel;
     }
 
+    private static final int COLUMNS = 9;
+    private static final int ROWS = 6;
+    private static final int SLOT_COUNT = COLUMNS * ROWS;
 
-    private void buildItemGrid(ModularPanel panel, Map<ItemStackKey, Integer> db) {
-        panel.removeAll();
+    private final ItemStackDrawable[] slots = new ItemStackDrawable[SLOT_COUNT];
 
-        int columns = 9;
-        int slotSize = 18;
+    private void buildItemGrid(ModularPanel panel) {
+
+        int slotSize = 16;
         int padding = 2;
 
-        int index = 0;
-        for (var e : db.entrySet()) {
-            ItemStackKey key = e.getKey();
-            int amount = e.getValue();
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            int col = i % COLUMNS;
+            int row = i / COLUMNS;
 
-            ItemStack stack = key.toStack(amount);
+            ItemStackDrawable d = (ItemStackDrawable) new ItemStackDrawable().setItem((ItemStack) null);
 
-            int col = index % columns;
-            int row = index / columns;
+            slots[i] = d;
 
             panel.child(
-                new ItemStackDrawable()
-                    .setItem(stack)
-                    .asWidget()
+                d.asWidget()
                     .pos(col * (slotSize + padding), row * (slotSize + padding))
-                    .size(slotSize, slotSize)
-            );
+                    .size(slotSize, slotSize));
+        }
+    }
 
-            index++;
+    private void updateGrid(Map<ItemStackKey, Integer> db) {
+
+        int i = 0;
+        for (var e : db.entrySet()) {
+            if (i >= slots.length) break;
+
+            ItemStack stack = e.getKey()
+                .toStack(e.getValue());
+            slots[i].setItem(stack);
+            i++;
+        }
+
+        while (i < slots.length) {
+            slots[i].setItem((ItemStack) null);
+            i++;
         }
     }
 

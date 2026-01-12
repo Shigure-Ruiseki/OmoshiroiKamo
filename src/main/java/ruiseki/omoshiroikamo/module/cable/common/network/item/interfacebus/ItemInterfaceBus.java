@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
-import java.util.Map;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -95,9 +93,11 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
-            if (s != null) {
+            if (s != null && s.stackSize > 0) {
+                hash = 31 * hash + slot;
                 hash = 31 * hash + Item.getIdFromItem(s.getItem());
                 hash = 31 * hash + s.getItemDamage();
+                hash = 31 * hash + s.stackSize;
                 if (s.hasTagCompound()) {
                     hash = 31 * hash + s.getTagCompound()
                         .hashCode();
@@ -106,7 +106,6 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         }
         return hash;
     }
-
 
     private int[] getAccessibleSlots(IInventory inv) {
         if (inv instanceof ISidedInventory sided) {

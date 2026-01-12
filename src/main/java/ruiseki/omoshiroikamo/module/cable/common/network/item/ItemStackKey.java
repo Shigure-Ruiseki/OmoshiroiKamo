@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
+import java.io.IOException;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 
 public final class ItemStackKey {
 
@@ -59,5 +61,28 @@ public final class ItemStackKey {
 
         return stack;
     }
-}
 
+    public void write(PacketBuffer buf) throws IOException {
+        buf.writeShort(Item.getIdFromItem(item));
+        buf.writeShort(meta);
+
+        if (tag != null) {
+            buf.writeBoolean(true);
+            buf.writeNBTTagCompoundToBuffer(tag);
+        } else {
+            buf.writeBoolean(false);
+        }
+    }
+
+    public static ItemStackKey read(PacketBuffer buf) throws IOException {
+        Item item = Item.getItemById(buf.readShort());
+        int meta = buf.readShort();
+
+        NBTTagCompound tag = null;
+        if (buf.readBoolean()) {
+            tag = buf.readNBTTagCompoundFromBuffer();
+        }
+
+        return new ItemStackKey(item, meta, tag);
+    }
+}

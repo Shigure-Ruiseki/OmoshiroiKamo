@@ -1,11 +1,10 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
-
-import net.minecraft.item.ItemStack;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.minecraft.item.ItemStack;
 
 public class ItemIndex {
 
