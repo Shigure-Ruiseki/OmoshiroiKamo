@@ -20,6 +20,11 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
+import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
@@ -51,8 +56,10 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // Recipe processing
     private final ProcessAgent processAgent = new ProcessAgent();
-    // TODO: recipeGroup will be obtained from GUI blueprint in future
+    // Recipe group - obtained from custom structure or GUI
     private String recipeGroup = "default";
+    // CustomStructure name (null = use default simple check)
+    private String customStructureName = null;
     // Look-ahead: next recipe cached during current processing
     private transient ModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
@@ -72,8 +79,15 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     @Override
     protected IStructureDefinition<TEMachineController> getStructureDefinition() {
-        // TODO: Load from JSON via StructureManager
-        // For MVP, return null to use simplified check
+        // Check for custom structure first
+        if (customStructureName != null && !customStructureName.isEmpty()) {
+            IStructureDefinition<TEMachineController> customDef = CustomStructureRegistry
+                .getDefinition(customStructureName);
+            if (customDef != null) {
+                return customDef;
+            }
+        }
+        // Fallback to default structure (or null for simple check)
         return STRUCTURE_DEFINITION;
     }
 
@@ -135,6 +149,75 @@ public class TEMachineController extends AbstractMBModifierTE {
     // ========== Crafting Configuration ==========
     // TODO: These methods are inherited from AbstractMBModifierTE but unused
     // Consider removing or refactoring the parent class.
+
+    @Override
+    protected boolean structureCheck(String piece, int ox, int oy, int oz) {
+        boolean valid = super.structureCheck(piece, ox, oy, oz);
+
+        if (valid && isFormed) {
+            // Perform additional requirements check for CustomStructure
+            if (!checkRequirements()) {
+                isFormed = false;
+                clearStructureParts();
+                return false;
+            }
+        }
+
+        return valid;
+    }
+
+    /**
+     * Check if the formed structure meets the requirements defined in
+     * CustomStructure.
+     *
+     * @return true if requirements are met or no requirements exist
+     */
+    private boolean checkRequirements() {
+        if (customStructureName == null || customStructureName.isEmpty()) return true;
+
+        StructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(customStructureName);
+        if (entry == null || entry.requirements == null) return true;
+
+        StructureDefinitionData.Requirements req = entry.requirements;
+
+        if (!checkPortRequirement(req.itemInput, IPortType.Type.ITEM, true)) return false;
+        if (!checkPortRequirement(req.itemOutput, IPortType.Type.ITEM, false)) return false;
+        if (!checkPortRequirement(req.fluidInput, IPortType.Type.FLUID, true)) return false;
+        if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false)) return false;
+        if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true)) return false;
+        if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false)) return false;
+        // Add other port types as needed
+
+        return true;
+    }
+
+    private boolean checkPortRequirement(StructureDefinitionData.PortRequirement req, IPortType.Type type,
+        boolean isInput) {
+        if (req == null) return true;
+
+        long count;
+        if (isInput) {
+            count = inputPorts.stream()
+                .filter(p -> p.getPortType() == type)
+                .count();
+        } else {
+            count = outputPorts.stream()
+                .filter(p -> p.getPortType() == type)
+                .count();
+        }
+
+        if (req.min != null && count < req.min) {
+            // Missing ports
+            return false;
+        }
+        if (req.max != null && count > req.max) {
+            // Too many ports
+            return false;
+        }
+
+        return true;
+    }
 
     @Override
     public int getBaseDuration() {
@@ -652,6 +735,9 @@ public class TEMachineController extends AbstractMBModifierTE {
     public void writeCommon(NBTTagCompound nbt) {
         super.writeCommon(nbt);
         nbt.setString("recipeGroup", recipeGroup);
+        if (customStructureName != null) {
+            nbt.setString("customStructureName", customStructureName);
+        }
         NBTTagCompound agentNbt = new NBTTagCompound();
         processAgent.writeToNBT(agentNbt);
         nbt.setTag("processAgent", agentNbt);
@@ -662,8 +748,66 @@ public class TEMachineController extends AbstractMBModifierTE {
         super.readCommon(nbt);
         recipeGroup = nbt.getString("recipeGroup");
         if (recipeGroup.isEmpty()) recipeGroup = "default";
+        if (nbt.hasKey("customStructureName")) {
+            customStructureName = nbt.getString("customStructureName");
+            // Update recipeGroup from custom structure if available
+            updateRecipeGroupFromStructure();
+        }
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
         }
+    }
+
+    // ========== CustomStructure Methods ==========
+
+    /**
+     * Set the custom structure name. Also updates recipeGroup from structure.
+     */
+    public void setCustomStructureName(String name) {
+        this.customStructureName = name;
+        updateRecipeGroupFromStructure();
+    }
+
+    /**
+     * Get the custom structure name.
+     */
+    public String getCustomStructureName() {
+        return customStructureName;
+    }
+
+    /**
+     * Get the current recipe group.
+     */
+    public String getRecipeGroup() {
+        return recipeGroup;
+    }
+
+    /**
+     * Set the recipe group manually.
+     */
+    public void setRecipeGroup(String recipeGroup) {
+        this.recipeGroup = recipeGroup;
+    }
+
+    /**
+     * Update recipeGroup from custom structure definition.
+     */
+    private void updateRecipeGroupFromStructure() {
+        if (customStructureName == null || customStructureName.isEmpty()) return;
+        StructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(customStructureName);
+        if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
+            this.recipeGroup = entry.recipeGroup;
+        }
+    }
+
+    /**
+     * Get the custom structure properties, or null if not using custom structure.
+     */
+    public Properties getCustomProperties() {
+        if (customStructureName == null || customStructureName.isEmpty()) return null;
+        StructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(customStructureName);
+        return entry != null ? entry.properties : null;
     }
 }

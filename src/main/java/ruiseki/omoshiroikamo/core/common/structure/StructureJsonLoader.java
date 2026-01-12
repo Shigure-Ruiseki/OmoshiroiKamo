@@ -19,6 +19,9 @@ import com.google.gson.JsonParser;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockMapping;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Layer;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.PortRequirement;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Requirements;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
@@ -74,11 +77,32 @@ public class StructureJsonLoader {
                 return false;
             }
 
+            // Support both single object (CustomStructure) and array (existing structures)
+            // formats
+            if (rootElement.isJsonObject()) {
+                // Single object format (CustomStructure)
+                JsonObject obj = rootElement.getAsJsonObject();
+                if (!obj.has("name") || obj.get("name")
+                    .isJsonNull()) {
+                    Logger.warn("Structure object missing 'name' field: " + file.getName());
+                    return false;
+                }
+                String name = obj.get("name")
+                    .getAsString();
+                StructureEntry entry = parseStructureEntry(obj);
+                if (entry != null) {
+                    structureCache.put(name, entry);
+                    Logger.info("Loaded single structure: " + name + " from " + file.getName());
+                }
+                return true;
+            }
+
             if (!rootElement.isJsonArray()) {
-                Logger.warn("Structure file is not a JSON array: " + file.getName());
+                Logger.warn("Structure file is not a JSON array or object: " + file.getName());
                 return false;
             }
 
+            // Array format (existing structures like ore_miner.json)
             JsonArray array = rootElement.getAsJsonArray();
             if (array.size() == 0) {
                 Logger.warn("Structure file contains empty array: " + file.getName());
@@ -148,6 +172,18 @@ public class StructureJsonLoader {
         entry.name = obj.get("name")
             .getAsString();
 
+        // Parse displayName (CustomStructure)
+        if (obj.has("displayName")) {
+            entry.displayName = obj.get("displayName")
+                .getAsString();
+        }
+
+        // Parse recipeGroup (CustomStructure)
+        if (obj.has("recipeGroup")) {
+            entry.recipeGroup = obj.get("recipeGroup")
+                .getAsString();
+        }
+
         // Parse layers
         if (obj.has("layers")) {
             entry.layers = new ArrayList<>();
@@ -167,6 +203,16 @@ public class StructureJsonLoader {
             for (Map.Entry<String, JsonElement> mapEntry : mappingsObj.entrySet()) {
                 entry.mappings.put(mapEntry.getKey(), parseBlockMapping(mapEntry.getValue()));
             }
+        }
+
+        // Parse requirements (CustomStructure)
+        if (obj.has("requirements")) {
+            entry.requirements = parseRequirements(obj.getAsJsonObject("requirements"));
+        }
+
+        // Parse properties (CustomStructure)
+        if (obj.has("properties")) {
+            entry.properties = parseProperties(obj.getAsJsonObject("properties"));
         }
 
         return entry;
@@ -192,7 +238,7 @@ public class StructureJsonLoader {
     }
 
     /**
-     * Parse a block mapping (string or object form).
+     * Parse a block mapping (string, array, or object form).
      */
     private BlockMapping parseBlockMapping(JsonElement element) {
         BlockMapping mapping = new BlockMapping();
@@ -200,6 +246,17 @@ public class StructureJsonLoader {
         if (element.isJsonPrimitive()) {
             // Simple string form: "mod:block:meta"
             mapping.block = element.getAsString();
+        } else if (element.isJsonArray()) {
+            // Array form: ["mod:block1:*", "mod:block2:*"]
+            mapping.blocks = new ArrayList<>();
+            JsonArray array = element.getAsJsonArray();
+            for (JsonElement item : array) {
+                if (item.isJsonPrimitive()) {
+                    BlockEntry entry = new BlockEntry();
+                    entry.id = item.getAsString();
+                    mapping.blocks.add(entry);
+                }
+            }
         } else if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
 
@@ -221,7 +278,7 @@ public class StructureJsonLoader {
                 }
             }
 
-            // min/max
+            // min/max (for existing structure compatibility)
             if (obj.has("min")) mapping.min = obj.get("min")
                 .getAsInt();
             if (obj.has("max")) mapping.max = obj.get("max")
@@ -388,5 +445,73 @@ public class StructureJsonLoader {
         }
 
         return new ShapeWithMappings(shape, mappings);
+    }
+
+    // ========== CustomStructure parsing helpers ==========
+
+    /**
+     * Parse requirements from JSON.
+     */
+    private Requirements parseRequirements(JsonObject obj) {
+        Requirements req = new Requirements();
+        req.itemInput = parsePortRequirement(obj, "itemInput");
+        req.itemOutput = parsePortRequirement(obj, "itemOutput");
+        req.fluidInput = parsePortRequirement(obj, "fluidInput");
+        req.fluidOutput = parsePortRequirement(obj, "fluidOutput");
+        req.energyInput = parsePortRequirement(obj, "energyInput");
+        req.energyOutput = parsePortRequirement(obj, "energyOutput");
+        req.manaInput = parsePortRequirement(obj, "manaInput");
+        req.manaOutput = parsePortRequirement(obj, "manaOutput");
+        req.gasInput = parsePortRequirement(obj, "gasInput");
+        req.gasOutput = parsePortRequirement(obj, "gasOutput");
+        req.essentiaInput = parsePortRequirement(obj, "essentiaInput");
+        req.essentiaOutput = parsePortRequirement(obj, "essentiaOutput");
+        req.visInput = parsePortRequirement(obj, "visInput");
+        req.visOutput = parsePortRequirement(obj, "visOutput");
+        return req;
+    }
+
+    /**
+     * Parse a single port requirement.
+     */
+    private PortRequirement parsePortRequirement(JsonObject parent, String key) {
+        if (!parent.has(key)) {
+            return null;
+        }
+        JsonObject obj = parent.getAsJsonObject(key);
+        PortRequirement req = new PortRequirement();
+        if (obj.has("min")) {
+            req.min = obj.get("min")
+                .getAsInt();
+        }
+        if (obj.has("max")) {
+            req.max = obj.get("max")
+                .getAsInt();
+        }
+        return req;
+    }
+
+    /**
+     * Parse properties from JSON.
+     */
+    private Properties parseProperties(JsonObject obj) {
+        Properties props = new Properties();
+        if (obj.has("speedMultiplier")) {
+            props.speedMultiplier = obj.get("speedMultiplier")
+                .getAsFloat();
+        }
+        if (obj.has("energyMultiplier")) {
+            props.energyMultiplier = obj.get("energyMultiplier")
+                .getAsFloat();
+        }
+        if (obj.has("batchMin")) {
+            props.batchMin = obj.get("batchMin")
+                .getAsInt();
+        }
+        if (obj.has("batchMax")) {
+            props.batchMax = obj.get("batchMax")
+                .getAsInt();
+        }
+        return props;
     }
 }

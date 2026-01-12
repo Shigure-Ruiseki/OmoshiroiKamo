@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.core.integration.structureLib;
 
+import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.QuantumBeaconStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.QuantumOreExtractorStructure;
@@ -13,6 +14,9 @@ public class StructureCompat {
         QuantumOreExtractorStructure.registerStructureInfo();
         QuantumResExtractorStructure.registerStructureInfo();
         QuantumBeaconStructure.registerStructureInfo();
+
+        // Register custom structures from JSON
+        CustomStructureRegistry.registerAll();
     }
 
     /**
@@ -24,6 +28,10 @@ public class StructureCompat {
         QuantumOreExtractorStructure.registerStructureInfo();
         QuantumResExtractorStructure.registerStructureInfo();
         QuantumBeaconStructure.registerStructureInfo();
+
+        // Reload custom structures from JSON
+        CustomStructureRegistry.registerAll();
+
         Logger.info("StructureLib definitions reloaded");
     }
 }
