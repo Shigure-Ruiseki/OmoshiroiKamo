@@ -210,11 +210,10 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         TileEntity te = getTargetTE();
         if (!(te instanceof IInventory inv)) return null;
 
-        int[] slots = getAccessibleSlots(inv);
         ItemStack result = null;
         int remaining = amount;
 
-        for (int slot : slots) {
+        for (int slot : getAccessibleSlots(inv)) {
             if (remaining <= 0) break;
 
             ItemStack s = inv.getStackInSlot(slot);
@@ -224,13 +223,22 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
             int take = Math.min(remaining, s.stackSize);
             ItemStack taken = inv.decrStackSize(slot, take);
-            if (taken == null) continue;
 
-            remaining -= taken.stackSize;
-            result = merge(result, taken);
+            if (taken != null) {
+                if (result == null) {
+                    result = taken;
+                } else {
+                    result.stackSize += taken.stackSize;
+                }
+                remaining -= taken.stackSize;
+            }
         }
 
-        if (result != null) inv.markDirty();
+        if (result != null) {
+            inv.markDirty();
+            markNetworkDirty();
+        }
+
         return result;
     }
 
@@ -240,43 +248,36 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         TileEntity te = getTargetTE();
         if (!(te instanceof IInventory inv)) return stack;
 
-        int[] slots = getAccessibleSlots(inv);
         ItemStack remaining = stack.copy();
+        boolean changed = false;
 
-        for (int slot : slots) {
+        for (int slot : getAccessibleSlots(inv)) {
             if (remaining.stackSize <= 0) break;
 
             ItemStack target = inv.getStackInSlot(slot);
 
             if (target == null) {
-                ItemStack toAdd = remaining.copy();
-                int maxStack = Math.min(toAdd.getMaxStackSize(), remaining.stackSize);
-                toAdd.stackSize = maxStack;
-                inv.setInventorySlotContents(slot, toAdd);
-
-                remaining.stackSize -= maxStack;
-            } else if (ItemUtils.areStacksEqual(target, remaining) && target.stackSize < target.getMaxStackSize()) {
-
+                int add = Math.min(remaining.getMaxStackSize(), remaining.stackSize);
+                ItemStack placed = remaining.splitStack(add);
+                inv.setInventorySlotContents(slot, placed);
+                changed = true;
+            } else if (ItemUtils.areStacksEqual(target, remaining)) {
                 int space = target.getMaxStackSize() - target.stackSize;
-                int mergeAmount = Math.min(space, remaining.stackSize);
-
-                target.stackSize += mergeAmount;
-                remaining.stackSize -= mergeAmount;
-                inv.markDirty();
+                if (space > 0) {
+                    int add = Math.min(space, remaining.stackSize);
+                    target.stackSize += add;
+                    remaining.stackSize -= add;
+                    changed = true;
+                }
             }
         }
 
-        if (remaining.stackSize < stack.stackSize) {
+        if (changed) {
+            inv.markDirty();
             markNetworkDirty();
         }
 
         return remaining.stackSize > 0 ? remaining : null;
-    }
-
-    private static ItemStack merge(ItemStack a, ItemStack b) {
-        if (a == null) return b;
-        a.stackSize += b.stackSize;
-        return a;
     }
 
     private int[] getAccessibleSlots(IInventory inv) {

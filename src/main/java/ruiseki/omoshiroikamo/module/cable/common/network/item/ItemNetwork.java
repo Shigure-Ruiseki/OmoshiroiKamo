@@ -1,14 +1,10 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemInterfaceBus;
 
@@ -64,20 +60,10 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
     }
 
     private void rebuildIndex() {
-        index.clear();
         lastSnapshot.mergeFrom(index);
-
-        Set<Long> visited = new HashSet<>();
-
+        index.clear();
         for (IItemPart part : parts) {
             if (!(part instanceof IItemQueryable q)) continue;
-
-            TileEntity te = part.getTargetTE();
-            if (te == null) continue;
-
-            long posKey = new BlockPos(te.xCoord, te.yCoord, te.zCoord).toLong();
-            if (!visited.add(posKey)) continue;
-
             q.collectItems(index);
         }
 

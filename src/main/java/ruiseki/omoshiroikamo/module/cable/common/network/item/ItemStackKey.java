@@ -56,6 +56,7 @@ public final class ItemStackKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ItemStackKey other)) return false;
+        if (hash != other.hash) return false;
 
         if (item != other.item) return false;
         if (meta != other.meta) return false;
