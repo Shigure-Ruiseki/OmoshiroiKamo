@@ -13,25 +13,19 @@ public class ItemIndex {
     }
 
     public void add(ItemStack stack) {
-        if (stack == null || stack.stackSize <= 0) return;
         items.addTo(ItemStackKey.of(stack), stack.stackSize);
-    }
-
-    /** Internal view – do NOT modify outside network */
-    public Object2IntOpenHashMap<ItemStackKey> view() {
-        return items;
-    }
-
-    /** Snapshot for sync / diff */
-    public Object2IntOpenHashMap<ItemStackKey> snapshot() {
-        return new Object2IntOpenHashMap<>(items);
     }
 
     public int get(ItemStackKey key) {
         return items.getOrDefault(key, 0);
     }
 
-    public boolean isEmpty() {
-        return items.isEmpty();
+    public Object2IntOpenHashMap<ItemStackKey> view() {
+        return items;
+    }
+
+    public void mergeFrom(ItemIndex other) {
+        items.clear();
+        items.putAll(other.items);
     }
 }

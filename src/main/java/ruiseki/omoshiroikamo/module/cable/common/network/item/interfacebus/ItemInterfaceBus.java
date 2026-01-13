@@ -2,9 +2,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +21,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
@@ -31,6 +30,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 
 public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
 
@@ -94,38 +94,11 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
             if (s != null && s.stackSize > 0) {
-                hash = 31 * hash + slot;
-                hash = 31 * hash + Item.getIdFromItem(s.getItem());
-                hash = 31 * hash + s.getItemDamage();
+                hash = 31 * hash + ItemStackKey.of(s).hash;
                 hash = 31 * hash + s.stackSize;
-                if (s.hasTagCompound()) {
-                    hash = 31 * hash + s.getTagCompound()
-                        .hashCode();
-                }
             }
         }
         return hash;
-    }
-
-    private int[] getAccessibleSlots(IInventory inv) {
-        if (inv instanceof ISidedInventory sided) {
-            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
-        }
-
-        int size = inv.getSizeInventory();
-        int[] slots = new int[size];
-        for (int i = 0; i < size; i++) slots[i] = i;
-        return slots;
-    }
-
-    private ItemStack copyIdentity(ItemStack src) {
-        ItemStack copy = new ItemStack(src.getItem(), src.stackSize, src.getItemDamage());
-        if (src.hasTagCompound()) {
-            copy.setTagCompound(
-                (NBTTagCompound) src.getTagCompound()
-                    .copy());
-        }
-        return copy;
     }
 
     private void markNetworkDirty() {
@@ -231,4 +204,89 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         return Integer.MAX_VALUE;
     }
 
+    public ItemStack extract(ItemStackKey key, int amount) {
+        if (amount <= 0) return null;
+
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return null;
+
+        int[] slots = getAccessibleSlots(inv);
+        ItemStack result = null;
+        int remaining = amount;
+
+        for (int slot : slots) {
+            if (remaining <= 0) break;
+
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s == null || s.stackSize <= 0) continue;
+            if (!ItemStackKey.of(s)
+                .equals(key)) continue;
+
+            int take = Math.min(remaining, s.stackSize);
+            ItemStack taken = inv.decrStackSize(slot, take);
+            if (taken == null) continue;
+
+            remaining -= taken.stackSize;
+            result = merge(result, taken);
+        }
+
+        if (result != null) inv.markDirty();
+        return result;
+    }
+
+    public ItemStack insert(ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) return null;
+
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return stack;
+
+        int[] slots = getAccessibleSlots(inv);
+        ItemStack remaining = stack.copy();
+
+        for (int slot : slots) {
+            if (remaining.stackSize <= 0) break;
+
+            ItemStack target = inv.getStackInSlot(slot);
+
+            if (target == null) {
+                ItemStack toAdd = remaining.copy();
+                int maxStack = Math.min(toAdd.getMaxStackSize(), remaining.stackSize);
+                toAdd.stackSize = maxStack;
+                inv.setInventorySlotContents(slot, toAdd);
+
+                remaining.stackSize -= maxStack;
+            } else if (ItemUtils.areStacksEqual(target, remaining) && target.stackSize < target.getMaxStackSize()) {
+
+                int space = target.getMaxStackSize() - target.stackSize;
+                int mergeAmount = Math.min(space, remaining.stackSize);
+
+                target.stackSize += mergeAmount;
+                remaining.stackSize -= mergeAmount;
+                inv.markDirty();
+            }
+        }
+
+        if (remaining.stackSize < stack.stackSize) {
+            markNetworkDirty();
+        }
+
+        return remaining.stackSize > 0 ? remaining : null;
+    }
+
+    private static ItemStack merge(ItemStack a, ItemStack b) {
+        if (a == null) return b;
+        a.stackSize += b.stackSize;
+        return a;
+    }
+
+    private int[] getAccessibleSlots(IInventory inv) {
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
+        }
+
+        int size = inv.getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) slots[i] = i;
+        return slots;
+    }
 }

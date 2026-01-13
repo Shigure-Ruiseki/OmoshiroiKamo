@@ -17,12 +17,13 @@ import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexSyncHandler;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 
@@ -43,57 +44,66 @@ public class CableTerminal extends AbstractPart {
 
     }
 
-    SlotGroupWidget itemSlots;
+    private static final int COLUMNS = 9;
+    private static final int ROWS = 6;
+    private static final int SLOT_COUNT = COLUMNS * ROWS;
+
+    private SlotGroupWidget itemSlots;
+    private final CableItemSlotSH[] itemSlotSH = new CableItemSlotSH[SLOT_COUNT];
+    private final CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
     @Override
     public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+
         ModularPanel panel = new ModularPanel("cable_terminal");
+        panel.size(176, 223);
 
         ItemIndexClient clientIndex = new ItemIndexClient();
-        ItemIndexSyncHandler sh = new ItemIndexSyncHandler(this::getItemNetwork, clientIndex);
+        ItemIndexSH sh = new ItemIndexSH(this::getItemNetwork, clientIndex);
         syncManager.syncValue("cable_terminal_sh", sh);
 
-        itemSlots = new SlotGroupWidget().name("itemSlots");
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            CableItemSlotSH slotSH = new CableItemSlotSH(getItemNetwork());
+            itemSlotSH[i] = slotSH;
+            syncManager.syncValue("itemSlot_" + i, i, slotSH);
+        }
+
+        itemSlots = new SlotGroupWidget().name("itemSlots")
+            .pos(7, 14);
         panel.child(itemSlots);
         buildItemGrid();
-
-        final int[] lastVersion = { -1 };
+        final int[] last = { -1 };
 
         syncManager.onClientTick(() -> {
             int v = clientIndex.getServerVersion();
-            if (v != lastVersion[0]) {
-                lastVersion[0] = v;
+            if (v != last[0]) {
+                last[0] = v;
                 updateGrid(clientIndex.view());
             }
         });
 
         syncManager.onServerTick(() -> {
-            if (syncManager.isClient()) return;
             ItemNetwork net = getItemNetwork();
-            if (net == null) return;
-            int clientVer = clientIndex.getServerVersion();
-            if (clientVer < 0 || net.isDirty()) {
-                sh.requestSync(clientVer);
+            if (net != null) {
+                sh.requestSync(clientIndex.getServerVersion());
             }
         });
 
-        syncManager.addCloseListener(player -> { clientIndex.destroy(); });
+        syncManager.addCloseListener(p -> clientIndex.destroy());
+
+        panel.bindPlayerInventory();
+        syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
     }
-
-    private static final int COLUMNS = 9;
-    private static final int ROWS = 6;
-    private static final int SLOT_COUNT = COLUMNS * ROWS;
-
-    private final CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
     private void buildItemGrid() {
         for (int i = 0; i < SLOT_COUNT; i++) {
             int col = i % COLUMNS;
             int row = i / COLUMNS;
 
-            CableItemSlot slot = new CableItemSlot().setStack(null);
+            CableItemSlot slot = new CableItemSlot().setStack(null)
+                .syncHandler("itemSlot_" + i, i);
             slots[i] = slot;
             itemSlots.child(slot.pos(col * 18, row * 18));
         }

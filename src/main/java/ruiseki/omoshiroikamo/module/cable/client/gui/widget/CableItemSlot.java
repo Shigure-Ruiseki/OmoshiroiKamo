@@ -6,25 +6,33 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.cleanroommc.modularui.api.ITheme;
 import com.cleanroommc.modularui.api.IThemeApi;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.core.mixins.early.minecraft.GuiAccessor;
 import com.cleanroommc.modularui.core.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.drawable.GuiDraw;
+import com.cleanroommc.modularui.integration.recipeviewer.RecipeViewerIngredientProvider;
 import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.SlotTheme;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.utils.GlStateManager;
 import com.cleanroommc.modularui.utils.Platform;
+import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.Widget;
 
-public class CableItemSlot extends Widget<CableItemSlot> implements Interactable {
+import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
+
+public class CableItemSlot extends Widget<CableItemSlot> implements Interactable, RecipeViewerIngredientProvider {
 
     public static final int SIZE = 18;
 
     private ItemStack stack;
+    private CableItemSlotSH syncHandler;
 
     public CableItemSlot() {
         itemTooltip().setAutoUpdate(true);
@@ -33,6 +41,30 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
             if (stack == null || stack.getItem() == null || stack.stackSize <= 0) return;
             tooltip.addFromItem(stack);
         });
+    }
+
+    @Override
+    public boolean isValidSyncHandler(SyncHandler syncHandler) {
+        return syncHandler instanceof CableItemSlotSH;
+    }
+
+    @Override
+    protected void setSyncHandler(@Nullable SyncHandler syncHandler) {
+        super.setSyncHandler(syncHandler);
+        this.syncHandler = castIfTypeElseNull(syncHandler, CableItemSlotSH.class);
+    }
+
+    @Override
+    public @NotNull CableItemSlotSH getSyncHandler() {
+        if (this.syncHandler == null) {
+            throw new IllegalStateException("Widget is not initialised!");
+        }
+        return this.syncHandler;
+    }
+
+    public CableItemSlot syncHandler(CableItemSlotSH syncHandler) {
+        setSyncHandler(syncHandler);
+        return this;
     }
 
     @Override
@@ -149,4 +181,47 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
         ((GuiAccessor) guiScreen).setZLevel(0f);
         renderItem.zLevel = 0f;
     }
+
+    @Override
+    public @NotNull Result onMousePressed(int mouseButton) {
+        ItemStack slotStack = getStack();
+        ItemStack cursorStack = Minecraft.getMinecraft().thePlayer.inventory.getItemStack();
+        boolean shift = GuiScreen.isShiftKeyDown();
+        SlotClickType clickType = SlotClickType.fromMouseAndModifiers(mouseButton, shift);
+
+        int amount = switch (clickType) {
+            case LEFT -> 1;
+            case RIGHT -> 32;
+            case SHIFT_LEFT, SHIFT_RIGHT -> 64;
+            default -> 1;
+        };
+
+        boolean toInventory = clickType == SlotClickType.SHIFT_LEFT;
+
+        syncHandler.requestClick(slotStack, cursorStack, amount, toInventory);
+
+        return Result.ACCEPT;
+    }
+
+    @Override
+    public @Nullable ItemStack getStackForRecipeViewer() {
+        return getStack();
+    }
+
+    public enum SlotClickType {
+
+        LEFT,
+        RIGHT,
+        SHIFT_LEFT,
+        SHIFT_RIGHT;
+
+        public static SlotClickType fromMouseAndModifiers(int mouseButton, boolean shift) {
+            if (shift) {
+                return mouseButton == 0 ? SHIFT_LEFT : SHIFT_RIGHT;
+            } else {
+                return mouseButton == 0 ? LEFT : RIGHT;
+            }
+        }
+    }
+
 }

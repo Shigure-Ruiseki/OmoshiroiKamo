@@ -13,7 +13,7 @@ public final class ItemStackKey {
     public final int meta;
     public final NBTTagCompound tag;
 
-    private final int hash;
+    public final int hash;
 
     private final int tagHash;
 
