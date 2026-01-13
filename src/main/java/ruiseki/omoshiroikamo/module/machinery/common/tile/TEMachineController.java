@@ -78,7 +78,7 @@ public class TEMachineController extends AbstractMBModifierTE {
     // ========== Structure Definition ==========
 
     @Override
-    protected IStructureDefinition<TEMachineController> getStructureDefinition() {
+    public IStructureDefinition<TEMachineController> getStructureDefinition() {
         // Check for custom structure first
         if (customStructureName != null && !customStructureName.isEmpty()) {
             IStructureDefinition<TEMachineController> customDef = CustomStructureRegistry

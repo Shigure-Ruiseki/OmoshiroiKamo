@@ -69,7 +69,7 @@ public class CustomStructureRegistry {
                 Logger.info("    Layer " + i + ": " + java.util.Arrays.toString(shape[i]));
             }
 
-            // Validate Q symbol
+            // Validate Q symbol and find its position
             int qCount = countSymbol(shape, 'Q');
             if (qCount == 0) {
                 Logger.error("CustomStructureRegistry: Structure '" + entry.name + "' has no controller 'Q'!");
@@ -79,6 +79,9 @@ public class CustomStructureRegistry {
                 return;
             }
             Logger.info("  Controller 'Q' found: " + qCount);
+
+            // Calculate controller offset from Q position
+            entry.controllerOffset = findControllerOffset(shape);
 
             // Build structure definition
             StructureDefinition.Builder<TEMachineController> builder = StructureDefinition.builder();
@@ -228,5 +231,38 @@ public class CustomStructureRegistry {
             }
         }
         return count;
+    }
+
+    /**
+     * Find the controller (Q) position and return the offset for StructureLib.
+     * 
+     * JSON format coordinate mapping:
+     * - layer index = Y axis (vertical, up is positive)
+     * - row index = Z axis (depth, controller facing direction)
+     * - col (char) index = X axis (horizontal)
+     * 
+     * StructureLib buildOrHints expects (offsetA, offsetB, offsetC) which are:
+     * - offsetA: horizontal offset (X)
+     * - offsetB: vertical offset (Y)
+     * - offsetC: depth offset (Z)
+     * 
+     * The offset represents where the controller is relative to the structure
+     * origin (0,0,0).
+     */
+    private static int[] findControllerOffset(String[][] shape) {
+        for (int layer = 0; layer < shape.length; layer++) {
+            for (int row = 0; row < shape[layer].length; row++) {
+                String rowStr = shape[layer][row];
+                for (int col = 0; col < rowStr.length(); col++) {
+                    if (rowStr.charAt(col) == 'Q') {
+                        // Controller found at (layer, row, col) in JSON coordinates
+                        // Map to StructureLib: X=col, Y=layer, Z=row
+                        return new int[] { col, layer, row };
+                    }
+                }
+            }
+        }
+        // Default if not found
+        return new int[] { 0, 0, 0 };
     }
 }

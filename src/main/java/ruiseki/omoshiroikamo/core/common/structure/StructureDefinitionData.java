@@ -41,6 +41,12 @@ public class StructureDefinitionData {
 
         /** Machine properties (CustomStructure only). */
         public Properties properties;
+
+        /**
+         * Controller offset for hologram display [x, y, z]. Calculated from 'Q'
+         * position.
+         */
+        public int[] controllerOffset;
     }
 
     /**
