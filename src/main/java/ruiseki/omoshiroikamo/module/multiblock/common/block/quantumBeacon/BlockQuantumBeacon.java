@@ -116,7 +116,6 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
                 // Range information
                 int tier = stack.getItemDamage() + 1;
                 BeaconTierRangeConfig rangeConfig = QuantumBeaconConfig.getRangeConfig(tier);
-                list.add("");
                 list.add(EnumChatFormatting.GOLD + LibMisc.LANG.localize("tooltip.beacon.range"));
                 list.add(
                     "  " + EnumChatFormatting.AQUA
