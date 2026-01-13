@@ -19,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -30,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
@@ -278,7 +278,7 @@ public class TECable extends AbstractTE
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side,
         float hitX, float hitY, float hitZ) {
         if (world.isRemote) {
-            return true;
+            return false;
         }
 
         CableHit hit = this.rayTraceCable(player);
@@ -286,21 +286,14 @@ public class TECable extends AbstractTE
             ICablePart part = getPart(hit.side);
 
             if (part != null) {
-                player.addChatMessage(new ChatComponentText("[Part] " + part));
-
                 OKGuiFactories.tileEntity()
+                    .setGuiContainer(GuiContainerWrapper.class)
                     .open(player, x, y, z, hit.side);
             }
 
             return true;
         }
-
-        for (AbstractCableNetwork<?> net : this.getNetworks()
-            .values()) {
-            player.addChatMessage(new ChatComponentText("[Network] " + net));
-        }
-
-        return true;
+        return false;
     }
 
     @Override

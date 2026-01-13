@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.client.gui.factory;
+package ruiseki.omoshiroikamo.core.client.gui.factory;
 
 import java.util.Objects;
 
@@ -15,6 +15,7 @@ import com.cleanroommc.modularui.factory.GuiManager;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
+import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.utils.Platform;
@@ -22,11 +23,11 @@ import com.cleanroommc.modularui.utils.Platform;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 
-public class ItemBackpackUIFactory extends AbstractUIFactory<PlayerInventoryGuiData> {
+public class ItemFactory extends AbstractUIFactory<PlayerInventoryGuiData> {
 
-    public static final ItemBackpackUIFactory INSTANCE = new ItemBackpackUIFactory();
+    public static final ItemFactory INSTANCE = new ItemFactory();
+    private Class<? extends IMuiScreen> customScreenClass;
 
     public void openFromPlayerInventory(EntityPlayer player, int index) {
         GuiManager
@@ -53,7 +54,7 @@ public class ItemBackpackUIFactory extends AbstractUIFactory<PlayerInventoryGuiD
             new PlayerInventoryGuiData(Platform.getClientPlayer(), InventoryTypes.BAUBLES, index));
     }
 
-    private ItemBackpackUIFactory() {
+    private ItemFactory() {
         super(LibResources.PREFIX_MOD + "player_inv");
     }
 
@@ -80,6 +81,19 @@ public class ItemBackpackUIFactory extends AbstractUIFactory<PlayerInventoryGuiD
 
     @Override
     public IMuiScreen createScreenWrapper(ModularContainer container, ModularScreen screen) {
-        return new BackpackGuiContainer(container, screen);
+        if (customScreenClass != null) {
+            try {
+                return customScreenClass.getConstructor(ModularContainer.class, ModularScreen.class)
+                    .newInstance(container, screen);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to create custom screen", e);
+            }
+        }
+        return new GuiContainerWrapper(container, screen);
+    }
+
+    public ItemFactory setGuiContainer(Class<? extends IMuiScreen> clazz) {
+        this.customScreenClass = clazz;
+        return this;
     }
 }

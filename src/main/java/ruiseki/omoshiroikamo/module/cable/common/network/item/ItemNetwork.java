@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemInterfaceBus;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
 
@@ -96,7 +95,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
 
         for (IItemPart part : interfaces) {
             if (remaining <= 0) break;
-            if (!(part instanceof ItemInterfaceBus interfaceBus)) continue;
+            if (!(part instanceof IItemQueryable interfaceBus)) continue;
 
             ItemStack got = interfaceBus.extract(key, remaining);
             if (got == null || got.stackSize <= 0) continue;
@@ -119,7 +118,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         ItemStack remaining = stack.copy();
 
         for (IItemPart part : interfaces) {
-            if (!(part instanceof ItemInterfaceBus bus)) continue;
+            if (!(part instanceof IItemQueryable bus)) continue;
 
             ItemStack leftover = bus.insert(remaining);
             if (leftover == null || leftover.stackSize <= 0) {

@@ -19,11 +19,19 @@ public class PartTESR extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks) {
         if (!(tile instanceof TECable cable)) return;
+        if (tile.getWorldObj() == null) return;
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
+        GL11.glDisable(GL11.GL_LIGHTING);
 
         Tessellator tess = TessellatorManager.get();
+
+        int brightness = tile.getWorldObj()
+            .getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord, 0);
+
+        tess.setBrightness(brightness);
+        tess.setColorOpaque_F(1.0F, 1.0F, 1.0F);
 
         for (ICablePart part : cable.getParts()) {
             AxisAlignedBB bb = part.getCollisionBox();
@@ -32,6 +40,7 @@ public class PartTESR extends TileEntitySpecialRenderer {
             renderCubeWithCollisionBB(bb, tess, part);
         }
 
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 

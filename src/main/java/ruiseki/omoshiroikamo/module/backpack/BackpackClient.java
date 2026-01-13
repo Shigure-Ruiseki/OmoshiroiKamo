@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackGuiOpener;
 
 @SideOnly(Side.CLIENT)
@@ -27,9 +26,7 @@ public class BackpackClient implements IModuleClient {
     }
 
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        MGuiFactories.init();
-    }
+    public void preInit(FMLPreInitializationEvent event) {}
 
     @Override
     public void init(FMLInitializationEvent event) {

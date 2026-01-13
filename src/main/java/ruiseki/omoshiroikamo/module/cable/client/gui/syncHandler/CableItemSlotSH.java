@@ -79,9 +79,7 @@ public class CableItemSlotSH extends SyncHandler {
             ItemStack leftover = network.insert(cursorStack);
             player.inventory.setItemStack(leftover);
             syncToClient(RESP_MOUSE, bufOut -> bufOut.writeItemStackToBuffer(leftover));
-        }
-
-        else if (key != null) {
+        } else if (key != null) {
             ItemStack extracted = network.extract(key, amount);
             if (extracted != null) {
                 if (toInventory) {

@@ -204,6 +204,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         return Integer.MAX_VALUE;
     }
 
+    @Override
     public ItemStack extract(ItemStackKey key, int amount) {
         if (amount <= 0) return null;
 
@@ -236,12 +237,12 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
         if (result != null) {
             inv.markDirty();
-            markNetworkDirty();
         }
 
         return result;
     }
 
+    @Override
     public ItemStack insert(ItemStack stack) {
         if (stack == null || stack.stackSize <= 0) return null;
 
@@ -274,7 +275,6 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
         if (changed) {
             inv.markDirty();
-            markNetworkDirty();
         }
 
         return remaining.stackSize > 0 ? remaining : null;

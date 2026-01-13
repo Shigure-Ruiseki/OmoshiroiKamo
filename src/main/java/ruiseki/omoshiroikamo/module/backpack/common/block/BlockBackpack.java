@@ -36,11 +36,12 @@ import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockBauble;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.MGuiFactories;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
@@ -209,7 +210,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 if (cap.canPlayerAccess(player.getUniqueID())) {
-                    MGuiFactories.playerInventory()
+                    OKGuiFactories.item()
+                        .setGuiContainer(BackpackGuiContainer.class)
                         .openFromMainHand(player);
                 }
             }

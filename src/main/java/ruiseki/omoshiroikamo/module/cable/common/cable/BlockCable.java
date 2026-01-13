@@ -12,8 +12,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
+import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
@@ -104,23 +107,65 @@ public class BlockCable extends BlockOK {
     }
 
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (!(te instanceof TECable cable)) return super.getPickBlock(target, world, x, y, z);
+    @SideOnly(Side.CLIENT)
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
 
-        EntityPlayer player = null;
-        if (target != null && target.entityHit instanceof EntityPlayer) {
-            player = (EntityPlayer) target.entityHit;
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (!(te instanceof TECable cable)) {
+            return super.getPickBlock(target, world, x, y, z, player);
         }
 
-        if (player != null) {
-            TECable.CableHit hit = cable.rayTraceCable(player);
-            if (hit != null && hit.type == TECable.CableHit.Type.PART && hit.part != null) {
-                return hit.part.getItemStack();
+        TECable.CableHit hit = cable.rayTraceCable(player);
+        if (hit != null && hit.type == TECable.CableHit.Type.PART && hit.part != null) {
+            ItemStack stack = hit.part.getItemStack();
+            if (stack != null) {
+                return stack.copy();
             }
         }
 
         return new ItemStack(this);
+    }
+
+    @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (!(te instanceof TECable cable)) {
+            return super.removedByPlayer(world, player, x, y, z, willHarvest);
+        }
+
+        if (world.isRemote) {
+            return true;
+        }
+
+        TECable.CableHit hit = cable.rayTraceCable(player);
+        if (hit == null) {
+            return super.removedByPlayer(world, player, x, y, z, willHarvest);
+        }
+
+        if (hit.type == TECable.CableHit.Type.PART && hit.side != null) {
+            ICablePart part = cable.getPart(hit.side);
+            if (part != null) {
+                ItemStack drop = part.getItemStack();
+                if (drop != null) {
+                    TECable.dropStack(world, x, y, z, drop);
+                }
+
+                cable.removePart(hit.side);
+
+                cable.updateConnections();
+                cable.markDirty();
+                world.markBlockForUpdate(x, y, z);
+
+                return false;
+            }
+        }
+
+        if (hit.type == TECable.CableHit.Type.CORE) {
+            return super.removedByPlayer(world, player, x, y, z, willHarvest);
+        }
+
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
 
     @Override

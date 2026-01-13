@@ -63,8 +63,6 @@ public class TerminalPanel extends ModularPanel {
             }
         });
 
-        syncManager.addCloseListener(p -> clientIndex.destroy());
-
         this.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
     }
