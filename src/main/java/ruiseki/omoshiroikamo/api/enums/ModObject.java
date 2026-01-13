@@ -73,6 +73,8 @@ public enum ModObject {
     blockModularVisInput,
     blockModularVisOutput,
 
+    blockVisBridge,
+
     blockCable,
 
     itemBackPack,

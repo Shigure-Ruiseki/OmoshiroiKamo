@@ -82,6 +82,9 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
         IconRegistry.addIcon(
             "overlay_energyoutput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_6"));
+        IconRegistry.addIcon(
+            "overlay_energyoutput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

@@ -64,8 +64,9 @@ public class SmartGasTank extends GasTank implements IGasTank {
             return 0;
         }
 
+        // If tank is empty or has zero amount, accept any gas type
         if (stored == null || stored.getGas()
-            .getID() < 0) {
+            .getID() < 0 || stored.amount <= 0) {
             int fill = Math.min(resource.amount, capacity);
             if (doReceive) {
                 setGas(resource.copy());
@@ -75,9 +76,7 @@ public class SmartGasTank extends GasTank implements IGasTank {
             return fill;
         }
 
-        if (!stored.isGasEqual(resource)) {
-            return 0;
-        }
+        if (!stored.isGasEqual(resource)) return 0;
 
         int space = capacity - stored.amount;
         int filled = Math.min(space, resource.amount);

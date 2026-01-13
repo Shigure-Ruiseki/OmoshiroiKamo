@@ -19,6 +19,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
+import mekanism.api.gas.ITubeConnection;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
@@ -35,7 +36,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Mekanism Handle Push/Pull itself so skip Auto PushPull
  */
 public abstract class AbstractGasPortTE extends AbstractTE
-    implements IModularPort, IGasHandler, IGuiHolder<PosGuiData> {
+    implements IModularPort, IGasHandler, ITubeConnection, IGuiHolder<PosGuiData> {
 
     protected final EnumIO[] sides = new EnumIO[6];
 
@@ -78,13 +79,19 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return;
+        }
         sides[side.ordinal()] = state;
-        requestRenderUpdate();
+        forceRenderUpdate();
     }
 
     @Override
@@ -164,6 +171,22 @@ public abstract class AbstractGasPortTE extends AbstractTE
         return res;
     }
 
+    public GasStack internalDrawGas(int amount, boolean doTransfer) {
+        GasStack res = tank.draw(amount, doTransfer);
+        if (res != null && res.amount > 0 && doTransfer) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
+    public int internalReceiveGas(GasStack gasStack, boolean doTransfer) {
+        int res = tank.receive(gasStack, doTransfer);
+        if (res > 0 && doTransfer) {
+            tankDirty = true;
+        }
+        return res;
+    }
+
     @Override
     public int receiveGas(ForgeDirection from, GasStack gasStack) {
         return this.receiveGas(from, gasStack, true);
@@ -177,6 +200,12 @@ public abstract class AbstractGasPortTE extends AbstractTE
     @Override
     public GasTankInfo[] getTankInfo(ForgeDirection from) {
         return new GasTankInfo[] { tank.getInfo() };
+    }
+
+    // ITubeConnection - allows Mekanism cables to connect
+    @Override
+    public boolean canTubeConnect(ForgeDirection side) {
+        return getSideIO(side) != EnumIO.NONE;
     }
 
     @Override

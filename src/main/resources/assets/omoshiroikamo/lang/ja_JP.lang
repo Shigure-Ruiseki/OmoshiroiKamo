@@ -625,6 +625,8 @@ waila.me.no_channel=装置でチャンネルが見つかりません
 waila.me.offline=装置はオフラインです
 tooltip.me_output.desc=アイテムを直接MEネットワークに出力する
 tooltip.me_fluid_output.desc=液体を直接MEネットワークに出力する
+tooltip.me_output.wip=開発中
+tooltip.me_output.lag_warning=警告: MEネットワーク接続時にラグが発生する可能性があります
 
 #ENTITY
 

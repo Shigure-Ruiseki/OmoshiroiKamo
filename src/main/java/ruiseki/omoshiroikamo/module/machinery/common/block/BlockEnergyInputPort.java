@@ -82,6 +82,9 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> i
         IconRegistry.addIcon(
             "overlay_energyinput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_6"));
+        IconRegistry.addIcon(
+            "overlay_energyinput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

@@ -56,6 +56,13 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     private long tickCounter = 0;
     private boolean proxyReady = false;
 
+    // Cached fluid amount for fast lookup (avoid iterating fluidCache every tick)
+    private long cachedFluidAmount = 0;
+
+    // Tick interval for moveToCache to avoid frequent operations
+    private static final int MOVE_TO_CACHE_INTERVAL = 5;
+    private long lastMoveToCacheTick = 0;
+
     // Client-synced status for Waila
     private boolean clientIsActive = false;
     private boolean clientIsPowered = false;
@@ -141,18 +148,16 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     protected void moveToCache() {
         FluidStack fluidStack = tank.getFluid();
         if (fluidStack != null && fluidStack.amount > 0) {
-            // Add to cache
-            fluidCache.add(AEFluidStack.create(fluidStack.copy()));
+            // Add to cache and update count
+            IAEFluidStack aeStack = AEFluidStack.create(fluidStack.copy());
+            fluidCache.add(aeStack);
+            cachedFluidAmount += fluidStack.amount;
             tank.setFluid(null);
         }
     }
 
     protected long getCachedAmount() {
-        long amount = 0;
-        for (IAEFluidStack fluid : fluidCache) {
-            amount += fluid.getStackSize();
-        }
-        return amount;
+        return cachedFluidAmount;
     }
 
     // ========== ME Network Transfer ==========
@@ -170,12 +175,15 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
             for (IAEFluidStack s : fluidCache) {
                 if (s.getStackSize() == 0) continue;
 
+                long before = s.getStackSize();
                 IAEFluidStack rest = Platform.poweredInsert(proxy.getEnergy(), storage, s, getRequest());
 
                 if (rest != null && rest.getStackSize() > 0) {
+                    cachedFluidAmount -= (before - rest.getStackSize());
                     s.setStackSize(rest.getStackSize());
                     continue;
                 }
+                cachedFluidAmount -= before;
                 s.setStackSize(0);
             }
         } catch (final GridAccessException e) {
@@ -219,41 +227,44 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
 
     @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
-        tickCounter = worldObj.getTotalWorldTime();
+        // Only process every 10 ticks to reduce overhead
+        if (!shouldDoWorkThisTick(10)) {
+            return false;
+        }
 
-        // Step 1: Move fluids from tank to cache
+        // Move fluids from tank to cache
         moveToCache();
 
-        // Step 2: Flush cache to ME network periodically
-        if (tickCounter > lastOutputTick + 20 || getCachedAmount() >= CACHE_CAPACITY) {
+        // Flush cache to ME network if there are cached fluids
+        if (cachedFluidAmount > 0) {
             flushCachedStack();
         }
 
-        return false; // Don't call super - we don't push to adjacent blocks
+        return false;
     }
-
     // ========== NBT Handling ==========
 
     @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
 
-        // Sync ME status to client (for Waila)
-        AENetworkProxy proxy = getProxy();
-        root.setBoolean("meActive", proxy != null && proxy.isActive());
-        root.setBoolean("mePowered", proxy != null && proxy.isPowered());
+        // Sync ME status to client (for Waila) - use cached values to avoid AE2 calls
+        root.setBoolean("meActive", proxyReady);
+        root.setBoolean("mePowered", proxyReady);
 
-        // Save cached fluids
-        NBTTagList fluids = new NBTTagList();
-        for (IAEFluidStack s : fluidCache) {
-            if (s.getStackSize() == 0) continue;
-            NBTTagCompound tag = new NBTTagCompound();
-            s.getFluidStack()
-                .writeToNBT(tag);
-            tag.setLong("count", s.getStackSize());
-            fluids.appendTag(tag);
+        // Only save cached fluids that have content
+        if (cachedFluidAmount > 0) {
+            NBTTagList fluids = new NBTTagList();
+            for (IAEFluidStack s : fluidCache) {
+                if (s.getStackSize() == 0) continue;
+                NBTTagCompound tag = new NBTTagCompound();
+                s.getFluidStack()
+                    .writeToNBT(tag);
+                tag.setLong("count", s.getStackSize());
+                fluids.appendTag(tag);
+            }
+            root.setTag("cachedFluids", fluids);
         }
-        root.setTag("cachedFluids", fluids);
 
         // Save proxy state
         if (gridProxy != null) {

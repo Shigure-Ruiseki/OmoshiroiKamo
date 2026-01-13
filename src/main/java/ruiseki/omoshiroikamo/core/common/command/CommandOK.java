@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 public class CommandOK extends CommandBase {
 
     private final CommandStructure structureCommand = new CommandStructure();
+    private final CommandModular modularCommand = new CommandModular();
 
     @Override
     public String getCommandName() {
@@ -22,7 +23,7 @@ public class CommandOK extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/ok <structure|...>";
+        return "/ok <structure|modular|...>";
     }
 
     @Override
@@ -43,6 +44,9 @@ public class CommandOK extends CommandBase {
             case "structure":
                 structureCommand.processCommand(sender, args);
                 break;
+            case "modular":
+                modularCommand.processCommand(sender, args);
+                break;
             default:
                 sendUsage(sender);
                 break;
@@ -55,5 +59,7 @@ public class CommandOK extends CommandBase {
         sender.addChatMessage(
             new ChatComponentText(
                 EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.main_usage_structure")));
+        sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok modular reload - Reload modular data"));
     }
 }

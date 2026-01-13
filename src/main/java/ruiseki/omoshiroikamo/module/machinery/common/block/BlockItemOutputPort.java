@@ -82,6 +82,10 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> imp
         IconRegistry.addIcon(
             "overlay_itemoutput_6",
             reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_itemoutput_6"));
+        // Fallback/disabled overlay for faces where IO is blocked
+        IconRegistry.addIcon(
+            "overlay_itemoutput_disabled",
+            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

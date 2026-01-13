@@ -626,6 +626,8 @@ waila.me.no_channel=Device Missing Channel
 waila.me.offline=Device Offline
 tooltip.me_output.desc=Outputs items directly to ME Network
 tooltip.me_fluid_output.desc=Outputs fluids directly to ME Network
+tooltip.me_output.wip=Work In Progress
+tooltip.me_output.lag_warning=Warning: May cause lag when connected to ME Network
 
 #ENTITY
 
