@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
-import java.util.Map;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -11,21 +9,15 @@ import org.jetbrains.annotations.NotNull;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
-import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 
 public class CableTerminal extends AbstractPart {
 
@@ -44,87 +36,9 @@ public class CableTerminal extends AbstractPart {
 
     }
 
-    private static final int COLUMNS = 9;
-    private static final int ROWS = 6;
-    private static final int SLOT_COUNT = COLUMNS * ROWS;
-
-    private SlotGroupWidget itemSlots;
-    private final CableItemSlotSH[] itemSlotSH = new CableItemSlotSH[SLOT_COUNT];
-    private final CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
-
     @Override
     public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
-
-        ModularPanel panel = new ModularPanel("cable_terminal");
-        panel.size(176, 223);
-
-        ItemIndexClient clientIndex = new ItemIndexClient();
-        ItemIndexSH sh = new ItemIndexSH(this::getItemNetwork, clientIndex);
-        syncManager.syncValue("cable_terminal_sh", sh);
-
-        for (int i = 0; i < SLOT_COUNT; i++) {
-            CableItemSlotSH slotSH = new CableItemSlotSH(getItemNetwork());
-            itemSlotSH[i] = slotSH;
-            syncManager.syncValue("itemSlot_" + i, i, slotSH);
-        }
-
-        itemSlots = new SlotGroupWidget().name("itemSlots")
-            .pos(7, 14);
-        panel.child(itemSlots);
-        buildItemGrid();
-        final int[] last = { -1 };
-
-        syncManager.onClientTick(() -> {
-            int v = clientIndex.getServerVersion();
-            if (v != last[0]) {
-                last[0] = v;
-                updateGrid(clientIndex.view());
-            }
-        });
-
-        syncManager.onServerTick(() -> {
-            ItemNetwork net = getItemNetwork();
-            if (net != null) {
-                sh.requestSync(clientIndex.getServerVersion());
-            }
-        });
-
-        syncManager.addCloseListener(p -> clientIndex.destroy());
-
-        panel.bindPlayerInventory();
-        syncManager.bindPlayerInventory(data.getPlayer());
-
-        return panel;
-    }
-
-    private void buildItemGrid() {
-        for (int i = 0; i < SLOT_COUNT; i++) {
-            int col = i % COLUMNS;
-            int row = i / COLUMNS;
-
-            CableItemSlot slot = new CableItemSlot().setStack(null)
-                .syncHandler("itemSlot_" + i, i);
-            slots[i] = slot;
-            itemSlots.child(slot.pos(col * 18, row * 18));
-        }
-    }
-
-    private void updateGrid(Map<ItemStackKey, Integer> db) {
-
-        int i = 0;
-        for (var e : db.entrySet()) {
-            if (i >= slots.length) break;
-
-            ItemStack stack = e.getKey()
-                .toStack(e.getValue());
-            slots[i].setStack(stack);
-            i++;
-        }
-
-        while (i < slots.length) {
-            slots[i].setStack(null);
-            i++;
-        }
+        return new TerminalPanel(data, syncManager, settings, this);
     }
 
     @Override
