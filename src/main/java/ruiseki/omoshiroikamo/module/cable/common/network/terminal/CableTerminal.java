@@ -11,12 +11,13 @@ import org.jetbrains.annotations.NotNull;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
-import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
@@ -42,47 +43,41 @@ public class CableTerminal extends AbstractPart {
 
     }
 
+    SlotGroupWidget itemSlots;
+
     @Override
     public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ItemIndexClient.INSTANCE.destroy();
         ModularPanel panel = new ModularPanel("cable_terminal");
 
-        ItemNetwork net = getItemNetwork();
-        ItemIndexSyncHandler sh = new ItemIndexSyncHandler(() -> net);
-
+        ItemIndexClient clientIndex = new ItemIndexClient();
+        ItemIndexSyncHandler sh = new ItemIndexSyncHandler(this::getItemNetwork, clientIndex);
         syncManager.syncValue("cable_terminal_sh", sh);
 
-        buildItemGrid(panel);
+        itemSlots = new SlotGroupWidget().name("itemSlots");
+        panel.child(itemSlots);
+        buildItemGrid();
 
         final int[] lastVersion = { -1 };
 
         syncManager.onClientTick(() -> {
-            int v = ItemIndexClient.INSTANCE.getServerVersion();
-
-            if (lastVersion[0] == -1) {
-                lastVersion[0] = v;
-                updateGrid(ItemIndexClient.INSTANCE.db);
-                return;
-            }
-
-            if (cable.getWorld()
-                .getWorldTime() % 20 != 0) return;
-
+            int v = clientIndex.getServerVersion();
             if (v != lastVersion[0]) {
                 lastVersion[0] = v;
-                updateGrid(ItemIndexClient.INSTANCE.db);
+                updateGrid(clientIndex.view());
             }
         });
 
         syncManager.onServerTick(() -> {
-            if (!syncManager.isClient() && net != null) {
-                int clientV = ItemIndexClient.INSTANCE.getServerVersion();
-                int serverV = net.getIndexVersion();
-                if (clientV != serverV) {
-                    sh.requestSync();
-                }
+            if (syncManager.isClient()) return;
+            ItemNetwork net = getItemNetwork();
+            if (net == null) return;
+            int clientVer = clientIndex.getServerVersion();
+            if (clientVer < 0 || net.isDirty()) {
+                sh.requestSync(clientVer);
             }
         });
+
+        syncManager.addCloseListener(player -> { clientIndex.destroy(); });
 
         return panel;
     }
@@ -91,25 +86,16 @@ public class CableTerminal extends AbstractPart {
     private static final int ROWS = 6;
     private static final int SLOT_COUNT = COLUMNS * ROWS;
 
-    private final ItemStackDrawable[] slots = new ItemStackDrawable[SLOT_COUNT];
+    private final CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
-    private void buildItemGrid(ModularPanel panel) {
-
-        int slotSize = 16;
-        int padding = 2;
-
+    private void buildItemGrid() {
         for (int i = 0; i < SLOT_COUNT; i++) {
             int col = i % COLUMNS;
             int row = i / COLUMNS;
 
-            ItemStackDrawable d = (ItemStackDrawable) new ItemStackDrawable().setItem((ItemStack) null);
-
-            slots[i] = d;
-
-            panel.child(
-                d.asWidget()
-                    .pos(col * (slotSize + padding), row * (slotSize + padding))
-                    .size(slotSize, slotSize));
+            CableItemSlot slot = new CableItemSlot().setStack(null);
+            slots[i] = slot;
+            itemSlots.child(slot.pos(col * 18, row * 18));
         }
     }
 
@@ -121,12 +107,12 @@ public class CableTerminal extends AbstractPart {
 
             ItemStack stack = e.getKey()
                 .toStack(e.getValue());
-            slots[i].setItem(stack);
+            slots[i].setStack(stack);
             i++;
         }
 
         while (i < slots.length) {
-            slots[i].setItem((ItemStack) null);
+            slots[i].setStack(null);
             i++;
         }
     }

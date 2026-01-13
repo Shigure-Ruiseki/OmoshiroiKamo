@@ -13,16 +13,27 @@ public final class ItemStackKey {
     public final int meta;
     public final NBTTagCompound tag;
 
-    public final int hash;
+    private final int hash;
+
+    private final int tagHash;
 
     private ItemStackKey(Item item, int meta, NBTTagCompound tag) {
         this.item = item;
         this.meta = meta;
-        this.tag = tag;
+
+        if (tag != null && tag.hasNoTags()) {
+            tag = null;
+        }
+
+        this.tag = tag != null ? (NBTTagCompound) tag.copy() : null;
+
+        this.tagHash = this.tag != null ? this.tag.hashCode() : 0;
         this.hash = computeHash();
     }
 
     public static ItemStackKey of(ItemStack stack) {
+        if (stack == null) throw new IllegalArgumentException("stack");
+
         return new ItemStackKey(
             stack.getItem(),
             stack.getItemDamage(),
@@ -32,19 +43,8 @@ public final class ItemStackKey {
     private int computeHash() {
         int h = Item.getIdFromItem(item);
         h = 31 * h + meta;
-        if (tag != null) h = 31 * h + tag.hashCode();
+        h = 31 * h + tagHash;
         return h;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ItemStackKey other)) return false;
-        if (item != other.item) return false;
-        if (meta != other.meta) return false;
-        if (tag == null && other.tag == null) return true;
-        if (tag == null || other.tag == null) return false;
-        return tag.equals(other.tag);
     }
 
     @Override
@@ -52,19 +52,31 @@ public final class ItemStackKey {
         return hash;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ItemStackKey other)) return false;
+
+        if (item != other.item) return false;
+        if (meta != other.meta) return false;
+
+        if (tag == null) return other.tag == null;
+        if (other.tag == null) return false;
+
+        return tag.equals(other.tag);
+    }
+
     public ItemStack toStack(int count) {
-        ItemStack stack = new ItemStack(this.item, count, this.meta);
-
-        if (this.tag != null) {
-            stack.setTagCompound((NBTTagCompound) this.tag.copy());
+        ItemStack stack = new ItemStack(item, count, meta);
+        if (tag != null) {
+            stack.setTagCompound((NBTTagCompound) tag.copy());
         }
-
         return stack;
     }
 
     public void write(PacketBuffer buf) throws IOException {
-        buf.writeShort(Item.getIdFromItem(item));
-        buf.writeShort(meta);
+        buf.writeVarIntToBuffer(Item.getIdFromItem(item));
+        buf.writeVarIntToBuffer(meta);
 
         if (tag != null) {
             buf.writeBoolean(true);
@@ -75,8 +87,8 @@ public final class ItemStackKey {
     }
 
     public static ItemStackKey read(PacketBuffer buf) throws IOException {
-        Item item = Item.getItemById(buf.readShort());
-        int meta = buf.readShort();
+        Item item = Item.getItemById(buf.readVarIntFromBuffer());
+        int meta = buf.readVarIntFromBuffer();
 
         NBTTagCompound tag = null;
         if (buf.readBoolean()) {

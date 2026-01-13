@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.cable.common.network.item;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +13,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
 
     public final ItemIndex index = new ItemIndex();
+
     private int indexVersion = 0;
     private boolean dirty = true;
 
@@ -71,8 +71,8 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
             TileEntity te = part.getTargetTE();
             if (te == null) continue;
 
-            long key = new BlockPos(te.xCoord, te.yCoord, te.zCoord).toLong();
-            if (!visited.add(key)) continue;
+            long posKey = new BlockPos(te.xCoord, te.yCoord, te.zCoord).toLong();
+            if (!visited.add(posKey)) continue;
 
             q.collectItems(index);
         }
@@ -81,15 +81,11 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         dirty = false;
     }
 
+    public boolean isDirty() {
+        return dirty;
+    }
+
     public int getIndexVersion() {
         return indexVersion;
-    }
-
-    public Map<ItemStackKey, Integer> getItemIndexView() {
-        return index.view();
-    }
-
-    public Map<ItemStackKey, Integer> getItemIndexSnapshot() {
-        return index.snapshot();
     }
 }

@@ -1,28 +1,31 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
-import java.util.HashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public class ItemIndexClient {
 
-    public static final ItemIndexClient INSTANCE = new ItemIndexClient();
+    private final Object2IntOpenHashMap<ItemStackKey> db = new Object2IntOpenHashMap<>();
 
-    public Map<ItemStackKey, Integer> db = new HashMap<>();
     private int serverVersion = -1;
 
-    public void update(Map<ItemStackKey, Integer> newDB, int serverVersion) {
+    public void update(Object2IntOpenHashMap<ItemStackKey> newDB, int version) {
         db.clear();
         db.putAll(newDB);
-        this.serverVersion = serverVersion;
+        this.serverVersion = version;
     }
 
     public void destroy() {
         db.clear();
-        this.serverVersion = -1;
+        serverVersion = -1;
     }
 
     public int getServerVersion() {
         return serverVersion;
+    }
+
+    /** Read-only usage by GUI */
+    public Object2IntOpenHashMap<ItemStackKey> view() {
+        return db;
     }
 
     @Override
