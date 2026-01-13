@@ -23,6 +23,9 @@ public class StructureCompat {
 
         // Register StructureLib info container for the modular controller (NEI tab)
         IMultiblockInfoContainer.registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
+        Logger.info(
+            "Registered TEMachineController with IMultiblockInfoContainer. Contains: "
+                + IMultiblockInfoContainer.contains(TEMachineController.class));
     }
 
     /**

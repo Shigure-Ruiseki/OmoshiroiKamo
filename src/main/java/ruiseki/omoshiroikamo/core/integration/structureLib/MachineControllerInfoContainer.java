@@ -46,6 +46,25 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
             offset[1],
             offset[2],
             hintsOnly);
+
+        ruiseki.omoshiroikamo.core.common.util.Logger.info(
+            "[MachineControllerInfoContainer] Built called. " + "Pos: ["
+                + ctx.xCoord
+                + ","
+                + ctx.yCoord
+                + ","
+                + ctx.zCoord
+                + "], "
+                + "Offset: ["
+                + offset[0]
+                + ","
+                + offset[1]
+                + ","
+                + offset[2]
+                + "], "
+                + "HintsOnly: "
+                + hintsOnly);
+
     }
 
     @Override
@@ -77,8 +96,24 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
 
     @Override
     public String[] getDescription(ItemStack stack) {
-        String structureName = ItemMachineBlueprint.getStructureName(stack);
-        if (structureName != null) {
+        String structureName = null;
+        if (stack != null) {
+            if (stack.getItem() instanceof ItemMachineBlueprint) {
+                structureName = ItemMachineBlueprint.getStructureName(stack);
+            } else if (stack.hasTagCompound()) {
+                if (stack.getTagCompound()
+                    .hasKey("customStructureName")) {
+                    structureName = stack.getTagCompound()
+                        .getString("customStructureName");
+                } else if (stack.getTagCompound()
+                    .hasKey("customStructure")) {
+                        structureName = stack.getTagCompound()
+                            .getString("customStructure");
+                    }
+            }
+        }
+
+        if (structureName != null && !structureName.isEmpty()) {
             return new String[] { "Structure: " + structureName };
         }
         return new String[] { "Modular Machine Controller" };
@@ -96,10 +131,34 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
             }
         }
 
-        // Priority 2: Controller's stored structure
+        // Priority 2: Controller ItemBlock with NBT (for NEI display)
+        if (triggerStack != null && triggerStack.hasTagCompound()
+            && triggerStack.getItem() == net.minecraft.item.Item.getItemFromBlock(
+                ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks.MACHINE_CONTROLLER.getBlock())) {
+            if (triggerStack.getTagCompound()
+                .hasKey("customStructureName")) {
+                String name = triggerStack.getTagCompound()
+                    .getString("customStructureName");
+                if (name != null && !name.isEmpty()) {
+                    return name;
+                }
+            }
+        }
+
+        // Priority 3: Controller's stored structure
         String controllerStructure = ctx.getCustomStructureName();
         if (controllerStructure != null && !controllerStructure.isEmpty()) {
             return controllerStructure;
+        }
+
+        // Fallback: Use the first registered custom structure as default for NEI
+        // display
+        if (triggerStack != null) { // Only do this if it's an item trigger (NEI or hand)
+            java.util.Set<String> names = CustomStructureRegistry.getRegisteredNames();
+            if (!names.isEmpty()) {
+                return names.iterator()
+                    .next();
+            }
         }
 
         return null;
