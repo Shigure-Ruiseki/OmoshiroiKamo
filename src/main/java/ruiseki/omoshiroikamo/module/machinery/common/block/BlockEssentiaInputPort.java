@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
@@ -20,7 +19,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssen
  * Essentia Input Port block - absorbs Essentia from nearby Thaumcraft
  * containers.
  */
-public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPort> implements IModularBlock {
+public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPort> {
 
     protected BlockEssentiaInputPort() {
         super(ModObject.blockModularEssentiaInput.unlocalisedName, TEEssentiaInputPort.class);

@@ -19,7 +19,6 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
@@ -42,7 +41,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutp
  * - Add animation/particle effects when outputting items
  * - Support comparator output for automation
  */
-public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> implements IModularBlock {
+public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     protected BlockItemOutputPort() {
         super(
