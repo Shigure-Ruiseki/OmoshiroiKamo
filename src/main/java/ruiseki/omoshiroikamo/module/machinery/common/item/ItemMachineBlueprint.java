@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,8 +19,8 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtilit
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OKCreativeTab;
+import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -30,15 +29,15 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * Each registered CustomStructure generates a corresponding blueprint in the
  * creative tab.
  */
-public class ItemMachineBlueprint extends Item {
+public class ItemMachineBlueprint extends ItemOK {
 
     public static final String STRUCTURE_NBT_KEY = "customStructure";
 
     public ItemMachineBlueprint() {
-        setUnlocalizedName("machineBlueprint");
+        super("machineBlueprint");
         setMaxStackSize(1);
-        setHasSubtypes(true);
         setCreativeTab(OKCreativeTab.MULTIBLOCK);
+        setTextureName("machineBlueprint");
     }
 
     /**
@@ -141,14 +140,7 @@ public class ItemMachineBlueprint extends Item {
         }
 
         // Trigger StructureLib hologram display / survival build
-        // Follow the same pattern as ItemConstructableTrigger:
-        // Return the result of ConstructableUtility.handle() directly
         return ConstructableUtility.handle(stack, player, world, x, y, z, side);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibResources.PREFIX_MOD + "machineBlueprint");
-    }
 }

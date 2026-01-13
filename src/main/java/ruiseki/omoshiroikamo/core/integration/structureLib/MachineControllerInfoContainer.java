@@ -47,24 +47,6 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
             offset[2],
             hintsOnly);
 
-        ruiseki.omoshiroikamo.core.common.util.Logger.info(
-            "[MachineControllerInfoContainer] Built called. " + "Pos: ["
-                + ctx.xCoord
-                + ","
-                + ctx.yCoord
-                + ","
-                + ctx.zCoord
-                + "], "
-                + "Offset: ["
-                + offset[0]
-                + ","
-                + offset[1]
-                + ","
-                + offset[2]
-                + "], "
-                + "HintsOnly: "
-                + hintsOnly);
-
     }
 
     @Override
