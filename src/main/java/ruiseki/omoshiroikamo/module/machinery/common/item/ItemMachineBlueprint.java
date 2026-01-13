@@ -15,6 +15,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtility;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OKCreativeTab;
@@ -141,8 +143,7 @@ public class ItemMachineBlueprint extends Item {
         // Trigger StructureLib hologram display / survival build
         // Follow the same pattern as ItemConstructableTrigger:
         // Return the result of ConstructableUtility.handle() directly
-        return com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtility
-            .handle(stack, player, world, x, y, z, side);
+        return ConstructableUtility.handle(stack, player, world, x, y, z, side);
     }
 
     @Override

@@ -782,7 +782,7 @@ public class TEMachineController extends AbstractMBModifierTE {
         }
     }
 
-    // ========== CustomStructure Methods ==========
+    // ========== CustomStructure ==========
 
     /**
      * Set the custom structure name. Also updates recipeGroup from structure.
