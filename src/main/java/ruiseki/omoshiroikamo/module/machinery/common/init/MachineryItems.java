@@ -11,8 +11,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 public enum MachineryItems {
 
     // spotless: off
-    MACHINE_BLUEPRINT(new ItemMachineBlueprint()),
-    ;
+    MACHINE_BLUEPRINT(new ItemMachineBlueprint()),;
     // spotless: on
 
     public static final MachineryItems[] VALUES = values();

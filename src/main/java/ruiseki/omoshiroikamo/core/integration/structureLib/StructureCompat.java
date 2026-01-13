@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.integration.structureLib;
 
+import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
+
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -20,8 +22,7 @@ public class StructureCompat {
         CustomStructureRegistry.registerAll();
 
         // Register StructureLib info container for the modular controller (NEI tab)
-        com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer
-            .registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
+        IMultiblockInfoContainer.registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
     }
 
     /**

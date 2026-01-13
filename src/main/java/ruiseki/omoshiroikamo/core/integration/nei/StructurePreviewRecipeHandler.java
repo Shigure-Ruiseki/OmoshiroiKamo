@@ -64,12 +64,46 @@ public class StructurePreviewRecipeHandler extends RecipeHandlerBase {
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
         arecipes.clear();
+
+        // Machine Controller → show all structures
         Item controllerItem = MachineryBlocks.MACHINE_CONTROLLER.getItem();
         if (controllerItem != null && ingredient.getItem() == controllerItem) {
             loadAllRecipes();
             return;
         }
+
+        // Blueprint → show specific structure only
+        if (ingredient.getItem() instanceof ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint) {
+            String structureName = ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint
+                .getStructureName(ingredient);
+            if (structureName != null && !structureName.isEmpty()) {
+                loadStructureByName(structureName);
+                return;
+            }
+        }
+
         super.loadUsageRecipes(ingredient);
+    }
+
+    /**
+     * Load a specific structure by name (for blueprint usage lookup).
+     */
+    private void loadStructureByName(String structureName) {
+        StructureManager manager = StructureManager.getInstance();
+        var entry = manager.getCustomStructure(structureName);
+        if (entry == null || entry.layers == null || entry.layers.isEmpty()) {
+            return;
+        }
+
+        // Build shape array from layers
+        String[][] shape = new String[entry.layers.size()][];
+        for (int i = 0; i < entry.layers.size(); i++) {
+            shape[i] = entry.layers.get(i).rows.toArray(new String[0]);
+        }
+
+        Map<Character, Object> mappings = toCharKeyMap(entry.mappings);
+        String title = entry.displayName != null ? entry.displayName : structureName;
+        addLayerRecipes(title, structureName, shape, mappings);
     }
 
     @Override
