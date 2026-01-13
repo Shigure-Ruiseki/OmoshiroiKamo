@@ -64,7 +64,10 @@ public class TerminalPanel extends ModularPanel {
             }
         });
 
-        this.child(new TileWidget(terminal.getItemStack().getDisplayName()).maxWidth(176));
+        this.child(
+            new TileWidget(
+                terminal.getItemStack()
+                    .getDisplayName()).maxWidth(176));
         this.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
     }

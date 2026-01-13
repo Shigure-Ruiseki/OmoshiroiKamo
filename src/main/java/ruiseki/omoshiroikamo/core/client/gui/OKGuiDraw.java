@@ -12,8 +12,7 @@ public class OKGuiDraw {
     public static final double PI2 = Math.PI * 2;
     public static final double PI_2 = Math.PI / 2;
 
-    public static void drawCompactAmount(int amount, int x, int y, int width, int height,
-                                         Alignment alignment) {
+    public static void drawCompactAmount(int amount, int x, int y, int width, int height, Alignment alignment) {
         if (amount <= 1) return;
 
         String text = formatCompactAmount(amount);
