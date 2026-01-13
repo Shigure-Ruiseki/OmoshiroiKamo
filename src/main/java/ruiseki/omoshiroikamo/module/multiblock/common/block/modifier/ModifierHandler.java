@@ -13,17 +13,14 @@ public class ModifierHandler {
 
     private List<IModifierBlock> modifiers = new ArrayList<>();
     private final Map<String, Float> attributeTotals = new HashMap<>();
-    private boolean hasCalculated = false;
 
     public void setModifiers(List<IModifierBlock> modifiers) {
         this.modifiers = (modifiers != null) ? modifiers : Collections.emptyList();
-        this.hasCalculated = false;
     }
 
     public void calculateAttributeMultipliers() {
         if (modifiers.isEmpty()) {
             attributeTotals.clear();
-            hasCalculated = true;
             return;
         }
 
@@ -56,7 +53,6 @@ public class ModifierHandler {
             }
         });
 
-        hasCalculated = true;
     }
 
     public boolean hasAttribute(String attributeName) {

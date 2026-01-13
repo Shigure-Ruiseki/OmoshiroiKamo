@@ -55,7 +55,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof TEStall te) {
+        if (tileEntity instanceof TEStall) {
             spawnCow(world, x, y, z);
         }
         super.breakBlock(world, x, y, z, block, meta);

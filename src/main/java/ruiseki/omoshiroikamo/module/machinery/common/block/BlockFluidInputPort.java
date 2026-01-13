@@ -18,7 +18,6 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
@@ -43,7 +42,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInp
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> implements IModularBlock {
+public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> {
 
     protected BlockFluidInputPort() {
         super(

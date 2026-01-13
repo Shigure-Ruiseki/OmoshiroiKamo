@@ -44,7 +44,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxyable, IActionHost {
 
     private static final int TANK_CAPACITY = 16000; // 16 buckets
-    private static final long CACHE_CAPACITY = 64000; // 64 buckets before forced flush
 
     private AENetworkProxy gridProxy;
     private BaseActionSource requestSource;
@@ -52,16 +51,10 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
         .storage()
         .createFluidList();
 
-    private long lastOutputTick = 0;
-    private long tickCounter = 0;
     private boolean proxyReady = false;
 
     // Cached fluid amount for fast lookup (avoid iterating fluidCache every tick)
     private long cachedFluidAmount = 0;
-
-    // Tick interval for moveToCache to avoid frequent operations
-    private static final int MOVE_TO_CACHE_INTERVAL = 5;
-    private long lastMoveToCacheTick = 0;
 
     // Client-synced status for Waila
     private boolean clientIsActive = false;
@@ -189,7 +182,6 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
         } catch (final GridAccessException e) {
             Logger.debug("ME Fluid Output Port: Grid access exception during flush");
         }
-        lastOutputTick = tickCounter;
     }
 
     @Override

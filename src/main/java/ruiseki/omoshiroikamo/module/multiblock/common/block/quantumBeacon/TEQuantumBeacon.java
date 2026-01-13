@@ -44,10 +44,6 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
      */
     private boolean wasFlightGrantedByBeacon = false;
 
-    // Beam rendering state
-    private float beamProgress = 0.0F;
-    private long lastBeamUpdateTick = 0L;
-
     // Beam segment cache for optimized rendering
     @SideOnly(Side.CLIENT)
     private List<BeamSegment> cachedBeamSegments;

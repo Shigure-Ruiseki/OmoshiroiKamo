@@ -16,7 +16,6 @@ import net.minecraft.world.World;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
@@ -27,7 +26,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutp
  * Requires Applied Energistics 2 to be loaded.
  * Uses JSON model with base + overlay textures via GTNHLib.
  */
-public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME> implements IModularBlock {
+public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME> {
 
     protected BlockItemOutputPortME() {
         super(ModObject.blockModularItemOutputME.unlocalisedName, TEItemOutputPortME.class);

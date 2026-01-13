@@ -24,11 +24,77 @@ public class StructureDefinitionData {
         /** Structure name ("default" or e.g. "oreExtractorTier1"). */
         public String name;
 
+        /** Display name for UI (CustomStructure only). */
+        public String displayName;
+
+        /** Recipe group to use (CustomStructure only). */
+        public String recipeGroup;
+
         /** Layer array (null for default entries). */
         public List<Layer> layers;
 
         /** Block mappings. */
         public Map<String, Object> mappings;
+
+        /** Port requirements (CustomStructure only). */
+        public Requirements requirements;
+
+        /** Machine properties (CustomStructure only). */
+        public Properties properties;
+
+        /**
+         * Controller offset for hologram display [x, y, z]. Calculated from 'Q'
+         * position.
+         */
+        public int[] controllerOffset;
+    }
+
+    /**
+     * Port requirements for CustomStructure.
+     */
+    public static class Requirements {
+
+        public PortRequirement itemInput;
+        public PortRequirement itemOutput;
+        public PortRequirement fluidInput;
+        public PortRequirement fluidOutput;
+        public PortRequirement energyInput;
+        public PortRequirement energyOutput;
+        public PortRequirement manaInput;
+        public PortRequirement manaOutput;
+        public PortRequirement gasInput;
+        public PortRequirement gasOutput;
+        public PortRequirement essentiaInput;
+        public PortRequirement essentiaOutput;
+        public PortRequirement visInput;
+        public PortRequirement visOutput;
+    }
+
+    /**
+     * Min/max requirement for a port type.
+     */
+    public static class PortRequirement {
+
+        public Integer min;
+        public Integer max;
+    }
+
+    /**
+     * Machine properties for CustomStructure.
+     */
+    public static class Properties {
+
+        /** Speed multiplier (default 1.0). */
+        public float speedMultiplier = 1.0f;
+
+        /** Energy cost multiplier (default 1.0). */
+        public float energyMultiplier = 1.0f;
+
+        /** Minimum batch size (default 1). */
+        public int batchMin = 1;
+
+        /** Maximum batch size (default 1). */
+        public int batchMax = 1;
     }
 
     /**

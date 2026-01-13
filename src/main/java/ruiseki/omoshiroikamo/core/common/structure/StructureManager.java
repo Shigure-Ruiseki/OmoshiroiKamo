@@ -9,6 +9,7 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockMapping;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -21,6 +22,7 @@ public class StructureManager {
     private static StructureManager INSTANCE;
 
     private final Map<String, StructureJsonLoader> loaders = new HashMap<>();
+    private final Map<String, StructureEntry> customStructures = new HashMap<>();
     private final StructureErrorCollector errorCollector = StructureErrorCollector.getInstance();
     private File configDir;
     private boolean initialized = false;
@@ -76,6 +78,9 @@ public class StructureManager {
             loadStructureFile("solar_array");
             loadStructureFile("quantum_beacon");
 
+            // Load custom structures from modular/structures/
+            loadCustomStructures();
+
             // Persist errors if any were found
             if (errorCollector.hasErrors()) {
                 errorCollector.writeToFile();
@@ -84,7 +89,10 @@ public class StructureManager {
             initialized = true;
             Logger.info(
                 "StructureManager initialized"
-                    + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : ""));
+                    + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : "")
+                    + ", "
+                    + customStructures.size()
+                    + " custom structure(s)");
         } catch (Exception e) {
             errorCollector.collect(StructureException.loadFailed("initialization", e));
             errorCollector.writeToFile();
@@ -210,6 +218,7 @@ public class StructureManager {
      */
     public void reload() {
         loaders.clear();
+        customStructures.clear();
         warnedStructures.clear();
         errorCollector.clear();
 
@@ -217,6 +226,9 @@ public class StructureManager {
         loadStructureFile("res_miner");
         loadStructureFile("solar_array");
         loadStructureFile("quantum_beacon");
+
+        // Reload custom structures
+        loadCustomStructures();
 
         if (errorCollector.hasErrors()) {
             errorCollector.writeToFile();
@@ -233,7 +245,10 @@ public class StructureManager {
 
         Logger.info(
             "StructureManager reloaded"
-                + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : ""));
+                + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : "")
+                + ", "
+                + customStructures.size()
+                + " custom structure(s)");
     }
 
     /**
@@ -271,5 +286,90 @@ public class StructureManager {
      */
     public static String[][] getBeaconShape(int tier) {
         return getInstance().getShape("quantum_beacon", "beaconTier" + tier);
+    }
+
+    // ===== CustomStructure methods =====
+
+    /**
+     * Load custom structures from modular/structures/ directory.
+     * Each JSON file represents one custom structure.
+     */
+    private void loadCustomStructures() {
+        File customDir = new File(configDir, "modular/structures");
+        Logger.info("StructureManager: Loading custom structures from " + customDir.getAbsolutePath());
+
+        if (!customDir.exists()) {
+            customDir.mkdirs();
+            Logger.info("StructureManager: Custom structures directory created (empty)");
+            return;
+        }
+
+        File[] files = customDir.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files == null) {
+            Logger.warn("StructureManager: Could not list files in custom structures directory");
+            return;
+        }
+
+        Logger.info("StructureManager: Found " + files.length + " JSON file(s)");
+
+        for (File file : files) {
+            Logger.info("StructureManager: Processing " + file.getName());
+            try {
+                StructureJsonLoader loader = new StructureJsonLoader();
+                if (loader.loadFromFile(file)) {
+                    // Get the first (and only) structure from the file
+                    for (String structureName : loader.getStructureNames()) {
+                        StructureEntry entry = loader.getStructureEntry(structureName);
+                        if (entry != null) {
+                            // Check if it has required custom structure fields
+                            if (entry.recipeGroup != null) {
+                                customStructures.put(entry.name, entry);
+                                Logger.info("  Loaded: " + entry.name);
+                                Logger.info("    displayName: " + entry.displayName);
+                                Logger.info("    recipeGroup: " + entry.recipeGroup);
+                                Logger.info("    layers: " + (entry.layers != null ? entry.layers.size() : 0));
+                                Logger.info("    mappings: " + (entry.mappings != null ? entry.mappings.size() : 0));
+                            } else {
+                                Logger.warn("  Skipped '" + structureName + "' - no recipeGroup defined");
+                            }
+                        }
+                    }
+                } else {
+                    Logger.warn("  Failed to parse " + file.getName());
+                }
+
+                // Collect loader errors
+                for (String error : loader.getErrors()) {
+                    Logger.warn("  Parse error: " + error);
+                    errorCollector.collect(StructureException.ErrorType.PARSE_ERROR, file.getName(), error);
+                }
+            } catch (Exception e) {
+                Logger.error("  Exception loading " + file.getName() + ": " + e.getMessage());
+                errorCollector.collect(StructureException.loadFailed(file.getName(), e));
+            }
+        }
+
+        Logger.info("StructureManager: Custom structures loaded - " + customStructures.size() + " total");
+    }
+
+    /**
+     * Get a custom structure by name.
+     */
+    public StructureEntry getCustomStructure(String name) {
+        return customStructures.get(name);
+    }
+
+    /**
+     * Get all custom structure names.
+     */
+    public Set<String> getCustomStructureNames() {
+        return new HashSet<>(customStructures.keySet());
+    }
+
+    /**
+     * Check if a custom structure exists.
+     */
+    public boolean hasCustomStructure(String name) {
+        return customStructures.containsKey(name);
     }
 }
