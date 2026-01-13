@@ -31,7 +31,6 @@ public class PartTESR extends TileEntitySpecialRenderer {
             .getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord, 0);
 
         tess.setBrightness(brightness);
-        tess.setColorOpaque_F(1.0F, 1.0F, 1.0F);
 
         for (ICablePart part : cable.getParts()) {
             AxisAlignedBB bb = part.getCollisionBox();

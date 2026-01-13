@@ -10,6 +10,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
 import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
+import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
@@ -30,7 +31,7 @@ public class TerminalPanel extends ModularPanel {
     public TerminalPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings,
         CableTerminal terminal) {
         super("cable_terminal");
-        this.size(176, 223);
+        this.size(176, 284);
 
         ItemIndexClient clientIndex = new ItemIndexClient();
         ItemIndexSH sh = new ItemIndexSH(terminal::getItemNetwork, clientIndex);
@@ -63,6 +64,7 @@ public class TerminalPanel extends ModularPanel {
             }
         });
 
+        this.child(new TileWidget(terminal.getItemStack().getDisplayName()).maxWidth(176));
         this.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
     }

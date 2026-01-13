@@ -20,11 +20,13 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.SlotTheme;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
+import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.GlStateManager;
 import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.Widget;
 
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiDraw;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
 
 public class CableItemSlot extends Widget<CableItemSlot> implements Interactable, RecipeViewerIngredientProvider {
@@ -157,7 +159,7 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
         Platform.endDrawItem();
 
         // amount text
-        GuiDraw.drawStandardSlotAmountText(stack.stackSize, null, getArea());
+        OKGuiDraw.drawCompactAmount(stack.stackSize, 1, 1, 16, 16, Alignment.BottomRight);
 
         // overlay (durability, etc.)
         ItemStack overlayStack = stack.copy();
