@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
@@ -19,7 +18,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output.TEVisOutput
 /**
  * Vis Output Port block - provides Vis to Thaumcraft Vis Relay network.
  */
-public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> implements IModularBlock {
+public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
 
     protected BlockVisOutputPort() {
         super(ModObject.blockModularVisOutput.unlocalisedName, TEVisOutputPort.class);

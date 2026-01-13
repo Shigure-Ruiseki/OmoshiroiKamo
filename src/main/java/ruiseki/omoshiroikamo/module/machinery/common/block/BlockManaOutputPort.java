@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -39,7 +38,7 @@ import vazkii.botania.api.wand.IWandHUD;
  * - Implement BlockColor tinting for machine color customization
  * - Add animation/particle effects when receiving mana
  */
-public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> implements IModularBlock, IWandHUD {
+public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> implements IWandHUD {
 
     protected BlockManaOutputPort() {
         super(ModObject.blockModularManaOutput.unlocalisedName, TEManaOutputPortT1.class);

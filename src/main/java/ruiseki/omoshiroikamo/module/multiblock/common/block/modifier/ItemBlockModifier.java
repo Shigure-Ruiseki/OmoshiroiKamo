@@ -18,8 +18,7 @@ public class ItemBlockModifier extends ItemBlock {
     }
 
     @Override
-    @SuppressWarnings({ "unchecked" })
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         super.addInformation(stack, player, list, flag);
         Block block = Block.getBlockFromItem(stack.getItem());
         if (block instanceof BlockModifier) {

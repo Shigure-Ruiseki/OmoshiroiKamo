@@ -34,19 +34,14 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
         return true;
     }
 
-    private long lastUpdate = 0;
-
     @Override
     public final void updateEntity() {
-        if (worldObj.getTotalWorldTime() != lastUpdate) {
-            lastUpdate = worldObj.getTotalWorldTime();
-            doUpdate();
-            if (isProgressTile && !worldObj.isRemote) {
-                int curScaled = getProgressScaled(16);
-                if (++ticksSinceLastProgressUpdate >= getProgressUpdateFreq() || curScaled != lastProgressScaled) {
-                    requestProgressSync();
-                    lastProgressScaled = curScaled;
-                }
+        doUpdate();
+        if (isProgressTile && !worldObj.isRemote) {
+            int curScaled = getProgressScaled(16);
+            if (++ticksSinceLastProgressUpdate >= getProgressUpdateFreq() || curScaled != lastProgressScaled) {
+                requestProgressSync();
+                lastProgressScaled = curScaled;
             }
         }
     }
@@ -71,7 +66,8 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
     }
 
     /**
-     * Controls how often progress updates. Has no effect if your TE is not {@link IProgressTile}.
+     * Controls how often progress updates.
+     * Has no effect if your TE is not IProgressTile.
      */
     protected int getProgressUpdateFreq() {
         return 20;

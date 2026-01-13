@@ -18,13 +18,11 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
-import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
 
-public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExtractor>
-    implements IWailaBlockInfoProvider {
+public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExtractor> {
 
     protected BlockQuantumOreExtractor() {
         super(

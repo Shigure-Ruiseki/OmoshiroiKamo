@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
@@ -19,7 +18,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output.TEEsse
 /**
  * Essentia Output Port block - provides Essentia to Infusion Altar and Tubes.
  */
-public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputPort> implements IModularBlock {
+public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputPort> {
 
     protected BlockEssentiaOutputPort() {
         super(ModObject.blockModularEssentiaOutput.unlocalisedName, TEEssentiaOutputPort.class);

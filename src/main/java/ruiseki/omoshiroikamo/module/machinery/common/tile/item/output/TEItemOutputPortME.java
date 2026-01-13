@@ -45,7 +45,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyable, IActionHost {
 
     private static final int BUFFER_SLOTS = 63;
-    private static final long CACHE_CAPACITY = 1600;
 
     private AENetworkProxy gridProxy;
     private BaseActionSource requestSource;
@@ -53,16 +52,10 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         .storage()
         .createItemList();
 
-    private long lastOutputTick = 0;
-    private long tickCounter = 0;
     private boolean proxyReady = false;
 
     // Cached item count for fast lookup (avoid iterating itemCache every tick)
     private long cachedItemCount = 0;
-
-    // Tick interval for moveToCache to avoid scanning slots every tick
-    private static final int MOVE_TO_CACHE_INTERVAL = 5;
-    private long lastMoveToCacheTick = 0;
 
     // Client-synced status for Waila
     private boolean clientIsActive = false;
@@ -195,7 +188,6 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
         } catch (final GridAccessException e) {
             Logger.debug("ME Output Port: Grid access exception during flush");
         }
-        lastOutputTick = tickCounter;
     }
 
     public boolean isActive() {

@@ -58,9 +58,6 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
     protected EnumDye focusColor = EnumDye.WHITE;
     protected float focusBoostModifier = 1.0F;
 
-    private float beamProgress = 0.0F;
-    private long lastBeamUpdateTick = 0L;
-
     // Beam segment cache for optimized rendering
     @SideOnly(Side.CLIENT)
     private List<BeamSegment> cachedBeamSegments;
