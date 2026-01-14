@@ -4,9 +4,14 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -54,6 +59,40 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, placer, stack);
+
+        if (world.isRemote) return;
+
+        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
+        if (te == null) return;
+
+        // Calculate facing from player's yaw (block front faces player)
+        int facing = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+        ForgeDirection direction;
+        switch (facing) {
+            case 0:
+                direction = ForgeDirection.NORTH;
+                break;
+            case 1:
+                direction = ForgeDirection.EAST;
+                break;
+            case 2:
+                direction = ForgeDirection.SOUTH;
+                break;
+            case 3:
+                direction = ForgeDirection.WEST;
+                break;
+            default:
+                direction = ForgeDirection.NORTH;
+                break;
+        }
+
+        te.setExtendedFacing(ExtendedFacing.of(direction));
     }
 
     @Override

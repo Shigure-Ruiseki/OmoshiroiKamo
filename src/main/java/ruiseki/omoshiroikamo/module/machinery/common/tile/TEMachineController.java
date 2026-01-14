@@ -13,6 +13,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.gtnewhorizon.structurelib.alignment.IAlignment;
+import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
+import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
@@ -48,7 +51,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  * TODO: NEI integration
  * TODO: Other port types
  */
-public class TEMachineController extends AbstractMBModifierTE {
+public class TEMachineController extends AbstractMBModifierTE implements IAlignment {
 
     // IO ports tracked during structure formation
     private final List<IModularPort> inputPorts = new ArrayList<>();
@@ -67,6 +70,9 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     // Structure definition (will be loaded from JSON)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
+
+    // Controller facing (rotation state) - used by IAlignment
+    private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
 
     // Structure offsets per tier
     private static final int[][] OFFSETS = { { 1, 1, 1 } };
@@ -765,6 +771,8 @@ public class TEMachineController extends AbstractMBModifierTE {
         NBTTagCompound agentNbt = new NBTTagCompound();
         processAgent.writeToNBT(agentNbt);
         nbt.setTag("processAgent", agentNbt);
+        // Save ExtendedFacing
+        nbt.setByte("extendedFacing", (byte) extendedFacing.ordinal());
     }
 
     @Override
@@ -779,6 +787,13 @@ public class TEMachineController extends AbstractMBModifierTE {
         }
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
+        }
+        // Load ExtendedFacing
+        if (nbt.hasKey("extendedFacing")) {
+            int ordinal = nbt.getByte("extendedFacing") & 0xFF;
+            if (ordinal >= 0 && ordinal < ExtendedFacing.VALUES.length) {
+                extendedFacing = ExtendedFacing.VALUES[ordinal];
+            }
         }
     }
 
@@ -841,5 +856,36 @@ public class TEMachineController extends AbstractMBModifierTE {
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
         return entry != null ? entry.properties : null;
+    }
+
+    // ========== IAlignment Implementation ==========
+    // TODO: In the future, load alignment limits from structure JSON config
+    // to allow per-structure rotation restrictions.
+
+    @Override
+    public ExtendedFacing getExtendedFacing() {
+        return extendedFacing;
+    }
+
+    @Override
+    public void setExtendedFacing(ExtendedFacing facing) {
+        if (facing == null) facing = ExtendedFacing.DEFAULT;
+        this.extendedFacing = facing;
+
+        // Reset structure state when facing changes
+        this.isFormed = false;
+        clearStructureParts();
+
+        markDirty();
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public IAlignmentLimits getAlignmentLimits() {
+        // Allow only horizontal directions (no up/down facing)
+        // TODO: Load from structure JSON config in the future
+        return IAlignmentLimits.UPRIGHT;
     }
 }

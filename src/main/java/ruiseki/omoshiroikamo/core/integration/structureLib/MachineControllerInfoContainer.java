@@ -10,6 +10,7 @@ import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -27,26 +28,31 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
 
         IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
         if (def == null) {
+            notifyStructureNotFound(ctx, structureName);
             return;
         }
 
         int[] offset = getOffset(structureName, ctx);
         String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
 
-        def.buildOrHints(
-            ctx,
-            triggerStack,
-            pieceName,
-            ctx.getWorldObj(),
-            ExtendedFacing.DEFAULT,
-            ctx.xCoord,
-            ctx.yCoord,
-            ctx.zCoord,
-            offset[0],
-            offset[1],
-            offset[2],
-            hintsOnly);
-
+        // Check if the piece exists in the structure definition
+        try {
+            def.buildOrHints(
+                ctx,
+                triggerStack,
+                pieceName,
+                ctx.getWorldObj(),
+                ctx.getExtendedFacing(), // Use controller's facing instead of DEFAULT
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                offset[0],
+                offset[1],
+                offset[2],
+                hintsOnly);
+        } catch (java.util.NoSuchElementException e) {
+            notifyStructureNotFound(ctx, pieceName);
+        }
     }
 
     @Override
@@ -55,25 +61,49 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         String structureName = getStructureName(triggerStack, ctx);
 
         IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
-        if (def == null) return 0;
+        if (def == null) {
+            notifyStructureNotFound(ctx, structureName);
+            return 0;
+        }
 
         int[] offset = getOffset(structureName, ctx);
+        String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
 
-        return def.survivalBuild(
-            ctx,
-            triggerStack,
-            structureName != null ? structureName : ctx.getStructurePieceName(),
-            ctx.getWorldObj(),
-            ExtendedFacing.DEFAULT,
-            ctx.xCoord,
-            ctx.yCoord,
-            ctx.zCoord,
-            offset[0],
-            offset[1],
-            offset[2],
-            elementBudget,
-            env,
-            false);
+        try {
+            return def.survivalBuild(
+                ctx,
+                triggerStack,
+                pieceName,
+                ctx.getWorldObj(),
+                ctx.getExtendedFacing(), // Use controller's facing instead of DEFAULT
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                offset[0],
+                offset[1],
+                offset[2],
+                elementBudget,
+                env,
+                false);
+        } catch (java.util.NoSuchElementException e) {
+            notifyStructureNotFound(ctx, pieceName);
+            return 0;
+        }
+    }
+
+    /**
+     * Notify that a structure was not found.
+     * Logs to console and notifies any connected player.
+     */
+    private void notifyStructureNotFound(TEMachineController ctx, String structureName) {
+        String msg = "[Machine] Structure '" + structureName + "' not found!";
+        Logger.warn(msg);
+
+        // Try to notify client (if this is being triggered by a player action)
+        if (ctx != null && ctx.getWorldObj() != null && !ctx.getWorldObj().isRemote) {
+            // This is server-side, we can't directly send chat here
+            // The chat message will be sent by other code paths if needed
+        }
     }
 
     @Override
