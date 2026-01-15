@@ -7,7 +7,6 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
-import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -28,6 +27,8 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
+import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
@@ -99,12 +100,26 @@ public class NEIConfig implements IConfigureNEI {
         }
 
         // Register Modular Machine structure preview handlers (one per structure)
+        // Only register as usage handlers - structure preview shows on Usage (U), not
+        // Recipe (R)
         if (BackportConfigs.useMachinery) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
-                GuiCraftingRecipe.craftinghandlers.add(handler);
+                // Register ONLY as usage handler - structure preview is Usage-only
                 GuiUsageRecipe.usagehandlers.add(handler);
+
+                // Register blueprint for this structure as a catalyst (appears in left tab)
+                // Use handler.getOverlayIdentifier() for correct ID matching
+                ItemStack blueprint = ItemMachineBlueprint
+                    .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
+                API.addRecipeCatalyst(blueprint, handler.getOverlayIdentifier());
+
+                // Also register controller as catalyst for this specific structure
+                API.addRecipeCatalyst(
+                    new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()),
+                    handler.getOverlayIdentifier());
             }
+
             Logger.info(
                 "Registered {} Modular Machine NEI handlers",
                 CustomStructureRegistry.getRegisteredNames()
