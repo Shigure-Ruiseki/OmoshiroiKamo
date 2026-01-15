@@ -26,14 +26,37 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         // Get structure name from blueprint or controller
         String structureName = getStructureName(triggerStack, ctx);
 
+        // DEBUG: Log the construct call for troubleshooting
+        Logger.info(
+            "[MachineControllerInfoContainer] construct called - structureName: " + structureName
+                + ", hintsOnly: "
+                + hintsOnly
+                + ", ctx.world: "
+                + (ctx.getWorldObj() != null ? ctx.getWorldObj()
+                    .getClass()
+                    .getSimpleName() : "null")
+                + ", triggerStack: "
+                + (triggerStack != null ? triggerStack.getDisplayName() : "null"));
+
         IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
         if (def == null) {
+            Logger.warn("[MachineControllerInfoContainer] Structure definition is null for: " + structureName);
             notifyStructureNotFound(ctx, structureName);
             return;
         }
 
         int[] offset = getOffset(structureName, ctx);
         String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
+
+        Logger.info(
+            "[MachineControllerInfoContainer] Building piece: " + pieceName
+                + " at offset: ["
+                + offset[0]
+                + ", "
+                + offset[1]
+                + ", "
+                + offset[2]
+                + "]");
 
         // Check if the piece exists in the structure definition
         try {
@@ -42,7 +65,8 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 triggerStack,
                 pieceName,
                 ctx.getWorldObj(),
-                ctx.getExtendedFacing(), // Use controller's facing instead of DEFAULT
+                ExtendedFacing.DEFAULT, // Use DEFAULT for consistent behavior (matches
+                                        // TieredMultiblockInfoContainer)
                 ctx.xCoord,
                 ctx.yCoord,
                 ctx.zCoord,
@@ -50,7 +74,9 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 offset[1],
                 offset[2],
                 hintsOnly);
+            Logger.info("[MachineControllerInfoContainer] buildOrHints completed successfully");
         } catch (java.util.NoSuchElementException e) {
+            Logger.error("[MachineControllerInfoContainer] NoSuchElementException for piece: " + pieceName);
             notifyStructureNotFound(ctx, pieceName);
         }
     }
@@ -75,7 +101,8 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 triggerStack,
                 pieceName,
                 ctx.getWorldObj(),
-                ctx.getExtendedFacing(), // Use controller's facing instead of DEFAULT
+                ExtendedFacing.DEFAULT, // Use DEFAULT for consistent behavior (matches
+                                        // TieredMultiblockInfoContainer)
                 ctx.xCoord,
                 ctx.yCoord,
                 ctx.zCoord,

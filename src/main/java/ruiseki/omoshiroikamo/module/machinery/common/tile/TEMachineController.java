@@ -152,6 +152,22 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         return false;
     }
 
+    /**
+     * Called by StructureLib's ofTileAdder during structure check.
+     * Adds a port to the appropriate list based on direction.
+     *
+     * @param port    The port to add
+     * @param isInput True for input list, false for output list
+     */
+    public void addPortFromStructure(IModularPort port, boolean isInput) {
+        if (port == null) return;
+        if (isInput) {
+            addIfAbsent(inputPorts, port);
+        } else {
+            addIfAbsent(outputPorts, port);
+        }
+    }
+
     // ========== Crafting Configuration ==========
     // TODO: These methods are inherited from AbstractMBModifierTE but unused
     // Consider removing or refactoring the parent class.
