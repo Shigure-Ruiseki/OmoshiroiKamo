@@ -3,13 +3,18 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular;
 import static blockrenderer6343.client.utils.BRUtil.FAKE_PLAYER;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
 import blockrenderer6343.api.utils.CreativeItemSource;
+import blockrenderer6343.client.utils.ConstructableData;
 import blockrenderer6343.integration.nei.GuiMultiblockHandler;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
@@ -29,6 +34,26 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
     public void setCurrentStructure(CustomStructureConstructable structure) {
         this.currentStructure = structure;
+    }
+
+    /**
+     * Get the static lastRenderingController for comparison.
+     * This is used to detect when we're switching between tabs.
+     */
+    public IConstructable getLastRenderingController() {
+        return lastRenderingController;
+    }
+
+    /**
+     * Override loadMultiblock to force GUI reinitialization on every page switch.
+     * This fixes the issue where buttons/sliders don't respond on pages 2+.
+     */
+    @Override
+    public void loadMultiblock(IConstructable multiblock, ItemStack stackForm, @NotNull ConstructableData data) {
+        // Force reinit by clearing the last controller reference
+        // This ensures initGui() and loadNewMultiblock() are called every time
+        lastRenderingController = null;
+        super.loadMultiblock(multiblock, stackForm, data);
     }
 
     @Override

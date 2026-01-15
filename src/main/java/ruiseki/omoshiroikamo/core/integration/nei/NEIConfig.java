@@ -12,6 +12,7 @@ import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -97,12 +98,17 @@ public class NEIConfig implements IConfigureNEI {
             registerHandler(new SimulationChamberRecipeHandler());
         }
 
-        // Register Modular Machine structure preview handler
+        // Register Modular Machine structure preview handlers (one per structure)
         if (BackportConfigs.useMachinery) {
-            ModularMachineNEIHandler modularHandler = new ModularMachineNEIHandler();
-            GuiCraftingRecipe.craftinghandlers.add(modularHandler);
-            GuiUsageRecipe.usagehandlers.add(modularHandler);
-            Logger.info("Registered Modular Machine NEI handler");
+            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+                ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
+                GuiCraftingRecipe.craftinghandlers.add(handler);
+                GuiUsageRecipe.usagehandlers.add(handler);
+            }
+            Logger.info(
+                "Registered {} Modular Machine NEI handlers",
+                CustomStructureRegistry.getRegisteredNames()
+                    .size());
         }
     }
 

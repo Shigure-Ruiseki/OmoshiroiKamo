@@ -1,8 +1,5 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -25,71 +22,70 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
- * NEI handler for ModularMachine structure previews.
- * Extends MultiblockHandler to integrate with BlockRenderer6343's preview
- * system.
- * Each custom structure is displayed as a separate page in NEI.
+ * NEI handler for a single ModularMachine structure preview.
+ * Each structure gets its own handler instance and tab in NEI.
+ * This avoids the page navigation issues with shared static state.
  */
 public class ModularMachineNEIHandler extends MultiblockHandler {
 
-    private static final ModularMachineGuiHandler guiHandler = new ModularMachineGuiHandler();
+    // Each handler has its own GuiHandler instance to avoid state conflicts
+    private final ModularMachineGuiHandler guiHandler;
 
-    // Cached constructables for each structure
-    private static final List<CustomStructureConstructable> constructableList = new ArrayList<>();
-    private static boolean initialized = false;
+    // The specific structure this handler displays
+    private final String structureName;
+    private final CustomStructureConstructable constructable;
 
-    public ModularMachineNEIHandler() {
+    /**
+     * Create a handler for a specific structure.
+     * 
+     * @param structureName Name of the structure
+     */
+    public ModularMachineNEIHandler(String structureName) {
+        // Create a dedicated GuiHandler for this structure and pass to parent
+        super(new ModularMachineGuiHandler());
+        this.guiHandler = (ModularMachineGuiHandler) super.getGuiHandler();
+        this.structureName = structureName;
+
+        // Create the constructable for this structure
+        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
+        StructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(structureName);
+        int[] offset = (entry != null && entry.controllerOffset != null) ? entry.controllerOffset
+            : new int[] { 0, 0, 0 };
+
+        this.constructable = new CustomStructureConstructable(structureName, def, offset);
+        this.guiHandler.setCurrentStructure(this.constructable);
+
+        Logger.info("[ModularMachineNEIHandler] Created handler for structure: " + structureName);
+    }
+
+    /**
+     * Private constructor for newInstance().
+     */
+    private ModularMachineNEIHandler(String structureName, ModularMachineGuiHandler guiHandler,
+        CustomStructureConstructable constructable) {
         super(guiHandler);
+        this.guiHandler = guiHandler;
+        this.structureName = structureName;
+        this.constructable = constructable;
+        this.guiHandler.setCurrentStructure(this.constructable);
     }
 
     /**
-     * Initialize the handler with all registered custom structures.
-     * Called from NEI config after CustomStructureRegistry is populated.
+     * Get the GuiHandler for parent class.
      */
-    public static void initialize() {
-        if (initialized) return;
-
-        constructableList.clear();
-
-        for (String name : CustomStructureRegistry.getRegisteredNames()) {
-            IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(name);
-            if (def == null) continue;
-
-            StructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(name);
-            int[] offset = (entry != null && entry.controllerOffset != null) ? entry.controllerOffset
-                : new int[] { 0, 0, 0 };
-
-            CustomStructureConstructable constructable = new CustomStructureConstructable(name, def, offset);
-            constructableList.add(constructable);
-
-            Logger.info("[ModularMachineNEIHandler] Registered structure: " + name);
-        }
-
-        initialized = true;
-        Logger.info("[ModularMachineNEIHandler] Initialized with " + constructableList.size() + " structure(s)");
-    }
-
-    /**
-     * Reinitialize after structure registry changes (e.g., reload).
-     */
-    public static void reinitialize() {
-        initialized = false;
-        initialize();
+    @Override
+    public ModularMachineGuiHandler getGuiHandler() {
+        return guiHandler;
     }
 
     @Override
     public @NotNull ItemStack getConstructableStack(IConstructable multiblock) {
-        // Return the controller block for all structures
         return new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
     }
 
     @Override
     protected @NotNull ObjectSet<IConstructable> tryLoadingMultiblocks(ItemStack candidate) {
-        if (!initialized || constructableList.isEmpty()) {
-            initialize();
-        }
-
         if (candidate == null || candidate.getItem() == null) {
             return ObjectSets.emptySet();
         }
@@ -97,23 +93,19 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         // Check if it's the Machine Controller block
         Item controllerItem = Item.getItemFromBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
         if (candidate.getItem() == controllerItem) {
-            // Return all structures for the controller
-            return new ObjectOpenHashSet<>(constructableList);
+            // Return only THIS structure
+            ObjectSet<IConstructable> result = new ObjectOpenHashSet<>();
+            result.add(constructable);
+            return result;
         }
 
-        // Check if it's a Blueprint item
+        // Check if it's a Blueprint item matching this structure
         if (candidate.getItem() instanceof ItemMachineBlueprint) {
-            String structureName = ItemMachineBlueprint.getStructureName(candidate);
-            if (structureName != null && !structureName.isEmpty()) {
-                // Find the specific structure
-                for (CustomStructureConstructable c : constructableList) {
-                    if (c.getStructureName()
-                        .equals(structureName)) {
-                        ObjectSet<IConstructable> result = new ObjectOpenHashSet<>();
-                        result.add(c);
-                        return result;
-                    }
-                }
+            String blueprintStructure = ItemMachineBlueprint.getStructureName(candidate);
+            if (structureName.equals(blueprintStructure)) {
+                ObjectSet<IConstructable> result = new ObjectOpenHashSet<>();
+                result.add(constructable);
+                return result;
             }
         }
 
@@ -122,40 +114,40 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
 
     @Override
     public void drawBackground(int recipe) {
-        // Set the current structure on the GUI handler before rendering
-        if (currentMultiblocks != null && recipe >= 0 && recipe < currentMultiblocks.length) {
-            IConstructable current = currentMultiblocks[recipe];
-            if (current instanceof CustomStructureConstructable csc) {
-                guiHandler.setCurrentStructure(csc);
-            }
+        // Ensure GUI handler has the correct structure
+        guiHandler.setCurrentStructure(constructable);
+        // Only force rebuild when switching FROM a different structure's tab
+        // This allows layer changes to work while viewing the same tab
+        // Access lastRenderingController via guiHandler (inherited static from
+        // GuiMultiblockHandler)
+        if (guiHandler.getLastRenderingController() != constructable) {
+            oldRecipe = -1;
         }
         super.drawBackground(recipe);
     }
 
     @Override
     public TemplateRecipeHandler newInstance() {
-        return new ModularMachineNEIHandler();
+        // Create a new instance with the same structure
+        return new ModularMachineNEIHandler(structureName, new ModularMachineGuiHandler(), constructable);
     }
 
     @Override
     public String getRecipeName() {
-        // Show the current structure name
-        if (currentMultiblocks != null && oldRecipe >= 0 && oldRecipe < currentMultiblocks.length) {
-            IConstructable current = currentMultiblocks[oldRecipe];
-            if (current instanceof CustomStructureConstructable csc) {
-                return "Modular: " + csc.getStructureName();
-            }
-        }
-        return "Modular Machine";
+        return structureName;
     }
 
     @Override
     public String getRecipeTabName() {
-        return "Modular Machine";
+        return structureName;
     }
 
     @Override
     public String getGuiTexture() {
         return "blockrenderer6343:textures/void.png";
+    }
+
+    public String getStructureName() {
+        return structureName;
     }
 }
