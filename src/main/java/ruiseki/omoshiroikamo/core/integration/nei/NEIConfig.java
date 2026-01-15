@@ -2,10 +2,18 @@ package ruiseki.omoshiroikamo.core.integration.nei;
 
 import net.minecraft.item.ItemStack;
 
+import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
+
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
+import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
+import codechicken.nei.recipe.GuiCraftingRecipe;
+import codechicken.nei.recipe.GuiUsageRecipe;
+import codechicken.nei.recipe.HandlerInfo;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
@@ -18,13 +26,34 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowBreedingRecipeHandle
 import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
 
+@EventBusSubscriber
 @SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
+
+    /**
+     * Register handler info for Modular Machine NEI tab.
+     * This controls the appearance of the recipe tab in NEI.
+     */
+    @SubscribeEvent
+    public static void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
+        if (BackportConfigs.useMachinery) {
+            event.registerHandlerInfo(
+                new HandlerInfo.Builder(ModularMachineNEIHandler.class, "Modular Machine", LibMisc.MOD_ID)
+                    .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
+                    .setHeight(168)
+                    .setWidth(192)
+                    .setMaxRecipesPerPage(1)
+                    .setShiftY(6)
+                    .build());
+            Logger.info("Registered Modular Machine NEI handler info");
+        }
+    }
 
     @Override
     public void loadConfig() {
@@ -66,6 +95,14 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.useDML) {
             registerHandler(new LootFabricatorRecipeHandler());
             registerHandler(new SimulationChamberRecipeHandler());
+        }
+
+        // Register Modular Machine structure preview handler
+        if (BackportConfigs.useMachinery) {
+            ModularMachineNEIHandler modularHandler = new ModularMachineNEIHandler();
+            GuiCraftingRecipe.craftinghandlers.add(modularHandler);
+            GuiUsageRecipe.usagehandlers.add(modularHandler);
+            Logger.info("Registered Modular Machine NEI handler");
         }
     }
 
