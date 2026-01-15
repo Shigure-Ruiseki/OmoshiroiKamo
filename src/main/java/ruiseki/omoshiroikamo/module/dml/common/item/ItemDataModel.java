@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemDataModel extends ItemOK {
+    // TODO: add mod integration by default
 
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
@@ -93,9 +94,9 @@ public class ItemDataModel extends ItemOK {
             builder.addLang("tooltip.data_model.tier", LibMisc.LANG.localize(DataModelExperience.getTierName(tier)));
             if (tier != DataModelExperience.getMaxTier()) {
                 builder.addLang(
-                    "tooltip.data_model.data_collected",
-                    DataModel.getCurrentTierSimulationCountWithKills(stack),
-                    DataModel.getTierRoof(stack));
+                        "tooltip.data_model.data_collected",
+                        DataModel.getCurrentTierSimulationCountWithKills(stack),
+                        DataModel.getTierRoof(stack));
                 builder.addLang("tooltip.data_model.kill_multiplier", DataModel.getKillMultiplier(stack));
             }
             builder.addLang("tooltip.data_model.rf_cost", DataModel.getSimulationTickCost(stack));
