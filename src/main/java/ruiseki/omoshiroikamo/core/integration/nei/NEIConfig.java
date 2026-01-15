@@ -108,16 +108,22 @@ public class NEIConfig implements IConfigureNEI {
                 // Register ONLY as usage handler - structure preview is Usage-only
                 GuiUsageRecipe.usagehandlers.add(handler);
 
+                String overlayId = handler.getOverlayIdentifier();
+                Logger.info(
+                    "[NEI-DEBUG] Registering catalyst for structure '{}' with overlayId: '{}'",
+                    structureName,
+                    overlayId);
+
                 // Register blueprint for this structure as a catalyst (appears in left tab)
-                // Use handler.getOverlayIdentifier() for correct ID matching
                 ItemStack blueprint = ItemMachineBlueprint
                     .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
-                API.addRecipeCatalyst(blueprint, handler.getOverlayIdentifier());
+                API.addRecipeCatalyst(blueprint, overlayId);
+                Logger.info("[NEI-DEBUG]   - Registered blueprint catalyst: {}", blueprint.getDisplayName());
 
                 // Also register controller as catalyst for this specific structure
-                API.addRecipeCatalyst(
-                    new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()),
-                    handler.getOverlayIdentifier());
+                ItemStack controller = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+                API.addRecipeCatalyst(controller, overlayId);
+                Logger.info("[NEI-DEBUG]   - Registered controller catalyst: {}", controller.getDisplayName());
             }
 
             Logger.info(

@@ -94,9 +94,9 @@ public class ItemDataModel extends ItemOK {
             builder.addLang("tooltip.data_model.tier", LibMisc.LANG.localize(DataModelExperience.getTierName(tier)));
             if (tier != DataModelExperience.getMaxTier()) {
                 builder.addLang(
-                        "tooltip.data_model.data_collected",
-                        DataModel.getCurrentTierSimulationCountWithKills(stack),
-                        DataModel.getTierRoof(stack));
+                    "tooltip.data_model.data_collected",
+                    DataModel.getCurrentTierSimulationCountWithKills(stack),
+                    DataModel.getTierRoof(stack));
                 builder.addLang("tooltip.data_model.kill_multiplier", DataModel.getKillMultiplier(stack));
             }
             builder.addLang("tooltip.data_model.rf_cost", DataModel.getSimulationTickCost(stack));
