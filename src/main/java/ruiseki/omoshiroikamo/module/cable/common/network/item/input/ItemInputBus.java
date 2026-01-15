@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.input;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,6 +34,8 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
 
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
+
+    private int transferLimit = 1000;
 
     @Override
     public String getId() {
@@ -87,10 +90,23 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
     }
 
     @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setInteger("transferLimit", transferLimit);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        transferLimit = tag.getInteger("transferLimit");
+    }
+
+    @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("tickSyncer", SyncHandlers.intNumber(this::getTickInterval, this::setTickInterval));
         syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
         syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
+        syncManager.syncValue("transferSyncer", SyncHandlers.intNumber(this::getTransferLimit, this::setTransferLimit));
 
         ModularPanel panel = new ModularPanel("item_input_bus");
 
@@ -130,12 +146,22 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
             new TextFieldWidget().syncHandler("channelSyncer")
                 .right(0));
 
+        Row transferRow = new Row();
+        transferRow.height(20);
+        transferRow.child(
+            IKey.lang("gui.cable.transfer")
+                .asWidget());
+        transferRow.child(
+            new TextFieldWidget().syncHandler("transferSyncer")
+                .right(0));
+
         Column col = new Column();
         col.padding(7)
             .child(sideRow)
             .child(tickRow)
             .child(priorityRow)
-            .child(channelRow);
+            .child(channelRow)
+            .child(transferRow);
         panel.child(col);
 
         return panel;
@@ -166,6 +192,10 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
 
     @Override
     public int getTransferLimit() {
-        return Integer.MAX_VALUE;
+        return this.transferLimit;
+    }
+
+    public void setTransferLimit(int transferLimit) {
+        this.transferLimit = transferLimit;
     }
 }
