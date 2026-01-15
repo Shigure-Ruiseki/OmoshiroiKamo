@@ -19,7 +19,6 @@ import blockrenderer6343.integration.nei.GuiMultiblockHandler;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -59,7 +58,6 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
     @Override
     protected void placeMultiblock() {
         if (currentStructure == null) {
-            Logger.warn("[ModularMachineGuiHandler] No structure set for preview!");
             return;
         }
 
@@ -71,7 +69,6 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         }
 
         if (def == null) {
-            Logger.warn("[ModularMachineGuiHandler] Structure definition not found: " + structureName);
             return;
         }
 
@@ -82,7 +79,6 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         // Get the TileEntity
         TileEntity tileEntity = renderer.world.getTileEntity(MB_PLACE_POS.x, MB_PLACE_POS.y, MB_PLACE_POS.z);
         if (!(tileEntity instanceof TEMachineController controller)) {
-            Logger.error("[ModularMachineGuiHandler] Failed to get TEMachineController at placement position");
             return;
         }
 
@@ -139,8 +135,6 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
         // Update entities for proper rendering
         renderer.world.updateEntitiesForNEI();
-
-        Logger.info("[ModularMachineGuiHandler] Placed structure: " + structureName);
     }
 
     @Override

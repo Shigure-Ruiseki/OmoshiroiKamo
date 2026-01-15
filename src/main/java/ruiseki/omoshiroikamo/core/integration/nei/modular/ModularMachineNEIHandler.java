@@ -16,7 +16,6 @@ import it.unimi.dsi.fastutil.objects.ObjectSets;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -55,8 +54,6 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
 
         this.constructable = new CustomStructureConstructable(structureName, def, offset);
         this.guiHandler.setCurrentStructure(this.constructable);
-
-        Logger.info("[ModularMachineNEIHandler] Created handler for structure: " + structureName);
     }
 
     /**
