@@ -67,7 +67,6 @@ public class TerminalPanel extends ModularPanel {
                 .total(
                     () -> clientIndex.view()
                         .size())
-                .visible(() -> SLOT_COUNT)
                 .onChange(offset -> {
                     indexOffset = offset;
                     updateGrid(clientIndex.view());

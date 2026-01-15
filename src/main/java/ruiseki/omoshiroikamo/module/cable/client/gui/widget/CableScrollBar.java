@@ -13,7 +13,6 @@ import com.cleanroommc.modularui.widget.Widget;
 public class CableScrollBar extends Widget<CableScrollBar> implements Interactable {
 
     private IntSupplier totalSupplier = () -> 0;
-    private IntSupplier visibleSupplier = () -> 1;
     private IntConsumer onChange = i -> {};
 
     private int offset = 0;
@@ -27,11 +26,6 @@ public class CableScrollBar extends Widget<CableScrollBar> implements Interactab
 
     public CableScrollBar total(IntSupplier sup) {
         this.totalSupplier = sup;
-        return this;
-    }
-
-    public CableScrollBar visible(IntSupplier sup) {
-        this.visibleSupplier = sup;
         return this;
     }
 
