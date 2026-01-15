@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.dml.common.item.deepLearner;
 
-import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.DML_INVENTORY_TEXTURE;
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.DML_INVENTORY_TEXTURE;
 
 import java.util.ArrayList;
 import java.util.List;

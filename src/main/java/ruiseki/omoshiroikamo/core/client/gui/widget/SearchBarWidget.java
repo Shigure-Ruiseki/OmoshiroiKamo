@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.widget;
+package ruiseki.omoshiroikamo.core.client.gui.widget;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
@@ -9,9 +9,9 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public class CableSearchBar extends TextFieldWidget {
+public class SearchBarWidget extends TextFieldWidget {
 
-    static protected String prevText = "";
+    protected static String prevText = "";
 
     public static final UITexture VANILLA_SEARCH_BACKGROUND = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/vanilla_search")
@@ -20,7 +20,7 @@ public class CableSearchBar extends TextFieldWidget {
         .name("vanilla_search")
         .build();
 
-    public CableSearchBar() {
+    public SearchBarWidget() {
         super();
         background(VANILLA_SEARCH_BACKGROUND);
         value(new StringValue(prevText));
@@ -37,6 +37,10 @@ public class CableSearchBar extends TextFieldWidget {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        doUpdate();
+    }
+
+    public void doUpdate() {
         String txt = getText();
 
         if (!txt.equals(prevText)) {
@@ -48,7 +52,11 @@ public class CableSearchBar extends TextFieldWidget {
     @Override
     public void onInit() {
         super.onInit();
-        doSearch(prevText);
+        doInit();
+    }
+
+    public void doInit() {
+        research();
     }
 
     public void research() {

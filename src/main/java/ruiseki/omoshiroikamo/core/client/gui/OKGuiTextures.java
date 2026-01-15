@@ -10,9 +10,9 @@ import com.cleanroommc.modularui.drawable.UITexture;
 
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public final class GuiTextures {
+public final class OKGuiTextures {
 
-    private GuiTextures() {}
+    private OKGuiTextures() {}
 
     public static final UITexture BREEDER_PROGRESS = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/widgets/progress_breeder")

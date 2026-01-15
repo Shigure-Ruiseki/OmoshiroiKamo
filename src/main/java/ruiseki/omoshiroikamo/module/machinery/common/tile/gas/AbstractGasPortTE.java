@@ -26,7 +26,7 @@ import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -248,7 +248,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
         column.child(
             new ProgressWidget().value(new DoubleValue((double) this.tank.getStored() / this.tank.getMaxGas()))
-                .texture(GuiTextures.BASIC_BAR, 64)
+                .texture(OKGuiTextures.BASIC_BAR, 64)
                 .size(64, 16));
 
         column.child(

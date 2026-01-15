@@ -14,6 +14,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
@@ -30,6 +31,8 @@ public class CableTerminal extends AbstractPart {
 
     public ItemStackHandlerBase craftingStackHandler = new ItemStackHandlerBase(10);
     public String CRAFTING_MATRIX_TAG = "CraftingMatrix";
+    public SortType sortType = SortType.BY_NAME;
+    public String SORT_TYPE_TAG = "SortType";
 
     @Override
     public String getId() {
@@ -55,12 +58,15 @@ public class CableTerminal extends AbstractPart {
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setTag(CRAFTING_MATRIX_TAG, craftingStackHandler.serializeNBT());
+        tag.setInteger(SORT_TYPE_TAG, sortType.ordinal());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         craftingStackHandler.deserializeNBT(tag.getCompoundTag(CRAFTING_MATRIX_TAG));
+        tag.setInteger(SORT_TYPE_TAG, sortType.ordinal());
+        sortType = SortType.fromIndex(tag.getInteger(SORT_TYPE_TAG));
     }
 
     @Override
@@ -113,5 +119,13 @@ public class CableTerminal extends AbstractPart {
 
     public ItemNetwork getItemNetwork() {
         return (ItemNetwork) getCable().getNetwork(IItemPart.class);
+    }
+
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
     }
 }

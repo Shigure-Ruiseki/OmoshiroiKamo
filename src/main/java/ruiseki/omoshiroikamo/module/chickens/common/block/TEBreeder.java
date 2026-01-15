@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -24,7 +25,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
@@ -109,8 +110,8 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
                         .matrix("S+II  OOO")
                         .key(
                             'I',
-                            index -> new ItemSlot().background(GuiTextures.ROOST_SLOT)
-                                .hoverBackground(GuiTextures.ROOST_SLOT)
+                            index -> new ItemSlot().background(OKGuiTextures.ROOST_SLOT)
+                                .hoverBackground(OKGuiTextures.ROOST_SLOT)
                                 .slot(
                                     new ModularSlot(inv, index).slotGroup("input")
                                         .filter(stack -> isItemValidForSlot(index, stack))))
@@ -119,7 +120,7 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
                             new ItemSlot().slot(
                                 new ModularSlot(inv, 2).slotGroup("input")
                                     .filter(stack -> isItemValidForSlot(2, stack))))
-                        .key('+', new Widget<>().background(com.cleanroommc.modularui.drawable.GuiTextures.ADD))
+                        .key('+', new Widget<>().background(GuiTextures.ADD))
                         .key(
                             'O',
                             index -> new ItemSlot().slot(new ModularSlot(inv, index + 3).accessibility(false, true)))
@@ -135,7 +136,7 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
                         .topRel(0.25f)
                         .leftRel(0.57f)
                         .size(36, 18)
-                        .texture(GuiTextures.BREEDER_PROGRESS, 36)));
+                        .texture(OKGuiTextures.BREEDER_PROGRESS, 36)));
         panel.bindPlayerInventory();
         return panel;
     }

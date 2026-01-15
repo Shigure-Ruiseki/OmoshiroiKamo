@@ -31,7 +31,7 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.drawble.Outline;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.FilterSlot;
@@ -41,27 +41,27 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IAdvancedFilter
 public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
     private static final CyclicVariantButtonWidget.Variant[] FILTER_TYPE_VARIANTS = new CyclicVariantButtonWidget.Variant[] {
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.whitelist"), GuiTextures.CHECK_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.blacklist"), GuiTextures.CROSS_ICON) };
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.whitelist"), OKGuiTextures.CHECK_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.blacklist"), OKGuiTextures.CROSS_ICON) };
 
     private static final CyclicVariantButtonWidget.Variant[] MATCH_TYPE_VARIANTS = new CyclicVariantButtonWidget.Variant[] {
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.match_item"), GuiTextures.BY_ITEM_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.match_mod_id"), GuiTextures.BY_MOD_ID_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.match_item"), OKGuiTextures.BY_ITEM_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.match_mod_id"), OKGuiTextures.BY_MOD_ID_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.match_ore_dict"),
-            GuiTextures.MATCH_ORE_DICT_ICON) };
+            OKGuiTextures.MATCH_ORE_DICT_ICON) };
 
     private static final CyclicVariantButtonWidget.Variant[] IGNORE_DURABILITY_VARIANTS = new CyclicVariantButtonWidget.Variant[] {
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.match_durability"),
-            GuiTextures.MATCH_DURABILITY_ICON),
+            OKGuiTextures.MATCH_DURABILITY_ICON),
         new CyclicVariantButtonWidget.Variant(
             IKey.lang("gui.backpack.ignore_durability"),
-            GuiTextures.IGNORE_DURABILITY_ICON) };
+            OKGuiTextures.IGNORE_DURABILITY_ICON) };
 
     private static final CyclicVariantButtonWidget.Variant[] IGNORE_NBT_VARIANTS = new CyclicVariantButtonWidget.Variant[] {
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.match_nbt"), GuiTextures.MATCH_NBT_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.ignore_nbt"), GuiTextures.IGNORE_NBT_ICON) };
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.match_nbt"), OKGuiTextures.MATCH_NBT_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.ignore_nbt"), OKGuiTextures.IGNORE_NBT_ICON) };
 
     @Getter
     private final CyclicVariantButtonWidget filterTypeButton;
@@ -155,7 +155,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
         // OreDict buttons
         ButtonWidget<?> addOreDictEntryButton = new ButtonWidget<>();
         addOreDictEntryButton.size(20, 20);
-        addOreDictEntryButton.overlay(GuiTextures.ADD_ICON);
+        addOreDictEntryButton.overlay(OKGuiTextures.ADD_ICON);
         addOreDictEntryButton.onMousePressed(mouseButton -> {
             String oreName = oreDictTextField.getText();
             if (oreName.isEmpty()) {
@@ -173,7 +173,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
 
         ButtonWidget<?> removeOreDictEntryButton = new ButtonWidget<>();
         removeOreDictEntryButton.size(20, 20);
-        removeOreDictEntryButton.overlay(GuiTextures.REMOVE_ICON);
+        removeOreDictEntryButton.overlay(OKGuiTextures.REMOVE_ICON);
         removeOreDictEntryButton.onMousePressed(mouseButton -> {
             if (this.focusedOreDictEntry == null) {
                 return false;
@@ -325,7 +325,7 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
                                 .matches());
 
                     if (testMatched) {
-                        tooltip().addLine(GuiTextures.CHECK_ICON);
+                        tooltip().addLine(OKGuiTextures.CHECK_ICON);
                     }
                 }
             });

@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
@@ -21,6 +21,10 @@ public class ItemIndexClient {
 
     public Object2IntOpenHashMap<ItemStackKey> view() {
         return db;
+    }
+
+    public int size() {
+        return view().size();
     }
 
     public int get(ItemStackKey key) {
@@ -51,43 +55,19 @@ public class ItemIndexClient {
         cacheDirty = false;
     }
 
-    private static String norm(String s) {
-        return s == null ? "" : s.toLowerCase(Locale.ROOT);
-    }
-
-    public List<ItemStackKey> search(String query) {
+    public List<ItemStackKey> viewGrid(int rowOffset, int columns, int visibleRows) {
         rebuildCacheIfNeeded();
 
-        String q = norm(query);
-        if (q.isEmpty()) return keyCache;
+        int startIndex = rowOffset * columns;
+        int maxItems = columns * visibleRows;
 
-        ArrayList<ItemStackKey> result = new ArrayList<>();
-
-        for (ItemStackKey key : keyCache) {
-            if (matches(key, q)) {
-                result.add(key);
-            }
+        int total = keyCache.size();
+        if (total == 0 || startIndex >= total) {
+            return Collections.emptyList();
         }
-        return result;
-    }
 
-    private boolean matches(ItemStackKey key, String q) {
-        var item = key.item;
+        int to = Math.min(total, startIndex + maxItems);
 
-        String reg = item.getUnlocalizedName();
-        if (reg != null && reg.toLowerCase()
-            .contains(q)) return true;
-
-        String name = key.toStack(1)
-            .getDisplayName();
-        return name != null && name.toLowerCase()
-            .contains(q);
-    }
-
-    public void destroy() {
-        db.clear();
-        keyCache.clear();
-        indexVersion = -1;
-        cacheDirty = true;
+        return keyCache.subList(startIndex, to);
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.FilterUpgradeWrapper;
@@ -15,9 +15,9 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFilterUpgrade;
 public class FilterUpgradeWidget extends BasicExpandedTabWidget<FilterUpgradeWrapper> {
 
     private static final List<CyclicVariantButtonWidget.Variant> FILTER_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input_output"), GuiTextures.IN_OUT_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input"), GuiTextures.IN_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.output"), GuiTextures.OUT_ICON));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input_output"), OKGuiTextures.IN_OUT_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.input"), OKGuiTextures.IN_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.output"), OKGuiTextures.OUT_ICON));
 
     @Getter
     private final CyclicVariantButtonWidget filterButton;
