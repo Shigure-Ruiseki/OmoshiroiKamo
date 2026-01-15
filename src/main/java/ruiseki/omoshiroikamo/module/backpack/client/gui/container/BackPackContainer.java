@@ -565,6 +565,7 @@ public class BackPackContainer extends ModularContainer {
             this.resetDrag();
         }
 
+        detectAndSendChanges();
         return Platform.EMPTY_STACK;
     }
 
