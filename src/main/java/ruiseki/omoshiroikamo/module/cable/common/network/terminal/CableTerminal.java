@@ -1,18 +1,20 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
@@ -26,6 +28,19 @@ public class CableTerminal extends AbstractPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    public ItemStackHandlerBase craftingStackHandler = new ItemStackHandlerBase(10);
+    public String CRAFTING_MATRIX_TAG = "CraftingMatrix";
+
+    @Override
+    public String getId() {
+        return "cable_terminal";
+    }
+
+    @Override
+    public Class<? extends ICablePart> getBasePartType() {
+        return null;
+    }
+
     @Override
     public void doUpdate() {
 
@@ -37,18 +52,20 @@ public class CableTerminal extends AbstractPart {
     }
 
     @Override
-    public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setTag(CRAFTING_MATRIX_TAG, craftingStackHandler.serializeNBT());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        craftingStackHandler.deserializeNBT(tag.getCompoundTag(CRAFTING_MATRIX_TAG));
+    }
+
+    @Override
+    public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return new TerminalPanel(data, syncManager, settings, this);
-    }
-
-    @Override
-    public String getId() {
-        return "cable_terminal";
-    }
-
-    @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return null;
     }
 
     @Override

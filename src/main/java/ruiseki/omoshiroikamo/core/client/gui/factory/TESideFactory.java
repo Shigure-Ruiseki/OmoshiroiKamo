@@ -13,15 +13,15 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.factory.AbstractUIFactory;
 import com.cleanroommc.modularui.factory.GuiManager;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.network.NetworkUtils;
 import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularScreen;
 
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
-public class TESideFactory extends AbstractUIFactory<PosSideGuiData> {
+public class TESideFactory extends AbstractUIFactory<SidedPosGuiData> {
 
     public static final TESideFactory INSTANCE = new TESideFactory();
     private Class<? extends IMuiScreen> customScreenClass;
@@ -32,23 +32,23 @@ public class TESideFactory extends AbstractUIFactory<PosSideGuiData> {
 
     public void open(EntityPlayer player, int x, int y, int z, ForgeDirection side) {
         Objects.requireNonNull(player);
-        PosSideGuiData data = new PosSideGuiData(player, x, y, z, side);
+        SidedPosGuiData data = new SidedPosGuiData(player, x, y, z, side);
         GuiManager.open(this, data, (EntityPlayerMP) player);
     }
 
     @Override
-    public @NotNull IGuiHolder<PosSideGuiData> getGuiHolder(PosSideGuiData data) {
+    public @NotNull IGuiHolder<SidedPosGuiData> getGuiHolder(SidedPosGuiData data) {
         return Objects.requireNonNull(castGuiHolder(data.getTileEntity()), "Found TileEntity is not a gui holder!");
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player, PosSideGuiData guiData) {
+    public boolean canInteractWith(EntityPlayer player, SidedPosGuiData guiData) {
         return player == guiData.getPlayer() && guiData.getTileEntity() != null
             && guiData.getSquaredDistance(player) <= 64;
     }
 
     @Override
-    public void writeGuiData(PosSideGuiData guiData, PacketBuffer buffer) {
+    public void writeGuiData(SidedPosGuiData guiData, PacketBuffer buffer) {
         buffer.writeVarIntToBuffer(guiData.getX());
         buffer.writeVarIntToBuffer(guiData.getY());
         buffer.writeVarIntToBuffer(guiData.getZ());
@@ -56,8 +56,8 @@ public class TESideFactory extends AbstractUIFactory<PosSideGuiData> {
     }
 
     @Override
-    public @NotNull PosSideGuiData readGuiData(EntityPlayer player, PacketBuffer buffer) {
-        return new PosSideGuiData(
+    public @NotNull SidedPosGuiData readGuiData(EntityPlayer player, PacketBuffer buffer) {
+        return new SidedPosGuiData(
             player,
             buffer.readVarIntFromBuffer(),
             buffer.readVarIntFromBuffer(),

@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -42,7 +43,6 @@ import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
@@ -51,7 +51,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
-    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<PosSideGuiData> {
+    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
 
     protected final EnumSet<ForgeDirection> connections = EnumSet.noneOf(ForgeDirection.class);
 
@@ -641,7 +641,7 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public ModularPanel buildUI(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ICablePart part = getPart(data.getSide());
         return part.partPanel(data, syncManager, settings);
     }

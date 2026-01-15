@@ -8,19 +8,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
-public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<PosSideGuiData> {
+public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
     private final int slots;
@@ -201,7 +201,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     @Override
-    public ModularPanel buildUI(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return new BackpackGuiHolder.TileEntityGuiHolder(handler).buildUI(data, syncManager, settings);
     }
 }

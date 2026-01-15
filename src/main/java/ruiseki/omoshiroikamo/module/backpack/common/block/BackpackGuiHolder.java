@@ -8,13 +8,13 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public abstract class BackpackGuiHolder {
@@ -58,14 +58,14 @@ public abstract class BackpackGuiHolder {
         panel.addTexts();
     }
 
-    public static final class TileEntityGuiHolder extends BackpackGuiHolder implements IGuiHolder<PosSideGuiData> {
+    public static final class TileEntityGuiHolder extends BackpackGuiHolder implements IGuiHolder<SidedPosGuiData> {
 
         public TileEntityGuiHolder(BackpackHandler handler) {
             super(handler);
         }
 
         @Override
-        public ModularPanel buildUI(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
             TileEntity tileEntity = data.getTileEntity();
             BackpackPanel panel = createPanel(syncManager, settings, data.getPlayer(), tileEntity, null, null);
             addCommonWidgets(panel);

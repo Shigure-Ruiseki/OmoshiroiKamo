@@ -4,21 +4,27 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 
+import com.cleanroommc.modularui.factory.GuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableSearchBar;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 
 public class TerminalPanel extends ModularPanel {
+
+    private final GuiData data;
+    private final PanelSyncManager syncManager;
+    private final UISettings settings;
+    private final CableTerminal terminal;
 
     private static final int COLUMNS = 9;
     private static final int ROWS = 6;
@@ -28,9 +34,14 @@ public class TerminalPanel extends ModularPanel {
     private final CableItemSlotSH[] itemSlotSH = new CableItemSlotSH[SLOT_COUNT];
     private final CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
-    public TerminalPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings,
-        CableTerminal terminal) {
+    public TerminalPanel(GuiData data, PanelSyncManager syncManager, UISettings settings, CableTerminal terminal) {
         super("cable_terminal");
+
+        this.data = data;
+        this.syncManager = syncManager;
+        this.settings = settings;
+        this.terminal = terminal;
+
         this.size(176, 284);
 
         ItemIndexClient clientIndex = new ItemIndexClient();
@@ -42,13 +53,21 @@ public class TerminalPanel extends ModularPanel {
             itemSlotSH[i] = slotSH;
             syncManager.syncValue("itemSlot_" + i, i, slotSH);
         }
-
-        itemSlots = new SlotGroupWidget().name("itemSlots")
-            .pos(7, 14);
-        this.child(itemSlots);
         buildItemGrid();
-        final int[] last = { -1 };
 
+        this.child(
+            new TileWidget(
+                terminal.getItemStack()
+                    .getDisplayName()).maxWidth(176));
+        this.child(
+            new CableSearchBar().top(5)
+                .left(5)
+                .width(166)
+                .height(12));
+        this.bindPlayerInventory();
+        syncManager.bindPlayerInventory(data.getPlayer());
+
+        final int[] last = { -1 };
         syncManager.onClientTick(() -> {
             int v = clientIndex.getServerVersion();
             if (v != last[0]) {
@@ -56,23 +75,17 @@ public class TerminalPanel extends ModularPanel {
                 updateGrid(clientIndex.view());
             }
         });
-
         syncManager.onServerTick(() -> {
             ItemNetwork net = terminal.getItemNetwork();
             if (net != null) {
                 sh.requestSync(clientIndex.getServerVersion());
             }
         });
-
-        this.child(
-            new TileWidget(
-                terminal.getItemStack()
-                    .getDisplayName()).maxWidth(176));
-        this.bindPlayerInventory();
-        syncManager.bindPlayerInventory(data.getPlayer());
     }
 
     private void buildItemGrid() {
+        itemSlots = new SlotGroupWidget().name("itemSlots")
+            .pos(7, 18);
         for (int i = 0; i < SLOT_COUNT; i++) {
             int col = i % COLUMNS;
             int row = i / COLUMNS;
@@ -82,6 +95,7 @@ public class TerminalPanel extends ModularPanel {
             slots[i] = slot;
             itemSlots.child(slot.pos(col * 18, row * 18));
         }
+        this.child(itemSlots);
     }
 
     private void updateGrid(Map<ItemStackKey, Integer> db) {
