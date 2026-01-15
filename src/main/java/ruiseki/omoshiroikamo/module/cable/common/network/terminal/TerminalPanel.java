@@ -2,18 +2,19 @@ package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
 import java.util.Map;
 
-import net.minecraft.item.ItemStack;
-
 import com.cleanroommc.modularui.factory.GuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
+import lombok.Getter;
+import lombok.Setter;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableScrollBar;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableSearchBar;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
@@ -34,6 +35,10 @@ public class TerminalPanel extends ModularPanel {
     private final CableItemSlotSH[] itemSlotSH = new CableItemSlotSH[SLOT_COUNT];
     private final CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
+    @Getter
+    @Setter
+    private int indexOffset = 0;
+
     public TerminalPanel(GuiData data, PanelSyncManager syncManager, UISettings settings, CableTerminal terminal) {
         super("cable_terminal");
 
@@ -53,7 +58,22 @@ public class TerminalPanel extends ModularPanel {
             itemSlotSH[i] = slotSH;
             syncManager.syncValue("itemSlot_" + i, i, slotSH);
         }
+
         buildItemGrid();
+
+        this.child(
+            new CableScrollBar().pos(178, 18)
+                .size(8, ROWS * 18)
+                .total(
+                    () -> clientIndex.view()
+                        .size())
+                .visible(() -> SLOT_COUNT)
+                .onChange(offset -> {
+                    indexOffset = offset;
+                    updateGrid(clientIndex.view());
+                })
+                .columns(COLUMNS)
+                .rows(ROWS));
 
         this.child(
             new TileWidget(
@@ -99,20 +119,22 @@ public class TerminalPanel extends ModularPanel {
     }
 
     private void updateGrid(Map<ItemStackKey, Integer> db) {
+        int startIndex = indexOffset * COLUMNS;
 
         int i = 0;
+        int skipped = 0;
+
         for (var e : db.entrySet()) {
+            if (skipped++ < startIndex) continue;
             if (i >= slots.length) break;
 
-            ItemStack stack = e.getKey()
-                .toStack(e.getValue());
-            slots[i].setStack(stack);
-            i++;
+            slots[i++].setStack(
+                e.getKey()
+                    .toStack(e.getValue()));
         }
 
         while (i < slots.length) {
-            slots[i].setStack(null);
-            i++;
+            slots[i++].setStack(null);
         }
     }
 }
