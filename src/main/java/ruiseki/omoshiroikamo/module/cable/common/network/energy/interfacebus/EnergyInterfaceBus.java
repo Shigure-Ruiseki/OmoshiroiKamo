@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -38,8 +41,8 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IEnergyPart.class;
+    public List<Class<? extends ICablePart>> getBasePartTypes() {
+        return Collections.singletonList(IEnergyPart.class);
     }
 
     @Override

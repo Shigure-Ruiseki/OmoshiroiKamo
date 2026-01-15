@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -48,8 +51,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IItemPart.class;
+    public List<Class<? extends ICablePart>> getBasePartTypes() {
+        return Collections.singletonList(IItemPart.class);
     }
 
     @Override
@@ -102,7 +105,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     }
 
     private void markNetworkDirty() {
-        ItemNetwork net = (ItemNetwork) getNetwork();
+        ItemNetwork net = getItemNetwork();
         if (net != null) net.markDirty();
     }
 

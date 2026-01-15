@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.output;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -43,8 +46,8 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IEnergyPart.class;
+    public List<Class<? extends ICablePart>> getBasePartTypes() {
+        return Collections.singletonList(IEnergyPart.class);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         if (tickCounter < tickInterval) return;
         tickCounter = 0;
 
-        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        EnergyNetwork network = getEnergyNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
         EnergyTransfer transfer = new EnergyTransfer();
@@ -205,9 +208,6 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public int extractEnergy(int amount, boolean simulate) {
-        EnergyNetwork network = (EnergyNetwork) getNetwork();
-        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return 0;
-
         return 0;
     }
 

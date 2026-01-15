@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.output;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -43,8 +46,8 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IItemPart.class;
+    public List<Class<? extends ICablePart>> getBasePartTypes() {
+        return Collections.singletonList(IItemPart.class);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         if (tickCounter < tickInterval) return;
         tickCounter = 0;
 
-        ItemNetwork network = (ItemNetwork) getNetwork();
+        ItemNetwork network = getItemNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
         ItemTransfer transfer = new ItemTransfer();

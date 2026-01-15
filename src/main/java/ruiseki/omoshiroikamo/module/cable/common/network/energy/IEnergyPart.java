@@ -20,4 +20,8 @@ public interface IEnergyPart extends ICablePart {
      * Called when an external tile actively requests energy from this part.
      */
     int extractEnergy(int amount, boolean simulate);
+
+    default EnergyNetwork getEnergyNetwork() {
+        return getCable() != null ? (EnergyNetwork) getCable().getNetwork(IEnergyPart.class) : null;
+    }
 }

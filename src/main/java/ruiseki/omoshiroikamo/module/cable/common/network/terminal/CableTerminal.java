@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -19,6 +22,7 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
@@ -40,8 +44,8 @@ public class CableTerminal extends AbstractPart {
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return null;
+    public List<Class<? extends ICablePart>> getBasePartTypes() {
+        return Arrays.asList(IItemPart.class, IEnergyPart.class);
     }
 
     @Override

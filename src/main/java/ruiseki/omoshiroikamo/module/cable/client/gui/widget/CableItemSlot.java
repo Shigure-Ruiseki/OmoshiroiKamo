@@ -192,9 +192,10 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
         SlotClickType clickType = SlotClickType.fromMouseAndModifiers(mouseButton, shift);
 
         int amount = switch (clickType) {
-            case LEFT -> 1;
+            case LEFT -> 64;
             case RIGHT -> 32;
-            case SHIFT_LEFT, SHIFT_RIGHT -> 64;
+            case SHIFT_LEFT -> 64;
+            case SHIFT_RIGHT -> 1;
             default -> 1;
         };
 

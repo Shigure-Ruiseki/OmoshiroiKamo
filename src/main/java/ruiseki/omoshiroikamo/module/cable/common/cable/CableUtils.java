@@ -85,12 +85,17 @@ public final class CableUtils {
         Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> newNetworks = new HashMap<>();
         for (ICable cable : cluster.cables) {
             for (ICablePart part : cable.getParts()) {
-                Class<? extends ICablePart> type = part.getBasePartType();
-                if (type == null) continue;
 
-                AbstractCableNetwork<?> net = newNetworks.computeIfAbsent(type, CableNetworkRegistry::create);
+                List<Class<? extends ICablePart>> types = part.getBasePartTypes();
+                if (types == null || types.isEmpty()) continue;
 
-                net.addPart(part);
+                for (Class<? extends ICablePart> type : types) {
+                    if (type == null) continue;
+
+                    AbstractCableNetwork<?> net = newNetworks.computeIfAbsent(type, CableNetworkRegistry::create);
+
+                    net.addPart(part);
+                }
             }
         }
 

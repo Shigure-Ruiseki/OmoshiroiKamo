@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.cable;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +27,7 @@ public interface ICablePart {
 
     ICable getCable();
 
-    Class<? extends ICablePart> getBasePartType();
+    List<Class<? extends ICablePart>> getBasePartTypes();
 
     ForgeDirection getSide();
 
@@ -76,8 +78,9 @@ public interface ICablePart {
         return getIcon();
     }
 
-    default AbstractCableNetwork<?> getNetwork() {
+    default AbstractCableNetwork<?> getNetwork(Class<? extends ICablePart> network) {
         ICable cable = getCable();
-        return cable != null ? cable.getNetwork(getBasePartType()) : null;
+        return cable != null ? cable.getNetwork(network) : null;
     }
+
 }

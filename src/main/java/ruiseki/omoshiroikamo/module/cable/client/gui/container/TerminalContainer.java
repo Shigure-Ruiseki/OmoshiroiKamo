@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cable.client.gui.container;
 
-import java.util.Objects;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -24,12 +22,17 @@ public class TerminalContainer extends ModularContainer {
     public ItemStack slotClick(int slotId, int mouseButton, int mode, EntityPlayer player) {
         ClickType clickType = ClickType.fromNumber(mode);
         if (clickType == ClickType.QUICK_MOVE) {
+            if (slotId < 0 || slotId >= inventorySlots.size()) {
+                return null;
+            }
+
             Slot slot = inventorySlots.get(slotId);
             if (!(slot instanceof ModularSlot modularSlot)) {
                 return null;
             }
 
-            if (!Objects.equals(modularSlot.getSlotGroupName(), "player_inventory")) {
+            String group = modularSlot.getSlotGroupName();
+            if (!"player_inventory".equals(group) && !"craftingMatrix".equals(group)) {
                 return null;
             }
 
