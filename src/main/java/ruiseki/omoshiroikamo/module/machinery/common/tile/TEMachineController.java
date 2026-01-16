@@ -1,9 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -44,9 +41,6 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
  * Machine Controller TileEntity - manages a Modular Machinery multiblock.
@@ -356,99 +350,6 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         }
     }
 
-    /**
-     * Diagnose why no recipe is currently running.
-     * Returns an error message.
-     */
-    private String diagnoseRecipeIssue() {
-        // Check if there are any recipes for this group
-        List<ModularRecipe> recipes = RecipeLoader.getInstance()
-            .getRecipes(recipeGroup);
-        if (recipes.isEmpty()) {
-            return "No recipes registered for group: " + recipeGroup;
-        }
-
-        // Check if we have required port types
-        if (getInputPorts().isEmpty()) {
-            return "No input ports connected";
-        }
-        if (getOutputPorts().isEmpty()) {
-            return "No output ports connected";
-        }
-
-        // Try to find what's missing for each recipe
-        for (ModularRecipe recipe : recipes) {
-            StringBuilder missingInputs = new StringBuilder();
-            StringBuilder missingOutputs = new StringBuilder();
-
-            // Check inputs
-            for (var input : recipe.getInputs()) {
-                if (!input.process(getInputPorts(), true)) {
-                    if (missingInputs.length() > 0) missingInputs.append(", ");
-                    missingInputs.append(
-                        input.getPortType()
-                            .name());
-                }
-            }
-
-            // If inputs are OK, check outputs
-            if (missingInputs.length() == 0) {
-                for (var output : recipe.getOutputs()) {
-                    if (!output.process(getOutputPorts(), true)) {
-                        if (missingOutputs.length() > 0) missingOutputs.append(", ");
-                        missingOutputs.append(
-                            output.getPortType()
-                                .name());
-                    }
-                }
-
-                if (missingOutputs.length() > 0) {
-                    return "Output full or missing: " + missingOutputs;
-                }
-
-                // All inputs/outputs OK but recipe not starting - check energy (fallback)
-                return "Energy required";
-            }
-        }
-
-        // Generic message - inputs don't match any recipe
-        return "No matching recipe found";
-    }
-
-    /**
-     * Diagnose which output types are blocked when waiting for output.
-     * Uses cached output types from ProcessAgent.
-     */
-    private String diagnoseBlockedOutputs() {
-        // Try to use recipe first
-        ModularRecipe recipe = processAgent.getCurrentRecipe();
-        if (recipe != null) {
-            StringBuilder blocked = new StringBuilder();
-            for (var output : recipe.getOutputs()) {
-                if (!output.process(getOutputPorts(), true)) {
-                    if (blocked.length() > 0) blocked.append(", ");
-                    blocked.append(
-                        output.getPortType()
-                            .name());
-                }
-            }
-            return blocked.length() > 0 ? blocked.toString() : "Unknown";
-        }
-
-        // Fallback: use cached output types
-        Set<IPortType.Type> cachedTypes = processAgent.getCachedOutputTypes();
-        if (cachedTypes.isEmpty()) {
-            return "Unknown (no cached outputs)";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (IPortType.Type type : cachedTypes) {
-            if (sb.length() > 0) sb.append(", ");
-            sb.append(type.name());
-        }
-        return sb.toString() + " (from cache)";
-    }
-
     @Override
     protected void finishCrafting() {
         resetCrafting();
@@ -505,7 +406,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     /**
      * Get status text for GUI display.
-     * Uses diagnose methods for detailed status information.
+     * Delegates to ProcessAgent for detailed status information.
      */
     private String getStatusText() {
         if (customStructureName == null || customStructureName.isEmpty()) {
@@ -514,18 +415,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (!isFormed) {
             return "Structure Not Formed";
         }
-        if (processAgent.isWaitingForOutput()) {
-            // Use diagnoseBlockedOutputs for detailed info
-            String blocked = diagnoseBlockedOutputs();
-            return "Output Full: " + blocked;
-        }
-        if (processAgent.isRunning()) {
-            int progress = processAgent.getProgress();
-            int max = processAgent.getMaxProgress();
-            return "Processing: " + String.format("%.1f", (float) progress / max * 100) + "%";
-        }
-        // IDLE - use diagnoseRecipeIssue for detailed info
-        return diagnoseRecipeIssue();
+        return processAgent.getStatusMessage(getOutputPorts());
     }
 
     /**

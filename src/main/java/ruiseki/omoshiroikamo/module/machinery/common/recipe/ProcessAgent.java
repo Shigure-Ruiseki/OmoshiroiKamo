@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -227,6 +228,57 @@ public class ProcessAgent {
     public float getProgressPercent() {
         if (maxProgress == 0) return 0;
         return (float) progress / maxProgress;
+    }
+
+    /**
+     * Get a status message for GUI display.
+     * Returns a human-readable string describing the current processing state.
+     *
+     * @param outputPorts Output ports for checking blocked outputs
+     * @return Status message string
+     */
+    public String getStatusMessage(List<IModularPort> outputPorts) {
+        if (running && !waitingForOutput) {
+            return "Processing " + (int)(progress / maxProgress * 100) + " %";
+        }
+
+        if (waitingForOutput) {
+            String blocked = diagnoseBlockedOutputs(outputPorts);
+            return "Waiting: " + blocked;
+        }
+
+        return "Idle";
+    }
+
+    /**
+     * Diagnose which output types are blocked when waiting for output.
+     */
+    private String diagnoseBlockedOutputs(List<IModularPort> outputPorts) {
+        if (currentRecipe != null) {
+            StringBuilder blocked = new StringBuilder();
+            for (IRecipeOutput output : currentRecipe.getOutputs()) {
+                if (!output.process(outputPorts, true)) {
+                    if (blocked.length() > 0) blocked.append(", ");
+                    blocked.append(
+                        output.getPortType()
+                            .name());
+                }
+            }
+            if (blocked.length() > 0) return blocked.toString();
+        }
+
+        // Fallback: use cached output types
+        Set<IPortType.Type> cachedTypes = getCachedOutputTypes();
+        if (!cachedTypes.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (IPortType.Type type : cachedTypes) {
+                if (sb.length() > 0) sb.append(", ");
+                sb.append(type.name());
+            }
+            return sb.toString();
+        }
+
+        return "Unknown";
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
