@@ -53,7 +53,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     @Getter
     @Setter
-    public boolean useIC2Compat = true;
+    public boolean useIC2Compat = false;
 
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
