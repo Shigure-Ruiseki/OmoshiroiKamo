@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +38,6 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
@@ -85,9 +84,8 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         }
     };
 
-    // IO ports tracked during structure formation
-    private final List<IModularPort> inputPorts = new ArrayList<>();
-    private final List<IModularPort> outputPorts = new ArrayList<>();
+    // Port management (delegated to PortManager)
+    private final PortManager portManager = new PortManager();
 
     // Recipe processing
     private final ProcessAgent processAgent = new ProcessAgent();
@@ -155,8 +153,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     protected void clearStructureParts() {
-        inputPorts.clear();
-        outputPorts.clear();
+        portManager.clear();
     }
 
     @Override
@@ -169,26 +166,21 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         IPortType.Direction direction = port.getPortDirection();
 
         return switch (direction) {
-            case INPUT -> addIfAbsent(inputPorts, port);
-            case OUTPUT -> addIfAbsent(outputPorts, port);
+            case INPUT -> {
+                portManager.addPort(port, true);
+                yield true;
+            }
+            case OUTPUT -> {
+                portManager.addPort(port, false);
+                yield true;
+            }
             case BOTH -> {
-                addIfAbsent(inputPorts, port);
-                addIfAbsent(outputPorts, port);
+                portManager.addPort(port, true);
+                portManager.addPort(port, false);
                 yield true;
             }
             default -> false;
         };
-    }
-
-    /**
-     * Add port to list if not already present.
-     */
-    private boolean addIfAbsent(List<IModularPort> list, IModularPort port) {
-        if (!list.contains(port)) {
-            list.add(port);
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -199,12 +191,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * @param isInput True for input list, false for output list
      */
     public void addPortFromStructure(IModularPort port, boolean isInput) {
-        if (port == null) return;
-        if (isInput) {
-            addIfAbsent(inputPorts, port);
-        } else {
-            addIfAbsent(outputPorts, port);
-        }
+        portManager.addPort(port, isInput);
     }
 
     // ========== Crafting Configuration ==========
@@ -252,46 +239,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.requirements == null) return true;
-
-        StructureDefinitionData.Requirements req = entry.requirements;
-
-        if (!checkPortRequirement(req.itemInput, IPortType.Type.ITEM, true, "Item Input")) return false;
-        if (!checkPortRequirement(req.itemOutput, IPortType.Type.ITEM, false, "Item Output")) return false;
-        if (!checkPortRequirement(req.fluidInput, IPortType.Type.FLUID, true, "Fluid Input")) return false;
-        if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false, "Fluid Output")) return false;
-        if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true, "Energy Input")) return false;
-        if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false, "Energy Output")) return false;
-        // TODO: Add other port types as needed
-
-        return true;
-    }
-
-    private boolean checkPortRequirement(StructureDefinitionData.PortRequirement req, IPortType.Type type,
-        boolean isInput, String label) {
-        if (req == null) return true;
-
-        long count;
-        if (isInput) {
-            count = inputPorts.stream()
-                .filter(p -> p.getPortType() == type)
-                .count();
-        } else {
-            count = outputPorts.stream()
-                .filter(p -> p.getPortType() == type)
-                .count();
-        }
-
-        if (req.min != null && count < req.min) {
-            lastValidationError = "Missing " + label + " Port. Need at least " + req.min + ", found " + count;
-            return false;
-        }
-        if (req.max != null && count > req.max) {
-            lastValidationError = "Too many " + label + " Ports. Max " + req.max + ", found " + count;
-            return false;
-        }
-
-        return true;
+        return portManager.checkRequirements(entry);
     }
 
     @Override
@@ -354,7 +302,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     private void processRecipe() {
         // Try to output if waiting
         if (processAgent.isWaitingForOutput()) {
-            if (processAgent.tryOutput(outputPorts)) {
+            if (processAgent.tryOutput(getOutputPorts())) {
                 // Output succeeded, try to start next recipe immediately
                 startNextRecipe();
             }
@@ -369,14 +317,14 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
             // Look-ahead: search for next recipe while processing (only once)
             if (nextRecipe == null) {
                 nextRecipe = RecipeLoader.getInstance()
-                    .findMatch(new String[] { recipeGroup }, inputPorts);
+                    .findMatch(new String[] { recipeGroup }, getInputPorts());
                 cachedRecipeVersion = RecipeLoader.getInstance()
                     .getRecipeVersion();
             }
 
             // If complete, immediately try to output and start next
             if (result == ProcessAgent.TickResult.READY_OUTPUT) {
-                if (processAgent.tryOutput(outputPorts)) {
+                if (processAgent.tryOutput(getOutputPorts())) {
                     startNextRecipe();
                 }
             }
@@ -398,13 +346,13 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         ModularRecipe recipe = nextRecipe;
         if (recipe == null) {
             recipe = RecipeLoader.getInstance()
-                .findMatch(new String[] { recipeGroup }, inputPorts);
+                .findMatch(new String[] { recipeGroup }, getInputPorts());
         }
         nextRecipe = null; // Clear cache
 
         if (recipe != null) {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            processAgent.start(recipe, inputPorts, energyPorts);
+            processAgent.start(recipe, getInputPorts(), energyPorts);
         }
     }
 
@@ -421,10 +369,10 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         }
 
         // Check if we have required port types
-        if (inputPorts.isEmpty()) {
+        if (getInputPorts().isEmpty()) {
             return "No input ports connected";
         }
-        if (outputPorts.isEmpty()) {
+        if (getOutputPorts().isEmpty()) {
             return "No output ports connected";
         }
 
@@ -435,7 +383,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
             // Check inputs
             for (var input : recipe.getInputs()) {
-                if (!input.process(inputPorts, true)) {
+                if (!input.process(getInputPorts(), true)) {
                     if (missingInputs.length() > 0) missingInputs.append(", ");
                     missingInputs.append(
                         input.getPortType()
@@ -446,7 +394,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
             // If inputs are OK, check outputs
             if (missingInputs.length() == 0) {
                 for (var output : recipe.getOutputs()) {
-                    if (!output.process(outputPorts, true)) {
+                    if (!output.process(getOutputPorts(), true)) {
                         if (missingOutputs.length() > 0) missingOutputs.append(", ");
                         missingOutputs.append(
                             output.getPortType()
@@ -477,7 +425,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (recipe != null) {
             StringBuilder blocked = new StringBuilder();
             for (var output : recipe.getOutputs()) {
-                if (!output.process(outputPorts, true)) {
+                if (!output.process(getOutputPorts(), true)) {
                     if (blocked.length() > 0) blocked.append(", ");
                     blocked.append(
                         output.getPortType()
@@ -488,7 +436,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         }
 
         // Fallback: use cached output types
-        java.util.Set<IPortType.Type> cachedTypes = processAgent.getCachedOutputTypes();
+        Set<IPortType.Type> cachedTypes = processAgent.getCachedOutputTypes();
         if (cachedTypes.isEmpty()) {
             return "Unknown (no cached outputs)";
         }
@@ -639,47 +587,31 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     // ========== Getters ==========
 
     public List<IModularPort> getInputPorts() {
-        return inputPorts;
+        return portManager.getInputPorts();
     }
 
     public List<IModularPort> getOutputPorts() {
-        return outputPorts;
+        return portManager.getOutputPorts();
     }
 
     public List<IModularPort> getInputPorts(IPortType.Type type) {
-        return inputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .collect(Collectors.toList());
+        return portManager.getInputPorts(type);
     }
 
     public List<IModularPort> getOutputPorts(IPortType.Type type) {
-        return outputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .collect(Collectors.toList());
+        return portManager.getOutputPorts(type);
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends IModularPort> List<T> getTypedInputPorts(IPortType.Type type, Class<T> portClass) {
-        return inputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .filter(portClass::isInstance)
-            .map(p -> (T) p)
-            .collect(Collectors.toList());
+        return portManager.getTypedInputPorts(type, portClass);
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends IModularPort> List<T> getTypedOutputPorts(IPortType.Type type, Class<T> portClass) {
-        return outputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .filter(portClass::isInstance)
-            .map(p -> (T) p)
-            .collect(Collectors.toList());
+        return portManager.getTypedOutputPorts(type, portClass);
     }
 
     public <T extends IModularPort> List<T> validPorts(List<T> ports) {
-        return ports.stream()
-            .filter(p -> p != null && !((TileEntity) p).isInvalid())
-            .collect(Collectors.toList());
+        return portManager.validPorts(ports);
     }
 
     // ========== Item IO Helpers ==========
