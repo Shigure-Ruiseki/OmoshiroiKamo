@@ -47,9 +47,7 @@ public class CableItemSlotSH extends SyncHandler {
     }
 
     public void requestClone(ItemStack slotStack) {
-        syncToServer(RESP_CLONE, buf -> {
-            buf.writeItemStackToBuffer(slotStack);
-        });
+        syncToServer(RESP_CLONE, buf -> { buf.writeItemStackToBuffer(slotStack); });
     }
 
     @Override
