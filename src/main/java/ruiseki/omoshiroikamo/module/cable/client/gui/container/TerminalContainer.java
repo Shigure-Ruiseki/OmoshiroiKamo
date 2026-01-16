@@ -25,21 +25,21 @@ public class TerminalContainer extends ModularContainer {
         }
 
         if (player.worldObj.isRemote) {
-            return null;
+            return super.slotClick(slotId, mouseButton, mode, player);
         }
 
         if (slotId < 0 || slotId >= inventorySlots.size()) {
-            return null;
+            return super.slotClick(slotId, mouseButton, mode, player);
         }
 
         Slot slot = inventorySlots.get(slotId);
 
         if (!(slot instanceof ModularSlot modularSlot)) {
-            return null;
+            return super.slotClick(slotId, mouseButton, mode, player);
         }
 
         if (!slot.getHasStack() || !slot.canTakeStack(player)) {
-            return null;
+            return super.slotClick(slotId, mouseButton, mode, player);
         }
 
         String group = modularSlot.getSlotGroupName();
@@ -49,7 +49,7 @@ public class TerminalContainer extends ModularContainer {
 
         var network = terminal.getItemNetwork();
         if (network == null) {
-            return null;
+            return super.slotClick(slotId, mouseButton, mode, player);
         }
 
         ItemStack original = slot.getStack();

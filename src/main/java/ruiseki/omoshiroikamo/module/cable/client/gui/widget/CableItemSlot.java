@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
@@ -187,7 +188,18 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
     @Override
     public @NotNull Result onMousePressed(int mouseButton) {
         ItemStack slotStack = getStack();
-        ItemStack cursorStack = Minecraft.getMinecraft().thePlayer.inventory.getItemStack();
+        if (slotStack == null || slotStack.stackSize <= 0) {
+            return Result.ACCEPT;
+        }
+
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
+        if (mouseButton == 2 && player.capabilities.isCreativeMode) {
+            syncHandler.requestClone(slotStack);
+            return Result.ACCEPT;
+        }
+
+        ItemStack cursorStack = player.inventory.getItemStack();
         boolean shift = GuiScreen.isShiftKeyDown();
         SlotClickType clickType = SlotClickType.fromMouseAndModifiers(mouseButton, shift);
 
@@ -196,13 +208,11 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
             case RIGHT -> 32;
             case SHIFT_LEFT -> 64;
             case SHIFT_RIGHT -> 1;
-            default -> 1;
         };
 
         boolean toInventory = clickType == SlotClickType.SHIFT_LEFT;
 
         syncHandler.requestClick(slotStack, cursorStack, amount, toInventory);
-
         return Result.ACCEPT;
     }
 

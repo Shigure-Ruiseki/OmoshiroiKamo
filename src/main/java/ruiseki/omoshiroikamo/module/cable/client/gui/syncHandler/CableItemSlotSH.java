@@ -15,7 +15,9 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 public class CableItemSlotSH extends SyncHandler {
 
     public static final int REQ_TAKE = 0;
-    public static final int RESP_MOUSE = 1;
+    public static final int RESP_CLONE = 1;
+
+    public static final int RESP_MOUSE = 100;
 
     public final ItemNetwork network;
 
@@ -44,10 +46,17 @@ public class CableItemSlotSH extends SyncHandler {
         });
     }
 
+    public void requestClone(ItemStack slotStack) {
+        syncToServer(RESP_CLONE, buf -> {
+            buf.writeItemStackToBuffer(slotStack);
+        });
+    }
+
     @Override
     public void readOnServer(int id, PacketBuffer buf) throws IOException {
         switch (id) {
             case REQ_TAKE -> handleClick(buf);
+            case RESP_CLONE -> handleClone(buf);
             default -> {}
         }
     }
@@ -58,6 +67,14 @@ public class CableItemSlotSH extends SyncHandler {
             case RESP_MOUSE -> handleClientMouse(buf);
             default -> {}
         }
+    }
+
+    private void handleClone(PacketBuffer buf) throws IOException {
+        EntityPlayer player = getSyncManager().getPlayer();
+        if (player == null || !player.capabilities.isCreativeMode) return;
+        ItemStack stack = buf.readItemStackFromBuffer();
+        stack.stackSize = stack.getMaxStackSize();
+        syncToClient(RESP_MOUSE, out -> out.writeItemStackToBuffer(stack));
     }
 
     protected void handleClick(PacketBuffer buf) throws IOException {
