@@ -12,7 +12,7 @@ import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackCraftingSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.DelegatedStackHandlerSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.FilterSlotSH;
@@ -47,7 +47,7 @@ public class UpgradeSlotUpdateGroup {
     public ModularCraftingMatrixSlot[] craftingMatrixSlots;
 
     private InventoryCraftingWrapper craftMatrix;
-    public ModularBackpackCraftingSlot craftingResultSlot;
+    public BackpackCraftingSlot craftingResultSlot;
 
     public UpgradeSlotUpdateGroup(BackpackPanel panel, BackpackHandler handler, int slotIndex) {
         this.panel = panel;
@@ -236,7 +236,7 @@ public class UpgradeSlotUpdateGroup {
             craftingMatrixSlots[i] = slot;
         }
 
-        ModularBackpackCraftingSlot resultSlot = new ModularBackpackCraftingSlot(
+        BackpackCraftingSlot resultSlot = new BackpackCraftingSlot(
             craftingMatrixStackHandler.getDelegatedStackHandler(),
             9,
             handler,

@@ -25,7 +25,7 @@ import codechicken.nei.recipe.DefaultOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.StackInfo;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackCraftingSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 
 public class BackpackOverlay implements IOverlayHandler {
@@ -335,7 +335,7 @@ public class BackpackOverlay implements IOverlayHandler {
         final EntityClientPlayerMP thePlayer = NEIClientUtils.mc().thePlayer;
 
         for (Slot slot : gui.inventorySlots.inventorySlots) {
-            if (slot instanceof ModularBackpackCraftingSlot) continue;
+            if (slot instanceof BackpackCraftingSlot) continue;
             if (!(slot instanceof ModularCraftingMatrixSlot matrixSlot)) continue;
             if (!matrixSlot.isActive()) continue;
             if (!slot.getHasStack()) continue;

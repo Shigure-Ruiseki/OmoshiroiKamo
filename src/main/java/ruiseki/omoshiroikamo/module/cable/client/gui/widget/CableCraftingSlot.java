@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.client.gui.widget;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -8,24 +9,30 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.stats.AchievementList;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
-import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
+import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CraftingSlotSH;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 
 public class CableCraftingSlot extends ModularCraftingMatrixSlot {
 
     @Setter
+    @Getter
     private InventoryCraftingWrapper craftMatrix;
     private int amountCrafted;
-    private CableTerminal terminal;
 
-    public CableCraftingSlot(IItemHandler itemHandler, int index, CableTerminal terminal) {
-        super(itemHandler, index);
-        this.terminal = terminal;
+    public CableCraftingSlot(IItemHandler handler, int index) {
+        super(handler, index);
+        setActive(false);
     }
 
     @Override
@@ -48,6 +55,9 @@ public class CableCraftingSlot extends ModularCraftingMatrixSlot {
         this.onCrafting(stack);
     }
 
+    /**
+     * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood.
+     */
     @Override
     protected void onCrafting(ItemStack p_75208_1_) {
         p_75208_1_.onCrafting(getPlayer().worldObj, getPlayer(), this.amountCrafted);
@@ -93,6 +103,65 @@ public class CableCraftingSlot extends ModularCraftingMatrixSlot {
         if (p_75208_1_.getItem() == Item.getItemFromBlock(Blocks.bookshelf)) {
             getPlayer().addStat(AchievementList.bookcase, 1);
         }
+    }
+
+    @Override
+    public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
+
+        if (player.worldObj.isRemote) {
+            return;
+        }
+
+        if (stack != null && stack.getItem() != null) {
+            FMLCommonHandler.instance()
+                .firePlayerCraftingEvent(player, stack, craftMatrix);
+            onCrafting(stack);
+        }
+
+        for (int i = 0; i < craftMatrix.getSizeInventory() - 1; i++) {
+            ItemStack slotStack = craftMatrix.getStackInSlot(i);
+            if (slotStack == null) continue;
+
+            ItemStack original = slotStack.copy();
+            boolean extractedFromHandler = false;
+
+            if (getNetwork() != null) {
+                ItemStack extracted = getNetwork().extract(ItemStackKey.of(slotStack), 1);
+                if (extracted != null) {
+                    extractedFromHandler = true;
+                }
+            }
+
+            if (!extractedFromHandler) {
+                slotStack.stackSize--;
+                if (slotStack.stackSize <= 0) slotStack = null;
+                craftMatrix.setInventorySlotContents(i, slotStack);
+            }
+
+            if (original.getItem()
+                .hasContainerItem(original)) {
+                ItemStack cont = original.getItem()
+                    .getContainerItem(original);
+                if (cont != null && cont.isItemStackDamageable() && cont.getItemDamage() > cont.getMaxDamage()) {
+                    MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, cont));
+                } else if (cont != null) {
+                    if (craftMatrix.getStackInSlot(i) == null) {
+                        craftMatrix.setInventorySlotContents(i, cont);
+                    } else if (!player.inventory.addItemStackToInventory(cont)) {
+                        player.dropPlayerItemWithRandomChoice(cont, false);
+                    }
+                }
+            }
+        }
+
+        craftMatrix.notifyContainer();
+    }
+
+    private ItemNetwork getNetwork() {
+        if (getSyncHandler() instanceof CraftingSlotSH sh) {
+            return sh.getNetwork();
+        }
+        return null;
     }
 
     public void updateResult(ItemStack stack) {

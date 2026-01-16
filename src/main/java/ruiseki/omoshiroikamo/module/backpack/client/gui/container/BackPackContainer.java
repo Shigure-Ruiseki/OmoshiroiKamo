@@ -22,7 +22,7 @@ import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackCraftingSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
@@ -94,7 +94,7 @@ public class BackPackContainer extends ModularContainer {
 
                         if (slot == null || !slot.getHasStack()) continue;
                         if (slot instanceof ModularFilterSlot) continue;
-                        if (slot instanceof ModularBackpackCraftingSlot) continue;
+                        if (slot instanceof BackpackCraftingSlot) continue;
 
                         ItemStack slotStack = slot.getStack();
 
@@ -150,7 +150,7 @@ public class BackPackContainer extends ModularContainer {
                 Slot clickedSlot = getSlot(slotId);
                 boolean isBackpackSlot = clickedSlot instanceof ModularBackpackSlot;
                 boolean isFilterSlot = clickedSlot instanceof ModularFilterSlot;
-                boolean isCraftingSlot = clickedSlot instanceof ModularBackpackCraftingSlot;
+                boolean isCraftingSlot = clickedSlot instanceof BackpackCraftingSlot;
 
                 if (clickedSlot != null) {
                     ItemStack slotStack = clickedSlot.getStack();

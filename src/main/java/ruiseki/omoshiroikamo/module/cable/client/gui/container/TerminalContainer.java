@@ -20,40 +20,50 @@ public class TerminalContainer extends ModularContainer {
 
     @Override
     public ItemStack slotClick(int slotId, int mouseButton, int mode, EntityPlayer player) {
-        ClickType clickType = ClickType.fromNumber(mode);
-        if (clickType == ClickType.QUICK_MOVE) {
-            if (slotId < 0 || slotId >= inventorySlots.size()) {
-                return null;
-            }
-
-            Slot slot = inventorySlots.get(slotId);
-            if (!(slot instanceof ModularSlot modularSlot)) {
-                return null;
-            }
-
-            String group = modularSlot.getSlotGroupName();
-            if (!"player_inventory".equals(group) && !"craftingMatrix".equals(group)) {
-                return null;
-            }
-
-            if (!slot.getHasStack() || !slot.canTakeStack(player)) {
-                return null;
-            }
-
-            if (terminal.getItemNetwork() == null) {
-                return null;
-            }
-
-            ItemStack stack = slot.getStack();
-            ItemStack remainder = terminal.getItemNetwork()
-                .insert(stack);
-            slot.putStack(remainder);
-            slot.onSlotChanged();
-            player.inventory.markDirty();
-            detectAndSendChanges();
-            return remainder;
+        if (ClickType.fromNumber(mode) != ClickType.QUICK_MOVE) {
+            return super.slotClick(slotId, mouseButton, mode, player);
         }
 
-        return super.slotClick(slotId, mouseButton, mode, player);
+        if (player.worldObj.isRemote) {
+            return null;
+        }
+
+        if (slotId < 0 || slotId >= inventorySlots.size()) {
+            return null;
+        }
+
+        Slot slot = inventorySlots.get(slotId);
+
+        if (!(slot instanceof ModularSlot modularSlot)) {
+            return null;
+        }
+
+        if (!slot.getHasStack() || !slot.canTakeStack(player)) {
+            return null;
+        }
+
+        String group = modularSlot.getSlotGroupName();
+        if (!("player_inventory".equals(group) || "craftingMatrix".equals(group))) {
+            return super.slotClick(slotId, mouseButton, mode, player);
+        }
+
+        var network = terminal.getItemNetwork();
+        if (network == null) {
+            return null;
+        }
+
+        ItemStack original = slot.getStack();
+        ItemStack toInsert = original.copy();
+
+        ItemStack remainder = network.insert(toInsert);
+
+        slot.putStack((remainder == null || remainder.stackSize <= 0) ? null : remainder);
+
+        slot.onSlotChanged();
+        player.inventory.markDirty();
+        detectAndSendChanges();
+
+        return remainder;
     }
+
 }

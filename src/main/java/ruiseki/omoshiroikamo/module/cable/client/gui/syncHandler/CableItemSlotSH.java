@@ -17,7 +17,7 @@ public class CableItemSlotSH extends SyncHandler {
     public static final int REQ_TAKE = 0;
     public static final int RESP_MOUSE = 1;
 
-    private final ItemNetwork network;
+    public final ItemNetwork network;
 
     public CableItemSlotSH(ItemNetwork network) {
         this.network = network;

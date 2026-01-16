@@ -12,6 +12,7 @@ import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
+import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 
@@ -21,7 +22,7 @@ import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
 
-public class ModularBackpackCraftingSlot extends ModularCraftingMatrixSlot {
+public class BackpackCraftingSlot extends ModularCraftingMatrixSlot {
 
     @Setter
     private InventoryCraftingWrapper craftMatrix;
@@ -29,7 +30,7 @@ public class ModularBackpackCraftingSlot extends ModularCraftingMatrixSlot {
     private final BackpackHandler handler;
     private final int slotIndex;
 
-    public ModularBackpackCraftingSlot(IItemHandler itemHandler, int index, BackpackHandler handler, int slotIndex) {
+    public BackpackCraftingSlot(IItemHandler itemHandler, int index, BackpackHandler handler, int slotIndex) {
         super(itemHandler, index);
         this.handler = handler;
         this.slotIndex = slotIndex;
@@ -114,6 +115,13 @@ public class ModularBackpackCraftingSlot extends ModularCraftingMatrixSlot {
 
         if (p_75208_1_.getItem() == Item.getItemFromBlock(Blocks.bookshelf)) {
             getPlayer().addStat(AchievementList.bookcase, 1);
+        }
+    }
+
+    @Override
+    public void onCraftShiftClick(EntityPlayer player, ItemStack stack) {
+        if (!Platform.isStackEmpty(stack)) {
+            player.dropPlayerItemWithRandomChoice(stack, false);
         }
     }
 

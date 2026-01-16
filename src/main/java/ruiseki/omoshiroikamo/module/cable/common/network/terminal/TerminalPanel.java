@@ -34,6 +34,7 @@ import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CraftingSlotSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableCraftingSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
@@ -197,9 +198,9 @@ public class TerminalPanel extends ModularPanel {
     }
 
     private void buildCraftingGrid() {
-        CableCraftingSlot craftingResultSlot = new CableCraftingSlot(terminal.craftingStackHandler, 9, terminal);
+        CableCraftingSlot craftingResultSlot = new CableCraftingSlot(terminal.craftingStackHandler, 9);
         craftingResultSlot.accessibility(false, true)
-            .slotGroup("craftingMatrix");
+            .slotGroup("craftingResult");
 
         craftMatrix = new InventoryCraftingWrapper(new Container() {
 
@@ -217,9 +218,9 @@ public class TerminalPanel extends ModularPanel {
             @Override
             public void onCraftMatrixChanged(IInventory p_75130_1_) {
                 if (data.getPlayer().worldObj.isRemote) return;
-                craftingResultSlot.updateResult(
-                    CraftingManager.getInstance()
-                        .findMatchingRecipe(craftMatrix, data.getPlayer().worldObj));
+                ItemStack result = CraftingManager.getInstance()
+                    .findMatchingRecipe(craftMatrix, data.getPlayer().worldObj);
+                craftingResultSlot.updateResult(result);
             }
 
         }, 3, 3, terminal.craftingStackHandler, 0);
@@ -251,11 +252,12 @@ public class TerminalPanel extends ModularPanel {
             slot.slotGroup("craftingMatrix");
         }
         syncManager.registerSlotGroup("craftingMatrix", 9, true);
+        syncManager.registerSlotGroup("craftingResult", 1, true);
 
         SlotGroupWidget craftingGroupsWidget = new SlotGroupWidget().name("crafting_matrix")
             .pos(33, 140)
             .coverChildren();
-        ItemSlot resultSlot = new ItemSlot().slot(craftingResultSlot)
+        ItemSlot resultSlot = new ItemSlot().syncHandler(new CraftingSlotSH(craftingResultSlot, terminal))
             .pos(97, 18)
             .background(OKGuiTextures.EMPTY_SLOT);
         craftingGroupsWidget.child(resultSlot);
@@ -273,8 +275,8 @@ public class TerminalPanel extends ModularPanel {
     public static final UITexture ARROW = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
-        .xy(48, 221, 22, 15)
-        .adaptable(8)
+        .xy(47, 220, 24, 18)
+        .adaptable(1)
         .build();
 
     public static final UITexture CRAFTING_SLOT = UITexture.builder()
@@ -287,7 +289,7 @@ public class TerminalPanel extends ModularPanel {
     @Override
     public void drawBackground(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         super.drawBackground(context, widgetTheme);
-        ARROW.draw(context, 94, 158, 24, 16, widgetTheme.getTheme());
+        ARROW.draw(context, 94, 158, 24, 18, widgetTheme.getTheme());
         CRAFTING_SLOT.draw(context, 126, 154, 26, 26, widgetTheme.getTheme());
     }
 }
