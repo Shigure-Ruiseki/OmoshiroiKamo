@@ -24,7 +24,6 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -33,6 +32,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * NEI handler for a single ModularMachine structure preview.
  * Each structure gets its own handler instance and tab in NEI.
  * Only shows on Usage lookup (not Recipe lookup for controller).
+ * 
+ * TODO: Fix blueprints appear briefly in left tab
+ * The loadTransferRects implementation might need adjustment for proper NEI
+ * integration.
  */
 public class ModularMachineNEIHandler extends MultiblockHandler {
 
@@ -65,8 +68,6 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
 
         // Component blocks will be lazily initialized on first access
         this.componentBlocks = null;
-
-        Logger.info("[NEI-DEBUG] Created handler for structure: {}", structureName);
     }
 
     /**
@@ -90,23 +91,12 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
         if (entry != null && entry.mappings != null) {
-            Logger.info(
-                "[NEI-DEBUG] Building component blocks for '{}', mappings: {}",
-                structureName,
-                entry.mappings.keySet());
             for (Object value : entry.mappings.values()) {
                 extractBlocksFromMapping(value, blocks);
             }
-        } else {
-            Logger.warn("[NEI-DEBUG] No mappings found for structure: {}", structureName);
         }
         // Always include the controller block
         blocks.add(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-
-        Logger.info("[NEI-DEBUG] Built {} component blocks for '{}'", blocks.size(), structureName);
-        for (Block b : blocks) {
-            Logger.info("[NEI-DEBUG]   - {}", Block.blockRegistry.getNameForObject(b));
-        }
         return blocks;
     }
 
@@ -126,26 +116,17 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
      */
     @SuppressWarnings("unchecked")
     private void extractBlocksFromMapping(Object value, Set<Block> blocks) {
-        Logger.info(
-            "[NEI-DEBUG] extractBlocksFromMapping: value type={}, value={}",
-            value != null ? value.getClass()
-                .getSimpleName() : "null",
-            value);
-
         // Handle BlockMapping class (parsed from JSON)
         if (value instanceof StructureDefinitionData.BlockMapping) {
             StructureDefinitionData.BlockMapping mapping = (StructureDefinitionData.BlockMapping) value;
             // Single block
             if (mapping.block != null) {
-                Logger.info("[NEI-DEBUG]   BlockMapping.block = {}", mapping.block);
                 addBlockFromId(mapping.block, blocks);
             }
             // Multiple blocks
             if (mapping.blocks != null) {
-                Logger.info("[NEI-DEBUG]   BlockMapping.blocks = {} entries", mapping.blocks.size());
                 for (StructureDefinitionData.BlockEntry entry : mapping.blocks) {
                     if (entry.id != null) {
-                        Logger.info("[NEI-DEBUG]     BlockEntry.id = {}", entry.id);
                         addBlockFromId(entry.id, blocks);
                     }
                 }
@@ -158,14 +139,7 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
             addBlockFromId((String) value, blocks);
         } else if (value instanceof List) {
             // Array of strings: ["mod:block1:*", "mod:block2:*"]
-            List<?> list = (List<?>) value;
-            Logger.info("[NEI-DEBUG]   List with {} items", list.size());
-            for (Object item : list) {
-                Logger.info(
-                    "[NEI-DEBUG]   List item type={}, value={}",
-                    item != null ? item.getClass()
-                        .getSimpleName() : "null",
-                    item);
+            for (Object item : (List<?>) value) {
                 if (item instanceof String) {
                     addBlockFromId((String) item, blocks);
                 }
@@ -206,12 +180,6 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         }
 
         Block block = Block.getBlockFromName(cleanId);
-        Logger.info(
-            "[NEI-DEBUG] addBlockFromId: '{}' -> cleanId='{}' -> block={}",
-            blockId,
-            cleanId,
-            block != null ? Block.blockRegistry.getNameForObject(block) : "NULL");
-
         if (block != null) {
             blocks.add(block);
         }
@@ -260,16 +228,9 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
             return ObjectSets.emptySet();
         }
 
-        // DEBUG: Log what's being checked
-        String itemName = candidate.getItem()
-            .getUnlocalizedName();
-        Logger
-            .info("[NEI-DEBUG] tryLoadingMultiblocks for structure '{}': checking item '{}'", structureName, itemName);
-
         // Check if it's the Machine Controller block
         Item controllerItem = Item.getItemFromBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
         if (candidate.getItem() == controllerItem) {
-            Logger.info("[NEI-DEBUG]   -> MATCH: Controller block");
             ObjectSet<IConstructable> result = new ObjectOpenHashSet<>();
             result.add(constructable);
             return result;
@@ -278,9 +239,7 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         // Check if it's a Blueprint item matching this structure
         if (candidate.getItem() instanceof ItemMachineBlueprint) {
             String blueprintStructure = ItemMachineBlueprint.getStructureName(candidate);
-            Logger.info("[NEI-DEBUG]   -> Blueprint for structure: {}", blueprintStructure);
             if (structureName.equals(blueprintStructure)) {
-                Logger.info("[NEI-DEBUG]   -> MATCH: Blueprint matches this handler");
                 ObjectSet<IConstructable> result = new ObjectOpenHashSet<>();
                 result.add(constructable);
                 return result;
@@ -290,18 +249,13 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         // Check if it's a component block of this structure
         if (candidate.getItem() instanceof ItemBlock) {
             Block block = ((ItemBlock) candidate.getItem()).field_150939_a;
-            String blockName = Block.blockRegistry.getNameForObject(block);
-            boolean isComponent = getComponentBlocks().contains(block);
-            Logger.info("[NEI-DEBUG]   -> Checking block: {}, isComponent: {}", blockName, isComponent);
-            if (isComponent) {
-                Logger.info("[NEI-DEBUG]   -> MATCH: Component block");
+            if (getComponentBlocks().contains(block)) {
                 ObjectSet<IConstructable> result = new ObjectOpenHashSet<>();
                 result.add(constructable);
                 return result;
             }
         }
 
-        Logger.info("[NEI-DEBUG]   -> No match");
         return ObjectSets.emptySet();
     }
 

@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.core.integration.nei;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
@@ -9,6 +12,7 @@ import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
+import codechicken.nei.recipe.RecipeCatalysts;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
@@ -50,7 +54,6 @@ public class NEIConfig implements IConfigureNEI {
                     .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
                     .setHeight(168)
                     .setWidth(192)
-                    .setMaxRecipesPerPage(1)
                     .setShiftY(6)
                     .build());
             Logger.info("Registered Modular Machine NEI handler info");
@@ -102,28 +105,21 @@ public class NEIConfig implements IConfigureNEI {
         // Register Modular Machine structure preview handlers (one per structure)
         // Only register as usage handlers - structure preview shows on Usage (U), not
         // Recipe (R)
+        // TODO: Fix catalyst display issue - blueprints appear briefly in left tab then
+        // disappear.
         if (BackportConfigs.useMachinery) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
                 // Register ONLY as usage handler - structure preview is Usage-only
                 GuiUsageRecipe.usagehandlers.add(handler);
 
+                // Register blueprint and controller as catalysts
                 String overlayId = handler.getOverlayIdentifier();
-                Logger.info(
-                    "[NEI-DEBUG] Registering catalyst for structure '{}' with overlayId: '{}'",
-                    structureName,
-                    overlayId);
-
-                // Register blueprint for this structure as a catalyst (appears in left tab)
-                ItemStack blueprint = ItemMachineBlueprint
-                    .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
-                API.addRecipeCatalyst(blueprint, overlayId);
-                Logger.info("[NEI-DEBUG]   - Registered blueprint catalyst: {}", blueprint.getDisplayName());
-
-                // Also register controller as catalyst for this specific structure
-                ItemStack controller = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-                API.addRecipeCatalyst(controller, overlayId);
-                Logger.info("[NEI-DEBUG]   - Registered controller catalyst: {}", controller.getDisplayName());
+                List<ItemStack> catalysts = new ArrayList<>();
+                catalysts.add(
+                    ItemMachineBlueprint.createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName));
+                catalysts.add(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()));
+                RecipeCatalysts.putRecipeCatalysts(overlayId, catalysts);
             }
 
             Logger.info(
