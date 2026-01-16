@@ -5,7 +5,6 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -93,21 +92,6 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
         }
 
         te.setExtendedFacing(ExtendedFacing.of(direction));
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
-        float hitY, float hitZ) {
-        if (world.isRemote) {
-            return true;
-        }
-
-        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
-        if (te != null) {
-            te.onRightClick(player);
-            return true;
-        }
-        return false;
     }
 
     @Override

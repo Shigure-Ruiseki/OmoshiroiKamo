@@ -2,33 +2,47 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.structurelib.alignment.IAlignment;
 import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -41,17 +55,35 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  * crafting logic.
  * Corresponds to the 'Q' symbol in structure definitions.
  *
- * TODO: This class already extends AbstractMBModifierTE which provides:
- * - CraftingState management (via AbstractMachineTE)
- * - RedstoneMode support (via AbstractEnergyTE)
- * - Energy capability system (via AbstractEnergyTE)
- * Ensure we don't duplicate these existing systems.
- * TODO: PortManager refactoring
- * TODO: GUI implimentation
- * TODO: NEI integration
- * TODO: Other port types
+ * Blueprint slot provides GUI-based structure selection.
+ * The controller reads the structure name from the inserted blueprint
+ * and validates the surrounding blocks against that structure definition.
  */
-public class TEMachineController extends AbstractMBModifierTE implements IAlignment {
+public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
+
+    // ========== Blueprint Inventory ==========
+    public static final int BLUEPRINT_SLOT = 0;
+    private static final int INVENTORY_SIZE = 1;
+
+    private final ItemStackHandlerBase inventory = new ItemStackHandlerBase(INVENTORY_SIZE) {
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+            if (slot == BLUEPRINT_SLOT) {
+                updateStructureFromBlueprint();
+            }
+            markDirty();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            if (slot == BLUEPRINT_SLOT) {
+                return stack != null && stack.getItem() instanceof ItemMachineBlueprint;
+            }
+            return false;
+        }
+    };
 
     // IO ports tracked during structure formation
     private final List<IModularPort> inputPorts = new ArrayList<>();
@@ -61,21 +93,18 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     private final ProcessAgent processAgent = new ProcessAgent();
     // Recipe group - obtained from custom structure or GUI
     private String recipeGroup = "default";
-    // CustomStructure name (null = use default simple check)
+    // CustomStructure name (automatically derived from blueprint)
     private String customStructureName = null;
     // Look-ahead: next recipe cached during current processing
     private transient ModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
-    // Structure definition (will be loaded from JSON)
+    // Structure definition (dynamically loaded from CustomStructureRegistry)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
 
     // Controller facing (rotation state) - used by IAlignment
     private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
-
-    // Structure offsets per tier
-    private static final int[][] OFFSETS = { { 1, 1, 1 } };
 
     public TEMachineController() {
         super();
@@ -99,12 +128,22 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public int[][] getOffSet() {
-        return OFFSETS;
+        // Get offset from custom structure definition if available
+        if (customStructureName != null && !customStructureName.isEmpty()) {
+            StructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(customStructureName);
+            if (entry != null && entry.controllerOffset != null && entry.controllerOffset.length >= 3) {
+                return new int[][] { entry.controllerOffset };
+            }
+        }
+        // Default offset (no structure)
+        return new int[][] { { 0, 0, 0 } };
     }
 
     @Override
     public String getStructurePieceName() {
-        return "main";
+        // CustomStructureRegistry registers shapes using the structure name
+        return customStructureName != null ? customStructureName : "main";
     }
 
     @Override
@@ -223,7 +262,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false, "Fluid Output")) return false;
         if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true, "Energy Input")) return false;
         if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false, "Energy Output")) return false;
-        // Add other port types as needed
+        // TODO: Add other port types as needed
 
         return true;
     }
@@ -281,33 +320,25 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     }
 
     /**
-     * Override doUpdate to use structure check when STRUCTURE_DEFINITION is null.
+     * Main update loop.
+     * Blueprint is required for the controller to operate.
+     * Uses StructureLib for structure validation when blueprint is set.
      */
     @Override
     public void doUpdate() {
-        if (STRUCTURE_DEFINITION != null) {
-            super.doUpdate();
-            return;
-        }
-
-        // Check structure every 20 ticks
-        if (!shouldDoWorkThisTick(20)) {
-            // Still process recipe every tick if running
-            if (isFormed && processAgent.isRunning()) {
-                processRecipe();
+        // Blueprint required - no operation without it
+        if (customStructureName == null || customStructureName.isEmpty()) {
+            if (isFormed) {
+                isFormed = false;
+                clearStructureParts();
+                processAgent.abort();
             }
             return;
         }
 
-        // Re-scan structure
-        boolean wasFormed = isFormed;
-        boolean nowFormed = trySimpleFormStructure();
-
-        if (wasFormed && !nowFormed) {
-            isFormed = false;
-            clearStructureParts();
-            processAgent.abort();
-        }
+        // Use StructureLib-based structure checking (calls super.doUpdate())
+        // Super handles IC2 registration, energy sync, and structure validation
+        super.doUpdate();
 
         // Process recipes when formed
         if (isFormed) {
@@ -480,141 +511,129 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         return 0; // Energy is managed by ProcessAgent
     }
 
-    public void onRightClick(EntityPlayer player) {
-        if (worldObj.isRemote) return;
+    // ========== ModularUI GUI ==========
+    // TODO: GUI enhance
 
-        setPlayer(player);
-        boolean wasFormed = isFormed;
-
-        // Always try to form if not formed
-        if (!isFormed) {
-            trySimpleFormStructure();
-        }
-
-        if (isFormed) {
-            String status = "Idle";
-            if (processAgent.isWaitingForOutput()) {
-                status = "Waiting for Output";
-                // Diagnose which outputs are blocked
-                String blockedOutputs = diagnoseBlockedOutputs();
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.YELLOW + "[Machine] Complete (100%) - Waiting for output space: "
-                            + blockedOutputs));
-            } else if (processAgent.isRunning()) {
-                int progress = processAgent.getProgress();
-                int max = processAgent.getMaxProgress();
-                String percent = String.format("%.1f", (float) progress / max * 100);
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.GREEN + "[Machine] Processing: "
-                            + progress
-                            + "/"
-                            + max
-                            + " ("
-                            + percent
-                            + "%)"));
-            } else {
-                // IDLE - try to diagnose why no recipe is running
-                String diagnosisMsg = diagnoseRecipeIssue();
-                if (diagnosisMsg != null) {
-                    player.addChatComponentMessage(
-                        new ChatComponentText(EnumChatFormatting.YELLOW + "[Machine] " + diagnosisMsg));
-                } else {
-                    player.addChatComponentMessage(
-                        new ChatComponentText(
-                            "[Machine] " + status
-                                + " | Inputs: "
-                                + inputPorts.size()
-                                + " | Outputs: "
-                                + outputPorts.size()));
-                }
-            }
-
-            // Always show port details when clicking controller
-            sendPortTypeCounts(player, "Input", inputPorts);
-            sendPortTypeCounts(player, "Output", outputPorts);
-        } else {
-            if (lastValidationError != null && !lastValidationError.isEmpty()) {
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.RED + "[Machine] Structure Invalid: " + lastValidationError));
-            } else {
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.RED + "[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
-            }
-        }
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        openGui(player);
+        return true;
     }
 
-    private void sendPortTypeCounts(EntityPlayer player, String label, List<IModularPort> ports) {
-        StringBuilder sb = new StringBuilder("  " + label + " Ports: ");
-        for (IPortType.Type type : IPortType.Type.values()) {
-            if (type == IPortType.Type.NONE) continue;
-            long count = ports.stream()
-                .filter(p -> p.getPortType() == type)
-                .count();
-            if (count > 0) {
-                sb.append(type.name())
-                    .append("=")
-                    .append(count)
-                    .append(" ");
-            }
-        }
-        player.addChatComponentMessage(new ChatComponentText(sb.toString()));
-    }
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        ModularPanel panel = new ModularPanel("machine_controller_gui");
 
-    private void sendPortDetails(EntityPlayer player, List<IModularPort> inputs, List<IModularPort> outputs) {
-        for (IModularPort port : inputs) {
-            TileEntity te = (TileEntity) port;
-            player.addChatComponentMessage(
-                new ChatComponentText(
-                    "  [IN] " + port.getPortType()
-                        .name() + " @ (" + te.xCoord + ", " + te.yCoord + ", " + te.zCoord + ")"));
-        }
-        for (IModularPort port : outputs) {
-            TileEntity te = (TileEntity) port;
-            player.addChatComponentMessage(
-                new ChatComponentText(
-                    "  [OUT] " + port.getPortType()
-                        .name() + " @ (" + te.xCoord + ", " + te.yCoord + ", " + te.zCoord + ")"));
-        }
+        // Title
+        panel.child(new TileWidget(getLocalizedName()));
+
+        // Blueprint slot (right side)
+        panel.child(
+            new ItemSlot()
+                .slot(
+                    new ModularSlot(inventory, BLUEPRINT_SLOT)
+                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
+                .background(GuiTextures.EMPTY_SLOT)
+                .pos(151, 8));
+
+        // Status display
+        panel.child(
+            IKey.dynamic(this::getStatusText)
+                .asWidget()
+                .pos(8, 25));
+
+        // Progress bar (Change is needed)
+        panel.child(
+            new ProgressWidget().progress(this::getProgressPercent)
+                .texture(GuiTextures.SOLID_UP_ARROW_ICON, 20)
+                .pos(80, 45));
+
+        syncManager.bindPlayerInventory(data.getPlayer());
+        panel.bindPlayerInventory();
+
+        return panel;
     }
 
     /**
-     * Simple 3x3x3 structure check for MVP testing.
-     * Controller is on the front face (Z=0), structure extends behind (Z+1 to Z+3)
+     * Get status text for GUI display.
+     * Uses diagnose methods for detailed status information.
      */
-    private boolean trySimpleFormStructure() {
-        clearStructureParts();
+    private String getStatusText() {
+        if (customStructureName == null || customStructureName.isEmpty()) {
+            return "Insert Blueprint";
+        }
+        if (!isFormed) {
+            return "Structure Not Formed";
+        }
+        if (processAgent.isWaitingForOutput()) {
+            // Use diagnoseBlockedOutputs for detailed info
+            String blocked = diagnoseBlockedOutputs();
+            return "Output Full: " + blocked;
+        }
+        if (processAgent.isRunning()) {
+            int progress = processAgent.getProgress();
+            int max = processAgent.getMaxProgress();
+            return "Processing: " + String.format("%.1f", (float) progress / max * 100) + "%";
+        }
+        // IDLE - use diagnoseRecipeIssue for detailed info
+        return diagnoseRecipeIssue();
+    }
 
-        int casingCount = 0;
-        // Check 3x3x3 area behind the controller
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = 1; dz <= 3; dz++) {
-                    int checkX = xCoord + dx;
-                    int checkY = yCoord + dy;
-                    int checkZ = zCoord + dz;
-                    Block block = worldObj.getBlock(checkX, checkY, checkZ);
+    /**
+     * Get progress percentage for GUI progress bar.
+     */
+    private float getProgressPercent() {
+        if (!processAgent.isRunning()) return 0f;
+        int max = processAgent.getMaxProgress();
+        if (max <= 0) return 0f;
+        return (float) processAgent.getProgress() / max;
+    }
 
-                    if (block == MachineryBlocks.MACHINE_CASING.getBlock()) {
-                        casingCount++;
-                    } else if (block instanceof IModularBlock) {
-                        addToMachine(block, 0, checkX, checkY, checkZ);
-                        casingCount++;
-                    }
-                }
+    // ========== Blueprint Inventory Methods ==========
+
+    /**
+     * Get the blueprint inventory handler.
+     */
+    public ItemStackHandlerBase getInventory() {
+        return inventory;
+    }
+
+    /**
+     * Get the blueprint ItemStack from the inventory slot.
+     */
+    @Nullable
+    public ItemStack getBlueprintStack() {
+        return inventory.getStackInSlot(BLUEPRINT_SLOT);
+    }
+
+    /**
+     * Get structure name from the blueprint in the slot.
+     */
+    @Nullable
+    private String getStructureNameFromBlueprint() {
+        ItemStack blueprint = getBlueprintStack();
+        if (blueprint == null || blueprint.stackSize == 0) return null;
+        if (!(blueprint.getItem() instanceof ItemMachineBlueprint)) return null;
+        return ItemMachineBlueprint.getStructureName(blueprint);
+    }
+
+    /**
+     * Update custom structure when blueprint changes.
+     * Called automatically when inventory contents change.
+     */
+    private void updateStructureFromBlueprint() {
+        String newName = getStructureNameFromBlueprint();
+        if (!Objects.equals(newName, customStructureName)) {
+            this.customStructureName = newName;
+            updateRecipeGroupFromStructure();
+            this.isFormed = false;
+            clearStructureParts();
+            processAgent.abort();
+            if (worldObj != null) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
-
-        if (casingCount >= 27) {
-            isFormed = true;
-            onFormed();
-            return true;
-        }
-
-        return false;
     }
 
     // ========== Getters ==========
@@ -659,7 +678,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     public <T extends IModularPort> List<T> validPorts(List<T> ports) {
         return ports.stream()
-            .filter(p -> p != null && !((net.minecraft.tileentity.TileEntity) p).isInvalid())
+            .filter(p -> p != null && !((TileEntity) p).isInvalid())
             .collect(Collectors.toList());
     }
 
@@ -784,6 +803,9 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (customStructureName != null) {
             nbt.setString("customStructureName", customStructureName);
         }
+        // Save blueprint inventory
+        nbt.setTag("inventory", inventory.serializeNBT());
+        // Save process agent
         NBTTagCompound agentNbt = new NBTTagCompound();
         processAgent.writeToNBT(agentNbt);
         nbt.setTag("processAgent", agentNbt);
@@ -796,11 +818,13 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         super.readCommon(nbt);
         recipeGroup = nbt.getString("recipeGroup");
         if (recipeGroup.isEmpty()) recipeGroup = "default";
-        if (nbt.hasKey("customStructureName")) {
-            customStructureName = nbt.getString("customStructureName");
-            // Update recipeGroup from custom structure if available
-            updateRecipeGroupFromStructure();
+        // Load blueprint inventory
+        if (nbt.hasKey("inventory")) {
+            inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
         }
+        // Update structure from loaded blueprint
+        updateStructureFromBlueprint();
+        // Load process agent
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
         }
