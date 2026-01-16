@@ -77,7 +77,6 @@ public class TerminalOverlay implements IOverlayHandler {
     private void clearGridIntoNetwork(GuiContainer gui, TerminalContainer container) {
         EntityClientPlayerMP player = NEIClientUtils.mc().thePlayer;
 
-
         for (Slot slot : gui.inventorySlots.inventorySlots) {
             if (!(slot instanceof ModularCraftingMatrixSlot matrix) || !matrix.isActive()) {
                 continue;
@@ -114,9 +113,7 @@ public class TerminalOverlay implements IOverlayHandler {
 
     private boolean isCraftingGridCleared(GuiContainer gui) {
         for (Slot slot : gui.inventorySlots.inventorySlots) {
-            if (slot instanceof ModularCraftingMatrixSlot matrix
-                && matrix.isActive()
-                && slot.getHasStack()) {
+            if (slot instanceof ModularCraftingMatrixSlot matrix && matrix.isActive() && slot.getHasStack()) {
 
                 return false;
             }
