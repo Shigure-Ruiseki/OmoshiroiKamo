@@ -188,13 +188,10 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
     @Override
     public @NotNull Result onMousePressed(int mouseButton) {
         ItemStack slotStack = getStack();
-        if (slotStack == null || slotStack.stackSize <= 0) {
-            return Result.ACCEPT;
-        }
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-        if (mouseButton == 2 && player.capabilities.isCreativeMode) {
+        if (mouseButton == 2 && player.capabilities.isCreativeMode && slotStack != null) {
             syncHandler.requestClone(slotStack);
             return Result.ACCEPT;
         }

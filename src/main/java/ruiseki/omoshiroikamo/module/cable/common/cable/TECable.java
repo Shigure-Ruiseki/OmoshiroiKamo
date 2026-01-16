@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
@@ -287,7 +286,7 @@ public class TECable extends AbstractTE
 
             if (part != null) {
                 OKGuiFactories.tileEntity()
-                    .setGuiContainer(GuiContainerWrapper.class)
+                    .setGuiContainer(part.getGuiContainer())
                     .open(player, x, y, z, hit.side);
             }
 

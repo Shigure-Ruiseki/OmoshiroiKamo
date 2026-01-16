@@ -2,9 +2,13 @@ package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
 import java.util.List;
 
+import codechicken.nei.FastTransferManager;
+import com.cleanroommc.modularui.screen.GuiContainerWrapper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
@@ -18,6 +22,7 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
@@ -54,11 +59,16 @@ public class TerminalPanel extends ModularPanel {
     private static final int ROWS = 6;
     private static final int SLOT_COUNT = COLUMNS * ROWS;
 
+    public final ItemIndexClient clientIndex;
+    public ItemIndexSH syncHandler;
     private SlotGroupWidget itemSlots;
     private CableScrollBar scrollBar;
     private SearchBarWidget searchBar;
     private CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
-    private InventoryCraftingWrapper craftMatrix;
+
+    public ModularCraftingMatrixSlot[] craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
+    public CraftingSlotSH[] craftingSlotSH = new CraftingSlotSH[9];
+    public InventoryCraftingWrapper craftMatrix;
 
     @Getter
     @Setter
@@ -72,13 +82,11 @@ public class TerminalPanel extends ModularPanel {
         this.settings = settings;
         this.terminal = terminal;
 
-        settings.customContainer(() -> new TerminalContainer(terminal));
-
         this.size(176, 294);
 
-        ItemIndexClient clientIndex = new ItemIndexClient();
-        ItemIndexSH sh = new ItemIndexSH(terminal::getItemNetwork, clientIndex);
-        syncManager.syncValue("cable_terminal_sh", sh);
+        clientIndex = new ItemIndexClient();
+        syncHandler = new ItemIndexSH(terminal, this, clientIndex);
+        syncManager.syncValue("cable_terminal_sh", syncHandler);
 
         EnumSyncValue<SortType> sortTypeSyncer = new EnumSyncValue<>(
             SortType.class,
@@ -144,9 +152,11 @@ public class TerminalPanel extends ModularPanel {
         syncManager.onServerTick(() -> {
             ItemNetwork net = terminal.getItemNetwork();
             if (net != null) {
-                sh.requestSync(clientIndex.getServerVersion());
+                syncHandler.requestSync(clientIndex.getServerVersion());
             }
         });
+
+        settings.customContainer(() -> new TerminalContainer(terminal, this));
     }
 
     private void buildItemGrid() {
@@ -226,7 +236,6 @@ public class TerminalPanel extends ModularPanel {
         }, 3, 3, terminal.craftingStackHandler, 0);
         craftingResultSlot.setCraftMatrix(craftMatrix);
 
-        ModularCraftingMatrixSlot[] craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
         for (int i = 0; i < 9; i++) {
             ModularCraftingMatrixSlot slot = new ModularCraftingMatrixSlot(terminal.craftingStackHandler, i);
             slot.changeListener((newItem, onlyAmountChanged, client, init) -> {
@@ -263,7 +272,8 @@ public class TerminalPanel extends ModularPanel {
         craftingGroupsWidget.child(resultSlot);
 
         for (int i = 0; i < 9; i++) {
-            ItemSlot itemSlot = new ItemSlot().slot(craftingMatrixSlots[i])
+            craftingSlotSH[i] = new CraftingSlotSH(craftingMatrixSlots[i], terminal);
+            ItemSlot itemSlot = new ItemSlot().syncHandler(craftingSlotSH[i])
                 .pos(i % 3 * 18, i / 3 * 18)
                 .name("craftingMatrix_" + i);
             craftingGroupsWidget.child(itemSlot);

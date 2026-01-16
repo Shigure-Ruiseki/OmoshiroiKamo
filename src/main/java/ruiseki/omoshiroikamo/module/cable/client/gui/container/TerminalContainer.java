@@ -9,13 +9,16 @@ import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.TerminalPanel;
 
 public class TerminalContainer extends ModularContainer {
 
     public final CableTerminal terminal;
+    public final TerminalPanel panel;
 
-    public TerminalContainer(CableTerminal terminal) {
+    public TerminalContainer(CableTerminal terminal, TerminalPanel panel) {
         this.terminal = terminal;
+        this.panel = panel;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class TerminalContainer extends ModularContainer {
         }
 
         if (player.worldObj.isRemote) {
-            return super.slotClick(slotId, mouseButton, mode, player);
+            return null;
         }
 
         if (slotId < 0 || slotId >= inventorySlots.size()) {
