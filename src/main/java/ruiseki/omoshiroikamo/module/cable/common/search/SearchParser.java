@@ -77,7 +77,7 @@ public class SearchParser {
                 continue;
             }
             if (c == ' ' && !quote) {
-                if (cur.length() > 0) {
+                if (!cur.isEmpty()) {
                     result.add(cur.toString());
                     cur.setLength(0);
                 }
@@ -86,7 +86,7 @@ public class SearchParser {
             }
         }
 
-        if (cur.length() > 0) result.add(cur.toString());
+        if (!cur.isEmpty()) result.add(cur.toString());
         return result;
     }
 }

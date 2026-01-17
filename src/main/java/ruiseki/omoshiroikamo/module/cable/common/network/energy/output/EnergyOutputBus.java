@@ -62,9 +62,7 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public void doUpdate() {
-        tickCounter++;
-        if (tickCounter < tickInterval) return;
-        tickCounter = 0;
+        if (!shouldDoTickInterval()) return;
 
         EnergyNetwork network = getEnergyNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;

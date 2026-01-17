@@ -45,6 +45,10 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
     private int lastHash = 0;
 
+    public ItemInterfaceBus() {
+        setTickInterval(20);
+    }
+
     @Override
     public String getId() {
         return "item_interface_bus";
@@ -67,8 +71,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
     @Override
     public void doUpdate() {
-        if (cable.getWorld()
-            .getTotalWorldTime() % 20 != 0) return;
+        if (!shouldDoTickInterval()) return;
 
         int hash = calcInventoryHash();
         if (hash != lastHash) {

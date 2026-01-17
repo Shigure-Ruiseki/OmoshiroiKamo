@@ -35,6 +35,10 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    public EnergyInterfaceBus() {
+        setTickInterval(20);
+    }
+
     @Override
     public String getId() {
         return "energy_interface_bus";
@@ -57,6 +61,7 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public void doUpdate() {
+        if (!shouldDoTickInterval()) return;
 
     }
 

@@ -62,10 +62,7 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
 
     @Override
     public void doUpdate() {
-
-        tickCounter++;
-        if (tickCounter < tickInterval) return;
-        tickCounter = 0;
+        if (!shouldDoTickInterval()) return;
 
         ItemNetwork network = getItemNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;

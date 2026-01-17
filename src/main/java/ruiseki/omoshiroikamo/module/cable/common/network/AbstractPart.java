@@ -93,6 +93,13 @@ public abstract class AbstractPart implements ICablePart {
         this.channel = channel;
     }
 
+    public boolean shouldDoTickInterval() {
+        tickCounter++;
+        if (tickCounter < tickInterval) return false;
+        tickCounter = 0;
+        return true;
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName();
