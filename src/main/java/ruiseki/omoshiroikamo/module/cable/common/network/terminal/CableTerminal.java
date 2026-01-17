@@ -39,6 +39,8 @@ public class CableTerminal extends AbstractPart {
     public String CRAFTING_MATRIX_TAG = "CraftingMatrix";
     public SortType sortType = SortType.BY_NAME;
     public String SORT_TYPE_TAG = "SortType";
+    public boolean sortOrder = true;
+    public String SORT_ORDER_TAG = "SortOrder";
 
     @Override
     public String getId() {
@@ -64,15 +66,25 @@ public class CableTerminal extends AbstractPart {
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setTag(CRAFTING_MATRIX_TAG, craftingStackHandler.serializeNBT());
-        tag.setInteger(SORT_TYPE_TAG, sortType.ordinal());
+        tag.setInteger(SORT_TYPE_TAG, sortType.getIndex());
+        tag.setBoolean(SORT_ORDER_TAG, sortOrder);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        craftingStackHandler.deserializeNBT(tag.getCompoundTag(CRAFTING_MATRIX_TAG));
-        tag.setInteger(SORT_TYPE_TAG, sortType.ordinal());
-        sortType = SortType.fromIndex(tag.getInteger(SORT_TYPE_TAG));
+
+        if (tag.hasKey(CRAFTING_MATRIX_TAG)) {
+            craftingStackHandler.deserializeNBT(tag.getCompoundTag(CRAFTING_MATRIX_TAG));
+        }
+
+        if (tag.hasKey(SORT_TYPE_TAG)) {
+            sortType = SortType.byIndex(tag.getInteger(SORT_TYPE_TAG));
+        }
+
+        if (tag.hasKey(SORT_ORDER_TAG)) {
+            sortOrder = tag.getBoolean(SORT_ORDER_TAG);
+        }
     }
 
     @Override
@@ -137,6 +149,21 @@ public class CableTerminal extends AbstractPart {
     }
 
     public void setSortType(SortType sortType) {
-        this.sortType = sortType;
+        if (this.sortType != sortType) {
+            this.sortType = sortType;
+            getCable().dirty();
+        }
     }
+
+    public boolean getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(boolean sortOrder) {
+        if (this.sortOrder != sortOrder) {
+            this.sortOrder = sortOrder;
+            getCable().dirty();
+        }
+    }
+
 }

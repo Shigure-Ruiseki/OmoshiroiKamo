@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
 import java.util.List;
 
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -37,6 +38,8 @@ import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableCraftingSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableScrollBar;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.SortOrderButton;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.SortTypeButton;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
@@ -79,11 +82,7 @@ public class TerminalPanel extends ModularPanel {
         syncHandler = new ItemIndexSH(terminal, this, clientIndex);
         syncManager.syncValue("cable_terminal_sh", syncHandler);
 
-        EnumSyncValue<SortType> sortTypeSyncer = new EnumSyncValue<>(
-            SortType.class,
-            terminal::getSortType,
-            terminal::setSortType);
-        syncManager.syncValue("sortTypeSyncer", sortTypeSyncer);
+        buildLeftBar();
 
         buildItemGrid();
 
@@ -196,6 +195,36 @@ public class TerminalPanel extends ModularPanel {
         while (i < slots.length) {
             slots[i++].setStack(null);
         }
+    }
+
+    private void buildLeftBar() {
+        EnumSyncValue<SortType> sortTypeSyncer = new EnumSyncValue<>(
+            SortType.class,
+            terminal::getSortType,
+            terminal::setSortType);
+        syncManager.syncValue("sortTypeSyncer", sortTypeSyncer);
+
+        BooleanSyncValue sortOrderSyncer = new BooleanSyncValue(terminal::getSortOrder, terminal::setSortOrder);
+        syncManager.syncValue("sortOrderSyncer", sortOrderSyncer);
+
+        Column col = new Column();
+        col.coverChildren().width(18).pos(-20, 6).childPadding(2);
+
+        SortTypeButton sortType = new SortTypeButton(sortTypeSyncer);
+        sortType.addMousePressedUpdater(value -> {
+            clientIndex.setSort(terminal.getSortType());
+            updateGrid(clientIndex, searchBar.getText());
+        });
+        col.child(sortType);
+
+        SortOrderButton sortOrder = new SortOrderButton(sortOrderSyncer);
+        sortOrder.addMousePressedUpdater(value -> {
+            clientIndex.setSortOrder(terminal.getSortOrder());
+            updateGrid(clientIndex, searchBar.getText());
+        });
+        col.child(sortOrder);
+
+        this.child(col);
     }
 
     private void buildCraftingGrid() {

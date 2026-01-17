@@ -50,8 +50,13 @@ public abstract class AbstractPartItem extends ItemOK implements ICablePartItem 
         ICablePart part = createPart();
         cable.setPart(side, part);
 
-
-        world.playSoundEffect(cable.getPos().x + 0.5F, cable.getPos().y + 0.5F, cable.getPos().z + 0.5F, "dig.stone", 1F, 1F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+        world.playSoundEffect(
+            cable.getPos().x + 0.5F,
+            cable.getPos().y + 0.5F,
+            cable.getPos().z + 0.5F,
+            "dig.stone",
+            1F,
+            1F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 
         if (!player.capabilities.isCreativeMode) {
             stack.stackSize--;

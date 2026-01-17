@@ -1,6 +1,9 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -74,6 +77,31 @@ public final class ItemStackKey {
         }
         return stack;
     }
+
+    public String getDisplayName() {
+        ItemStack stack = toStack(1);
+        return stack.getDisplayName();
+    }
+
+
+    public String getModId() {
+        String name = Item.itemRegistry.getNameForObject(item);
+        if (name == null) return "";
+        int idx = name.indexOf(':');
+        return idx >= 0 ? name.substring(0, idx) : name;
+    }
+
+    public List<String> getOreNames() {
+        ItemStack stack = toStack(1);
+        int[] ids = net.minecraftforge.oredict.OreDictionary.getOreIDs(stack);
+        List<String> result = new ArrayList<>(ids.length);
+        for (int id : ids) {
+            result.add(net.minecraftforge.oredict.OreDictionary.getOreName(id));
+        }
+        Collections.sort(result);
+        return result;
+    }
+
 
     public void write(PacketBuffer buf) throws IOException {
         buf.writeVarIntToBuffer(Item.getIdFromItem(item));

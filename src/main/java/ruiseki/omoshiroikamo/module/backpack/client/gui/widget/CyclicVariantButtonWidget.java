@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntConsumer;
 
@@ -18,7 +19,7 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
     protected final List<Variant> variants;
     private int iconOffset = 2;
     private int iconSize = 16;
-    private final IntConsumer mousePressedUpdater;
+    private final List<IntConsumer> mousePressedUpdaters = new ArrayList<>();
 
     @Getter
     protected int index;
@@ -32,7 +33,9 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
         this.index = index;
         this.iconOffset = iconOffset;
         this.iconSize = iconSize;
-        this.mousePressedUpdater = mousePressedUpdater;
+        if (mousePressedUpdater != null) {
+            this.mousePressedUpdaters.add(mousePressedUpdater);
+        }
 
         this.size(20, 20)
             .onMousePressed(mouseButton -> {
@@ -41,7 +44,9 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
                 } else {
                     this.index = (this.index + 1) % variants.size();
                 }
-                this.mousePressedUpdater.accept(this.index);
+                for (IntConsumer updater : mousePressedUpdaters) {
+                    updater.accept(this.index);
+                }
                 this.markTooltipDirty();
                 return true;
             })
@@ -62,6 +67,13 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
 
     public CyclicVariantButtonWidget(List<Variant> variants, IntConsumer mousePressedUpdater) {
         this(variants, 0, 2, 16, mousePressedUpdater);
+    }
+
+    public CyclicVariantButtonWidget addMousePressedUpdater(IntConsumer updater) {
+        if (updater != null && !this.mousePressedUpdaters.contains(updater)) {
+            this.mousePressedUpdaters.add(updater);
+        }
+        return this;
     }
 
     @Override
