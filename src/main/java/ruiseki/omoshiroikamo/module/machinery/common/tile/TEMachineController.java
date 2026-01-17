@@ -51,6 +51,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * Blueprint slot provides GUI-based structure selection.
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
+ * TODO: Drop blueprint when broken
+ * TODO: Do not consume blueprint when auto-construct
  */
 public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
 
@@ -200,7 +202,17 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         // Clear previous error
         lastValidationError = "";
 
-        boolean valid = super.structureCheck(piece, ox, oy, oz);
+        // Clear structure parts before checking
+        clearStructureParts();
+
+        // Use controller's facing for rotation support
+        boolean valid = getStructureDefinition()
+            .check(this, piece, worldObj, getExtendedFacing(), xCoord, yCoord, zCoord, ox, oy, oz, false);
+
+        if (valid && !isFormed) {
+            isFormed = true;
+            onFormed();
+        } else if (!valid && isFormed) isFormed = false;
 
         if (valid && isFormed) {
             // Perform additional requirements check for CustomStructure
@@ -210,16 +222,14 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
                 return false;
             }
         } else if (!valid) {
-            // If super check failed, we don't know exactly why (StructureLib doesn't tell
-            // us easily),
+            // If check failed, we don't know exactly why (StructureLib doesn't tell us easily),
             // but usually it means blocks don't match.
-            // We could try to give a hint if custom structure is set.
             if (customStructureName != null) {
                 lastValidationError = "Block mismatch or incomplete structure.";
             }
         }
 
-        return valid;
+        return isFormed;
     }
 
     /**
@@ -268,15 +278,20 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      */
     @Override
     public void doUpdate() {
-        // Blueprint required - no operation without it
-        if (customStructureName == null || customStructureName.isEmpty()) {
-            if (isFormed) {
-                isFormed = false;
-                clearStructureParts();
-                processAgent.abort();
-            }
-            return;
+        // Sync customStructureName from blueprint if blueprint is present in GUI
+        // Only update if blueprint has a structure name (don't clear existing structure)
+        String blueprintName = getStructureNameFromBlueprint();
+        if (blueprintName != null && !blueprintName.isEmpty() && !Objects.equals(blueprintName, customStructureName)) {
+            this.customStructureName = blueprintName;
+            updateRecipeGroupFromStructure();
+            this.isFormed = false;
+            clearStructureParts();
+            processAgent.abort();
+            markDirty();
         }
+
+        // Blueprint required - no operation without it
+        if (customStructureName == null || customStructureName.isEmpty()) return;
 
         // Use StructureLib-based structure checking (calls super.doUpdate())
         // Super handles IC2 registration, energy sync, and structure validation
@@ -459,8 +474,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     /**
      * Update custom structure when blueprint changes.
      * Called automatically when inventory contents change.
+     * Only processes on server side to ensure proper sync.
      */
     private void updateStructureFromBlueprint() {
+        // Skip if on client side
+        if (worldObj != null && worldObj.isRemote) return;
+
         String newName = getStructureNameFromBlueprint();
         if (!Objects.equals(newName, customStructureName)) {
             this.customStructureName = newName;
@@ -468,6 +487,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
             this.isFormed = false;
             clearStructureParts();
             processAgent.abort();
+            markDirty();
             if (worldObj != null) {
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }

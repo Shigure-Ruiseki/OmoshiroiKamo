@@ -85,14 +85,17 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Calculate controller offset from Q position
-            entry.controllerOffset = findControllerOffset(shape);
+            // Apply 180-degree rotation to align JSON definition with StructureLib coordinate system
+            String[][] rotatedShape = rotate180(shape);
+
+            // Calculate controller offset from rotated shape
+            entry.controllerOffset = findControllerOffset(rotatedShape);
 
             // Build structure definition
             StructureDefinition.Builder<TEMachineController> builder = StructureDefinition.builder();
 
-            // Add shape
-            builder.addShape(entry.name, transpose(shape));
+            // Add rotated shape
+            builder.addShape(entry.name, transpose(rotatedShape));
 
             // Add Controller ('Q')
             builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
@@ -236,6 +239,28 @@ public class CustomStructureRegistry {
 
         Logger.warn("CustomStructureRegistry: Unknown mapping type for symbol '" + symbol + "'");
         return null;
+    }
+
+    /**
+     * Apply 180-degree horizontal rotation to the shape.
+     * True 180-degree rotation requires:
+     * 1. Reverse the order of rows in each layer (front-to-back flip)
+     * 2. Reverse each row string (left-to-right flip)
+     * Used to align JSON definition with controller facing direction.
+     */
+    private static String[][] rotate180(String[][] shape) {
+        String[][] rotated = new String[shape.length][];
+        for (int layer = 0; layer < shape.length; layer++) {
+            int numRows = shape[layer].length;
+            rotated[layer] = new String[numRows];
+            for (int row = 0; row < numRows; row++) {
+                // Get row from opposite end and reverse it
+                int srcRow = numRows - 1 - row;
+                rotated[layer][row] = new StringBuilder(shape[layer][srcRow]).reverse()
+                    .toString();
+            }
+        }
+        return rotated;
     }
 
     /**

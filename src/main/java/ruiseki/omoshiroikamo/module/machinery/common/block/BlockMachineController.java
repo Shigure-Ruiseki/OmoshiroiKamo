@@ -25,9 +25,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  *
  * TODO List:
  * - Implement GUI for machine management and status display
- * - Add structure detection and validation logic
- * - Load and parse JSON machine definitions
- * - Recipe lookup and crafting progress management
  * - State management (IDLE, WORKING, PAUSED, ERROR)
  * - Redstone control modes (Ignore, Low, High, Pulse)
  * - Working particles and sound effects
@@ -35,8 +32,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * - Block state visual changes based on status
  * - NEI/JEI recipe integration
  * - Implement BlockColor tinting for machine-wide color customization
- * - Auto-build structure from blueprint item
- * - Structure preview rendering (hologram-style)
+ * - Drop blueprint when broken
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> {
 

@@ -35,13 +35,13 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
 
         try {
+            // Use controller's facing for rotation support
             def.buildOrHints(
                 ctx,
                 triggerStack,
                 pieceName,
                 ctx.getWorldObj(),
-                ctx.getExtendedFacing()
-                    .getOppositeDirection(),
+                ctx.getExtendedFacing(),
                 ctx.xCoord,
                 ctx.yCoord,
                 ctx.zCoord,
@@ -69,13 +69,13 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
 
         try {
+            // Use controller's facing for rotation support
             return def.survivalBuild(
                 ctx,
                 triggerStack,
                 pieceName,
                 ctx.getWorldObj(),
-                ctx.getExtendedFacing()
-                    .getOppositeDirection(),
+                ctx.getExtendedFacing(),
                 ctx.xCoord,
                 ctx.yCoord,
                 ctx.zCoord,
