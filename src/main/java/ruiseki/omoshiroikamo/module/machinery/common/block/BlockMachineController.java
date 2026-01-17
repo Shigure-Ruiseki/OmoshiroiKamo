@@ -58,41 +58,33 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
-        super.onBlockPlacedBy(world, x, y, z, placer, stack);
-
-        if (world.isRemote) return;
-
         TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
-        if (te == null) return;
+        if (te == null)
+            return;
+
+        // Preserve TileEntity data but avoid block metadata-based facing.
+        te.readFromItemStack(stack);
+        world.markBlockForUpdate(x, y, z);
+
+        if (world.isRemote)
+            return;
 
         // Calculate facing from player's yaw (block front faces player)
         int facing = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
-        ForgeDirection direction;
-        switch (facing) {
-            case 0:
-                direction = ForgeDirection.NORTH;
-                break;
-            case 1:
-                direction = ForgeDirection.EAST;
-                break;
-            case 2:
-                direction = ForgeDirection.SOUTH;
-                break;
-            case 3:
-                direction = ForgeDirection.WEST;
-                break;
-            default:
-                direction = ForgeDirection.NORTH;
-                break;
-        }
+        ForgeDirection direction = switch (facing) {
+            case 0 -> ForgeDirection.NORTH;
+            case 1 -> ForgeDirection.EAST;
+            case 2 -> ForgeDirection.SOUTH;
+            case 3 -> ForgeDirection.WEST;
+            default -> ForgeDirection.NORTH;
+        };
 
         te.setExtendedFacing(ExtendedFacing.of(direction));
     }
 
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
-        IWailaConfigHandler config) {
+            IWailaConfigHandler config) {
         // TODO: Display machine name and type
         // TODO: Show current state (Idle, Working, Error)
         // TODO: Show crafting progress percentage
