@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class ItemStackKey {
 
@@ -19,6 +21,12 @@ public final class ItemStackKey {
     public final int hash;
 
     private final int tagHash;
+
+    private String displayNameLower;
+    private String modIdLower;
+    private List<String> tooltipLower;
+    private String creativeTab;
+    private int[] oreIds;
 
     private ItemStackKey(Item item, int meta, NBTTagCompound tag) {
         this.item = item;
@@ -70,6 +78,10 @@ public final class ItemStackKey {
         return tag.equals(other.tag);
     }
 
+    public ItemStack toStack() {
+        return toStack(1);
+    }
+
     public ItemStack toStack(int count) {
         ItemStack stack = new ItemStack(item, count, meta);
         if (tag != null) {
@@ -79,10 +91,12 @@ public final class ItemStackKey {
     }
 
     public String getDisplayName() {
-        ItemStack stack = toStack(1);
-        return stack.getDisplayName();
+        if (displayNameLower == null) {
+            displayNameLower = toStack().getDisplayName()
+                .toLowerCase();
+        }
+        return displayNameLower;
     }
-
 
     public String getModId() {
         String name = Item.itemRegistry.getNameForObject(item);
@@ -91,17 +105,55 @@ public final class ItemStackKey {
         return idx >= 0 ? name.substring(0, idx) : name;
     }
 
-    public List<String> getOreNames() {
-        ItemStack stack = toStack(1);
-        int[] ids = net.minecraftforge.oredict.OreDictionary.getOreIDs(stack);
-        List<String> result = new ArrayList<>(ids.length);
-        for (int id : ids) {
-            result.add(net.minecraftforge.oredict.OreDictionary.getOreName(id));
+    public List<String> getTooltipLower() {
+        if (tooltipLower != null) return tooltipLower;
+
+        tooltipLower = Collections.emptyList();
+
+        if (Minecraft.getMinecraft() == null || Minecraft.getMinecraft().thePlayer == null) {
+            return tooltipLower;
         }
-        Collections.sort(result);
-        return result;
+
+        ItemStack stack = toStack();
+        List<String> raw = stack.getTooltip(Minecraft.getMinecraft().thePlayer, false);
+
+        List<String> list = new ArrayList<>(raw.size());
+        for (String s : raw) {
+            list.add(s.toLowerCase());
+        }
+
+        tooltipLower = list;
+        return tooltipLower;
     }
 
+    public String getCreativeTab() {
+        if (creativeTab != null) return creativeTab;
+
+        creativeTab = item.getCreativeTab() != null ? item.getCreativeTab()
+            .getTabLabel()
+            .toLowerCase() : "";
+        return creativeTab;
+    }
+
+    public int[] getOreIds() {
+        if (oreIds == null) {
+            oreIds = OreDictionary.getOreIDs(toStack());
+        }
+        return oreIds;
+    }
+
+    public String getModIdLower() {
+        if (modIdLower == null) {
+            String name = Item.itemRegistry.getNameForObject(item);
+            if (name != null && name.contains(":")) {
+                modIdLower = name.substring(0, name.indexOf(':'))
+                    .toLowerCase();
+            } else {
+                modIdLower = "minecraft";
+            }
+        }
+        return modIdLower;
+    }
 
     public void write(PacketBuffer buf) throws IOException {
         buf.writeVarIntToBuffer(Item.getIdFromItem(item));

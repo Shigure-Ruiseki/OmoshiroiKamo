@@ -1,14 +1,15 @@
 package ruiseki.omoshiroikamo.module.cable.client.gui.widget;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
+
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class SortTypeButton extends CyclicVariantButtonWidget {
 
@@ -36,9 +37,12 @@ public class SortTypeButton extends CyclicVariantButtonWidget {
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.sort_type.by_count"), COUNT_SORT));
 
     public SortTypeButton(EnumSyncValue<SortType> syncValue) {
-        super(VARIANTS,
+        super(
+            VARIANTS,
             syncValue.getValue()
-                .getIndex(), 0, 18,
+                .getIndex(),
+            0,
+            18,
             value -> { syncValue.setValue(SortType.byIndex(value)); });
         size(18);
     }

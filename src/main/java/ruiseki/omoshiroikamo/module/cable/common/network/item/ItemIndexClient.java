@@ -8,6 +8,8 @@ import java.util.List;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import ruiseki.omoshiroikamo.api.enums.SortType;
+import ruiseki.omoshiroikamo.module.cable.common.search.SearchNode;
+import ruiseki.omoshiroikamo.module.cable.common.search.SearchParser;
 
 public class ItemIndexClient {
 
@@ -19,6 +21,9 @@ public class ItemIndexClient {
 
     private SortType sortType = SortType.BY_NAME;
     private boolean sortOrder = false;
+
+    private SearchNode compiledSearch;
+    private String search = "";
 
     public int getServerVersion() {
         return indexVersion;
@@ -54,10 +59,14 @@ public class ItemIndexClient {
         if (!cacheDirty) return;
 
         keyCache.clear();
-        keyCache.addAll(db.keySet());
+
+        for (ItemStackKey key : db.keySet()) {
+            if (matchesSearch(key)) {
+                keyCache.add(key);
+            }
+        }
 
         keyCache.sort(buildComparator());
-
         cacheDirty = false;
     }
 
@@ -79,6 +88,15 @@ public class ItemIndexClient {
         return this.sortOrder;
     }
 
+    public void setSearch(String s) {
+        this.search = s;
+        this.compiledSearch = SearchParser.parse(s);
+        cacheDirty = true;
+    }
+
+    public String getSearch() {
+        return search;
+    }
 
     private Comparator<ItemStackKey> buildComparator() {
         return (a, b) -> {
@@ -88,11 +106,13 @@ public class ItemIndexClient {
             int r = 0;
             switch (getSortType()) {
                 case BY_NAME:
-                    r = a.getDisplayName().compareToIgnoreCase(b.getDisplayName());
+                    r = a.getDisplayName()
+                        .compareToIgnoreCase(b.getDisplayName());
                     break;
 
                 case BY_MOD_ID:
-                    r = a.getModId().compareToIgnoreCase(b.getModId());
+                    r = a.getModId()
+                        .compareToIgnoreCase(b.getModId());
                     break;
 
                 case BY_COUNT:
@@ -101,6 +121,10 @@ public class ItemIndexClient {
             }
             return getSortOrder() ? -r : r;
         };
+    }
+
+    private boolean matchesSearch(ItemStackKey key) {
+        return compiledSearch == null || compiledSearch.matches(key);
     }
 
     public List<ItemStackKey> viewGrid(int rowOffset, int columns, int visibleRows) {

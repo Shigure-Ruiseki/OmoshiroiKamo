@@ -1,13 +1,14 @@
 package ruiseki.omoshiroikamo.module.cable.client.gui.widget;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class SortOrderButton extends CyclicVariantButtonWidget {
 
@@ -26,18 +27,12 @@ public class SortOrderButton extends CyclicVariantButtonWidget {
         .xy(54, 0, 18, 18)
         .build();
 
-
     private static final List<CyclicVariantButtonWidget.Variant> VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.sort_order.asc"), ASC_SORT),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.sort_order.desc"), DESC_SORT));
 
     public SortOrderButton(BooleanSyncValue syncValue) {
-        super(
-            VARIANTS,
-            syncValue.getValue() ? ASC : DESC,
-            0, 18,
-            value -> syncValue.setValue(value == ASC)
-        );
+        super(VARIANTS, syncValue.getValue() ? ASC : DESC, 0, 18, value -> syncValue.setValue(value == ASC));
         size(18);
     }
 }

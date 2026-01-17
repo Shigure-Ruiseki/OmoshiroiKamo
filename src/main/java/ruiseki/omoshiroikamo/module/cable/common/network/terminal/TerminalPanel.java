@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
 import java.util.List;
 
-import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -17,6 +16,7 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
@@ -92,7 +92,8 @@ public class TerminalPanel extends ModularPanel {
 
             @Override
             public void doSearch(String search) {
-                updateGrid(clientIndex, getText());
+                clientIndex.setSearch(search);
+                updateGrid(clientIndex);
             }
         }.top(5)
             .left(5)
@@ -111,7 +112,7 @@ public class TerminalPanel extends ModularPanel {
             .total(clientIndex::size)
             .onChange(offset -> {
                 indexOffset = offset;
-                updateGrid(clientIndex, searchBar.getText());
+                updateGrid(clientIndex);
             })
             .columns(COLUMNS)
             .rows(ROWS);
@@ -136,7 +137,7 @@ public class TerminalPanel extends ModularPanel {
             int v = clientIndex.getServerVersion();
             if (v != last[0]) {
                 last[0] = v;
-                updateGrid(clientIndex, searchBar.getText());
+                updateGrid(clientIndex);
             }
         });
         syncManager.onServerTick(() -> {
@@ -180,7 +181,7 @@ public class TerminalPanel extends ModularPanel {
         this.child(itemSlots);
     }
 
-    private void updateGrid(ItemIndexClient index, String search) {
+    private void updateGrid(ItemIndexClient index) {
         List<ItemStackKey> keys = index.viewGrid(indexOffset, COLUMNS, ROWS);
 
         int i = 0;
@@ -208,19 +209,22 @@ public class TerminalPanel extends ModularPanel {
         syncManager.syncValue("sortOrderSyncer", sortOrderSyncer);
 
         Column col = new Column();
-        col.coverChildren().width(18).pos(-20, 6).childPadding(2);
+        col.coverChildren()
+            .width(18)
+            .pos(-20, 6)
+            .childPadding(2);
 
         SortTypeButton sortType = new SortTypeButton(sortTypeSyncer);
         sortType.addMousePressedUpdater(value -> {
             clientIndex.setSort(terminal.getSortType());
-            updateGrid(clientIndex, searchBar.getText());
+            updateGrid(clientIndex);
         });
         col.child(sortType);
 
         SortOrderButton sortOrder = new SortOrderButton(sortOrderSyncer);
         sortOrder.addMousePressedUpdater(value -> {
             clientIndex.setSortOrder(terminal.getSortOrder());
-            updateGrid(clientIndex, searchBar.getText());
+            updateGrid(clientIndex);
         });
         col.child(sortOrder);
 
