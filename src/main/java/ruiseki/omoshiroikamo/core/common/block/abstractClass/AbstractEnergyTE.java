@@ -138,7 +138,6 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     @Optional.Method(modid = "IC2")
     private void registerIC2() {
         if (ic2Registered) return;
-        Logger.info("Registering IC2 energy tile at {}, {}, {}", xCoord, yCoord, zCoord);
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
         ic2Registered = true;
     }
