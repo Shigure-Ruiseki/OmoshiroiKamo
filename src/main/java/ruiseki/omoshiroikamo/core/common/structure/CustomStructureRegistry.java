@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.structure;
 
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlockHint;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
 import java.util.ArrayList;
@@ -97,8 +97,9 @@ public class CustomStructureRegistry {
             // Add rotated shape
             builder.addShape(entry.name, transpose(rotatedShape));
 
-            // Add Controller ('Q')
-            builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
+            // Add Controller ('Q') - use ofBlockHint to check only, not autoplace
+            // The controller already exists when building, so we don't want to replace it
+            builder.addElement('Q', ofBlockHint(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
 
             // Add Air element ('_')
             builder.addElement('_', isAir());
