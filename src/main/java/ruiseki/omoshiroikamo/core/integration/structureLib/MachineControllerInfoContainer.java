@@ -40,7 +40,8 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 triggerStack,
                 pieceName,
                 ctx.getWorldObj(),
-                ExtendedFacing.DEFAULT,
+                ctx.getExtendedFacing()
+                    .getOppositeDirection(),
                 ctx.xCoord,
                 ctx.yCoord,
                 ctx.zCoord,
@@ -73,8 +74,8 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 triggerStack,
                 pieceName,
                 ctx.getWorldObj(),
-                ExtendedFacing.DEFAULT, // Use DEFAULT for consistent behavior (matches
-                                        // TieredMultiblockInfoContainer)
+                ctx.getExtendedFacing()
+                    .getOppositeDirection(),
                 ctx.xCoord,
                 ctx.yCoord,
                 ctx.zCoord,
