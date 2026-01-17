@@ -276,15 +276,12 @@ public class TECable extends AbstractTE
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side,
         float hitX, float hitY, float hitZ) {
-        if (world.isRemote) {
-            return false;
-        }
 
         CableHit hit = this.rayTraceCable(player);
         if (hit != null && hit.type == CableHit.Type.PART) {
             ICablePart part = getPart(hit.side);
 
-            if (part != null) {
+            if (part != null && !worldObj.isRemote) {
                 OKGuiFactories.tileEntity()
                     .setGuiContainer(part.getGuiContainer())
                     .open(player, x, y, z, hit.side);

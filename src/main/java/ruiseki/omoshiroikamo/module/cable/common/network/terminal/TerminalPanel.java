@@ -23,8 +23,6 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
-import lombok.Getter;
-import lombok.Setter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
@@ -50,23 +48,21 @@ public class TerminalPanel extends ModularPanel {
     private final UISettings settings;
     private final CableTerminal terminal;
 
-    private static final int COLUMNS = 9;
-    private static final int ROWS = 6;
-    private static final int SLOT_COUNT = COLUMNS * ROWS;
+    public static final int COLUMNS = 9;
+    public static final int ROWS = 6;
+    public static final int SLOT_COUNT = COLUMNS * ROWS;
 
     public final ItemIndexClient clientIndex;
     public ItemIndexSH syncHandler;
-    private SlotGroupWidget itemSlots;
-    private CableScrollBar scrollBar;
-    private SearchBarWidget searchBar;
-    private CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
+    public SlotGroupWidget itemSlots;
+    public CableScrollBar scrollBar;
+    public SearchBarWidget searchBar;
+    public CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
     public ModularCraftingMatrixSlot[] craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
     public CraftingSlotSH[] craftingSlotSH = new CraftingSlotSH[9];
     public InventoryCraftingWrapper craftMatrix;
 
-    @Getter
-    @Setter
     private int indexOffset = 0;
 
     public TerminalPanel(GuiData data, PanelSyncManager syncManager, UISettings settings, CableTerminal terminal) {

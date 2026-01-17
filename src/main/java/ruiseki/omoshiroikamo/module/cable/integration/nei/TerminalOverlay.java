@@ -16,7 +16,6 @@ import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.IRecipeHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
@@ -38,7 +37,6 @@ public class TerminalOverlay implements IOverlayHandler {
         if (index == null) return 0;
         clearGridIntoNetwork(gui, container);
         if (!waitUntilGridCleared(gui, 500)) {
-            Logger.info("Failed to clear crafting grid into network");
             return 0;
         }
 
@@ -47,7 +45,6 @@ public class TerminalOverlay implements IOverlayHandler {
         Object2IntOpenHashMap<ItemStackKey> used = new Object2IntOpenHashMap<>();
         for (PositionedStack ps : ingredients) {
             if (ps == null || !consumeIfEnough(index, ps.item, used)) {
-                Logger.info("Not enough items in network");
                 return 0;
             }
         }
