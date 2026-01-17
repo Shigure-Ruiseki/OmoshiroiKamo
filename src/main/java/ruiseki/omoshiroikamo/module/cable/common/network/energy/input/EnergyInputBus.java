@@ -21,13 +21,14 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class EnergyInputBus extends AbstractPart implements IEnergyPart {
@@ -46,8 +47,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public List<Class<? extends ICablePart>> getBasePartTypes() {
-        return Collections.singletonList(IEnergyPart.class);
+    public List<Class<? extends ICableNode>> getBaseNodeTypes() {
+        return Collections.singletonList(IEnergyNet.class);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
         EnergyTransfer transfer = new EnergyTransfer();
         transfer.setMaxEnergyPerTransfer(getTransferLimit());
 
-        for (IEnergyPart iFace : network.interfaces) {
+        for (IEnergyNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
             transfer.push(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());

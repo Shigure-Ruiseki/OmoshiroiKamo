@@ -10,7 +10,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
-public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
+public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
 
     private final ItemIndex allIndex = new ItemIndex();
     private final ItemIndex lastAllSnapshot = new ItemIndex();
@@ -25,19 +25,19 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
     private int indexChannel = -1;
     private int indexVersion = 0;
 
-    public List<IItemPart> inputs;
-    public List<IItemPart> interfaces;
-    public List<IItemPart> outputs;
+    public List<IItemNet> inputs;
+    public List<IItemNet> interfaces;
+    public List<IItemNet> outputs;
 
     public ItemNetwork() {
-        super(IItemPart.class);
+        super(IItemNet.class);
     }
 
     @Override
     public void doNetworkTick() {
         super.doNetworkTick();
 
-        if (parts.isEmpty()) return;
+        if (nodes.isEmpty()) return;
 
         rebuildPartLists();
 
@@ -51,7 +51,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         interfaces = new ArrayList<>();
         outputs = new ArrayList<>();
 
-        for (IItemPart part : parts) {
+        for (IItemNet part : nodes) {
             switch (part.getIO()) {
                 case INPUT -> inputs.add(part);
                 case OUTPUT -> outputs.add(part);
@@ -93,7 +93,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
             }
         }
 
-        for (IItemPart part : parts) {
+        for (IItemNet part : nodes) {
             if (!(part instanceof IItemQueryable q)) continue;
 
             int ch = part.getChannel();
@@ -151,7 +151,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
         ItemStack result = null;
         int remaining = amount;
 
-        for (IItemPart part : interfaces) {
+        for (IItemNet part : interfaces) {
             if (remaining <= 0) break;
             if (!(part instanceof IItemQueryable interfaceBus)) continue;
 
@@ -175,7 +175,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemPart> {
 
         ItemStack remaining = stack.copy();
 
-        for (IItemPart part : interfaces) {
+        for (IItemNet part : interfaces) {
             if (!(part instanceof IItemQueryable bus)) continue;
 
             ItemStack leftover = bus.insert(remaining);

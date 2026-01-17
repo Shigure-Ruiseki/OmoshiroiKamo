@@ -1,7 +1,9 @@
 package ruiseki.omoshiroikamo.core.client.gui.widget;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.StringValue;
@@ -24,6 +26,8 @@ public class SearchBarWidget extends TextFieldWidget {
         super();
         background(VANILLA_SEARCH_BACKGROUND);
         value(new StringValue(prevText));
+        tooltip().addLine(IKey.lang("gui.search_bar.tool_tip"))
+            .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.cable.ICable;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CableNetworkRegistry;
@@ -30,48 +31,13 @@ public final class CableUtils {
         rebuildCluster(cluster);
     }
 
-    public static void joinCables(ICable cable, ForgeDirection dir) {
-        if (cable.isConnected(dir)) return;
-
-        TileEntity te = cable.getTileEntity();
-        if (te == null) return;
-
-        TileEntity otherTe = te.getWorldObj()
-            .getTileEntity(te.xCoord + dir.offsetX, te.yCoord + dir.offsetY, te.zCoord + dir.offsetZ);
-
-        if (!(otherTe instanceof ICable other)) return;
-        if (!cable.canConnect(otherTe, dir) || !other.canConnect(te, dir.getOpposite())) return;
-
-        cable.connect(dir);
-        other.connect(dir.getOpposite());
-
-        rebuildNetworks(cable);
-    }
-
-    public static void disconnectCable(ICable cable, ForgeDirection dir) {
-        cable.disconnect(dir);
-
-        TileEntity te = cable.getTileEntity();
-        if (te == null) return;
-
-        TileEntity otherTe = te.getWorldObj()
-            .getTileEntity(te.xCoord + dir.offsetX, te.yCoord + dir.offsetY, te.zCoord + dir.offsetZ);
-
-        if (otherTe instanceof ICable other) {
-            other.disconnect(dir.getOpposite());
-            rebuildNetworks(other);
-        }
-
-        rebuildNetworks(cable);
-    }
-
     private static void rebuildCluster(CableCluster cluster) {
         if (cluster.cables.isEmpty()) return;
 
         Set<AbstractCableNetwork<?>> destroyed = new HashSet<>();
 
         for (ICable cable : cluster.cables) {
-            Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> nets = cable.getNetworks();
+            Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> nets = cable.getNetworks();
             if (nets != null && !nets.isEmpty()) {
                 for (AbstractCableNetwork<?> net : new ArrayList<>(nets.values())) {
                     if (net != null && destroyed.add(net)) {
@@ -82,27 +48,25 @@ public final class CableUtils {
             cable.setNetworks(new HashMap<>());
         }
 
-        Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> newNetworks = new HashMap<>();
+        Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> newNetworks = new HashMap<>();
+
         for (ICable cable : cluster.cables) {
             for (ICablePart part : cable.getParts()) {
-
-                List<Class<? extends ICablePart>> types = part.getBasePartTypes();
+                List<Class<? extends ICableNode>> types = part.getBaseNodeTypes();
                 if (types == null || types.isEmpty()) continue;
 
-                for (Class<? extends ICablePart> type : types) {
+                for (Class<? extends ICableNode> type : types) {
                     if (type == null) continue;
 
                     AbstractCableNetwork<?> net = newNetworks.computeIfAbsent(type, CableNetworkRegistry::create);
 
-                    net.addPart(part);
+                    net.addNode(part);
                 }
             }
         }
 
         for (ICable cable : cluster.cables) {
-            Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> map = new HashMap<>();
-            map.putAll(newNetworks);
-            cable.setNetworks(map);
+            cable.setNetworks(new HashMap<>(newNetworks));
             cable.dirty();
         }
     }

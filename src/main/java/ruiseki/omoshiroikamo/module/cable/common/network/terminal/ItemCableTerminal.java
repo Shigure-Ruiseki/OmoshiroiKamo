@@ -14,9 +14,4 @@ public class ItemCableTerminal extends AbstractPartItem {
     public ICablePart createPart() {
         return new CableTerminal();
     }
-
-    @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return ICablePart.class;
-    }
 }

@@ -22,11 +22,12 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
@@ -46,8 +47,8 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
     }
 
     @Override
-    public List<Class<? extends ICablePart>> getBasePartTypes() {
-        return Collections.singletonList(IItemPart.class);
+    public List<Class<? extends ICableNode>> getBaseNodeTypes() {
+        return Collections.singletonList(IItemNet.class);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         ItemTransfer transfer = new ItemTransfer();
         transfer.setMaxItemsPerTransfer(getTransferLimit());
 
-        for (IItemPart iFace : network.interfaces) {
+        for (IItemNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
             transfer.pull(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());

@@ -16,7 +16,7 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -24,8 +24,8 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
 public class CableTerminal extends AbstractPart {
@@ -42,14 +42,18 @@ public class CableTerminal extends AbstractPart {
     public boolean sortOrder = true;
     public String SORT_ORDER_TAG = "SortOrder";
 
+    public CableTerminal() {
+        setChannel(-1);
+    }
+
     @Override
     public String getId() {
         return "cable_terminal";
     }
 
     @Override
-    public List<Class<? extends ICablePart>> getBasePartTypes() {
-        return Arrays.asList(IItemPart.class, IEnergyPart.class);
+    public List<Class<? extends ICableNode>> getBaseNodeTypes() {
+        return Arrays.asList(IItemNet.class, IEnergyNet.class);
     }
 
     @Override
@@ -141,7 +145,7 @@ public class CableTerminal extends AbstractPart {
     }
 
     public ItemNetwork getItemNetwork() {
-        return (ItemNetwork) getCable().getNetwork(IItemPart.class);
+        return (ItemNetwork) getCable().getNetwork(IItemNet.class);
     }
 
     public SortType getSortType() {

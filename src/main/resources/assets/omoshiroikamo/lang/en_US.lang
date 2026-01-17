@@ -85,6 +85,9 @@ gui.io.isActivated=Active
 gui.io.enabled=Enabled
 gui.io.disabled=Disabled
 
+gui.search_bar.tool_tip=Right click to clear the search bar
+
+
 #Cable
 
 gui.cable.index_channel=Chan: 

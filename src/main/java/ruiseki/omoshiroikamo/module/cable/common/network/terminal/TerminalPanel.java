@@ -78,7 +78,7 @@ public class TerminalPanel extends ModularPanel {
         this.settings = settings;
         this.terminal = terminal;
 
-        this.size(176, 294);
+        this.size(176, 282);
 
         clientIndex = new ItemIndexClient();
         syncHandler = new ItemIndexSH(terminal, this, clientIndex);
@@ -119,7 +119,7 @@ public class TerminalPanel extends ModularPanel {
         this.child(
             IKey.lang(data.getPlayer().inventory.getInventoryName())
                 .asWidget()
-                .pos(8, 200));
+                .pos(8, 188));
         this.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
 
@@ -316,7 +316,7 @@ public class TerminalPanel extends ModularPanel {
         syncManager.registerSlotGroup("craftingResult", 1, true);
 
         SlotGroupWidget craftingGroupsWidget = new SlotGroupWidget().name("crafting_matrix")
-            .pos(33, 140)
+            .pos(33, 132)
             .coverChildren();
         ItemSlot resultSlot = new ItemSlot().syncHandler(new CraftingSlotSH(craftingResultSlot, terminal))
             .pos(97, 18)
@@ -356,7 +356,7 @@ public class TerminalPanel extends ModularPanel {
     @Override
     public void drawBackground(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         super.drawBackground(context, widgetTheme);
-        ARROW.draw(context, 94, 158, 24, 18, widgetTheme.getTheme());
-        CRAFTING_SLOT.draw(context, 126, 154, 26, 26, widgetTheme.getTheme());
+        ARROW.draw(context, 94, 148, 24, 18, widgetTheme.getTheme());
+        CRAFTING_SLOT.draw(context, 126, 146, 26, 26, widgetTheme.getTheme());
     }
 }

@@ -44,6 +44,24 @@ public interface ICable extends IOKTile, IOKEnergyIO {
 
     boolean hasVisualConnection(ForgeDirection side);
 
+    // Endpoint
+
+    boolean canConnectEndpoint(TileEntity te, ForgeDirection side);
+
+    void setEndpoint(ICableEndpoint endpoint);
+
+    void removeEndpoint(ICableEndpoint endpoint);
+
+    Collection<ICableEndpoint> getEndpoints();
+
+    // Blocked Side
+
+    boolean isSideBlocked(ForgeDirection side);
+
+    void blockSide(ForgeDirection side);
+
+    void unblockSide(ForgeDirection side);
+
     // Events
 
     boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side, float hitX,
@@ -60,9 +78,9 @@ public interface ICable extends IOKTile, IOKEnergyIO {
     World getWorld();
 
     // Network
-    Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> getNetworks();
+    Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> getNetworks();
 
-    <T extends ICablePart> AbstractCableNetwork<T> getNetwork(Class<T> partType);
+    <T extends ICableNode> AbstractCableNetwork<T> getNetwork(Class<T> partType);
 
-    <T extends ICablePart> void setNetworks(Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> networks);
+    <T extends ICableNode> void setNetworks(Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks);
 }

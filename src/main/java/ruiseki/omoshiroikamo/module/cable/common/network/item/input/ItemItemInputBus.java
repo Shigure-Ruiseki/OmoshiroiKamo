@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.cable.common.network.item.input;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPartItem;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 
 public class ItemItemInputBus extends AbstractPartItem {
 
@@ -15,10 +14,5 @@ public class ItemItemInputBus extends AbstractPartItem {
     @Override
     public ICablePart createPart() {
         return new ItemInputBus();
-    }
-
-    @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IItemPart.class;
     }
 }

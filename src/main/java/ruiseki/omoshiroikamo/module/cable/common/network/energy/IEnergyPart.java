@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network.energy;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 
-public interface IEnergyPart extends ICablePart {
+public interface IEnergyPart extends ICablePart, IEnergyNet {
 
     /**
      * Maximum amount of energy transferable per tick.
@@ -20,8 +20,4 @@ public interface IEnergyPart extends ICablePart {
      * Called when an external tile actively requests energy from this part.
      */
     int extractEnergy(int amount, boolean simulate);
-
-    default EnergyNetwork getEnergyNetwork() {
-        return getCable() != null ? (EnergyNetwork) getCable().getNetwork(IEnergyPart.class) : null;
-    }
 }

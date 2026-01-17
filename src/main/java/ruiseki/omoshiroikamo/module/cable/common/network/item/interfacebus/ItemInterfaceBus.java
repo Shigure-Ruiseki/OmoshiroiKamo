@@ -23,12 +23,13 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
@@ -56,8 +57,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     }
 
     @Override
-    public List<Class<? extends ICablePart>> getBasePartTypes() {
-        return Collections.singletonList(IItemPart.class);
+    public List<Class<? extends ICableNode>> getBaseNodeTypes() {
+        return Collections.singletonList(IItemNet.class);
     }
 
     @Override
