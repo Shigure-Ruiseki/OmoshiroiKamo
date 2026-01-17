@@ -125,6 +125,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
         Row priorityRow = new Row();
@@ -134,6 +136,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Row channelRow = new Row();
@@ -143,6 +147,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Row transferRow = new Row();
@@ -152,6 +158,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         transferRow.child(
             new TextFieldWidget().syncHandler("transferSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Column col = new Column();

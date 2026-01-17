@@ -12,6 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.oredict.OreDictionary;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public final class ItemStackKey {
 
     public final Item item;
@@ -22,10 +25,16 @@ public final class ItemStackKey {
 
     private final int tagHash;
 
+    @SideOnly(Side.CLIENT)
     private String displayNameLower;
-    private String modIdLower;
+
+    @SideOnly(Side.CLIENT)
     private List<String> tooltipLower;
+
+    @SideOnly(Side.CLIENT)
     private String creativeTab;
+
+    @SideOnly(Side.CLIENT)
     private int[] oreIds;
 
     private ItemStackKey(Item item, int meta, NBTTagCompound tag) {
@@ -42,7 +51,7 @@ public final class ItemStackKey {
         this.hash = computeHash();
     }
 
-    public static ItemStackKey of(ItemStack stack) {
+    static ItemStackKey of(ItemStack stack) {
         if (stack == null) throw new IllegalArgumentException("stack");
 
         return new ItemStackKey(
@@ -90,6 +99,7 @@ public final class ItemStackKey {
         return stack;
     }
 
+    @SideOnly(Side.CLIENT)
     public String getDisplayName() {
         if (displayNameLower == null) {
             displayNameLower = toStack().getDisplayName()
@@ -98,6 +108,7 @@ public final class ItemStackKey {
         return displayNameLower;
     }
 
+    @SideOnly(Side.CLIENT)
     public String getModId() {
         String name = Item.itemRegistry.getNameForObject(item);
         if (name == null) return "";
@@ -105,6 +116,7 @@ public final class ItemStackKey {
         return idx >= 0 ? name.substring(0, idx) : name;
     }
 
+    @SideOnly(Side.CLIENT)
     public List<String> getTooltipLower() {
         if (tooltipLower != null) return tooltipLower;
 
@@ -126,6 +138,7 @@ public final class ItemStackKey {
         return tooltipLower;
     }
 
+    @SideOnly(Side.CLIENT)
     public String getCreativeTab() {
         if (creativeTab != null) return creativeTab;
 
@@ -135,24 +148,12 @@ public final class ItemStackKey {
         return creativeTab;
     }
 
+    @SideOnly(Side.CLIENT)
     public int[] getOreIds() {
         if (oreIds == null) {
             oreIds = OreDictionary.getOreIDs(toStack());
         }
         return oreIds;
-    }
-
-    public String getModIdLower() {
-        if (modIdLower == null) {
-            String name = Item.itemRegistry.getNameForObject(item);
-            if (name != null && name.contains(":")) {
-                modIdLower = name.substring(0, name.indexOf(':'))
-                    .toLowerCase();
-            } else {
-                modIdLower = "minecraft";
-            }
-        }
-        return modIdLower;
     }
 
     public void write(PacketBuffer buf) throws IOException {

@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class TerminalOverlay implements IOverlayHandler {
 
@@ -172,7 +173,7 @@ public class TerminalOverlay implements IOverlayHandler {
     private boolean consumeIfEnough(ItemIndexClient index, ItemStack stack, Object2IntOpenHashMap<ItemStackKey> used) {
         if (stack == null) return false;
 
-        ItemStackKey key = ItemStackKey.of(stack);
+        ItemStackKey key = ItemStackKeyPool.get(stack);
         int need = stack.stackSize;
         int available = index.get(key) - used.getOrDefault(key, 0);
 

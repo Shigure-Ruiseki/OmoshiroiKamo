@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.TerminalPanel;
 
@@ -25,6 +26,8 @@ public class ItemIndexSH extends SyncHandler {
     public static final int EXTRACT = 100;
     public static final int INSERT = 101;
     public static final int SYNC_SERVER_STACK = 102;
+
+    public static final int SET_CHANNEL = 200;
 
     private final CableTerminal terminal;
     private final TerminalPanel panel;
@@ -74,6 +77,10 @@ public class ItemIndexSH extends SyncHandler {
 
     @Override
     public void readOnServer(int id, PacketBuffer buf) throws IOException {
+        if (id == SET_CHANNEL) {
+            handleServerChannel(buf);
+        }
+
         if (id == EXTRACT) {
             handleExtract(buf);
         }
@@ -87,9 +94,13 @@ public class ItemIndexSH extends SyncHandler {
         }
     }
 
+    public void syncChannel(int channel) {
+        syncToServer(SET_CHANNEL, buf -> buf.writeVarIntToBuffer(channel));
+    }
+
     public void extractToMouse(ItemStack stack, int amount) {
         syncToServer(EXTRACT, buf -> {
-            ItemStackKey.of(stack)
+            ItemStackKeyPool.get(stack)
                 .write(buf);
             buf.writeVarIntToBuffer(amount);
             buf.writeBoolean(false);
@@ -98,7 +109,7 @@ public class ItemIndexSH extends SyncHandler {
 
     public void extractToInventory(ItemStack stack, int amount) {
         syncToServer(EXTRACT, buf -> {
-            ItemStackKey.of(stack)
+            ItemStackKeyPool.get(stack)
                 .write(buf);
             buf.writeVarIntToBuffer(amount);
             buf.writeBoolean(true);
@@ -162,4 +173,11 @@ public class ItemIndexSH extends SyncHandler {
         player.inventory.setItemStack(stack);
     }
 
+    private void handleServerChannel(PacketBuffer buffer) {
+        int channel = buffer.readVarIntFromBuffer();
+        if (network != null) {
+            network.setIndexChannel(channel);
+            network.markDirty(channel);
+        }
+    }
 }

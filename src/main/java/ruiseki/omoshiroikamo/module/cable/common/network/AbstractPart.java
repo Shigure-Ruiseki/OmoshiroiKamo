@@ -41,16 +41,16 @@ public abstract class AbstractPart implements ICablePart {
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setInteger("TickCounter", tickCounter);
-        tag.setInteger("TICK_INTERVAL", Math.max(1, this.tickInterval));
+        tag.setInteger("tickCounter", tickCounter);
+        tag.setInteger("tickInterval", Math.max(1, this.tickInterval));
         tag.setInteger("priority", priority);
         tag.setInteger("channel", channel);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        this.tickCounter = tag.getInteger("TickCounter");
-        this.tickInterval = Math.max(1, tag.getInteger("TICK_INTERVAL"));
+        this.tickCounter = tag.getInteger("tickCounter");
+        this.tickInterval = Math.max(1, tag.getInteger("tickInterval"));
         this.priority = tag.getInteger("priority");
         this.channel = tag.getInteger("channel");
     }

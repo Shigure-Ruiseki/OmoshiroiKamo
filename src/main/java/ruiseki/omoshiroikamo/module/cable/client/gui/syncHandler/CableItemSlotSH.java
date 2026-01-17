@@ -11,6 +11,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class CableItemSlotSH extends SyncHandler {
 
@@ -30,7 +31,7 @@ public class CableItemSlotSH extends SyncHandler {
             boolean slotNotEmpty = slotStack != null && slotStack.stackSize > 0;
             buf.writeBoolean(slotNotEmpty);
             if (slotNotEmpty) {
-                ItemStackKey key = ItemStackKey.of(slotStack);
+                ItemStackKey key = ItemStackKeyPool.get(slotStack);
                 key.write(buf);
             }
 

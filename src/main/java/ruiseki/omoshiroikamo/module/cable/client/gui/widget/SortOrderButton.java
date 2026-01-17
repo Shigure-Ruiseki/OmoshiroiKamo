@@ -18,13 +18,13 @@ public class SortOrderButton extends CyclicVariantButtonWidget {
     public static final UITexture ASC_SORT = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/cable/icons")
         .imageSize(256, 256)
-        .xy(36, 0, 18, 18)
+        .xy(198, 34, 18, 18)
         .build();
 
     public static final UITexture DESC_SORT = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/cable/icons")
         .imageSize(256, 256)
-        .xy(54, 0, 18, 18)
+        .xy(180, 34, 18, 18)
         .build();
 
     private static final List<CyclicVariantButtonWidget.Variant> VARIANTS = Arrays.asList(

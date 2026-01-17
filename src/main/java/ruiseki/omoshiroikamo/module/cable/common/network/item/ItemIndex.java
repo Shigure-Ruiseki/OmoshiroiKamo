@@ -8,12 +8,14 @@ public class ItemIndex {
 
     private final Object2IntOpenHashMap<ItemStackKey> items = new Object2IntOpenHashMap<>();
 
+    public static final ItemIndex EMPTY = new ItemIndex();
+
     public void clear() {
         items.clear();
     }
 
     public void add(ItemStack stack) {
-        items.addTo(ItemStackKey.of(stack), stack.stackSize);
+        items.addTo(ItemStackKeyPool.get(stack), stack.stackSize);
     }
 
     public int get(ItemStackKey key) {

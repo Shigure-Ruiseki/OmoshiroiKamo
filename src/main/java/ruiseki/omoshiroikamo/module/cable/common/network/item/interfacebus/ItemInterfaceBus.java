@@ -34,6 +34,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
 
@@ -100,7 +101,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
             if (s != null && s.stackSize > 0) {
-                hash = 31 * hash + ItemStackKey.of(s).hash;
+                hash = 31 * hash + ItemStackKeyPool.get(s).hash;
                 hash = 31 * hash + s.stackSize;
             }
         }
@@ -109,7 +110,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
     private void markNetworkDirty() {
         ItemNetwork net = getItemNetwork();
-        if (net != null) net.markDirty();
+        if (net != null) net.markDirty(getChannel());
     }
 
     @Override
@@ -151,6 +152,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
                 .asWidget());
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
         Row priorityRow = new Row();
@@ -160,6 +163,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
                 .asWidget());
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Row channelRow = new Row();
@@ -169,6 +174,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
                 .asWidget());
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Column col = new Column();
@@ -225,7 +232,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
             ItemStack s = inv.getStackInSlot(slot);
             if (s == null || s.stackSize <= 0) continue;
-            if (!ItemStackKey.of(s)
+            if (!ItemStackKeyPool.get(s)
                 .equals(key)) continue;
 
             int take = Math.min(remaining, s.stackSize);

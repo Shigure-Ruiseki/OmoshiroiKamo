@@ -19,10 +19,13 @@ import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.SyncHandlers;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -59,7 +62,6 @@ public class TerminalPanel extends ModularPanel {
     public ItemIndexSH syncHandler;
     public SlotGroupWidget itemSlots;
     public CableScrollBar scrollBar;
-    public SearchBarWidget searchBar;
     public CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
     public ModularCraftingMatrixSlot[] craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
@@ -88,18 +90,7 @@ public class TerminalPanel extends ModularPanel {
 
         buildCraftingGrid();
 
-        searchBar = (SearchBarWidget) new SearchBarWidget() {
-
-            @Override
-            public void doSearch(String search) {
-                clientIndex.setSearch(search);
-                updateGrid(clientIndex);
-            }
-        }.top(5)
-            .left(5)
-            .width(166)
-            .height(12);
-        this.child(searchBar);
+        buildTopBar();
 
         ExpandedWidget rightExpanded = ExpandedWidget.right()
             .coverChildrenWidth()
@@ -231,6 +222,43 @@ public class TerminalPanel extends ModularPanel {
         this.child(col);
     }
 
+    private void buildTopBar() {
+
+        Row row = new Row();
+        row.coverChildren()
+            .pos(7, 5)
+            .childPadding(2);
+
+        Row channelRow = new Row();
+        channelRow.height(11)
+            .width(60);
+        channelRow.child(
+            IKey.lang("gui.cable.index_channel")
+                .asWidget());
+        channelRow.child(
+            new TextFieldWidget().size(32, 11)
+                .setFormatAsInteger(true)
+                .setDefaultNumber(-1)
+                .setNumbers(-1, Integer.MAX_VALUE)
+                .value(SyncHandlers.intNumber(terminal::getChannel, this::changeChannel)));
+        row.child(channelRow);
+
+        SearchBarWidget searchBar = new SearchBarWidget() {
+
+            @Override
+            public void doSearch(String search) {
+                clientIndex.setSearch(search);
+                updateGrid(clientIndex);
+            }
+        };
+        searchBar.top(1)
+            .size(102, 10);
+
+        row.child(searchBar);
+
+        this.child(row);
+    }
+
     private void buildCraftingGrid() {
         CableCraftingSlot craftingResultSlot = new CableCraftingSlot(terminal.craftingStackHandler, 9);
         craftingResultSlot.accessibility(false, true)
@@ -306,14 +334,19 @@ public class TerminalPanel extends ModularPanel {
         this.child(craftingGroupsWidget);
     }
 
-    public static final UITexture ARROW = UITexture.builder()
+    private void changeChannel(int channel) {
+        terminal.setChannel(channel);
+        syncHandler.syncChannel(channel);
+    }
+
+    private static final UITexture ARROW = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(47, 220, 24, 18)
         .adaptable(1)
         .build();
 
-    public static final UITexture CRAFTING_SLOT = UITexture.builder()
+    private static final UITexture CRAFTING_SLOT = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/gui_controls")
         .imageSize(256, 256)
         .xy(71, 216, 26, 26)

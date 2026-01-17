@@ -21,7 +21,7 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CraftingSlotSH;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class CableCraftingSlot extends ModularCraftingMatrixSlot {
 
@@ -126,7 +126,7 @@ public class CableCraftingSlot extends ModularCraftingMatrixSlot {
             boolean extractedFromHandler = false;
 
             if (getNetwork() != null) {
-                ItemStack extracted = getNetwork().extract(ItemStackKey.of(slotStack), 1);
+                ItemStack extracted = getNetwork().extract(ItemStackKeyPool.get(slotStack), 1);
                 if (extracted != null) {
                     extractedFromHandler = true;
                 }
