@@ -239,7 +239,7 @@ public class ProcessAgent {
      */
     public String getStatusMessage(List<IModularPort> outputPorts) {
         if (running && !waitingForOutput) {
-            return "Processing " + (int)(progress / maxProgress * 100) + " %";
+            return "Processing " + (int) (progress / maxProgress * 100) + " %";
         }
 
         if (waitingForOutput) {

@@ -16,7 +16,6 @@ import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
  * Abstract base class for tile entities that store and manage energy.
