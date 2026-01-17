@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.item;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -8,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cofh.api.item.IToolHammer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
@@ -22,7 +24,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
  * - Add tooltip
  * - Add announcement when change io
  */
-public class ItemWrench extends ItemOK {
+public class ItemWrench extends ItemOK implements IToolHammer {
 
     public ItemWrench() {
         super(ModObject.itemWrench.unlocalisedName);
@@ -83,4 +85,13 @@ public class ItemWrench extends ItemOK {
         return hitSide;
     }
 
+    @Override
+    public boolean isUsable(ItemStack item, EntityLivingBase user, int x, int y, int z) {
+        return true;
+    }
+
+    @Override
+    public void toolUsed(ItemStack item, EntityLivingBase user, int x, int y, int z) {
+
+    }
 }

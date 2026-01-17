@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator;
 
-import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.DML_INVENTORY_TEXTURE;
-import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.EMPTY_SLOT;
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.DML_INVENTORY_TEXTURE;
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.EMPTY_SLOT;
 
 import java.util.ArrayList;
 import java.util.List;

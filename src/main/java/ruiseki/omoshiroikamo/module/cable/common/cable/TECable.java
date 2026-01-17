@@ -19,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -30,19 +29,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
+import cofh.api.item.IToolHammer;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.cable.ICable;
+import ruiseki.omoshiroikamo.api.cable.ICableEndpoint;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
@@ -51,23 +53,31 @@ import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
-    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<PosSideGuiData> {
+    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
 
     protected final EnumSet<ForgeDirection> connections = EnumSet.noneOf(ForgeDirection.class);
+    private final EnumSet<ForgeDirection> blockedSides = EnumSet.noneOf(ForgeDirection.class);
 
+    private final Map<ForgeDirection, ICableEndpoint> endpoints = new EnumMap<>(ForgeDirection.class);
     private final Map<ForgeDirection, ICablePart> parts = new EnumMap<>(ForgeDirection.class);
 
-    private Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> networks;
+    private Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks = new HashMap<>();;
 
-    private boolean clientUpdated = false;
-    private boolean needsNetworkRebuild = false;
+    public boolean clientUpdated = false;
+    public boolean needsNetworkRebuild = false;
 
-    public TECable() {
-        networks = new HashMap<>();
-    }
+    public TECable() {}
 
     @Override
     public void writeCommon(NBTTagCompound tag) {
+        int[] blocked = new int[blockedSides.size()];
+        Iterator<ForgeDirection> blockSide = blockedSides.iterator();
+        for (int i = 0; i < blocked.length; i++) {
+            blocked[i] = blockSide.next()
+                .ordinal();
+        }
+        tag.setIntArray("blockedSides", blocked);
+
         int[] dirs = new int[connections.size()];
         Iterator<ForgeDirection> cons = connections.iterator();
         for (int i = 0; i < dirs.length; i++) {
@@ -96,6 +106,13 @@ public class TECable extends AbstractTE
 
     @Override
     public void readCommon(NBTTagCompound tag) {
+        blockedSides.clear();
+        if (tag.hasKey("blockedSides")) {
+            int[] arr = tag.getIntArray("blockedSides");
+            for (int i : arr) {
+                blockedSides.add(ForgeDirection.values()[i]);
+            }
+        }
 
         // connections
         connections.clear();
@@ -172,10 +189,15 @@ public class TECable extends AbstractTE
 
     @Override
     public boolean canConnect(TileEntity other, ForgeDirection side) {
+        if (isSideBlocked(side)) return false;
         if (hasPart(side)) return false;
+
         if (!(other instanceof ICable otherCable)) return false;
+
         ForgeDirection opp = side.getOpposite();
         if (otherCable.hasPart(opp)) return false;
+        if (otherCable.isSideBlocked(opp)) return false;
+
         return true;
     }
 
@@ -193,13 +215,38 @@ public class TECable extends AbstractTE
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-            boolean canConnect = canConnect(te, dir);
-            boolean wasConnected = isConnected(dir);
+            /* ================= Cable ↔ Cable ================= */
+            boolean canCableConnect = canConnect(te, dir);
+            boolean wasCableConnected = isConnected(dir);
 
-            if (canConnect != wasConnected) {
-                if (canConnect) connect(dir);
-                else disconnect(dir);
+            if (canCableConnect != wasCableConnected) {
+                if (canCableConnect) {
+                    connect(dir);
+                } else {
+                    disconnect(dir);
+                }
                 changed = true;
+            }
+
+            ICableEndpoint current = endpoints.get(dir);
+            if (te instanceof ICableEndpoint endpoint && !isSideBlocked(dir)) {
+                if (current != endpoint) {
+                    if (current != null) {
+                        current.onDetached();
+                    }
+
+                    endpoint.setCable(this, dir);
+                    endpoint.onAttached();
+                    endpoints.put(dir, endpoint);
+                    changed = true;
+                }
+
+            } else {
+                if (current != null) {
+                    current.onDetached();
+                    endpoints.remove(dir);
+                    changed = true;
+                }
             }
         }
 
@@ -275,32 +322,131 @@ public class TECable extends AbstractTE
     }
 
     @Override
+    public boolean canConnectEndpoint(TileEntity te, ForgeDirection side) {
+        if (te == null) return false;
+        if (isSideBlocked(side)) return false;
+        if (endpoints.containsKey(side)) return false;
+        return te instanceof ICableEndpoint;
+    }
+
+    @Override
+    public void setEndpoint(ICableEndpoint endpoint) {
+        if (endpoint == null) return;
+
+        ForgeDirection side = endpoint.getSide();
+        endpoints.put(side, endpoint);
+
+        endpoint.onAttached();
+
+        needsNetworkRebuild = true;
+        markDirty();
+    }
+
+    @Override
+    public void removeEndpoint(ICableEndpoint endpoint) {
+        if (endpoint == null) return;
+
+        ForgeDirection side = endpoint.getSide();
+        if (endpoints.remove(side) != null) {
+            endpoint.onDetached();
+            needsNetworkRebuild = true;
+            markDirty();
+        }
+    }
+
+    @Override
+    public Collection<ICableEndpoint> getEndpoints() {
+        return endpoints.values();
+    }
+
+    @Override
+    public boolean isSideBlocked(ForgeDirection side) {
+        return blockedSides.contains(side);
+    }
+
+    @Override
+    public void blockSide(ForgeDirection side) {
+        if (!blockedSides.add(side)) return;
+
+        disconnect(side);
+
+        TileEntity te = getPos().offset(side)
+            .getTileEntity(worldObj);
+        if (te instanceof ICable other) {
+            other.blockSide(side.getOpposite());
+        }
+
+        if (!worldObj.isRemote) {
+            CableUtils.rebuildNetworks(this);
+        }
+    }
+
+    @Override
+    public void unblockSide(ForgeDirection side) {
+        if (!blockedSides.remove(side)) return;
+
+        TileEntity te = getPos().offset(side)
+            .getTileEntity(worldObj);
+        if (te instanceof ICable other) {
+            other.unblockSide(side.getOpposite());
+        }
+
+        if (!worldObj.isRemote) {
+            updateConnections();
+            CableUtils.rebuildNetworks(this);
+        }
+    }
+
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side,
         float hitX, float hitY, float hitZ) {
-        if (world.isRemote) {
-            return true;
-        }
+        ItemStack held = player.getHeldItem();
 
         CableHit hit = this.rayTraceCable(player);
-        if (hit != null && hit.type == CableHit.Type.PART) {
-            ICablePart part = getPart(hit.side);
+        if (hit != null) {
+            if (!worldObj.isRemote) {
+                if (held != null && held.getItem() instanceof IToolHammer hammer) {
+                    if (hit.type == CableHit.Type.CONNECTION) {
+                        blockSide(hit.side);
+                        hammer.toolUsed(held, player, x, y, z);
+                        return true;
+                    }
 
-            if (part != null) {
-                player.addChatMessage(new ChatComponentText("[Part] " + part));
-
-                OKGuiFactories.tileEntity()
-                    .open(player, x, y, z, hit.side);
+                    if (hit.type == CableHit.Type.CORE) {
+                        unblockSide(side);
+                        hammer.toolUsed(held, player, x, y, z);
+                        return true;
+                    }
+                }
             }
 
-            return true;
-        }
+            if (hit.type == CableHit.Type.PART) {
+                ICablePart part = getPart(hit.side);
+                if (part != null && !worldObj.isRemote) {
+                    if (held != null && held.getItem() instanceof IToolHammer hammer) {
+                        if (!hammer.isUsable(held, player, x, y, z)) {
+                            return false;
+                        }
 
-        for (AbstractCableNetwork<?> net : this.getNetworks()
-            .values()) {
-            player.addChatMessage(new ChatComponentText("[Network] " + net));
-        }
+                        ItemStack drop = part.getItemStack();
+                        if (drop != null) {
+                            dropStack(world, xCoord, yCoord, zCoord, drop);
+                        }
 
-        return true;
+                        removePart(hit.side);
+                        hammer.toolUsed(held, player, x, y, z);
+                        return true;
+                    }
+
+                    OKGuiFactories.tileEntity()
+                        .setGuiContainer(part.getGuiContainer())
+                        .open(player, x, y, z, hit.side);
+                }
+
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -331,18 +477,18 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> getNetworks() {
+    public Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> getNetworks() {
         return networks;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends ICablePart> AbstractCableNetwork<T> getNetwork(Class<T> partType) {
+    public <T extends ICableNode> AbstractCableNetwork<T> getNetwork(Class<T> partType) {
         return (AbstractCableNetwork<T>) networks.get(partType);
     }
 
     @Override
-    public <T extends ICablePart> void setNetworks(Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> networks) {
+    public <T extends ICableNode> void setNetworks(Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks) {
         this.networks = networks;
     }
 
@@ -439,8 +585,8 @@ public class TECable extends AbstractTE
     @Override
     public void getWailaNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y,
         int z) {
-        if (tile instanceof TECable cable) {
-            Map<Class<? extends ICablePart>, AbstractCableNetwork<?>> nets = cable.getNetworks();
+        if (tile instanceof ICable cable) {
+            Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> nets = cable.getNetworks();
             tag.setInteger("networkCount", nets.size());
             int i = 0;
             for (AbstractCableNetwork<?> n : nets.values()) {
@@ -448,7 +594,7 @@ public class TECable extends AbstractTE
                     "networkName" + i,
                     n.getClass()
                         .getSimpleName() + " ["
-                        + n.getParts()
+                        + n.getNodes()
                             .size()
                         + "]");
                 i++;
@@ -648,7 +794,7 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public ModularPanel buildUI(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ICablePart part = getPart(data.getSide());
         return part.partPanel(data, syncManager, settings);
     }

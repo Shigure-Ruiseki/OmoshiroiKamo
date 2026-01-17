@@ -329,24 +329,27 @@ public class BackpackInventoryUtils {
         switch (type) {
             case INVENTORY:
                 for (int i = 0; i < stackHandler.getSlots() - 1; i++) {
-                    ItemStack stack = stackHandler.getStackInSlot(i);
-                    if (stack == null || stack.stackSize <= 0) continue;
+                    ItemStack original = stackHandler.getStackInSlot(i);
+                    if (original == null || original.stackSize <= 0) continue;
+
+                    ItemStack moving = original.copy();
 
                     for (int j = 9; j < playerInv.getSlots(); j++) {
-                        if (stack == null || stack.stackSize <= 0) break;
-                        stack = playerInv.insertItem(j, stack, false);
+                        if (moving == null || moving.stackSize <= 0) break;
+                        moving = playerInv.insertItem(j, moving, false);
                     }
 
-                    stackHandler.setStackInSlot(i, stack);
+                    stackHandler.setStackInSlot(i, moving);
                 }
                 break;
 
             case BACKPACK:
                 for (int i = 0; i < stackHandler.getSlots() - 1; i++) {
-                    ItemStack stack = stackHandler.getStackInSlot(i);
-                    if (stack == null || stack.stackSize <= 0) continue;
+                    ItemStack original = stackHandler.getStackInSlot(i);
+                    if (original == null || original.stackSize <= 0) continue;
 
-                    ItemStack remaining = backpack.insertItem(stack, false);
+                    ItemStack remaining = backpack.insertItem(original.copy(), false);
+
                     stackHandler.setStackInSlot(i, remaining);
                 }
                 break;

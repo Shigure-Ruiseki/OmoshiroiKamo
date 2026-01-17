@@ -1,12 +1,19 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
@@ -16,15 +23,21 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
-public class ItemInterfaceBus extends AbstractPart implements IItemPart {
+public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -32,14 +45,20 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    private int lastHash = 0;
+
+    public ItemInterfaceBus() {
+        setTickInterval(20);
+    }
+
     @Override
     public String getId() {
         return "item_interface_bus";
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IItemPart.class;
+    public List<Class<? extends ICableNode>> getBaseNodeTypes() {
+        return Collections.singletonList(IItemNet.class);
     }
 
     @Override
@@ -53,7 +72,15 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
     }
 
     @Override
-    public void doUpdate() {}
+    public void doUpdate() {
+        if (!shouldDoTickInterval()) return;
+
+        int hash = calcInventoryHash();
+        if (hash != lastHash) {
+            lastHash = hash;
+            markNetworkDirty();
+        }
+    }
 
     @Override
     public void onChunkUnload() {
@@ -65,8 +92,45 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
         return CableItems.ITEM_INTERFACE_BUS.newItemStack();
     }
 
+    private int calcInventoryHash() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return 0;
+
+        int hash = 1;
+        int[] slots = getAccessibleSlots(inv);
+
+        for (int slot : slots) {
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s != null && s.stackSize > 0) {
+                hash = 31 * hash + ItemStackKeyPool.get(s).hash;
+                hash = 31 * hash + s.stackSize;
+            }
+        }
+        return hash;
+    }
+
+    private void markNetworkDirty() {
+        ItemNetwork net = getItemNetwork();
+        if (net != null) net.markDirty(getChannel());
+    }
+
     @Override
-    public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void collectItems(ItemIndex index) {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return;
+
+        int[] slots = getAccessibleSlots(inv);
+
+        for (int slot : slots) {
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s != null && s.stackSize > 0) {
+                index.add(s);
+            }
+        }
+    }
+
+    @Override
+    public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("tickSyncer", SyncHandlers.intNumber(this::getTickInterval, this::setTickInterval));
         syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
         syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
@@ -89,6 +153,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
                 .asWidget());
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
         Row priorityRow = new Row();
@@ -98,6 +164,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
                 .asWidget());
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Row channelRow = new Row();
@@ -107,6 +175,8 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
                 .asWidget());
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Column col = new Column();
@@ -148,4 +218,90 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart {
         return Integer.MAX_VALUE;
     }
 
+    @Override
+    public ItemStack extract(ItemStackKey key, int amount) {
+        if (amount <= 0) return null;
+
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return null;
+
+        ItemStack result = null;
+        int remaining = amount;
+
+        for (int slot : getAccessibleSlots(inv)) {
+            if (remaining <= 0) break;
+
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s == null || s.stackSize <= 0) continue;
+            if (!ItemStackKeyPool.get(s)
+                .equals(key)) continue;
+
+            int take = Math.min(remaining, s.stackSize);
+            ItemStack taken = inv.decrStackSize(slot, take);
+
+            if (taken != null) {
+                if (result == null) {
+                    result = taken;
+                } else {
+                    result.stackSize += taken.stackSize;
+                }
+                remaining -= taken.stackSize;
+            }
+        }
+
+        if (result != null) {
+            inv.markDirty();
+        }
+
+        return result;
+    }
+
+    @Override
+    public ItemStack insert(ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) return null;
+
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IInventory inv)) return stack;
+
+        ItemStack remaining = stack.copy();
+        boolean changed = false;
+
+        for (int slot : getAccessibleSlots(inv)) {
+            if (remaining.stackSize <= 0) break;
+
+            ItemStack target = inv.getStackInSlot(slot);
+
+            if (target == null) {
+                int add = Math.min(remaining.getMaxStackSize(), remaining.stackSize);
+                ItemStack placed = remaining.splitStack(add);
+                inv.setInventorySlotContents(slot, placed);
+                changed = true;
+            } else if (ItemUtils.areStacksEqual(target, remaining)) {
+                int space = target.getMaxStackSize() - target.stackSize;
+                if (space > 0) {
+                    int add = Math.min(space, remaining.stackSize);
+                    target.stackSize += add;
+                    remaining.stackSize -= add;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            inv.markDirty();
+        }
+
+        return remaining.stackSize > 0 ? remaining : null;
+    }
+
+    private int[] getAccessibleSlots(IInventory inv) {
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
+        }
+
+        int size = inv.getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) slots[i] = i;
+        return slots;
+    }
 }

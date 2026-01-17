@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network.energy;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 
-public interface IEnergyPart extends ICablePart {
+public interface IEnergyPart extends ICablePart, IEnergyNet {
 
     /**
      * Maximum amount of energy transferable per tick.

@@ -5,7 +5,7 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
@@ -19,7 +19,7 @@ public class SortingSettingWidget extends ExpandedTabWidget {
     private final TabWidget parentTabWidget;
 
     public SortingSettingWidget(BackpackPanel panel, BackpackSettingPanel settingPanel, TabWidget parentTabWidget) {
-        super(2, GuiTextures.NO_SORT_ICON, "gui.backpack.sorting_settings", 80, ExpandDirection.RIGHT);
+        super(2, OKGuiTextures.NO_SORT_ICON, "gui.backpack.sorting_settings", 80, ExpandDirection.RIGHT);
 
         this.panel = panel;
         this.settingPanel = settingPanel;
@@ -31,7 +31,7 @@ public class SortingSettingWidget extends ExpandedTabWidget {
             .childPadding(2);
 
         ButtonWidget<?> lockAllButton = new ButtonWidget<>().size(20)
-            .overlay(GuiTextures.ALL_FOUR_SLOT_ICON)
+            .overlay(OKGuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
                     BackpackHandler handler = panel.getHandler();
@@ -53,7 +53,7 @@ public class SortingSettingWidget extends ExpandedTabWidget {
                     .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
         ButtonWidget<?> unlockAllButton = new ButtonWidget<>().size(20)
-            .overlay(GuiTextures.NONE_FOUR_SLOT_ICON)
+            .overlay(OKGuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
                     BackpackHandler handler = panel.getHandler();
