@@ -222,7 +222,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
                 return false;
             }
         } else if (!valid) {
-            // If check failed, we don't know exactly why (StructureLib doesn't tell us easily),
+            // If check failed, we don't know exactly why
             // but usually it means blocks don't match.
             if (customStructureName != null) {
                 lastValidationError = "Block mismatch or incomplete structure.";
@@ -279,7 +279,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     @Override
     public void doUpdate() {
         // Sync customStructureName from blueprint if blueprint is present in GUI
-        // Only update if blueprint has a structure name (don't clear existing structure)
+        // Only update if blueprint has a structure name
         String blueprintName = getStructureNameFromBlueprint();
         if (blueprintName != null && !blueprintName.isEmpty() && !Objects.equals(blueprintName, customStructureName)) {
             this.customStructureName = blueprintName;
@@ -654,8 +654,8 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public IAlignmentLimits getAlignmentLimits() {
-        // Allow only horizontal directions (no up/down facing)
+        // Allow all directions
         // TODO: Load from structure JSON config in the future
-        return IAlignmentLimits.UPRIGHT;
+        return IAlignmentLimits.UNLIMITED;
     }
 }
