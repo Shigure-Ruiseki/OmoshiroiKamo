@@ -4,6 +4,7 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -94,5 +95,18 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
         // TODO: Show crafting progress percentage
         // TODO: Show energy consumption rate
         // TODO: Display error message if in error state
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        TEMachineController controller = (TEMachineController) world.getTileEntity(x, y, z);
+        if (controller != null) {
+            ItemStack blueprint = controller.getBlueprintStack();
+            if (blueprint != null && blueprint.stackSize > 0) {
+                dropStack(world, x, y, z, blueprint.copy());
+            }
+        }
+
+        super.breakBlock(world, x, y, z, block, meta);
     }
 }

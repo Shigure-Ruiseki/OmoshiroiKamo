@@ -18,6 +18,9 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
@@ -407,9 +410,21 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
                 .asWidget()
                 .pos(8, 25));
 
+        IntSyncValue progressSyncer = new IntSyncValue(processAgent::getProgress, processAgent::setProgress);
+        IntSyncValue maxProgressSyncer = new IntSyncValue(processAgent::getMaxProgress, processAgent::setMaxProgress);
+        BooleanSyncValue runningSyncer = new BooleanSyncValue(processAgent::isRunning, processAgent::setRunning);
+        BooleanSyncValue waitingSyncer = new BooleanSyncValue(
+            processAgent::isWaitingForOutput,
+            processAgent::setWaitingForOutput);
+
+        syncManager.syncValue("processProgressSyncer", progressSyncer);
+        syncManager.syncValue("processMaxSyncer", maxProgressSyncer);
+        syncManager.syncValue("processRunningSyncer", runningSyncer);
+        syncManager.syncValue("processWaitingSyncer", waitingSyncer);
+
         // Progress bar (Change is needed)
         panel.child(
-            new ProgressWidget().progress(this::getProgressPercent)
+            new ProgressWidget().value(new DoubleSyncValue(() -> (double) processAgent.getProgressPercent()))
                 .texture(GuiTextures.SOLID_UP_ARROW_ICON, 20)
                 .pos(80, 45));
 
@@ -437,10 +452,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * Get progress percentage for GUI progress bar.
      */
     private float getProgressPercent() {
-        if (!processAgent.isRunning()) return 0f;
-        int max = processAgent.getMaxProgress();
-        if (max <= 0) return 0f;
-        return (float) processAgent.getProgress() / max;
+        return processAgent.getProgressPercent();
     }
 
     // ========== Blueprint Inventory Methods ==========

@@ -195,16 +195,32 @@ public class ProcessAgent {
         return running;
     }
 
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
     public boolean isWaitingForOutput() {
         return waitingForOutput;
+    }
+
+    public void setWaitingForOutput(boolean waitingForOutput) {
+        this.waitingForOutput = waitingForOutput;
     }
 
     public int getProgress() {
         return progress;
     }
 
+    public void setProgress(int progress) {
+        this.progress = Math.max(0, progress);
+    }
+
     public int getMaxProgress() {
         return maxProgress;
+    }
+
+    public void setMaxProgress(int maxProgress) {
+        this.maxProgress = Math.max(0, maxProgress);
     }
 
     public ModularRecipe getCurrentRecipe() {
@@ -239,7 +255,10 @@ public class ProcessAgent {
      */
     public String getStatusMessage(List<IModularPort> outputPorts) {
         if (running && !waitingForOutput) {
-            return "Processing " + (int) (progress / maxProgress * 100) + " %";
+            if (maxProgress <= 0) {
+                return "Processing 0 %";
+            }
+            return "Processing " + (int) ((float) progress / maxProgress * 100) + " %";
         }
 
         if (waitingForOutput) {
