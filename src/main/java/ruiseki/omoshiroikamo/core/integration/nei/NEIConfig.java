@@ -105,8 +105,8 @@ public class NEIConfig implements IConfigureNEI {
         // Register Modular Machine structure preview handlers (one per structure)
         // Only register as usage handlers - structure preview shows on Usage (U), not
         // Recipe (R)
-        // TODO: Fix catalyst display issue - blueprints appear briefly in left tab then
-        // disappear.
+        // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
+        // TODO: Add Recipe of Modular Machines
         if (BackportConfigs.useMachinery) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);

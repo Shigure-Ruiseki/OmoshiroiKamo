@@ -54,7 +54,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * Blueprint slot provides GUI-based structure selection.
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
- * TODO: Drop blueprint when broken
  * TODO: Do not consume blueprint when auto-construct
  */
 public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
