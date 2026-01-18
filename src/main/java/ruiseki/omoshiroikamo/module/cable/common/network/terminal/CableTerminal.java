@@ -3,12 +3,17 @@ package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
@@ -20,6 +25,7 @@ import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
@@ -134,16 +140,6 @@ public class CableTerminal extends AbstractPart {
         };
     }
 
-    @Override
-    public ResourceLocation getIcon() {
-        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/cable_terminal.png");
-    }
-
-    @Override
-    public ResourceLocation getBackIcon() {
-        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/terminal_back.png");
-    }
-
     public ItemNetwork getItemNetwork() {
         return (ItemNetwork) getCable().getNetwork(IItemNet.class);
     }
@@ -170,4 +166,55 @@ public class CableTerminal extends AbstractPart {
         }
     }
 
+    private static IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/cable_terminal.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/cable_terminal.png");
+    private static final ResourceLocation back_texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/terminal_back.png");
+
+    @Override
+    public void renderPart(Tessellator tess, float partialTicks) {
+        GL11.glPushMatrix();
+
+        rotateForSide(getSide());
+
+        RenderUtils.bindTexture(texture);
+        model.renderPart("front");
+
+        RenderUtils.bindTexture(back_texture);
+        model.renderPart("back");
+
+        GL11.glPopMatrix();
+    }
+
+    @Override
+    public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
+        GL11.glPushMatrix();
+
+        switch (type) {
+            case ENTITY:
+                GL11.glTranslatef(0f, 0f, -0.5f);
+                break;
+            case EQUIPPED, EQUIPPED_FIRST_PERSON:
+                GL11.glTranslatef(0.25f, 0.5f, 0.25f);
+                break;
+            case INVENTORY:
+                GL11.glTranslatef(0.5f, 0f, 0f);
+                break;
+            default:
+                GL11.glTranslatef(0f, 0f, 0f);
+                break;
+        }
+
+        rotateForSide(getSide());
+
+        RenderUtils.bindTexture(texture);
+        model.renderPart("front");
+
+        RenderUtils.bindTexture(back_texture);
+        model.renderPart("back");
+
+        GL11.glPopMatrix();
+    }
 }

@@ -3,12 +3,17 @@ package ruiseki.omoshiroikamo.module.cable.common.network.energy.output;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
@@ -21,10 +26,13 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.energy.EnergyUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
@@ -201,11 +209,6 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public ResourceLocation getIcon() {
-        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/energy_output_bus.png");
-    }
-
-    @Override
     public int getTransferLimit() {
         return transferLimit;
     }
@@ -224,4 +227,49 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         return 0;
     }
 
+    private static IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_output_bus.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/energy_output_bus.png");
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void renderPart(Tessellator tess, float partialTicks) {
+        GL11.glPushMatrix();
+
+        RenderUtils.bindTexture(texture);
+
+        rotateForSide(getSide());
+
+        model.renderAll();
+
+        GL11.glPopMatrix();
+    }
+
+    @Override
+    public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
+        GL11.glPushMatrix();
+
+        switch (type) {
+            case ENTITY:
+                GL11.glTranslatef(0f, 0f, -0.5f);
+                break;
+            case EQUIPPED, EQUIPPED_FIRST_PERSON:
+                GL11.glTranslatef(0.25f, 0.5f, 0.25f);
+                break;
+            case INVENTORY:
+                GL11.glTranslatef(0.5f, 0f, 0f);
+                break;
+            default:
+                GL11.glTranslatef(0f, 0f, 0f);
+                break;
+        }
+
+        rotateForSide(getSide());
+
+        RenderUtils.bindTexture(texture);
+        model.renderAll();
+
+        GL11.glPopMatrix();
+    }
 }

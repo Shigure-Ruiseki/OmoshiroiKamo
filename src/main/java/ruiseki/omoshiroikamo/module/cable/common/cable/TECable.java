@@ -390,14 +390,6 @@ public class TECable extends AbstractTE
                         return true;
                     }
 
-                    ICableEndpoint endpoint = getEndpoint(hit.side);
-                    if (endpoint != null) {
-                        OKGuiFactories.tileEntity()
-                            .setGuiContainer(endpoint.getGuiContainer())
-                            .open(player, x, y, z, hit.side);
-                        return true;
-                    }
-
                     return false;
                 }
 
@@ -785,10 +777,9 @@ public class TECable extends AbstractTE
     @Override
     public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ICablePart part = getPart(data.getSide());
-        if (part != null) return part.partPanel(data, syncManager, settings);
-
-        ICableEndpoint endpoint = getEndpoint(data.getSide());
-        if (endpoint != null) return endpoint.endpointPanel(data, syncManager, settings);
+        if (part != null) {
+            return part.partPanel(data, syncManager, settings);
+        }
 
         return new ModularPanel("baseCable");
     }

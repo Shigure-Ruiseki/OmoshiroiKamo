@@ -3,14 +3,19 @@ package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
@@ -26,6 +31,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
@@ -48,7 +54,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     private int lastHash = 0;
 
     public ItemInterfaceBus() {
-        setTickInterval(20);
+        setTickInterval(100);
     }
 
     @Override
@@ -209,11 +215,6 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     }
 
     @Override
-    public ResourceLocation getIcon() {
-        return new ResourceLocation(LibResources.PREFIX_ITEM + "cable/item_interface_bus.png");
-    }
-
-    @Override
     public int getTransferLimit() {
         return Integer.MAX_VALUE;
     }
@@ -303,5 +304,50 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         int[] slots = new int[size];
         for (int i = 0; i < size; i++) slots[i] = i;
         return slots;
+    }
+
+    private static IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_interface_bus.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/item_interface_bus.png");
+
+    @Override
+    public void renderPart(Tessellator tess, float partialTicks) {
+        GL11.glPushMatrix();
+
+        RenderUtils.bindTexture(texture);
+
+        rotateForSide(getSide());
+
+        model.renderAll();
+
+        GL11.glPopMatrix();
+    }
+
+    @Override
+    public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
+        GL11.glPushMatrix();
+
+        switch (type) {
+            case ENTITY:
+                GL11.glTranslatef(0f, 0f, -0.5f);
+                break;
+            case EQUIPPED, EQUIPPED_FIRST_PERSON:
+                GL11.glTranslatef(0.25f, 0.5f, 0.25f);
+                break;
+            case INVENTORY:
+                GL11.glTranslatef(0.5f, 0f, 0f);
+                break;
+            default:
+                GL11.glTranslatef(0f, 0f, 0f);
+                break;
+        }
+
+        rotateForSide(getSide());
+
+        RenderUtils.bindTexture(texture);
+        model.renderAll();
+
+        GL11.glPopMatrix();
     }
 }

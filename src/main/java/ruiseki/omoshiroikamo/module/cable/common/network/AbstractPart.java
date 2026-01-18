@@ -4,6 +4,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 
@@ -98,6 +102,36 @@ public abstract class AbstractPart implements ICablePart {
         if (tickCounter < tickInterval) return false;
         tickCounter = 0;
         return true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void rotateForSide(ForgeDirection side) {
+        switch (side) {
+            case NORTH -> {
+                GL11.glTranslatef(0f, 0f, -0.001f);
+            }
+            case SOUTH -> {
+                GL11.glTranslatef(0f, 0f, 0.001f);
+                GL11.glRotatef(180f, 0f, 1f, 0f);
+            }
+            case WEST -> {
+                GL11.glTranslatef(-0.001f, 0f, 0f);
+                GL11.glRotatef(90f, 0f, 1f, 0f);
+            }
+            case EAST -> {
+                GL11.glTranslatef(0.001f, 0f, 0f);
+                GL11.glRotatef(-90f, 0f, 1f, 0f);
+            }
+            case UP -> {
+                GL11.glTranslatef(0f, 0.501f, -0.5f);
+                GL11.glRotatef(90f, 1f, 0f, 0f);
+            }
+            case DOWN -> {
+                GL11.glTranslatef(0f, 0.499f, 0.5f);
+                GL11.glRotatef(-90f, 1f, 0f, 0f);
+            }
+            default -> {}
+        }
     }
 
     @Override

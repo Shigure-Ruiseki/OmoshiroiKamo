@@ -1,9 +1,10 @@
 package ruiseki.omoshiroikamo.api.cable;
 
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,10 +40,8 @@ public interface ICablePart extends ICableNode {
     AxisAlignedBB getCollisionBox();
 
     @SideOnly(Side.CLIENT)
-    ResourceLocation getIcon();
+    void renderPart(Tessellator tess, float partialTicks);
 
     @SideOnly(Side.CLIENT)
-    default ResourceLocation getBackIcon() {
-        return getIcon();
-    }
+    void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess);
 }

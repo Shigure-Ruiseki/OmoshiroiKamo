@@ -106,30 +106,30 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeCommon(NBTTagCompound tag) {
+        super.writeCommon(tag);
 
         int[] sideData = new int[6];
         for (int i = 0; i < 6; i++) {
             sideData[i] = sides[i].ordinal();
         }
-        root.setIntArray("sideIO", sideData);
-        root.setInteger("energyMode", energyMode.ordinal());
-        root.setBoolean("useIC2", useIC2Compat);
+        tag.setIntArray("sideIO", sideData);
+        tag.setInteger("energyMode", energyMode.ordinal());
+        tag.setBoolean("useIC2", useIC2Compat);
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readCommon(NBTTagCompound tag) {
+        super.readCommon(tag);
 
-        if (root.hasKey("sideIO")) {
-            int[] sideData = root.getIntArray("sideIO");
+        if (tag.hasKey("sideIO")) {
+            int[] sideData = tag.getIntArray("sideIO");
             for (int i = 0; i < 6 && i < sideData.length; i++) {
                 sides[i] = EnumIO.values()[sideData[i]];
             }
         }
-        energyMode = EnergyMode.byIndex(root.getInteger("energyMode"));
-        useIC2Compat = root.getBoolean("useIC2");
+        energyMode = EnergyMode.byIndex(tag.getInteger("energyMode"));
+        useIC2Compat = tag.getBoolean("useIC2");
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
