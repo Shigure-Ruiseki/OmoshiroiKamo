@@ -26,12 +26,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.cleanroommc.modularui.factory.GuiData;
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
-import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
@@ -40,7 +37,6 @@ import cofh.api.item.IToolHammer;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
-import ruiseki.omoshiroikamo.api.block.IOKGuiHolder;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
@@ -55,7 +51,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
-    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IOKGuiHolder<SidedPosGuiData> {
+    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
 
     private byte connectionMask;
     private byte blockedMask;
@@ -397,6 +393,7 @@ public class TECable extends AbstractTE
                     ICableEndpoint endpoint = getEndpoint(hit.side);
                     if (endpoint != null) {
                         OKGuiFactories.tileEntity()
+                            .setGuiContainer(endpoint.getGuiContainer())
                             .open(player, x, y, z, hit.side);
                         return true;
                     }
@@ -430,6 +427,7 @@ public class TECable extends AbstractTE
                     }
 
                     OKGuiFactories.tileEntity()
+                        .setGuiContainer(part.getGuiContainer())
                         .open(player, x, y, z, hit.side);
 
                     return true;
@@ -793,21 +791,6 @@ public class TECable extends AbstractTE
         if (endpoint != null) return endpoint.endpointPanel(data, syncManager, settings);
 
         return new ModularPanel("baseCable");
-    }
-
-    @Override
-    public GuiContainerWrapper createGuiContainer(ModularContainer container, ModularScreen screen) {
-        GuiData data = container.getGuiData();
-        if (data instanceof SidedPosGuiData guiData) {
-            if (getEndpoint(guiData.getSide()) != null) {
-                return getEndpoint(guiData.getSide()).createGuiContainer(container, screen);
-            }
-            if (getPart(guiData.getSide()) != null) {
-                return getPart(guiData.getSide()).createGuiContainer(container, screen);
-            }
-        }
-
-        return IOKGuiHolder.super.createGuiContainer(container, screen);
     }
 
     @Override

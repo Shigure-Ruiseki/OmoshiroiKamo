@@ -7,15 +7,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
-import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import ruiseki.omoshiroikamo.api.block.IOKGuiHolder;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
@@ -23,7 +20,7 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiCon
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
-public class TEBackpack extends AbstractTE implements ISidedInventory, IOKGuiHolder<SidedPosGuiData> {
+public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
     private final int slots;
@@ -198,6 +195,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IOKGuiHol
     public void openGui(EntityPlayer player) {
         if (!worldObj.isRemote) {
             OKGuiFactories.tileEntity()
+                .setGuiContainer(BackpackGuiContainer.class)
                 .open(player, xCoord, yCoord, zCoord, ForgeDirection.UNKNOWN);
         }
     }
@@ -205,10 +203,5 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IOKGuiHol
     @Override
     public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return new BackpackGuiHolder.TileEntityGuiHolder(handler).buildUI(data, syncManager, settings);
-    }
-
-    @Override
-    public GuiContainerWrapper createGuiContainer(ModularContainer container, ModularScreen screen) {
-        return new BackpackGuiContainer(container, screen);
     }
 }

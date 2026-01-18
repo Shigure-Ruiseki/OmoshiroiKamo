@@ -10,11 +10,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
-import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
@@ -99,8 +97,8 @@ public class CableTerminal extends AbstractPart {
     }
 
     @Override
-    public GuiContainerWrapper createGuiContainer(ModularContainer container, ModularScreen screen) {
-        return new TerminalGuiContainer(container, screen);
+    public Class<? extends IMuiScreen> getGuiContainer() {
+        return TerminalGuiContainer.class;
     }
 
     @Override
