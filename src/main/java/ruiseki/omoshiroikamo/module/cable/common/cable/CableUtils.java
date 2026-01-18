@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.cable.ICable;
+import ruiseki.omoshiroikamo.api.cable.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
@@ -52,6 +53,21 @@ public final class CableUtils {
 
         for (ICable cable : cluster.cables) {
             for (ICablePart part : cable.getParts()) {
+                List<Class<? extends ICableNode>> types = part.getBaseNodeTypes();
+                if (types == null || types.isEmpty()) continue;
+
+                for (Class<? extends ICableNode> type : types) {
+                    if (type == null) continue;
+
+                    AbstractCableNetwork<?> net = newNetworks.computeIfAbsent(type, CableNetworkRegistry::create);
+
+                    net.addNode(part);
+                }
+            }
+        }
+
+        for (ICable cable : cluster.cables) {
+            for (ICableEndpoint part : cable.getEndpoints()) {
                 List<Class<? extends ICableNode>> types = part.getBaseNodeTypes();
                 if (types == null || types.isEmpty()) continue;
 

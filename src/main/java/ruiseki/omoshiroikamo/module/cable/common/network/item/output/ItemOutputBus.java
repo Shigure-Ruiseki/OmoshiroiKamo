@@ -24,6 +24,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
@@ -74,7 +75,12 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         for (IItemNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.pull(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
+            transfer.sink(ItemUtils.getItemSink(getTargetTE(), side.getOpposite()));
+            transfer.source(
+                ItemUtils.getItemSource(
+                    iFace.getTargetTE(),
+                    iFace.getSide()
+                        .getOpposite()));
             transfer.transfer();
         }
 

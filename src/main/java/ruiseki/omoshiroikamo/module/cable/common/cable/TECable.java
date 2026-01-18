@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +26,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiData;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
+import com.cleanroommc.modularui.screen.GuiContainerWrapper;
+import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
@@ -39,6 +40,7 @@ import cofh.api.item.IToolHammer;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
+import ruiseki.omoshiroikamo.api.block.IOKGuiHolder;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
@@ -53,15 +55,15 @@ import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
-    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
+    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IOKGuiHolder<SidedPosGuiData> {
 
-    protected final EnumSet<ForgeDirection> connections = EnumSet.noneOf(ForgeDirection.class);
-    private final EnumSet<ForgeDirection> blockedSides = EnumSet.noneOf(ForgeDirection.class);
+    private byte connectionMask;
+    private byte blockedMask;
 
     private final Map<ForgeDirection, ICableEndpoint> endpoints = new EnumMap<>(ForgeDirection.class);
     private final Map<ForgeDirection, ICablePart> parts = new EnumMap<>(ForgeDirection.class);
 
-    private Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks = new HashMap<>();;
+    private Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks = new HashMap<>();
 
     public boolean clientUpdated = false;
     public boolean needsNetworkRebuild = false;
@@ -70,21 +72,8 @@ public class TECable extends AbstractTE
 
     @Override
     public void writeCommon(NBTTagCompound tag) {
-        int[] blocked = new int[blockedSides.size()];
-        Iterator<ForgeDirection> blockSide = blockedSides.iterator();
-        for (int i = 0; i < blocked.length; i++) {
-            blocked[i] = blockSide.next()
-                .ordinal();
-        }
-        tag.setIntArray("blockedSides", blocked);
-
-        int[] dirs = new int[connections.size()];
-        Iterator<ForgeDirection> cons = connections.iterator();
-        for (int i = 0; i < dirs.length; i++) {
-            dirs[i] = cons.next()
-                .ordinal();
-        }
-        tag.setIntArray("connections", dirs);
+        tag.setByte("blockedMask", blockedMask);
+        tag.setByte("connectionMask", connectionMask);
 
         NBTTagCompound partsTag = new NBTTagCompound();
         for (Map.Entry<ForgeDirection, ICablePart> entry : parts.entrySet()) {
@@ -106,20 +95,8 @@ public class TECable extends AbstractTE
 
     @Override
     public void readCommon(NBTTagCompound tag) {
-        blockedSides.clear();
-        if (tag.hasKey("blockedSides")) {
-            int[] arr = tag.getIntArray("blockedSides");
-            for (int i : arr) {
-                blockedSides.add(ForgeDirection.values()[i]);
-            }
-        }
-
-        // connections
-        connections.clear();
-        int[] dirs = tag.getIntArray("connections");
-        for (int i : dirs) {
-            connections.add(ForgeDirection.values()[i]);
-        }
+        blockedMask = tag.getByte("blockedMask");
+        connectionMask = tag.getByte("connectionMask");
 
         // parts
         parts.clear();
@@ -188,145 +165,8 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public boolean canConnect(TileEntity other, ForgeDirection side) {
-        if (isSideBlocked(side)) return false;
-        if (hasPart(side)) return false;
-
-        if (!(other instanceof ICable otherCable)) return false;
-
-        ForgeDirection opp = side.getOpposite();
-        if (otherCable.hasPart(opp)) return false;
-        if (otherCable.isSideBlocked(opp)) return false;
-
-        return true;
-    }
-
-    @Override
-    public boolean isConnected(ForgeDirection side) {
-        return connections.contains(side);
-    }
-
-    @Override
-    public void updateConnections() {
-        if (worldObj == null || worldObj.isRemote) return;
-
-        boolean changed = false;
-
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-
-            /* ================= Cable ↔ Cable ================= */
-            boolean canCableConnect = canConnect(te, dir);
-            boolean wasCableConnected = isConnected(dir);
-
-            if (canCableConnect != wasCableConnected) {
-                if (canCableConnect) {
-                    connect(dir);
-                } else {
-                    disconnect(dir);
-                }
-                changed = true;
-            }
-
-            ICableEndpoint current = endpoints.get(dir);
-            if (te instanceof ICableEndpoint endpoint && !isSideBlocked(dir)) {
-                if (current != endpoint) {
-                    if (current != null) {
-                        current.onDetached();
-                    }
-
-                    endpoint.setCable(this, dir);
-                    endpoint.onAttached();
-                    endpoints.put(dir, endpoint);
-                    changed = true;
-                }
-
-            } else {
-                if (current != null) {
-                    current.onDetached();
-                    endpoints.remove(dir);
-                    changed = true;
-                }
-            }
-        }
-
-        if (changed) {
-            needsNetworkRebuild = true;
-            markDirty();
-        }
-    }
-
-    @Override
-    public void disconnect(ForgeDirection side) {
-        connections.remove(side);
-    }
-
-    @Override
-    public void connect(ForgeDirection side) {
-        connections.add(side);
-    }
-
-    @Override
-    public void destroy() {
-        if (worldObj == null || worldObj.isRemote) return;
-
-        // 1. Drop parts
-        for (Map.Entry<ForgeDirection, ICablePart> e : parts.entrySet()) {
-            ICablePart part = e.getValue();
-
-            // detach
-            part.onDetached();
-
-            // drop item
-            ItemStack stack = part.getItemStack();
-            if (stack != null) {
-                dropStack(worldObj, xCoord, yCoord, zCoord, stack);
-            }
-        }
-
-        parts.clear();
-
-        // 2. Networks cleanup
-        if (networks != null && !networks.isEmpty()) {
-            for (AbstractCableNetwork<?> net : new ArrayList<>(networks.values())) {
-                net.destroyNetwork();
-            }
-            networks.clear();
-        }
-
-        connections.clear();
-    }
-
-    public static void dropStack(World world, int x, int y, int z, ItemStack stack) {
-        if (stack == null || stack.stackSize <= 0) {
-            return;
-        }
-
-        float dx = world.rand.nextFloat() * 0.8F + 0.1F;
-        float dy = world.rand.nextFloat() * 0.8F + 0.1F;
-        float dz = world.rand.nextFloat() * 0.8F + 0.1F;
-
-        EntityItem entityItem = new EntityItem(world, x + dx, y + dy, z + dz, stack.copy());
-
-        float motion = 0.05F;
-        entityItem.motionX = world.rand.nextGaussian() * motion;
-        entityItem.motionY = world.rand.nextGaussian() * motion + 0.2F;
-        entityItem.motionZ = world.rand.nextGaussian() * motion;
-
-        world.spawnEntityInWorld(entityItem);
-    }
-
-    @Override
-    public boolean hasVisualConnection(ForgeDirection side) {
-        return connections.contains(side) || parts.containsKey(side);
-    }
-
-    @Override
-    public boolean canConnectEndpoint(TileEntity te, ForgeDirection side) {
-        if (te == null) return false;
-        if (isSideBlocked(side)) return false;
-        if (endpoints.containsKey(side)) return false;
-        return te instanceof ICableEndpoint;
+    public ICableEndpoint getEndpoint(ForgeDirection side) {
+        return endpoints.get(side);
     }
 
     @Override
@@ -360,14 +200,156 @@ public class TECable extends AbstractTE
     }
 
     @Override
+    public boolean canConnect(TileEntity other, ForgeDirection side) {
+        if (isSideBlocked(side)) return false;
+        if (hasPart(side)) return false;
+
+        if (other instanceof ICable otherCable) {
+            ForgeDirection opp = side.getOpposite();
+            if (otherCable.isSideBlocked(opp)) return false;
+            if (otherCable.hasPart(opp)) return false;
+            return true;
+        }
+
+        if (other instanceof ICableEndpoint) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isConnected(ForgeDirection side) {
+        return (connectionMask & bit(side)) != 0;
+    }
+
+    @Override
+    public void connect(ForgeDirection side) {
+        connectionMask |= bit(side);
+    }
+
+    @Override
+    public void disconnect(ForgeDirection side) {
+        connectionMask &= (byte) ~bit(side);
+    }
+
+    @Override
+    public void updateConnections() {
+        if (worldObj == null || worldObj.isRemote) return;
+
+        boolean changed = false;
+
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            TileEntity te = getPos().offset(dir)
+                .getTileEntity(worldObj);
+
+            boolean canCableConnect = canConnect(te, dir);
+            boolean wasConnected = (connectionMask & bit(dir)) != 0;
+
+            if (canCableConnect != wasConnected) {
+                if (canCableConnect) {
+                    connectionMask |= bit(dir);
+                } else {
+                    connectionMask &= (byte) ~bit(dir);
+                }
+                changed = true;
+            }
+
+            changed |= updateEndpointForSide(dir, te);
+        }
+
+        if (changed) {
+            needsNetworkRebuild = true;
+            markDirty();
+        }
+    }
+
+    private boolean updateEndpointForSide(ForgeDirection dir, TileEntity te) {
+        ICableEndpoint old = endpoints.get(dir);
+
+        if (te instanceof ICableEndpoint ep && !isSideBlocked(dir)) {
+            if (old != ep) {
+                if (old != null) old.onDetached();
+                endpoints.put(dir, ep);
+                ep.setCable(this, dir);
+                ep.onAttached();
+                return true;
+            }
+        } else if (old != null) {
+            old.onDetached();
+            endpoints.remove(dir);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void destroy() {
+        if (worldObj == null || worldObj.isRemote) return;
+
+        for (Map.Entry<ForgeDirection, ICablePart> e : parts.entrySet()) {
+            ICablePart part = e.getValue();
+
+            part.onDetached();
+
+            ItemStack stack = part.getItemStack();
+            if (stack != null) {
+                dropStack(worldObj, xCoord, yCoord, zCoord, stack);
+            }
+        }
+        parts.clear();
+
+        for (ICableEndpoint ep : endpoints.values()) {
+            ep.onDetached();
+        }
+        endpoints.clear();
+
+        if (networks != null && !networks.isEmpty()) {
+            for (AbstractCableNetwork<?> net : new ArrayList<>(networks.values())) {
+                net.destroyNetwork();
+            }
+            networks.clear();
+        }
+
+        connectionMask = 0;
+        blockedMask = 0;
+    }
+
+    public static void dropStack(World world, int x, int y, int z, ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) {
+            return;
+        }
+
+        float dx = world.rand.nextFloat() * 0.8F + 0.1F;
+        float dy = world.rand.nextFloat() * 0.8F + 0.1F;
+        float dz = world.rand.nextFloat() * 0.8F + 0.1F;
+
+        EntityItem entityItem = new EntityItem(world, x + dx, y + dy, z + dz, stack.copy());
+
+        float motion = 0.05F;
+        entityItem.motionX = world.rand.nextGaussian() * motion;
+        entityItem.motionY = world.rand.nextGaussian() * motion + 0.2F;
+        entityItem.motionZ = world.rand.nextGaussian() * motion;
+
+        world.spawnEntityInWorld(entityItem);
+    }
+
+    @Override
+    public boolean hasVisualConnection(ForgeDirection side) {
+        return ((connectionMask & bit(side)) != 0) || parts.containsKey(side);
+    }
+
+    @Override
     public boolean isSideBlocked(ForgeDirection side) {
-        return blockedSides.contains(side);
+        return (blockedMask & bit(side)) != 0;
     }
 
     @Override
     public void blockSide(ForgeDirection side) {
-        if (!blockedSides.add(side)) return;
+        int b = bit(side);
+        if ((blockedMask & b) != 0) return;
 
+        blockedMask |= (byte) b;
         disconnect(side);
 
         TileEntity te = getPos().offset(side)
@@ -376,14 +358,16 @@ public class TECable extends AbstractTE
             other.blockSide(side.getOpposite());
         }
 
-        if (!worldObj.isRemote) {
-            CableUtils.rebuildNetworks(this);
-        }
+        needsNetworkRebuild = true;
+        markDirty();
     }
 
     @Override
     public void unblockSide(ForgeDirection side) {
-        if (!blockedSides.remove(side)) return;
+        int b = bit(side);
+        if ((blockedMask & b) == 0) return;
+
+        blockedMask &= (byte) ~b;
 
         TileEntity te = getPos().offset(side)
             .getTileEntity(worldObj);
@@ -391,10 +375,8 @@ public class TECable extends AbstractTE
             other.unblockSide(side.getOpposite());
         }
 
-        if (!worldObj.isRemote) {
-            updateConnections();
-            CableUtils.rebuildNetworks(this);
-        }
+        needsNetworkRebuild = true;
+        markDirty();
     }
 
     @Override
@@ -405,24 +387,33 @@ public class TECable extends AbstractTE
         CableHit hit = this.rayTraceCable(player);
         if (hit != null) {
             if (!worldObj.isRemote) {
-                if (held != null && held.getItem() instanceof IToolHammer hammer) {
-                    if (hit.type == CableHit.Type.CONNECTION) {
+                if (hit.type == CableHit.Type.CONNECTION) {
+                    if (held != null && held.getItem() instanceof IToolHammer hammer) {
                         blockSide(hit.side);
                         hammer.toolUsed(held, player, x, y, z);
                         return true;
                     }
 
-                    if (hit.type == CableHit.Type.CORE) {
+                    ICableEndpoint endpoint = getEndpoint(hit.side);
+                    if (endpoint != null) {
+                        OKGuiFactories.tileEntity()
+                            .open(player, x, y, z, hit.side);
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                if (hit.type == CableHit.Type.CORE) {
+                    if (held != null && held.getItem() instanceof IToolHammer hammer) {
                         unblockSide(side);
                         hammer.toolUsed(held, player, x, y, z);
                         return true;
                     }
                 }
-            }
 
-            if (hit.type == CableHit.Type.PART) {
-                ICablePart part = getPart(hit.side);
-                if (part != null && !worldObj.isRemote) {
+                if (hit.type == CableHit.Type.PART) {
+                    ICablePart part = getPart(hit.side);
                     if (held != null && held.getItem() instanceof IToolHammer hammer) {
                         if (!hammer.isUsable(held, player, x, y, z)) {
                             return false;
@@ -439,12 +430,12 @@ public class TECable extends AbstractTE
                     }
 
                     OKGuiFactories.tileEntity()
-                        .setGuiContainer(part.getGuiContainer())
                         .open(player, x, y, z, hit.side);
-                }
 
-                return true;
+                    return true;
+                }
             }
+
         }
         return false;
     }
@@ -796,12 +787,36 @@ public class TECable extends AbstractTE
     @Override
     public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         ICablePart part = getPart(data.getSide());
-        return part.partPanel(data, syncManager, settings);
+        if (part != null) return part.partPanel(data, syncManager, settings);
+
+        ICableEndpoint endpoint = getEndpoint(data.getSide());
+        if (endpoint != null) return endpoint.endpointPanel(data, syncManager, settings);
+
+        return new ModularPanel("baseCable");
+    }
+
+    @Override
+    public GuiContainerWrapper createGuiContainer(ModularContainer container, ModularScreen screen) {
+        GuiData data = container.getGuiData();
+        if (data instanceof SidedPosGuiData guiData) {
+            if (getEndpoint(guiData.getSide()) != null) {
+                return getEndpoint(guiData.getSide()).createGuiContainer(container, screen);
+            }
+            if (getPart(guiData.getSide()) != null) {
+                return getPart(guiData.getSide()).createGuiContainer(container, screen);
+            }
+        }
+
+        return IOKGuiHolder.super.createGuiContainer(container, screen);
     }
 
     @Override
     public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
         return null;
+    }
+
+    private static byte bit(ForgeDirection dir) {
+        return (byte) (1 << dir.ordinal());
     }
 
     public static class CableHit {

@@ -11,6 +11,7 @@ import com.cleanroommc.modularui.ModularUI;
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.factory.AbstractUIFactory;
+import com.cleanroommc.modularui.factory.GuiData;
 import com.cleanroommc.modularui.factory.GuiManager;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
@@ -22,12 +23,12 @@ import com.cleanroommc.modularui.utils.Platform;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.block.IOKGuiHolder;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemFactory extends AbstractUIFactory<PlayerInventoryGuiData> {
 
     public static final ItemFactory INSTANCE = new ItemFactory();
-    private Class<? extends IMuiScreen> customScreenClass;
 
     public void openFromPlayerInventory(EntityPlayer player, int index) {
         GuiManager
@@ -81,19 +82,12 @@ public class ItemFactory extends AbstractUIFactory<PlayerInventoryGuiData> {
 
     @Override
     public IMuiScreen createScreenWrapper(ModularContainer container, ModularScreen screen) {
-        if (customScreenClass != null) {
-            try {
-                return customScreenClass.getConstructor(ModularContainer.class, ModularScreen.class)
-                    .newInstance(container, screen);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create custom screen", e);
-            }
-        }
-        return new GuiContainerWrapper(container, screen);
-    }
+        GuiData data = container.getGuiData();
 
-    public ItemFactory setGuiContainer(Class<? extends IMuiScreen> clazz) {
-        this.customScreenClass = clazz;
-        return this;
+        if (data instanceof IOKGuiHolder<?>okHolder) {
+            return okHolder.createGuiContainer(container, screen);
+        }
+
+        return new GuiContainerWrapper(container, screen);
     }
 }

@@ -28,7 +28,6 @@ import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketQuickDraw;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
@@ -80,7 +79,6 @@ public class KeyHandler {
                 if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
 
                     OKGuiFactories.item()
-                        .setGuiContainer(BackpackGuiContainer.class)
                         .openFromPlayerInventoryClient(slot);
                     return;
                 }
@@ -90,7 +88,6 @@ public class KeyHandler {
                 InventoryTypes.BAUBLES.visitAll(player, (type, index, stack) -> {
                     if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
                         OKGuiFactories.item()
-                            .setGuiContainer(BackpackGuiContainer.class)
                             .openFromBaublesClient(index);
                         return true;
                     }

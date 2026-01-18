@@ -6,7 +6,6 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.module.cable.CableCommon;
 
 public abstract class AbstractCableNetwork<T extends ICableNode> {
@@ -19,7 +18,7 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
     }
 
     @SuppressWarnings("unchecked")
-    public void addNode(ICablePart part) {
+    public void addNode(ICableNode part) {
         if (part == null) return;
         if (!baseNodeClass.isInstance(part)) return;
 

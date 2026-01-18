@@ -12,8 +12,8 @@ public abstract class AbstractPart implements ICablePart {
     protected ICable cable;
     protected ForgeDirection side;
 
-    protected int tickCounter = 0;
     protected int tickInterval = 1;
+    protected int tickCounter = tickInterval;
 
     protected int priority = 0;
     protected int channel = 0;

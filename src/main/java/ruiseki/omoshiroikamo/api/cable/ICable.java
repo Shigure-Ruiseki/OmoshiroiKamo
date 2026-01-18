@@ -28,6 +28,16 @@ public interface ICable extends IOKTile, IOKEnergyIO {
 
     Collection<ICablePart> getParts();
 
+    // Endpoint
+
+    ICableEndpoint getEndpoint(ForgeDirection side);
+
+    void setEndpoint(ICableEndpoint endpoint);
+
+    void removeEndpoint(ICableEndpoint endpoint);
+
+    Collection<ICableEndpoint> getEndpoints();
+
     // Connection
 
     boolean canConnect(TileEntity other, ForgeDirection side);
@@ -43,16 +53,6 @@ public interface ICable extends IOKTile, IOKEnergyIO {
     void destroy();
 
     boolean hasVisualConnection(ForgeDirection side);
-
-    // Endpoint
-
-    boolean canConnectEndpoint(TileEntity te, ForgeDirection side);
-
-    void setEndpoint(ICableEndpoint endpoint);
-
-    void removeEndpoint(ICableEndpoint endpoint);
-
-    Collection<ICableEndpoint> getEndpoints();
 
     // Blocked Side
 

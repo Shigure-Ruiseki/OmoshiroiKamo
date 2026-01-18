@@ -20,9 +20,11 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import org.lwjgl.opengl.GL11;
 
-import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
+import com.cleanroommc.modularui.screen.GuiContainerWrapper;
+import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
@@ -30,6 +32,7 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
+import ruiseki.omoshiroikamo.api.block.IOKGuiHolder;
 import ruiseki.omoshiroikamo.api.client.IBaubleRender;
 import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
@@ -128,7 +131,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     }
 
     public static class ItemBackpack extends ItemBlockBauble
-        implements IGuiHolder<PlayerInventoryGuiData>, IBaubleRender, IItemJSONRender {
+        implements IOKGuiHolder<PlayerInventoryGuiData>, IBaubleRender, IItemJSONRender {
 
         @Getter
         private int backpackSlots = 27;
@@ -211,7 +214,6 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 if (cap.canPlayerAccess(player.getUniqueID())) {
                     OKGuiFactories.item()
-                        .setGuiContainer(BackpackGuiContainer.class)
                         .openFromMainHand(player);
                 }
             }
@@ -223,6 +225,11 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             ItemStack stack = data.getUsedItemStack();
             BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
+        }
+
+        @Override
+        public GuiContainerWrapper createGuiContainer(ModularContainer container, ModularScreen screen) {
+            return new BackpackGuiContainer(container, screen);
         }
 
         @Override

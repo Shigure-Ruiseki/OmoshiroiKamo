@@ -23,6 +23,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
+import ruiseki.omoshiroikamo.api.energy.EnergyUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
@@ -74,7 +75,12 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         for (IEnergyNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.pull(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
+            transfer.sink(EnergyUtils.getEnergySink(getTargetTE(), side.getOpposite()));
+            transfer.source(
+                EnergyUtils.getEnergySource(
+                    iFace.getTargetTE(),
+                    iFace.getSide()
+                        .getOpposite()));
             transfer.transfer();
         }
 
