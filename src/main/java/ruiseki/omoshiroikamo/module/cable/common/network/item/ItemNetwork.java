@@ -144,7 +144,15 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         return indexChannel;
     }
 
-    public ItemStack extract(ItemStackKey key, int amount) {
+    public ItemStack extract(ItemStack required, int amount) {
+        return extract(required, amount, -1);
+    }
+
+    public ItemStack insert(ItemStack stack) {
+        return insert(stack, -1);
+    }
+
+    public ItemStack extract(ItemStack required, int amount, int channel) {
         if (amount <= 0) return null;
         if (interfaces == null || interfaces.isEmpty()) return null;
 
@@ -152,10 +160,11 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         int remaining = amount;
 
         for (IItemNet part : interfaces) {
+            if (channel != -1 && channel != part.getChannel()) continue;
             if (remaining <= 0) break;
             if (!(part instanceof IItemQueryable interfaceBus)) continue;
 
-            ItemStack got = interfaceBus.extract(key, remaining);
+            ItemStack got = interfaceBus.extract(required, remaining);
             if (got == null || got.stackSize <= 0) continue;
 
             remaining -= got.stackSize;
@@ -163,19 +172,20 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         }
 
         if (result != null) {
-            markDirty();
+            markDirty(channel);
         }
 
         return result;
     }
 
-    public ItemStack insert(ItemStack stack) {
+    public ItemStack insert(ItemStack stack, int channel) {
         if (stack == null || stack.stackSize <= 0) return null;
         if (interfaces == null || interfaces.isEmpty()) return stack;
 
         ItemStack remaining = stack.copy();
 
         for (IItemNet part : interfaces) {
+            if (channel != -1 && channel != part.getChannel()) continue;
             if (!(part instanceof IItemQueryable bus)) continue;
 
             ItemStack leftover = bus.insert(remaining);
@@ -191,7 +201,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
             return remaining;
         }
 
-        markDirty();
+        markDirty(channel);
         return null;
     }
 

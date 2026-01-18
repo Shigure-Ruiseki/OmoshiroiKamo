@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.CraftingManager;
 
 import com.cleanroommc.modularui.api.UpOrDown;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.factory.GuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -20,6 +21,7 @@ import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.SyncHandlers;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
@@ -143,7 +145,7 @@ public class TerminalPanel extends ModularPanel {
 
     private void buildItemGrid() {
         for (int i = 0; i < SLOT_COUNT; i++) {
-            CableItemSlotSH slotSH = new CableItemSlotSH(terminal.getItemNetwork());
+            CableItemSlotSH slotSH = new CableItemSlotSH(terminal.getItemNetwork(), terminal);
             syncManager.syncValue("itemSlot_" + i, i, slotSH);
         }
 
@@ -238,6 +240,7 @@ public class TerminalPanel extends ModularPanel {
         channelRow.child(
             new TextFieldWidget().size(32, 11)
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setDefaultNumber(-1)
                 .setNumbers(-1, Integer.MAX_VALUE)
                 .value(SyncHandlers.intNumber(terminal::getChannel, this::changeChannel)));
@@ -260,7 +263,7 @@ public class TerminalPanel extends ModularPanel {
     }
 
     private void buildCraftingGrid() {
-        CableCraftingSlot craftingResultSlot = new CableCraftingSlot(terminal.craftingStackHandler, 9);
+        CableCraftingSlot craftingResultSlot = new CableCraftingSlot(terminal.craftingStackHandler, 9, terminal);
         craftingResultSlot.accessibility(false, true)
             .slotGroup("craftingResult");
 
@@ -330,6 +333,17 @@ public class TerminalPanel extends ModularPanel {
                 .name("craftingMatrix_" + i);
             craftingGroupsWidget.child(itemSlot);
         }
+
+        ButtonWidget<?> clearBtn = new ButtonWidget<>().size(8)
+            .pos(56, 0)
+            .onMousePressed(btn -> {
+                if (btn == 0) {
+                    Interactable.playButtonClickSound();
+                    return true;
+                }
+                return false;
+            });
+        craftingGroupsWidget.child(clearBtn);
 
         this.child(craftingGroupsWidget);
     }

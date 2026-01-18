@@ -13,8 +13,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.TerminalPanel;
 
@@ -100,8 +98,7 @@ public class ItemIndexSH extends SyncHandler {
 
     public void extractToMouse(ItemStack stack, int amount) {
         syncToServer(EXTRACT, buf -> {
-            ItemStackKeyPool.get(stack)
-                .write(buf);
+            buf.writeItemStackToBuffer(stack);
             buf.writeVarIntToBuffer(amount);
             buf.writeBoolean(false);
         });
@@ -109,8 +106,7 @@ public class ItemIndexSH extends SyncHandler {
 
     public void extractToInventory(ItemStack stack, int amount) {
         syncToServer(EXTRACT, buf -> {
-            ItemStackKeyPool.get(stack)
-                .write(buf);
+            buf.writeItemStackToBuffer(stack);
             buf.writeVarIntToBuffer(amount);
             buf.writeBoolean(true);
         });
@@ -125,7 +121,7 @@ public class ItemIndexSH extends SyncHandler {
     }
 
     private void handleExtract(PacketBuffer buf) throws IOException {
-        ItemStackKey key = ItemStackKey.read(buf);
+        ItemStack stack = buf.readItemStackFromBuffer();
         int amount = buf.readVarIntFromBuffer();
         boolean toInventory = buf.readBoolean();
 
@@ -134,7 +130,7 @@ public class ItemIndexSH extends SyncHandler {
 
         amount = Math.max(1, amount);
 
-        ItemStack extracted = network.extract(key, amount);
+        ItemStack extracted = network.extract(stack, amount, terminal.getChannel());
         if (extracted == null) return;
 
         if (toInventory) {
@@ -154,7 +150,7 @@ public class ItemIndexSH extends SyncHandler {
         ItemStack mouse = player.inventory.getItemStack();
         if (mouse == null) return;
         ItemStack toInsert = mouse.copy();
-        ItemStack remainder = network.insert(toInsert);
+        ItemStack remainder = network.insert(toInsert, terminal.getChannel());
 
         if (remainder == null || remainder.stackSize == 0) {
             player.inventory.setItemStack(null);

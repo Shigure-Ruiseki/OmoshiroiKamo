@@ -6,7 +6,7 @@ public interface IItemQueryable {
 
     void collectItems(ItemIndex index);
 
-    ItemStack extract(ItemStackKey key, int amount);
+    ItemStack extract(ItemStack required, int amount);
 
     ItemStack insert(ItemStack stack);
 }

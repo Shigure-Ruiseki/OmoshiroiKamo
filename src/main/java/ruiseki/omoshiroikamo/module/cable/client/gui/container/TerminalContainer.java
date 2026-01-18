@@ -58,7 +58,7 @@ public class TerminalContainer extends ModularContainer {
         ItemStack original = slot.getStack();
         ItemStack toInsert = original.copy();
 
-        ItemStack remainder = network.insert(toInsert);
+        ItemStack remainder = network.insert(toInsert, terminal.getChannel());
 
         slot.putStack((remainder == null || remainder.stackSize <= 0) ? null : remainder);
 

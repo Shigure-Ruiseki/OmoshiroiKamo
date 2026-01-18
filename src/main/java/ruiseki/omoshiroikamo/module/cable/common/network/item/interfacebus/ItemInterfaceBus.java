@@ -40,7 +40,6 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
@@ -160,6 +159,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
@@ -171,6 +171,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
@@ -182,6 +183,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
@@ -220,7 +222,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     }
 
     @Override
-    public ItemStack extract(ItemStackKey key, int amount) {
+    public ItemStack extract(ItemStack required, int amount) {
         if (amount <= 0) return null;
 
         TileEntity te = getTargetTE();
@@ -234,8 +236,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
 
             ItemStack s = inv.getStackInSlot(slot);
             if (s == null || s.stackSize <= 0) continue;
-            if (!ItemStackKeyPool.get(s)
-                .equals(key)) continue;
+            if (!ItemUtils.areStacksEqual(required, s)) continue;
 
             int take = Math.min(remaining, s.stackSize);
             ItemStack taken = inv.decrStackSize(slot, take);

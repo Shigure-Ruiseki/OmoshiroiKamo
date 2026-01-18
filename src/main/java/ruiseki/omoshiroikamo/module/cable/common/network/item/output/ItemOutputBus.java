@@ -48,7 +48,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private int transferLimit = 1000;
+    private int transferLimit = 64;
 
     @Override
     public String getId() {
@@ -142,6 +142,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
@@ -153,6 +154,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
@@ -164,6 +166,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
@@ -175,6 +178,7 @@ public class ItemOutputBus extends AbstractPart implements IItemPart {
         transferRow.child(
             new TextFieldWidget().syncHandler("transferSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 

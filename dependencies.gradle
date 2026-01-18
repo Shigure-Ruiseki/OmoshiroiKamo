@@ -58,6 +58,7 @@ dependencies {
     runtimeOnlyNonPublishable files("libs/CoFHCore-[1.7.10]3.1.4-329.jar")
     runtimeOnlyNonPublishable('curse.maven:thermal-foundation-222880:2388752')
     runtimeOnlyNonPublishable('curse.maven:thermal-expansion-69163:2388758')
+    runtimeOnlyNonPublishable('curse.maven:spark-361579:4271867')
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:WAILAPlugins:0.7.2:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.7.27:dev") { transitive = false }
     runtimeOnlyNonPublishable files("libs/TimeVial-1.0.1.jar")

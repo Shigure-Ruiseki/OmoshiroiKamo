@@ -109,6 +109,7 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
@@ -120,6 +121,7 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
@@ -131,6 +133,7 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
                 .setFormatAsInteger(true)
+                .setScrollValues(1, 5, 10)
                 .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 

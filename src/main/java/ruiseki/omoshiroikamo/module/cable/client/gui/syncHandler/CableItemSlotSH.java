@@ -10,8 +10,7 @@ import net.minecraft.network.PacketBuffer;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
 
 public class CableItemSlotSH extends SyncHandler {
 
@@ -21,9 +20,11 @@ public class CableItemSlotSH extends SyncHandler {
     public static final int RESP_MOUSE = 100;
 
     public final ItemNetwork network;
+    public final CableTerminal terminal;
 
-    public CableItemSlotSH(ItemNetwork network) {
+    public CableItemSlotSH(ItemNetwork network, CableTerminal terminal) {
         this.network = network;
+        this.terminal = terminal;
     }
 
     public void requestClick(ItemStack slotStack, ItemStack cursorStack, int slotAmount, boolean toInventory) {
@@ -31,8 +32,7 @@ public class CableItemSlotSH extends SyncHandler {
             boolean slotNotEmpty = slotStack != null && slotStack.stackSize > 0;
             buf.writeBoolean(slotNotEmpty);
             if (slotNotEmpty) {
-                ItemStackKey key = ItemStackKeyPool.get(slotStack);
-                key.write(buf);
+                buf.writeItemStackToBuffer(slotStack);
             }
 
             buf.writeVarIntToBuffer(slotAmount);
@@ -78,7 +78,7 @@ public class CableItemSlotSH extends SyncHandler {
 
     protected void handleClick(PacketBuffer buf) throws IOException {
         boolean slotNotEmpty = buf.readBoolean();
-        ItemStackKey key = slotNotEmpty ? ItemStackKey.read(buf) : null;
+        ItemStack stack = slotNotEmpty ? buf.readItemStackFromBuffer() : null;
 
         int amount = buf.readVarIntFromBuffer();
 
@@ -92,11 +92,11 @@ public class CableItemSlotSH extends SyncHandler {
         if (player == null) return;
 
         if (cursorStack != null && cursorStack.stackSize > 0) {
-            ItemStack leftover = network.insert(cursorStack);
+            ItemStack leftover = network.insert(cursorStack, terminal.getChannel());
             player.inventory.setItemStack(leftover);
             syncToClient(RESP_MOUSE, bufOut -> bufOut.writeItemStackToBuffer(leftover));
-        } else if (key != null) {
-            ItemStack extracted = network.extract(key, amount);
+        } else if (stack != null) {
+            ItemStack extracted = network.extract(stack, amount, terminal.getChannel());
             if (extracted != null) {
                 if (toInventory) {
                     if (!player.inventory.addItemStackToInventory(extracted)) {
