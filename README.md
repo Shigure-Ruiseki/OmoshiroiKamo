@@ -20,6 +20,9 @@ Each backport module can be individually enabled or disabled in the config.
 - Chickens, More Chickens and Roost (Backport)
 - Fluid Cows (Backport WIP)
 - RetroSophisticated Backpacks (Backport)
+- Modular Machinery (Backport WIP)
+- Deep Mob Learning
+- Cable system from Integrated Dynamics
 
 ![Backport Config](https://media.forgecdn.net/attachments/1389/517/z7214707883928_63d047db4be5142074322b35573e34d4.jpg)
 
@@ -38,22 +41,21 @@ Each backport module can be individually enabled or disabled in the config.
 A clean-room rewrite and backport of the modern Environmental Tech mod.
 All code has been rewritten, and all textures are original.
 
-- Quantum Extractor (Ore, Blocks, Special Drops)
-- Solar Array (Generate Energy From Sun)
+- Quantum Extractor (Mine ores, resources, crystals from bedrock!)
+- Solar Array
 - Quantum Beacon (Give Multieffect by Energy)
-- Extractor NEI integration
-- Colored laser
-- Dimension-specific ore mining (NEI WIP)
+- Extractor NEI integration (Original GUI with lens, dimensions, blocks view)
+- Colored laser (like beacon)
+- Dimension-specific ore mining
 - Customizable structures
 
 ### Custom Structure (WIP Modular Machinery backport)
 - JSON Custom structures
-- JSON Error handling
-- JSON Symbol mapping
 - Structure in-game reload
 - Structure in-game scan by command or Structure wand
-- Structure NEI integration (in-game reload-able)
+- Structure NEI integration
 - [See CUSTOM_STRUCTURES.md for details](./CUSTOM_STRUCTURES.md)
+- Basic recipe processing
 
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
