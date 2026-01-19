@@ -32,6 +32,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -201,6 +202,9 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     // Field to store validation error message
     private String lastValidationError = "";
 
+    // Last process error reason for GUI display
+    private ErrorReason lastProcessErrorReason = ErrorReason.NONE;
+
     @Override
     protected boolean structureCheck(String piece, int ox, int oy, int oz) {
         // Clear previous error
@@ -221,6 +225,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (valid && isFormed) {
             // Perform additional requirements check for CustomStructure
             if (!checkRequirements()) {
+                lastValidationError = "Structure requirements not met.";
                 isFormed = false;
                 clearStructureParts();
                 return false;
@@ -315,7 +320,9 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     private void processRecipe() {
         // Try to output if waiting
         if (processAgent.isWaitingForOutput()) {
+            lastProcessErrorReason = ErrorReason.WAITING_OUTPUT;
             if (processAgent.tryOutput(getOutputPorts())) {
+                lastProcessErrorReason = ErrorReason.NONE;
                 // Output succeeded, try to start next recipe immediately
                 startNextRecipe();
             }
@@ -326,6 +333,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (processAgent.isRunning()) {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
             ProcessAgent.TickResult result = processAgent.tick(energyPorts);
+
+            if (result == ProcessAgent.TickResult.NO_ENERGY) {
+                lastProcessErrorReason = ErrorReason.NO_ENERGY;
+            } else {
+                lastProcessErrorReason = ErrorReason.NONE;
+            }
 
             // Look-ahead: search for next recipe while processing (only once)
             if (nextRecipe == null) {
@@ -338,6 +351,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
             // If complete, immediately try to output and start next
             if (result == ProcessAgent.TickResult.READY_OUTPUT) {
                 if (processAgent.tryOutput(getOutputPorts())) {
+                    lastProcessErrorReason = ErrorReason.NONE;
                     startNextRecipe();
                 }
             }
@@ -366,6 +380,9 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (recipe != null) {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
             processAgent.start(recipe, getInputPorts(), energyPorts);
+            lastProcessErrorReason = ErrorReason.NONE;
+        } else {
+            lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
         }
     }
 
@@ -411,6 +428,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
                 .asWidget()
                 .pos(8, 25));
 
+        // Error display (validation)
+        panel.child(
+            IKey.dynamic(this::getErrorText)
+                .asWidget()
+                .pos(8, 35));
+
         IntSyncValue progressSyncer = new IntSyncValue(processAgent::getProgress, processAgent::setProgress);
         IntSyncValue maxProgressSyncer = new IntSyncValue(processAgent::getMaxProgress, processAgent::setMaxProgress);
         BooleanSyncValue runningSyncer = new BooleanSyncValue(processAgent::isRunning, processAgent::setRunning);
@@ -446,7 +469,45 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (!isFormed) {
             return "Structure Not Formed";
         }
-        return processAgent.getStatusMessage(getOutputPorts());
+        if (processAgent.isRunning() || processAgent.isWaitingForOutput()) {
+            if (lastProcessErrorReason == ErrorReason.NO_ENERGY) {
+                return ErrorReason.NO_ENERGY.getMessage();
+            }
+            return processAgent.getStatusMessage(getOutputPorts());
+        }
+
+        ErrorReason reason = getIdleErrorReason();
+        if (reason == ErrorReason.NONE) {
+            return "Idle";
+        }
+        return reason.getMessage();
+    }
+
+    private ErrorReason getIdleErrorReason() {
+        if (getInputPorts().isEmpty()) return ErrorReason.NO_INPUT_PORTS;
+        if (getOutputPorts().isEmpty()) return ErrorReason.NO_OUTPUT_PORTS;
+        if (RecipeLoader.getInstance()
+            .getRecipes(recipeGroup)
+            .isEmpty()) {
+            return ErrorReason.NO_RECIPES;
+        }
+        if (lastProcessErrorReason == ErrorReason.NO_MATCHING_RECIPE) {
+            return ErrorReason.NO_MATCHING_RECIPE;
+        }
+        if (lastProcessErrorReason == ErrorReason.NO_ENERGY) {
+            return ErrorReason.NO_ENERGY;
+        }
+        return ErrorReason.IDLE;
+    }
+
+    /**
+     * Get validation error text for GUI display.
+     */
+    private String getErrorText() {
+        if (customStructureName == null || customStructureName.isEmpty()) return "";
+        if (isFormed) return "";
+        if (lastValidationError == null || lastValidationError.isEmpty()) return "";
+        return lastValidationError;
     }
 
     /**
@@ -500,6 +561,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
             this.isFormed = false;
             clearStructureParts();
             processAgent.abort();
+            lastProcessErrorReason = ErrorReason.NONE;
             markDirty();
             if (worldObj != null) {
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -592,6 +654,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         // Reset structure state
         this.isFormed = false;
         clearStructureParts();
+        lastProcessErrorReason = ErrorReason.NONE;
 
         // Notify client
         markDirty();
