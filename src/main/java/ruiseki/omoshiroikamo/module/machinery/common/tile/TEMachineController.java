@@ -34,7 +34,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
@@ -419,7 +419,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
                 .slot(
                     new ModularSlot(inventory, BLUEPRINT_SLOT)
                         .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                .background(GuiTextures.EMPTY_SLOT)
+                .background(OKGuiTextures.EMPTY_SLOT)
                 .pos(151, 8));
 
         // Status display
@@ -449,7 +449,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         // Progress bar (Change is needed)
         panel.child(
             new ProgressWidget().value(new DoubleSyncValue(() -> (double) processAgent.getProgressPercent()))
-                .texture(GuiTextures.SOLID_UP_ARROW_ICON, 20)
+                .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
                 .pos(80, 45));
 
         syncManager.bindPlayerInventory(data.getPlayer());
