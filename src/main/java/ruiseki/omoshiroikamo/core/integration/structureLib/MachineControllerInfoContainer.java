@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.integration.structureLib;
 
+import java.util.NoSuchElementException;
+
 import net.minecraft.item.ItemStack;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
@@ -49,7 +51,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 offset[1],
                 offset[2],
                 hintsOnly);
-        } catch (java.util.NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             notifyStructureNotFound(ctx, pieceName);
         }
     }
@@ -85,7 +87,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 elementBudget,
                 env,
                 false);
-        } catch (java.util.NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             notifyStructureNotFound(ctx, pieceName);
             return 0;
         }
