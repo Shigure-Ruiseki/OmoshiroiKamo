@@ -15,10 +15,8 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPort;
 
-/**
- * Essentia Input Port block - absorbs Essentia from nearby Thaumcraft
- * containers.
- */
+// TODO: Add texture
+
 public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPort> {
 
     protected BlockEssentiaInputPort() {

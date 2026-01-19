@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 
 @EventBusSubscriber(side = Side.CLIENT)
 public class WrenchOverlayRenderer {
+    // TODO: add back-side support
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {

@@ -17,9 +17,7 @@ import thaumcraft.api.aspects.AspectList;
  * Stores Vis as AspectList (primal aspects).
  *
  * TODO: Use sides array or remove if unnecessary
- * TODO: Add tiered blocks/TEs (currently fixed at Tier 1)
- * TODO: Register with VisNetHandler.sources (may require TileVisNode
- * inheritance)
+ * TODO: Add tiered blocks/TEs
  * TODO: All sides should be IN, OUT like mana port
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {

@@ -30,6 +30,7 @@ import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
 public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
+    // TODO: Add auto breeder
 
     public TEBreeder() {}
 

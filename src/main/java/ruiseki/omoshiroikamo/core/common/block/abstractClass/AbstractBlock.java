@@ -28,6 +28,7 @@ import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 
 public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
+    // TODO: Change block meta to extendedFacing for all the tileentities
 
     protected AbstractBlock(String name, Class<T> teClass, Material mat) {
         super(name, teClass, mat);

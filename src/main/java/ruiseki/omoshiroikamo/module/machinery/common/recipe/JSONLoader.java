@@ -18,6 +18,12 @@ import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.OutputParserRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
+/**
+ * JSONLoader class for loading recipes from JSON files.
+ * TODO: NBT support for recipes
+ * TODO: Support No Consume
+ */
+
 public class JSONLoader {
 
     /**

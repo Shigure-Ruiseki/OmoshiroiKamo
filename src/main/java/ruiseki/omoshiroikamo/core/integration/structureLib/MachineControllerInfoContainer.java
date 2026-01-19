@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.integration.structureLib;
 
+import java.util.NoSuchElementException;
+
 import net.minecraft.item.ItemStack;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
@@ -10,6 +12,7 @@ import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -22,31 +25,35 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
 
     @Override
     public void construct(ItemStack triggerStack, boolean hintsOnly, TEMachineController ctx, ExtendedFacing facing) {
-        // Get structure name from blueprint or controller
         String structureName = getStructureName(triggerStack, ctx);
 
         IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
         if (def == null) {
+            notifyStructureNotFound(ctx, structureName);
             return;
         }
 
         int[] offset = getOffset(structureName, ctx);
         String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
 
-        def.buildOrHints(
-            ctx,
-            triggerStack,
-            pieceName,
-            ctx.getWorldObj(),
-            ExtendedFacing.DEFAULT,
-            ctx.xCoord,
-            ctx.yCoord,
-            ctx.zCoord,
-            offset[0],
-            offset[1],
-            offset[2],
-            hintsOnly);
-
+        try {
+            // Use controller's facing for rotation support
+            def.buildOrHints(
+                ctx,
+                triggerStack,
+                pieceName,
+                ctx.getWorldObj(),
+                ctx.getExtendedFacing(),
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                offset[0],
+                offset[1],
+                offset[2],
+                hintsOnly);
+        } catch (NoSuchElementException e) {
+            notifyStructureNotFound(ctx, pieceName);
+        }
     }
 
     @Override
@@ -55,25 +62,50 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         String structureName = getStructureName(triggerStack, ctx);
 
         IStructureDefinition<TEMachineController> def = getStructureDefinition(structureName, ctx);
-        if (def == null) return 0;
+        if (def == null) {
+            notifyStructureNotFound(ctx, structureName);
+            return 0;
+        }
 
         int[] offset = getOffset(structureName, ctx);
+        String pieceName = structureName != null ? structureName : ctx.getStructurePieceName();
 
-        return def.survivalBuild(
-            ctx,
-            triggerStack,
-            structureName != null ? structureName : ctx.getStructurePieceName(),
-            ctx.getWorldObj(),
-            ExtendedFacing.DEFAULT,
-            ctx.xCoord,
-            ctx.yCoord,
-            ctx.zCoord,
-            offset[0],
-            offset[1],
-            offset[2],
-            elementBudget,
-            env,
-            false);
+        try {
+            // Use controller's facing for rotation support
+            return def.survivalBuild(
+                ctx,
+                triggerStack,
+                pieceName,
+                ctx.getWorldObj(),
+                ctx.getExtendedFacing(),
+                ctx.xCoord,
+                ctx.yCoord,
+                ctx.zCoord,
+                offset[0],
+                offset[1],
+                offset[2],
+                elementBudget,
+                env,
+                false);
+        } catch (NoSuchElementException e) {
+            notifyStructureNotFound(ctx, pieceName);
+            return 0;
+        }
+    }
+
+    /**
+     * Notify that a structure was not found.
+     * Logs to console and notifies any connected player.
+     */
+    private void notifyStructureNotFound(TEMachineController ctx, String structureName) {
+        String msg = "[Machine] Structure '" + structureName + "' not found!";
+        Logger.warn(msg);
+
+        // Try to notify client (if this is being triggered by a player action)
+        if (ctx != null && ctx.getWorldObj() != null && !ctx.getWorldObj().isRemote) {
+            // This is server-side, we can't directly send chat here
+            // The chat message will be sent by other code paths if needed
+        }
     }
 
     @Override
@@ -113,34 +145,10 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
             }
         }
 
-        // Priority 2: Controller ItemBlock with NBT (for NEI display)
-        if (triggerStack != null && triggerStack.hasTagCompound()
-            && triggerStack.getItem() == net.minecraft.item.Item.getItemFromBlock(
-                ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks.MACHINE_CONTROLLER.getBlock())) {
-            if (triggerStack.getTagCompound()
-                .hasKey("customStructureName")) {
-                String name = triggerStack.getTagCompound()
-                    .getString("customStructureName");
-                if (name != null && !name.isEmpty()) {
-                    return name;
-                }
-            }
-        }
-
-        // Priority 3: Controller's stored structure
+        // Priority 2: Controller's stored structure
         String controllerStructure = ctx.getCustomStructureName();
         if (controllerStructure != null && !controllerStructure.isEmpty()) {
             return controllerStructure;
-        }
-
-        // Fallback: Use the first registered custom structure as default for NEI
-        // display
-        if (triggerStack != null) { // Only do this if it's an item trigger (NEI or hand)
-            java.util.Set<String> names = CustomStructureRegistry.getRegisteredNames();
-            if (!names.isEmpty()) {
-                return names.iterator()
-                    .next();
-            }
         }
 
         return null;

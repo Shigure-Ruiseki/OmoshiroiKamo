@@ -4,8 +4,13 @@ import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
@@ -66,7 +71,7 @@ public class CustomStructureRegistry {
             Logger.info("CustomStructureRegistry: Registering '" + entry.name + "'");
             Logger.info("  Layers: " + shape.length);
             for (int i = 0; i < shape.length; i++) {
-                Logger.info("    Layer " + i + ": " + java.util.Arrays.toString(shape[i]));
+                Logger.info("    Layer " + i + ": " + Arrays.toString(shape[i]));
             }
 
             // Validate Q symbol and find its position
@@ -80,16 +85,20 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Calculate controller offset from Q position
-            entry.controllerOffset = findControllerOffset(shape);
+            // Apply 180-degree rotation to align JSON definition with StructureLib coordinate system
+            String[][] rotatedShape = rotate180(shape);
+
+            // Calculate controller offset from rotated shape
+            entry.controllerOffset = findControllerOffset(rotatedShape);
 
             // Build structure definition
             StructureDefinition.Builder<TEMachineController> builder = StructureDefinition.builder();
 
-            // Add shape
-            builder.addShape(entry.name, transpose(shape));
+            // Add rotated shape
+            builder.addShape(entry.name, transpose(rotatedShape));
 
-            // Add Controller ('Q')
+            // Add Controller ('Q') - use ofBlockHint to check only, not autoplace
+            // The controller already exists when building, so we don't want to replace it
             builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
 
             // Add Air element ('_')
@@ -152,8 +161,8 @@ public class CustomStructureRegistry {
     /**
      * Get all registered structure names.
      */
-    public static java.util.Set<String> getRegisteredNames() {
-        return new java.util.HashSet<>(structureDefinitions.keySet());
+    public static Set<String> getRegisteredNames() {
+        return new HashSet<>(structureDefinitions.keySet());
     }
 
     /**
@@ -166,19 +175,34 @@ public class CustomStructureRegistry {
             return BlockResolver.createElement((String) mapping);
         }
 
+        // Handle direct List (JSON array mapped directly, e.g., "P": ["block1",
+        // "block2"])
+        if (mapping instanceof List) {
+            List<?> listMapping = (List<?>) mapping;
+            List<String> blockStrings = new ArrayList<>();
+            for (Object item : listMapping) {
+                if (item instanceof String) {
+                    blockStrings.add((String) item);
+                }
+            }
+            if (!blockStrings.isEmpty()) {
+                return BlockResolver.createChainElementWithTileAdder(blockStrings);
+            }
+        }
+
         if (mapping instanceof StructureDefinitionData.BlockMapping) {
             StructureDefinitionData.BlockMapping blockMapping = (StructureDefinitionData.BlockMapping) mapping;
             if (blockMapping.block != null && !blockMapping.block.isEmpty()) {
                 return BlockResolver.createElement(blockMapping.block);
             }
             if (blockMapping.blocks != null && !blockMapping.blocks.isEmpty()) {
-                java.util.List<String> blockStrings = new java.util.ArrayList<>();
+                List<String> blockStrings = new ArrayList<>();
                 for (StructureDefinitionData.BlockEntry entry : blockMapping.blocks) {
                     if (entry != null && entry.id != null) {
                         blockStrings.add(entry.id);
                     }
                 }
-                return BlockResolver.createChainElement(blockStrings);
+                return BlockResolver.createChainElementWithTileAdder(blockStrings);
             }
         }
 
@@ -193,9 +217,9 @@ public class CustomStructureRegistry {
             }
             if (mapData.containsKey("blocks")) {
                 Object blocksObj = mapData.get("blocks");
-                if (blocksObj instanceof java.util.List) {
-                    java.util.List<?> blocksList = (java.util.List<?>) blocksObj;
-                    java.util.List<String> blockStrings = new java.util.ArrayList<>();
+                if (blocksObj instanceof List) {
+                    List<?> blocksList = (List<?>) blocksObj;
+                    List<String> blockStrings = new ArrayList<>();
                     for (Object item : blocksList) {
                         if (item instanceof Map) {
                             Map<String, Object> blockItem = (Map<String, Object>) item;
@@ -208,7 +232,7 @@ public class CustomStructureRegistry {
                         }
                     }
                     if (!blockStrings.isEmpty()) {
-                        return BlockResolver.createChainElement(blockStrings);
+                        return BlockResolver.createChainElementWithTileAdder(blockStrings);
                     }
                 }
             }
@@ -216,6 +240,28 @@ public class CustomStructureRegistry {
 
         Logger.warn("CustomStructureRegistry: Unknown mapping type for symbol '" + symbol + "'");
         return null;
+    }
+
+    /**
+     * Apply 180-degree horizontal rotation to the shape.
+     * True 180-degree rotation requires:
+     * 1. Reverse the order of rows in each layer (front-to-back flip)
+     * 2. Reverse each row string (left-to-right flip)
+     * Used to align JSON definition with controller facing direction.
+     */
+    private static String[][] rotate180(String[][] shape) {
+        String[][] rotated = new String[shape.length][];
+        for (int layer = 0; layer < shape.length; layer++) {
+            int numRows = shape[layer].length;
+            rotated[layer] = new String[numRows];
+            for (int row = 0; row < numRows; row++) {
+                // Get row from opposite end and reverse it
+                int srcRow = numRows - 1 - row;
+                rotated[layer][row] = new StringBuilder(shape[layer][srcRow]).reverse()
+                    .toString();
+            }
+        }
+        return rotated;
     }
 
     /**

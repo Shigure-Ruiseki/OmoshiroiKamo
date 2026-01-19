@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.TileVisBridge;
  * Vis Bridge block - bridges Vis from Vis Output Port to Thaumcraft Vis
  * network.
  * When placed, it absorbs Vis from the block face that was clicked.
+ * TODO: Add texture
  */
 public class BlockVisBridge extends Block {
 

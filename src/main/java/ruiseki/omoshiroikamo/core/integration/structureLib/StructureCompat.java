@@ -21,11 +21,8 @@ public class StructureCompat {
         // Register custom structures from JSON
         CustomStructureRegistry.registerAll();
 
-        // Register StructureLib info container for the modular controller (NEI tab)
+        // Register StructureLib info container for in-game hologram building
         IMultiblockInfoContainer.registerTileClass(TEMachineController.class, new MachineControllerInfoContainer());
-        Logger.info(
-            "Registered TEMachineController with IMultiblockInfoContainer. Contains: "
-                + IMultiblockInfoContainer.contains(TEMachineController.class));
     }
 
     /**
