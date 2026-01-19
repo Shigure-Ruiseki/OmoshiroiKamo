@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.search;
+package ruiseki.omoshiroikamo.core.common.search;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -17,12 +17,15 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
+import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.value.sync.SyncHandlers;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
+import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
@@ -30,11 +33,14 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
+import ruiseki.omoshiroikamo.api.item.CraftingFilter;
+import ruiseki.omoshiroikamo.api.item.ItemStackKey;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ExpandedWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
+import ruiseki.omoshiroikamo.core.integration.nei.NEISearchField;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
@@ -43,11 +49,11 @@ import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ItemIndexSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableCraftingSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableItemSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CableScrollBar;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.CraftingFilterButton;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.SortOrderButton;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.SortTypeButton;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
 
 public class TerminalPanel extends ModularPanel {
 
@@ -64,6 +70,8 @@ public class TerminalPanel extends ModularPanel {
     public ItemIndexSH syncHandler;
     public SlotGroupWidget itemSlots;
     public CableScrollBar scrollBar;
+    public SearchBarWidget searchBar;
+    public StringSyncValue searchSyncer;
     public CableItemSlot[] slots = new CableItemSlot[SLOT_COUNT];
 
     public ModularCraftingMatrixSlot[] craftingMatrixSlots = new ModularCraftingMatrixSlot[9];
@@ -132,6 +140,14 @@ public class TerminalPanel extends ModularPanel {
                 last[0] = v;
                 updateGrid(clientIndex);
             }
+            String neiText = NEISearchField.getText();
+            if (neiText != null && terminal.getSyncNEI() && searchBar != null && !searchBar.isFocused()) {
+                if (!neiText.equals(searchSyncer.getStringValue())) {
+                    searchSyncer.setStringValue(neiText);
+                    clientIndex.setSearch(neiText);
+                    updateGrid(clientIndex);
+                }
+            }
         });
         syncManager.onServerTick(() -> {
             ItemNetwork net = terminal.getItemNetwork();
@@ -165,7 +181,7 @@ public class TerminalPanel extends ModularPanel {
                 }
             };
 
-            slot.setStack(null);
+            slot.setEntry(null, 0, false);
             slot.syncHandler("itemSlot_" + i, i);
 
             slots[i] = slot;
@@ -178,16 +194,17 @@ public class TerminalPanel extends ModularPanel {
         List<ItemStackKey> keys = index.viewGrid(indexOffset, COLUMNS, ROWS);
 
         int i = 0;
-
         for (ItemStackKey key : keys) {
             if (i >= slots.length) break;
 
-            int count = index.get(key);
-            slots[i++].setStack(count > 0 ? key.toStack(count) : null);
+            int stored = index.getStored(key);
+            boolean craftable = index.isCraftable(key);
+
+            slots[i++].setEntry(stored > 0 || craftable ? key : null, stored, craftable && stored <= 0);
         }
 
-        while (i < slots.length) {
-            slots[i++].setStack(null);
+        for (; i < slots.length; i++) {
+            slots[i].setEntry(null, 0, false);
         }
     }
 
@@ -195,11 +212,20 @@ public class TerminalPanel extends ModularPanel {
         EnumSyncValue<SortType> sortTypeSyncer = new EnumSyncValue<>(
             SortType.class,
             terminal::getSortType,
-            terminal::setSortType);
+            this::changeSortType);
         syncManager.syncValue("sortTypeSyncer", sortTypeSyncer);
 
-        BooleanSyncValue sortOrderSyncer = new BooleanSyncValue(terminal::getSortOrder, terminal::setSortOrder);
+        BooleanSyncValue sortOrderSyncer = new BooleanSyncValue(terminal::getSortOrder, this::changeSortOrder);
         syncManager.syncValue("sortOrderSyncer", sortOrderSyncer);
+
+        BooleanSyncValue syncNEISyncer = new BooleanSyncValue(terminal::getSyncNEI, terminal::setSyncNEI);
+        syncManager.syncValue("syncNEI", syncNEISyncer);
+
+        EnumSyncValue<CraftingFilter> craftingSyncer = new EnumSyncValue<>(
+            CraftingFilter.class,
+            terminal::getCraftingFilter,
+            this::changeCraftingFilter);
+        syncManager.syncValue("craftingSyncer", craftingSyncer);
 
         Column col = new Column();
         col.coverChildren()
@@ -208,18 +234,19 @@ public class TerminalPanel extends ModularPanel {
             .childPadding(2);
 
         SortTypeButton sortType = new SortTypeButton(sortTypeSyncer);
-        sortType.addMousePressedUpdater(value -> {
-            clientIndex.setSort(terminal.getSortType());
-            updateGrid(clientIndex);
-        });
         col.child(sortType);
 
         SortOrderButton sortOrder = new SortOrderButton(sortOrderSyncer);
-        sortOrder.addMousePressedUpdater(value -> {
-            clientIndex.setSortOrder(terminal.getSortOrder());
-            updateGrid(clientIndex);
-        });
         col.child(sortOrder);
+
+        ToggleButton syncNEI = new ToggleButton().size(18)
+            .overlay(SYNC_NEI)
+            .tooltip(tooltip -> tooltip.addLine(IKey.lang("gui.syncNEI")))
+            .value(new BoolValue.Dynamic(syncNEISyncer::getValue, syncNEISyncer::setValue));
+        col.child(syncNEI);
+
+        CraftingFilterButton button = new CraftingFilterButton(craftingSyncer);
+        col.child(button);
 
         this.child(col);
     }
@@ -246,15 +273,21 @@ public class TerminalPanel extends ModularPanel {
                 .value(SyncHandlers.intNumber(terminal::getChannel, this::changeChannel)));
         row.child(channelRow);
 
-        SearchBarWidget searchBar = new SearchBarWidget() {
+        searchSyncer = new StringSyncValue(terminal::getSearch, terminal::setSearch);
+        searchBar = new SearchBarWidget() {
 
             @Override
             public void doSearch(String search) {
                 clientIndex.setSearch(search);
                 updateGrid(clientIndex);
+
+                if (terminal.getSyncNEI() && !NEISearchField.isFocused()) {
+                    NEISearchField.setText(search);
+                }
             }
         };
         searchBar.top(1)
+            .value(searchSyncer)
             .size(102, 10);
 
         row.child(searchBar);
@@ -336,9 +369,13 @@ public class TerminalPanel extends ModularPanel {
 
         ButtonWidget<?> clearBtn = new ButtonWidget<>().size(8)
             .pos(56, 0)
+            .overlay(CLEAR)
+            .hoverBackground(BTN)
+            .background(BTN)
             .onMousePressed(btn -> {
                 if (btn == 0) {
                     Interactable.playButtonClickSound();
+                    syncHandler.clearCraftingGrid();
                     return true;
                 }
                 return false;
@@ -348,10 +385,42 @@ public class TerminalPanel extends ModularPanel {
         this.child(craftingGroupsWidget);
     }
 
+    private void changeSortType(SortType sortType) {
+        terminal.setSortType(sortType);
+        clientIndex.setSortType(sortType);
+        updateGrid(clientIndex);
+    }
+
+    private void changeSortOrder(boolean sortOrder) {
+        terminal.setSortOrder(sortOrder);
+        clientIndex.setSortOrder(sortOrder);
+        updateGrid(clientIndex);
+    }
+
+    private void changeCraftingFilter(CraftingFilter craftingFilter) {
+        terminal.setCraftingFilter(craftingFilter);
+        clientIndex.setCraftingFilter(craftingFilter);
+        updateGrid(clientIndex);
+    }
+
     private void changeChannel(int channel) {
         terminal.setChannel(channel);
         syncHandler.syncChannel(channel);
     }
+
+    private static final UITexture CLEAR = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .imageSize(256, 256)
+        .xy(0, 44, 8, 8)
+        .adaptable(1)
+        .build();
+
+    private static final UITexture BTN = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .imageSize(256, 256)
+        .xy(0, 36, 8, 8)
+        .adaptable(1)
+        .build();
 
     private static final UITexture ARROW = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/gui_controls")
@@ -365,6 +434,12 @@ public class TerminalPanel extends ModularPanel {
         .imageSize(256, 256)
         .xy(71, 216, 26, 26)
         .adaptable(1)
+        .build();
+
+    public static final UITexture SYNC_NEI = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .imageSize(256, 256)
+        .xy(162, 36, 18, 18)
         .build();
 
     @Override

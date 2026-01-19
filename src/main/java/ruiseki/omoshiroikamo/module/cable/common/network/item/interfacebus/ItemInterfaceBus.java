@@ -30,6 +30,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -40,7 +41,6 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
 
@@ -307,7 +307,7 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         return slots;
     }
 
-    private static IModelCustom model = AdvancedModelLoader
+    private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_interface_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/item_interface_bus.png");

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.ICraftingNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
@@ -20,6 +22,7 @@ public final class CableNetworkRegistry {
     static {
         CableNetworkRegistry.register(IEnergyNet.class, EnergyNetwork::new);
         CableNetworkRegistry.register(IItemNet.class, ItemNetwork::new);
+        CableNetworkRegistry.register(ICraftingNet.class, CraftingNetwork::new);
     }
 
     @SuppressWarnings("unchecked")

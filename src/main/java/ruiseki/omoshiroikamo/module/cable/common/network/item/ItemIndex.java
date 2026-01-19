@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.module.cable.common.network.item;
 import net.minecraft.item.ItemStack;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 
 public class ItemIndex {
 

@@ -27,23 +27,55 @@ import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.Widget;
 
+import ruiseki.omoshiroikamo.api.item.ItemStackKey;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiDraw;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CableItemSlotSH;
 
 public class CableItemSlot extends Widget<CableItemSlot> implements Interactable, RecipeViewerIngredientProvider {
 
     public static final int SIZE = 18;
 
-    private ItemStack stack;
+    private ItemStackKey key;
+    private int storedCount;
+    private boolean craftable;
+
     private CableItemSlotSH syncHandler;
 
     public CableItemSlot() {
         itemTooltip().setAutoUpdate(true);
         itemTooltip().tooltipBuilder(tooltip -> {
-            ItemStack stack = getStack();
-            if (stack == null || stack.getItem() == null || stack.stackSize <= 0) return;
+            ItemStack stack = getRenderStack();
+            if (stack == null) return;
+
             tooltip.addFromItem(stack);
+
+            if (storedCount <= 0 && craftable) {
+                tooltip.addLine("§7Craftable");
+            }
         });
+    }
+
+    public CableItemSlot setEntry(@Nullable ItemStackKey key, int storedCount, boolean craftable) {
+        this.key = key;
+        this.storedCount = storedCount;
+        this.craftable = craftable;
+        return this;
+    }
+
+    @Nullable
+    public ItemStack getRenderStack() {
+        if (key == null) return null;
+
+        if (storedCount > 0) {
+            return key.toStack(storedCount);
+        }
+
+        if (craftable) {
+            return key.toStack(1);
+        }
+
+        return null;
     }
 
     @Override
@@ -76,15 +108,6 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
         size(SIZE);
     }
 
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    public CableItemSlot setStack(ItemStack stack) {
-        this.stack = stack;
-        return this;
-    }
-
     public RichTooltip itemTooltip() {
         return super.tooltip();
     }
@@ -93,7 +116,7 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
     public void drawForeground(ModularGuiContext context) {
         RichTooltip tooltip = getTooltip();
         if (tooltip != null && isHoveringFor(tooltip.getShowUpTimer())) {
-            tooltip.draw(getContext(), getStack());
+            tooltip.draw(getContext(), getRenderStack());
         }
     }
 
@@ -131,8 +154,8 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
 
     public void drawStack() {
 
-        ItemStack stack = getStack();
-        if (stack == null || stack.getItem() == null || stack.stackSize <= 0) return;
+        ItemStack stack = getRenderStack();
+        if (stack == null) return;
 
         GuiScreen guiScreen = getScreen().getScreenWrapper()
             .getGuiScreen();
@@ -160,7 +183,11 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
         Platform.endDrawItem();
 
         // amount text
-        OKGuiDraw.drawCompactAmount(stack.stackSize, 1, 1, 16, 16, Alignment.BottomRight);
+        if (storedCount > 0) {
+            OKGuiDraw.drawCompactAmount(storedCount, 1, 1, 16, 16, Alignment.BottomRight);
+        } else if (craftable) {
+            OKGuiDraw.drawCraftable(1, 1, 16, 16, Alignment.BottomRight);
+        }
 
         // overlay (durability, etc.)
         ItemStack overlayStack = stack.copy();
@@ -187,13 +214,22 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
 
     @Override
     public @NotNull Result onMousePressed(int mouseButton) {
-        ItemStack slotStack = getStack();
+        ItemStack slotStack = getRenderStack();
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-        if (mouseButton == 2 && player.capabilities.isCreativeMode && slotStack != null) {
-            syncHandler.requestClone(slotStack);
-            return Result.ACCEPT;
+        if (mouseButton == 2 && slotStack != null) {
+            if (craftable) {
+                // TODO: Add Crafting Request
+                Logger.info("craftable");
+                return Result.ACCEPT;
+            }
+
+            if (player.capabilities.isCreativeMode) {
+                syncHandler.requestClone(slotStack);
+                return Result.ACCEPT;
+            }
+            return Result.IGNORE;
         }
 
         ItemStack cursorStack = player.inventory.getItemStack();
@@ -215,7 +251,7 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
 
     @Override
     public @Nullable ItemStack getStackForRecipeViewer() {
-        return getStack();
+        return getRenderStack();
     }
 
     public enum SlotClickType {

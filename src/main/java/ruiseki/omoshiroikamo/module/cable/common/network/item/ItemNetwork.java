@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
@@ -168,7 +169,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
             if (got == null || got.stackSize <= 0) continue;
 
             remaining -= got.stackSize;
-            result = merge(result, got);
+            result = ItemUtils.merge(result, got);
         }
 
         if (result != null) {
@@ -204,11 +205,4 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         markDirty(channel);
         return null;
     }
-
-    private static ItemStack merge(ItemStack a, ItemStack b) {
-        if (a == null) return b;
-        a.stackSize += b.stackSize;
-        return a;
-    }
-
 }

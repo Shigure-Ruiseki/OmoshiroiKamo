@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class SearchBarWidget extends TextFieldWidget {
 
-    protected static String prevText = "";
+    protected String prevText = "";
 
     public static final UITexture VANILLA_SEARCH_BACKGROUND = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/vanilla_search")

@@ -26,6 +26,8 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
 
     public static final CableISBRH INSTANCE = new CableISBRH();
 
+    private static final float PART_INSET = 3f / 16f;
+
     public CableISBRH() {}
 
     @Override
@@ -40,7 +42,7 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
 
         tess.startDrawingQuads();
         RenderUtils.renderCube(tess, min, min, min, max, max, max, icon);
-        RenderUtils.renderCube(tess, min, min, 0.0f, max, max, min, icon);
+        RenderUtils.renderCube(tess, min, min, 0f, max, max, min, icon);
         RenderUtils.renderCube(tess, min, min, max, max, max, 1.0f, icon);
 
         tess.draw();
@@ -63,37 +65,43 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
 
         // UP (+Y)
         if (cable.hasVisualConnection(ForgeDirection.UP)) {
-            renderer.setRenderBounds(min, max, min, max, 1.0, max);
+            boolean hasPart = cable.hasPart(ForgeDirection.UP);
+            renderer.setRenderBounds(min, max, min, max, hasPart ? 1.0f - PART_INSET : 1.0f, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // DOWN (-Y)
         if (cable.hasVisualConnection(ForgeDirection.DOWN)) {
-            renderer.setRenderBounds(min, 0.0, min, max, min, max);
+            boolean hasPart = cable.hasPart(ForgeDirection.DOWN);
+            renderer.setRenderBounds(min, hasPart ? PART_INSET : 0f, min, max, min, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // NORTH (-Z)
         if (cable.hasVisualConnection(ForgeDirection.NORTH)) {
-            renderer.setRenderBounds(min, min, 0.0, max, max, min);
+            boolean hasPart = cable.hasPart(ForgeDirection.NORTH);
+            renderer.setRenderBounds(min, min, hasPart ? PART_INSET : 0f, max, max, min);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // SOUTH (+Z)
         if (cable.hasVisualConnection(ForgeDirection.SOUTH)) {
-            renderer.setRenderBounds(min, min, max, max, max, 1.0);
+            boolean hasPart = cable.hasPart(ForgeDirection.SOUTH);
+            renderer.setRenderBounds(min, min, max, max, max, hasPart ? 1.0f - PART_INSET : 1.0f);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // WEST (-X)
         if (cable.hasVisualConnection(ForgeDirection.WEST)) {
-            renderer.setRenderBounds(0.0, min, min, min, max, max);
+            boolean hasPart = cable.hasPart(ForgeDirection.WEST);
+            renderer.setRenderBounds(hasPart ? PART_INSET : 0f, min, min, min, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 
         // EAST (+X)
         if (cable.hasVisualConnection(ForgeDirection.EAST)) {
-            renderer.setRenderBounds(max, min, min, 1.0, max, max);
+            boolean hasPart = cable.hasPart(ForgeDirection.EAST);
+            renderer.setRenderBounds(max, min, min, hasPart ? 1.0f - PART_INSET : 1.0f, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 

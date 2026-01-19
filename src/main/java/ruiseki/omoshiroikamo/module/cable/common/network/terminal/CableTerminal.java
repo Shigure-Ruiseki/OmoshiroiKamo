@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network.terminal;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -24,12 +25,15 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.SortType;
+import ruiseki.omoshiroikamo.api.item.CraftingFilter;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.ICraftingNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
@@ -47,6 +51,12 @@ public class CableTerminal extends AbstractPart {
     public String SORT_TYPE_TAG = "SortType";
     public boolean sortOrder = true;
     public String SORT_ORDER_TAG = "SortOrder";
+    public String search = "";
+    public String SEARCH_TAG = "Search";
+    public boolean syncNEI = false;
+    public String SYNC_NEI_TAG = "SyncNEI";
+    public CraftingFilter craftingFilter = CraftingFilter.BOTH;
+    public String CRAFTING_FILTER_TAG = "CraftingFilter";
 
     public CableTerminal() {
         setChannel(-1);
@@ -59,7 +69,7 @@ public class CableTerminal extends AbstractPart {
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Arrays.asList(IItemNet.class, IEnergyNet.class);
+        return Arrays.asList(IItemNet.class, IEnergyNet.class, ICraftingNet.class);
     }
 
     @Override
@@ -78,6 +88,9 @@ public class CableTerminal extends AbstractPart {
         tag.setTag(CRAFTING_MATRIX_TAG, craftingStackHandler.serializeNBT());
         tag.setInteger(SORT_TYPE_TAG, sortType.getIndex());
         tag.setBoolean(SORT_ORDER_TAG, sortOrder);
+        tag.setString(SEARCH_TAG, search);
+        tag.setBoolean(SYNC_NEI_TAG, syncNEI);
+        tag.setInteger(CRAFTING_FILTER_TAG, craftingFilter.getIndex());
     }
 
     @Override
@@ -94,6 +107,18 @@ public class CableTerminal extends AbstractPart {
 
         if (tag.hasKey(SORT_ORDER_TAG)) {
             sortOrder = tag.getBoolean(SORT_ORDER_TAG);
+        }
+
+        if (tag.hasKey(SEARCH_TAG)) {
+            search = tag.getString(SEARCH_TAG);
+        }
+
+        if (tag.hasKey(SYNC_NEI_TAG)) {
+            syncNEI = tag.getBoolean(SYNC_NEI_TAG);
+        }
+
+        if (tag.hasKey(CRAFTING_FILTER_TAG)) {
+            craftingFilter = CraftingFilter.byIndex(tag.getInteger(CRAFTING_FILTER_TAG));
         }
     }
 
@@ -144,6 +169,10 @@ public class CableTerminal extends AbstractPart {
         return (ItemNetwork) getCable().getNetwork(IItemNet.class);
     }
 
+    public CraftingNetwork getCraftingNetwork() {
+        return (CraftingNetwork) getCable().getNetwork(ICraftingNet.class);
+    }
+
     public SortType getSortType() {
         return sortType;
     }
@@ -151,7 +180,7 @@ public class CableTerminal extends AbstractPart {
     public void setSortType(SortType sortType) {
         if (this.sortType != sortType) {
             this.sortType = sortType;
-            getCable().dirty();
+            markDirty();
         }
     }
 
@@ -162,11 +191,48 @@ public class CableTerminal extends AbstractPart {
     public void setSortOrder(boolean sortOrder) {
         if (this.sortOrder != sortOrder) {
             this.sortOrder = sortOrder;
-            getCable().dirty();
+            markDirty();
         }
     }
 
-    private static IModelCustom model = AdvancedModelLoader
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        if (!Objects.equals(this.search, search)) {
+            this.search = search;
+            markDirty();
+        }
+    }
+
+    public boolean getSyncNEI() {
+        return syncNEI;
+    }
+
+    public void setSyncNEI(boolean syncNEI) {
+        if (this.syncNEI != syncNEI) {
+            this.syncNEI = syncNEI;
+            markDirty();
+        }
+    }
+
+    public CraftingFilter getCraftingFilter() {
+        return craftingFilter;
+    }
+
+    public void setCraftingFilter(CraftingFilter craftingFilter) {
+        if (this.craftingFilter != craftingFilter) {
+            this.craftingFilter = craftingFilter;
+            markDirty();
+        }
+    }
+
+    public void markDirty() {
+        getCable().dirty();
+    }
+
+    private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/cable_terminal.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/cable_terminal.png");

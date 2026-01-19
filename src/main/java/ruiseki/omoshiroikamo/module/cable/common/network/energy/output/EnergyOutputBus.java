@@ -231,7 +231,7 @@ public class EnergyOutputBus extends AbstractPart implements IEnergyPart {
         return 0;
     }
 
-    private static IModelCustom model = AdvancedModelLoader
+    private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_output_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/energy_output_bus.png");

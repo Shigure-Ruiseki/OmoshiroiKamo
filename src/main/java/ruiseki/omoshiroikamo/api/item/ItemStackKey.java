@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.item;
+package ruiseki.omoshiroikamo.api.item;
 
 import java.io.IOException;
 import java.util.ArrayList;

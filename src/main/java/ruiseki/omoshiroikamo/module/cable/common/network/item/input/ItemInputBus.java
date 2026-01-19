@@ -221,7 +221,7 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
         this.transferLimit = transferLimit;
     }
 
-    private static IModelCustom model = AdvancedModelLoader
+    private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_input_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/item_input_bus.png");

@@ -13,7 +13,7 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
     protected final List<T> nodes = new ArrayList<>();
     protected final Class<T> baseNodeClass;
 
-    protected AbstractCableNetwork(Class<T> baseNodeClass) {
+    public AbstractCableNetwork(Class<T> baseNodeClass) {
         this.baseNodeClass = baseNodeClass;
     }
 

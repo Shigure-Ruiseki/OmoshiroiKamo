@@ -87,6 +87,11 @@ gui.io.disabled=Disabled
 
 gui.search_bar.tool_tip=Right click to clear the search bar
 
+gui.syncNEI=Sync NEI
+
+gui.crafting_filter.storage=Storage
+gui.crafting_filter.craftable=Craftable
+gui.crafting_filter.both=Both
 
 #Cable
 

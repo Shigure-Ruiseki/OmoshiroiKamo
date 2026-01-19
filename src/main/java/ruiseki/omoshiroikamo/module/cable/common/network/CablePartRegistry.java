@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.interfacebus.CraftingInterfaceBus;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.input.EnergyInputBus;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus.EnergyInterfaceBus;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.EnergyOutputBus;
@@ -25,6 +26,7 @@ public class CablePartRegistry {
         CablePartRegistry.register("item_output_bus", ItemOutputBus::new);
         CablePartRegistry.register("item_interface_bus", ItemInterfaceBus::new);
         CablePartRegistry.register("cable_terminal", CableTerminal::new);
+        CablePartRegistry.register("crafting_interface_bus", CraftingInterfaceBus::new);
     }
 
     public static void register(String id, Supplier<? extends ICablePart> factory) {

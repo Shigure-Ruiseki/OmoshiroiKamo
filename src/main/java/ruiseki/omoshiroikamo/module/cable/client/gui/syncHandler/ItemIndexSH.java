@@ -10,8 +10,9 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.item.ItemStackKeyUtils;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.TerminalPanel;
@@ -24,35 +25,52 @@ public class ItemIndexSH extends SyncHandler {
     public static final int EXTRACT = 100;
     public static final int INSERT = 101;
     public static final int SYNC_SERVER_STACK = 102;
+    public static final int CLEAR_GRID = 103;
 
     public static final int SET_CHANNEL = 200;
 
     private final CableTerminal terminal;
     private final TerminalPanel panel;
-    private final ItemNetwork network;
+    private final ItemNetwork itemNetwork;
+    private final CraftingNetwork craftingNetwork;
     private final ItemIndexClient clientIndex;
 
     public ItemIndexSH(CableTerminal terminal, TerminalPanel panel, ItemIndexClient clientIndex) {
         this.terminal = terminal;
-        this.network = terminal.getItemNetwork();
+        this.itemNetwork = terminal.getItemNetwork();
+        this.craftingNetwork = terminal.getCraftingNetwork();
         this.panel = panel;
         this.clientIndex = clientIndex;
     }
 
     public void requestSync(int clientVersion) {
-        if (network == null) return;
+        if (itemNetwork == null) return;
 
-        int serverVer = network.getIndexVersion();
+        int serverVer = itemNetwork.getIndexVersion();
 
         if (clientVersion < 0) {
-            syncToClient(SYNC_FULL, b -> ItemIndexUtils.writeFull(b, network));
+            syncToClient(SYNC_FULL, b -> {
+                b.writeInt(itemNetwork.getIndexVersion());
+                ItemStackKeyUtils.writeMap(
+                    b,
+                    itemNetwork.getIndex()
+                        .view());
+                ItemStackKeyUtils.writeKeys(
+                    b,
+                    craftingNetwork.getIndex()
+                        .keys());
+            });
             return;
         }
 
         if (clientVersion != serverVer) {
-            syncToClient(
-                SYNC_DELTA,
-                b -> ItemIndexUtils.writeDelta(b, network.getLastSnapshot(), network.getIndex(), serverVer));
+            syncToClient(SYNC_DELTA, b -> {
+                ItemStackKeyUtils.writeDelta(b, itemNetwork.getLastSnapshot(), itemNetwork.getIndex(), serverVer);
+                ItemStackKeyUtils.writeKeys(
+                    b,
+                    craftingNetwork.getIndex()
+                        .keys());
+            });
         }
     }
 
@@ -62,14 +80,18 @@ public class ItemIndexSH extends SyncHandler {
 
         if (id == SYNC_FULL) {
             int version = buf.readInt();
-            clientIndex.replace(ItemIndexUtils.readMap(buf), version);
+            clientIndex.replace(ItemStackKeyUtils.readMap(buf), ItemStackKeyUtils.readKeys(buf), version);
             return;
         }
 
         if (id == SYNC_DELTA) {
             int version = buf.readInt();
-            clientIndex.applyDelta(ItemIndexUtils.readMap(buf), ItemIndexUtils.readKeys(buf), version);
-            return;
+
+            var added = ItemStackKeyUtils.readMap(buf);
+            var removed = ItemStackKeyUtils.readKeys(buf);
+            var craftables = ItemStackKeyUtils.readKeys(buf);
+
+            clientIndex.applyDelta(added, removed, craftables, version);
         }
     }
 
@@ -89,6 +111,10 @@ public class ItemIndexSH extends SyncHandler {
 
         if (id == SYNC_SERVER_STACK) {
             handleServerStackMouse(buf);
+        }
+
+        if (id == CLEAR_GRID) {
+            handleClearGrid();
         }
     }
 
@@ -120,17 +146,21 @@ public class ItemIndexSH extends SyncHandler {
         syncToServer(SYNC_SERVER_STACK, buf -> buf.writeItemStackToBuffer(stack));
     }
 
+    public void clearCraftingGrid() {
+        syncToServer(ItemIndexSH.CLEAR_GRID, buffer -> {});
+    }
+
     private void handleExtract(PacketBuffer buf) throws IOException {
         ItemStack stack = buf.readItemStackFromBuffer();
         int amount = buf.readVarIntFromBuffer();
         boolean toInventory = buf.readBoolean();
 
         EntityPlayer player = getSyncManager().getPlayer();
-        if (player == null || network == null) return;
+        if (player == null || itemNetwork == null) return;
 
         amount = Math.max(1, amount);
 
-        ItemStack extracted = network.extract(stack, amount, terminal.getChannel());
+        ItemStack extracted = itemNetwork.extract(stack, amount, terminal.getChannel());
         if (extracted == null) return;
 
         if (toInventory) {
@@ -145,12 +175,12 @@ public class ItemIndexSH extends SyncHandler {
 
     private void handleInsert() {
         EntityPlayer player = getSyncManager().getPlayer();
-        if (player == null || network == null) return;
+        if (player == null || itemNetwork == null) return;
 
         ItemStack mouse = player.inventory.getItemStack();
         if (mouse == null) return;
         ItemStack toInsert = mouse.copy();
-        ItemStack remainder = network.insert(toInsert, terminal.getChannel());
+        ItemStack remainder = itemNetwork.insert(toInsert, terminal.getChannel());
 
         if (remainder == null || remainder.stackSize == 0) {
             player.inventory.setItemStack(null);
@@ -171,9 +201,20 @@ public class ItemIndexSH extends SyncHandler {
 
     private void handleServerChannel(PacketBuffer buffer) {
         int channel = buffer.readVarIntFromBuffer();
-        if (network != null) {
-            network.setIndexChannel(channel);
-            network.markDirty(channel);
+        if (itemNetwork != null) {
+            itemNetwork.setIndexChannel(channel);
+            itemNetwork.markDirty(channel);
         }
     }
+
+    private void handleClearGrid() {
+        if (itemNetwork == null) return;
+        for (int i = 0; i < 9; i++) {
+            ItemStack s = terminal.craftingStackHandler.extractItem(i, Integer.MAX_VALUE, false);
+            if (s == null) continue;
+            ItemStack rem = itemNetwork.insert(s, terminal.getChannel());
+            terminal.craftingStackHandler.setStackInSlot(i, rem);
+        }
+    }
+
 }

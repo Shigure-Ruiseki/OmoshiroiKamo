@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.item;
+package ruiseki.omoshiroikamo.api.item;
 
 import net.minecraft.item.ItemStack;
 

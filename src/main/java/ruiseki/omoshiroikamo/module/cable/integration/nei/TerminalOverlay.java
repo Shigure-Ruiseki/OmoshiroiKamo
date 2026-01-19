@@ -15,11 +15,11 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.IRecipeHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKey;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
 public class TerminalOverlay implements IOverlayHandler {
 
@@ -175,7 +175,7 @@ public class TerminalOverlay implements IOverlayHandler {
 
         ItemStackKey key = ItemStackKeyPool.get(stack);
         int need = stack.stackSize;
-        int available = index.get(key) - used.getOrDefault(key, 0);
+        int available = index.getStored(key) - used.getOrDefault(key, 0);
 
         if (available < need) return false;
 
