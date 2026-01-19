@@ -39,7 +39,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
@@ -303,7 +303,7 @@ public class BackpackSlot extends ItemSlot {
     }
 
     private void drawLockedSlot(ModularGuiContext context, WidgetTheme widgetTheme) {
-        GuiTextures.NO_SORT_ICON.draw(context, 1, 1, 16, 16, widgetTheme);
+        OKGuiTextures.NO_SORT_ICON.draw(context, 1, 1, 16, 16, widgetTheme);
         GlStateManager.disableDepth();
         GuiDraw.drawRect(1, 1, 17, 17, Color.argb(139, 139, 139, 128));
         GlStateManager.enableDepth();

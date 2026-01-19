@@ -28,7 +28,7 @@ public class WailaUtils {
 
     public static String getProgress(IProgressTile handler) {
         float progress = handler.getProgress();
-        return LibMisc.LANG.localize("gui.progress", progress * 100);
+        return LibMisc.LANG.localize("gui.progress", Math.max(0, progress * 100));
     }
 
     public static String getCraftingState(ICraftingTile handler) {

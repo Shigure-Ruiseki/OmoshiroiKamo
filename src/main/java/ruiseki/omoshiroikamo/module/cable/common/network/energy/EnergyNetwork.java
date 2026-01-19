@@ -5,26 +5,26 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
-public class EnergyNetwork extends AbstractCableNetwork<IEnergyPart> {
+public class EnergyNetwork extends AbstractCableNetwork<IEnergyNet> {
 
-    public List<IEnergyPart> inputs;
-    public List<IEnergyPart> interfaces;
-    public List<IEnergyPart> outputs;
+    public List<IEnergyNet> inputs;
+    public List<IEnergyNet> interfaces;
+    public List<IEnergyNet> outputs;
 
     public EnergyNetwork() {
-        super(IEnergyPart.class);
+        super(IEnergyNet.class);
     }
 
     @Override
     public void doNetworkTick() {
         super.doNetworkTick();
 
-        if (parts.isEmpty()) return;
+        if (nodes.isEmpty()) return;
         interfaces = new ArrayList<>();
         inputs = new ArrayList<>();
         outputs = new ArrayList<>();
 
-        for (IEnergyPart part : parts) {
+        for (IEnergyNet part : nodes) {
             switch (part.getIO()) {
                 case INPUT -> inputs.add(part);
                 case OUTPUT -> outputs.add(part);

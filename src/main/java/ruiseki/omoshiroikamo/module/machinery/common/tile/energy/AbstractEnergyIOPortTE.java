@@ -32,7 +32,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -269,7 +269,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
                     .excludeAreaInRecipeViewer());
 
         panel.child(
-            new ProgressWidget().texture(GuiTextures.ENERGY_BAR, 64)
+            new ProgressWidget().texture(OKGuiTextures.ENERGY_BAR, 64)
                 .size(16, 64)
                 .value(new DoubleSyncValue(() -> (double) this.getEnergyStored() / this.getMaxEnergyStored()))
                 .tooltipAutoUpdate(true)

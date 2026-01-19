@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
-import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -58,14 +58,14 @@ public abstract class BackpackGuiHolder {
         panel.addTexts();
     }
 
-    public static final class TileEntityGuiHolder extends BackpackGuiHolder implements IGuiHolder<PosGuiData> {
+    public static final class TileEntityGuiHolder extends BackpackGuiHolder implements IGuiHolder<SidedPosGuiData> {
 
         public TileEntityGuiHolder(BackpackHandler handler) {
             super(handler);
         }
 
         @Override
-        public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
             TileEntity tileEntity = data.getTileEntity();
             BackpackPanel panel = createPanel(syncManager, settings, data.getPlayer(), tileEntity, null, null);
             addCommonWidgets(panel);

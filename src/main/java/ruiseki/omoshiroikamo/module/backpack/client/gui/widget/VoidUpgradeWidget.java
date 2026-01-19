@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
@@ -14,12 +14,14 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.VoidUpgradeWrap
 public class VoidUpgradeWidget extends BasicExpandedTabWidget<VoidUpgradeWrapper> {
 
     private static final List<CyclicVariantButtonWidget.Variant> VOID_INPUT_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_all"), GuiTextures.VOID_ALL),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_automation"), GuiTextures.VOID_AUTOMATION));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_all"), OKGuiTextures.VOID_ALL),
+        new CyclicVariantButtonWidget.Variant(
+            IKey.lang("gui.backpack.void_automation"),
+            OKGuiTextures.VOID_AUTOMATION));
 
     private static final List<CyclicVariantButtonWidget.Variant> VOID_TYPE_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_overflow"), GuiTextures.VOID_OVERFLOW),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_any"), GuiTextures.VOID_ANY));
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_overflow"), OKGuiTextures.VOID_OVERFLOW),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_any"), OKGuiTextures.VOID_ANY));
 
     public VoidUpgradeWidget(int slotIndex, VoidUpgradeWrapper wrapper) {
         super(

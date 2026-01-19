@@ -254,6 +254,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
 
         int ordinal = buf.readInt();
         BackpackInventoryUtils.clear(panel, upgradeWrapper.getStorage(), ordinal);
+        panel.getPlayer().inventory.markDirty();
     }
 
 }

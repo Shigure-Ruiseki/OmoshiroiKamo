@@ -26,6 +26,10 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
+    public static boolean useCable;
+
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
     public static boolean useBackpack;
 
     @Config.DefaultBoolean(true)

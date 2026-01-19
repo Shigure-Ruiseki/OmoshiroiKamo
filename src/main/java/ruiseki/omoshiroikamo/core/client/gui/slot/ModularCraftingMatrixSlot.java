@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.client.gui.slot;
+package ruiseki.omoshiroikamo.core.client.gui.slot;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;

@@ -238,7 +238,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
         }
 
         if (remaining != null && remaining.stackSize > 0) {
-            if (!simulate) {
+            if (simulate) {
                 return null;
             }
         }

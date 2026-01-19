@@ -65,6 +65,14 @@ gui.redstone_mode.high_on=On with redstone signal
 gui.redstone_mode.high_off=Off with redstone signal
 gui.redstone_mode.always_off=Always off
 
+gui.sort_type.by_mod_id=Mod Id
+gui.sort_type.by_name=Name
+gui.sort_type.by_count=Count
+gui.sort_type.by_ore_dict=OreDict
+
+gui.sort_order.asc=Ascending
+gui.sort_order.desc=Descending
+
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
 gui.energy_transfer=Transfer: %s RF/t
@@ -77,7 +85,12 @@ gui.io.isActivated=Active
 gui.io.enabled=Enabled
 gui.io.disabled=Disabled
 
+gui.search_bar.tool_tip=Right click to clear the search bar
 
+
+#Cable
+
+gui.cable.index_channel=Chan: 
 
 #Modular Machinery
 

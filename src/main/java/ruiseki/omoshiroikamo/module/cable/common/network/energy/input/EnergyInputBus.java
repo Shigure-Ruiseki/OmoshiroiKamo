@@ -1,12 +1,17 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.energy.input;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
@@ -16,14 +21,14 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.core.client.gui.data.PosSideGuiData;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
 public class EnergyInputBus extends AbstractPart implements IEnergyPart {
@@ -34,14 +39,16 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    private int transferLimit = 1000;
+
     @Override
     public String getId() {
         return "energy_input_bus";
     }
 
     @Override
-    public Class<? extends ICablePart> getBasePartType() {
-        return IEnergyPart.class;
+    public List<Class<? extends ICableNode>> getBaseNodeTypes() {
+        return Collections.singletonList(IEnergyNet.class);
     }
 
     @Override
@@ -56,18 +63,15 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public void doUpdate() {
+        if (!shouldDoTickInterval()) return;
 
-        tickCounter++;
-        if (tickCounter < tickInterval) return;
-        tickCounter = 0;
-
-        EnergyNetwork network = (EnergyNetwork) getNetwork();
+        EnergyNetwork network = getEnergyNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
         EnergyTransfer transfer = new EnergyTransfer();
         transfer.setMaxEnergyPerTransfer(getTransferLimit());
 
-        for (IEnergyPart iFace : network.interfaces) {
+        for (IEnergyNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
             transfer.push(this.getTargetTE(), iFace.getSide(), iFace.getTargetTE());
@@ -86,10 +90,23 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public @NotNull ModularPanel partPanel(PosSideGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setInteger("transferLimit", transferLimit);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        transferLimit = tag.getInteger("transferLimit");
+    }
+
+    @Override
+    public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("tickSyncer", SyncHandlers.intNumber(this::getTickInterval, this::setTickInterval));
         syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
         syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
+        syncManager.syncValue("transferSyncer", SyncHandlers.intNumber(this::getTransferLimit, this::setTransferLimit));
 
         ModularPanel panel = new ModularPanel("energy_input_bus");
 
@@ -109,6 +126,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         tickRow.child(
             new TextFieldWidget().syncHandler("tickSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(1, Integer.MAX_VALUE)
                 .right(0));
 
         Row priorityRow = new Row();
@@ -118,6 +137,8 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         priorityRow.child(
             new TextFieldWidget().syncHandler("prioritySyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Row channelRow = new Row();
@@ -127,6 +148,19 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
                 .asWidget());
         channelRow.child(
             new TextFieldWidget().syncHandler("channelSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
+                .right(0));
+
+        Row transferRow = new Row();
+        transferRow.height(20);
+        transferRow.child(
+            IKey.lang("gui.cable.transfer")
+                .asWidget());
+        transferRow.child(
+            new TextFieldWidget().syncHandler("transferSyncer")
+                .setFormatAsInteger(true)
+                .setNumbers(0, Integer.MAX_VALUE)
                 .right(0));
 
         Column col = new Column();
@@ -134,7 +168,9 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
             .child(sideRow)
             .child(tickRow)
             .child(priorityRow)
-            .child(channelRow);
+            .child(channelRow)
+            .child(transferRow);
+
         panel.child(col);
 
         return panel;
@@ -165,7 +201,11 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public int getTransferLimit() {
-        return Integer.MAX_VALUE;
+        return this.transferLimit;
+    }
+
+    public void setTransferLimit(int transferLimit) {
+        this.transferLimit = transferLimit;
     }
 
     @Override

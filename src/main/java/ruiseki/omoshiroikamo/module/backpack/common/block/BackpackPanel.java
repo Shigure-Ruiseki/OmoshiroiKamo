@@ -33,7 +33,7 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.core.client.gui.GuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
@@ -49,13 +49,13 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.AdvancedFilterUpg
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.AdvancedMagnetUpgradeWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.AdvancedVoidUpgradeWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.BackpackList;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.BackpackSearchBarWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.BasicExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CraftingUpgradeWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.FeedingUpgradeWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.FilterUpgradeWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.MagnetUpgradeWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.SettingTabWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ShiftButtonWidget;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
@@ -93,10 +93,10 @@ public class BackpackPanel extends ModularPanel {
     private static final List<CyclicVariantButtonWidget.Variant> SORT_TYPE_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(
             IKey.lang(LibMisc.LANG.localize("gui.backpack.sort_by_name")),
-            GuiTextures.SMALL_A_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_mod_id"), GuiTextures.SMALL_M_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_count"), GuiTextures.SMALL_1_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_ore_dict"), GuiTextures.SMALL_O_ICON));
+            OKGuiTextures.SMALL_A_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_mod_id"), OKGuiTextures.SMALL_M_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_count"), OKGuiTextures.SMALL_1_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_ore_dict"), OKGuiTextures.SMALL_O_ICON));
 
     @Getter
     private final EntityPlayer player;
@@ -137,7 +137,7 @@ public class BackpackPanel extends ModularPanel {
     private Column backpackInvCol;
     @Getter
     private Row backpackInvRow;
-    private SearchBarWidget searchBarWidget;
+    private BackpackSearchBarWidget searchBarWidget;
 
     public boolean isMemorySettingTabOpened = false;
     public boolean shouldMemorizeRespectNBT = false;
@@ -227,8 +227,8 @@ public class BackpackPanel extends ModularPanel {
     public void addSortingButtons() {
 
         ShiftButtonWidget sortButton = new ShiftButtonWidget(
-            GuiTextures.SOLID_DOWN_ARROW_ICON,
-            GuiTextures.SOLID_UP_ARROW_ICON).top(4)
+            OKGuiTextures.SOLID_DOWN_ARROW_ICON,
+            OKGuiTextures.SOLID_UP_ARROW_ICON).top(4)
                 .right(21)
                 .size(12)
                 .setEnabledIf(w -> !settingPanel.isPanelOpen())
@@ -278,8 +278,8 @@ public class BackpackPanel extends ModularPanel {
 
     public void addTransferButtons() {
         ShiftButtonWidget transferToPlayerButton = new ShiftButtonWidget(
-            GuiTextures.DOT_DOWN_ARROW_ICON,
-            GuiTextures.SOLID_DOWN_ARROW_ICON).top(19 + backpackSlotsHeight)
+            OKGuiTextures.DOT_DOWN_ARROW_ICON,
+            OKGuiTextures.SOLID_DOWN_ARROW_ICON).top(19 + backpackSlotsHeight)
                 .right(21)
                 .size(12)
                 .setEnabledIf(shiftButtonWidget -> !settingPanel.isPanelOpen())
@@ -311,8 +311,8 @@ public class BackpackPanel extends ModularPanel {
                 });
 
         ShiftButtonWidget transferToBackpackButton = new ShiftButtonWidget(
-            GuiTextures.DOT_UP_ARROW_ICON,
-            GuiTextures.SOLID_UP_ARROW_ICON).top(19 + backpackSlotsHeight)
+            OKGuiTextures.DOT_UP_ARROW_ICON,
+            OKGuiTextures.SOLID_UP_ARROW_ICON).top(19 + backpackSlotsHeight)
                 .right(7)
                 .size(12)
                 .setEnabledIf(shiftButtonWidget -> !settingPanel.isPanelOpen())
@@ -381,7 +381,7 @@ public class BackpackPanel extends ModularPanel {
 
     public void addSearchBar() {
 
-        searchBarWidget = (SearchBarWidget) new SearchBarWidget(this).top(6)
+        searchBarWidget = (BackpackSearchBarWidget) new BackpackSearchBarWidget(this).top(6)
             .width(this.width - 37)
             .height(10)
             .right(32);

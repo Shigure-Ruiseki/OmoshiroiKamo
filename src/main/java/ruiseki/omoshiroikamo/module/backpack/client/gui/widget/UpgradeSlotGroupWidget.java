@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 
-import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.TOGGLE_DISABLE_ICON;
-import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.TOGGLE_ENABLE_ICON;
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.TOGGLE_DISABLE_ICON;
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.TOGGLE_ENABLE_ICON;
 
 import java.util.ArrayList;
 import java.util.List;

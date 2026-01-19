@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.backpack.client.gui.slot;
+package ruiseki.omoshiroikamo.module.cable.client.gui.widget;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,42 +12,34 @@ import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
-import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.widgets.slot.InventoryCraftingWrapper;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
+import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.CraftingSlotSH;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemStackKeyPool;
 
-public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
+public class CableCraftingSlot extends ModularCraftingMatrixSlot {
 
     @Setter
+    @Getter
     private InventoryCraftingWrapper craftMatrix;
     private int amountCrafted;
-    private final BackpackHandler handler;
-    private final int slotIndex;
 
-    public ModularCraftingSlot(IItemHandler itemHandler, int index, BackpackHandler handler, int slotIndex) {
-        super(itemHandler, index);
-        this.handler = handler;
-        this.slotIndex = slotIndex;
+    public CableCraftingSlot(IItemHandler handler, int index) {
+        super(handler, index);
         setActive(false);
     }
 
-    /**
-     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-     */
     @Override
     public boolean isItemValid(ItemStack stack) {
         return false;
     }
 
-    /**
-     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
-     * stack.
-     */
     @Override
     public ItemStack decrStackSize(int amount) {
         if (this.getHasStack()) {
@@ -57,10 +49,6 @@ public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
         return super.decrStackSize(amount);
     }
 
-    /**
-     * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood. Typically increases an
-     * internal count then calls onCrafting(item).
-     */
     @Override
     protected void onCrafting(ItemStack stack, int amount) {
         this.amountCrafted += amount;
@@ -118,24 +106,17 @@ public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
     }
 
     @Override
-    public void onCraftShiftClick(EntityPlayer player, ItemStack stack) {
-        if (Platform.isStackEmpty(stack)) return;
-
-        if (!player.inventory.addItemStackToInventory(stack)) {
-            player.dropPlayerItemWithRandomChoice(stack, false);
-        }
-    }
-
-    @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
+
+        if (player.worldObj.isRemote) {
+            return;
+        }
+
         if (stack != null && stack.getItem() != null) {
             FMLCommonHandler.instance()
                 .firePlayerCraftingEvent(player, stack, craftMatrix);
             onCrafting(stack);
         }
-
-        ICraftingUpgrade wrapper = handler != null ? handler.gatherCapabilityUpgrades(ICraftingUpgrade.class)
-            .get(slotIndex) : null;
 
         for (int i = 0; i < craftMatrix.getSizeInventory() - 1; i++) {
             ItemStack slotStack = craftMatrix.getStackInSlot(i);
@@ -144,8 +125,8 @@ public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
             ItemStack original = slotStack.copy();
             boolean extractedFromHandler = false;
 
-            if (wrapper != null && wrapper.isUseBackpack()) {
-                ItemStack extracted = handler.extractItem(slotStack, 1, false);
+            if (getNetwork() != null) {
+                ItemStack extracted = getNetwork().extract(ItemStackKeyPool.get(slotStack), 1);
                 if (extracted != null) {
                     extractedFromHandler = true;
                 }
@@ -174,6 +155,13 @@ public class ModularCraftingSlot extends ModularCraftingMatrixSlot {
         }
 
         craftMatrix.notifyContainer();
+    }
+
+    private ItemNetwork getNetwork() {
+        if (getSyncHandler() instanceof CraftingSlotSH sh) {
+            return sh.getNetwork();
+        }
+        return null;
     }
 
     public void updateResult(ItemStack stack) {

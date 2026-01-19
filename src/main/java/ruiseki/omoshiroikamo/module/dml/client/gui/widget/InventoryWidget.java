@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.dml.client.gui.widget;
 
-import static ruiseki.omoshiroikamo.core.client.gui.GuiTextures.DML_INVENTORY_SLOT;
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.DML_INVENTORY_SLOT;
 
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;

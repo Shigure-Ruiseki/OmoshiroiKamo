@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.drawable.GuiDraw;
@@ -21,46 +20,53 @@ public class ItemStackDrawable extends ItemDrawable {
 
     public ItemStackDrawable() {}
 
-    public ItemStackDrawable(@NotNull ItemStack item) {
+    public ItemStackDrawable(ItemStack item) {
         setItem(item);
     }
 
-    public ItemStackDrawable(@NotNull Item item) {
+    public ItemStackDrawable(Item item) {
         setItem(item);
     }
 
-    public ItemStackDrawable(@NotNull Item item, int meta) {
+    public ItemStackDrawable(Item item, int meta) {
         setItem(item, meta);
     }
 
-    public ItemStackDrawable(@NotNull Item item, int meta, int amount) {
+    public ItemStackDrawable(Item item, int meta, int amount) {
         setItem(item, meta, amount);
     }
 
-    public ItemStackDrawable(@NotNull Item item, int meta, int amount, @Nullable NBTTagCompound nbt) {
+    public ItemStackDrawable(Item item, int meta, int amount, @Nullable NBTTagCompound nbt) {
         setItem(item, meta, amount, nbt);
     }
 
-    public ItemStackDrawable(@NotNull Block item) {
+    public ItemStackDrawable(Block item) {
         setItem(item);
     }
 
-    public ItemStackDrawable(@NotNull Block item, int meta) {
+    public ItemStackDrawable(Block item, int meta) {
         setItem(item, meta);
     }
 
-    public ItemStackDrawable(@NotNull Block item, int meta, int amount) {
+    public ItemStackDrawable(Block item, int meta, int amount) {
         setItem(new ItemStack(item, amount, meta));
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
-        applyColor(widgetTheme.getColor());
-        if (getItem() != null) {
-            GuiDraw.drawItem(this.getItem(), x, y, width, height, context.getCurrentDrawingZ());
-            GuiDraw.drawAmountText(this.getItem().stackSize, null, x, y, width, height, Alignment.BottomRight);
+
+        ItemStack stack = getItem();
+
+        if (stack == null || stack.getItem() == null || stack.stackSize <= 0) {
+            return;
         }
+
+        applyColor(widgetTheme.getColor());
+
+        GuiDraw.drawItem(stack, x, y, width, height, context.getCurrentDrawingZ());
+
+        GuiDraw.drawAmountText(stack.stackSize, null, x, y, width, height, Alignment.BottomRight);
     }
 
 }
