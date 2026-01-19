@@ -16,7 +16,6 @@ import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
  * Abstract base class for tile entities that store and manage energy.
@@ -138,7 +137,6 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     @Optional.Method(modid = "IC2")
     private void registerIC2() {
         if (ic2Registered) return;
-        Logger.info("Registering IC2 energy tile at {}, {}, {}", xCoord, yCoord, zCoord);
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
         ic2Registered = true;
     }

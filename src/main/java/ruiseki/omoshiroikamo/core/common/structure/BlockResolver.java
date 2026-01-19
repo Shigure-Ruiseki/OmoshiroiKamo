@@ -3,16 +3,22 @@ package ruiseki.omoshiroikamo.core.common.structure;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlockAnyMeta;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofTileAdder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Utility for resolving Block objects from block ID strings
@@ -117,6 +123,73 @@ public class BlockResolver {
         }
 
         return (IStructureElement<T>) ofChain(elements.toArray(new IStructureElement[0]));
+    }
+
+    /**
+     * Create a chain element from multiple block strings with TileEntity detection.
+     * This allows any of the specified blocks to be valid at this position,
+     * and automatically collects IModularPort TileEntities.
+     *
+     * @param blockStrings List of block strings
+     * @return IStructureElement using ofChain with TileAdder, or null if all
+     *         invalid
+     */
+    @SuppressWarnings("unchecked")
+    public static IStructureElement<TEMachineController> createChainElementWithTileAdder(List<String> blockStrings) {
+        if (blockStrings == null || blockStrings.isEmpty()) {
+            return null;
+        }
+
+        List<IStructureElement<TEMachineController>> elements = new ArrayList<>();
+        Block hintBlock = MachineryBlocks.MACHINE_CASING.getBlock();
+
+        // First, add TileAdder to detect and collect ports
+        elements.add(ofTileAdder(BlockResolver::collectPort, hintBlock, 0));
+
+        // Then add block checks for each valid block type
+        for (String blockString : blockStrings) {
+            IStructureElement<TEMachineController> element = createElement(blockString);
+            if (element != null) {
+                elements.add(element);
+            }
+        }
+
+        if (elements.size() <= 1) {
+            // Only TileAdder, no valid blocks - return null
+            return null;
+        }
+
+        return ofChain(elements.toArray(new IStructureElement[0]));
+    }
+
+    /**
+     * Callback for ofTileAdder to collect IModularPort TileEntities.
+     * Called during structure check for each block position.
+     *
+     * @param controller The machine controller
+     * @param tile       The TileEntity at this position (may be null)
+     * @return true if the position is valid (port found), false to let block check
+     *         handle it
+     */
+    public static boolean collectPort(TEMachineController controller, TileEntity tile) {
+        if (tile == null) return false;
+
+        if (tile instanceof IModularPort port) {
+            IPortType.Direction direction = port.getPortDirection();
+            switch (direction) {
+                case INPUT -> controller.addPortFromStructure(port, true);
+                case OUTPUT -> controller.addPortFromStructure(port, false);
+                case BOTH -> {
+                    controller.addPortFromStructure(port, true);
+                    controller.addPortFromStructure(port, false);
+                }
+                case NONE -> {
+                    /* Skip ports with no direction */ }
+            }
+            return true;
+        }
+
+        return false;
     }
 
     /**

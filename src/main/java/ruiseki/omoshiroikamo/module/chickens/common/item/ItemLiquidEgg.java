@@ -26,6 +26,8 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
+    // TODO: When use in Fluid port, it will be consumed.
+    // For now, empty egg is returned.
 
     public ItemLiquidEgg() {
         super(ModObject.itemLiquidEgg);

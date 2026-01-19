@@ -1,36 +1,50 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.gtnewhorizon.structurelib.alignment.IAlignment;
+import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
+import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 /**
  * Machine Controller TileEntity - manages a Modular Machinery multiblock.
@@ -38,38 +52,58 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  * crafting logic.
  * Corresponds to the 'Q' symbol in structure definitions.
  *
- * TODO: This class already extends AbstractMBModifierTE which provides:
- * - CraftingState management (via AbstractMachineTE)
- * - RedstoneMode support (via AbstractEnergyTE)
- * - Energy capability system (via AbstractEnergyTE)
- * Ensure we don't duplicate these existing systems.
- * TODO: PortManager refactoring
- * TODO: GUI implimentation
- * TODO: NEI integration
- * TODO: Other port types
+ * Blueprint slot provides GUI-based structure selection.
+ * The controller reads the structure name from the inserted blueprint
+ * and validates the surrounding blocks against that structure definition.
+ * TODO: Do not consume blueprint when auto-construct
+ * TODO: Prevent NBT pickup on controller middle-click
+ * TODO: Support shift-click
  */
-public class TEMachineController extends AbstractMBModifierTE {
+public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
 
-    // IO ports tracked during structure formation
-    private final List<IModularPort> inputPorts = new ArrayList<>();
-    private final List<IModularPort> outputPorts = new ArrayList<>();
+    // ========== Blueprint Inventory ==========
+    public static final int BLUEPRINT_SLOT = 0;
+    private static final int INVENTORY_SIZE = 1;
+
+    private final ItemStackHandlerBase inventory = new ItemStackHandlerBase(INVENTORY_SIZE) {
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+            if (slot == BLUEPRINT_SLOT) {
+                updateStructureFromBlueprint();
+            }
+            markDirty();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            if (slot == BLUEPRINT_SLOT) {
+                return stack != null && stack.getItem() instanceof ItemMachineBlueprint;
+            }
+            return false;
+        }
+    };
+
+    // Port management (delegated to PortManager)
+    private final PortManager portManager = new PortManager();
 
     // Recipe processing
     private final ProcessAgent processAgent = new ProcessAgent();
     // Recipe group - obtained from custom structure or GUI
     private String recipeGroup = "default";
-    // CustomStructure name (null = use default simple check)
+    // CustomStructure name (automatically derived from blueprint)
     private String customStructureName = null;
     // Look-ahead: next recipe cached during current processing
     private transient ModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
-    // Structure definition (will be loaded from JSON)
+    // Structure definition (dynamically loaded from CustomStructureRegistry)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
 
-    // Structure offsets per tier
-    private static final int[][] OFFSETS = { { 1, 1, 1 } };
+    // Controller facing (rotation state) - used by IAlignment
+    private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
 
     public TEMachineController() {
         super();
@@ -93,12 +127,22 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     @Override
     public int[][] getOffSet() {
-        return OFFSETS;
+        // Get offset from custom structure definition if available
+        if (customStructureName != null && !customStructureName.isEmpty()) {
+            StructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(customStructureName);
+            if (entry != null && entry.controllerOffset != null && entry.controllerOffset.length >= 3) {
+                return new int[][] { entry.controllerOffset };
+            }
+        }
+        // Default offset (no structure)
+        return new int[][] { { 0, 0, 0 } };
     }
 
     @Override
     public String getStructurePieceName() {
-        return "main";
+        // CustomStructureRegistry registers shapes using the structure name
+        return customStructureName != null ? customStructureName : "main";
     }
 
     @Override
@@ -110,8 +154,7 @@ public class TEMachineController extends AbstractMBModifierTE {
 
     @Override
     protected void clearStructureParts() {
-        inputPorts.clear();
-        outputPorts.clear();
+        portManager.clear();
     }
 
     @Override
@@ -124,11 +167,17 @@ public class TEMachineController extends AbstractMBModifierTE {
         IPortType.Direction direction = port.getPortDirection();
 
         return switch (direction) {
-            case INPUT -> addIfAbsent(inputPorts, port);
-            case OUTPUT -> addIfAbsent(outputPorts, port);
+            case INPUT -> {
+                portManager.addPort(port, true);
+                yield true;
+            }
+            case OUTPUT -> {
+                portManager.addPort(port, false);
+                yield true;
+            }
             case BOTH -> {
-                addIfAbsent(inputPorts, port);
-                addIfAbsent(outputPorts, port);
+                portManager.addPort(port, true);
+                portManager.addPort(port, false);
                 yield true;
             }
             default -> false;
@@ -136,14 +185,14 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     /**
-     * Add port to list if not already present.
+     * Called by StructureLib's ofTileAdder during structure check.
+     * Adds a port to the appropriate list based on direction.
+     *
+     * @param port    The port to add
+     * @param isInput True for input list, false for output list
      */
-    private boolean addIfAbsent(List<IModularPort> list, IModularPort port) {
-        if (!list.contains(port)) {
-            list.add(port);
-            return true;
-        }
-        return false;
+    public void addPortFromStructure(IModularPort port, boolean isInput) {
+        portManager.addPort(port, isInput);
     }
 
     // ========== Crafting Configuration ==========
@@ -153,31 +202,43 @@ public class TEMachineController extends AbstractMBModifierTE {
     // Field to store validation error message
     private String lastValidationError = "";
 
+    // Last process error reason for GUI display
+    private ErrorReason lastProcessErrorReason = ErrorReason.NONE;
+
     @Override
     protected boolean structureCheck(String piece, int ox, int oy, int oz) {
         // Clear previous error
         lastValidationError = "";
 
-        boolean valid = super.structureCheck(piece, ox, oy, oz);
+        // Clear structure parts before checking
+        clearStructureParts();
+
+        // Use controller's facing for rotation support
+        boolean valid = getStructureDefinition()
+            .check(this, piece, worldObj, getExtendedFacing(), xCoord, yCoord, zCoord, ox, oy, oz, false);
+
+        if (valid && !isFormed) {
+            isFormed = true;
+            onFormed();
+        } else if (!valid && isFormed) isFormed = false;
 
         if (valid && isFormed) {
             // Perform additional requirements check for CustomStructure
             if (!checkRequirements()) {
+                lastValidationError = "Structure requirements not met.";
                 isFormed = false;
                 clearStructureParts();
                 return false;
             }
         } else if (!valid) {
-            // If super check failed, we don't know exactly why (StructureLib doesn't tell
-            // us easily),
+            // If check failed, we don't know exactly why
             // but usually it means blocks don't match.
-            // We could try to give a hint if custom structure is set.
             if (customStructureName != null) {
                 lastValidationError = "Block mismatch or incomplete structure.";
             }
         }
 
-        return valid;
+        return isFormed;
     }
 
     /**
@@ -191,46 +252,7 @@ public class TEMachineController extends AbstractMBModifierTE {
 
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.requirements == null) return true;
-
-        StructureDefinitionData.Requirements req = entry.requirements;
-
-        if (!checkPortRequirement(req.itemInput, IPortType.Type.ITEM, true, "Item Input")) return false;
-        if (!checkPortRequirement(req.itemOutput, IPortType.Type.ITEM, false, "Item Output")) return false;
-        if (!checkPortRequirement(req.fluidInput, IPortType.Type.FLUID, true, "Fluid Input")) return false;
-        if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false, "Fluid Output")) return false;
-        if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true, "Energy Input")) return false;
-        if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false, "Energy Output")) return false;
-        // Add other port types as needed
-
-        return true;
-    }
-
-    private boolean checkPortRequirement(StructureDefinitionData.PortRequirement req, IPortType.Type type,
-        boolean isInput, String label) {
-        if (req == null) return true;
-
-        long count;
-        if (isInput) {
-            count = inputPorts.stream()
-                .filter(p -> p.getPortType() == type)
-                .count();
-        } else {
-            count = outputPorts.stream()
-                .filter(p -> p.getPortType() == type)
-                .count();
-        }
-
-        if (req.min != null && count < req.min) {
-            lastValidationError = "Missing " + label + " Port. Need at least " + req.min + ", found " + count;
-            return false;
-        }
-        if (req.max != null && count > req.max) {
-            lastValidationError = "Too many " + label + " Ports. Max " + req.max + ", found " + count;
-            return false;
-        }
-
-        return true;
+        return portManager.checkRequirements(entry);
     }
 
     @Override
@@ -259,33 +281,30 @@ public class TEMachineController extends AbstractMBModifierTE {
     }
 
     /**
-     * Override doUpdate to use structure check when STRUCTURE_DEFINITION is null.
+     * Main update loop.
+     * Blueprint is required for the controller to operate.
+     * Uses StructureLib for structure validation when blueprint is set.
      */
     @Override
     public void doUpdate() {
-        if (STRUCTURE_DEFINITION != null) {
-            super.doUpdate();
-            return;
-        }
-
-        // Check structure every 20 ticks
-        if (!shouldDoWorkThisTick(20)) {
-            // Still process recipe every tick if running
-            if (isFormed && processAgent.isRunning()) {
-                processRecipe();
-            }
-            return;
-        }
-
-        // Re-scan structure
-        boolean wasFormed = isFormed;
-        boolean nowFormed = trySimpleFormStructure();
-
-        if (wasFormed && !nowFormed) {
-            isFormed = false;
+        // Sync customStructureName from blueprint if blueprint is present in GUI
+        // Only update if blueprint has a structure name
+        String blueprintName = getStructureNameFromBlueprint();
+        if (blueprintName != null && !blueprintName.isEmpty() && !Objects.equals(blueprintName, customStructureName)) {
+            this.customStructureName = blueprintName;
+            updateRecipeGroupFromStructure();
+            this.isFormed = false;
             clearStructureParts();
             processAgent.abort();
+            markDirty();
         }
+
+        // Blueprint required - no operation without it
+        if (customStructureName == null || customStructureName.isEmpty()) return;
+
+        // Use StructureLib-based structure checking (calls super.doUpdate())
+        // Super handles IC2 registration, energy sync, and structure validation
+        super.doUpdate();
 
         // Process recipes when formed
         if (isFormed) {
@@ -301,7 +320,9 @@ public class TEMachineController extends AbstractMBModifierTE {
     private void processRecipe() {
         // Try to output if waiting
         if (processAgent.isWaitingForOutput()) {
-            if (processAgent.tryOutput(outputPorts)) {
+            lastProcessErrorReason = ErrorReason.WAITING_OUTPUT;
+            if (processAgent.tryOutput(getOutputPorts())) {
+                lastProcessErrorReason = ErrorReason.NONE;
                 // Output succeeded, try to start next recipe immediately
                 startNextRecipe();
             }
@@ -313,17 +334,24 @@ public class TEMachineController extends AbstractMBModifierTE {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
             ProcessAgent.TickResult result = processAgent.tick(energyPorts);
 
+            if (result == ProcessAgent.TickResult.NO_ENERGY) {
+                lastProcessErrorReason = ErrorReason.NO_ENERGY;
+            } else {
+                lastProcessErrorReason = ErrorReason.NONE;
+            }
+
             // Look-ahead: search for next recipe while processing (only once)
             if (nextRecipe == null) {
                 nextRecipe = RecipeLoader.getInstance()
-                    .findMatch(new String[] { recipeGroup }, inputPorts);
+                    .findMatch(new String[] { recipeGroup }, getInputPorts());
                 cachedRecipeVersion = RecipeLoader.getInstance()
                     .getRecipeVersion();
             }
 
             // If complete, immediately try to output and start next
             if (result == ProcessAgent.TickResult.READY_OUTPUT) {
-                if (processAgent.tryOutput(outputPorts)) {
+                if (processAgent.tryOutput(getOutputPorts())) {
+                    lastProcessErrorReason = ErrorReason.NONE;
                     startNextRecipe();
                 }
             }
@@ -345,107 +373,17 @@ public class TEMachineController extends AbstractMBModifierTE {
         ModularRecipe recipe = nextRecipe;
         if (recipe == null) {
             recipe = RecipeLoader.getInstance()
-                .findMatch(new String[] { recipeGroup }, inputPorts);
+                .findMatch(new String[] { recipeGroup }, getInputPorts());
         }
         nextRecipe = null; // Clear cache
 
         if (recipe != null) {
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            processAgent.start(recipe, inputPorts, energyPorts);
+            processAgent.start(recipe, getInputPorts(), energyPorts);
+            lastProcessErrorReason = ErrorReason.NONE;
+        } else {
+            lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
         }
-    }
-
-    /**
-     * Diagnose why no recipe is currently running.
-     * Returns an error message.
-     */
-    private String diagnoseRecipeIssue() {
-        // Check if there are any recipes for this group
-        List<ModularRecipe> recipes = RecipeLoader.getInstance()
-            .getRecipes(recipeGroup);
-        if (recipes.isEmpty()) {
-            return "No recipes registered for group: " + recipeGroup;
-        }
-
-        // Check if we have required port types
-        if (inputPorts.isEmpty()) {
-            return "No input ports connected";
-        }
-        if (outputPorts.isEmpty()) {
-            return "No output ports connected";
-        }
-
-        // Try to find what's missing for each recipe
-        for (ModularRecipe recipe : recipes) {
-            StringBuilder missingInputs = new StringBuilder();
-            StringBuilder missingOutputs = new StringBuilder();
-
-            // Check inputs
-            for (var input : recipe.getInputs()) {
-                if (!input.process(inputPorts, true)) {
-                    if (missingInputs.length() > 0) missingInputs.append(", ");
-                    missingInputs.append(
-                        input.getPortType()
-                            .name());
-                }
-            }
-
-            // If inputs are OK, check outputs
-            if (missingInputs.length() == 0) {
-                for (var output : recipe.getOutputs()) {
-                    if (!output.process(outputPorts, true)) {
-                        if (missingOutputs.length() > 0) missingOutputs.append(", ");
-                        missingOutputs.append(
-                            output.getPortType()
-                                .name());
-                    }
-                }
-
-                if (missingOutputs.length() > 0) {
-                    return "Output full or missing: " + missingOutputs;
-                }
-
-                // All inputs/outputs OK but recipe not starting - check energy (fallback)
-                return "Energy required";
-            }
-        }
-
-        // Generic message - inputs don't match any recipe
-        return "No matching recipe found";
-    }
-
-    /**
-     * Diagnose which output types are blocked when waiting for output.
-     * Uses cached output types from ProcessAgent.
-     */
-    private String diagnoseBlockedOutputs() {
-        // Try to use recipe first
-        ModularRecipe recipe = processAgent.getCurrentRecipe();
-        if (recipe != null) {
-            StringBuilder blocked = new StringBuilder();
-            for (var output : recipe.getOutputs()) {
-                if (!output.process(outputPorts, true)) {
-                    if (blocked.length() > 0) blocked.append(", ");
-                    blocked.append(
-                        output.getPortType()
-                            .name());
-                }
-            }
-            return blocked.length() > 0 ? blocked.toString() : "Unknown";
-        }
-
-        // Fallback: use cached output types
-        java.util.Set<IPortType.Type> cachedTypes = processAgent.getCachedOutputTypes();
-        if (cachedTypes.isEmpty()) {
-            return "Unknown (no cached outputs)";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (IPortType.Type type : cachedTypes) {
-            if (sb.length() > 0) sb.append(", ");
-            sb.append(type.name());
-        }
-        return sb.toString() + " (from cache)";
     }
 
     @Override
@@ -458,299 +396,207 @@ public class TEMachineController extends AbstractMBModifierTE {
         return 0; // Energy is managed by ProcessAgent
     }
 
-    public void onRightClick(EntityPlayer player) {
-        if (worldObj.isRemote) return;
+    // ========== ModularUI GUI ==========
+    // TODO: GUI enhance
 
-        setPlayer(player);
-        boolean wasFormed = isFormed;
-
-        // Always try to form if not formed
-        if (!isFormed) {
-            trySimpleFormStructure();
-        }
-
-        if (isFormed) {
-            String status = "Idle";
-            if (processAgent.isWaitingForOutput()) {
-                status = "Waiting for Output";
-                // Diagnose which outputs are blocked
-                String blockedOutputs = diagnoseBlockedOutputs();
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.YELLOW + "[Machine] Complete (100%) - Waiting for output space: "
-                            + blockedOutputs));
-            } else if (processAgent.isRunning()) {
-                int progress = processAgent.getProgress();
-                int max = processAgent.getMaxProgress();
-                String percent = String.format("%.1f", (float) progress / max * 100);
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.GREEN + "[Machine] Processing: "
-                            + progress
-                            + "/"
-                            + max
-                            + " ("
-                            + percent
-                            + "%)"));
-            } else {
-                // IDLE - try to diagnose why no recipe is running
-                String diagnosisMsg = diagnoseRecipeIssue();
-                if (diagnosisMsg != null) {
-                    player.addChatComponentMessage(
-                        new ChatComponentText(EnumChatFormatting.YELLOW + "[Machine] " + diagnosisMsg));
-                } else {
-                    player.addChatComponentMessage(
-                        new ChatComponentText(
-                            "[Machine] " + status
-                                + " | Inputs: "
-                                + inputPorts.size()
-                                + " | Outputs: "
-                                + outputPorts.size()));
-                }
-            }
-
-            // Always show port details when clicking controller
-            sendPortTypeCounts(player, "Input", inputPorts);
-            sendPortTypeCounts(player, "Output", outputPorts);
-        } else {
-            if (lastValidationError != null && !lastValidationError.isEmpty()) {
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.RED + "[Machine] Structure Invalid: " + lastValidationError));
-            } else {
-                player.addChatComponentMessage(
-                    new ChatComponentText(
-                        EnumChatFormatting.RED + "[Machine] Invalid structure. Need 3x3x3 blocks behind controller."));
-            }
-        }
+    @Override
+    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
+        float hitZ) {
+        openGui(player);
+        return true;
     }
 
-    private void sendPortTypeCounts(EntityPlayer player, String label, List<IModularPort> ports) {
-        StringBuilder sb = new StringBuilder("  " + label + " Ports: ");
-        for (IPortType.Type type : IPortType.Type.values()) {
-            if (type == IPortType.Type.NONE) continue;
-            long count = ports.stream()
-                .filter(p -> p.getPortType() == type)
-                .count();
-            if (count > 0) {
-                sb.append(type.name())
-                    .append("=")
-                    .append(count)
-                    .append(" ");
-            }
-        }
-        player.addChatComponentMessage(new ChatComponentText(sb.toString()));
-    }
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        ModularPanel panel = new ModularPanel("machine_controller_gui");
 
-    private void sendPortDetails(EntityPlayer player, List<IModularPort> inputs, List<IModularPort> outputs) {
-        for (IModularPort port : inputs) {
-            TileEntity te = (TileEntity) port;
-            player.addChatComponentMessage(
-                new ChatComponentText(
-                    "  [IN] " + port.getPortType()
-                        .name() + " @ (" + te.xCoord + ", " + te.yCoord + ", " + te.zCoord + ")"));
-        }
-        for (IModularPort port : outputs) {
-            TileEntity te = (TileEntity) port;
-            player.addChatComponentMessage(
-                new ChatComponentText(
-                    "  [OUT] " + port.getPortType()
-                        .name() + " @ (" + te.xCoord + ", " + te.yCoord + ", " + te.zCoord + ")"));
-        }
+        // Title
+        panel.child(new TileWidget(getLocalizedName()));
+
+        // Blueprint slot (right side)
+        panel.child(
+            new ItemSlot()
+                .slot(
+                    new ModularSlot(inventory, BLUEPRINT_SLOT)
+                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
+                .background(OKGuiTextures.EMPTY_SLOT)
+                .pos(151, 8));
+
+        // Status display
+        panel.child(
+            IKey.dynamic(this::getStatusText)
+                .asWidget()
+                .pos(8, 25));
+
+        // Error display (validation)
+        panel.child(
+            IKey.dynamic(this::getErrorText)
+                .asWidget()
+                .pos(8, 35));
+
+        IntSyncValue progressSyncer = new IntSyncValue(processAgent::getProgress, processAgent::setProgress);
+        IntSyncValue maxProgressSyncer = new IntSyncValue(processAgent::getMaxProgress, processAgent::setMaxProgress);
+        BooleanSyncValue runningSyncer = new BooleanSyncValue(processAgent::isRunning, processAgent::setRunning);
+        BooleanSyncValue waitingSyncer = new BooleanSyncValue(
+            processAgent::isWaitingForOutput,
+            processAgent::setWaitingForOutput);
+
+        syncManager.syncValue("processProgressSyncer", progressSyncer);
+        syncManager.syncValue("processMaxSyncer", maxProgressSyncer);
+        syncManager.syncValue("processRunningSyncer", runningSyncer);
+        syncManager.syncValue("processWaitingSyncer", waitingSyncer);
+
+        // Progress bar (Change is needed)
+        panel.child(
+            new ProgressWidget().value(new DoubleSyncValue(() -> (double) processAgent.getProgressPercent()))
+                .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
+                .pos(80, 45));
+
+        syncManager.bindPlayerInventory(data.getPlayer());
+        panel.bindPlayerInventory();
+
+        return panel;
     }
 
     /**
-     * Simple 3x3x3 structure check for MVP testing.
-     * Controller is on the front face (Z=0), structure extends behind (Z+1 to Z+3)
+     * Get status text for GUI display.
+     * Delegates to ProcessAgent for detailed status information.
      */
-    private boolean trySimpleFormStructure() {
-        clearStructureParts();
+    private String getStatusText() {
+        if (customStructureName == null || customStructureName.isEmpty()) {
+            return "Insert Blueprint";
+        }
+        if (!isFormed) {
+            return "Structure Not Formed";
+        }
+        if (processAgent.isRunning() || processAgent.isWaitingForOutput()) {
+            if (lastProcessErrorReason == ErrorReason.NO_ENERGY) {
+                return ErrorReason.NO_ENERGY.getMessage();
+            }
+            return processAgent.getStatusMessage(getOutputPorts());
+        }
 
-        int casingCount = 0;
-        // Check 3x3x3 area behind the controller
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = 1; dz <= 3; dz++) {
-                    int checkX = xCoord + dx;
-                    int checkY = yCoord + dy;
-                    int checkZ = zCoord + dz;
-                    Block block = worldObj.getBlock(checkX, checkY, checkZ);
+        ErrorReason reason = getIdleErrorReason();
+        if (reason == ErrorReason.NONE) {
+            return "Idle";
+        }
+        return reason.getMessage();
+    }
 
-                    if (block == MachineryBlocks.MACHINE_CASING.getBlock()) {
-                        casingCount++;
-                    } else if (block instanceof IModularBlock) {
-                        addToMachine(block, 0, checkX, checkY, checkZ);
-                        casingCount++;
-                    }
-                }
+    private ErrorReason getIdleErrorReason() {
+        if (getInputPorts().isEmpty()) return ErrorReason.NO_INPUT_PORTS;
+        if (getOutputPorts().isEmpty()) return ErrorReason.NO_OUTPUT_PORTS;
+        if (RecipeLoader.getInstance()
+            .getRecipes(recipeGroup)
+            .isEmpty()) {
+            return ErrorReason.NO_RECIPES;
+        }
+        if (lastProcessErrorReason == ErrorReason.NO_MATCHING_RECIPE) {
+            return ErrorReason.NO_MATCHING_RECIPE;
+        }
+        if (lastProcessErrorReason == ErrorReason.NO_ENERGY) {
+            return ErrorReason.NO_ENERGY;
+        }
+        return ErrorReason.IDLE;
+    }
+
+    /**
+     * Get validation error text for GUI display.
+     */
+    private String getErrorText() {
+        if (customStructureName == null || customStructureName.isEmpty()) return "";
+        if (isFormed) return "";
+        if (lastValidationError == null || lastValidationError.isEmpty()) return "";
+        return lastValidationError;
+    }
+
+    /**
+     * Get progress percentage for GUI progress bar.
+     */
+    private float getProgressPercent() {
+        return processAgent.getProgressPercent();
+    }
+
+    // ========== Blueprint Inventory Methods ==========
+
+    /**
+     * Get the blueprint inventory handler.
+     */
+    public ItemStackHandlerBase getInventory() {
+        return inventory;
+    }
+
+    /**
+     * Get the blueprint ItemStack from the inventory slot.
+     */
+    @Nullable
+    public ItemStack getBlueprintStack() {
+        return inventory.getStackInSlot(BLUEPRINT_SLOT);
+    }
+
+    /**
+     * Get structure name from the blueprint in the slot.
+     */
+    @Nullable
+    private String getStructureNameFromBlueprint() {
+        ItemStack blueprint = getBlueprintStack();
+        if (blueprint == null || blueprint.stackSize == 0) return null;
+        if (!(blueprint.getItem() instanceof ItemMachineBlueprint)) return null;
+        return ItemMachineBlueprint.getStructureName(blueprint);
+    }
+
+    /**
+     * Update custom structure when blueprint changes.
+     * Called automatically when inventory contents change.
+     * Only processes on server side to ensure proper sync.
+     */
+    private void updateStructureFromBlueprint() {
+        // Skip if on client side
+        if (worldObj != null && worldObj.isRemote) return;
+
+        String newName = getStructureNameFromBlueprint();
+        if (!Objects.equals(newName, customStructureName)) {
+            this.customStructureName = newName;
+            updateRecipeGroupFromStructure();
+            this.isFormed = false;
+            clearStructureParts();
+            processAgent.abort();
+            lastProcessErrorReason = ErrorReason.NONE;
+            markDirty();
+            if (worldObj != null) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
-
-        if (casingCount >= 27) {
-            isFormed = true;
-            onFormed();
-            return true;
-        }
-
-        return false;
     }
 
     // ========== Getters ==========
 
     public List<IModularPort> getInputPorts() {
-        return inputPorts;
+        return portManager.getInputPorts();
     }
 
     public List<IModularPort> getOutputPorts() {
-        return outputPorts;
+        return portManager.getOutputPorts();
     }
 
     public List<IModularPort> getInputPorts(IPortType.Type type) {
-        return inputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .collect(Collectors.toList());
+        return portManager.getInputPorts(type);
     }
 
     public List<IModularPort> getOutputPorts(IPortType.Type type) {
-        return outputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .collect(Collectors.toList());
+        return portManager.getOutputPorts(type);
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends IModularPort> List<T> getTypedInputPorts(IPortType.Type type, Class<T> portClass) {
-        return inputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .filter(portClass::isInstance)
-            .map(p -> (T) p)
-            .collect(Collectors.toList());
+        return portManager.getTypedInputPorts(type, portClass);
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends IModularPort> List<T> getTypedOutputPorts(IPortType.Type type, Class<T> portClass) {
-        return outputPorts.stream()
-            .filter(p -> p.getPortType() == type)
-            .filter(portClass::isInstance)
-            .map(p -> (T) p)
-            .collect(Collectors.toList());
+        return portManager.getTypedOutputPorts(type, portClass);
     }
 
     public <T extends IModularPort> List<T> validPorts(List<T> ports) {
-        return ports.stream()
-            .filter(p -> p != null && !((net.minecraft.tileentity.TileEntity) p).isInvalid())
-            .collect(Collectors.toList());
-    }
-
-    // ========== Item IO Helpers ==========
-
-    public List<ItemStack> getStoredInputItems() {
-        List<ItemStack> items = new ArrayList<>();
-        for (AbstractItemIOPortTE port : getTypedInputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
-            for (int i = 0; i < port.getSizeInventory(); i++) {
-                ItemStack stack = port.getStackInSlot(i);
-                if (stack != null) {
-                    items.add(stack.copy());
-                }
-            }
-        }
-        return items;
-    }
-
-    /**
-     * Insert items into output item ports.
-     * 
-     * @return remainder that couldn't be inserted
-     */
-    public List<ItemStack> insertOutputItems(List<ItemStack> items) {
-        List<ItemStack> remainder = new ArrayList<>();
-        for (ItemStack stack : items) {
-            ItemStack remaining = stack.copy();
-            for (AbstractItemIOPortTE port : getTypedOutputPorts(IPortType.Type.ITEM, AbstractItemIOPortTE.class)) {
-                remaining = insertItemToPort(port, remaining);
-                if (remaining == null || remaining.stackSize == 0) {
-                    break;
-                }
-            }
-            if (remaining != null && remaining.stackSize > 0) {
-                remainder.add(remaining);
-            }
-        }
-        return remainder;
-    }
-
-    private ItemStack insertItemToPort(AbstractItemIOPortTE port, ItemStack stack) {
-        if (stack == null) return null;
-        ItemStack remaining = stack.copy();
-        for (int i = 0; i < port.getSizeInventory() && remaining.stackSize > 0; i++) {
-            ItemStack existing = port.getStackInSlot(i);
-            if (existing == null) {
-                port.setInventorySlotContents(i, remaining.copy());
-                return null;
-            } else if (existing.isItemEqual(remaining) && ItemStack.areItemStackTagsEqual(existing, remaining)) {
-                int space = existing.getMaxStackSize() - existing.stackSize;
-                int transfer = Math.min(space, remaining.stackSize);
-                existing.stackSize += transfer;
-                remaining.stackSize -= transfer;
-                port.setInventorySlotContents(i, existing);
-            }
-        }
-        return remaining.stackSize > 0 ? remaining : null;
-    }
-
-    // ========== Fluid IO Helpers ==========
-
-    public List<FluidStack> getStoredInputFluids() {
-        List<FluidStack> fluids = new ArrayList<>();
-        for (AbstractFluidPortTE port : getTypedInputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
-            FluidStack stored = port.getStoredFluid();
-            if (stored != null && stored.amount > 0) {
-                fluids.add(stored.copy());
-            }
-        }
-        return fluids;
-    }
-
-    /**
-     * Fill fluid into output fluid ports.
-     * 
-     * @return amount that was actually filled
-     */
-    public int fillOutputFluid(FluidStack fluid) {
-        if (fluid == null || fluid.amount <= 0) return 0;
-        int remaining = fluid.amount;
-        for (AbstractFluidPortTE port : getTypedOutputPorts(IPortType.Type.FLUID, AbstractFluidPortTE.class)) {
-            FluidStack toFill = fluid.copy();
-            toFill.amount = remaining;
-            // Use internal fill to bypass side IO checks
-            int filled = port.internalFill(toFill, true);
-            remaining -= filled;
-            if (remaining <= 0) break;
-        }
-        return fluid.amount - remaining;
-    }
-
-    // ========== Energy IO Helpers ==========
-
-    public int getStoredInputEnergy() {
-        int total = 0;
-        for (AbstractEnergyIOPortTE port : getTypedInputPorts(IPortType.Type.ENERGY, AbstractEnergyIOPortTE.class)) {
-            total += port.getEnergyStored();
-        }
-        return total;
-    }
-
-    public int extractInputEnergy(int amount, boolean simulate) {
-        int remaining = amount;
-        for (AbstractEnergyIOPortTE port : getTypedInputPorts(IPortType.Type.ENERGY, AbstractEnergyIOPortTE.class)) {
-            int available = port.getEnergyStored();
-            int toExtract = Math.min(available, remaining);
-            if (!simulate && toExtract > 0) {
-                port.extractEnergy(toExtract);
-            }
-            remaining -= toExtract;
-            if (remaining <= 0) break;
-        }
-        return amount - remaining;
+        return portManager.validPorts(ports);
     }
 
     // ========== NBT Persistence ==========
@@ -762,9 +608,14 @@ public class TEMachineController extends AbstractMBModifierTE {
         if (customStructureName != null) {
             nbt.setString("customStructureName", customStructureName);
         }
+        // Save blueprint inventory
+        nbt.setTag("inventory", inventory.serializeNBT());
+        // Save process agent
         NBTTagCompound agentNbt = new NBTTagCompound();
         processAgent.writeToNBT(agentNbt);
         nbt.setTag("processAgent", agentNbt);
+        // Save ExtendedFacing
+        nbt.setByte("extendedFacing", (byte) extendedFacing.ordinal());
     }
 
     @Override
@@ -772,13 +623,22 @@ public class TEMachineController extends AbstractMBModifierTE {
         super.readCommon(nbt);
         recipeGroup = nbt.getString("recipeGroup");
         if (recipeGroup.isEmpty()) recipeGroup = "default";
-        if (nbt.hasKey("customStructureName")) {
-            customStructureName = nbt.getString("customStructureName");
-            // Update recipeGroup from custom structure if available
-            updateRecipeGroupFromStructure();
+        // Load blueprint inventory
+        if (nbt.hasKey("inventory")) {
+            inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
         }
+        // Update structure from loaded blueprint
+        updateStructureFromBlueprint();
+        // Load process agent
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
+        }
+        // Load ExtendedFacing
+        if (nbt.hasKey("extendedFacing")) {
+            int ordinal = nbt.getByte("extendedFacing") & 0xFF;
+            if (ordinal >= 0 && ordinal < ExtendedFacing.VALUES.length) {
+                extendedFacing = ExtendedFacing.VALUES[ordinal];
+            }
         }
     }
 
@@ -794,6 +654,7 @@ public class TEMachineController extends AbstractMBModifierTE {
         // Reset structure state
         this.isFormed = false;
         clearStructureParts();
+        lastProcessErrorReason = ErrorReason.NONE;
 
         // Notify client
         markDirty();
@@ -841,5 +702,36 @@ public class TEMachineController extends AbstractMBModifierTE {
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
         return entry != null ? entry.properties : null;
+    }
+
+    // ========== IAlignment Implementation ==========
+    // TODO: In the future, load alignment limits from structure JSON config
+    // to allow per-structure rotation restrictions.
+
+    @Override
+    public ExtendedFacing getExtendedFacing() {
+        return extendedFacing;
+    }
+
+    @Override
+    public void setExtendedFacing(ExtendedFacing facing) {
+        if (facing == null) facing = ExtendedFacing.DEFAULT;
+        this.extendedFacing = facing;
+
+        // Reset structure state when facing changes
+        this.isFormed = false;
+        clearStructureParts();
+
+        markDirty();
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public IAlignmentLimits getAlignmentLimits() {
+        // Allow all directions
+        // TODO: Load from structure JSON config in the future
+        return IAlignmentLimits.UNLIMITED;
     }
 }

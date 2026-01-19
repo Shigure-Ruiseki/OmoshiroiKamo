@@ -14,7 +14,7 @@ public class ThermalChickens extends BaseChickenHandler {
     public static ChickensRegistryItem cinnabarChicken;
     public static ChickensRegistryItem enderiumChicken;
     public static ChickensRegistryItem lumiumChicken;
-    public static ChickensRegistryItem mithrilChicken; // Missing texture
+    public static ChickensRegistryItem mithrilChicken;
     public static ChickensRegistryItem signalumChicken;
 
     public ThermalChickens() {

@@ -16,8 +16,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPortME;
 
 /**
- * ME Essentia Input Port block - pulls Essentia from Thaumic Energistics ME
- * network.
+ * pulls Essentia from Thaumic Energistics ME network.
+ * TODO: Add texture
  */
 public class BlockEssentiaInputPortME extends AbstractPortBlock<TEEssentiaInputPortME> {
 

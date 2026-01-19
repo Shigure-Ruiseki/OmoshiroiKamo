@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -130,7 +132,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
     }
 
     private int countDistinctInputTypes() {
-        java.util.Set<IPortType.Type> types = new java.util.HashSet<>();
+        Set<IPortType.Type> types = new HashSet<>();
         for (IRecipeInput input : inputs) {
             types.add(input.getPortType());
         }
@@ -189,9 +191,11 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
                 throw new IllegalStateException("Recipe recipeGroup is required");
             }
             if (inputs.isEmpty()) {
+                // TODO: Nullable
                 throw new IllegalStateException("Recipe must have at least one input");
             }
             if (outputs.isEmpty()) {
+                // TODO: Nullable
                 throw new IllegalStateException("Recipe must have at least one output");
             }
             return new ModularRecipe(this);

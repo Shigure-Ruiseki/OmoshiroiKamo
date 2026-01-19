@@ -4,9 +4,14 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -21,18 +26,16 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  *
  * TODO List:
  * - Implement GUI for machine management and status display
- * - Add structure detection and validation logic
- * - Load and parse JSON machine definitions
- * - Recipe lookup and crafting progress management
  * - State management (IDLE, WORKING, PAUSED, ERROR)
  * - Redstone control modes (Ignore, Low, High, Pulse)
  * - Working particles and sound effects
  * - Completion effects (particles, sounds)
  * - Block state visual changes based on status
- * - NEI/JEI recipe integration
+ * - NEI recipe integration
  * - Implement BlockColor tinting for machine-wide color customization
- * - Auto-build structure from blueprint item
- * - Structure preview rendering (hologram-style)
+ * - Drop blueprint when broken
+ * - Rotate controller texture
+ * - Make controller face shows only front side
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> {
 
@@ -57,18 +60,33 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
-        float hitY, float hitZ) {
-        if (world.isRemote) {
-            return true;
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
+        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
+        if (te == null) return;
+
+        // Preserve TileEntity data but avoid block metadata-based facing.
+        te.readFromItemStack(stack);
+        world.markBlockForUpdate(x, y, z);
+
+        ForgeDirection direction;
+        float pitch = placer.rotationPitch;
+        if (pitch > 60.0F) {
+            direction = ForgeDirection.UP;
+        } else if (pitch < -60.0F) {
+            direction = ForgeDirection.DOWN;
+        } else {
+            // Calculate facing from player's yaw (block front faces player)
+            int facing = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            direction = switch (facing) {
+                case 0 -> ForgeDirection.NORTH;
+                case 1 -> ForgeDirection.EAST;
+                case 2 -> ForgeDirection.SOUTH;
+                case 3 -> ForgeDirection.WEST;
+                default -> ForgeDirection.NORTH;
+            };
         }
 
-        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
-        if (te != null) {
-            te.onRightClick(player);
-            return true;
-        }
-        return false;
+        te.setExtendedFacing(ExtendedFacing.of(direction));
     }
 
     @Override
@@ -79,5 +97,18 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
         // TODO: Show crafting progress percentage
         // TODO: Show energy consumption rate
         // TODO: Display error message if in error state
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        TEMachineController controller = (TEMachineController) world.getTileEntity(x, y, z);
+        if (controller != null) {
+            ItemStack blueprint = controller.getBlueprintStack();
+            if (blueprint != null && blueprint.stackSize > 0) {
+                dropStack(world, x, y, z, blueprint.copy());
+            }
+        }
+
+        super.breakBlock(world, x, y, z, block, meta);
     }
 }

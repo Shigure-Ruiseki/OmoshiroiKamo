@@ -25,6 +25,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.block.solarArray.SolarArra
  * Generates and updates default structure JSON files.
  */
 public class DefaultStructureGenerator {
+    // TODO: Change to modular format
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
         .create();

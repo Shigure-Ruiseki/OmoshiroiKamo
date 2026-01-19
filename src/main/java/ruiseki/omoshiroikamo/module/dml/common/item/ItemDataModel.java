@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemDataModel extends ItemOK {
+    // TODO: add mod integration by default
 
     private final Map<Integer, IIcon> icons = new HashMap<>();
 

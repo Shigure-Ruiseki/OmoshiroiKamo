@@ -16,6 +16,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
  * Item Input Port TileEntity.
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
+ * TODO: Add auto-sort
  */
 public abstract class TEItemInputPort extends AbstractItemIOPortTE {
 
