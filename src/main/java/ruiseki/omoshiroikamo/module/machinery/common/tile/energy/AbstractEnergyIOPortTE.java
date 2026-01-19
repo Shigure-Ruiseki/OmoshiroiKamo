@@ -42,6 +42,8 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;
 
 /**
  * Extends AbstractEnergyTE to leverage existing energy management system.
+ * TODO: add RF-only, EU-only, or both ports
+ * TODO: add ???-energy only ports and universal port if needed
  */
 public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IModularPort, IGuiHolder<PosGuiData> {
 

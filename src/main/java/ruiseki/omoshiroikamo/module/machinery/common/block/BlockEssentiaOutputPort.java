@@ -16,7 +16,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output.TEEssentiaOutputPort;
 
 /**
- * Essentia Output Port block - provides Essentia to Infusion Altar and Tubes.
+ * provides Essentia to Infusion Altar and Tubes.
+ * TODO: Add texture
  */
 public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputPort> {
 

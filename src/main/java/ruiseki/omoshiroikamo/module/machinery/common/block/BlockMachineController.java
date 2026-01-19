@@ -31,9 +31,11 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * - Working particles and sound effects
  * - Completion effects (particles, sounds)
  * - Block state visual changes based on status
- * - NEI/JEI recipe integration
+ * - NEI recipe integration
  * - Implement BlockColor tinting for machine-wide color customization
  * - Drop blueprint when broken
+ * - Rotate controller texture
+ * - Make controller face shows only front side
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> {
 

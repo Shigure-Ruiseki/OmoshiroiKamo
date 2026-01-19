@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Data classes representing the JSON structure definitions.
+ * TODO: Custom model renderer if we can
  */
 public class StructureDefinitionData {
 
@@ -36,7 +37,8 @@ public class StructureDefinitionData {
         /** Block mappings. */
         public Map<String, Object> mappings;
 
-        /** Port requirements (CustomStructure only). */
+        // Port requirements (CustomStructure only).
+        // TODO: Custom IO Block (tanks and storages from other mods)
         public Requirements requirements;
 
         /** Machine properties (CustomStructure only). */

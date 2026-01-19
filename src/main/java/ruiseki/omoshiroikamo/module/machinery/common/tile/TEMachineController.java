@@ -55,6 +55,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
  * TODO: Do not consume blueprint when auto-construct
+ * TODO: Prevent NBT pickup on controller middle-click
+ * TODO: Support shift-click
  */
 public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
 

@@ -30,6 +30,9 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Item Input Port TileEntity.
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
+ * TODO: Add auto-sort
+ * TODO: Support shift-click
+ * TODO: Fix item count sync? issue
  */
 public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData> {
 

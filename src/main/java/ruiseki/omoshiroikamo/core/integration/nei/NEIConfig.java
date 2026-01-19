@@ -64,6 +64,7 @@ public class NEIConfig implements IConfigureNEI {
     public void loadConfig() {
         Logger.info("Loading NeiConfig: {}", getName());
         if (BackportConfigs.useMultiBlock) {
+            // TODO: Change Void Miner structure preview to Tier-based because buttons do not work now
             // Register Ore Extractors
             for (int i = 0; i < 6; i++) {
                 QuantumOreExtractorRecipeHandler ore = new QuantumOreExtractorRecipeHandler(i);
@@ -107,6 +108,7 @@ public class NEIConfig implements IConfigureNEI {
         // Recipe (R)
         // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
         // TODO: Add Recipe of Modular Machines
+        // TODO: Enable 'P' button in structure preview (Name is currently null)
         if (BackportConfigs.useMachinery) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
