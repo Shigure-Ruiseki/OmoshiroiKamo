@@ -94,13 +94,14 @@ gui.crafting_filter.craftable=Craftable
 gui.crafting_filter.both=Both
 
 #Cable
+gui.cable.part_settings=Part Settings
 
 gui.cable.index_channel=Chan: 
 
-gui.cable.redstoneReader.lowRedstone=Redstone Low
-gui.cable.redstoneReader.hasRedstone=Redstone
-gui.cable.redstoneReader.highRedstone=Redstone High
-gui.cable.redstoneReader.redstoneValue=Redstone
+gui.cable.redstoneReader.lowRedstone=Redstone Low:
+gui.cable.redstoneReader.hasRedstone=Redstone:
+gui.cable.redstoneReader.highRedstone=Redstone High:
+gui.cable.redstoneReader.redstoneValue=Redstone:
 
 gui.cable.side=Target Side
 gui.cable.tick=Ticks / Operation
