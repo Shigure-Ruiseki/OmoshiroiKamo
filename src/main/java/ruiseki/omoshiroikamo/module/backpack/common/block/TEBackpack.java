@@ -111,24 +111,25 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack contents) {
-        if (contents == null) {
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        if (stack == null) {
             handler.setStackInSlot(slot, null);
             return;
         }
 
-        if (!(handler.canVoid(contents, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.AUTOMATION)
-            || handler.canVoid(contents, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.AUTOMATION))) {
+        if (handler.canVoid(stack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.AUTOMATION)
+            || handler.canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.AUTOMATION)) {
 
-            handler.setStackInSlot(slot, contents);
-            ItemStack stack = handler.getStackInSlot(slot);
-            if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-                stack.stackSize = getInventoryStackLimit();
-                handler.setStackInSlot(slot, stack);
-            }
-        } else {
-            handler.insertItem(contents.copy(), false);
+            handler.setStackInSlot(slot, null);
+            return;
         }
+
+        ItemStack copy = stack.copy();
+        if (copy.stackSize > getInventoryStackLimit()) {
+            copy.stackSize = getInventoryStackLimit();
+        }
+
+        handler.setStackInSlot(slot, copy);
     }
 
     @Override
