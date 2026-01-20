@@ -1,7 +1,9 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -10,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -99,6 +102,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
+    // Tint color for structure blocks (loaded from structure properties)
+    private Integer structureTintColor = null;
+
+    // Structure block positions tracking (for tint cache management)
+    private final Set<ChunkCoordinates> structureBlockPositions = new HashSet<>();
+
     // Structure definition (dynamically loaded from CustomStructureRegistry)
     private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
 
@@ -154,11 +163,25 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     protected void clearStructureParts() {
+        // Clear cache
+        StructureTintCache.clearAll(worldObj, structureBlockPositions);
+
+        // Trigger block updates (to reset colors)
+        for (ChunkCoordinates pos : structureBlockPositions) {
+            if (worldObj != null) {
+                worldObj.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
+            }
+        }
+
+        structureBlockPositions.clear();
         portManager.clear();
     }
 
     @Override
     protected boolean addToMachine(Block block, int meta, int x, int y, int z) {
+        // Track all structure block positions
+        structureBlockPositions.add(new ChunkCoordinates(x, y, z));
+
         TileEntity te = worldObj.getTileEntity(x, y, z);
         if (te == null || !(te instanceof IModularPort port)) {
             return false;
@@ -220,7 +243,11 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (valid && !isFormed) {
             isFormed = true;
             onFormed();
-        } else if (!valid && isFormed) isFormed = false;
+        } else if (!valid && isFormed) {
+            isFormed = false;
+            structureTintColor = null;
+            updateStructureBlocksRendering();
+        }
 
         if (valid && isFormed) {
             // Perform additional requirements check for CustomStructure
@@ -277,7 +304,23 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public void onFormed() {
-        // Called when structure is successfully formed
+        // Load structure tint color
+        structureTintColor = getStructureTintColor();
+
+        // Cache tint color for all structure blocks
+        if (structureTintColor != null) {
+            for (ChunkCoordinates pos : structureBlockPositions) {
+                StructureTintCache.put(worldObj, pos.posX, pos.posY, pos.posZ, structureTintColor);
+            }
+        }
+
+        // Add controller itself to cache
+        if (structureTintColor != null) {
+            StructureTintCache.put(worldObj, xCoord, yCoord, zCoord, structureTintColor);
+        }
+
+        // Trigger block updates
+        updateStructureBlocksRendering();
     }
 
     /**
@@ -702,6 +745,60 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
         return entry != null ? entry.properties : null;
+    }
+
+    // ========== Structure Tinting ==========
+
+    /**
+     * Get cached structure tint color.
+     * Used by BlockMachineController's colorMultiplier.
+     * 
+     * @return ARGB color value, or null if no color defined
+     */
+    public Integer getCachedStructureTintColor() {
+        return structureTintColor;
+    }
+
+    /**
+     * Get the tint color from this controller's structure properties.
+     * Returns null if not formed or no color is defined.
+     * 
+     * @return ARGB color value, or null if no color defined
+     */
+    public Integer getStructureTintColor() {
+        if (!isFormed || customStructureName == null) {
+            return null;
+        }
+
+        Properties props = getCustomProperties();
+
+        if (props != null && props.tintColor != null) {
+            try {
+                String hex = props.tintColor.replace("#", "");
+                int color = (int) Long.parseLong(hex, 16) | 0xFF000000;
+                return color;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Update rendering for all blocks in the structure.
+     * Called when structure is formed or unformed to apply/remove tint.
+     */
+    private void updateStructureBlocksRendering() {
+        if (worldObj == null || worldObj.isRemote) return;
+
+        // Update all structure blocks
+        for (ChunkCoordinates pos : structureBlockPositions) {
+            worldObj.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
+        }
+
+        // Update controller itself
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     // ========== IAlignment Implementation ==========

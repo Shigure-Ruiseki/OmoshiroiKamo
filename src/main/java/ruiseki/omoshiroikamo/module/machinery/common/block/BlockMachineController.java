@@ -7,14 +7,19 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -37,7 +42,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * - Rotate controller texture
  * - Make controller face shows only front side
  */
-public class BlockMachineController extends AbstractBlock<TEMachineController> {
+public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
     protected BlockMachineController() {
         super("modularMachineController", TEMachineController.class);
@@ -47,6 +52,39 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> {
 
     public static BlockMachineController create() {
         return new BlockMachineController();
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
+        BlockColor.registerBlockColors(new IModularBlockTint() {
+
+            @Override
+            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
+                if (tintIndex == 0) {
+                    // Check for structure color from TileEntity first
+                    TileEntity te = world.getTileEntity(x, y, z);
+                    if (te instanceof TEMachineController controller) {
+                        Integer structureColor = controller.getCachedStructureTintColor();
+                        if (structureColor != null) {
+                            return structureColor;
+                        }
+                    }
+                    // Fall back to config color
+                    return MachineryConfig.getDefaultTintColorInt();
+                }
+                return 0xFFFFFFFF; // White for non-tinted layers
+            }
+
+            @Override
+            public int colorMultiplier(ItemStack stack, int tintIndex) {
+                if (tintIndex == 0) {
+                    return MachineryConfig.getDefaultTintColorInt();
+                }
+                return 0xFFFFFFFF; // White for non-tinted layers
+            }
+        }, this);
     }
 
     @Override

@@ -7,8 +7,11 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 @Config.Comment("Modular Machinery settings")
 @Config.LangKey(LibResources.CONFIG + "modularConfig")
-@Config(modid = LibMisc.MOD_ID, category = "tinting", configSubDirectory = LibMisc.MOD_ID
-        + "/modular", filename = "modular")
+@Config(
+    modid = LibMisc.MOD_ID,
+    category = "tinting",
+    configSubDirectory = LibMisc.MOD_ID + "/modular",
+    filename = "modular")
 public class MachineryConfig {
 
     @Config.Comment("Default tint color for machine blocks (hex color code)")
