@@ -8,7 +8,9 @@ public interface IRedstonePart extends ILogicPart {
 
     int getRedstoneInput();
 
-    int getRedstone();
+    int getRedstoneValue();
+
+    boolean hasRedstone();
 
     boolean isLowRedstone();
 

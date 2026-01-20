@@ -22,8 +22,10 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Row;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
@@ -41,9 +43,12 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private int redstone = 0;
-    private boolean lowRedstone = true;
-    private boolean hightRedstone = false;
+    private int redstoneValue = 0;
+    private boolean hasRedstone = false;
+    private boolean highRedstone = false;
+    private boolean lowRedstone = false;
+
+    private static final int HIGH_THRESHOLD = 8;
 
     @Override
     public String getId() {
@@ -62,12 +67,11 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
     @Override
     public void doUpdate() {
+        if (!shouldDoTickInterval()) return;
+
         int newValue = getRedstoneInput();
-        if (newValue != redstone) {
-            redstone = newValue;
-            if (cable != null) {
-                cable.dirty();
-            }
+        if (newValue != this.redstoneValue) {
+            setRedstone(newValue);
         }
     }
 
@@ -94,15 +98,48 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
-        panel.child(
-            IKey.dynamic(() -> String.valueOf(lowRedstone))
-                .asWidget());
-        panel.child(
-            IKey.dynamic(() -> String.valueOf(hightRedstone))
-                .asWidget());
-        panel.child(
-            IKey.dynamic(() -> String.valueOf(redstone))
-                .asWidget());
+        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstoneValue));
+
+        Column col = new Column();
+
+        Row lowRedRow = new Row();
+        lowRedRow.child(
+            IKey.lang("gui.redstoneReader.lowRedstone")
+                .asWidget())
+            .child(
+                IKey.dynamic(() -> String.valueOf(lowRedstone))
+                    .asWidget()).height(18);
+
+        Row highRedRow = new Row();
+        highRedRow.child(
+            IKey.lang("gui.redstoneReader.highRedstone")
+                .asWidget())
+            .child(
+                IKey.dynamic(() -> String.valueOf(highRedstone))
+                    .asWidget()).height(18);
+
+        Row hasRedRow = new Row();
+        hasRedRow.child(
+            IKey.lang("gui.redstoneReader.lowRedstone")
+                .asWidget())
+            .child(
+                IKey.dynamic(() -> String.valueOf(hasRedstone))
+                    .asWidget()).height(18);
+
+        Row valueRedRow = new Row();
+        valueRedRow.child(
+            IKey.lang("gui.redstoneReader.redstoneValue")
+                .asWidget())
+            .child(
+                IKey.dynamic(() -> String.valueOf(redstoneValue))
+                    .asWidget()).height(18);
+
+        col.padding(7)
+            .child(highRedRow)
+            .child(hasRedRow)
+            .child(lowRedRow)
+            .child(valueRedRow);
+        panel.child(col);
 
         return panel;
     }
@@ -136,8 +173,18 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     }
 
     @Override
-    public int getRedstone() {
-        return redstone;
+    public int getRedstoneValue() {
+        return redstoneValue;
+    }
+
+    @Override
+    public boolean hasRedstone() {
+        return hasRedstone;
+    }
+
+    @Override
+    public boolean isHighRedstone() {
+        return highRedstone;
     }
 
     @Override
@@ -145,16 +192,12 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         return lowRedstone;
     }
 
-    @Override
-    public boolean isHighRedstone() {
-        return hightRedstone;
-    }
-
-    public void setRedstone(int redstone) {
-        this.redstone = redstone;
-        this.lowRedstone = redstone == 0;
-        this.hightRedstone = redstone > 0;
-        getCable().dirty();
+    public void setRedstone(int value) {
+        this.redstoneValue = value;
+        this.hasRedstone = value > 0;
+        this.highRedstone = value >= HIGH_THRESHOLD;
+        this.lowRedstone = value > 0 && value < HIGH_THRESHOLD;
+        cable.dirty();
     }
 
     @Override

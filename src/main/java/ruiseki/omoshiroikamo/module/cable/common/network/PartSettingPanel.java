@@ -5,7 +5,6 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
-import com.cleanroommc.modularui.value.sync.PanelSyncHandler;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.layout.Column;
@@ -82,17 +81,16 @@ public final class PartSettingPanel {
     }
 
     public static ButtonWidget<?> addSettingButton(IPanelHandler settingPanel) {
-        return
-            new ButtonWidget<>().size(18)
-                .pos(-20, 0)
-                .tooltip(tooltip -> { tooltip.addLine(IKey.lang("gui.cable.part_settings")); })
-                .onMousePressed(btn -> {
-                    if (settingPanel.isPanelOpen()) {
-                        settingPanel.closePanel();
-                        return true;
-                    }
-                    settingPanel.openPanel();
+        return new ButtonWidget<>().size(18)
+            .pos(-20, 0)
+            .tooltip(tooltip -> { tooltip.addLine(IKey.lang("gui.cable.part_settings")); })
+            .onMousePressed(btn -> {
+                if (settingPanel.isPanelOpen()) {
+                    settingPanel.closePanel();
                     return true;
-                });
+                }
+                settingPanel.openPanel();
+                return true;
+            });
     }
 }
