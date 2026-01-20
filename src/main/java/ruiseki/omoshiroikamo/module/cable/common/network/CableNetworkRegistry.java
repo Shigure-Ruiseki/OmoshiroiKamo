@@ -10,6 +10,8 @@ import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicNetwork;
 
 public final class CableNetworkRegistry {
 
@@ -23,6 +25,7 @@ public final class CableNetworkRegistry {
         CableNetworkRegistry.register(IEnergyNet.class, EnergyNetwork::new);
         CableNetworkRegistry.register(IItemNet.class, ItemNetwork::new);
         CableNetworkRegistry.register(ICraftingNet.class, CraftingNetwork::new);
+        CableNetworkRegistry.register(ILogicNet.class, LogicNetwork::new);
     }
 
     @SuppressWarnings("unchecked")

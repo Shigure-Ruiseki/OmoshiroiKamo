@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.IRedstonePart;
 
 public class BlockCable extends BlockOK {
 
@@ -166,6 +167,34 @@ public class BlockCable extends BlockOK {
         }
 
         return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    }
+
+    @Override
+    public boolean canProvidePower() {
+        return true;
+    }
+
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        if (side < 0) return false;
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (!(te instanceof TECable cable)) return false;
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        return cable.getPart(dir) instanceof IRedstonePart;
+    }
+
+    @Override
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TECable cable) {
+            return cable.getRedstonePower(ForgeDirection.getOrientation(side));
+        }
+        return 0;
+    }
+
+    @Override
+    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+        return isProvidingWeakPower(world, x, y, z, side);
     }
 
     @Override

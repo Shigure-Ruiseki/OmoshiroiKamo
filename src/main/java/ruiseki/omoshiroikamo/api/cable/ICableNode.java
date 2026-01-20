@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 
@@ -17,6 +18,8 @@ public interface ICableNode {
     List<Class<? extends ICableNode>> getBaseNodeTypes();
 
     ForgeDirection getSide();
+
+    BlockPos getPos();
 
     EnumIO getIO();
 

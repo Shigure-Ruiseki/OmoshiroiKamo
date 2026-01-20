@@ -51,7 +51,7 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
         CableCommon.cableNetworkTickHandler.unregisterNetwork(this);
     }
 
-    public void doNetworkTick() {}
+    public abstract void doNetworkTick();
 
     @Override
     public String toString() {

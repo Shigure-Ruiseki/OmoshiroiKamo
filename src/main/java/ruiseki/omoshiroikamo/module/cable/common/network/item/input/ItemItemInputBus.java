@@ -8,7 +8,6 @@ public class ItemItemInputBus extends AbstractPartItem {
 
     public ItemItemInputBus() {
         super(ModObject.itemItemInputBus.unlocalisedName);
-        setMaxStackSize(64);
     }
 
     @Override

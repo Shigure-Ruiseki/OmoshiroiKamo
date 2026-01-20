@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -49,6 +50,7 @@ import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.IRedstonePart;
 
 public class TECable extends AbstractTE
     implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
@@ -506,6 +508,18 @@ public class TECable extends AbstractTE
             }
             networks.clear();
         }
+    }
+
+    public int getRedstonePower(ForgeDirection side) {
+        if (worldObj == null) return 0;
+        if (isSideBlocked(side)) return 0;
+
+        ICablePart part = getPart(side);
+        if (!(part instanceof IRedstonePart rs)) {
+            return 0;
+        }
+
+        return MathHelper.clamp_int(rs.getRedstoneOutput(), 0, 15);
     }
 
     @Override

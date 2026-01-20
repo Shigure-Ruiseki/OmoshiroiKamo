@@ -36,7 +36,6 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
 
     @Override
     public void doNetworkTick() {
-        super.doNetworkTick();
 
         if (nodes.isEmpty()) return;
 

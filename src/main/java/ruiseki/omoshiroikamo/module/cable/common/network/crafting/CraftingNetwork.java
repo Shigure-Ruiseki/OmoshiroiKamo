@@ -18,4 +18,9 @@ public class CraftingNetwork extends AbstractCableNetwork<ICraftingNet> {
     public CraftingIndex getIndex() {
         return craftingIndex;
     }
+
+    @Override
+    public void doNetworkTick() {
+
+    }
 }

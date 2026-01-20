@@ -17,7 +17,6 @@ public class EnergyNetwork extends AbstractCableNetwork<IEnergyNet> {
 
     @Override
     public void doNetworkTick() {
-        super.doNetworkTick();
 
         if (nodes.isEmpty()) return;
         interfaces = new ArrayList<>();

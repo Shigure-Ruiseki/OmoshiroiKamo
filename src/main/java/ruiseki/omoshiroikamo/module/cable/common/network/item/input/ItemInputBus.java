@@ -200,6 +200,15 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
     }
 
     @Override
+    public int getTransferLimit() {
+        return this.transferLimit;
+    }
+
+    public void setTransferLimit(int transferLimit) {
+        this.transferLimit = transferLimit;
+    }
+
+    @Override
     public AxisAlignedBB getCollisionBox() {
         return switch (getSide()) {
             case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
@@ -210,15 +219,6 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
             case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
             default -> null;
         };
-    }
-
-    @Override
-    public int getTransferLimit() {
-        return this.transferLimit;
-    }
-
-    public void setTransferLimit(int transferLimit) {
-        this.transferLimit = transferLimit;
     }
 
     private static final IModelCustom model = AdvancedModelLoader

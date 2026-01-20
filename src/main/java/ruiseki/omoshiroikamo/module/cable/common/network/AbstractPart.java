@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 
@@ -33,6 +34,11 @@ public abstract class AbstractPart implements ICablePart {
     }
 
     @Override
+    public BlockPos getPos() {
+        return cable.getPos();
+    }
+
+    @Override
     public void setSide(ForgeDirection side) {
         this.side = side;
     }
@@ -41,6 +47,21 @@ public abstract class AbstractPart implements ICablePart {
     public void setCable(ICable cable, ForgeDirection side) {
         this.cable = cable;
         setSide(side);
+    }
+
+    @Override
+    public void onAttached() {
+
+    }
+
+    @Override
+    public void onDetached() {
+
+    }
+
+    @Override
+    public void onChunkUnload() {
+
     }
 
     @Override
