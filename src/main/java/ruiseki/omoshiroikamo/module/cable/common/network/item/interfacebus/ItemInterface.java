@@ -79,7 +79,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ITEM_INTERFACE_BUS.newItemStack();
+        return CableItems.ITEM_INTERFACE.newItemStack();
     }
 
     private int calcInventoryHash() {

@@ -68,7 +68,7 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.CRAFTING_INTERFACE_BUS.newItemStack();
+        return CableItems.CRAFTING_INTERFACE.newItemStack();
     }
 
     @Override

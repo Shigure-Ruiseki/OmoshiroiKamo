@@ -87,7 +87,7 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ITEM_INPUT_BUS.newItemStack();
+        return CableItems.ITEM_INPUT.newItemStack();
     }
 
     @Override

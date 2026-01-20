@@ -82,7 +82,7 @@ public class EnergyOutput extends AbstractPart implements IEnergyPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ENERGY_OUTPUT_BUS.newItemStack();
+        return CableItems.ENERGY_OUTPUT.newItemStack();
     }
 
     @Override

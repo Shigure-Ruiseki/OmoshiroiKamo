@@ -20,14 +20,14 @@ public enum CableItems {
 
     // spotless: off
 
-    ENERGY_INTERFACE_BUS(new ItemEnergyInterface()),
-    ENERGY_INPUT_BUS(new ItemEnergyInput()),
-    ENERGY_OUTPUT_BUS(new ItemEnergyOutput()),
-    ITEM_INTERFACE_BUS(new ItemItemInterface()),
-    ITEM_INPUT_BUS(new ItemItemInput()),
-    ITEM_OUTPUT_BUS(new ItemItemOutput()),
+    ENERGY_INTERFACE(new ItemEnergyInterface()),
+    ENERGY_INPUT(new ItemEnergyInput()),
+    ENERGY_OUTPUT(new ItemEnergyOutput()),
+    ITEM_INTERFACE(new ItemItemInterface()),
+    ITEM_INPUT(new ItemItemInput()),
+    ITEM_OUTPUT(new ItemItemOutput()),
     CABLE_TERMINAL(new ItemStorageTerminal()),
-    CRAFTING_INTERFACE_BUS(new ItemCraftingInterface()),
+    CRAFTING_INTERFACE(new ItemCraftingInterface()),
     REDSTONE_READER(new ItemRedstoneReader()),
 
     ;

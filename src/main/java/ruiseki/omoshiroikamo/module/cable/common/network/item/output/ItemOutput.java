@@ -87,7 +87,7 @@ public class ItemOutput extends AbstractPart implements IItemPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ITEM_OUTPUT_BUS.newItemStack();
+        return CableItems.ITEM_OUTPUT.newItemStack();
     }
 
     @Override

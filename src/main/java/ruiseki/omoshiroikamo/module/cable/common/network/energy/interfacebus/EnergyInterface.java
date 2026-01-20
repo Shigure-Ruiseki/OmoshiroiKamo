@@ -66,7 +66,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ENERGY_INTERFACE_BUS.newItemStack();
+        return CableItems.ENERGY_INTERFACE.newItemStack();
     }
 
     @Override
