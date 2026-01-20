@@ -4,14 +4,14 @@ import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPartItem;
 
-public class ItemItemInputBus extends AbstractPartItem {
+public class ItemItemInput extends AbstractPartItem {
 
-    public ItemItemInputBus() {
-        super(ModObject.itemItemInputBus.unlocalisedName);
+    public ItemItemInput() {
+        super(ModObject.itemItemInput.unlocalisedName);
     }
 
     @Override
     public ICablePart createPart() {
-        return new ItemInputBus();
+        return new ItemInput();
     }
 }

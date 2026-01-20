@@ -6,28 +6,28 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.cable.common.network.crafting.interfacebus.ItemCraftingInterfaceBus;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.input.ItemEnergyInputBus;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus.ItemEnergyInterfaceBus;
-import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.ItemEnergyOutputBus;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemItemInputBus;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemItemInterfaceBus;
-import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutputBus;
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.interfacebus.ItemCraftingInterface;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.input.ItemEnergyInput;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus.ItemEnergyInterface;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.ItemEnergyOutput;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemItemInput;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemItemInterface;
+import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutput;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.ItemRedstoneReader;
-import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemCableTerminal;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemStorageTerminal;
 
 public enum CableItems {
 
     // spotless: off
 
-    ENERGY_INTERFACE_BUS(new ItemEnergyInterfaceBus()),
-    ENERGY_INPUT_BUS(new ItemEnergyInputBus()),
-    ENERGY_OUTPUT_BUS(new ItemEnergyOutputBus()),
-    ITEM_INTERFACE_BUS(new ItemItemInterfaceBus()),
-    ITEM_INPUT_BUS(new ItemItemInputBus()),
-    ITEM_OUTPUT_BUS(new ItemItemOutputBus()),
-    CABLE_TERMINAL(new ItemCableTerminal()),
-    CRAFTING_INTERFACE_BUS(new ItemCraftingInterfaceBus()),
+    ENERGY_INTERFACE_BUS(new ItemEnergyInterface()),
+    ENERGY_INPUT_BUS(new ItemEnergyInput()),
+    ENERGY_OUTPUT_BUS(new ItemEnergyOutput()),
+    ITEM_INTERFACE_BUS(new ItemItemInterface()),
+    ITEM_INPUT_BUS(new ItemItemInput()),
+    ITEM_OUTPUT_BUS(new ItemItemOutput()),
+    CABLE_TERMINAL(new ItemStorageTerminal()),
+    CRAFTING_INTERFACE_BUS(new ItemCraftingInterface()),
     REDSTONE_READER(new ItemRedstoneReader()),
 
     ;

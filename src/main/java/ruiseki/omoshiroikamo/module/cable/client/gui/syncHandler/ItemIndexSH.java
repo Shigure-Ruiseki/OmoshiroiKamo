@@ -14,8 +14,8 @@ import ruiseki.omoshiroikamo.api.item.ItemStackKeyUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
-import ruiseki.omoshiroikamo.module.cable.common.network.terminal.TerminalPanel;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.StorageTerminal;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.StorageTerminalPanel;
 
 public class ItemIndexSH extends SyncHandler {
 
@@ -29,13 +29,13 @@ public class ItemIndexSH extends SyncHandler {
 
     public static final int SET_CHANNEL = 200;
 
-    private final CableTerminal terminal;
-    private final TerminalPanel panel;
+    private final StorageTerminal terminal;
+    private final StorageTerminalPanel panel;
     private final ItemNetwork itemNetwork;
     private final CraftingNetwork craftingNetwork;
     private final ItemIndexClient clientIndex;
 
-    public ItemIndexSH(CableTerminal terminal, TerminalPanel panel, ItemIndexClient clientIndex) {
+    public ItemIndexSH(StorageTerminal terminal, StorageTerminalPanel panel, ItemIndexClient clientIndex) {
         this.terminal = terminal;
         this.itemNetwork = terminal.getItemNetwork();
         this.craftingNetwork = terminal.getCraftingNetwork();

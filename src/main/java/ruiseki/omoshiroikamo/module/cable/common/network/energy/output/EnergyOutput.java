@@ -1,10 +1,11 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus;
+package ruiseki.omoshiroikamo.module.cable.common.network.energy.output;
 
 import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -14,6 +15,7 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
+import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -22,16 +24,19 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
+import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
+import ruiseki.omoshiroikamo.api.energy.EnergyUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
+public class EnergyOutput extends AbstractPart implements IEnergyPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -39,13 +44,11 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    public EnergyInterfaceBus() {
-        setTickInterval(20);
-    }
+    private int transferLimit = 1000;
 
     @Override
     public String getId() {
-        return "energy_interface_bus";
+        return "energy_output";
     }
 
     @Override
@@ -54,39 +57,59 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public void onAttached() {
-
-    }
-
-    @Override
-    public void onDetached() {
-
-    }
-
-    @Override
     public void doUpdate() {
         if (!shouldDoTickInterval()) return;
 
-    }
+        EnergyNetwork network = getEnergyNetwork();
+        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
-    @Override
-    public void onChunkUnload() {
+        EnergyTransfer transfer = new EnergyTransfer();
+        transfer.setMaxEnergyPerTransfer(getTransferLimit());
+
+        for (IEnergyNet iFace : network.interfaces) {
+            if (iFace.getChannel() != this.getChannel()) continue;
+
+            transfer.sink(EnergyUtils.getEnergySink(getTargetTE(), side.getOpposite()));
+            transfer.source(
+                EnergyUtils.getEnergySource(
+                    iFace.getTargetTE(),
+                    iFace.getSide()
+                        .getOpposite()));
+            transfer.transfer();
+        }
 
     }
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.ENERGY_INTERFACE_BUS.newItemStack();
+        return CableItems.ENERGY_OUTPUT_BUS.newItemStack();
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setInteger("transferLimit", transferLimit);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        transferLimit = tag.getInteger("transferLimit");
     }
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return PartSettingPanel.build(this);
+        ModularPanel panel = new ModularPanel("energy_output");
+
+        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        panel.child(PartSettingPanel.addSettingButton(settingPanel));
+
+        return panel;
     }
 
     @Override
     public EnumIO getIO() {
-        return EnumIO.BOTH;
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -104,7 +127,11 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public int getTransferLimit() {
-        return 1000;
+        return transferLimit;
+    }
+
+    public void setTransferLimit(int transferLimit) {
+        this.transferLimit = transferLimit;
     }
 
     @Override
@@ -118,9 +145,9 @@ public class EnergyInterfaceBus extends AbstractPart implements IEnergyPart {
     }
 
     private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_interface_bus.obj"));
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_output_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/energy_interface_bus.png");
+        LibResources.PREFIX_ITEM + "cable/energy_output_bus.png");
 
     @Override
     @SideOnly(Side.CLIENT)

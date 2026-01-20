@@ -11,7 +11,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
+import ruiseki.omoshiroikamo.module.cable.common.network.terminal.StorageTerminal;
 
 public class CableItemSlotSH extends SyncHandler {
 
@@ -22,9 +22,9 @@ public class CableItemSlotSH extends SyncHandler {
 
     public final ItemNetwork itemNetwork;
     public final CraftingNetwork craftingNetwork;
-    public final CableTerminal terminal;
+    public final StorageTerminal terminal;
 
-    public CableItemSlotSH(CableTerminal terminal) {
+    public CableItemSlotSH(StorageTerminal terminal) {
         this.terminal = terminal;
         this.itemNetwork = terminal.getItemNetwork();
         this.craftingNetwork = terminal.getCraftingNetwork();

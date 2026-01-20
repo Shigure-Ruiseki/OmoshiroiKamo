@@ -37,7 +37,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
-public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQueryable {
+public class ItemInterface extends AbstractPart implements IItemPart, IItemQueryable {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -45,30 +45,25 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    private static final IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_interface_bus.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/item_interface_bus.png");
+
     private int lastHash = 0;
 
-    public ItemInterfaceBus() {
+    public ItemInterface() {
         setTickInterval(100);
     }
 
     @Override
     public String getId() {
-        return "item_interface_bus";
+        return "item_interface";
     }
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
         return Collections.singletonList(IItemNet.class);
-    }
-
-    @Override
-    public void onAttached() {
-
-    }
-
-    @Override
-    public void onDetached() {
-
     }
 
     @Override
@@ -80,11 +75,6 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
             lastHash = hash;
             markNetworkDirty();
         }
-    }
-
-    @Override
-    public void onChunkUnload() {
-
     }
 
     @Override
@@ -137,19 +127,6 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
     @Override
     public EnumIO getIO() {
         return EnumIO.BOTH;
-    }
-
-    @Override
-    public AxisAlignedBB getCollisionBox() {
-        return switch (getSide()) {
-            case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
-            case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
-            case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
-            case UP -> AxisAlignedBB.getBoundingBox(W_MIN, 1f - DEPTH, W_MIN, W_MAX, 1f, W_MAX);
-            case NORTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 0f, W_MAX, W_MAX, DEPTH);
-            case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
-            default -> null;
-        };
     }
 
     @Override
@@ -243,10 +220,18 @@ public class ItemInterfaceBus extends AbstractPart implements IItemPart, IItemQu
         return slots;
     }
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_interface_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/item_interface_bus.png");
+    @Override
+    public AxisAlignedBB getCollisionBox() {
+        return switch (getSide()) {
+            case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
+            case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
+            case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
+            case UP -> AxisAlignedBB.getBoundingBox(W_MIN, 1f - DEPTH, W_MIN, W_MAX, 1f, W_MAX);
+            case NORTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 0f, W_MAX, W_MAX, DEPTH);
+            case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
+            default -> null;
+        };
+    }
 
     @Override
     public void renderPart(Tessellator tess, float partialTicks) {

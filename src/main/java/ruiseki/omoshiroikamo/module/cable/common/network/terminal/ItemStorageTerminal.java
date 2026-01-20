@@ -4,14 +4,14 @@ import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPartItem;
 
-public class ItemCableTerminal extends AbstractPartItem {
+public class ItemStorageTerminal extends AbstractPartItem {
 
-    public ItemCableTerminal() {
-        super(ModObject.itemCableTerminal.unlocalisedName);
+    public ItemStorageTerminal() {
+        super(ModObject.itemStorgeTerminal.unlocalisedName);
     }
 
     @Override
     public ICablePart createPart() {
-        return new CableTerminal();
+        return new StorageTerminal();
     }
 }

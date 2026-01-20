@@ -104,34 +104,34 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
         Row lowRedRow = new Row();
         lowRedRow.child(
-            IKey.lang("gui.redstoneReader.lowRedstone")
+            IKey.lang("gui.cable.redstoneReader.lowRedstone")
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(lowRedstone))
                     .asWidget())
             .height(18);
 
-        Row highRedRow = new Row();
-        highRedRow.child(
-            IKey.lang("gui.redstoneReader.highRedstone")
-                .asWidget())
-            .child(
-                IKey.dynamic(() -> String.valueOf(highRedstone))
-                    .asWidget())
-            .height(18);
-
         Row hasRedRow = new Row();
         hasRedRow.child(
-            IKey.lang("gui.redstoneReader.lowRedstone")
+            IKey.lang("gui.cable.redstoneReader.hasRedstone")
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(hasRedstone))
                     .asWidget())
             .height(18);
 
+        Row highRedRow = new Row();
+        highRedRow.child(
+            IKey.lang("gui.cable.redstoneReader.highRedstone")
+                .asWidget())
+            .child(
+                IKey.dynamic(() -> String.valueOf(highRedstone))
+                    .asWidget())
+            .height(18);
+
         Row valueRedRow = new Row();
         valueRedRow.child(
-            IKey.lang("gui.redstoneReader.redstoneValue")
+            IKey.lang("gui.cable.redstoneReader.redstoneValue")
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(redstoneValue))

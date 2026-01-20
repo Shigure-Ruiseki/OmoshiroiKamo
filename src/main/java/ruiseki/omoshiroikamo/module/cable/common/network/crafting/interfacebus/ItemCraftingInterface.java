@@ -4,15 +4,15 @@ import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPartItem;
 
-public class ItemCraftingInterfaceBus extends AbstractPartItem {
+public class ItemCraftingInterface extends AbstractPartItem {
 
-    public ItemCraftingInterfaceBus() {
-        super(ModObject.itemCraftingInterfaceBus.unlocalisedName);
+    public ItemCraftingInterface() {
+        super(ModObject.itemCraftingInterface.unlocalisedName);
         setMaxStackSize(64);
     }
 
     @Override
     public ICablePart createPart() {
-        return new CraftingInterfaceBus();
+        return new CraftingInterface();
     }
 }

@@ -126,19 +126,19 @@ public enum ModObject {
 
     itemWrench,
 
-    itemEnergyInterfaceBus,
-    itemEnergyInputBus,
-    itemEnergyOutputBus,
+    itemEnergyInterface,
+    itemEnergyInput,
+    itemEnergyOutput,
 
-    itemItemInterfaceBus,
-    itemItemInputBus,
-    itemItemOutputBus,
+    itemItemInterface,
+    itemItemInput,
+    itemItemOutput,
 
-    itemCraftingInterfaceBus,
+    itemCraftingInterface,
 
     itemRedstoneReader,
 
-    itemCableTerminal,;
+    itemStorgeTerminal,;
     // spotless: on
 
     public final String unlocalisedName;

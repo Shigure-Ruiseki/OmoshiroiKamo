@@ -1,6 +1,6 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.crafting.interfacebus;
+package ruiseki.omoshiroikamo.module.cable.common.network.energy.interfacebus;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -19,34 +19,59 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.crafting.ICraftingNet;
-import ruiseki.omoshiroikamo.module.cable.common.network.crafting.ICraftingPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
+import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class CraftingInterfaceBus extends AbstractPart implements ICraftingPart {
+public class EnergyInterface extends AbstractPart implements IEnergyPart {
 
-    private static final float WIDTH = 10f / 16f;
-    private static final float DEPTH = 3f / 16f;
+    private static final float WIDTH = 6f / 16f; // 6px
+    private static final float DEPTH = 4f / 16f; // 4px
+
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    public CraftingInterfaceBus() {
-        setChannel(-1);
+    private static final IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_interface_bus.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/energy_interface_bus.png");
+
+    public EnergyInterface() {
+        setTickInterval(20);
     }
 
     @Override
     public String getId() {
-        return "crafting_interface_bus";
+        return "energy_interface";
     }
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Arrays.asList(ICraftingNet.class);
+        return Collections.singletonList(IEnergyNet.class);
+    }
+
+    @Override
+    public void doUpdate() {
+        if (!shouldDoTickInterval()) return;
+
+    }
+
+    @Override
+    public ItemStack getItemStack() {
+        return CableItems.ENERGY_INTERFACE_BUS.newItemStack();
+    }
+
+    @Override
+    public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return PartSettingPanel.build(this);
     }
 
     @Override
@@ -55,38 +80,23 @@ public class CraftingInterfaceBus extends AbstractPart implements ICraftingPart 
     }
 
     @Override
-    public void onAttached() {
-
+    public int getTransferLimit() {
+        return 1000;
     }
 
     @Override
-    public void onDetached() {
-
+    public int receiveEnergy(int amount, boolean simulate) {
+        return 0;
     }
 
     @Override
-    public void doUpdate() {
-
-    }
-
-    @Override
-    public void onChunkUnload() {
-
-    }
-
-    @Override
-    public ItemStack getItemStack() {
-        return CableItems.CRAFTING_INTERFACE_BUS.newItemStack();
-    }
-
-    @Override
-    public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new ModularPanel("crafting_interface_bus");
+    public int extractEnergy(int amount, boolean simulate) {
+        return 0;
     }
 
     @Override
     public AxisAlignedBB getCollisionBox() {
-        return switch (getSide()) {
+        return switch (side) {
             case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
             case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
             case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
@@ -97,18 +107,15 @@ public class CraftingInterfaceBus extends AbstractPart implements ICraftingPart 
         };
     }
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/crafting_interface_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/crafting_interface_bus.png");
-
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
+        RenderUtils.bindTexture(texture);
+
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
         model.renderAll();
 
         GL11.glPopMatrix();

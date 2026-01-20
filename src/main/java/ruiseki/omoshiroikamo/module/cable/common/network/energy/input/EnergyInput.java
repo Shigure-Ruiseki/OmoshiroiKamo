@@ -15,16 +15,11 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.value.sync.SyncHandlers;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
-import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,11 +31,12 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
 
-public class EnergyInputBus extends AbstractPart implements IEnergyPart {
+public class EnergyInput extends AbstractPart implements IEnergyPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -48,26 +44,21 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    private static final IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_input_bus.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/energy_input_bus.png");
+
     private int transferLimit = 1000;
 
     @Override
     public String getId() {
-        return "energy_input_bus";
+        return "energy_input";
     }
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
         return Collections.singletonList(IEnergyNet.class);
-    }
-
-    @Override
-    public void onAttached() {
-
-    }
-
-    @Override
-    public void onDetached() {
-
     }
 
     @Override
@@ -94,11 +85,6 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public void onChunkUnload() {
-
-    }
-
-    @Override
     public ItemStack getItemStack() {
         return CableItems.ENERGY_INPUT_BUS.newItemStack();
     }
@@ -117,79 +103,10 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        syncManager.syncValue("tickSyncer", SyncHandlers.intNumber(this::getTickInterval, this::setTickInterval));
-        syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
-        syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
-        syncManager.syncValue("transferSyncer", SyncHandlers.intNumber(this::getTransferLimit, this::setTransferLimit));
+        ModularPanel panel = new ModularPanel("energy_input");
 
-        ModularPanel panel = new ModularPanel("energy_input_bus");
-
-        Row sideRow = new Row();
-        sideRow.height(20);
-        sideRow.child(
-            IKey.lang("gui.cable.side")
-                .asWidget());
-        sideRow.child(
-            new TextFieldWidget().value(new StringValue(getSide().name()))
-                .right(0));
-
-        Row tickRow = new Row();
-        tickRow.height(20);
-        tickRow.child(
-            IKey.lang("gui.cable.tick")
-                .asWidget());
-        tickRow.child(
-            new TextFieldWidget().syncHandler("tickSyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(1, Integer.MAX_VALUE)
-                .right(0));
-
-        Row priorityRow = new Row();
-        priorityRow.height(20);
-        priorityRow.child(
-            IKey.lang("gui.cable.priority")
-                .asWidget());
-        priorityRow.child(
-            new TextFieldWidget().syncHandler("prioritySyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(0, Integer.MAX_VALUE)
-                .right(0));
-
-        Row channelRow = new Row();
-        channelRow.height(20);
-        channelRow.child(
-            IKey.lang("gui.cable.channel")
-                .asWidget());
-        channelRow.child(
-            new TextFieldWidget().syncHandler("channelSyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(0, Integer.MAX_VALUE)
-                .right(0));
-
-        Row transferRow = new Row();
-        transferRow.height(20);
-        transferRow.child(
-            IKey.lang("gui.cable.transfer")
-                .asWidget());
-        transferRow.child(
-            new TextFieldWidget().syncHandler("transferSyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(0, Integer.MAX_VALUE)
-                .right(0));
-
-        Column col = new Column();
-        col.padding(7)
-            .child(sideRow)
-            .child(tickRow)
-            .child(priorityRow)
-            .child(channelRow)
-            .child(transferRow);
-
-        panel.child(col);
+        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         return panel;
     }
@@ -197,19 +114,6 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
     @Override
     public EnumIO getIO() {
         return EnumIO.INPUT;
-    }
-
-    @Override
-    public AxisAlignedBB getCollisionBox() {
-        return switch (getSide()) {
-            case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
-            case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
-            case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
-            case UP -> AxisAlignedBB.getBoundingBox(W_MIN, 1f - DEPTH, W_MIN, W_MAX, 1f, W_MAX);
-            case NORTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 0f, W_MAX, W_MAX, DEPTH);
-            case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
-            default -> null;
-        };
     }
 
     @Override
@@ -231,10 +135,18 @@ public class EnergyInputBus extends AbstractPart implements IEnergyPart {
         return 0;
     }
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/energy_input_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/energy_input_bus.png");
+    @Override
+    public AxisAlignedBB getCollisionBox() {
+        return switch (getSide()) {
+            case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
+            case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
+            case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
+            case UP -> AxisAlignedBB.getBoundingBox(W_MIN, 1f - DEPTH, W_MIN, W_MAX, 1f, W_MAX);
+            case NORTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 0f, W_MAX, W_MAX, DEPTH);
+            case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
+            default -> null;
+        };
+    }
 
     @Override
     @SideOnly(Side.CLIENT)

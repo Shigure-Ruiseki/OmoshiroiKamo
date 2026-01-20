@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.item.input;
+package ruiseki.omoshiroikamo.module.cable.common.network.item.output;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,16 +15,11 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.value.sync.SyncHandlers;
-import com.cleanroommc.modularui.widgets.layout.Column;
-import com.cleanroommc.modularui.widgets.layout.Row;
-import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cpw.mods.fml.relauncher.Side;
@@ -36,11 +31,12 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
-public class ItemInputBus extends AbstractPart implements IItemPart {
+public class ItemOutput extends AbstractPart implements IItemPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -48,26 +44,21 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    private static final IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_output_bus.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/item_output_bus.png");
+
     private int transferLimit = 64;
 
     @Override
     public String getId() {
-        return "item_input_bus";
+        return "item_output";
     }
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
         return Collections.singletonList(IItemNet.class);
-    }
-
-    @Override
-    public void onAttached() {
-
-    }
-
-    @Override
-    public void onDetached() {
-
     }
 
     @Override
@@ -83,9 +74,9 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
         for (IItemNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.source(ItemUtils.getItemSource(getTargetTE(), side.getOpposite()));
-            transfer.sink(
-                ItemUtils.getItemSink(
+            transfer.sink(ItemUtils.getItemSink(getTargetTE(), side.getOpposite()));
+            transfer.source(
+                ItemUtils.getItemSource(
                     iFace.getTargetTE(),
                     iFace.getSide()
                         .getOpposite()));
@@ -95,13 +86,8 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
     }
 
     @Override
-    public void onChunkUnload() {
-
-    }
-
-    @Override
     public ItemStack getItemStack() {
-        return CableItems.ITEM_INPUT_BUS.newItemStack();
+        return CableItems.ITEM_OUTPUT_BUS.newItemStack();
     }
 
     @Override
@@ -118,85 +104,17 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        syncManager.syncValue("tickSyncer", SyncHandlers.intNumber(this::getTickInterval, this::setTickInterval));
-        syncManager.syncValue("prioritySyncer", SyncHandlers.intNumber(this::getPriority, this::setPriority));
-        syncManager.syncValue("channelSyncer", SyncHandlers.intNumber(this::getChannel, this::setChannel));
-        syncManager.syncValue("transferSyncer", SyncHandlers.intNumber(this::getTransferLimit, this::setTransferLimit));
+        ModularPanel panel = new ModularPanel("item_output");
 
-        ModularPanel panel = new ModularPanel("item_input_bus");
-
-        Row sideRow = new Row();
-        sideRow.height(20);
-        sideRow.child(
-            IKey.lang("gui.cable.side")
-                .asWidget());
-        sideRow.child(
-            new TextFieldWidget().value(new StringValue(getSide().name()))
-                .right(0));
-
-        Row tickRow = new Row();
-        tickRow.height(20);
-        tickRow.child(
-            IKey.lang("gui.cable.tick")
-                .asWidget());
-        tickRow.child(
-            new TextFieldWidget().syncHandler("tickSyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(1, Integer.MAX_VALUE)
-                .right(0));
-
-        Row priorityRow = new Row();
-        priorityRow.height(20);
-        priorityRow.child(
-            IKey.lang("gui.cable.priority")
-                .asWidget());
-        priorityRow.child(
-            new TextFieldWidget().syncHandler("prioritySyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(0, Integer.MAX_VALUE)
-                .right(0));
-
-        Row channelRow = new Row();
-        channelRow.height(20);
-        channelRow.child(
-            IKey.lang("gui.cable.channel")
-                .asWidget());
-        channelRow.child(
-            new TextFieldWidget().syncHandler("channelSyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(0, Integer.MAX_VALUE)
-                .right(0));
-
-        Row transferRow = new Row();
-        transferRow.height(20);
-        transferRow.child(
-            IKey.lang("gui.cable.transfer")
-                .asWidget());
-        transferRow.child(
-            new TextFieldWidget().syncHandler("transferSyncer")
-                .setFormatAsInteger(true)
-                .setScrollValues(1, 5, 10)
-                .setNumbers(0, Integer.MAX_VALUE)
-                .right(0));
-
-        Column col = new Column();
-        col.padding(7)
-            .child(sideRow)
-            .child(tickRow)
-            .child(priorityRow)
-            .child(channelRow)
-            .child(transferRow);
-        panel.child(col);
+        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         return panel;
     }
 
     @Override
     public EnumIO getIO() {
-        return EnumIO.INPUT;
+        return EnumIO.OUTPUT;
     }
 
     @Override
@@ -220,11 +138,6 @@ public class ItemInputBus extends AbstractPart implements IItemPart {
             default -> null;
         };
     }
-
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_input_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/item_input_bus.png");
 
     @Override
     @SideOnly(Side.CLIENT)

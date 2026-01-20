@@ -55,12 +55,12 @@ import ruiseki.omoshiroikamo.module.cable.client.gui.widget.SortTypeButton;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndexClient;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
-public class TerminalPanel extends ModularPanel {
+public class StorageTerminalPanel extends ModularPanel {
 
     private final GuiData data;
     private final PanelSyncManager syncManager;
     private final UISettings settings;
-    private final CableTerminal terminal;
+    private final StorageTerminal terminal;
 
     public static final int COLUMNS = 9;
     public static final int ROWS = 6;
@@ -80,7 +80,8 @@ public class TerminalPanel extends ModularPanel {
 
     private int indexOffset = 0;
 
-    public TerminalPanel(GuiData data, PanelSyncManager syncManager, UISettings settings, CableTerminal terminal) {
+    public StorageTerminalPanel(GuiData data, PanelSyncManager syncManager, UISettings settings,
+        StorageTerminal terminal) {
         super("cable_terminal");
 
         this.data = data;

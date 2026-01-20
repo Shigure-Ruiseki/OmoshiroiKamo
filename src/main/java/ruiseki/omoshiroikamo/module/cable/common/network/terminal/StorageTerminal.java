@@ -38,12 +38,19 @@ import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 
-public class CableTerminal extends AbstractPart {
+public class StorageTerminal extends AbstractPart {
 
     private static final float WIDTH = 10f / 16f;
     private static final float DEPTH = 3f / 16f;
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
+
+    private static final IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/cable_terminal.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/cable_terminal.png");
+    private static final ResourceLocation back_texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/terminal_back.png");
 
     public ItemStackHandlerBase craftingStackHandler = new ItemStackHandlerBase(10);
     public String CRAFTING_MATRIX_TAG = "CraftingMatrix";
@@ -58,13 +65,13 @@ public class CableTerminal extends AbstractPart {
     public CraftingFilter craftingFilter = CraftingFilter.BOTH;
     public String CRAFTING_FILTER_TAG = "CraftingFilter";
 
-    public CableTerminal() {
+    public StorageTerminal() {
         setChannel(-1);
     }
 
     @Override
     public String getId() {
-        return "cable_terminal";
+        return "storage_terminal";
     }
 
     @Override
@@ -74,11 +81,6 @@ public class CableTerminal extends AbstractPart {
 
     @Override
     public void doUpdate() {
-
-    }
-
-    @Override
-    public void onChunkUnload() {
 
     }
 
@@ -124,22 +126,12 @@ public class CableTerminal extends AbstractPart {
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new TerminalPanel(data, syncManager, settings, this);
+        return new StorageTerminalPanel(data, syncManager, settings, this);
     }
 
     @Override
     public Class<? extends IMuiScreen> getGuiContainer() {
         return TerminalGuiContainer.class;
-    }
-
-    @Override
-    public void onAttached() {
-
-    }
-
-    @Override
-    public void onDetached() {
-
     }
 
     @Override
@@ -231,13 +223,6 @@ public class CableTerminal extends AbstractPart {
             default -> null;
         };
     }
-
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/cable_terminal.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/cable_terminal.png");
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/terminal_back.png");
 
     @Override
     public void renderPart(Tessellator tess, float partialTicks) {
