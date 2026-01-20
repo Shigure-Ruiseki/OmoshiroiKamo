@@ -132,7 +132,6 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         handler.setStackInSlot(slot, copy);
     }
 
-
     @Override
     public String getInventoryName() {
         return handler.getDisplayName();

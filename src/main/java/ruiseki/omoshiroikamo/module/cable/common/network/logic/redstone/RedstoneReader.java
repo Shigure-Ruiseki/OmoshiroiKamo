@@ -108,7 +108,8 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(lowRedstone))
-                    .asWidget()).height(18);
+                    .asWidget())
+            .height(18);
 
         Row highRedRow = new Row();
         highRedRow.child(
@@ -116,7 +117,8 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(highRedstone))
-                    .asWidget()).height(18);
+                    .asWidget())
+            .height(18);
 
         Row hasRedRow = new Row();
         hasRedRow.child(
@@ -124,7 +126,8 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(hasRedstone))
-                    .asWidget()).height(18);
+                    .asWidget())
+            .height(18);
 
         Row valueRedRow = new Row();
         valueRedRow.child(
@@ -132,7 +135,8 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                 .asWidget())
             .child(
                 IKey.dynamic(() -> String.valueOf(redstoneValue))
-                    .asWidget()).height(18);
+                    .asWidget())
+            .height(18);
 
         col.padding(7)
             .child(highRedRow)
