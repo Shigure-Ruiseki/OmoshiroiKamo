@@ -49,10 +49,6 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
             if (stack == null) return;
 
             tooltip.addFromItem(stack);
-
-            if (storedCount <= 0 && craftable) {
-                tooltip.addLine("§7Craftable");
-            }
         });
     }
 
@@ -219,16 +215,18 @@ public class CableItemSlot extends Widget<CableItemSlot> implements Interactable
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
         if (mouseButton == 2 && slotStack != null) {
+
+            if (player.capabilities.isCreativeMode) {
+                syncHandler.requestClone(slotStack);
+                return Result.ACCEPT;
+            }
+
             if (craftable) {
                 // TODO: Add Crafting Request
                 Logger.info("craftable");
                 return Result.ACCEPT;
             }
 
-            if (player.capabilities.isCreativeMode) {
-                syncHandler.requestClone(slotStack);
-                return Result.ACCEPT;
-            }
             return Result.IGNORE;
         }
 

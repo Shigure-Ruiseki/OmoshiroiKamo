@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.api.cable.ICablePartItem;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.cable.client.render.CableISBRH;
 import ruiseki.omoshiroikamo.module.cable.client.render.ItemPartRenderer;
 import ruiseki.omoshiroikamo.module.cable.client.render.PartTESR;
@@ -25,7 +26,7 @@ public class CableClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return BackportConfigs.useCable;
     }
 
     @Override

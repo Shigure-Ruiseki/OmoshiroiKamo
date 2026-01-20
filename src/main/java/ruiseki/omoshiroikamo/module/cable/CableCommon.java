@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableBlocks;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.CableNetworkTickHandler;
@@ -25,7 +26,7 @@ public class CableCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return BackportConfigs.useCable;
     }
 
     @Override

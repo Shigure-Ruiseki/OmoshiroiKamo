@@ -9,6 +9,7 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
+import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.CableTerminal;
 
@@ -19,12 +20,14 @@ public class CableItemSlotSH extends SyncHandler {
 
     public static final int RESP_MOUSE = 100;
 
-    public final ItemNetwork network;
+    public final ItemNetwork itemNetwork;
+    public final CraftingNetwork craftingNetwork;
     public final CableTerminal terminal;
 
-    public CableItemSlotSH(ItemNetwork network, CableTerminal terminal) {
-        this.network = network;
+    public CableItemSlotSH(CableTerminal terminal) {
         this.terminal = terminal;
+        this.itemNetwork = terminal.getItemNetwork();
+        this.craftingNetwork = terminal.getCraftingNetwork();
     }
 
     public void requestClick(ItemStack slotStack, ItemStack cursorStack, int slotAmount, boolean toInventory) {
@@ -87,16 +90,16 @@ public class CableItemSlotSH extends SyncHandler {
 
         boolean toInventory = buf.readBoolean();
 
-        if (network == null) return;
+        if (itemNetwork == null) return;
         EntityPlayer player = getSyncManager().getPlayer();
         if (player == null) return;
 
         if (cursorStack != null && cursorStack.stackSize > 0) {
-            ItemStack leftover = network.insert(cursorStack, terminal.getChannel());
+            ItemStack leftover = itemNetwork.insert(cursorStack, terminal.getChannel());
             player.inventory.setItemStack(leftover);
             syncToClient(RESP_MOUSE, bufOut -> bufOut.writeItemStackToBuffer(leftover));
         } else if (stack != null) {
-            ItemStack extracted = network.extract(stack, amount, terminal.getChannel());
+            ItemStack extracted = itemNetwork.extract(stack, amount, terminal.getChannel());
             if (extracted != null) {
                 if (toInventory) {
                     if (!player.inventory.addItemStackToInventory(extracted)) {

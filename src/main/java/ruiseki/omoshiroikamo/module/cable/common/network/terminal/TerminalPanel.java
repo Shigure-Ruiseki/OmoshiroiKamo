@@ -161,7 +161,7 @@ public class TerminalPanel extends ModularPanel {
 
     private void buildItemGrid() {
         for (int i = 0; i < SLOT_COUNT; i++) {
-            CableItemSlotSH slotSH = new CableItemSlotSH(terminal.getItemNetwork(), terminal);
+            CableItemSlotSH slotSH = new CableItemSlotSH(terminal);
             syncManager.syncValue("itemSlot_" + i, i, slotSH);
         }
 
