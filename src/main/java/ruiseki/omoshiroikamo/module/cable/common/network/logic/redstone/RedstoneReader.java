@@ -1,15 +1,11 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone;
 
-import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.factory.SidedPosGuiData;
-import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.sync.IntSyncValue;
-import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -17,28 +13,37 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
+
+import com.cleanroommc.modularui.api.IPanelHandler;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
-
-import java.util.Collections;
-import java.util.List;
 
 public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
-    private static final float WIDTH = 6f / 16f; // 6px
-    private static final float DEPTH = 4f / 16f; // 4px
-
+    private static final float WIDTH = 10f / 16f;
+    private static final float DEPTH = 4f / 16f;
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     private int redstone = 0;
+    private boolean lowRedstone = true;
+    private boolean hightRedstone = false;
 
     @Override
     public String getId() {
@@ -67,23 +72,90 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     }
 
     @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+    }
+
+    @Override
     public ItemStack getItemStack() {
         return CableItems.REDSTONE_READER.newItemStack();
     }
 
     @Override
-    public @NotNull ModularPanel partPanel(
-        SidedPosGuiData data,
-        PanelSyncManager syncManager,
-        UISettings settings) {
-
-        syncManager.syncValue("redstone", new IntSyncValue(this::getRedstone, this::setRedstone));
+    public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
 
         ModularPanel panel = new ModularPanel("redstone_reader");
-        panel.child(IKey.dynamic(() -> String.valueOf(redstone)).asWidget());
+
+        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        panel.child(PartSettingPanel.addSettingButton(settingPanel));
+
+        panel.child(
+            IKey.dynamic(() -> String.valueOf(lowRedstone))
+                .asWidget());
+        panel.child(
+            IKey.dynamic(() -> String.valueOf(hightRedstone))
+                .asWidget());
+        panel.child(
+            IKey.dynamic(() -> String.valueOf(redstone))
+                .asWidget());
+
         return panel;
     }
 
+    @Override
+    public int getRedstoneOutput() {
+        return 0;
+    }
+
+    @Override
+    public int getRedstoneInput() {
+        if (cable == null || cable.getWorld() == null) return 0;
+
+        ForgeDirection side = getSide();
+        World world = cable.getWorld();
+
+        int x = getPos().x + side.offsetX;
+        int y = getPos().y + side.offsetY;
+        int z = getPos().z + side.offsetZ;
+
+        int weak = world.getIndirectPowerLevelTo(
+            x,
+            y,
+            z,
+            side.getOpposite()
+                .ordinal());
+
+        int strong = world.getStrongestIndirectPower(x, y, z);
+
+        return Math.max(weak, strong);
+    }
+
+    @Override
+    public int getRedstone() {
+        return redstone;
+    }
+
+    @Override
+    public boolean isLowRedstone() {
+        return lowRedstone;
+    }
+
+    @Override
+    public boolean isHighRedstone() {
+        return hightRedstone;
+    }
+
+    public void setRedstone(int redstone) {
+        this.redstone = redstone;
+        this.lowRedstone = redstone == 0;
+        this.hightRedstone = redstone > 0;
+        getCable().dirty();
+    }
 
     @Override
     public AxisAlignedBB getCollisionBox() {
@@ -99,20 +171,23 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     }
 
     private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/item_input_bus.obj"));
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/redstone_reader.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/item_input_bus.png");
+        LibResources.PREFIX_ITEM + "cable/redstone_reader_front.png");
+    private static final ResourceLocation back_texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/redstone_reader_back.png");
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderUtils.bindTexture(texture);
-
         rotateForSide(getSide());
 
-        model.renderAll();
+        RenderUtils.bindTexture(texture);
+        model.renderAllExcept("back");
+
+        RenderUtils.bindTexture(back_texture);
+        model.renderOnly("back");
 
         GL11.glPopMatrix();
     }
@@ -139,40 +214,12 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         rotateForSide(getSide());
 
         RenderUtils.bindTexture(texture);
-        model.renderAll();
+        model.renderAllExcept("back");
+
+        RenderUtils.bindTexture(back_texture);
+        model.renderOnly("back");
 
         GL11.glPopMatrix();
     }
 
-    @Override
-    public int getRedstoneOutput() {
-        return 0;
-    }
-
-    @Override
-    public int getRedstoneInput() {
-        if (cable == null || cable.getWorld() == null) return 0;
-
-        ForgeDirection side = getSide();
-        World world = cable.getWorld();
-
-        int x = getPos().x + side.offsetX;
-        int y = getPos().y + side.offsetY;
-        int z = getPos().z + side.offsetZ;
-
-        int weak = world.getIndirectPowerLevelTo(x, y, z, side.getOpposite().ordinal());
-
-        int strong = world.getStrongestIndirectPower(x, y, z);
-
-        return Math.max(weak, strong);
-    }
-
-    public int getRedstone() {
-        return redstone;
-    }
-
-    public void setRedstone(int redstone) {
-        this.redstone = redstone;
-        getCable().dirty();
-    }
 }

@@ -5,6 +5,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPartItem;
 
 public class ItemRedstoneReader extends AbstractPartItem {
+
     public ItemRedstoneReader() {
         super(ModObject.itemRedstoneReader.unlocalisedName);
     }
