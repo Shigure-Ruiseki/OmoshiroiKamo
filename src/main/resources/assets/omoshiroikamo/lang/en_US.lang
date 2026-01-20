@@ -506,15 +506,15 @@ item.sootCoveredPlate.name=Soot-covered Plate
 
 item.structureWand.name=Structure Wand
 
-item.itemInput=Item Input
-item.itemOutput=Item Output
-item.itemInterface=Item Interface
-item.energyInput=Energy Input
-item.energyOutput=Energy Output
-item.energyInterface=Energy Interface
-item.storageTerminal=Storage Terminal
-item.redstoneReader=Redstone Reader
-item.craftingInterface=Crafting Interface
+item.itemInput.name=Item Input
+item.itemOutput.name=Item Output
+item.itemInterface.name=Item Interface
+item.energyInput.name=Energy Input
+item.energyOutput.name=Energy Output
+item.energyInterface.name=Energy Interface
+item.storageTerminal.name=Storage Terminal
+item.redstoneReader.name=Redstone Reader
+item.craftingInterface.name=Crafting Interface
 
 #Block
 

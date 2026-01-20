@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPartItem;
 public class ItemStorageTerminal extends AbstractPartItem {
 
     public ItemStorageTerminal() {
-        super(ModObject.itemStorgeTerminal.unlocalisedName);
+        super(ModObject.itemStorageTerminal.unlocalisedName);
     }
 
     @Override

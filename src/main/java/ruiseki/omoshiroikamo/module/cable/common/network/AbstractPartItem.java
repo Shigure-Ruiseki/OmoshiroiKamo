@@ -64,5 +64,4 @@ public abstract class AbstractPartItem extends ItemOK implements ICablePartItem 
 
         return true;
     }
-
 }

@@ -138,7 +138,7 @@ public enum ModObject {
 
     itemRedstoneReader,
 
-    itemStorgeTerminal,;
+    itemStorageTerminal,;
     // spotless: on
 
     public final String unlocalisedName;
