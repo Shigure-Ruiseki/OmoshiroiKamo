@@ -44,7 +44,7 @@ public class EnergyOutput extends AbstractPart implements IEnergyPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private int transferLimit = 1000;
+    private int transferLimit = 10000;
 
     @Override
     public String getId() {

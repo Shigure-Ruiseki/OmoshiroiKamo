@@ -49,7 +49,7 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/energy_input_bus.png");
 
-    private int transferLimit = 1000;
+    private int transferLimit = 10000;
 
     @Override
     public String getId() {
