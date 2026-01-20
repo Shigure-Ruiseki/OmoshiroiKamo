@@ -192,7 +192,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         // Only update if blueprint has a structure name
         String blueprintName = getStructureNameFromBlueprint();
         if (blueprintName != null && !blueprintName.isEmpty()
-                && !Objects.equals(blueprintName, structureAgent.getCustomStructureName())) {
+            && !Objects.equals(blueprintName, structureAgent.getCustomStructureName())) {
             structureAgent.setCustomStructureName(blueprintName);
             updateRecipeGroupFromStructure();
             setFormed(false);
@@ -202,7 +202,8 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         }
 
         // Blueprint required - no operation without it
-        if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName().isEmpty()) {
+        if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
+            .isEmpty()) {
             return;
         }
 
@@ -247,9 +248,9 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
             // Look-ahead: search for next recipe while processing (only once)
             if (nextRecipe == null) {
                 nextRecipe = RecipeLoader.getInstance()
-                        .findMatch(new String[] { recipeGroup }, getInputPorts());
+                    .findMatch(new String[] { recipeGroup }, getInputPorts());
                 cachedRecipeVersion = RecipeLoader.getInstance()
-                        .getRecipeVersion();
+                    .getRecipeVersion();
             }
 
             // If complete, immediately try to output and start next
@@ -269,7 +270,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     private void startNextRecipe() {
         // Invalidate cache if recipes were reloaded
         if (cachedRecipeVersion != RecipeLoader.getInstance()
-                .getRecipeVersion()) {
+            .getRecipeVersion()) {
             nextRecipe = null;
         }
 
@@ -277,7 +278,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         ModularRecipe recipe = nextRecipe;
         if (recipe == null) {
             recipe = RecipeLoader.getInstance()
-                    .findMatch(new String[] { recipeGroup }, getInputPorts());
+                .findMatch(new String[] { recipeGroup }, getInputPorts());
         }
         nextRecipe = null; // Clear cache
 
@@ -305,7 +306,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-            float hitZ) {
+        float hitZ) {
         openGui(player);
         return true;
     }
@@ -338,10 +339,8 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     @Nullable
     private String getStructureNameFromBlueprint() {
         ItemStack blueprint = getBlueprintStack();
-        if (blueprint == null || blueprint.stackSize == 0)
-            return null;
-        if (!(blueprint.getItem() instanceof ItemMachineBlueprint))
-            return null;
+        if (blueprint == null || blueprint.stackSize == 0) return null;
+        if (!(blueprint.getItem() instanceof ItemMachineBlueprint)) return null;
         return ItemMachineBlueprint.getStructureName(blueprint);
     }
 
@@ -352,8 +351,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      */
     private void updateStructureFromBlueprint() {
         // Skip if on client side
-        if (worldObj != null && worldObj.isRemote)
-            return;
+        if (worldObj != null && worldObj.isRemote) return;
 
         String newName = getStructureNameFromBlueprint();
         if (!Objects.equals(newName, structureAgent.getCustomStructureName())) {
@@ -421,8 +419,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     public void readCommon(NBTTagCompound nbt) {
         super.readCommon(nbt);
         recipeGroup = nbt.getString("recipeGroup");
-        if (recipeGroup.isEmpty())
-            recipeGroup = "default";
+        if (recipeGroup.isEmpty()) recipeGroup = "default";
         // Load blueprint inventory
         if (nbt.hasKey("inventory")) {
             inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
@@ -488,11 +485,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * Update recipeGroup from custom structure definition.
      */
     private void updateRecipeGroupFromStructure() {
-        if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName().isEmpty()) {
+        if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
+            .isEmpty()) {
             return;
         }
         StructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(structureAgent.getCustomStructureName());
+            .getCustomStructure(structureAgent.getCustomStructureName());
         if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
             this.recipeGroup = entry.recipeGroup;
         }
@@ -546,8 +544,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public void setExtendedFacing(ExtendedFacing facing) {
-        if (facing == null)
-            facing = ExtendedFacing.DEFAULT;
+        if (facing == null) facing = ExtendedFacing.DEFAULT;
         this.extendedFacing = facing;
 
         // Reset structure state when facing changes
@@ -569,31 +566,31 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     // ========== Package Accessors for Managers ==========
 
-    PortManager getPortManager() {
+    public PortManager getPortManager() {
         return portManager;
     }
 
-    ProcessAgent getProcessAgent() {
+    public ProcessAgent getProcessAgent() {
         return processAgent;
     }
 
-    ErrorReason getLastProcessErrorReason() {
+    public ErrorReason getLastProcessErrorReason() {
         return lastProcessErrorReason;
     }
 
-    void setLastProcessErrorReason(ErrorReason reason) {
+    public void setLastProcessErrorReason(ErrorReason reason) {
         this.lastProcessErrorReason = reason;
     }
 
-    boolean isFormed() {
+    public boolean isFormed() {
         return isFormed;
     }
 
-    void setFormed(boolean formed) {
+    public void setFormed(boolean formed) {
         this.isFormed = formed;
     }
 
-    String getLastValidationError() {
+    public String getLastValidationError() {
         return structureAgent.getLastValidationError();
     }
 }

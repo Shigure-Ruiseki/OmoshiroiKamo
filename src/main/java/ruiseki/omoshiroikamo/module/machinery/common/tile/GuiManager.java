@@ -37,35 +37,37 @@ public class GuiManager {
 
         // Blueprint slot (right side)
         panel.child(
-                new ItemSlot().slot(new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
+            new ItemSlot()
+                .slot(
+                    new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
                         .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                        .background(OKGuiTextures.EMPTY_SLOT)
-                        .pos(151, 8));
+                .background(OKGuiTextures.EMPTY_SLOT)
+                .pos(151, 8));
 
         // Status display
         panel.child(
-                IKey.dynamic(this::getStatusText)
-                        .asWidget()
-                        .pos(8, 25));
+            IKey.dynamic(this::getStatusText)
+                .asWidget()
+                .pos(8, 25));
 
         // Error display (validation)
         panel.child(
-                IKey.dynamic(this::getErrorText)
-                        .asWidget()
-                        .pos(8, 35));
+            IKey.dynamic(this::getErrorText)
+                .asWidget()
+                .pos(8, 35));
 
         IntSyncValue progressSyncer = new IntSyncValue(
-                controller.getProcessAgent()::getProgress,
-                controller.getProcessAgent()::setProgress);
+            controller.getProcessAgent()::getProgress,
+            controller.getProcessAgent()::setProgress);
         IntSyncValue maxProgressSyncer = new IntSyncValue(
-                controller.getProcessAgent()::getMaxProgress,
-                controller.getProcessAgent()::setMaxProgress);
+            controller.getProcessAgent()::getMaxProgress,
+            controller.getProcessAgent()::setMaxProgress);
         BooleanSyncValue runningSyncer = new BooleanSyncValue(
-                controller.getProcessAgent()::isRunning,
-                controller.getProcessAgent()::setRunning);
+            controller.getProcessAgent()::isRunning,
+            controller.getProcessAgent()::setRunning);
         BooleanSyncValue waitingSyncer = new BooleanSyncValue(
-                controller.getProcessAgent()::isWaitingForOutput,
-                controller.getProcessAgent()::setWaitingForOutput);
+            controller.getProcessAgent()::isWaitingForOutput,
+            controller.getProcessAgent()::setWaitingForOutput);
 
         syncManager.syncValue("processProgressSyncer", progressSyncer);
         syncManager.syncValue("processMaxSyncer", maxProgressSyncer);
@@ -74,9 +76,9 @@ public class GuiManager {
 
         // Progress bar
         panel.child(
-                new ProgressWidget().value(new DoubleSyncValue(() -> (double) getProgressPercent()))
-                        .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
-                        .pos(80, 45));
+            new ProgressWidget().value(new DoubleSyncValue(() -> (double) getProgressPercent()))
+                .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
+                .pos(80, 45));
 
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
@@ -85,21 +87,22 @@ public class GuiManager {
     }
 
     private String getStatusText() {
-        if (controller.getCustomStructureName() == null || controller.getCustomStructureName().isEmpty()) {
+        if (controller.getCustomStructureName() == null || controller.getCustomStructureName()
+            .isEmpty()) {
             return "Insert Blueprint";
         }
         if (!controller.isFormed()) {
             return "Structure Not Formed";
         }
         if (controller.getProcessAgent()
-                .isRunning()
-                || controller.getProcessAgent()
-                        .isWaitingForOutput()) {
+            .isRunning()
+            || controller.getProcessAgent()
+                .isWaitingForOutput()) {
             if (controller.getLastProcessErrorReason() == ErrorReason.NO_ENERGY) {
                 return ErrorReason.NO_ENERGY.getMessage();
             }
             return controller.getProcessAgent()
-                    .getStatusMessage(controller.getOutputPorts());
+                .getStatusMessage(controller.getOutputPorts());
         }
 
         ErrorReason reason = getIdleErrorReason();
@@ -111,14 +114,12 @@ public class GuiManager {
 
     private ErrorReason getIdleErrorReason() {
         if (controller.getInputPorts()
-                .isEmpty())
-            return ErrorReason.NO_INPUT_PORTS;
+            .isEmpty()) return ErrorReason.NO_INPUT_PORTS;
         if (controller.getOutputPorts()
-                .isEmpty())
-            return ErrorReason.NO_OUTPUT_PORTS;
+            .isEmpty()) return ErrorReason.NO_OUTPUT_PORTS;
         if (RecipeLoader.getInstance()
-                .getRecipes(controller.getRecipeGroup())
-                .isEmpty()) {
+            .getRecipes(controller.getRecipeGroup())
+            .isEmpty()) {
             return ErrorReason.NO_RECIPES;
         }
         if (controller.getLastProcessErrorReason() == ErrorReason.NO_MATCHING_RECIPE) {
@@ -131,17 +132,16 @@ public class GuiManager {
     }
 
     private String getErrorText() {
-        if (controller.getCustomStructureName() == null || controller.getCustomStructureName().isEmpty())
-            return "";
-        if (controller.isFormed())
-            return "";
-        if (controller.getLastValidationError() == null || controller.getLastValidationError().isEmpty())
-            return "";
+        if (controller.getCustomStructureName() == null || controller.getCustomStructureName()
+            .isEmpty()) return "";
+        if (controller.isFormed()) return "";
+        if (controller.getLastValidationError() == null || controller.getLastValidationError()
+            .isEmpty()) return "";
         return controller.getLastValidationError();
     }
 
     private float getProgressPercent() {
         return controller.getProcessAgent()
-                .getProgressPercent();
+            .getProgressPercent();
     }
 }

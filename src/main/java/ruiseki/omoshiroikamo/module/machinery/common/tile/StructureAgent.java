@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,10 +14,12 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**
  * Handles structure-related logic for {@link TEMachineController}.
@@ -49,7 +52,7 @@ public class StructureAgent {
         // Check for custom structure first
         if (customStructureName != null && !customStructureName.isEmpty()) {
             IStructureDefinition<TEMachineController> customDef = CustomStructureRegistry
-                    .getDefinition(customStructureName);
+                .getDefinition(customStructureName);
             if (customDef != null) {
                 return customDef;
             }
@@ -62,7 +65,7 @@ public class StructureAgent {
         // Get offset from custom structure definition if available
         if (customStructureName != null && !customStructureName.isEmpty()) {
             StructureEntry entry = StructureManager.getInstance()
-                    .getCustomStructure(customStructureName);
+                .getCustomStructure(customStructureName);
             if (entry != null && entry.controllerOffset != null && entry.controllerOffset.length >= 3) {
                 return new int[][] { entry.controllerOffset };
             }
@@ -79,26 +82,44 @@ public class StructureAgent {
     // ========== Structure Parts Tracking ==========
 
     public void clearStructureParts() {
-        // Clear cache
-        StructureTintCache.clearAll(controller.worldObj, structureBlockPositions);
+        if (controller.getWorldObj() == null) {
+            structureBlockPositions.clear();
+            controller.getPortManager()
+                .clear();
+            return;
+        }
 
-        // Trigger block updates (to reset colors)
+        // Clear cache (server-side)
+        StructureTintCache.clearAll(controller.getWorldObj(), structureBlockPositions);
+
+        // Send packet to clients to clear color
+        if (!controller.getWorldObj().isRemote && !structureBlockPositions.isEmpty()) {
+            // Include controller position in clear list
+            ArrayList<ChunkCoordinates> allPositions = new ArrayList<>(structureBlockPositions);
+            allPositions.add(new ChunkCoordinates(controller.xCoord, controller.yCoord, controller.zCoord));
+
+            PacketStructureTint clearPacket = PacketStructureTint
+                .createClear(controller.getWorldObj().provider.dimensionId, allPositions);
+            PacketHandler.sendToAllAround(clearPacket, controller);
+        }
+
+        // Trigger block updates (to reset colors) on server
         for (ChunkCoordinates pos : structureBlockPositions) {
-            if (controller.worldObj != null) {
-                controller.worldObj.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
-            }
+            controller.getWorldObj()
+                .markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
         }
 
         structureBlockPositions.clear();
         controller.getPortManager()
-                .clear();
+            .clear();
     }
 
     public boolean addToMachine(Block block, int meta, int x, int y, int z) {
         // Track all structure block positions
         structureBlockPositions.add(new ChunkCoordinates(x, y, z));
 
-        TileEntity te = controller.worldObj.getTileEntity(x, y, z);
+        TileEntity te = controller.getWorldObj()
+            .getTileEntity(x, y, z);
         if (te == null || !(te instanceof IModularPort port)) {
             return false;
         }
@@ -108,19 +129,19 @@ public class StructureAgent {
         return switch (direction) {
             case INPUT -> {
                 controller.getPortManager()
-                        .addPort(port, true);
+                    .addPort(port, true);
                 yield true;
             }
             case OUTPUT -> {
                 controller.getPortManager()
-                        .addPort(port, false);
+                    .addPort(port, false);
                 yield true;
             }
             case BOTH -> {
                 controller.getPortManager()
-                        .addPort(port, true);
+                    .addPort(port, true);
                 controller.getPortManager()
-                        .addPort(port, false);
+                    .addPort(port, false);
                 yield true;
             }
             default -> false;
@@ -137,9 +158,18 @@ public class StructureAgent {
         clearStructureParts();
 
         // Use controller's facing for rotation support
-        boolean valid = getStructureDefinition()
-                .check(controller, piece, controller.worldObj, controller.getExtendedFacing(), controller.xCoord,
-                        controller.yCoord, controller.zCoord, ox, oy, oz, false);
+        boolean valid = getStructureDefinition().check(
+            controller,
+            piece,
+            controller.getWorldObj(),
+            controller.getExtendedFacing(),
+            controller.xCoord,
+            controller.yCoord,
+            controller.zCoord,
+            ox,
+            oy,
+            oz,
+            false);
 
         if (valid && !controller.isFormed()) {
             controller.setFormed(true);
@@ -176,30 +206,45 @@ public class StructureAgent {
      * @return true if requirements are met or no requirements exist
      */
     private boolean checkRequirements() {
-        if (customStructureName == null || customStructureName.isEmpty())
-            return true;
+        if (customStructureName == null || customStructureName.isEmpty()) return true;
 
         StructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(customStructureName);
+            .getCustomStructure(customStructureName);
         return controller.getPortManager()
-                .checkRequirements(entry);
+            .checkRequirements(entry);
     }
 
     public void onFormed() {
         // Load structure tint color
         structureTintColor = getStructureTintColor();
 
-        // Cache tint color for all structure blocks
+        if (controller.getWorldObj() == null) return;
+
+        // Cache tint color for all structure blocks (server-side)
         if (structureTintColor != null) {
             for (ChunkCoordinates pos : structureBlockPositions) {
-                StructureTintCache.put(controller.worldObj, pos.posX, pos.posY, pos.posZ, structureTintColor);
+                StructureTintCache.put(controller.getWorldObj(), pos.posX, pos.posY, pos.posZ, structureTintColor);
             }
+            // Add controller itself to cache
+            StructureTintCache.put(
+                controller.getWorldObj(),
+                controller.xCoord,
+                controller.yCoord,
+                controller.zCoord,
+                structureTintColor);
         }
 
-        // Add controller itself to cache
-        if (structureTintColor != null) {
-            StructureTintCache.put(controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord,
-                    structureTintColor);
+        // Send packet to clients to set color
+        if (!controller.getWorldObj().isRemote && structureTintColor != null && !structureBlockPositions.isEmpty()) {
+            // Include controller position
+            ArrayList<ChunkCoordinates> allPositions = new ArrayList<>(structureBlockPositions);
+            allPositions.add(new ChunkCoordinates(controller.xCoord, controller.yCoord, controller.zCoord));
+
+            PacketStructureTint colorPacket = new PacketStructureTint(
+                controller.getWorldObj().provider.dimensionId,
+                structureTintColor,
+                allPositions);
+            PacketHandler.sendToAllAround(colorPacket, controller);
         }
 
         // Trigger block updates
@@ -217,10 +262,9 @@ public class StructureAgent {
     }
 
     public Properties getCustomProperties() {
-        if (customStructureName == null || customStructureName.isEmpty())
-            return null;
+        if (customStructureName == null || customStructureName.isEmpty()) return null;
         StructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(customStructureName);
+            .getCustomStructure(customStructureName);
         return entry != null ? entry.properties : null;
     }
 
@@ -251,16 +295,17 @@ public class StructureAgent {
     }
 
     public void updateStructureBlocksRendering() {
-        if (controller.worldObj == null || controller.worldObj.isRemote)
-            return;
+        if (controller.getWorldObj() == null || controller.getWorldObj().isRemote) return;
 
         // Update all structure blocks
         for (ChunkCoordinates pos : structureBlockPositions) {
-            controller.worldObj.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
+            controller.getWorldObj()
+                .markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
         }
 
         // Update controller itself
-        controller.worldObj.markBlockForUpdate(controller.xCoord, controller.yCoord, controller.zCoord);
+        controller.getWorldObj()
+            .markBlockForUpdate(controller.xCoord, controller.yCoord, controller.zCoord);
     }
 
     public String getLastValidationError() {
