@@ -10,10 +10,10 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
+import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.core.common.world.OKWorldGenerator;
 
 public class CoreCommon implements IModuleCommon {
 
@@ -41,14 +41,13 @@ public class CoreCommon implements IModuleCommon {
             .initialize(
                 event.getModConfigurationDirectory()
                     .getParentFile());
-
-        OKWorldGenerator.preInit();
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        PacketHandler.init();
+        CoreOreDict.init();
         CoreRecipes.init();
+        PacketHandler.init();
     }
 
     @Override
