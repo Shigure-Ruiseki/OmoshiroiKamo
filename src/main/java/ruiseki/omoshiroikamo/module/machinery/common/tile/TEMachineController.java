@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -142,6 +143,10 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      */
     public void addPortFromStructure(IModularPort port, boolean isInput) {
         portManager.addPort(port, isInput);
+        // Also add the port's position to structure block positions
+        if (port instanceof TileEntity te) {
+            structureAgent.addStructurePosition(te.xCoord, te.yCoord, te.zCoord);
+        }
     }
 
     // ========== Crafting Configuration ==========

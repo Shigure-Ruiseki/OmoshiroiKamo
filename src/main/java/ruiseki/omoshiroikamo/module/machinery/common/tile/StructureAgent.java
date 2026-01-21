@@ -89,24 +89,26 @@ public class StructureAgent {
             return;
         }
 
-        // Clear cache (server-side)
-        StructureTintCache.clearAll(controller.getWorldObj(), structureBlockPositions);
+        // Clear cache ONLY on server-side (client cache is managed by packets)
+        if (!controller.getWorldObj().isRemote) {
+            StructureTintCache.clearAll(controller.getWorldObj(), structureBlockPositions);
 
-        // Send packet to clients to clear color
-        if (!controller.getWorldObj().isRemote && !structureBlockPositions.isEmpty()) {
-            // Include controller position in clear list
-            ArrayList<ChunkCoordinates> allPositions = new ArrayList<>(structureBlockPositions);
-            allPositions.add(new ChunkCoordinates(controller.xCoord, controller.yCoord, controller.zCoord));
+            // Send packet to clients to clear color
+            if (!structureBlockPositions.isEmpty()) {
+                // Include controller position in clear list
+                ArrayList<ChunkCoordinates> allPositions = new ArrayList<>(structureBlockPositions);
+                allPositions.add(new ChunkCoordinates(controller.xCoord, controller.yCoord, controller.zCoord));
 
-            PacketStructureTint clearPacket = PacketStructureTint
-                .createClear(controller.getWorldObj().provider.dimensionId, allPositions);
-            PacketHandler.sendToAllAround(clearPacket, controller);
-        }
+                PacketStructureTint clearPacket = PacketStructureTint
+                    .createClear(controller.getWorldObj().provider.dimensionId, allPositions);
+                PacketHandler.sendToAllAround(clearPacket, controller);
+            }
 
-        // Trigger block updates (to reset colors) on server
-        for (ChunkCoordinates pos : structureBlockPositions) {
-            controller.getWorldObj()
-                .markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
+            // Trigger block updates (to reset colors) on server
+            for (ChunkCoordinates pos : structureBlockPositions) {
+                controller.getWorldObj()
+                    .markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
+            }
         }
 
         structureBlockPositions.clear();
@@ -146,6 +148,14 @@ public class StructureAgent {
             }
             default -> false;
         };
+    }
+
+    /**
+     * Add a position to the structure block positions list.
+     * Used by addPortFromStructure to track port positions.
+     */
+    public void addStructurePosition(int x, int y, int z) {
+        structureBlockPositions.add(new ChunkCoordinates(x, y, z));
     }
 
     // ========== Structure Validation ==========
@@ -188,6 +198,10 @@ public class StructureAgent {
                 clearStructureParts();
                 return false;
             }
+
+            // Send tint packet AFTER all callbacks (including port additions) have
+            // completed
+            sendTintPacket();
         } else if (!valid) {
             // If check failed, we don't know exactly why
             // but usually it means blocks don't match.
@@ -218,9 +232,24 @@ public class StructureAgent {
         // Load structure tint color
         structureTintColor = getStructureTintColor();
 
+        // Note: structureBlockPositions may be empty here because callbacks run after
+        // check()
+        // The actual tint packet will be sent by sendTintPacket() called after all
+        // callbacks complete
+    }
+
+    /**
+     * Send tint color to clients. Called after structure check is complete
+     * and all callbacks (including port additions) have finished.
+     */
+    public void sendTintPacket() {
         if (controller.getWorldObj() == null) return;
 
-        // Cache tint color for all structure blocks (server-side)
+        // Only server-side handles cache and packet sending
+        // Client cache is managed by packets received from server
+        if (controller.getWorldObj().isRemote) return;
+
+        // Cache tint color for all structure blocks (server-side only)
         if (structureTintColor != null) {
             for (ChunkCoordinates pos : structureBlockPositions) {
                 StructureTintCache.put(controller.getWorldObj(), pos.posX, pos.posY, pos.posZ, structureTintColor);
@@ -235,7 +264,7 @@ public class StructureAgent {
         }
 
         // Send packet to clients to set color
-        if (!controller.getWorldObj().isRemote && structureTintColor != null && !structureBlockPositions.isEmpty()) {
+        if (structureTintColor != null && !structureBlockPositions.isEmpty()) {
             // Include controller position
             ArrayList<ChunkCoordinates> allPositions = new ArrayList<>(structureBlockPositions);
             allPositions.add(new ChunkCoordinates(controller.xCoord, controller.yCoord, controller.zCoord));

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -70,11 +71,20 @@ public class StructureTintCache {
     public static Integer get(IBlockAccess world, int x, int y, int z) {
         if (world == null) return null;
 
-        // No way to get dimension ID from IBlockAccess,
-        // so we assume it's a World instance
-        if (!(world instanceof World)) return null;
+        int dimension;
+        if (world instanceof World) {
+            dimension = ((World) world).provider.dimensionId;
+        } else {
+            // Try to get dimension from TileEntity if world is not a World instance (e.g.
+            // ChunkCache)
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te.getWorldObj() != null) {
+                dimension = te.getWorldObj().provider.dimensionId;
+            } else {
+                return null;
+            }
+        }
 
-        int dimension = ((World) world).provider.dimensionId;
         Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimension);
         if (dimensionCache != null) {
             return dimensionCache.get(new ChunkCoordinates(x, y, z));

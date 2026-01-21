@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
+import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
@@ -61,6 +63,11 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
                 return 0xFFFFFFFF; // White for non-tinted layers
             }
         }, this);
+    }
+
+    @Override
+    public int getRenderType() {
+        return JSON_ISBRH_ID;
     }
 
     @Override

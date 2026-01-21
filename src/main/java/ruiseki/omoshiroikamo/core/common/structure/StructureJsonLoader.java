@@ -512,6 +512,10 @@ public class StructureJsonLoader {
             props.batchMax = obj.get("batchMax")
                 .getAsInt();
         }
+        if (obj.has("tintColor")) {
+            props.tintColor = obj.get("tintColor")
+                .getAsString();
+        }
         return props;
     }
 }
