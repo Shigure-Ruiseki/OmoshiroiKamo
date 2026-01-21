@@ -22,9 +22,10 @@ public class BackpackRecipes {
     }
 
     public static void blockRecipes() {
+
         // Leather Backpack
         GameRegistry.addRecipe(
-            new NBTShapedOreRecipe(
+            new ShapedOreRecipe(
                 BackpackBlocks.BACKPACK_BASE.newItemStack(),
                 "SLS",
                 "SCS",

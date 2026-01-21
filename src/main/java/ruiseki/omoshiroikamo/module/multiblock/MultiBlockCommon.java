@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockOreDicts;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiblockRecipes;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiblockWorldGenerator;
 
 public class MultiBlockCommon implements IModuleCommon {
 
@@ -39,6 +40,7 @@ public class MultiBlockCommon implements IModuleCommon {
         MultiBlockItems.preInit();
         MultiBlockOreDicts.preInit();
         MultiBlockAchievements.preInit();
+        MultiblockWorldGenerator.preInit();
     }
 
     @Override
