@@ -52,7 +52,7 @@ public abstract class TEFluidInputPort extends AbstractFluidPortTE {
             if (getSideIO(side) != EnumIO.NONE) {
                 return IconRegistry.getIcon("overlay_fluidinput_" + getTier());
             }
-            return IconRegistry.getIcon("overlay_fluidinput_disabled");
+            return null;
         }
         return AbstractPortBlock.baseIcon;
     }

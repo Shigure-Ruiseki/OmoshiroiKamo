@@ -176,7 +176,7 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
     @Override
     public IIcon getOverlayIcon(ForgeDirection side) {
         if (getSideIO(side) == EnumIO.NONE) {
-            return IconRegistry.getIcon("overlay_port_disabled");
+            return null;
         }
         return IconRegistry.getIcon("overlay_essentiaoutput_" + getTier());
     }

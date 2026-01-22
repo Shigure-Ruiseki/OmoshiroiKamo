@@ -16,9 +16,12 @@ import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.block.ISidedIO;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
@@ -191,23 +194,43 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         float g, float b) {
         Tessellator t = Tessellator.instance;
         int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
-        IIcon icon = AbstractPortBlock.baseIcon != null ? AbstractPortBlock.baseIcon : block.getIcon(0, 0);
 
-        float u0 = icon.getMinU();
-        float u1 = icon.getMaxU();
-        float v0 = icon.getMinV();
-        float v1 = icon.getMaxV();
+        // Get TileEntity to check IO state
+        TileEntity te = world.getTileEntity(x, y, z);
+        ISidedIO ioConfig = te instanceof ISidedIO ? (ISidedIO) te : null;
 
-        // Render each face with appropriate shading (same order as overlays)
+        IIcon portBaseIcon = AbstractPortBlock.baseIcon != null ? AbstractPortBlock.baseIcon : block.getIcon(0, 0);
+        IIcon casingIcon = MachineryBlocks.MACHINE_CASING.getBlock()
+            .getIcon(0, 0);
+
+        // Helper to get icon for a specific face
+        // If IO is NONE (Disabled), use Casing texture. Otherwise use Port Base
+        // texture.
+        // If TE is not ISidedIO (shouldn't happen for ports), fallback to Port Base.
+        IIcon iconDown = (ioConfig != null && ioConfig.getSideIO(ForgeDirection.DOWN) == EnumIO.NONE) ? casingIcon
+            : portBaseIcon;
+        IIcon iconUp = (ioConfig != null && ioConfig.getSideIO(ForgeDirection.UP) == EnumIO.NONE) ? casingIcon
+            : portBaseIcon;
+        IIcon iconNorth = (ioConfig != null && ioConfig.getSideIO(ForgeDirection.NORTH) == EnumIO.NONE) ? casingIcon
+            : portBaseIcon;
+        IIcon iconSouth = (ioConfig != null && ioConfig.getSideIO(ForgeDirection.SOUTH) == EnumIO.NONE) ? casingIcon
+            : portBaseIcon;
+        IIcon iconWest = (ioConfig != null && ioConfig.getSideIO(ForgeDirection.WEST) == EnumIO.NONE) ? casingIcon
+            : portBaseIcon;
+        IIcon iconEast = (ioConfig != null && ioConfig.getSideIO(ForgeDirection.EAST) == EnumIO.NONE) ? casingIcon
+            : portBaseIcon;
+
+        // Render each face with appropriate shading (same order as overlays) and
+        // specific icon
         // DOWN face
         if (!world.getBlock(x, y - 1, z)
             .isOpaqueCube()) {
             t.setBrightness(block.getMixedBrightnessForBlock(world, x, y - 1, z));
             t.setColorOpaque_F(r * 0.5f, g * 0.5f, b * 0.5f);
-            t.addVertexWithUV(x, y, z + 1, u0, v1);
-            t.addVertexWithUV(x, y, z, u0, v0);
-            t.addVertexWithUV(x + 1, y, z, u1, v0);
-            t.addVertexWithUV(x + 1, y, z + 1, u1, v1);
+            t.addVertexWithUV(x, y, z + 1, iconDown.getMinU(), iconDown.getMaxV());
+            t.addVertexWithUV(x, y, z, iconDown.getMinU(), iconDown.getMinV());
+            t.addVertexWithUV(x + 1, y, z, iconDown.getMaxU(), iconDown.getMinV());
+            t.addVertexWithUV(x + 1, y, z + 1, iconDown.getMaxU(), iconDown.getMaxV());
         }
 
         // UP face
@@ -215,10 +238,10 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
             .isOpaqueCube()) {
             t.setBrightness(block.getMixedBrightnessForBlock(world, x, y + 1, z));
             t.setColorOpaque_F(r * 1.0f, g * 1.0f, b * 1.0f);
-            t.addVertexWithUV(x, y + 1, z, u0, v0);
-            t.addVertexWithUV(x, y + 1, z + 1, u0, v1);
-            t.addVertexWithUV(x + 1, y + 1, z + 1, u1, v1);
-            t.addVertexWithUV(x + 1, y + 1, z, u1, v0);
+            t.addVertexWithUV(x, y + 1, z, iconUp.getMinU(), iconUp.getMinV());
+            t.addVertexWithUV(x, y + 1, z + 1, iconUp.getMinU(), iconUp.getMaxV());
+            t.addVertexWithUV(x + 1, y + 1, z + 1, iconUp.getMaxU(), iconUp.getMaxV());
+            t.addVertexWithUV(x + 1, y + 1, z, iconUp.getMaxU(), iconUp.getMinV());
         }
 
         // NORTH face
@@ -226,10 +249,10 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
             .isOpaqueCube()) {
             t.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z - 1));
             t.setColorOpaque_F(r * 0.8f, g * 0.8f, b * 0.8f);
-            t.addVertexWithUV(x, y, z, u1, v1);
-            t.addVertexWithUV(x, y + 1, z, u1, v0);
-            t.addVertexWithUV(x + 1, y + 1, z, u0, v0);
-            t.addVertexWithUV(x + 1, y, z, u0, v1);
+            t.addVertexWithUV(x, y, z, iconNorth.getMaxU(), iconNorth.getMaxV());
+            t.addVertexWithUV(x, y + 1, z, iconNorth.getMaxU(), iconNorth.getMinV());
+            t.addVertexWithUV(x + 1, y + 1, z, iconNorth.getMinU(), iconNorth.getMinV());
+            t.addVertexWithUV(x + 1, y, z, iconNorth.getMinU(), iconNorth.getMaxV());
         }
 
         // SOUTH face
@@ -237,10 +260,10 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
             .isOpaqueCube()) {
             t.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z + 1));
             t.setColorOpaque_F(r * 0.8f, g * 0.8f, b * 0.8f);
-            t.addVertexWithUV(x + 1, y, z + 1, u1, v1);
-            t.addVertexWithUV(x + 1, y + 1, z + 1, u1, v0);
-            t.addVertexWithUV(x, y + 1, z + 1, u0, v0);
-            t.addVertexWithUV(x, y, z + 1, u0, v1);
+            t.addVertexWithUV(x + 1, y, z + 1, iconSouth.getMaxU(), iconSouth.getMaxV());
+            t.addVertexWithUV(x + 1, y + 1, z + 1, iconSouth.getMaxU(), iconSouth.getMinV());
+            t.addVertexWithUV(x, y + 1, z + 1, iconSouth.getMinU(), iconSouth.getMinV());
+            t.addVertexWithUV(x, y, z + 1, iconSouth.getMinU(), iconSouth.getMaxV());
         }
 
         // WEST face
@@ -248,10 +271,10 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
             .isOpaqueCube()) {
             t.setBrightness(block.getMixedBrightnessForBlock(world, x - 1, y, z));
             t.setColorOpaque_F(r * 0.6f, g * 0.6f, b * 0.6f);
-            t.addVertexWithUV(x, y, z + 1, u1, v1);
-            t.addVertexWithUV(x, y + 1, z + 1, u1, v0);
-            t.addVertexWithUV(x, y + 1, z, u0, v0);
-            t.addVertexWithUV(x, y, z, u0, v1);
+            t.addVertexWithUV(x, y, z + 1, iconWest.getMaxU(), iconWest.getMaxV());
+            t.addVertexWithUV(x, y + 1, z + 1, iconWest.getMaxU(), iconWest.getMinV());
+            t.addVertexWithUV(x, y + 1, z, iconWest.getMinU(), iconWest.getMinV());
+            t.addVertexWithUV(x, y, z, iconWest.getMinU(), iconWest.getMaxV());
         }
 
         // EAST face
@@ -259,10 +282,10 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
             .isOpaqueCube()) {
             t.setBrightness(block.getMixedBrightnessForBlock(world, x + 1, y, z));
             t.setColorOpaque_F(r * 0.6f, g * 0.6f, b * 0.6f);
-            t.addVertexWithUV(x + 1, y, z, u0, v1);
-            t.addVertexWithUV(x + 1, y + 1, z, u0, v0);
-            t.addVertexWithUV(x + 1, y + 1, z + 1, u1, v0);
-            t.addVertexWithUV(x + 1, y, z + 1, u1, v1);
+            t.addVertexWithUV(x + 1, y, z, iconEast.getMinU(), iconEast.getMaxV());
+            t.addVertexWithUV(x + 1, y + 1, z, iconEast.getMinU(), iconEast.getMinV());
+            t.addVertexWithUV(x + 1, y + 1, z + 1, iconEast.getMaxU(), iconEast.getMinV());
+            t.addVertexWithUV(x + 1, y, z + 1, iconEast.getMaxU(), iconEast.getMaxV());
         }
     }
 

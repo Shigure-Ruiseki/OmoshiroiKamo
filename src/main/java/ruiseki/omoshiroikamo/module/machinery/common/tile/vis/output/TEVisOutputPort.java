@@ -90,7 +90,7 @@ public class TEVisOutputPort extends AbstractVisPortTE {
         }
         if (renderPass == 1) {
             if (getSideIO(side) == EnumIO.NONE) {
-                return IconRegistry.getIcon("overlay_port_disabled");
+                return null;
             }
             return IconRegistry.getIcon("overlay_visoutput_" + getTier());
         }

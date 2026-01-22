@@ -75,7 +75,7 @@ public abstract class TEItemInputPort extends AbstractItemIOPortTE {
             if (getSideIO(side) != EnumIO.NONE) {
                 return IconRegistry.getIcon("overlay_iteminput_" + getTier());
             }
-            return IconRegistry.getIcon("overlay_iteminput_disabled");
+            return null;
         }
         return AbstractPortBlock.baseIcon;
     }
