@@ -56,8 +56,8 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof ICable cable)) return false;
 
-        float min = 6f / 16f;
-        float max = 10f / 16f;
+        float min = 6f / 16f + 0.001f;
+        float max = 10f / 16f - 0.001f;
 
         // Core
         renderer.setRenderBounds(min, min, min, max, max, max);

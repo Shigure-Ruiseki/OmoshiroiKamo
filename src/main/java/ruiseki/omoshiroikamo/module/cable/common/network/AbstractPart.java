@@ -11,6 +11,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicNetwork;
 
 public abstract class AbstractPart implements ICablePart {
 
@@ -153,6 +155,10 @@ public abstract class AbstractPart implements ICablePart {
             }
             default -> {}
         }
+    }
+
+    public LogicNetwork getLogicNetwork() {
+        return getCable() != null ? (LogicNetwork) getCable().getNetwork(ILogicNet.class) : null;
     }
 
     @Override

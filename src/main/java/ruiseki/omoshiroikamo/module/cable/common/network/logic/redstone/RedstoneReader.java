@@ -35,13 +35,23 @@ import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicType;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicValue;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.IntLogicValue;
 
 public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
     private static final float WIDTH = 10f / 16f;
-    private static final float DEPTH = 4f / 16f;
+    private static final float DEPTH = 5f / 16f;
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
+
+    private static final IModelCustom model = AdvancedModelLoader
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/reader.obj"));
+    private static final ResourceLocation texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/redstone_reader_front.png");
+    private static final ResourceLocation back_texture = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "cable/redstone_reader_back.png");
 
     private int redstoneValue = 0;
     private boolean hasRedstone = false;
@@ -98,7 +108,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
-        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstoneValue));
+        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstoneValue, this::setRedstone));
 
         Column col = new Column();
 
@@ -109,7 +119,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
             .child(
                 IKey.dynamic(() -> String.valueOf(lowRedstone))
                     .asWidget())
-            .height(18)
+            .height(20)
             .childPadding(2);
 
         Row hasRedRow = new Row();
@@ -119,7 +129,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
             .child(
                 IKey.dynamic(() -> String.valueOf(hasRedstone))
                     .asWidget())
-            .height(18)
+            .height(20)
             .childPadding(2);
 
         Row highRedRow = new Row();
@@ -129,7 +139,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
             .child(
                 IKey.dynamic(() -> String.valueOf(highRedstone))
                     .asWidget())
-            .height(18)
+            .height(20)
             .childPadding(2);
 
         Row valueRedRow = new Row();
@@ -139,7 +149,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
             .child(
                 IKey.dynamic(() -> String.valueOf(redstoneValue))
                     .asWidget())
-            .height(18)
+            .height(20)
             .childPadding(2);
 
         col.padding(7)
@@ -221,13 +231,6 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         };
     }
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/redstone_reader.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/redstone_reader_front.png");
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/redstone_reader_back.png");
-
     @Override
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
@@ -273,4 +276,13 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         GL11.glPopMatrix();
     }
 
+    @Override
+    public LogicType getLogicType() {
+        return LogicType.INTEGER;
+    }
+
+    @Override
+    public LogicValue getLogicValue() {
+        return new IntLogicValue(redstoneValue);
+    }
 }

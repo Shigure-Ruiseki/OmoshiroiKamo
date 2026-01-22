@@ -1,4 +1,14 @@
 package ruiseki.omoshiroikamo.module.cable.common.variable;
 
-public interface IValueType<V extends IValue> {
+public enum IValueType {
+
+    BOOLEAN,
+    INT,
+    LONG,
+    FLOAT,
+    STRING;
+
+    public boolean isNumeric() {
+        return this == INT || this == LONG || this == FLOAT;
+    }
 }

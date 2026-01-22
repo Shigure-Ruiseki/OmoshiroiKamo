@@ -1,17 +1,13 @@
 package ruiseki.omoshiroikamo.api.item;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.network.PacketBuffer;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import ruiseki.omoshiroikamo.module.cable.common.network.crafting.CraftingIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
-import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemEntry;
 
 public final class ItemStackKeyUtils {
 
@@ -90,24 +86,4 @@ public final class ItemStackKeyUtils {
         }
         return set;
     }
-
-    public static List<ItemEntry> buildEntries(ItemIndex itemIndex, CraftingIndex craftingIndex) {
-
-        ObjectOpenHashSet<ItemStackKey> allKeys = new ObjectOpenHashSet<>();
-        allKeys.addAll(
-            itemIndex.view()
-                .keySet());
-        allKeys.addAll(craftingIndex.keys());
-
-        List<ItemEntry> entries = new ArrayList<>(allKeys.size());
-
-        for (ItemStackKey key : allKeys) {
-            int stored = itemIndex.get(key);
-            boolean craftable = craftingIndex.isCraftable(key);
-            entries.add(new ItemEntry(key, stored, craftable));
-        }
-
-        return entries;
-    }
-
 }

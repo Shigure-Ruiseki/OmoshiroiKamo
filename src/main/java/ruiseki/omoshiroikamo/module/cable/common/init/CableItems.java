@@ -15,10 +15,12 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemI
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutput;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.ItemRedstoneReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemStorageTerminal;
+import ruiseki.omoshiroikamo.module.cable.common.variable.ItemLogicCard;
 
 public enum CableItems {
 
     // spotless: off
+    LOGIC_CARD(new ItemLogicCard()),
 
     ENERGY_INTERFACE(new ItemEnergyInterface()),
     ENERGY_INPUT(new ItemEnergyInput()),

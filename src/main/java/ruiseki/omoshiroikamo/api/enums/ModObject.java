@@ -126,6 +126,8 @@ public enum ModObject {
 
     itemWrench,
 
+    itemLogicCard,
+
     itemEnergyInterface,
     itemEnergyInput,
     itemEnergyOutput,

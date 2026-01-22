@@ -551,7 +551,6 @@ public class TECable extends AbstractTE
         IWailaConfigHandler config) {
 
         EntityPlayer player = accessor.getPlayer();
-
         // HIT INFO
         CableHit hit = rayTraceCable(player);
         if (hit != null) {
@@ -561,19 +560,23 @@ public class TECable extends AbstractTE
                 case CORE -> tooltip.add("Core cable");
             }
         }
+        tooltip.add(getPos().toString());
 
-        // NETWORK INFO
-        NBTTagCompound tag = accessor.getNBTData();
-        int networkCount = tag.getInteger("networkCount");
+        if (accessor.getPlayer()
+            .isSneaking()) {
+            // NETWORK INFO
+            NBTTagCompound tag = accessor.getNBTData();
+            int networkCount = tag.getInteger("networkCount");
 
-        if (networkCount == 0) {
-            tooltip.add("Networks: none");
-            return;
-        }
+            if (networkCount == 0) {
+                tooltip.add("Networks: none");
+                return;
+            }
 
-        tooltip.add("Networks: " + networkCount);
-        for (int i = 0; i < networkCount; i++) {
-            tooltip.add(" - " + tag.getString("networkName" + i));
+            tooltip.add("Networks: " + networkCount);
+            for (int i = 0; i < networkCount; i++) {
+                tooltip.add(" - " + tag.getString("networkName" + i));
+            }
         }
     }
 
