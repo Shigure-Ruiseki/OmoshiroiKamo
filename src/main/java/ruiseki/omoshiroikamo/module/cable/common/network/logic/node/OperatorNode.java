@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.LogicOperator;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.ILogicOperator;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public class OperatorNode implements ILogicNode {
 
-    private final LogicOperator operator;
+    private final ILogicOperator operator;
     private final List<ILogicNode> children;
 
-    public OperatorNode(LogicOperator operator, ILogicNode... children) {
+    public OperatorNode(ILogicOperator operator, ILogicNode... children) {
         this.operator = operator;
         this.children = Arrays.asList(children);
     }

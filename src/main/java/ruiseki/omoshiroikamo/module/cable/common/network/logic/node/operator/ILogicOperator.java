@@ -4,7 +4,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
-public interface LogicOperator {
+public interface ILogicOperator {
 
     ILogicValue apply(List<ILogicValue> inputs);
 }

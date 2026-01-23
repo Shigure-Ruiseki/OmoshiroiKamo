@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKeyRegistry;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.LogicOperator;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.ILogicOperator;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.OperatorRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
@@ -57,7 +57,7 @@ public class LogicNodeFactory {
     private static ILogicNode readOperator(NBTTagCompound tag) {
 
         String opId = tag.getString("Op");
-        LogicOperator op = OperatorRegistry.get(opId);
+        ILogicOperator op = OperatorRegistry.get(opId);
 
         if (op == null) return null;
 

@@ -5,15 +5,19 @@ import java.util.List;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
-public class OpAnd implements ILogicOperator {
+public class OpIf implements ILogicOperator {
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {
-        for (ILogicValue v : in) {
-            if (!v.asBoolean()) {
-                return LogicValues.of(false);
-            }
+        if (in.size() < 2) {
+            return LogicValues.NULL;
         }
-        return LogicValues.of(true);
+
+        ILogicValue condition = in.get(0);
+        if (!condition.asBoolean()) {
+            return in.size() >= 3 ? in.get(2) : LogicValues.NULL;
+        }
+
+        return in.get(1);
     }
 }

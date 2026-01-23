@@ -5,7 +5,7 @@ import java.util.List;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
-public class OpGreaterThan implements LogicOperator {
+public class OpGreaterThan implements ILogicOperator {
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {

@@ -6,7 +6,7 @@ import java.util.Objects;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
-public class OpEqual implements LogicOperator {
+public class OpEqual implements ILogicOperator {
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {
