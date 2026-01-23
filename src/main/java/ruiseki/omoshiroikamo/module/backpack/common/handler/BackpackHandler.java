@@ -347,12 +347,11 @@ public class BackpackHandler implements IItemHandlerModifiable {
             if (stack.getItem() instanceof ItemStackUpgrade upgrade) {
                 result += upgrade.multiplier(stack);
             }
-            if (stack.equals(BackpackItems.STACK_UPGRADE.newItemStack(1,4))) {
+            if (stack.equals(BackpackItems.STACK_UPGRADE.newItemStack(1, 4))) {
                 hasstackUpdateOmega = true;
             }
         }
-        if(hasstackUpdateOmega)
-        return BackpackConfig.stackUpgradeTierOmegaMul;
+        if (hasstackUpdateOmega) return BackpackConfig.stackUpgradeTierOmegaMul;
         else return result == 0 ? 1 : result;
     }
 

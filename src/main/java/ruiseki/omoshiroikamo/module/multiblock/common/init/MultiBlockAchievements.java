@@ -38,7 +38,7 @@ public enum MultiBlockAchievements {
         MultiBlockBlocks.QUANTUM_BEACON.newItemStack(1, 3), ASSEMBLE_NANO_BOT_BEACON_T1, true, enableMultiBlock),
 
     CRAFT_MODIFIER_CORE("craft_modifier_core", 7, 0, MultiBlockBlocks.MODIFIER_NULL.newItemStack(), null, false,
-            enableMultiBlock),
+        enableMultiBlock),
     CRAFT_MODIFIER_SPEED("craft_modifier_speed", 6, 2, MultiBlockBlocks.MODIFIER_SPEED.newItemStack(),
         CRAFT_MODIFIER_CORE, false, enableMultiBlock),
     CRAFT_MODIFIER_ACCURACY("craft_modifier_accuracy", 6, 4, MultiBlockBlocks.MODIFIER_ACCURACY.newItemStack(),
@@ -67,7 +67,7 @@ public enum MultiBlockAchievements {
         CRAFT_MODIFIER_CORE, false, enableMultiBlock),
 
     CRAFT_COLORED_LENS("craft_colored_lens", 10, 3, MultiBlockBlocks.COLORED_LENS.newItemStack(), null, false,
-            enableMultiBlock);
+        enableMultiBlock);
 
     public static final MultiBlockAchievements[] VALUES = values();
 
