@@ -42,7 +42,7 @@ public class ItemSootCoveredRedstone extends ItemOK {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.useDML;
+        return BackportConfigs.enableDML;
     }
 
     @SubscribeEvent

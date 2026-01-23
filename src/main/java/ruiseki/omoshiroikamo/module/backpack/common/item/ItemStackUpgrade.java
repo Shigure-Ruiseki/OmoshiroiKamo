@@ -20,7 +20,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
 
     @SideOnly(Side.CLIENT)
-    protected IIcon tier1, tier2, tier3, tier4;
+    protected IIcon tier1, tier2, tier3, tier4, tierOmega;
 
     public ItemStackUpgrade() {
         super(ModObject.itemStackUpgrade.unlocalisedName);
@@ -33,6 +33,7 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));
         list.add(new ItemStack(item, 1, 3));
+        list.add(new ItemStack(item, 1, 4));
     }
 
     @Override
@@ -45,6 +46,8 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
                 return super.getUnlocalizedName(stack) + ".Diamond";
             case 3:
                 return super.getUnlocalizedName(stack) + ".Netherite";
+            case 4:
+                return super.getUnlocalizedName(stack) + ".Omega";
             default:
                 return super.getUnlocalizedName(stack) + ".Iron";
         }
@@ -59,6 +62,8 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
                 return tier3;
             case 3:
                 return tier4;
+            case 4:
+                return tierOmega;
             default:
                 return tier1;
         }
@@ -71,6 +76,7 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
         tier2 = reg.registerIcon(LibResources.PREFIX_MOD + "stack_upgrade_tier_2");
         tier3 = reg.registerIcon(LibResources.PREFIX_MOD + "stack_upgrade_tier_3");
         tier4 = reg.registerIcon(LibResources.PREFIX_MOD + "stack_upgrade_tier_4");
+        tierOmega = reg.registerIcon(LibResources.PREFIX_MOD + "stack_upgrade_tier_omega");
     }
 
     @Override
@@ -86,6 +92,8 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
                 return BackpackConfig.stackUpgradeTier3Mul;
             case 3:
                 return BackpackConfig.stackUpgradeTier4Mul;
+            case 4:
+                return BackpackConfig.stackUpgradeTierOmegaMul;
             default:
                 return BackpackConfig.stackUpgradeTier1Mul;
         }

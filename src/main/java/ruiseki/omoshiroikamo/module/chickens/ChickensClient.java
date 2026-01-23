@@ -27,7 +27,7 @@ public class ChickensClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useChicken;
+        return BackportConfigs.enableChicken;
     }
 
     @Override

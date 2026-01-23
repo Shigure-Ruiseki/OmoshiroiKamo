@@ -33,7 +33,7 @@ public class MachineryCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useMachinery;
+        return BackportConfigs.enableMachinery;
     }
 
     @Override

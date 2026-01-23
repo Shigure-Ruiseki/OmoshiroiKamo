@@ -27,11 +27,13 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
@@ -332,6 +334,7 @@ public class BackpackHandler implements IItemHandlerModifiable {
     public int getTotalStackMultiplier() {
         List<ItemStack> stacks = upgradeHandler.getStacks();
         int result = 0;
+        boolean hasstackUpdateOmega = false;
 
         if (stacks.isEmpty()) {
             return 1;
@@ -344,8 +347,13 @@ public class BackpackHandler implements IItemHandlerModifiable {
             if (stack.getItem() instanceof ItemStackUpgrade upgrade) {
                 result += upgrade.multiplier(stack);
             }
+            if (stack.equals(BackpackItems.STACK_UPGRADE.newItemStack(1,4))) {
+                hasstackUpdateOmega = true;
+            }
         }
-        return result == 0 ? 1 : result;
+        if(hasstackUpdateOmega)
+        return BackpackConfig.stackUpgradeTierOmegaMul;
+        else return result == 0 ? 1 : result;
     }
 
     public int getStackMultiplierExcluding(int excludeSlot, ItemStack replacement) {

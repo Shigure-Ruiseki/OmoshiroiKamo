@@ -48,7 +48,7 @@ public class QuantumBeaconEventHandler {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.useMultiBlock;
+        return BackportConfigs.enableMultiBlock;
     }
 
     /**

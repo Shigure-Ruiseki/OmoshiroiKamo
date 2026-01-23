@@ -32,7 +32,7 @@ public class MachineryClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useMachinery;
+        return BackportConfigs.enableMachinery;
     }
 
     @Override
