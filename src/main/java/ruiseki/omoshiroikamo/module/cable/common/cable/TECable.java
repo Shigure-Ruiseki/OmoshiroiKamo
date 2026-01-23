@@ -50,7 +50,7 @@ import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.energy.IEnergyPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.IRedstonePart;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.IRedstonePart;
 
 public class TECable extends AbstractTE
     implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {

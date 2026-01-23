@@ -39,6 +39,11 @@ public final class OKGuiTextures {
         .imageSize(18, 18)
         .build();
 
+    public static final UITexture VARIABLE_SLOT = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/slot/variable_slot")
+        .imageSize(18, 18)
+        .build();
+
     public static final AdaptableUITexture DML_INVENTORY_TEXTURE = (AdaptableUITexture) UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/deepMobLearning/player_inventory")
         .imageSize(256, 256)

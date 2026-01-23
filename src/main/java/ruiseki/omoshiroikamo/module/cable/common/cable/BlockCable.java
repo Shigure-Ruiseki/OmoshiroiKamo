@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.IRedstonePart;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.IRedstonePart;
 
 public class BlockCable extends BlockOK {
 

@@ -20,13 +20,18 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
@@ -35,6 +40,12 @@ import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.EvalContext;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.ILogicNode;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.LogicEvaluator;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.LogicNodeFactory;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public class ItemInput extends AbstractPart implements IItemPart {
 
@@ -51,6 +62,10 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
     private int transferLimit = 64;
 
+    private ItemStack variableCard = null;
+
+    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(1);
+
     @Override
     public String getId() {
         return "item_input";
@@ -64,6 +79,23 @@ public class ItemInput extends AbstractPart implements IItemPart {
     @Override
     public void doUpdate() {
         if (!shouldDoTickInterval()) return;
+        if (variableCard == null) return;
+
+        LogicNetwork logicNetwork = getLogicNetwork();
+        if (logicNetwork == null || logicNetwork.getNodes()
+            .isEmpty()) return;
+
+        NBTTagCompound logic = ItemNBTUtils.getCompound(variableCard, "Logic", false);
+        if (logic == null) return;
+
+        ILogicNode root = LogicNodeFactory.fromNBT(logic);
+        if (root == null) return;
+
+        EvalContext ctx = new EvalContext(logicNetwork, null);
+
+        ILogicValue value = LogicEvaluator.evaluate(root, ctx);
+
+        if (!value.asBoolean()) return;
 
         ItemNetwork network = getItemNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
@@ -94,12 +126,14 @@ public class ItemInput extends AbstractPart implements IItemPart {
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setInteger("transferLimit", transferLimit);
+        tag.setTag("item_inv", this.inv.serializeNBT());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         transferLimit = tag.getInteger("transferLimit");
+        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
     }
 
     @Override
@@ -108,6 +142,20 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
+
+        panel.child(
+            new ItemSlot().slot(new ModularSlot(inv, 0).changeListener((newItem, amountChanged, client, init) -> {
+
+                if (init) return;
+                if (newItem == null) return;
+                if (newItem.getItem() != CableItems.LOGIC_CARD.getItem()) return;
+                this.variableCard = newItem;
+
+            }))
+                .background(OKGuiTextures.VARIABLE_SLOT));
+
+        panel.bindPlayerInventory();
+        syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
     }

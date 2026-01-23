@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone;
+package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone;
 
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.ModObject;

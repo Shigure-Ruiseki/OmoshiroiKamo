@@ -4,6 +4,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
 public class LogicNetwork extends AbstractCableNetwork<ILogicNet> {
 
@@ -27,8 +30,12 @@ public class LogicNetwork extends AbstractCableNetwork<ILogicNet> {
         return null;
     }
 
-    public LogicValue getValueAt(int x, int y, int z, ForgeDirection side) {
+    public ILogicValue readAt(int x, int y, int z, ForgeDirection side, LogicKey key) {
         ILogicNet node = getNodeAt(x, y, z, side);
-        return node != null ? node.getLogicValue() : null;
+        if (node instanceof ILogicReader reader) {
+            return reader.read(key);
+        }
+        return LogicValues.NULL;
     }
+
 }

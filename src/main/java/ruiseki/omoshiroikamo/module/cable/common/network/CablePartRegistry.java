@@ -12,7 +12,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.EnergyOut
 import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemInput;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemInterface;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemOutput;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.RedstoneReader;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.RedstoneReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.StorageTerminal;
 
 public class CablePartRegistry {

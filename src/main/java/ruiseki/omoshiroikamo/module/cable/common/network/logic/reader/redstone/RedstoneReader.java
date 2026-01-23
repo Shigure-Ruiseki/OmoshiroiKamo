@@ -1,5 +1,6 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone;
+package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,18 +27,25 @@ import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
+import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicType;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicValue;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.IntLogicValue;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
 public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
@@ -59,6 +67,8 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     private boolean lowRedstone = false;
 
     private static final int HIGH_THRESHOLD = 8;
+
+    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(4);
 
     @Override
     public String getId() {
@@ -88,11 +98,13 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
+        tag.setTag("item_inv", this.inv.serializeNBT());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
+        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
     }
 
     @Override
@@ -108,7 +120,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
-        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstoneValue, this::setRedstone));
+        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstone, this::setRedstone));
 
         Column col = new Column();
 
@@ -121,6 +133,21 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                     .asWidget())
             .height(20)
             .childPadding(2);
+        lowRedRow.child(
+            new ItemSlot().slot(new ModularSlot(inv, 0).changeListener((newItem, amountChanged, client, init) -> {
+
+                if (init) return;
+                if (newItem == null) return;
+                if (newItem.getItem() != CableItems.LOGIC_CARD.getItem()) return;
+
+                ItemStack copy = newItem.copy();
+
+                writeLogicToCard(copy, LogicKeys.LOW_REDSTONE, this);
+
+                inv.setStackInSlot(0, copy);
+
+            }))
+                .background(OKGuiTextures.VARIABLE_SLOT));
 
         Row hasRedRow = new Row();
         hasRedRow.child(
@@ -131,6 +158,20 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                     .asWidget())
             .height(20)
             .childPadding(2);
+        hasRedRow.child(
+            new ItemSlot().slot(new ModularSlot(inv, 1).changeListener((newItem, amountChanged, client, init) -> {
+
+                if (init) return;
+                if (newItem == null) return;
+                if (newItem.getItem() != CableItems.LOGIC_CARD.getItem()) return;
+
+                ItemStack copy = newItem.copy();
+
+                writeLogicToCard(copy, LogicKeys.HAS_REDSTONE, this);
+
+                inv.setStackInSlot(1, copy);
+            }))
+                .background(OKGuiTextures.VARIABLE_SLOT));
 
         Row highRedRow = new Row();
         highRedRow.child(
@@ -141,6 +182,21 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                     .asWidget())
             .height(20)
             .childPadding(2);
+        highRedRow.child(
+            new ItemSlot().slot(new ModularSlot(inv, 2).changeListener((newItem, amountChanged, client, init) -> {
+
+                if (init) return;
+                if (newItem == null) return;
+                if (newItem.getItem() != CableItems.LOGIC_CARD.getItem()) return;
+
+                ItemStack copy = newItem.copy();
+
+                writeLogicToCard(copy, LogicKeys.HIGH_REDSTONE, this);
+
+                inv.setStackInSlot(2, copy);
+
+            }))
+                .background(OKGuiTextures.VARIABLE_SLOT));
 
         Row valueRedRow = new Row();
         valueRedRow.child(
@@ -151,6 +207,21 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
                     .asWidget())
             .height(20)
             .childPadding(2);
+        valueRedRow.child(
+            new ItemSlot().slot(new ModularSlot(inv, 3).changeListener((newItem, amountChanged, client, init) -> {
+
+                if (init) return;
+                if (newItem == null) return;
+                if (newItem.getItem() != CableItems.LOGIC_CARD.getItem()) return;
+
+                ItemStack copy = newItem.copy();
+
+                writeLogicToCard(copy, LogicKeys.REDSTONE_VALUE, this);
+
+                inv.setStackInSlot(3, copy);
+
+            }))
+                .background(OKGuiTextures.VARIABLE_SLOT));
 
         col.padding(7)
             .child(highRedRow)
@@ -158,6 +229,9 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
             .child(lowRedRow)
             .child(valueRedRow);
         panel.child(col);
+
+        panel.bindPlayerInventory();
+        syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
     }
@@ -190,24 +264,8 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         return Math.max(weak, strong);
     }
 
-    @Override
-    public int getRedstoneValue() {
+    public int getRedstone() {
         return redstoneValue;
-    }
-
-    @Override
-    public boolean hasRedstone() {
-        return hasRedstone;
-    }
-
-    @Override
-    public boolean isHighRedstone() {
-        return highRedstone;
-    }
-
-    @Override
-    public boolean isLowRedstone() {
-        return lowRedstone;
     }
 
     public void setRedstone(int value) {
@@ -277,12 +335,50 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
     }
 
     @Override
-    public LogicType getLogicType() {
-        return LogicType.INTEGER;
+    public List<LogicKey> getLogics() {
+        return Arrays
+            .asList(LogicKeys.REDSTONE_VALUE, LogicKeys.HAS_REDSTONE, LogicKeys.HIGH_REDSTONE, LogicKeys.LOW_REDSTONE);
     }
 
     @Override
-    public LogicValue getLogicValue() {
-        return new IntLogicValue(redstoneValue);
+    public ILogicValue read(LogicKey key) {
+        if (key == LogicKeys.REDSTONE_VALUE) {
+            return LogicValues.of(redstoneValue);
+        }
+        if (key == LogicKeys.HAS_REDSTONE) {
+            return LogicValues.of(hasRedstone);
+        }
+        if (key == LogicKeys.HIGH_REDSTONE) {
+            return LogicValues.of(highRedstone);
+        }
+        if (key == LogicKeys.LOW_REDSTONE) {
+            return LogicValues.of(lowRedstone);
+        }
+        return LogicValues.NULL;
     }
+
+    public void writeLogicToCard(ItemStack card, LogicKey key, ICablePart part) {
+        NBTTagCompound logic = new NBTTagCompound();
+
+        logic.setString("Type", "READER");
+
+        logic.setString("Reader", part.getId());
+
+        logic.setInteger("X", part.getPos().x);
+        logic.setInteger("Y", part.getPos().y);
+        logic.setInteger("Z", part.getPos().z);
+        logic.setByte(
+            "Side",
+            (byte) part.getSide()
+                .ordinal());
+
+        logic.setString("Key", key.getId());
+        logic.setString(
+            "Value",
+            key.getDefaultType()
+                .getId());
+
+        ItemNBTUtils.setCompound(card, "Logic", logic);
+    }
+
 }

@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.energy.output.ItemEnerg
 import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemItemInput;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemItemInterface;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutput;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.redstone.ItemRedstoneReader;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.ItemRedstoneReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemStorageTerminal;
 import ruiseki.omoshiroikamo.module.cable.common.variable.ItemLogicCard;
 
