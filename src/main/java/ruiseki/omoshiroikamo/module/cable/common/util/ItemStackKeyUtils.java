@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.item;
+package ruiseki.omoshiroikamo.module.cable.common.util;
 
 import java.io.IOException;
 
@@ -7,6 +7,7 @@ import net.minecraft.network.PacketBuffer;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import ruiseki.omoshiroikamo.api.item.ItemStackKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 
 public final class ItemStackKeyUtils {

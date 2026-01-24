@@ -68,7 +68,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
     @Override
     public void doUpdate() {
-        if (!shouldDoTickInterval()) return;
+        if (shouldSkipThisTick()) return;
 
         int hash = calcInventoryHash();
         if (hash != lastHash) {

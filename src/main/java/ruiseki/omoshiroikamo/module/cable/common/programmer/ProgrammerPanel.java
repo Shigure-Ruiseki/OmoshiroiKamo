@@ -31,6 +31,7 @@ import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BooleanVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.DoubleVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.IntegerVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.LongVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.StringVariable;
 
 public class ProgrammerPanel extends ModularPanel {
@@ -115,10 +116,11 @@ public class ProgrammerPanel extends ModularPanel {
     }
 
     private final List<ProgramItem> items = Arrays.asList(
-        new ProgramItem("Double", () -> new DoubleVariable(this)),
-        new ProgramItem("String", () -> new StringVariable(this)),
+        new ProgramItem("Boolean", () -> new BooleanVariable(this)),
         new ProgramItem("Integer", () -> new IntegerVariable(this)),
-        new ProgramItem("Boolean", () -> new BooleanVariable(this)));
+        new ProgramItem("Long", () -> new LongVariable(this)),
+        new ProgramItem("Double", () -> new DoubleVariable(this)),
+        new ProgramItem("String", () -> new StringVariable(this)));
 
     public void addVariableList() {
         StringValue searchValue = new StringValue("");

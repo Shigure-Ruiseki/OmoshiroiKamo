@@ -8,7 +8,8 @@ import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.ILogicOperator;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.OperatorRegistry;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
+import ruiseki.omoshiroikamo.module.cable.common.util.LogicNBTUtils;
 
 public class LogicNodeFactory {
 
@@ -43,15 +44,8 @@ public class LogicNodeFactory {
     }
 
     private static ILogicNode readLiteral(NBTTagCompound tag) {
-
-        String valueType = tag.getString("ValueType");
-
-        return switch (valueType) {
-            case "boolean" -> new LiteralNode(LogicValues.of(tag.getBoolean("Value")));
-            case "int" -> new LiteralNode(LogicValues.of(tag.getInteger("Value")));
-            case "string" -> new LiteralNode(LogicValues.of(tag.getString("Value")));
-            default -> null;
-        };
+        ILogicValue value = LogicNBTUtils.readLiteralValue(tag);
+        return value != null ? new LiteralNode(value) : null;
     }
 
     private static ILogicNode readOperator(NBTTagCompound tag) {

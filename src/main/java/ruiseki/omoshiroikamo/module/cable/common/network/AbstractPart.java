@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -11,8 +12,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.EvalContext;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.ILogicNode;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.LogicEvaluator;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.LogicNodeFactory;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public abstract class AbstractPart implements ICablePart {
 
@@ -20,7 +27,6 @@ public abstract class AbstractPart implements ICablePart {
     protected ForgeDirection side;
 
     protected int tickInterval = 1;
-    protected int tickCounter = tickInterval;
 
     protected int priority = 0;
     protected int channel = 0;
@@ -68,7 +74,6 @@ public abstract class AbstractPart implements ICablePart {
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setInteger("tickCounter", tickCounter);
         tag.setInteger("tickInterval", Math.max(1, this.tickInterval));
         tag.setInteger("priority", priority);
         tag.setInteger("channel", channel);
@@ -76,7 +81,6 @@ public abstract class AbstractPart implements ICablePart {
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        this.tickCounter = tag.getInteger("tickCounter");
         this.tickInterval = Math.max(1, tag.getInteger("tickInterval"));
         this.priority = tag.getInteger("priority");
         this.channel = tag.getInteger("channel");
@@ -120,11 +124,9 @@ public abstract class AbstractPart implements ICablePart {
         this.channel = channel;
     }
 
-    public boolean shouldDoTickInterval() {
-        tickCounter++;
-        if (tickCounter < tickInterval) return false;
-        tickCounter = 0;
-        return true;
+    public boolean shouldSkipThisTick() {
+        return getCable().getWorld()
+            .getTotalWorldTime() % tickInterval == 0;
     }
 
     @SideOnly(Side.CLIENT)
@@ -159,6 +161,22 @@ public abstract class AbstractPart implements ICablePart {
 
     public LogicNetwork getLogicNetwork() {
         return getCable() != null ? (LogicNetwork) getCable().getNetwork(ILogicNet.class) : null;
+    }
+
+    public ILogicValue evaluateLogic(ItemStack variableCard) {
+        LogicNetwork logicNetwork = getLogicNetwork();
+        if (logicNetwork == null || logicNetwork.getNodes()
+            .isEmpty()) return null;
+
+        NBTTagCompound logic = ItemNBTUtils.getCompound(variableCard, "Logic", false);
+        if (logic == null) return null;
+
+        ILogicNode root = LogicNodeFactory.fromNBT(logic);
+        if (root == null) return null;
+
+        EvalContext ctx = new EvalContext(logicNetwork, null);
+
+        return LogicEvaluator.evaluate(root, ctx);
     }
 
     public void markDirty() {

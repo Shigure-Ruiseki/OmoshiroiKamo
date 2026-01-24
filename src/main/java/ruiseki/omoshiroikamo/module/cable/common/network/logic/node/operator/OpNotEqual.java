@@ -4,15 +4,13 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
+import ruiseki.omoshiroikamo.module.cable.common.util.LogicOperationUtils;
 
-public class OpAnd implements ILogicOperator {
+public class OpNotEqual implements ILogicOperator {
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {
-        return LogicValues.of(
-            in.get(0)
-                .asBoolean()
-                && in.get(1)
-                    .asBoolean());
+        boolean eq = LogicOperationUtils.equals(in.get(0), in.get(1));
+        return LogicValues.of(!eq);
     }
 }

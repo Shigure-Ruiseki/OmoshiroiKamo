@@ -36,9 +36,27 @@ public class StringValue implements ILogicValue {
     }
 
     @Override
+    public float asFloat() {
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    @Override
     public double asDouble() {
         try {
             return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public long asLong() {
+        try {
+            return Long.parseLong(value);
         } catch (NumberFormatException e) {
             return 0;
         }

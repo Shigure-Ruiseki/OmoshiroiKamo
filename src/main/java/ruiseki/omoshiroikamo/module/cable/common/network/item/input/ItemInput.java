@@ -28,7 +28,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -40,11 +39,6 @@ import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicNetwork;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.EvalContext;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.ILogicNode;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.LogicEvaluator;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.LogicNodeFactory;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public class ItemInput extends AbstractPart implements IItemPart {
@@ -85,22 +79,10 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
     @Override
     public void doUpdate() {
-        if (!shouldDoTickInterval()) return;
+        if (shouldSkipThisTick()) return;
         if (variableCard == null) return;
 
-        LogicNetwork logicNetwork = getLogicNetwork();
-        if (logicNetwork == null || logicNetwork.getNodes()
-            .isEmpty()) return;
-
-        NBTTagCompound logic = ItemNBTUtils.getCompound(variableCard, "Logic", false);
-        if (logic == null) return;
-
-        ILogicNode root = LogicNodeFactory.fromNBT(logic);
-        if (root == null) return;
-
-        EvalContext ctx = new EvalContext(logicNetwork, null);
-
-        ILogicValue value = LogicEvaluator.evaluate(root, ctx);
+        ILogicValue value = evaluateLogic(variableCard);
 
         if (!value.asBoolean()) return;
 

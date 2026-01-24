@@ -63,7 +63,7 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
 
     @Override
     public void doUpdate() {
-        if (!shouldDoTickInterval()) return;
+        if (shouldSkipThisTick()) return;
 
         EnergyNetwork network = getEnergyNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;

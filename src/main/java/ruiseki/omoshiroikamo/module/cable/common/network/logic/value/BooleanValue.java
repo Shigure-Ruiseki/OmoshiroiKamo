@@ -7,7 +7,7 @@ public class BooleanValue implements ILogicValue {
 
     private final boolean value;
 
-    BooleanValue(boolean value) {
+    public BooleanValue(boolean value) {
         this.value = value;
     }
 
@@ -33,6 +33,16 @@ public class BooleanValue implements ILogicValue {
 
     @Override
     public double asDouble() {
+        return value ? 1 : 0;
+    }
+
+    @Override
+    public long asLong() {
+        return value ? 1 : 0;
+    }
+
+    @Override
+    public float asFloat() {
         return value ? 1 : 0;
     }
 

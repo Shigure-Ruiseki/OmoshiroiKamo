@@ -28,6 +28,16 @@ public class LogicValues {
         }
 
         @Override
+        public long asLong() {
+            return 0;
+        }
+
+        @Override
+        public float asFloat() {
+            return 0;
+        }
+
+        @Override
         public double asDouble() {
             return 0;
         }
@@ -49,6 +59,18 @@ public class LogicValues {
 
     public static ILogicValue of(int value) {
         return new IntValue(value);
+    }
+
+    public static ILogicValue of(long value) {
+        return new LongValue(value);
+    }
+
+    public static ILogicValue of(float value) {
+        return new FloatValue(value);
+    }
+
+    public static ILogicValue of(double value) {
+        return new DoubleValue(value);
     }
 
     public static ILogicValue of(String value) {

@@ -21,9 +21,11 @@ public class ProgrammerSH extends SyncHandler {
 
     public static final int CLEAR_VARIABLE_SLOT = 0;
 
-    public static final int SET_INT_LITERAL = 100;
-    public static final int SET_BOOLEAN_LITERAL = 101;
-    public static final int SET_DOUBLE_LITERAL = 101;
+    public static final int SET_BOOLEAN_LITERAL = 100;
+    public static final int SET_INT_LITERAL = 101;
+    public static final int SET_LONG_LITERAL = 102;
+    public static final int SET_DOUBLE_LITERAL = 103;
+    public static final int SET_STRING_LITERAL = 104;
 
     public ProgrammerSH(ProgrammerHandler handler, ProgrammerPanel panel) {
         this.handler = handler;
@@ -42,16 +44,24 @@ public class ProgrammerSH extends SyncHandler {
             handleClearVariableSlot();
         }
 
-        if (id == SET_INT_LITERAL) {
-            writeIntLiteral(buf);
-        }
-
         if (id == SET_BOOLEAN_LITERAL) {
             writeBooleanLiteral(buf);
         }
 
+        if (id == SET_INT_LITERAL) {
+            writeIntLiteral(buf);
+        }
+
+        if (id == SET_LONG_LITERAL) {
+            writeLongLiteral(buf);
+        }
+
         if (id == SET_DOUBLE_LITERAL) {
-            writeBooleanLiteral(buf);
+            writeDoubleLiteral(buf);
+        }
+
+        if (id == SET_STRING_LITERAL) {
+            writeStringLiteral(buf);
         }
     }
 
@@ -72,22 +82,6 @@ public class ProgrammerSH extends SyncHandler {
         }
     }
 
-    private void writeIntLiteral(PacketBuffer buffer) {
-        int value = buffer.readInt();
-        ItemStack stack = handler.getHandler()
-            .getStackInSlot(0);
-        if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.INT.getId());
-        logic.setInteger("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
-        handler.getHandler()
-            .setStackInSlot(0, stack);
-    }
-
     private void writeBooleanLiteral(PacketBuffer buffer) {
         boolean value = buffer.readBoolean();
         ItemStack stack = handler.getHandler()
@@ -104,6 +98,38 @@ public class ProgrammerSH extends SyncHandler {
             .setStackInSlot(0, stack);
     }
 
+    private void writeIntLiteral(PacketBuffer buffer) {
+        int value = buffer.readInt();
+        ItemStack stack = handler.getHandler()
+            .getStackInSlot(0);
+        if (stack == null) return;
+        NBTTagCompound logic = new NBTTagCompound();
+
+        logic.setString("Type", "LITERAL");
+        logic.setString("ValueType", LogicTypes.INT.getId());
+        logic.setInteger("Value", value);
+        ItemNBTUtils.setCompound(stack, "Logic", logic);
+
+        handler.getHandler()
+            .setStackInSlot(0, stack);
+    }
+
+    private void writeLongLiteral(PacketBuffer buffer) {
+        long value = buffer.readLong();
+        ItemStack stack = handler.getHandler()
+            .getStackInSlot(0);
+        if (stack == null) return;
+        NBTTagCompound logic = new NBTTagCompound();
+
+        logic.setString("Type", "LITERAL");
+        logic.setString("ValueType", LogicTypes.LONG.getId());
+        logic.setLong("Value", value);
+        ItemNBTUtils.setCompound(stack, "Logic", logic);
+
+        handler.getHandler()
+            .setStackInSlot(0, stack);
+    }
+
     private void writeDoubleLiteral(PacketBuffer buffer) {
         boolean value = buffer.readBoolean();
         ItemStack stack = handler.getHandler()
@@ -112,8 +138,24 @@ public class ProgrammerSH extends SyncHandler {
         NBTTagCompound logic = new NBTTagCompound();
 
         logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.BOOLEAN.getId());
+        logic.setString("ValueType", LogicTypes.DOUBLE.getId());
         logic.setBoolean("Value", value);
+        ItemNBTUtils.setCompound(stack, "Logic", logic);
+
+        handler.getHandler()
+            .setStackInSlot(0, stack);
+    }
+
+    private void writeStringLiteral(PacketBuffer buffer) throws IOException {
+        String value = buffer.readStringFromBuffer(36);
+        ItemStack stack = handler.getHandler()
+            .getStackInSlot(0);
+        if (stack == null) return;
+        NBTTagCompound logic = new NBTTagCompound();
+
+        logic.setString("Type", "LITERAL");
+        logic.setString("ValueType", LogicTypes.DOUBLE.getId());
+        logic.setString("Value", value);
         ItemNBTUtils.setCompound(stack, "Logic", logic);
 
         handler.getHandler()

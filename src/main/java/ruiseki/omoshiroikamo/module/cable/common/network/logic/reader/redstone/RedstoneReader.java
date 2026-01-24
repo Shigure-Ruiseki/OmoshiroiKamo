@@ -85,7 +85,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
     @Override
     public void doUpdate() {
-        if (!shouldDoTickInterval()) return;
+        if (shouldSkipThisTick()) return;
 
         int newValue = getRedstoneInput();
         if (newValue != this.redstoneValue) {

@@ -1,21 +1,19 @@
 package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
 
-public class BooleanVariable extends ParentWidget<BooleanVariable> {
+public class LongVariable extends ParentWidget<LongVariable> {
 
-    public BooleanVariable(ProgrammerPanel panel) {
+    public LongVariable(ProgrammerPanel panel) {
         width(162);
         heightRel(1f);
 
@@ -24,16 +22,21 @@ public class BooleanVariable extends ParentWidget<BooleanVariable> {
             .childPadding(2)
             .align(Alignment.TopCenter);
 
-        col.child(new TextWidget<>(IKey.str("Boolean config")));
+        col.child(new TextWidget<>(IKey.str("Long config")));
 
-        col.child(
-            new ToggleButton().overlay(CLEAR)
-                .size(12)
-                .onUpdateListener(widget -> {
+        TextFieldWidget field = new TextFieldWidget().setDefaultNumber(0.0)
+            .setNumbersDouble(d -> d)
+            .width(80)
+            .onUpdateListener(widget -> {
+                if (!widget.getText()
+                    .isEmpty()) {
                     panel.syncHandler.syncToServer(
-                        ProgrammerSH.SET_BOOLEAN_LITERAL,
-                        buffer -> buffer.writeBoolean(!widget.isValueSelected()));
-                }));
+                        ProgrammerSH.SET_LONG_LITERAL,
+                        buffer -> buffer.writeLong((long) widget.parse(widget.getText())));
+                }
+            });
+
+        col.child(field);
 
         child(
             new ItemSlot().syncHandler(panel.slots[0])
@@ -42,12 +45,5 @@ public class BooleanVariable extends ParentWidget<BooleanVariable> {
 
         child(col);
     }
-
-    private static final UITexture CLEAR = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
-        .imageSize(256, 256)
-        .xy(0, 44, 8, 8)
-        .adaptable(1)
-        .build();
 
 }

@@ -8,13 +8,27 @@ public class OperatorRegistry {
     private static final Map<String, ILogicOperator> OPS = new HashMap<>();
 
     static {
+        // LOGIC
         register("AND", new OpAnd());
         register("OR", new OpOr());
         register("NAND", new OpNand());
         register("NOT", new OpNot());
 
+        // COMPARISON
+
+        // ==
         register("EQ", new OpEqual());
-        register("GT", new OpGreaterThan());
+        // !=
+        register("NEQ", new OpNotEqual());
+
+        // >
+        register("GTR", new OpGreaterThan());
+        // >=
+        register("GEQ", new OpGreaterOrEqual());
+        // <
+        register("LSS", new OpLessThan());
+        // <=
+        register("LEQ", new OpLessOrEqual());
 
         register("IF", new OpIf());
     }

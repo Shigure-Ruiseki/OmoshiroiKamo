@@ -9,11 +9,10 @@ public class OpOr implements ILogicOperator {
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {
-        for (ILogicValue v : in) {
-            if (v.asBoolean()) {
-                return LogicValues.of(true);
-            }
-        }
-        return LogicValues.of(false);
+        return LogicValues.of(
+            in.get(0)
+                .asBoolean()
+                || in.get(1)
+                    .asBoolean());
     }
 }

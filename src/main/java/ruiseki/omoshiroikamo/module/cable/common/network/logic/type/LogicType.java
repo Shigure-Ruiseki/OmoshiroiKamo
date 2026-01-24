@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.type;
 
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
-
 public abstract class LogicType<T> {
 
     private final String id;
@@ -18,11 +16,9 @@ public abstract class LogicType<T> {
         return false;
     }
 
-    public boolean isEquatable() {
-        return true;
+    public boolean isNumeric() {
+        return false;
     }
-
-    public abstract T cast(ILogicValue value);
 
     @Override
     public String toString() {

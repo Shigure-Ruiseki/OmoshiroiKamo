@@ -1,18 +1,16 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator;
 
 import java.util.List;
-import java.util.Objects;
 
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
+import ruiseki.omoshiroikamo.module.cable.common.util.LogicOperationUtils;
 
 public class OpEqual implements ILogicOperator {
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {
-        ILogicValue a = in.get(0);
-        ILogicValue b = in.get(1);
-
-        return LogicValues.of(Objects.equals(a.raw(), b.raw()));
+        boolean eq = LogicOperationUtils.equals(in.get(0), in.get(1));
+        return LogicValues.of(eq);
     }
 }

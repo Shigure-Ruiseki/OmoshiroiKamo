@@ -11,6 +11,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicTypeRegistry;
+import ruiseki.omoshiroikamo.module.cable.common.util.LogicNBTUtils;
 
 public class ItemVariableCard extends ItemOK {
 
@@ -35,7 +36,8 @@ public class ItemVariableCard extends ItemOK {
         switch (type) {
             case "READER" -> addReaderInfo(logic, list);
             case "OP" -> addOperatorInfo(logic, list);
-            case "LITERAL" -> addLiteralInfo(logic, list);
+            case "LITERAL" -> LogicNBTUtils.addLiteralTooltip(logic, list);
+
             default -> list.add("§cUnknown logic");
         }
     }
@@ -72,19 +74,4 @@ public class ItemVariableCard extends ItemOK {
             list.add(" §fInputs: §b" + count);
         }
     }
-
-    private void addLiteralInfo(NBTTagCompound tag, List<String> list) {
-
-        list.add("§7Literal:");
-
-        String valueType = tag.getString("ValueType");
-        list.add(" §fType: §a" + valueType);
-
-        switch (valueType) {
-            case "boolean" -> list.add(" §fValue: §b" + tag.getBoolean("Value"));
-            case "int" -> list.add(" §fValue: §b" + tag.getInteger("Value"));
-            case "string" -> list.add(" §fValue: §b\"" + tag.getString("Value") + "\"");
-        }
-    }
-
 }
