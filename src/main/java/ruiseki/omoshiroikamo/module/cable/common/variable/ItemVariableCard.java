@@ -12,10 +12,10 @@ import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicTypeRegistry;
 
-public class ItemLogicCard extends ItemOK {
+public class ItemVariableCard extends ItemOK {
 
-    public ItemLogicCard() {
-        super(ModObject.itemLogicCard.unlocalisedName);
+    public ItemVariableCard() {
+        super(ModObject.itemVariableCard.unlocalisedName);
         setMaxStackSize(1);
     }
 
@@ -81,7 +81,7 @@ public class ItemLogicCard extends ItemOK {
         list.add(" §fType: §a" + valueType);
 
         switch (valueType) {
-            case "bool" -> list.add(" §fValue: §b" + tag.getBoolean("Value"));
+            case "boolean" -> list.add(" §fValue: §b" + tag.getBoolean("Value"));
             case "int" -> list.add(" §fValue: §b" + tag.getInteger("Value"));
             case "string" -> list.add(" §fValue: §b\"" + tag.getString("Value") + "\"");
         }

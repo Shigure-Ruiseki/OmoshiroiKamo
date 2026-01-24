@@ -28,6 +28,14 @@ public class LogicTypes {
         }
     });
 
+    public static final LogicType<Double> DOUBLE = LogicTypeRegistry.register(new LogicType<>("double") {
+
+        @Override
+        public Double cast(ILogicValue value) {
+            return value.asDouble();
+        }
+    });
+
     public static final LogicType<String> STRING = LogicTypeRegistry.register(new LogicType<>("string") {
 
         @Override

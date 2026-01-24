@@ -31,9 +31,7 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
-import ruiseki.omoshiroikamo.api.cable.ICablePart;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
@@ -142,7 +140,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
                 ItemStack copy = newItem.copy();
 
-                writeLogicToCard(copy, LogicKeys.LOW_REDSTONE, this);
+                this.writeLogicToCard(copy, LogicKeys.LOW_REDSTONE, this);
 
                 inv.setStackInSlot(0, copy);
 
@@ -167,7 +165,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
                 ItemStack copy = newItem.copy();
 
-                writeLogicToCard(copy, LogicKeys.HAS_REDSTONE, this);
+                this.writeLogicToCard(copy, LogicKeys.HAS_REDSTONE, this);
 
                 inv.setStackInSlot(1, copy);
             }))
@@ -191,7 +189,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
                 ItemStack copy = newItem.copy();
 
-                writeLogicToCard(copy, LogicKeys.HIGH_REDSTONE, this);
+                this.writeLogicToCard(copy, LogicKeys.HIGH_REDSTONE, this);
 
                 inv.setStackInSlot(2, copy);
 
@@ -216,7 +214,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
                 ItemStack copy = newItem.copy();
 
-                writeLogicToCard(copy, LogicKeys.REDSTONE_VALUE, this);
+                this.writeLogicToCard(copy, LogicKeys.REDSTONE_VALUE, this);
 
                 inv.setStackInSlot(3, copy);
 
@@ -356,29 +354,4 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         }
         return LogicValues.NULL;
     }
-
-    public void writeLogicToCard(ItemStack card, LogicKey key, ICablePart part) {
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "READER");
-
-        logic.setString("Reader", part.getId());
-
-        logic.setInteger("X", part.getPos().x);
-        logic.setInteger("Y", part.getPos().y);
-        logic.setInteger("Z", part.getPos().z);
-        logic.setByte(
-            "Side",
-            (byte) part.getSide()
-                .ordinal());
-
-        logic.setString("Key", key.getId());
-        logic.setString(
-            "Value",
-            key.getDefaultType()
-                .getId());
-
-        ItemNBTUtils.setCompound(card, "Logic", logic);
-    }
-
 }

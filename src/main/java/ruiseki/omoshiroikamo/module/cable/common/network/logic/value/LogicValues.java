@@ -28,6 +28,11 @@ public class LogicValues {
         }
 
         @Override
+        public double asDouble() {
+            return 0;
+        }
+
+        @Override
         public String asString() {
             return "";
         }
@@ -39,7 +44,7 @@ public class LogicValues {
     };
 
     public static ILogicValue of(boolean value) {
-        return new BoolValue(value);
+        return new BooleanValue(value);
     }
 
     public static ILogicValue of(int value) {

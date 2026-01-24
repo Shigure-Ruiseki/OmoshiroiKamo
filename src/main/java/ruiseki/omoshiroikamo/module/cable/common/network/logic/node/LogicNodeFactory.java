@@ -47,7 +47,7 @@ public class LogicNodeFactory {
         String valueType = tag.getString("ValueType");
 
         return switch (valueType) {
-            case "bool" -> new LiteralNode(LogicValues.of(tag.getBoolean("Value")));
+            case "boolean" -> new LiteralNode(LogicValues.of(tag.getBoolean("Value")));
             case "int" -> new LiteralNode(LogicValues.of(tag.getInteger("Value")));
             case "string" -> new LiteralNode(LogicValues.of(tag.getString("Value")));
             default -> null;

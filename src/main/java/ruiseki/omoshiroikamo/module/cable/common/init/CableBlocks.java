@@ -6,12 +6,16 @@ import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.cable.common.cable.BlockCable;
+import ruiseki.omoshiroikamo.module.cable.common.programmer.BlockProgrammer;
 
 public enum CableBlocks {
 
     // spotless: off
 
-    CABLE(new BlockCable());
+    CABLE(new BlockCable()),
+    PROGRAMMER(new BlockProgrammer()),
+
+    ;
     // spotless: on
 
     public static final CableBlocks[] VALUES = values();

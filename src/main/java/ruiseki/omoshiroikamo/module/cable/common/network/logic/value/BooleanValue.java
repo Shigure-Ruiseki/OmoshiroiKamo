@@ -3,11 +3,11 @@ package ruiseki.omoshiroikamo.module.cable.common.network.logic.value;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicTypes;
 
-public class BoolValue implements ILogicValue {
+public class BooleanValue implements ILogicValue {
 
     private final boolean value;
 
-    BoolValue(boolean value) {
+    BooleanValue(boolean value) {
         this.value = value;
     }
 
@@ -28,6 +28,11 @@ public class BoolValue implements ILogicValue {
 
     @Override
     public int asInt() {
+        return value ? 1 : 0;
+    }
+
+    @Override
+    public double asDouble() {
         return value ? 1 : 0;
     }
 

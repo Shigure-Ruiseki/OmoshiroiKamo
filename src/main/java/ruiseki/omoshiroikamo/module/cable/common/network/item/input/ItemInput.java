@@ -64,7 +64,14 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
     private ItemStack variableCard = null;
 
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(1);
+    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(1) {
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+            markDirty();
+        }
+    };
 
     @Override
     public String getId() {
@@ -133,7 +140,9 @@ public class ItemInput extends AbstractPart implements IItemPart {
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         transferLimit = tag.getInteger("transferLimit");
-        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
+        if (tag.hasKey("item_inv")) {
+            this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
+        }
     }
 
     @Override

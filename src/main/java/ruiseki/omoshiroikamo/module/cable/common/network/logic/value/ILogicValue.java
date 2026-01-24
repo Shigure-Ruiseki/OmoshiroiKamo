@@ -12,5 +12,7 @@ public interface ILogicValue {
 
     int asInt();
 
+    double asDouble();
+
     String asString();
 }

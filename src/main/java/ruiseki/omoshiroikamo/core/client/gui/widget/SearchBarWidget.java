@@ -1,26 +1,18 @@
 package ruiseki.omoshiroikamo.core.client.gui.widget;
 
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.VANILLA_SEARCH_BACKGROUND;
+
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
-
 public class SearchBarWidget extends TextFieldWidget {
 
     protected String prevText = "";
-
-    public static final UITexture VANILLA_SEARCH_BACKGROUND = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/vanilla_search")
-        .imageSize(18, 18)
-        .adaptable(1)
-        .name("vanilla_search")
-        .build();
 
     public SearchBarWidget() {
         super();

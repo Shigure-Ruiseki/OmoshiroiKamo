@@ -161,6 +161,10 @@ public abstract class AbstractPart implements ICablePart {
         return getCable() != null ? (LogicNetwork) getCable().getNetwork(ILogicNet.class) : null;
     }
 
+    public void markDirty() {
+        getCable().dirty();
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName();

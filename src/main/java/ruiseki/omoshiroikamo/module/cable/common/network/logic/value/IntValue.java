@@ -32,6 +32,11 @@ public class IntValue implements ILogicValue {
     }
 
     @Override
+    public double asDouble() {
+        return value;
+    }
+
+    @Override
     public String asString() {
         return Integer.toString(value);
     }

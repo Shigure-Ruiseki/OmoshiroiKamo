@@ -14,6 +14,13 @@ public final class OKGuiTextures {
 
     private OKGuiTextures() {}
 
+    public static final UITexture VANILLA_SEARCH_BACKGROUND = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/vanilla_search")
+        .imageSize(18, 18)
+        .adaptable(1)
+        .name("vanilla_search")
+        .build();
+
     public static final UITexture BREEDER_PROGRESS = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/widgets/progress_breeder")
         .imageSize(36, 36)

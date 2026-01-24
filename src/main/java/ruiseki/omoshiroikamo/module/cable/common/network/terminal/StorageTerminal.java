@@ -207,10 +207,6 @@ public class StorageTerminal extends AbstractPart {
         }
     }
 
-    public void markDirty() {
-        getCable().dirty();
-    }
-
     @Override
     public AxisAlignedBB getCollisionBox() {
         return switch (getSide()) {
