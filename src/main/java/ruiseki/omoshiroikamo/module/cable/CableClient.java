@@ -26,7 +26,7 @@ public class CableClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useCable;
+        return BackportConfigs.enableCable;
     }
 
     @Override

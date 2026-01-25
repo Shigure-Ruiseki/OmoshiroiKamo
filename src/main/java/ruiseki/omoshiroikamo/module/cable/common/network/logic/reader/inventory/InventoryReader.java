@@ -9,6 +9,7 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -29,6 +30,7 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
@@ -160,6 +162,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         // Settings panel
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
+
+        syncManager
+            .syncValue("clientCacheSyncer", new StringSyncValue(this::getClientCacheNBT, this::setClientCacheNBT));
 
         // Search
         StringValue searchValue = new StringValue("");
@@ -393,6 +398,18 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         return selectedSlot;
     }
 
+    public String getClientCacheNBT() {
+        return clientCache.toString();
+    }
+
+    public void setClientCacheNBT(String s) {
+        try {
+            clientCache = (NBTTagCompound) JsonToNBT.func_150315_a(s);
+        } catch (Exception e) {
+            clientCache = new NBTTagCompound();
+        }
+    }
+
     private IInventory getInventory(World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
 
@@ -440,5 +457,4 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         }
         return true;
     }
-
 }

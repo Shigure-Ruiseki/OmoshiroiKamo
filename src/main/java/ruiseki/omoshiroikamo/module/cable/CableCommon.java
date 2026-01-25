@@ -28,7 +28,7 @@ public class CableCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useCable;
+        return BackportConfigs.enableCable;
     }
 
     @Override
