@@ -14,31 +14,31 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useChicken;
+    public static boolean enableChicken;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useMultiBlock;
+    public static boolean enableMultiBlock;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useCow;
+    public static boolean enableCow;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useCable;
+    public static boolean enableCable;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useBackpack;
+    public static boolean enableBackpack;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useDML;
+    public static boolean enableDML;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean useMachinery;
+    public static boolean enableMachinery;
 
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(BackportConfigs.class);

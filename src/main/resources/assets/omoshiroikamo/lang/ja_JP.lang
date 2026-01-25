@@ -416,6 +416,7 @@ item.stackUpgrade.Iron.name=スタックアップグレード Tier 1
 item.stackUpgrade.Gold.name=スタックアップグレード Tier 2
 item.stackUpgrade.Diamond.name=スタックアップグレード Tier 3
 item.stackUpgrade.Netherite.name=スタックアップグレード Tier 4
+item.stackUpgrade.Omega.name=スタックアップグレード Tier Ω
 item.craftingUpgrade.name=クラフトアップグレード
 item.batteryUpgrade.name=バッテリーアップグレード
 item.everlastingUpgrade.name=永遠アップグレード

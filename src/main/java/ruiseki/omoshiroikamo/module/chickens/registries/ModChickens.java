@@ -25,7 +25,7 @@ import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken
 public class ModChickens {
 
     public static void preInit() {
-        if (!BackportConfigs.useChicken) return;
+        if (!BackportConfigs.enableChicken) return;
 
         EntityRegistry.registerModEntity(
             EntityChickensChicken.class,
@@ -42,12 +42,12 @@ public class ModChickens {
     }
 
     public static void init() {
-        if (!BackportConfigs.useChicken) return;
+        if (!BackportConfigs.enableChicken) return;
         registerModAddons();
     }
 
     public static void postInit() {
-        if (!BackportConfigs.useChicken) return;
+        if (!BackportConfigs.enableChicken) return;
 
         loadConfiguration();
 

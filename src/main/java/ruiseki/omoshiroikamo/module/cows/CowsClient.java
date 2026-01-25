@@ -24,7 +24,7 @@ public class CowsClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useCow;
+        return BackportConfigs.enableCow;
     }
 
     @Override

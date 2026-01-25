@@ -24,7 +24,7 @@ public class ChickensCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useChicken;
+        return BackportConfigs.enableChicken;
     }
 
     @Override

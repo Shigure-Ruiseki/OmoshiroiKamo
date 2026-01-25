@@ -73,6 +73,10 @@ public class BackpackConfig {
     @Config.RangeInt(min = 1)
     public static int stackUpgradeTier4Mul;
 
+    @Config.DefaultInt(33554431)
+    @Config.RangeInt(min = 1)
+    public static int stackUpgradeTierOmegaMul;
+
     @Config.LangKey(LibResources.CONFIG + "magnetConfig")
     public static class MagnetConfig {
 

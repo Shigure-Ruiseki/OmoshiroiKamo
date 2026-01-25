@@ -71,7 +71,7 @@ public class KeyHandler {
     }
 
     private void handleOpenBackpack() {
-        if (keyOpenBackpack.isPressed() && BackportConfigs.useBackpack) {
+        if (keyOpenBackpack.isPressed() && BackportConfigs.enableBackpack) {
             EntityPlayer player = Platform.getClientPlayer();
 
             for (int armorIndex = 0; armorIndex < 4; armorIndex++) {
@@ -101,7 +101,7 @@ public class KeyHandler {
     }
 
     private void handleBackpackQuickDraw() {
-        if (!keyBackpackPickBlock.getIsKeyPressed() || !BackportConfigs.useBackpack) return;
+        if (!keyBackpackPickBlock.getIsKeyPressed() || !BackportConfigs.enableBackpack) return;
 
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.currentScreen != null) return;

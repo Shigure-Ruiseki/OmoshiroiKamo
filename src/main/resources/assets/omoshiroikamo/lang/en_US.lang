@@ -490,6 +490,7 @@ item.stackUpgrade.Iron.name=Stack Upgrade Tier 1
 item.stackUpgrade.Gold.name=Stack Upgrade Tier 2
 item.stackUpgrade.Diamond.name=Stack Upgrade Tier 3
 item.stackUpgrade.Netherite.name=Stack Upgrade Tier 4
+item.stackUpgrade.Omega.name=Stack Upgrade Omega Tier
 item.craftingUpgrade.name=Crafting Upgrade
 item.batteryUpgrade.name=Battery Upgrade
 item.everlastingUpgrade.name=Everlasting Upgrade

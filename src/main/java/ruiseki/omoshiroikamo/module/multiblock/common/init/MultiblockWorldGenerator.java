@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.world;
+package ruiseki.omoshiroikamo.module.multiblock.common.init;
 
 import java.util.Random;
 
@@ -12,11 +12,10 @@ import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.backport.multiblock.MultiblockWorldGenConfig;
-import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
-public class OKWorldGenerator implements IWorldGenerator {
+public class MultiblockWorldGenerator implements IWorldGenerator {
 
-    public static final OKWorldGenerator INSTANCE = new OKWorldGenerator();
+    public static final MultiblockWorldGenerator INSTANCE = new MultiblockWorldGenerator();
     private final WorldGenMinable hardened_stone = new WorldGenMinable(
         MultiBlockBlocks.BLOCK_HARDENED_STONE.getBlock(),
         MultiblockWorldGenConfig.hardenedStone.nodeSize);
@@ -36,7 +35,7 @@ public class OKWorldGenerator implements IWorldGenerator {
         IChunkProvider chunkProvider) {
         if (world.provider instanceof WorldProviderSurface) {
 
-            if (BackportConfigs.useMultiBlock) {
+            if (BackportConfigs.enableMultiBlock) {
 
                 if (MultiblockWorldGenConfig.hardenedStone.enable) {
                     this.runGeneration(

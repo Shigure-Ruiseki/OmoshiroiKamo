@@ -24,7 +24,7 @@ public class WrenchOverlayRenderer {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.useMachinery;
+        return BackportConfigs.enableMachinery;
     }
 
     @SubscribeEvent

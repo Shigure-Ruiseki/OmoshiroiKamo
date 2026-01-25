@@ -25,7 +25,7 @@ public class BackpackCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useBackpack;
+        return BackportConfigs.enableBackpack;
     }
 
     @Override

@@ -51,7 +51,7 @@ public class NEIConfig implements IConfigureNEI {
      */
     @SubscribeEvent
     public static void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
-        if (BackportConfigs.useMachinery) {
+        if (BackportConfigs.enableMachinery) {
             event.registerHandlerInfo(
                 new HandlerInfo.Builder(ModularMachineNEIHandler.class, "Modular Machine", LibMisc.MOD_ID)
                     .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
@@ -66,7 +66,7 @@ public class NEIConfig implements IConfigureNEI {
     @Override
     public void loadConfig() {
         Logger.info("Loading NeiConfig: {}", getName());
-        if (BackportConfigs.useMultiBlock) {
+        if (BackportConfigs.enableMultiBlock) {
             // TODO: Change Void Miner structure preview to Tier-based because buttons do not work now
             // Register Ore Extractors
             for (int i = 0; i < 6; i++) {
@@ -84,29 +84,29 @@ public class NEIConfig implements IConfigureNEI {
                 registerDimensionCatalysts(res.getRecipeID());
             }
         }
-        if (BackportConfigs.useChicken) {
+        if (BackportConfigs.enableChicken) {
             registerHandler(new ChickenLayingRecipeHandler());
             registerHandler(new ChickenBreedingRecipeHandler());
             registerHandler(new ChickenDropsRecipeHandler());
             registerHandler(new ChickenThrowsRecipeHandler());
         }
 
-        if (BackportConfigs.useCow) {
+        if (BackportConfigs.enableCow) {
             registerHandler(new CowBreedingRecipeHandler());
             registerHandler(new CowMilkingRecipeHandler());
         }
 
-        if (BackportConfigs.useBackpack) {
+        if (BackportConfigs.enableBackpack) {
             API.registerGuiOverlay(BackpackGuiContainer.class, "crafting", new BackpackPositioner());
             API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
         }
 
-        if (BackportConfigs.useCable) {
+        if (BackportConfigs.enableCable) {
             API.registerGuiOverlay(TerminalGuiContainer.class, "crafting", new TerminalPositioner());
             API.registerGuiOverlayHandler(TerminalGuiContainer.class, new TerminalOverlay(), "crafting");
         }
 
-        if (BackportConfigs.useDML) {
+        if (BackportConfigs.enableDML) {
             registerHandler(new LootFabricatorRecipeHandler());
             registerHandler(new SimulationChamberRecipeHandler());
         }
@@ -117,7 +117,7 @@ public class NEIConfig implements IConfigureNEI {
         // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
         // TODO: Add Recipe of Modular Machines
         // TODO: Enable 'P' button in structure preview (Name is currently null)
-        if (BackportConfigs.useMachinery) {
+        if (BackportConfigs.enableMachinery) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
                 // Register ONLY as usage handler - structure preview is Usage-only
