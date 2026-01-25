@@ -363,11 +363,13 @@ public class StructureAgent {
         nbt.setTag("structureBlocks", list);
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public boolean readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("customStructureName")) {
             customStructureName = nbt.getString("customStructureName");
         }
         structureBlockPositions.clear();
+
+        boolean loadedBlocks = false;
         if (nbt.hasKey("structureBlocks")) {
             NBTTagList list = nbt.getTagList("structureBlocks", 10);
             for (int i = 0; i < list.tagCount(); i++) {
@@ -375,7 +377,15 @@ public class StructureAgent {
                 structureBlockPositions
                     .add(new ChunkCoordinates(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z")));
             }
+            loadedBlocks = !structureBlockPositions.isEmpty();
         }
+
+        // Restore color cache from loaded structure name
+        if (loadedBlocks && customStructureName != null) {
+            structureTintColor = getStructureTintColor();
+        }
+
+        return loadedBlocks;
     }
 
 }
