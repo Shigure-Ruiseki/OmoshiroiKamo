@@ -2,11 +2,13 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -156,6 +158,11 @@ public class StructureAgent {
      */
     public void addStructurePosition(int x, int y, int z) {
         structureBlockPositions.add(new ChunkCoordinates(x, y, z));
+    }
+
+    public void setStructureBlockPositions(List<ChunkCoordinates> positions) {
+        structureBlockPositions.clear();
+        structureBlockPositions.addAll(positions);
     }
 
     // ========== Structure Validation ==========
@@ -341,17 +348,34 @@ public class StructureAgent {
         return lastValidationError;
     }
 
-    // ========== NBT Persistence ==========
-
     public void writeToNBT(NBTTagCompound nbt) {
         if (customStructureName != null) {
             nbt.setString("customStructureName", customStructureName);
         }
+        NBTTagList list = new NBTTagList();
+        for (ChunkCoordinates pos : structureBlockPositions) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setInteger("x", pos.posX);
+            tag.setInteger("y", pos.posY);
+            tag.setInteger("z", pos.posZ);
+            list.appendTag(tag);
+        }
+        nbt.setTag("structureBlocks", list);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("customStructureName")) {
             customStructureName = nbt.getString("customStructureName");
         }
+        structureBlockPositions.clear();
+        if (nbt.hasKey("structureBlocks")) {
+            NBTTagList list = nbt.getTagList("structureBlocks", 10);
+            for (int i = 0; i < list.tagCount(); i++) {
+                NBTTagCompound tag = list.getCompoundTagAt(i);
+                structureBlockPositions
+                    .add(new ChunkCoordinates(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z")));
+            }
+        }
     }
+
 }

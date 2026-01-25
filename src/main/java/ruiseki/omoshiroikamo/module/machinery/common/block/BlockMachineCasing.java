@@ -46,6 +46,11 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
     }
 
     @Override
+    public int getRenderColor(int meta) {
+        return MachineryConfig.getDefaultTintColorInt();
+    }
+
+    @Override
     public int getRenderType() {
         return 0;
     }

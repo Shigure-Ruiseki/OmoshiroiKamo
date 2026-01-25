@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,9 +10,12 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
@@ -98,7 +102,11 @@ public class TEMachineController extends AbstractMBModifierTE
     private final GuiManager guiManager = new GuiManager(this);
 
     // Controller facing (rotation state) - used by IAlignment
+    // Controller facing (rotation state) - used by IAlignment
     private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
+
+    // Transient flag to trigger tint packet resend on load
+    private boolean needsTintResend = false;
 
     public TEMachineController() {
         super();
@@ -205,6 +213,12 @@ public class TEMachineController extends AbstractMBModifierTE
      */
     @Override
     public void doUpdate() {
+        // Resend tint packet on load/restore
+        if (needsTintResend && worldObj != null && !worldObj.isRemote) {
+            structureAgent.sendTintPacket();
+            needsTintResend = false;
+        }
+
         // Sync customStructureName from blueprint if blueprint is present in GUI
         // Only update if blueprint has a structure name
         String blueprintName = getStructureNameFromBlueprint();
@@ -440,6 +454,18 @@ public class TEMachineController extends AbstractMBModifierTE
         // Load blueprint inventory
         if (nbt.hasKey("inventory")) {
             inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
+        }
+        // Load structure block positions
+        if (nbt.hasKey("structureBlocks", Constants.NBT.TAG_LIST)) {
+            NBTTagList structureBlocksNBT = nbt.getTagList("structureBlocks", Constants.NBT.TAG_COMPOUND);
+            List<ChunkCoordinates> loadedPositions = new ArrayList<>();
+            for (int i = 0; i < structureBlocksNBT.tagCount(); i++) {
+                NBTTagCompound posNBT = structureBlocksNBT.getCompoundTagAt(i);
+                loadedPositions
+                    .add(new ChunkCoordinates(posNBT.getInteger("x"), posNBT.getInteger("y"), posNBT.getInteger("z")));
+            }
+            structureAgent.setStructureBlockPositions(loadedPositions);
+            needsTintResend = true;
         }
         // Load structure data
         structureAgent.readFromNBT(nbt);
