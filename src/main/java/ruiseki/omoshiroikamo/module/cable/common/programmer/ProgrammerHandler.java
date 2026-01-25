@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 
 public class ProgrammerHandler {
 
@@ -24,32 +23,7 @@ public class ProgrammerHandler {
 
     public ProgrammerHandler(ItemStack itemStack) {
         this.itemStack = itemStack;
-        handler = new ItemStackHandler(10) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                writeToItem();
-            }
-        };
-        readFromItem();
-    }
-
-    public void writeToItem() {
-        if (itemStack == null) {
-            return;
-        }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(itemStack);
-        writeToNBT(tag);
-        itemStack.setTagCompound(tag);
-    }
-
-    public void readFromItem() {
-        if (itemStack == null) {
-            return;
-        }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(itemStack);
-        readFromNBT(tag);
+        handler = new ItemStackHandler(10);
     }
 
     public void writeToNBT(NBTTagCompound tag) {

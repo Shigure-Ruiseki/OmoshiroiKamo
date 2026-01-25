@@ -4,7 +4,7 @@ public abstract class NumberValue implements ILogicValue {
 
     @Override
     public boolean asBoolean() {
-        return asDouble() != 0;
+        return false;
     }
 
     @Override

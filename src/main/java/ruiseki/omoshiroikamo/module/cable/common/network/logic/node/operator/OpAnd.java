@@ -8,6 +8,11 @@ import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues
 public class OpAnd implements ILogicOperator {
 
     @Override
+    public String getId() {
+        return "AND";
+    }
+
+    @Override
     public ILogicValue apply(List<ILogicValue> in) {
         return LogicValues.of(
             in.get(0)

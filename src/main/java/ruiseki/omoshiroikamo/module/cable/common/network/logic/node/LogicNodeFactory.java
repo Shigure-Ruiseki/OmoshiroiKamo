@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.node;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.operator.ILogicOperator;
@@ -14,6 +16,15 @@ import ruiseki.omoshiroikamo.module.cable.common.util.LogicNBTUtils;
 public class LogicNodeFactory {
 
     private LogicNodeFactory() {}
+
+    public static ILogicNode readNodeFromItem(ItemStack stack) {
+        if (stack == null) return null;
+
+        NBTTagCompound logic = ItemNBTUtils.getCompound(stack, "Logic", false);
+        if (logic == null) return null;
+
+        return LogicNodeFactory.fromNBT(logic);
+    }
 
     public static ILogicNode fromNBT(NBTTagCompound tag) {
         if (tag == null || !tag.hasKey("Type")) {
@@ -60,7 +71,11 @@ public class LogicNodeFactory {
 
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound childTag = list.getCompoundTagAt(i);
-            children[i] = fromNBT(childTag);
+            ILogicNode child = fromNBT(childTag);
+            if (child == null) {
+                return null;
+            }
+            children[i] = child;
         }
 
         return new OperatorNode(op, children);

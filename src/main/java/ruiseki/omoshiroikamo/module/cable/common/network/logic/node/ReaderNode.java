@@ -13,6 +13,14 @@ public class ReaderNode implements ILogicNode {
         this.key = key;
     }
 
+    public ReaderRef getRef() {
+        return ref;
+    }
+
+    public LogicKey getKey() {
+        return key;
+    }
+
     @Override
     public ILogicValue evaluate(EvalContext ctx) {
         return ctx.network()

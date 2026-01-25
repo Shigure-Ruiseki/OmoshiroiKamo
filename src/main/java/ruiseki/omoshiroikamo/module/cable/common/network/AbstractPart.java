@@ -12,7 +12,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.cable.ICable;
 import ruiseki.omoshiroikamo.api.cable.ICablePart;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.LogicNetwork;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.node.EvalContext;
@@ -124,7 +123,8 @@ public abstract class AbstractPart implements ICablePart {
         this.channel = channel;
     }
 
-    public boolean shouldSkipThisTick() {
+    public boolean shouldTickNow() {
+        if (tickInterval <= 1) return true;
         return getCable().getWorld()
             .getTotalWorldTime() % tickInterval == 0;
     }
@@ -168,10 +168,7 @@ public abstract class AbstractPart implements ICablePart {
         if (logicNetwork == null || logicNetwork.getNodes()
             .isEmpty()) return null;
 
-        NBTTagCompound logic = ItemNBTUtils.getCompound(variableCard, "Logic", false);
-        if (logic == null) return null;
-
-        ILogicNode root = LogicNodeFactory.fromNBT(logic);
+        ILogicNode root = LogicNodeFactory.readNodeFromItem(variableCard);
         if (root == null) return null;
 
         EvalContext ctx = new EvalContext(logicNetwork, null);

@@ -1,34 +1,33 @@
 package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable;
 
-import com.cleanroommc.modularui.value.LongValue;
+import com.cleanroommc.modularui.value.DoubleValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
 
-public class LongVariable extends BaseVariableWidget {
+public class FloatVariable extends BaseVariableWidget {
 
-    private LongValue longValue;
+    private DoubleValue floatValue;
 
-    public LongVariable(ProgrammerPanel panel) {
+    public FloatVariable(ProgrammerPanel panel) {
         super(panel);
 
         Column col = new Column();
         col.coverChildren()
             .childPadding(2);
 
-        longValue = new LongValue(0);
-        TextFieldWidget field = new TextFieldWidget().value(longValue)
+        floatValue = new DoubleValue(0);
+        TextFieldWidget field = new TextFieldWidget().value(floatValue)
             .setDefaultNumber(0.0)
             .setNumbersDouble(d -> d)
             .width(80)
-            .onUpdateListener(widget -> {
-                if (!widget.getText()
-                    .isEmpty()) {
-                    writeLogicNBT();
-                }
-            });
+            .onUpdateListener(
+                widget -> {
+                    if (!widget.getText()
+                        .isEmpty()) {}
+                });
 
         col.child(field);
 
@@ -38,6 +37,6 @@ public class LongVariable extends BaseVariableWidget {
     @Override
     public void writeLogicNBT() {
         panel.syncHandler
-            .syncToServer(ProgrammerSH.SET_LONG_LITERAL, buffer -> buffer.writeLong(longValue.getLongValue()));
+            .syncToServer(ProgrammerSH.SET_FLOAT_LITERAL, buffer -> buffer.writeFloat(floatValue.getFloatValue()));
     }
 }

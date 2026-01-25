@@ -5,7 +5,12 @@ import java.util.List;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
-public class OpNand implements ILogicOperator {
+public class OpNAnd implements ILogicOperator {
+
+    @Override
+    public String getId() {
+        return "NAND";
+    }
 
     @Override
     public ILogicValue apply(List<ILogicValue> in) {

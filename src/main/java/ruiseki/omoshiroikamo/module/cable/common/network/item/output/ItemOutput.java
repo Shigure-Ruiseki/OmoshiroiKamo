@@ -63,7 +63,7 @@ public class ItemOutput extends AbstractPart implements IItemPart {
 
     @Override
     public void doUpdate() {
-        if (shouldSkipThisTick()) return;
+        if (!shouldTickNow()) return;
 
         ItemNetwork network = getItemNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;

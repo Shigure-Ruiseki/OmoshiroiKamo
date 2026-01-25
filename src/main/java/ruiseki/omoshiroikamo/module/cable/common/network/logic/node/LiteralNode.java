@@ -10,6 +10,10 @@ public class LiteralNode implements ILogicNode {
         this.value = value;
     }
 
+    public ILogicValue getValue() {
+        return value;
+    }
+
     @Override
     public ILogicValue evaluate(EvalContext ctx) {
         return value;

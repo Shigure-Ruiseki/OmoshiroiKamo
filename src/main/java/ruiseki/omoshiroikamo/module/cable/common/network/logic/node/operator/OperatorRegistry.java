@@ -9,32 +9,36 @@ public class OperatorRegistry {
 
     static {
         // LOGIC
-        register("AND", new OpAnd());
-        register("OR", new OpOr());
-        register("NAND", new OpNand());
-        register("NOT", new OpNot());
+        register(new OpAnd());
+        register(new OpOr());
+        register(new OpNAnd());
+        register(new OpNot());
 
         // COMPARISON
 
         // ==
-        register("EQ", new OpEqual());
+        register(new OpEqual());
         // !=
-        register("NEQ", new OpNotEqual());
+        register(new OpNotEqual());
 
         // >
-        register("GTR", new OpGreaterThan());
+        register(new OpGreaterThan());
         // >=
-        register("GEQ", new OpGreaterOrEqual());
+        register(new OpGreaterOrEqual());
         // <
-        register("LSS", new OpLessThan());
+        register(new OpLessThan());
         // <=
-        register("LEQ", new OpLessOrEqual());
+        register(new OpLessOrEqual());
 
-        register("IF", new OpIf());
+        // CONTROL
+        register(new OpIf());
     }
 
-    public static void register(String id, ILogicOperator op) {
-        OPS.put(id, op);
+    public static void register(ILogicOperator op) {
+        if (op == null || op.getId() == null) {
+            throw new IllegalArgumentException("Operator or operator ID is null");
+        }
+        OPS.put(op.getId(), op);
     }
 
     public static ILogicOperator get(String id) {

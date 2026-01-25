@@ -2,51 +2,51 @@ package ruiseki.omoshiroikamo.module.cable.common.network.logic.type;
 
 public class LogicTypes {
 
-    public static final LogicType<Void> NULL = LogicTypeRegistry.register(new LogicType<>("null") {
+    public static LogicType<Void> NULL;
+    public static LogicType<Boolean> BOOLEAN;
+    public static LogicType<Integer> INT;
+    public static LogicType<Long> LONG;
+    public static LogicType<Float> FLOAT;
+    public static LogicType<Double> DOUBLE;
+    public static LogicType<String> STRING;
 
-    });
+    public static void preInit() {
+        NULL = LogicTypeRegistry.register(new LogicType<>("null") {});
+        BOOLEAN = LogicTypeRegistry.register(new LogicType<>("boolean") {});
+        INT = LogicTypeRegistry.register(new LogicType<>("int") {
 
-    public static final LogicType<Boolean> BOOLEAN = LogicTypeRegistry.register(new LogicType<>("boolean") {
+            @Override
+            public boolean isNumeric() {
+                return true;
+            }
 
-    });
+        });
+        LONG = LogicTypeRegistry.register(new LogicType<>("long") {
 
-    public static final LogicType<Integer> INT = LogicTypeRegistry.register(new LogicType<>("int") {
+            @Override
+            public boolean isNumeric() {
+                return true;
+            }
 
-        @Override
-        public boolean isNumeric() {
-            return true;
-        }
+        });
+        FLOAT = LogicTypeRegistry.register(new LogicType<>("float") {
 
-    });
+            @Override
+            public boolean isNumeric() {
+                return true;
+            }
 
-    public static final LogicType<Long> LONG = LogicTypeRegistry.register(new LogicType<>("long") {
+        });
+        DOUBLE = LogicTypeRegistry.register(new LogicType<>("double") {
 
-        @Override
-        public boolean isNumeric() {
-            return true;
-        }
+            @Override
+            public boolean isNumeric() {
+                return true;
+            }
 
-    });
+        });
+        STRING = LogicTypeRegistry.register(new LogicType<>("string") {
 
-    public static final LogicType<Float> FLOAT = LogicTypeRegistry.register(new LogicType<>("float") {
-
-        @Override
-        public boolean isNumeric() {
-            return true;
-        }
-
-    });
-
-    public static final LogicType<Double> DOUBLE = LogicTypeRegistry.register(new LogicType<>("double") {
-
-        @Override
-        public boolean isNumeric() {
-            return true;
-        }
-
-    });
-
-    public static final LogicType<String> STRING = LogicTypeRegistry.register(new LogicType<>("string") {
-
-    });
+        });
+    }
 }

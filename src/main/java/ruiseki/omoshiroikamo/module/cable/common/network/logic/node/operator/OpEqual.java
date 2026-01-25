@@ -9,6 +9,11 @@ import ruiseki.omoshiroikamo.module.cable.common.util.LogicOperationUtils;
 public class OpEqual implements ILogicOperator {
 
     @Override
+    public String getId() {
+        return "EQ";
+    }
+
+    @Override
     public ILogicValue apply(List<ILogicValue> in) {
         boolean eq = LogicOperationUtils.equals(in.get(0), in.get(1));
         return LogicValues.of(eq);

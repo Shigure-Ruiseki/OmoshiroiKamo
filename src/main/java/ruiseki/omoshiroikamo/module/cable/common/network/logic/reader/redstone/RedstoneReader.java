@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
 
     @Override
     public void doUpdate() {
-        if (shouldSkipThisTick()) return;
+        if (!shouldTickNow()) return;
 
         int newValue = getRedstoneInput();
         if (newValue != this.redstoneValue) {
@@ -330,12 +329,6 @@ public class RedstoneReader extends AbstractPart implements IRedstonePart {
         model.renderOnly("back");
 
         GL11.glPopMatrix();
-    }
-
-    @Override
-    public List<LogicKey> getLogics() {
-        return Arrays
-            .asList(LogicKeys.REDSTONE_VALUE, LogicKeys.HAS_REDSTONE, LogicKeys.HIGH_REDSTONE, LogicKeys.LOW_REDSTONE);
     }
 
     @Override

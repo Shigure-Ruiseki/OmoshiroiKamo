@@ -60,7 +60,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
 
     @Override
     public void doUpdate() {
-        if (shouldSkipThisTick()) return;
+        if (!shouldTickNow()) return;
 
     }
 

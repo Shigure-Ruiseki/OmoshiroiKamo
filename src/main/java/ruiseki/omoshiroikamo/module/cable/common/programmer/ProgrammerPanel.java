@@ -19,19 +19,25 @@ import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.AndVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BooleanVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.DoubleVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.EmptyVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.FloatVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.IfVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.IntegerVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.LongVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.NAndVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.StringVariable;
 
 public class ProgrammerPanel extends ModularPanel {
@@ -46,6 +52,7 @@ public class ProgrammerPanel extends ModularPanel {
 
     private final StringValue selectedItem = new StringValue("");
     private Column detailColumn;
+    private BaseVariableWidget detailWidget;
 
     public ProgrammerPanel(GuiData data, PanelSyncManager syncManager, UISettings settings, ProgrammerHandler handler) {
         super("programmer");
@@ -54,6 +61,8 @@ public class ProgrammerPanel extends ModularPanel {
         this.syncManager = syncManager;
         this.settings = settings;
         this.handler = handler;
+
+        height(184);
 
         syncHandler = new ProgrammerSH(handler, this);
         syncManager.syncValue("programmer_sh", syncHandler);
@@ -103,24 +112,34 @@ public class ProgrammerPanel extends ModularPanel {
     public static class ProgramItem {
 
         public final String name;
-        private final Supplier<Widget<?>> widgetFactory;
+        private final Supplier<BaseVariableWidget> widgetFactory;
 
-        public ProgramItem(String name, Supplier<Widget<?>> widgetFactory) {
+        public ProgramItem(String name, Supplier<BaseVariableWidget> widgetFactory) {
             this.name = name;
             this.widgetFactory = widgetFactory;
         }
 
-        public Widget<?> createWidget() {
+        public BaseVariableWidget createWidget() {
             return widgetFactory.get();
         }
     }
 
     private final List<ProgramItem> items = Arrays.asList(
+
+        // Type
         new ProgramItem("Boolean", () -> new BooleanVariable(this)),
         new ProgramItem("Integer", () -> new IntegerVariable(this)),
         new ProgramItem("Long", () -> new LongVariable(this)),
+        new ProgramItem("Float", () -> new FloatVariable(this)),
         new ProgramItem("Double", () -> new DoubleVariable(this)),
-        new ProgramItem("String", () -> new StringVariable(this)));
+        new ProgramItem("String", () -> new StringVariable(this)),
+
+        // Operator
+        new ProgramItem("And", () -> new AndVariable(this)),
+        new ProgramItem("Not And", () -> new NAndVariable(this)),
+
+        // Controller
+        new ProgramItem("If", () -> new IfVariable(this)));
 
     public void addVariableList() {
         StringValue searchValue = new StringValue("");
@@ -158,7 +177,6 @@ public class ProgrammerPanel extends ModularPanel {
                         widget.onMousePressed(btn -> {
                             if (btn == 0) {
                                 Interactable.playButtonClickSound();
-                                syncHandler.clearVariableSlot();
                                 selectItem(item);
                             }
                             return true;
@@ -172,20 +190,44 @@ public class ProgrammerPanel extends ModularPanel {
     }
 
     public void addDetailPanel() {
+        Column col = new Column();
+
         detailColumn = new Column();
+        detailWidget = new EmptyVariable(this);
 
         detailColumn.margin(5)
-            .heightRel(0.45f)
-            .pos(5, 5);
+            .height(74)
+            .pos(5, 5)
+            .child(detailWidget);
+        col.child(detailColumn);
 
-        child(detailColumn);
+        ItemSlot slot = new ItemSlot().syncHandler("slots", 0)
+            .right(7)
+            .bottom(86);
+        col.child(slot);
+
+        slots[0].getSlot()
+            .changeListener((newItem, onlyAmountChanged, client, init) -> {
+                if (init) return;
+
+                if (detailWidget != null) {
+                    detailWidget.writeLogicNBT();
+                }
+            });
+
+        child(col);
     }
 
     private void selectItem(ProgramItem item) {
         selectedItem.setStringValue(item.name);
+
+        syncHandler.clearVariableSlot();
         detailColumn.removeAll();
-        detailColumn.child(item.createWidget());
-        this.scheduleResize();
+        detailWidget = item.createWidget();
+
+        detailColumn.child(detailWidget);
+
+        scheduleResize();
     }
 
 }

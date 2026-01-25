@@ -17,6 +17,14 @@ public class OperatorNode implements ILogicNode {
         this.children = Arrays.asList(children);
     }
 
+    public ILogicOperator getOperator() {
+        return operator;
+    }
+
+    public List<ILogicNode> getChildren() {
+        return children;
+    }
+
     @Override
     public ILogicValue evaluate(EvalContext ctx) {
         List<ILogicValue> values = new ArrayList<>();

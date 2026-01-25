@@ -9,6 +9,11 @@ import ruiseki.omoshiroikamo.module.cable.common.util.LogicOperationUtils;
 public class OpGreaterThan implements ILogicOperator {
 
     @Override
+    public String getId() {
+        return "GTR";
+    }
+
+    @Override
     public ILogicValue apply(List<ILogicValue> in) {
         Integer cmp = LogicOperationUtils.compare(in.get(0), in.get(1));
         return cmp == null ? LogicValues.NULL : LogicValues.of(cmp > 0);

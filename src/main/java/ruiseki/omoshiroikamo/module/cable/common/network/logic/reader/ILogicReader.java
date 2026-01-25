@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -11,8 +9,6 @@ import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public interface ILogicReader {
-
-    List<LogicKey> getLogics();
 
     ILogicValue read(LogicKey key);
 

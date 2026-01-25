@@ -79,7 +79,7 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
     @Override
     public void doUpdate() {
-        if (shouldSkipThisTick()) return;
+        if (!shouldTickNow()) return;
         if (variableCard == null) return;
 
         ILogicValue value = evaluateLogic(variableCard);
