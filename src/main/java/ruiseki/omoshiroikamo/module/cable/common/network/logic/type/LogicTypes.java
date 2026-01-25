@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.type;
 
+import net.minecraft.item.ItemStack;
+
 import ruiseki.omoshiroikamo.api.block.BlockStack;
 
 public class LogicTypes {
@@ -12,6 +14,7 @@ public class LogicTypes {
     public static LogicType<Double> DOUBLE;
     public static LogicType<String> STRING;
     public static LogicType<BlockStack> BLOCK;
+    public static LogicType<ItemStack> ITEM;
 
     public static void preInit() {
         NULL = LogicTypeRegistry.register(new LogicType<>("null") {});
@@ -53,6 +56,10 @@ public class LogicTypes {
         });
 
         BLOCK = LogicTypeRegistry.register(new LogicType<>("block") {
+
+        });
+
+        ITEM = LogicTypeRegistry.register(new LogicType<>("item") {
 
         });
     }

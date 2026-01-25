@@ -58,15 +58,6 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     private static final ResourceLocation back_texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/block_reader_back.png");
 
-    private static final int SLOT_HAS_BLOCK = 0;
-    private static final int SLOT_DIMENSION = 1;
-    private static final int SLOT_COORD_X = 2;
-    private static final int SLOT_COORD_Y = 3;
-    private static final int SLOT_COORD_Z = 4;
-    private static final int SLOT_BLOCK = 5;
-    private static final int SLOT_BIOME = 6;
-    private static final int SLOT_LIGHT = 7;
-
     private final ItemStackHandlerBase inv = new ItemStackHandlerBase(8);
 
     @Override
@@ -229,22 +220,6 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
         syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
-    }
-
-    private World world() {
-        return getCable().getWorld();
-    }
-
-    private int readX() {
-        return getPos().offset(getSide()).x;
-    }
-
-    private int readY() {
-        return getPos().offset(getSide()).y;
-    }
-
-    private int readZ() {
-        return getPos().offset(getSide()).z;
     }
 
     @Override

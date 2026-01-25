@@ -1,39 +1,38 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.value;
 
-import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.block.BlockStack;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicTypes;
 
-public class BlockValue implements ILogicValue {
+public class ItemStackValue implements ILogicValue {
 
-    private final BlockStack block;
+    private final ItemStack item;
 
-    public BlockValue(BlockStack block) {
-        this.block = block;
+    public ItemStackValue(ItemStack stack) {
+        item = stack;
     }
 
     @Override
     public LogicType<?> getType() {
-        return LogicTypes.BLOCK;
+        return LogicTypes.ITEM;
     }
 
     @Override
     public Object raw() {
-        return block;
+        return item;
     }
 
     @Override
     public boolean asBoolean() {
-        return block != null;
+        return item != null;
     }
 
     @Override
     public int asInt() {
-        return block.getBlockId();
+        return item != null ? Item.getIdFromItem(item.getItem()) : -1;
     }
 
     @Override
@@ -53,24 +52,19 @@ public class BlockValue implements ILogicValue {
 
     @Override
     public String asString() {
-        if (block == null) return "null";
+        if (item == null) return "null";
 
-        String name = Block.blockRegistry.getNameForObject(block);
+        String name = Item.itemRegistry.getNameForObject(item);
         return name != null ? name : "unknown";
     }
 
     @Override
     public BlockStack asBlockStack() {
-        return block;
+        return BlockStack.fromItemStack(item);
     }
 
     @Override
     public ItemStack asItemStack() {
-        return block.toItemStack();
-    }
-
-    @Override
-    public FluidStack asFluidStack() {
-        return block.toFluidStack();
+        return item;
     }
 }

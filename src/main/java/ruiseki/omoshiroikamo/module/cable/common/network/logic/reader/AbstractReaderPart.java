@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
@@ -52,5 +53,21 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
             .right(7));
 
         return row;
+    }
+
+    public World world() {
+        return getCable().getWorld();
+    }
+
+    public int readX() {
+        return getPos().offset(getSide()).x;
+    }
+
+    public int readY() {
+        return getPos().offset(getSide()).y;
+    }
+
+    public int readZ() {
+        return getPos().offset(getSide()).z;
     }
 }

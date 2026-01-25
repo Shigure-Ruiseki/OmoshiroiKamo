@@ -113,6 +113,17 @@ gui.cable.blockReader.block=Block
 gui.cable.blockReader.biome=Biome
 gui.cable.blockReader.light=Light Level
 
+gui.cable.inventoryReader.isInventory=Is Inventory
+gui.cable.inventoryReader.inventoryFull=Inventory Full
+gui.cable.inventoryReader.inventoryEmpty=Inventory Empty
+gui.cable.inventoryReader.inventoryNotEmpty=Inventory Not Empty
+gui.cable.inventoryReader.inventoryCount=Inventory Count
+gui.cable.inventoryReader.inventorySlots=Inventory Slots
+gui.cable.inventoryReader.slotsFilled=Slots Filled
+gui.cable.inventoryReader.fillRatio=Fill Ratio
+gui.cable.inventoryReader.items=Items
+gui.cable.inventoryReader.slotItem=Slot Item
+
 gui.cable.side=Target Side
 gui.cable.tick=Ticks / Operation
 gui.cable.priority=Priority
@@ -549,6 +560,7 @@ item.energyInterface.name=Energy Interface
 item.storageTerminal.name=Storage Terminal
 item.redstoneReader.name=Redstone Reader
 item.blockReader.name=Block Reader
+item.inventoryReader.name=Inventory Reader
 item.craftingInterface.name=Crafting Interface
 
 #Block

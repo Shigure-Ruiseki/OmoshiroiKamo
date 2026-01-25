@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemItemInpu
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemItemInterface;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutput;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.block.ItemBlockReader;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.inventory.ItemInventoryReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.ItemRedstoneReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemStorageTerminal;
 import ruiseki.omoshiroikamo.module.cable.common.variable.ItemVariableCard;
@@ -33,6 +34,7 @@ public enum CableItems {
     CRAFTING_INTERFACE(new ItemCraftingInterface()),
     REDSTONE_READER(new ItemRedstoneReader()),
     BLOCK_READER(new ItemBlockReader()),
+    INVENTORY_READER(new ItemInventoryReader()),
 
     ;
     // spotless: on

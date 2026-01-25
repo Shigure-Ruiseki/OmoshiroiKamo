@@ -34,11 +34,11 @@ public class LogicValues {
     }
 
     public static ILogicValue of(BlockStack value) {
-        return new BlockValue(value);
+        return new BlockStackValue(value);
     }
 
     public static ILogicValue of(ItemStack value) {
-        return NULL;
+        return new ItemStackValue(value);
     }
 
     public static ILogicValue of(FluidStack value) {

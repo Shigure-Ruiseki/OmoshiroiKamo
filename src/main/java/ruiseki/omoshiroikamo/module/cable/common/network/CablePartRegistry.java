@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemInput;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemInterface;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemOutput;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.block.BlockReader;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.inventory.InventoryReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.RedstoneReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.StorageTerminal;
 
@@ -31,6 +32,7 @@ public class CablePartRegistry {
         CablePartRegistry.register("crafting_interface", CraftingInterface::new);
         CablePartRegistry.register("redstone_reader", RedstoneReader::new);
         CablePartRegistry.register("block_reader", BlockReader::new);
+        CablePartRegistry.register("inventory_reader", InventoryReader::new);
     }
 
     public static void register(String id, Supplier<? extends ICablePart> factory) {

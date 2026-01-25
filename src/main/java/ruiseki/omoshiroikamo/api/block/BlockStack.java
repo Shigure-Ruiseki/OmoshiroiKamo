@@ -18,6 +18,11 @@ public class BlockStack {
         this.meta = meta;
     }
 
+    public BlockStack(Block block) {
+        this.block = block;
+        this.meta = 0;
+    }
+
     public Block getBlock() {
         return block;
     }

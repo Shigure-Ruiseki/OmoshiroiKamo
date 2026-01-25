@@ -1,9 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone;
 
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicPart;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.ILogicReader;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.ILogicReaderPart;
 
-public interface IRedstonePart extends ILogicPart, ILogicReader {
+public interface IRedstonePart extends ILogicReaderPart {
 
     int getRedstoneOutput();
 
