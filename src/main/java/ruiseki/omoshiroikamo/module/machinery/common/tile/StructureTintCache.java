@@ -80,16 +80,15 @@ public class StructureTintCache {
         if (world instanceof World) {
             dimension = ((World) world).provider.dimensionId;
         } else {
-            // Try to get dimension from TileEntity if world is not a World instance (e.g.
-            // ChunkCache)
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (te != null && te.getWorldObj() != null) {
-                dimension = te.getWorldObj().provider.dimensionId;
-            } else {
-                // Fallback: try to get dimension from client world (for non-TE blocks like
-                // Casing)
-                dimension = getClientDimension();
-                if (dimension == Integer.MIN_VALUE) {
+            // Prioritize client dimension for rendering consistency (matches Casing
+            // behavior)
+            dimension = getClientDimension();
+            if (dimension == Integer.MIN_VALUE) {
+                // Fallback: try to get dimension from TileEntity (server-side IBlockAccess?)
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (te != null && te.getWorldObj() != null) {
+                    dimension = te.getWorldObj().provider.dimensionId;
+                } else {
                     return null;
                 }
             }

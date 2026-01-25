@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -25,6 +26,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -32,6 +34,7 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierT
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
@@ -49,7 +52,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * TODO: Prevent NBT pickup on controller middle-click
  * TODO: Support shift-click
  */
-public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
+public class TEMachineController extends AbstractMBModifierTE
+    implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {
 
     // ========== Blueprint Inventory ==========
     public static final int BLUEPRINT_SLOT = 0;
@@ -147,6 +151,14 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (port instanceof TileEntity te) {
             structureAgent.addStructurePosition(te.xCoord, te.yCoord, te.zCoord);
         }
+    }
+
+    /**
+     * Called by BlockResolver to track all structure blocks (casings, etc.)
+     * for tinting purposes.
+     */
+    public void trackStructureBlock(int x, int y, int z) {
+        structureAgent.addStructurePosition(x, y, z);
     }
 
     // ========== Crafting Configuration ==========
@@ -597,5 +609,18 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     public String getLastValidationError() {
         return structureAgent.getLastValidationError();
+    }
+
+    // ========== ISidedTexture Implementation ==========
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int pass) {
+        if (pass == 1) { // Overlay pass
+            Block block = getBlockType();
+            if (block instanceof BlockMachineController controllerBlock) {
+                return controllerBlock.getOverlayIcon();
+            }
+        }
+        return null; // Base pass handled by ISBRH using standard block render
     }
 }

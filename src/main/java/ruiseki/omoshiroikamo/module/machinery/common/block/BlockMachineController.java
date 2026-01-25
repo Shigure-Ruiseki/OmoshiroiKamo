@@ -1,19 +1,17 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -21,6 +19,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -54,37 +53,32 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         return new BlockMachineController();
     }
 
+    private IIcon overlayIcon;
+
     @Override
     public void init() {
         super.init();
+    }
 
-        BlockColor.registerBlockColors(new IModularBlockTint() {
+    @Override
+    public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+        // Get color from cache
+        Integer structureColor = StructureTintCache.get(world, x, y, z);
+        if (structureColor != null) {
+            return structureColor;
+        }
+        // Fall back to config color
+        return MachineryConfig.getDefaultTintColorInt();
+    }
 
-            @Override
-            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
-                if (tintIndex == 0) {
-                    // Check for structure color from TileEntity first
-                    TileEntity te = world.getTileEntity(x, y, z);
-                    if (te instanceof TEMachineController controller) {
-                        Integer structureColor = controller.getCachedStructureTintColor();
-                        if (structureColor != null) {
-                            return structureColor;
-                        }
-                    }
-                    // Fall back to config color
-                    return MachineryConfig.getDefaultTintColorInt();
-                }
-                return 0xFFFFFFFF; // White for non-tinted layers
-            }
+    @Override
+    public void registerBlockIcons(IIconRegister reg) {
+        super.registerBlockIcons(reg);
+        this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller");
+    }
 
-            @Override
-            public int colorMultiplier(ItemStack stack, int tintIndex) {
-                if (tintIndex == 0) {
-                    return MachineryConfig.getDefaultTintColorInt();
-                }
-                return 0xFFFFFFFF; // White for non-tinted layers
-            }
-        }, this);
+    public IIcon getOverlayIcon() {
+        return overlayIcon;
     }
 
     @Override
@@ -94,7 +88,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
 
     @Override
     public int getRenderType() {
-        return JSON_ISBRH_ID;
+        return AbstractPortBlock.portRendererId;
     }
 
     @Override

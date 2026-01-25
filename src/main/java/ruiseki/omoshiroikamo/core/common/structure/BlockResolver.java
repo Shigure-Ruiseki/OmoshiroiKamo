@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 
@@ -87,9 +89,9 @@ public class BlockResolver {
         }
 
         if (result.anyMeta) {
-            return (IStructureElement<T>) ofBlockAnyMeta(result.block, 0);
+            return withTracking((IStructureElement<T>) ofBlockAnyMeta(result.block, 0));
         } else {
-            return (IStructureElement<T>) ofBlock(result.block, result.meta);
+            return withTracking((IStructureElement<T>) ofBlock(result.block, result.meta));
         }
     }
 
@@ -190,6 +192,35 @@ public class BlockResolver {
         }
 
         return false;
+    }
+
+    /**
+     * Wrap an element to track its position in the controller on success.
+     */
+    private static <T> IStructureElement<T> withTracking(IStructureElement<T> element) {
+        return new IStructureElement<T>() {
+
+            @Override
+            public boolean check(T t, World world, int x, int y, int z) {
+                if (element.check(t, world, x, y, z)) {
+                    if (t instanceof TEMachineController) {
+                        ((TEMachineController) t).trackStructureBlock(x, y, z);
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean spawnHint(T t, World world, int x, int y, int z, ItemStack trigger) {
+                return element.spawnHint(t, world, x, y, z, trigger);
+            }
+
+            @Override
+            public boolean placeBlock(T t, World world, int x, int y, int z, ItemStack trigger) {
+                return element.placeBlock(t, world, x, y, z, trigger);
+            }
+        };
     }
 
     /**

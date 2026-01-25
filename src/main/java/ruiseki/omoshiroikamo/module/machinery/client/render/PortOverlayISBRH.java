@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
@@ -67,6 +68,19 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         RenderUtils.renderCube(tess, 0, 0, 0, 1, 1, 1, baseIcon);
         tess.draw();
 
+        // Render Controller Overlay if applicable
+        if (block instanceof BlockMachineController controllerBlock) {
+            IIcon overlayIcon = controllerBlock.getOverlayIcon();
+            if (overlayIcon != null) {
+                tess.startDrawingQuads();
+                tess.setColorOpaque_F(1.0f, 1.0f, 1.0f); // White (untinted)
+                tess.setNormal(0.0F, 1.0F, 0.0F);
+                // Render slightly larger to prevent z-fighting in inventory
+                RenderUtils.renderCube(tess, -0.001, -0.001, -0.001, 1.002, 1.002, 1.002, overlayIcon);
+                tess.draw();
+            }
+        }
+
         GL11.glPopMatrix();
     }
 
@@ -108,10 +122,6 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         // shouldSideBeRendered=false
         boolean prevRenderAllFaces = renderer.renderAllFaces;
         renderer.renderAllFaces = true;
-
-        // Disable AO to prevent incorrect brightness calculation
-        boolean prevEnableAO = renderer.enableAO;
-        renderer.enableAO = false;
 
         // Render all faces with port base icon
         // Uses block.getIcon(world, x,y,z, side) which handles casing switch
@@ -172,7 +182,6 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
         // Restore flags
         renderer.renderAllFaces = prevRenderAllFaces;
-        renderer.enableAO = prevEnableAO;
 
         return true;
     }
