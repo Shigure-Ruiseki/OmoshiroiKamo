@@ -1,5 +1,10 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.value;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+
+import ruiseki.omoshiroikamo.api.block.BlockStack;
+
 public class LogicValues {
 
     public static final ILogicValue NULL = new NullValue();
@@ -26,6 +31,18 @@ public class LogicValues {
 
     public static ILogicValue of(String value) {
         return new StringValue(value);
+    }
+
+    public static ILogicValue of(BlockStack value) {
+        return new BlockValue(value);
+    }
+
+    public static ILogicValue of(ItemStack value) {
+        return NULL;
+    }
+
+    public static ILogicValue of(FluidStack value) {
+        return NULL;
     }
 
     private LogicValues() {}

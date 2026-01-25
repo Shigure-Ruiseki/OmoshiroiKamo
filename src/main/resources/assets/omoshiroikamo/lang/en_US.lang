@@ -94,6 +94,7 @@ gui.crafting_filter.craftable=Craftable
 gui.crafting_filter.both=Both
 
 #Cable
+
 gui.cable.part_settings=Part Settings
 
 gui.cable.index_channel=Chan: 
@@ -102,6 +103,15 @@ gui.cable.redstoneReader.lowRedstone=Redstone Low:
 gui.cable.redstoneReader.hasRedstone=Redstone:
 gui.cable.redstoneReader.highRedstone=Redstone High:
 gui.cable.redstoneReader.redstoneValue=Redstone:
+
+gui.cable.blockReader.hasBlock=Has Block
+gui.cable.blockReader.dimension=Dimension
+gui.cable.blockReader.coord.x=X
+gui.cable.blockReader.coord.y=Y
+gui.cable.blockReader.coord.z=Z
+gui.cable.blockReader.block=Block
+gui.cable.blockReader.biome=Biome
+gui.cable.blockReader.light=Light Level
 
 gui.cable.side=Target Side
 gui.cable.tick=Ticks / Operation
@@ -129,7 +139,6 @@ gui.cable.op.gtr=GTR >
 gui.cable.op.geq=GEQ >=
 gui.cable.op.lss=LSS <
 gui.cable.op.leq=LEQ <=
-
 
 #Modular Machinery
 
@@ -211,8 +220,8 @@ gui.backpack.transfer_to_backpack_inv=Transfer All Items to Backpack Inventory
 gui.backpack.transfer_to_backpack_inv_matched_1=Transfer Matched Items to Backpack Inventory
 gui.backpack.transfer_to_backpack_inv_matched_2=Shift To Transfer All
 
-gui.backpack.settings=Settings
 gui.backpack=Backpack
+gui.backpack.settings=Settings
 gui.configuration_tab=Configuration Tab
 
 gui.backpack.memorized_slot=Memorized Slot
@@ -381,6 +390,7 @@ tooltip.living_matter.xp=Experience per item: %s
 tooltip.pristine_matter.loot_items=Available loot items:
 
 tooltip.soot_covered_redstone=Crafted by crushing %s against a %s (%s)
+
 #ACHIEVEMENT
 
 achievement.omoshiroikamo.craft_assembler=Ready To Assemble
@@ -538,6 +548,7 @@ item.energyOutput.name=Energy Output
 item.energyInterface.name=Energy Interface
 item.storageTerminal.name=Storage Terminal
 item.redstoneReader.name=Redstone Reader
+item.blockReader.name=Block Reader
 item.craftingInterface.name=Crafting Interface
 
 #Block

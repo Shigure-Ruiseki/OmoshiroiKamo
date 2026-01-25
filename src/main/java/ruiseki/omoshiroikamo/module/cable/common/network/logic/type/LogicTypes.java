@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.type;
 
+import ruiseki.omoshiroikamo.api.block.BlockStack;
+
 public class LogicTypes {
 
     public static LogicType<Void> NULL;
@@ -9,6 +11,7 @@ public class LogicTypes {
     public static LogicType<Float> FLOAT;
     public static LogicType<Double> DOUBLE;
     public static LogicType<String> STRING;
+    public static LogicType<BlockStack> BLOCK;
 
     public static void preInit() {
         NULL = LogicTypeRegistry.register(new LogicType<>("null") {});
@@ -46,6 +49,10 @@ public class LogicTypes {
 
         });
         STRING = LogicTypeRegistry.register(new LogicType<>("string") {
+
+        });
+
+        BLOCK = LogicTypeRegistry.register(new LogicType<>("block") {
 
         });
     }

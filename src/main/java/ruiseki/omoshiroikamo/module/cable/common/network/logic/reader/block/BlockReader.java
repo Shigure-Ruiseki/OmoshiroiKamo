@@ -1,4 +1,6 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone;
+package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.block;
+
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.VANILLA_SEARCH_BACKGROUND;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
@@ -23,15 +24,14 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
-import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import ruiseki.omoshiroikamo.api.block.BlockStack;
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -44,7 +44,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicK
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
-public class RedstoneReader extends AbstractReaderPart implements IRedstonePart {
+public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
     private static final float WIDTH = 10f / 16f;
     private static final float DEPTH = 5f / 16f;
@@ -54,22 +54,24 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "cable/reader.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/redstone_reader_front.png");
+        LibResources.PREFIX_ITEM + "cable/block_reader_front.png");
     private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "cable/redstone_reader_back.png");
+        LibResources.PREFIX_ITEM + "cable/block_reader_back.png");
 
-    private int redstoneValue = 0;
-    private boolean hasRedstone = false;
-    private boolean highRedstone = false;
-    private boolean lowRedstone = false;
+    private static final int SLOT_HAS_BLOCK = 0;
+    private static final int SLOT_DIMENSION = 1;
+    private static final int SLOT_COORD_X = 2;
+    private static final int SLOT_COORD_Y = 3;
+    private static final int SLOT_COORD_Z = 4;
+    private static final int SLOT_BLOCK = 5;
+    private static final int SLOT_BIOME = 6;
+    private static final int SLOT_LIGHT = 7;
 
-    private static final int HIGH_THRESHOLD = 8;
-
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(4);
+    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(8);
 
     @Override
     public String getId() {
-        return "redstone_reader";
+        return "block_reader";
     }
 
     @Override
@@ -85,11 +87,6 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
     @Override
     public void doUpdate() {
         if (!shouldTickNow()) return;
-
-        int newValue = getRedstoneInput();
-        if (newValue != this.redstoneValue) {
-            setRedstone(newValue);
-        }
     }
 
     @Override
@@ -112,20 +109,18 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
 
     @Override
     public ItemStack getItemStack() {
-        return CableItems.REDSTONE_READER.newItemStack();
+        return CableItems.BLOCK_READER.newItemStack();
     }
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("redstone_reader");
+        ModularPanel panel = new ModularPanel("block_reader");
+
         panel.height(200);
 
-        // Settings
+        // Settings panel
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
-
-        // Sync
-        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstone, this::setRedstone));
 
         // Search
         StringValue searchValue = new StringValue("");
@@ -135,7 +130,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 .pos(7, 7)
                 .width(162)
                 .height(16)
-                .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND));
+                .background(VANILLA_SEARCH_BACKGROUND));
 
         // List
         ListWidget<Row, ?> list = new ListWidget<>();
@@ -148,96 +143,108 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
         // Rows
         addSearchableRow(
             list,
-            IKey.lang("gui.cable.redstoneReader.redstoneValue")
+            IKey.lang("gui.cable.blockReader.hasBlock")
                 .get(),
             infoRow(
-                "gui.cable.redstoneReader.redstoneValue",
-                IKey.dynamic(() -> String.valueOf(redstoneValue)),
-                3,
-                LogicKeys.REDSTONE_VALUE,
-                inv),
-            searchValue);
-
-        addSearchableRow(
-            list,
-            IKey.lang("gui.cable.redstoneReader.hasRedstone")
-                .get(),
-            infoRow(
-                "gui.cable.redstoneReader.hasRedstone",
-                IKey.dynamic(() -> String.valueOf(hasRedstone)),
-                1,
-                LogicKeys.HAS_REDSTONE,
-                inv),
-            searchValue);
-
-        addSearchableRow(
-            list,
-            IKey.lang("gui.cable.redstoneReader.highRedstone")
-                .get(),
-            infoRow(
-                "gui.cable.redstoneReader.highRedstone",
-                IKey.dynamic(() -> String.valueOf(highRedstone)),
-                2,
-                LogicKeys.HIGH_REDSTONE,
-                inv),
-            searchValue);
-
-        addSearchableRow(
-            list,
-            IKey.lang("gui.cable.redstoneReader.lowRedstone")
-                .get(),
-            infoRow(
-                "gui.cable.redstoneReader.lowRedstone",
-                IKey.dynamic(() -> String.valueOf(lowRedstone)),
+                "gui.cable.blockReader.hasBlock",
+                IKey.dynamic(() -> String.valueOf(!world().isAirBlock(readX(), readY(), readZ()))),
                 0,
-                LogicKeys.LOW_REDSTONE,
+                LogicKeys.HAS_BLOCK,
                 inv),
             searchValue);
 
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader.dimension")
+                .get(),
+            infoRow(
+                "gui.cable.blockReader.dimension",
+                IKey.dynamic(() -> world().provider.getDimensionName()),
+                1,
+                LogicKeys.DIMENSION,
+                inv),
+            searchValue);
+
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader.coord.x")
+                .get(),
+            infoRow("gui.cable.blockReader.coord.x", IKey.dynamic(() -> String.valueOf(readX())), 2, LogicKeys.X, inv),
+            searchValue);
+
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader.coord.y")
+                .get(),
+            infoRow("gui.cable.blockReader.coord.y", IKey.dynamic(() -> String.valueOf(readY())), 3, LogicKeys.Y, inv),
+            searchValue);
+
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader..coord.z")
+                .get(),
+            infoRow("gui.cable.blockReader.coord.z", IKey.dynamic(() -> String.valueOf(readZ())), 4, LogicKeys.Z, inv),
+            searchValue);
+
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader.block")
+                .get(),
+            infoRow(
+                "gui.cable.blockReader.block",
+                IKey.dynamic(
+                    () -> world().getBlock(readX(), readY(), readZ())
+                        .getLocalizedName()),
+                5,
+                LogicKeys.BLOCK,
+                inv),
+            searchValue);
+
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader.biome")
+                .get(),
+            infoRow(
+                "gui.cable.blockReader.biome",
+                IKey.dynamic(() -> world().getBiomeGenForCoords(readX(), readZ()).biomeName),
+                6,
+                LogicKeys.BIOME,
+                inv),
+            searchValue);
+
+        addSearchableRow(
+            list,
+            IKey.lang("gui.cable.blockReader.light")
+                .get(),
+            infoRow(
+                "gui.cable.blockReader.light",
+                IKey.dynamic(() -> String.valueOf(world().getBlockLightValue(readX(), readY(), readZ()))),
+                7,
+                LogicKeys.LIGHT_LEVEL,
+                inv),
+            searchValue);
+
+        // ===== Inventory =====
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
     }
 
-    @Override
-    public int getRedstoneOutput() {
-        return 0;
+    private World world() {
+        return getCable().getWorld();
     }
 
-    @Override
-    public int getRedstoneInput() {
-        if (cable == null || cable.getWorld() == null) return 0;
-
-        ForgeDirection side = getSide();
-        World world = cable.getWorld();
-
-        int x = getPos().x + side.offsetX;
-        int y = getPos().y + side.offsetY;
-        int z = getPos().z + side.offsetZ;
-
-        int weak = world.getIndirectPowerLevelTo(
-            x,
-            y,
-            z,
-            side.getOpposite()
-                .ordinal());
-
-        int strong = world.getStrongestIndirectPower(x, y, z);
-
-        return Math.max(weak, strong);
+    private int readX() {
+        return getPos().offset(getSide()).x;
     }
 
-    public int getRedstone() {
-        return redstoneValue;
+    private int readY() {
+        return getPos().offset(getSide()).y;
     }
 
-    public void setRedstone(int value) {
-        this.redstoneValue = value;
-        this.hasRedstone = value > 0;
-        this.highRedstone = value >= HIGH_THRESHOLD;
-        this.lowRedstone = value > 0 && value < HIGH_THRESHOLD;
-        cable.dirty();
+    private int readZ() {
+        return getPos().offset(getSide()).z;
     }
 
     @Override
@@ -300,18 +307,35 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
 
     @Override
     public ILogicValue read(LogicKey key) {
-        if (key == LogicKeys.REDSTONE_VALUE) {
-            return LogicValues.of(redstoneValue);
+        World world = world();
+        int x = readX();
+        int y = readY();
+        int z = readZ();
+
+        if (key == LogicKeys.HAS_BLOCK) {
+            return LogicValues.of(!world.isAirBlock(x, y, z));
         }
-        if (key == LogicKeys.HAS_REDSTONE) {
-            return LogicValues.of(hasRedstone);
+
+        if (key == LogicKeys.DIMENSION) {
+            return LogicValues.of(world.provider.getDimensionName());
         }
-        if (key == LogicKeys.HIGH_REDSTONE) {
-            return LogicValues.of(highRedstone);
+
+        if (key == LogicKeys.X) return LogicValues.of(x);
+        if (key == LogicKeys.Y) return LogicValues.of(y);
+        if (key == LogicKeys.Z) return LogicValues.of(z);
+
+        if (key == LogicKeys.BLOCK) {
+            return LogicValues.of(BlockStack.fromWorld(world, x, y, z));
         }
-        if (key == LogicKeys.LOW_REDSTONE) {
-            return LogicValues.of(lowRedstone);
+
+        if (key == LogicKeys.BIOME) {
+            return LogicValues.of(world.getBiomeGenForCoords(x, z).biomeName);
         }
+
+        if (key == LogicKeys.LIGHT_LEVEL) {
+            return LogicValues.of(world.getBlockLightValue(x, y, z));
+        }
+
         return LogicValues.NULL;
     }
 }

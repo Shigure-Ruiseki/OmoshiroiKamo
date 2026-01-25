@@ -83,7 +83,7 @@ public class ItemInput extends AbstractPart implements IItemPart {
         if (variableCard == null) return;
 
         ILogicValue value = evaluateLogic(variableCard);
-
+        if (value == null) return;
         if (!value.asBoolean()) return;
 
         ItemNetwork network = getItemNetwork();
@@ -104,6 +104,12 @@ public class ItemInput extends AbstractPart implements IItemPart {
             transfer.transfer();
         }
 
+    }
+
+    @Override
+    public void onDetached() {
+        super.onDetached();
+        inv.dropAll(getCable().getWorld(), getPos().x, getPos().y, getPos().z);
     }
 
     @Override

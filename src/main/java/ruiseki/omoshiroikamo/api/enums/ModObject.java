@@ -139,6 +139,9 @@ public enum ModObject {
     itemCraftingInterface,
 
     itemRedstoneReader,
+    itemBlockReader,
+    itemFluidReader,
+    itemInventoryReader,
 
     itemStorageTerminal,;
     // spotless: on

@@ -3,7 +3,9 @@ package ruiseki.omoshiroikamo.core.client.gui.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
@@ -161,4 +163,33 @@ public class ItemStackHandlerBase extends ItemStackHandler {
 
         this.stacks = newStacks;
     }
+
+    public void dropAll(World world, int x, int y, int z) {
+        for (int i = 0; i < getSlots(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack != null) {
+                dropStack(world, x, y, z, stack);
+            }
+        }
+    }
+
+    public static void dropStack(World world, int x, int y, int z, ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) {
+            return;
+        }
+
+        float dx = world.rand.nextFloat() * 0.8F + 0.1F;
+        float dy = world.rand.nextFloat() * 0.8F + 0.1F;
+        float dz = world.rand.nextFloat() * 0.8F + 0.1F;
+
+        EntityItem entityItem = new EntityItem(world, x + dx, y + dy, z + dz, stack.copy());
+
+        float motion = 0.05F;
+        entityItem.motionX = world.rand.nextGaussian() * motion;
+        entityItem.motionY = world.rand.nextGaussian() * motion + 0.2F;
+        entityItem.motionZ = world.rand.nextGaussian() * motion;
+
+        world.spawnEntityInWorld(entityItem);
+    }
+
 }
