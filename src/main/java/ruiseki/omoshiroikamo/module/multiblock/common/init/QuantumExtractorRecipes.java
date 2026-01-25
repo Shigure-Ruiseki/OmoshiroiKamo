@@ -33,7 +33,7 @@ public class QuantumExtractorRecipes {
     private static FocusableHandler.FocusableList cachedResList;
 
     public static void init() {
-        if (!BackportConfigs.useMultiBlock) return;
+        if (!BackportConfigs.enableMultiBlock) return;
 
         // Initialize legacy arrays for backward compatibility (no dimension filter)
         for (int i = 0; i < MAX_TIER; i++) {
@@ -66,7 +66,7 @@ public class QuantumExtractorRecipes {
 
     /**
      * Get ore registry for NEI display with dimension filter.
-     * 
+     *
      * @param tier  The miner tier
      * @param dimId The dimension ID, or NEI_DIMENSION_COMMON for common-only ores
      * @return Registry containing appropriate ores with correct probability

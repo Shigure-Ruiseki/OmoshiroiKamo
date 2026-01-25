@@ -24,7 +24,7 @@ public class DMLCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useDML;
+        return BackportConfigs.enableDML;
     }
 
     @Override

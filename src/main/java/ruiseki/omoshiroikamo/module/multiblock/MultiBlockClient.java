@@ -23,7 +23,7 @@ public class MultiBlockClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useMultiBlock;
+        return BackportConfigs.enableMultiBlock;
     }
 
     @Override

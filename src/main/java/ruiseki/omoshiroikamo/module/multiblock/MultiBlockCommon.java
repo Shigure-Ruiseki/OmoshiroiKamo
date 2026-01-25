@@ -26,7 +26,7 @@ public class MultiBlockCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useMultiBlock;
+        return BackportConfigs.enableMultiBlock;
     }
 
     @Override

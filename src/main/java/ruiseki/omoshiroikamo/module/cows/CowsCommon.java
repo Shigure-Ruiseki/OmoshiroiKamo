@@ -25,7 +25,7 @@ public class CowsCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useCow;
+        return BackportConfigs.enableCow;
     }
 
     @Override

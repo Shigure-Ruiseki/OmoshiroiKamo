@@ -35,7 +35,7 @@ public class MultiblockWorldGenerator implements IWorldGenerator {
         IChunkProvider chunkProvider) {
         if (world.provider instanceof WorldProviderSurface) {
 
-            if (BackportConfigs.useMultiBlock) {
+            if (BackportConfigs.enableMultiBlock) {
 
                 if (MultiblockWorldGenConfig.hardenedStone.enable) {
                     this.runGeneration(

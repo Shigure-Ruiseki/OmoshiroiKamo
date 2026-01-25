@@ -223,6 +223,16 @@ public class BackpackRecipes {
                     BackpackItems.STACK_UPGRADE.newItemStack(1, 2)));
         }
 
+        // Stack Upgrade Tier Omega
+        GameRegistry.addRecipe(
+            new ShapedOreRecipe(
+                BackpackItems.STACK_UPGRADE.newItemStack(1, 4),
+                "BBB",
+                "BBB",
+                "BBB",
+                'B',
+                BackpackItems.STACK_UPGRADE.newItemStack(1, 3)));
+
         // Crafting Upgrade
         GameRegistry.addRecipe(
             new ShapedOreRecipe(
