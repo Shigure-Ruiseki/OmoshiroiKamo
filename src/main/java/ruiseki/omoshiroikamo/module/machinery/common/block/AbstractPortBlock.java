@@ -11,6 +11,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 
+import ruiseki.omoshiroikamo.api.block.ISidedIO;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
@@ -31,6 +33,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     public static int portRendererId = -1;
 
     public static IIcon baseIcon;
+    public static IIcon casingIcon;
 
     @SafeVarargs
     protected AbstractPortBlock(String name, Class<? extends TileEntity>... teClasses) {
@@ -96,13 +99,23 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-        // Always return base icon - overlays are rendered by ISBRH
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof ISidedIO) {
+            ISidedIO io = (ISidedIO) te;
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
+            if (io.getSideIO(dir) == EnumIO.NONE) {
+                if (casingIcon != null) {
+                    return casingIcon;
+                }
+            }
+        }
         return baseIcon;
     }
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
         baseIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
+        casingIcon = reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing");
         registerPortOverlays(reg);
     }
 

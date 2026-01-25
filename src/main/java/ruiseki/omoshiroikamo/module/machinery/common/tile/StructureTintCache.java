@@ -4,10 +4,15 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Caches tint colors for structure blocks at the world level.
@@ -81,7 +86,12 @@ public class StructureTintCache {
             if (te != null && te.getWorldObj() != null) {
                 dimension = te.getWorldObj().provider.dimensionId;
             } else {
-                return null;
+                // Fallback: try to get dimension from client world (for non-TE blocks like
+                // Casing)
+                dimension = getClientDimension();
+                if (dimension == Integer.MIN_VALUE) {
+                    return null;
+                }
             }
         }
 
@@ -90,6 +100,30 @@ public class StructureTintCache {
             return dimensionCache.get(new ChunkCoordinates(x, y, z));
         }
         return null;
+    }
+
+    /**
+     * Get dimension ID from client world.
+     * Returns Integer.MIN_VALUE if not on client side or client world is null.
+     */
+    private static int getClientDimension() {
+        // This method is called during rendering, which is always client-side
+        // Use reflection-free approach: FMLCommonHandler for side check
+        if (FMLCommonHandler.instance()
+            .getSide()
+            .isClient()) {
+            return getClientDimensionImpl();
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * Client-only implementation to get dimension ID.
+     * Separated to prevent class loading issues on server.
+     */
+    @SideOnly(Side.CLIENT)
+    private static int getClientDimensionImpl() {
+        return Minecraft.getMinecraft().theWorld.provider.dimensionId;
     }
 
     /**

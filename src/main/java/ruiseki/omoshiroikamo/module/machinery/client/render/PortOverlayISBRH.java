@@ -22,7 +22,6 @@ import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
@@ -94,72 +93,55 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         ISidedIO ioConfig = te instanceof ISidedIO ? (ISidedIO) te : null;
         ISidedTexture sidedTexture = te instanceof ISidedTexture ? (ISidedTexture) te : null;
 
-        // Prepare base icons
-        IIcon portBaseIcon = AbstractPortBlock.baseIcon != null ? AbstractPortBlock.baseIcon : block.getIcon(0, 0);
-        IIcon casingIcon = MachineryBlocks.MACHINE_CASING.getBlock()
-            .getIcon(0, 0);
+        // Prepare base icon - use port base for all faces
+        // (Disabled faces will simply not have an overlay rendered)
+        // IIcon portBaseIcon = AbstractPortBlock.baseIcon != null ?
+        // AbstractPortBlock.baseIcon : block.getIcon(0, 0);
 
+        // Render base block with proper AO and lighting using
+        // renderStandardBlockWithColorMultiplier
+        // This handles all lighting, AO, and face culling automatically
+        renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
+
+        // CRITICAL: Enable renderAllFaces to prevent face culling issues
+        // Without this, faces may not render if block returns
+        // shouldSideBeRendered=false
+        boolean prevRenderAllFaces = renderer.renderAllFaces;
+        renderer.renderAllFaces = true;
+
+        // Disable AO to prevent incorrect brightness calculation
+        boolean prevEnableAO = renderer.enableAO;
+        renderer.enableAO = false;
+
+        // Render all faces with port base icon
+        // Uses block.getIcon(world, x,y,z, side) which handles casing switch
+        renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+
+        // Render Overlays (Manual with Offset) on top of base
         Tessellator t = Tessellator.instance;
-        t.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
-
-        // Iterate faces and render using RenderBlocks for Base, Manual for Overlay
         for (int i = 0; i < 6; i++) {
             ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
 
-            // Render Base with RenderBlocks (Fixes lighting/AO/Shading)
-            // Select icon
-            IIcon baseIcon = portBaseIcon;
+            // Skip overlay for disabled faces
             if (ioConfig != null && ioConfig.getSideIO(dir) == EnumIO.NONE) {
-                baseIcon = casingIcon;
+                continue;
             }
 
-            // Verify neighbor opacity to prevent rendering internal faces
+            // Allow disabled overlay to render (let TE decide texture via ISidedTexture)
+
+            // Check neighbor opacity to prevent rendering internal overlays
             int ax = x + dir.offsetX;
             int ay = y + dir.offsetY;
             int az = z + dir.offsetZ;
-            // Optimally skipping opaque faces
             if (world.getBlock(ax, ay, az)
                 .isOpaqueCube()) {
                 continue;
             }
 
-            // Apply Mesh Tint Color
-            // RenderBlocks usually resets color, so we set it immediately before renderFace
-            t.setColorOpaque_F(r, g, b);
-
-            renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
-            renderer.setOverrideBlockTexture(baseIcon);
-            switch (dir) {
-                case DOWN:
-                    renderer.renderFaceYNeg(block, x, y, z, baseIcon);
-                    break;
-                case UP:
-                    renderer.renderFaceYPos(block, x, y, z, baseIcon);
-                    break;
-                case NORTH:
-                    renderer.renderFaceZNeg(block, x, y, z, baseIcon);
-                    break;
-                case SOUTH:
-                    renderer.renderFaceZPos(block, x, y, z, baseIcon);
-                    break;
-                case WEST:
-                    renderer.renderFaceXNeg(block, x, y, z, baseIcon);
-                    break;
-                case EAST:
-                    renderer.renderFaceXPos(block, x, y, z, baseIcon);
-                    break;
-                default:
-                    break;
-            }
-            renderer.clearOverrideBlockTexture();
-
-            // Render Overlay (Manual with Offset)
             if (sidedTexture != null) {
                 IIcon overlayIcon = sidedTexture.getTexture(dir, 1);
                 if (overlayIcon != null) {
-                    // Reset brightness for overlay (manual render)
-                    // We must calculate brightness manually or use the base block's brightness
-                    // Using neighbor brightness prevents dark overlay on lit faces
+                    // Use neighbor brightness for overlay
                     int neighborBrightness = world.getLightBrightnessForSkyBlocks(ax, ay, az, 0);
                     t.setBrightness(neighborBrightness);
 
@@ -181,12 +163,16 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                             break;
                     }
                     t.setColorOpaque_F(shade, shade, shade);
-                    t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ); // Ensure normal for shaders
+                    t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
                     renderFace(t, dir, x, y, z, overlayIcon, EPS);
                 }
             }
         }
+
+        // Restore flags
+        renderer.renderAllFaces = prevRenderAllFaces;
+        renderer.enableAO = prevEnableAO;
 
         return true;
     }
