@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable;
+package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type;
 
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.value.BoolValue;
@@ -7,6 +7,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
 
 public class BooleanVariable extends BaseVariableWidget {

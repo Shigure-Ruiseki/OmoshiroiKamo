@@ -1,10 +1,11 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable;
+package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type;
 
 import com.cleanroommc.modularui.value.DoubleValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
 
 public class FloatVariable extends BaseVariableWidget {

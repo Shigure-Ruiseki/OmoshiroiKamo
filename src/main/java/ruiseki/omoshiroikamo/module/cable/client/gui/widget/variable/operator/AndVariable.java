@@ -1,15 +1,21 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable;
+package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.operator;
 
+import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.VANILLA_SEARCH_BACKGROUND;
+
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
 
-public class IfVariable extends BaseVariableWidget {
+public class AndVariable extends BaseVariableWidget {
 
-    public IfVariable(ProgrammerPanel panel) {
+    public AndVariable(ProgrammerPanel panel) {
         super(panel);
 
         Column col = new Column();
@@ -18,16 +24,18 @@ public class IfVariable extends BaseVariableWidget {
 
         Row row = new Row();
         row.coverChildren()
+            .padding(2)
+            .background(VANILLA_SEARCH_BACKGROUND)
             .childPadding(2);
         row.child(
-            new ItemSlot().name("cond")
-                .syncHandler(panel.slots[1]));
+            new ItemSlot().name("a")
+                .syncHandler("slots", 1));
         row.child(
-            new ItemSlot().name("then")
-                .syncHandler(panel.slots[2]));
+            new TextWidget<>(IKey.str("&&")).size(18)
+                .alignment(Alignment.CENTER));
         row.child(
-            new ItemSlot().name("else")
-                .syncHandler(panel.slots[3]));
+            new ItemSlot().name("b")
+                .syncHandler("slots", 2));
 
         panel.slots[1].getSlot()
             .changeListener((newItem, amountChanged, client, init) -> {
@@ -35,12 +43,6 @@ public class IfVariable extends BaseVariableWidget {
                 writeLogicNBT();
             });
         panel.slots[2].getSlot()
-            .changeListener((newItem, amountChanged, client, init) -> {
-                if (init) return;
-                writeLogicNBT();
-
-            });
-        panel.slots[3].getSlot()
             .changeListener((newItem, amountChanged, client, init) -> {
                 if (init) return;
                 writeLogicNBT();
@@ -53,6 +55,6 @@ public class IfVariable extends BaseVariableWidget {
 
     @Override
     public void writeLogicNBT() {
-        panel.syncHandler.syncToServer(ProgrammerSH.SET_IF_LOGIC);
+        panel.syncHandler.syncToServer(ProgrammerSH.SET_AND_LOGIC);
     }
 }

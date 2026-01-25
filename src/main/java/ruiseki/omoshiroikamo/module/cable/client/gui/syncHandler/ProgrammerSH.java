@@ -11,9 +11,9 @@ import net.minecraft.network.PacketBuffer;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicTypes;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerHandler;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
+import ruiseki.omoshiroikamo.module.cable.common.util.LogicNBTUtils;
 
 public class ProgrammerSH extends SyncHandler {
 
@@ -32,6 +32,8 @@ public class ProgrammerSH extends SyncHandler {
     public static final int SET_IF_LOGIC = 200;
     public static final int SET_AND_LOGIC = 201;
     public static final int SET_NAND_LOGIC = 202;
+    public static final int SET_OR_LOGIC = 203;
+    public static final int SET_NOR_LOGIC = 204;
 
     public ProgrammerSH(ProgrammerHandler handler, ProgrammerPanel panel) {
         this.handler = handler;
@@ -79,11 +81,19 @@ public class ProgrammerSH extends SyncHandler {
         }
 
         if (id == SET_AND_LOGIC) {
-            writeAndLogic();
+            writeLogic("AND");
         }
 
         if (id == SET_NAND_LOGIC) {
-            writeNAndLogic();
+            writeLogic("NAND");
+        }
+
+        if (id == SET_OR_LOGIC) {
+            writeLogic("OR");
+        }
+
+        if (id == SET_NOR_LOGIC) {
+            writeLogic("NOR");
         }
     }
 
@@ -109,13 +119,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.BOOLEAN.getId());
-        logic.setBoolean("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
+        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -125,13 +129,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.INT.getId());
-        logic.setInteger("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
+        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.intLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -141,13 +139,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.LONG.getId());
-        logic.setLong("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
+        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.longLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -157,29 +149,17 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.FLOAT.getId());
-        logic.setFloat("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
+        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.floatLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
 
     private void writeDoubleLiteral(PacketBuffer buffer) {
-        boolean value = buffer.readBoolean();
+        double value = buffer.readDouble();
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.DOUBLE.getId());
-        logic.setBoolean("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
+        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.doubleLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -189,13 +169,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        NBTTagCompound logic = new NBTTagCompound();
-
-        logic.setString("Type", "LITERAL");
-        logic.setString("ValueType", LogicTypes.DOUBLE.getId());
-        logic.setString("Value", value);
-        ItemNBTUtils.setCompound(stack, "Logic", logic);
-
+        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.stringLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -239,7 +213,7 @@ public class ProgrammerSH extends SyncHandler {
             .setStackInSlot(0, target);
     }
 
-    private void writeAndLogic() {
+    private void writeLogic(String op) {
         ItemStack target = handler.getHandler()
             .getStackInSlot(0);
         if (target == null) return;
@@ -258,7 +232,7 @@ public class ProgrammerSH extends SyncHandler {
 
         NBTTagCompound logic = new NBTTagCompound();
         logic.setString("Type", "OP");
-        logic.setString("Op", "AND");
+        logic.setString("Op", op);
 
         NBTTagList children = new NBTTagList();
         children.appendTag(condLogic.copy());
@@ -267,40 +241,6 @@ public class ProgrammerSH extends SyncHandler {
         logic.setTag("Children", children);
 
         ItemNBTUtils.setCompound(target, "Logic", logic);
-        handler.getHandler()
-            .setStackInSlot(0, target);
-    }
-
-    private void writeNAndLogic() {
-        ItemStack target = handler.getHandler()
-            .getStackInSlot(0);
-        if (target == null) return;
-
-        ItemStack condS = handler.getHandler()
-            .getStackInSlot(1);
-        ItemStack thenS = handler.getHandler()
-            .getStackInSlot(2);
-
-        if (condS == null || thenS == null) return;
-
-        NBTTagCompound condLogic = ItemNBTUtils.getCompound(condS, "Logic", false);
-        NBTTagCompound thenLogic = ItemNBTUtils.getCompound(thenS, "Logic", false);
-
-        if (condLogic == null || thenLogic == null) return;
-
-        NBTTagCompound logic = new NBTTagCompound();
-        logic.setString("Type", "OP");
-        logic.setString("Op", "NAND");
-
-        NBTTagList children = new NBTTagList();
-        children.appendTag(condLogic.copy());
-        children.appendTag(thenLogic.copy());
-
-        logic.setTag("Children", children);
-
-        ItemNBTUtils.setCompound(target, "Logic", logic);
-        handler.getHandler()
-            .setStackInSlot(0, target);
     }
 
 }

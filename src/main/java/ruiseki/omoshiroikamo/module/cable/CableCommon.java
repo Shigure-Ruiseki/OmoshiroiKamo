@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableBlocks;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.CableNetworkTickHandler;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.type.LogicTypes;
 
 public class CableCommon implements IModuleCommon {

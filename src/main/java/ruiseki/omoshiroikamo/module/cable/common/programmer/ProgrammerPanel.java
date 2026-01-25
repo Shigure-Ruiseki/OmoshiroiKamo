@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.cable.common.programmer;
 
 import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.VANILLA_SEARCH_BACKGROUND;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -21,24 +21,30 @@ import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
+import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.AndVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BaseVariableWidget;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BooleanVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.DoubleVariable;
 import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.EmptyVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.FloatVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.IfVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.IntegerVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.LongVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.NAndVariable;
-import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.StringVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.operator.AndVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.operator.IfVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.operator.NandVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.operator.NorVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.operator.OrVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type.BooleanVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type.DoubleVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type.FloatVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type.IntegerVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type.LongVariable;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type.StringVariable;
+import ruiseki.omoshiroikamo.module.cable.common.variable.ItemVariableCard;
 
 public class ProgrammerPanel extends ModularPanel {
 
@@ -77,6 +83,7 @@ public class ProgrammerPanel extends ModularPanel {
             slots[i] = syncer;
         }
 
+        registerDefaultItems();
         addVariableList();
 
         addDetailPanel();
@@ -99,6 +106,59 @@ public class ProgrammerPanel extends ModularPanel {
             }
         });
 
+    }
+
+    private void registerDefaultItems() {
+
+        // Type
+        addItem(
+            IKey.lang("gui.cable.type.boolean")
+                .get(),
+            () -> new BooleanVariable(this));
+        addItem(
+            IKey.lang("gui.cable.type.int")
+                .get(),
+            () -> new IntegerVariable(this));
+        addItem(
+            IKey.lang("gui.cable.type.long")
+                .get(),
+            () -> new LongVariable(this));
+        addItem(
+            IKey.lang("gui.cable.type.float")
+                .get(),
+            () -> new FloatVariable(this));
+        addItem(
+            IKey.lang("gui.cable.type.double")
+                .get(),
+            () -> new DoubleVariable(this));
+        addItem(
+            IKey.lang("gui.cable.type.string")
+                .get(),
+            () -> new StringVariable(this));
+
+        // Controller
+        addItem(
+            IKey.lang("gui.cable.op.if")
+                .get(),
+            () -> new IfVariable(this));
+
+        // Operator
+        addItem(
+            IKey.lang("gui.cable.op.and")
+                .get(),
+            () -> new AndVariable(this));
+        addItem(
+            IKey.lang("gui.cable.op.nand")
+                .get(),
+            () -> new NandVariable(this));
+        addItem(
+            IKey.lang("gui.cable.op.or")
+                .get(),
+            () -> new OrVariable(this));
+        addItem(
+            IKey.lang("gui.cable.op.nor")
+                .get(),
+            () -> new NorVariable(this));
     }
 
     private static final UITexture LIST_ITEM_BG = UITexture.builder()
@@ -124,22 +184,11 @@ public class ProgrammerPanel extends ModularPanel {
         }
     }
 
-    private final List<ProgramItem> items = Arrays.asList(
+    private final List<ProgramItem> items = new ArrayList<>();
 
-        // Type
-        new ProgramItem("Boolean", () -> new BooleanVariable(this)),
-        new ProgramItem("Integer", () -> new IntegerVariable(this)),
-        new ProgramItem("Long", () -> new LongVariable(this)),
-        new ProgramItem("Float", () -> new FloatVariable(this)),
-        new ProgramItem("Double", () -> new DoubleVariable(this)),
-        new ProgramItem("String", () -> new StringVariable(this)),
-
-        // Operator
-        new ProgramItem("And", () -> new AndVariable(this)),
-        new ProgramItem("Not And", () -> new NAndVariable(this)),
-
-        // Controller
-        new ProgramItem("If", () -> new IfVariable(this)));
+    public void addItem(String name, Supplier<BaseVariableWidget> factory) {
+        items.add(new ProgramItem(name, factory));
+    }
 
     public void addVariableList() {
         StringValue searchValue = new StringValue("");
@@ -201,12 +250,20 @@ public class ProgrammerPanel extends ModularPanel {
             .child(detailWidget);
         col.child(detailColumn);
 
+        Row row = new Row();
         ItemSlot slot = new ItemSlot().syncHandler("slots", 0)
             .right(7)
-            .bottom(86);
-        col.child(slot);
+            .background(OKGuiTextures.VARIABLE_SLOT)
+            .background(OKGuiTextures.VARIABLE_SLOT);
+        TextWidget<?> textWidget = new TextWidget<>(IKey.dynamic(selectedItem::getStringValue)).height(18)
+            .left(7);
+        row.size(176, 18)
+            .bottom(86)
+            .child(textWidget)
+            .child(slot);
 
         slots[0].getSlot()
+            .filter(stack -> stack.getItem() instanceof ItemVariableCard)
             .changeListener((newItem, onlyAmountChanged, client, init) -> {
                 if (init) return;
 
@@ -215,6 +272,7 @@ public class ProgrammerPanel extends ModularPanel {
                 }
             });
 
+        child(row);
         child(col);
     }
 

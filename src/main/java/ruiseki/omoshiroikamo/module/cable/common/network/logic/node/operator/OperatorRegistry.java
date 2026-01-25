@@ -11,7 +11,7 @@ public class OperatorRegistry {
         // LOGIC
         register(new OpAnd());
         register(new OpOr());
-        register(new OpNAnd());
+        register(new OpNand());
         register(new OpNot());
 
         // COMPARISON

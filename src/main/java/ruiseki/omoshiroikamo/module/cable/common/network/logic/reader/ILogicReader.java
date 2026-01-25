@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.api.cable.ICableNode;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public interface ILogicReader {

@@ -39,8 +39,8 @@ import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 

@@ -108,6 +108,29 @@ gui.cable.tick=Ticks / Operation
 gui.cable.priority=Priority
 gui.cable.channel=Channel
 
+gui.cable.type.boolean=Boolean
+gui.cable.type.int=Integer
+gui.cable.type.long=Long
+gui.cable.type.float=Float
+gui.cable.type.double=Double
+gui.cable.type.string=String
+
+gui.cable.op.if=IF
+
+gui.cable.op.and=AND && 
+gui.cable.op.nand=NAND !&&
+gui.cable.op.or=OR || 
+gui.cable.op.nor=NOR !|| 
+gui.cable.op.xor=XOR ^
+
+gui.cable.op.eq=EQ ==
+gui.cable.op.neq=NEQ !=
+gui.cable.op.gtr=GTR >
+gui.cable.op.geq=GEQ >=
+gui.cable.op.lss=LSS <
+gui.cable.op.leq=LEQ <=
+
+
 #Modular Machinery
 
 gui.machinery.energy_used=Energy Used: %s
@@ -304,7 +327,7 @@ tooltip.backpack.crafting_upgrade=Adds additional crafting grid to side of backp
 tooltip.backpack.inception_upgrade=Allows backpacks to be stored inside backpack
 tooltip.backpack.pickup_upgrade=Allows backpacks to pickup items
 tooltip.backpack.advanced_pickup_upgrade=Allows backpack to pickup items with more configurations
-tooltip.feeding_upgrade=Allows backpacks to automatically feed player
+tooltip.backpack.feeding_upgrade=Allows backpacks to automatically feed player
 tooltip.backpack.advanced_feeding_upgrade=Allows backpack to automatically feed player with more configurations
 tooltip.backpack.filter_upgrade=Filters inserted items when placing in world
 tooltip.backpack.advanced_filter_upgrade=Filters inserted items when placing in world with more configurations

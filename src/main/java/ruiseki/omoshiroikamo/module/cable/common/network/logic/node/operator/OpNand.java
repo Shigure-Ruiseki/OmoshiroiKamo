@@ -5,7 +5,7 @@ import java.util.List;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.LogicValues;
 
-public class OpNAnd implements ILogicOperator {
+public class OpNand implements ILogicOperator {
 
     @Override
     public String getId() {

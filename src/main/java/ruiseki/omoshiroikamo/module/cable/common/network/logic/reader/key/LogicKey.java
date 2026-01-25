@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.cable.common.network.logic.key;
+package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key;
 
 import java.util.Objects;
 

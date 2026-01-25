@@ -1,27 +1,26 @@
-package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable;
+package ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.type;
 
-import com.cleanroommc.modularui.value.DoubleValue;
+import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.module.cable.client.gui.syncHandler.ProgrammerSH;
+import ruiseki.omoshiroikamo.module.cable.client.gui.widget.variable.BaseVariableWidget;
 import ruiseki.omoshiroikamo.module.cable.common.programmer.ProgrammerPanel;
 
-public class DoubleVariable extends BaseVariableWidget {
+public class StringVariable extends BaseVariableWidget {
 
-    private DoubleValue doubleValue;
+    private StringValue stringValue;
 
-    public DoubleVariable(ProgrammerPanel panel) {
+    public StringVariable(ProgrammerPanel panel) {
         super(panel);
 
         Column col = new Column();
         col.coverChildren()
             .childPadding(2);
 
-        doubleValue = new DoubleValue(0);
-        TextFieldWidget field = new TextFieldWidget().value(doubleValue)
-            .setDefaultNumber(0.0)
-            .setNumbersDouble(d -> d)
+        stringValue = new StringValue("");
+        TextFieldWidget field = new TextFieldWidget().value(stringValue)
             .width(80)
             .onUpdateListener(widget -> {
                 if (!widget.getText()
@@ -37,7 +36,8 @@ public class DoubleVariable extends BaseVariableWidget {
 
     @Override
     public void writeLogicNBT() {
-        panel.syncHandler
-            .syncToServer(ProgrammerSH.SET_DOUBLE_LITERAL, buffer -> buffer.writeDouble(doubleValue.getDoubleValue()));
+        panel.syncHandler.syncToServer(
+            ProgrammerSH.SET_STRING_LITERAL,
+            buffer -> buffer.writeStringToBuffer(stringValue.getStringValue()));
     }
 }

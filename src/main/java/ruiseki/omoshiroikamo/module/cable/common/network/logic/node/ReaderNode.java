@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.node;
 
-import ruiseki.omoshiroikamo.module.cable.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKey;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.value.ILogicValue;
 
 public class ReaderNode implements ILogicNode {
