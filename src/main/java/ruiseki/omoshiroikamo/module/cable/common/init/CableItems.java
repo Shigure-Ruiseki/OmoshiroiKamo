@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.input.ItemItemInpu
 import ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus.ItemItemInterface;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.output.ItemItemOutput;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.block.ItemBlockReader;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.fluid.ItemFluidReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.inventory.ItemInventoryReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.redstone.ItemRedstoneReader;
 import ruiseki.omoshiroikamo.module.cable.common.network.terminal.ItemStorageTerminal;
@@ -22,19 +23,24 @@ import ruiseki.omoshiroikamo.module.cable.common.variable.ItemVariableCard;
 public enum CableItems {
 
     // spotless: off
+
     LOGIC_CARD(new ItemVariableCard()),
 
     ENERGY_INTERFACE(new ItemEnergyInterface()),
     ENERGY_INPUT(new ItemEnergyInput()),
     ENERGY_OUTPUT(new ItemEnergyOutput()),
+
     ITEM_INTERFACE(new ItemItemInterface()),
     ITEM_INPUT(new ItemItemInput()),
     ITEM_OUTPUT(new ItemItemOutput()),
+
     CABLE_TERMINAL(new ItemStorageTerminal()),
     CRAFTING_INTERFACE(new ItemCraftingInterface()),
+
     REDSTONE_READER(new ItemRedstoneReader()),
     BLOCK_READER(new ItemBlockReader()),
     INVENTORY_READER(new ItemInventoryReader()),
+    FLUID_READER(new ItemFluidReader()),
 
     ;
     // spotless: on

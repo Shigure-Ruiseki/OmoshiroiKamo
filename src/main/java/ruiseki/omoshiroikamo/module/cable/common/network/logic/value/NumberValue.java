@@ -9,6 +9,6 @@ public abstract class NumberValue implements ILogicValue {
 
     @Override
     public String asString() {
-        return raw().toString();
+        return String.valueOf(raw());
     }
 }

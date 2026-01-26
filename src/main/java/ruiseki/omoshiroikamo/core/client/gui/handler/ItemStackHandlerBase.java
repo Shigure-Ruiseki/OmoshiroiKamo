@@ -5,7 +5,10 @@ import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
@@ -190,6 +193,57 @@ public class ItemStackHandlerBase extends ItemStackHandler {
         entityItem.motionZ = world.rand.nextGaussian() * motion;
 
         world.spawnEntityInWorld(entityItem);
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagList list = new NBTTagList();
+
+        for (int i = 0; i < stacks.size(); i++) {
+            ItemStack stack = stacks.get(i);
+            if (stack != null) {
+                NBTTagCompound itemTag = new NBTTagCompound();
+                itemTag.setInteger("Slot", i);
+                stack.writeToNBT(itemTag);
+                itemTag.setInteger("Count", stack.stackSize);
+                list.appendTag(itemTag);
+            }
+        }
+
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setTag("Items", list);
+        nbt.setInteger("Size", stacks.size());
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        int size = nbt.hasKey("Size", Constants.NBT.TAG_INT) ? nbt.getInteger("Size") : this.stacks.size();
+
+        this.resize(size);
+
+        for (int i = 0; i < stacks.size(); i++) {
+            stacks.set(i, null);
+        }
+
+        NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+
+        for (int i = 0; i < tagList.tagCount(); ++i) {
+            NBTTagCompound itemTags = tagList.getCompoundTagAt(i);
+            int slot = itemTags.getInteger("Slot");
+
+            if (slot >= 0 && slot < stacks.size()) {
+                ItemStack loadedStack = ItemStack.loadItemStackFromNBT(itemTags);
+                if (loadedStack != null) {
+                    if (itemTags.hasKey("RealCount", Constants.NBT.TAG_INT)) {
+                        loadedStack.stackSize = itemTags.getInteger("RealCount");
+                    }
+                }
+                stacks.set(slot, loadedStack);
+            }
+        }
+
+        this.onLoad();
     }
 
 }

@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -18,6 +20,20 @@ import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKey;
 
 public abstract class AbstractReaderPart extends AbstractPart implements ILogicReader {
+
+    public NBTTagCompound clientCache = new NBTTagCompound();
+
+    public String getClientCacheNBT() {
+        return clientCache.toString();
+    }
+
+    public void setClientCacheNBT(String s) {
+        try {
+            clientCache = (NBTTagCompound) JsonToNBT.func_150315_a(s);
+        } catch (Exception e) {
+            clientCache = new NBTTagCompound();
+        }
+    }
 
     public void addSearchableRow(ListWidget<Row, ?> list, String searchKey, Row row, StringValue searchValue) {
         row.setEnabledIf(

@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.value;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -23,6 +26,10 @@ public interface ILogicValue {
     double asDouble();
 
     String asString();
+
+    default List<ILogicValue> asList() {
+        return Collections.emptyList();
+    }
 
     default BlockStack asBlockStack() {
         return null;

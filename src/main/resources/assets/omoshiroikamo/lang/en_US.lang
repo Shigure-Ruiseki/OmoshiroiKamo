@@ -121,8 +121,22 @@ gui.cable.inventoryReader.inventoryCount=Inventory Count
 gui.cable.inventoryReader.inventorySlots=Inventory Slots
 gui.cable.inventoryReader.slotsFilled=Slots Filled
 gui.cable.inventoryReader.fillRatio=Fill Ratio
-gui.cable.inventoryReader.items=Items
+gui.cable.inventoryReader.itemsList=Items
 gui.cable.inventoryReader.slotItem=Slot Item
+
+gui.cable.fluidReader.isTank=Is Tank
+gui.cable.fluidReader.tankEmpty=Tank Empty
+gui.cable.fluidReader.tankNotEmpty=Tank Not Empty
+gui.cable.fluidReader.tankFull=Tank Full
+gui.cable.fluidReader.tankCount=Tank Count
+gui.cable.fluidReader.fluidAmount=Fluid Amount
+gui.cable.fluidReader.totalAmount=Total Fluid Amount
+gui.cable.fluidReader.fluidCapacity=Fluid Capacity
+gui.cable.fluidReader.totalCapacity=Total Fluid Capacity
+gui.cable.fluidReader.fillRatio=Fluid Fill Ratio
+gui.cable.fluidReader.tankFluids=Tank Fluids
+gui.cable.fluidReader.tankCapacities=Tank Capacities
+gui.cable.fluidReader.tankFluid=Tank Fluid
 
 gui.cable.side=Target Side
 gui.cable.tick=Ticks / Operation
@@ -562,6 +576,7 @@ item.storageTerminal.name=Storage Terminal
 item.redstoneReader.name=Redstone Reader
 item.blockReader.name=Block Reader
 item.inventoryReader.name=Inventory Reader
+item.fluidReader.name=Fluid Reader
 item.craftingInterface.name=Crafting Interface
 
 #Block

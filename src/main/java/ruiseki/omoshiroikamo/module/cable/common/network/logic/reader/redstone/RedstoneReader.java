@@ -23,8 +23,8 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
-import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
@@ -58,11 +58,6 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
     private static final ResourceLocation back_texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/redstone_reader_back.png");
 
-    private int redstoneValue = 0;
-    private boolean hasRedstone = false;
-    private boolean highRedstone = false;
-    private boolean lowRedstone = false;
-
     private static final int HIGH_THRESHOLD = 8;
 
     private final ItemStackHandlerBase inv = new ItemStackHandlerBase(4);
@@ -86,10 +81,13 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
     public void doUpdate() {
         if (!shouldTickNow()) return;
 
-        int newValue = getRedstoneInput();
-        if (newValue != this.redstoneValue) {
-            setRedstone(newValue);
-        }
+        int value = getRedstoneInput();
+
+        clientCache = new NBTTagCompound();
+        clientCache.setInteger("value", value);
+        clientCache.setBoolean("has", value > 0);
+        clientCache.setBoolean("high", value >= HIGH_THRESHOLD);
+        clientCache.setBoolean("low", value > 0 && value < HIGH_THRESHOLD);
     }
 
     @Override
@@ -125,7 +123,8 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         // Sync
-        syncManager.syncValue("redstoneSyncer", new IntSyncValue(this::getRedstone, this::setRedstone));
+        syncManager
+            .syncValue("clientCacheSyncer", new StringSyncValue(this::getClientCacheNBT, this::setClientCacheNBT));
 
         // Search
         StringValue searchValue = new StringValue("");
@@ -134,14 +133,14 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
             new TextFieldWidget().value(searchValue)
                 .pos(7, 7)
                 .width(162)
-                .height(16)
+                .height(10)
                 .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND));
 
         // List
         ListWidget<Row, ?> list = new ListWidget<>();
-        list.pos(7, 25)
+        list.pos(7, 20)
             .width(162)
-            .maxSize(90);
+            .maxSize(85);
 
         panel.child(list);
 
@@ -152,7 +151,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 .get(),
             infoRow(
                 "gui.cable.redstoneReader.redstoneValue",
-                IKey.dynamic(() -> String.valueOf(redstoneValue)),
+                IKey.dynamic(() -> String.valueOf(clientCache.getInteger("value"))),
                 3,
                 LogicKeys.REDSTONE_VALUE,
                 inv),
@@ -164,7 +163,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 .get(),
             infoRow(
                 "gui.cable.redstoneReader.hasRedstone",
-                IKey.dynamic(() -> String.valueOf(hasRedstone)),
+                IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("has"))),
                 1,
                 LogicKeys.HAS_REDSTONE,
                 inv),
@@ -176,7 +175,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 .get(),
             infoRow(
                 "gui.cable.redstoneReader.highRedstone",
-                IKey.dynamic(() -> String.valueOf(highRedstone)),
+                IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("high"))),
                 2,
                 LogicKeys.HIGH_REDSTONE,
                 inv),
@@ -188,7 +187,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 .get(),
             infoRow(
                 "gui.cable.redstoneReader.lowRedstone",
-                IKey.dynamic(() -> String.valueOf(lowRedstone)),
+                IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("low"))),
                 0,
                 LogicKeys.LOW_REDSTONE,
                 inv),
@@ -226,18 +225,6 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
         int strong = world.getStrongestIndirectPower(x, y, z);
 
         return Math.max(weak, strong);
-    }
-
-    public int getRedstone() {
-        return redstoneValue;
-    }
-
-    public void setRedstone(int value) {
-        this.redstoneValue = value;
-        this.hasRedstone = value > 0;
-        this.highRedstone = value >= HIGH_THRESHOLD;
-        this.lowRedstone = value > 0 && value < HIGH_THRESHOLD;
-        cable.dirty();
     }
 
     @Override
@@ -300,18 +287,15 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
 
     @Override
     public ILogicValue read(LogicKey key) {
-        if (key == LogicKeys.REDSTONE_VALUE) {
-            return LogicValues.of(redstoneValue);
-        }
-        if (key == LogicKeys.HAS_REDSTONE) {
-            return LogicValues.of(hasRedstone);
-        }
-        if (key == LogicKeys.HIGH_REDSTONE) {
-            return LogicValues.of(highRedstone);
-        }
-        if (key == LogicKeys.LOW_REDSTONE) {
-            return LogicValues.of(lowRedstone);
-        }
+
+        if (key == LogicKeys.REDSTONE_VALUE) return LogicValues.of(clientCache.getInteger("value"));
+
+        if (key == LogicKeys.HAS_REDSTONE) return LogicValues.of(clientCache.getBoolean("has"));
+
+        if (key == LogicKeys.HIGH_REDSTONE) return LogicValues.of(clientCache.getBoolean("high"));
+
+        if (key == LogicKeys.LOW_REDSTONE) return LogicValues.of(clientCache.getBoolean("low"));
+
         return LogicValues.NULL;
     }
 }

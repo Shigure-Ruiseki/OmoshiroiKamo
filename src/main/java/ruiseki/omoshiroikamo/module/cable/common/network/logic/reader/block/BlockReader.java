@@ -25,6 +25,7 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
@@ -78,6 +79,32 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     @Override
     public void doUpdate() {
         if (!shouldTickNow()) return;
+
+        World world = world();
+        int x = readX();
+        int y = readY();
+        int z = readZ();
+
+        NBTTagCompound tag = new NBTTagCompound();
+
+        boolean hasBlock = !world.isAirBlock(x, y, z);
+        tag.setBoolean("hasBlock", hasBlock);
+
+        tag.setString("dimension", world.provider.getDimensionName());
+        tag.setInteger("x", x);
+        tag.setInteger("y", y);
+        tag.setInteger("z", z);
+
+        if (hasBlock) {
+            tag.setTag(
+                "block",
+                BlockStack.fromWorld(world, x, y, z)
+                    .serializeNBT());
+            tag.setString("biome", world.getBiomeGenForCoords(x, z).biomeName);
+            tag.setInteger("light", world.getBlockLightValue(x, y, z));
+        }
+
+        this.clientCache = tag;
     }
 
     @Override
@@ -113,6 +140,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
+        syncManager
+            .syncValue("clientCacheSyncer", new StringSyncValue(this::getClientCacheNBT, this::setClientCacheNBT));
+
         // Search
         StringValue searchValue = new StringValue("");
 
@@ -120,14 +150,14 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
             new TextFieldWidget().value(searchValue)
                 .pos(7, 7)
                 .width(162)
-                .height(16)
+                .height(10)
                 .background(VANILLA_SEARCH_BACKGROUND));
 
         // List
         ListWidget<Row, ?> list = new ListWidget<>();
-        list.pos(7, 25)
+        list.pos(7, 20)
             .width(162)
-            .maxSize(90);
+            .maxSize(85);
 
         panel.child(list);
 
@@ -138,7 +168,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 .get(),
             infoRow(
                 "gui.cable.blockReader.hasBlock",
-                IKey.dynamic(() -> String.valueOf(!world().isAirBlock(readX(), readY(), readZ()))),
+                IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("hasBlock"))),
                 0,
                 LogicKeys.HAS_BLOCK,
                 inv),
@@ -150,7 +180,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 .get(),
             infoRow(
                 "gui.cable.blockReader.dimension",
-                IKey.dynamic(() -> world().provider.getDimensionName()),
+                IKey.dynamic(() -> String.valueOf(clientCache.getString("dimension"))),
                 1,
                 LogicKeys.DIMENSION,
                 inv),
@@ -160,21 +190,36 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
             list,
             IKey.lang("gui.cable.blockReader.coord.x")
                 .get(),
-            infoRow("gui.cable.blockReader.coord.x", IKey.dynamic(() -> String.valueOf(readX())), 2, LogicKeys.X, inv),
+            infoRow(
+                "gui.cable.blockReader.coord.x",
+                IKey.dynamic(() -> String.valueOf(clientCache.getInteger("x"))),
+                2,
+                LogicKeys.X,
+                inv),
             searchValue);
 
         addSearchableRow(
             list,
             IKey.lang("gui.cable.blockReader.coord.y")
                 .get(),
-            infoRow("gui.cable.blockReader.coord.y", IKey.dynamic(() -> String.valueOf(readY())), 3, LogicKeys.Y, inv),
+            infoRow(
+                "gui.cable.blockReader.coord.y",
+                IKey.dynamic(() -> String.valueOf(clientCache.getInteger("y"))),
+                3,
+                LogicKeys.Y,
+                inv),
             searchValue);
 
         addSearchableRow(
             list,
             IKey.lang("gui.cable.blockReader..coord.z")
                 .get(),
-            infoRow("gui.cable.blockReader.coord.z", IKey.dynamic(() -> String.valueOf(readZ())), 4, LogicKeys.Z, inv),
+            infoRow(
+                "gui.cable.blockReader.coord.z",
+                IKey.dynamic(() -> String.valueOf(clientCache.getInteger("z"))),
+                4,
+                LogicKeys.Z,
+                inv),
             searchValue);
 
         addSearchableRow(
@@ -184,8 +229,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
             infoRow(
                 "gui.cable.blockReader.block",
                 IKey.dynamic(
-                    () -> world().getBlock(readX(), readY(), readZ())
-                        .getLocalizedName()),
+                    () -> String.valueOf(
+                        BlockStack.deserializeNBT(clientCache.getCompoundTag("block"))
+                            .getDisplayName())),
                 5,
                 LogicKeys.BLOCK,
                 inv),
@@ -197,7 +243,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 .get(),
             infoRow(
                 "gui.cable.blockReader.biome",
-                IKey.dynamic(() -> world().getBiomeGenForCoords(readX(), readZ()).biomeName),
+                IKey.dynamic(() -> String.valueOf(clientCache.getString("biome"))),
                 6,
                 LogicKeys.BIOME,
                 inv),
@@ -209,7 +255,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 .get(),
             infoRow(
                 "gui.cable.blockReader.light",
-                IKey.dynamic(() -> String.valueOf(world().getBlockLightValue(readX(), readY(), readZ()))),
+                IKey.dynamic(() -> String.valueOf(clientCache.getInteger("light"))),
                 7,
                 LogicKeys.LIGHT_LEVEL,
                 inv),
@@ -282,33 +328,37 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
     @Override
     public ILogicValue read(LogicKey key) {
-        World world = world();
-        int x = readX();
-        int y = readY();
-        int z = readZ();
 
         if (key == LogicKeys.HAS_BLOCK) {
-            return LogicValues.of(!world.isAirBlock(x, y, z));
+            return LogicValues.of(clientCache.getBoolean("hasBlock"));
         }
 
         if (key == LogicKeys.DIMENSION) {
-            return LogicValues.of(world.provider.getDimensionName());
+            return LogicValues.of(clientCache.getString("dimension"));
         }
 
-        if (key == LogicKeys.X) return LogicValues.of(x);
-        if (key == LogicKeys.Y) return LogicValues.of(y);
-        if (key == LogicKeys.Z) return LogicValues.of(z);
+        if (key == LogicKeys.X) {
+            return LogicValues.of(clientCache.getInteger("x"));
+        }
+
+        if (key == LogicKeys.Y) {
+            return LogicValues.of(clientCache.getInteger("y"));
+        }
+        if (key == LogicKeys.Z) {
+            return LogicValues.of(clientCache.getInteger("z"));
+        }
 
         if (key == LogicKeys.BLOCK) {
-            return LogicValues.of(BlockStack.fromWorld(world, x, y, z));
+            if (!clientCache.getBoolean("hasBlock")) return LogicValues.NULL;
+            return LogicValues.of(BlockStack.deserializeNBT(clientCache.getCompoundTag("block")));
         }
 
         if (key == LogicKeys.BIOME) {
-            return LogicValues.of(world.getBiomeGenForCoords(x, z).biomeName);
+            return LogicValues.of(clientCache.getString("biome"));
         }
 
         if (key == LogicKeys.LIGHT_LEVEL) {
-            return LogicValues.of(world.getBlockLightValue(x, y, z));
+            return LogicValues.of(clientCache.getInteger("light"));
         }
 
         return LogicValues.NULL;

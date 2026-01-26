@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.api.block;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -10,8 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class BlockStack {
 
-    private final Block block;
-    private final int meta;
+    private Block block;
+    private int meta;
 
     public BlockStack(Block block, int meta) {
         this.block = block;
@@ -22,6 +23,8 @@ public class BlockStack {
         this.block = block;
         this.meta = 0;
     }
+
+    private BlockStack() {}
 
     public Block getBlock() {
         return block;
@@ -95,6 +98,46 @@ public class BlockStack {
     public boolean matchesIgnoreMeta(BlockStack other) {
         if (other == null) return false;
         return this.block == other.block;
+    }
+
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        if (block != null) {
+            String name = Block.blockRegistry.getNameForObject(block);
+            if (name != null) {
+                tag.setString("block", name);
+                tag.setInteger("meta", meta);
+            }
+        }
+
+        return tag;
+    }
+
+    public static BlockStack deserializeNBT(NBTTagCompound tag) {
+        if (tag == null || !tag.hasKey("block")) return BlockStack.empty();
+
+        Block block = (Block) Block.blockRegistry.getObject(tag.getString("block"));
+        if (block == null) return BlockStack.empty();
+
+        int meta = tag.hasKey("meta") ? tag.getInteger("meta") : 0;
+        return new BlockStack(block, meta);
+    }
+
+    public String getRegistryName() {
+        if (block == null) return "";
+        String name = Block.blockRegistry.getNameForObject(block);
+        return name != null ? name : "";
+    }
+
+    public String getDisplayName() {
+        if (block == null) return "null";
+
+        Item item = Item.getItemFromBlock(block);
+        if (item == null) return getRegistryName();
+
+        ItemStack stack = new ItemStack(item, 1, meta);
+        return stack.getDisplayName();
     }
 
     @Override
