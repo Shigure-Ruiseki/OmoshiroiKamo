@@ -344,8 +344,7 @@ gui.button_page_select.prev=Previous page
 #Display
 
 power.rf=RF
-fluid.millibucket.abr=L
-fluid.empty=Empty
+fluid.millibucket=mB
 
 #TOOLTIPS
 

@@ -253,8 +253,7 @@ gui.button_page_select.prev=前のページ
 #Display
 
 power.rf=RF
-fluid.millibucket.abr=L
-fluid.empty=空
+fluid.millibucket=mB
 
 #TOOLTIPS
 

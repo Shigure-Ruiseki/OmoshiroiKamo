@@ -434,7 +434,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
             if (sb.length() > 0) sb.append(", ");
             sb.append(cap)
-                .append("mB");
+                .append(
+                    IKey.lang("gui.millibucket")
+                        .get());
 
             if (sb.length() > 256) break;
         }
@@ -464,7 +466,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             sb.append(fs.getLocalizedName())
                 .append(" ")
                 .append(fs.amount)
-                .append("mB");
+                .append(
+                    IKey.lang("gui.millibucket")
+                        .get());
 
             if (sb.length() > 256) break;
         }

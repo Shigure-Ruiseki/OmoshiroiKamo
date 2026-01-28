@@ -497,7 +497,7 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
                         LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.fluid"),
                         fluidName,
                         amount,
-                        LibMisc.LANG.localize("fluid.millibucket.abr")));
+                        LibMisc.LANG.localize("fluid.millibucket")));
             }
         }
     }
