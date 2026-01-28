@@ -273,7 +273,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             (syncManager1, syncHandler) -> tankSettingPanel(
                 syncManager1,
                 syncHandler,
-                new IntSyncValue(this::getTankFluid, this::setTankFluid)),
+                new IntSyncValue(this::getFluidAmountTank, this::setFluidAmountTank)),
             true);
         addSearchableRow(
             list,
@@ -301,7 +301,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             (syncManager1, syncHandler) -> tankSettingPanel(
                 syncManager1,
                 syncHandler,
-                new IntSyncValue(this::getTankFluid, this::setTankFluid)),
+                new IntSyncValue(this::getFluidCapacityTank, this::setFluidCapacityTank)),
             true);
         addSearchableRow(
             list,
