@@ -6,6 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.ListWidget;
@@ -15,6 +18,7 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicKey;
@@ -22,6 +26,14 @@ import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicK
 public abstract class AbstractReaderPart extends AbstractPart implements ILogicReader {
 
     public NBTTagCompound clientCache = new NBTTagCompound();
+
+    public static final UITexture INFO_BG = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/cable/part_reader")
+        .imageSize(256, 256)
+        .xy(8, 17, 162, 36)
+        .adaptable(1)
+        .name("partInfoBg")
+        .build();
 
     public String getClientCacheNBT() {
         return clientCache.toString();
@@ -45,15 +57,31 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
     }
 
     public Row infoRow(String langKey, IKey valueKey, int slot, LogicKey key, ItemStackHandler inv) {
-        Row row = (Row) new Row().height(20)
+        Row row = (Row) new Row().coverChildrenHeight()
             .width(162)
-            .childPadding(4);
+            .childPadding(4)
+            .background(INFO_BG);
 
         Column textCol = new Column();
-        textCol.child(
-            IKey.lang(langKey)
-                .asWidget())
-            .child(valueKey.asWidget());
+        textCol.coverChildren()
+            .left(2)
+            .childPadding(2)
+            .padding(2)
+            .child(
+                IKey.lang(langKey)
+                    .asWidget()
+                    .left(2)
+                    .width(128)
+                    .maxWidth(120))
+            .child(
+                valueKey.alignment(Alignment.CENTER)
+                    .color(Color.WHITE.main)
+                    .shadow(false)
+                    .asWidget()
+                    .height(12)
+                    .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND)
+                    .width(130)
+                    .maxWidth(120));
 
         row.child(textCol);
 
@@ -66,6 +94,7 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
             inv.setStackInSlot(slot, copy);
         }))
             .background(OKGuiTextures.VARIABLE_SLOT)
+            .top(7)
             .right(7));
 
         return row;

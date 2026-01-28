@@ -274,7 +274,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 .get(),
             infoRow("gui.cable.fluidReader.fluidAmount", IKey.dynamic(() -> {
                 NBTTagCompound t = getTankTag(fluidAmountTank);
-                return t == null ? "-" : String.valueOf(t.getInteger("amount"));
+                return t == null ? "Empty" : String.valueOf(t.getInteger("amount"));
             }), 10, LogicKeys.FLUID_AMOUNT, inv),
             searchValue);
 
@@ -296,7 +296,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 .get(),
             infoRow("gui.cable.fluidReader.fluidCapacity", IKey.dynamic(() -> {
                 NBTTagCompound t = getTankTag(fluidCapacityTank);
-                return t == null ? "-" : String.valueOf(t.getInteger("capacity"));
+                return t == null ? "Empty" : String.valueOf(t.getInteger("capacity"));
             }), 11, LogicKeys.FLUID_CAPACITY, inv),
             searchValue);
 

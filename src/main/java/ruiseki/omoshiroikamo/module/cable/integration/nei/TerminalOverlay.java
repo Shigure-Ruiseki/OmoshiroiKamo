@@ -37,7 +37,7 @@ public class TerminalOverlay implements IOverlayHandler {
         ItemIndexClient index = container.panel.clientIndex;
         if (index == null) return 0;
         clearGridIntoNetwork(gui, container);
-        if (!waitUntilGridCleared(gui, 500)) {
+        if (!waitUntilGridCleared(gui, 100)) {
             return 0;
         }
 
@@ -100,7 +100,6 @@ public class TerminalOverlay implements IOverlayHandler {
 
         while (System.currentTimeMillis() < end) {
             NEIClientUtils.mc().playerController.updateController();
-            gui.inventorySlots.detectAndSendChanges();
 
             if (isCraftingGridCleared(gui)) {
                 return true;
