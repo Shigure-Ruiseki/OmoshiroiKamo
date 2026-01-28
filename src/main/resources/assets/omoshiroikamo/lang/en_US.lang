@@ -56,6 +56,8 @@ gui.progress=Progress: %.1f%%
 gui.efficiency=Efficiency: %.1f%%
 gui.sunlightBlocked=Sky Blocked!
 
+gui.empty=Empty
+
 gui.craftingState.idle=Idle
 gui.craftingState.running=Processing
 gui.craftingState.error=Error
@@ -98,6 +100,7 @@ gui.crafting_filter.both=Both
 gui.cable.part_settings=Part Settings
 
 gui.cable.index_channel=Chan: 
+gui.cable.id=ID
 
 gui.cable.redstoneReader.lowRedstone=Redstone Low:
 gui.cable.redstoneReader.hasRedstone=Redstone:

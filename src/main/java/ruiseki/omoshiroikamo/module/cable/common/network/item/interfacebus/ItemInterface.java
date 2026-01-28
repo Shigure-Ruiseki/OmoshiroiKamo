@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.item.interfacebus;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -36,6 +36,7 @@ import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemPart;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.cable.common.network.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.cable.common.network.logic.ILogicNet;
 
 public class ItemInterface extends AbstractPart implements IItemPart, IItemQueryable {
 
@@ -63,7 +64,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Collections.singletonList(IItemNet.class);
+        return Arrays.asList(IItemNet.class, ILogicNet.class);
     }
 
     @Override

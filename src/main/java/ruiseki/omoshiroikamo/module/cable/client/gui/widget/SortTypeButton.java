@@ -14,19 +14,19 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButt
 public class SortTypeButton extends CyclicVariantButtonWidget {
 
     public static final UITexture NAME_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(18, 18, 18, 18)
         .build();
 
     public static final UITexture ID_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(0, 18, 18, 18)
         .build();
 
     public static final UITexture COUNT_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(36, 18, 18, 18)
         .build();

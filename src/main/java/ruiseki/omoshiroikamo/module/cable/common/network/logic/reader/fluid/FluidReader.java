@@ -31,7 +31,11 @@ import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
+import com.cleanroommc.modularui.widgets.TextWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
@@ -63,10 +67,13 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
     private static final ResourceLocation back_texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/fluid_reader_back.png");
 
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(14);
     private int fluidAmountTank = 0;
     private int fluidCapacityTank = 0;
     private int tankFluid = 0;
+
+    public FluidReader() {
+        super(new ItemStackHandlerBase(14));
+    }
 
     @Override
     public String getId() {
@@ -150,7 +157,6 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setTag("item_inv", this.inv.serializeNBT());
 
         tag.setInteger("fluidAmountTank", fluidAmountTank);
         tag.setInteger("fluidCapacityTank", fluidCapacityTank);
@@ -160,7 +166,6 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
 
         fluidAmountTank = tag.getInteger("fluidAmountTank");
         fluidCapacityTank = tag.getInteger("fluidCapacityTank");
@@ -216,8 +221,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.isTank",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("isTank"))),
                 0,
-                LogicKeys.IS_TANK,
-                inv),
+                LogicKeys.IS_TANK),
             searchValue);
 
         addSearchableRow(
@@ -228,8 +232,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.tankEmpty",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("allEmpty"))),
                 1,
-                LogicKeys.TANK_EMPTY,
-                inv),
+                LogicKeys.TANK_EMPTY),
             searchValue);
 
         addSearchableRow(
@@ -240,8 +243,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.tankNotEmpty",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("anyNotEmpty"))),
                 2,
-                LogicKeys.TANK_NOT_EMPTY,
-                inv),
+                LogicKeys.TANK_NOT_EMPTY),
             searchValue);
 
         addSearchableRow(
@@ -252,8 +254,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.tankFull",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("allFull"))),
                 3,
-                LogicKeys.TANK_FULL,
-                inv),
+                LogicKeys.TANK_FULL),
             searchValue);
 
         addSearchableRow(
@@ -264,10 +265,16 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.tankCount",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("tankCount"))),
                 4,
-                LogicKeys.TANK,
-                inv),
+                LogicKeys.TANK),
             searchValue);
 
+        IPanelHandler tankAmountSetting = syncManager.panel(
+            "tankSetting",
+            (syncManager1, syncHandler) -> tankSettingPanel(
+                syncManager1,
+                syncHandler,
+                new IntSyncValue(this::getTankFluid, this::setTankFluid)),
+            true);
         addSearchableRow(
             list,
             IKey.lang("gui.cable.fluidReader.fluidAmount")
@@ -275,7 +282,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             infoRow("gui.cable.fluidReader.fluidAmount", IKey.dynamic(() -> {
                 NBTTagCompound t = getTankTag(fluidAmountTank);
                 return t == null ? "Empty" : String.valueOf(t.getInteger("amount"));
-            }), 10, LogicKeys.FLUID_AMOUNT, inv),
+            }), 10, LogicKeys.FLUID_AMOUNT, tankAmountSetting),
             searchValue);
 
         addSearchableRow(
@@ -286,10 +293,16 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.totalAmount",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("totalAmount"))),
                 5,
-                LogicKeys.TOTAL_FLUID_AMOUNT,
-                inv),
+                LogicKeys.TOTAL_FLUID_AMOUNT),
             searchValue);
 
+        IPanelHandler tankCapacitySetting = syncManager.panel(
+            "tankSetting",
+            (syncManager1, syncHandler) -> tankSettingPanel(
+                syncManager1,
+                syncHandler,
+                new IntSyncValue(this::getTankFluid, this::setTankFluid)),
+            true);
         addSearchableRow(
             list,
             IKey.lang("gui.cable.fluidReader.fluidCapacity")
@@ -297,7 +310,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             infoRow("gui.cable.fluidReader.fluidCapacity", IKey.dynamic(() -> {
                 NBTTagCompound t = getTankTag(fluidCapacityTank);
                 return t == null ? "Empty" : String.valueOf(t.getInteger("capacity"));
-            }), 11, LogicKeys.FLUID_CAPACITY, inv),
+            }), 11, LogicKeys.FLUID_CAPACITY, tankCapacitySetting),
             searchValue);
 
         addSearchableRow(
@@ -308,8 +321,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 "gui.cable.fluidReader.totalCapacity",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("totalCapacity"))),
                 6,
-                LogicKeys.TOTAL_FLUID_CAPACITY,
-                inv),
+                LogicKeys.TOTAL_FLUID_CAPACITY),
             searchValue);
 
         addSearchableRow(
@@ -320,23 +332,38 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 int cap = clientCache.getInteger("totalCapacity");
                 int amt = clientCache.getInteger("totalAmount");
                 return cap == 0 ? "0.00" : String.format("%.2f", (double) amt / cap);
-            }), 7, LogicKeys.FLUID_FILL_RATIO, inv),
+            }), 7, LogicKeys.FLUID_FILL_RATIO),
             searchValue);
 
         addSearchableRow(
             list,
             IKey.lang("gui.cable.fluidReader.tankFluids")
                 .get(),
-            infoRow("gui.cable.fluidReader.tankFluids", IKey.str(""), 8, LogicKeys.TANK_FLUIDS, inv),
+            infoRow(
+                "gui.cable.fluidReader.tankFluids",
+                IKey.dynamic(this::buildTankFluidsText),
+                8,
+                LogicKeys.TANK_FLUIDS),
             searchValue);
 
         addSearchableRow(
             list,
             IKey.lang("gui.cable.fluidReader.tankCapacities")
                 .get(),
-            infoRow("gui.cable.fluidReader.tankCapacities", IKey.str(""), 9, LogicKeys.TANK_CAPACITIES, inv),
+            infoRow(
+                "gui.cable.fluidReader.tankCapacities",
+                IKey.dynamic(this::buildTankCapacitiesText),
+                9,
+                LogicKeys.TANK_CAPACITIES),
             searchValue);
 
+        IPanelHandler tankSetting = syncManager.panel(
+            "tankSetting",
+            (syncManager1, syncHandler) -> tankSettingPanel(
+                syncManager1,
+                syncHandler,
+                new IntSyncValue(this::getTankFluid, this::setTankFluid)),
+            true);
         addSearchableRow(
             list,
             IKey.lang("gui.cable.fluidReader.tankFluid")
@@ -346,13 +373,102 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 if (t == null || !t.hasKey("fluid")) return "";
                 FluidStack fs = FluidStack.loadFluidStackFromNBT(t.getCompoundTag("fluid"));
                 return fs == null ? "" : fs.getLocalizedName();
-            }), 12, LogicKeys.TANK_FLUID, inv),
+            }), 12, LogicKeys.TANK_FLUID, tankSetting),
             searchValue);
 
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
+    }
+
+    private ModularPanel tankSettingPanel(PanelSyncManager syncManager, IPanelHandler syncHandler, IntSyncValue value) {
+        ModularPanel panel = new Dialog<>("fluid_setting").setDraggable(false)
+            .setDisablePanelsBelow(false)
+            .setCloseOnOutOfBoundsClick(false);
+
+        Column col = new Column();
+
+        Row selectTank = new Row();
+        selectTank.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.cable.id")).width(162))
+            .child(
+                new TextFieldWidget().value(value)
+                    .right(0)
+                    .height(12)
+                    .setNumbers()
+                    .setDefaultNumber(0)
+                    .setFormatAsInteger(true));
+
+        col.coverChildren()
+            .marginTop(16)
+            .left(6)
+            .childPadding(2)
+            .child(selectTank);
+
+        panel.child(ButtonWidget.panelCloseButton())
+            .child(col);
+
+        return panel;
+    }
+
+    private String buildTankCapacitiesText() {
+        if (!clientCache.getBoolean("isTank")) {
+            return IKey.lang("gui.empty")
+                .get();
+        }
+
+        int count = clientCache.getInteger("tankCount");
+        if (count <= 0) {
+            return IKey.lang("gui.empty")
+                .get();
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < count; i++) {
+            NBTTagCompound t = clientCache.getCompoundTag("tank_" + i);
+            int cap = t.getInteger("capacity");
+
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(cap)
+                .append("mB");
+
+            if (sb.length() > 256) break;
+        }
+
+        return sb.length() == 0 ? IKey.lang("gui.empty")
+            .get() : ellipsis(sb.toString(), 110);
+    }
+
+    private String buildTankFluidsText() {
+        if (!clientCache.getBoolean("isTank")) return IKey.lang("gui.empty")
+            .get();
+
+        int count = clientCache.getInteger("tankCount");
+        if (count <= 0) return IKey.lang("gui.empty")
+            .get();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < count; i++) {
+            NBTTagCompound t = clientCache.getCompoundTag("tank_" + i);
+            if (!t.hasKey("fluid")) continue;
+
+            FluidStack fs = FluidStack.loadFluidStackFromNBT(t.getCompoundTag("fluid"));
+            if (fs == null) continue;
+
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(fs.getLocalizedName())
+                .append(" ")
+                .append(fs.amount)
+                .append("mB");
+
+            if (sb.length() > 256) break;
+        }
+
+        return sb.length() == 0 ? IKey.lang("gui.empty")
+            .get() : ellipsis(sb.toString(), 110);
     }
 
     @Override
@@ -500,5 +616,32 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
         int count = clientCache.getInteger("tankCount");
         if (id < 0 || id >= count) return null;
         return clientCache.getCompoundTag("tank_" + id);
+    }
+
+    public int getFluidAmountTank() {
+        return fluidAmountTank;
+    }
+
+    public int getFluidCapacityTank() {
+        return fluidCapacityTank;
+    }
+
+    public int getTankFluid() {
+        return tankFluid;
+    }
+
+    public void setFluidAmountTank(int fluidAmountTank) {
+        this.fluidAmountTank = fluidAmountTank;
+        markDirty();
+    }
+
+    public void setFluidCapacityTank(int fluidCapacityTank) {
+        this.fluidCapacityTank = fluidCapacityTank;
+        markDirty();
+    }
+
+    public void setTankFluid(int tankFluid) {
+        this.tankFluid = tankFluid;
+        markDirty();
     }
 }

@@ -59,7 +59,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     private static final ResourceLocation back_texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "cable/block_reader_back.png");
 
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(8);
+    public BlockReader() {
+        super(new ItemStackHandlerBase(8));
+    }
 
     @Override
     public String getId() {
@@ -80,10 +82,10 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     public void doUpdate() {
         if (!shouldTickNow()) return;
 
-        World world = world();
-        int x = readX();
-        int y = readY();
-        int z = readZ();
+        World world = getWorld();
+        int x = targetX();
+        int y = targetY();
+        int z = targetZ();
 
         NBTTagCompound tag = new NBTTagCompound();
 
@@ -170,8 +172,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.hasBlock",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("hasBlock"))),
                 0,
-                LogicKeys.HAS_BLOCK,
-                inv),
+                LogicKeys.HAS_BLOCK),
             searchValue);
 
         addSearchableRow(
@@ -182,8 +183,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.dimension",
                 IKey.dynamic(() -> String.valueOf(clientCache.getString("dimension"))),
                 1,
-                LogicKeys.DIMENSION,
-                inv),
+                LogicKeys.DIMENSION),
             searchValue);
 
         addSearchableRow(
@@ -194,8 +194,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.coord.x",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("x"))),
                 2,
-                LogicKeys.X,
-                inv),
+                LogicKeys.X),
             searchValue);
 
         addSearchableRow(
@@ -206,8 +205,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.coord.y",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("y"))),
                 3,
-                LogicKeys.Y,
-                inv),
+                LogicKeys.Y),
             searchValue);
 
         addSearchableRow(
@@ -218,8 +216,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.coord.z",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("z"))),
                 4,
-                LogicKeys.Z,
-                inv),
+                LogicKeys.Z),
             searchValue);
 
         addSearchableRow(
@@ -233,8 +230,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                         BlockStack.deserializeNBT(clientCache.getCompoundTag("block"))
                             .getDisplayName())),
                 5,
-                LogicKeys.BLOCK,
-                inv),
+                LogicKeys.BLOCK),
             searchValue);
 
         addSearchableRow(
@@ -245,8 +241,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.biome",
                 IKey.dynamic(() -> String.valueOf(clientCache.getString("biome"))),
                 6,
-                LogicKeys.BIOME,
-                inv),
+                LogicKeys.BIOME),
             searchValue);
 
         addSearchableRow(
@@ -257,8 +252,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
                 "gui.cable.blockReader.light",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("light"))),
                 7,
-                LogicKeys.LIGHT_LEVEL,
-                inv),
+                LogicKeys.LIGHT_LEVEL),
             searchValue);
 
         // ===== Inventory =====

@@ -410,14 +410,14 @@ public class StorageTerminalPanel extends ModularPanel {
     }
 
     private static final UITexture CLEAR = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(0, 44, 8, 8)
         .adaptable(1)
         .build();
 
     private static final UITexture BTN = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(0, 36, 8, 8)
         .adaptable(1)
@@ -438,7 +438,7 @@ public class StorageTerminalPanel extends ModularPanel {
         .build();
 
     public static final UITexture SYNC_NEI = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(162, 36, 18, 18)
         .build();

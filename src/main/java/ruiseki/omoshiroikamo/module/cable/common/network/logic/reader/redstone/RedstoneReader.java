@@ -62,6 +62,10 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
 
     private final ItemStackHandlerBase inv = new ItemStackHandlerBase(4);
 
+    public RedstoneReader() {
+        super(new ItemStackHandlerBase(4));
+    }
+
     @Override
     public String getId() {
         return "redstone_reader";
@@ -94,18 +98,6 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
     public void onDetached() {
         super.onDetached();
         inv.dropAll(getCable().getWorld(), getPos().x, getPos().y, getPos().z);
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
-        tag.setTag("item_inv", this.inv.serializeNBT());
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
     }
 
     @Override
@@ -153,8 +145,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 "gui.cable.redstoneReader.redstoneValue",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("value"))),
                 3,
-                LogicKeys.REDSTONE_VALUE,
-                inv),
+                LogicKeys.REDSTONE_VALUE),
             searchValue);
 
         addSearchableRow(
@@ -165,8 +156,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 "gui.cable.redstoneReader.hasRedstone",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("has"))),
                 1,
-                LogicKeys.HAS_REDSTONE,
-                inv),
+                LogicKeys.HAS_REDSTONE),
             searchValue);
 
         addSearchableRow(
@@ -177,8 +167,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 "gui.cable.redstoneReader.highRedstone",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("high"))),
                 2,
-                LogicKeys.HIGH_REDSTONE,
-                inv),
+                LogicKeys.HIGH_REDSTONE),
             searchValue);
 
         addSearchableRow(
@@ -189,8 +178,7 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
                 "gui.cable.redstoneReader.lowRedstone",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("low"))),
                 0,
-                LogicKeys.LOW_REDSTONE,
-                inv),
+                LogicKeys.LOW_REDSTONE),
             searchValue);
 
         panel.bindPlayerInventory();
@@ -221,7 +209,6 @@ public class RedstoneReader extends AbstractReaderPart implements IRedstonePart 
             z,
             side.getOpposite()
                 .ordinal());
-
         int strong = world.getStrongestIndirectPower(x, y, z);
 
         return Math.max(weak, strong);

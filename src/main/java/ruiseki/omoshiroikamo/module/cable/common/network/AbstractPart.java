@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.cable.common.network;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -101,6 +102,22 @@ public abstract class AbstractPart implements ICablePart {
         return this.cable.getPos()
             .offset(this.side)
             .getTileEntity(this.cable.getWorld());
+    }
+
+    public World getWorld() {
+        return getCable().getWorld();
+    }
+
+    public int targetX() {
+        return getPos().offset(getSide()).x;
+    }
+
+    public int targetY() {
+        return getPos().offset(getSide()).y;
+    }
+
+    public int targetZ() {
+        return getPos().offset(getSide()).z;
     }
 
     @Override

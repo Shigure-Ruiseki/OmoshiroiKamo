@@ -16,13 +16,13 @@ public class SortOrderButton extends CyclicVariantButtonWidget {
     private static final int DESC = 1;
 
     public static final UITexture ASC_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(198, 36, 18, 18)
         .build();
 
     public static final UITexture DESC_SORT = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/icons")
+        .location(LibMisc.MOD_ID, "gui/cable/terminal_icons")
         .imageSize(256, 256)
         .xy(180, 36, 18, 18)
         .build();

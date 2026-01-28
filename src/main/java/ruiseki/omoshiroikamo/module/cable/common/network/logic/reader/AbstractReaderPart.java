@@ -1,16 +1,19 @@
 package ruiseki.omoshiroikamo.module.cable.common.network.logic.reader;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
+import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.widget.Interactable;
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
-import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.value.StringValue;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
@@ -18,6 +21,7 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.cable.common.init.CableItems;
 import ruiseki.omoshiroikamo.module.cable.common.network.AbstractPart;
@@ -26,14 +30,11 @@ import ruiseki.omoshiroikamo.module.cable.common.network.logic.reader.key.LogicK
 public abstract class AbstractReaderPart extends AbstractPart implements ILogicReader {
 
     public NBTTagCompound clientCache = new NBTTagCompound();
+    public final ItemStackHandlerBase inv;
 
-    public static final UITexture INFO_BG = UITexture.builder()
-        .location(LibMisc.MOD_ID, "gui/cable/part_reader")
-        .imageSize(256, 256)
-        .xy(8, 17, 162, 36)
-        .adaptable(1)
-        .name("partInfoBg")
-        .build();
+    public AbstractReaderPart(ItemStackHandlerBase inv) {
+        this.inv = inv;
+    }
 
     public String getClientCacheNBT() {
         return clientCache.toString();
@@ -47,6 +48,28 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
         }
     }
 
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setTag("item_inv", this.inv.serializeNBT());
+        tag.setTag("clientCache", clientCache);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
+        clientCache = tag.getCompoundTag("clientCache");
+    }
+
+    public static final UITexture INFO_BG = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/cable/part_reader")
+        .imageSize(256, 256)
+        .xy(8, 17, 162, 36)
+        .adaptable(1)
+        .name("partInfoBg")
+        .build();
+
     public void addSearchableRow(ListWidget<Row, ?> list, String searchKey, Row row, StringValue searchValue) {
         row.setEnabledIf(
             w -> searchKey.toLowerCase()
@@ -56,23 +79,49 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
         list.child(row);
     }
 
-    public Row infoRow(String langKey, IKey valueKey, int slot, LogicKey key, ItemStackHandler inv) {
+    public Row infoRow(String langKey, IKey valueKey, int slot, LogicKey key) {
+        return infoRow(langKey, valueKey, slot, key, null);
+    }
+
+    public Row infoRow(String langKey, IKey valueKey, int slot, LogicKey key, IPanelHandler settingPanel) {
         Row row = (Row) new Row().coverChildrenHeight()
             .width(162)
             .childPadding(4)
             .background(INFO_BG);
 
         Column textCol = new Column();
-        textCol.coverChildren()
-            .left(2)
-            .childPadding(2)
-            .padding(2)
+        Row tile = new Row();
+        tile.coverChildren()
             .child(
                 IKey.lang(langKey)
                     .asWidget()
                     .left(2)
                     .width(128)
-                    .maxWidth(120))
+                    .maxWidth(120));
+
+        if (settingPanel != null) {
+            ButtonWidget<?> settingBtn = new ButtonWidget<>().overlay(GuiTextures.ADD)
+                .size(8)
+                .right(0)
+                .onMousePressed(btn -> {
+                    if (btn == 0) {
+                        Interactable.playButtonClickSound();
+                        if (settingPanel.isPanelOpen()) {
+                            settingPanel.closePanel();
+                            return true;
+                        }
+                        settingPanel.openPanel();
+                        return true;
+                    }
+                    return false;
+                });
+            tile.child(settingBtn);
+        }
+
+        textCol.coverChildren()
+            .childPadding(2)
+            .padding(2)
+            .child(tile)
             .child(
                 valueKey.alignment(Alignment.CENTER)
                     .color(Color.WHITE.main)
@@ -82,16 +131,13 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
                     .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND)
                     .width(130)
                     .maxWidth(120));
-
         row.child(textCol);
 
         row.child(new ItemSlot().slot(new ModularSlot(inv, slot).changeListener((newItem, amount, client, init) -> {
             if (init || newItem == null) return;
             if (newItem.getItem() != CableItems.LOGIC_CARD.getItem()) return;
-
-            ItemStack copy = newItem.copy();
-            writeLogicToCard(copy, key, this);
-            inv.setStackInSlot(slot, copy);
+            writeLogicToCard(newItem, key, this);
+            inv.setStackInSlot(slot, newItem);
         }))
             .background(OKGuiTextures.VARIABLE_SLOT)
             .top(7)
@@ -100,19 +146,20 @@ public abstract class AbstractReaderPart extends AbstractPart implements ILogicR
         return row;
     }
 
-    public World world() {
-        return getCable().getWorld();
+    public static String ellipsis(String text, int maxPixels) {
+        if (text == null || text.isEmpty()) return "";
+
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+
+        if (fr.getStringWidth(text) <= maxPixels) {
+            return text;
+        }
+
+        String dots = "...";
+        int dotsWidth = fr.getStringWidth(dots);
+
+        String trimmed = fr.trimStringToWidth(text, maxPixels - dotsWidth);
+        return trimmed + dots;
     }
 
-    public int readX() {
-        return getPos().offset(getSide()).x;
-    }
-
-    public int readY() {
-        return getPos().offset(getSide()).y;
-    }
-
-    public int readZ() {
-        return getPos().offset(getSide()).z;
-    }
 }

@@ -28,9 +28,14 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.StringValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
+import com.cleanroommc.modularui.widgets.TextWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
@@ -63,7 +68,10 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         LibResources.PREFIX_ITEM + "cable/inventory_reader_back.png");
 
     protected int selectedSlot = 0;
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(10);
+
+    public InventoryReader() {
+        super(new ItemStackHandlerBase(10));
+    }
 
     @Override
     public String getId() {
@@ -141,21 +149,13 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setTag("item_inv", this.inv.serializeNBT());
         tag.setInteger("SelectedSlot", selectedSlot);
-        tag.setTag("ClientCache", clientCache);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
-        if (tag.hasKey("SelectedSlot")) {
-            selectedSlot = tag.getInteger("SelectedSlot");
-        }
-        if (tag.hasKey("ClientCache")) {
-            clientCache = tag.getCompoundTag("ClientCache");
-        }
+        selectedSlot = tag.getInteger("SelectedSlot");
     }
 
     @Override
@@ -203,8 +203,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.isInventory",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("isInv"))),
                 0,
-                LogicKeys.IS_INVENTORY,
-                inv),
+                LogicKeys.IS_INVENTORY),
             searchValue);
 
         addSearchableRow(
@@ -215,8 +214,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.inventoryFull",
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("full"))),
                 3,
-                LogicKeys.INV_FULL,
-                inv),
+                LogicKeys.INV_FULL),
             searchValue);
 
         addSearchableRow(
@@ -227,8 +225,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.inventoryEmpty",
                 IKey.dynamic(() -> String.valueOf(!clientCache.getBoolean("full"))),
                 1,
-                LogicKeys.INV_EMPTY,
-                inv),
+                LogicKeys.INV_EMPTY),
             searchValue);
 
         addSearchableRow(
@@ -239,8 +236,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.inventoryNotEmpty",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("count") > 0)),
                 2,
-                LogicKeys.INV_NOT_EMPTY,
-                inv),
+                LogicKeys.INV_NOT_EMPTY),
             searchValue);
 
         addSearchableRow(
@@ -251,8 +247,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.inventoryCount",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("count"))),
                 4,
-                LogicKeys.INV_COUNT,
-                inv),
+                LogicKeys.INV_COUNT),
             searchValue);
 
         addSearchableRow(
@@ -263,8 +258,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.inventorySlots",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("slots"))),
                 5,
-                LogicKeys.INV_SLOTS,
-                inv),
+                LogicKeys.INV_SLOTS),
             searchValue);
 
         addSearchableRow(
@@ -275,8 +269,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 "gui.cable.inventoryReader.slotsFilled",
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("filled"))),
                 6,
-                LogicKeys.INV_SLOTS_FILLED,
-                inv),
+                LogicKeys.INV_SLOTS_FILLED),
             searchValue);
 
         addSearchableRow(
@@ -287,29 +280,100 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 int slots = clientCache.getInteger("slots");
                 int filled = clientCache.getInteger("filled");
                 return slots == 0 ? "0.00" : String.format("%.2f", (double) filled / slots);
-            }), 7, LogicKeys.INV_FILL_RATIO, inv),
+            }), 7, LogicKeys.INV_FILL_RATIO),
             searchValue);
 
+        IPanelHandler slotItemSetting = syncManager.panel("slotItemSetting", this::slotItemSetting, true);
         addSearchableRow(
             list,
             IKey.lang("gui.cable.inventoryReader.slotItem")
                 .get(),
             infoRow("gui.cable.inventoryReader.slotItem", IKey.dynamic(() -> {
-                if (!clientCache.hasKey("slotItem")) return "Empty";
+                if (!clientCache.hasKey("slotItem")) return IKey.lang("gui.empty")
+                    .get();
                 ItemStack stack = ItemStack.loadItemStackFromNBT(clientCache.getCompoundTag("slotItem"));
-                return stack == null ? "Empty" : stack.getDisplayName();
-            }), 8, LogicKeys.SLOT_ITEM, inv),
+                return stack == null ? IKey.lang("gui.empty")
+                    .get() : stack.getDisplayName();
+            }), 8, LogicKeys.SLOT_ITEM, slotItemSetting),
             searchValue);
 
         addSearchableRow(
             list,
             IKey.lang("gui.cable.inventoryReader.itemsList")
                 .get(),
-            infoRow("gui.cable.inventoryReader.itemsList", IKey.str(""), 9, LogicKeys.ITEMS_LIST, inv),
+            infoRow(
+                "gui.cable.inventoryReader.itemsList",
+                IKey.dynamic(this::buildItemsListText),
+                9,
+                LogicKeys.ITEMS_LIST),
             searchValue);
 
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
+
+        return panel;
+    }
+
+    private String buildItemsListText() {
+        if (!clientCache.hasKey("items")) return IKey.lang("gui.empty")
+            .get();
+
+        NBTTagCompound items = clientCache.getCompoundTag("items");
+        int size = items.getInteger("size");
+
+        if (size <= 0) return IKey.lang("gui.empty")
+            .get();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < size; i++) {
+            ItemStack s = ItemStack.loadItemStackFromNBT(items.getCompoundTag("item_" + i));
+            if (s == null) continue;
+
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(s.getDisplayName())
+                .append(" x")
+                .append(s.stackSize);
+
+            if (sb.length() > 256) {
+                sb.append("...");
+                break;
+            }
+        }
+
+        if (sb.length() == 0) {
+            return IKey.lang("gui.empty")
+                .get();
+        }
+
+        return ellipsis(sb.toString(), 110);
+    }
+
+    private ModularPanel slotItemSetting(PanelSyncManager syncManager, IPanelHandler syncHandler) {
+        ModularPanel panel = new Dialog<>("logic_setting").setDraggable(false)
+            .setDisablePanelsBelow(false)
+            .setCloseOnOutOfBoundsClick(false);
+
+        Column col = new Column();
+
+        Row selectSlot = new Row();
+        selectSlot.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.cable.id")).width(162))
+            .child(
+                new TextFieldWidget().value(new IntSyncValue(this::getSelectedSlot, this::setSelectedSlot))
+                    .right(0)
+                    .height(12)
+                    .setNumbers()
+                    .setDefaultNumber(0)
+                    .setFormatAsInteger(true));
+
+        col.coverChildren()
+            .marginTop(16)
+            .left(6)
+            .childPadding(2)
+            .child(selectSlot);
+        panel.child(ButtonWidget.panelCloseButton())
+            .child(col);
 
         return panel;
     }
@@ -435,8 +499,8 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         TileEntity te = getTargetTE();
 
         if (te instanceof TileEntityChest) {
-            if (world().getBlock(readX(), readY(), readZ()) instanceof BlockChest blockChest) {
-                IInventory inv = blockChest.func_149951_m(world(), readX(), readY(), readZ());
+            if (getWorld().getBlock(targetX(), targetY(), targetZ()) instanceof BlockChest blockChest) {
+                IInventory inv = blockChest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
                 if (inv != null) {
                     return inv;
                 }
