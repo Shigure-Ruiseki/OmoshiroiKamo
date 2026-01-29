@@ -2,8 +2,10 @@
 
 creativetab.okBackpack=OK Backpack
 creativetab.okMultiblock=OK Multiblock
-creativetab.okChickenCow=OK Chicken & Cow
-creativetab.okDeepMobLearner=OK Deep Mob Learning
+creativetab.okChicken=OK Chicken
+creativetab.okCow=OK Cow
+creativetab.okDML=OK Deep Mob Learning
+creativetab.okIDs=OK Integrated Dynamics
 
 #Config
 
@@ -97,76 +99,76 @@ gui.crafting_filter.both=Both
 
 #Cable
 
-gui.cable.part_settings=Part Settings
+gui.ids.part_settings=Part Settings
 
-gui.cable.index_channel=Chan: 
-gui.cable.id=ID
+gui.ids.index_channel=Chan: 
+gui.ids.id=ID
 
-gui.cable.redstoneReader.lowRedstone=Redstone Low:
-gui.cable.redstoneReader.hasRedstone=Redstone:
-gui.cable.redstoneReader.highRedstone=Redstone High:
-gui.cable.redstoneReader.redstoneValue=Redstone:
+gui.ids.redstoneReader.lowRedstone=Redstone Low:
+gui.ids.redstoneReader.hasRedstone=Redstone:
+gui.ids.redstoneReader.highRedstone=Redstone High:
+gui.ids.redstoneReader.redstoneValue=Redstone:
 
-gui.cable.blockReader.hasBlock=Has Block
-gui.cable.blockReader.dimension=Dimension
-gui.cable.blockReader.coord.x=X
-gui.cable.blockReader.coord.y=Y
-gui.cable.blockReader.coord.z=Z
-gui.cable.blockReader.block=Block
-gui.cable.blockReader.biome=Biome
-gui.cable.blockReader.light=Light Level
+gui.ids.blockReader.hasBlock=Has Block
+gui.ids.blockReader.dimension=Dimension
+gui.ids.blockReader.coord.x=X
+gui.ids.blockReader.coord.y=Y
+gui.ids.blockReader.coord.z=Z
+gui.ids.blockReader.block=Block
+gui.ids.blockReader.biome=Biome
+gui.ids.blockReader.light=Light Level
 
-gui.cable.inventoryReader.isInventory=Is Inventory
-gui.cable.inventoryReader.inventoryFull=Inventory Full
-gui.cable.inventoryReader.inventoryEmpty=Inventory Empty
-gui.cable.inventoryReader.inventoryNotEmpty=Inventory Not Empty
-gui.cable.inventoryReader.inventoryCount=Inventory Count
-gui.cable.inventoryReader.inventorySlots=Inventory Slots
-gui.cable.inventoryReader.slotsFilled=Slots Filled
-gui.cable.inventoryReader.fillRatio=Fill Ratio
-gui.cable.inventoryReader.itemsList=Items
-gui.cable.inventoryReader.slotItem=Slot Item
+gui.ids.inventoryReader.isInventory=Is Inventory
+gui.ids.inventoryReader.inventoryFull=Inventory Full
+gui.ids.inventoryReader.inventoryEmpty=Inventory Empty
+gui.ids.inventoryReader.inventoryNotEmpty=Inventory Not Empty
+gui.ids.inventoryReader.inventoryCount=Inventory Count
+gui.ids.inventoryReader.inventorySlots=Inventory Slots
+gui.ids.inventoryReader.slotsFilled=Slots Filled
+gui.ids.inventoryReader.fillRatio=Fill Ratio
+gui.ids.inventoryReader.itemsList=Items
+gui.ids.inventoryReader.slotItem=Slot Item
 
-gui.cable.fluidReader.isTank=Is Tank
-gui.cable.fluidReader.tankEmpty=Tank Empty
-gui.cable.fluidReader.tankNotEmpty=Tank Not Empty
-gui.cable.fluidReader.tankFull=Tank Full
-gui.cable.fluidReader.tankCount=Tank Count
-gui.cable.fluidReader.fluidAmount=Fluid Amount
-gui.cable.fluidReader.totalAmount=Total Fluid Amount
-gui.cable.fluidReader.fluidCapacity=Fluid Capacity
-gui.cable.fluidReader.totalCapacity=Total Fluid Capacity
-gui.cable.fluidReader.fillRatio=Fluid Fill Ratio
-gui.cable.fluidReader.tankFluids=Tank Fluids
-gui.cable.fluidReader.tankCapacities=Tank Capacities
-gui.cable.fluidReader.tankFluid=Tank Fluid
+gui.ids.fluidReader.isTank=Is Tank
+gui.ids.fluidReader.tankEmpty=Tank Empty
+gui.ids.fluidReader.tankNotEmpty=Tank Not Empty
+gui.ids.fluidReader.tankFull=Tank Full
+gui.ids.fluidReader.tankCount=Tank Count
+gui.ids.fluidReader.fluidAmount=Fluid Amount
+gui.ids.fluidReader.totalAmount=Total Fluid Amount
+gui.ids.fluidReader.fluidCapacity=Fluid Capacity
+gui.ids.fluidReader.totalCapacity=Total Fluid Capacity
+gui.ids.fluidReader.fillRatio=Fluid Fill Ratio
+gui.ids.fluidReader.tankFluids=Tank Fluids
+gui.ids.fluidReader.tankCapacities=Tank Capacities
+gui.ids.fluidReader.tankFluid=Tank Fluid
 
-gui.cable.side=Target Side
-gui.cable.tick=Ticks / Operation
-gui.cable.priority=Priority
-gui.cable.channel=Channel
+gui.ids.side=Target Side
+gui.ids.tick=Ticks / Operation
+gui.ids.priority=Priority
+gui.ids.channel=Channel
 
-gui.cable.type.boolean=Boolean
-gui.cable.type.int=Integer
-gui.cable.type.long=Long
-gui.cable.type.float=Float
-gui.cable.type.double=Double
-gui.cable.type.string=String
+gui.ids.type.boolean=Boolean
+gui.ids.type.int=Integer
+gui.ids.type.long=Long
+gui.ids.type.float=Float
+gui.ids.type.double=Double
+gui.ids.type.string=String
 
-gui.cable.op.if=IF
+gui.ids.op.if=IF
 
-gui.cable.op.and=AND && 
-gui.cable.op.nand=NAND !&&
-gui.cable.op.or=OR || 
-gui.cable.op.nor=NOR !|| 
-gui.cable.op.xor=XOR ^
+gui.ids.op.and=AND && 
+gui.ids.op.nand=NAND !&&
+gui.ids.op.or=OR || 
+gui.ids.op.nor=NOR !|| 
+gui.ids.op.xor=XOR ^
 
-gui.cable.op.eq=EQ ==
-gui.cable.op.neq=NEQ !=
-gui.cable.op.gtr=GTR >
-gui.cable.op.geq=GEQ >=
-gui.cable.op.lss=LSS <
-gui.cable.op.leq=LEQ <=
+gui.ids.op.eq=EQ ==
+gui.ids.op.neq=NEQ !=
+gui.ids.op.gtr=GTR >
+gui.ids.op.geq=GEQ >=
+gui.ids.op.lss=LSS <
+gui.ids.op.leq=LEQ <=
 
 #Modular Machinery
 
@@ -721,7 +723,8 @@ tile.lootFabricator.name=Loot Fabricator
 tile.simulationChamber.name=Simulation Chamber
 tile.machineCasing.name=Machine Casing
 
-tile.cable.name=Cable
+tile.cable.name=Logic Cable
+tile.programmer.name=Programmer
 
 #ME Output Bus
 tile.modularItemOutputME.me.name=ME Item Output Bus

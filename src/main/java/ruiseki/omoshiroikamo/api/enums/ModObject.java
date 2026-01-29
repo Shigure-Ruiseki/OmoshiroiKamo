@@ -76,6 +76,7 @@ public enum ModObject {
     blockVisBridge,
 
     blockCable,
+    blockProgrammer,
 
     itemBackPack,
     itemUpgrade,

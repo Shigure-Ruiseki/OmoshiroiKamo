@@ -18,7 +18,6 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtilit
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.OKCreativeTab;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -36,7 +35,6 @@ public class ItemMachineBlueprint extends ItemOK {
     public ItemMachineBlueprint() {
         super("machineBlueprint");
         setMaxStackSize(1);
-        setCreativeTab(OKCreativeTab.MULTIBLOCK);
         setTextureName("machineBlueprint");
     }
 

@@ -26,7 +26,6 @@ import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.OKCreativeTab;
 import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
@@ -64,10 +63,6 @@ public class BlockOK extends Block {
         setBlockName(name);
         setStepSound(Block.soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
-        setCreativeTab(OKCreativeTab.MULTIBLOCK);
-        setCreativeTab(OKCreativeTab.BACKPACK);
-        setCreativeTab(OKCreativeTab.CHICKEN_COW);
-        setCreativeTab(OKCreativeTab.DEEP_MOB_LEARNING);
     }
 
     public void init() {

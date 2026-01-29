@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.OKCreativeTab;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
@@ -18,10 +17,6 @@ public class ItemOK extends Item {
 
     public ItemOK() {
         setHasSubtypes(true);
-        setCreativeTab(OKCreativeTab.MULTIBLOCK);
-        setCreativeTab(OKCreativeTab.BACKPACK);
-        setCreativeTab(OKCreativeTab.CHICKEN_COW);
-        setCreativeTab(OKCreativeTab.DEEP_MOB_LEARNING);
     }
 
     public ItemOK(String name) {

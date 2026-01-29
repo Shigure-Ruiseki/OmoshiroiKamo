@@ -26,7 +26,7 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean enableCable;
+    public static boolean enableIDs;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

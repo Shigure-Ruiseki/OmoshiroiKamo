@@ -22,9 +22,6 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackPositioner;
-import ruiseki.omoshiroikamo.module.cable.client.gui.container.TerminalGuiContainer;
-import ruiseki.omoshiroikamo.module.cable.integration.nei.TerminalOverlay;
-import ruiseki.omoshiroikamo.module.cable.integration.nei.TerminalPositioner;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenLayingRecipeHandler;
@@ -33,6 +30,9 @@ import ruiseki.omoshiroikamo.module.cows.integration.nei.CowBreedingRecipeHandle
 import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
+import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
+import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalOverlay;
+import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalPositioner;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
@@ -101,7 +101,7 @@ public class NEIConfig implements IConfigureNEI {
             API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
         }
 
-        if (BackportConfigs.enableCable) {
+        if (BackportConfigs.enableIDs) {
             API.registerGuiOverlay(TerminalGuiContainer.class, "crafting", new TerminalPositioner());
             API.registerGuiOverlayHandler(TerminalGuiContainer.class, new TerminalOverlay(), "crafting");
         }
