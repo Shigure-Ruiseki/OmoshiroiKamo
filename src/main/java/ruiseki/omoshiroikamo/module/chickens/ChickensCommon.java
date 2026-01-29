@@ -36,6 +36,7 @@ public class ChickensCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         ChickensBlocks.preInit();
         ChickensItems.preInit();
+        ChickensCreative.preInit();
         ModChickens.preInit();
     }
 

@@ -37,6 +37,7 @@ public class CowsCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         CowsBlocks.preInit();
         CowsItems.preInit();
+        CowsCreative.preInit();
         ModCows.preInit();
     }
 

@@ -38,6 +38,7 @@ public class MultiBlockCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         MultiBlockBlocks.preInit();
         MultiBlockItems.preInit();
+        MultiBlockCreative.preInit();
         MultiBlockOreDicts.preInit();
         MultiBlockAchievements.preInit();
         MultiblockWorldGenerator.preInit();

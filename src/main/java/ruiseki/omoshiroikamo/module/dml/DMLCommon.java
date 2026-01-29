@@ -36,6 +36,7 @@ public class DMLCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         DMLBlocks.preInit();
         DMLItems.preInit();
+        DMLCreative.preInit();
     }
 
     @Override

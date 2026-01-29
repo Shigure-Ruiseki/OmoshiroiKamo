@@ -2,8 +2,9 @@
 
 creativetab.okBackpack=OK バックパック
 creativetab.okMultiblock=OK マルチブロック
-creativetab.okChickenCow=OK ニワトリとウシ
-creativetab.okDeepMobLearner=OK モブラーニング
+creativetab.okChicken=OK ニワトリ
+creativetab.okCow=OK ウシ
+creativetab.okDML=OK モブラーニング
 
 #Config
 
@@ -253,8 +254,7 @@ gui.button_page_select.prev=前のページ
 #Display
 
 power.rf=RF
-fluid.millibucket.abr=L
-fluid.empty=空
+fluid.millibucket=mB
 
 #TOOLTIPS
 

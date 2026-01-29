@@ -28,4 +28,9 @@ public class ItemUtils extends ItemUtil {
         return Objects.equals(stack1.getTagCompound(), stack2.getTagCompound());
     }
 
+    public static ItemStack merge(ItemStack a, ItemStack b) {
+        if (a == null) return b;
+        a.stackSize += b.stackSize;
+        return a;
+    }
 }

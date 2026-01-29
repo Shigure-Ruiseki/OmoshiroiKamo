@@ -101,9 +101,9 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
 
-    protected abstract void writeCommon(NBTTagCompound root);
+    public abstract void writeCommon(NBTTagCompound root);
 
-    protected abstract void readCommon(NBTTagCompound root);
+    public abstract void readCommon(NBTTagCompound root);
 
     private BlockPos cachedPos = null;
 

@@ -31,4 +31,10 @@ public class ToggleWidget extends CyclicVariantButtonWidget {
         super(VARIANTS, syncer.getValue() ? 0 : 1, 1, 16, value -> { syncer.setValue(value == 0); });
         size(18);
     }
+
+    public ToggleWidget(List<CyclicVariantButtonWidget.Variant> variants, BooleanSyncValue syncer, int iconOffset,
+        int iconSize) {
+        super(variants, syncer.getValue() ? 0 : 1, 1, 16, value -> { syncer.setValue(value == 0); });
+        size(18);
+    }
 }

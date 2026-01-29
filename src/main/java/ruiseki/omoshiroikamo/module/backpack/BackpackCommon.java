@@ -37,6 +37,7 @@ public class BackpackCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         BackpackBlocks.preInit();
         BackpackItems.preInit();
+        BackpackCreative.preInit();
         BackpackBaubleCompat.preInit();
     }
 

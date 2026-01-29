@@ -1,0 +1,85 @@
+package ruiseki.omoshiroikamo.module.ids.common.init;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import lombok.Getter;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.ids.common.network.crafting.interfacebus.ItemCraftingInterface;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.block.ItemBlockReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.fluid.ItemFluidReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.inventory.ItemInventoryReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.redstone.ItemRedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.ItemStorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemEnergyInput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyInterface;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.ItemEnergyOutput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemItemInput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemItemInterface;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemItemOutput;
+import ruiseki.omoshiroikamo.module.ids.common.variable.ItemVariableCard;
+
+public enum IDsItems {
+
+    // spotless: off
+
+    LOGIC_CARD(new ItemVariableCard()),
+
+    ENERGY_INTERFACE(new ItemEnergyInterface()),
+    ENERGY_INPUT(new ItemEnergyInput()),
+    ENERGY_OUTPUT(new ItemEnergyOutput()),
+
+    ITEM_INTERFACE(new ItemItemInterface()),
+    ITEM_INPUT(new ItemItemInput()),
+    ITEM_OUTPUT(new ItemItemOutput()),
+
+    STORAGE_TERMINAL(new ItemStorageTerminal()),
+    CRAFTING_INTERFACE(new ItemCraftingInterface()),
+
+    REDSTONE_READER(new ItemRedstoneReader()),
+    BLOCK_READER(new ItemBlockReader()),
+    INVENTORY_READER(new ItemInventoryReader()),
+    FLUID_READER(new ItemFluidReader()),
+
+    ;
+    // spotless: on
+
+    public static final IDsItems[] VALUES = values();
+
+    public static void preInit() {
+        for (IDsItems item : VALUES) {
+            try {
+                GameRegistry.registerItem(item.getItem(), item.getName());
+                Logger.info("Successfully initialized " + item.name());
+            } catch (Exception e) {
+                Logger.error("Failed to initialize item: +" + item.name());
+            }
+        }
+    }
+
+    @Getter
+    private final Item item;
+
+    IDsItems(Item item) {
+        this.item = item;
+    }
+
+    public String getName() {
+        return getItem().getUnlocalizedName()
+            .replace("item.", "");
+    }
+
+    public ItemStack newItemStack() {
+        return newItemStack(1);
+    }
+
+    public ItemStack newItemStack(int count) {
+        return newItemStack(count, 0);
+    }
+
+    public ItemStack newItemStack(int count, int meta) {
+        return new ItemStack(this.getItem(), count, meta);
+    }
+
+}

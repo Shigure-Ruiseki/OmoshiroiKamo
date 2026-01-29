@@ -82,5 +82,4 @@ public class TESideFactory extends AbstractUIFactory<SidedPosGuiData> {
         this.customScreenClass = clazz;
         return this;
     }
-
 }

@@ -34,6 +34,7 @@ public abstract class TEEnergyInputPort extends AbstractEnergyIOPortTE implement
     public boolean processTasks(boolean redstoneChecksPassed) {
         if (isRedstoneActive()) {
             EnergyTransfer transfer = new EnergyTransfer();
+
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 if (!getSideIO(direction).canInput()) {
                     continue;
