@@ -103,6 +103,7 @@ gui.ids.part_settings=Part Settings
 
 gui.ids.index_channel=Chan: 
 gui.ids.id=ID
+gui.ids.length=Length
 
 gui.ids.redstoneReader.lowRedstone=Redstone Low:
 gui.ids.redstoneReader.hasRedstone=Redstone:

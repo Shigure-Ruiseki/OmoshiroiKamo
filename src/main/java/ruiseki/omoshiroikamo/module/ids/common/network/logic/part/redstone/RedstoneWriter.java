@@ -23,8 +23,11 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.StringValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
@@ -59,7 +62,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         LibResources.PREFIX_ITEM + "ids/redstone_reader_back.png");
 
     private int lastOutput = 0;
-    private int pulseTicks = 0;
+    private int pulseBooleanLength = 2;
+    private int pulseIntLength = 2;
 
     public RedstoneWriter() {
         super(new ItemStackHandlerBase(4));
@@ -82,30 +86,19 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
     @Override
     public void doUpdate() {
+
         if (!shouldTickNow()) return;
 
         int resolved = resolveActiveSlot();
 
         if (resolved == -1) {
-            if (lastOutput != 0) setOutput(0);
-            activeSlot = -1;
-            pulseTicks = 0;
-
-            clientCache.setBoolean("hasValue", false);
-            markDirty();
+            resetAll();
             return;
         }
 
         if (activeSlot != resolved) {
             activeSlot = resolved;
-            pulseTicks = 0;
             setOutput(0);
-        }
-
-        if (pulseTicks > 0) {
-            pulseTicks--;
-            if (pulseTicks == 0) setOutput(0);
-            return;
         }
 
         ItemStack card = inv.getStackInSlot(activeSlot);
@@ -123,12 +116,17 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setInteger("lastOutput", lastOutput);
+        tag.setInteger("pulseBoolLen", pulseBooleanLength);
+        tag.setInteger("pulseIntLen", pulseIntLength);
+
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         lastOutput = tag.getInteger("lastOutput");
+        pulseBooleanLength = tag.getInteger("pulseBoolLen");
+        pulseIntLength = tag.getInteger("pulseIntLen");
     }
 
     @Override
@@ -180,6 +178,14 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
                 IKey.lang("gui.ids.redstoneWriter.redstoneInt")
                     .get()),
             searchValue);
+
+        IPanelHandler pulseBooleanSetting = syncManager.panel(
+            "pulseBooleanSetting",
+            (syncManager1, syncHandler) -> pulseSettingPanel(
+                syncManager1,
+                syncHandler,
+                new IntSyncValue(this::getPulseBooleanLength, this::setPulseBooleanLength)),
+            true);
         addSearchableRow(
             list,
             IKey.lang("gui.ids.redstoneWriter.pulseBoolean")
@@ -187,8 +193,17 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
             writerSlotRow(
                 2,
                 IKey.lang("gui.ids.redstoneWriter.pulseBoolean")
-                    .get()),
+                    .get(),
+                pulseBooleanSetting),
             searchValue);
+
+        IPanelHandler pulseIntSetting = syncManager.panel(
+            "pulseIntSetting",
+            (syncManager1, syncHandler) -> pulseSettingPanel(
+                syncManager1,
+                syncHandler,
+                new IntSyncValue(this::getPulseIntLength, this::setPulseIntLength)),
+            true);
         addSearchableRow(
             list,
             IKey.lang("gui.ids.redstoneWriter.pulseInt")
@@ -196,7 +211,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
             writerSlotRow(
                 3,
                 IKey.lang("gui.ids.redstoneWriter.pulseInt")
-                    .get()),
+                    .get(),
+                pulseIntSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(this::getPreviewText)
@@ -221,6 +237,55 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
+    }
+
+    private ModularPanel pulseSettingPanel(PanelSyncManager syncManager, IPanelHandler syncHandler,
+        IntSyncValue value) {
+        ModularPanel panel = new Dialog<>("pulse_setting").setDraggable(false)
+            .setDisablePanelsBelow(false)
+            .setCloseOnOutOfBoundsClick(false);
+
+        Column col = new Column();
+
+        Row selectTank = new Row();
+        selectTank.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.ids.length")).width(162))
+            .child(
+                new TextFieldWidget().value(value)
+                    .right(0)
+                    .height(12)
+                    .setNumbers()
+                    .setDefaultNumber(1)
+                    .setFormatAsInteger(true));
+
+        col.coverChildren()
+            .marginTop(16)
+            .left(6)
+            .childPadding(2)
+            .child(selectTank);
+
+        panel.child(ButtonWidget.panelCloseButton())
+            .child(col);
+
+        return panel;
+    }
+
+    public int getPulseBooleanLength() {
+        return pulseBooleanLength;
+    }
+
+    public void setPulseBooleanLength(int v) {
+        pulseBooleanLength = Math.max(1, v);
+        markDirty();
+    }
+
+    public int getPulseIntLength() {
+        return pulseIntLength;
+    }
+
+    public void setPulseIntLength(int v) {
+        pulseIntLength = Math.max(1, v);
+        markDirty();
     }
 
     @Override
@@ -300,6 +365,15 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         clientCache.setInteger("intValue", value.asInt());
     }
 
+    private boolean isPulseActive(int length) {
+        if (length <= 0) return false;
+
+        long t = getWorld().getTotalWorldTime();
+        long period = length * 2L;
+
+        return (t % period) < length;
+    }
+
     private enum Mode {
 
         REDSTONE_BOOL,
@@ -324,13 +398,13 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         Mode mode = Mode.fromSlot(activeSlot);
 
         return switch (mode) {
+
             case REDSTONE_BOOL -> value.asBoolean() ? 15 : 0;
 
             case REDSTONE_INT -> Math.max(0, Math.min(15, value.asInt()));
 
             case PULSE_BOOL -> {
-                if (value.asBoolean()) {
-                    pulseTicks = 2;
+                if (value.asBoolean() && isPulseActive(pulseBooleanLength)) {
                     yield 15;
                 }
                 yield 0;
@@ -338,8 +412,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
             case PULSE_INT -> {
                 int v = Math.max(0, Math.min(15, value.asInt()));
-                if (v > 0) {
-                    pulseTicks = 2;
+                if (v > 0 && isPulseActive(pulseIntLength)) {
                     yield v;
                 }
                 yield 0;
@@ -354,6 +427,13 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         lastOutput = value;
         markDirty();
         notifyNeighbors();
+    }
+
+    private void resetAll() {
+        if (lastOutput != 0) setOutput(0);
+        activeSlot = -1;
+        clientCache.setBoolean("hasValue", false);
+        markDirty();
     }
 
     public String getPreviewText() {

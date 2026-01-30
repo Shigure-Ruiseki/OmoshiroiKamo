@@ -142,8 +142,7 @@ public abstract class AbstractPart implements ICablePart {
 
     public boolean shouldTickNow() {
         if (tickInterval <= 1) return true;
-        return getCable().getWorld()
-            .getTotalWorldTime() % tickInterval == 0;
+        return getWorld().getTotalWorldTime() % tickInterval == 0;
     }
 
     @SideOnly(Side.CLIENT)
