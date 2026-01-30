@@ -77,6 +77,8 @@ public interface ICable extends IOKTile, IOKEnergyIO {
 
     World getWorld();
 
+    void notifyNeighbors();
+
     // Network
     Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> getNetworks();
 

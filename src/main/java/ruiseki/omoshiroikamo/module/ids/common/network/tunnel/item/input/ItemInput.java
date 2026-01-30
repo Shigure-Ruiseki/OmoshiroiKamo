@@ -51,7 +51,7 @@ public class ItemInput extends AbstractPart implements IItemPart {
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/item_input_bus.obj"));
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "ids/item_input_bus.png");
 

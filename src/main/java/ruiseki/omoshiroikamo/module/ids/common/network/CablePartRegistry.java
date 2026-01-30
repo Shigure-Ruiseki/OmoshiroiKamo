@@ -6,10 +6,11 @@ import java.util.function.Supplier;
 
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.module.ids.common.network.crafting.interfacebus.CraftingInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.block.BlockReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.fluid.FluidReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.inventory.InventoryReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.redstone.RedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.block.BlockReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.fluid.FluidReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.inventory.InventoryReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.RedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.RedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.StorageTerminal;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.EnergyInput;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.EnergyInterface;
@@ -38,6 +39,8 @@ public class CablePartRegistry {
         CablePartRegistry.register("block_reader", BlockReader::new);
         CablePartRegistry.register("inventory_reader", InventoryReader::new);
         CablePartRegistry.register("fluid_reader", FluidReader::new);
+
+        CablePartRegistry.register("redstone_writer", RedstoneWriter::new);
     }
 
     public static void register(String id, Supplier<? extends ICablePart> factory) {

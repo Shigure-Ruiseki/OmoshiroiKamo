@@ -49,7 +49,7 @@ import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.redstone.IRedstonePart;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.IRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
@@ -140,6 +140,7 @@ public class TECable extends AbstractTE
 
         needsNetworkRebuild = true;
         markDirty();
+        notifyNeighbors();
     }
 
     @Override
@@ -149,6 +150,7 @@ public class TECable extends AbstractTE
             part.onDetached();
             needsNetworkRebuild = true;
             markDirty();
+            notifyNeighbors();
         }
     }
 
@@ -460,6 +462,12 @@ public class TECable extends AbstractTE
     }
 
     @Override
+    public void notifyNeighbors() {
+        if (worldObj == null) return;
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+    }
+
+    @Override
     public Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> getNetworks() {
         return networks;
     }
@@ -515,7 +523,7 @@ public class TECable extends AbstractTE
         if (isSideBlocked(side)) return 0;
 
         ICablePart part = getPart(side);
-        if (!(part instanceof IRedstonePart rs)) {
+        if (!(part instanceof IRedstoneWriter rs)) {
             return 0;
         }
 

@@ -144,6 +144,8 @@ public enum ModObject {
     itemFluidReader,
     itemInventoryReader,
 
+    itemRedstoneWriter,
+
     itemStorageTerminal,;
     // spotless: on
 

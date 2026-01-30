@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.redstone.IRedstonePart;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.IRedstoneLogic;
 
 public class BlockCable extends BlockOK {
 
@@ -179,17 +179,19 @@ public class BlockCable extends BlockOK {
         if (side < 0) return false;
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof TECable cable)) return false;
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
-        return cable.getPart(dir) instanceof IRedstonePart;
+        ForgeDirection dir = ForgeDirection.getOrientation(side)
+            .getOpposite();
+        return cable.getPart(dir) instanceof IRedstoneLogic;
     }
 
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof TECable cable) {
-            return cable.getRedstonePower(ForgeDirection.getOrientation(side));
-        }
-        return 0;
+        if (!(te instanceof TECable cable)) return 0;
+
+        ForgeDirection dir = ForgeDirection.getOrientation(side)
+            .getOpposite();
+        return cable.getRedstonePower(dir);
     }
 
     @Override

@@ -7,10 +7,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.ids.common.network.crafting.interfacebus.ItemCraftingInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.block.ItemBlockReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.fluid.ItemFluidReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.inventory.ItemInventoryReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.redstone.ItemRedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.block.ItemBlockReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.fluid.ItemFluidReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.inventory.ItemInventoryReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.ItemStorageTerminal;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemEnergyInput;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyInterface;
@@ -41,6 +42,8 @@ public enum IDsItems {
     BLOCK_READER(new ItemBlockReader()),
     INVENTORY_READER(new ItemInventoryReader()),
     FLUID_READER(new ItemFluidReader()),
+
+    REDSTONE_WRITER(new ItemRedstoneWriter()),
 
     ;
     // spotless: on

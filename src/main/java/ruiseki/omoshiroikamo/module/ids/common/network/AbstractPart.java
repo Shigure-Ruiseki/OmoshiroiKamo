@@ -197,6 +197,10 @@ public abstract class AbstractPart implements ICablePart {
         getCable().dirty();
     }
 
+    public void notifyNeighbors() {
+        getCable().notifyNeighbors();
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName();
