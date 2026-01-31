@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.IRedstoneLogic;
 
@@ -34,7 +35,7 @@ public class BlockCable extends BlockOK {
 
     @Override
     public void init() {
-        GameRegistry.registerBlock(this, name);
+        GameRegistry.registerBlock(this, ItemBlockCable.class, name);
         GameRegistry.registerTileEntity(teClass, name + "TileEntity");
     }
 
@@ -129,14 +130,9 @@ public class BlockCable extends BlockOK {
 
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof TECable cable)) {
             return super.removedByPlayer(world, player, x, y, z, willHarvest);
-        }
-
-        if (world.isRemote) {
-            return true;
         }
 
         TECable.CableHit hit = cable.rayTraceCable(player);
@@ -147,22 +143,35 @@ public class BlockCable extends BlockOK {
         if (hit.type == TECable.CableHit.Type.PART && hit.side != null) {
             ICablePart part = cable.getPart(hit.side);
             if (part != null) {
+
                 ItemStack drop = part.getItemStack();
-                if (drop != null) {
+                if (!player.capabilities.isCreativeMode && drop != null) {
                     TECable.dropStack(world, x, y, z, drop);
                 }
 
                 cable.removePart(hit.side);
 
-                cable.updateConnections();
-                cable.markDirty();
-                world.markBlockForUpdate(x, y, z);
+                boolean shouldBreakBlock = !cable.hasCore() && cable.getParts()
+                    .isEmpty();
 
-                return false;
+                if (shouldBreakBlock) {
+                    return super.removedByPlayer(world, player, x, y, z, willHarvest);
+                }
+
+                return true;
             }
         }
 
         if (hit.type == TECable.CableHit.Type.CORE) {
+            for (ICablePart part : cable.getParts()) {
+                if (part != null) {
+                    ItemStack drop = part.getItemStack();
+                    if (!player.capabilities.isCreativeMode && drop != null) {
+                        TECable.dropStack(world, x, y, z, drop);
+                    }
+                }
+            }
+
             return super.removedByPlayer(world, player, x, y, z, willHarvest);
         }
 
@@ -207,4 +216,30 @@ public class BlockCable extends BlockOK {
         }
         return null;
     }
+
+    public static class ItemBlockCable extends ItemBlockOK {
+
+        public ItemBlockCable(Block block) {
+            super(block, block);
+        }
+
+        @Override
+        public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ) {
+
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof ICable cable) {
+                if (!cable.hasCore()) {
+                    cable.setHasCore(true);
+                    if (!player.capabilities.isCreativeMode) {
+                        --stack.stackSize;
+                    }
+                    return true;
+                }
+            }
+
+            return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
+        }
+    }
+
 }

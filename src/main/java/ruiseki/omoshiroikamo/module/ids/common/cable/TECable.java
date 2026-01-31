@@ -63,6 +63,8 @@ public class TECable extends AbstractTE
 
     private Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks = new HashMap<>();
 
+    private boolean hasCore = true;
+
     public boolean clientUpdated = false;
     public boolean needsNetworkRebuild = false;
 
@@ -70,6 +72,7 @@ public class TECable extends AbstractTE
 
     @Override
     public void writeCommon(NBTTagCompound tag) {
+        tag.setBoolean("hasCore", hasCore);
         tag.setByte("blockedMask", blockedMask);
         tag.setByte("connectionMask", connectionMask);
 
@@ -93,6 +96,12 @@ public class TECable extends AbstractTE
 
     @Override
     public void readCommon(NBTTagCompound tag) {
+        if (tag.hasKey("hasCore")) {
+            hasCore = tag.getBoolean("hasCore");
+        } else {
+            hasCore = true;
+        }
+
         blockedMask = tag.getByte("blockedMask");
         connectionMask = tag.getByte("connectionMask");
 
@@ -137,10 +146,7 @@ public class TECable extends AbstractTE
         parts.put(side, part);
         part.setCable(this, side);
         part.onAttached();
-
         needsNetworkRebuild = true;
-        markDirty();
-        notifyNeighbors();
     }
 
     @Override
@@ -149,8 +155,6 @@ public class TECable extends AbstractTE
         if (part != null) {
             part.onDetached();
             needsNetworkRebuild = true;
-            markDirty();
-            notifyNeighbors();
         }
     }
 
@@ -172,25 +176,19 @@ public class TECable extends AbstractTE
     @Override
     public void setEndpoint(ICableEndpoint endpoint) {
         if (endpoint == null) return;
-
         ForgeDirection side = endpoint.getSide();
         endpoints.put(side, endpoint);
-
         endpoint.onAttached();
-
         needsNetworkRebuild = true;
-        markDirty();
     }
 
     @Override
     public void removeEndpoint(ICableEndpoint endpoint) {
         if (endpoint == null) return;
-
         ForgeDirection side = endpoint.getSide();
         if (endpoints.remove(side) != null) {
             endpoint.onDetached();
             needsNetworkRebuild = true;
-            markDirty();
         }
     }
 
@@ -205,6 +203,7 @@ public class TECable extends AbstractTE
         if (hasPart(side)) return false;
 
         if (other instanceof ICable otherCable) {
+            if (!otherCable.hasCore()) return false;
             ForgeDirection opp = side.getOpposite();
             if (otherCable.isSideBlocked(opp)) return false;
             if (otherCable.hasPart(opp)) return false;
@@ -235,7 +234,7 @@ public class TECable extends AbstractTE
 
     @Override
     public void updateConnections() {
-        if (worldObj == null || worldObj.isRemote) return;
+        if (!hasCore || worldObj == null || worldObj.isRemote) return;
 
         boolean changed = false;
 
@@ -289,13 +288,7 @@ public class TECable extends AbstractTE
 
         for (Map.Entry<ForgeDirection, ICablePart> e : parts.entrySet()) {
             ICablePart part = e.getValue();
-
             part.onDetached();
-
-            ItemStack stack = part.getItemStack();
-            if (stack != null) {
-                dropStack(worldObj, xCoord, yCoord, zCoord, stack);
-            }
         }
         parts.clear();
 
@@ -336,6 +329,7 @@ public class TECable extends AbstractTE
 
     @Override
     public boolean hasVisualConnection(ForgeDirection side) {
+        if (!hasCore) return false;
         return ((connectionMask & bit(side)) != 0) || parts.containsKey(side);
     }
 
@@ -393,7 +387,6 @@ public class TECable extends AbstractTE
                         hammer.toolUsed(held, player, x, y, z);
                         return true;
                     }
-
                     return false;
                 }
 
@@ -422,11 +415,12 @@ public class TECable extends AbstractTE
                         return true;
                     }
 
-                    OKGuiFactories.tileEntity()
-                        .setGuiContainer(part.getGuiContainer())
-                        .open(player, x, y, z, hit.side);
-
-                    return true;
+                    if (hasCore()) {
+                        OKGuiFactories.tileEntity()
+                            .setGuiContainer(part.getGuiContainer())
+                            .open(player, x, y, z, hit.side);
+                        return true;
+                    }
                 }
             }
 
@@ -528,6 +522,24 @@ public class TECable extends AbstractTE
         }
 
         return MathHelper.clamp_int(rs.getRedstoneOutput(), 0, 15);
+    }
+
+    @Override
+    public boolean hasCore() {
+        return hasCore;
+    }
+
+    @Override
+    public void setHasCore(boolean hasCore) {
+        if (this.hasCore != hasCore) {
+            this.hasCore = hasCore;
+
+            if (!hasCore) {
+                connectionMask = 0;
+            }
+
+            dirty();
+        }
     }
 
     @Override
@@ -648,7 +660,9 @@ public class TECable extends AbstractTE
         float max = 10f / 16f;
 
         // core
-        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+        if (hasCore()) {
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+        }
 
         if (hasVisualConnection(ForgeDirection.WEST))
             parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
@@ -720,14 +734,16 @@ public class TECable extends AbstractTE
         }
 
         // CORE
-        AxisAlignedBB core = getCoreBox();
-        AxisAlignedBB wcore = core.getOffsetBoundingBox(xCoord, yCoord, zCoord);
-        MovingObjectPosition mop = wcore.calculateIntercept(start, end);
+        if (hasCore()) {
+            AxisAlignedBB core = getCoreBox();
+            AxisAlignedBB wcore = core.getOffsetBoundingBox(xCoord, yCoord, zCoord);
+            MovingObjectPosition mop = wcore.calculateIntercept(start, end);
 
-        if (mop != null) {
-            double d = mop.hitVec.distanceTo(start);
-            if (d < bestDist) {
-                best = new CableHit(CableHit.Type.CORE, null, null, core, mop.hitVec);
+            if (mop != null) {
+                double d = mop.hitVec.distanceTo(start);
+                if (d < bestDist) {
+                    best = new CableHit(CableHit.Type.CORE, null, null, core, mop.hitVec);
+                }
             }
         }
 

@@ -54,6 +54,10 @@ public interface ICable extends IOKTile, IOKEnergyIO {
 
     boolean hasVisualConnection(ForgeDirection side);
 
+    boolean hasCore();
+
+    void setHasCore(boolean hasCore);
+
     // Blocked Side
 
     boolean isSideBlocked(ForgeDirection side);

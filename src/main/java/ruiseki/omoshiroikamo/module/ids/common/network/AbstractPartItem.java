@@ -10,6 +10,8 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.api.ids.ICablePartItem;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
+import ruiseki.omoshiroikamo.module.ids.common.cable.TECable;
+import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 
 public abstract class AbstractPartItem extends ItemOK implements ICablePartItem {
 
@@ -26,9 +28,7 @@ public abstract class AbstractPartItem extends ItemOK implements ICablePartItem 
 
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof ICable cable) {
-            if (tryPlacePart(cable, dir, player, stack, world)) {
-                return true;
-            }
+            return tryPlacePart(cable, dir, player, stack, world);
         }
 
         int ox = x + dir.offsetX;
@@ -36,15 +36,26 @@ public abstract class AbstractPartItem extends ItemOK implements ICablePartItem 
         int oz = z + dir.offsetZ;
 
         TileEntity te2 = world.getTileEntity(ox, oy, oz);
-        if (te2 instanceof ICable cable2) {
-            return tryPlacePart(cable2, dir.getOpposite(), player, stack, world);
+        if (te2 instanceof ICable cable) {
+            return tryPlacePart(cable, dir.getOpposite(), player, stack, world);
+        }
+
+        if (!world.isAirBlock(ox, oy, oz)) {
+            return false;
+        }
+
+        world.setBlock(ox, oy, oz, IDsBlocks.CABLE.getBlock());
+
+        TileEntity te3 = world.getTileEntity(ox, oy, oz);
+        if (te3 instanceof TECable cable) {
+            cable.setHasCore(false);
+            return tryPlacePart(cable, dir.getOpposite(), player, stack, world);
         }
 
         return false;
     }
 
     private boolean tryPlacePart(ICable cable, ForgeDirection side, EntityPlayer player, ItemStack stack, World world) {
-
         if (cable.hasPart(side)) return false;
 
         ICablePart part = createPart();
