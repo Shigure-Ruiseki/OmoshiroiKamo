@@ -203,10 +203,10 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.blockReader..coord.z")
+            IKey.lang("gui.ids.blockReader.coord.z")
                 .get(),
             infoRow(
-                IKey.lang("gui.ids.blockReader..coord.z")
+                IKey.lang("gui.ids.blockReader.coord.z")
                     .get(),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("z"))),
                 4,

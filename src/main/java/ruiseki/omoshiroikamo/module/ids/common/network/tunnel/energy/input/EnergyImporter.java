@@ -1,6 +1,6 @@
-package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input;
+package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -20,29 +20,23 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
+import ruiseki.omoshiroikamo.api.energy.EnergyUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.EnergyNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
 
-public class ItemInput extends AbstractPart implements IItemPart {
+public class EnergyImporter extends AbstractPart implements IEnergyPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -53,107 +47,66 @@ public class ItemInput extends AbstractPart implements IItemPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_input_bus.png");
+        LibResources.PREFIX_ITEM + "ids/energy_importer_active.png");
 
-    private int transferLimit = 64;
-
-    private ItemStack variableCard = null;
-
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(1) {
-
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-            markDirty();
-        }
-    };
+    private int transferLimit = 10000;
 
     @Override
     public String getId() {
-        return "item_input";
+        return "energy_importer";
     }
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Arrays.asList(IItemNet.class, ILogicNet.class);
+        return Collections.singletonList(IEnergyNet.class);
     }
 
     @Override
     public void doUpdate() {
         if (!shouldTickNow()) return;
-        if (variableCard == null) return;
 
-        ILogicValue value = evaluateLogic(variableCard);
-        if (value == null) return;
-        if (!value.asBoolean()) return;
-
-        ItemNetwork network = getItemNetwork();
+        EnergyNetwork network = getEnergyNetwork();
         if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
 
-        ItemTransfer transfer = new ItemTransfer();
-        transfer.setMaxItemsPerTransfer(getTransferLimit());
+        EnergyTransfer transfer = new EnergyTransfer();
+        transfer.setMaxEnergyPerTransfer(getTransferLimit());
 
-        for (IItemNet iFace : network.interfaces) {
+        for (IEnergyNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.source(ItemUtils.getItemSource(getTargetTE(), side.getOpposite()));
+            transfer.source(EnergyUtils.getEnergySource(getTargetTE(), side.getOpposite()));
             transfer.sink(
-                ItemUtils.getItemSink(
+                EnergyUtils.getEnergySink(
                     iFace.getTargetTE(),
                     iFace.getSide()
                         .getOpposite()));
             transfer.transfer();
         }
-
-    }
-
-    @Override
-    public void onDetached() {
-        super.onDetached();
-        inv.dropAll(getCable().getWorld(), getPos().x, getPos().y, getPos().z);
     }
 
     @Override
     public ItemStack getItemStack() {
-        return IDsItems.ITEM_INPUT.newItemStack();
+        return IDsItems.ENERGY_INPUT.newItemStack();
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setInteger("transferLimit", transferLimit);
-        tag.setTag("item_inv", this.inv.serializeNBT());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         transferLimit = tag.getInteger("transferLimit");
-        if (tag.hasKey("item_inv")) {
-            this.inv.deserializeNBT(tag.getCompoundTag("item_inv"));
-        }
     }
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("item_input");
+        ModularPanel panel = new ModularPanel("energy_importer");
 
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
-
-        panel.child(
-            new ItemSlot().slot(new ModularSlot(inv, 0).changeListener((newItem, amountChanged, client, init) -> {
-
-                if (init) return;
-                if (newItem == null) return;
-                if (newItem.getItem() != IDsItems.LOGIC_CARD.getItem()) return;
-                this.variableCard = newItem;
-
-            }))
-                .background(OKGuiTextures.VARIABLE_SLOT));
-
-        panel.bindPlayerInventory();
-        syncManager.bindPlayerInventory(data.getPlayer());
 
         return panel;
     }
@@ -170,6 +123,16 @@ public class ItemInput extends AbstractPart implements IItemPart {
 
     public void setTransferLimit(int transferLimit) {
         this.transferLimit = transferLimit;
+    }
+
+    @Override
+    public int receiveEnergy(int amount, boolean simulate) {
+        return 0;
+    }
+
+    @Override
+    public int extractEnergy(int amount, boolean simulate) {
+        return 0;
     }
 
     @Override

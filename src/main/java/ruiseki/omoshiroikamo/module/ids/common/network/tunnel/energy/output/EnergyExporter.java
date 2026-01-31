@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input;
+package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.EnergyNetwo
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
 
-public class EnergyInput extends AbstractPart implements IEnergyPart {
+public class EnergyExporter extends AbstractPart implements IEnergyPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -46,14 +46,14 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
 
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_input_bus.png");
+    private static final ResourceLocation active = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "ids/energy_exporter_active.png");
 
     private int transferLimit = 10000;
 
     @Override
     public String getId() {
-        return "energy_input";
+        return "energy_exporter";
     }
 
     @Override
@@ -74,19 +74,20 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
         for (IEnergyNet iFace : network.interfaces) {
             if (iFace.getChannel() != this.getChannel()) continue;
 
-            transfer.source(EnergyUtils.getEnergySource(getTargetTE(), side.getOpposite()));
-            transfer.sink(
-                EnergyUtils.getEnergySink(
+            transfer.sink(EnergyUtils.getEnergySink(getTargetTE(), side.getOpposite()));
+            transfer.source(
+                EnergyUtils.getEnergySource(
                     iFace.getTargetTE(),
                     iFace.getSide()
                         .getOpposite()));
             transfer.transfer();
         }
+
     }
 
     @Override
     public ItemStack getItemStack() {
-        return IDsItems.ENERGY_INPUT.newItemStack();
+        return IDsItems.ENERGY_OUTPUT.newItemStack();
     }
 
     @Override
@@ -103,7 +104,7 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("energy_input");
+        ModularPanel panel = new ModularPanel("energy_exporter");
 
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
@@ -113,12 +114,25 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
 
     @Override
     public EnumIO getIO() {
-        return EnumIO.INPUT;
+        return EnumIO.OUTPUT;
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBox() {
+        return switch (side) {
+            case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
+            case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
+            case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
+            case UP -> AxisAlignedBB.getBoundingBox(W_MIN, 1f - DEPTH, W_MIN, W_MAX, 1f, W_MAX);
+            case NORTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 0f, W_MAX, W_MAX, DEPTH);
+            case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
+            default -> null;
+        };
     }
 
     @Override
     public int getTransferLimit() {
-        return this.transferLimit;
+        return transferLimit;
     }
 
     public void setTransferLimit(int transferLimit) {
@@ -136,24 +150,11 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox() {
-        return switch (getSide()) {
-            case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
-            case EAST -> AxisAlignedBB.getBoundingBox(1f - DEPTH, W_MIN, W_MIN, 1f, W_MAX, W_MAX);
-            case DOWN -> AxisAlignedBB.getBoundingBox(W_MIN, 0f, W_MIN, W_MAX, DEPTH, W_MAX);
-            case UP -> AxisAlignedBB.getBoundingBox(W_MIN, 1f - DEPTH, W_MIN, W_MAX, 1f, W_MAX);
-            case NORTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 0f, W_MAX, W_MAX, DEPTH);
-            case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
-            default -> null;
-        };
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderUtils.bindTexture(texture);
+        RenderUtils.bindTexture(active);
 
         rotateForSide(getSide());
 
@@ -183,7 +184,7 @@ public class EnergyInput extends AbstractPart implements IEnergyPart {
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderUtils.bindTexture(active);
         model.renderAll();
 
         GL11.glPopMatrix();

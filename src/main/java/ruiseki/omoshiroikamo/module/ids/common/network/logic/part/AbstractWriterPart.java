@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.logic.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +24,13 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.LogicNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.EvalContext;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.ILogicNode;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.LogicEvaluator;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.LogicNodeFactory;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 
 public abstract class AbstractWriterPart extends AbstractPart {
 
@@ -75,6 +84,28 @@ public abstract class AbstractWriterPart extends AbstractPart {
         activeSlot = tag.getInteger("activeSlot");
     }
 
+    public ILogicValue getCardValue() {
+        ItemStack card = inv.getStackInSlot(activeSlot);
+        return card != null ? evaluateLogic(card) : null;
+    }
+
+    public LogicNetwork getLogicNetwork() {
+        return getCable() != null ? (LogicNetwork) getCable().getNetwork(ILogicNet.class) : null;
+    }
+
+    public ILogicValue evaluateLogic(ItemStack variableCard) {
+        LogicNetwork logicNetwork = getLogicNetwork();
+        if (logicNetwork == null || logicNetwork.getNodes()
+            .isEmpty()) return null;
+
+        ILogicNode root = LogicNodeFactory.readNodeFromItem(variableCard);
+        if (root == null) return null;
+
+        EvalContext ctx = new EvalContext(logicNetwork, null);
+
+        return LogicEvaluator.evaluate(root, ctx);
+    }
+
     public int resolveActiveSlot() {
         int found = -1;
 
@@ -125,7 +156,7 @@ public abstract class AbstractWriterPart extends AbstractPart {
             ButtonWidget<?> settingBtn = new ButtonWidget<>().overlay(GuiTextures.ADD)
                 .size(8)
                 .top(5)
-                .right(-10)
+                .right(-7)
                 .onMousePressed(btn -> {
                     if (btn == 0) {
                         Interactable.playButtonClickSound();
@@ -145,9 +176,29 @@ public abstract class AbstractWriterPart extends AbstractPart {
         row.child(
             new ItemSlot().slot(new ModularSlot(inv, slot))
                 .align(Alignment.CenterRight)
+                .marginRight(4)
                 .background(OKGuiTextures.VARIABLE_SLOT));
 
         return row;
     }
 
+    public static String ellipsis(String text, int maxPixels) {
+        if (text == null || text.isEmpty()) return "";
+
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+
+        if (fr.getStringWidth(text) <= maxPixels) {
+            return text;
+        }
+
+        String dots = "...";
+        int dotsWidth = fr.getStringWidth(dots);
+
+        String trimmed = fr.trimStringToWidth(text, maxPixels - dotsWidth);
+        return trimmed + dots;
+    }
+
+    public void resetAll() {
+        activeSlot = -1;
+    }
 }

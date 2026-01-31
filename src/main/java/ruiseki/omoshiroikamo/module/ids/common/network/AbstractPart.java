@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.module.ids.common.network;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -13,13 +12,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.LogicNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.EvalContext;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.ILogicNode;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.LogicEvaluator;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.LogicNodeFactory;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 
 public abstract class AbstractPart implements ICablePart {
 
@@ -173,23 +165,6 @@ public abstract class AbstractPart implements ICablePart {
             }
             default -> {}
         }
-    }
-
-    public LogicNetwork getLogicNetwork() {
-        return getCable() != null ? (LogicNetwork) getCable().getNetwork(ILogicNet.class) : null;
-    }
-
-    public ILogicValue evaluateLogic(ItemStack variableCard) {
-        LogicNetwork logicNetwork = getLogicNetwork();
-        if (logicNetwork == null || logicNetwork.getNodes()
-            .isEmpty()) return null;
-
-        ILogicNode root = LogicNodeFactory.readNodeFromItem(variableCard);
-        if (root == null) return null;
-
-        EvalContext ctx = new EvalContext(logicNetwork, null);
-
-        return LogicEvaluator.evaluate(root, ctx);
     }
 
     public void markDirty() {

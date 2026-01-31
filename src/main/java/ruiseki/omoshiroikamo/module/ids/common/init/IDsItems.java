@@ -13,12 +13,12 @@ import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.inventory.Item
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneReader;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.ItemStorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemEnergyInput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemEnergyImporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.ItemEnergyOutput;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemItemInput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.ItemEnergyExporter;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemItemImporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemItemInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemItemOutput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemItemExporter;
 import ruiseki.omoshiroikamo.module.ids.common.variable.ItemVariableCard;
 
 public enum IDsItems {
@@ -28,12 +28,12 @@ public enum IDsItems {
     LOGIC_CARD(new ItemVariableCard()),
 
     ENERGY_INTERFACE(new ItemEnergyInterface()),
-    ENERGY_INPUT(new ItemEnergyInput()),
-    ENERGY_OUTPUT(new ItemEnergyOutput()),
+    ENERGY_INPUT(new ItemEnergyImporter()),
+    ENERGY_OUTPUT(new ItemEnergyExporter()),
 
     ITEM_INTERFACE(new ItemItemInterface()),
-    ITEM_INPUT(new ItemItemInput()),
-    ITEM_OUTPUT(new ItemItemOutput()),
+    ITEM_INPUT(new ItemItemImporter()),
+    ITEM_OUTPUT(new ItemItemExporter()),
 
     STORAGE_TERMINAL(new ItemStorageTerminal()),
     CRAFTING_INTERFACE(new ItemCraftingInterface()),

@@ -538,6 +538,10 @@ public class TECable extends AbstractTE
                 connectionMask = 0;
             }
 
+            if (hasCore) {
+                needsNetworkRebuild = true;
+            }
+
             dirty();
         }
     }

@@ -20,7 +20,7 @@ import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.CableNetworkRegistry;
 
-public final class CableUtils {
+public class CableUtils {
 
     private CableUtils() {}
 

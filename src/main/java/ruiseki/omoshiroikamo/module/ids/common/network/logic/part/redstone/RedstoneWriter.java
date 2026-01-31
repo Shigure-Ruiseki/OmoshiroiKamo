@@ -86,7 +86,6 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
     @Override
     public void doUpdate() {
-
         if (!shouldTickNow()) return;
 
         int resolved = resolveActiveSlot();
@@ -101,9 +100,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
             setOutput(0);
         }
 
-        ItemStack card = inv.getStackInSlot(activeSlot);
-        ILogicValue value = card != null ? evaluateLogic(card) : null;
-
+        ILogicValue value = getCardValue();
         int newOutput = computeOutput();
         if (newOutput != lastOutput) {
             setOutput(newOutput);
@@ -429,11 +426,11 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         notifyNeighbors();
     }
 
-    private void resetAll() {
+    @Override
+    public void resetAll() {
+        super.resetAll();
         if (lastOutput != 0) setOutput(0);
-        activeSlot = -1;
         clientCache.setBoolean("hasValue", false);
-        markDirty();
     }
 
     public String getPreviewText() {

@@ -1,18 +1,18 @@
-package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output;
+package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPartItem;
 
-public class ItemItemOutput extends AbstractPartItem {
+public class ItemEnergyImporter extends AbstractPartItem {
 
-    public ItemItemOutput() {
-        super(ModObject.itemItemOutput.unlocalisedName);
+    public ItemEnergyImporter() {
+        super(ModObject.itemEnergyImporter.unlocalisedName);
         setMaxStackSize(64);
     }
 
     @Override
     public ICablePart createPart() {
-        return new ItemOutput();
+        return new EnergyImporter();
     }
 }

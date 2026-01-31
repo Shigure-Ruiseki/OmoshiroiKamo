@@ -42,7 +42,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_interface_bus.png");
+        LibResources.PREFIX_ITEM + "ids/energy_interface.png");
 
     public EnergyInterface() {
         setTickInterval(20);

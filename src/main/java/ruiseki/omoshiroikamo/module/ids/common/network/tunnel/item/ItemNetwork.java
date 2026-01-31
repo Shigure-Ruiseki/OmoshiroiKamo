@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -204,4 +205,19 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         markDirty(channel);
         return null;
     }
+
+    public List<IItemNet> getInterfacesForChannel(int channel) {
+        if (interfaces == null || interfaces.isEmpty()) return Collections.emptyList();
+
+        if (channel == -1) return interfaces;
+
+        List<IItemNet> list = new ArrayList<>();
+        for (IItemNet part : interfaces) {
+            if (part.getChannel() == channel) {
+                list.add(part);
+            }
+        }
+        return list;
+    }
+
 }

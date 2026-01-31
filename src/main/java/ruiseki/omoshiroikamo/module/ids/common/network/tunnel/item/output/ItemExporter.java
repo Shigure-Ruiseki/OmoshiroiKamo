@@ -27,17 +27,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractWriterPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemNetwork;
 
-public class ItemOutput extends AbstractPart implements IItemPart {
+public class ItemExporter extends AbstractWriterPart implements IItemPart {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -47,14 +48,20 @@ public class ItemOutput extends AbstractPart implements IItemPart {
 
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_output_bus.png");
+    private static final ResourceLocation active = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "ids/item_exporter_active.png");
+    private static final ResourceLocation inactive = new ResourceLocation(
+        LibResources.PREFIX_ITEM + "ids/item_exporter_inactive.png");
 
     private int transferLimit = 64;
 
+    public ItemExporter() {
+        super(new ItemStackHandlerBase(1));
+    }
+
     @Override
     public String getId() {
-        return "item_output";
+        return "item_exporter";
     }
 
     @Override
@@ -105,7 +112,7 @@ public class ItemOutput extends AbstractPart implements IItemPart {
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("item_output");
+        ModularPanel panel = new ModularPanel("item_exporter");
 
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
@@ -145,7 +152,7 @@ public class ItemOutput extends AbstractPart implements IItemPart {
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderUtils.bindTexture(texture);
+        RenderUtils.bindTexture(activeSlot != -1 ? active : inactive);
 
         rotateForSide(getSide());
 
@@ -175,7 +182,7 @@ public class ItemOutput extends AbstractPart implements IItemPart {
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderUtils.bindTexture(active);
         model.renderAll();
 
         GL11.glPopMatrix();

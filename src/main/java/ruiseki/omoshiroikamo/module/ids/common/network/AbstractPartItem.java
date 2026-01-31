@@ -23,6 +23,9 @@ public abstract class AbstractPartItem extends ItemOK implements ICablePartItem 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
+        if (world.isRemote) {
+            return true;
+        }
 
         ForgeDirection dir = ForgeDirection.getOrientation(side);
 

@@ -130,12 +130,12 @@ public enum ModObject {
     itemVariableCard,
 
     itemEnergyInterface,
-    itemEnergyInput,
-    itemEnergyOutput,
+    itemEnergyImporter,
+    itemEnergyExporter,
 
     itemItemInterface,
-    itemItemInput,
-    itemItemOutput,
+    itemItemImporter,
+    itemItemExporter,
 
     itemCraftingInterface,
 

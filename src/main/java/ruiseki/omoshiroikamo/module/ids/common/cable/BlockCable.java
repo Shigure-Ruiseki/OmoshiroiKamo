@@ -130,6 +130,10 @@ public class BlockCable extends BlockOK {
 
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        if (world.isRemote) {
+            return true;
+        }
+
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof TECable cable)) {
             return super.removedByPlayer(world, player, x, y, z, willHarvest);

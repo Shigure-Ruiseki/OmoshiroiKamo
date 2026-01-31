@@ -12,24 +12,24 @@ import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.inventory.Inve
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.RedstoneReader;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.RedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.EnergyInput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.EnergyImporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.EnergyInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.EnergyOutput;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemInput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.EnergyExporter;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemImporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemOutput;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemExporter;
 
 public class CablePartRegistry {
 
     private static final Map<String, Supplier<? extends ICablePart>> REGISTRY = new HashMap<>();
 
     static {
-        CablePartRegistry.register("energy_input", EnergyInput::new);
-        CablePartRegistry.register("energy_output", EnergyOutput::new);
+        CablePartRegistry.register("energy_importer", EnergyImporter::new);
+        CablePartRegistry.register("energy_exporter", EnergyExporter::new);
         CablePartRegistry.register("energy_interface", EnergyInterface::new);
 
-        CablePartRegistry.register("item_input", ItemInput::new);
-        CablePartRegistry.register("item_output", ItemOutput::new);
+        CablePartRegistry.register("item_importer", ItemImporter::new);
+        CablePartRegistry.register("item_exporter", ItemExporter::new);
         CablePartRegistry.register("item_interface", ItemInterface::new);
 
         CablePartRegistry.register("storage_terminal", StorageTerminal::new);
