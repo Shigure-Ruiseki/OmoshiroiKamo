@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 public class ModCows {
 
     public static void preInit() {
-        if (!BackportConfigs.useCow) return;
+        if (!BackportConfigs.enableCow) return;
 
         EntityRegistry
             .registerModEntity(EntityCowsCow.class, "cow", CowConfig.cowEntityId, OmoshiroiKamo.instance, 64, 1, true);
@@ -29,12 +29,12 @@ public class ModCows {
     }
 
     public static void init() {
-        if (!BackportConfigs.useCow) return;
+        if (!BackportConfigs.enableCow) return;
         registerModAddons();
     }
 
     public static void postInit() {
-        if (!BackportConfigs.useCow) return;
+        if (!BackportConfigs.enableCow) return;
 
         loadConfiguration();
 

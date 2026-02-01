@@ -32,7 +32,7 @@ public class NEICompat {
     }
 
     public static void IMCSender() {
-        if (BackportConfigs.useMultiBlock) {
+        if (BackportConfigs.enableMultiBlock) {
             // Register Ore Extractor handlers
             for (int i = 0; i <= 5; i++) {
                 String oreId = ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + i;
@@ -49,7 +49,7 @@ public class NEICompat {
             }
         }
 
-        if (BackportConfigs.useChicken) {
+        if (BackportConfigs.enableChicken) {
 
             sendHandlerImage(
                 ChickenLayingRecipeHandler.UID,
@@ -94,11 +94,11 @@ public class NEICompat {
                 6);
         }
 
-        if (BackportConfigs.useBackpack) {
+        if (BackportConfigs.enableBackpack) {
             sendCatalyst("crafting", BackpackItems.CRAFTING_UPGRADE.newItemStack());
         }
 
-        if (BackportConfigs.useDML) {
+        if (BackportConfigs.enableDML) {
             sendHandler(LootFabricatorRecipeHandler.UID, DMLBlocks.LOOT_FABRICATOR.newItemStack(), 48, 8);
             sendCatalyst(LootFabricatorRecipeHandler.UID, DMLBlocks.LOOT_FABRICATOR.newItemStack());
             sendHandler(SimulationChamberRecipeHandler.UID, DMLBlocks.SIMULATION_CHAMBER.newItemStack(), 48, 8);

@@ -16,8 +16,7 @@ public class OKGuiDraw {
         if (amount <= 1) return;
 
         String text = formatCompactAmount(amount);
-
-        final float SCALE = 0.6f;
+        final float SCALE = 0.5f;
 
         GlStateManager.pushMatrix();
         GlStateManager.disableLighting();
@@ -27,6 +26,30 @@ public class OKGuiDraw {
         textRenderer.setShadow(true);
         textRenderer.setScale(SCALE);
         textRenderer.setColor(Color.WHITE.main);
+
+        textRenderer.setAlignment(alignment, width, height);
+        textRenderer.setPos(x, y);
+        textRenderer.setHardWrapOnBorder(false);
+
+        textRenderer.draw(text);
+
+        textRenderer.setHardWrapOnBorder(true);
+        GlStateManager.popMatrix();
+    }
+
+    public static void drawCraftable(int x, int y, int width, int height, Alignment alignment) {
+
+        final String text = "Craft";
+        final float SCALE = 0.5f;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.translate(0, 0, 200);
+
+        textRenderer.setShadow(true);
+        textRenderer.setScale(SCALE);
+        textRenderer.setColor(Color.YELLOW.main);
 
         textRenderer.setAlignment(alignment, width, height);
         textRenderer.setPos(x, y);

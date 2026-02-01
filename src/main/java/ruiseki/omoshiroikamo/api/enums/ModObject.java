@@ -76,6 +76,7 @@ public enum ModObject {
     blockVisBridge,
 
     blockCable,
+    blockProgrammer,
 
     itemBackPack,
     itemUpgrade,
@@ -126,15 +127,24 @@ public enum ModObject {
 
     itemWrench,
 
-    itemEnergyInterfaceBus,
-    itemEnergyInputBus,
-    itemEnergyOutputBus,
+    itemVariableCard,
 
-    itemItemInterfaceBus,
-    itemItemInputBus,
-    itemItemOutputBus,
+    itemEnergyInterface,
+    itemEnergyInput,
+    itemEnergyOutput,
 
-    itemCableTerminal,;
+    itemItemInterface,
+    itemItemInput,
+    itemItemOutput,
+
+    itemCraftingInterface,
+
+    itemRedstoneReader,
+    itemBlockReader,
+    itemFluidReader,
+    itemInventoryReader,
+
+    itemStorageTerminal,;
     // spotless: on
 
     public final String unlocalisedName;

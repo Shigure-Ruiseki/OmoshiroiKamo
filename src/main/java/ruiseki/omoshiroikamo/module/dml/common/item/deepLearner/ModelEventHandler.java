@@ -20,7 +20,7 @@ public class ModelEventHandler {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.useDML;
+        return BackportConfigs.enableDML;
     }
 
     @SubscribeEvent

@@ -22,9 +22,10 @@ public class BackpackRecipes {
     }
 
     public static void blockRecipes() {
+
         // Leather Backpack
         GameRegistry.addRecipe(
-            new NBTShapedOreRecipe(
+            new ShapedOreRecipe(
                 BackpackBlocks.BACKPACK_BASE.newItemStack(),
                 "SLS",
                 "SCS",
@@ -221,6 +222,16 @@ public class BackpackRecipes {
                     'U',
                     BackpackItems.STACK_UPGRADE.newItemStack(1, 2)));
         }
+
+        // Stack Upgrade Tier Omega
+        GameRegistry.addRecipe(
+            new ShapedOreRecipe(
+                BackpackItems.STACK_UPGRADE.newItemStack(1, 4),
+                "BBB",
+                "BBB",
+                "BBB",
+                'B',
+                BackpackItems.STACK_UPGRADE.newItemStack(1, 3)));
 
         // Crafting Upgrade
         GameRegistry.addRecipe(

@@ -2,8 +2,10 @@
 
 creativetab.okBackpack=OK Backpack
 creativetab.okMultiblock=OK Multiblock
-creativetab.okChickenCow=OK Chicken & Cow
-creativetab.okDeepMobLearner=OK Deep Mob Learning
+creativetab.okChicken=OK Chicken
+creativetab.okCow=OK Cow
+creativetab.okDML=OK Deep Mob Learning
+creativetab.okIDs=OK Integrated Dynamics
 
 #Config
 
@@ -56,6 +58,8 @@ gui.progress=Progress: %.1f%%
 gui.efficiency=Efficiency: %.1f%%
 gui.sunlightBlocked=Sky Blocked!
 
+gui.empty=Empty
+
 gui.craftingState.idle=Idle
 gui.craftingState.running=Processing
 gui.craftingState.error=Error
@@ -87,10 +91,84 @@ gui.io.disabled=Disabled
 
 gui.search_bar.tool_tip=Right click to clear the search bar
 
+gui.syncNEI=Sync NEI
+
+gui.crafting_filter.storage=Storage
+gui.crafting_filter.craftable=Craftable
+gui.crafting_filter.both=Both
 
 #Cable
 
-gui.cable.index_channel=Chan: 
+gui.ids.part_settings=Part Settings
+
+gui.ids.index_channel=Chan: 
+gui.ids.id=ID
+
+gui.ids.redstoneReader.lowRedstone=Redstone Low:
+gui.ids.redstoneReader.hasRedstone=Redstone:
+gui.ids.redstoneReader.highRedstone=Redstone High:
+gui.ids.redstoneReader.redstoneValue=Redstone:
+
+gui.ids.blockReader.hasBlock=Has Block
+gui.ids.blockReader.dimension=Dimension
+gui.ids.blockReader.coord.x=X
+gui.ids.blockReader.coord.y=Y
+gui.ids.blockReader.coord.z=Z
+gui.ids.blockReader.block=Block
+gui.ids.blockReader.biome=Biome
+gui.ids.blockReader.light=Light Level
+
+gui.ids.inventoryReader.isInventory=Is Inventory
+gui.ids.inventoryReader.inventoryFull=Inventory Full
+gui.ids.inventoryReader.inventoryEmpty=Inventory Empty
+gui.ids.inventoryReader.inventoryNotEmpty=Inventory Not Empty
+gui.ids.inventoryReader.inventoryCount=Inventory Count
+gui.ids.inventoryReader.inventorySlots=Inventory Slots
+gui.ids.inventoryReader.slotsFilled=Slots Filled
+gui.ids.inventoryReader.fillRatio=Fill Ratio
+gui.ids.inventoryReader.itemsList=Items
+gui.ids.inventoryReader.slotItem=Slot Item
+
+gui.ids.fluidReader.isTank=Is Tank
+gui.ids.fluidReader.tankEmpty=Tank Empty
+gui.ids.fluidReader.tankNotEmpty=Tank Not Empty
+gui.ids.fluidReader.tankFull=Tank Full
+gui.ids.fluidReader.tankCount=Tank Count
+gui.ids.fluidReader.fluidAmount=Fluid Amount
+gui.ids.fluidReader.totalAmount=Total Fluid Amount
+gui.ids.fluidReader.fluidCapacity=Fluid Capacity
+gui.ids.fluidReader.totalCapacity=Total Fluid Capacity
+gui.ids.fluidReader.fillRatio=Fluid Fill Ratio
+gui.ids.fluidReader.tankFluids=Tank Fluids
+gui.ids.fluidReader.tankCapacities=Tank Capacities
+gui.ids.fluidReader.tankFluid=Tank Fluid
+
+gui.ids.side=Target Side
+gui.ids.tick=Ticks / Operation
+gui.ids.priority=Priority
+gui.ids.channel=Channel
+
+gui.ids.type.boolean=Boolean
+gui.ids.type.int=Integer
+gui.ids.type.long=Long
+gui.ids.type.float=Float
+gui.ids.type.double=Double
+gui.ids.type.string=String
+
+gui.ids.op.if=IF
+
+gui.ids.op.and=AND && 
+gui.ids.op.nand=NAND !&&
+gui.ids.op.or=OR || 
+gui.ids.op.nor=NOR !|| 
+gui.ids.op.xor=XOR ^
+
+gui.ids.op.eq=EQ ==
+gui.ids.op.neq=NEQ !=
+gui.ids.op.gtr=GTR >
+gui.ids.op.geq=GEQ >=
+gui.ids.op.lss=LSS <
+gui.ids.op.leq=LEQ <=
 
 #Modular Machinery
 
@@ -172,8 +250,8 @@ gui.backpack.transfer_to_backpack_inv=Transfer All Items to Backpack Inventory
 gui.backpack.transfer_to_backpack_inv_matched_1=Transfer Matched Items to Backpack Inventory
 gui.backpack.transfer_to_backpack_inv_matched_2=Shift To Transfer All
 
-gui.backpack.settings=Settings
 gui.backpack=Backpack
+gui.backpack.settings=Settings
 gui.configuration_tab=Configuration Tab
 
 gui.backpack.memorized_slot=Memorized Slot
@@ -268,8 +346,7 @@ gui.button_page_select.prev=Previous page
 #Display
 
 power.rf=RF
-fluid.millibucket.abr=L
-fluid.empty=Empty
+fluid.millibucket=mB
 
 #TOOLTIPS
 
@@ -288,7 +365,7 @@ tooltip.backpack.crafting_upgrade=Adds additional crafting grid to side of backp
 tooltip.backpack.inception_upgrade=Allows backpacks to be stored inside backpack
 tooltip.backpack.pickup_upgrade=Allows backpacks to pickup items
 tooltip.backpack.advanced_pickup_upgrade=Allows backpack to pickup items with more configurations
-tooltip.feeding_upgrade=Allows backpacks to automatically feed player
+tooltip.backpack.feeding_upgrade=Allows backpacks to automatically feed player
 tooltip.backpack.advanced_feeding_upgrade=Allows backpack to automatically feed player with more configurations
 tooltip.backpack.filter_upgrade=Filters inserted items when placing in world
 tooltip.backpack.advanced_filter_upgrade=Filters inserted items when placing in world with more configurations
@@ -342,6 +419,7 @@ tooltip.living_matter.xp=Experience per item: %s
 tooltip.pristine_matter.loot_items=Available loot items:
 
 tooltip.soot_covered_redstone=Crafted by crushing %s against a %s (%s)
+
 #ACHIEVEMENT
 
 achievement.omoshiroikamo.craft_assembler=Ready To Assemble
@@ -430,6 +508,7 @@ item.stackUpgrade.Iron.name=Stack Upgrade Tier 1
 item.stackUpgrade.Gold.name=Stack Upgrade Tier 2
 item.stackUpgrade.Diamond.name=Stack Upgrade Tier 3
 item.stackUpgrade.Netherite.name=Stack Upgrade Tier 4
+item.stackUpgrade.Omega.name=Stack Upgrade Omega Tier
 item.craftingUpgrade.name=Crafting Upgrade
 item.batteryUpgrade.name=Battery Upgrade
 item.everlastingUpgrade.name=Everlasting Upgrade
@@ -490,6 +569,19 @@ item.sootCoveredRedstone.name=Soot-covered Redstone
 item.sootCoveredPlate.name=Soot-covered Plate
 
 item.structureWand.name=Structure Wand
+
+item.itemInput.name=Item Input
+item.itemOutput.name=Item Output
+item.itemInterface.name=Item Interface
+item.energyInput.name=Energy Input
+item.energyOutput.name=Energy Output
+item.energyInterface.name=Energy Interface
+item.storageTerminal.name=Storage Terminal
+item.redstoneReader.name=Redstone Reader
+item.blockReader.name=Block Reader
+item.inventoryReader.name=Inventory Reader
+item.fluidReader.name=Fluid Reader
+item.craftingInterface.name=Crafting Interface
 
 #Block
 
@@ -630,6 +722,9 @@ tile.stall.name=Stall
 tile.lootFabricator.name=Loot Fabricator
 tile.simulationChamber.name=Simulation Chamber
 tile.machineCasing.name=Machine Casing
+
+tile.cable.name=Logic Cable
+tile.programmer.name=Programmer
 
 #ME Output Bus
 tile.modularItemOutputME.me.name=ME Item Output Bus

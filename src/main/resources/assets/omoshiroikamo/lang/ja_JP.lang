@@ -2,8 +2,9 @@
 
 creativetab.okBackpack=OK バックパック
 creativetab.okMultiblock=OK マルチブロック
-creativetab.okChickenCow=OK ニワトリとウシ
-creativetab.okDeepMobLearner=OK モブラーニング
+creativetab.okChicken=OK ニワトリ
+creativetab.okCow=OK ウシ
+creativetab.okDML=OK モブラーニング
 
 #Config
 
@@ -253,8 +254,7 @@ gui.button_page_select.prev=前のページ
 #Display
 
 power.rf=RF
-fluid.millibucket.abr=L
-fluid.empty=空
+fluid.millibucket=mB
 
 #TOOLTIPS
 
@@ -273,7 +273,7 @@ tooltip.backpack.crafting_upgrade=バックパックの横にクラフトグリ�
 tooltip.backpack.inception_upgrade=バックパックの中にバックパックを入れられるようになります
 tooltip.backpack.pickup_upgrade=バックパックがアイテムを拾えるようにします
 tooltip.backpack.advanced_pickup_upgrade=バックパックがアイテムを拾えるようにします（詳細設定可能）
-tooltip.feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします
+tooltip.backpack.feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします
 tooltip.backpack.advanced_feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします（詳細設定可能）
 tooltip.backpack.filter_upgrade=ワールドに設置する際に搬入アイテムをフィルタリングします
 tooltip.backpack.advanced_filter_upgrade=ワールドに設置する際に搬入アイテムをフィルタリングします（詳細設定可能）
@@ -416,6 +416,7 @@ item.stackUpgrade.Iron.name=スタックアップグレード Tier 1
 item.stackUpgrade.Gold.name=スタックアップグレード Tier 2
 item.stackUpgrade.Diamond.name=スタックアップグレード Tier 3
 item.stackUpgrade.Netherite.name=スタックアップグレード Tier 4
+item.stackUpgrade.Omega.name=スタックアップグレード Tier Ω
 item.craftingUpgrade.name=クラフトアップグレード
 item.batteryUpgrade.name=バッテリーアップグレード
 item.everlastingUpgrade.name=永遠アップグレード

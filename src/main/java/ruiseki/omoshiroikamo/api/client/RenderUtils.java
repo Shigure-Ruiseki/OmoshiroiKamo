@@ -82,28 +82,28 @@ public class RenderUtils {
         t.addVertexWithUV(minX, maxY, minZ, u0 + minX * du, v0 + minZ * dv);
 
         // ==== NORTH (-Z) ====
-        t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * du, v0 + minY * dv);
-        t.addVertexWithUV(minX, minY, minZ, u0 + minX * du, v0 + minY * dv);
-        t.addVertexWithUV(minX, maxY, minZ, u0 + minX * du, v0 + maxY * dv);
-        t.addVertexWithUV(maxX, maxY, minZ, u0 + maxX * du, v0 + maxY * dv);
+        t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * du, v1 - minY * dv);
+        t.addVertexWithUV(minX, minY, minZ, u0 + minX * du, v1 - minY * dv);
+        t.addVertexWithUV(minX, maxY, minZ, u0 + minX * du, v1 - maxY * dv);
+        t.addVertexWithUV(maxX, maxY, minZ, u0 + maxX * du, v1 - maxY * dv);
 
         // ==== SOUTH (+Z) ====
-        t.addVertexWithUV(minX, minY, maxZ, u0 + minX * du, v0 + minY * dv);
-        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * du, v0 + minY * dv);
-        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxX * du, v0 + maxY * dv);
-        t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * du, v0 + maxY * dv);
+        t.addVertexWithUV(minX, minY, maxZ, u0 + minX * du, v1 - minY * dv);
+        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * du, v1 - minY * dv);
+        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxX * du, v1 - maxY * dv);
+        t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * du, v1 - maxY * dv);
 
         // ==== WEST (-X) ====
-        t.addVertexWithUV(minX, minY, minZ, u0 + minZ * du, v0 + minY * dv);
-        t.addVertexWithUV(minX, minY, maxZ, u0 + maxZ * du, v0 + minY * dv);
-        t.addVertexWithUV(minX, maxY, maxZ, u0 + maxZ * du, v0 + maxY * dv);
-        t.addVertexWithUV(minX, maxY, minZ, u0 + minZ * du, v0 + maxY * dv);
+        t.addVertexWithUV(minX, minY, minZ, u0 + minZ * du, v1 - minY * dv);
+        t.addVertexWithUV(minX, minY, maxZ, u0 + maxZ * du, v1 - minY * dv);
+        t.addVertexWithUV(minX, maxY, maxZ, u0 + maxZ * du, v1 - maxY * dv);
+        t.addVertexWithUV(minX, maxY, minZ, u0 + minZ * du, v1 - maxY * dv);
 
         // ==== EAST (+X) ====
-        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxZ * du, v0 + minY * dv);
-        t.addVertexWithUV(maxX, minY, minZ, u0 + minZ * du, v0 + minY * dv);
-        t.addVertexWithUV(maxX, maxY, minZ, u0 + minZ * du, v0 + maxY * dv);
-        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxZ * du, v0 + maxY * dv);
+        t.addVertexWithUV(maxX, minY, maxZ, u0 + maxZ * du, v1 - minY * dv);
+        t.addVertexWithUV(maxX, minY, minZ, u0 + minZ * du, v1 - minY * dv);
+        t.addVertexWithUV(maxX, maxY, minZ, u0 + minZ * du, v1 - maxY * dv);
+        t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxZ * du, v1 - maxY * dv);
 
         t.draw();
     }

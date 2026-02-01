@@ -25,7 +25,7 @@ public class BackpackCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useBackpack;
+        return BackportConfigs.enableBackpack;
     }
 
     @Override
@@ -37,6 +37,7 @@ public class BackpackCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         BackpackBlocks.preInit();
         BackpackItems.preInit();
+        BackpackCreative.preInit();
         BackpackBaubleCompat.preInit();
     }
 

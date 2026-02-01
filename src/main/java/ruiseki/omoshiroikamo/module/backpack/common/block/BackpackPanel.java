@@ -439,7 +439,7 @@ public class BackpackPanel extends ModularPanel {
             ItemSlot slotWidget = upgradeSlotWidgets.get(slotIndex);
             ItemStack upgrade = slotWidget.getSlot()
                 .getStack();
-            if (!(upgrade != null && upgrade.getItem() instanceof ItemUpgrade item)) {
+            if (!(upgrade != null && upgrade.getItem() instanceof ItemUpgrade<?>item)) {
                 continue;
             }
             if (!item.hasTab()) {
@@ -632,7 +632,7 @@ public class BackpackPanel extends ModularPanel {
                 ItemSlot slotWidget = upgradeSlotWidgets.get(i);
                 ItemStack stack = slotWidget.getSlot()
                     .getStack();
-                if (stack == null || !(stack.getItem() instanceof ItemUpgrade item) || !item.hasTab()) continue;
+                if (stack == null || !(stack.getItem() instanceof ItemUpgrade<?>item) || !item.hasTab()) continue;
 
                 UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
                 if (wrapper != null && wrapper.isTabOpened()) {

@@ -24,7 +24,7 @@ public class DMLCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useDML;
+        return BackportConfigs.enableDML;
     }
 
     @Override
@@ -36,6 +36,7 @@ public class DMLCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         DMLBlocks.preInit();
         DMLItems.preInit();
+        DMLCreative.preInit();
     }
 
     @Override

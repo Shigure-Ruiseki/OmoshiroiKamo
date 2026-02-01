@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import org.jetbrains.annotations.Nullable;
+
 public final class ItemNBTUtils {
 
     /**
@@ -148,6 +150,19 @@ public final class ItemNBTUtils {
     public static NBTTagCompound getCompound(ItemStack stack, String tag, boolean nullifyOnFail) {
         return verifyExistance(stack, tag) ? getNBT(stack).getCompoundTag(tag)
             : nullifyOnFail ? null : new NBTTagCompound();
+    }
+
+    @Nullable
+    public static NBTTagCompound getCompoundOrNull(ItemStack stack, String tag) {
+        return verifyExistance(stack, tag) ? getNBT(stack).getCompoundTag(tag) : null;
+    }
+
+    public static NBTTagCompound getOrCreateCompound(ItemStack stack, String tag) {
+        NBTTagCompound root = getNBT(stack);
+        if (!root.hasKey(tag)) {
+            root.setTag(tag, new NBTTagCompound());
+        }
+        return root.getCompoundTag(tag);
     }
 
     public static String getString(ItemStack stack, String tag, String defaultExpected) {

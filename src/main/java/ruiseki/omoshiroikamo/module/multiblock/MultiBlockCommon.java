@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockOreDicts;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiblockRecipes;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiblockWorldGenerator;
 
 public class MultiBlockCommon implements IModuleCommon {
 
@@ -25,7 +26,7 @@ public class MultiBlockCommon implements IModuleCommon {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useMultiBlock;
+        return BackportConfigs.enableMultiBlock;
     }
 
     @Override
@@ -37,8 +38,10 @@ public class MultiBlockCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         MultiBlockBlocks.preInit();
         MultiBlockItems.preInit();
+        MultiBlockCreative.preInit();
         MultiBlockOreDicts.preInit();
         MultiBlockAchievements.preInit();
+        MultiblockWorldGenerator.preInit();
     }
 
     @Override

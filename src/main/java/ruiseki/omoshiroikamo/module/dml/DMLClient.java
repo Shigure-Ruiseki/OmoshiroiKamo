@@ -18,7 +18,7 @@ public class DMLClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useDML;
+        return BackportConfigs.enableDML;
     }
 
     @Override

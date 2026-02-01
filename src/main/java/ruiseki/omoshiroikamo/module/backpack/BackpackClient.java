@@ -22,7 +22,7 @@ public class BackpackClient implements IModuleClient {
 
     @Override
     public boolean isEnabled() {
-        return BackportConfigs.useBackpack;
+        return BackportConfigs.enableBackpack;
     }
 
     @Override
