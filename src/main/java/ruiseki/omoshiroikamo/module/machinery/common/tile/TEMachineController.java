@@ -134,7 +134,7 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     protected void clearStructureParts() {
-        structureAgent.clearStructureParts();
+        structureAgent.resetStructure();
     }
 
     @Override
