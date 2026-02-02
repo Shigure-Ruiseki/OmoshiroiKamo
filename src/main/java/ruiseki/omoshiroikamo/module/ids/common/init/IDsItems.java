@@ -17,6 +17,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemE
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.ItemEnergyExporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemItemImporter;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemItemFilterInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemItemInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemItemExporter;
 import ruiseki.omoshiroikamo.module.ids.common.variable.ItemVariableCard;
@@ -28,12 +29,13 @@ public enum IDsItems {
     LOGIC_CARD(new ItemVariableCard()),
 
     ENERGY_INTERFACE(new ItemEnergyInterface()),
-    ENERGY_INPUT(new ItemEnergyImporter()),
-    ENERGY_OUTPUT(new ItemEnergyExporter()),
+    ENERGY_IMPORTER(new ItemEnergyImporter()),
+    ENERGY_EXPORTER(new ItemEnergyExporter()),
 
     ITEM_INTERFACE(new ItemItemInterface()),
-    ITEM_INPUT(new ItemItemImporter()),
-    ITEM_OUTPUT(new ItemItemExporter()),
+    ITEM_FILTER_INTERFACE(new ItemItemFilterInterface()),
+    ITEM_IMPORTER(new ItemItemImporter()),
+    ITEM_EXPORTER(new ItemItemExporter()),
 
     STORAGE_TERMINAL(new ItemStorageTerminal()),
     CRAFTING_INTERFACE(new ItemCraftingInterface()),

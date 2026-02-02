@@ -108,6 +108,9 @@ gui.ids.transferLimit=Transfer Limit
 gui.ids.roundRobin=Round Robin
 gui.ids.nbt=NBT
 gui.ids.stackSize=Stack Size
+gui.ids.allowInsertions=Allow Insert
+gui.ids.allowExtractions=Allow Extract
+gui.ids.blackList=Black List
 
 gui.ids.redstoneReader.lowRedstone=Redstone Low | Boolean
 gui.ids.redstoneReader.hasRedstone=Redstone | Boolean
@@ -158,6 +161,16 @@ gui.ids.itemImporter.itemAmount=Import Item Amount | Int
 gui.ids.itemImporter.itemSlot=Import Item Slot | Int
 gui.ids.itemImporter.item=Import Item | ItemStack
 gui.ids.itemImporter.items=Import Items | List
+
+gui.ids.itemExporter.allItem=Export All Item | Boolean
+gui.ids.itemExporter.itemAmount=Export Item Amount | Int
+gui.ids.itemExporter.itemSlot=Export Item Slot | Int
+gui.ids.itemExporter.item=Export Item | ItemStack
+gui.ids.itemExporter.items=Export Items | List
+
+gui.ids.itemFilterInterface.all=Filter All | Boolean
+gui.ids.itemFilterInterface.item=Filter Item | ItemStack
+gui.ids.itemFilterInterface.items=Filter Items | List
 
 gui.ids.side=Target Side
 gui.ids.tick=Ticks / Operation
@@ -591,6 +604,7 @@ item.variableCard.name=Variable Card
 item.itemImporter.name=Item Importer
 item.itemExporter.name=Item Exporter
 item.itemInterface.name=Item Interface
+item.itemFilterInterface.name=Item Filter Interface
 item.energyImporter.name=Energy Importer
 item.energyExporter.name=Energy Exporter
 item.energyInterface.name=Energy Interface

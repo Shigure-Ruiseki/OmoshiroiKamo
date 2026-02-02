@@ -134,6 +134,7 @@ public enum ModObject {
     itemEnergyExporter,
 
     itemItemInterface,
+    itemItemFilterInterface,
     itemItemImporter,
     itemItemExporter,
 

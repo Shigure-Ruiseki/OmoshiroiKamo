@@ -86,7 +86,7 @@ public class EnergyImporter extends AbstractPart implements IEnergyPart {
 
     @Override
     public ItemStack getItemStack() {
-        return IDsItems.ENERGY_INPUT.newItemStack();
+        return IDsItems.ENERGY_IMPORTER.newItemStack();
     }
 
     @Override

@@ -16,6 +16,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.Energ
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.EnergyInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.EnergyExporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemImporter;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemFilterInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemExporter;
 
@@ -31,6 +32,7 @@ public class CablePartRegistry {
         CablePartRegistry.register("item_importer", ItemImporter::new);
         CablePartRegistry.register("item_exporter", ItemExporter::new);
         CablePartRegistry.register("item_interface", ItemInterface::new);
+        CablePartRegistry.register("item_filter_interface", ItemFilterInterface::new);
 
         CablePartRegistry.register("storage_terminal", StorageTerminal::new);
         CablePartRegistry.register("crafting_interface", CraftingInterface::new);

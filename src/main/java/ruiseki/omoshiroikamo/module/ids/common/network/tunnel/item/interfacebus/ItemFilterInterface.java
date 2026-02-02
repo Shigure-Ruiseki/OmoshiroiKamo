@@ -1,11 +1,16 @@
-package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input;
+package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus;
 
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.BlockChest;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -37,12 +42,10 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
-import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
+import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -55,11 +58,11 @@ import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractWriter
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemPart;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemQueryable;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.IItemInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.InterfaceItemSink;
 
-public class ItemImporter extends AbstractWriterPart implements IItemPart {
+public class ItemFilterInterface extends AbstractWriterPart implements IItemPart, IItemQueryable, IItemInterface {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -70,26 +73,29 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_importer_active.png");
+        LibResources.PREFIX_ITEM + "ids/item_filter_interface_active.png");
     private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_importer_inactive.png");
+        LibResources.PREFIX_ITEM + "ids/item_filter_interface_inactive.png");
 
-    private int transferLimit = 64;
-    private int slot = -1;
-    private boolean roundRobin = false;
+    private int lastHash = 0;
+
+    private boolean allowInsertions = true;
+    private boolean allowExtractions = true;
     private boolean blackList = true;
+    private int transferLimit = Integer.MAX_VALUE;
     private boolean nbt = false;
     private boolean stackSize = false;
 
-    private int rrCursor = 0;
+    private ItemStackPredicate runtimeFilter;
 
-    public ItemImporter() {
-        super(new ItemStackHandlerBase(5));
+    public ItemFilterInterface() {
+        super(new ItemStackHandlerBase(3));
+        setTickInterval(100);
     }
 
     @Override
     public String getId() {
-        return "item_importer";
+        return "item_filter_interface";
     }
 
     @Override
@@ -100,6 +106,12 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
     @Override
     public void doUpdate() {
         if (!shouldTickNow()) return;
+
+        int hash = calcInventoryHash();
+        if (hash != lastHash) {
+            lastHash = hash;
+            markNetworkDirty();
+        }
 
         int resolved = resolveActiveSlot();
         if (resolved == -1) {
@@ -117,41 +129,77 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
         ILogicValue value = evaluateLogic(card);
         if (value == null) return;
         updateClientCache(value);
-        executeImport(value, Mode.fromSlot(activeSlot));
+
+        runtimeFilter = buildFilter(Mode.fromSlot(activeSlot), value);
     }
 
     @Override
     public ItemStack getItemStack() {
-        return IDsItems.ITEM_IMPORTER.newItemStack();
+        return IDsItems.ITEM_FILTER_INTERFACE.newItemStack();
+    }
+
+    private int calcInventoryHash() {
+        IInventory inv = getInventory();
+        if (inv == null) return 0;
+
+        int hash = 1;
+        int[] slots = getAccessibleSlots(inv);
+
+        for (int slot : slots) {
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s != null && s.stackSize > 0) {
+                hash = 31 * hash + ItemStackKeyPool.get(s).hash;
+                hash = 31 * hash + s.stackSize;
+            }
+        }
+        return hash;
+    }
+
+    private void markNetworkDirty() {
+        ItemNetwork net = getItemNetwork();
+        if (net != null) net.markDirty(getChannel());
+    }
+
+    @Override
+    public void collectItems(ItemIndex index) {
+        IInventory inv = getInventory();
+        if (inv == null) return;
+
+        int[] slots = getAccessibleSlots(inv);
+
+        for (int slot : slots) {
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s != null && s.stackSize > 0) {
+                index.add(s);
+            }
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("transferLimit", transferLimit);
-        tag.setInteger("slot", slot);
-        tag.setBoolean("roundRobin", roundRobin);
+        tag.setBoolean("allowInsertions", allowInsertions);
+        tag.setBoolean("allowExtractions", allowExtractions);
         tag.setBoolean("blackList", blackList);
+        tag.setInteger("transferLimit", transferLimit);
         tag.setBoolean("nbt", nbt);
         tag.setBoolean("stackSize", stackSize);
-        tag.setInteger("rrCursor", rrCursor);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        transferLimit = tag.getInteger("transferLimit");
-        slot = tag.getInteger("slot");
-        roundRobin = tag.getBoolean("roundRobin");
+        allowInsertions = tag.getBoolean("allowInsertions");
+        allowExtractions = tag.getBoolean("allowExtractions");
         blackList = tag.getBoolean("blackList");
+        transferLimit = tag.getInteger("transferLimit");
         nbt = tag.getBoolean("nbt");
         stackSize = tag.getBoolean("stackSize");
-        rrCursor = tag.getInteger("rrCursor");
     }
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("item_importer");
+        ModularPanel panel = new ModularPanel("item_filer_interface");
         panel.height(196);
 
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
@@ -179,55 +227,33 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.allItem")
+            IKey.lang("gui.ids.itemFilterInterface.all")
                 .get(),
             writerSlotRow(
                 0,
-                IKey.lang("gui.ids.itemImporter.allItem")
+                IKey.lang("gui.ids.itemFilterInterface.all")
                     .get(),
                 allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.itemAmount")
+            IKey.lang("gui.ids.itemFilterInterface.item")
                 .get(),
             writerSlotRow(
                 1,
-                IKey.lang("gui.ids.itemImporter.itemAmount")
+                IKey.lang("gui.ids.itemFilterInterface.item")
                     .get(),
                 allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.itemSlot")
+            IKey.lang("gui.ids.itemFilterInterface.items")
                 .get(),
             writerSlotRow(
                 2,
-                IKey.lang("gui.ids.itemImporter.itemSlot")
-                    .get(),
-                allSetting),
-            searchValue);
-
-        addSearchableRow(
-            list,
-            IKey.lang("gui.ids.itemImporter.item")
-                .get(),
-            writerSlotRow(
-                3,
-                IKey.lang("gui.ids.itemImporter.item")
-                    .get(),
-                allSetting),
-            searchValue);
-
-        addSearchableRow(
-            list,
-            IKey.lang("gui.ids.itemImporter.items")
-                .get(),
-            writerSlotRow(
-                4,
-                IKey.lang("gui.ids.itemImporter.items")
+                IKey.lang("gui.ids.itemFilterInterface.items")
                     .get(),
                 allSetting),
             searchValue);
@@ -263,16 +289,32 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Column col = new Column();
 
-        Row slot = new Row();
-        slot.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.id")).width(162))
+        Row allowInsertions = new Row();
+        allowInsertions.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.ids.allowInsertions")).width(162))
             .child(
-                new TextFieldWidget().value(new IntSyncValue(this::getSlot, this::setSlot))
+                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
-                    .height(12)
-                    .setNumbers()
-                    .setDefaultNumber(-1)
-                    .setFormatAsInteger(true));
+                    .size(12)
+                    .value(new BooleanSyncValue(this::isAllowInsertions, this::setAllowInsertions)));
+
+        Row allowExtractions = new Row();
+        allowExtractions.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.ids.allowExtractions")).width(162))
+            .child(
+                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
+                    .right(0)
+                    .size(12)
+                    .value(new BooleanSyncValue(this::isAllowExtractions, this::setAllowExtractions)));
+
+        Row blackList = new Row();
+        blackList.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.ids.blackList")).width(162))
+            .child(
+                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
+                    .right(0)
+                    .size(12)
+                    .value(new BooleanSyncValue(this::isBlackList, this::setBlackList)));
 
         Row transferLimit = new Row();
         transferLimit.coverChildren()
@@ -284,24 +326,6 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                     .setNumbers()
                     .setDefaultNumber(1)
                     .setFormatAsInteger(true));
-
-        Row roundRobin = new Row();
-        roundRobin.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.roundRobin")).width(162))
-            .child(
-                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
-                    .right(0)
-                    .size(12)
-                    .value(new BooleanSyncValue(this::isRoundRobin, this::setRoundRobin)));
-
-        Row blackList = new Row();
-        blackList.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.blackList")).width(162))
-            .child(
-                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
-                    .right(0)
-                    .size(12)
-                    .value(new BooleanSyncValue(this::isBlackList, this::setBlackList)));
 
         Row nbt = new Row();
         nbt.coverChildren()
@@ -325,9 +349,10 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
             .marginTop(16)
             .left(6)
             .childPadding(2)
-            .child(slot)
+            .child(allowInsertions)
+            .child(allowExtractions)
+            .child(blackList)
             .child(transferLimit)
-            .child(roundRobin)
             .child(nbt)
             .child(stackSize);
 
@@ -339,7 +364,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
     @Override
     public EnumIO getIO() {
-        return EnumIO.INPUT;
+        return EnumIO.BOTH;
     }
 
     @Override
@@ -352,21 +377,21 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
         markDirty();
     }
 
-    public int getSlot() {
-        return slot;
+    public boolean isAllowInsertions() {
+        return allowInsertions;
     }
 
-    public void setSlot(int slot) {
-        this.slot = slot;
+    public void setAllowInsertions(boolean allowInsertions) {
+        this.allowInsertions = allowInsertions;
         markDirty();
     }
 
-    public boolean isRoundRobin() {
-        return roundRobin;
+    public boolean isAllowExtractions() {
+        return allowExtractions;
     }
 
-    public void setRoundRobin(boolean roundRobin) {
-        this.roundRobin = roundRobin;
+    public void setAllowExtractions(boolean allowExtractions) {
+        this.allowExtractions = allowExtractions;
         markDirty();
     }
 
@@ -398,6 +423,96 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
     }
 
     @Override
+    public ItemStack extract(ItemStack required, int amount) {
+        if (amount <= 0) return null;
+
+        IInventory inv = getInventory();
+        if (inv == null) return null;
+
+        ItemStack result = null;
+        int remaining = amount;
+
+        for (int slot : getAccessibleSlots(inv)) {
+            if (remaining <= 0) break;
+
+            ItemStack s = inv.getStackInSlot(slot);
+            if (s == null || s.stackSize <= 0) continue;
+            if (!allowExtractions) return null;
+            if (runtimeFilter != null && !runtimeFilter.test(s)) continue;
+            if (!ItemUtils.areStacksEqual(required, s)) continue;
+
+            int take = Math.min(remaining, s.stackSize);
+            ItemStack taken = inv.decrStackSize(slot, take);
+
+            if (taken != null) {
+                if (result == null) {
+                    result = taken;
+                } else {
+                    result.stackSize += taken.stackSize;
+                }
+                remaining -= taken.stackSize;
+            }
+        }
+
+        if (result != null) {
+            inv.markDirty();
+        }
+
+        return result;
+    }
+
+    @Override
+    public ItemStack insert(ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) return stack;
+        if (!allowInsertions) return stack;
+        if (runtimeFilter != null && !runtimeFilter.test(stack)) return stack;
+
+        IInventory inv = getInventory();
+        if (inv == null) return stack;
+
+        ItemStack remaining = stack.copy();
+        boolean changed = false;
+
+        for (int slot : getAccessibleSlots(inv)) {
+            if (remaining.stackSize <= 0) break;
+
+            ItemStack target = inv.getStackInSlot(slot);
+
+            if (target == null) {
+                int add = Math.min(remaining.getMaxStackSize(), remaining.stackSize);
+                ItemStack placed = remaining.splitStack(add);
+                inv.setInventorySlotContents(slot, placed);
+                changed = true;
+            } else if (ItemUtils.areStacksEqual(target, remaining)) {
+                int space = target.getMaxStackSize() - target.stackSize;
+                if (space > 0) {
+                    int add = Math.min(space, remaining.stackSize);
+                    target.stackSize += add;
+                    remaining.stackSize -= add;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            inv.markDirty();
+        }
+
+        return remaining.stackSize > 0 ? remaining : null;
+    }
+
+    private int[] getAccessibleSlots(IInventory inv) {
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
+        }
+
+        int size = inv.getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) slots[i] = i;
+        return slots;
+    }
+
+    @Override
     public AxisAlignedBB getCollisionBox() {
         return switch (getSide()) {
             case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);
@@ -411,7 +526,6 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -451,142 +565,55 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
         GL11.glPopMatrix();
     }
 
+    @Override
+    public IInventory getInventory() {
+        TileEntity te = getTargetTE();
+
+        if (te instanceof TileEntityChest) {
+            if (getWorld().getBlock(targetX(), targetY(), targetZ()) instanceof BlockChest chest) {
+                return chest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
+            }
+            return null;
+        }
+
+        return te instanceof IInventory ? (IInventory) te : null;
+    }
+
+    @Override
+    public int[] getSlots() {
+        IInventory inv = getInventory();
+        if (inv == null) return new int[0];
+
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
+        }
+
+        int size = inv.getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) slots[i] = i;
+        return slots;
+    }
+
     private enum Mode {
 
-        IMPORT_ALL_BOOL,
-        IMPORT_AMOUNT_INT,
-        IMPORT_SLOT_INT,
-        IMPORT_ITEM,
-        IMPORT_ITEMS;
+        FILTER_ALL,
+        FILTER_ITEM,
+        FILTER_ITEMS;
 
         static Mode fromSlot(int slot) {
             return values()[Math.min(slot, values().length - 1)];
         }
     }
 
-    private void executeImport(ILogicValue value, Mode mode) {
-        ItemNetwork network = getItemNetwork();
-        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
-
-        ItemTransfer transfer = new ItemTransfer();
-        transfer.source(ItemUtils.getItemSource(getTargetTE(), side.getOpposite()));
-
-        List<IItemNet> targets = network.getInterfacesForChannel(getChannel());
-        if (targets.isEmpty()) return;
-
-        if (roundRobin) {
-            int size = targets.size();
-            IItemNet iFace = targets.get(rrCursor % size);
-
-            transfer.sink(new InterfaceItemSink((IItemInterface) iFace));
-
-            boolean success = executeTransferByMode(transfer, value, mode);
-            if (success) {
-                rrCursor = (rrCursor + 1) % size;
-            }
-        } else {
-            for (IItemNet iFace : targets) {
-                transfer.sink(new InterfaceItemSink((IItemInterface) iFace));
-                executeTransferByMode(transfer, value, mode);
-            }
-        }
-    }
-
-    private boolean executeTransferByMode(ItemTransfer transfer, ILogicValue value, Mode mode) {
-        switch (mode) {
-            case IMPORT_ALL_BOOL -> {
-                if (!value.asBoolean()) return false;
-                transfer.setMaxItemsPerTransfer(transferLimit);
-                return transfer.transfer() > 0;
-            }
-
-            case IMPORT_AMOUNT_INT -> {
-                int limit = Math.max(0, value.asInt());
-                if (limit <= 0) return false;
-
-                transfer.setMaxItemsPerTransfer(limit);
-                if (slot != -1) {
-                    transfer.setSourceSlots(slot);
-                }
-                return transfer.transfer() > 0;
-            }
-
-            case IMPORT_SLOT_INT -> {
-                int s = value.asInt();
-                if (s < 0 || transferLimit <= 0) return false;
-
-                transfer.setMaxItemsPerTransfer(transferLimit);
-                transfer.setSourceSlots(s);
-                return transfer.transfer() > 0;
-            }
-
-            case IMPORT_ITEM -> {
-                ItemStack stack = value.asItemStack();
-                if (stack == null) return false;
-
-                transfer.setFilter(buildPredicate(stack));
-                transfer.setMaxItemsPerTransfer(transferLimit);
-
-                if (slot != -1) {
-                    transfer.setSourceSlots(slot);
-                }
-                return transfer.transfer() > 0;
-            }
-
-            case IMPORT_ITEMS -> {
-                List<ILogicValue> list = value.asList();
-                if (list == null || list.isEmpty()) return false;
-
-                boolean moved = false;
-
-                for (ILogicValue v : list) {
-                    if (v == null) continue;
-                    ItemStack stack = v.asItemStack();
-                    if (stack == null) continue;
-
-                    transfer.setFilter(buildPredicate(stack));
-                    transfer.setMaxItemsPerTransfer(transferLimit);
-
-                    if (slot != -1) {
-                        transfer.setSourceSlots(slot);
-                    }
-
-                    moved |= transfer.transfer() > 0;
-                }
-                return moved;
-            }
-        }
-        return false;
-    }
-
-    private ItemStackPredicate buildPredicate(ItemStack stack) {
-        ItemStackPredicate match;
-
-        if (nbt) {
-            match = ItemStackPredicate.matches(stack);
-        } else {
-            match = ItemStackPredicate.matches(new ItemStack(stack.getItem(), 1, stack.getItemDamage()));
-        }
-
-        ItemStackPredicate itemPredicate = blackList ? s -> !match.test(s) : match;
-
-        if (stackSize) {
-            itemPredicate = itemPredicate.withStackSize(transferLimit, Integer.MAX_VALUE);
-        }
-
-        return itemPredicate;
-    }
-
     @Override
     public void resetAll() {
         super.resetAll();
-        rrCursor = 0;
-        setTransferLimit(64);
+        setTransferLimit(Integer.MAX_VALUE);
         setNbt(false);
         setStackSize(false);
-        setRoundRobin(false);
+        setAllowExtractions(true);
+        setAllowInsertions(true);
         setBlackList(false);
-        setSlot(-1);
         clientCache.setBoolean("hasValue", false);
     }
 
@@ -596,11 +623,8 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
             clientCache.setBoolean("hasValue", false);
             return;
         }
-
         clientCache.setBoolean("hasValue", true);
         clientCache.setBoolean("all", value.asBoolean());
-        clientCache.setInteger("amount", value.asInt());
-        clientCache.setInteger("slot", value.asInt());
         clientCache.setString("item", value.asString());
         clientCache.setString("items", value.asString());
     }
@@ -611,12 +635,51 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
         Mode mode = Mode.fromSlot(slot);
 
         return switch (mode) {
-            case IMPORT_ALL_BOOL -> clientCache.getBoolean("all") ? "TRUE" : "FALSE";
-            case IMPORT_AMOUNT_INT -> String.valueOf(clientCache.getInteger("amount"));
-            case IMPORT_SLOT_INT -> String.valueOf(clientCache.getInteger("slot"));
-            case IMPORT_ITEM -> String.valueOf(clientCache.getString("item"));
-            case IMPORT_ITEMS -> String.valueOf(clientCache.getString("items"));
+            case FILTER_ALL -> clientCache.getBoolean("all") ? "TRUE" : "FALSE";
+            case FILTER_ITEM -> String.valueOf(clientCache.getString("item"));
+            case FILTER_ITEMS -> String.valueOf(clientCache.getString("items"));
         };
+    }
+
+    private boolean matches(ItemStack filter, ItemStack target) {
+        if (filter == null || target == null) return false;
+
+        if (!ItemUtils.areStacksEqual(filter, target, !nbt)) {
+            return false;
+        }
+
+        if (stackSize && target.stackSize < filter.stackSize) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private ItemStackPredicate buildFilter(Mode mode, ILogicValue value) {
+        ItemStackPredicate base = switch (mode) {
+            case FILTER_ALL -> stack -> value.asBoolean();
+
+            case FILTER_ITEM -> {
+                ItemStack filter = value.asItemStack();
+                yield stack -> matches(filter, stack.toStack());
+            }
+
+            case FILTER_ITEMS -> {
+                List<ILogicValue> filters = value.asList();
+                yield stack -> {
+                    for (ILogicValue filter : filters) {
+                        if (matches(filter.asItemStack(), stack.toStack())) return true;
+                    }
+                    return false;
+                };
+            }
+        };
+
+        if (blackList) {
+            return stack -> !base.test(stack);
+        }
+
+        return base;
     }
 
 }
