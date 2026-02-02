@@ -12,6 +12,8 @@ import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 
 public class ItemCrystal extends ItemOK {
 
+    public static final int VARIATIONS = 8;
+
     public ItemCrystal() {
         super(ModObject.itemCrystal.unlocalisedName);
         setTextureName("crystal");
@@ -19,14 +21,9 @@ public class ItemCrystal extends ItemOK {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
-        list.add(new ItemStack(this, 1, 0));
-        list.add(new ItemStack(this, 1, 1));
-        list.add(new ItemStack(this, 1, 2));
-        list.add(new ItemStack(this, 1, 3));
-        list.add(new ItemStack(this, 1, 4));
-        list.add(new ItemStack(this, 1, 5));
-        list.add(new ItemStack(this, 1, 6));
-        list.add(new ItemStack(this, 1, 7)); // Celestial Crystal (All Tier, low probability)
+        for (int i = 0; i < VARIATIONS; i++) {
+            list.add(new ItemStack(this, 1, i));
+        }
     }
 
     @Override
