@@ -13,7 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import com.gtnewhorizon.structurelib.structure.AutoPlaceEnvironment;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
+import com.gtnewhorizon.structurelib.structure.IStructureElementChain;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -198,29 +200,49 @@ public class BlockResolver {
      * Wrap an element to track its position in the controller on success.
      */
     private static <T> IStructureElement<T> withTracking(IStructureElement<T> element) {
-        return new IStructureElement<T>() {
+        return new TrackingStructureElement<>(element);
+    }
 
-            @Override
-            public boolean check(T t, World world, int x, int y, int z) {
-                if (element.check(t, world, x, y, z)) {
-                    if (t instanceof TEMachineController) {
-                        ((TEMachineController) t).trackStructureBlock(x, y, z);
-                    }
-                    return true;
+    private static class TrackingStructureElement<T> implements IStructureElement<T>, IStructureElementChain<T> {
+
+        private final IStructureElement<T> wrappedElement;
+
+        public TrackingStructureElement(IStructureElement<T> wrapped) {
+            this.wrappedElement = wrapped;
+        }
+
+        @Override
+        public boolean check(T t, World world, int x, int y, int z) {
+            if (wrappedElement.check(t, world, x, y, z)) {
+                if (t instanceof TEMachineController) {
+                    ((TEMachineController) t).trackStructureBlock(x, y, z);
                 }
-                return false;
+                return true;
             }
+            return false;
+        }
 
-            @Override
-            public boolean spawnHint(T t, World world, int x, int y, int z, ItemStack trigger) {
-                return element.spawnHint(t, world, x, y, z, trigger);
-            }
+        @Override
+        public boolean spawnHint(T t, World world, int x, int y, int z, ItemStack trigger) {
+            return wrappedElement.spawnHint(t, world, x, y, z, trigger);
+        }
 
-            @Override
-            public boolean placeBlock(T t, World world, int x, int y, int z, ItemStack trigger) {
-                return element.placeBlock(t, world, x, y, z, trigger);
-            }
-        };
+        @Override
+        public boolean placeBlock(T t, World world, int x, int y, int z, ItemStack trigger) {
+            return wrappedElement.placeBlock(t, world, x, y, z, trigger);
+        }
+
+        @Override
+        public BlocksToPlace getBlocksToPlace(T t, World world, int x, int y, int z, ItemStack trigger,
+            AutoPlaceEnvironment env) {
+            return wrappedElement.getBlocksToPlace(t, world, x, y, z, trigger, env);
+        }
+
+        @Override
+        public IStructureElement<T>[] fallbacks() {
+            // Expose the wrapped element to NEI's StructureHacks via the chain interface
+            return new IStructureElement[] { wrappedElement };
+        }
     }
 
     /**
