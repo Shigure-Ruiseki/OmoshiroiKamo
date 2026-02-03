@@ -243,7 +243,6 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
         };
     }
 
-    @Override
     public int getTransferLimit() {
         return transferLimit;
     }

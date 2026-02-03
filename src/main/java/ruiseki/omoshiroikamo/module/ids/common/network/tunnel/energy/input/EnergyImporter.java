@@ -232,7 +232,6 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
         return EnumIO.INPUT;
     }
 
-    @Override
     public int getTransferLimit() {
         return this.transferLimit;
     }

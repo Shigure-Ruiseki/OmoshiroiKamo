@@ -367,7 +367,6 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
         return EnumIO.BOTH;
     }
 
-    @Override
     public int getTransferLimit() {
         return transferLimit;
     }

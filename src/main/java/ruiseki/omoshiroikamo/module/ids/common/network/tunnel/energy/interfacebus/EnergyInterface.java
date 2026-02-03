@@ -79,7 +79,6 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
         return EnumIO.BOTH;
     }
 
-    @Override
     public int getTransferLimit() {
         return 1000;
     }

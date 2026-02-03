@@ -342,7 +342,6 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
         return EnumIO.INPUT;
     }
 
-    @Override
     public int getTransferLimit() {
         return transferLimit;
     }
