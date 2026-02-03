@@ -756,49 +756,21 @@ public class TECable extends AbstractTE
 
     @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
-        if (amount <= 0) return 0;
-
-        ICablePart part = getPart(side);
-        if (part == null) return 0;
-        if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
-        if (!(part instanceof IEnergyPart energyPart)) return 0;
-
-        if (!energyPart.getIO()
-            .canInput()) return 0;
-
-        int limit = energyPart.getTransferLimit();
-        int toTransfer = Math.min(amount, limit);
-
-        return energyPart.receiveEnergy(toTransfer, simulate);
+        return 0;
     }
 
     @Override
     public int extractEnergy(ForgeDirection side, int amount, boolean simulate) {
-        if (amount <= 0) return 0;
-
-        ICablePart part = getPart(side);
-        if (part == null) return 0;
-        if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
-        if (!(part instanceof IEnergyPart energyPart)) return 0;
-
-        if (!energyPart.getIO()
-            .canOutput()) return 0;
-
-        int limit = energyPart.getTransferLimit();
-        int toTransfer = Math.min(amount, limit);
-
-        return energyPart.extractEnergy(toTransfer, simulate);
+        return 0;
     }
 
     @Override
     public int getEnergyStored() {
-        // NO OP
         return 0;
     }
 
     @Override
     public int getMaxEnergyStored() {
-        // NO OP
         return 0;
     }
 

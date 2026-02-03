@@ -77,7 +77,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
     private int transferLimit = 64;
     private int slot = -1;
     private boolean roundRobin = false;
-    private boolean blackList = true;
+    private boolean blackList = false;
     private boolean nbt = false;
     private boolean stackSize = false;
 
@@ -504,6 +504,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
                 int limit = Math.max(0, value.asInt());
                 if (limit <= 0) return false;
 
+                setTransferLimit(limit);
                 transfer.setMaxItemsPerTransfer(limit);
                 if (slot != -1) {
                     transfer.setSourceSlots(slot);

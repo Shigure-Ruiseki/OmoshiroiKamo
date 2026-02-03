@@ -172,6 +172,12 @@ gui.ids.itemFilterInterface.all=Filter All | Boolean
 gui.ids.itemFilterInterface.item=Filter Item | ItemStack
 gui.ids.itemFilterInterface.items=Filter Items | List
 
+gui.ids.energyImporter.boolean=Import Energy | Boolean
+gui.ids.energyImporter.amount=Import Energy Amount | Int
+
+gui.ids.energyExporter.boolean=Export Energy | Boolean
+gui.ids.energyExporter.amount=Export Energy Amount | Int
+
 gui.ids.side=Target Side
 gui.ids.tick=Ticks / Operation
 gui.ids.priority=Priority

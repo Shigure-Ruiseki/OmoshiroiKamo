@@ -85,16 +85,6 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
     }
 
     @Override
-    public int receiveEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
-    @Override
-    public int extractEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
-    @Override
     public AxisAlignedBB getCollisionBox() {
         return switch (side) {
             case WEST -> AxisAlignedBB.getBoundingBox(0f, W_MIN, W_MIN, DEPTH, W_MAX, W_MAX);

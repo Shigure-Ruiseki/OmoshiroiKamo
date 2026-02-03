@@ -38,7 +38,7 @@ public class InterfaceItemSink implements ItemSink {
         ItemStack mcStack = stack.toStack();
         ItemStack remaining = iface.insert(mcStack);
 
-        if (remaining == null) {
+        if (remaining == null || remaining.stackSize <= 0) {
             return 0;
         }
 
@@ -60,7 +60,12 @@ public class InterfaceItemSink implements ItemSink {
 
     @Override
     public @NotNull StandardInventoryIterator sinkIterator() {
-        return new StandardInventoryIterator(iface.getInventory(), iface.getSide(), iface.getSlots(), allowedSlots) {
+        return new StandardInventoryIterator(
+            iface.getInventory(),
+            iface.getSide()
+                .getOpposite(),
+            iface.getSlots(),
+            allowedSlots) {
 
             @Override
             protected boolean canAccess(ItemStack stack, int slot) {

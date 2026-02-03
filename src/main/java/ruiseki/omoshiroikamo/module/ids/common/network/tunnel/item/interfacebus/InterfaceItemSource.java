@@ -68,7 +68,12 @@ public class InterfaceItemSource implements ItemSource {
 
     @Override
     public @NotNull StandardInventoryIterator sourceIterator() {
-        return new StandardInventoryIterator(iface.getInventory(), iface.getSide(), iface.getSlots(), allowedSlots) {
+        return new StandardInventoryIterator(
+            iface.getInventory(),
+            iface.getSide()
+                .getOpposite(),
+            iface.getSlots(),
+            allowedSlots) {
 
             @Override
             protected boolean canAccess(ItemStack stack, int slot) {
