@@ -91,9 +91,18 @@ public class BlockResolver {
         }
 
         if (result.anyMeta) {
-            return withTracking((IStructureElement<T>) ofBlockAnyMeta(result.block, 0));
+            // For wildcards:
+            // - Logic: check any meta
+            // - Visual: display as meta 0
+            IStructureElement<T> logic = (IStructureElement<T>) ofBlockAnyMeta(result.block, 0);
+            IStructureElement<T> visual = (IStructureElement<T>) ofBlock(result.block, 0);
+            return withTracking(new HybridStructureElement<>(logic, visual));
         } else {
-            return withTracking((IStructureElement<T>) ofBlock(result.block, result.meta));
+            // For specific meta:
+            // Use HybridStructureElement to ensure NEI's StructureHacks processes via
+            // fallbacks() path, which correctly applies tinting.
+            IStructureElement<T> element = (IStructureElement<T>) ofBlock(result.block, result.meta);
+            return withTracking(new HybridStructureElement<>(element, element));
         }
     }
 
@@ -135,8 +144,7 @@ public class BlockResolver {
      * and automatically collects IModularPort TileEntities.
      *
      * @param blockStrings List of block strings
-     * @return IStructureElement using ofChain with TileAdder, or null if all
-     *         invalid
+     * @return IStructureElement using ofChain with TileAdder, or null if all invalid
      */
     @SuppressWarnings("unchecked")
     public static IStructureElement<TEMachineController> createChainElementWithTileAdder(List<String> blockStrings) {
@@ -148,7 +156,9 @@ public class BlockResolver {
         Block hintBlock = MachineryBlocks.MACHINE_CASING.getBlock();
 
         // First, add TileAdder to detect and collect ports
-        elements.add(ofTileAdder(BlockResolver::collectPort, hintBlock, 0));
+        // Wrap in NoHintStructureElement to prevent it from rendering a default
+        // casing, which causes Z-fighting with the actual block element.
+        elements.add(new NoHintStructureElement<>(ofTileAdder(BlockResolver::collectPort, hintBlock, 0)));
 
         // Then add block checks for each valid block type
         for (String blockString : blockStrings) {
@@ -203,6 +213,48 @@ public class BlockResolver {
         return new TrackingStructureElement<>(element);
     }
 
+    /**
+     * A hybrid element that separates logic from visuals.
+     * Used to fix NEI rendering issues where wildcards don't get tinted correctly.
+     */
+    private static class HybridStructureElement<T> implements IStructureElementChain<T> {
+
+        private final IStructureElement<T> logicElement;
+        private final IStructureElement<T> visualElement;
+
+        public HybridStructureElement(IStructureElement<T> logic, IStructureElement<T> visual) {
+            this.logicElement = logic;
+            this.visualElement = visual;
+        }
+
+        @Override
+        public boolean check(T t, World world, int x, int y, int z) {
+            return logicElement.check(t, world, x, y, z);
+        }
+
+        @Override
+        public boolean spawnHint(T t, World world, int x, int y, int z, ItemStack trigger) {
+            return visualElement.spawnHint(t, world, x, y, z, trigger);
+        }
+
+        @Override
+        public boolean placeBlock(T t, World world, int x, int y, int z, ItemStack trigger) {
+            return visualElement.placeBlock(t, world, x, y, z, trigger);
+        }
+
+        @Override
+        public BlocksToPlace getBlocksToPlace(T t, World world, int x, int y, int z, ItemStack trigger,
+            AutoPlaceEnvironment env) {
+            return visualElement.getBlocksToPlace(t, world, x, y, z, trigger, env);
+        }
+
+        @Override
+        public IStructureElement<T>[] fallbacks() {
+            // Expose visual element to NEI
+            return new IStructureElement[] { visualElement };
+        }
+    }
+
     private static class TrackingStructureElement<T> implements IStructureElement<T>, IStructureElementChain<T> {
 
         private final IStructureElement<T> wrappedElement;
@@ -242,6 +294,46 @@ public class BlockResolver {
         public IStructureElement<T>[] fallbacks() {
             // Expose the wrapped element to NEI's StructureHacks via the chain interface
             return new IStructureElement[] { wrappedElement };
+        }
+    }
+
+    /**
+     * A wrapper that suppresses the spawnHint of the underlying element.
+     * Used for TileAdder to prevent it from drawing a duplicate
+     */
+    private static class NoHintStructureElement<T> implements IStructureElementChain<T> {
+
+        private final IStructureElement<T> wrapped;
+
+        public NoHintStructureElement(IStructureElement<T> wrapped) {
+            this.wrapped = wrapped;
+        }
+
+        @Override
+        public boolean check(T t, World world, int x, int y, int z) {
+            return wrapped.check(t, world, x, y, z);
+        }
+
+        @Override
+        public boolean spawnHint(T t, World world, int x, int y, int z, ItemStack trigger) {
+            // Suppress hint rendering
+            return false;
+        }
+
+        @Override
+        public boolean placeBlock(T t, World world, int x, int y, int z, ItemStack trigger) {
+            return wrapped.placeBlock(t, world, x, y, z, trigger);
+        }
+
+        @Override
+        public BlocksToPlace getBlocksToPlace(T t, World world, int x, int y, int z, ItemStack trigger,
+            AutoPlaceEnvironment env) {
+            return wrapped.getBlocksToPlace(t, world, x, y, z, trigger, env);
+        }
+
+        @Override
+        public IStructureElement<T>[] fallbacks() {
+            return new IStructureElement[] { wrapped };
         }
     }
 

@@ -65,6 +65,19 @@ public class StructureTintCache {
     }
 
     /**
+     * Clear all cached colors for the specified dimension.
+     * Used when switching structures in NEI preview.
+     * 
+     * @param dimensionId Dimension ID to clear
+     */
+    public static void clearDimension(int dimensionId) {
+        Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimensionId);
+        if (dimensionCache != null) {
+            dimensionCache.clear();
+        }
+    }
+
+    /**
      * Get color for the specified coordinates
      * 
      * @param world IBlockAccess (World or IBlockAccess implementation)
@@ -80,11 +93,10 @@ public class StructureTintCache {
         if (world instanceof World) {
             dimension = ((World) world).provider.dimensionId;
         } else {
-            // Prioritize client dimension for rendering consistency (matches Casing
-            // behavior)
+            // Prioritize client dimension for rendering consistency
             dimension = getClientDimension();
             if (dimension == Integer.MIN_VALUE) {
-                // Fallback: try to get dimension from TileEntity (server-side IBlockAccess?)
+                // Fallback: try to get dimension from TileEntity
                 TileEntity te = world.getTileEntity(x, y, z);
                 if (te != null && te.getWorldObj() != null) {
                     dimension = te.getWorldObj().provider.dimensionId;
@@ -95,10 +107,8 @@ public class StructureTintCache {
         }
 
         Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimension);
-        if (dimensionCache != null) {
-            return dimensionCache.get(new ChunkCoordinates(x, y, z));
-        }
-        return null;
+        Integer result = dimensionCache != null ? dimensionCache.get(new ChunkCoordinates(x, y, z)) : null;
+        return result;
     }
 
     /**
