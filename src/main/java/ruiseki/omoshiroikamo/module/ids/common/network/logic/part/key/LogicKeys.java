@@ -75,7 +75,6 @@ public class LogicKeys {
         INV_COUNT = LogicKeyRegistry.register("inventory_count", LogicTypes.INT);
         INV_SLOTS = LogicKeyRegistry.register("inventory_slots", LogicTypes.INT);
         INV_SLOTS_FILLED = LogicKeyRegistry.register("inventory_slots_filled", LogicTypes.INT);
-        SLOT_ITEM = LogicKeyRegistry.register("slot_item", LogicTypes.INT);
         FLUID_AMOUNT = LogicKeyRegistry.register("fluid_amount", LogicTypes.INT);
         TOTAL_FLUID_AMOUNT = LogicKeyRegistry.register("total_fluid_amount", LogicTypes.INT);
         FLUID_CAPACITY = LogicKeyRegistry.register("fluid_capacity", LogicTypes.INT);
@@ -93,6 +92,8 @@ public class LogicKeys {
         TANK_CAPACITIES = LogicKeyRegistry.register("tank_capacities", LogicTypes.LIST);
 
         BLOCK = LogicKeyRegistry.register("block", LogicTypes.BLOCK);
+
+        SLOT_ITEM = LogicKeyRegistry.register("slot_item", LogicTypes.ITEM);
 
         TANK_FLUID = LogicKeyRegistry.register("tank_fluid", LogicTypes.FLUID);
 

@@ -178,6 +178,8 @@ gui.ids.energyImporter.amount=Import Energy Amount | Int
 gui.ids.energyExporter.boolean=Export Energy | Boolean
 gui.ids.energyExporter.amount=Export Energy Amount | Int
 
+gui.ids.energyFilterInterface.all=Filter All | Boolean
+
 gui.ids.side=Target Side
 gui.ids.tick=Ticks / Operation
 gui.ids.priority=Priority
@@ -614,6 +616,7 @@ item.itemFilterInterface.name=Item Filter Interface
 item.energyImporter.name=Energy Importer
 item.energyExporter.name=Energy Exporter
 item.energyInterface.name=Energy Interface
+item.energyFilterInterface.name=Energy Filter Interface
 item.storageTerminal.name=Storage Terminal
 item.redstoneReader.name=Redstone Reader
 item.blockReader.name=Block Reader

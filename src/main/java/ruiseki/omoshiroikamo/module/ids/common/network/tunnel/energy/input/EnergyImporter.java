@@ -51,6 +51,8 @@ import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.IEnergyInterface;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.InterfaceEnergySink;
 
 public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
 
@@ -180,16 +182,18 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
             .asWidget()
             .height(10)
             .width(162)
+            .left(7)
+            .bottom(90)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         col.coverChildren()
             .pos(7, 7)
             .childPadding(4)
             .child(searchWidget)
-            .child(list)
-            .child(valueWidget);
+            .child(list);
 
         panel.child(col);
+        panel.child(valueWidget);
 
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
@@ -333,11 +337,7 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
             if (iFace.getChannel() != this.getChannel()) continue;
 
             transfer.source(EnergyUtils.getEnergySource(getTargetTE(), side.getOpposite()));
-            transfer.sink(
-                EnergyUtils.getEnergySink(
-                    iFace.getTargetTE(),
-                    iFace.getSide()
-                        .getOpposite()));
+            transfer.sink(new InterfaceEnergySink((IEnergyInterface) iFace));
 
             transfer.transfer();
         }

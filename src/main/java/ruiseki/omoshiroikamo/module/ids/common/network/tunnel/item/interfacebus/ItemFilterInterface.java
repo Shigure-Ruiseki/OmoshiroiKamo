@@ -82,7 +82,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     private boolean allowInsertions = true;
     private boolean allowExtractions = true;
     private boolean blackList = true;
-    private int transferLimit = Integer.MAX_VALUE;
+    private int transferLimit = 64;
     private boolean nbt = false;
     private boolean stackSize = false;
 
@@ -265,16 +265,18 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
             .asWidget()
             .height(10)
             .width(162)
+            .left(7)
+            .bottom(90)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         col.coverChildren()
             .pos(7, 7)
             .childPadding(4)
             .child(searchWidget)
-            .child(list)
-            .child(valueWidget);
+            .child(list);
 
         panel.child(col);
+        panel.child(valueWidget);
 
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());
@@ -425,11 +427,13 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     public ItemStack extract(ItemStack required, int amount) {
         if (amount <= 0) return null;
 
+        int limit = Math.min(amount, transferLimit);
+
         IInventory inv = getInventory();
         if (inv == null) return null;
 
         ItemStack result = null;
-        int remaining = amount;
+        int remaining = limit;
 
         for (int slot : getAccessibleSlots(inv)) {
             if (remaining <= 0) break;
@@ -469,7 +473,12 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
         IInventory inv = getInventory();
         if (inv == null) return stack;
 
+        int limit = Math.min(stack.stackSize, transferLimit);
+
         ItemStack remaining = stack.copy();
+        remaining.stackSize = limit;
+
+        int inserted = 0;
         boolean changed = false;
 
         for (int slot : getAccessibleSlots(inv)) {
@@ -481,6 +490,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                 int add = Math.min(remaining.getMaxStackSize(), remaining.stackSize);
                 ItemStack placed = remaining.splitStack(add);
                 inv.setInventorySlotContents(slot, placed);
+                inserted += add;
                 changed = true;
             } else if (ItemUtils.areStacksEqual(target, remaining)) {
                 int space = target.getMaxStackSize() - target.stackSize;
@@ -488,6 +498,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
                     int add = Math.min(space, remaining.stackSize);
                     target.stackSize += add;
                     remaining.stackSize -= add;
+                    inserted += add;
                     changed = true;
                 }
             }
@@ -497,7 +508,14 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
             inv.markDirty();
         }
 
-        return remaining.stackSize > 0 ? remaining : null;
+        int leftover = stack.stackSize - inserted;
+        if (leftover > 0) {
+            ItemStack ret = stack.copy();
+            ret.stackSize = leftover;
+            return ret;
+        }
+
+        return null;
     }
 
     private int[] getAccessibleSlots(IInventory inv) {
@@ -607,7 +625,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     @Override
     public void resetAll() {
         super.resetAll();
-        setTransferLimit(Integer.MAX_VALUE);
+        setTransferLimit(64);
         setNbt(false);
         setStackSize(false);
         setAllowExtractions(true);

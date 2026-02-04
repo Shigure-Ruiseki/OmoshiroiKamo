@@ -101,6 +101,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         }
 
         ILogicValue value = getCardValue();
+        if (value == null) return;
         int newOutput = computeOutput();
         if (newOutput != lastOutput) {
             setOutput(newOutput);
@@ -212,23 +213,25 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
                 pulseIntSetting),
             searchValue);
 
-        TextWidget<?> valueWidget = IKey.dynamic(this::getPreviewText)
+        TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
             .alignment(Alignment.CENTER)
             .color(Color.WHITE.main)
             .shadow(false)
             .asWidget()
             .height(10)
             .width(162)
+            .left(7)
+            .bottom(90)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         col.coverChildren()
             .pos(7, 7)
             .childPadding(4)
             .child(searchWidget)
-            .child(list)
-            .child(valueWidget);
+            .child(list);
 
         panel.child(col);
+        panel.child(valueWidget);
 
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());

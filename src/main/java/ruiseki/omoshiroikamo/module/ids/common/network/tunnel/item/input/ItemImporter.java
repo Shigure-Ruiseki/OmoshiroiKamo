@@ -239,16 +239,18 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
             .asWidget()
             .height(10)
             .width(162)
+            .left(7)
+            .bottom(90)
             .background(OKGuiTextures.VANILLA_SEARCH_BACKGROUND);
 
         col.coverChildren()
             .pos(7, 7)
             .childPadding(4)
             .child(searchWidget)
-            .child(list)
-            .child(valueWidget);
+            .child(list);
 
         panel.child(col);
+        panel.child(valueWidget);
 
         panel.bindPlayerInventory();
         syncManager.bindPlayerInventory(data.getPlayer());

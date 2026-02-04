@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.Redst
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.RedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.StorageTerminal;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.EnergyImporter;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.EnergyFilterInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.EnergyInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.EnergyExporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemImporter;
@@ -28,6 +29,7 @@ public class CablePartRegistry {
         CablePartRegistry.register("energy_importer", EnergyImporter::new);
         CablePartRegistry.register("energy_exporter", EnergyExporter::new);
         CablePartRegistry.register("energy_interface", EnergyInterface::new);
+        CablePartRegistry.register("energy_filter_interface", EnergyFilterInterface::new);
 
         CablePartRegistry.register("item_importer", ItemImporter::new);
         CablePartRegistry.register("item_exporter", ItemExporter::new);

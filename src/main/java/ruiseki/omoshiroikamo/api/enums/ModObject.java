@@ -130,6 +130,7 @@ public enum ModObject {
     itemVariableCard,
 
     itemEnergyInterface,
+    itemEnergyFilterInterface,
     itemEnergyImporter,
     itemEnergyExporter,
 

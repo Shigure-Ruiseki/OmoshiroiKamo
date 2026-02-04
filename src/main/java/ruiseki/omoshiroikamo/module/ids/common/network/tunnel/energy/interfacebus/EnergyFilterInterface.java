@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output;
+package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus;
 
 import java.util.Collections;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -17,27 +18,30 @@ import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.StringValue;
-import com.cleanroommc.modularui.value.sync.IntSyncValue;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
+import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import cofh.api.energy.IEnergyConnection;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.EnergyUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -48,13 +52,10 @@ import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractWriterPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.EnergyNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.IEnergyInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.InterfaceEnergySource;
 
-public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
+public class EnergyFilterInterface extends AbstractWriterPart implements IEnergyPart, IEnergyInterface {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -65,19 +66,22 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_exporter_active.png");
+        LibResources.PREFIX_ITEM + "ids/energy_filter_interface_active.png");
     private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_exporter_inactive.png");
+        LibResources.PREFIX_ITEM + "ids/energy_filter_interface_inactive.png");
 
-    private int transferLimit = 10000;
+    private boolean allowInsertions = true;
+    private boolean allowExtractions = true;
+    private boolean lastOutput = true;
 
-    public EnergyExporter() {
-        super(new ItemStackHandlerBase(2));
+    public EnergyFilterInterface() {
+        super(new ItemStackHandlerBase(1));
+        setTickInterval(20);
     }
 
     @Override
     public String getId() {
-        return "energy_exporter";
+        return "energy_filter_interface";
     }
 
     @Override
@@ -88,6 +92,7 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
     @Override
     public void doUpdate() {
         if (!shouldTickNow()) return;
+
         int resolved = resolveActiveSlot();
         if (resolved == -1) {
             resetAll();
@@ -103,31 +108,34 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
 
         ILogicValue value = evaluateLogic(card);
         if (value == null) return;
-
+        if (value.asBoolean() != lastOutput) {
+            setOutput(value.asBoolean());
+        }
         updateClientCache(value);
-        executeExport(value, Mode.fromSlot(activeSlot));
     }
 
     @Override
     public ItemStack getItemStack() {
-        return IDsItems.ENERGY_EXPORTER.newItemStack();
+        return IDsItems.ENERGY_FILTER_INTERFACE.newItemStack();
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("transferLimit", transferLimit);
+        tag.setBoolean("allowInsertions", allowInsertions);
+        tag.setBoolean("allowExtractions", allowExtractions);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        transferLimit = tag.getInteger("transferLimit");
+        allowInsertions = tag.getBoolean("allowInsertions");
+        allowExtractions = tag.getBoolean("allowExtractions");
     }
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("energy_exporter");
+        ModularPanel panel = new ModularPanel("energy_filer_interface");
         panel.height(196);
 
         IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
@@ -155,22 +163,11 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.energyExporter.boolean")
+            IKey.lang("gui.ids.energyFilterInterface.all")
                 .get(),
             writerSlotRow(
                 0,
-                IKey.lang("gui.ids.energyExporter.boolean")
-                    .get(),
-                allSetting),
-            searchValue);
-
-        addSearchableRow(
-            list,
-            IKey.lang("gui.ids.energyExporter.amount")
-                .get(),
-            writerSlotRow(
-                1,
-                IKey.lang("gui.ids.energyExporter.amount")
+                IKey.lang("gui.ids.energyFilterInterface.all")
                     .get(),
                 allSetting),
             searchValue);
@@ -208,22 +205,30 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
 
         Column col = new Column();
 
-        Row transferLimit = new Row();
-        transferLimit.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.transferLimit")).width(162))
+        Row allowInsertions = new Row();
+        allowInsertions.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.ids.allowInsertions")).width(162))
             .child(
-                new TextFieldWidget().value(new IntSyncValue(this::getTransferLimit, this::setTransferLimit))
+                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
-                    .height(12)
-                    .setNumbers()
-                    .setDefaultNumber(1)
-                    .setFormatAsInteger(true));
+                    .size(12)
+                    .value(new BooleanSyncValue(this::isAllowInsertions, this::setAllowInsertions)));
+
+        Row allowExtractions = new Row();
+        allowExtractions.coverChildren()
+            .child(new TextWidget<>(IKey.lang("gui.ids.allowExtractions")).width(162))
+            .child(
+                new ToggleButton().overlay(GuiTextures.CROSS_TINY)
+                    .right(0)
+                    .size(12)
+                    .value(new BooleanSyncValue(this::isAllowExtractions, this::setAllowExtractions)));
 
         col.coverChildren()
             .marginTop(16)
             .left(6)
             .childPadding(2)
-            .child(transferLimit);
+            .child(allowInsertions)
+            .child(allowExtractions);
 
         panel.child(ButtonWidget.panelCloseButton())
             .child(col);
@@ -231,9 +236,27 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
         return panel;
     }
 
+    public boolean isAllowInsertions() {
+        return allowInsertions;
+    }
+
+    public void setAllowInsertions(boolean allowInsertions) {
+        this.allowInsertions = allowInsertions;
+        markDirty();
+    }
+
+    public boolean isAllowExtractions() {
+        return allowExtractions;
+    }
+
+    public void setAllowExtractions(boolean allowExtractions) {
+        this.allowExtractions = allowExtractions;
+        markDirty();
+    }
+
     @Override
     public EnumIO getIO() {
-        return EnumIO.OUTPUT;
+        return EnumIO.BOTH;
     }
 
     @Override
@@ -247,14 +270,6 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
             case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
             default -> null;
         };
-    }
-
-    public int getTransferLimit() {
-        return transferLimit;
-    }
-
-    public void setTransferLimit(int transferLimit) {
-        this.transferLimit = transferLimit;
     }
 
     @Override
@@ -298,53 +313,69 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
         GL11.glPopMatrix();
     }
 
+    private IEnergyReceiver getEnergyReceiver() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyReceiver receiver)) return null;
+        return receiver;
+    }
+
+    private IEnergyProvider getEnergyProvider() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyProvider provider)) return null;
+        return provider;
+    }
+
+    private IEnergyConnection getEnergyConnection() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyConnection connection)) return null;
+        return connection;
+    }
+
+    @Override
+    public int extract(int amount, boolean simulate) {
+        if (!allowExtractions) return 0;
+        if (!lastOutput) return 0;
+        if (getEnergyProvider() == null) return 0;
+        return getEnergyProvider().extractEnergy(getSide().getOpposite(), amount, simulate);
+    }
+
+    @Override
+    public int insert(int amount, boolean simulate) {
+        if (!allowInsertions) return 0;
+        if (!lastOutput) return 0;
+        if (getEnergyReceiver() == null) return 0;
+        return getEnergyReceiver().receiveEnergy(getSide().getOpposite(), amount, simulate);
+    }
+
+    @Override
+    public boolean canConnect() {
+        if (getEnergyConnection() == null) return false;
+        return getEnergyConnection().canConnectEnergy(getSide().getOpposite());
+    }
+
     private enum Mode {
 
-        EXPORT_ENERGY_BOOL,
-        EXPORT_ENERGY_AMOUNT_INT;
+        FILTER_ALL;
 
         static Mode fromSlot(int slot) {
             return values()[Math.min(slot, values().length - 1)];
         }
     }
 
-    private void executeExport(ILogicValue value, Mode mode) {
-        EnergyNetwork network = getEnergyNetwork();
-        if (network == null || network.interfaces == null || network.interfaces.isEmpty()) return;
-
-        int limit;
-
-        switch (mode) {
-            case EXPORT_ENERGY_BOOL -> {
-                if (!value.asBoolean()) return;
-                limit = getTransferLimit();
-            }
-            case EXPORT_ENERGY_AMOUNT_INT -> {
-                limit = value.asInt();
-                if (limit <= 0) return;
-            }
-            default -> {
-                return;
-            }
-        }
-
-        EnergyTransfer transfer = new EnergyTransfer();
-        transfer.setMaxEnergyPerTransfer(limit);
-
-        for (IEnergyNet iFace : network.interfaces) {
-            if (iFace.getChannel() != this.getChannel()) continue;
-
-            transfer.source(new InterfaceEnergySource((IEnergyInterface) iFace));
-            transfer.sink(EnergyUtils.getEnergySink(getTargetTE(), side.getOpposite()));
-
-            transfer.transfer();
-        }
+    private void setOutput(boolean value) {
+        if (value == lastOutput) return;
+        lastOutput = value;
+        markDirty();
+        notifyNeighbors();
     }
 
     @Override
     public void resetAll() {
         super.resetAll();
-        setTransferLimit(10000);
+        setAllowExtractions(true);
+        setAllowInsertions(true);
+        setOutput(false);
+        clientCache.setBoolean("hasValue", false);
     }
 
     private void updateClientCache(ILogicValue value) {
@@ -353,10 +384,8 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
             clientCache.setBoolean("hasValue", false);
             return;
         }
-
         clientCache.setBoolean("hasValue", true);
-        clientCache.setBoolean("boolean", value.asBoolean());
-        clientCache.setInteger("amount", value.asInt());
+        clientCache.setBoolean("all", value.asBoolean());
     }
 
     public String getPreviewText() {
@@ -365,8 +394,8 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
         Mode mode = Mode.fromSlot(slot);
 
         return switch (mode) {
-            case EXPORT_ENERGY_BOOL -> clientCache.getBoolean("boolean") ? "TRUE" : "FALSE";
-            case EXPORT_ENERGY_AMOUNT_INT -> String.valueOf(clientCache.getInteger("amount"));
+            case FILTER_ALL -> clientCache.getBoolean("all") ? "TRUE" : "FALSE";
         };
     }
+
 }

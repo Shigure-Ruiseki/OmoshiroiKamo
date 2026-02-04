@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemR
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.ItemStorageTerminal;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemEnergyImporter;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyFilterInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.ItemEnergyExporter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemItemImporter;
@@ -29,6 +30,7 @@ public enum IDsItems {
     LOGIC_CARD(new ItemVariableCard()),
 
     ENERGY_INTERFACE(new ItemEnergyInterface()),
+    ENERGY_FILTER_INTERFACE(new ItemEnergyFilterInterface()),
     ENERGY_IMPORTER(new ItemEnergyImporter()),
     ENERGY_EXPORTER(new ItemEnergyExporter()),
 
