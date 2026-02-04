@@ -28,16 +28,21 @@ public class IDsCreative extends BaseCreativeTab {
         addBlock(tab, list, IDsBlocks.PROGRAMMER.getBlock());
 
         addItem(tab, list, IDsItems.LOGIC_CARD.getItem());
+
         addItem(tab, list, IDsItems.REDSTONE_READER.getItem());
         addItem(tab, list, IDsItems.BLOCK_READER.getItem());
         addItem(tab, list, IDsItems.INVENTORY_READER.getItem());
         addItem(tab, list, IDsItems.FLUID_READER.getItem());
-        addItem(tab, list, IDsItems.ITEM_INPUT.getItem());
-        addItem(tab, list, IDsItems.ITEM_OUTPUT.getItem());
+
+        addItem(tab, list, IDsItems.ITEM_IMPORTER.getItem());
+        addItem(tab, list, IDsItems.ITEM_EXPORTER.getItem());
         addItem(tab, list, IDsItems.ITEM_INTERFACE.getItem());
-        addItem(tab, list, IDsItems.ENERGY_INPUT.getItem());
-        addItem(tab, list, IDsItems.ENERGY_OUTPUT.getItem());
+        addItem(tab, list, IDsItems.ITEM_FILTER_INTERFACE.getItem());
+
+        addItem(tab, list, IDsItems.ENERGY_IMPORTER.getItem());
+        addItem(tab, list, IDsItems.ENERGY_EXPORTER.getItem());
         addItem(tab, list, IDsItems.ENERGY_INTERFACE.getItem());
+
         addItem(tab, list, IDsItems.CRAFTING_INTERFACE.getItem());
         addItem(tab, list, IDsItems.STORAGE_TERMINAL.getItem());
     }

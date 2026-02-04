@@ -60,8 +60,10 @@ public class CableISBRH implements ISimpleBlockRenderingHandler {
         float max = 10f / 16f - 0.001f;
 
         // Core
-        renderer.setRenderBounds(min, min, min, max, max, max);
-        renderer.renderStandardBlock(block, x, y, z);
+        if (cable.hasCore()) {
+            renderer.setRenderBounds(min, min, min, max, max, max);
+            renderer.renderStandardBlock(block, x, y, z);
+        }
 
         // UP (+Y)
         if (cable.hasVisualConnection(ForgeDirection.UP)) {

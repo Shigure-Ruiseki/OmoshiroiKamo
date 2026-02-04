@@ -4,8 +4,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.ILogicReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.ILogicReader;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.LogicValues;
 
