@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -46,6 +46,7 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractWriterPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.EnergyNetwork;
@@ -82,7 +83,7 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Collections.singletonList(IEnergyNet.class);
+        return Arrays.asList(IEnergyNet.class, ILogicNet.class);
     }
 
     @Override

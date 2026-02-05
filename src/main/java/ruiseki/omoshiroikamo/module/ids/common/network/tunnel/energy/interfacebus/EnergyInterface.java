@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -32,6 +32,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
 
@@ -59,7 +60,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnerg
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Collections.singletonList(IEnergyNet.class);
+        return Arrays.asList(IEnergyNet.class, ILogicNet.class);
     }
 
     @Override
