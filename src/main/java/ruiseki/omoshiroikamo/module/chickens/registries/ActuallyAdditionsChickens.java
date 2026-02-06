@@ -37,9 +37,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "RestoniaCrystalChicken",
             0xCA0000,
             0x8C0000,
-            SpawnType.NONE).setLayItem(restoniaCrystal)
-                .setLang("en_US", "Restonia Crystal Chicken")
-                .setLang("ja_JP", "レストニアクリスタルのニワトリ");
+            SpawnType.NONE).setLayItem(restoniaCrystal);
         allChickens.add(restoniaCrystalChicken);
 
         ItemStack palisCrystal = new ItemStack(itemCrystal, 1, 1);
@@ -49,9 +47,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "PalisCrystalChicken",
             0x0E0E84,
             0x000048,
-            SpawnType.NONE).setLayItem(palisCrystal)
-                .setLang("en_US", "Palis Crystal Chicken")
-                .setLang("ja_JP", "パリスクリスタルのニワトリ");
+            SpawnType.NONE).setLayItem(palisCrystal);
         allChickens.add(palisCrystalChicken);
 
         ItemStack diamantineCrystal = new ItemStack(itemCrystal, 1, 2);
@@ -61,9 +57,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "DiamantineCrystalChicken",
             0xAFB1FF,
             0x797CE5,
-            SpawnType.NONE).setLayItem(diamantineCrystal)
-                .setLang("en_US", "Diamantine Crystal Chicken")
-                .setLang("ja_JP", "ディアマンティンクリスタルのニワトリ");
+            SpawnType.NONE).setLayItem(diamantineCrystal);
         allChickens.add(diamantineCrystalChicken);
 
         ItemStack voidCrystal = new ItemStack(itemCrystal, 1, 3);
@@ -73,9 +67,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "VoidCrystalChicken",
             0x1F1F1F,
             0x000000,
-            SpawnType.NONE).setLayItem(voidCrystal)
-                .setLang("en_US", "Void Crystal Chicken")
-                .setLang("ja_JP", "ヴォイドクリスタルのニワトリ");
+            SpawnType.NONE).setLayItem(voidCrystal);
         allChickens.add(voidCrystalChicken);
 
         ItemStack emeradicCrystal = new ItemStack(itemCrystal, 1, 4);
@@ -85,9 +77,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "EmeradicCrystalChicken",
             0x06D306,
             0x159A0E,
-            SpawnType.NONE).setLayItem(emeradicCrystal)
-                .setLang("en_US", "Emeradic Crystal Chicken")
-                .setLang("ja_JP", "エメラディッククリスタルのニワトリ");
+            SpawnType.NONE).setLayItem(emeradicCrystal);
         allChickens.add(emeradicCrystalChicken);
 
         ItemStack enoriCrystal = new ItemStack(itemCrystal, 1, 5);
@@ -97,9 +87,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "EnoriCrystalChicken",
             0xECE3FF,
             0xB5B5B5,
-            SpawnType.NONE).setLayItem(enoriCrystal)
-                .setLang("en_US", "Enori Crystal Chicken")
-                .setLang("ja_JP", "エノリクリスタルのニワトリ");
+            SpawnType.NONE).setLayItem(enoriCrystal);
         allChickens.add(enoriCrystalChicken);
 
         blackQuartzChicken = addChicken(
@@ -108,9 +96,7 @@ public class ActuallyAdditionsChickens extends BaseChickenHandler {
             "BlackQuartzChicken",
             0x1F1F1F,
             0x535353,
-            SpawnType.NONE).setLayString("ore:gemQuartzBlack")
-                .setLang("en_US", "Black Quartz Chicken")
-                .setLang("ja_JP", "ブラッククォーツのニワトリ");
+            SpawnType.NONE).setLayString("ore:gemQuartzBlack");
         allChickens.add(blackQuartzChicken);
 
         return allChickens;

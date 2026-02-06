@@ -181,7 +181,6 @@ public abstract class BaseChickenHandler {
                         }
 
                         if (data.lang != null) {
-                            // TODO move to lang files
                             String langKey = "entity." + data.name + ".name";
                             JsonUtils.registerLang(langKey, data.lang);
                         }

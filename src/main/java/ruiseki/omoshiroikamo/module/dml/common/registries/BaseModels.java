@@ -30,10 +30,6 @@ public class BaseModels extends BaseModelHandler {
                 "You are on fire." }).setAssociatedMobs(new String[] { "Blaze" })
                     .setLivingMatter("hellish")
                     .setSimulationRFCost(256)
-                    .setLang("en_US", "§bBlaze Data Model§r")
-                    .setLang("ja_JP", "§bブレイズデータモデル§r")
-                    .setPristineLang("en_US", "Pristine Blaze Matter")
-                    .setPristineLang("ja_JP", "純粋なブレイズマター")
                     .setCraftingStrings(new String[] { "minecraft:blaze_powder" })
                     .setLootStrings(new String[] { "minecraft:blaze_rod,22", "ThermalFoundation:material,32,771" });
         allModels.add(blaze);
@@ -50,10 +46,6 @@ public class BaseModels extends BaseModelHandler {
             new String[] { "Will blow up your base if left unattended." }).setAssociatedMobs(new String[] { "Creeper" })
                 .setLivingMatter("overworldian")
                 .setSimulationRFCost(80)
-                .setLang("en_US", "§bCreeper Data Model§r")
-                .setLang("ja_JP", "§bクリーパーデータモデル§r")
-                .setPristineLang("en_US", "Pristine Creeper Matter")
-                .setPristineLang("ja_JP", "純粋なクリーパーマター")
                 .setCraftingStrings(new String[] { "minecraft:gunpowder" })
                 .setLootStrings(new String[] { "minecraft:gunpowder,64", "minecraft:skull,6,4" });
         allModels.add(creeper);
@@ -71,10 +63,6 @@ public class BaseModels extends BaseModelHandler {
                 "Destroy its crystals and break the cycle!" }).setAssociatedMobs(new String[] { "EnderDragon" })
                     .setLivingMatter("extraterrestrial")
                     .setSimulationRFCost(2560)
-                    .setLang("en_US", "§bEnder Dragon Data Model§r")
-                    .setLang("ja_JP", "§bエンダードラゴンデータモデル§r")
-                    .setPristineLang("en_US", "Pristine Ender Dragon Matter")
-                    .setPristineLang("ja_JP", "純粋なエンダードラゴンマター")
                     .setCraftingStrings(new String[] { "minecraft:dragon_egg" })
                     .setLootStrings(
                         new String[] { "minecraft:dragon_breath,32", "minecraft:dragon_egg,1",
@@ -94,10 +82,6 @@ public class BaseModels extends BaseModelHandler {
                 .setAssociatedMobs(new String[] { "Enderman", "etfuturum.endermite" })
                 .setLivingMatter("extraterrestrial")
                 .setSimulationRFCost(512)
-                .setLang("en_US", "§bEnderman Data Model§r")
-                .setLang("ja_JP", "§bエンダーマンデータモデル§r")
-                .setPristineLang("en_US", "Pristine Enderman Matter")
-                .setPristineLang("ja_JP", "純粋なエンダーマンマター")
                 .setCraftingStrings(new String[] { "minecraft:ender_pearl" })
                 .setLootStrings(
                     new String[] { "minecraft:ender_pearl,6", "minecraft:end_crystal,1",
@@ -117,10 +101,6 @@ public class BaseModels extends BaseModelHandler {
                 .setAssociatedMobs(new String[] { "Ghast" })
                 .setLivingMatter("hellish")
                 .setSimulationRFCost(372)
-                .setLang("en_US", "§bGhast Data Model§r")
-                .setLang("ja_JP", "§bガストデータモデル§r")
-                .setPristineLang("en_US", "Pristine Ghast Matter")
-                .setPristineLang("ja_JP", "純粋なガストマター")
                 .setCraftingStrings(new String[] { "minecraft:ghast_tear" })
                 .setLootStrings(new String[] { "minecraft:ghast_tear,8" });
         allModels.add(ghast);
@@ -139,10 +119,6 @@ public class BaseModels extends BaseModelHandler {
                     .setAssociatedMobs(new String[] { "Skeleton", "TwilightForest.Skeleton Druid" })
                     .setLivingMatter("overworldian")
                     .setSimulationRFCost(80)
-                    .setLang("en_US", "§bSkeleton Data Model§r")
-                    .setLang("ja_JP", "§bスケルトンデータモデル§r")
-                    .setPristineLang("en_US", "Pristine Skeleton Matter")
-                    .setPristineLang("ja_JP", "純粋なスケルトンマター")
                     .setCraftingStrings(new String[] { "minecraft:bone" })
                     .setLootStrings(new String[] { "minecraft:bone,64", "minecraft:arrow,64", "minecraft:skull,6" });
         allModels.add(skeleton);
@@ -161,10 +137,6 @@ public class BaseModels extends BaseModelHandler {
                     .setAssociatedMobs(new String[] { "Slime", "LavaSlime" })
                     .setLivingMatter("overworldian")
                     .setSimulationRFCost(150)
-                    .setLang("en_US", "§bSlime Data Model§r")
-                    .setLang("ja_JP", "§bスライムデータモデル§r")
-                    .setPristineLang("en_US", "Pristine Slime Matter")
-                    .setPristineLang("ja_JP", "純粋なスライムマター")
                     .setCraftingStrings(new String[] { "minecraft:slime_ball" })
                     .setLootStrings(new String[] { "minecraft:slime_ball,32" });
         allModels.add(slime);
@@ -184,10 +156,6 @@ public class BaseModels extends BaseModelHandler {
                         "TwilightForest.King Spider" })
                 .setLivingMatter("overworldian")
                 .setSimulationRFCost(80)
-                .setLang("en_US", "§bSpider Data Model§r")
-                .setLang("ja_JP", "§bスパイダーデータモデル§r")
-                .setPristineLang("en_US", "Pristine Spider Matter")
-                .setPristineLang("ja_JP", "純粋なスパイダーマター")
                 .setCraftingStrings(new String[] { "minecraft:spider_eye" })
                 .setLootStrings(new String[] { "minecraft:spider_eye,16", "minecraft:string,64", "minecraft:web,8" });
         allModels.add(spider);
@@ -205,10 +173,6 @@ public class BaseModels extends BaseModelHandler {
                 .setAssociatedMobs(new String[] { "Witch" })
                 .setLivingMatter("overworldian")
                 .setSimulationRFCost(120)
-                .setLang("en_US", "§bWitch Data Model§r")
-                .setLang("ja_JP", "§bウィッチデータモデル§r")
-                .setPristineLang("en_US", "Pristine Witch Matter")
-                .setPristineLang("ja_JP", "純粋なウィッチマター")
                 .setCraftingStrings(new String[] { "minecraft:glass_bottle" })
                 .setLootStrings(
                     new String[] { "minecraft:redstone,32", "minecraft:glowstone_dust,32", "minecraft:sugar,64" });
@@ -227,10 +191,6 @@ public class BaseModels extends BaseModelHandler {
                 .setAssociatedMobs(new String[] { "WitherBoss" })
                 .setLivingMatter("extraterrestrial")
                 .setSimulationRFCost(2048)
-                .setLang("en_US", "§bWither Data Model§r")
-                .setLang("ja_JP", "§bウィザーデータモデル§r")
-                .setPristineLang("en_US", "Pristine Wither Matter")
-                .setPristineLang("ja_JP", "純粋なウィザーマター")
                 .setCraftingStrings(new String[] { "minecraft:nether_star" })
                 .setLootStrings(new String[] { "minecraft:nether_star,3" });
         allModels.add(wither);
@@ -248,10 +208,6 @@ public class BaseModels extends BaseModelHandler {
                 .setAssociatedMobs(new String[] { "witherSkeleton" })
                 .setLivingMatter("hellish")
                 .setSimulationRFCost(880)
-                .setLang("en_US", "§bWither Skeleton Data Model§r")
-                .setLang("ja_JP", "§bウィザースケルトンデータモデル§r")
-                .setPristineLang("en_US", "Pristine Wither Skeleton Matter")
-                .setPristineLang("ja_JP", "純粋なウィザースケルトンマター")
                 .setCraftingStrings(new String[] { "minecraft:skull,1,1" })
                 .setLootStrings(new String[] { "minecraft:skull,18,1", "minecraft:coal,64" });
         allModels.add(witherSkeleton);
@@ -271,10 +227,6 @@ public class BaseModels extends BaseModelHandler {
                         "etfuturum.villager_zombie" })
                 .setLivingMatter("overworldian")
                 .setSimulationRFCost(80)
-                .setLang("en_US", "§bZombie Data Model§r")
-                .setLang("ja_JP", "§bゾンビデータモデル§r")
-                .setPristineLang("en_US", "Pristine Zombie Matter")
-                .setPristineLang("ja_JP", "純粋なゾンビマター")
                 .setCraftingStrings(new String[] { "minecraft:rotten_flesh" })
                 .setLootStrings(
                     new String[] { "minecraft:rotten_flesh,64", "minecraft:iron_ingot,16", "minecraft:carrot,32",

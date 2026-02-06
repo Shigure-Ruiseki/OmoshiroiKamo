@@ -113,18 +113,13 @@ public class ModLivingMatters {
     public List<LivingRegistryItem> registerLivings() {
         List<LivingRegistryItem> allLivings = new ArrayList<>();
 
-        LivingRegistryItem overworldian = addLiving(this.nextID(), "overworldian", "overworldian", 10)
-            .setLang("en_US", "§9Overworldian")
-            .setLang("ja_JP", "§9オーバーワールド系");
+        LivingRegistryItem overworldian = addLiving(this.nextID(), "overworldian", "overworldian", 10);
         allLivings.add(overworldian);
 
-        LivingRegistryItem hellish = addLiving(this.nextID(), "hellish", "hellish", 14).setLang("en_US", "§cHellish")
-            .setLang("ja_JP", "§c地獄系");
+        LivingRegistryItem hellish = addLiving(this.nextID(), "hellish", "hellish", 14);
         allLivings.add(hellish);
 
-        LivingRegistryItem extraterrestrial = addLiving(this.nextID(), "extraterrestrial", "extraterrestrial", 20)
-            .setLang("en_US", "§dExtraterrestrial")
-            .setLang("ja_JP", "§d宇宙系");
+        LivingRegistryItem extraterrestrial = addLiving(this.nextID(), "extraterrestrial", "extraterrestrial", 20);
         allLivings.add(extraterrestrial);
 
         return allLivings;

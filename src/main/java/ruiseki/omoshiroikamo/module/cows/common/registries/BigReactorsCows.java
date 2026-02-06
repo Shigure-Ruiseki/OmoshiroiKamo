@@ -21,19 +21,13 @@ public class BigReactorsCows extends BaseCowHandler {
     public List<CowsRegistryItem> registerCows() {
         List<CowsRegistryItem> allCows = new ArrayList<>();
 
-        yelloriumCow = addCow("YelloriumCow", 500, 0xE5FF00, 0xA6A600, SpawnType.NORMAL).setFluidString("yellorium")
-            .setLang("en_US", "Yellorium Cow")
-            .setLang("ja_JP", "イエロリウムウシ");
+        yelloriumCow = addCow("YelloriumCow", 500, 0xE5FF00, 0xA6A600, SpawnType.NORMAL).setFluidString("yellorium");
         allCows.add(yelloriumCow);
 
-        cyaniteCow = addCow("CyaniteCow", 501, 0x66CCFF, 0x3399CC, SpawnType.NORMAL).setFluidString("cyanite")
-            .setLang("en_US", "Cyanite Cow")
-            .setLang("ja_JP", "シアナイトウシ");
+        cyaniteCow = addCow("CyaniteCow", 501, 0x66CCFF, 0x3399CC, SpawnType.NORMAL).setFluidString("cyanite");
         allCows.add(cyaniteCow);
 
-        steamCow = addCow("SteamCow", 502, 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL).setFluidString("steam")
-            .setLang("en_US", "Steam Cow")
-            .setLang("ja_JP", "蒸気ウシ");
+        steamCow = addCow("SteamCow", 502, 0xCCCCCC, 0xFFFFFF, SpawnType.NORMAL).setFluidString("steam");
         allCows.add(steamCow);
 
         return allCows;
