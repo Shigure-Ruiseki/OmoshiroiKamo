@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
@@ -161,6 +162,14 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
         public boolean isValidSyncHandler(SyncHandler handler) {
             if (handler instanceof UpgradeSlotSH) {
                 slotSyncHandler = (UpgradeSlotSH) handler;
+            }
+            return slotSyncHandler != null;
+        }
+
+        @Override
+        public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+            if (syncOrValue instanceof UpgradeSlotSH) {
+                slotSyncHandler = (UpgradeSlotSH) syncOrValue;
             }
             return slotSyncHandler != null;
         }

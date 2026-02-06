@@ -131,7 +131,8 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
         ModularPanel panel = new ModularPanel("energy_importer");
         panel.height(196);
 
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         // Sync
@@ -152,7 +153,7 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
             .height(72)
             .maxSize(72);
 
-        IPanelHandler allSetting = syncManager.panel("allSetting", this::allSettingPanel, true);
+        IPanelHandler allSetting = syncManager.syncedPanel("allSetting", true, this::allSettingPanel);
 
         addSearchableRow(
             list,

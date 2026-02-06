@@ -8,16 +8,15 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
+import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.utils.Platform;
 
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerInputHandler;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketSyncCarriedItem;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
@@ -59,8 +58,7 @@ public class BackpackGuiOpener implements IContainerInputHandler {
         ItemStack stack = slot.getStack();
         if (!(stack.getItem() instanceof BlockBackpack.ItemBackpack)) return false;
 
-        OKGuiFactories.item()
-            .setGuiContainer(BackpackGuiContainer.class)
+        GuiFactories.playerInventory()
             .openFromPlayerInventoryClient(slot.getSlotIndex());
 
         return true;

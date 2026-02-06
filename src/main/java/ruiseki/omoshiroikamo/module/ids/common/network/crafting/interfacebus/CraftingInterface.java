@@ -76,7 +76,8 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
 
         ModularPanel panel = new ModularPanel("crafting_interface");
 
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         return panel;

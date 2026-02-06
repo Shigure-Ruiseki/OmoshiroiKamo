@@ -176,7 +176,8 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
         panel.height(196);
 
         // Settings panel
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         syncManager
@@ -256,13 +257,13 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 LogicKeys.TANK),
             searchValue);
 
-        IPanelHandler tankAmountSetting = syncManager.panel(
+        IPanelHandler tankAmountSetting = syncManager.syncedPanel(
             "tankSetting",
+            true,
             (syncManager1, syncHandler) -> tankSettingPanel(
                 syncManager1,
                 syncHandler,
-                new IntSyncValue(this::getFluidAmountTank, this::setFluidAmountTank)),
-            true);
+                new IntSyncValue(this::getFluidAmountTank, this::setFluidAmountTank)));
         addSearchableRow(
             list,
             IKey.lang("gui.ids.fluidReader.fluidAmount")
@@ -292,13 +293,13 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 LogicKeys.TOTAL_FLUID_AMOUNT),
             searchValue);
 
-        IPanelHandler tankCapacitySetting = syncManager.panel(
+        IPanelHandler tankCapacitySetting = syncManager.syncedPanel(
             "tankSetting",
+            true,
             (syncManager1, syncHandler) -> tankSettingPanel(
                 syncManager1,
                 syncHandler,
-                new IntSyncValue(this::getFluidCapacityTank, this::setFluidCapacityTank)),
-            true);
+                new IntSyncValue(this::getFluidCapacityTank, this::setFluidCapacityTank)));
         addSearchableRow(
             list,
             IKey.lang("gui.ids.fluidReader.fluidCapacity")
@@ -368,13 +369,13 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 LogicKeys.TANK_CAPACITIES),
             searchValue);
 
-        IPanelHandler tankSetting = syncManager.panel(
+        IPanelHandler tankSetting = syncManager.syncedPanel(
             "tankSetting",
+            true,
             (syncManager1, syncHandler) -> tankSettingPanel(
                 syncManager1,
                 syncHandler,
-                new IntSyncValue(this::getTankFluid, this::setTankFluid)),
-            true);
+                new IntSyncValue(this::getTankFluid, this::setTankFluid)));
         addSearchableRow(
             list,
             IKey.lang("gui.ids.fluidReader.tankFluid")

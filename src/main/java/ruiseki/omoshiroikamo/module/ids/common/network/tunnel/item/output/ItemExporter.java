@@ -154,7 +154,8 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
         ModularPanel panel = new ModularPanel("item_exporter");
         panel.height(196);
 
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         // Sync
@@ -174,7 +175,7 @@ public class ItemExporter extends AbstractWriterPart implements IItemPart {
         list.width(162)
             .maxSize(72);
 
-        IPanelHandler allSetting = syncManager.panel("allSetting", this::allSettingPanel, true);
+        IPanelHandler allSetting = syncManager.syncedPanel("allSetting", true, this::allSettingPanel);
 
         addSearchableRow(
             list,

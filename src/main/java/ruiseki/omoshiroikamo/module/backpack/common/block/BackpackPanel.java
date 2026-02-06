@@ -37,6 +37,7 @@ import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularUpgradeSlot;
@@ -199,9 +200,10 @@ public class BackpackPanel extends ModularPanel {
         this.syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 1, 99, true));
 
         settingPanel = this.syncManager
-            .panel("setting_panel", (syncManager1, syncHandler) -> new BackpackSettingPanel(this), true);
+            .syncedPanel("setting_panel", true, (syncManager1, syncHandler) -> new BackpackSettingPanel(this));
 
         this.settings.customContainer(() -> new BackPackContainer(handler, handler.slotIndex));
+        this.settings.customGui(() -> BackpackGuiContainer::new);
 
         syncManager.bindPlayerInventory(player);
         this.bindPlayerInventory();

@@ -8,15 +8,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
@@ -195,8 +194,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     @Override
     public void openGui(EntityPlayer player) {
         if (!worldObj.isRemote) {
-            OKGuiFactories.tileEntity()
-                .setGuiContainer(BackpackGuiContainer.class)
+            GuiFactories.sidedTileEntity()
                 .open(player, xCoord, yCoord, zCoord, ForgeDirection.UNKNOWN);
         }
     }

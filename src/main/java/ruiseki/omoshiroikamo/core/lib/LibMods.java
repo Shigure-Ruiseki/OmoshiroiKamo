@@ -41,11 +41,6 @@ public enum LibMods {
         this.supplier = null;
     }
 
-    LibMods(Supplier<Boolean> supplier) {
-        this.supplier = supplier;
-        this.modid = null;
-    }
-
     public boolean isLoaded() {
         if (loaded == null) {
             if (supplier != null) {

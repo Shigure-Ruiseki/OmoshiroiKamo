@@ -13,6 +13,7 @@ import net.minecraft.util.MovingObjectPosition;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.utils.Platform;
 
@@ -23,12 +24,10 @@ import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketQuickDraw;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
@@ -79,8 +78,7 @@ public class KeyHandler {
                 ItemStack stack = player.inventory.getStackInSlot(slot);
                 if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
 
-                    OKGuiFactories.item()
-                        .setGuiContainer(BackpackGuiContainer.class)
+                    GuiFactories.playerInventory()
                         .openFromPlayerInventoryClient(slot);
                     return;
                 }
@@ -89,8 +87,7 @@ public class KeyHandler {
             if (LibMods.Baubles.isLoaded()) {
                 InventoryTypes.BAUBLES.visitAll(player, (type, index, stack) -> {
                     if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
-                        OKGuiFactories.item()
-                            .setGuiContainer(BackpackGuiContainer.class)
+                        GuiFactories.playerInventory()
                             .openFromBaublesClient(index);
                         return true;
                     }
