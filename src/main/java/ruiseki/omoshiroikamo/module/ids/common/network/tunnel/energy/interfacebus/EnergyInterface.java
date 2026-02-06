@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -19,6 +20,9 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import cofh.api.energy.IEnergyConnection;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
@@ -31,7 +35,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
 
-public class EnergyInterface extends AbstractPart implements IEnergyPart {
+public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnergyInterface {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -40,9 +44,9 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/energy_interface_bus.obj"));
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_interface_bus.png");
+        LibResources.PREFIX_ITEM + "ids/energy_interface.png");
 
     public EnergyInterface() {
         setTickInterval(20);
@@ -77,21 +81,6 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
     @Override
     public EnumIO getIO() {
         return EnumIO.BOTH;
-    }
-
-    @Override
-    public int getTransferLimit() {
-        return 1000;
-    }
-
-    @Override
-    public int receiveEnergy(int amount, boolean simulate) {
-        return 0;
-    }
-
-    @Override
-    public int extractEnergy(int amount, boolean simulate) {
-        return 0;
     }
 
     @Override
@@ -146,5 +135,41 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart {
         model.renderAll();
 
         GL11.glPopMatrix();
+    }
+
+    private IEnergyReceiver getEnergyReceiver() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyReceiver receiver)) return null;
+        return receiver;
+    }
+
+    private IEnergyProvider getEnergyProvider() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyProvider provider)) return null;
+        return provider;
+    }
+
+    private IEnergyConnection getEnergyConnection() {
+        TileEntity te = getTargetTE();
+        if (!(te instanceof IEnergyConnection connection)) return null;
+        return connection;
+    }
+
+    @Override
+    public int extract(int amount, boolean simulate) {
+        if (getEnergyProvider() == null) return 0;
+        return getEnergyProvider().extractEnergy(getSide().getOpposite(), amount, simulate);
+    }
+
+    @Override
+    public int insert(int amount, boolean simulate) {
+        if (getEnergyReceiver() == null) return 0;
+        return getEnergyReceiver().receiveEnergy(getSide().getOpposite(), amount, simulate);
+    }
+
+    @Override
+    public boolean canConnect() {
+        if (getEnergyConnection() == null) return false;
+        return getEnergyConnection().canConnectEnergy(getSide().getOpposite());
     }
 }

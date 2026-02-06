@@ -103,45 +103,82 @@ gui.ids.part_settings=Part Settings
 
 gui.ids.index_channel=Chan: 
 gui.ids.id=ID
+gui.ids.length=Length
+gui.ids.transferLimit=Transfer Limit
+gui.ids.roundRobin=Round Robin
+gui.ids.nbt=NBT
+gui.ids.stackSize=Stack Size
+gui.ids.allowInsertions=Allow Insert
+gui.ids.allowExtractions=Allow Extract
+gui.ids.blackList=Black List
 
-gui.ids.redstoneReader.lowRedstone=Redstone Low:
-gui.ids.redstoneReader.hasRedstone=Redstone:
-gui.ids.redstoneReader.highRedstone=Redstone High:
-gui.ids.redstoneReader.redstoneValue=Redstone:
+gui.ids.redstoneReader.lowRedstone=Redstone Low | Boolean
+gui.ids.redstoneReader.hasRedstone=Redstone | Boolean
+gui.ids.redstoneReader.highRedstone=Redstone High | Boolean
+gui.ids.redstoneReader.redstoneValue=Redstone | Int
 
-gui.ids.blockReader.hasBlock=Has Block
+gui.ids.blockReader.hasBlock=Has Block | Boolean
 gui.ids.blockReader.dimension=Dimension
-gui.ids.blockReader.coord.x=X
-gui.ids.blockReader.coord.y=Y
-gui.ids.blockReader.coord.z=Z
-gui.ids.blockReader.block=Block
-gui.ids.blockReader.biome=Biome
-gui.ids.blockReader.light=Light Level
+gui.ids.blockReader.coord.x=X | Int
+gui.ids.blockReader.coord.y=Y | Int
+gui.ids.blockReader.coord.z=Z | Int
+gui.ids.blockReader.block=Block | String
+gui.ids.blockReader.biome=Biome | String
+gui.ids.blockReader.light=Light Level | Int
 
-gui.ids.inventoryReader.isInventory=Is Inventory
-gui.ids.inventoryReader.inventoryFull=Inventory Full
-gui.ids.inventoryReader.inventoryEmpty=Inventory Empty
-gui.ids.inventoryReader.inventoryNotEmpty=Inventory Not Empty
-gui.ids.inventoryReader.inventoryCount=Inventory Count
-gui.ids.inventoryReader.inventorySlots=Inventory Slots
-gui.ids.inventoryReader.slotsFilled=Slots Filled
-gui.ids.inventoryReader.fillRatio=Fill Ratio
-gui.ids.inventoryReader.itemsList=Items
-gui.ids.inventoryReader.slotItem=Slot Item
+gui.ids.inventoryReader.isInventory=Is Inventory | Boolean
+gui.ids.inventoryReader.inventoryFull=Inventory Full | Boolean
+gui.ids.inventoryReader.inventoryEmpty=Inventory Empty | Boolean
+gui.ids.inventoryReader.inventoryNotEmpty=Inventory Not Empty | Boolean
+gui.ids.inventoryReader.inventoryCount=Inventory Count | Int
+gui.ids.inventoryReader.inventorySlots=Inventory Slots | Int
+gui.ids.inventoryReader.slotsFilled=Slots Filled | Int
+gui.ids.inventoryReader.fillRatio=Fill Ratio | Double
+gui.ids.inventoryReader.itemsList=Items | List
+gui.ids.inventoryReader.slotItem=Slot Item | ItemStack
 
-gui.ids.fluidReader.isTank=Is Tank
-gui.ids.fluidReader.tankEmpty=Tank Empty
-gui.ids.fluidReader.tankNotEmpty=Tank Not Empty
-gui.ids.fluidReader.tankFull=Tank Full
-gui.ids.fluidReader.tankCount=Tank Count
-gui.ids.fluidReader.fluidAmount=Fluid Amount
-gui.ids.fluidReader.totalAmount=Total Fluid Amount
-gui.ids.fluidReader.fluidCapacity=Fluid Capacity
-gui.ids.fluidReader.totalCapacity=Total Fluid Capacity
-gui.ids.fluidReader.fillRatio=Fluid Fill Ratio
-gui.ids.fluidReader.tankFluids=Tank Fluids
-gui.ids.fluidReader.tankCapacities=Tank Capacities
-gui.ids.fluidReader.tankFluid=Tank Fluid
+gui.ids.fluidReader.isTank=Is Tank | Boolean
+gui.ids.fluidReader.tankEmpty=Tank Empty | Boolean
+gui.ids.fluidReader.tankNotEmpty=Tank Not Empty | Boolean
+gui.ids.fluidReader.tankFull=Tank Full | Boolean
+gui.ids.fluidReader.tankCount=Tank Count | Int
+gui.ids.fluidReader.fluidAmount=Fluid Amount | Int
+gui.ids.fluidReader.totalAmount=Total Fluid Amount | Int
+gui.ids.fluidReader.fluidCapacity=Fluid Capacity | Int
+gui.ids.fluidReader.totalCapacity=Total Fluid Capacity | Int
+gui.ids.fluidReader.fillRatio=Fluid Fill Ratio | Double
+gui.ids.fluidReader.tankFluids=Tank Fluids | List
+gui.ids.fluidReader.tankCapacities=Tank Capacities | List
+gui.ids.fluidReader.tankFluid=Tank Fluid | FluidStack
+
+gui.ids.redstoneWriter.redstoneBoolean=Redstone | Boolean
+gui.ids.redstoneWriter.redstoneInt=Redstone | Int
+gui.ids.redstoneWriter.pulseBoolean=Pulse | Boolean
+gui.ids.redstoneWriter.pulseInt=Pulse | Int
+
+gui.ids.itemImporter.allItem=Import All Item | Boolean
+gui.ids.itemImporter.itemAmount=Import Item Amount | Int
+gui.ids.itemImporter.itemSlot=Import Item Slot | Int
+gui.ids.itemImporter.item=Import Item | ItemStack
+gui.ids.itemImporter.items=Import Items | List
+
+gui.ids.itemExporter.allItem=Export All Item | Boolean
+gui.ids.itemExporter.itemAmount=Export Item Amount | Int
+gui.ids.itemExporter.itemSlot=Export Item Slot | Int
+gui.ids.itemExporter.item=Export Item | ItemStack
+gui.ids.itemExporter.items=Export Items | List
+
+gui.ids.itemFilterInterface.all=Filter All | Boolean
+gui.ids.itemFilterInterface.item=Filter Item | ItemStack
+gui.ids.itemFilterInterface.items=Filter Items | List
+
+gui.ids.energyImporter.boolean=Import Energy | Boolean
+gui.ids.energyImporter.amount=Import Energy Amount | Int
+
+gui.ids.energyExporter.boolean=Export Energy | Boolean
+gui.ids.energyExporter.amount=Export Energy Amount | Int
+
+gui.ids.energyFilterInterface.all=Filter All | Boolean
 
 gui.ids.side=Target Side
 gui.ids.tick=Ticks / Operation
@@ -570,17 +607,22 @@ item.sootCoveredPlate.name=Soot-covered Plate
 
 item.structureWand.name=Structure Wand
 
-item.itemInput.name=Item Input
-item.itemOutput.name=Item Output
+item.variableCard.name=Variable Card
+
+item.itemImporter.name=Item Importer
+item.itemExporter.name=Item Exporter
 item.itemInterface.name=Item Interface
-item.energyInput.name=Energy Input
-item.energyOutput.name=Energy Output
+item.itemFilterInterface.name=Item Filter Interface
+item.energyImporter.name=Energy Importer
+item.energyExporter.name=Energy Exporter
 item.energyInterface.name=Energy Interface
+item.energyFilterInterface.name=Energy Filter Interface
 item.storageTerminal.name=Storage Terminal
 item.redstoneReader.name=Redstone Reader
 item.blockReader.name=Block Reader
 item.inventoryReader.name=Inventory Reader
 item.fluidReader.name=Fluid Reader
+item.redstoneWriter.name=Redstone Reader
 item.craftingInterface.name=Crafting Interface
 
 #Block

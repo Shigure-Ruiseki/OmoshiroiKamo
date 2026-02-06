@@ -20,7 +20,7 @@ import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.CableNetworkRegistry;
 
-public final class CableUtils {
+public class CableUtils {
 
     private CableUtils() {}
 
@@ -52,6 +52,7 @@ public final class CableUtils {
         Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> newNetworks = new HashMap<>();
 
         for (ICable cable : cluster.cables) {
+            if (!cable.hasCore()) continue;
             for (ICablePart part : cable.getParts()) {
                 List<Class<? extends ICableNode>> types = part.getBaseNodeTypes();
                 if (types == null || types.isEmpty()) continue;
@@ -67,6 +68,7 @@ public final class CableUtils {
         }
 
         for (ICable cable : cluster.cables) {
+            if (!cable.hasCore()) continue;
             for (ICableEndpoint part : cable.getEndpoints()) {
                 List<Class<? extends ICableNode>> types = part.getBaseNodeTypes();
                 if (types == null || types.isEmpty()) continue;
@@ -92,6 +94,8 @@ public final class CableUtils {
         Queue<ICable> queue = new ArrayDeque<>();
         Set<ICable> visited = new HashSet<>();
 
+        if (!start.hasCore()) return cluster;
+
         queue.add(start);
         visited.add(start);
 
@@ -108,7 +112,7 @@ public final class CableUtils {
                 TileEntity otherTe = world
                     .getTileEntity(te.xCoord + dir.offsetX, te.yCoord + dir.offsetY, te.zCoord + dir.offsetZ);
 
-                if (otherTe instanceof ICable other && visited.add(other)) {
+                if (otherTe instanceof ICable other && other.hasCore() && visited.add(other)) {
                     queue.add(other);
                 }
             }

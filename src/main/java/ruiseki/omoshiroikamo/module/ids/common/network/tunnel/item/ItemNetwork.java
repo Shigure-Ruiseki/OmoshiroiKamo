@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.IItemInterface;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
 
@@ -162,7 +164,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         for (IItemNet part : interfaces) {
             if (channel != -1 && channel != part.getChannel()) continue;
             if (remaining <= 0) break;
-            if (!(part instanceof IItemQueryable interfaceBus)) continue;
+            if (!(part instanceof IItemInterface interfaceBus)) continue;
 
             ItemStack got = interfaceBus.extract(required, remaining);
             if (got == null || got.stackSize <= 0) continue;
@@ -186,7 +188,7 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
 
         for (IItemNet part : interfaces) {
             if (channel != -1 && channel != part.getChannel()) continue;
-            if (!(part instanceof IItemQueryable bus)) continue;
+            if (!(part instanceof IItemInterface bus)) continue;
 
             ItemStack leftover = bus.insert(remaining);
             if (leftover == null || leftover.stackSize <= 0) {
@@ -204,4 +206,19 @@ public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
         markDirty(channel);
         return null;
     }
+
+    public List<IItemNet> getInterfacesForChannel(int channel) {
+        if (interfaces == null || interfaces.isEmpty()) return Collections.emptyList();
+
+        if (channel == -1) return interfaces;
+
+        List<IItemNet> list = new ArrayList<>();
+        for (IItemNet part : interfaces) {
+            if (part.getChannel() == channel) {
+                list.add(part);
+            }
+        }
+        return list;
+    }
+
 }

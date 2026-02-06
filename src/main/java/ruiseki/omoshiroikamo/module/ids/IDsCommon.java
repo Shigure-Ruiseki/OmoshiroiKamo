@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.IDsNetworkTickHandler;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.type.LogicTypes;
 
 public class IDsCommon implements IModuleCommon {

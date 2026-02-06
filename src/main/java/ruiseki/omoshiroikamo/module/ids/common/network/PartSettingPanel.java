@@ -15,7 +15,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public final class PartSettingPanel {
+public class PartSettingPanel {
 
     public static final UITexture SETTING_BTN = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/ids/icons")

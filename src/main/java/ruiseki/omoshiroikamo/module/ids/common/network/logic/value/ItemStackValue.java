@@ -54,7 +54,7 @@ public class ItemStackValue implements ILogicValue {
     public String asString() {
         if (item == null) return "null";
 
-        String name = Item.itemRegistry.getNameForObject(item);
+        String name = item.getDisplayName();
         return name != null ? name : "unknown";
     }
 

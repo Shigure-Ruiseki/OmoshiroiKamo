@@ -130,12 +130,14 @@ public enum ModObject {
     itemVariableCard,
 
     itemEnergyInterface,
-    itemEnergyInput,
-    itemEnergyOutput,
+    itemEnergyFilterInterface,
+    itemEnergyImporter,
+    itemEnergyExporter,
 
     itemItemInterface,
-    itemItemInput,
-    itemItemOutput,
+    itemItemFilterInterface,
+    itemItemImporter,
+    itemItemExporter,
 
     itemCraftingInterface,
 
@@ -143,6 +145,8 @@ public enum ModObject {
     itemBlockReader,
     itemFluidReader,
     itemInventoryReader,
+
+    itemRedstoneWriter,
 
     itemStorageTerminal,;
     // spotless: on

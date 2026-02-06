@@ -49,7 +49,7 @@ import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.reader.redstone.IRedstonePart;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.IRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
@@ -63,6 +63,8 @@ public class TECable extends AbstractTE
 
     private Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks = new HashMap<>();
 
+    private boolean hasCore = true;
+
     public boolean clientUpdated = false;
     public boolean needsNetworkRebuild = false;
 
@@ -70,6 +72,7 @@ public class TECable extends AbstractTE
 
     @Override
     public void writeCommon(NBTTagCompound tag) {
+        tag.setBoolean("hasCore", hasCore);
         tag.setByte("blockedMask", blockedMask);
         tag.setByte("connectionMask", connectionMask);
 
@@ -93,6 +96,12 @@ public class TECable extends AbstractTE
 
     @Override
     public void readCommon(NBTTagCompound tag) {
+        if (tag.hasKey("hasCore")) {
+            hasCore = tag.getBoolean("hasCore");
+        } else {
+            hasCore = true;
+        }
+
         blockedMask = tag.getByte("blockedMask");
         connectionMask = tag.getByte("connectionMask");
 
@@ -137,9 +146,7 @@ public class TECable extends AbstractTE
         parts.put(side, part);
         part.setCable(this, side);
         part.onAttached();
-
         needsNetworkRebuild = true;
-        markDirty();
     }
 
     @Override
@@ -148,7 +155,6 @@ public class TECable extends AbstractTE
         if (part != null) {
             part.onDetached();
             needsNetworkRebuild = true;
-            markDirty();
         }
     }
 
@@ -170,25 +176,19 @@ public class TECable extends AbstractTE
     @Override
     public void setEndpoint(ICableEndpoint endpoint) {
         if (endpoint == null) return;
-
         ForgeDirection side = endpoint.getSide();
         endpoints.put(side, endpoint);
-
         endpoint.onAttached();
-
         needsNetworkRebuild = true;
-        markDirty();
     }
 
     @Override
     public void removeEndpoint(ICableEndpoint endpoint) {
         if (endpoint == null) return;
-
         ForgeDirection side = endpoint.getSide();
         if (endpoints.remove(side) != null) {
             endpoint.onDetached();
             needsNetworkRebuild = true;
-            markDirty();
         }
     }
 
@@ -203,6 +203,7 @@ public class TECable extends AbstractTE
         if (hasPart(side)) return false;
 
         if (other instanceof ICable otherCable) {
+            if (!otherCable.hasCore()) return false;
             ForgeDirection opp = side.getOpposite();
             if (otherCable.isSideBlocked(opp)) return false;
             if (otherCable.hasPart(opp)) return false;
@@ -233,7 +234,7 @@ public class TECable extends AbstractTE
 
     @Override
     public void updateConnections() {
-        if (worldObj == null || worldObj.isRemote) return;
+        if (!hasCore || worldObj == null || worldObj.isRemote) return;
 
         boolean changed = false;
 
@@ -287,13 +288,7 @@ public class TECable extends AbstractTE
 
         for (Map.Entry<ForgeDirection, ICablePart> e : parts.entrySet()) {
             ICablePart part = e.getValue();
-
             part.onDetached();
-
-            ItemStack stack = part.getItemStack();
-            if (stack != null) {
-                dropStack(worldObj, xCoord, yCoord, zCoord, stack);
-            }
         }
         parts.clear();
 
@@ -334,6 +329,7 @@ public class TECable extends AbstractTE
 
     @Override
     public boolean hasVisualConnection(ForgeDirection side) {
+        if (!hasCore) return false;
         return ((connectionMask & bit(side)) != 0) || parts.containsKey(side);
     }
 
@@ -391,7 +387,6 @@ public class TECable extends AbstractTE
                         hammer.toolUsed(held, player, x, y, z);
                         return true;
                     }
-
                     return false;
                 }
 
@@ -420,11 +415,12 @@ public class TECable extends AbstractTE
                         return true;
                     }
 
-                    OKGuiFactories.tileEntity()
-                        .setGuiContainer(part.getGuiContainer())
-                        .open(player, x, y, z, hit.side);
-
-                    return true;
+                    if (hasCore()) {
+                        OKGuiFactories.tileEntity()
+                            .setGuiContainer(part.getGuiContainer())
+                            .open(player, x, y, z, hit.side);
+                        return true;
+                    }
                 }
             }
 
@@ -457,6 +453,12 @@ public class TECable extends AbstractTE
     @Override
     public World getWorld() {
         return worldObj;
+    }
+
+    @Override
+    public void notifyNeighbors() {
+        if (worldObj == null) return;
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
     }
 
     @Override
@@ -515,11 +517,33 @@ public class TECable extends AbstractTE
         if (isSideBlocked(side)) return 0;
 
         ICablePart part = getPart(side);
-        if (!(part instanceof IRedstonePart rs)) {
+        if (!(part instanceof IRedstoneWriter rs)) {
             return 0;
         }
 
         return MathHelper.clamp_int(rs.getRedstoneOutput(), 0, 15);
+    }
+
+    @Override
+    public boolean hasCore() {
+        return hasCore;
+    }
+
+    @Override
+    public void setHasCore(boolean hasCore) {
+        if (this.hasCore != hasCore) {
+            this.hasCore = hasCore;
+
+            if (!hasCore) {
+                connectionMask = 0;
+            }
+
+            if (hasCore) {
+                needsNetworkRebuild = true;
+            }
+
+            dirty();
+        }
     }
 
     @Override
@@ -640,7 +664,9 @@ public class TECable extends AbstractTE
         float max = 10f / 16f;
 
         // core
-        parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+        if (hasCore()) {
+            parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
+        }
 
         if (hasVisualConnection(ForgeDirection.WEST))
             parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
@@ -712,14 +738,16 @@ public class TECable extends AbstractTE
         }
 
         // CORE
-        AxisAlignedBB core = getCoreBox();
-        AxisAlignedBB wcore = core.getOffsetBoundingBox(xCoord, yCoord, zCoord);
-        MovingObjectPosition mop = wcore.calculateIntercept(start, end);
+        if (hasCore()) {
+            AxisAlignedBB core = getCoreBox();
+            AxisAlignedBB wcore = core.getOffsetBoundingBox(xCoord, yCoord, zCoord);
+            MovingObjectPosition mop = wcore.calculateIntercept(start, end);
 
-        if (mop != null) {
-            double d = mop.hitVec.distanceTo(start);
-            if (d < bestDist) {
-                best = new CableHit(CableHit.Type.CORE, null, null, core, mop.hitVec);
+            if (mop != null) {
+                double d = mop.hitVec.distanceTo(start);
+                if (d < bestDist) {
+                    best = new CableHit(CableHit.Type.CORE, null, null, core, mop.hitVec);
+                }
             }
         }
 
@@ -728,49 +756,21 @@ public class TECable extends AbstractTE
 
     @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
-        if (amount <= 0) return 0;
-
-        ICablePart part = getPart(side);
-        if (part == null) return 0;
-        if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
-        if (!(part instanceof IEnergyPart energyPart)) return 0;
-
-        if (!energyPart.getIO()
-            .canInput()) return 0;
-
-        int limit = energyPart.getTransferLimit();
-        int toTransfer = Math.min(amount, limit);
-
-        return energyPart.receiveEnergy(toTransfer, simulate);
+        return 0;
     }
 
     @Override
     public int extractEnergy(ForgeDirection side, int amount, boolean simulate) {
-        if (amount <= 0) return 0;
-
-        ICablePart part = getPart(side);
-        if (part == null) return 0;
-        if (!shouldDoWorkThisTick(part.getTickInterval())) return 0;
-        if (!(part instanceof IEnergyPart energyPart)) return 0;
-
-        if (!energyPart.getIO()
-            .canOutput()) return 0;
-
-        int limit = energyPart.getTransferLimit();
-        int toTransfer = Math.min(amount, limit);
-
-        return energyPart.extractEnergy(toTransfer, simulate);
+        return 0;
     }
 
     @Override
     public int getEnergyStored() {
-        // NO OP
         return 0;
     }
 
     @Override
     public int getMaxEnergyStored() {
-        // NO OP
         return 0;
     }
 

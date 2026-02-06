@@ -3,11 +3,13 @@ package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.BlockChest;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -38,7 +40,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemQueryabl
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemNetwork;
 
-public class ItemInterface extends AbstractPart implements IItemPart, IItemQueryable {
+public class ItemInterface extends AbstractPart implements IItemPart, IItemQueryable, IItemInterface {
 
     private static final float WIDTH = 6f / 16f; // 6px
     private static final float DEPTH = 4f / 16f; // 4px
@@ -47,9 +49,9 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/item_interface_bus.obj"));
+        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_interface_bus.png");
+        LibResources.PREFIX_ITEM + "ids/item_interface.png");
 
     private int lastHash = 0;
 
@@ -84,11 +86,11 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     }
 
     private int calcInventoryHash() {
-        TileEntity te = getTargetTE();
-        if (!(te instanceof IInventory inv)) return 0;
+        IInventory inv = getInventory();
+        if (inv == null) return 0;
 
         int hash = 1;
-        int[] slots = getAccessibleSlots(inv);
+        int[] slots = getSlots();
 
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
@@ -107,10 +109,10 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
     @Override
     public void collectItems(ItemIndex index) {
-        TileEntity te = getTargetTE();
-        if (!(te instanceof IInventory inv)) return;
+        IInventory inv = getInventory();
+        if (inv == null) return;
 
-        int[] slots = getAccessibleSlots(inv);
+        int[] slots = getSlots();
 
         for (int slot : slots) {
             ItemStack s = inv.getStackInSlot(slot);
@@ -130,7 +132,6 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
         return EnumIO.BOTH;
     }
 
-    @Override
     public int getTransferLimit() {
         return Integer.MAX_VALUE;
     }
@@ -139,13 +140,13 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     public ItemStack extract(ItemStack required, int amount) {
         if (amount <= 0) return null;
 
-        TileEntity te = getTargetTE();
-        if (!(te instanceof IInventory inv)) return null;
+        IInventory inv = getInventory();
+        if (inv == null) return null;
 
         ItemStack result = null;
         int remaining = amount;
 
-        for (int slot : getAccessibleSlots(inv)) {
+        for (int slot : getSlots()) {
             if (remaining <= 0) break;
 
             ItemStack s = inv.getStackInSlot(slot);
@@ -176,8 +177,8 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     public ItemStack insert(ItemStack stack) {
         if (stack == null || stack.stackSize <= 0) return null;
 
-        TileEntity te = getTargetTE();
-        if (!(te instanceof IInventory inv)) return stack;
+        IInventory inv = getInventory();
+        if (inv == null) return stack;
 
         ItemStack remaining = stack.copy();
         boolean changed = false;
@@ -272,5 +273,34 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
         model.renderAll();
 
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public IInventory getInventory() {
+        TileEntity te = getTargetTE();
+
+        if (te instanceof TileEntityChest) {
+            if (getWorld().getBlock(targetX(), targetY(), targetZ()) instanceof BlockChest chest) {
+                return chest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
+            }
+            return null;
+        }
+
+        return te instanceof IInventory ? (IInventory) te : null;
+    }
+
+    @Override
+    public int[] getSlots() {
+        IInventory inv = getInventory();
+        if (inv == null) return new int[0];
+
+        if (inv instanceof ISidedInventory sided) {
+            return sided.getAccessibleSlotsFromSide(getSide().ordinal());
+        }
+
+        int size = inv.getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) slots[i] = i;
+        return slots;
     }
 }
