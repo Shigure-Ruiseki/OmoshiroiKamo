@@ -3,15 +3,13 @@ package ruiseki.omoshiroikamo.module.machinery.common.network;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 
 /**
  * Packet to synchronize structure tint colors from server to client.
@@ -23,6 +21,22 @@ public class PacketStructureTint implements IMessage {
     private int color;
     private boolean clear;
     private List<ChunkCoordinates> positions;
+
+    public int getDimensionId() {
+        return dimensionId;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public boolean isClear() {
+        return clear;
+    }
+
+    public List<ChunkCoordinates> getPositions() {
+        return positions;
+    }
 
     public PacketStructureTint() {
         this.positions = new ArrayList<>();
@@ -84,30 +98,9 @@ public class PacketStructureTint implements IMessage {
 
         @Override
         public IMessage onMessage(PacketStructureTint message, MessageContext ctx) {
-            // Handle on client side
-            Minecraft.getMinecraft()
-                .func_152344_a(() -> {
-                    World world = Minecraft.getMinecraft().theWorld;
-                    if (world == null || world.provider.dimensionId != message.dimensionId) {
-                        return;
-                    }
-
-                    if (message.clear) {
-                        // Clear colors and trigger re-render
-                        StructureTintCache.clearAll(world, message.positions);
-                    } else {
-                        // Set colors
-                        for (ChunkCoordinates pos : message.positions) {
-                            StructureTintCache.put(world, pos.posX, pos.posY, pos.posZ, message.color);
-                        }
-                    }
-
-                    // Trigger block re-renders
-                    for (ChunkCoordinates pos : message.positions) {
-                        world.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
-                    }
-                });
-
+            // Handle via proxy to avoid server-side class loading issues with client-only
+            // classes
+            OmoshiroiKamo.proxy.handleStructureTint(message);
             return null;
         }
     }

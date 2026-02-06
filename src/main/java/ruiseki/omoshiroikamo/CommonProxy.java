@@ -32,6 +32,7 @@ import ruiseki.omoshiroikamo.module.cows.CowsCommon;
 import ruiseki.omoshiroikamo.module.dml.DMLCommon;
 import ruiseki.omoshiroikamo.module.ids.IDsCommon;
 import ruiseki.omoshiroikamo.module.machinery.MachineryCommon;
+import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockCommon;
 
 public class CommonProxy {
@@ -123,6 +124,10 @@ public class CommonProxy {
 
     public double getReachDistanceForPlayer(EntityPlayer entityPlayer) {
         return 5;
+    }
+
+    public void handleStructureTint(PacketStructureTint message) {
+        // No-op on server
     }
 
     public final class TickTimer {
