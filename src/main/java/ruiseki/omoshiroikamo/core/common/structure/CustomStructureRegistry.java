@@ -85,8 +85,8 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Apply 180-degree rotation to align JSON definition with StructureLib coordinate system
-            String[][] rotatedShape = rotate180(shape);
+            // Apply X-axis flip to correct Left/Right mirroring
+            String[][] rotatedShape = flipX(shape);
 
             // Calculate controller offset from rotated shape
             entry.controllerOffset = findControllerOffset(rotatedShape);
@@ -243,21 +243,18 @@ public class CustomStructureRegistry {
     }
 
     /**
-     * Apply 180-degree horizontal rotation to the shape.
-     * True 180-degree rotation requires:
-     * 1. Reverse the order of rows in each layer (front-to-back flip)
-     * 2. Reverse each row string (left-to-right flip)
-     * Used to align JSON definition with controller facing direction.
+     * Flip the shape along the X-axis (mirror horizontally).
+     * Strictly reverses the strings without changing Z-order (rows).
      */
-    private static String[][] rotate180(String[][] shape) {
+    private static String[][] flipX(String[][] shape) {
         String[][] rotated = new String[shape.length][];
         for (int layer = 0; layer < shape.length; layer++) {
             int numRows = shape[layer].length;
             rotated[layer] = new String[numRows];
             for (int row = 0; row < numRows; row++) {
-                // Get row from opposite end and reverse it
-                int srcRow = numRows - 1 - row;
-                rotated[layer][row] = new StringBuilder(shape[layer][srcRow]).reverse()
+                // Keep the same row index (Z)
+                // Reverse the string (X)
+                rotated[layer][row] = new StringBuilder(shape[layer][row]).reverse()
                     .toString();
             }
         }
