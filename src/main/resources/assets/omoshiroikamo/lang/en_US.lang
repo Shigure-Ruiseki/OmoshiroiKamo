@@ -1099,3 +1099,89 @@ item.pristine.Wither\ Skeleton.name=Pristine Wither Skeleton Matter
 item.model.Zombie.name=§bZombie Data Model§r
 item.pristine.Zombie.name=Pristine Zombie Matter
 
+
+# Modular Machinery
+tile.modularMachineCasing.name=Machine Casing
+tile.modularMachineController.name=Machine Controller
+tile.visBridge.name=Vis Bridge
+
+# Item Input Port
+tile.modularItemInput.tier_1.name=Item Input Bus Tier 1
+tile.modularItemInput.tier_2.name=Item Input Bus Tier 2
+tile.modularItemInput.tier_3.name=Item Input Bus Tier 3
+tile.modularItemInput.tier_4.name=Item Input Bus Tier 4
+tile.modularItemInput.tier_5.name=Item Input Bus Tier 5
+tile.modularItemInput.tier_6.name=Item Input Bus Tier 6
+
+# Item Output Port
+tile.modularItemOutput.tier_1.name=Item Output Bus Tier 1
+tile.modularItemOutput.tier_2.name=Item Output Bus Tier 2
+tile.modularItemOutput.tier_3.name=Item Output Bus Tier 3
+tile.modularItemOutput.tier_4.name=Item Output Bus Tier 4
+tile.modularItemOutput.tier_5.name=Item Output Bus Tier 5
+tile.modularItemOutput.tier_6.name=Item Output Bus Tier 6
+
+# Fluid Input Port
+tile.modularFluidInput.tier_1.name=Fluid Input Hatch Tier 1
+tile.modularFluidInput.tier_2.name=Fluid Input Hatch Tier 2
+tile.modularFluidInput.tier_3.name=Fluid Input Hatch Tier 3
+tile.modularFluidInput.tier_4.name=Fluid Input Hatch Tier 4
+tile.modularFluidInput.tier_5.name=Fluid Input Hatch Tier 5
+tile.modularFluidInput.tier_6.name=Fluid Input Hatch Tier 6
+
+# Fluid Output Port
+tile.modularFluidOutput.tier_1.name=Fluid Output Hatch Tier 1
+tile.modularFluidOutput.tier_2.name=Fluid Output Hatch Tier 2
+tile.modularFluidOutput.tier_3.name=Fluid Output Hatch Tier 3
+tile.modularFluidOutput.tier_4.name=Fluid Output Hatch Tier 4
+tile.modularFluidOutput.tier_5.name=Fluid Output Hatch Tier 5
+tile.modularFluidOutput.tier_6.name=Fluid Output Hatch Tier 6
+
+# Energy Input Port
+tile.modularEnergyInput.tier_1.name=Energy Input Hatch Tier 1
+tile.modularEnergyInput.tier_2.name=Energy Input Hatch Tier 2
+tile.modularEnergyInput.tier_3.name=Energy Input Hatch Tier 3
+tile.modularEnergyInput.tier_4.name=Energy Input Hatch Tier 4
+tile.modularEnergyInput.tier_5.name=Energy Input Hatch Tier 5
+tile.modularEnergyInput.tier_6.name=Energy Input Hatch Tier 6
+
+# Energy Output Port
+tile.modularEnergyOutput.tier_1.name=Energy Output Hatch Tier 1
+tile.modularEnergyOutput.tier_2.name=Energy Output Hatch Tier 2
+tile.modularEnergyOutput.tier_3.name=Energy Output Hatch Tier 3
+tile.modularEnergyOutput.tier_4.name=Energy Output Hatch Tier 4
+tile.modularEnergyOutput.tier_5.name=Energy Output Hatch Tier 5
+tile.modularEnergyOutput.tier_6.name=Energy Output Hatch Tier 6
+
+# Gas Input Port
+tile.modularGasInput.tier_1.name=Gas Input Hatch Tier 1
+tile.modularGasInput.tier_2.name=Gas Input Hatch Tier 2
+tile.modularGasInput.tier_3.name=Gas Input Hatch Tier 3
+tile.modularGasInput.tier_4.name=Gas Input Hatch Tier 4
+tile.modularGasInput.tier_5.name=Gas Input Hatch Tier 5
+tile.modularGasInput.tier_6.name=Gas Input Hatch Tier 6
+
+# Gas Output Port
+tile.modularGasOutput.tier_1.name=Gas Output Hatch Tier 1
+tile.modularGasOutput.tier_2.name=Gas Output Hatch Tier 2
+tile.modularGasOutput.tier_3.name=Gas Output Hatch Tier 3
+tile.modularGasOutput.tier_4.name=Gas Output Hatch Tier 4
+tile.modularGasOutput.tier_5.name=Gas Output Hatch Tier 5
+tile.modularGasOutput.tier_6.name=Gas Output Hatch Tier 6
+
+# Mana Ports
+tile.modularManaInput.tier_1.name=Mana Input Hatch
+tile.modularManaOutput.tier_1.name=Mana Output Hatch
+
+# Vis Ports
+tile.modularVisInput.tier_1.name=Vis Input Relay
+tile.modularVisOutput.tier_1.name=Vis Output Relay
+
+# Essentia Ports
+tile.modularEssentiaInput.tier_1.name=Essentia Input Hatch
+tile.modularEssentiaOutput.tier_1.name=Essentia Output Hatch
+
+# ME Ports
+tile.modularItemOutputME.me.name=ME Item Output Bus
+tile.modularFluidOutputME.me.name=ME Fluid Output Hatch
+tile.modularEssentiaInputME.me.name=ME Essentia Input Hatch

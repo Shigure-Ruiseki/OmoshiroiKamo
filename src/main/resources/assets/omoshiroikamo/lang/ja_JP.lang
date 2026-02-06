@@ -945,3 +945,89 @@ item.model.Wither\ Skeleton.name=§bウィザースケルトンデータモデ�
 item.pristine.Wither\ Skeleton.name=純粋なウィザースケルトンマター
 item.model.Zombie.name=§bゾンビデータモデル§r
 item.pristine.Zombie.name=純粋なゾンビマター
+
+# Modular Machinery
+tile.modularMachineCasing.name=モジュラーマシンケーシング
+tile.modularMachineController.name=モジュラーマシンコントローラー
+tile.visBridge.name=Vis ブリッジ
+
+# Item Input Port
+tile.modularItemInput.tier_1.name=アイテム搬入バス ティア1
+tile.modularItemInput.tier_2.name=アイテム搬入バス ティア2
+tile.modularItemInput.tier_3.name=アイテム搬入バス ティア3
+tile.modularItemInput.tier_4.name=アイテム搬入バス ティア4
+tile.modularItemInput.tier_5.name=アイテム搬入バス ティア5
+tile.modularItemInput.tier_6.name=アイテム搬入バス ティア6
+
+# Item Output Port
+tile.modularItemOutput.tier_1.name=アイテム搬出バス ティア1
+tile.modularItemOutput.tier_2.name=アイテム搬出バス ティア2
+tile.modularItemOutput.tier_3.name=アイテム搬出バス ティア3
+tile.modularItemOutput.tier_4.name=アイテム搬出バス ティア4
+tile.modularItemOutput.tier_5.name=アイテム搬出バス ティア5
+tile.modularItemOutput.tier_6.name=アイテム搬出バス ティア6
+
+# Fluid Input Port
+tile.modularFluidInput.tier_1.name=液体搬入ハッチ ティア1
+tile.modularFluidInput.tier_2.name=液体搬入ハッチ ティア2
+tile.modularFluidInput.tier_3.name=液体搬入ハッチ ティア3
+tile.modularFluidInput.tier_4.name=液体搬入ハッチ ティア4
+tile.modularFluidInput.tier_5.name=液体搬入ハッチ ティア5
+tile.modularFluidInput.tier_6.name=液体搬入ハッチ ティア6
+
+# Fluid Output Port
+tile.modularFluidOutput.tier_1.name=液体搬出ハッチ ティア1
+tile.modularFluidOutput.tier_2.name=液体搬出ハッチ ティア2
+tile.modularFluidOutput.tier_3.name=液体搬出ハッチ ティア3
+tile.modularFluidOutput.tier_4.name=液体搬出ハッチ ティア4
+tile.modularFluidOutput.tier_5.name=液体搬出ハッチ ティア5
+tile.modularFluidOutput.tier_6.name=液体搬出ハッチ ティア6
+
+# Energy Input Port
+tile.modularEnergyInput.tier_1.name=エネルギー搬入ハッチ ティア1
+tile.modularEnergyInput.tier_2.name=エネルギー搬入ハッチ ティア2
+tile.modularEnergyInput.tier_3.name=エネルギー搬入ハッチ ティア3
+tile.modularEnergyInput.tier_4.name=エネルギー搬入ハッチ ティア4
+tile.modularEnergyInput.tier_5.name=エネルギー搬入ハッチ ティア5
+tile.modularEnergyInput.tier_6.name=エネルギー搬入ハッチ ティア6
+
+# Energy Output Port
+tile.modularEnergyOutput.tier_1.name=エネルギー搬出ハッチ ティア1
+tile.modularEnergyOutput.tier_2.name=エネルギー搬出ハッチ ティア2
+tile.modularEnergyOutput.tier_3.name=エネルギー搬出ハッチ ティア3
+tile.modularEnergyOutput.tier_4.name=エネルギー搬出ハッチ ティア4
+tile.modularEnergyOutput.tier_5.name=エネルギー搬出ハッチ ティア5
+tile.modularEnergyOutput.tier_6.name=エネルギー搬出ハッチ ティア6
+
+# Gas Input Port
+tile.modularGasInput.tier_1.name=ガス搬入ハッチ ティア1
+tile.modularGasInput.tier_2.name=ガス搬入ハッチ ティア2
+tile.modularGasInput.tier_3.name=ガス搬入ハッチ ティア3
+tile.modularGasInput.tier_4.name=ガス搬入ハッチ ティア4
+tile.modularGasInput.tier_5.name=ガス搬入ハッチ ティア5
+tile.modularGasInput.tier_6.name=ガス搬入ハッチ ティア6
+
+# Gas Output Port
+tile.modularGasOutput.tier_1.name=ガス搬出ハッチ ティア1
+tile.modularGasOutput.tier_2.name=ガス搬出ハッチ ティア2
+tile.modularGasOutput.tier_3.name=ガス搬出ハッチ ティア3
+tile.modularGasOutput.tier_4.name=ガス搬出ハッチ ティア4
+tile.modularGasOutput.tier_5.name=ガス搬出ハッチ ティア5
+tile.modularGasOutput.tier_6.name=ガス搬出ハッチ ティア6
+
+# Mana Ports
+tile.modularManaInput.tier_1.name=マナ搬入ハッチ
+tile.modularManaOutput.tier_1.name=マナ搬出ハッチ
+
+# Vis Ports
+tile.modularVisInput.tier_1.name=Vis搬入リレー
+tile.modularVisOutput.tier_1.name=Vis搬出リレー
+
+# Essentia Ports
+tile.modularEssentiaInput.tier_1.name=エッセンシア搬入ハッチ
+tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出ハッチ
+
+# ME Ports
+tile.modularItemOutputME.me.name=MEアイテム搬出バス
+tile.modularFluidOutputME.me.name=ME液体搬出ハッチ
+tile.modularEssentiaInputME.me.name=MEエッセンシア搬入ハッチ
