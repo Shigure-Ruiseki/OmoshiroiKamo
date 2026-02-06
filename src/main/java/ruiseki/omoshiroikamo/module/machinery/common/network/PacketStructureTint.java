@@ -17,7 +17,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
  * Packet to synchronize structure tint colors from server to client.
  * Sent when a structure is formed (to set color) or unformed (to clear color).
  */
-public class PacketStructureTint implements IMessage, IMessageHandler<PacketStructureTint, IMessage> {
+public class PacketStructureTint implements IMessage {
 
     private int dimensionId;
     private int color;
@@ -80,32 +80,35 @@ public class PacketStructureTint implements IMessage, IMessageHandler<PacketStru
         }
     }
 
-    @Override
-    public IMessage onMessage(PacketStructureTint message, MessageContext ctx) {
-        // Handle on client side
-        Minecraft.getMinecraft()
-            .func_152344_a(() -> {
-                World world = Minecraft.getMinecraft().theWorld;
-                if (world == null || world.provider.dimensionId != message.dimensionId) {
-                    return;
-                }
+    public static class Handler implements IMessageHandler<PacketStructureTint, IMessage> {
 
-                if (message.clear) {
-                    // Clear colors and trigger re-render
-                    StructureTintCache.clearAll(world, message.positions);
-                } else {
-                    // Set colors
-                    for (ChunkCoordinates pos : message.positions) {
-                        StructureTintCache.put(world, pos.posX, pos.posY, pos.posZ, message.color);
+        @Override
+        public IMessage onMessage(PacketStructureTint message, MessageContext ctx) {
+            // Handle on client side
+            Minecraft.getMinecraft()
+                .func_152344_a(() -> {
+                    World world = Minecraft.getMinecraft().theWorld;
+                    if (world == null || world.provider.dimensionId != message.dimensionId) {
+                        return;
                     }
-                }
 
-                // Trigger block re-renders
-                for (ChunkCoordinates pos : message.positions) {
-                    world.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
-                }
-            });
+                    if (message.clear) {
+                        // Clear colors and trigger re-render
+                        StructureTintCache.clearAll(world, message.positions);
+                    } else {
+                        // Set colors
+                        for (ChunkCoordinates pos : message.positions) {
+                            StructureTintCache.put(world, pos.posX, pos.posY, pos.posZ, message.color);
+                        }
+                    }
 
-        return null;
+                    // Trigger block re-renders
+                    for (ChunkCoordinates pos : message.positions) {
+                        world.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
+                    }
+                });
+
+            return null;
+        }
     }
 }

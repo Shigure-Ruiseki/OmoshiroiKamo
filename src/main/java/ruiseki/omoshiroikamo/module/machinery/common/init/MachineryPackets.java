@@ -10,7 +10,10 @@ public class MachineryPackets {
     public static void init() {
         PacketHandler.INSTANCE
             .registerMessage(PacketToggleSide.class, PacketToggleSide.class, PacketHandler.nextID(), Side.SERVER);
-        PacketHandler.INSTANCE
-            .registerMessage(PacketStructureTint.class, PacketStructureTint.class, PacketHandler.nextID(), Side.CLIENT);
+        PacketHandler.INSTANCE.registerMessage(
+            PacketStructureTint.Handler.class,
+            PacketStructureTint.class,
+            PacketHandler.nextID(),
+            Side.CLIENT);
     }
 }
