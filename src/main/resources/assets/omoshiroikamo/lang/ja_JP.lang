@@ -1031,3 +1031,14 @@ tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出ハッチ
 tile.modularItemOutputME.me.name=MEアイテム搬出バス
 tile.modularFluidOutputME.me.name=ME液体搬出ハッチ
 tile.modularEssentiaInputME.me.name=MEエッセンシア搬入ハッチ
+
+# Deep Mob Learning
+model.tier_0.name=§7フォールティー§r
+model.tier_1.name=§aベーシック§r
+model.tier_2.name=§9アドバンスド§r
+model.tier_3.name=§dスーペリア§r
+model.tier_4.name=§6自己認識§r
+
+tooltip.creative_model_learner.desc=ディープラーナー内のデータモデルをレベルアップさせるクリエイティブアイテム。
+tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§o右クリック§rでティアを上昇させます。§r
+tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
