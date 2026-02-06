@@ -267,7 +267,7 @@ public class BackpackPanel extends ModularPanel {
                 backpackSyncHandler.setSortType(nextSortType);
 
                 backpackSyncHandler
-                    .syncToServer(BackpackSH.UPDATE_SET_SORT_TYPE, buf -> { buf.writeInt(nextSortType.ordinal()); });
+                    .syncToServer(BackpackSH.UPDATE_SET_SORT_TYPE, buf ->  buf.writeInt(nextSortType.ordinal()));
 
             }).setEnabledIf(cyclicVariantButtonWidget -> !settingPanel.isPanelOpen())
                 .top(4)
@@ -291,7 +291,7 @@ public class BackpackPanel extends ModularPanel {
                         backpackSyncHandler.transferToPlayerInventory(transferMatched);
                         backpackSyncHandler.syncToServer(
                             BackpackSH.UPDATE_TRANSFER_TO_PLAYER_INV,
-                            buf -> { buf.writeBoolean(transferMatched); });
+                            buf -> buf.writeBoolean(transferMatched));
                         return true;
                     }
                     return false;
@@ -324,7 +324,7 @@ public class BackpackPanel extends ModularPanel {
                         backpackSyncHandler.transferToBackpack(transferMatched);
                         backpackSyncHandler.syncToServer(
                             BackpackSH.UPDATE_TRANSFER_TO_BACKPACK_INV,
-                            buf -> { buf.writeBoolean(transferMatched); });
+                            buf -> buf.writeBoolean(transferMatched));
                         return true;
                     }
                     return false;
@@ -489,11 +489,10 @@ public class BackpackPanel extends ModularPanel {
                 new ItemDrawable(stack).asIcon()
                     .size(18));
             tabWidget.tooltip(
-                tooltip -> {
+                tooltip ->
                     tooltip.clearText()
                         .addLine(IKey.str(item.getItemStackDisplayName(stack)))
-                        .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
-                });
+                        .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
             // spotless: off
 

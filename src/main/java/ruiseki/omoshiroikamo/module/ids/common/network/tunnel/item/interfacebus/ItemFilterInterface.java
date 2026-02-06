@@ -666,11 +666,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
             return false;
         }
 
-        if (stackSize && target.stackSize < filter.stackSize) {
-            return false;
-        }
-
-        return true;
+        return !stackSize || target.stackSize >= filter.stackSize;
     }
 
     private ItemStackPredicate buildFilter(Mode mode, ILogicValue value) {

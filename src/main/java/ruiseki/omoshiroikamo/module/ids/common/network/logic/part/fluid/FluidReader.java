@@ -261,8 +261,6 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             "tankSetting",
             true,
             (syncManager1, syncHandler) -> tankSettingPanel(
-                syncManager1,
-                syncHandler,
                 new IntSyncValue(this::getFluidAmountTank, this::setFluidAmountTank)));
         addSearchableRow(
             list,
@@ -297,8 +295,6 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             "tankSetting",
             true,
             (syncManager1, syncHandler) -> tankSettingPanel(
-                syncManager1,
-                syncHandler,
                 new IntSyncValue(this::getFluidCapacityTank, this::setFluidCapacityTank)));
         addSearchableRow(
             list,
@@ -372,10 +368,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
         IPanelHandler tankSetting = syncManager.syncedPanel(
             "tankSetting",
             true,
-            (syncManager1, syncHandler) -> tankSettingPanel(
-                syncManager1,
-                syncHandler,
-                new IntSyncValue(this::getTankFluid, this::setTankFluid)));
+            (syncManager1, syncHandler) -> tankSettingPanel(new IntSyncValue(this::getTankFluid, this::setTankFluid)));
         addSearchableRow(
             list,
             IKey.lang("gui.ids.fluidReader.tankFluid")
@@ -408,7 +401,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
         return panel;
     }
 
-    private ModularPanel tankSettingPanel(PanelSyncManager syncManager, IPanelHandler syncHandler, IntSyncValue value) {
+    private ModularPanel tankSettingPanel(IntSyncValue value) {
         ModularPanel panel = new Dialog<>("fluid_setting").setDraggable(false)
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
