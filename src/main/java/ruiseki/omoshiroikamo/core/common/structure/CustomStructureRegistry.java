@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Registers CustomStructures with StructureLib.
+ * TODO: Fix background blocks flickering
  */
 public class CustomStructureRegistry {
 
@@ -85,8 +86,9 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Apply X-axis flip to correct Left/Right mirroring
-            String[][] rotatedShape = flipX(shape);
+            // Apply 180-degree rotation to align JSON definition with StructureLib
+            // This ensures Top of JSON = Front of Machine for in-game placement
+            String[][] rotatedShape = rotate180(shape);
 
             // Calculate controller offset from rotated shape
             entry.controllerOffset = findControllerOffset(rotatedShape);
@@ -242,20 +244,15 @@ public class CustomStructureRegistry {
         return null;
     }
 
-    /**
-     * Flip the shape along the X-axis (mirror horizontally).
-     * Strictly reverses the strings without changing Z-order (rows).
-     */
-    private static String[][] flipX(String[][] shape) {
+    private static String[][] rotate180(String[][] shape) {
         String[][] rotated = new String[shape.length][];
         for (int layer = 0; layer < shape.length; layer++) {
             int numRows = shape[layer].length;
             rotated[layer] = new String[numRows];
             for (int row = 0; row < numRows; row++) {
-                // Keep the same row index (Z)
-                // Reverse the string (X)
-                rotated[layer][row] = new StringBuilder(shape[layer][row]).reverse()
-                    .toString();
+                // Get row from opposite end (Z flip) but keep string order (No X flip)
+                int srcRow = numRows - 1 - row;
+                rotated[layer][row] = shape[layer][srcRow];
             }
         }
         return rotated;

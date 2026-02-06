@@ -63,7 +63,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             return;
         }
 
-        // Clear old tint cache for NEI's fake world (Integer.MAX_VALUE dimension)
+        // Clear old tint cache for NEI's fake world
         // This prevents old structure's tint data from interfering with new structure
         StructureTintCache.clearDimension(Integer.MAX_VALUE);
 
@@ -88,7 +88,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             return;
         }
 
-        // Set the structure name on the controller (so it knows which structure to use)
+        // Set the structure name on the controller
         controller.setCustomStructureName(structureName);
 
         // Get offset for the structure
@@ -109,7 +109,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                ExtendedFacing.DEFAULT,
+                ExtendedFacing.SOUTH_NORMAL_NONE,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
@@ -129,7 +129,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                ExtendedFacing.DEFAULT,
+                ExtendedFacing.SOUTH_NORMAL_NONE,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
