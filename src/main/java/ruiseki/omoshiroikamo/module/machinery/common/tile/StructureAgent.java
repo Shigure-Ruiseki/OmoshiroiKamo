@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**
@@ -126,7 +127,7 @@ public class StructureAgent {
 
         TileEntity te = controller.getWorldObj()
             .getTileEntity(x, y, z);
-        if (te == null || !(te instanceof IModularPort port)) {
+        if (!(te instanceof IModularPort port)) {
             return false;
         }
 
@@ -355,10 +356,9 @@ public class StructureAgent {
         if (props != null && props.tintColor != null) {
             try {
                 String hex = props.tintColor.replace("#", "");
-                int color = (int) Long.parseLong(hex, 16) | 0xFF000000;
-                return color;
+                return (int) Long.parseLong(hex, 16) | 0xFF000000;
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.error(e.getMessage());
                 return null;
             }
         }

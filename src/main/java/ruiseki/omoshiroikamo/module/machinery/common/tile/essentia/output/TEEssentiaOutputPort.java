@@ -17,7 +17,6 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * Provides Essentia to Infusion Altar and Essentia Tubes.
  * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
  * for Tubes.
- *
  * TODO: Create TEEssentiaOutputPortME subclass (export Essentia to ME network)
  */
 
@@ -57,8 +56,7 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
             if (te == null) continue;
 
             // Try IEssentiaTransport first (tubes, jars)
-            if (te instanceof IEssentiaTransport) {
-                IEssentiaTransport target = (IEssentiaTransport) te;
+            if (te instanceof IEssentiaTransport target) {
                 ForgeDirection opposite = dir.getOpposite();
 
                 if (!target.canInputFrom(opposite)) continue;
@@ -77,8 +75,7 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
                 }
             }
             // Try IAspectContainer (jars, etc.)
-            else if (te instanceof IAspectContainer) {
-                IAspectContainer container = (IAspectContainer) te;
+            else if (te instanceof IAspectContainer container) {
 
                 for (Aspect aspect : aspects.getAspects()) {
                     if (aspect == null) continue;

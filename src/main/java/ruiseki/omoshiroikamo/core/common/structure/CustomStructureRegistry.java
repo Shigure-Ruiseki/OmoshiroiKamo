@@ -179,7 +179,7 @@ public class CustomStructureRegistry {
 
         // Handle direct List (JSON array mapped directly, e.g., "P": ["block1",
         // "block2"])
-        if (mapping instanceof List<?> listMapping) {
+        if (mapping instanceof List<?>listMapping) {
             List<String> blockStrings = new ArrayList<>();
             for (Object item : listMapping) {
                 if (item instanceof String) {
@@ -217,8 +217,7 @@ public class CustomStructureRegistry {
             }
             if (mapData.containsKey("blocks")) {
                 Object blocksObj = mapData.get("blocks");
-                if (blocksObj instanceof List) {
-                    List<?> blocksList = (List<?>) blocksObj;
+                if (blocksObj instanceof List<?>blocksList) {
                     List<String> blockStrings = new ArrayList<>();
                     for (Object item : blocksList) {
                         if (item instanceof Map) {
@@ -273,17 +272,14 @@ public class CustomStructureRegistry {
 
     /**
      * Find the controller (Q) position and return the offset for StructureLib.
-     *
      * JSON format coordinate mapping:
      * - layer index = Y axis (vertical, up is positive)
      * - row index = Z axis (depth, controller facing direction)
      * - col (char) index = X axis (horizontal)
-     *
      * StructureLib buildOrHints expects (offsetA, offsetB, offsetC) which are:
      * - offsetA: horizontal offset (X)
      * - offsetB: vertical offset (Y)
      * - offsetC: depth offset (Z)
-     *
      * The offset represents where the controller is relative to the structure
      * origin (0,0,0).
      */

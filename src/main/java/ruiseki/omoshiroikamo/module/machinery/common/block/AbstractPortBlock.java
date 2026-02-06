@@ -100,8 +100,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof ISidedIO) {
-            ISidedIO io = (ISidedIO) te;
+        if (te instanceof ISidedIO io) {
             ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
             if (io.getSideIO(dir) == EnumIO.NONE) {
                 if (casingIcon != null) {

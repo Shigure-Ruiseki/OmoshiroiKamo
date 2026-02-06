@@ -36,7 +36,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 /**
  * ME Output Port - outputs items directly to AE2 ME Network.
  * Extends TEItemOutputPort and implements IGridProxyable for AE2 integration.
- *
  * Flow:
  * 1. Receives items via ISidedInventory (from adjacent machines like
  * QuantumExtractor)
@@ -289,10 +288,8 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
                 ItemStack stack = ItemStack.loadItemStackFromNBT(tag);
                 if (stack != null) {
                     IAEItemStack aeStack = AEItemStack.create(stack);
-                    if (aeStack != null) {
-                        aeStack.setStackSize(tag.getLong("count"));
-                        itemCache.add(aeStack);
-                    }
+                    aeStack.setStackSize(tag.getLong("count"));
+                    itemCache.add(aeStack);
                 }
             }
         }

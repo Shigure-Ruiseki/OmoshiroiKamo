@@ -94,14 +94,14 @@ public class BlockResolver {
             // For wildcards:
             // - Logic: check any meta
             // - Visual: display as meta 0
-            IStructureElement<T> logic = (IStructureElement<T>) ofBlockAnyMeta(result.block, 0);
-            IStructureElement<T> visual = (IStructureElement<T>) ofBlock(result.block, 0);
+            IStructureElement<T> logic = ofBlockAnyMeta(result.block, 0);
+            IStructureElement<T> visual = ofBlock(result.block, 0);
             return withTracking(new HybridStructureElement<>(logic, visual));
         } else {
             // For specific meta:
             // Use HybridStructureElement to ensure NEI's StructureHacks processes via
             // fallbacks() path, which correctly applies tinting.
-            IStructureElement<T> element = (IStructureElement<T>) ofBlock(result.block, result.meta);
+            IStructureElement<T> element = ofBlock(result.block, result.meta);
             return withTracking(new HybridStructureElement<>(element, element));
         }
     }
@@ -135,7 +135,7 @@ public class BlockResolver {
             return elements.get(0);
         }
 
-        return (IStructureElement<T>) ofChain(elements.toArray(new IStructureElement[0]));
+        return ofChain(elements.toArray(new IStructureElement[0]));
     }
 
     /**
@@ -249,6 +249,7 @@ public class BlockResolver {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public IStructureElement<T>[] fallbacks() {
             // Expose visual element to NEI
             return new IStructureElement[] { visualElement };
@@ -291,6 +292,7 @@ public class BlockResolver {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public IStructureElement<T>[] fallbacks() {
             // Expose the wrapped element to NEI's StructureHacks via the chain interface
             return new IStructureElement[] { wrappedElement };
@@ -332,6 +334,7 @@ public class BlockResolver {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public IStructureElement<T>[] fallbacks() {
             return new IStructureElement[] { wrapped };
         }

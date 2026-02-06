@@ -10,7 +10,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 /**
  * Machine Casing - basic structural block for Modular Machinery.
  * Used as the main building block for machine structures.
- *
  * TODO List:
  * - Implement BlockColor tinting for machine color customization
  * - Add variant types (reinforced, vented, circuitry, etc.)

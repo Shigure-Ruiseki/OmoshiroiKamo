@@ -36,7 +36,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 /**
  * ME Fluid Output Port - outputs fluids directly to AE2 ME Network.
  * Extends TEFluidOutputPort and implements IGridProxyable for AE2 integration.
- *
  * Flow:
  * 1. Receives fluids via IFluidHandler (from adjacent machines)
  * 2. Periodically flushes internal tank to ME cache

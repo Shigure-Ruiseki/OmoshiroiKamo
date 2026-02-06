@@ -40,7 +40,7 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      *
      * @return structure definition
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     protected abstract IStructureDefinition getStructureDefinition();
 
     /**
