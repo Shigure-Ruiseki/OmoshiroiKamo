@@ -26,7 +26,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     private final BackpackHandler handler;
 
     public TEBackpack() {
-        this(BackpackConfig.obsidianBackpackSlots,BackpackConfig.obsidianUpgradeSlots);
+        this(BackpackConfig.obsidianBackpackSlots, BackpackConfig.obsidianUpgradeSlots);
     }
 
     public TEBackpack(int slots, int upgradeSlots) {
