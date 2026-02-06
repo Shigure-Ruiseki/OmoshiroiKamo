@@ -40,7 +40,7 @@ dependencies {
     implementation("com.github.GTNewHorizons:ModularUI2:2.3.35-1.7.10:dev")
 
     devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.2-GTNH:dev')
-    devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.2:dev") { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.5:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.40-GTNH:dev")
     devOnlyNonPublishable('com.github.GTNewHorizons:Angelica:1.0.0-beta67:dev') { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.9.5:dev") { transitive = false }

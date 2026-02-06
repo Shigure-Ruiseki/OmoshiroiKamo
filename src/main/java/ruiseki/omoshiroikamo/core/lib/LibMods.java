@@ -11,6 +11,7 @@ public enum LibMods {
     AE2FluidCrafting("ae2fc"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
+    BlockRenderer6343("blockrenderer6343"),
     BigReactors("BigReactors"),
     BogoSorter("bogosorter"),
     Botania("Botania"),
