@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockCrystal;
 
 public class MultiblockRecipes {
 
@@ -987,6 +988,24 @@ public class MultiblockRecipes {
                 'D',
                 "blockDiamond"));
 
+        // Luck Modifier
+        GameRegistry.addRecipe(
+            new ShapedOreRecipe(
+                MultiBlockBlocks.MODIFIER_LUCK.getItem(),
+                "LCL",
+                "MNM",
+                "LcL",
+                'M',
+                MultiBlockBlocks.BLOCK_MICA.getItem(),
+                'N',
+                MultiBlockBlocks.MODIFIER_NULL.getItem(),
+                'C',
+                MultiBlockItems.CRYSTAL.newItemStack(1, 7),
+                'c',
+                MultiBlockItems.CRYSTAL.newItemStack(1, 3),
+                'L',
+                "blockLapis"));
+
         // Flight Modifier
         if (!LibMods.EtFuturum.isLoaded()) {
             GameRegistry.addRecipe(
@@ -1241,7 +1260,7 @@ public class MultiblockRecipes {
                 "stoneAlabaster"));
 
         // Crystal
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < BlockCrystal.VARIATIONS; i++) {
             GameRegistry.addRecipe(
                 new ShapedOreRecipe(
                     MultiBlockBlocks.BLOCK_CRYSTAL.newItemStack(1, i),

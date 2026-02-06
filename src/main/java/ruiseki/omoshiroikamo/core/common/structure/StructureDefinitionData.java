@@ -97,6 +97,9 @@ public class StructureDefinitionData {
 
         /** Maximum batch size (default 1). */
         public int batchMax = 1;
+
+        /** Tint color for this structure (hex color, optional). */
+        public String tintColor;
     }
 
     /**

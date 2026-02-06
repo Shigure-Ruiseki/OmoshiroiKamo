@@ -10,21 +10,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
-import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
-import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
-import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widgets.ProgressWidget;
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.structurelib.alignment.IAlignment;
 import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
@@ -32,16 +26,15 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
-import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
@@ -59,7 +52,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * TODO: Prevent NBT pickup on controller middle-click
  * TODO: Support shift-click
  */
-public class TEMachineController extends AbstractMBModifierTE implements IAlignment, IGuiHolder<PosGuiData> {
+public class TEMachineController extends AbstractMBModifierTE
+    implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {
 
     // ========== Blueprint Inventory ==========
     public static final int BLUEPRINT_SLOT = 0;
@@ -88,22 +82,27 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     // Port management (delegated to PortManager)
     private final PortManager portManager = new PortManager();
 
+    // Structure management
+    private final StructureAgent structureAgent = new StructureAgent(this);
+
     // Recipe processing
     private final ProcessAgent processAgent = new ProcessAgent();
     // Recipe group - obtained from custom structure or GUI
     private String recipeGroup = "default";
-    // CustomStructure name (automatically derived from blueprint)
-    private String customStructureName = null;
     // Look-ahead: next recipe cached during current processing
     private transient ModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
-    // Structure definition (dynamically loaded from CustomStructureRegistry)
-    private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
+    // GUI management
+    private final GuiManager guiManager = new GuiManager(this);
 
     // Controller facing (rotation state) - used by IAlignment
+    // Controller facing (rotation state) - used by IAlignment
     private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
+
+    // Transient flag to trigger tint packet resend on load
+    private boolean needsTintResend = false;
 
     public TEMachineController() {
         super();
@@ -113,36 +112,17 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public IStructureDefinition<TEMachineController> getStructureDefinition() {
-        // Check for custom structure first
-        if (customStructureName != null && !customStructureName.isEmpty()) {
-            IStructureDefinition<TEMachineController> customDef = CustomStructureRegistry
-                .getDefinition(customStructureName);
-            if (customDef != null) {
-                return customDef;
-            }
-        }
-        // Fallback to default structure (or null for simple check)
-        return STRUCTURE_DEFINITION;
+        return structureAgent.getStructureDefinition();
     }
 
     @Override
     public int[][] getOffSet() {
-        // Get offset from custom structure definition if available
-        if (customStructureName != null && !customStructureName.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(customStructureName);
-            if (entry != null && entry.controllerOffset != null && entry.controllerOffset.length >= 3) {
-                return new int[][] { entry.controllerOffset };
-            }
-        }
-        // Default offset (no structure)
-        return new int[][] { { 0, 0, 0 } };
+        return structureAgent.getOffSet();
     }
 
     @Override
     public String getStructurePieceName() {
-        // CustomStructureRegistry registers shapes using the structure name
-        return customStructureName != null ? customStructureName : "main";
+        return structureAgent.getStructurePieceName();
     }
 
     @Override
@@ -154,34 +134,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     protected void clearStructureParts() {
-        portManager.clear();
+        structureAgent.resetStructure();
     }
 
     @Override
     protected boolean addToMachine(Block block, int meta, int x, int y, int z) {
-        TileEntity te = worldObj.getTileEntity(x, y, z);
-        if (te == null || !(te instanceof IModularPort port)) {
-            return false;
-        }
-
-        IPortType.Direction direction = port.getPortDirection();
-
-        return switch (direction) {
-            case INPUT -> {
-                portManager.addPort(port, true);
-                yield true;
-            }
-            case OUTPUT -> {
-                portManager.addPort(port, false);
-                yield true;
-            }
-            case BOTH -> {
-                portManager.addPort(port, true);
-                portManager.addPort(port, false);
-                yield true;
-            }
-            default -> false;
-        };
+        return structureAgent.addToMachine(block, meta, x, y, z);
     }
 
     /**
@@ -193,66 +151,30 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      */
     public void addPortFromStructure(IModularPort port, boolean isInput) {
         portManager.addPort(port, isInput);
+        // Also add the port's position to structure block positions
+        if (port instanceof TileEntity te) {
+            structureAgent.addStructurePosition(te.xCoord, te.yCoord, te.zCoord);
+        }
+    }
+
+    /**
+     * Called by BlockResolver to track all structure blocks (casings, etc.)
+     * for tinting purposes.
+     */
+    public void trackStructureBlock(int x, int y, int z) {
+        structureAgent.addStructurePosition(x, y, z);
     }
 
     // ========== Crafting Configuration ==========
     // TODO: These methods are inherited from AbstractMBModifierTE but unused
     // Consider removing or refactoring the parent class.
 
-    // Field to store validation error message
-    private String lastValidationError = "";
-
     // Last process error reason for GUI display
     private ErrorReason lastProcessErrorReason = ErrorReason.NONE;
 
     @Override
     protected boolean structureCheck(String piece, int ox, int oy, int oz) {
-        // Clear previous error
-        lastValidationError = "";
-
-        // Clear structure parts before checking
-        clearStructureParts();
-
-        // Use controller's facing for rotation support
-        boolean valid = getStructureDefinition()
-            .check(this, piece, worldObj, getExtendedFacing(), xCoord, yCoord, zCoord, ox, oy, oz, false);
-
-        if (valid && !isFormed) {
-            isFormed = true;
-            onFormed();
-        } else if (!valid && isFormed) isFormed = false;
-
-        if (valid && isFormed) {
-            // Perform additional requirements check for CustomStructure
-            if (!checkRequirements()) {
-                lastValidationError = "Structure requirements not met.";
-                isFormed = false;
-                clearStructureParts();
-                return false;
-            }
-        } else if (!valid) {
-            // If check failed, we don't know exactly why
-            // but usually it means blocks don't match.
-            if (customStructureName != null) {
-                lastValidationError = "Block mismatch or incomplete structure.";
-            }
-        }
-
-        return isFormed;
-    }
-
-    /**
-     * Check if the formed structure meets the requirements defined in
-     * CustomStructure.
-     *
-     * @return true if requirements are met or no requirements exist
-     */
-    private boolean checkRequirements() {
-        if (customStructureName == null || customStructureName.isEmpty()) return true;
-
-        StructureEntry entry = StructureManager.getInstance()
-            .getCustomStructure(customStructureName);
-        return portManager.checkRequirements(entry);
+        return structureAgent.structureCheck(piece, ox, oy, oz);
     }
 
     @Override
@@ -277,7 +199,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public void onFormed() {
-        // Called when structure is successfully formed
+        structureAgent.onFormed();
     }
 
     /**
@@ -287,20 +209,30 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      */
     @Override
     public void doUpdate() {
+        // Resend tint packet on load/restore
+        if (needsTintResend && worldObj != null && !worldObj.isRemote) {
+            structureAgent.sendTintPacket();
+            needsTintResend = false;
+        }
+
         // Sync customStructureName from blueprint if blueprint is present in GUI
         // Only update if blueprint has a structure name
         String blueprintName = getStructureNameFromBlueprint();
-        if (blueprintName != null && !blueprintName.isEmpty() && !Objects.equals(blueprintName, customStructureName)) {
-            this.customStructureName = blueprintName;
+        if (blueprintName != null && !blueprintName.isEmpty()
+            && !Objects.equals(blueprintName, structureAgent.getCustomStructureName())) {
+            structureAgent.setCustomStructureName(blueprintName);
             updateRecipeGroupFromStructure();
-            this.isFormed = false;
+            setFormed(false);
             clearStructureParts();
             processAgent.abort();
             markDirty();
         }
 
         // Blueprint required - no operation without it
-        if (customStructureName == null || customStructureName.isEmpty()) return;
+        if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
+            .isEmpty()) {
+            return;
+        }
 
         // Use StructureLib-based structure checking (calls super.doUpdate())
         // Super handles IC2 registration, energy sync, and structure validation
@@ -408,113 +340,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel panel = new ModularPanel("machine_controller_gui");
-
-        // Title
-        panel.child(new TileWidget(getLocalizedName()));
-
-        // Blueprint slot (right side)
-        panel.child(
-            new ItemSlot()
-                .slot(
-                    new ModularSlot(inventory, BLUEPRINT_SLOT)
-                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                .background(OKGuiTextures.EMPTY_SLOT)
-                .pos(151, 8));
-
-        // Status display
-        panel.child(
-            IKey.dynamic(this::getStatusText)
-                .asWidget()
-                .pos(8, 25));
-
-        // Error display (validation)
-        panel.child(
-            IKey.dynamic(this::getErrorText)
-                .asWidget()
-                .pos(8, 35));
-
-        IntSyncValue progressSyncer = new IntSyncValue(processAgent::getProgress, processAgent::setProgress);
-        IntSyncValue maxProgressSyncer = new IntSyncValue(processAgent::getMaxProgress, processAgent::setMaxProgress);
-        BooleanSyncValue runningSyncer = new BooleanSyncValue(processAgent::isRunning, processAgent::setRunning);
-        BooleanSyncValue waitingSyncer = new BooleanSyncValue(
-            processAgent::isWaitingForOutput,
-            processAgent::setWaitingForOutput);
-
-        syncManager.syncValue("processProgressSyncer", progressSyncer);
-        syncManager.syncValue("processMaxSyncer", maxProgressSyncer);
-        syncManager.syncValue("processRunningSyncer", runningSyncer);
-        syncManager.syncValue("processWaitingSyncer", waitingSyncer);
-
-        // Progress bar (Change is needed)
-        panel.child(
-            new ProgressWidget().value(new DoubleSyncValue(() -> (double) processAgent.getProgressPercent()))
-                .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
-                .pos(80, 45));
-
-        syncManager.bindPlayerInventory(data.getPlayer());
-        panel.bindPlayerInventory();
-
-        return panel;
-    }
-
-    /**
-     * Get status text for GUI display.
-     * Delegates to ProcessAgent for detailed status information.
-     */
-    private String getStatusText() {
-        if (customStructureName == null || customStructureName.isEmpty()) {
-            return "Insert Blueprint";
-        }
-        if (!isFormed) {
-            return "Structure Not Formed";
-        }
-        if (processAgent.isRunning() || processAgent.isWaitingForOutput()) {
-            if (lastProcessErrorReason == ErrorReason.NO_ENERGY) {
-                return ErrorReason.NO_ENERGY.getMessage();
-            }
-            return processAgent.getStatusMessage(getOutputPorts());
-        }
-
-        ErrorReason reason = getIdleErrorReason();
-        if (reason == ErrorReason.NONE) {
-            return "Idle";
-        }
-        return reason.getMessage();
-    }
-
-    private ErrorReason getIdleErrorReason() {
-        if (getInputPorts().isEmpty()) return ErrorReason.NO_INPUT_PORTS;
-        if (getOutputPorts().isEmpty()) return ErrorReason.NO_OUTPUT_PORTS;
-        if (RecipeLoader.getInstance()
-            .getRecipes(recipeGroup)
-            .isEmpty()) {
-            return ErrorReason.NO_RECIPES;
-        }
-        if (lastProcessErrorReason == ErrorReason.NO_MATCHING_RECIPE) {
-            return ErrorReason.NO_MATCHING_RECIPE;
-        }
-        if (lastProcessErrorReason == ErrorReason.NO_ENERGY) {
-            return ErrorReason.NO_ENERGY;
-        }
-        return ErrorReason.IDLE;
-    }
-
-    /**
-     * Get validation error text for GUI display.
-     */
-    private String getErrorText() {
-        if (customStructureName == null || customStructureName.isEmpty()) return "";
-        if (isFormed) return "";
-        if (lastValidationError == null || lastValidationError.isEmpty()) return "";
-        return lastValidationError;
-    }
-
-    /**
-     * Get progress percentage for GUI progress bar.
-     */
-    private float getProgressPercent() {
-        return processAgent.getProgressPercent();
+        return guiManager.buildUI(data, syncManager, settings);
     }
 
     // ========== Blueprint Inventory Methods ==========
@@ -555,10 +381,10 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (worldObj != null && worldObj.isRemote) return;
 
         String newName = getStructureNameFromBlueprint();
-        if (!Objects.equals(newName, customStructureName)) {
-            this.customStructureName = newName;
+        if (!Objects.equals(newName, structureAgent.getCustomStructureName())) {
+            structureAgent.setCustomStructureName(newName);
             updateRecipeGroupFromStructure();
-            this.isFormed = false;
+            setFormed(false);
             clearStructureParts();
             processAgent.abort();
             lastProcessErrorReason = ErrorReason.NONE;
@@ -605,9 +431,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
     public void writeCommon(NBTTagCompound nbt) {
         super.writeCommon(nbt);
         nbt.setString("recipeGroup", recipeGroup);
-        if (customStructureName != null) {
-            nbt.setString("customStructureName", customStructureName);
-        }
+        structureAgent.writeToNBT(nbt);
         // Save blueprint inventory
         nbt.setTag("inventory", inventory.serializeNBT());
         // Save process agent
@@ -627,6 +451,15 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         if (nbt.hasKey("inventory")) {
             inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
         }
+        if (nbt.hasKey("inventory")) {
+            inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
+        }
+
+        // Load structure data and positions
+        if (structureAgent.readFromNBT(nbt)) {
+            needsTintResend = true;
+        }
+
         // Update structure from loaded blueprint
         updateStructureFromBlueprint();
         // Load process agent
@@ -648,11 +481,11 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * Set the custom structure name. Also updates recipeGroup from structure.
      */
     public void setCustomStructureName(String name) {
-        this.customStructureName = name;
+        structureAgent.setCustomStructureName(name);
         updateRecipeGroupFromStructure();
 
         // Reset structure state
-        this.isFormed = false;
+        setFormed(false);
         clearStructureParts();
         lastProcessErrorReason = ErrorReason.NONE;
 
@@ -665,7 +498,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * Get the custom structure name.
      */
     public String getCustomStructureName() {
-        return customStructureName;
+        return structureAgent.getCustomStructureName();
     }
 
     /**
@@ -686,9 +519,12 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * Update recipeGroup from custom structure definition.
      */
     private void updateRecipeGroupFromStructure() {
-        if (customStructureName == null || customStructureName.isEmpty()) return;
+        if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
+            .isEmpty()) {
+            return;
+        }
         StructureEntry entry = StructureManager.getInstance()
-            .getCustomStructure(customStructureName);
+            .getCustomStructure(structureAgent.getCustomStructureName());
         if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
             this.recipeGroup = entry.recipeGroup;
         }
@@ -698,10 +534,37 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
      * Get the custom structure properties, or null if not using custom structure.
      */
     public Properties getCustomProperties() {
-        if (customStructureName == null || customStructureName.isEmpty()) return null;
-        StructureEntry entry = StructureManager.getInstance()
-            .getCustomStructure(customStructureName);
-        return entry != null ? entry.properties : null;
+        return structureAgent.getCustomProperties();
+    }
+
+    // ========== Structure Tinting ==========
+
+    /**
+     * Get cached structure tint color.
+     * Used by BlockMachineController's colorMultiplier.
+     * 
+     * @return ARGB color value, or null if no color defined
+     */
+    public Integer getCachedStructureTintColor() {
+        return structureAgent.getCachedStructureTintColor();
+    }
+
+    /**
+     * Get the tint color from this controller's structure properties.
+     * Returns null if not formed or no color is defined.
+     * 
+     * @return ARGB color value, or null if no color defined
+     */
+    public Integer getStructureTintColor() {
+        return structureAgent.getStructureTintColor();
+    }
+
+    /**
+     * Update rendering for all blocks in the structure.
+     * Called when structure is formed or unformed to apply/remove tint.
+     */
+    private void updateStructureBlocksRendering() {
+        structureAgent.updateStructureBlocksRendering();
     }
 
     // ========== IAlignment Implementation ==========
@@ -719,7 +582,7 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         this.extendedFacing = facing;
 
         // Reset structure state when facing changes
-        this.isFormed = false;
+        setFormed(false);
         clearStructureParts();
 
         markDirty();
@@ -733,5 +596,48 @@ public class TEMachineController extends AbstractMBModifierTE implements IAlignm
         // Allow all directions
         // TODO: Load from structure JSON config in the future
         return IAlignmentLimits.UNLIMITED;
+    }
+
+    // ========== Package Accessors for Managers ==========
+
+    public PortManager getPortManager() {
+        return portManager;
+    }
+
+    public ProcessAgent getProcessAgent() {
+        return processAgent;
+    }
+
+    public ErrorReason getLastProcessErrorReason() {
+        return lastProcessErrorReason;
+    }
+
+    public void setLastProcessErrorReason(ErrorReason reason) {
+        this.lastProcessErrorReason = reason;
+    }
+
+    public boolean isFormed() {
+        return isFormed;
+    }
+
+    public void setFormed(boolean formed) {
+        this.isFormed = formed;
+    }
+
+    public String getLastValidationError() {
+        return structureAgent.getLastValidationError();
+    }
+
+    // ========== ISidedTexture Implementation ==========
+
+    @Override
+    public IIcon getTexture(ForgeDirection side, int pass) {
+        if (pass == 1) { // Overlay pass
+            Block block = getBlockType();
+            if (block instanceof BlockMachineController controllerBlock) {
+                return controllerBlock.getOverlayIcon();
+            }
+        }
+        return null; // Base pass handled by ISBRH using standard block render
     }
 }

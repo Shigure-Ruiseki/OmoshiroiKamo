@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.gtnewhorizon.gtnhlib.util.CoordinatePacker;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
@@ -20,6 +21,7 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -61,6 +63,10 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             return;
         }
 
+        // Clear old tint cache for NEI's fake world
+        // This prevents old structure's tint data from interfering with new structure
+        StructureTintCache.clearDimension(Integer.MAX_VALUE);
+
         String structureName = currentStructure.getStructureName();
         IStructureDefinition<TEMachineController> def = currentStructure.getDefinition();
 
@@ -82,7 +88,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             return;
         }
 
-        // Set the structure name on the controller (so it knows which structure to use)
+        // Set the structure name on the controller
         controller.setCustomStructureName(structureName);
 
         // Get offset for the structure
@@ -103,7 +109,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                ExtendedFacing.DEFAULT,
+                ExtendedFacing.SOUTH_NORMAL_NONE,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
@@ -123,7 +129,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                ExtendedFacing.DEFAULT,
+                ExtendedFacing.SOUTH_NORMAL_NONE,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
@@ -131,6 +137,19 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 offset[1],
                 offset[2],
                 false);
+        }
+
+        // Store tint color for use in beforeRender callback
+        // (Actual tint application happens via callback set in loadMultiblock)
+        if (entry != null && entry.properties != null && entry.properties.tintColor != null) {
+            try {
+                String hex = entry.properties.tintColor.replace("#", "");
+                currentTintColor = (int) Long.parseLong(hex, 16) | 0xFF000000;
+            } catch (Exception e) {
+                currentTintColor = null;
+            }
+        } else {
+            currentTintColor = null;
         }
 
         // Update entities for proper rendering
@@ -141,5 +160,46 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
     protected Object getContextObject() {
         TileEntity tile = renderer.world.getTileEntity(MB_PLACE_POS.x, MB_PLACE_POS.y, MB_PLACE_POS.z);
         return tile != null ? tile : renderingController;
+    }
+
+    // Current tint color for this structure
+    private Integer currentTintColor = null;
+
+    /**
+     * Apply tint colors to all rendered blocks using renderedBlocks coordinates.
+     * This ensures exact coordinate match between PUT and GET.
+     */
+    private void applyTintToRenderedBlocks() {
+        if (currentTintColor == null || renderer == null) {
+            return;
+        }
+        StructureTintCache.clearDimension(Integer.MAX_VALUE);
+
+        // Apply tint to each block that will be rendered
+        for (long packed : renderer.renderedBlocks) {
+            int x = CoordinatePacker.unpackX(packed);
+            int y = CoordinatePacker.unpackY(packed);
+            int z = CoordinatePacker.unpackZ(packed);
+            StructureTintCache.put(renderer.world, x, y, z, currentTintColor);
+        }
+        // Also add translucent blocks
+        for (long packed : renderer.renderTranslucentBlocks) {
+            int x = CoordinatePacker.unpackX(packed);
+            int y = CoordinatePacker.unpackY(packed);
+            int z = CoordinatePacker.unpackZ(packed);
+            StructureTintCache.put(renderer.world, x, y, z, currentTintColor);
+        }
+    }
+
+    /**
+     * set up rendering callbacks after the scene is initialized.
+     */
+    @Override
+    protected void loadNewMultiblock() {
+        super.loadNewMultiblock();
+        // Set beforeRender callback to apply tint right before each render
+        if (renderer != null) {
+            renderer.setBeforeWorldRender(r -> applyTintToRenderedBlocks());
+        }
     }
 }

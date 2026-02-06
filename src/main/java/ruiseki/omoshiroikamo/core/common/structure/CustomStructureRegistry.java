@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Registers CustomStructures with StructureLib.
+ * TODO: Fix background blocks flickering
  */
 public class CustomStructureRegistry {
 
@@ -85,7 +86,8 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Apply 180-degree rotation to align JSON definition with StructureLib coordinate system
+            // Apply 180-degree rotation to align JSON definition with StructureLib
+            // This ensures Top of JSON = Front of Machine for in-game placement
             String[][] rotatedShape = rotate180(shape);
 
             // Calculate controller offset from rotated shape
@@ -242,23 +244,15 @@ public class CustomStructureRegistry {
         return null;
     }
 
-    /**
-     * Apply 180-degree horizontal rotation to the shape.
-     * True 180-degree rotation requires:
-     * 1. Reverse the order of rows in each layer (front-to-back flip)
-     * 2. Reverse each row string (left-to-right flip)
-     * Used to align JSON definition with controller facing direction.
-     */
     private static String[][] rotate180(String[][] shape) {
         String[][] rotated = new String[shape.length][];
         for (int layer = 0; layer < shape.length; layer++) {
             int numRows = shape[layer].length;
             rotated[layer] = new String[numRows];
             for (int row = 0; row < numRows; row++) {
-                // Get row from opposite end and reverse it
+                // Get row from opposite end (Z flip) but keep string order (No X flip)
                 int srcRow = numRows - 1 - row;
-                rotated[layer][row] = new StringBuilder(shape[layer][srcRow]).reverse()
-                    .toString();
+                rotated[layer][row] = shape[layer][srcRow];
             }
         }
         return rotated;

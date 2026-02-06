@@ -145,7 +145,7 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
     @Override
     public IIcon getOverlayIcon(ForgeDirection side) {
         if (getSideIO(side) == EnumIO.NONE) {
-            return IconRegistry.getIcon("overlay_port_disabled");
+            return null;
         }
         return IconRegistry.getIcon("overlay_essentiainput_" + getTier());
     }

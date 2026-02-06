@@ -28,6 +28,7 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
@@ -330,6 +331,9 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
+            if (getSideIO(side) == EnumIO.NONE) {
+                return null;
+            }
             return IconRegistry.getIcon("overlay_fluidoutput_me");
         }
         return AbstractPortBlock.baseIcon;

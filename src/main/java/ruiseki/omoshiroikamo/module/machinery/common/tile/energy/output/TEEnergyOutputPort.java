@@ -66,7 +66,7 @@ public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implemen
             if (getSideIO(side) != EnumIO.NONE) {
                 return IconRegistry.getIcon("overlay_energyoutput_" + getTier());
             }
-            return IconRegistry.getIcon("overlay_energyoutput_disabled");
+            return null;
         }
         return AbstractPortBlock.baseIcon;
     }
