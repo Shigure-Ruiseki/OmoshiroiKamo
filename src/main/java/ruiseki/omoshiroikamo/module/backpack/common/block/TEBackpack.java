@@ -15,6 +15,7 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
@@ -23,6 +24,10 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     private final int[] allSlots;
     private final BackpackHandler handler;
+
+    public TEBackpack() {
+        this(BackpackConfig.obsidianBackpackSlots,BackpackConfig.obsidianUpgradeSlots);
+    }
 
     public TEBackpack(int slots, int upgradeSlots) {
         handler = new BackpackHandler(null, this, slots, upgradeSlots);
