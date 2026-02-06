@@ -62,8 +62,6 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
     private static final int HIGH_THRESHOLD = 8;
 
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(4);
-
     public RedstoneReader() {
         super(new ItemStackHandlerBase(4));
     }

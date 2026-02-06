@@ -516,11 +516,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         if (te instanceof TileEntityChest) {
             if (getWorld().getBlock(targetX(), targetY(), targetZ()) instanceof BlockChest blockChest) {
-                IInventory inv = blockChest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
-                if (inv != null) {
-                    return inv;
-                }
-                return null;
+                return blockChest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
             }
         }
 

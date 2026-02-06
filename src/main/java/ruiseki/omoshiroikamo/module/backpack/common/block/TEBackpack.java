@@ -22,17 +22,9 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
-    private final int slots;
-    private final int upgradeSlots;
     private final BackpackHandler handler;
 
-    public TEBackpack() {
-        this(120, 7);
-    }
-
     public TEBackpack(int slots, int upgradeSlots) {
-        this.slots = slots;
-        this.upgradeSlots = upgradeSlots;
         handler = new BackpackHandler(null, this, slots, upgradeSlots);
         allSlots = new int[handler.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {

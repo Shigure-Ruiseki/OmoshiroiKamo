@@ -206,15 +206,10 @@ public class TECable extends AbstractTE
             if (!otherCable.hasCore()) return false;
             ForgeDirection opp = side.getOpposite();
             if (otherCable.isSideBlocked(opp)) return false;
-            if (otherCable.hasPart(opp)) return false;
-            return true;
+            return !otherCable.hasPart(opp);
         }
 
-        if (other instanceof ICableEndpoint) {
-            return true;
-        }
-
-        return false;
+        return other instanceof ICableEndpoint;
     }
 
     @Override
@@ -650,9 +645,8 @@ public class TECable extends AbstractTE
             case EAST -> AxisAlignedBB.getBoundingBox(max, min, min, 1, max, max);
             case DOWN -> AxisAlignedBB.getBoundingBox(min, 0, min, max, min, max);
             case UP -> AxisAlignedBB.getBoundingBox(min, max, min, max, 1, max);
-            case NORTH -> AxisAlignedBB.getBoundingBox(min, min, 0, max, max, min);
             case SOUTH -> AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1);
-            default -> null;
+            default -> AxisAlignedBB.getBoundingBox(min, min, 0, max, max, min);
         };
     }
 

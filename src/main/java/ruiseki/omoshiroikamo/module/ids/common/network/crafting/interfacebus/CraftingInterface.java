@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.crafting.interfacebus;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -53,7 +53,7 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Arrays.asList(ICraftingNet.class);
+        return Collections.singletonList(ICraftingNet.class);
     }
 
     @Override

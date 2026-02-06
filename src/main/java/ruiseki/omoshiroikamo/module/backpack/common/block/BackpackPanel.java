@@ -251,10 +251,8 @@ public class BackpackPanel extends ModularPanel {
                     return false;
                 })
                 .tooltipStatic(
-                    (tooltip) -> {
-                        tooltip.addLine(IKey.lang("gui.backpack.sort_inventory"))
-                            .pos(RichTooltip.Pos.NEXT_TO_MOUSE);
-                    });
+                    (tooltip) -> tooltip.addLine(IKey.lang("gui.backpack.sort_inventory"))
+                        .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
         CyclicVariantButtonWidget sortTypeButton = new CyclicVariantButtonWidget(
             SORT_TYPE_VARIANTS,
