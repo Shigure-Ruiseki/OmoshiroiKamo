@@ -162,7 +162,8 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         panel.height(196);
 
         // Settings panel
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         syncManager
@@ -283,7 +284,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
                 LogicKeys.INV_FILL_RATIO),
             searchValue);
 
-        IPanelHandler slotItemSetting = syncManager.panel("slotItemSetting", this::slotItemSetting, true);
+        IPanelHandler slotItemSetting = syncManager.syncedPanel("slotItemSetting", true, this::slotItemSetting);
         addSearchableRow(
             list,
             IKey.lang("gui.ids.inventoryReader.slotItem")
@@ -515,11 +516,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         if (te instanceof TileEntityChest) {
             if (getWorld().getBlock(targetX(), targetY(), targetZ()) instanceof BlockChest blockChest) {
-                IInventory inv = blockChest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
-                if (inv != null) {
-                    return inv;
-                }
-                return null;
+                return blockChest.func_149951_m(getWorld(), targetX(), targetY(), targetZ());
             }
         }
 

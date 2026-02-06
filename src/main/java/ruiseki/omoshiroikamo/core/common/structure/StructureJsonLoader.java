@@ -34,16 +34,16 @@ public class StructureJsonLoader {
         .create();
 
     /** Default mappings shared across all structures. */
-    private Map<Character, BlockMapping> defaultMappings = new HashMap<>();
+    private final Map<Character, BlockMapping> defaultMappings = new HashMap<>();
 
     /** Cached structure definitions (name -> StructureEntry). */
-    private Map<String, StructureEntry> structureCache = new HashMap<>();
+    private final Map<String, StructureEntry> structureCache = new HashMap<>();
 
     /** Parsed shapes (name -> String[][]). */
-    private Map<String, String[][]> parsedShapes = new HashMap<>();
+    private final Map<String, String[][]> parsedShapes = new HashMap<>();
 
     /** Collected error list. */
-    private List<String> errors = new ArrayList<>();
+    private final List<String> errors = new ArrayList<>();
 
     /**
      * Get a copy of the error list.
@@ -90,10 +90,8 @@ public class StructureJsonLoader {
                 String name = obj.get("name")
                     .getAsString();
                 StructureEntry entry = parseStructureEntry(obj);
-                if (entry != null) {
-                    structureCache.put(name, entry);
-                    Logger.info("Loaded single structure: " + name + " from " + file.getName());
-                }
+                structureCache.put(name, entry);
+                Logger.info("Loaded single structure: " + name + " from " + file.getName());
                 return true;
             }
 
@@ -132,9 +130,7 @@ public class StructureJsonLoader {
                 } else {
                     // Parse a structure entry
                     StructureEntry entry = parseStructureEntry(obj);
-                    if (entry != null) {
-                        structureCache.put(name, entry);
-                    }
+                    structureCache.put(name, entry);
                 }
             }
 
@@ -158,9 +154,7 @@ public class StructureJsonLoader {
             char symbol = entry.getKey()
                 .charAt(0);
             BlockMapping mapping = parseBlockMapping(entry.getValue());
-            if (mapping != null) {
-                defaultMappings.put(symbol, mapping);
-            }
+            defaultMappings.put(symbol, mapping);
         }
     }
 
@@ -190,9 +184,7 @@ public class StructureJsonLoader {
             JsonArray layersArray = obj.getAsJsonArray("layers");
             for (JsonElement layerElement : layersArray) {
                 Layer layer = parseLayer(layerElement.getAsJsonObject());
-                if (layer != null) {
-                    entry.layers.add(layer);
-                }
+                entry.layers.add(layer);
             }
         }
 
@@ -272,9 +264,7 @@ public class StructureJsonLoader {
                 JsonArray blocksArray = obj.getAsJsonArray("blocks");
                 for (JsonElement blockElement : blocksArray) {
                     BlockEntry blockEntry = parseBlockEntry(blockElement);
-                    if (blockEntry != null) {
-                        mapping.blocks.add(blockEntry);
-                    }
+                    mapping.blocks.add(blockEntry);
                 }
             }
 
@@ -423,12 +413,9 @@ public class StructureJsonLoader {
         }
 
         // Collect all mappings (default + structure-specific)
-        Map<Character, Object> mappings = new HashMap<>();
 
         // Add default mappings first
-        for (Map.Entry<Character, BlockMapping> entry : defaultMappings.entrySet()) {
-            mappings.put(entry.getKey(), entry.getValue());
-        }
+        Map<Character, Object> mappings = new HashMap<>(defaultMappings);
 
         // Override with structure-specific mappings
         StructureEntry entry = structureCache.get(structureName);

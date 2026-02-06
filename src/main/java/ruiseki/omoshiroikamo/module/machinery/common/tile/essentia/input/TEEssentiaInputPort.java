@@ -114,10 +114,9 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
     private void drawEssentiaFromNeighbors() {
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             TileEntity te = ThaumcraftApiHelper.getConnectableTile(worldObj, xCoord, yCoord, zCoord, dir);
-            if (!(te instanceof IEssentiaTransport)) {
+            if (!(te instanceof IEssentiaTransport source)) {
                 continue;
             }
-            IEssentiaTransport source = (IEssentiaTransport) te;
             ForgeDirection opposite = dir.getOpposite();
             if (!(source.canOutputTo(opposite))) {
                 continue;

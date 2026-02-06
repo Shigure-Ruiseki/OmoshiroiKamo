@@ -11,11 +11,11 @@ import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
 
@@ -48,12 +48,10 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
         .build();
 
     private final List<UpgradeToggleWidget> toggleWidgets;
-    private final BackpackPanel panel;
     private final int slotSize;
 
     public UpgradeSlotGroupWidget(BackpackPanel panel, int slotSize) {
         super();
-        this.panel = panel;
         this.slotSize = slotSize;
 
         this.toggleWidgets = new ArrayList<>();
@@ -158,9 +156,9 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
         }
 
         @Override
-        public boolean isValidSyncHandler(SyncHandler handler) {
-            if (handler instanceof UpgradeSlotSH) {
-                slotSyncHandler = (UpgradeSlotSH) handler;
+        public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+            if (syncOrValue instanceof UpgradeSlotSH) {
+                slotSyncHandler = (UpgradeSlotSH) syncOrValue;
             }
             return slotSyncHandler != null;
         }

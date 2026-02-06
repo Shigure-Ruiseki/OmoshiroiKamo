@@ -132,10 +132,6 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
         return EnumIO.BOTH;
     }
 
-    public int getTransferLimit() {
-        return Integer.MAX_VALUE;
-    }
-
     @Override
     public ItemStack extract(ItemStack required, int amount) {
         if (amount <= 0) return null;

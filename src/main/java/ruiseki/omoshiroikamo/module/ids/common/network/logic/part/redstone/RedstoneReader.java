@@ -62,8 +62,6 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
     private static final int HIGH_THRESHOLD = 8;
 
-    private final ItemStackHandlerBase inv = new ItemStackHandlerBase(4);
-
     public RedstoneReader() {
         super(new ItemStackHandlerBase(4));
     }
@@ -107,7 +105,8 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
         panel.height(196);
 
         // Settings
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         // Sync

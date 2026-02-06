@@ -32,7 +32,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * NEI handler for a single ModularMachine structure preview.
  * Each structure gets its own handler instance and tab in NEI.
  * Only shows on Usage lookup (not Recipe lookup for controller).
- * 
  * TODO: Fix blueprints appear briefly in left tab
  * The loadTransferRects implementation might need adjustment for proper NEI
  * integration.
@@ -117,8 +116,7 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
     @SuppressWarnings("unchecked")
     private void extractBlocksFromMapping(Object value, Set<Block> blocks) {
         // Handle BlockMapping class (parsed from JSON)
-        if (value instanceof StructureDefinitionData.BlockMapping) {
-            StructureDefinitionData.BlockMapping mapping = (StructureDefinitionData.BlockMapping) value;
+        if (value instanceof StructureDefinitionData.BlockMapping mapping) {
             // Single block
             if (mapping.block != null) {
                 addBlockFromId(mapping.block, blocks);
@@ -186,7 +184,7 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
     }
 
     @Override
-    public ModularMachineGuiHandler getGuiHandler() {
+    public @NotNull ModularMachineGuiHandler getGuiHandler() {
         return guiHandler;
     }
 

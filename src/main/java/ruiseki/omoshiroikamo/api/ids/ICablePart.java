@@ -8,9 +8,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
-import com.cleanroommc.modularui.screen.GuiContainerWrapper;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
@@ -32,10 +30,6 @@ public interface ICablePart extends ICableNode {
 
     @NotNull
     ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings);
-
-    default Class<? extends IMuiScreen> getGuiContainer() {
-        return GuiContainerWrapper.class;
-    }
 
     AxisAlignedBB getCollisionBox();
 

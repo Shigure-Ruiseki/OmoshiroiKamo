@@ -15,6 +15,6 @@ public class Outline implements IDrawable {
 
     @Override
     public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
-        GuiDraw.drawOutline(x, y, width, height, color);
+        GuiDraw.drawBorderInsideLTRB(x, y, width, height, color);
     }
 }

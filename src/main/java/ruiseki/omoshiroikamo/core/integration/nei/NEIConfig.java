@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackPositioner;
@@ -51,7 +52,7 @@ public class NEIConfig implements IConfigureNEI {
      */
     @SubscribeEvent
     public static void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
-        if (BackportConfigs.enableMachinery) {
+        if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
             event.registerHandlerInfo(
                 new HandlerInfo.Builder(ModularMachineNEIHandler.class, "Modular Machine", LibMisc.MOD_ID)
                     .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
@@ -117,7 +118,7 @@ public class NEIConfig implements IConfigureNEI {
         // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
         // TODO: Add Recipe of Modular Machines
         // TODO: Enable 'P' button in structure preview (Name is currently null)
-        if (BackportConfigs.enableMachinery) {
+        if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
                 // Register ONLY as usage handler - structure preview is Usage-only

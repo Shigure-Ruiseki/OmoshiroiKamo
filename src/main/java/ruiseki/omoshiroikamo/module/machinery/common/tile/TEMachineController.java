@@ -44,7 +44,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * Extends AbstractMBModifierTE to leverage existing structure validation and
  * crafting logic.
  * Corresponds to the 'Q' symbol in structure definitions.
- *
  * Blueprint slot provides GUI-based structure selection.
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
@@ -469,7 +468,7 @@ public class TEMachineController extends AbstractMBModifierTE
         // Load ExtendedFacing
         if (nbt.hasKey("extendedFacing")) {
             int ordinal = nbt.getByte("extendedFacing") & 0xFF;
-            if (ordinal >= 0 && ordinal < ExtendedFacing.VALUES.length) {
+            if (ordinal < ExtendedFacing.VALUES.length) {
                 extendedFacing = ExtendedFacing.VALUES[ordinal];
             }
         }
@@ -542,7 +541,7 @@ public class TEMachineController extends AbstractMBModifierTE
     /**
      * Get cached structure tint color.
      * Used by BlockMachineController's colorMultiplier.
-     * 
+     *
      * @return ARGB color value, or null if no color defined
      */
     public Integer getCachedStructureTintColor() {
@@ -552,7 +551,7 @@ public class TEMachineController extends AbstractMBModifierTE
     /**
      * Get the tint color from this controller's structure properties.
      * Returns null if not formed or no color is defined.
-     * 
+     *
      * @return ARGB color value, or null if no color defined
      */
     public Integer getStructureTintColor() {

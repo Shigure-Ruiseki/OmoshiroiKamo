@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -43,7 +44,6 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiFactories;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
@@ -206,15 +206,10 @@ public class TECable extends AbstractTE
             if (!otherCable.hasCore()) return false;
             ForgeDirection opp = side.getOpposite();
             if (otherCable.isSideBlocked(opp)) return false;
-            if (otherCable.hasPart(opp)) return false;
-            return true;
+            return !otherCable.hasPart(opp);
         }
 
-        if (other instanceof ICableEndpoint) {
-            return true;
-        }
-
-        return false;
+        return other instanceof ICableEndpoint;
     }
 
     @Override
@@ -416,8 +411,7 @@ public class TECable extends AbstractTE
                     }
 
                     if (hasCore()) {
-                        OKGuiFactories.tileEntity()
-                            .setGuiContainer(part.getGuiContainer())
+                        GuiFactories.sidedTileEntity()
                             .open(player, x, y, z, hit.side);
                         return true;
                     }
@@ -651,9 +645,8 @@ public class TECable extends AbstractTE
             case EAST -> AxisAlignedBB.getBoundingBox(max, min, min, 1, max, max);
             case DOWN -> AxisAlignedBB.getBoundingBox(min, 0, min, max, min, max);
             case UP -> AxisAlignedBB.getBoundingBox(min, max, min, max, 1, max);
-            case NORTH -> AxisAlignedBB.getBoundingBox(min, min, 0, max, max, min);
             case SOUTH -> AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1);
-            default -> null;
+            default -> AxisAlignedBB.getBoundingBox(min, min, 0, max, max, min);
         };
     }
 

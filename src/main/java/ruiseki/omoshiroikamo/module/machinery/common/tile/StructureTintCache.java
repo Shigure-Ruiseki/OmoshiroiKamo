@@ -18,7 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Caches tint colors for structure blocks at the world level.
  * Controllers register/unregister colors on formation/unformation.
  * Port/Casing blocks retrieve colors from this cache.
- * 
  * Thread-safe implementation.
  */
 public class StructureTintCache {
@@ -30,7 +29,7 @@ public class StructureTintCache {
 
     /**
      * Set color for the specified coordinates
-     * 
+     *
      * @param world World
      * @param x     X coordinate
      * @param y     Y coordinate
@@ -48,7 +47,7 @@ public class StructureTintCache {
 
     /**
      * Remove color for the specified coordinates
-     * 
+     *
      * @param world World
      * @param x     X coordinate
      * @param y     Y coordinate
@@ -67,7 +66,7 @@ public class StructureTintCache {
     /**
      * Clear all cached colors for the specified dimension.
      * Used when switching structures in NEI preview.
-     * 
+     *
      * @param dimensionId Dimension ID to clear
      */
     public static void clearDimension(int dimensionId) {
@@ -79,7 +78,7 @@ public class StructureTintCache {
 
     /**
      * Get color for the specified coordinates
-     * 
+     *
      * @param world IBlockAccess (World or IBlockAccess implementation)
      * @param x     X coordinate
      * @param y     Y coordinate
@@ -107,8 +106,7 @@ public class StructureTintCache {
         }
 
         Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimension);
-        Integer result = dimensionCache != null ? dimensionCache.get(new ChunkCoordinates(x, y, z)) : null;
-        return result;
+        return dimensionCache != null ? dimensionCache.get(new ChunkCoordinates(x, y, z)) : null;
     }
 
     /**
@@ -137,7 +135,7 @@ public class StructureTintCache {
 
     /**
      * Clear cache for all specified coordinates
-     * 
+     *
      * @param world     World
      * @param positions Collection of coordinates to clear
      */
@@ -155,7 +153,7 @@ public class StructureTintCache {
 
     /**
      * Clear all cache for a specific dimension (for debugging)
-     * 
+     *
      * @param world World
      */
     public static void clearDimension(World world) {

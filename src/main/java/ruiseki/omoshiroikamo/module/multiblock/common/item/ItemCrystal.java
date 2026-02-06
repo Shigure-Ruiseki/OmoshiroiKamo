@@ -29,26 +29,17 @@ public class ItemCrystal extends ItemOK {
     @Override
     public int getColorFromItemStack(ItemStack stack, int pass) {
         int meta = stack.getItemDamage();
-        switch (meta) {
-            case 0:
-                return EnumDye.rgbToHex(138, 255, 250);
-            case 1:
-                return EnumDye.rgbToHex(255, 179, 71);
-            case 2:
-                return EnumDye.rgbToHex(11, 0, 51);
-            case 3:
-                return EnumDye.rgbToHex(27, 255, 212);
-            case 4:
-                return EnumDye.rgbToHex(28, 28, 28);
-            case 5:
-                return EnumDye.rgbToHex(177, 156, 217);
-            case 6:
-                return EnumDye.rgbToHex(128, 0, 128);
-            case 7:
-                return EnumDye.rgbToHex(255, 215, 0);
-            default:
-                return EnumDye.WHITE.getColor();
-        }
+        return switch (meta) {
+            case 0 -> EnumDye.rgbToHex(138, 255, 250);
+            case 1 -> EnumDye.rgbToHex(255, 179, 71);
+            case 2 -> EnumDye.rgbToHex(11, 0, 51);
+            case 3 -> EnumDye.rgbToHex(27, 255, 212);
+            case 4 -> EnumDye.rgbToHex(28, 28, 28);
+            case 5 -> EnumDye.rgbToHex(177, 156, 217);
+            case 6 -> EnumDye.rgbToHex(128, 0, 128);
+            case 7 -> EnumDye.rgbToHex(255, 215, 0);
+            default -> EnumDye.WHITE.getColor();
+        };
     }
 
     @Override

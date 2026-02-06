@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -50,6 +50,7 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractWriterPart;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
@@ -86,7 +87,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Collections.singletonList(IEnergyNet.class);
+        return Arrays.asList(IEnergyNet.class, ILogicNet.class);
     }
 
     @Override
@@ -138,7 +139,8 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
         ModularPanel panel = new ModularPanel("energy_filer_interface");
         panel.height(196);
 
-        IPanelHandler settingPanel = syncManager.panel("part_panel", (sm, sh) -> PartSettingPanel.build(this), true);
+        IPanelHandler settingPanel = syncManager
+            .syncedPanel("part_panel", true, (sm, sh) -> PartSettingPanel.build(this));
         panel.child(PartSettingPanel.addSettingButton(settingPanel));
 
         // Sync
@@ -159,7 +161,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
             .height(72)
             .maxSize(72);
 
-        IPanelHandler allSetting = syncManager.panel("allSetting", this::allSettingPanel, true);
+        IPanelHandler allSetting = syncManager.syncedPanel("allSetting", true, this::allSettingPanel);
 
         addSearchableRow(
             list,

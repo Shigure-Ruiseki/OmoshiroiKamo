@@ -46,11 +46,21 @@ public class QuantumExtractorRecipes {
     }
 
     public static IFocusableRegistry getOreRegistry(int tier, int dimId) {
-        return oreRegistryByDim.computeIfAbsent(dimId, QuantumExtractorRecipes::createOreRegistryForDim)[tier];
+        IFocusableRegistry[] arr = oreRegistryByDim.get(dimId);
+        if (arr == null) {
+            arr = createOreRegistryForDim(dimId);
+            oreRegistryByDim.put(dimId, arr);
+        }
+        return arr[tier];
     }
 
     public static IFocusableRegistry getResRegistry(int tier, int dimId) {
-        return resRegistryByDim.computeIfAbsent(dimId, QuantumExtractorRecipes::createResRegistryForDim)[tier];
+        IFocusableRegistry[] arr = resRegistryByDim.get(dimId);
+        if (arr == null) {
+            arr = createResRegistryForDim(dimId);
+            resRegistryByDim.put(dimId, arr);
+        }
+        return arr[tier];
     }
 
     /**
@@ -195,7 +205,7 @@ public class QuantumExtractorRecipes {
                     entryStack = wsb.getMainStack();
                 }
             }
-            if (entryStack != null && areStacksSameItem(entryStack, stack)) {
+            if (areStacksSameItem(entryStack, stack)) {
                 // Found matching entry, return first dimension
                 int[] dims = entry.getDimensions();
                 if (dims != null && dims.length > 0) {
@@ -233,7 +243,7 @@ public class QuantumExtractorRecipes {
                     entryStack = wsb.getMainStack();
                 }
             }
-            if (entryStack != null && areStacksSameItem(entryStack, stack)) {
+            if (areStacksSameItem(entryStack, stack)) {
                 // Found matching entry, return first dimension
                 int[] dims = entry.getDimensions();
                 if (dims != null && dims.length > 0) {

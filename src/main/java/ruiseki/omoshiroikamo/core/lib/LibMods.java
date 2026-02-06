@@ -11,6 +11,7 @@ public enum LibMods {
     AE2FluidCrafting("ae2fc"),
     Baubles("Baubles"),
     BaublesExpanded("Baubles|Expanded"),
+    BlockRenderer6343("blockrenderer6343"),
     BigReactors("BigReactors"),
     BogoSorter("bogosorter"),
     Botania("Botania"),
@@ -39,11 +40,6 @@ public enum LibMods {
     LibMods(String modid) {
         this.modid = modid;
         this.supplier = null;
-    }
-
-    LibMods(Supplier<Boolean> supplier) {
-        this.supplier = supplier;
-        this.modid = null;
     }
 
     public boolean isLoaded() {

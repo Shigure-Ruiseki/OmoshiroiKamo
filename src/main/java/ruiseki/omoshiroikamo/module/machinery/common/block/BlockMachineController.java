@@ -27,7 +27,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * This block is mapped to the 'Q' symbol in structure definitions.
  * When right-clicked, it validates and forms the multiblock structure.
  * Uses JSON model with base + overlay textures via GTNHLib.
- *
  * TODO List:
  * - Implement GUI for machine management and status display
  * - State management (IDLE, WORKING, PAUSED, ERROR)
@@ -54,11 +53,6 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     }
 
     private IIcon overlayIcon;
-
-    @Override
-    public void init() {
-        super.init();
-    }
 
     @Override
     public int colorMultiplier(IBlockAccess world, int x, int y, int z) {

@@ -16,7 +16,6 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -126,12 +125,8 @@ public class StorageTerminal extends AbstractPart {
 
     @Override
     public @NotNull ModularPanel partPanel(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        settings.customGui(() -> TerminalGuiContainer::new);
         return new StorageTerminalPanel(data, syncManager, settings, this);
-    }
-
-    @Override
-    public Class<? extends IMuiScreen> getGuiContainer() {
-        return TerminalGuiContainer.class;
     }
 
     @Override
