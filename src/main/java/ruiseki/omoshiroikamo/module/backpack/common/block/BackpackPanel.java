@@ -267,7 +267,7 @@ public class BackpackPanel extends ModularPanel {
                 backpackSyncHandler.setSortType(nextSortType);
 
                 backpackSyncHandler
-                    .syncToServer(BackpackSH.UPDATE_SET_SORT_TYPE, buf ->  buf.writeInt(nextSortType.ordinal()));
+                    .syncToServer(BackpackSH.UPDATE_SET_SORT_TYPE, buf -> buf.writeInt(nextSortType.ordinal()));
 
             }).setEnabledIf(cyclicVariantButtonWidget -> !settingPanel.isPanelOpen())
                 .top(4)
@@ -489,10 +489,9 @@ public class BackpackPanel extends ModularPanel {
                 new ItemDrawable(stack).asIcon()
                     .size(18));
             tabWidget.tooltip(
-                tooltip ->
-                    tooltip.clearText()
-                        .addLine(IKey.str(item.getItemStackDisplayName(stack)))
-                        .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
+                tooltip -> tooltip.clearText()
+                    .addLine(IKey.str(item.getItemStackDisplayName(stack)))
+                    .pos(RichTooltip.Pos.NEXT_TO_MOUSE));
 
             // spotless: off
 

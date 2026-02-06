@@ -197,8 +197,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         IPanelHandler pulseIntSetting = syncManager.syncedPanel(
             "pulseIntSetting",
             true,
-            (syncManager1, syncHandler) -> pulseSettingPanel(
-                new IntSyncValue(this::getPulseIntLength, this::setPulseIntLength)));
+            (syncManager1,
+                syncHandler) -> pulseSettingPanel(new IntSyncValue(this::getPulseIntLength, this::setPulseIntLength)));
         addSearchableRow(
             list,
             IKey.lang("gui.ids.redstoneWriter.pulseInt")
@@ -236,8 +236,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
         return panel;
     }
 
-    private ModularPanel pulseSettingPanel(
-        IntSyncValue value) {
+    private ModularPanel pulseSettingPanel(IntSyncValue value) {
         ModularPanel panel = new Dialog<>("pulse_setting").setDraggable(false)
             .setDisablePanelsBelow(false)
             .setCloseOnOutOfBoundsClick(false);
