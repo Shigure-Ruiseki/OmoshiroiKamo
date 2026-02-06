@@ -9,9 +9,9 @@ public final class LibMisc {
     public static final String MOD_NAME = Tags.MOD_NAME;
 
     public static final String VERSION = Tags.VERSION;
-    public static final String DEPENDENCIES = "required-after:gtnhlib@[0.8.34,);"
+    public static final String DEPENDENCIES = "required-after:gtnhlib@[0.9.5,);"
         + "required-after:structurelib@[1.4.23,);"
-        + "required-after:modularui2@[2.3.22-1.7.10,);"
+        + "required-after:modularui2@[2.3.35-1.7.10,);"
         + "after:Baubles|Expanded;"
         + "after:Baubles;"
         + "after:NotEnoughItems;"
