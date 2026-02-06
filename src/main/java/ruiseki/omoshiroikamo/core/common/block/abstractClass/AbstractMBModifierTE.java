@@ -137,7 +137,7 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
         // Always call super first to ensure IC2 registration and energy sync
         super.doUpdate();
 
-        if (!shouldDoWorkThisTick(20) && isFormed) {
+        if (!shouldDoWorkThisTick(5) && isFormed) {
             return;
         }
 

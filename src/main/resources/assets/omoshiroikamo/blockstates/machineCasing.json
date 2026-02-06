@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "omoshiroikamo:block/machineCasing" }
+    "": {
+      "model": "omoshiroikamo:block/machineCasing"
+    }
   }
 }

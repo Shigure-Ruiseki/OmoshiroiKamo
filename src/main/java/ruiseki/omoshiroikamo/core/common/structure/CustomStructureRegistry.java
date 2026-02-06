@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Registers CustomStructures with StructureLib.
+ * TODO: Fix background blocks flickering
  */
 public class CustomStructureRegistry {
 
@@ -85,7 +86,8 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Apply 180-degree rotation to align JSON definition with StructureLib coordinate system
+            // Apply 180-degree rotation to align JSON definition with StructureLib
+            // This ensures Top of JSON = Front of Machine for in-game placement
             String[][] rotatedShape = rotate180(shape);
 
             // Calculate controller offset from rotated shape
@@ -177,8 +179,7 @@ public class CustomStructureRegistry {
 
         // Handle direct List (JSON array mapped directly, e.g., "P": ["block1",
         // "block2"])
-        if (mapping instanceof List) {
-            List<?> listMapping = (List<?>) mapping;
+        if (mapping instanceof List<?> listMapping) {
             List<String> blockStrings = new ArrayList<>();
             for (Object item : listMapping) {
                 if (item instanceof String) {
@@ -190,8 +191,7 @@ public class CustomStructureRegistry {
             }
         }
 
-        if (mapping instanceof StructureDefinitionData.BlockMapping) {
-            StructureDefinitionData.BlockMapping blockMapping = (StructureDefinitionData.BlockMapping) mapping;
+        if (mapping instanceof StructureDefinitionData.BlockMapping blockMapping) {
             if (blockMapping.block != null && !blockMapping.block.isEmpty()) {
                 return BlockResolver.createElement(blockMapping.block);
             }
@@ -242,23 +242,15 @@ public class CustomStructureRegistry {
         return null;
     }
 
-    /**
-     * Apply 180-degree horizontal rotation to the shape.
-     * True 180-degree rotation requires:
-     * 1. Reverse the order of rows in each layer (front-to-back flip)
-     * 2. Reverse each row string (left-to-right flip)
-     * Used to align JSON definition with controller facing direction.
-     */
     private static String[][] rotate180(String[][] shape) {
         String[][] rotated = new String[shape.length][];
         for (int layer = 0; layer < shape.length; layer++) {
             int numRows = shape[layer].length;
             rotated[layer] = new String[numRows];
             for (int row = 0; row < numRows; row++) {
-                // Get row from opposite end and reverse it
+                // Get row from opposite end (Z flip) but keep string order (No X flip)
                 int srcRow = numRows - 1 - row;
-                rotated[layer][row] = new StringBuilder(shape[layer][srcRow]).reverse()
-                    .toString();
+                rotated[layer][row] = shape[layer][srcRow];
             }
         }
         return rotated;
@@ -281,17 +273,17 @@ public class CustomStructureRegistry {
 
     /**
      * Find the controller (Q) position and return the offset for StructureLib.
-     * 
+     *
      * JSON format coordinate mapping:
      * - layer index = Y axis (vertical, up is positive)
      * - row index = Z axis (depth, controller facing direction)
      * - col (char) index = X axis (horizontal)
-     * 
+     *
      * StructureLib buildOrHints expects (offsetA, offsetB, offsetC) which are:
      * - offsetA: horizontal offset (X)
      * - offsetB: vertical offset (Y)
      * - offsetC: depth offset (Z)
-     * 
+     *
      * The offset represents where the controller is relative to the structure
      * origin (0,0,0).
      */
