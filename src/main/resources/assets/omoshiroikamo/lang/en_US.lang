@@ -1185,3 +1185,37 @@ tile.modularEssentiaOutput.tier_1.name=Essentia Output Hatch
 tile.modularItemOutputME.me.name=ME Item Output Bus
 tile.modularFluidOutputME.me.name=ME Fluid Output Hatch
 tile.modularEssentiaInputME.me.name=ME Essentia Input Hatch
+
+# Deep Mob Learning
+model.tier_0.name=§7Faulty§r
+model.tier_1.name=§aBasic§r
+model.tier_2.name=§9Advanced§r
+model.tier_3.name=§dSuperior§r
+model.tier_4.name=§6Self-Aware§r
+
+tooltip.creative_model_learner.desc=A creative item that levels up data models inside the Deep Learner.
+tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r
+tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r
+
+# Integrated Dynamics
+tile.ids.cable.name=Logic Cable
+tile.ids.programmer.name=Programmer
+
+item.ids.variableCard.name=Variable Card
+item.ids.energyInterface.name=Energy Interface
+item.ids.energyFilterInterface.name=Energy Filter Interface
+item.ids.energyImporter.name=Energy Importer
+item.ids.energyExporter.name=Energy Exporter
+item.ids.itemInterface.name=Item Interface
+item.ids.itemFilterInterface.name=Item Filter Interface
+item.ids.itemImporter.name=Item Importer
+item.ids.itemExporter.name=Item Exporter
+item.ids.storageTerminal.name=Storage Terminal
+item.ids.craftingInterface.name=Crafting Interface
+item.ids.redstoneReader.name=Redstone Reader
+item.ids.blockReader.name=Block Reader
+item.ids.inventoryReader.name=Inventory Reader
+item.ids.fluidReader.name=Fluid Reader
+item.ids.redstoneWriter.name=Redstone Writer
+
+tooltip.ids.variable_card.empty=§7No logic data

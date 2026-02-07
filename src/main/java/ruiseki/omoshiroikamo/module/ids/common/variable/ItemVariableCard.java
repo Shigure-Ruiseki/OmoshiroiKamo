@@ -11,6 +11,7 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemVariableCard extends ItemOK {
 
@@ -23,7 +24,7 @@ public class ItemVariableCard extends ItemOK {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if (ItemNBTUtils.getCompound(stack, "Logic", false) == null) {
-            list.add("§7No logic data");
+            list.add(LibMisc.LANG.localize("tooltip.ids.variable_card.empty"));
             return;
         }
 

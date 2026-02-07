@@ -1042,3 +1042,26 @@ model.tier_4.name=§6自己認識§r
 tooltip.creative_model_learner.desc=ディープラーナー内のデータモデルをレベルアップさせるクリエイティブアイテム。
 tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§o右クリック§rでティアを上昇させます。§r
 tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
+
+# Integrated Dynamics
+tile.ids.cable.name=ロジックケーブル
+tile.ids.programmer.name=プログラマー
+
+item.ids.variableCard.name=変数カード
+item.ids.energyInterface.name=エネルギーインターフェース
+item.ids.energyFilterInterface.name=エネルギーフィルターインターフェース
+item.ids.energyImporter.name=エネルギー搬入口
+item.ids.energyExporter.name=エネルギー搬出口
+item.ids.itemInterface.name=アイテムインターフェース
+item.ids.itemFilterInterface.name=アイテムフィルターインターフェース
+item.ids.itemImporter.name=アイテム搬入口
+item.ids.itemExporter.name=アイテム搬出口
+item.ids.storageTerminal.name=ストレージターミナル
+item.ids.craftingInterface.name=クラフティングインターフェース
+item.ids.redstoneReader.name=レッドストーンリーダー
+item.ids.blockReader.name=ブロックリーダー
+item.ids.inventoryReader.name=インベントリリーダー
+item.ids.fluidReader.name=液体リーダー
+item.ids.redstoneWriter.name=レッドストーンライター
+
+tooltip.ids.variable_card.empty=§7ロジックデータなし
