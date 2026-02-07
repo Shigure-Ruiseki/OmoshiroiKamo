@@ -20,7 +20,7 @@ public class ItemChickenCatcher extends ItemOK {
         super(ModObject.itemChickenCatcher);
         setMaxDamage(64);
         setMaxStackSize(1);
-        setTextureName("chicken_catcher");
+        setTextureName("chicken/chicken_catcher");
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ItemAdvancedFilterUpgrade extends ItemUpgrade<AdvancedFilterUpgrade
     public ItemAdvancedFilterUpgrade() {
         super(ModObject.itemAdvancedFilterUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("advanced_filter_upgrade");
+        setTextureName("backpack/advanced_filter_upgrade");
     }
 
     @Override

@@ -64,7 +64,7 @@ public class ItemCowSpawnEgg extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "cow_displayer");
+        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "cow/cow_displayer");
     }
 
     @Override

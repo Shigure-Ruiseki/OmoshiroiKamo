@@ -14,7 +14,7 @@ public class BlockModifierFlight extends BlockModifier {
 
     protected BlockModifierFlight() {
         super(ModObject.blockModifierFlight.unlocalisedName, "flight");
-        setTextureName("modifier_flight");
+        setTextureName("multiblock/modifier_flight");
     }
 
     public static BlockModifierFlight create() {

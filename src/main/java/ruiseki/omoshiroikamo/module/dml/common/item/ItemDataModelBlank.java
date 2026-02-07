@@ -8,7 +8,7 @@ public class ItemDataModelBlank extends ItemOK {
     public ItemDataModelBlank() {
         super(ModObject.itemDataModelBlank.unlocalisedName);
         setMaxStackSize(64);
-        setTextureName("data_model_blank");
+        setTextureName("dml/data_model_blank");
     }
 
 }

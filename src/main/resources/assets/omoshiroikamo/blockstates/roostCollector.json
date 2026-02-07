@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "omoshiroikamo:block/roostCollector"
+      "model": "omoshiroikamo:block/chicken/roostCollector"
     }
   }
 }

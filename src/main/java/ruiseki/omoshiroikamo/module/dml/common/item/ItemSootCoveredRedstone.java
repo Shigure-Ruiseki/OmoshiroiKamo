@@ -29,7 +29,7 @@ public class ItemSootCoveredRedstone extends ItemOK {
     public ItemSootCoveredRedstone() {
         super(ModObject.itemSootCoveredRedstone.unlocalisedName);
         setMaxStackSize(64);
-        setTextureName("soot_covered_redstone");
+        setTextureName("dml/soot_covered_redstone");
     }
 
     @Override

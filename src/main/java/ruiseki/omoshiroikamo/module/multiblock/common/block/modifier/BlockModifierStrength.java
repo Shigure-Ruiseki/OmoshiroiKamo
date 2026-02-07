@@ -14,7 +14,7 @@ public class BlockModifierStrength extends BlockModifier {
 
     protected BlockModifierStrength() {
         super(ModObject.blockModifierStrength.unlocalisedName, "strength");
-        setTextureName("modifier_strength");
+        setTextureName("multiblock/modifier_strength");
     }
 
     public static BlockModifierStrength create() {

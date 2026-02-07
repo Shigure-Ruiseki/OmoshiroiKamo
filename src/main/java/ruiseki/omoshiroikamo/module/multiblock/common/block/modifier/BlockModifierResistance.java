@@ -14,7 +14,7 @@ public class BlockModifierResistance extends BlockModifier {
 
     protected BlockModifierResistance() {
         super(ModObject.blockModifierResistance.unlocalisedName, "resistance");
-        setTextureName("modifier_resistance");
+        setTextureName("multiblock/modifier_resistance");
     }
 
     public static BlockModifierResistance create() {

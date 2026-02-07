@@ -9,7 +9,7 @@ public class BlockModifierCore extends BlockModifier {
 
     protected BlockModifierCore() {
         super(ModObject.blockModifierNull.unlocalisedName, "");
-        setTextureName("modifier_core");
+        setTextureName("multiblock/modifier_core");
     }
 
     public static BlockModifierCore create() {

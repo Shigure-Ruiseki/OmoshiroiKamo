@@ -1,0 +1,6 @@
+{
+  "parent": "omoshiroikamo:block/dml/lootFabricatorIdle",
+  "textures": {
+    "front": "omoshiroikamo:block/dml/loot_fabricator_error"
+  }
+}

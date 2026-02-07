@@ -22,7 +22,7 @@ public class ItemAnalyzer extends ItemOK {
         super(ModObject.itemAnalyzer);
         setMaxStackSize(1);
         setMaxDamage(238);
-        setTextureName("analyzer");
+        setTextureName("chicken/analyzer");
     }
 
     @Override

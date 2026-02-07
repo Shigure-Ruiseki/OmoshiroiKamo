@@ -14,7 +14,7 @@ public class BlockModifierHaste extends BlockModifier {
 
     protected BlockModifierHaste() {
         super(ModObject.blockModifierHaste.unlocalisedName, "haste");
-        setTextureName("modifier_haste");
+        setTextureName("multiblock/modifier_haste");
     }
 
     public static BlockModifierHaste create() {

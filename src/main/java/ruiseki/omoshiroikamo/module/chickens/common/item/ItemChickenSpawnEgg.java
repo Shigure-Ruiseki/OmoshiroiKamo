@@ -74,8 +74,8 @@ public class ItemChickenSpawnEgg extends ItemOK {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IIconRegister register) {
-        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "spawn_egg");
-        overlayIcon = register.registerIcon(LibResources.PREFIX_MOD + "spawn_egg_overlay");
+        baseIcon = register.registerIcon(LibResources.PREFIX_MOD + "chicken/spawn_egg");
+        overlayIcon = register.registerIcon(LibResources.PREFIX_MOD + "chicken/spawn_egg_overlay");
     }
 
     @SideOnly(Side.CLIENT)

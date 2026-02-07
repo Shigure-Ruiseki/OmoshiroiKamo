@@ -17,7 +17,7 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
     public ItemUpgrade(String name) {
         super(name);
         setNoRepair();
-        setTextureName("upgrade_base");
+        setTextureName("backpack/upgrade_base");
     }
 
     public ItemUpgrade() {

@@ -15,7 +15,7 @@ public class ItemVoidUpgrade extends ItemUpgrade<VoidUpgradeWrapper> {
     public ItemVoidUpgrade() {
         super(ModObject.itemVoidUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("void_upgrade");
+        setTextureName("backpack/void_upgrade");
     }
 
     @Override

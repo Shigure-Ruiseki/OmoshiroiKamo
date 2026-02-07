@@ -1,7 +1,0 @@
-{
-  "parent": "omoshiroikamo:block/hardenedStructure",
-  "textures": {
-    "base": "omoshiroikamo:block/basalt_structure",
-    "particle": "omoshiroikamo:block/basalt_structure"
-  }
-}

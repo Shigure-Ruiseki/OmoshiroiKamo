@@ -26,7 +26,7 @@ public class ItemDeepLearner extends ItemOK implements IGuiHolder<PlayerInventor
     public ItemDeepLearner() {
         super(ModObject.itemDeepLearner.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("deep_learner");
+        setTextureName("dml/deep_learner");
     }
 
     @Override

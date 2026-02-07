@@ -14,7 +14,7 @@ public class BlockModifierFireResistance extends BlockModifier {
 
     protected BlockModifierFireResistance() {
         super(ModObject.blockModifierFireResistance.unlocalisedName, "fire_resistance");
-        setTextureName("modifier_fire_resistance");
+        setTextureName("multiblock/modifier_fire_resistance");
     }
 
     public static BlockModifierFireResistance create() {

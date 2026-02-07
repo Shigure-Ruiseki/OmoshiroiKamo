@@ -12,7 +12,7 @@ public class BlockModifierLuck extends BlockModifier {
 
     protected BlockModifierLuck() {
         super("modifierLuck", "luck");
-        setTextureName("modifier_luck");
+        setTextureName("multiblock/modifier_luck");
     }
 
     public static BlockModifierLuck create() {

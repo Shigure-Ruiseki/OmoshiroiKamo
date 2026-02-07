@@ -14,7 +14,7 @@ public class BlockModifierSaturation extends BlockModifier {
 
     protected BlockModifierSaturation() {
         super(ModObject.blockModifierSaturation.unlocalisedName, "saturation");
-        setTextureName("modifier_saturation");
+        setTextureName("multiblock/modifier_saturation");
     }
 
     public static BlockModifierSaturation create() {

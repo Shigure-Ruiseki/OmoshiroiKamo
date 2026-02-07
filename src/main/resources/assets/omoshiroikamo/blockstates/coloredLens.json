@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "omoshiroikamo:block/coloredLens"
+      "model": "omoshiroikamo:block/multiblock/coloredLens"
     }
   }
 }

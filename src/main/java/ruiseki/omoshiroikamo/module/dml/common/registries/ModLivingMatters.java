@@ -126,7 +126,7 @@ public class ModLivingMatters {
     }
 
     public LivingRegistryItem addLiving(int id, String displayName, String texture, int xpValue) {
-        return new LivingRegistryItem(id, displayName, LibResources.PREFIX_MOD + "living/" + texture, xpValue);
+        return new LivingRegistryItem(id, displayName, LibResources.PREFIX_MOD + "dml/living/" + texture, xpValue);
     }
 
     protected int nextID() {

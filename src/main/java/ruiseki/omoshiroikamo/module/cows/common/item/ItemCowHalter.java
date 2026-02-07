@@ -29,7 +29,7 @@ public class ItemCowHalter extends ItemOK {
     public ItemCowHalter() {
         super(ModObject.itemCowHalter);
         setMaxStackSize(1);
-        setTextureName("cow_halter");
+        setTextureName("cow/cow_halter");
     }
 
     @Override

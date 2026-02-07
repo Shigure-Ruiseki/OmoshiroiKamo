@@ -15,7 +15,7 @@ public class ItemAdvancedFeedingUpgrade extends ItemUpgrade<AdvancedFeedingUpgra
     public ItemAdvancedFeedingUpgrade() {
         super(ModObject.itemAdvancedFeedingUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("advanced_feeding_upgrade");
+        setTextureName("backpack/advanced_feeding_upgrade");
     }
 
     @Override
