@@ -16,7 +16,7 @@ public class ItemCreativeModelLearner extends ItemOK {
     public ItemCreativeModelLearner() {
         super(ModObject.itemCreativeModelLearner.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("creative_model_learner");
+        setTextureName("dml/creative_model_learner");
     }
 
     @Override

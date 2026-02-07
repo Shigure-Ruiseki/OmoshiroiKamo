@@ -1,10 +1,10 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "particle": "omoshiroikamo:block/machine_yellow",
-    "sides": "omoshiroikamo:block/machine_yellow",
-    "base": "omoshiroikamo:block/machine_base_dme",
-    "front": "omoshiroikamo:block/loot_fabricator_idle"
+    "particle": "omoshiroikamo:block/dml/machine_yellow",
+    "sides": "omoshiroikamo:block/dml/machine_yellow",
+    "base": "omoshiroikamo:block/dml/machine_base_dme",
+    "front": "omoshiroikamo:block/dml/loot_fabricator_idle"
   },
   "elements": [
     {

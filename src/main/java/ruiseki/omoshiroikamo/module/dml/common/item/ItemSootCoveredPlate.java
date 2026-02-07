@@ -8,6 +8,6 @@ public class ItemSootCoveredPlate extends ItemOK {
     public ItemSootCoveredPlate() {
         super(ModObject.itemSootCoveredPlate.unlocalisedName);
         setMaxStackSize(64);
-        setTextureName("soot_covered_plate");
+        setTextureName("dml/soot_covered_plate");
     }
 }

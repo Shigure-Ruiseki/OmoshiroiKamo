@@ -15,7 +15,7 @@ public class ItemEverlastingUpgrade extends ItemUpgrade<UpgradeWrapper> {
     public ItemEverlastingUpgrade() {
         super(ModObject.itemEverlastingUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("everlasting_upgrade");
+        setTextureName("backpack/everlasting_upgrade");
     }
 
     @Override

@@ -1,7 +1,7 @@
 {
-  "parent": "omoshiroikamo:block/backpackLeather",
+  "parent": "omoshiroikamo:block/backpack/backpackLeather",
   "textures": {
-    "clips": "omoshiroikamo:block/obsidian_clips"
+    "clips": "omoshiroikamo:block/backpack/iron_clips"
   },
   "display": {
     "thirdperson_righthand": {

@@ -193,12 +193,12 @@ public abstract class BaseModelHandler {
 
                         if (data.pristineMatterTexture != null) {
                             model.setPristineTexture(
-                                LibResources.PREFIX_MOD + "pristine/"
+                                LibResources.PREFIX_MOD + "dml/pristine/"
                                     + this.texturesLocation
                                     + data.pristineMatterTexture);
                         } else {
                             model.setPristineTexture(
-                                LibResources.PREFIX_MOD + "pristine/"
+                                LibResources.PREFIX_MOD + "dml/pristine/"
                                     + this.texturesLocation
                                     + "pristine_matter_"
                                     + data.texture);
@@ -294,7 +294,7 @@ public abstract class BaseModelHandler {
         return new ModelRegistryItem(
             id,
             displayName,
-            LibResources.PREFIX_MOD + "model/" + this.texturesLocation + texture,
+            LibResources.PREFIX_MOD + "dml/model/" + this.texturesLocation + texture,
             entityDisplay,
             numberOfHearts,
             interfaceScale,

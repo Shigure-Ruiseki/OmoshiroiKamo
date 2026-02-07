@@ -8,6 +8,6 @@ public class ItemPolymerClay extends ItemOK {
     public ItemPolymerClay() {
         super(ModObject.itemPolymerClay.unlocalisedName);
         setMaxStackSize(64);
-        setTextureName("polymer_clay");
+        setTextureName("dml/polymer_clay");
     }
 }

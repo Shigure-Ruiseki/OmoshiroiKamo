@@ -1,10 +1,10 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "particle": "omoshiroikamo:block/machine_blue",
-    "sides": "omoshiroikamo:block/machine_blue",
-    "base": "omoshiroikamo:block/machine_base_dme",
-    "front": "omoshiroikamo:block/simulation_chamber_idle"
+    "particle": "omoshiroikamo:block/dml/machine_blue",
+    "sides": "omoshiroikamo:block/dml/machine_blue",
+    "base": "omoshiroikamo:block/dml/machine_base_dme",
+    "front": "omoshiroikamo:block/dml/simulation_chamber_idle"
   },
   "elements": [
     {

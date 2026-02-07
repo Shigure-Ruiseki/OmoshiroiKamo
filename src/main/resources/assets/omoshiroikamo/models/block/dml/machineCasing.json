@@ -1,7 +1,7 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "base": "omoshiroikamo:block/machine_base_dme"
+    "base": "omoshiroikamo:block/dml/machine_base_dme"
   },
   "elements": [
     {

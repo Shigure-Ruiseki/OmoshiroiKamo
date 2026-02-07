@@ -15,7 +15,7 @@ public class ItemPickupUpgrade extends ItemUpgrade<PickupUpgradeWrapper> {
     public ItemPickupUpgrade() {
         super(ModObject.itemPickupUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("pickup_upgrade");
+        setTextureName("backpack/pickup_upgrade");
     }
 
     @Override

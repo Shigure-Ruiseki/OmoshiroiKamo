@@ -1,8 +1,8 @@
 {
   "multipart": [
-    { "when": { "meta": 0 }, "apply": { "model": "omoshiroikamo:block/backpackGold", "y": 270 } },
-    { "when": { "meta": 1 }, "apply": { "model": "omoshiroikamo:block/backpackGold", "y": 90 } },
-    { "when": { "meta": 2 }, "apply": { "model": "omoshiroikamo:block/backpackGold", "y": 0 } },
-    { "when": { "meta": 3 }, "apply": { "model": "omoshiroikamo:block/backpackGold", "y": 180 } }
+    { "when": { "meta": 0 }, "apply": { "model": "omoshiroikamo:block/backpack/backpackGold", "y": 270 } },
+    { "when": { "meta": 1 }, "apply": { "model": "omoshiroikamo:block/backpack/backpackGold", "y": 90 } },
+    { "when": { "meta": 2 }, "apply": { "model": "omoshiroikamo:block/backpack/backpackGold", "y": 0 } },
+    { "when": { "meta": 3 }, "apply": { "model": "omoshiroikamo:block/backpack/backpackGold", "y": 180 } }
   ]
 }

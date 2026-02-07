@@ -15,7 +15,7 @@ public class ItemCraftingUpgrade extends ItemUpgrade<CraftingUpgradeWrapper> {
     public ItemCraftingUpgrade() {
         super(ModObject.itemCraftingUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("crafting_upgrade");
+        setTextureName("backpack/crafting_upgrade");
     }
 
     @Override

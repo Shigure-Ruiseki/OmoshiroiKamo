@@ -1,6 +1,0 @@
-{
-  "parent": "omoshiroikamo:block/simulationChamberIdle",
-  "textures": {
-    "front": "omoshiroikamo:block/simulation_chamber_error"
-  }
-}

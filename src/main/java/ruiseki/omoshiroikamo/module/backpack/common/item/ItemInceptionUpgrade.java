@@ -15,7 +15,7 @@ public class ItemInceptionUpgrade extends ItemUpgrade<UpgradeWrapper> {
     public ItemInceptionUpgrade() {
         super(ModObject.itemInceptionUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("inception_upgrade");
+        setTextureName("backpack/inception_upgrade");
     }
 
     @Override

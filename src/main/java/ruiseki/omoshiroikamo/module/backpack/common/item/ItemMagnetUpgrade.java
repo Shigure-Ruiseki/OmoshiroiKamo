@@ -15,7 +15,7 @@ public class ItemMagnetUpgrade extends ItemUpgrade<MagnetUpgradeWrapper> {
     public ItemMagnetUpgrade() {
         super(ModObject.itemMagnetUpgrade.unlocalisedName);
         setMaxStackSize(1);
-        setTextureName("magnet_upgrade");
+        setTextureName("backpack/magnet_upgrade");
     }
 
     @Override
