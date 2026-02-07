@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 
 public interface ILogicReader {
@@ -29,7 +29,7 @@ public interface ILogicReader {
 
         logic.setString("Key", key.getId());
         logic.setString(
-            "Value",
+            "ValueType",
             key.getDefaultType()
                 .getId());
 

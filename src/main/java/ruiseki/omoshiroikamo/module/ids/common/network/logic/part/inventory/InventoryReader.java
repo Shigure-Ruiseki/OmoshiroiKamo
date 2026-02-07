@@ -46,9 +46,9 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractReaderPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKey;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.LogicValues;
 

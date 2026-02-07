@@ -6,10 +6,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.operator.ILogicOperator;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.operator.OperatorRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKey;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
 

@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.IDsNetworkTickHandler;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.type.LogicTypes;
 
 public class IDsCommon implements IModuleCommon {
@@ -40,6 +40,7 @@ public class IDsCommon implements IModuleCommon {
     public void preInit(FMLPreInitializationEvent event) {
         LogicTypes.preInit();
         LogicKeys.preInit();
+
         IDsBlocks.preInit();
         IDsItems.preInit();
         IDsCreative.preInit();
