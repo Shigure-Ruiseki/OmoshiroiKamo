@@ -24,7 +24,7 @@ public class ItemColoredEgg extends ItemOK {
         super(ModObject.itemColoredEgg.unlocalisedName);
         setMaxStackSize(16);
         setMaxDamage(0);
-        setTextureName("colored_egg");
+        setTextureName("chicken/colored_egg");
     }
 
     @Override

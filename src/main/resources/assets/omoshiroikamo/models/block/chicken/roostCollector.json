@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube",
 	"textures": {
-		"particle": "omoshiroikamo:block/plain_face",
-		"up": "omoshiroikamo:block/plain_face",
-		"west": "omoshiroikamo:block/slat_side"
+		"particle": "omoshiroikamo:block/chicken/plain_face",
+		"up": "omoshiroikamo:block/chicken/plain_face",
+		"west": "omoshiroikamo:block/chicken/slat_side"
 	},
 	"elements": [
 		{

@@ -3,11 +3,11 @@
 	"parent": "minecraft:block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "omoshiroikamo:block/plain_face",
-		"wood": "omoshiroikamo:block/plain_face",
-		"front": "omoshiroikamo:block/curtain_side",
-		"hay_side": "omoshiroikamo:block/hay_side",
-		"hay": "omoshiroikamo:block/hay_floor"
+		"particle": "omoshiroikamo:block/chicken/plain_face",
+		"wood": "omoshiroikamo:block/chicken/plain_face",
+		"front": "omoshiroikamo:block/chicken/curtain_side",
+		"hay_side": "omoshiroikamo:block/chicken/hay_side",
+		"hay": "omoshiroikamo:block/chicken/hay_floor"
 	},
 	"elements": [
 		{

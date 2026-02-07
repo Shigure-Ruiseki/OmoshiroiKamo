@@ -13,7 +13,7 @@ public class ItemSolidXp extends ItemOK {
 
     public ItemSolidXp() {
         super(ModObject.itemSolidXp);
-        setTextureName("solid_xp");
+        setTextureName("chicken/solid_xp");
     }
 
     public boolean hasCustomEntity(ItemStack stack) {

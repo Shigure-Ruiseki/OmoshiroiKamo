@@ -3,10 +3,10 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "omoshiroikamo:block/curtain_side",
-		"side": "omoshiroikamo:block/curtain_side",
-		"floor": "omoshiroikamo:block/hay_floor",
-		"top": "omoshiroikamo:block/plain_face"
+		"particle": "omoshiroikamo:block/chicken/curtain_side",
+		"side": "omoshiroikamo:block/chicken/curtain_side",
+		"floor": "omoshiroikamo:block/chicken/hay_floor",
+		"top": "omoshiroikamo:block/chicken/plain_face"
 	},
 	"elements": [
 		{

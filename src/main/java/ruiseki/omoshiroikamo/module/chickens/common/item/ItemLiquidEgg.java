@@ -33,7 +33,7 @@ public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
         super(ModObject.itemLiquidEgg);
         setMaxStackSize(16);
         setMaxDamage(0);
-        setTextureName("liquid_egg");
+        setTextureName("chicken/liquid_egg");
     }
 
     @Override
