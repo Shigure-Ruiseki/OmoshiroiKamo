@@ -1078,9 +1078,9 @@ entity.EnderiumCow.name=エンダリウムウシ
 entity.PigIronCow.name=豚鉄ウシ
 
 # DML
-item.living_matter.overworldian.name=§9オーバーワールド系
-item.living_matter.hellish.name=§c地獄系
-item.living_matter.extraterrestrial.name=§d宇宙系
+item.living_matter.overworldian.name=§9オーバーワールド系マター
+item.living_matter.hellish.name=§c地獄系マター
+item.living_matter.extraterrestrial.name=§d宇宙系マター
 
 item.model.Blaze.name=§bブレイズデータモデル§r
 item.pristine.Blaze.name=純粋なブレイズマター

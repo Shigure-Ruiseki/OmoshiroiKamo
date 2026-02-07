@@ -1078,9 +1078,9 @@ entity.EnderiumCow.name=Enderium Cow
 entity.PigIronCow.name=Pig Iron Cow
 
 # DML
-item.living_matter.overworldian.name=§9Overworldian
-item.living_matter.hellish.name=§cHellish
-item.living_matter.extraterrestrial.name=§dExtraterrestrial
+item.living_matter.overworldian.name=§9Overworldian Matter
+item.living_matter.hellish.name=§cHellish Matter
+item.living_matter.extraterrestrial.name=§dExtraterrestrial Matter
 
 item.model.Blaze.name=§bBlaze Data Model§r
 item.pristine.Blaze.name=Pristine Blaze Matter
