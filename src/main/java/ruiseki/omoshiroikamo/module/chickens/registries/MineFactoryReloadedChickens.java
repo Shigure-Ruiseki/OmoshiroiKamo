@@ -25,9 +25,7 @@ public class MineFactoryReloadedChickens extends BaseChickenHandler {
             "PinkSlimeChicken",
             0xC8738A,
             0x804954,
-            SpawnType.NONE).setLang("en_US", "Pink Slime Chicken")
-                .setLang("ja_JP", "ピンクスライムのニワトリ")
-                .setLayString("ore:slimeballPink");
+            SpawnType.NONE).setLayString("ore:slimeballPink");
         allChickens.add(pinkSlimeChicken);
 
         return allChickens;

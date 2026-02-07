@@ -51,6 +51,11 @@ config.energyConfig=Energy Settings
 option.omoshiroikamo.breedingTime=Breeding Time
 option.omoshiroikamo.grownTime=Grown Time
 
+# NEI
+nei.dml.simulation_chamber=Simulation Chamber
+nei.dml.loot_fabricator=Loot Fabricator
+nei.multiblock.lens_bonus=%s Bonus
+
 #Gui
 
 gui.powerMonitor.of=of
@@ -69,7 +74,7 @@ gui.redstone_mode.high_on=On with redstone signal
 gui.redstone_mode.high_off=Off with redstone signal
 gui.redstone_mode.always_off=Always off
 
-gui.sort_type.by_mod_id=Mod Id
+gui.sort_type.by_mod_id=Mod ID
 gui.sort_type.by_name=Name
 gui.sort_type.by_count=Count
 gui.sort_type.by_ore_dict=OreDict
@@ -213,6 +218,7 @@ gui.machinery.energy_used=Energy Used: %s
 gui.machinery.use_ic2=Use IC2
 
 # Backpack Gui Elements
+
 container.backpack=Backpack
 
 gui.backpack.pickup_settings=Pickup Settings
@@ -525,6 +531,8 @@ keybind.backpackOpenToggle=Open Backpack
 
 #Item
 
+item.wrench.name=Wrench
+
 tile.backpackLeather.name=Leather Backpack
 tile.backpackIron.name=Iron Backpack
 tile.backpackGold.name=Gold Backpack
@@ -598,7 +606,7 @@ item.coloredEgg.green.name=Cactus Green Chicken Egg
 item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
 
-item.creativeModelLearner.name=Creative Model Learner
+item.creativeModelLearner.name=Creative Model Learner (WIP)
 item.dataModelBlank.name=Blank Data Model
 item.deepLearner.name=§bDeep Learner§r
 item.polymerClay.name=Polymer Clay
@@ -622,7 +630,7 @@ item.redstoneReader.name=Redstone Reader
 item.blockReader.name=Block Reader
 item.inventoryReader.name=Inventory Reader
 item.fluidReader.name=Fluid Reader
-item.redstoneWriter.name=Redstone Reader
+item.redstoneWriter.name=Redstone Writer
 item.craftingInterface.name=Crafting Interface
 
 #Block
@@ -893,3 +901,347 @@ command.ok.wand_scanning=[OmoshiroiKamo] Scanning %d blocks...
 command.ok.wand_cleared=[OmoshiroiKamo] Wand selection cleared.
 command.ok.wand_no_selection=[OmoshiroiKamo] No pending selection to clear.
 
+# Chickens
+entity.RestoniaCrystalChicken.name=Restonia Crystal Chicken
+entity.PalisCrystalChicken.name=Palis Crystal Chicken
+entity.DiamantineCrystalChicken.name=Diamantine Crystal Chicken
+entity.VoidCrystalChicken.name=Void Crystal Chicken
+entity.EmeradicCrystalChicken.name=Emeradic Crystal Chicken
+entity.EnoriCrystalChicken.name=Enori Crystal Chicken
+entity.BlackQuartzChicken.name=Black Quartz Chicken
+entity.WhiteChicken.name=White Chicken
+entity.YellowChicken.name=Yellow Chicken
+entity.BlueChicken.name=Blue Chicken
+entity.GreenChicken.name=Green Chicken
+entity.RedChicken.name=Red Chicken
+entity.BlackChicken.name=Black Chicken
+entity.PinkChicken.name=Pink Chicken
+entity.PurpleChicken.name=Purple Chicken
+entity.OrangeChicken.name=Orange Chicken
+entity.LightBlueChicken.name=Light Blue Chicken
+entity.LimeChicken.name=Lime Chicken
+entity.GrayChicken.name=Gray Chicken
+entity.CyanChicken.name=Cyan Chicken
+entity.SilverDyeChicken.name=Silver Chicken
+entity.MagentaChicken.name=Magenta Chicken
+entity.BrownChicken.name=Brown Chicken
+entity.SmartChicken.name=Smart Chicken
+entity.FlintChicken.name=Flint Chicken
+entity.QuartzChicken.name=Quartz Chicken
+entity.LogChicken.name=Log Chicken
+entity.SandChicken.name=Sand Chicken
+entity.StringChicken.name=String Chicken
+entity.GlowstoneChicken.name=Glowstone Chicken
+entity.GunpowderChicken.name=Gunpowder Chicken
+entity.RedstoneChicken.name=Redstone Chicken
+entity.GlassChicken.name=Glass Chicken
+entity.IronChicken.name=Iron Chicken
+entity.CoalChicken.name=Coal Chicken
+entity.GoldChicken.name=Gold Chicken
+entity.SnowballChicken.name=Snowball Chicken
+entity.WaterChicken.name=Water Chicken
+entity.LavaChicken.name=Lava Chicken
+entity.ClayChicken.name=Clay Chicken
+entity.LeatherChicken.name=Leather Chicken
+entity.NetherwartChicken.name=Nether Wart Chicken
+entity.DiamondChicken.name=Diamond Chicken
+entity.BlazeChicken.name=Blaze Chicken
+entity.SlimeChicken.name=Slime Chicken
+entity.EnderChicken.name=Ender Chicken
+entity.GhastChicken.name=Ghast Chicken
+entity.EmeraldChicken.name=Emerald Chicken
+entity.MagmaChicken.name=Magma Chicken
+entity.XpChicken.name=XP Chicken
+entity.PShardChicken.name=Prismarine Shard Chicken
+entity.PCrystalChicken.name=Prismarine Crystal Chicken
+entity.SoulSandChicken.name=Soul Sand Chicken
+entity.ObsidianChicken.name=Obsidian Chicken
+entity.YelloriumChicken.name=Yellorium Chicken
+entity.GraphiteChicken.name=Graphite Chicken
+entity.CyaniteChicken.name=Cyanite Chicken
+entity.BlutoniumChicken.name=Blutonium Chicken
+entity.LudicriteChicken.name=Ludicrite Chicken
+entity.TerrasteelChicken.name=Terrasteel Chicken
+entity.ManasteelChicken.name=Manasteel Chicken
+entity.ElementiumChicken.name=Elementium Chicken
+entity.DraconiumChicken.name=Draconium Chicken
+entity.DraconiumAwakenedChicken.name=Awakened Draconium Chicken
+entity.ElectricalSteelChicken.name=Electrical Steel Chicken
+entity.EnergeticAlloyChicken.name=Energetic Alloy Chicken
+entity.VibrantAlloyChicken.name=Vibrant Alloy Chicken
+entity.RedstoneAlloyChicken.name=Redstone Alloy Chicken
+entity.ConductiveIronChicken.name=Conductive Iron Chicken
+entity.PulsatingIronChicken.name=Pulsating Iron Chicken
+entity.DarkSteelChicken.name=Dark Steel Chicken
+entity.EndSteelChicken.name=End Steel Chicken
+entity.SoulariumChicken.name=Soularium Chicken
+entity.OsmiumChicken.name=Osmium Chicken
+entity.InvarChicken.name=Invar Chicken
+entity.BronzeChicken.name=Bronze Chicken
+entity.ZincChicken.name=Zinc Chicken
+entity.TinChicken.name=Tin Chicken
+entity.SteelChicken.name=Steel Chicken
+entity.SilverChicken.name=Silver Chicken
+entity.PlatinumChicken.name=Platinum Chicken
+entity.NickelChicken.name=Nickel Chicken
+entity.LeadChicken.name=Lead Chicken
+entity.CopperChicken.name=Copper Chicken
+entity.BrassChicken.name=Brass Chicken
+entity.CupronickelChicken.name=Cupronickel Chicken
+entity.ElectrumChicken.name=Electrum Chicken
+entity.SiliconChicken.name=Silicon Chicken
+entity.SulfurChicken.name=Sulfur Chicken
+entity.SaltpeterChicken.name=Saltpeter Chicken
+entity.AluminiumChicken.name=Aluminium Chicken
+entity.AmberChicken.name=Amber Chicken
+entity.AmethystChicken.name=Amethyst Chicken
+entity.MalachiteChicken.name=Malachite Chicken
+entity.PeridotChicken.name=Peridot Chicken
+entity.RubyChicken.name=Ruby Chicken
+entity.SapphireChicken.name=Sapphire Chicken
+entity.TanzaniteChicken.name=Tanzanite Chicken
+entity.TopazChicken.name=Topaz Chicken
+entity.GarnetChicken.name=Garnet Chicken
+entity.SaltChicken.name=Salt Chicken
+entity.RubberChicken.name=Rubber Chicken
+entity.UraniumChicken.name=Uranium Chicken
+entity.PinkSlimeChicken.name=Pink Slime Chicken
+entity.BasalzRodChicken.name=Basalz Rod Chicken
+entity.BlitzRodChicken.name=Blitz Rod Chicken
+entity.BlizzRodChicken.name=Blizz Rod Chicken
+entity.CinnabarChicken.name=Cinnabar Chicken
+entity.EnderiumChicken.name=Enderium Chicken
+entity.LumiumChicken.name=Lumium Chicken
+entity.MithrilChicken.name=Mithril Chicken
+entity.SignalumChicken.name=Signalum Chicken
+entity.ArditeChicken.name=Ardite Chicken
+entity.CobaltChicken.name=Cobalt Chicken
+entity.ManyullynChicken.name=Manyullyn Chicken
+entity.PigIronChicken.name=Pig Iron Chicken
+entity.BloodSlimeChicken.name=Blood Slime Chicken
+entity.BlueSlimeChicken.name=Blue Slime Chicken
+
+# Cows
+entity.WaterCow.name=Water Cow
+entity.LavaCow.name=Lava Cow
+entity.YelloriumCow.name=Yellorium Cow
+entity.CyaniteCow.name=Cyanite Cow
+entity.SteamCow.name=Steam Cow
+entity.OilCow.name=Oil Cow
+entity.FuelCow.name=Fuel Cow
+entity.RedPlasmaCow.name=Red Plasma Cow
+entity.NutrientDistillationCow.name=Nutrient Distillation Cow
+entity.HootchCow.name=Hootch Cow
+entity.RocketFuelCow.name=Rocket Fuel Cow
+entity.FireWaterCow.name=Fire Water Cow
+entity.LiquidSunshineCow.name=Liquid Sunshine Cow
+entity.CloudSeedCow.name=Cloud Seed Cow
+entity.CloudSeedConcentratedCow.name=Cloud Seed Concentrated Cow
+entity.EnderDistillationCow.name=Ender Distillation Cow
+entity.VaporOfLevityCow.name=Vapor of Levity Cow
+entity.HeavyWaterCow.name=Heavy Water Cow
+entity.BrineCow.name=Brine Cow
+entity.LithiumCow.name=Lithium Cow
+entity.SludgeCow.name=Sludge Cow
+entity.SewageCow.name=Sewage Cow
+entity.MobEssenceCow.name=Mob Essence Cow
+entity.BiofuelCow.name=Biofuel Cow
+entity.MeatCow.name=Meat Cow
+entity.PinkSlimeCow.name=Pink Slime Cow
+entity.ChocolateMilkCow.name=Chocolate Milk Cow
+entity.MushroomSoupCow.name=Mushroom Soup Cow
+entity.IronCow.name=Iron Cow
+entity.GoldCow.name=Gold Cow
+entity.CopperCow.name=Copper Cow
+entity.TinCow.name=Tin Cow
+entity.AluminiumCow.name=Aluminium Cow
+entity.CobaltCow.name=Cobalt Cow
+entity.ArditeCow.name=Ardite Cow
+entity.BronzeCow.name=Bronze Cow
+entity.AlubrassCow.name=Alubrass Cow
+entity.ManyullynCow.name=Manyullyn Cow
+entity.ObsidianCow.name=Obsidian Cow
+entity.SteelCow.name=Steel Cow
+entity.GlassCow.name=Glass Cow
+entity.StoneCow.name=Stone Cow
+entity.EmeraldCow.name=Emerald Cow
+entity.NickelCow.name=Nickel Cow
+entity.LeadCow.name=Lead Cow
+entity.SilverCow.name=Silver Cow
+entity.ShinyCow.name=Shiny Cow
+entity.InvarCow.name=Invar Cow
+entity.ElectrumCow.name=Electrum Cow
+entity.LumiumCow.name=Lumium Cow
+entity.SignalumCow.name=Signalum Cow
+entity.MithrilCow.name=Mithril Cow
+entity.EnderiumCow.name=Enderium Cow
+entity.PigIronCow.name=Pig Iron Cow
+
+# DML
+item.living_matter.overworldian.name=§9Overworldian Matter
+item.living_matter.hellish.name=§cHellish Matter
+item.living_matter.extraterrestrial.name=§dExtraterrestrial Matter
+
+item.model.Blaze.name=§bBlaze Data Model§r
+item.pristine.Blaze.name=Pristine Blaze Matter
+item.model.Creeper.name=§bCreeper Data Model§r
+item.pristine.Creeper.name=Pristine Creeper Matter
+item.model.Ender Dragon.name=§bEnder Dragon Data Model§r
+item.pristine.Ender Dragon.name=Pristine Ender Dragon Matter
+item.model.Enderman.name=§bEnderman Data Model§r
+item.pristine.Enderman.name=Pristine Enderman Matter
+item.model.Ghast.name=§bGhast Data Model§r
+item.pristine.Ghast.name=Pristine Ghast Matter
+item.model.Skeleton.name=§bSkeleton Data Model§r
+item.pristine.Skeleton.name=Pristine Skeleton Matter
+item.model.Slime.name=§bSlime Data Model§r
+item.pristine.Slime.name=Pristine Slime Matter
+item.model.Spider.name=§bSpider Data Model§r
+item.pristine.Spider.name=Pristine Spider Matter
+item.model.Witch.name=§bWitch Data Model§r
+item.pristine.Witch.name=Pristine Witch Matter
+item.model.Wither.name=§bWither Data Model§r
+item.pristine.Wither.name=Pristine Wither Matter
+item.model.Wither Skeleton.name=§bWither Skeleton Data Model§r
+item.pristine.Wither Skeleton.name=Pristine Wither Skeleton Matter
+item.model.Zombie.name=§bZombie Data Model§r
+item.pristine.Zombie.name=Pristine Zombie Matter
+
+# Trivia
+dml.trivia.blaze.1=Bring buckets of water, and watch in despair as it evaporates, and everything is on fire.
+dml.trivia.blaze.2=You are on fire.
+dml.trivia.creeper.1=Will blow up your base if left unattended.
+dml.trivia.dragon.1=Resides in the End, does not harbor treasure.
+dml.trivia.dragon.2=Destroy its crystals and break the cycle!
+dml.trivia.enderman.1=Friendly unless provoked, dislikes rain.
+dml.trivia.enderman.2=Teleports short distances.
+dml.trivia.ghast.1=If you hear something that sounds like a crying llama, you're probably hearing a ghast.
+dml.trivia.skeleton.1=A formidable archer, which seem to be running some sort of cheat engine
+dml.trivia.skeleton.2=If only I had a shield...
+dml.trivia.slime.1=The bouncing bouncer
+dml.trivia.slime.2=bounces, bounces and bounces
+dml.trivia.slime.3=Bounces and bou- squish! -"A new slime haiku"
+dml.trivia.spider.1=Nocturnal douchebags, beware!
+dml.trivia.spider.2=Drops strands of string for some reason.
+dml.trivia.witch.1=Affinity with potions and concoctions.
+dml.trivia.witch.2=Likes cats.
+dml.trivia.witch.3=Beware!
+dml.trivia.wither.1=Do not approach this enemy. Run!
+dml.trivia.wither.2=I mean it has 3 heads, what could possibly go wrong?
+dml.trivia.wither_skeleton.1=Inflicts the Wither effect.
+dml.trivia.wither_skeleton.2=Bring milk!
+dml.trivia.zombie.1=They go moan in the night.
+dml.trivia.zombie.2=Does not understand the need for personal space.
+
+# Modular Machinery
+tile.modularMachineCasing.name=Machine Casing
+tile.modularMachineController.name=Machine Controller
+tile.visBridge.name=Vis Bridge
+
+# Item Input Port
+tile.modularItemInput.tier_1.name=Item Input Bus Tier 1
+tile.modularItemInput.tier_2.name=Item Input Bus Tier 2
+tile.modularItemInput.tier_3.name=Item Input Bus Tier 3
+tile.modularItemInput.tier_4.name=Item Input Bus Tier 4
+tile.modularItemInput.tier_5.name=Item Input Bus Tier 5
+tile.modularItemInput.tier_6.name=Item Input Bus Tier 6
+
+# Item Output Port
+tile.modularItemOutput.tier_1.name=Item Output Bus Tier 1
+tile.modularItemOutput.tier_2.name=Item Output Bus Tier 2
+tile.modularItemOutput.tier_3.name=Item Output Bus Tier 3
+tile.modularItemOutput.tier_4.name=Item Output Bus Tier 4
+tile.modularItemOutput.tier_5.name=Item Output Bus Tier 5
+tile.modularItemOutput.tier_6.name=Item Output Bus Tier 6
+
+# Fluid Input Port
+tile.modularFluidInput.tier_1.name=Fluid Input Hatch Tier 1
+tile.modularFluidInput.tier_2.name=Fluid Input Hatch Tier 2
+tile.modularFluidInput.tier_3.name=Fluid Input Hatch Tier 3
+tile.modularFluidInput.tier_4.name=Fluid Input Hatch Tier 4
+tile.modularFluidInput.tier_5.name=Fluid Input Hatch Tier 5
+tile.modularFluidInput.tier_6.name=Fluid Input Hatch Tier 6
+
+# Fluid Output Port
+tile.modularFluidOutput.tier_1.name=Fluid Output Hatch Tier 1
+tile.modularFluidOutput.tier_2.name=Fluid Output Hatch Tier 2
+tile.modularFluidOutput.tier_3.name=Fluid Output Hatch Tier 3
+tile.modularFluidOutput.tier_4.name=Fluid Output Hatch Tier 4
+tile.modularFluidOutput.tier_5.name=Fluid Output Hatch Tier 5
+tile.modularFluidOutput.tier_6.name=Fluid Output Hatch Tier 6
+
+# Energy Input Port
+tile.modularEnergyInput.tier_1.name=Energy Input Hatch Tier 1
+tile.modularEnergyInput.tier_2.name=Energy Input Hatch Tier 2
+tile.modularEnergyInput.tier_3.name=Energy Input Hatch Tier 3
+tile.modularEnergyInput.tier_4.name=Energy Input Hatch Tier 4
+tile.modularEnergyInput.tier_5.name=Energy Input Hatch Tier 5
+tile.modularEnergyInput.tier_6.name=Energy Input Hatch Tier 6
+
+# Energy Output Port
+tile.modularEnergyOutput.tier_1.name=Energy Output Hatch Tier 1
+tile.modularEnergyOutput.tier_2.name=Energy Output Hatch Tier 2
+tile.modularEnergyOutput.tier_3.name=Energy Output Hatch Tier 3
+tile.modularEnergyOutput.tier_4.name=Energy Output Hatch Tier 4
+tile.modularEnergyOutput.tier_5.name=Energy Output Hatch Tier 5
+tile.modularEnergyOutput.tier_6.name=Energy Output Hatch Tier 6
+
+# Gas Input Port
+tile.modularGasInput.tier_1.name=Gas Input Hatch Tier 1
+tile.modularGasInput.tier_2.name=Gas Input Hatch Tier 2
+tile.modularGasInput.tier_3.name=Gas Input Hatch Tier 3
+tile.modularGasInput.tier_4.name=Gas Input Hatch Tier 4
+tile.modularGasInput.tier_5.name=Gas Input Hatch Tier 5
+tile.modularGasInput.tier_6.name=Gas Input Hatch Tier 6
+
+# Gas Output Port
+tile.modularGasOutput.tier_1.name=Gas Output Hatch Tier 1
+tile.modularGasOutput.tier_2.name=Gas Output Hatch Tier 2
+tile.modularGasOutput.tier_3.name=Gas Output Hatch Tier 3
+tile.modularGasOutput.tier_4.name=Gas Output Hatch Tier 4
+tile.modularGasOutput.tier_5.name=Gas Output Hatch Tier 5
+tile.modularGasOutput.tier_6.name=Gas Output Hatch Tier 6
+
+# Mana Ports
+tile.modularManaInput.tier_1.name=Mana Input Hatch
+tile.modularManaOutput.tier_1.name=Mana Output Hatch
+
+# Vis Ports
+tile.modularVisInput.tier_1.name=Vis Input Relay
+tile.modularVisOutput.tier_1.name=Vis Output Relay
+
+# Essentia Ports
+tile.modularEssentiaInput.tier_1.name=Essentia Input Hatch
+tile.modularEssentiaOutput.tier_1.name=Essentia Output Hatch
+
+# ME Ports
+tile.modularItemOutputME.me.name=ME Item Output Bus
+tile.modularFluidOutputME.me.name=ME Fluid Output Hatch
+tile.modularEssentiaInputME.me.name=ME Essentia Input Hatch
+
+# Deep Mob Learning
+model.tier_0.name=§7Faulty§r
+model.tier_1.name=§aBasic§r
+model.tier_2.name=§9Advanced§r
+model.tier_3.name=§dSuperior§r
+model.tier_4.name=§6Self-Aware§r
+
+tooltip.creative_model_learner.desc=A creative item that levels up data models inside the Deep Learner.
+tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r
+tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r
+
+# Integrated Dynamics
+tooltip.variable_card.empty=§7No logic data
+
+# Machine Blueprint
+item.machineBlueprint.display.name.format=Blueprint: %s
+item.machineBlueprint.display.name.empty=Empty Blueprint
+
+tooltip.machineBlueprint.structure=Structure: %s
+tooltip.machineBlueprint.valid=Valid structure definition
+tooltip.machineBlueprint.invalid=Structure not found!
+tooltip.machineBlueprint.null=Blueprint is empty!
+tooltip.machineBlueprint.show=Right-click controller to show structure
+tooltip.machineBlueprint.build=Sneak+Right-click to build
+
+message.machineBlueprint.empty=This blueprint is empty

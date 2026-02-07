@@ -124,6 +124,7 @@ public class ModelRegistryItem {
         return this;
     }
 
+    // Not used
     public ModelRegistryItem setLang(String langCode, String value) {
         if (this.lang == null) {
             this.lang = new HashMap<>();
