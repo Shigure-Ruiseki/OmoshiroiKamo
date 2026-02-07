@@ -46,9 +46,9 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.AbstractReaderPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKey;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.LogicValues;
 
@@ -254,7 +254,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                     .get(),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("tankCount"))),
                 4,
-                LogicKeys.TANK),
+                LogicKeys.TANKS),
             searchValue);
 
         IPanelHandler tankAmountSetting = syncManager.syncedPanel(
@@ -584,7 +584,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         if (key == LogicKeys.TOTAL_FLUID_CAPACITY) return LogicValues.of(clientCache.getInteger("totalCapacity"));
 
-        if (key == LogicKeys.TANK) return LogicValues.of(clientCache.getInteger("tankCount"));
+        if (key == LogicKeys.TANKS) return LogicValues.of(clientCache.getInteger("tankCount"));
 
         if (key == LogicKeys.FLUID_FILL_RATIO) {
             int cap = clientCache.getInteger("totalCapacity");

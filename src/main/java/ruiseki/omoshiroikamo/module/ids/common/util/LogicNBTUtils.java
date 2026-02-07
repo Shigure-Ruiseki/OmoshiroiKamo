@@ -31,6 +31,7 @@ public class LogicNBTUtils {
             case "float" -> LogicValues.of(tag.getFloat("Value"));
             case "double" -> LogicValues.of(tag.getDouble("Value"));
             case "string" -> LogicValues.of(tag.getString("Value"));
+            case "list" -> LogicValues.of(tag.getString("Value"));
             default -> null;
         };
     }
@@ -79,9 +80,9 @@ public class LogicNBTUtils {
 
         int side = tag.getByte("Side");
         list.add(" §fSide: §e" + ForgeDirection.getOrientation(side));
-        String value = tag.getString("Value");
+        String value = tag.getString("ValueType");
         list.add(
-            " §fValue: §e" + LogicTypeRegistry.get(value)
+            " §fType: §e" + LogicTypeRegistry.get(value)
                 .toString());
     }
 
@@ -133,8 +134,8 @@ public class LogicNBTUtils {
         int z = tag.getInteger("Z");
         list.add(prefix(next, false) + "§7Pos: §e" + x + ", " + y + ", " + z);
 
-        if (tag.hasKey("Value")) {
-            String id = tag.getString("Value");
+        if (tag.hasKey("ValueType")) {
+            String id = tag.getString("ValueType");
             LogicType<?> t = LogicTypeRegistry.get(id);
             list.add(prefix(next, true) + "§7Type: §b" + (t != null ? t.getId() : "UNKNOWN"));
         }

@@ -1,6 +1,8 @@
-package ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key;
+package ruiseki.omoshiroikamo.module.ids.common.network.logic.key;
 
 import java.util.Objects;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
 
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.type.LogicType;
 
@@ -21,6 +23,8 @@ public class LogicKey {
     public LogicType<?> getDefaultType() {
         return defaultType;
     }
+
+    public void registerIcons(IIconRegister register) {}
 
     @Override
     public boolean equals(Object o) {

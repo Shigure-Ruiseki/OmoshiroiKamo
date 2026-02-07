@@ -2,10 +2,14 @@ package ruiseki.omoshiroikamo.module.ids.common.network.logic.type;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.block.BlockStack;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class LogicTypes {
 
@@ -19,14 +23,29 @@ public class LogicTypes {
     public static LogicType<BlockStack> BLOCK;
     public static LogicType<ItemStack> ITEM;
     public static LogicType<FluidStack> FLUID;
+    public static LogicType<NBTTagCompound> NBT;
     public static LogicType<List<String>> LIST;
 
     public static void preInit() {
-        NULL = LogicTypeRegistry.register(new LogicType<>("null") {});
+        NULL = LogicTypeRegistry.register(new LogicType<>("null"));
 
-        BOOLEAN = LogicTypeRegistry.register(new LogicType<>("boolean") {});
+        BOOLEAN = LogicTypeRegistry.register(new LogicType<>("boolean") {
+
+            @Override
+            public void registerIcons(IIconRegister register) {
+                IconRegistry.addIcon(
+                    "valuetype.boolean",
+                    register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/boolean"));
+            }
+        });
 
         INT = LogicTypeRegistry.register(new LogicType<>("int") {
+
+            @Override
+            public void registerIcons(IIconRegister register) {
+                IconRegistry
+                    .addIcon("valuetype.int", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/int"));
+            }
 
             @Override
             public boolean isNumeric() {
@@ -56,6 +75,13 @@ public class LogicTypes {
         DOUBLE = LogicTypeRegistry.register(new LogicType<>("double") {
 
             @Override
+            public void registerIcons(IIconRegister register) {
+                IconRegistry.addIcon(
+                    "valuetype.double",
+                    register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/double"));
+            }
+
+            @Override
             public boolean isNumeric() {
                 return true;
             }
@@ -64,22 +90,36 @@ public class LogicTypes {
 
         STRING = LogicTypeRegistry.register(new LogicType<>("string") {
 
+            @Override
+            public void registerIcons(IIconRegister register) {
+                IconRegistry.addIcon(
+                    "valuetype.string",
+                    register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/string"));
+            }
         });
 
         LIST = LogicTypeRegistry.register(new LogicType<>("list") {
 
+            @Override
+            public void registerIcons(IIconRegister register) {
+                IconRegistry
+                    .addIcon("valuetype.list", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/list"));
+            }
         });
 
-        BLOCK = LogicTypeRegistry.register(new LogicType<>("block") {
+        BLOCK = LogicTypeRegistry.register(new LogicType<>("block"));
 
-        });
+        ITEM = LogicTypeRegistry.register(new LogicType<>("item"));
 
-        ITEM = LogicTypeRegistry.register(new LogicType<>("item") {
+        FLUID = LogicTypeRegistry.register(new LogicType<>("fluid"));
 
-        });
+        NBT = LogicTypeRegistry.register(new LogicType<>("nbt") {
 
-        FLUID = LogicTypeRegistry.register(new LogicType<>("fluid") {
-
+            @Override
+            public void registerIcons(IIconRegister register) {
+                IconRegistry
+                    .addIcon("valuetype.nbt", register.registerIcon(LibResources.PREFIX_MOD + "ids/valuetype/nbt"));
+            }
         });
     }
 }

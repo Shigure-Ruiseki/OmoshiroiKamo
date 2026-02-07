@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.block.BlockStack;
@@ -40,6 +41,10 @@ public interface ILogicValue {
     }
 
     default FluidStack asFluidStack() {
+        return null;
+    }
+
+    default NBTTagCompound asNBT() {
         return null;
     }
 }
