@@ -31,6 +31,7 @@ public class LivingRegistryItem {
         this.xpValue = xpValue;
     }
 
+    // Not used
     public LivingRegistryItem setLang(String langCode, String value) {
         if (this.lang == null) {
             this.lang = new HashMap<>();
