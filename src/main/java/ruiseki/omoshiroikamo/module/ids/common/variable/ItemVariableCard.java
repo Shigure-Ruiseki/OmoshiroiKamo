@@ -16,12 +16,12 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.type.LogicTypeRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
 
 public class ItemVariableCard extends ItemOK {
