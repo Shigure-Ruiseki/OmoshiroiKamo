@@ -108,6 +108,113 @@ gui.backpack.crafting_settings=クラフトアップグレードの設定
 gui.backpack.void_settings=自動廃棄アップグレードの設定
 gui.backpack.advanced_void_settings=詳細な自動廃棄アップグレードの設定
 
+#Cable
+
+gui.ids.part_settings=パーツ設定
+gui.ids.index_channel=チャンネル: 
+gui.ids.id=ID
+gui.ids.length=長さ
+gui.ids.transferLimit=転送制限
+gui.ids.roundRobin=順番
+gui.ids.nbt=NBT
+gui.ids.stackSize=スタックサイズ
+gui.ids.allowInsertions=搬入できる
+gui.ids.allowExtractions=搬出できる
+gui.ids.blackList=ブラックリスト
+gui.ids.redstoneReader.lowRedstone=レッドストーン信号 低 | 真偽値
+gui.ids.redstoneReader.hasRedstone=レッドストーン信号 | 真偽値
+gui.ids.redstoneReader.highRedstone=レッドストーン信号 高 | 真偽値
+gui.ids.redstoneReader.redstoneValue=レッドストーン信号 | 数値
+
+gui.ids.blockReader.hasBlock=ブロックがあるか | 真偽値
+gui.ids.blockReader.dimension=次元
+gui.ids.blockReader.coord.x=X | 座標
+gui.ids.blockReader.coord.y=Y | 座標
+gui.ids.blockReader.coord.z=Z | 座標
+gui.ids.blockReader.block=ブロック | 文字列
+gui.ids.blockReader.biome=バイオーム | 文字列
+gui.ids.blockReader.light=明るさ | 数値
+
+gui.ids.inventoryReader.isInventory=インベントリがあるか | 真偽値
+gui.ids.inventoryReader.inventoryFull=インベントリがいっぱいか | 真偽値
+gui.ids.inventoryReader.inventoryEmpty=インベントリが空か | 真偽値
+gui.ids.inventoryReader.inventoryNotEmpty=インベントリが空でないか | 真偽値
+gui.ids.inventoryReader.inventoryCount=インベントリの数 | 整数
+gui.ids.inventoryReader.inventorySlots=インベントリのスロット | 整数
+gui.ids.inventoryReader.slotsFilled=埋まっているスロットの数 | 整数
+gui.ids.inventoryReader.fillRatio=埋まっている割合 | 少数 (Double)
+gui.ids.inventoryReader.itemsList=アイテム | リスト (List)
+gui.ids.inventoryReader.slotItem=スロットのアイテム | アイテムスタック (ItemStack)
+
+gui.ids.fluidReader.isTank=タンクがあるか | 真偽値
+gui.ids.fluidReader.tankEmpty=タンクが空か | 真偽値
+gui.ids.fluidReader.tankNotEmpty=タンクが空でない | 真偽値
+gui.ids.fluidReader.tankFull=タンクがいっぱいか | 真偽値
+gui.ids.fluidReader.tankCount=タンクの数 | 整数
+gui.ids.fluidReader.fluidAmount=液体の量 | 整数
+gui.ids.fluidReader.totalAmount=液体の総量 | 整数
+gui.ids.fluidReader.fluidCapacity=液体の容量 | 整数
+gui.ids.fluidReader.totalCapacity=液体の総容量 | 整数
+gui.ids.fluidReader.fillRatio=液体の割合 | 少数 (Double)
+gui.ids.fluidReader.tankFluids=タンクの液体 | リスト (List)
+gui.ids.fluidReader.tankCapacities=タンクの容量 | リスト (List)
+gui.ids.fluidReader.tankFluid=タンクの液体 | 液体スタック (FluidStack)
+
+gui.ids.redstoneWriter.redstoneBoolean=レッドストーン信号 | 真偽値
+gui.ids.redstoneWriter.redstoneInt=レッドストーン信号 | 整数
+gui.ids.redstoneWriter.pulseBoolean=パルス | 真偽値
+gui.ids.redstoneWriter.pulseInt=パルス | 整数
+
+gui.ids.itemImporter.allItem=全てのアイテムを搬入 | 真偽値
+gui.ids.itemImporter.itemAmount=搬入アイテムの数 | 整数
+gui.ids.itemImporter.itemSlot=搬入アイテムのスロット | 整数
+gui.ids.itemImporter.item=搬入アイテム | アイテムスタック (ItemStack)
+gui.ids.itemImporter.items=搬入アイテム | リスト (List)
+
+gui.ids.itemExporter.allItem=全てのアイテムを搬出 | 真偽値
+gui.ids.itemExporter.itemAmount=搬出アイテムの数 | 整数
+gui.ids.itemExporter.itemSlot=搬出アイテムのスロット | 整数
+gui.ids.itemExporter.item=搬出アイテム | アイテムスタック (ItemStack)
+gui.ids.itemExporter.items=搬出アイテム | リスト (List)
+
+gui.ids.itemFilterInterface.all=フィルターを全て | 真偽値
+gui.ids.itemFilterInterface.item=フィルター | アイテムスタック (ItemStack)
+gui.ids.itemFilterInterface.items=フィルター | リスト (List)
+
+gui.ids.energyImporter.boolean=エネルギーを搬入 | 真偽値
+gui.ids.energyImporter.amount=エネルギーの搬入量 | 整数
+
+gui.ids.energyExporter.boolean=エネルギーを搬出 | 真偽値
+gui.ids.energyExporter.amount=エネルギーの搬出量 | 整数
+
+gui.ids.energyFilterInterface.all=全て | 真偽値
+
+gui.ids.side=搬入出面
+gui.ids.tick=何ティック毎に動作するか
+gui.ids.priority=優先度
+gui.ids.channel=チャンネル
+gui.ids.type.boolean=真偽値
+gui.ids.type.int=整数
+gui.ids.type.long=整数 (Long)
+gui.ids.type.float=小数 (Float)
+gui.ids.type.double=小数 (Double)
+gui.ids.type.string=文字列
+
+gui.ids.op.if=条件
+
+gui.ids.op.and=AND (両方真ならば) && 
+gui.ids.op.nand=NAND (片方でも偽ならば) !&&
+gui.ids.op.or=OR (片方でも真ならば) || 
+gui.ids.op.nor=NOR (両方偽ならば) !|| 
+gui.ids.op.xor=XOR (2つの真偽が異なっていれば) ^
+
+gui.ids.op.eq=EQ (等しい) ==
+gui.ids.op.neq=NEQ (等しくない) !=
+gui.ids.op.gtr=GTR (より大きい) >
+gui.ids.op.geq=GEQ (以上) >=
+gui.ids.op.lss=LSS (より小さい) <
+gui.ids.op.leq=LEQ (以下) <=
+
 # Backpack Gui Tooltips
 
 gui.backpack.stack_size_extra=数: %s / %s
@@ -1044,24 +1151,25 @@ tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§o右クリック§
 tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
 
 # Integrated Dynamics
-tile.ids.cable.name=ロジックケーブル
-tile.ids.programmer.name=プログラマー
+tile.cable.name=ロジックケーブル
+tile.programmer.name=プログラマー
 
-item.ids.variableCard.name=変数カード
-item.ids.energyInterface.name=エネルギーインターフェース
-item.ids.energyFilterInterface.name=エネルギーフィルターインターフェース
-item.ids.energyImporter.name=エネルギー搬入口
-item.ids.energyExporter.name=エネルギー搬出口
-item.ids.itemInterface.name=アイテムインターフェース
-item.ids.itemFilterInterface.name=アイテムフィルターインターフェース
-item.ids.itemImporter.name=アイテム搬入口
-item.ids.itemExporter.name=アイテム搬出口
-item.ids.storageTerminal.name=ストレージターミナル
-item.ids.craftingInterface.name=クラフティングインターフェース
-item.ids.redstoneReader.name=レッドストーンリーダー
-item.ids.blockReader.name=ブロックリーダー
-item.ids.inventoryReader.name=インベントリリーダー
-item.ids.fluidReader.name=液体リーダー
-item.ids.redstoneWriter.name=レッドストーンライター
+item.variableCard.name=変数カード
+item.energyInterface.name=エネルギーインターフェース
+item.energyFilterInterface.name=エネルギーフィルターインターフェース
+item.energyImporter.name=エネルギー搬入口
+item.energyExporter.name=エネルギー搬出口
+item.itemInterface.name=アイテムインターフェース
+item.itemFilterInterface.name=アイテムフィルターインターフェース
+item.itemImporter.name=アイテム搬入口
+item.itemExporter.name=アイテム搬出口
+item.storageTerminal.name=ストレージターミナル
+item.craftingInterface.name=クラフティングインターフェース
+item.redstoneReader.name=レッドストーンリーダー
+item.blockReader.name=ブロックリーダー
+item.inventoryReader.name=インベントリリーダー
+item.fluidReader.name=液体リーダー
+item.redstoneWriter.name=レッドストーンライター
 
-tooltip.ids.variable_card.empty=§7ロジックデータなし
+tooltip.variable_card.empty=§7ロジックデータなし
+

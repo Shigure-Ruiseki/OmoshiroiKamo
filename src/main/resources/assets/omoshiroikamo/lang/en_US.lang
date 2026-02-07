@@ -622,7 +622,7 @@ item.redstoneReader.name=Redstone Reader
 item.blockReader.name=Block Reader
 item.inventoryReader.name=Inventory Reader
 item.fluidReader.name=Fluid Reader
-item.redstoneWriter.name=Redstone Reader
+item.redstoneWriter.name=Redstone Writer
 item.craftingInterface.name=Crafting Interface
 
 #Block
@@ -1197,25 +1197,4 @@ tooltip.creative_model_learner.desc=A creative item that levels up data models i
 tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r
 tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r
 
-# Integrated Dynamics
-tile.ids.cable.name=Logic Cable
-tile.ids.programmer.name=Programmer
-
-item.ids.variableCard.name=Variable Card
-item.ids.energyInterface.name=Energy Interface
-item.ids.energyFilterInterface.name=Energy Filter Interface
-item.ids.energyImporter.name=Energy Importer
-item.ids.energyExporter.name=Energy Exporter
-item.ids.itemInterface.name=Item Interface
-item.ids.itemFilterInterface.name=Item Filter Interface
-item.ids.itemImporter.name=Item Importer
-item.ids.itemExporter.name=Item Exporter
-item.ids.storageTerminal.name=Storage Terminal
-item.ids.craftingInterface.name=Crafting Interface
-item.ids.redstoneReader.name=Redstone Reader
-item.ids.blockReader.name=Block Reader
-item.ids.inventoryReader.name=Inventory Reader
-item.ids.fluidReader.name=Fluid Reader
-item.ids.redstoneWriter.name=Redstone Writer
-
-tooltip.ids.variable_card.empty=§7No logic data
+tooltip.variable_card.empty=§7No logic data
