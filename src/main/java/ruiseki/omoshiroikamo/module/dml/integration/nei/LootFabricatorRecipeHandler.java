@@ -14,11 +14,11 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class LootFabricatorRecipeHandler extends RecipeHandlerBase {
 
@@ -63,8 +63,7 @@ public class LootFabricatorRecipeHandler extends RecipeHandlerBase {
         for (ModelRegistryItem model : list) {
             for (ItemStack lootItem : model.getLootItems()) {
                 arecipes.add(
-                        new CachedLootFabricatorRecipe(DMLItems.PRISTINE_MATTER.newItemStack(1, model.getId()),
-                                lootItem));
+                    new CachedLootFabricatorRecipe(DMLItems.PRISTINE_MATTER.newItemStack(1, model.getId()), lootItem));
             }
         }
     }
