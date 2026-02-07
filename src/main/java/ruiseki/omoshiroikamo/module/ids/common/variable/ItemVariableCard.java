@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
-import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
 
 public class ItemVariableCard extends ItemOK {
 
