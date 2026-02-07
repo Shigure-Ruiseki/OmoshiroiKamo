@@ -69,7 +69,7 @@ gui.redstone_mode.high_on=On with redstone signal
 gui.redstone_mode.high_off=Off with redstone signal
 gui.redstone_mode.always_off=Always off
 
-gui.sort_type.by_mod_id=Mod Id
+gui.sort_type.by_mod_id=Mod ID
 gui.sort_type.by_name=Name
 gui.sort_type.by_count=Count
 gui.sort_type.by_ore_dict=OreDict
@@ -213,6 +213,7 @@ gui.machinery.energy_used=Energy Used: %s
 gui.machinery.use_ic2=Use IC2
 
 # Backpack Gui Elements
+
 container.backpack=Backpack
 
 gui.backpack.pickup_settings=Pickup Settings
@@ -524,6 +525,8 @@ category.omoshiroikamo=Omoshiroi Kamo
 keybind.backpackOpenToggle=Open Backpack
 
 #Item
+
+item.wrench.name=Wrench
 
 tile.backpackLeather.name=Leather Backpack
 tile.backpackIron.name=Iron Backpack
@@ -1099,7 +1102,6 @@ item.pristine.Wither\ Skeleton.name=Pristine Wither Skeleton Matter
 item.model.Zombie.name=§bZombie Data Model§r
 item.pristine.Zombie.name=Pristine Zombie Matter
 
-
 # Modular Machinery
 tile.modularMachineCasing.name=Machine Casing
 tile.modularMachineController.name=Machine Controller
@@ -1197,4 +1199,18 @@ tooltip.creative_model_learner.desc=A creative item that levels up data models i
 tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r
 tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r
 
+# Integrated Dynamics
 tooltip.variable_card.empty=§7No logic data
+
+# Machine Blueprint
+item.machineBlueprint.display.name.format=Blueprint: %s
+item.machineBlueprint.display.name.empty=Empty Blueprint
+
+tooltip.machineBlueprint.structure=Structure: %s
+tooltip.machineBlueprint.valid=Valid structure definition
+tooltip.machineBlueprint.invalid=Structure not found!
+tooltip.machineBlueprint.assign=Right-click a controller to assign
+tooltip.machineBlueprint.show=Right-click controller to show structure
+tooltip.machineBlueprint.build=Sneak+Right-click to build
+
+message.machineBlueprint.empty=This blueprint is empty

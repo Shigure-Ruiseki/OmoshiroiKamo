@@ -5,6 +5,7 @@ creativetab.okMultiblock=OK マルチブロック
 creativetab.okChicken=OK ニワトリ
 creativetab.okCow=OK ウシ
 creativetab.okDML=OK モブラーニング
+creativetab.okIDs=OK インテグレーテッドダイナミクス
 
 #Config
 
@@ -57,6 +58,8 @@ gui.progress=進捗: %.2f%%
 gui.efficiency=効率: %.2f%%
 gui.sunlightBlocked=空が見えない！
 
+gui.empty=空
+
 gui.craftingState.idle=待機中
 gui.craftingState.running=稼働中
 gui.craftingState.error=エラー
@@ -65,6 +68,14 @@ gui.redstone_mode.always_on=常にオン
 gui.redstone_mode.high_on=レッドストーン信号でオン
 gui.redstone_mode.high_off=レッドストーン信号でオフ
 gui.redstone_mode.always_off=常にオフ
+
+gui.sort_type.by_mod_id=Mod ID
+gui.sort_type.by_name=名前
+gui.sort_type.by_count=数
+gui.sort_type.by_ore_dict=鉱石辞書
+
+gui.sort_order.asc=昇順
+gui.sort_order.desc=降順
 
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
@@ -78,39 +89,18 @@ gui.io.isActivated=有効
 gui.io.enabled=有効
 gui.io.disabled=無効
 
+gui.search_bar.tool_tip=右クリックで検索バーをクリア
 
-#Modular Machinery
+gui.syncNEI=NEIと同期
 
-gui.machinery.energy_used=消費電力: %s
-gui.machinery.use_ic2=IC2を使用
-
-# Backpack Gui Elements
-container.backpack=バックパック
-
-gui.backpack.pickup_settings=拾うアップグレードの設定
-gui.backpack.advanced_pickup_settings=詳細な拾うアップグレードの設定
-
-gui.backpack.magnet_settings=マグネットの設定
-gui.backpack.advanced_magnet_settings=詳細なマグネットアップグレードの設定
-
-gui.backpack.feeding_settings=自動食事アップグレードの設定
-gui.backpack.advanced_feeding_settings=詳細な自動食事アップグレードの設定
-
-gui.backpack.filter_settings=フィルターの設定
-gui.backpack.advanced_filter_settings=詳細なフィルターの設定
-
-gui.backpack.backpack_settings=バックパックの設定
-gui.backpack.memory_settings=メモリーの設定
-gui.backpack.sorting_settings=ソートの設定
-
-gui.backpack.crafting_settings=クラフトアップグレードの設定
-
-gui.backpack.void_settings=自動廃棄アップグレードの設定
-gui.backpack.advanced_void_settings=詳細な自動廃棄アップグレードの設定
+gui.crafting_filter.storage=ストレージ内アイテム
+gui.crafting_filter.craftable=クラフト可能
+gui.crafting_filter.both=両方
 
 #Cable
 
 gui.ids.part_settings=パーツ設定
+
 gui.ids.index_channel=チャンネル: 
 gui.ids.id=ID
 gui.ids.length=長さ
@@ -121,6 +111,7 @@ gui.ids.stackSize=スタックサイズ
 gui.ids.allowInsertions=搬入できる
 gui.ids.allowExtractions=搬出できる
 gui.ids.blackList=ブラックリスト
+
 gui.ids.redstoneReader.lowRedstone=レッドストーン信号 低 | 真偽値
 gui.ids.redstoneReader.hasRedstone=レッドストーン信号 | 真偽値
 gui.ids.redstoneReader.highRedstone=レッドストーン信号 高 | 真偽値
@@ -193,6 +184,7 @@ gui.ids.side=搬入出面
 gui.ids.tick=何ティック毎に動作するか
 gui.ids.priority=優先度
 gui.ids.channel=チャンネル
+
 gui.ids.type.boolean=真偽値
 gui.ids.type.int=整数
 gui.ids.type.long=整数 (Long)
@@ -214,6 +206,36 @@ gui.ids.op.gtr=GTR (より大きい) >
 gui.ids.op.geq=GEQ (以上) >=
 gui.ids.op.lss=LSS (より小さい) <
 gui.ids.op.leq=LEQ (以下) <=
+
+#Modular Machinery
+
+gui.machinery.energy_used=消費電力: %s
+gui.machinery.use_ic2=IC2を使用
+
+# Backpack Gui Elements
+
+container.backpack=バックパック
+
+gui.backpack.pickup_settings=拾うアップグレードの設定
+gui.backpack.advanced_pickup_settings=詳細な拾うアップグレードの設定
+
+gui.backpack.magnet_settings=マグネットの設定
+gui.backpack.advanced_magnet_settings=詳細なマグネットアップグレードの設定
+
+gui.backpack.feeding_settings=自動食事アップグレードの設定
+gui.backpack.advanced_feeding_settings=詳細な自動食事アップグレードの設定
+
+gui.backpack.filter_settings=フィルターの設定
+gui.backpack.advanced_filter_settings=詳細なフィルターの設定
+
+gui.backpack.backpack_settings=バックパックの設定
+gui.backpack.memory_settings=メモリーの設定
+gui.backpack.sorting_settings=ソートの設定
+
+gui.backpack.crafting_settings=クラフトアップグレードの設定
+
+gui.backpack.void_settings=自動廃棄アップグレードの設定
+gui.backpack.advanced_void_settings=詳細な自動廃棄アップグレードの設定
 
 # Backpack Gui Tooltips
 
@@ -303,6 +325,7 @@ gui.backpack.void_automation=他のアップグレード/自動化でのみ機�
 
 gui.deep_learner.hud=メインハンドまたはオフハンドに持ち、データモデルが入っているとHUDを表示します
 gui.deep_learner.contains=以下のモデルが含まれています
+
 gui.deep_learner.heading_name=名前
 gui.deep_learner.heading_information=情報
 gui.deep_learner.model_tier=モデルレベル: %s
@@ -503,6 +526,8 @@ keybind.backpackOpenToggle=バックパックを開く
 
 #Item
 
+item.wrench.name=レンチ
+
 tile.backpackLeather.name=革のバックパック
 tile.backpackIron.name=鉄のバックパック
 tile.backpackGold.name=金のバックパック
@@ -584,6 +609,24 @@ item.sootCoveredRedstone.name=煤まみれのレッドストーン
 item.sootCoveredPlate.name=煤まみれのプレート
 
 item.structureWand.name=ストラクチャーワンド
+
+item.variableCard.name=変数カード
+
+item.energyInterface.name=エネルギーインターフェース
+item.energyFilterInterface.name=エネルギーフィルターインターフェース
+item.energyImporter.name=エネルギー搬入口
+item.energyExporter.name=エネルギー搬出口
+item.itemInterface.name=アイテムインターフェース
+item.itemFilterInterface.name=アイテムフィルターインターフェース
+item.itemImporter.name=アイテム搬入口
+item.itemExporter.name=アイテム搬出口
+item.storageTerminal.name=ストレージターミナル
+item.craftingInterface.name=クラフティングインターフェース
+item.redstoneReader.name=レッドストーン読み取り器
+item.blockReader.name=ブロック読み取り器
+item.inventoryReader.name=インベントリ読み取り器
+item.fluidReader.name=液体読み取り器
+item.redstoneWriter.name=レッドストーン書き込み器
 
 #Block
 
@@ -725,6 +768,9 @@ tile.lootFabricator.name=ルートファブリケーター
 tile.simulationChamber.name=シミュレーションチャンバー
 tile.machineCasing.name=マシンケーシング
 
+tile.cable.name=ロジックケーブル
+tile.programmer.name=プログラマー
+
 #ME Output Bus
 tile.modularItemOutputME.me.name=MEアイテム出力バス
 tile.modularFluidOutputME.me.name=ME液体出力バス
@@ -811,6 +857,9 @@ tooltip.wand.pos_not_set=未設定
 tooltip.wand.size=サイズ: %dx%dx%d
 
 #Structure Commands
+command.ok.main_usage_title=使用法:
+command.ok.main_usage_structure=/ok structure - ストラクチャー管理コマンド
+
 command.ok.reloading=[OmoshiroiKamo] ストラクチャー設定を再読み込み中...
 command.ok.reload_success=[OmoshiroiKamo] ストラクチャー設定の再読み込みに成功しました!
 command.ok.reload_errors=[OmoshiroiKamo] 再読み込み完了 (%d エラー)!
@@ -1140,36 +1189,29 @@ tile.modularFluidOutputME.me.name=ME液体搬出ハッチ
 tile.modularEssentiaInputME.me.name=MEエッセンシア搬入ハッチ
 
 # Deep Mob Learning
-model.tier_0.name=§7フォールティー§r
-model.tier_1.name=§aベーシック§r
-model.tier_2.name=§9アドバンスド§r
-model.tier_3.name=§dスーペリア§r
+model.tier_0.name=§7欠陥品§r
+model.tier_1.name=§a普通§r
+model.tier_2.name=§9高度§r
+model.tier_3.name=§d素晴らしい§r
 model.tier_4.name=§6自己認識§r
 
 tooltip.creative_model_learner.desc=ディープラーナー内のデータモデルをレベルアップさせるクリエイティブアイテム。
-tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§o右クリック§rでティアを上昇させます。§r
-tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
+tooltip.creative_model_learner.shift=§r§oシフト§r§7 + §r§o右クリック§rでティアを上昇させます。§r
+tooltip.creative_model_learner.ctrl=§r§oコントロール§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
 
 # Integrated Dynamics
-tile.cable.name=ロジックケーブル
-tile.programmer.name=プログラマー
-
-item.variableCard.name=変数カード
-item.energyInterface.name=エネルギーインターフェース
-item.energyFilterInterface.name=エネルギーフィルターインターフェース
-item.energyImporter.name=エネルギー搬入口
-item.energyExporter.name=エネルギー搬出口
-item.itemInterface.name=アイテムインターフェース
-item.itemFilterInterface.name=アイテムフィルターインターフェース
-item.itemImporter.name=アイテム搬入口
-item.itemExporter.name=アイテム搬出口
-item.storageTerminal.name=ストレージターミナル
-item.craftingInterface.name=クラフティングインターフェース
-item.redstoneReader.name=レッドストーンリーダー
-item.blockReader.name=ブロックリーダー
-item.inventoryReader.name=インベントリリーダー
-item.fluidReader.name=液体リーダー
-item.redstoneWriter.name=レッドストーンライター
-
 tooltip.variable_card.empty=§7ロジックデータなし
+
+# Machine Blueprint
+item.machineBlueprint.display.name.format=設計図: %s
+item.machineBlueprint.display.name.empty=空の設計図
+
+tooltip.machineBlueprint.structure=構造体: %s
+tooltip.machineBlueprint.valid=有効な構造体です
+tooltip.machineBlueprint.invalid=構造体が無効です！
+tooltip.machineBlueprint.assign=コントローラーに使うことで割り当て
+tooltip.machineBlueprint.show=コントローラーに使うことで構造体を表示
+tooltip.machineBlueprint.build=コントローラーにシフト右クリックで建造
+
+message.machineBlueprint.empty=この設計図は空です
 
