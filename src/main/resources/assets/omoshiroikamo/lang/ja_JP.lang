@@ -138,9 +138,9 @@ gui.ids.inventoryReader.inventoryNotEmpty=インベントリが空でないか |
 gui.ids.inventoryReader.inventoryCount=インベントリの数 | 整数
 gui.ids.inventoryReader.inventorySlots=インベントリのスロット | 整数
 gui.ids.inventoryReader.slotsFilled=埋まっているスロットの数 | 整数
-gui.ids.inventoryReader.fillRatio=埋まっている割合 | 少数 (Double)
-gui.ids.inventoryReader.itemsList=アイテム | リスト (List)
-gui.ids.inventoryReader.slotItem=スロットのアイテム | アイテムスタック (ItemStack)
+gui.ids.inventoryReader.fillRatio=埋まっている割合 | 少数
+gui.ids.inventoryReader.itemsList=アイテム | リスト
+gui.ids.inventoryReader.slotItem=スロットのアイテム | アイテムスタック
 
 gui.ids.fluidReader.isTank=タンクがあるか | 真偽値
 gui.ids.fluidReader.tankEmpty=タンクが空か | 真偽値
@@ -151,10 +151,10 @@ gui.ids.fluidReader.fluidAmount=液体の量 | 整数
 gui.ids.fluidReader.totalAmount=液体の総量 | 整数
 gui.ids.fluidReader.fluidCapacity=液体の容量 | 整数
 gui.ids.fluidReader.totalCapacity=液体の総容量 | 整数
-gui.ids.fluidReader.fillRatio=液体の割合 | 少数 (Double)
-gui.ids.fluidReader.tankFluids=タンクの液体 | リスト (List)
-gui.ids.fluidReader.tankCapacities=タンクの容量 | リスト (List)
-gui.ids.fluidReader.tankFluid=タンクの液体 | 液体スタック (FluidStack)
+gui.ids.fluidReader.fillRatio=液体の割合 | 少数
+gui.ids.fluidReader.tankFluids=タンクの液体 | リスト
+gui.ids.fluidReader.tankCapacities=タンクの容量 | リスト
+gui.ids.fluidReader.tankFluid=タンクの液体 | 液体スタック
 
 gui.ids.redstoneWriter.redstoneBoolean=レッドストーン信号 | 真偽値
 gui.ids.redstoneWriter.redstoneInt=レッドストーン信号 | 整数
@@ -164,18 +164,18 @@ gui.ids.redstoneWriter.pulseInt=パルス | 整数
 gui.ids.itemImporter.allItem=全てのアイテムを搬入 | 真偽値
 gui.ids.itemImporter.itemAmount=搬入アイテムの数 | 整数
 gui.ids.itemImporter.itemSlot=搬入アイテムのスロット | 整数
-gui.ids.itemImporter.item=搬入アイテム | アイテムスタック (ItemStack)
-gui.ids.itemImporter.items=搬入アイテム | リスト (List)
+gui.ids.itemImporter.item=搬入アイテム | アイテムスタック
+gui.ids.itemImporter.items=搬入アイテム | リスト
 
 gui.ids.itemExporter.allItem=全てのアイテムを搬出 | 真偽値
 gui.ids.itemExporter.itemAmount=搬出アイテムの数 | 整数
 gui.ids.itemExporter.itemSlot=搬出アイテムのスロット | 整数
-gui.ids.itemExporter.item=搬出アイテム | アイテムスタック (ItemStack)
-gui.ids.itemExporter.items=搬出アイテム | リスト (List)
+gui.ids.itemExporter.item=搬出アイテム | アイテムスタック
+gui.ids.itemExporter.items=搬出アイテム | リスト
 
-gui.ids.itemFilterInterface.all=フィルターを全て | 真偽値
-gui.ids.itemFilterInterface.item=フィルター | アイテムスタック (ItemStack)
-gui.ids.itemFilterInterface.items=フィルター | リスト (List)
+gui.ids.itemFilterInterface.all=全て | 真偽値
+gui.ids.itemFilterInterface.item=フィルター | アイテムスタック
+gui.ids.itemFilterInterface.items=フィルター | リスト
 
 gui.ids.energyImporter.boolean=エネルギーを搬入 | 真偽値
 gui.ids.energyImporter.amount=エネルギーの搬入量 | 整数
