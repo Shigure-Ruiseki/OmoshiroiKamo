@@ -109,7 +109,7 @@ public class ItemMachineBlueprint extends ItemOK {
                 tooltip.add(EnumChatFormatting.RED + LibMisc.LANG.localize("tooltip.machineBlueprint.invalid"));
             }
         } else {
-            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.assign"));
+            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.null"));
         }
 
         tooltip.add(EnumChatFormatting.DARK_GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.show"));

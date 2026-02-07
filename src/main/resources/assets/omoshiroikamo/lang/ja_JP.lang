@@ -199,11 +199,11 @@ gui.ids.type.string=文字列
 
 gui.ids.op.if=条件
 
-gui.ids.op.and=AND (両方真ならば) && 
-gui.ids.op.nand=NAND (片方でも偽ならば) !&&
-gui.ids.op.or=OR (片方でも真ならば) || 
-gui.ids.op.nor=NOR (両方偽ならば) !|| 
-gui.ids.op.xor=XOR (2つの真偽が異なっていれば) ^
+gui.ids.op.and=AND && 
+gui.ids.op.nand=NAND !&&
+gui.ids.op.or=OR || 
+gui.ids.op.nor=NOR !|| 
+gui.ids.op.xor=XOR ^
 
 gui.ids.op.eq=EQ (等しい) ==
 gui.ids.op.neq=NEQ (等しくない) !=
@@ -1240,7 +1240,7 @@ item.machineBlueprint.display.name.empty=空の設計図
 tooltip.machineBlueprint.structure=構造体: %s
 tooltip.machineBlueprint.valid=有効な構造体です
 tooltip.machineBlueprint.invalid=構造体が無効です！
-tooltip.machineBlueprint.assign=コントローラーに使うことで割り当て
+tooltip.machineBlueprint.null=ブループリントが空です！
 tooltip.machineBlueprint.show=コントローラーに使うことで構造体を表示
 tooltip.machineBlueprint.build=コントローラーにシフト右クリックで建造
 

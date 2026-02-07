@@ -1240,7 +1240,7 @@ item.machineBlueprint.display.name.empty=Empty Blueprint
 tooltip.machineBlueprint.structure=Structure: %s
 tooltip.machineBlueprint.valid=Valid structure definition
 tooltip.machineBlueprint.invalid=Structure not found!
-tooltip.machineBlueprint.assign=Right-click a controller to assign
+tooltip.machineBlueprint.null=Blueprint is empty!
 tooltip.machineBlueprint.show=Right-click controller to show structure
 tooltip.machineBlueprint.build=Sneak+Right-click to build
 
