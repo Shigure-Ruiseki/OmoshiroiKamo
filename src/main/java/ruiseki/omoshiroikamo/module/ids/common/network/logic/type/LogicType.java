@@ -1,6 +1,10 @@
 package ruiseki.omoshiroikamo.module.ids.common.network.logic.type;
 
-public abstract class LogicType<T> {
+import net.minecraft.client.renderer.texture.IIconRegister;
+
+import org.jetbrains.annotations.NotNull;
+
+public class LogicType<T> {
 
     private final String id;
 
@@ -8,12 +12,10 @@ public abstract class LogicType<T> {
         this.id = id;
     }
 
-    public String getId() {
-        return id;
-    }
+    public void registerIcons(IIconRegister register) {}
 
-    public boolean isComparable() {
-        return false;
+    public @NotNull String getId() {
+        return id;
     }
 
     public boolean isNumeric() {

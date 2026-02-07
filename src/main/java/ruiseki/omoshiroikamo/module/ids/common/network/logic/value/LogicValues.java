@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.common.network.logic.value;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import ruiseki.omoshiroikamo.api.block.BlockStack;
@@ -51,5 +52,9 @@ public class LogicValues {
 
     public static ILogicValue of(FluidStack value) {
         return new FluidStackValue(value);
+    }
+
+    public static ILogicValue of(NBTTagCompound value) {
+        return new NBTValue(value);
     }
 }

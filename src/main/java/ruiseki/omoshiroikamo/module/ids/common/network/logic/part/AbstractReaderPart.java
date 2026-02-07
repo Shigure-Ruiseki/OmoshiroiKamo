@@ -25,7 +25,7 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
 
 public abstract class AbstractReaderPart extends AbstractPart implements ILogicReader {
 

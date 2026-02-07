@@ -1,14 +1,14 @@
 package ruiseki.omoshiroikamo.core.client.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
-
 public class IconRegistry {
 
-    private static TMap<String, IIcon> icons = new THashMap<>();
+    private final static Map<String, IIcon> icons = new HashMap<>();
 
     private IconRegistry() {
 
