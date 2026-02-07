@@ -51,6 +51,11 @@ config.energyConfig=Energy Settings
 option.omoshiroikamo.breedingTime=Breeding Time
 option.omoshiroikamo.grownTime=Grown Time
 
+# NEI
+nei.dml.simulation_chamber=Simulation Chamber
+nei.dml.loot_fabricator=Loot Fabricator
+nei.multiblock.lens_bonus=%s Bonus
+
 #Gui
 
 gui.powerMonitor.of=of
@@ -601,7 +606,7 @@ item.coloredEgg.green.name=Cactus Green Chicken Egg
 item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
 
-item.creativeModelLearner.name=Creative Model Learner
+item.creativeModelLearner.name=Creative Model Learner (WIP)
 item.dataModelBlank.name=Blank Data Model
 item.deepLearner.name=§bDeep Learner§r
 item.polymerClay.name=Polymer Clay
