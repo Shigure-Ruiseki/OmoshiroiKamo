@@ -216,14 +216,14 @@ public class DeepLearnerPanel extends ModularPanel {
         }
     }
 
-    public void addInfoDisplay() {
+    public void addInfoDisplay(EntityLivingBase entity) {
         ItemStack stack = getHandler().getHandler()
             .getStackInSlot(modelIndex);
         if (stack == null) return;
         ModelRegistryItem model = DataModel.getDataFromStack(stack);
         if (model == null) return;
         float numberOfHearts = model.getNumberOfHearts();
-        String name = model.getDisplayName();
+        String name = entity != null ? entity.getCommandSenderName() : "entity." + model.getEntityDisplay() + ".name";
         String[] trivia = model.getMobTrivia();
         int tier = DataModel.getTier(stack);
         int totalKillCount = DataModel.getTotalKillCount(stack);
@@ -236,7 +236,7 @@ public class DeepLearnerPanel extends ModularPanel {
             .color(0xFF7CCDDB)
             .asWidget();
 
-        TextWidget<?> hearts = IKey.str(String.valueOf(numberOfHearts))
+        TextWidget<?> hearts = IKey.lang(String.valueOf(numberOfHearts))
             .scale(1f)
             .color(0xFFFFFFFF)
             .asWidget();
@@ -286,7 +286,7 @@ public class DeepLearnerPanel extends ModularPanel {
         Column mobTrivia = (Column) new Column().coverChildren();
 
         for (String string : trivia) {
-            TextWidget<?> text = IKey.str(string)
+            TextWidget<?> text = IKey.lang(string)
                 .scale(1f)
                 .color(0xFFFFFFFF)
                 .alignment(Alignment.CenterLeft)
@@ -454,7 +454,7 @@ public class DeepLearnerPanel extends ModularPanel {
             .pos(offsetX, 20 + offsetY);
 
         display.setWidget(widget);
-        addInfoDisplay();
+        addInfoDisplay(livingBase);
         this.scheduleResize();
     }
 

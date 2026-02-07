@@ -21,14 +21,10 @@ public class BaseCows extends BaseCowHandler {
     public List<CowsRegistryItem> registerCows() {
         List<CowsRegistryItem> allCows = new ArrayList<>();
 
-        waterCow = addCow("WaterCow", this.nextID(), 0x000099, 0x8080ff, SpawnType.NORMAL).setFluidString("water")
-            .setLang("en_US", "Water Cow")
-            .setLang("ja_JP", "水牛");
+        waterCow = addCow("WaterCow", this.nextID(), 0x000099, 0x8080ff, SpawnType.NORMAL).setFluidString("water");
         allCows.add(waterCow);
 
-        lavaCow = addCow("LavaCow", this.nextID(), 0xcc3300, 0xffff00, SpawnType.HELL).setFluidString("lava")
-            .setLang("en_US", "Lava Cow")
-            .setLang("ja_JP", "溶岩ウシ");
+        lavaCow = addCow("LavaCow", this.nextID(), 0xcc3300, 0xffff00, SpawnType.HELL).setFluidString("lava");
         allCows.add(lavaCow);
 
         return allCows;

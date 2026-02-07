@@ -25,6 +25,7 @@ import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
@@ -147,7 +148,8 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                 case LENS_BONUS:
                     // Show lens name in header
                     if (detailItem != null) {
-                        String lensName = detailItem.getDisplayName() + " Bonus";
+                        String lensName = LibMisc.LANG
+                            .localize("nei.multiblock.lens_bonus", detailItem.getDisplayName());
                         fr.drawString(lensName, HEADER_RECT.x, HEADER_RECT.y + 2, HEADER_TEXT_COLOR);
                     }
                     break;

@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -88,9 +89,9 @@ public class ItemMachineBlueprint extends ItemOK {
     public String getItemStackDisplayName(ItemStack stack) {
         String structureName = getStructureName(stack);
         if (structureName != null && !structureName.isEmpty()) {
-            return "Blueprint: " + structureName;
+            return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", structureName);
         }
-        return "Empty Blueprint";
+        return LibMisc.LANG.localize("item.machineBlueprint.display.name.empty");
     }
 
     @Override
@@ -98,20 +99,21 @@ public class ItemMachineBlueprint extends ItemOK {
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         String structureName = getStructureName(stack);
         if (structureName != null) {
-            tooltip.add(EnumChatFormatting.GRAY + "Structure: " + structureName);
+            tooltip.add(
+                EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.structure", structureName));
 
             // Show if the structure is valid
             if (CustomStructureRegistry.hasDefinition(structureName)) {
-                tooltip.add(EnumChatFormatting.GREEN + "Valid structure definition");
+                tooltip.add(EnumChatFormatting.GREEN + LibMisc.LANG.localize("tooltip.machineBlueprint.valid"));
             } else {
-                tooltip.add(EnumChatFormatting.RED + "Structure not found!");
+                tooltip.add(EnumChatFormatting.RED + LibMisc.LANG.localize("tooltip.machineBlueprint.invalid"));
             }
         } else {
-            tooltip.add(EnumChatFormatting.GRAY + "Right-click a controller to assign");
+            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.null"));
         }
 
-        tooltip.add(EnumChatFormatting.DARK_GRAY + "Right-click controller to show structure");
-        tooltip.add(EnumChatFormatting.DARK_GRAY + "Sneak+Right-click to build");
+        tooltip.add(EnumChatFormatting.DARK_GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.show"));
+        tooltip.add(EnumChatFormatting.DARK_GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.build"));
     }
 
     @Override
@@ -126,7 +128,8 @@ public class ItemMachineBlueprint extends ItemOK {
         if (structureName == null || structureName.isEmpty()) {
             if (!world.isRemote) {
                 player.addChatComponentMessage(
-                    new ChatComponentText(EnumChatFormatting.YELLOW + "This blueprint is empty"));
+                    new ChatComponentText(
+                        EnumChatFormatting.YELLOW + LibMisc.LANG.localize("message.machineBlueprint.empty")));
             }
             return false;
         }

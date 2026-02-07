@@ -45,7 +45,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return "Simulation Chamber";
+        return LibMisc.LANG.localize("nei.dml.simulation_chamber");
     }
 
     @Override

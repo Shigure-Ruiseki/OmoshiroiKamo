@@ -5,6 +5,7 @@ creativetab.okMultiblock=OK マルチブロック
 creativetab.okChicken=OK ニワトリ
 creativetab.okCow=OK ウシ
 creativetab.okDML=OK モブラーニング
+creativetab.okIDs=OK インテグレーテッドダイナミクス
 
 #Config
 
@@ -50,12 +51,19 @@ config.energyConfig=エネルギーの設定
 option.omoshiroikamo.breedingTime=繁殖時間
 option.omoshiroikamo.grownTime=成長時間
 
+# NEI
+nei.dml.simulation_chamber=シミュレーションチャンバー
+nei.dml.loot_fabricator=ルートファブリケーター
+nei.multiblock.lens_bonus=%s ボーナス
+
 #Gui
 
 gui.powerMonitor.of=の
 gui.progress=進捗: %.2f%%
 gui.efficiency=効率: %.2f%%
 gui.sunlightBlocked=空が見えない！
+
+gui.empty=空
 
 gui.craftingState.idle=待機中
 gui.craftingState.running=稼働中
@@ -65,6 +73,14 @@ gui.redstone_mode.always_on=常にオン
 gui.redstone_mode.high_on=レッドストーン信号でオン
 gui.redstone_mode.high_off=レッドストーン信号でオフ
 gui.redstone_mode.always_off=常にオフ
+
+gui.sort_type.by_mod_id=Mod ID
+gui.sort_type.by_name=名前
+gui.sort_type.by_count=数
+gui.sort_type.by_ore_dict=鉱石辞書
+
+gui.sort_order.asc=昇順
+gui.sort_order.desc=降順
 
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
@@ -78,6 +94,123 @@ gui.io.isActivated=有効
 gui.io.enabled=有効
 gui.io.disabled=無効
 
+gui.search_bar.tool_tip=右クリックで検索バーをクリア
+
+gui.syncNEI=NEIと同期
+
+gui.crafting_filter.storage=ストレージ内アイテム
+gui.crafting_filter.craftable=クラフト可能
+gui.crafting_filter.both=両方
+
+#Cable
+
+gui.ids.part_settings=パーツ設定
+
+gui.ids.index_channel=チャンネル: 
+gui.ids.id=ID
+gui.ids.length=長さ
+gui.ids.transferLimit=転送制限
+gui.ids.roundRobin=順番
+gui.ids.nbt=NBT
+gui.ids.stackSize=スタックサイズ
+gui.ids.allowInsertions=搬入できる
+gui.ids.allowExtractions=搬出できる
+gui.ids.blackList=ブラックリスト
+
+gui.ids.redstoneReader.lowRedstone=レッドストーン信号 低 | 真偽値
+gui.ids.redstoneReader.hasRedstone=レッドストーン信号 | 真偽値
+gui.ids.redstoneReader.highRedstone=レッドストーン信号 高 | 真偽値
+gui.ids.redstoneReader.redstoneValue=レッドストーン信号 | 数値
+
+gui.ids.blockReader.hasBlock=ブロックがあるか | 真偽値
+gui.ids.blockReader.dimension=次元
+gui.ids.blockReader.coord.x=X | 座標
+gui.ids.blockReader.coord.y=Y | 座標
+gui.ids.blockReader.coord.z=Z | 座標
+gui.ids.blockReader.block=ブロック | 文字列
+gui.ids.blockReader.biome=バイオーム | 文字列
+gui.ids.blockReader.light=明るさ | 数値
+
+gui.ids.inventoryReader.isInventory=インベントリがあるか | 真偽値
+gui.ids.inventoryReader.inventoryFull=インベントリがいっぱいか | 真偽値
+gui.ids.inventoryReader.inventoryEmpty=インベントリが空か | 真偽値
+gui.ids.inventoryReader.inventoryNotEmpty=インベントリが空でないか | 真偽値
+gui.ids.inventoryReader.inventoryCount=インベントリの数 | 整数
+gui.ids.inventoryReader.inventorySlots=インベントリのスロット | 整数
+gui.ids.inventoryReader.slotsFilled=埋まっているスロットの数 | 整数
+gui.ids.inventoryReader.fillRatio=埋まっている割合 | 少数
+gui.ids.inventoryReader.itemsList=アイテム | リスト
+gui.ids.inventoryReader.slotItem=スロットのアイテム | アイテムスタック
+
+gui.ids.fluidReader.isTank=タンクがあるか | 真偽値
+gui.ids.fluidReader.tankEmpty=タンクが空か | 真偽値
+gui.ids.fluidReader.tankNotEmpty=タンクが空でない | 真偽値
+gui.ids.fluidReader.tankFull=タンクがいっぱいか | 真偽値
+gui.ids.fluidReader.tankCount=タンクの数 | 整数
+gui.ids.fluidReader.fluidAmount=液体の量 | 整数
+gui.ids.fluidReader.totalAmount=液体の総量 | 整数
+gui.ids.fluidReader.fluidCapacity=液体の容量 | 整数
+gui.ids.fluidReader.totalCapacity=液体の総容量 | 整数
+gui.ids.fluidReader.fillRatio=液体の割合 | 少数
+gui.ids.fluidReader.tankFluids=タンクの液体 | リスト
+gui.ids.fluidReader.tankCapacities=タンクの容量 | リスト
+gui.ids.fluidReader.tankFluid=タンクの液体 | 液体スタック
+
+gui.ids.redstoneWriter.redstoneBoolean=レッドストーン信号 | 真偽値
+gui.ids.redstoneWriter.redstoneInt=レッドストーン信号 | 整数
+gui.ids.redstoneWriter.pulseBoolean=パルス | 真偽値
+gui.ids.redstoneWriter.pulseInt=パルス | 整数
+
+gui.ids.itemImporter.allItem=全てのアイテムを搬入 | 真偽値
+gui.ids.itemImporter.itemAmount=搬入アイテムの数 | 整数
+gui.ids.itemImporter.itemSlot=搬入アイテムのスロット | 整数
+gui.ids.itemImporter.item=搬入アイテム | アイテムスタック
+gui.ids.itemImporter.items=搬入アイテム | リスト
+
+gui.ids.itemExporter.allItem=全てのアイテムを搬出 | 真偽値
+gui.ids.itemExporter.itemAmount=搬出アイテムの数 | 整数
+gui.ids.itemExporter.itemSlot=搬出アイテムのスロット | 整数
+gui.ids.itemExporter.item=搬出アイテム | アイテムスタック
+gui.ids.itemExporter.items=搬出アイテム | リスト
+
+gui.ids.itemFilterInterface.all=全て | 真偽値
+gui.ids.itemFilterInterface.item=フィルター | アイテムスタック
+gui.ids.itemFilterInterface.items=フィルター | リスト
+
+gui.ids.energyImporter.boolean=エネルギーを搬入 | 真偽値
+gui.ids.energyImporter.amount=エネルギーの搬入量 | 整数
+
+gui.ids.energyExporter.boolean=エネルギーを搬出 | 真偽値
+gui.ids.energyExporter.amount=エネルギーの搬出量 | 整数
+
+gui.ids.energyFilterInterface.all=全て | 真偽値
+
+gui.ids.side=搬入出面
+gui.ids.tick=何ティック毎に動作するか
+gui.ids.priority=優先度
+gui.ids.channel=チャンネル
+
+gui.ids.type.boolean=真偽値
+gui.ids.type.int=整数
+gui.ids.type.long=整数 (Long)
+gui.ids.type.float=小数 (Float)
+gui.ids.type.double=小数 (Double)
+gui.ids.type.string=文字列
+
+gui.ids.op.if=条件
+
+gui.ids.op.and=AND && 
+gui.ids.op.nand=NAND !&&
+gui.ids.op.or=OR || 
+gui.ids.op.nor=NOR !|| 
+gui.ids.op.xor=XOR ^
+
+gui.ids.op.eq=EQ (等しい) ==
+gui.ids.op.neq=NEQ (等しくない) !=
+gui.ids.op.gtr=GTR (より大きい) >
+gui.ids.op.geq=GEQ (以上) >=
+gui.ids.op.lss=LSS (より小さい) <
+gui.ids.op.leq=LEQ (以下) <=
 
 #Modular Machinery
 
@@ -85,6 +218,7 @@ gui.machinery.energy_used=消費電力: %s
 gui.machinery.use_ic2=IC2を使用
 
 # Backpack Gui Elements
+
 container.backpack=バックパック
 
 gui.backpack.pickup_settings=拾うアップグレードの設定
@@ -196,6 +330,7 @@ gui.backpack.void_automation=他のアップグレード/自動化でのみ機�
 
 gui.deep_learner.hud=メインハンドまたはオフハンドに持ち、データモデルが入っているとHUDを表示します
 gui.deep_learner.contains=以下のモデルが含まれています
+
 gui.deep_learner.heading_name=名前
 gui.deep_learner.heading_information=情報
 gui.deep_learner.model_tier=モデルレベル: %s
@@ -396,6 +531,8 @@ keybind.backpackOpenToggle=バックパックを開く
 
 #Item
 
+item.wrench.name=レンチ
+
 tile.backpackLeather.name=革のバックパック
 tile.backpackIron.name=鉄のバックパック
 tile.backpackGold.name=金のバックパック
@@ -469,7 +606,7 @@ item.coloredEgg.green.name=サボテン色の卵
 item.coloredEgg.red.name=赤色の卵
 item.coloredEgg.black.name=イカスミ色の卵
 
-item.creativeModelLearner.name=クリエイティブモデルラーナー
+item.creativeModelLearner.name=クリエイティブモデルラーナー (WIP)
 item.dataModelBlank.name=空のデータモデル
 item.deepLearner.name=§bディープラーナー§r
 item.polymerClay.name=ポリマークレイ
@@ -477,6 +614,24 @@ item.sootCoveredRedstone.name=煤まみれのレッドストーン
 item.sootCoveredPlate.name=煤まみれのプレート
 
 item.structureWand.name=ストラクチャーワンド
+
+item.variableCard.name=変数カード
+
+item.energyInterface.name=エネルギーインターフェース
+item.energyFilterInterface.name=エネルギーフィルターインターフェース
+item.energyImporter.name=エネルギー搬入口
+item.energyExporter.name=エネルギー搬出口
+item.itemInterface.name=アイテムインターフェース
+item.itemFilterInterface.name=アイテムフィルターインターフェース
+item.itemImporter.name=アイテム搬入口
+item.itemExporter.name=アイテム搬出口
+item.storageTerminal.name=ストレージターミナル
+item.craftingInterface.name=クラフティングインターフェース
+item.redstoneReader.name=レッドストーン読み取り器
+item.blockReader.name=ブロック読み取り器
+item.inventoryReader.name=インベントリ読み取り器
+item.fluidReader.name=液体読み取り器
+item.redstoneWriter.name=レッドストーン書き込み器
 
 #Block
 
@@ -618,6 +773,9 @@ tile.lootFabricator.name=ルートファブリケーター
 tile.simulationChamber.name=シミュレーションチャンバー
 tile.machineCasing.name=マシンケーシング
 
+tile.cable.name=ロジックケーブル
+tile.programmer.name=プログラマー
+
 #ME Output Bus
 tile.modularItemOutputME.me.name=MEアイテム出力バス
 tile.modularFluidOutputME.me.name=ME液体出力バス
@@ -704,6 +862,9 @@ tooltip.wand.pos_not_set=未設定
 tooltip.wand.size=サイズ: %dx%dx%d
 
 #Structure Commands
+command.ok.main_usage_title=使用法:
+command.ok.main_usage_structure=/ok structure - ストラクチャー管理コマンド
+
 command.ok.reloading=[OmoshiroiKamo] ストラクチャー設定を再読み込み中...
 command.ok.reload_success=[OmoshiroiKamo] ストラクチャー設定の再読み込みに成功しました!
 command.ok.reload_errors=[OmoshiroiKamo] 再読み込み完了 (%d エラー)!
@@ -739,3 +900,349 @@ command.ok.wand_different_dimension=[OmoshiroiKamo] 選択範囲が異なるデ�
 command.ok.wand_scanning=[OmoshiroiKamo] %d ブロックをスキャン中...
 command.ok.wand_cleared=[OmoshiroiKamo] ワンドの選択範囲をクリアしました。
 command.ok.wand_no_selection=[OmoshiroiKamo] クリアする保留中の選択範囲がありません。
+
+# Chickens
+entity.RestoniaCrystalChicken.name=レストニアクリスタルのニワトリ
+entity.PalisCrystalChicken.name=パリスクリスタルのニワトリ
+entity.DiamantineCrystalChicken.name=ディアマンティンクリスタルのニワトリ
+entity.VoidCrystalChicken.name=ヴォイドクリスタルのニワトリ
+entity.EmeradicCrystalChicken.name=エメラディッククリスタルのニワトリ
+entity.EnoriCrystalChicken.name=エノリクリスタルのニワトリ
+entity.BlackQuartzChicken.name=ブラッククォーツのニワトリ
+entity.WhiteChicken.name=白いニワトリ
+entity.YellowChicken.name=黄色いニワトリ
+entity.BlueChicken.name=青いニワトリ
+entity.GreenChicken.name=緑のニワトリ
+entity.RedChicken.name=赤いニワトリ
+entity.BlackChicken.name=黒いニワトリ
+entity.PinkChicken.name=ピンクのニワトリ
+entity.PurpleChicken.name=紫のニワトリ
+entity.OrangeChicken.name=オレンジのニワトリ
+entity.LightBlueChicken.name=水色のニワトリ
+entity.LimeChicken.name=黄緑のニワトリ
+entity.GrayChicken.name=灰色のニワトリ
+entity.CyanChicken.name=シアンのニワトリ
+entity.SilverDyeChicken.name=薄灰色のニワトリ
+entity.MagentaChicken.name=マゼンタのニワトリ
+entity.BrownChicken.name=茶色のニワトリ
+entity.SmartChicken.name=スマートなニワトリ
+entity.FlintChicken.name=火打石のニワトリ
+entity.QuartzChicken.name=ネザークォーツのニワトリ
+entity.LogChicken.name=原木のニワトリ
+entity.SandChicken.name=砂のニワトリ
+entity.StringChicken.name=糸のニワトリ
+entity.GlowstoneChicken.name=グロウストーンのニワトリ
+entity.GunpowderChicken.name=火薬のニワトリ
+entity.RedstoneChicken.name=レッドストーンのニワトリ
+entity.GlassChicken.name=ガラスのニワトリ
+entity.IronChicken.name=鉄のニワトリ
+entity.CoalChicken.name=石炭のニワトリ
+entity.GoldChicken.name=金のニワトリ
+entity.SnowballChicken.name=雪玉のニワトリ
+entity.WaterChicken.name=水のニワトリ
+entity.LavaChicken.name=溶岩のニワトリ
+entity.ClayChicken.name=粘土のニワトリ
+entity.LeatherChicken.name=革のニワトリ
+entity.NetherwartChicken.name=ネザーウォートのニワトリ
+entity.DiamondChicken.name=ダイヤモンドのニワトリ
+entity.BlazeChicken.name=ブレイズのニワトリ
+entity.SlimeChicken.name=スライムのニワトリ
+entity.EnderChicken.name=エンダーのニワトリ
+entity.GhastChicken.name=ガストのニワトリ
+entity.EmeraldChicken.name=エメラルドのニワトリ
+entity.MagmaChicken.name=マグマのニワトリ
+entity.XpChicken.name=経験値のニワトリ
+entity.PShardChicken.name=プリズマリンシャードのニワトリ
+entity.PCrystalChicken.name=プリズマリンクリスタルのニワトリ
+entity.SoulSandChicken.name=ソウルサンドのニワトリ
+entity.ObsidianChicken.name=黒曜石のニワトリ
+entity.YelloriumChicken.name=イエロリウムのニワトリ
+entity.GraphiteChicken.name=グラファイトのニワトリ
+entity.CyaniteChicken.name=シアナイトのニワトリ
+entity.BlutoniumChicken.name=ブルトニウムのニワトリ
+entity.LudicriteChicken.name=ルディクライトのニワトリ
+entity.TerrasteelChicken.name=テラスチールのニワトリ
+entity.ManasteelChicken.name=マナスチールのニワトリ
+entity.ElementiumChicken.name=エレメンチウムのニワトリ
+entity.DraconiumChicken.name=ドラコニウムのニワトリ
+entity.DraconiumAwakenedChicken.name=覚醒ドラコニウムのニワトリ
+entity.ElectricalSteelChicken.name=電気鋼のニワトリ
+entity.EnergeticAlloyChicken.name=エナジェティック合金のニワトリ
+entity.VibrantAlloyChicken.name=ヴァイブラント合金のニワトリ
+entity.RedstoneAlloyChicken.name=レッドストーン合金のニワトリ
+entity.ConductiveIronChicken.name=導電性鉄のニワトリ
+entity.PulsatingIronChicken.name=脈動鉄のニワトリ
+entity.DarkSteelChicken.name=ダークスチールのニワトリ
+entity.EndSteelChicken.name=エンドスチールのニワトリ
+entity.SoulariumChicken.name=ソウラリウムのニワトリ
+entity.OsmiumChicken.name=オスミウムのニワトリ
+entity.InvarChicken.name=インバーのニワトリ
+entity.BronzeChicken.name=ブロンズのニワトリ
+entity.ZincChicken.name=亜鉛のニワトリ
+entity.TinChicken.name=スズのニワトリ
+entity.SteelChicken.name=鋼鉄のニワトリ
+entity.SilverChicken.name=銀のニワトリ
+entity.PlatinumChicken.name=プラチナのニワトリ
+entity.NickelChicken.name=ニッケルのニワトリ
+entity.LeadChicken.name=鉛のニワトリ
+entity.CopperChicken.name=銅のニワトリ
+entity.BrassChicken.name=真鍮のニワトリ
+entity.CupronickelChicken.name=白銅のニワトリ
+entity.ElectrumChicken.name=エレクトラムのニワトリ
+entity.SiliconChicken.name=シリコンのニワトリ
+entity.SulfurChicken.name=硫黄のニワトリ
+entity.SaltpeterChicken.name=硝石のニワトリ
+entity.AluminiumChicken.name=アルミニウムのニワトリ
+entity.AmberChicken.name=琥珀のニワトリ
+entity.AmethystChicken.name=アメジストのニワトリ
+entity.MalachiteChicken.name=マラカイトのニワトリ
+entity.PeridotChicken.name=ペリドットのニワトリ
+entity.RubyChicken.name=ルビーのニワトリ
+entity.SapphireChicken.name=サファイアのニワトリ
+entity.TanzaniteChicken.name=タンザナイトのニワトリ
+entity.TopazChicken.name=トパーズのニワトリ
+entity.GarnetChicken.name=ガーネットのニワトリ
+entity.SaltChicken.name=塩のニワトリ
+entity.RubberChicken.name=ゴムのニワトリ
+entity.UraniumChicken.name=ウランのニワトリ
+entity.PinkSlimeChicken.name=ピンクスライムのニワトリ
+entity.BasalzRodChicken.name=バサルツロッドのニワトリ
+entity.BlitzRodChicken.name=ブリッツロッドのニワトリ
+entity.BlizzRodChicken.name=ブリーズロッドのニワトリ
+entity.CinnabarChicken.name=シナバーのニワトリ
+entity.EnderiumChicken.name=エンダリウムのニワトリ
+entity.LumiumChicken.name=ルミウムのニワトリ
+entity.MithrilChicken.name=ミスリルのニワトリ
+entity.SignalumChicken.name=シグナルムのニワトリ
+entity.ArditeChicken.name=アーダイトのニワトリ
+entity.CobaltChicken.name=コバルトのニワトリ
+entity.ManyullynChicken.name=マニュリンのニワトリ
+entity.PigIronChicken.name=豚鉄のニワトリ
+entity.BloodSlimeChicken.name=ブラッドスライムのニワトリ
+entity.BlueSlimeChicken.name=ブルースライムのニワトリ
+
+# Cows
+entity.WaterCow.name=水牛
+entity.LavaCow.name=溶岩ウシ
+entity.YelloriumCow.name=イエロリウムウシ
+entity.CyaniteCow.name=シアナイトウシ
+entity.SteamCow.name=蒸気ウシ
+entity.OilCow.name=石油ウシ
+entity.FuelCow.name=燃料ウシ
+entity.RedPlasmaCow.name=レッドプラズマウシ
+entity.NutrientDistillationCow.name=栄養蒸留ウシ
+entity.HootchCow.name=ウイスキーウシ
+entity.RocketFuelCow.name=ロケット燃料ウシ
+entity.FireWaterCow.name=火酒ウシ
+entity.LiquidSunshineCow.name=サンシャインウシ
+entity.CloudSeedCow.name=クラウドシードウシ
+entity.CloudSeedConcentratedCow.name=濃縮クラウドシードウシ
+entity.EnderDistillationCow.name=エンダー蒸留ウシ
+entity.VaporOfLevityCow.name=軽い蒸気ウシ
+entity.HeavyWaterCow.name=重水ウシ
+entity.BrineCow.name=塩水ウシ
+entity.LithiumCow.name=リチウムウシ
+entity.SludgeCow.name=スラッジウシ
+entity.SewageCow.name=下水ウシ
+entity.MobEssenceCow.name=モブエッセンスウシ
+entity.BiofuelCow.name=バイオ燃料ウシ
+entity.MeatCow.name=液体肉ウシ
+entity.PinkSlimeCow.name=ピンクスライムウシ
+entity.ChocolateMilkCow.name=チョコレートミルクウシ
+entity.MushroomSoupCow.name=マッシュルームスープウシ
+entity.IronCow.name=鉄ウシ
+entity.GoldCow.name=金ウシ
+entity.CopperCow.name=銅ウシ
+entity.TinCow.name=錫ウシ
+entity.AluminiumCow.name=アルミニウムウシ
+entity.CobaltCow.name=コバルトウシ
+entity.ArditeCow.name=アーダイトウシ
+entity.BronzeCow.name=ブロンズウシ
+entity.AlubrassCow.name=アルミニウム黄銅ウシ
+entity.ManyullynCow.name=マニュリンウシ
+entity.ObsidianCow.name=黒曜石ウシ
+entity.SteelCow.name=鋼ウシ
+entity.GlassCow.name=ガラスウシ
+entity.StoneCow.name=石ウシ
+entity.EmeraldCow.name=エメラルドウシ
+entity.NickelCow.name=ニッケルウシ
+entity.LeadCow.name=鉛ウシ
+entity.SilverCow.name=銀ウシ
+entity.ShinyCow.name=プラチナウシ
+entity.InvarCow.name=インバーウシ
+entity.ElectrumCow.name=エレクトラムウシ
+entity.LumiumCow.name=ルミウムウシ
+entity.SignalumCow.name=シグナラムウシ
+entity.MithrilCow.name=ミスリルウシ
+entity.EnderiumCow.name=エンダリウムウシ
+entity.PigIronCow.name=豚鉄ウシ
+
+# DML
+item.living_matter.overworldian.name=§9オーバーワールド系マター
+item.living_matter.hellish.name=§c地獄系マター
+item.living_matter.extraterrestrial.name=§d宇宙系マター
+
+item.model.Blaze.name=§bブレイズデータモデル§r
+item.pristine.Blaze.name=純粋なブレイズマター
+item.model.Creeper.name=§bクリーパーデータモデル§r
+item.pristine.Creeper.name=純粋なクリーパーマター
+item.model.Ender Dragon.name=§bエンダードラゴンデータモデル§r
+item.pristine.Ender Dragon.name=純粋なエンダードラゴンマター
+item.model.Enderman.name=§bエンダーマンデータモデル§r
+item.pristine.Enderman.name=純粋なエンダーマンマター
+item.model.Ghast.name=§bガストデータモデル§r
+item.pristine.Ghast.name=純粋なガストマター
+item.model.Skeleton.name=§bスケルトンデータモデル§r
+item.pristine.Skeleton.name=純粋なスケルトンマター
+item.model.Slime.name=§bスライムデータモデル§r
+item.pristine.Slime.name=純粋なスライムマター
+item.model.Spider.name=§bスパイダーデータモデル§r
+item.pristine.Spider.name=純粋なスパイダーマター
+item.model.Witch.name=§bウィッチデータモデル§r
+item.pristine.Witch.name=純粋なウィッチマター
+item.model.Wither.name=§bウィザーデータモデル§r
+item.pristine.Wither.name=純粋なウィザーマター
+item.model.Wither Skeleton.name=§bウィザースケルトンデータモデル§r
+item.pristine.Wither Skeleton.name=純粋なウィザースケルトンマター
+item.model.Zombie.name=§bゾンビデータモデル§r
+item.pristine.Zombie.name=純粋なゾンビマター
+
+# Trivia
+dml.trivia.blaze.1=水入りバケツを持っていけば、蒸発する様子を絶望と共に見守ることになるし、辺り一面火の海だ。
+dml.trivia.blaze.2=君は燃えている。
+dml.trivia.creeper.1=放置すると拠点を爆破するぞ。
+dml.trivia.dragon.1=エンドに住んでおり、宝は持っていない。
+dml.trivia.dragon.2=クリスタルを破壊して円環を断ち切れ！
+dml.trivia.enderman.1=刺激しない限り友好的だが、雨が嫌い。
+dml.trivia.enderman.2=短距離をテレポートする。
+dml.trivia.ghast.1=泣いているラマのような声が聞こえたら、それは多分ガストだ。
+dml.trivia.skeleton.1=恐るべき射手であり、何らかのチートエンジンを使っているようだ。
+dml.trivia.skeleton.2=盾があったらなあ。
+dml.trivia.slime.1=跳ねるバウンサー
+dml.trivia.slime.2=跳ねて、跳ねて、跳ねまくる
+dml.trivia.slime.3=跳ねて、バウｎ...グシャッ！ - "とあるスライムの俳句"
+dml.trivia.spider.1=夜行性の嫌なやつらだ、気をつけろ！
+dml.trivia.spider.2=なぜか糸を落とす。
+dml.trivia.witch.1=ポーションや調合に親和性がある。
+dml.trivia.witch.2=猫が好き。
+dml.trivia.witch.3=用心しろ！
+dml.trivia.wither.1=この敵には近づくな。逃げろ！
+dml.trivia.wither.2=頭が3つあるんだぞ、何が起こるかわかったもんじゃない。
+dml.trivia.wither_skeleton.1=ウィザーの状態異常を付与してくる。
+dml.trivia.wither_skeleton.2=牛乳を持っていけ！
+dml.trivia.zombie.1=夜に唸り声を上げる。
+dml.trivia.zombie.2=パーソナルスペースの必要性を理解していない。
+
+# Modular Machinery
+tile.modularMachineCasing.name=モジュラーマシンケーシング
+tile.modularMachineController.name=モジュラーマシンコントローラー
+tile.visBridge.name=ビスブリッジ
+
+# Item Input Port
+tile.modularItemInput.tier_1.name=アイテム搬入口 ティア1
+tile.modularItemInput.tier_2.name=アイテム搬入口 ティア2
+tile.modularItemInput.tier_3.name=アイテム搬入口 ティア3
+tile.modularItemInput.tier_4.name=アイテム搬入口 ティア4
+tile.modularItemInput.tier_5.name=アイテム搬入口 ティア5
+tile.modularItemInput.tier_6.name=アイテム搬入口 ティア6
+
+# Item Output Port
+tile.modularItemOutput.tier_1.name=アイテム搬出口 ティア1
+tile.modularItemOutput.tier_2.name=アイテム搬出口 ティア2
+tile.modularItemOutput.tier_3.name=アイテム搬出口 ティア3
+tile.modularItemOutput.tier_4.name=アイテム搬出口 ティア4
+tile.modularItemOutput.tier_5.name=アイテム搬出口 ティア5
+tile.modularItemOutput.tier_6.name=アイテム搬出口 ティア6
+
+# Fluid Input Port
+tile.modularFluidInput.tier_1.name=液体搬入口 ティア1
+tile.modularFluidInput.tier_2.name=液体搬入口 ティア2
+tile.modularFluidInput.tier_3.name=液体搬入口 ティア3
+tile.modularFluidInput.tier_4.name=液体搬入口 ティア4
+tile.modularFluidInput.tier_5.name=液体搬入口 ティア5
+tile.modularFluidInput.tier_6.name=液体搬入口 ティア6
+
+# Fluid Output Port
+tile.modularFluidOutput.tier_1.name=液体搬出口 ティア1
+tile.modularFluidOutput.tier_2.name=液体搬出口 ティア2
+tile.modularFluidOutput.tier_3.name=液体搬出口 ティア3
+tile.modularFluidOutput.tier_4.name=液体搬出口 ティア4
+tile.modularFluidOutput.tier_5.name=液体搬出口 ティア5
+tile.modularFluidOutput.tier_6.name=液体搬出口 ティア6
+
+# Energy Input Port
+tile.modularEnergyInput.tier_1.name=エネルギー搬入口 ティア1
+tile.modularEnergyInput.tier_2.name=エネルギー搬入口 ティア2
+tile.modularEnergyInput.tier_3.name=エネルギー搬入口 ティア3
+tile.modularEnergyInput.tier_4.name=エネルギー搬入口 ティア4
+tile.modularEnergyInput.tier_5.name=エネルギー搬入口 ティア5
+tile.modularEnergyInput.tier_6.name=エネルギー搬入口 ティア6
+
+# Energy Output Port
+tile.modularEnergyOutput.tier_1.name=エネルギー搬出口 ティア1
+tile.modularEnergyOutput.tier_2.name=エネルギー搬出口 ティア2
+tile.modularEnergyOutput.tier_3.name=エネルギー搬出口 ティア3
+tile.modularEnergyOutput.tier_4.name=エネルギー搬出口 ティア4
+tile.modularEnergyOutput.tier_5.name=エネルギー搬出口 ティア5
+tile.modularEnergyOutput.tier_6.name=エネルギー搬出口 ティア6
+
+# Gas Input Port
+tile.modularGasInput.tier_1.name=ガス搬入口 ティア1
+tile.modularGasInput.tier_2.name=ガス搬入口 ティア2
+tile.modularGasInput.tier_3.name=ガス搬入口 ティア3
+tile.modularGasInput.tier_4.name=ガス搬入口 ティア4
+tile.modularGasInput.tier_5.name=ガス搬入口 ティア5
+tile.modularGasInput.tier_6.name=ガス搬入口 ティア6
+
+# Gas Output Port
+tile.modularGasOutput.tier_1.name=ガス搬出口 ティア1
+tile.modularGasOutput.tier_2.name=ガス搬出口 ティア2
+tile.modularGasOutput.tier_3.name=ガス搬出口 ティア3
+tile.modularGasOutput.tier_4.name=ガス搬出口 ティア4
+tile.modularGasOutput.tier_5.name=ガス搬出口 ティア5
+tile.modularGasOutput.tier_6.name=ガス搬出口 ティア6
+
+# Mana Ports
+tile.modularManaInput.tier_1.name=マナ搬入口
+tile.modularManaOutput.tier_1.name=マナ搬出口
+
+# Vis Ports
+tile.modularVisInput.tier_1.name=ビス搬入口
+tile.modularVisOutput.tier_1.name=ビス搬出口
+
+# Essentia Ports
+tile.modularEssentiaInput.tier_1.name=エッセンシア搬入口
+tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出口
+
+# ME Ports
+tile.modularItemOutputME.me.name=MEアイテム搬出口
+tile.modularFluidOutputME.me.name=ME液体搬出口
+tile.modularEssentiaInputME.me.name=MEエッセンシア搬入口
+
+# Deep Mob Learning
+model.tier_0.name=§7欠陥品§r
+model.tier_1.name=§a普通§r
+model.tier_2.name=§9高度§r
+model.tier_3.name=§d素晴らしい§r
+model.tier_4.name=§6自己認識§r
+
+tooltip.creative_model_learner.desc=ディープラーナー内のデータモデルをレベルアップさせるクリエイティブアイテム。
+tooltip.creative_model_learner.shift=§r§oシフト§r§7 + §r§o右クリック§rでティアを上昇させます。§r
+tooltip.creative_model_learner.ctrl=§r§oコントロール§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
+
+# Integrated Dynamics
+tooltip.variable_card.empty=§7ロジックデータなし
+
+# Machine Blueprint
+item.machineBlueprint.display.name.format=設計図: %s
+item.machineBlueprint.display.name.empty=空の設計図
+
+tooltip.machineBlueprint.structure=構造体: %s
+tooltip.machineBlueprint.valid=有効な構造体です
+tooltip.machineBlueprint.invalid=構造体が無効です！
+tooltip.machineBlueprint.null=ブループリントが空です！
+tooltip.machineBlueprint.show=コントローラーに使うことで構造体を表示
+tooltip.machineBlueprint.build=コントローラーにシフト右クリックで建造
+
+message.machineBlueprint.empty=この設計図は空です
+

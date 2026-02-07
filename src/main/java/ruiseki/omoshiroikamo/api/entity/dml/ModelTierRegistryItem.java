@@ -45,6 +45,7 @@ public class ModelTierRegistryItem {
         return "model.tier_" + tier + ".name";
     }
 
+    // Not used
     public ModelTierRegistryItem setLang(String langCode, String value) {
         if (this.lang == null) {
             this.lang = new HashMap<>();

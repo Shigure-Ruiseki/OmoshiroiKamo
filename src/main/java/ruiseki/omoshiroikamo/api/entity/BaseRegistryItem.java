@@ -313,6 +313,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
         return lang;
     }
 
+    // Not used
     public T setLang(String langCode, String value) {
         if (this.lang == null) {
             this.lang = new HashMap<>();

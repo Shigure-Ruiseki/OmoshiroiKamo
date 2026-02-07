@@ -38,9 +38,9 @@ public class ItemCreativeModelLearner extends ItemOK {
         if (!KeyboardUtils.isHoldingShift()) {
             list.add(LibMisc.LANG.localize("tooltip.holdShift"));
         } else {
-            list.add("A creative item that levels up data models inside the Deep Learner.");
-            list.add("§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r");
-            list.add("§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r");
+            list.add(LibMisc.LANG.localize("tooltip.creative_model_learner.desc"));
+            list.add(LibMisc.LANG.localize("tooltip.creative_model_learner.shift"));
+            list.add(LibMisc.LANG.localize("tooltip.creative_model_learner.ctrl"));
         }
     }
 }

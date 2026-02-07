@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
@@ -35,7 +36,7 @@ public class LootFabricatorRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return "Loot Fabricator";
+        return LibMisc.LANG.localize("nei.dml.loot_fabricator");
     }
 
     @Override

@@ -34,9 +34,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "ElectricalSteelChicken",
             0x939393,
             0x474747,
-            SpawnType.NONE).setLayString("ore:ingotElectricalSteel")
-                .setLang("en_US", "Electrical Steel Chicken")
-                .setLang("ja_JP", "電気鋼のニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotElectricalSteel");
         allChickens.add(electricalSteelChicken);
 
         energeticAlloyChicken = addChicken(
@@ -45,9 +43,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "EnergeticAlloyChicken",
             0xea6c05,
             0x65321b,
-            SpawnType.NONE).setLayString("ore:ingotEnergeticAlloy")
-                .setLang("en_US", "Energetic Alloy Chicken")
-                .setLang("ja_JP", "エナジェティック合金のニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotEnergeticAlloy");
         allChickens.add(energeticAlloyChicken);
 
         vibrantAlloyChicken = addChicken(
@@ -56,9 +52,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "VibrantAlloyChicken",
             0xbcf239,
             0x779c1d,
-            SpawnType.NONE).setLayString("ore:ingotVibrantAlloy")
-                .setLang("en_US", "Vibrant Alloy Chicken")
-                .setLang("ja_JP", "ヴァイブラント合金のニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotVibrantAlloy");
         allChickens.add(vibrantAlloyChicken);
 
         redstoneAlloyChicken = addChicken(
@@ -67,9 +61,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "RedstoneAlloyChicken",
             0xd03939,
             0x621919,
-            SpawnType.NONE).setLayString("ore:ingotRedstoneAlloy")
-                .setLang("en_US", "Redstone Alloy Chicken")
-                .setLang("ja_JP", "レッドストーン合金のニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotRedstoneAlloy");
         allChickens.add(redstoneAlloyChicken);
 
         conductiveIronChicken = addChicken(
@@ -78,9 +70,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "ConductiveIronChicken",
             0xCC9D96,
             0x7E6764,
-            SpawnType.NONE).setLayString("ore:ingotConductiveIron")
-                .setLang("en_US", "Conductive Iron Chicken")
-                .setLang("ja_JP", "導電性鉄のニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotConductiveIron");
         allChickens.add(conductiveIronChicken);
 
         pulsatingIronChicken = addChicken(
@@ -89,9 +79,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "PulsatingIronChicken",
             0x6FE78B,
             0x406448,
-            SpawnType.NONE).setLayString("ore:ingotPulsatingIron")
-                .setLang("en_US", "Pulsating Iron Chicken")
-                .setLang("ja_JP", "脈動鉄のニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotPulsatingIron");
         allChickens.add(pulsatingIronChicken);
 
         darkSteelChicken = addChicken(
@@ -100,9 +88,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "DarkSteelChicken",
             0x4D4D4E,
             0x242424,
-            SpawnType.NONE).setLayString("ore:ingotDarkSteel")
-                .setLang("en_US", "Dark Steel Chicken")
-                .setLang("ja_JP", "ダークスチールのニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotDarkSteel");
         allChickens.add(darkSteelChicken);
 
         endSteelChicken = addChicken(
@@ -111,9 +97,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "EndSteelChicken",
             0x6F6935,
             0xF5EFBB,
-            SpawnType.NONE).setLayString("ore:ingotEndSteel")
-                .setLang("en_US", "End Steel Chicken")
-                .setLang("ja_JP", "エンドスチールのニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotEndSteel");
         allChickens.add(endSteelChicken);
 
         soulariumChicken = addChicken(
@@ -122,9 +106,7 @@ public class EnderIOChickens extends BaseChickenHandler {
             "SoulariumChicken",
             0x6F5C36,
             0x4E371A,
-            SpawnType.NONE).setLayString("ore:ingotSoularium")
-                .setLang("en_US", "Soularium Chicken")
-                .setLang("ja_JP", "ソウラリウムのニワトリ");
+            SpawnType.NONE).setLayString("ore:ingotSoularium");
         allChickens.add(soulariumChicken);
 
         return allChickens;

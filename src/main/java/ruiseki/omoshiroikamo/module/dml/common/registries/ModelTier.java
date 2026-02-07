@@ -114,24 +114,19 @@ public class ModelTier {
     public List<ModelTierRegistryItem> registerTiers() {
         List<ModelTierRegistryItem> allTiers = new ArrayList<>();
 
-        ModelTierRegistryItem tier0 = addTier(0, 1, 6, false, 0, 2, 1, 0, 0).setLang("en_US", "§7Faulty§r")
-            .setLang("ja_JP", "§7フォールティー§r");
+        ModelTierRegistryItem tier0 = addTier(0, 1, 6, false, 0, 2, 1, 0, 0);
         allTiers.add(tier0);
 
-        ModelTierRegistryItem tier1 = addTier(1, 4, 48, true, 5, 5, 2, 1, 1).setLang("en_US", "§aBasic§r")
-            .setLang("ja_JP", "§aベーシック§r");
+        ModelTierRegistryItem tier1 = addTier(1, 4, 48, true, 5, 5, 2, 1, 1);
         allTiers.add(tier1);
 
-        ModelTierRegistryItem tier2 = addTier(2, 10, 300, true, 11, 8, 4, 1, 3).setLang("en_US", "§9Advanced§r")
-            .setLang("ja_JP", "§9アドバンスド§r");
+        ModelTierRegistryItem tier2 = addTier(2, 10, 300, true, 11, 8, 4, 1, 3);
         allTiers.add(tier2);
 
-        ModelTierRegistryItem tier3 = addTier(3, 18, 900, true, 12, 24, 5, 2, 6).setLang("en_US", "§dSuperior§r")
-            .setLang("ja_JP", "§dスーペリア§r");
+        ModelTierRegistryItem tier3 = addTier(3, 18, 900, true, 12, 24, 5, 2, 6);
         allTiers.add(tier3);
 
-        ModelTierRegistryItem tier4 = addTier(4, 0, 0, true, 18, 42, 7, 3, 11).setLang("en_US", "§6Self-Aware§r")
-            .setLang("ja_JP", "§6自己認識§r");
+        ModelTierRegistryItem tier4 = addTier(4, 0, 0, true, 18, 42, 7, 3, 11);
         allTiers.add(tier4);
 
         return allTiers;
