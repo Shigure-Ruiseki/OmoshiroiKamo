@@ -2,8 +2,8 @@
 	"credit": "Designed by ValkyrieofNight",
 	"parent": "block/cube",
 	"textures": {
-		"particle": "omoshiroikamo:block/laser_core",
-		"texture": "omoshiroikamo:block/laser_core",
+		"particle": "omoshiroikamo:block/multiblock/laser_core",
+		"texture": "omoshiroikamo:block/multiblock/laser_core",
 		"hsink": "block/iron_block"
 	},
 	"elements": [

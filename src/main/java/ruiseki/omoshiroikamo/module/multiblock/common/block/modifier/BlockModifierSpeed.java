@@ -15,7 +15,7 @@ public class BlockModifierSpeed extends BlockModifier {
 
     protected BlockModifierSpeed() {
         super(ModObject.blockModifierSpeed.unlocalisedName, "speed");
-        setTextureName("modifier_speed");
+        setTextureName("multiblock/modifier_speed");
     }
 
     public static BlockModifierSpeed create() {

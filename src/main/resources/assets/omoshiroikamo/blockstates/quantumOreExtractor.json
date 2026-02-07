@@ -1,5 +1,5 @@
 {
     "variants": {
-      "": { "model": "omoshiroikamo:block/quantumOreExtractor" }
+      "": { "model": "omoshiroikamo:block/multiblock/quantumOreExtractor" }
     }
 }

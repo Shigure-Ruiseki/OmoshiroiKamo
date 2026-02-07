@@ -14,7 +14,7 @@ public class BlockModifierJumpBoost extends BlockModifier {
 
     protected BlockModifierJumpBoost() {
         super(ModObject.blockModifierJumpBoost.unlocalisedName, "jump_boost");
-        setTextureName("modifier_jump_boost");
+        setTextureName("multiblock/modifier_jump_boost");
     }
 
     public static BlockModifierJumpBoost create() {

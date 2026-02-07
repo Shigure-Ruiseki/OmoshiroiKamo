@@ -40,11 +40,11 @@ public enum MultiBlockBlocks {
 
     // spotless: off
 
-    BLOCK_MICA(new BlockOK(ModObject.blockMica.unlocalisedName, Material.rock).setTextureName("mica")),
+    BLOCK_MICA(new BlockOK(ModObject.blockMica.unlocalisedName, Material.rock).setTextureName("multiblock/mica")),
     BLOCK_HARDENED_STONE(
-        new BlockOK(ModObject.blockHardenedStone.unlocalisedName, Material.rock).setTextureName("hardened_stone")),
-    BLOCK_ALABASTER(new BlockOK(ModObject.blockAlabaster.unlocalisedName, Material.rock).setTextureName("alabaster")),
-    BLOCK_BASALT(new BlockOK(ModObject.blockBasalt.unlocalisedName, Material.rock).setTextureName("basalt")),
+        new BlockOK(ModObject.blockHardenedStone.unlocalisedName, Material.rock).setTextureName("multiblock/hardened_stone")),
+    BLOCK_ALABASTER(new BlockOK(ModObject.blockAlabaster.unlocalisedName, Material.rock).setTextureName("multiblock/alabaster")),
+    BLOCK_BASALT(new BlockOK(ModObject.blockBasalt.unlocalisedName, Material.rock).setTextureName("multiblock/basalt")),
     QUANTUM_ORE_EXTRACTOR(BlockQuantumOreExtractor.create()),
     QUANTUM_RES_EXTRACTOR(BlockQuantumResExtractor.create()),
     QUANTUM_BEACON(BlockQuantumBeacon.create()),

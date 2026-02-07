@@ -14,7 +14,7 @@ public class BlockModifierWaterBreathing extends BlockModifier {
 
     protected BlockModifierWaterBreathing() {
         super(ModObject.blockModifierWaterBreathing.unlocalisedName, "water_breathing");
-        setTextureName("modifier_water_breathing");
+        setTextureName("multiblock/modifier_water_breathing");
     }
 
     public static BlockModifierWaterBreathing create() {

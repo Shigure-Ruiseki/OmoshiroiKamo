@@ -21,8 +21,7 @@ public class ItemBlockModifier extends ItemBlock {
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         super.addInformation(stack, player, list, flag);
         Block block = Block.getBlockFromItem(stack.getItem());
-        if (block instanceof BlockModifier) {
-            BlockModifier modifier = (BlockModifier) block;
+        if (block instanceof BlockModifier modifier) {
             List<String> tooltipLines = modifier.getTooltipLines();
             list.addAll(tooltipLines);
         }

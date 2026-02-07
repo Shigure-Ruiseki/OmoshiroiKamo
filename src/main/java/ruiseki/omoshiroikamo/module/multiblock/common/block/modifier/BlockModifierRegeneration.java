@@ -14,7 +14,7 @@ public class BlockModifierRegeneration extends BlockModifier {
 
     protected BlockModifierRegeneration() {
         super(ModObject.blockModifierRegeneration.unlocalisedName, "regen");
-        setTextureName("modifier_regen");
+        setTextureName("multiblock/modifier_regen");
     }
 
     public static BlockModifierRegeneration create() {

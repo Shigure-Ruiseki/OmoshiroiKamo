@@ -15,7 +15,7 @@ public class BlockModifierAccuracy extends BlockModifier {
 
     protected BlockModifierAccuracy() {
         super(ModObject.blockModifierAccuracy.unlocalisedName, "accuracy");
-        setTextureName("modifier_accuracy");
+        setTextureName("multiblock/modifier_accuracy");
     }
 
     public static BlockModifierAccuracy create() {

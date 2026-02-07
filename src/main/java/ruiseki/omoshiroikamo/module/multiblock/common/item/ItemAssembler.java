@@ -22,7 +22,7 @@ public class ItemAssembler extends ItemOK {
         super(ModObject.itemAssembler);
         setMaxStackSize(1);
         setNoRepair();
-        setTextureName("assembler");
+        setTextureName("multiblock/assembler");
     }
 
     @Override

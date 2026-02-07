@@ -2,11 +2,11 @@
 	"credit": "Designed by ValkyrieofNight",
 	"parent": "block/cube",
 	"textures": {
-		"glass_top2": "omoshiroikamo:block/lens_colored_top",
-		"glass_top": "omoshiroikamo:block/lens_colored_top_2",
-		"glass_side": "omoshiroikamo:block/lens_colored_side",
-		"glass_side_2": "omoshiroikamo:block/lens_colored_side_2",
-		"support": "omoshiroikamo:block/glass_colored",
+		"glass_top2": "omoshiroikamo:block/multiblock/lens_colored_top",
+		"glass_top": "omoshiroikamo:block/multiblock/lens_colored_top_2",
+		"glass_side": "omoshiroikamo:block/multiblock/lens_colored_side",
+		"glass_side_2": "omoshiroikamo:block/multiblock/lens_colored_side_2",
+		"support": "omoshiroikamo:block/multiblock/glass_colored",
 		"particle": "block/glass"
 	},
 	"elements": [

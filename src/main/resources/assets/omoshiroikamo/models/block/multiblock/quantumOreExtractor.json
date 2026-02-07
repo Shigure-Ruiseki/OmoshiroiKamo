@@ -2,9 +2,9 @@
 	"credit": "Designed by ValkyrieofNight",
 	"parent": "block/cube",
   "textures": {
-    "tier": "omoshiroikamo:block/cont_tier",
-    "laser_core": "omoshiroikamo:block/laser_core",
-    "vmbase": "omoshiroikamo:block/basalt",
+    "tier": "omoshiroikamo:block/multiblock/cont_tier",
+    "laser_core": "omoshiroikamo:block/multiblock/laser_core",
+    "vmbase": "omoshiroikamo:block/multiblock/basalt",
     "particle": "minecraft:block/diamond_block"
   },
   "elements": [

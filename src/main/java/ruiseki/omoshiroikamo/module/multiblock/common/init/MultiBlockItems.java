@@ -18,9 +18,9 @@ public enum MultiBlockItems {
     CRYSTAL(new ItemCrystal()),
     ASSEMBLER(new ItemAssembler()),
     STABILIZED_ENDER_PEAR(new ItemOK().setName(ModObject.itemStabilizedEnderPear)
-        .setTextureName("ender_stabilized")),
+        .setTextureName("multiblock/ender_stabilized")),
     PHOTOVOLTAIC_CELL(new ItemOK().setName(ModObject.itemPhotovoltaicCell)
-        .setTextureName("photovoltaic_cell")),
+        .setTextureName("multiblock/photovoltaic_cell")),
 
     ;
     // spotless: on

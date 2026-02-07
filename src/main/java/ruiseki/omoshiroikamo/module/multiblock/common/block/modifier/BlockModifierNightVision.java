@@ -14,7 +14,7 @@ public class BlockModifierNightVision extends BlockModifier {
 
     protected BlockModifierNightVision() {
         super(ModObject.blockModifierNightVision.unlocalisedName, "night_vision");
-        setTextureName("modifier_night_vision");
+        setTextureName("multiblock/modifier_night_vision");
     }
 
     public static BlockModifierNightVision create() {

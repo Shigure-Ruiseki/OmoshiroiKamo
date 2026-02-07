@@ -57,7 +57,7 @@ public class BlockMachineBase extends BlockOK implements IMBBlock {
         icons = new IIcon[blocks.length];
 
         for (int i = 0; i < blocks.length; i++) {
-            String iconName = LibResources.PREFIX_MOD + blocks[i];
+            String iconName = LibResources.PREFIX_MOD +"multiblock/" + blocks[i];
             icons[i] = reg.registerIcon(iconName);
         }
     }

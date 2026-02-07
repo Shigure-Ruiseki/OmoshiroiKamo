@@ -12,7 +12,7 @@ public class BlockModifierPiezo extends BlockModifier {
 
     protected BlockModifierPiezo() {
         super(ModObject.blockModifierPiezo.unlocalisedName, "piezo");
-        setTextureName("modifier_piezo");
+        setTextureName("multiblock/modifier_piezo");
     }
 
     public static BlockModifierPiezo create() {

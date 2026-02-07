@@ -16,7 +16,7 @@ public class ItemCrystal extends ItemOK {
 
     public ItemCrystal() {
         super(ModObject.itemCrystal.unlocalisedName);
-        setTextureName("crystal");
+        setTextureName("multiblock/crystal");
     }
 
     @Override

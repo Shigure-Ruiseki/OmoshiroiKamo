@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/cube",
 	"textures": {
-		"frame": "omoshiroikamo:block/cont_tier",
-		"base": "omoshiroikamo:block/basalt",
-		"particle": "omoshiroikamo:block/solar_tex",
-		"brain": "omoshiroikamo:block/solar_tex"
+		"frame": "omoshiroikamo:block/multiblock/cont_tier",
+		"base": "omoshiroikamo:block/multiblock/basalt",
+		"particle": "omoshiroikamo:block/multiblock/solar_tex",
+		"brain": "omoshiroikamo:block/multiblock/solar_tex"
 	},
 	"elements": [
 		{
