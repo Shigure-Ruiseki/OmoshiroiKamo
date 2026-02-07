@@ -6,6 +6,8 @@ import java.util.List;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 
 public class BaseModels extends BaseModelHandler {
+    // TODO: make trivias more configurable
+    // TODO: Add integration for some mods
 
     public BaseModels() {
         super("Base", "Base", "base/");
@@ -26,12 +28,11 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Bring buckets of water, and watch in despair as it evaporates, and everything is on fire.",
-                "You are on fire." }).setAssociatedMobs(new String[] { "Blaze" })
-                    .setLivingMatter("hellish")
-                    .setSimulationRFCost(256)
-                    .setCraftingStrings(new String[] { "minecraft:blaze_powder" })
-                    .setLootStrings(new String[] { "minecraft:blaze_rod,22", "ThermalFoundation:material,32,771" });
+            new String[] { "dml.trivia.blaze.1", "dml.trivia.blaze.2" }).setAssociatedMobs(new String[] { "Blaze" })
+                .setLivingMatter("hellish")
+                .setSimulationRFCost(256)
+                .setCraftingStrings(new String[] { "minecraft:blaze_powder" })
+                .setLootStrings(new String[] { "minecraft:blaze_rod,22", "ThermalFoundation:material,32,771" });
         allModels.add(blaze);
 
         ModelRegistryItem creeper = addModel(
@@ -43,7 +44,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Will blow up your base if left unattended." }).setAssociatedMobs(new String[] { "Creeper" })
+            new String[] { "dml.trivia.creeper.1" }).setAssociatedMobs(new String[] { "Creeper" })
                 .setLivingMatter("overworldian")
                 .setSimulationRFCost(80)
                 .setCraftingStrings(new String[] { "minecraft:gunpowder" })
@@ -59,14 +60,14 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Resides in the End, does not harbor treasure.",
-                "Destroy its crystals and break the cycle!" }).setAssociatedMobs(new String[] { "EnderDragon" })
-                    .setLivingMatter("extraterrestrial")
-                    .setSimulationRFCost(2560)
-                    .setCraftingStrings(new String[] { "minecraft:dragon_egg" })
-                    .setLootStrings(
-                        new String[] { "minecraft:dragon_breath,32", "minecraft:dragon_egg,1",
-                            "DraconicEvolution:dragon_heart,1", "DraconicEvolution:draconium_dust,64" });
+            new String[] { "dml.trivia.dragon.1", "dml.trivia.dragon.2" })
+                .setAssociatedMobs(new String[] { "EnderDragon" })
+                .setLivingMatter("extraterrestrial")
+                .setSimulationRFCost(2560)
+                .setCraftingStrings(new String[] { "minecraft:dragon_egg" })
+                .setLootStrings(
+                    new String[] { "minecraft:dragon_breath,32", "minecraft:dragon_egg,1",
+                        "DraconicEvolution:dragon_heart,1", "DraconicEvolution:draconium_dust,64" });
         allModels.add(dragon);
 
         ModelRegistryItem enderman = addModel(
@@ -78,7 +79,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Friendly unless provoked, dislikes rain.", "Teleports short distances." })
+            new String[] { "dml.trivia.enderman.1", "dml.trivia.enderman.2" })
                 .setAssociatedMobs(new String[] { "Enderman", "etfuturum.endermite" })
                 .setLivingMatter("extraterrestrial")
                 .setSimulationRFCost(512)
@@ -97,8 +98,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "If you hear something that sounds like a crying llama, you're probably hearing a ghast." })
-                .setAssociatedMobs(new String[] { "Ghast" })
+            new String[] { "dml.trivia.ghast.1" }).setAssociatedMobs(new String[] { "Ghast" })
                 .setLivingMatter("hellish")
                 .setSimulationRFCost(372)
                 .setCraftingStrings(new String[] { "minecraft:ghast_tear" })
@@ -114,13 +114,12 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "A formidable archer, which seem to be running some sort of cheat engine",
-                "A shield could prove useful" })
-                    .setAssociatedMobs(new String[] { "Skeleton", "TwilightForest.Skeleton Druid" })
-                    .setLivingMatter("overworldian")
-                    .setSimulationRFCost(80)
-                    .setCraftingStrings(new String[] { "minecraft:bone" })
-                    .setLootStrings(new String[] { "minecraft:bone,64", "minecraft:arrow,64", "minecraft:skull,6" });
+            new String[] { "dml.trivia.skeleton.1", "dml.trivia.skeleton.2" })
+                .setAssociatedMobs(new String[] { "Skeleton", "TwilightForest.Skeleton Druid" })
+                .setLivingMatter("overworldian")
+                .setSimulationRFCost(80)
+                .setCraftingStrings(new String[] { "minecraft:bone" })
+                .setLootStrings(new String[] { "minecraft:bone,64", "minecraft:arrow,64", "minecraft:skull,6" });
         allModels.add(skeleton);
 
         ModelRegistryItem slime = addModel(
@@ -132,13 +131,12 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "The bouncing bouncer", "bounces, bounces and bounces",
-                "Bounces and bou- squish! -\"A new slime haiku\"" })
-                    .setAssociatedMobs(new String[] { "Slime", "LavaSlime" })
-                    .setLivingMatter("overworldian")
-                    .setSimulationRFCost(150)
-                    .setCraftingStrings(new String[] { "minecraft:slime_ball" })
-                    .setLootStrings(new String[] { "minecraft:slime_ball,32" });
+            new String[] { "dml.trivia.slime.1", "dml.trivia.slime.2", "dml.trivia.slime.3" })
+                .setAssociatedMobs(new String[] { "Slime", "LavaSlime" })
+                .setLivingMatter("overworldian")
+                .setSimulationRFCost(150)
+                .setCraftingStrings(new String[] { "minecraft:slime_ball" })
+                .setLootStrings(new String[] { "minecraft:slime_ball,32" });
         allModels.add(slime);
 
         ModelRegistryItem spider = addModel(
@@ -150,7 +148,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Nocturnal douchebags, beware!", "Drops strands of string for some reason." })
+            new String[] { "dml.trivia.spider.1", "dml.trivia.spider.2" })
                 .setAssociatedMobs(
                     new String[] { "Spider", "CaveSpider", "TwilightForest.Swarm Spider", "TwilightForest.Hedge Spider",
                         "TwilightForest.King Spider" })
@@ -169,7 +167,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Affinity with potions and concoctions.", "Likes cats.", "Beware!" })
+            new String[] { "dml.trivia.witch.1", "dml.trivia.witch.2", "dml.trivia.witch.3" })
                 .setAssociatedMobs(new String[] { "Witch" })
                 .setLivingMatter("overworldian")
                 .setSimulationRFCost(120)
@@ -187,7 +185,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Do not approach this enemy. Run!", "I mean it has 3 heads, what could possibly go wrong?" })
+            new String[] { "dml.trivia.wither.1", "dml.trivia.wither.2" })
                 .setAssociatedMobs(new String[] { "WitherBoss" })
                 .setLivingMatter("extraterrestrial")
                 .setSimulationRFCost(2048)
@@ -204,7 +202,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "Inflicts the Wither effect.", "Bring milk!" })
+            new String[] { "dml.trivia.wither_skeleton.1", "dml.trivia.wither_skeleton.2" })
                 .setAssociatedMobs(new String[] { "witherSkeleton" })
                 .setLivingMatter("hellish")
                 .setSimulationRFCost(880)
@@ -221,7 +219,7 @@ public class BaseModels extends BaseModelHandler {
             1,
             0,
             0,
-            new String[] { "They go moan in the night.", "Does not understand the need for personal space." })
+            new String[] { "dml.trivia.zombie.1", "dml.trivia.zombie.2" })
                 .setAssociatedMobs(
                     new String[] { "Zombie", "etfuturum.husk", "PigZombie", "TwilightForest.Loyal Zombie",
                         "etfuturum.villager_zombie" })
