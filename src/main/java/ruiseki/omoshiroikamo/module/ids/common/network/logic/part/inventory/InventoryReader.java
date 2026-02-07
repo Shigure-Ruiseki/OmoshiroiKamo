@@ -62,9 +62,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/inventory_reader_front.png");
+        LibResources.PREFIX_ITEM + "ids/part/inventory_reader_front.png");
     private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/inventory_reader_back.png");
+        LibResources.PREFIX_ITEM + "ids/part/inventory_reader_back.png");
 
     protected int selectedSlot = 0;
 

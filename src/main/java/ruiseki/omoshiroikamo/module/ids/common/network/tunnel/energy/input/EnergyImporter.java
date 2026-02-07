@@ -66,9 +66,9 @@ public class EnergyImporter extends AbstractWriterPart implements IEnergyPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_importer_active.png");
+        LibResources.PREFIX_ITEM + "ids/part/energy_importer_active.png");
     private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_importer_inactive.png");
+        LibResources.PREFIX_ITEM + "ids/part/energy_importer_inactive.png");
 
     private int transferLimit = 10000;
 

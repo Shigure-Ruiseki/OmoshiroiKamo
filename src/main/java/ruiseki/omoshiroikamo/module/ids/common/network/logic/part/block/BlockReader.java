@@ -55,9 +55,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/block_reader_front.png");
+        LibResources.PREFIX_ITEM + "ids/part/block_reader_front.png");
     private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/block_reader_back.png");
+        LibResources.PREFIX_ITEM + "ids/part/block_reader_back.png");
 
     public BlockReader() {
         super(new ItemStackHandlerBase(8));

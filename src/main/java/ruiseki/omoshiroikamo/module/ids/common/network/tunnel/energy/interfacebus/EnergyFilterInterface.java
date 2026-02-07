@@ -67,9 +67,9 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_filter_interface_active.png");
+        LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_active.png");
     private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/energy_filter_interface_inactive.png");
+        LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_inactive.png");
 
     private boolean allowInsertions = true;
     private boolean allowExtractions = true;

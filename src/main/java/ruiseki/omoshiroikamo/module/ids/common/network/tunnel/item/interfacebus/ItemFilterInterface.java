@@ -73,9 +73,9 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_filter_interface_active.png");
+        LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_active.png");
     private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_filter_interface_inactive.png");
+        LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_inactive.png");
 
     private int lastHash = 0;
 
