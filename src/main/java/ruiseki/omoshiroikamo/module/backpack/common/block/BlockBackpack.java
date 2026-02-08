@@ -6,8 +6,6 @@ import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandl
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
@@ -32,6 +30,8 @@ import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.client.IBaubleRender;
 import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
@@ -146,7 +146,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public String getItemStackDisplayName(ItemStack stack) {
-            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("display", 10)) {
+            if (stack.hasTagCompound() && stack.getTagCompound()
+                .hasKey("display", 10)) {
                 return stack.getTagCompound()
                     .getCompoundTag("display")
                     .getString("Name");
