@@ -47,9 +47,9 @@ public class StorageTerminal extends AbstractPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/storage_terminal.png");
+        LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
     private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/terminal_back.png");
+        LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
 
     public ItemStackHandlerBase craftingStackHandler = new ItemStackHandlerBase(10);
     public String CRAFTING_MATRIX_TAG = "CraftingMatrix";

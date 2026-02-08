@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.core.integration.structureLib;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.IMultiblockInfoContainer;
 
+import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -13,10 +14,12 @@ import ruiseki.omoshiroikamo.module.multiblock.common.block.solarArray.SolarArra
 public class StructureCompat {
 
     public static void postInit() {
-        SolarArrayStructure.registerStructureInfo();
-        QuantumOreExtractorStructure.registerStructureInfo();
-        QuantumResExtractorStructure.registerStructureInfo();
-        QuantumBeaconStructure.registerStructureInfo();
+        if (BackportConfigs.enableMultiBlock) {
+            SolarArrayStructure.registerStructureInfo();
+            QuantumOreExtractorStructure.registerStructureInfo();
+            QuantumResExtractorStructure.registerStructureInfo();
+            QuantumBeaconStructure.registerStructureInfo();
+        }
 
         // Register custom structures from JSON
         CustomStructureRegistry.registerAll();
@@ -30,10 +33,12 @@ public class StructureCompat {
      * This re-registers the structures with StructureLib using updated shapes.
      */
     public static void reload() {
-        SolarArrayStructure.registerStructureInfo();
-        QuantumOreExtractorStructure.registerStructureInfo();
-        QuantumResExtractorStructure.registerStructureInfo();
-        QuantumBeaconStructure.registerStructureInfo();
+        if (BackportConfigs.enableMultiBlock) {
+            SolarArrayStructure.registerStructureInfo();
+            QuantumOreExtractorStructure.registerStructureInfo();
+            QuantumResExtractorStructure.registerStructureInfo();
+            QuantumBeaconStructure.registerStructureInfo();
+        }
 
         // Reload custom structures from JSON
         CustomStructureRegistry.registerAll();

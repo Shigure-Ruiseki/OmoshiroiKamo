@@ -51,7 +51,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_interface.png");
+        LibResources.PREFIX_ITEM + "ids/part/item_interface.png");
 
     private int lastHash = 0;
 

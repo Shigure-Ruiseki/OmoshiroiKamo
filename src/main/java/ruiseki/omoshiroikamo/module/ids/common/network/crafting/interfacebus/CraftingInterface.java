@@ -40,7 +40,7 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/crafting_interface_bus.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/crafting_interface_bus.png");
+        LibResources.PREFIX_ITEM + "ids/part/crafting_interface_bus.png");
 
     public CraftingInterface() {
         setChannel(-1);

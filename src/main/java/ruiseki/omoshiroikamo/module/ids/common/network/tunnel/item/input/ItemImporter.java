@@ -70,9 +70,9 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
     private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_importer_active.png");
+        LibResources.PREFIX_ITEM + "ids/part/item_importer_active.png");
     private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/item_importer_inactive.png");
+        LibResources.PREFIX_ITEM + "ids/part/item_importer_inactive.png");
 
     private int transferLimit = 64;
     private int slot = -1;

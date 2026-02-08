@@ -57,9 +57,9 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/writer.obj"));
     private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/redstone_writer_front.png");
+        LibResources.PREFIX_ITEM + "ids/part/redstone_writer_front.png");
     private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/redstone_reader_back.png");
+        LibResources.PREFIX_ITEM + "ids/part/redstone_reader_back.png");
 
     private int lastOutput = 0;
     private int pulseBooleanLength = 2;
