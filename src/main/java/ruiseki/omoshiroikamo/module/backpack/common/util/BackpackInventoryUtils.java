@@ -156,7 +156,7 @@ public class BackpackInventoryUtils {
             if (stack == null) continue;
             if (stack.getItem() instanceof BlockBackpack.ItemBackpack backpack) {
 
-                BackpackHandler other = new BackpackHandler(stack.copy(), null, backpack);
+                BackpackHandler other = new BackpackHandler(stack, null, backpack);
                 if (other == handler) continue;
                 if (!handler.canNestBackpack()) continue;
             }
@@ -362,7 +362,7 @@ public class BackpackInventoryUtils {
             if (backpackStack == null || backpackStack.stackSize <= 0) continue;
             if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) continue;
 
-            BackpackHandler handler = new BackpackHandler(backpackStack.copy(), null, backpack);
+            BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
             ItemStack extracted = handler.extractItem(wanted, wanted.getMaxStackSize(), false);
 
             PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
