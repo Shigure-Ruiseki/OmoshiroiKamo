@@ -6,6 +6,8 @@ import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandl
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
@@ -144,8 +146,12 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public String getItemStackDisplayName(ItemStack stack) {
-            BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
-            return cap.getDisplayName();
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("display", 10)) {
+                return stack.getTagCompound()
+                    .getCompoundTag("display")
+                    .getString("Name");
+            }
+            return super.getItemStackDisplayName(stack);
         }
 
         @Override
@@ -172,7 +178,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
             super.onUpdate(stack, world, entity, slot, isHeld);
-            if (!stack.hasTagCompound()) {
+            if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
                 stack.setTagCompound(
@@ -184,7 +190,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public void onCreated(ItemStack stack, World world, EntityPlayer player) {
             super.onCreated(stack, world, player);
-            if (!stack.hasTagCompound()) {
+            if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
                 BackpackHandler cap = new BackpackHandler(stack.copy(), null, this);
                 cap.writeToItem();
                 stack.setTagCompound(
@@ -224,6 +230,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
             list.add(LibMisc.LANG.localize("tooltip.backpack.inventory_size", backpackSlots));
             list.add(LibMisc.LANG.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
