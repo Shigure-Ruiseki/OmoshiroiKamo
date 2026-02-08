@@ -105,7 +105,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(backpackStack.copy(), null, backpack);
+            BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
 
             if (!handler.canPickupItem(stack)) {
                 continue;
