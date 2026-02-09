@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.ITheme;
 import com.cleanroommc.modularui.api.IThemeApi;
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.core.mixins.early.minecraft.GuiAccessor;
 import com.cleanroommc.modularui.core.mixins.early.minecraft.GuiScreenAccessor;
@@ -24,7 +25,6 @@ import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.GlStateManager;
 import com.cleanroommc.modularui.utils.Platform;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.Widget;
 
 import ruiseki.omoshiroikamo.api.item.ItemStackKey;
@@ -75,14 +75,14 @@ public class IDsItemSlot extends Widget<IDsItemSlot> implements Interactable, Re
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        return syncHandler instanceof IDsItemSlotSH;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue instanceof IDsItemSlotSH;
     }
 
     @Override
-    protected void setSyncHandler(@Nullable SyncHandler syncHandler) {
-        super.setSyncHandler(syncHandler);
-        this.syncHandler = castIfTypeElseNull(syncHandler, IDsItemSlotSH.class);
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.syncHandler = syncOrValue.castOrThrow(IDsItemSlotSH.class);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class IDsItemSlot extends Widget<IDsItemSlot> implements Interactable, Re
     }
 
     public IDsItemSlot syncHandler(IDsItemSlotSH syncHandler) {
-        setSyncHandler(syncHandler);
+        setSyncOrValue(ISyncOrValue.orEmpty(syncHandler));
         return this;
     }
 
@@ -212,7 +212,8 @@ public class IDsItemSlot extends Widget<IDsItemSlot> implements Interactable, Re
     public @NotNull Result onMousePressed(int mouseButton) {
         ItemStack slotStack = getRenderStack();
 
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = getSyncHandler().getSyncManager()
+            .getPlayer();
 
         if (mouseButton == 2 && slotStack != null) {
 

@@ -16,6 +16,7 @@ import ruiseki.omoshiroikamo.module.ids.client.render.ItemPartRenderer;
 import ruiseki.omoshiroikamo.module.ids.client.render.PartTESR;
 import ruiseki.omoshiroikamo.module.ids.common.cable.BlockCable;
 import ruiseki.omoshiroikamo.module.ids.common.cable.TECable;
+import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
 
 public class IDsClient implements IModuleClient {
 
@@ -31,6 +32,8 @@ public class IDsClient implements IModuleClient {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+
+        CablePartRegistry.initModels();
 
     }
 

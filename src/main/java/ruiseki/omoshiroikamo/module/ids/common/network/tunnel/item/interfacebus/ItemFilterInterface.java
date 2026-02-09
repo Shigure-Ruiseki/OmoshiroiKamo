@@ -73,14 +73,11 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     @SideOnly(Side.CLIENT)
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+    private static IModelCustom model;
     @SideOnly(Side.CLIENT)
-    private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_active.png");
+    private static ResourceLocation active;
     @SideOnly(Side.CLIENT)
-    private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_inactive.png");
+    private static ResourceLocation inactive;
 
     private int lastHash = 0;
 
@@ -549,6 +546,15 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+        active = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_active.png");
+        inactive = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_inactive.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -562,6 +568,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

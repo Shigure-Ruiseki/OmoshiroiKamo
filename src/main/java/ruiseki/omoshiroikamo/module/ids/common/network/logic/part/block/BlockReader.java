@@ -29,6 +29,8 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.BlockStack;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
@@ -52,12 +54,12 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/block_reader_front.png");
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/block_reader_back.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation texture;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation back_texture;
 
     public BlockReader() {
         super(new ItemStackHandlerBase(8));
@@ -281,6 +283,15 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/block_reader_front.png");
+        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/block_reader_back.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -296,6 +307,7 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

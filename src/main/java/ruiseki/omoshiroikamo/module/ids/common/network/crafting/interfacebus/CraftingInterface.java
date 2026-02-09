@@ -20,6 +20,8 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
@@ -37,10 +39,10 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/crafting_interface_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/crafting_interface_bus.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation texture;
 
     public CraftingInterface() {
         setChannel(-1);
@@ -97,6 +99,15 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader
+            .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/crafting_interface_bus.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/crafting_interface_bus.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -109,6 +120,7 @@ public class CraftingInterface extends AbstractPart implements ICraftingPart {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

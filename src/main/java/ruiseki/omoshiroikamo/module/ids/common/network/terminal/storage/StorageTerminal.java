@@ -47,14 +47,11 @@ public class StorageTerminal extends AbstractPart {
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     @SideOnly(Side.CLIENT)
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
+    private static IModelCustom model;
     @SideOnly(Side.CLIENT)
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
+    private static ResourceLocation texture;
     @SideOnly(Side.CLIENT)
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
+    private static ResourceLocation back_texture;
 
     public ItemStackHandlerBase craftingStackHandler = new ItemStackHandlerBase(10);
     public String CRAFTING_MATRIX_TAG = "CraftingMatrix";
@@ -218,6 +215,14 @@ public class StorageTerminal extends AbstractPart {
             case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
             default -> null;
         };
+    }
+
+    @Override
+    public void registerModel() {
+        model = AdvancedModelLoader
+            .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
+        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
     }
 
     @Override

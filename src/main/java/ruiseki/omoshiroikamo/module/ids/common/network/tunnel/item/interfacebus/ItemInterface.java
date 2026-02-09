@@ -51,11 +51,9 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
     @SideOnly(Side.CLIENT)
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+    private static IModelCustom model;
     @SideOnly(Side.CLIENT)
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/item_interface.png");
+    private static ResourceLocation texture;
 
     private int lastHash = 0;
 
@@ -236,6 +234,14 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/item_interface.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -249,6 +255,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

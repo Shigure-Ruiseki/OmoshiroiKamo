@@ -30,6 +30,8 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -53,12 +55,12 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/redstone_reader_front.png");
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/redstone_reader_back.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation texture;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation back_texture;
 
     private static final int HIGH_THRESHOLD = 8;
 
@@ -226,6 +228,15 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/reader.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/redstone_reader_front.png");
+        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/redstone_reader_back.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -241,6 +252,7 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

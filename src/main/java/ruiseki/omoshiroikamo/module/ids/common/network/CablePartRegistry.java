@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.module.ids.common.network.crafting.interfacebus.CraftingInterface;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.block.BlockReader;
@@ -25,7 +27,24 @@ public class CablePartRegistry {
 
     private static final Map<String, Supplier<? extends ICablePart>> REGISTRY = new HashMap<>();
 
-    static {
+    public static void register(String id, Supplier<? extends ICablePart> factory) {
+        REGISTRY.put(id, factory);
+    }
+
+    public static ICablePart create(String id) {
+        Supplier<? extends ICablePart> sup = REGISTRY.get(id);
+        return sup != null ? sup.get() : null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void initModels() {
+        for (Supplier<? extends ICablePart> sup : REGISTRY.values()) {
+            ICablePart part = sup.get();
+            part.registerModel();
+        }
+    }
+
+    public static void init() {
         CablePartRegistry.register("energy_importer", EnergyImporter::new);
         CablePartRegistry.register("energy_exporter", EnergyExporter::new);
         CablePartRegistry.register("energy_interface", EnergyInterface::new);
@@ -45,14 +64,5 @@ public class CablePartRegistry {
         CablePartRegistry.register("fluid_reader", FluidReader::new);
 
         CablePartRegistry.register("redstone_writer", RedstoneWriter::new);
-    }
-
-    public static void register(String id, Supplier<? extends ICablePart> factory) {
-        REGISTRY.put(id, factory);
-    }
-
-    public static ICablePart create(String id) {
-        Supplier<? extends ICablePart> sup = REGISTRY.get(id);
-        return sup != null ? sup.get() : null;
     }
 }

@@ -44,10 +44,10 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnerg
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/energy_interface.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation texture;
 
     public EnergyInterface() {
         setTickInterval(20);
@@ -99,6 +99,13 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnerg
 
     @Override
     @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/energy_interface.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -112,6 +119,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnerg
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

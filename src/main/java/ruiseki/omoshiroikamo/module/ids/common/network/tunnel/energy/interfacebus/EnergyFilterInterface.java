@@ -64,12 +64,12 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-    private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_active.png");
-    private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_inactive.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation active;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation inactive;
 
     private boolean allowInsertions = true;
     private boolean allowExtractions = true;
@@ -276,6 +276,14 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
     @Override
     @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+        active = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_active.png");
+        inactive = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/energy_filter_interface_inactive.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -289,6 +297,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 
