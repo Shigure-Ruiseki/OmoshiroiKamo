@@ -392,7 +392,7 @@ public class BackpackPanel extends ModularPanel {
 
     public void addUpgradeSlots() {
         upgradeSlotGroupWidget.name("upgrade_inventory");
-        upgradeSlotGroupWidget.flex()
+        upgradeSlotGroupWidget.resizer()
             .size(23, 10 + handler.getUpgradeSlots() * ItemSlot.SIZE)
             .left(-21);
         for (int i = 0; i < handler.getUpgradeSlots(); i++) {
@@ -648,10 +648,10 @@ public class BackpackPanel extends ModularPanel {
         super.postDraw(context, transformed);
         LAYERED_TAB_TEXTURE.draw(
             context,
-            getFlex().getArea().width - 6,
+            resizer().getArea().width - 6,
             0,
             6,
-            getFlex().getArea().height,
+            resizer().getArea().height,
             WidgetTheme.getDefault()
                 .getTheme());
     }
