@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 
@@ -72,11 +74,10 @@ public class BasicFilterWidget extends ParentWidget<BasicFilterWidget> {
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        if (syncHandler instanceof UpgradeSlotSH) {
-            this.slotSyncHandler = (UpgradeSlotSH) syncHandler;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        if (syncOrValue instanceof UpgradeSlotSH) {
+            this.slotSyncHandler = (UpgradeSlotSH) syncOrValue;
         }
         return this.slotSyncHandler != null;
     }
-
 }

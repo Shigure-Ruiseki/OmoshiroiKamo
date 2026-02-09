@@ -43,6 +43,8 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
@@ -50,6 +52,7 @@ import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
@@ -70,12 +73,12 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
-    private static final ResourceLocation active = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_active.png");
-    private static final ResourceLocation inactive = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_inactive.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation active;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation inactive;
 
     private int lastHash = 0;
 
@@ -228,35 +231,20 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemFilterInterface.all")
-                .get(),
-            writerSlotRow(
-                0,
-                IKey.lang("gui.ids.itemFilterInterface.all")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemFilterInterface.all"),
+            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.itemFilterInterface.all"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemFilterInterface.item")
-                .get(),
-            writerSlotRow(
-                1,
-                IKey.lang("gui.ids.itemFilterInterface.item")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemFilterInterface.item"),
+            writerSlotRow(1, LibMisc.LANG.localize("gui.ids.itemFilterInterface.item"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemFilterInterface.items")
-                .get(),
-            writerSlotRow(
-                2,
-                IKey.lang("gui.ids.itemFilterInterface.items")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemFilterInterface.items"),
+            writerSlotRow(2, LibMisc.LANG.localize("gui.ids.itemFilterInterface.items"), allSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -294,7 +282,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row allowInsertions = new Row();
         allowInsertions.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.allowInsertions")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.allowInsertions")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -303,7 +291,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row allowExtractions = new Row();
         allowExtractions.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.allowExtractions")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.allowExtractions")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -312,7 +300,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row blackList = new Row();
         blackList.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.blackList")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.blackList")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -321,7 +309,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row transferLimit = new Row();
         transferLimit.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.transferLimit")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.transferLimit")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getTransferLimit, this::setTransferLimit))
                     .right(0)
@@ -332,7 +320,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row nbt = new Row();
         nbt.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.nbt")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.nbt")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -341,7 +329,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row stackSize = new Row();
         stackSize.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.stackSize")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.stackSize")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -544,6 +532,15 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+        active = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_active.png");
+        inactive = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/item_filter_interface_inactive.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -557,6 +554,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

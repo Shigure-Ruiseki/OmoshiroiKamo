@@ -34,11 +34,14 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
@@ -54,12 +57,12 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/writer.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/redstone_writer_front.png");
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/redstone_reader_back.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation texture;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation back_texture;
 
     private int lastOutput = 0;
     private int pulseBooleanLength = 2;
@@ -161,21 +164,13 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.redstoneBoolean")
-                .get(),
-            writerSlotRow(
-                0,
-                IKey.lang("gui.ids.redstoneWriter.redstoneBoolean")
-                    .get()),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneBoolean"),
+            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneBoolean")),
             searchValue);
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.redstoneInt")
-                .get(),
-            writerSlotRow(
-                1,
-                IKey.lang("gui.ids.redstoneWriter.redstoneInt")
-                    .get()),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneInt"),
+            writerSlotRow(1, LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneInt")),
             searchValue);
 
         IPanelHandler pulseBooleanSetting = syncManager.syncedPanel(
@@ -185,13 +180,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
                 new IntSyncValue(this::getPulseBooleanLength, this::setPulseBooleanLength)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.pulseBoolean")
-                .get(),
-            writerSlotRow(
-                2,
-                IKey.lang("gui.ids.redstoneWriter.pulseBoolean")
-                    .get(),
-                pulseBooleanSetting),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseBoolean"),
+            writerSlotRow(2, LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseBoolean"), pulseBooleanSetting),
             searchValue);
 
         IPanelHandler pulseIntSetting = syncManager.syncedPanel(
@@ -201,13 +191,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
                 syncHandler) -> pulseSettingPanel(new IntSyncValue(this::getPulseIntLength, this::setPulseIntLength)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.pulseInt")
-                .get(),
-            writerSlotRow(
-                3,
-                IKey.lang("gui.ids.redstoneWriter.pulseInt")
-                    .get(),
-                pulseIntSetting),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseInt"),
+            writerSlotRow(3, LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseInt"), pulseIntSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -245,7 +230,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         Row selectTank = new Row();
         selectTank.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.length")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.length")).width(162))
             .child(
                 new TextFieldWidget().value(value)
                     .right(0)
@@ -303,6 +288,15 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/writer.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/redstone_writer_front.png");
+        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/redstone_reader_back.png");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
@@ -318,6 +312,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderItemPart(IItemRenderer.ItemRenderType type, ItemStack stack, Tessellator tess) {
         GL11.glPushMatrix();
 

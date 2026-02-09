@@ -34,6 +34,9 @@ public interface ICablePart extends ICableNode {
     AxisAlignedBB getCollisionBox();
 
     @SideOnly(Side.CLIENT)
+    void registerModel();
+
+    @SideOnly(Side.CLIENT)
     void renderPart(Tessellator tess, float partialTicks);
 
     @SideOnly(Side.CLIENT)

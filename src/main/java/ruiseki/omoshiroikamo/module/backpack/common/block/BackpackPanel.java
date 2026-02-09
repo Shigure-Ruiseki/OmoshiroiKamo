@@ -380,12 +380,12 @@ public class BackpackPanel extends ModularPanel {
     }
 
     public void addSearchBar() {
-
         searchBarWidget = (BackpackSearchBarWidget) new BackpackSearchBarWidget(this).top(6)
             .width(this.width - 37)
             .height(10)
             .right(32);
-        searchBarWidget.setEnabledIf(textFieldWidget -> !settingPanel.isPanelOpen());
+
+        searchBarWidget.setEnabledIf(tf -> !settingPanel.isPanelOpen());
 
         child(searchBarWidget);
     }

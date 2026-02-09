@@ -1,10 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.slot;
 
-import static ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils.getTooltipLower;
-import static ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils.matchesAllTerms;
-
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -428,39 +423,6 @@ public class BackpackSlot extends ItemSlot {
 
         ((GuiAccessor) guiScreen).setZLevel(0f);
         renderItem.zLevel = 0f;
-    }
-
-    public boolean matches(String search) {
-        if (search == null || search.trim()
-            .isEmpty()) return true;
-
-        ItemStack stack = getSlot().getStack();
-        if (stack == null) return false;
-
-        final String lowerName = stack.getDisplayName()
-            .toLowerCase();
-        final List<String> tooltip = getTooltipLower(stack);
-
-        final String creativeTab = stack.getItem()
-            .getCreativeTab() != null ? stack.getItem()
-                .getCreativeTab()
-                .getTabLabel()
-                .toLowerCase() : "";
-
-        String[] orTerms = search.toLowerCase()
-            .split("\\|");
-        boolean orMatched = false;
-
-        for (String group : orTerms) {
-            if (group.isEmpty()) continue;
-
-            if (matchesAllTerms(group.trim(), stack, lowerName, tooltip, creativeTab)) {
-                orMatched = true;
-                break;
-            }
-        }
-
-        return orMatched;
     }
 
 }

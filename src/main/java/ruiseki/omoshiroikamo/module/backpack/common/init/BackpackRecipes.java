@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.module.backpack.common.init;
 
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.ACCENT_COLOR;
 import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.BACKPACK_SLOTS;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.MAIN_COLOR;
 import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.UPGRADE_SLOTS;
 
 import net.minecraft.init.Blocks;
@@ -25,7 +27,7 @@ public class BackpackRecipes {
 
         // Leather Backpack
         GameRegistry.addRecipe(
-            new ShapedOreRecipe(
+            new NBTShapedOreRecipe(
                 BackpackBlocks.BACKPACK_BASE.newItemStack(),
                 "SLS",
                 "SCS",
@@ -35,7 +37,10 @@ public class BackpackRecipes {
                 'L',
                 "itemLeather",
                 'C',
-                new ItemStack(Blocks.chest, 1, 0)));
+                new ItemStack(Blocks.chest, 1, 0)).withInt(UPGRADE_SLOTS, BackpackConfig.leatherUpgradeSlots)
+                    .withInt(BACKPACK_SLOTS, BackpackConfig.leatherBackpackSlots)
+                    .withInt(MAIN_COLOR, 0xFFCC613A)
+                    .withInt(ACCENT_COLOR, 0xFF622E1A));
 
         // Iron Backpack
         GameRegistry.addRecipe(

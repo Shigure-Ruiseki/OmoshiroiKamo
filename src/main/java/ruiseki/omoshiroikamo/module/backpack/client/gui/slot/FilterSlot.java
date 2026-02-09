@@ -3,10 +3,9 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.slot;
 import net.minecraft.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.integration.recipeviewer.RecipeViewerGhostIngredientSlot;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.FilterSlotSH;
@@ -16,9 +15,9 @@ public class FilterSlot extends ItemSlot implements RecipeViewerGhostIngredientS
     private FilterSlotSH syncHandler;
 
     @Override
-    protected void setSyncHandler(@Nullable SyncHandler syncHandler) {
-        super.setSyncHandler(syncHandler);
-        this.syncHandler = castIfTypeElseNull(syncHandler, FilterSlotSH.class);
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.syncHandler = syncOrValue.castOrThrow(FilterSlotSH.class);
     }
 
     @Override

@@ -21,6 +21,8 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
@@ -44,12 +46,12 @@ public class StorageTerminal extends AbstractPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
-    private static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
-    private static final ResourceLocation texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
-    private static final ResourceLocation back_texture = new ResourceLocation(
-        LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
+    @SideOnly(Side.CLIENT)
+    private static IModelCustom model;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation texture;
+    @SideOnly(Side.CLIENT)
+    private static ResourceLocation back_texture;
 
     public ItemStackHandlerBase craftingStackHandler = new ItemStackHandlerBase(10);
     public String CRAFTING_MATRIX_TAG = "CraftingMatrix";
@@ -213,6 +215,14 @@ public class StorageTerminal extends AbstractPart {
             case SOUTH -> AxisAlignedBB.getBoundingBox(W_MIN, W_MIN, 1f - DEPTH, W_MAX, W_MAX, 1f);
             default -> null;
         };
+    }
+
+    @Override
+    public void registerModel() {
+        model = AdvancedModelLoader
+            .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
+        texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
+        back_texture = new ResourceLocation(LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
     }
 
     @Override

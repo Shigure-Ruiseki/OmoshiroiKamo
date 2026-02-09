@@ -111,54 +111,21 @@ public class ProgrammerPanel extends ModularPanel {
     private void registerDefaultItems() {
 
         // Type
-        addItem(
-            IKey.lang("gui.ids.type.boolean")
-                .get(),
-            () -> new BooleanVariable(this));
-        addItem(
-            IKey.lang("gui.ids.type.int")
-                .get(),
-            () -> new IntegerVariable(this));
-        addItem(
-            IKey.lang("gui.ids.type.long")
-                .get(),
-            () -> new LongVariable(this));
-        addItem(
-            IKey.lang("gui.ids.type.float")
-                .get(),
-            () -> new FloatVariable(this));
-        addItem(
-            IKey.lang("gui.ids.type.double")
-                .get(),
-            () -> new DoubleVariable(this));
-        addItem(
-            IKey.lang("gui.ids.type.string")
-                .get(),
-            () -> new StringVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.type.boolean"), () -> new BooleanVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.type.int"), () -> new IntegerVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.type.long"), () -> new LongVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.type.float"), () -> new FloatVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.type.double"), () -> new DoubleVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.type.string"), () -> new StringVariable(this));
 
         // Controller
-        addItem(
-            IKey.lang("gui.ids.op.if")
-                .get(),
-            () -> new IfVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.op.if"), () -> new IfVariable(this));
 
         // Operator
-        addItem(
-            IKey.lang("gui.ids.op.and")
-                .get(),
-            () -> new AndVariable(this));
-        addItem(
-            IKey.lang("gui.ids.op.nand")
-                .get(),
-            () -> new NandVariable(this));
-        addItem(
-            IKey.lang("gui.ids.op.or")
-                .get(),
-            () -> new OrVariable(this));
-        addItem(
-            IKey.lang("gui.ids.op.nor")
-                .get(),
-            () -> new NorVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.op.and"), () -> new AndVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.op.nand"), () -> new NandVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.op.or"), () -> new OrVariable(this));
+        addItem(LibMisc.LANG.localize("gui.ids.op.nor"), () -> new NorVariable(this));
     }
 
     private static final UITexture LIST_ITEM_BG = UITexture.builder()

@@ -180,12 +180,10 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!world.isRemote && stack != null) {
-                if (stack.hasTagCompound()) {
+                if (!stack.hasTagCompound()) {
                     BackpackHandler cap = new BackpackHandler(stack, null, this);
                     cap.writeToItem();
-                    stack.setTagCompound(
-                        cap.getBackpack()
-                            .getTagCompound());
+                    stack.setTagCompound(cap.getTagCompound());
                 }
             }
         }
@@ -194,12 +192,10 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onCreated(ItemStack stack, World world, EntityPlayer player) {
             super.onCreated(stack, world, player);
             if (!world.isRemote && stack != null) {
-                if (stack.hasTagCompound()) {
+                if (!stack.hasTagCompound()) {
                     BackpackHandler cap = new BackpackHandler(stack, null, this);
                     cap.writeToItem();
-                    stack.setTagCompound(
-                        cap.getBackpack()
-                            .getTagCompound());
+                    stack.setTagCompound(cap.getTagCompound());
                 }
             }
         }
