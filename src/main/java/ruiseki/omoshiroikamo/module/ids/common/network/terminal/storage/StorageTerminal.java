@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,10 +46,13 @@ public class StorageTerminal extends AbstractPart {
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    @SideOnly(Side.CLIENT)
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/storage_terminal.obj"));
+    @SideOnly(Side.CLIENT)
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "ids/part/storage_terminal.png");
+    @SideOnly(Side.CLIENT)
     private static final ResourceLocation back_texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "ids/part/terminal_back.png");
 

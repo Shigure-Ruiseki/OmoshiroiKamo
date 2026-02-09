@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus
 import java.util.Arrays;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockChest;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.IInventory;
@@ -48,8 +50,10 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     private static final float W_MIN = 0.5f - WIDTH / 2f;
     private static final float W_MAX = 0.5f + WIDTH / 2f;
 
+    @SideOnly(Side.CLIENT)
     private static final IModelCustom model = AdvancedModelLoader
         .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "ids/base_bus.obj"));
+    @SideOnly(Side.CLIENT)
     private static final ResourceLocation texture = new ResourceLocation(
         LibResources.PREFIX_ITEM + "ids/part/item_interface.png");
 

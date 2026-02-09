@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.module.backpack.common.block;
 
 import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.ACCENT_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.BACKPACK_SLOTS;
 import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.MAIN_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.UPGRADE_SLOTS;
 
 import java.util.List;
 
@@ -180,12 +182,13 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!world.isRemote && stack != null) {
-                if (stack.hasTagCompound()) {
-                    BackpackHandler cap = new BackpackHandler(stack, null, this);
-                    cap.writeToItem();
-                    stack.setTagCompound(
-                        cap.getBackpack()
-                            .getTagCompound());
+                if (!stack.hasTagCompound()) {
+                    NBTTagCompound tag = new NBTTagCompound();
+                    tag.setInteger(BACKPACK_SLOTS, backpackSlots);
+                    tag.setInteger(UPGRADE_SLOTS, upgradeSlots);
+                    tag.setInteger(MAIN_COLOR, 0xFFCC613A);
+                    tag.setInteger(ACCENT_COLOR, 0xFF622E1A);
+                    stack.setTagCompound(tag);
                 }
             }
         }
@@ -194,12 +197,13 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         public void onCreated(ItemStack stack, World world, EntityPlayer player) {
             super.onCreated(stack, world, player);
             if (!world.isRemote && stack != null) {
-                if (stack.hasTagCompound()) {
-                    BackpackHandler cap = new BackpackHandler(stack, null, this);
-                    cap.writeToItem();
-                    stack.setTagCompound(
-                        cap.getBackpack()
-                            .getTagCompound());
+                if (!stack.hasTagCompound()) {
+                    NBTTagCompound tag = new NBTTagCompound();
+                    tag.setInteger(BACKPACK_SLOTS, backpackSlots);
+                    tag.setInteger(UPGRADE_SLOTS, upgradeSlots);
+                    tag.setInteger(MAIN_COLOR, 0xFFCC613A);
+                    tag.setInteger(ACCENT_COLOR, 0xFF622E1A);
+                    stack.setTagCompound(tag);
                 }
             }
         }
