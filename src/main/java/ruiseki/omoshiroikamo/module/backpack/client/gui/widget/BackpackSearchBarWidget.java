@@ -7,7 +7,11 @@ import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 
+import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.client.gui.widget.SearchBarWidget;
+import ruiseki.omoshiroikamo.core.common.search.SearchNode;
+import ruiseki.omoshiroikamo.core.common.search.SearchParser;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 
@@ -15,6 +19,7 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
 
     private final BackpackPanel panel;
     private List<BackpackSlot> originalOrder;
+    private SearchNode compiledSearch;
 
     public BackpackSearchBarWidget(BackpackPanel panel) {
         this.panel = panel;
@@ -56,7 +61,9 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
         int columns = panel.getRowSize();
         int slotSize = BackpackSlot.SIZE;
 
-        if (search.isEmpty()) {
+        compiledSearch = search.isEmpty() ? null : SearchParser.parse(search);
+
+        if (compiledSearch == null) {
             for (int i = 0; i < originalOrder.size(); i++) {
                 BackpackSlot slot = originalOrder.get(i);
                 slot.setFocus(true);
@@ -69,34 +76,32 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
             return;
         }
 
-        List<BackpackSlot> filledSlots = new ArrayList<>();
-        List<BackpackSlot> emptySlots = new ArrayList<>();
+        List<BackpackSlot> matched = new ArrayList<>();
+        List<BackpackSlot> others = new ArrayList<>();
 
         for (BackpackSlot slot : originalOrder) {
-            if (slot.getSlot()
+            if (!slot.getSlot()
                 .getHasStack()) {
-                filledSlots.add(slot);
-                slot.setFocus(slot.matches(search));
-            } else {
-                emptySlots.add(slot);
                 slot.setFocus(false);
+                others.add(slot);
+                continue;
             }
+
+            ItemStackKey key = ItemStackKeyPool.get(
+                slot.getSlot()
+                    .getStack());
+            boolean match = compiledSearch.matches(key);
+
+            slot.setFocus(match);
+
+            if (match) matched.add(slot);
+            else others.add(slot);
         }
 
-        filledSlots.sort((a, b) -> {
-            boolean matchA = a.matches(search);
-            boolean matchB = b.matches(search);
-            if (matchA && !matchB) return -1;
-            if (!matchA && matchB) return 1;
-            return 0;
-        });
+        matched.addAll(others);
 
-        List<BackpackSlot> sortedSlots = new ArrayList<>();
-        sortedSlots.addAll(filledSlots);
-        sortedSlots.addAll(emptySlots);
-
-        for (int i = 0; i < sortedSlots.size(); i++) {
-            BackpackSlot slot = sortedSlots.get(i);
+        for (int i = 0; i < matched.size(); i++) {
+            BackpackSlot slot = matched.get(i);
             int x = (i % columns) * slotSize;
             int y = (i / columns) * slotSize;
             slot.left(x)
@@ -104,7 +109,8 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
             slot.scheduleResize();
         }
 
-        ((BackpackList) backpackSlots.getParent()).getScrollData()
-            .scrollTo(((BackpackList) backpackSlots.getParent()).getScrollArea(), 0);
+        backpackList.getScrollData()
+            .scrollTo(backpackList.getScrollArea(), 0);
     }
+
 }

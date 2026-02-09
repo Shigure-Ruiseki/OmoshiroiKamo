@@ -425,37 +425,4 @@ public class BackpackSlot extends ItemSlot {
         renderItem.zLevel = 0f;
     }
 
-    public boolean matches(String search) {
-        if (search == null || search.trim()
-            .isEmpty()) return true;
-
-        ItemStack stack = getSlot().getStack();
-        if (stack == null) return false;
-        //
-        // final String lowerName = stack.getDisplayName()
-        // .toLowerCase();
-        // final List<String> tooltip = Collections.emptyList();
-        //
-        // final String creativeTab = stack.getItem()
-        // .getCreativeTab() != null ? stack.getItem()
-        // .getCreativeTab()
-        // .getTabLabel()
-        // .toLowerCase() : "";
-        //
-        // String[] orTerms = search.toLowerCase()
-        // .split("\\|");
-        // boolean orMatched = false;
-        //
-        // for (String group : orTerms) {
-        // if (group.isEmpty()) continue;
-        //
-        // if (matchesAllTerms(group.trim(), stack, lowerName, tooltip, creativeTab)) {
-        // orMatched = true;
-        // break;
-        // }
-        // }
-
-        return false;
-    }
-
 }
