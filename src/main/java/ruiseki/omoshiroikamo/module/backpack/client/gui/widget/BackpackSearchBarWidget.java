@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
@@ -19,9 +18,6 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
 
     public BackpackSearchBarWidget(BackpackPanel panel) {
         this.panel = panel;
-        hintText(
-            IKey.lang("gui.backpack.search_hint")
-                .get());
     }
 
     private void cacheOriginalOrder() {

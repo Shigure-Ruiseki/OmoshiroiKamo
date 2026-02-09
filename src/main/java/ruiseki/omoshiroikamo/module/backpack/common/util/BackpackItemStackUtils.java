@@ -13,6 +13,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BackpackItemStackUtils {
 
@@ -34,9 +36,6 @@ public class BackpackItemStackUtils {
         return nbt;
     }
 
-    /**
-     * Equivalent to Kotlin extension fun ItemStack.writeToNBTExtended
-     */
     public static NBTTagCompound writeToNBTExtended(ItemStack stack, NBTTagCompound nbt) {
         stack.writeToNBT(nbt);
         nbt.setInteger("Count", stack.stackSize);
@@ -64,6 +63,7 @@ public class BackpackItemStackUtils {
         return stack;
     }
 
+    @SideOnly(Side.CLIENT)
     public static List<String> getTooltipLower(ItemStack stack) {
         try {
             List<String> list = stack.getTooltip(
