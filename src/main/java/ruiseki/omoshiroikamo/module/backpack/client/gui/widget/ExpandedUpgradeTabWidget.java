@@ -2,8 +2,10 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 
 import net.minecraft.item.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
@@ -40,9 +42,9 @@ public abstract class ExpandedUpgradeTabWidget<U extends UpgradeWrapper> extends
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        if (syncHandler instanceof UpgradeSlotSH) {
-            slotSyncHandler = (UpgradeSlotSH) syncHandler;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        if (syncOrValue instanceof UpgradeSlotSH) {
+            slotSyncHandler = (UpgradeSlotSH) syncOrValue;
         }
         return slotSyncHandler != null;
     }

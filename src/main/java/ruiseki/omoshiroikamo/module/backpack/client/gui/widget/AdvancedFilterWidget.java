@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
@@ -20,7 +21,6 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.utils.Color;
-import com.cleanroommc.modularui.value.sync.SyncHandler;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
@@ -257,9 +257,9 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        if (syncHandler instanceof UpgradeSlotSH) {
-            slotSyncHandler = (UpgradeSlotSH) syncHandler;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        if (syncOrValue instanceof UpgradeSlotSH) {
+            slotSyncHandler = (UpgradeSlotSH) syncOrValue;
         }
         return slotSyncHandler != null;
     }

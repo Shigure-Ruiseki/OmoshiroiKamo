@@ -44,6 +44,7 @@ import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
@@ -201,11 +202,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.isTank")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.isTank"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.isTank")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.isTank"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("isTank"))),
                 0,
                 LogicKeys.IS_TANK),
@@ -213,11 +212,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankEmpty")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankEmpty"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.tankEmpty")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.tankEmpty"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("allEmpty"))),
                 1,
                 LogicKeys.TANK_EMPTY),
@@ -225,11 +222,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankNotEmpty")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankNotEmpty"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.tankNotEmpty")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.tankNotEmpty"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("anyNotEmpty"))),
                 2,
                 LogicKeys.TANK_NOT_EMPTY),
@@ -237,11 +232,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankFull")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankFull"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.tankFull")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.tankFull"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("allFull"))),
                 3,
                 LogicKeys.TANK_FULL),
@@ -249,11 +242,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankCount")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankCount"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.tankCount")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.tankCount"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("tankCount"))),
                 4,
                 LogicKeys.TANKS),
@@ -266,28 +257,18 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 syncHandler) -> tankSettingPanel(new IntSyncValue(this::getFluidAmountTank, this::setFluidAmountTank)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.fluidAmount")
-                .get(),
-            infoRow(
-                IKey.lang("gui.ids.fluidReader.fluidAmount")
-                    .get(),
-                IKey.dynamic(() -> {
-                    NBTTagCompound t = getTankTag(fluidAmountTank);
-                    return t == null ? IKey.lang("gui.empty")
-                        .get() : String.valueOf(t.getInteger("amount"));
-                }),
-                10,
-                LogicKeys.FLUID_AMOUNT,
-                tankAmountSetting),
+            LibMisc.LANG.localize("gui.ids.fluidReader.fluidAmount"),
+            infoRow(LibMisc.LANG.localize("gui.ids.fluidReader.fluidAmount"), IKey.dynamic(() -> {
+                NBTTagCompound t = getTankTag(fluidAmountTank);
+                return t == null ? LibMisc.LANG.localize("gui.empty") : String.valueOf(t.getInteger("amount"));
+            }), 10, LogicKeys.FLUID_AMOUNT, tankAmountSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.totalAmount")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.totalAmount"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.totalAmount")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.totalAmount"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("totalAmount"))),
                 5,
                 LogicKeys.TOTAL_FLUID_AMOUNT),
@@ -300,28 +281,18 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
                 new IntSyncValue(this::getFluidCapacityTank, this::setFluidCapacityTank)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.fluidCapacity")
-                .get(),
-            infoRow(
-                IKey.lang("gui.ids.fluidReader.fluidCapacity")
-                    .get(),
-                IKey.dynamic(() -> {
-                    NBTTagCompound t = getTankTag(fluidCapacityTank);
-                    return t == null ? IKey.lang("gui.empty")
-                        .get() : String.valueOf(t.getInteger("capacity"));
-                }),
-                11,
-                LogicKeys.FLUID_CAPACITY,
-                tankCapacitySetting),
+            LibMisc.LANG.localize("gui.ids.fluidReader.fluidCapacity"),
+            infoRow(LibMisc.LANG.localize("gui.ids.fluidReader.fluidCapacity"), IKey.dynamic(() -> {
+                NBTTagCompound t = getTankTag(fluidCapacityTank);
+                return t == null ? LibMisc.LANG.localize("gui.empty") : String.valueOf(t.getInteger("capacity"));
+            }), 11, LogicKeys.FLUID_CAPACITY, tankCapacitySetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.totalCapacity")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.totalCapacity"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.totalCapacity")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.totalCapacity"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("totalCapacity"))),
                 6,
                 LogicKeys.TOTAL_FLUID_CAPACITY),
@@ -329,27 +300,19 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.fillRatio")
-                .get(),
-            infoRow(
-                IKey.lang("gui.ids.fluidReader.fillRatio")
-                    .get(),
-                IKey.dynamic(() -> {
-                    int cap = clientCache.getInteger("totalCapacity");
-                    int amt = clientCache.getInteger("totalAmount");
-                    return cap == 0 ? "0.00" : String.format("%.2f", (double) amt / cap);
-                }),
-                7,
-                LogicKeys.FLUID_FILL_RATIO),
+            LibMisc.LANG.localize("gui.ids.fluidReader.fillRatio"),
+            infoRow(LibMisc.LANG.localize("gui.ids.fluidReader.fillRatio"), IKey.dynamic(() -> {
+                int cap = clientCache.getInteger("totalCapacity");
+                int amt = clientCache.getInteger("totalAmount");
+                return cap == 0 ? "0.00" : String.format("%.2f", (double) amt / cap);
+            }), 7, LogicKeys.FLUID_FILL_RATIO),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankFluids")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankFluids"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.tankFluids")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.tankFluids"),
                 IKey.dynamic(this::buildTankFluidsText),
                 8,
                 LogicKeys.TANK_FLUIDS),
@@ -357,11 +320,9 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankCapacities")
-                .get(),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankCapacities"),
             infoRow(
-                IKey.lang("gui.ids.fluidReader.tankCapacities")
-                    .get(),
+                LibMisc.LANG.localize("gui.ids.fluidReader.tankCapacities"),
                 IKey.dynamic(this::buildTankCapacitiesText),
                 9,
                 LogicKeys.TANK_CAPACITIES),
@@ -373,20 +334,13 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             (syncManager1, syncHandler) -> tankSettingPanel(new IntSyncValue(this::getTankFluid, this::setTankFluid)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.fluidReader.tankFluid")
-                .get(),
-            infoRow(
-                IKey.lang("gui.ids.fluidReader.tankFluid")
-                    .get(),
-                IKey.dynamic(() -> {
-                    NBTTagCompound t = getTankTag(tankFluid);
-                    if (t == null || !t.hasKey("fluid")) return "";
-                    FluidStack fs = FluidStack.loadFluidStackFromNBT(t.getCompoundTag("fluid"));
-                    return fs == null ? "" : fs.getLocalizedName();
-                }),
-                12,
-                LogicKeys.TANK_FLUID,
-                tankSetting),
+            LibMisc.LANG.localize("gui.ids.fluidReader.tankFluid"),
+            infoRow(LibMisc.LANG.localize("gui.ids.fluidReader.tankFluid"), IKey.dynamic(() -> {
+                NBTTagCompound t = getTankTag(tankFluid);
+                if (t == null || !t.hasKey("fluid")) return "";
+                FluidStack fs = FluidStack.loadFluidStackFromNBT(t.getCompoundTag("fluid"));
+                return fs == null ? "" : fs.getLocalizedName();
+            }), 12, LogicKeys.TANK_FLUID, tankSetting),
             searchValue);
 
         col.coverChildren()
@@ -412,7 +366,7 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         Row selectTank = new Row();
         selectTank.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.id")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.id")).width(162))
             .child(
                 new TextFieldWidget().value(value)
                     .right(0)
@@ -435,14 +389,12 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
     private String buildTankCapacitiesText() {
         if (!clientCache.getBoolean("isTank")) {
-            return IKey.lang("gui.empty")
-                .get();
+            return LibMisc.LANG.localize("gui.empty");
         }
 
         int count = clientCache.getInteger("tankCount");
         if (count <= 0) {
-            return IKey.lang("gui.empty")
-                .get();
+            return LibMisc.LANG.localize("gui.empty");
         }
 
         StringBuilder sb = new StringBuilder();
@@ -453,24 +405,19 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
             if (sb.length() > 0) sb.append(", ");
             sb.append(cap)
-                .append(
-                    IKey.lang("fluid.millibucket")
-                        .get());
+                .append(LibMisc.LANG.localize("fluid.millibucket"));
 
             if (sb.length() > 256) break;
         }
 
-        return sb.length() == 0 ? IKey.lang("gui.empty")
-            .get() : ellipsis(sb.toString(), 110);
+        return sb.length() == 0 ? LibMisc.LANG.localize("gui.empty") : ellipsis(sb.toString(), 110);
     }
 
     private String buildTankFluidsText() {
-        if (!clientCache.getBoolean("isTank")) return IKey.lang("gui.empty")
-            .get();
+        if (!clientCache.getBoolean("isTank")) return LibMisc.LANG.localize("gui.empty");
 
         int count = clientCache.getInteger("tankCount");
-        if (count <= 0) return IKey.lang("gui.empty")
-            .get();
+        if (count <= 0) return LibMisc.LANG.localize("gui.empty");
 
         StringBuilder sb = new StringBuilder();
 
@@ -485,15 +432,12 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
             sb.append(fs.getLocalizedName())
                 .append(" ")
                 .append(fs.amount)
-                .append(
-                    IKey.lang("fluid.millibucket")
-                        .get());
+                .append(LibMisc.LANG.localize("fluid.millibucket"));
 
             if (sb.length() > 256) break;
         }
 
-        return sb.length() == 0 ? IKey.lang("gui.empty")
-            .get() : ellipsis(sb.toString(), 110);
+        return sb.length() == 0 ? LibMisc.LANG.localize("gui.empty") : ellipsis(sb.toString(), 110);
     }
 
     @Override

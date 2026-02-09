@@ -47,6 +47,7 @@ import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
@@ -165,13 +166,8 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.energyFilterInterface.all")
-                .get(),
-            writerSlotRow(
-                0,
-                IKey.lang("gui.ids.energyFilterInterface.all")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.energyFilterInterface.all"),
+            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.energyFilterInterface.all"), allSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -209,7 +205,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
         Row allowInsertions = new Row();
         allowInsertions.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.allowInsertions")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.allowInsertions")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -218,7 +214,7 @@ public class EnergyFilterInterface extends AbstractWriterPart implements IEnergy
 
         Row allowExtractions = new Row();
         allowExtractions.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.allowExtractions")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.allowExtractions")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)

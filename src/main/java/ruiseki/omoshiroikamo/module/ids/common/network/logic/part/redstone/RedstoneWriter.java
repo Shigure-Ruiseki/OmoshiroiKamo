@@ -41,6 +41,7 @@ import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
@@ -163,21 +164,13 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.redstoneBoolean")
-                .get(),
-            writerSlotRow(
-                0,
-                IKey.lang("gui.ids.redstoneWriter.redstoneBoolean")
-                    .get()),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneBoolean"),
+            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneBoolean")),
             searchValue);
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.redstoneInt")
-                .get(),
-            writerSlotRow(
-                1,
-                IKey.lang("gui.ids.redstoneWriter.redstoneInt")
-                    .get()),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneInt"),
+            writerSlotRow(1, LibMisc.LANG.localize("gui.ids.redstoneWriter.redstoneInt")),
             searchValue);
 
         IPanelHandler pulseBooleanSetting = syncManager.syncedPanel(
@@ -187,13 +180,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
                 new IntSyncValue(this::getPulseBooleanLength, this::setPulseBooleanLength)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.pulseBoolean")
-                .get(),
-            writerSlotRow(
-                2,
-                IKey.lang("gui.ids.redstoneWriter.pulseBoolean")
-                    .get(),
-                pulseBooleanSetting),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseBoolean"),
+            writerSlotRow(2, LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseBoolean"), pulseBooleanSetting),
             searchValue);
 
         IPanelHandler pulseIntSetting = syncManager.syncedPanel(
@@ -203,13 +191,8 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
                 syncHandler) -> pulseSettingPanel(new IntSyncValue(this::getPulseIntLength, this::setPulseIntLength)));
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.redstoneWriter.pulseInt")
-                .get(),
-            writerSlotRow(
-                3,
-                IKey.lang("gui.ids.redstoneWriter.pulseInt")
-                    .get(),
-                pulseIntSetting),
+            LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseInt"),
+            writerSlotRow(3, LibMisc.LANG.localize("gui.ids.redstoneWriter.pulseInt"), pulseIntSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -247,7 +230,7 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         Row selectTank = new Row();
         selectTank.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.length")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.length")).width(162))
             .child(
                 new TextFieldWidget().value(value)
                     .right(0)

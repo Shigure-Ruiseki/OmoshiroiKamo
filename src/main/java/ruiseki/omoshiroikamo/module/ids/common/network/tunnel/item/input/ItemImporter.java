@@ -47,6 +47,7 @@ import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
@@ -180,57 +181,32 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.allItem")
-                .get(),
-            writerSlotRow(
-                0,
-                IKey.lang("gui.ids.itemImporter.allItem")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemImporter.allItem"),
+            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.itemImporter.allItem"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.itemAmount")
-                .get(),
-            writerSlotRow(
-                1,
-                IKey.lang("gui.ids.itemImporter.itemAmount")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemImporter.itemAmount"),
+            writerSlotRow(1, LibMisc.LANG.localize("gui.ids.itemImporter.itemAmount"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.itemSlot")
-                .get(),
-            writerSlotRow(
-                2,
-                IKey.lang("gui.ids.itemImporter.itemSlot")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemImporter.itemSlot"),
+            writerSlotRow(2, LibMisc.LANG.localize("gui.ids.itemImporter.itemSlot"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.item")
-                .get(),
-            writerSlotRow(
-                3,
-                IKey.lang("gui.ids.itemImporter.item")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemImporter.item"),
+            writerSlotRow(3, LibMisc.LANG.localize("gui.ids.itemImporter.item"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            IKey.lang("gui.ids.itemImporter.items")
-                .get(),
-            writerSlotRow(
-                4,
-                IKey.lang("gui.ids.itemImporter.items")
-                    .get(),
-                allSetting),
+            LibMisc.LANG.localize("gui.ids.itemImporter.items"),
+            writerSlotRow(4, LibMisc.LANG.localize("gui.ids.itemImporter.items"), allSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -268,7 +244,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Row slot = new Row();
         slot.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.id")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.id")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getSlot, this::setSlot))
                     .right(0)
@@ -279,7 +255,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Row transferLimit = new Row();
         transferLimit.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.transferLimit")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.transferLimit")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getTransferLimit, this::setTransferLimit))
                     .right(0)
@@ -290,7 +266,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Row roundRobin = new Row();
         roundRobin.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.roundRobin")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.roundRobin")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -299,7 +275,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Row blackList = new Row();
         blackList.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.blackList")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.blackList")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -308,7 +284,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Row nbt = new Row();
         nbt.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.nbt")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.nbt")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -317,7 +293,7 @@ public class ItemImporter extends AbstractWriterPart implements IItemPart {
 
         Row stackSize = new Row();
         stackSize.coverChildren()
-            .child(new TextWidget<>(IKey.lang("gui.ids.stackSize")).width(162))
+            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.stackSize")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
