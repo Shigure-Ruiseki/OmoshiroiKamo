@@ -20,6 +20,7 @@ import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
+import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.FloatSyncValue;
@@ -152,15 +153,15 @@ public class LootFabricatorPanel extends ModularPanel {
     private final ButtonPageSelect nextPageButton;
     private final ButtonPageSelect prevPageButton;
     private final ButtonItemDeselect deselectButton;
-    private ProgressWidget processBar;
-    private ProgressWidget errorBar;
+    private final ProgressWidget processBar;
+    private final ProgressWidget errorBar;
 
     private CraftingError craftingError = CraftingError.NONE;
 
     private static final int ITEMS_PER_PAGE = 9;
     private static final int OUTPUT_SELECT_LIST_GUTTER = 1;
     private static final int OUTPUT_SELECT_BUTTON_SIZE = 18;
-    private GenericSyncValue<ItemStack> outputSyncer;
+    private final GenericSyncValue<ItemStack> outputSyncer;
 
     public LootFabricatorPanel(TELootFabricator tileEntity, PosGuiData data, PanelSyncManager syncManager,
         UISettings settings) {
@@ -180,7 +181,11 @@ public class LootFabricatorPanel extends ModularPanel {
         syncManager.syncValue("maxEnergySyncer", new IntSyncValue(tileEntity::getMaxEnergyStored));
         FloatSyncValue processSyncer = new FloatSyncValue(tileEntity::getProgress, tileEntity::setProgress);
         syncManager.syncValue("processSyncer", processSyncer);
-        outputSyncer = GenericSyncValue.forItem(tileEntity::getOutputItem, tileEntity::setOutputItem);
+        outputSyncer = GenericSyncValue.builder(ItemStack.class)
+            .getter(tileEntity::getOutputItem)
+            .setter(tileEntity::setOutputItem)
+            .adapter(ByteBufAdapters.ITEM_STACK)
+            .build();
         syncManager.syncValue("outputSyncer", outputSyncer);
         EnumSyncValue<RedstoneMode> redstoneModeSyncer = new EnumSyncValue<>(
             RedstoneMode.class,
@@ -381,20 +386,14 @@ public class LootFabricatorPanel extends ModularPanel {
     }
 
     private String getErrorTooltip() {
-        switch (craftingError) {
-            case REDSTONE:
-                return LibMisc.LANG.localize("gui.loot_fabricator.error.redstone");
-            case NO_PRISTINE:
-                return LibMisc.LANG.localize("gui.loot_fabricator.error.no_pristine");
-            case NO_OUTPUT_SELECTED:
-                return LibMisc.LANG.localize("gui.loot_fabricator.error.no_output_selected");
-            case OUTPUT_FULL:
-                return LibMisc.LANG.localize("gui.loot_fabricator.error.output_full");
-            case NO_ENERGY:
-                return LibMisc.LANG.localize("gui.loot_fabricator.error.no_energy");
-            default:
-                return "";
-        }
+        return switch (craftingError) {
+            case REDSTONE -> LibMisc.LANG.localize("gui.loot_fabricator.error.redstone");
+            case NO_PRISTINE -> LibMisc.LANG.localize("gui.loot_fabricator.error.no_pristine");
+            case NO_OUTPUT_SELECTED -> LibMisc.LANG.localize("gui.loot_fabricator.error.no_output_selected");
+            case OUTPUT_FULL -> LibMisc.LANG.localize("gui.loot_fabricator.error.output_full");
+            case NO_ENERGY -> LibMisc.LANG.localize("gui.loot_fabricator.error.no_energy");
+            default -> "";
+        };
     }
 
     public static class ButtonItemSelect extends ButtonWidget<ButtonItemSelect> {
