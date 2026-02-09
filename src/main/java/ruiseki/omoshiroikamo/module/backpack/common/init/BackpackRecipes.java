@@ -37,12 +37,10 @@ public class BackpackRecipes {
                 'L',
                 "itemLeather",
                 'C',
-                new ItemStack(Blocks.chest, 1, 0))
-                .withInt(UPGRADE_SLOTS, BackpackConfig.leatherUpgradeSlots)
-                .withInt(BACKPACK_SLOTS, BackpackConfig.leatherBackpackSlots)
-                .withInt(MAIN_COLOR, 0xFFCC613A)
-                .withInt(ACCENT_COLOR, 0xFF622E1A)
-        );
+                new ItemStack(Blocks.chest, 1, 0)).withInt(UPGRADE_SLOTS, BackpackConfig.leatherUpgradeSlots)
+                    .withInt(BACKPACK_SLOTS, BackpackConfig.leatherBackpackSlots)
+                    .withInt(MAIN_COLOR, 0xFFCC613A)
+                    .withInt(ACCENT_COLOR, 0xFF622E1A));
 
         // Iron Backpack
         GameRegistry.addRecipe(
