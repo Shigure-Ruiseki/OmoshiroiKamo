@@ -15,8 +15,6 @@ public class MachineryPackets {
             PacketStructureTint.Handler.class,
             PacketStructureTint.class,
             PacketHandler.nextID(),
-            PacketStructureTint.class,
-            PacketHandler.nextID(),
             Side.CLIENT);
         PacketHandler.INSTANCE.registerMessage(
             TEMachineController.PacketToggleRedstone.class,
