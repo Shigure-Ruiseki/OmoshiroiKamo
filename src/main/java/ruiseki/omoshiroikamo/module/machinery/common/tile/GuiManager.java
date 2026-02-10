@@ -6,15 +6,19 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
+import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
+import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
@@ -42,7 +46,26 @@ public class GuiManager {
                     new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
                         .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
                 .background(OKGuiTextures.EMPTY_SLOT)
+                .background(OKGuiTextures.EMPTY_SLOT)
                 .pos(151, 8));
+
+        // Redstone Mode Sync
+        EnumSyncValue<RedstoneMode> redstoneMode = new EnumSyncValue<>(
+            RedstoneMode.class,
+            controller::getRedstoneMode,
+            controller::setRedstoneMode);
+        syncManager.syncValue("redstoneMode", redstoneMode);
+
+        // Redstone Control Button
+        panel
+            .child(
+                new RedstoneModeWidget(redstoneMode)
+                    .addMousePressedUpdater(
+                        index -> {
+                            PacketHandler.INSTANCE
+                                .sendToServer(new TEMachineController.PacketToggleRedstone(controller));
+                        })
+                    .pos(151, 30));
 
         // Status display
         panel.child(
@@ -92,6 +115,10 @@ public class GuiManager {
             return "Insert Blueprint";
         }
         if (!controller.isFormed()) {
+            if (controller.getLastValidationError() != null && !controller.getLastValidationError()
+                .isEmpty()) {
+                return "Structure Mismatch";
+            }
             return "Structure Not Formed";
         }
         if (controller.getProcessAgent()
@@ -113,10 +140,6 @@ public class GuiManager {
     }
 
     private ErrorReason getIdleErrorReason() {
-        if (controller.getInputPorts()
-            .isEmpty()) return ErrorReason.NO_INPUT_PORTS;
-        if (controller.getOutputPorts()
-            .isEmpty()) return ErrorReason.NO_OUTPUT_PORTS;
         if (RecipeLoader.getInstance()
             .getRecipes(controller.getRecipeGroup())
             .isEmpty()) {

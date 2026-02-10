@@ -26,8 +26,6 @@ public class PacketHandler {
         INSTANCE
             .registerMessage(PacketClientFlight.class, PacketClientFlight.class, PacketHandler.nextID(), Side.CLIENT);
 
-        PacketHandler.INSTANCE
-            .registerMessage(PacketQuickDraw.class, PacketQuickDraw.class, PacketHandler.nextID(), Side.SERVER);
         PacketHandler.INSTANCE.registerMessage(
             PacketSyncCarriedItem.class,
             PacketSyncCarriedItem.class,

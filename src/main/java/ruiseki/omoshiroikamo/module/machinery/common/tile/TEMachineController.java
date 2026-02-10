@@ -24,6 +24,12 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
@@ -96,9 +102,9 @@ public class TEMachineController extends AbstractMBModifierTE
     // GUI management
     private final GuiManager guiManager = new GuiManager(this);
 
-    // Controller facing (rotation state) - used by IAlignment
-    // Controller facing (rotation state) - used by IAlignment
     private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
+
+    // Redstone Control - Inherited from AbstractTE
 
     // Transient flag to trigger tint packet resend on load
     private boolean needsTintResend = false;
@@ -494,6 +500,19 @@ public class TEMachineController extends AbstractMBModifierTE
                 extendedFacing = ExtendedFacing.VALUES[ordinal];
             }
         }
+        super.readCommon(nbt);
+    }
+
+    // ========== Redstone Control ==========
+
+    public void cycleRedstoneMode() {
+        RedstoneMode current = getRedstoneMode();
+        int ordinal = current.ordinal();
+        ordinal++;
+        if (ordinal >= RedstoneMode.values().length) {
+            ordinal = 0;
+        }
+        setRedstoneMode(RedstoneMode.values()[ordinal]);
     }
 
     // ========== CustomStructure ==========
@@ -665,8 +684,39 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     public void onNeighborBlockChange() {
-        if (worldObj != null && !worldObj.isRemote) {
-            structureAgent.forceStructureCheck();
+        if (worldObj != null && !worldObj.isRemote) {}
+    }
+
+    // ========== Networking ==========
+    public static class PacketToggleRedstone implements IMessage, IMessageHandler<PacketToggleRedstone, IMessage> {
+
+        public BlockPos pos;
+
+        public PacketToggleRedstone() {}
+
+        public PacketToggleRedstone(TEMachineController tile) {
+            this.pos = new BlockPos(tile.xCoord, tile.yCoord, tile.zCoord);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf) {
+            pos = BlockPos.fromLong(buf.readLong());
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf) {
+            buf.writeLong(pos.toLong());
+        }
+
+        @Override
+        public IMessage onMessage(PacketToggleRedstone message, MessageContext ctx) {
+            EntityPlayer player = ctx.getServerHandler().playerEntity;
+            World world = player.worldObj;
+            TileEntity te = world.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
+            if (te instanceof TEMachineController) {
+                ((TEMachineController) te).cycleRedstoneMode();
+            }
+            return null;
         }
     }
 }
