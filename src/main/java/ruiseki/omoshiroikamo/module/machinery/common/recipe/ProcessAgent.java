@@ -146,9 +146,6 @@ public class ProcessAgent {
             return TickResult.NO_INPUT;
         }
 
-        boolean hasAnyItem = false;
-        for (IModularPort port : inputPorts) {}
-
         return TickResult.IDLE;
     }
 
@@ -443,6 +440,6 @@ public class ProcessAgent {
         WAITING_OUTPUT,
         NO_INPUT,
         NO_MATCHING_RECIPE,
-        SUSPENDED
+        PAUSED
     }
 }

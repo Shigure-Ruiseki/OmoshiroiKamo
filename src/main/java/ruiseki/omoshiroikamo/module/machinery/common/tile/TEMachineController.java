@@ -24,12 +24,7 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
@@ -171,8 +166,23 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     // ========== Crafting Configuration ==========
-    // TODO: These methods are inherited from AbstractMBModifierTE but unused
-    // Consider removing or refactoring the parent class.
+    // We disable AbstractMachineTE's built-in crafting logic to rely solely on
+    // ProcessAgent.
+
+    @Override
+    public boolean canStartCrafting() {
+        return false;
+    }
+
+    @Override
+    protected boolean canContinueCrafting() {
+        return false;
+    }
+
+    @Override
+    protected CraftingState updateCraftingState() {
+        return CraftingState.IDLE;
+    }
 
     // Last process error reason for GUI display
     private ErrorReason lastProcessErrorReason = ErrorReason.NONE;
@@ -248,11 +258,12 @@ public class TEMachineController extends AbstractMBModifierTE
         // Super handles IC2 registration, energy sync, and structure validation
         super.doUpdate();
 
+        if (worldObj.isRemote) {
+            return;
+        }
         // Check Redstone signal for suspension
         if (!isRedstoneActive()) {
-            if (processAgent.isRunning()) {
-                lastProcessErrorReason = ErrorReason.SUSPENDED;
-            } else {}
+            lastProcessErrorReason = ErrorReason.PAUSED;
             return;
         }
 
@@ -288,8 +299,8 @@ public class TEMachineController extends AbstractMBModifierTE
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
             } else if (result == ProcessAgent.TickResult.NO_INPUT) {
                 lastProcessErrorReason = ErrorReason.INPUT_MISSING;
-            } else if (result == ProcessAgent.TickResult.SUSPENDED) {
-                lastProcessErrorReason = ErrorReason.SUSPENDED;
+            } else if (result == ProcessAgent.TickResult.PAUSED) {
+                lastProcessErrorReason = ErrorReason.PAUSED;
             } else {
                 lastProcessErrorReason = ErrorReason.NONE;
             }
@@ -505,16 +516,6 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // ========== Redstone Control ==========
 
-    public void cycleRedstoneMode() {
-        RedstoneMode current = getRedstoneMode();
-        int ordinal = current.ordinal();
-        ordinal++;
-        if (ordinal >= RedstoneMode.values().length) {
-            ordinal = 0;
-        }
-        setRedstoneMode(RedstoneMode.values()[ordinal]);
-    }
-
     // ========== CustomStructure ==========
 
     /**
@@ -683,40 +684,9 @@ public class TEMachineController extends AbstractMBModifierTE
         structureAgent.resetStructure();
     }
 
-    public void onNeighborBlockChange() {
-        if (worldObj != null && !worldObj.isRemote) {}
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        super.onNeighborBlockChange(world, x, y, z, block);
     }
 
-    // ========== Networking ==========
-    public static class PacketToggleRedstone implements IMessage, IMessageHandler<PacketToggleRedstone, IMessage> {
-
-        public BlockPos pos;
-
-        public PacketToggleRedstone() {}
-
-        public PacketToggleRedstone(TEMachineController tile) {
-            this.pos = new BlockPos(tile.xCoord, tile.yCoord, tile.zCoord);
-        }
-
-        @Override
-        public void fromBytes(ByteBuf buf) {
-            pos = BlockPos.fromLong(buf.readLong());
-        }
-
-        @Override
-        public void toBytes(ByteBuf buf) {
-            buf.writeLong(pos.toLong());
-        }
-
-        @Override
-        public IMessage onMessage(PacketToggleRedstone message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().playerEntity;
-            World world = player.worldObj;
-            TileEntity te = world.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
-            if (te instanceof TEMachineController) {
-                ((TEMachineController) te).cycleRedstoneMode();
-            }
-            return null;
-        }
-    }
 }

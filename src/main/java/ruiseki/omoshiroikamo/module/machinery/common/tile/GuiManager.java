@@ -17,7 +17,6 @@ import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
@@ -57,15 +56,7 @@ public class GuiManager {
         syncManager.syncValue("redstoneMode", redstoneMode);
 
         // Redstone Control Button
-        panel
-            .child(
-                new RedstoneModeWidget(redstoneMode)
-                    .addMousePressedUpdater(
-                        index -> {
-                            PacketHandler.INSTANCE
-                                .sendToServer(new TEMachineController.PacketToggleRedstone(controller));
-                        })
-                    .pos(151, 30));
+        panel.child(new RedstoneModeWidget(redstoneMode).pos(151, 30));
 
         // Status display
         panel.child(
@@ -150,6 +141,9 @@ public class GuiManager {
         }
         if (controller.getLastProcessErrorReason() == ErrorReason.NO_ENERGY) {
             return ErrorReason.NO_ENERGY;
+        }
+        if (!controller.isRedstoneActive()) {
+            return ErrorReason.PAUSED;
         }
         return ErrorReason.IDLE;
     }

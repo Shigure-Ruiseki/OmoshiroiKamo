@@ -17,7 +17,7 @@ public enum ErrorReason {
     NO_MATCHING_RECIPE("no_matching_recipe", "No matching recipe"),
     WAITING_OUTPUT("waiting_output", "Waiting for output space"),
     NO_INPUT("no_input", "No input resources"),
-    SUSPENDED("suspended", "Suspended by Redstone"),
+    PAUSED("paused", "Paused by Redstone"),
     MISSING_BLUEPRINT("missing_blueprint", "No Blueprint");
 
     private final String id;
