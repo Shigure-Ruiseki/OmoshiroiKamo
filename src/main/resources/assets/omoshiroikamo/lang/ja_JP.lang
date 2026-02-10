@@ -68,6 +68,10 @@ gui.empty=空
 gui.craftingState.idle=待機中
 gui.craftingState.running=稼働中
 gui.craftingState.error=エラー
+gui.craftingState.suspended=停止中
+gui.craftingState.no_input=材料不足
+gui.craftingState.no_matching_recipe=レシピ不一致
+gui.craftingState.missing_blueprint=ブループリント未挿入
 
 gui.redstone_mode.always_on=常にオン
 gui.redstone_mode.high_on=レッドストーン信号でオン

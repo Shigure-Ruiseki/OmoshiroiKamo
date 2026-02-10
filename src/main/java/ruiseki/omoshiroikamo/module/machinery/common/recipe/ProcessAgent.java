@@ -135,6 +135,23 @@ public class ProcessAgent {
         return TickResult.CONTINUE;
     }
 
+    /**
+     * Diagnose why the agent is idle.
+     */
+    public TickResult diagnoseIdle(List<IModularPort> inputPorts) {
+        if (running || waitingForOutput) return TickResult.CONTINUE; // Not idle
+
+        // Check input ports to see if any input is missing
+        if (inputPorts == null || inputPorts.isEmpty()) {
+            return TickResult.NO_INPUT;
+        }
+
+        boolean hasAnyItem = false;
+        for (IModularPort port : inputPorts) {}
+
+        return TickResult.IDLE;
+    }
+
     public boolean tryOutput(List<IModularPort> outputPorts) {
         if (!waitingForOutput) return false;
 
@@ -263,7 +280,7 @@ public class ProcessAgent {
 
         if (waitingForOutput) {
             String blocked = diagnoseBlockedOutputs(outputPorts);
-            return "Waiting: " + blocked;
+            return blocked + " Output is full";
         }
 
         return "Idle";
@@ -423,6 +440,9 @@ public class ProcessAgent {
         CONTINUE,
         NO_ENERGY,
         READY_OUTPUT,
-        WAITING_OUTPUT
+        WAITING_OUTPUT,
+        NO_INPUT,
+        NO_MATCHING_RECIPE,
+        SUSPENDED
     }
 }

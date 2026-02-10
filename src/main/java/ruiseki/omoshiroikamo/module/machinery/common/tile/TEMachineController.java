@@ -215,27 +215,40 @@ public class TEMachineController extends AbstractMBModifierTE
         }
 
         // Sync customStructureName from blueprint if blueprint is present in GUI
-        // Only update if blueprint has a structure name
         String blueprintName = getStructureNameFromBlueprint();
-        if (blueprintName != null && !blueprintName.isEmpty()
-            && !Objects.equals(blueprintName, structureAgent.getCustomStructureName())) {
+        String currentName = structureAgent.getCustomStructureName();
+
+        // Update if blueprint changed (including removal)
+        if (!Objects.equals(blueprintName, currentName)) {
             structureAgent.setCustomStructureName(blueprintName);
-            updateRecipeGroupFromStructure();
             setFormed(false);
             clearStructureParts();
             processAgent.abort();
             markDirty();
+
+            if (blueprintName != null && !blueprintName.isEmpty()) {
+                updateRecipeGroupFromStructure();
+            }
         }
 
         // Blueprint required - no operation without it
         if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
             .isEmpty()) {
+            lastProcessErrorReason = ErrorReason.MISSING_BLUEPRINT;
             return;
         }
 
         // Use StructureLib-based structure checking (calls super.doUpdate())
         // Super handles IC2 registration, energy sync, and structure validation
         super.doUpdate();
+
+        // Check Redstone signal for suspension
+        if (!isRedstoneActive()) {
+            if (processAgent.isRunning()) {
+                lastProcessErrorReason = ErrorReason.SUSPENDED;
+            } else {}
+            return;
+        }
 
         // Process recipes when formed
         if (isFormed) {
@@ -267,6 +280,10 @@ public class TEMachineController extends AbstractMBModifierTE
 
             if (result == ProcessAgent.TickResult.NO_ENERGY) {
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
+            } else if (result == ProcessAgent.TickResult.NO_INPUT) {
+                lastProcessErrorReason = ErrorReason.INPUT_MISSING;
+            } else if (result == ProcessAgent.TickResult.SUSPENDED) {
+                lastProcessErrorReason = ErrorReason.SUSPENDED;
             } else {
                 lastProcessErrorReason = ErrorReason.NONE;
             }
@@ -314,6 +331,11 @@ public class TEMachineController extends AbstractMBModifierTE
             lastProcessErrorReason = ErrorReason.NONE;
         } else {
             lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
+
+            // Check if it's actually NO_INPUT
+            if (processAgent.diagnoseIdle(getInputPorts()) == ProcessAgent.TickResult.NO_INPUT) {
+                lastProcessErrorReason = ErrorReason.INPUT_MISSING;
+            }
         }
     }
 
@@ -558,17 +580,8 @@ public class TEMachineController extends AbstractMBModifierTE
         return structureAgent.getStructureTintColor();
     }
 
-    /**
-     * Update rendering for all blocks in the structure.
-     * Called when structure is formed or unformed to apply/remove tint.
-     */
-    private void updateStructureBlocksRendering() {
-        structureAgent.updateStructureBlocksRendering();
-    }
-
     // ========== IAlignment Implementation ==========
-    // TODO: In the future, load alignment limits from structure JSON config
-    // to allow per-structure rotation restrictions.
+    // TODO: load rotation limits from config.
 
     @Override
     public ExtendedFacing getExtendedFacing() {
@@ -593,7 +606,6 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public IAlignmentLimits getAlignmentLimits() {
         // Allow all directions
-        // TODO: Load from structure JSON config in the future
         return IAlignmentLimits.UNLIMITED;
     }
 
@@ -638,5 +650,23 @@ public class TEMachineController extends AbstractMBModifierTE
             }
         }
         return null; // Base pass handled by ISBRH using standard block render
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        structureAgent.resetStructure();
+    }
+
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+        structureAgent.resetStructure();
+    }
+
+    public void onNeighborBlockChange() {
+        if (worldObj != null && !worldObj.isRemote) {
+            structureAgent.forceStructureCheck();
+        }
     }
 }

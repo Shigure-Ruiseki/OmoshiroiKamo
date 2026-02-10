@@ -68,6 +68,10 @@ gui.empty=Empty
 gui.craftingState.idle=Idle
 gui.craftingState.running=Processing
 gui.craftingState.error=Error
+gui.craftingState.suspended=Suspended
+gui.craftingState.no_input=No Input
+gui.craftingState.no_matching_recipe=No Recipe
+gui.craftingState.missing_blueprint=No Blueprint
 
 gui.redstone_mode.always_on=Always on
 gui.redstone_mode.high_on=On with redstone signal

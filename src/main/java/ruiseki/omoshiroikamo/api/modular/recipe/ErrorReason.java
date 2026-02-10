@@ -15,7 +15,10 @@ public enum ErrorReason {
     OUTPUT_FULL("output_full", "Output full"),
     INPUT_MISSING("input_missing", "Input missing"),
     NO_MATCHING_RECIPE("no_matching_recipe", "No matching recipe"),
-    WAITING_OUTPUT("waiting_output", "Waiting for output space");
+    WAITING_OUTPUT("waiting_output", "Waiting for output space"),
+    NO_INPUT("no_input", "No input resources"),
+    SUSPENDED("suspended", "Suspended by Redstone"),
+    MISSING_BLUEPRINT("missing_blueprint", "No Blueprint");
 
     private final String id;
     private final String defaultMessage;

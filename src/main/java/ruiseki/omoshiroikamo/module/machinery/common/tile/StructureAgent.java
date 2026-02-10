@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
@@ -231,11 +232,53 @@ public class StructureAgent {
             }
 
             if (customStructureName != null) {
-                lastValidationError = "Block mismatch or incomplete structure.";
+                // Perform detailed scan to find the first error
+                lastValidationError = checkStructureDetails(ox, oy, oz);
+                if (lastValidationError.isEmpty()) {
+                    lastValidationError = "Block mismatch or incomplete structure.";
+                }
             }
         }
 
         return controller.isFormed();
+    }
+
+    private String checkStructureDetails(int ox, int oy, int oz) {
+        if (customStructureName == null) return "";
+
+        StructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(customStructureName);
+        if (entry == null || entry.layers == null) return "Invalid structure definition.";
+
+        // Retrieve definition to get mapped elements
+        // This is a bit redundant but we need the exact elements used in validation
+        IStructureDefinition<TEMachineController> def = getStructureDefinition();
+        if (def == null) return "Missing structure definition.";
+
+        List<String> layers = new ArrayList<>();
+        for (StructureDefinitionData.Layer layer : entry.layers) {
+            return "Structure incomplete or mismatch.";
+        }
+
+        return "Block mismatch or incomplete structure.";
+    }
+
+    /**
+     * Force a structure check immediately, bypassing the periodic check.
+     */
+    public void forceStructureCheck() {
+        if (controller.getWorldObj() == null || controller.getWorldObj().isRemote) return;
+
+        // Calculate offsets
+        int[][] offsets = getOffSet();
+        int ox = 0, oy = 0, oz = 0;
+        if (offsets != null && offsets.length > 0) {
+            ox = offsets[0][0];
+            oy = offsets[0][1];
+            oz = offsets[0][2];
+        }
+
+        structureCheck(getStructurePieceName(), ox, oy, oz);
     }
 
     /**

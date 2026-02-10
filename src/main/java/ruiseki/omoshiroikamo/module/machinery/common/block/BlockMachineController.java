@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -136,5 +137,14 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         }
 
         super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        super.onNeighborBlockChange(world, x, y, z, block);
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TEMachineController controller) {
+            controller.onNeighborBlockChange();
+        }
     }
 }
