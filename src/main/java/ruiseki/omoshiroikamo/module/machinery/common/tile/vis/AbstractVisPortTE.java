@@ -14,11 +14,11 @@ import thaumcraft.api.aspects.AspectList;
 
 /**
  * Abstract base class for Vis ports.
- * Stores Vis as AspectList (primal aspects).
+ * Stores Vis as AspectList.
  *
  * TODO: Use sides array or remove if unnecessary
  * TODO: Add tiered blocks/TEs
- * TODO: All sides should be IN, OUT like mana port
+ * TODO: Add vis filter
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 

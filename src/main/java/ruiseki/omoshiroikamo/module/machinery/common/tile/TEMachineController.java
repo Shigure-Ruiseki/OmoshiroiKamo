@@ -41,16 +41,11 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 /**
- * Machine Controller TileEntity - manages a Modular Machinery multiblock.
- * Extends AbstractMBModifierTE to leverage existing structure validation and
- * crafting logic.
  * Corresponds to the 'Q' symbol in structure definitions.
- * Blueprint slot provides GUI-based structure selection.
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
  * TODO: Do not consume blueprint when auto-construct
  * TODO: Prevent NBT pickup on controller middle-click
- * TODO: Support shift-click
  */
 public class TEMachineController extends AbstractMBModifierTE
     implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {

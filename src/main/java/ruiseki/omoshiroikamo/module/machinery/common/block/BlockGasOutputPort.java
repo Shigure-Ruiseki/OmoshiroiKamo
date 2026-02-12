@@ -31,16 +31,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutput
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT6;
 
-/**
- * Mana Output Port - accepts mana for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for mana level (texture animation or overlay)
- * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving gas
- */
 public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> {
 
     protected BlockGasOutputPort() {

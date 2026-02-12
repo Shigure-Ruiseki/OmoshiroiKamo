@@ -32,15 +32,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutp
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT6;
 
-/**
- * Item Output Port - outputs items from machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- * TODO List:
- * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when outputting items
- * - Support comparator output for automation
- */
 public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     protected BlockItemOutputPort() {

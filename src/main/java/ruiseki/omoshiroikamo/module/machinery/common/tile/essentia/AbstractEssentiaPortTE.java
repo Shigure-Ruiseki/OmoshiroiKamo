@@ -15,12 +15,12 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.aspects.IAspectContainer;
 
 /**
- * Abstract base class for Essentia ports.
  * Stores multiple Aspects using AspectList.
  *
  * TODO: Use sides array in canInputFrom/canOutputTo
- * TODO: Add tiered blocks/TEs (currently fixed at Tier 1)
- * TODO: Implement TEEssentiaOutputPortME (export Essentia to ME network)
+ * TODO: Add tiered blocks/TEs
+ * TODO: Implement TEEssentiaOutputPortME
+ * TODO: Add essence filter
  */
 public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer {
 

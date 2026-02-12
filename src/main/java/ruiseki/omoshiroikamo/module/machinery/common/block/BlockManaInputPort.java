@@ -27,17 +27,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.input.TEManaInput
 import vazkii.botania.api.mana.IManaBlock;
 import vazkii.botania.api.wand.IWandHUD;
 
-/**
- * Mana Input Port - accepts mana for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for mana level (texture animation or overlay)
- * - Add model and textures
- * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving mana
- */
 public class BlockManaInputPort extends AbstractPortBlock<TEManaInputPort> implements IWandHUD {
 
     protected BlockManaInputPort() {

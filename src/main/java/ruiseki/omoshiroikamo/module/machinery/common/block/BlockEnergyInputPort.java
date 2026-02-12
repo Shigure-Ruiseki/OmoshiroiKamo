@@ -31,16 +31,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyI
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT6;
 
-/**
- * Energy Input Port - accepts energy (RF) for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for energy level (texture animation or overlay)
- * - Implement BlockColor tinting for machine color customization
- * - Add Tesla coil-style wireless energy input
- */
+// TODO: Add wireless energy input
 public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
     protected BlockEnergyInputPort() {

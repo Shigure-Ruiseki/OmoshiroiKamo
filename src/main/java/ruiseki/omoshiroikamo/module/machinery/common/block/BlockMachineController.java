@@ -25,18 +25,12 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 /**
  * Machine Controller - the brain of a Modular Machinery structure.
  * This block is mapped to the 'Q' symbol in structure definitions.
- * When right-clicked, it validates and forms the multiblock structure.
- * Uses JSON model with base + overlay textures via GTNHLib.
  * TODO List:
  * - Implement GUI for machine management and status display
- * - State management (IDLE, WORKING, PAUSED, ERROR)
- * - Redstone control modes (Ignore, Low, High, Pulse)
  * - Working particles and sound effects
  * - Completion effects (particles, sounds)
  * - Block state visual changes based on status
  * - NEI recipe integration
- * - Implement BlockColor tinting for machine-wide color customization
- * - Drop blueprint when broken
  * - Rotate controller texture
  * - Make controller face shows only front side
  */

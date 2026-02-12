@@ -33,15 +33,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInput
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.input.TEItemInputPortT6;
 
-/**
- * Item Input Port - accepts items for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- * TODO List:
- * - Add filter support for specific item types (should filter with pipe)
- * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving items
- */
 public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> {
 
     protected BlockItemInputPort() {

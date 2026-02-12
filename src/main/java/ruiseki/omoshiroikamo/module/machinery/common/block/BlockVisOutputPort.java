@@ -15,10 +15,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output.TEVisOutputPort;
 
-/**
- * Vis Output Port block - provides Vis to Thaumcraft Vis Relay network.
- * TODO: Add texture
- */
+// TODO: Add texture
 public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
 
     protected BlockVisOutputPort() {

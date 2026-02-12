@@ -17,7 +17,7 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * Provides Essentia to Infusion Altar and Essentia Tubes.
  * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
  * for Tubes.
- * TODO: Create TEEssentiaOutputPortME subclass (export Essentia to ME network)
+ * TODO: Create TEEssentiaOutputPortME
  */
 
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
