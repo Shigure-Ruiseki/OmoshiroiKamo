@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
+import java.util.List;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -14,9 +16,14 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
+import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
@@ -109,19 +116,19 @@ public class GuiManager {
      */
     private String getStatusText() {
         // Check for blueprint
-        if (!hasBlueprint()) return "Insert Blueprint";
+        if (!hasBlueprint()) return LibMisc.LANG.localize("gui.status.insert_blueprint");
 
         // Check structure formation
         if (!controller.isFormed()) {
-            if (hasValidationError()) return "Structure Mismatch";
-            return "Structure Not Formed";
+            if (hasValidationError()) return LibMisc.LANG.localize("gui.status.structure_mismatch");
+            return LibMisc.LANG.localize("gui.status.structure_not_formed");
         }
 
         ProcessAgent agent = controller.getProcessAgent();
 
-        // Check if machine is paused by redstone (highest priority for active machines)
+        // Check if machine is paused by redstone
         if (!controller.isRedstoneActive()) {
-            return ErrorReason.PAUSED.getMessage();
+            return LibMisc.LANG.localize(ErrorReason.PAUSED.getUnlocalizedName());
         }
 
         // Check processing status
@@ -140,10 +147,22 @@ public class GuiManager {
         ErrorReason lastError = controller.getLastProcessErrorReason();
 
         // Show energy error even during processing
-        if (lastError == ErrorReason.NO_ENERGY) return ErrorReason.NO_ENERGY.getMessage();
+        if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
 
-        // Default to agent's status message (e.g., "Processing 45%")
-        return agent.getStatusMessage(controller.getOutputPorts());
+        if (agent.isRunning() && !agent.isWaitingForOutput()) {
+            if (agent.getMaxProgress() <= 0) {
+                return LibMisc.LANG.localize("gui.status.processing", 0);
+            }
+            int percent = (int) (agent.getProgressPercent() * 100);
+            return LibMisc.LANG.localize("gui.status.processing", percent);
+        }
+
+        if (agent.isWaitingForOutput()) {
+            String blocked = diagnoseBlockedOutputs(controller.getOutputPorts());
+            return LibMisc.LANG.localize("gui.status.output_full", blocked);
+        }
+
+        return LibMisc.LANG.localize("gui.status.idle");
     }
 
     /**
@@ -154,18 +173,18 @@ public class GuiManager {
         if (RecipeLoader.getInstance()
             .getRecipes(controller.getRecipeGroup())
             .isEmpty()) {
-            return ErrorReason.NO_RECIPES.getMessage();
+            return LibMisc.LANG.localize(ErrorReason.NO_RECIPES.getUnlocalizedName());
         }
 
         ErrorReason lastError = controller.getLastProcessErrorReason();
 
         // Check specific error reasons
-        if (lastError == ErrorReason.NO_MATCHING_RECIPE) return lastError.getMessage();
-        if (lastError == ErrorReason.NO_ENERGY) return lastError.getMessage();
-        if (lastError == ErrorReason.INPUT_MISSING) return lastError.getMessage();
+        if (lastError == ErrorReason.NO_MATCHING_RECIPE) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        if (lastError == ErrorReason.INPUT_MISSING) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
 
         // Default idle state
-        return "Idle";
+        return LibMisc.LANG.localize("gui.status.idle");
     }
 
     /**
@@ -192,5 +211,40 @@ public class GuiManager {
     private float getProgressPercent() {
         return controller.getProcessAgent()
             .getProgressPercent();
+    }
+
+    /**
+     * Diagnose which output types are blocked when waiting for output.
+     */
+    private String diagnoseBlockedOutputs(List<IModularPort> outputPorts) {
+        ProcessAgent agent = controller.getProcessAgent();
+        ModularRecipe currentRecipe = agent.getCurrentRecipe();
+
+        if (currentRecipe != null) {
+            StringBuilder blocked = new StringBuilder();
+            for (IRecipeOutput output : currentRecipe.getOutputs()) {
+                if (!output.process(outputPorts, true)) {
+                    if (blocked.length() > 0) blocked.append(", ");
+                    blocked.append(
+                        LibMisc.LANG.localize(
+                            "gui.port_type." + output.getPortType()
+                                .name()));
+                }
+            }
+            if (blocked.length() > 0) return blocked.toString();
+        }
+
+        // Fallback: use cached output types
+        java.util.Set<IPortType.Type> cachedTypes = agent.getCachedOutputTypes();
+        if (!cachedTypes.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (IPortType.Type type : cachedTypes) {
+                if (sb.length() > 0) sb.append(", ");
+                sb.append(LibMisc.LANG.localize("gui.port_type." + type.name()));
+            }
+            return sb.toString();
+        }
+
+        return LibMisc.LANG.localize("gui.error.unknown");
     }
 }

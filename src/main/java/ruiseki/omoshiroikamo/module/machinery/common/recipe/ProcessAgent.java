@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -244,8 +245,8 @@ public class ProcessAgent {
     /**
      * Get a list of output types that are currently cached
      */
-    public java.util.Set<IPortType.Type> getCachedOutputTypes() {
-        java.util.Set<IPortType.Type> types = new java.util.HashSet<>();
+    public Set<IPortType.Type> getCachedOutputTypes() {
+        Set<IPortType.Type> types = new HashSet<>();
         if (!cachedItemOutputs.isEmpty()) types.add(IPortType.Type.ITEM);
         if (!cachedFluidOutputs.isEmpty()) types.add(IPortType.Type.FLUID);
         if (!cachedManaOutputs.isEmpty()) types.add(IPortType.Type.MANA);

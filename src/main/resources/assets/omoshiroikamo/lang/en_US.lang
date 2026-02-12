@@ -1249,3 +1249,34 @@ tooltip.machineBlueprint.show=Right-click controller to show structure
 tooltip.machineBlueprint.build=Sneak+Right-click to build
 
 message.machineBlueprint.empty=This blueprint is empty
+
+# Status Messages
+gui.status.insert_blueprint=Insert Blueprint
+gui.status.structure_mismatch=Structure Mismatch
+gui.status.structure_not_formed=Structure Not Formed
+gui.status.processing=Processing %d%%
+gui.status.output_full=Output Full: %s
+gui.status.idle=Idle
+
+# Error Reasons
+gui.error.paused=Paused by Redstone
+gui.error.no_recipes=No Recipes
+gui.error.no_matching_recipe=No Matching Recipe
+gui.error.no_energy=No Energy
+gui.error.input_missing=Input Missing
+gui.error.unknown=Unknown Error
+
+# Port Types
+gui.port_type.ITEM=Item
+gui.port_type.FLUID=Fluid
+gui.port_type.MANA=Mana
+gui.port_type.GAS=Gas
+gui.port_type.ESSENTIA=Essentia
+gui.port_type.VIS=Vis
+
+# Structure Errors
+gui.error.structure.requirements_not_met=Structure requirements not met
+gui.error.structure.block_mismatch=Block mismatch or incomplete structure
+gui.error.structure.invalid_definition=Invalid structure definition
+gui.error.structure.missing_definition=Missing structure definition
+gui.error.structure.incomplete=Structure incomplete or mismatch

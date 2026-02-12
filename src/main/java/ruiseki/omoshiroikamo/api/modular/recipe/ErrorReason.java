@@ -37,6 +37,10 @@ public enum ErrorReason {
         return defaultMessage;
     }
 
+    public String getUnlocalizedName() {
+        return "gui.error." + id;
+    }
+
     public ErrorReason withDetail(String detail) {
         this.detail = detail;
         return this;

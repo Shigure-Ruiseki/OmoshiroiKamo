@@ -1250,3 +1250,34 @@ tooltip.machineBlueprint.build=コントローラーにシフト右クリック�
 
 message.machineBlueprint.empty=この設計図は空です
 
+# Status Messages
+gui.status.insert_blueprint=ブループリントを挿入してください
+gui.status.structure_mismatch=構造が一致しません
+gui.status.structure_not_formed=構造が形成されていません
+gui.status.processing=処理中: %d%%
+gui.status.output_full=出力満杯: %s
+gui.status.idle=待機中
+
+# Error Reasons
+gui.error.paused=レッドストーンで一時停止
+gui.error.no_recipes=レシピがありません
+gui.error.no_matching_recipe=一致しているレシピが見つかりません
+gui.error.no_energy=エネルギーが不足しています
+gui.error.input_missing=入力が不足しています
+gui.error.unknown=不明なエラー
+
+# Port Types
+gui.port_type.ITEM=アイテム
+gui.port_type.FLUID=液体
+gui.port_type.MANA=マナ
+gui.port_type.GAS=ガス
+gui.port_type.ESSENTIA=エッセンシア
+gui.port_type.VIS=Vis
+
+# Structure Errors
+gui.error.structure.requirements_not_met=構造体の要件を満たしていません
+gui.error.structure.block_mismatch=ブロック不一致または構造体が不完全です
+gui.error.structure.invalid_definition=無効な構造定義です
+gui.error.structure.missing_definition=構造定義が見つかりません
+gui.error.structure.incomplete=構造体が不完全です
+

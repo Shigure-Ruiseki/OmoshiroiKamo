@@ -19,11 +19,11 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**
@@ -55,7 +55,7 @@ public class StructureAgent {
                 return customDef;
             }
         }
-        // Fallback to default structure (or null for simple check)
+        // Fallback to default structure
         return STRUCTURE_DEFINITION;
     }
 
@@ -85,7 +85,7 @@ public class StructureAgent {
             return;
         }
 
-        // Clear cache ONLY on server-side (client cache is managed by packets)
+        // Clear cache ONLY on server-side
         if (!controller.getWorldObj().isRemote) {
             // Send packet to clients to clear color
             if (!structureBlockPositions.isEmpty()) {
@@ -208,10 +208,10 @@ public class StructureAgent {
         if (valid && controller.isFormed()) {
             // Perform additional requirements check for CustomStructure
             if (!checkRequirements()) {
-                lastValidationError = "Structure requirements not met.";
+                lastValidationError = LibMisc.LANG.localize("gui.error.structure.requirements_not_met");
                 controller.setFormed(false);
                 if (!controller.getWorldObj().isRemote) {
-                    // Clear both old and current (just in case)
+                    // Clear both old and current
                     Set<ChunkCoordinates> allToClear = new HashSet<>(oldPositions);
                     allToClear.addAll(structureBlockPositions);
                     sendClearPacket(allToClear);
@@ -235,7 +235,7 @@ public class StructureAgent {
                 // Perform detailed scan to find the first error
                 lastValidationError = checkStructureDetails(ox, oy, oz);
                 if (lastValidationError.isEmpty()) {
-                    lastValidationError = "Block mismatch or incomplete structure.";
+                    lastValidationError = LibMisc.LANG.localize("gui.error.structure.block_mismatch");
                 }
             }
         }
@@ -248,19 +248,15 @@ public class StructureAgent {
 
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.layers == null) return "Invalid structure definition.";
+        if (entry == null || entry.layers == null)
+            return LibMisc.LANG.localize("gui.error.structure.invalid_definition");
 
         // Retrieve definition to get mapped elements
         // This is a bit redundant but we need the exact elements used in validation
         IStructureDefinition<TEMachineController> def = getStructureDefinition();
-        if (def == null) return "Missing structure definition.";
+        if (def == null) return LibMisc.LANG.localize("gui.error.structure.missing_definition");
 
-        List<String> layers = new ArrayList<>();
-        for (StructureDefinitionData.Layer layer : entry.layers) {
-            return "Structure incomplete or mismatch.";
-        }
-
-        return "Block mismatch or incomplete structure.";
+        return LibMisc.LANG.localize("gui.error.structure.block_mismatch");
     }
 
     /**
@@ -300,15 +296,14 @@ public class StructureAgent {
         // Load structure tint color
         structureTintColor = getStructureTintColor();
 
-        // Note: structureBlockPositions may be empty here because callbacks run after
-        // check()
+        // StructureBlockPositions may be empty here because callbacks run after check()
         // The actual tint packet will be sent by sendTintPacket() called after all
         // callbacks complete
     }
 
     /**
      * Send tint color to clients. Called after structure check is complete
-     * and all callbacks (including port additions) have finished.
+     * and all callbacks have finished.
      */
     public void sendTintPacket(Set<ChunkCoordinates> oldPositions) {
         if (controller.getWorldObj() == null) return;
@@ -317,7 +312,7 @@ public class StructureAgent {
         // Client cache is managed by packets received from server
         if (controller.getWorldObj().isRemote) return;
 
-        // 1. Calculate removed blocks (in old but not in new)
+        // 1. Calculate removed blocks
         Set<ChunkCoordinates> removedPositions = new HashSet<>(oldPositions);
         removedPositions.removeAll(structureBlockPositions);
 
@@ -326,10 +321,9 @@ public class StructureAgent {
             sendClearPacket(removedPositions);
         }
 
-        // 3. Update new blocks with tint (Sync all current blocks to be safe and ensure
-        // color is applied)
+        // 3. Update new blocks with tint
 
-        // Cache tint color for all structure blocks (server-side only)
+        // Cache tint color for all structure blocks
         if (structureTintColor != null) {
             for (ChunkCoordinates pos : structureBlockPositions) {
                 StructureTintCache.put(controller.getWorldObj(), pos.posX, pos.posY, pos.posZ, structureTintColor);
@@ -360,8 +354,7 @@ public class StructureAgent {
         updateStructureBlocksRendering();
     }
 
-    // Overload for backward compatibility / external calls if any (though
-    // resetStructure should be used for clearing)
+    // Overload for backward compatibility / external calls if any
     public void sendTintPacket() {
         sendTintPacket(new HashSet<>());
     }
