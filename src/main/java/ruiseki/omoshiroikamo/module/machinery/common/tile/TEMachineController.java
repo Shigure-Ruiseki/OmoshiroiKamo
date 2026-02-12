@@ -148,7 +148,8 @@ public class TEMachineController extends AbstractMBModifierTE
     public void addPortFromStructure(IModularPort port, boolean isInput) {
         portManager.addPort(port, isInput);
         // Also add the port's position to structure block positions
-        if (port instanceof TileEntity te) {
+        if (port instanceof TileEntity) {
+            TileEntity te = (TileEntity) port;
             structureAgent.addStructurePosition(te.xCoord, te.yCoord, te.zCoord);
         }
     }
@@ -673,8 +674,12 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public IIcon getTexture(ForgeDirection side, int pass) {
         if (pass == 1) { // Overlay pass
+            if (side != extendedFacing.getDirection()) {
+                return null;
+            }
             Block block = getBlockType();
-            if (block instanceof BlockMachineController controllerBlock) {
+            if (block instanceof BlockMachineController) {
+                BlockMachineController controllerBlock = (BlockMachineController) block;
                 return controllerBlock.getOverlayIcon();
             }
         }

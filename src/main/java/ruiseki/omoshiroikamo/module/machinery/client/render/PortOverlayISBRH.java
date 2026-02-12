@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -24,6 +25,7 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * ISBRH for rendering port overlays.
@@ -69,7 +71,8 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         tess.draw();
 
         // Render Controller Overlay if applicable
-        if (block instanceof BlockMachineController controllerBlock) {
+        if (block instanceof BlockMachineController) {
+            BlockMachineController controllerBlock = (BlockMachineController) block;
             IIcon overlayIcon = controllerBlock.getOverlayIcon();
             if (overlayIcon != null) {
                 tess.startDrawingQuads();
@@ -175,7 +178,14 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     t.setColorOpaque_F(shade, shade, shade);
                     t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
-                    renderFace(t, dir, x, y, z, overlayIcon, EPS);
+                    // Determine rotation
+                    Rotation rotation = Rotation.NORMAL;
+                    if (te instanceof TEMachineController) {
+                        rotation = ((TEMachineController) te).getExtendedFacing()
+                            .getRotation();
+                    }
+
+                    renderFace(t, dir, x, y, z, overlayIcon, EPS, rotation);
                 }
             }
         }
@@ -189,7 +199,8 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
     /**
      * Helper to render a single face with given icon and offset.
      */
-    private void renderFace(Tessellator t, ForgeDirection dir, double x, double y, double z, IIcon icon, float offset) {
+    private void renderFace(Tessellator t, ForgeDirection dir, double x, double y, double z, IIcon icon, float offset,
+        Rotation rotation) {
         float minU = icon.getMinU();
         float maxU = icon.getMaxU();
         float minV = icon.getMinV();
@@ -202,42 +213,88 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         // Set normal to ensure correct lighting calculation
         t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
+        float[] u = new float[4];
+        float[] v = new float[4];
+
+        switch (rotation) {
+            case CLOCKWISE:
+                u[0] = minU;
+                v[0] = maxV;
+                u[1] = minU;
+                v[1] = minV;
+                u[2] = maxU;
+                v[2] = minV;
+                u[3] = maxU;
+                v[3] = maxV;
+                break;
+            case UPSIDE_DOWN:
+                u[0] = maxU;
+                v[0] = maxV;
+                u[1] = minU;
+                v[1] = maxV;
+                u[2] = minU;
+                v[2] = minV;
+                u[3] = maxU;
+                v[3] = minV;
+                break;
+            case COUNTER_CLOCKWISE:
+                u[0] = maxU;
+                v[0] = minV;
+                u[1] = maxU;
+                v[1] = maxV;
+                u[2] = minU;
+                v[2] = maxV;
+                u[3] = minU;
+                v[3] = minV;
+                break;
+            default:
+                u[0] = minU;
+                v[0] = minV;
+                u[1] = maxU;
+                v[1] = minV;
+                u[2] = maxU;
+                v[2] = maxV;
+                u[3] = minU;
+                v[3] = maxV;
+                break;
+        }
+
         switch (dir) {
             case DOWN:
-                t.addVertexWithUV(x, y - eps, z, minU, minV);
-                t.addVertexWithUV(x + 1, y - eps, z, maxU, minV);
-                t.addVertexWithUV(x + 1, y - eps, z + 1, maxU, maxV);
-                t.addVertexWithUV(x, y - eps, z + 1, minU, maxV);
+                t.addVertexWithUV(x, y - eps, z, u[0], v[0]);
+                t.addVertexWithUV(x + 1, y - eps, z, u[1], v[1]);
+                t.addVertexWithUV(x + 1, y - eps, z + 1, u[2], v[2]);
+                t.addVertexWithUV(x, y - eps, z + 1, u[3], v[3]);
                 break;
             case UP:
-                t.addVertexWithUV(x, y + 1 + eps, z + 1, minU, maxV);
-                t.addVertexWithUV(x + 1, y + 1 + eps, z + 1, maxU, maxV);
-                t.addVertexWithUV(x + 1, y + 1 + eps, z, maxU, minV);
-                t.addVertexWithUV(x, y + 1 + eps, z, minU, minV);
+                t.addVertexWithUV(x, y + 1 + eps, z + 1, u[3], v[3]);
+                t.addVertexWithUV(x + 1, y + 1 + eps, z + 1, u[2], v[2]);
+                t.addVertexWithUV(x + 1, y + 1 + eps, z, u[1], v[1]);
+                t.addVertexWithUV(x, y + 1 + eps, z, u[0], v[0]);
                 break;
             case NORTH:
-                t.addVertexWithUV(x + 1, y, z - eps, maxU, maxV);
-                t.addVertexWithUV(x, y, z - eps, minU, maxV);
-                t.addVertexWithUV(x, y + 1, z - eps, minU, minV);
-                t.addVertexWithUV(x + 1, y + 1, z - eps, maxU, minV);
+                t.addVertexWithUV(x + 1, y, z - eps, u[2], v[2]);
+                t.addVertexWithUV(x, y, z - eps, u[3], v[3]);
+                t.addVertexWithUV(x, y + 1, z - eps, u[0], v[0]);
+                t.addVertexWithUV(x + 1, y + 1, z - eps, u[1], v[1]);
                 break;
             case SOUTH:
-                t.addVertexWithUV(x, y, z + 1 + eps, minU, maxV);
-                t.addVertexWithUV(x + 1, y, z + 1 + eps, maxU, maxV);
-                t.addVertexWithUV(x + 1, y + 1, z + 1 + eps, maxU, minV);
-                t.addVertexWithUV(x, y + 1, z + 1 + eps, minU, minV);
+                t.addVertexWithUV(x, y, z + 1 + eps, u[3], v[3]);
+                t.addVertexWithUV(x + 1, y, z + 1 + eps, u[2], v[2]);
+                t.addVertexWithUV(x + 1, y + 1, z + 1 + eps, u[1], v[1]);
+                t.addVertexWithUV(x, y + 1, z + 1 + eps, u[0], v[0]);
                 break;
             case WEST:
-                t.addVertexWithUV(x - eps, y, z, minU, maxV);
-                t.addVertexWithUV(x - eps, y, z + 1, maxU, maxV);
-                t.addVertexWithUV(x - eps, y + 1, z + 1, maxU, minV);
-                t.addVertexWithUV(x - eps, y + 1, z, minU, minV);
+                t.addVertexWithUV(x - eps, y, z, u[3], v[3]);
+                t.addVertexWithUV(x - eps, y, z + 1, u[2], v[2]);
+                t.addVertexWithUV(x - eps, y + 1, z + 1, u[1], v[1]);
+                t.addVertexWithUV(x - eps, y + 1, z, u[0], v[0]);
                 break;
             case EAST:
-                t.addVertexWithUV(x + 1 + eps, y, z + 1, maxU, maxV);
-                t.addVertexWithUV(x + 1 + eps, y, z, minU, maxV);
-                t.addVertexWithUV(x + 1 + eps, y + 1, z, minU, minV);
-                t.addVertexWithUV(x + 1 + eps, y + 1, z + 1, maxU, minV);
+                t.addVertexWithUV(x + 1 + eps, y, z + 1, u[2], v[2]);
+                t.addVertexWithUV(x + 1 + eps, y, z, u[3], v[3]);
+                t.addVertexWithUV(x + 1 + eps, y + 1, z, u[0], v[0]);
+                t.addVertexWithUV(x + 1 + eps, y + 1, z + 1, u[1], v[1]);
                 break;
             default:
                 break;

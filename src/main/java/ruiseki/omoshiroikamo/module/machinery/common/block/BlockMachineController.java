@@ -13,6 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -89,24 +91,44 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         world.markBlockForUpdate(x, y, z);
 
         ForgeDirection direction;
+        Rotation rotation = Rotation.NORMAL;
         float pitch = placer.rotationPitch;
+        int heading = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
         if (pitch > 60.0F) {
             direction = ForgeDirection.UP;
+            // Determine rotation based on heading for UP/DOWN
+            // 0: South (Z+), 1: West (X-), 2: North (Z-), 3: East (X+)
+            rotation = switch (heading) {
+                case 0 -> Rotation.UPSIDE_DOWN; // South
+                case 1 -> Rotation.COUNTER_CLOCKWISE; // West
+                case 2 -> Rotation.NORMAL; // North
+                case 3 -> Rotation.CLOCKWISE; // East
+                default -> Rotation.NORMAL;
+            };
         } else if (pitch < -60.0F) {
             direction = ForgeDirection.DOWN;
+            // Determine rotation based on heading for UP/DOWN
+            rotation = switch (heading) {
+                case 0 -> Rotation.UPSIDE_DOWN; // South
+                case 1 -> Rotation.COUNTER_CLOCKWISE; // West
+                case 2 -> Rotation.NORMAL; // North
+                case 3 -> Rotation.CLOCKWISE; // East
+                default -> Rotation.NORMAL;
+            };
         } else {
-            // Calculate facing from player's yaw (block front faces player)
-            int facing = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            direction = switch (facing) {
+            // Horizontal facing
+            direction = switch (heading) {
                 case 0 -> ForgeDirection.NORTH;
                 case 1 -> ForgeDirection.EAST;
                 case 2 -> ForgeDirection.SOUTH;
                 case 3 -> ForgeDirection.WEST;
                 default -> ForgeDirection.NORTH;
             };
+            rotation = Rotation.NORMAL;
         }
 
-        te.setExtendedFacing(ExtendedFacing.of(direction));
+        te.setExtendedFacing(ExtendedFacing.of(direction, rotation, Flip.NONE));
     }
 
     @Override
