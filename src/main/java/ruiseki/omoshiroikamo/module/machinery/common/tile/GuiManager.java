@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 /**
@@ -38,13 +39,12 @@ public class GuiManager {
         // Title
         panel.child(new TileWidget(controller.getLocalizedName()));
 
-        // Blueprint slot (right side)
+        // Blueprint slot
         panel.child(
             new ItemSlot()
                 .slot(
                     new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
                         .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                .background(OKGuiTextures.EMPTY_SLOT)
                 .background(OKGuiTextures.EMPTY_SLOT)
                 .pos(151, 8));
 
@@ -54,6 +54,11 @@ public class GuiManager {
             controller::getRedstoneMode,
             controller::setRedstoneMode);
         syncManager.syncValue("redstoneMode", redstoneMode);
+
+        BooleanSyncValue redstonePowered = new BooleanSyncValue(
+            controller::isRedstonePowered,
+            controller::setRedstonePowered);
+        syncManager.syncValue("redstonePowered", redstonePowered);
 
         // Redstone Control Button
         panel.child(new RedstoneModeWidget(redstoneMode).pos(151, 30));
@@ -66,27 +71,20 @@ public class GuiManager {
 
         // Error display (validation)
         panel.child(
-            IKey.dynamic(this::getErrorText)
+            IKey.dynamic(this::getValidationErrorText)
                 .asWidget()
                 .pos(8, 35));
 
+        // Sync progress values
         IntSyncValue progressSyncer = new IntSyncValue(
             controller.getProcessAgent()::getProgress,
             controller.getProcessAgent()::setProgress);
         IntSyncValue maxProgressSyncer = new IntSyncValue(
             controller.getProcessAgent()::getMaxProgress,
             controller.getProcessAgent()::setMaxProgress);
-        BooleanSyncValue runningSyncer = new BooleanSyncValue(
-            controller.getProcessAgent()::isRunning,
-            controller.getProcessAgent()::setRunning);
-        BooleanSyncValue waitingSyncer = new BooleanSyncValue(
-            controller.getProcessAgent()::isWaitingForOutput,
-            controller.getProcessAgent()::setWaitingForOutput);
 
-        syncManager.syncValue("processProgressSyncer", progressSyncer);
-        syncManager.syncValue("processMaxSyncer", maxProgressSyncer);
-        syncManager.syncValue("processRunningSyncer", runningSyncer);
-        syncManager.syncValue("processWaitingSyncer", waitingSyncer);
+        syncManager.syncValue("processProgress", progressSyncer);
+        syncManager.syncValue("processMaxProgress", maxProgressSyncer);
 
         // Progress bar
         panel.child(
@@ -100,61 +98,95 @@ public class GuiManager {
         return panel;
     }
 
+    /**
+     * Determines the primary status message to display in the GUI.
+     * Priority order:
+     * 1. Blueprint missing
+     * 2. Structure not formed
+     * 3. Paused by redstone
+     * 4. Processing status (running/waiting)
+     * 5. Idle status (with error reasons)
+     */
     private String getStatusText() {
-        if (controller.getCustomStructureName() == null || controller.getCustomStructureName()
-            .isEmpty()) {
-            return "Insert Blueprint";
-        }
+        // Check for blueprint
+        if (!hasBlueprint()) return "Insert Blueprint";
+
+        // Check structure formation
         if (!controller.isFormed()) {
-            if (controller.getLastValidationError() != null && !controller.getLastValidationError()
-                .isEmpty()) {
-                return "Structure Mismatch";
-            }
+            if (hasValidationError()) return "Structure Mismatch";
             return "Structure Not Formed";
         }
-        if (controller.getProcessAgent()
-            .isRunning()
-            || controller.getProcessAgent()
-                .isWaitingForOutput()) {
-            if (controller.getLastProcessErrorReason() == ErrorReason.NO_ENERGY) {
-                return ErrorReason.NO_ENERGY.getMessage();
-            }
-            return controller.getProcessAgent()
-                .getStatusMessage(controller.getOutputPorts());
+
+        ProcessAgent agent = controller.getProcessAgent();
+
+        // Check if machine is paused by redstone (highest priority for active machines)
+        if (!controller.isRedstoneActive()) {
+            return ErrorReason.PAUSED.getMessage();
         }
 
-        ErrorReason reason = getIdleErrorReason();
-        if (reason == ErrorReason.NONE) {
-            return "Idle";
+        // Check processing status
+        if (agent.isRunning() || agent.isWaitingForOutput()) {
+            return getProcessingStatusMessage(agent);
         }
-        return reason.getMessage();
+
+        // Machine is idle - check for specific error reasons
+        return getIdleStatusMessage();
     }
 
-    private ErrorReason getIdleErrorReason() {
+    /**
+     * Returns the status message when machine is actively processing.
+     */
+    private String getProcessingStatusMessage(ProcessAgent agent) {
+        ErrorReason lastError = controller.getLastProcessErrorReason();
+
+        // Show energy error even during processing
+        if (lastError == ErrorReason.NO_ENERGY) return ErrorReason.NO_ENERGY.getMessage();
+
+        // Default to agent's status message (e.g., "Processing 45%")
+        return agent.getStatusMessage(controller.getOutputPorts());
+    }
+
+    /**
+     * Returns the status message when machine is idle.
+     */
+    private String getIdleStatusMessage() {
+        // Check if no recipes are registered for this group
         if (RecipeLoader.getInstance()
             .getRecipes(controller.getRecipeGroup())
             .isEmpty()) {
-            return ErrorReason.NO_RECIPES;
+            return ErrorReason.NO_RECIPES.getMessage();
         }
-        if (controller.getLastProcessErrorReason() == ErrorReason.NO_MATCHING_RECIPE) {
-            return ErrorReason.NO_MATCHING_RECIPE;
-        }
-        if (controller.getLastProcessErrorReason() == ErrorReason.NO_ENERGY) {
-            return ErrorReason.NO_ENERGY;
-        }
-        if (!controller.isRedstoneActive()) {
-            return ErrorReason.PAUSED;
-        }
-        return ErrorReason.IDLE;
+
+        ErrorReason lastError = controller.getLastProcessErrorReason();
+
+        // Check specific error reasons
+        if (lastError == ErrorReason.NO_MATCHING_RECIPE) return lastError.getMessage();
+        if (lastError == ErrorReason.NO_ENERGY) return lastError.getMessage();
+        if (lastError == ErrorReason.INPUT_MISSING) return lastError.getMessage();
+
+        // Default idle state
+        return "Idle";
     }
 
-    private String getErrorText() {
-        if (controller.getCustomStructureName() == null || controller.getCustomStructureName()
-            .isEmpty()) return "";
+    /**
+     * Returns validation error text for display below status.
+     * Only shown when structure is not formed and there's a specific error.
+     */
+    private String getValidationErrorText() {
+        if (!hasBlueprint()) return "";
         if (controller.isFormed()) return "";
-        if (controller.getLastValidationError() == null || controller.getLastValidationError()
-            .isEmpty()) return "";
+        if (!hasValidationError()) return "";
         return controller.getLastValidationError();
+    }
+
+    private boolean hasBlueprint() {
+        String name = controller.getCustomStructureName();
+        return name != null && !name.isEmpty();
+    }
+
+    private boolean hasValidationError() {
+        String error = controller.getLastValidationError();
+        return error != null && !error.isEmpty();
     }
 
     private float getProgressPercent() {

@@ -15,7 +15,6 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.input.TEVisInputPort;
 
-
 // TODO: Add texture
 public class BlockVisInputPort extends AbstractPortBlock<TEVisInputPort> {
 

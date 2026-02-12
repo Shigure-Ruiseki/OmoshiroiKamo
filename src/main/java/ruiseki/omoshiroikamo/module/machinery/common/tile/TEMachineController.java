@@ -25,6 +25,7 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.api.block.CraftingState;
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
@@ -511,6 +512,19 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // ========== Redstone Control ==========
 
+    public boolean isRedstonePowered() {
+        return this.redstonePowered;
+    }
+
+    public void setRedstonePowered(boolean powered) {
+        this.redstonePowered = powered;
+    }
+
+    @Override
+    public boolean isRedstoneActive() {
+        return RedstoneMode.isActive(redstoneMode, redstonePowered);
+    }
+
     // ========== CustomStructure ==========
 
     /**
@@ -682,6 +696,14 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         super.onNeighborBlockChange(world, x, y, z, block);
+        if (!world.isRemote) {
+            boolean powered = world.isBlockIndirectlyGettingPowered(x, y, z);
+            if (this.redstonePowered != powered) {
+                this.redstonePowered = powered;
+                this.redstoneStateDirty = true;
+                this.forceClientUpdate = true;
+            }
+        }
     }
 
 }
