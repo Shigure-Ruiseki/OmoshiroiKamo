@@ -36,7 +36,7 @@ public class ItemMachineBlueprint extends ItemOK {
     public ItemMachineBlueprint() {
         super("machineBlueprint");
         setMaxStackSize(1);
-        setTextureName("machineBlueprint");
+        setTextureName("modular/machineBlueprint");
     }
 
     /**
