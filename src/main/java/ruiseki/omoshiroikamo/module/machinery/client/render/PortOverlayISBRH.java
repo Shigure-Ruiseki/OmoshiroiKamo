@@ -63,7 +63,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
         tess.startDrawingQuads();
         tess.setColorOpaque_F(r, g, b);
-        RenderUtils.renderCube(tess, 0, 0, 0, 1, 1, 1, baseIcon);
+        RenderUtils.renderCubeRotatedTopBottom(tess, 0, 0, 0, 1, 1, 1, baseIcon);
         tess.draw();
 
         // Render Controller Overlay if applicable
