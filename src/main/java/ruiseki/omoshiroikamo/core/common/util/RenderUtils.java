@@ -28,36 +28,42 @@ public class RenderUtils {
         float dv = v1 - v0;
 
         // ==== DOWN (Y-) ====
+        t.setNormal(0.0F, -1.0F, 0.0F);
         t.addVertexWithUV(minX, minY, maxZ, u0 + minX * du, v0 + maxZ * dv);
         t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * du, v0 + maxZ * dv);
         t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * du, v0 + minZ * dv);
         t.addVertexWithUV(minX, minY, minZ, u0 + minX * du, v0 + minZ * dv);
 
         // ==== UP (Y+) ====
+        t.setNormal(0.0F, 1.0F, 0.0F);
         t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * du, v0 + maxZ * dv);
         t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxX * du, v0 + maxZ * dv);
         t.addVertexWithUV(maxX, maxY, minZ, u0 + maxX * du, v0 + minZ * dv);
         t.addVertexWithUV(minX, maxY, minZ, u0 + minX * du, v0 + minZ * dv);
 
         // ==== NORTH (-Z) ====
+        t.setNormal(0.0F, 0.0F, -1.0F);
         t.addVertexWithUV(maxX, minY, minZ, u0 + maxX * du, v1 - minY * dv);
         t.addVertexWithUV(minX, minY, minZ, u0 + minX * du, v1 - minY * dv);
         t.addVertexWithUV(minX, maxY, minZ, u0 + minX * du, v1 - maxY * dv);
         t.addVertexWithUV(maxX, maxY, minZ, u0 + maxX * du, v1 - maxY * dv);
 
         // ==== SOUTH (+Z) ====
+        t.setNormal(0.0F, 0.0F, 1.0F);
         t.addVertexWithUV(minX, minY, maxZ, u0 + minX * du, v1 - minY * dv);
         t.addVertexWithUV(maxX, minY, maxZ, u0 + maxX * du, v1 - minY * dv);
         t.addVertexWithUV(maxX, maxY, maxZ, u0 + maxX * du, v1 - maxY * dv);
         t.addVertexWithUV(minX, maxY, maxZ, u0 + minX * du, v1 - maxY * dv);
 
         // ==== WEST (-X) ====
+        t.setNormal(-1.0F, 0.0F, 0.0F);
         t.addVertexWithUV(minX, minY, minZ, u0 + minZ * du, v1 - minY * dv);
         t.addVertexWithUV(minX, minY, maxZ, u0 + maxZ * du, v1 - minY * dv);
         t.addVertexWithUV(minX, maxY, maxZ, u0 + maxZ * du, v1 - maxY * dv);
         t.addVertexWithUV(minX, maxY, minZ, u0 + minZ * du, v1 - maxY * dv);
 
         // ==== EAST (+X) ====
+        t.setNormal(1.0F, 0.0F, 0.0F);
         t.addVertexWithUV(maxX, minY, maxZ, u0 + maxZ * du, v1 - minY * dv);
         t.addVertexWithUV(maxX, minY, minZ, u0 + minZ * du, v1 - minY * dv);
         t.addVertexWithUV(maxX, maxY, minZ, u0 + minZ * du, v1 - maxY * dv);

@@ -63,7 +63,6 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
         tess.startDrawingQuads();
         tess.setColorOpaque_F(r, g, b);
-        tess.setNormal(0.0F, 1.0F, 0.0F);
         RenderUtils.renderCube(tess, 0, 0, 0, 1, 1, 1, baseIcon);
         tess.draw();
 
@@ -74,7 +73,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
             if (overlayIcon != null) {
                 tess.startDrawingQuads();
-                tess.setColorOpaque_F(1.0f, 1.0f, 1.0f); // White
+                tess.setColorOpaque_F(0.75f, 0.75f, 0.75f); // Slightly dimmed from pure white
 
                 double eps = 0.001; // Slightly larger than base
                 tess.setNormal(1.0F, 0.0F, 0.0F);
