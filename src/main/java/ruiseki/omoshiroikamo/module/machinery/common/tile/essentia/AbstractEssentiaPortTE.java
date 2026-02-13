@@ -31,7 +31,7 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     public AbstractEssentiaPortTE(int maxCapacityPerAspect) {
         this.maxCapacityPerAspect = maxCapacityPerAspect;
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
@@ -124,8 +124,7 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
-        sides[side.ordinal()] = state;
-        forceRenderUpdate();
+        // Disabled for Essentia ports
     }
 
     @Override

@@ -30,7 +30,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     public AbstractVisPortTE(int maxVisPerAspect) {
         this.maxVisPerAspect = maxVisPerAspect;
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
@@ -108,8 +108,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
-        sides[side.ordinal()] = state;
-        forceRenderUpdate();
+        // Disabled for Vis ports
     }
 
     @Override
