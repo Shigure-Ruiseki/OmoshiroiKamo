@@ -8,9 +8,8 @@ import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
- * TODO List:
- * - Add variant types (reinforced, vented, circuitry, etc.)
- * - Add crafting recipe
+ * TODO: Add variant types (reinforced, vented, circuitry, etc.)
+ * TODO: Add crafting recipe
  */
 public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
 

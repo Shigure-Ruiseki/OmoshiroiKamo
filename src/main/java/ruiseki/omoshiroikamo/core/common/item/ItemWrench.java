@@ -19,10 +19,9 @@ import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
 
 /**
  * Item Wrench - config ISidedIO.
- * TODO List:
- * - Add Wrench texture
- * - Add tooltip
- * - Add announcement when change io
+ * TODO: Add Wrench texture
+ * TODO: Add tooltip
+ * TODO: Add announcement when change io
  */
 public class ItemWrench extends ItemOK implements IToolHammer {
 

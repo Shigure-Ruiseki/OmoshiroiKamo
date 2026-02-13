@@ -29,14 +29,11 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 /**
  * Machine Controller - the brain of a Modular Machinery structure.
  * This block is mapped to the 'Q' symbol in structure definitions.
- * TODO List:
- * - Implement GUI for machine management and status display
- * - Working particles and sound effects
- * - Completion effects (particles, sounds)
- * - Block state visual changes based on status
- * - NEI recipe integration
- * - Rotate controller texture
- * - Make controller face shows only front side
+ * TODO: Implement GUI for machine management and status display
+ * TODO: Working particles and sound effects
+ * TODO: Completion effects (particles, sounds)
+ * TODO: Block state visual changes based on status
+ * TODO: NEI recipe integration
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
