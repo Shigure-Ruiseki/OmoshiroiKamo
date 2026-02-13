@@ -37,9 +37,9 @@ public class ItemWrench extends ItemOK implements IToolHammer {
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
-        if (world.isRemote) return true;
+        if (world.isRemote) return false;
 
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof ISidedIO io)) return false;
@@ -53,32 +53,55 @@ public class ItemWrench extends ItemOK implements IToolHammer {
     }
 
     public static ForgeDirection getClickedSide(ForgeDirection hitSide, float hitX, float hitY, float hitZ) {
-        final float BORDER = 0.15f;
+        final float BORDER = 0.20f;
+
+        // Determine horizontal/vertical ranges based on the face
+        boolean hLeft = false, hRight = false, vTop = false, vBottom = false;
 
         switch (hitSide) {
             case UP:
             case DOWN:
-                if (hitX < BORDER) return ForgeDirection.WEST;
-                if (hitX > 1 - BORDER) return ForgeDirection.EAST;
-                if (hitZ < BORDER) return ForgeDirection.NORTH;
-                if (hitZ > 1 - BORDER) return ForgeDirection.SOUTH;
+                hLeft = hitX < BORDER;
+                hRight = hitX > 1 - BORDER;
+                vTop = hitZ < BORDER;
+                vBottom = hitZ > 1 - BORDER;
+
+                if ((hLeft || hRight) && (vTop || vBottom)) return hitSide.getOpposite();
+                if (hLeft) return ForgeDirection.WEST;
+                if (hRight) return ForgeDirection.EAST;
+                if (vTop) return ForgeDirection.NORTH;
+                if (vBottom) return ForgeDirection.SOUTH;
                 return hitSide;
 
             case NORTH:
             case SOUTH:
-                if (hitX < BORDER) return ForgeDirection.WEST;
-                if (hitX > 1 - BORDER) return ForgeDirection.EAST;
-                if (hitY < BORDER) return ForgeDirection.DOWN;
-                if (hitY > 1 - BORDER) return ForgeDirection.UP;
+                hLeft = hitX < BORDER;
+                hRight = hitX > 1 - BORDER;
+                vTop = hitY > 1 - BORDER;
+                vBottom = hitY < BORDER;
+
+                if ((hLeft || hRight) && (vTop || vBottom)) return hitSide.getOpposite();
+                if (hLeft) return ForgeDirection.WEST;
+                if (hRight) return ForgeDirection.EAST;
+                if (vTop) return ForgeDirection.UP;
+                if (vBottom) return ForgeDirection.DOWN;
                 return hitSide;
 
             case WEST:
             case EAST:
-                if (hitZ < BORDER) return ForgeDirection.NORTH;
-                if (hitZ > 1 - BORDER) return ForgeDirection.SOUTH;
-                if (hitY < BORDER) return ForgeDirection.DOWN;
-                if (hitY > 1 - BORDER) return ForgeDirection.UP;
+                hLeft = hitZ > 1 - BORDER;
+                hRight = hitZ < BORDER;
+                vTop = hitY > 1 - BORDER;
+                vBottom = hitY < BORDER;
+
+                if ((hLeft || hRight) && (vTop || vBottom)) return hitSide.getOpposite();
+                if (hLeft) return ForgeDirection.SOUTH;
+                if (hRight) return ForgeDirection.NORTH;
+                if (vTop) return ForgeDirection.UP;
+                if (vBottom) return ForgeDirection.DOWN;
                 return hitSide;
+            default:
+                break;
         }
 
         return hitSide;
