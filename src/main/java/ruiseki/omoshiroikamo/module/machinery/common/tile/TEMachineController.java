@@ -502,6 +502,7 @@ public class TEMachineController extends AbstractMBModifierTE
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
         }
         // Load ExtendedFacing
+        ExtendedFacing previousFacing = this.extendedFacing;
         if (nbt.hasKey("extendedFacing")) {
             int ordinal = nbt.getByte("extendedFacing") & 0xFF;
             if (ordinal < ExtendedFacing.VALUES.length) {
@@ -509,6 +510,10 @@ public class TEMachineController extends AbstractMBModifierTE
             }
         }
         super.readCommon(nbt);
+
+        if (worldObj != null && worldObj.isRemote && !Objects.equals(previousFacing, extendedFacing)) {
+            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+        }
     }
 
     // ========== Redstone Control ==========
