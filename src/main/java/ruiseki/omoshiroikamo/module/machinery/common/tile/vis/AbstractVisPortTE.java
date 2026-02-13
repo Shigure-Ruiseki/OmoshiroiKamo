@@ -15,8 +15,6 @@ import thaumcraft.api.aspects.AspectList;
 /**
  * Abstract base class for Vis ports.
  * Stores Vis as AspectList.
- *
- * TODO: Use sides array or remove if unnecessary
  * TODO: Add tiered blocks/TEs
  * TODO: Add vis filter
  */

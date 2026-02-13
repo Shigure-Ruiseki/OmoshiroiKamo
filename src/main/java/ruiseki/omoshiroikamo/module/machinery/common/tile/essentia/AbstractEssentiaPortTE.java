@@ -16,8 +16,6 @@ import thaumcraft.api.aspects.IAspectContainer;
 
 /**
  * Stores multiple Aspects using AspectList.
- *
- * TODO: Use sides array in canInputFrom/canOutputTo
  * TODO: Add tiered blocks/TEs
  * TODO: Implement TEEssentiaOutputPortME
  * TODO: Add essence filter
