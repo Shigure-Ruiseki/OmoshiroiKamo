@@ -48,6 +48,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     }
 
     private IIcon overlayIcon;
+    private IIcon sideOverlayIcon;
 
     @Override
     public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
@@ -64,10 +65,15 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     public void registerBlockIcons(IIconRegister reg) {
         super.registerBlockIcons(reg);
         this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller");
+        this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/base_modularports");
     }
 
     public IIcon getOverlayIcon() {
         return overlayIcon;
+    }
+
+    public IIcon getSideOverlayIcon() {
+        return sideOverlayIcon;
     }
 
     @Override

@@ -44,10 +44,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
         Tessellator tess = TessellatorManager.get();
-        IIcon baseIcon = AbstractPortBlock.baseIcon;
-        if (baseIcon == null) {
-            baseIcon = block.getIcon(0, metadata);
-        }
+        IIcon baseIcon = block.getIcon(0, metadata);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -74,21 +71,14 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         if (block instanceof BlockMachineController) {
             BlockMachineController controllerBlock = (BlockMachineController) block;
             IIcon overlayIcon = controllerBlock.getOverlayIcon();
+
             if (overlayIcon != null) {
                 tess.startDrawingQuads();
-                tess.setColorOpaque_F(1.0f, 1.0f, 1.0f); // White (untinted)
-                tess.setNormal(0.0F, 0.0F, 1.0F);
+                tess.setColorOpaque_F(1.0f, 1.0f, 1.0f); // White
 
                 double eps = 0.001; // Slightly larger than base
-                double minU = overlayIcon.getMinU();
-                double maxU = overlayIcon.getMaxU();
-                double minV = overlayIcon.getMinV();
-                double maxV = overlayIcon.getMaxV();
-
-                tess.addVertexWithUV(0 - eps, 0 - eps, 1 + eps, minU, maxV);
-                tess.addVertexWithUV(1 + eps, 0 - eps, 1 + eps, maxU, maxV);
-                tess.addVertexWithUV(1 + eps, 1 + eps, 1 + eps, maxU, minV);
-                tess.addVertexWithUV(0 - eps, 1 + eps, 1 + eps, minU, minV);
+                tess.setNormal(1.0F, 0.0F, 0.0F);
+                RenderUtils.renderFace(tess, ForgeDirection.EAST, 0, 0, 0, overlayIcon, (float) eps, Rotation.NORMAL);
 
                 tess.draw();
             }
