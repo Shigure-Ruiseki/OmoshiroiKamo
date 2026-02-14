@@ -179,15 +179,9 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                             };
                         }
 
-                        // Each source reverses CW↔CCW:
-                        // 1. Inherent UV mirror on NORTH/EAST/DOWN
-                        // 2. H or V flip (BOTH = 2 reversals → cancels out)
-                        // Swap CW↔CCW when total reversals is odd.
-                        int reversals = isReversedFace ? 1 : 0;
+                        // H or V flip reverses CW↔CCW direction.
+                        // (NED's H toggle introduces an effective H flip that handles the mirror.)
                         if (flip == Flip.HORIZONTAL || flip == Flip.VERTICAL) {
-                            reversals++;
-                        }
-                        if (reversals % 2 == 1) {
                             rotation = switch (rotation) {
                                 case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
                                 case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
