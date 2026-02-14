@@ -78,7 +78,16 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
                 double eps = 0.001; // Slightly larger than base
                 tess.setNormal(1.0F, 0.0F, 0.0F);
-                RenderUtils.renderFace(tess, ForgeDirection.EAST, 0, 0, 0, overlayIcon, (float) eps, Rotation.NORMAL);
+                RenderUtils.renderFace(
+                    tess,
+                    ForgeDirection.EAST,
+                    0,
+                    0,
+                    0,
+                    overlayIcon,
+                    (float) eps,
+                    Rotation.NORMAL,
+                    Flip.HORIZONTAL);
 
                 tess.draw();
             }
