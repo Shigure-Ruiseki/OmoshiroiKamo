@@ -27,7 +27,6 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
  * Loads and parses structure JSON files.
- * TODO: specify default controller direction
  */
 public class StructureJsonLoader {
 
