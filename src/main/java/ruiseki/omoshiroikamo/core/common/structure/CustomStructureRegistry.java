@@ -92,7 +92,7 @@ public class CustomStructureRegistry {
             String[][] rotatedShape;
             if (entry.defaultFacing != null
                 && (entry.defaultFacing.equalsIgnoreCase("UP") || entry.defaultFacing.equalsIgnoreCase("DOWN"))) {
-                rotatedShape = transformForVertical(shape);
+                rotatedShape = transformForVertical(shape, entry.defaultFacing);
             } else {
                 rotatedShape = rotate180(shape);
             }
@@ -262,21 +262,25 @@ public class CustomStructureRegistry {
         return rotated;
     }
 
-    private static String[][] transformForVertical(String[][] shape) {
+    private static String[][] transformForVertical(String[][] shape, String facing) {
         int originalLayers = shape.length;
         if (originalLayers == 0) return shape;
 
         int originalRows = shape[0].length;
+        boolean isDown = "DOWN".equalsIgnoreCase(facing);
 
         String[][] transformed = new String[originalRows][originalLayers];
 
         for (int originalZ = 0; originalZ < originalRows; originalZ++) {
             for (int originalY = 0; originalY < originalLayers; originalY++) {
+
+                int targetLayerIndex = originalZ;
+                int targetRowIndex = isDown ? (originalLayers - 1 - originalY) : originalY;
+
                 if (shape[originalY].length > originalZ) {
-                    transformed[originalZ][originalY] = shape[originalY][originalZ];
+                    transformed[targetLayerIndex][targetRowIndex] = shape[originalY][originalZ];
                 } else {
-                    // Should not happen if rectangular
-                    transformed[originalZ][originalY] = "";
+                    transformed[targetLayerIndex][targetRowIndex] = "";
                 }
             }
         }
