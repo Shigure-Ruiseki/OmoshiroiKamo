@@ -72,10 +72,10 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         StructureTintCache.clearDimension(Integer.MAX_VALUE);
 
         String structureName = currentStructure.getStructureName();
-        IStructureDefinition<TEMachineController> def = currentStructure.getDefinition();
+        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
 
         if (def == null) {
-            def = CustomStructureRegistry.getDefinition(structureName);
+            def = currentStructure.getDefinition();
         }
 
         if (def == null) {
