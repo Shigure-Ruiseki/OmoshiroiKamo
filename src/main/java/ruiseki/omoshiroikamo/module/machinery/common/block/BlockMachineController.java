@@ -102,7 +102,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
 
         if (pitch > 50.0F) {
             direction = ForgeDirection.UP;
-            // Determine rotation based on heading for UP/DOWN
+            // Determine rotation based on heading for UP
             // 0: South (Z+), 1: West (X-), 2: North (Z-), 3: East (X+)
             rotation = switch (heading) {
                 case 0 -> Rotation.UPSIDE_DOWN; // South
@@ -113,7 +113,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
             };
         } else if (pitch < -50.0F) {
             direction = ForgeDirection.DOWN;
-            // Determine rotation based on heading for UP/DOWN
+            // Determine rotation based on heading for DOWN
             rotation = switch (heading) {
                 case 0 -> Rotation.UPSIDE_DOWN; // South
                 case 1 -> Rotation.COUNTER_CLOCKWISE; // West

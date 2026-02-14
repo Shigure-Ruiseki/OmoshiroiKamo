@@ -157,11 +157,20 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     t.setColorOpaque_F(shade, shade, shade);
                     t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
-                    // Determine rotation
+                    // Determine rotation for overlay texture
                     Rotation rotation = Rotation.NORMAL;
                     if (te instanceof TEMachineController) {
+                        // SOUTH, WEST, UP faces have normal UV chirality
                         rotation = ((TEMachineController) te).getExtendedFacing()
                             .getRotation();
+                        // NORTH, EAST, DOWN faces have opposite UV chirality
+                        if (dir == ForgeDirection.NORTH || dir == ForgeDirection.EAST || dir == ForgeDirection.DOWN) {
+                            rotation = switch (rotation) {
+                                case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
+                                case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
+                                default -> rotation;
+                            };
+                        }
                     }
 
                     RenderUtils.renderFace(t, dir, x, y, z, overlayIcon, EPS, rotation);
