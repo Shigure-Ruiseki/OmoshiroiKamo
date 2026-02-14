@@ -135,8 +135,6 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         controller.setExtendedFacing(facing);
 
         // Build the structure using the definition
-        ExtendedFacing buildFacing = ExtendedFacing.SOUTH_NORMAL_NONE;
-
         FAKE_PLAYER.setWorld(renderer.world);
 
         int result, iterations = 0;
@@ -146,7 +144,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                buildFacing,
+                facing,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
@@ -166,7 +164,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                buildFacing,
+                facing,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
