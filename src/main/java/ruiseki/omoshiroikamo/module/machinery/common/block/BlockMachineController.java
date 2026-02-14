@@ -34,7 +34,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * TODO: Completion effects (particles, sounds)
  * TODO: Block state visual changes based on status
  * TODO: NEI recipe integration
- * TODO: Fix texture rotation of DOWN controller
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
@@ -101,7 +100,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         float pitch = placer.rotationPitch;
         int heading = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-        if (pitch > 60.0F) {
+        if (pitch > 50.0F) {
             direction = ForgeDirection.UP;
             // Determine rotation based on heading for UP/DOWN
             // 0: South (Z+), 1: West (X-), 2: North (Z-), 3: East (X+)
@@ -112,7 +111,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
                 case 3 -> Rotation.CLOCKWISE; // East
                 default -> Rotation.NORMAL;
             };
-        } else if (pitch < -60.0F) {
+        } else if (pitch < -50.0F) {
             direction = ForgeDirection.DOWN;
             // Determine rotation based on heading for UP/DOWN
             rotation = switch (heading) {
