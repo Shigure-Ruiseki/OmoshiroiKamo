@@ -115,9 +115,9 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
             direction = ForgeDirection.DOWN;
             // Determine rotation based on heading for DOWN
             rotation = switch (heading) {
-                case 0 -> Rotation.UPSIDE_DOWN; // South
+                case 0 -> Rotation.NORMAL; // South
                 case 1 -> Rotation.COUNTER_CLOCKWISE; // West
-                case 2 -> Rotation.NORMAL; // North
+                case 2 -> Rotation.UPSIDE_DOWN; // North
                 case 3 -> Rotation.CLOCKWISE; // East
                 default -> Rotation.NORMAL;
             };
