@@ -34,6 +34,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * TODO: Completion effects (particles, sounds)
  * TODO: Block state visual changes based on status
  * TODO: NEI recipe integration
+ * TODO: Fix texture rotation of DOWN controller
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
