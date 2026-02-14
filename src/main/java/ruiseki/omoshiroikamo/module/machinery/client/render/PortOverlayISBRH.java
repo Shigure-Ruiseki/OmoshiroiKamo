@@ -163,22 +163,35 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     Flip flip = Flip.NONE;
                     if (te instanceof TEMachineController) {
                         var extFacing = ((TEMachineController) te).getExtendedFacing();
-                        // SOUTH, WEST, UP faces have normal UV chirality
                         rotation = extFacing.getRotation();
                         flip = extFacing.getFlip();
-                        // NORTH, EAST, DOWN faces have opposite UV chirality:
-                        // base texture is horizontally mirrored, so toggle HORIZONTAL.
-                        if (dir == ForgeDirection.NORTH || dir == ForgeDirection.EAST || dir == ForgeDirection.DOWN) {
-                            rotation = switch (rotation) {
-                                case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
-                                case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
-                                default -> rotation;
-                            };
+
+                        boolean isReversedFace = dir == ForgeDirection.NORTH || dir == ForgeDirection.EAST
+                            || dir == ForgeDirection.DOWN;
+
+                        // NORTH, EAST, DOWN: base UV is horizontally mirrored → toggle H
+                        if (isReversedFace) {
                             flip = switch (flip) {
                                 case NONE -> Flip.HORIZONTAL;
                                 case HORIZONTAL -> Flip.NONE;
                                 case VERTICAL -> Flip.BOTH;
                                 case BOTH -> Flip.VERTICAL;
+                            };
+                        }
+
+                        // Each source reverses CW↔CCW:
+                        // 1. Inherent UV mirror on NORTH/EAST/DOWN
+                        // 2. H or V flip (BOTH = 2 reversals → cancels out)
+                        // Swap CW↔CCW when total reversals is odd.
+                        int reversals = isReversedFace ? 1 : 0;
+                        if (flip == Flip.HORIZONTAL || flip == Flip.VERTICAL) {
+                            reversals++;
+                        }
+                        if (reversals % 2 == 1) {
+                            rotation = switch (rotation) {
+                                case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
+                                case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
+                                default -> rotation;
                             };
                         }
                     }

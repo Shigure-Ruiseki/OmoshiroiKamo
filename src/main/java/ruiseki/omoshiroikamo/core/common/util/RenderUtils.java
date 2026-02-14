@@ -167,7 +167,7 @@ public class RenderUtils {
         float minV = icon.getMinV();
         float maxV = icon.getMaxV();
 
-        // Apply flip before rotation
+        // Flip first
         if (flip == Flip.HORIZONTAL || flip == Flip.BOTH) {
             float tmp = minU;
             minU = maxU;
@@ -182,6 +182,7 @@ public class RenderUtils {
         float[] u = new float[4];
         float[] v = new float[4];
 
+        // Then rotate
         switch (rotation) {
             case CLOCKWISE:
                 u[0] = minU;
