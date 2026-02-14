@@ -7,6 +7,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 
 public class RenderUtils {
@@ -140,7 +141,14 @@ public class RenderUtils {
 
     /**
      * Renders a single face with the specified icon, offset, and UV rotation.
-     * Useful for manually rendering overlays or faces with specific textures.
+     */
+    public static void renderFace(Tessellator t, ForgeDirection dir, double x, double y, double z, IIcon icon,
+        float offset, Rotation rotation) {
+        renderFace(t, dir, x, y, z, icon, offset, rotation, Flip.NONE);
+    }
+
+    /**
+     * Renders a single face with the specified icon, offset, UV rotation, and flip.
      *
      * @param t        The Tessellator instance
      * @param dir      The direction (face) to render
@@ -150,13 +158,26 @@ public class RenderUtils {
      * @param icon     The texture icon to use
      * @param offset   Offset from the block surface (to prevent Z-fighting)
      * @param rotation Rotation to apply to UV coordinates
+     * @param flip     Flip to apply to UV coordinates
      */
     public static void renderFace(Tessellator t, ForgeDirection dir, double x, double y, double z, IIcon icon,
-        float offset, Rotation rotation) {
+        float offset, Rotation rotation, Flip flip) {
         float minU = icon.getMinU();
         float maxU = icon.getMaxU();
         float minV = icon.getMinV();
         float maxV = icon.getMaxV();
+
+        // Apply flip before rotation
+        if (flip == Flip.HORIZONTAL || flip == Flip.BOTH) {
+            float tmp = minU;
+            minU = maxU;
+            maxU = tmp;
+        }
+        if (flip == Flip.VERTICAL || flip == Flip.BOTH) {
+            float tmp = minV;
+            minV = maxV;
+            maxV = tmp;
+        }
 
         float[] u = new float[4];
         float[] v = new float[4];

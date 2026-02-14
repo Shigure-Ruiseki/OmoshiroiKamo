@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
@@ -157,23 +158,32 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     t.setColorOpaque_F(shade, shade, shade);
                     t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
-                    // Determine rotation for overlay texture
+                    // Determine rotation and flip for overlay texture
                     Rotation rotation = Rotation.NORMAL;
+                    Flip flip = Flip.NONE;
                     if (te instanceof TEMachineController) {
+                        var extFacing = ((TEMachineController) te).getExtendedFacing();
                         // SOUTH, WEST, UP faces have normal UV chirality
-                        rotation = ((TEMachineController) te).getExtendedFacing()
-                            .getRotation();
-                        // NORTH, EAST, DOWN faces have opposite UV chirality
+                        rotation = extFacing.getRotation();
+                        flip = extFacing.getFlip();
+                        // NORTH, EAST, DOWN faces have opposite UV chirality:
+                        // base texture is horizontally mirrored, so toggle HORIZONTAL.
                         if (dir == ForgeDirection.NORTH || dir == ForgeDirection.EAST || dir == ForgeDirection.DOWN) {
                             rotation = switch (rotation) {
                                 case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
                                 case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
                                 default -> rotation;
                             };
+                            flip = switch (flip) {
+                                case NONE -> Flip.HORIZONTAL;
+                                case HORIZONTAL -> Flip.NONE;
+                                case VERTICAL -> Flip.BOTH;
+                                case BOTH -> Flip.VERTICAL;
+                            };
                         }
                     }
 
-                    RenderUtils.renderFace(t, dir, x, y, z, overlayIcon, EPS, rotation);
+                    RenderUtils.renderFace(t, dir, x, y, z, overlayIcon, EPS, rotation, flip);
                 }
             }
         }
