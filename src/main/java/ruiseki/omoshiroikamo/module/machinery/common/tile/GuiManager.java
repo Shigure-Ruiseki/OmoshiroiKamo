@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.List;
+import java.util.Set;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
@@ -235,7 +236,7 @@ public class GuiManager {
         }
 
         // Fallback: use cached output types
-        java.util.Set<IPortType.Type> cachedTypes = agent.getCachedOutputTypes();
+        Set<IPortType.Type> cachedTypes = agent.getCachedOutputTypes();
         if (!cachedTypes.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (IPortType.Type type : cachedTypes) {
