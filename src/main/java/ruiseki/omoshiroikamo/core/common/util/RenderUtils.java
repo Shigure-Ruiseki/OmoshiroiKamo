@@ -269,4 +269,27 @@ public class RenderUtils {
                 break;
         }
     }
+
+    /**
+     * Renders a single face with chirality correction for NORTH/EAST/DOWN faces.
+     */
+    public static void renderFaceCorrected(Tessellator t, ForgeDirection dir, double x, double y, double z, IIcon icon,
+        float offset, Rotation rotation, Flip flip) {
+
+        // NORTH, EAST, DOWN: toggle H to compensate inherent UV mirror
+        if (dir == ForgeDirection.NORTH || dir == ForgeDirection.EAST || dir == ForgeDirection.DOWN) {
+            flip = Flip.VALUES[flip.ordinal() ^ 1];
+        }
+
+        // A single-axis flip (H or V) reverses visual rotation direction
+        if (flip == Flip.HORIZONTAL || flip == Flip.VERTICAL) {
+            rotation = switch (rotation) {
+                case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
+                case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
+                default -> rotation;
+            };
+        }
+
+        renderFace(t, dir, x, y, z, icon, offset, rotation, flip);
+    }
 }

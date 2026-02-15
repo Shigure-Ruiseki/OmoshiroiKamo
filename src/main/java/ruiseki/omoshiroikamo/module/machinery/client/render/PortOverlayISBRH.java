@@ -78,7 +78,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
                 double eps = 0.001; // Slightly larger than base
                 tess.setNormal(1.0F, 0.0F, 0.0F);
-                RenderUtils.renderFace(
+                RenderUtils.renderFaceCorrected(
                     tess,
                     ForgeDirection.EAST,
                     0,
@@ -87,7 +87,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     overlayIcon,
                     (float) eps,
                     Rotation.NORMAL,
-                    Flip.HORIZONTAL);
+                    Flip.NONE);
 
                 tess.draw();
             }
@@ -147,23 +147,13 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     int neighborBrightness = world.getLightBrightnessForSkyBlocks(ax, ay, az, 0);
                     t.setBrightness(neighborBrightness);
 
-                    // Set color to white+ Shade
-                    float shade;
-                    switch (dir) {
-                        case DOWN:
-                            shade = 0.5f;
-                            break;
-                        case UP:
-                            shade = 1.0f;
-                            break;
-                        case NORTH:
-                        case SOUTH:
-                            shade = 0.8f;
-                            break;
-                        default:
-                            shade = 0.6f;
-                            break;
-                    }
+                    // Vanilla-style face shading
+                    float shade = switch (dir) {
+                        case DOWN -> 0.5f;
+                        case UP -> 1.0f;
+                        case NORTH, SOUTH -> 0.8f;
+                        default -> 0.6f;
+                    };
                     t.setColorOpaque_F(shade, shade, shade);
                     t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
@@ -174,32 +164,9 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                         var extFacing = ((TEMachineController) te).getExtendedFacing();
                         rotation = extFacing.getRotation();
                         flip = extFacing.getFlip();
-
-                        boolean isReversedFace = dir == ForgeDirection.NORTH || dir == ForgeDirection.EAST
-                            || dir == ForgeDirection.DOWN;
-
-                        // NORTH, EAST, DOWN: base UV is horizontally mirrored → toggle H
-                        if (isReversedFace) {
-                            flip = switch (flip) {
-                                case NONE -> Flip.HORIZONTAL;
-                                case HORIZONTAL -> Flip.NONE;
-                                case VERTICAL -> Flip.BOTH;
-                                case BOTH -> Flip.VERTICAL;
-                            };
-                        }
-
-                        // H or V flip reverses CW↔CCW direction.
-                        // (NED's H toggle introduces an effective H flip that handles the mirror.)
-                        if (flip == Flip.HORIZONTAL || flip == Flip.VERTICAL) {
-                            rotation = switch (rotation) {
-                                case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
-                                case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
-                                default -> rotation;
-                            };
-                        }
                     }
 
-                    RenderUtils.renderFace(t, dir, x, y, z, overlayIcon, EPS, rotation, flip);
+                    RenderUtils.renderFaceCorrected(t, dir, x, y, z, overlayIcon, EPS, rotation, flip);
                 }
             }
         }
