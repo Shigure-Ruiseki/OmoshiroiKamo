@@ -8,11 +8,10 @@ import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
-import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
@@ -47,29 +46,11 @@ public class GuiManager {
         // Title
         panel.child(new TileWidget(controller.getLocalizedName()));
 
-        // Blueprint slot
-        panel.child(
-            new ItemSlot()
-                .slot(
-                    new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
-                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                .background(OKGuiTextures.EMPTY_SLOT)
-                .pos(151, 8));
+        // Blueprint slot (Helper function)
+        addBlueprintSlot(panel, 151, 8);
 
-        // Redstone Mode Sync
-        EnumSyncValue<RedstoneMode> redstoneMode = new EnumSyncValue<>(
-            RedstoneMode.class,
-            controller::getRedstoneMode,
-            controller::setRedstoneMode);
-        syncManager.syncValue("redstoneMode", redstoneMode);
-
-        BooleanSyncValue redstonePowered = new BooleanSyncValue(
-            controller::isRedstonePowered,
-            controller::setRedstonePowered);
-        syncManager.syncValue("redstonePowered", redstonePowered);
-
-        // Redstone Control Button
-        panel.child(new RedstoneModeWidget(redstoneMode).pos(151, 30));
+        // Redstone Control Button (Helper function)
+        addRedstoneButton(panel, syncManager, 151, 30);
 
         // Status display
         panel.child(
@@ -94,16 +75,45 @@ public class GuiManager {
         syncManager.syncValue("processProgress", progressSyncer);
         syncManager.syncValue("processMaxProgress", maxProgressSyncer);
 
-        // Progress bar
-        panel.child(
-            new ProgressWidget().value(new DoubleSyncValue(() -> (double) getProgressPercent()))
-                .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
-                .pos(80, 45));
-
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
 
         return panel;
+    }
+
+    private void addBlueprintSlot(ModularPanel panel, int x, int y) {
+        panel.child(
+            new Column().background(OKGuiTextures.VARIABLE_SLOT)
+                .pos(x - 2, y - 2)
+                .size(22, 22));
+
+        panel.child(
+            new ItemSlot()
+                .slot(
+                    new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
+                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
+                .background(OKGuiTextures.EMPTY_SLOT)
+                .pos(x, y));
+    }
+
+    private void addRedstoneButton(ModularPanel panel, PanelSyncManager syncManager, int x, int y) {
+        panel.child(
+            new Column().background(OKGuiTextures.VARIABLE_SLOT)
+                .pos(x - 2, y - 2)
+                .size(22, 22));
+
+        EnumSyncValue<RedstoneMode> redstoneMode = new EnumSyncValue<>(
+            RedstoneMode.class,
+            controller::getRedstoneMode,
+            controller::setRedstoneMode);
+        syncManager.syncValue("redstoneMode", redstoneMode);
+
+        BooleanSyncValue redstonePowered = new BooleanSyncValue(
+            controller::isRedstonePowered,
+            controller::setRedstonePowered);
+        syncManager.syncValue("redstonePowered", redstonePowered);
+
+        panel.child(new RedstoneModeWidget(redstoneMode).pos(x, y));
     }
 
     /**
