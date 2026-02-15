@@ -46,6 +46,12 @@ public class GuiManager {
         // Title
         panel.child(new TileWidget(controller.getLocalizedName()));
 
+        // Structure Name
+        panel.child(
+            IKey.dynamic(this::getStructureNameText)
+                .asWidget()
+                .pos(8, 16));
+
         // Blueprint slot (Helper function)
         addBlueprintSlot(panel, 151, 8);
 
@@ -114,6 +120,17 @@ public class GuiManager {
         syncManager.syncValue("redstonePowered", redstonePowered);
 
         panel.child(new RedstoneModeWidget(redstoneMode).pos(x, y));
+    }
+
+    private String getStructureNameText() {
+        if (controller.isFormed()) {
+            String name = controller.getCustomStructureName();
+            if (name != null && !name.isEmpty()) {
+                // TODO: return LibMisc.LANG.localize("structure." + name + ".name");
+                return name;
+            }
+        }
+        return "";
     }
 
     /**
