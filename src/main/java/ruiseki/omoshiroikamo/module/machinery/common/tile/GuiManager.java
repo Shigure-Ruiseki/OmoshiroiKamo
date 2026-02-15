@@ -116,28 +116,23 @@ public class GuiManager {
      * 5. Idle status (with error reasons)
      */
     private String getStatusText() {
-        // Check for blueprint
         if (!hasBlueprint()) return LibMisc.LANG.localize("gui.status.insert_blueprint");
 
-        // Check structure formation
         if (!controller.isFormed()) {
             if (hasValidationError()) return LibMisc.LANG.localize("gui.status.structure_mismatch");
             return LibMisc.LANG.localize("gui.status.structure_not_formed");
         }
 
-        ProcessAgent agent = controller.getProcessAgent();
 
-        // Check if machine is paused by redstone
         if (!controller.isRedstoneActive()) {
             return LibMisc.LANG.localize(ErrorReason.PAUSED.getUnlocalizedName());
         }
 
-        // Check processing status
+        ProcessAgent agent = controller.getProcessAgent();
         if (agent.isRunning() || agent.isWaitingForOutput()) {
             return getProcessingStatusMessage(agent);
         }
 
-        // Machine is idle - check for specific error reasons
         return getIdleStatusMessage();
     }
 
@@ -151,16 +146,13 @@ public class GuiManager {
         if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
 
         if (agent.isRunning() && !agent.isWaitingForOutput()) {
-            if (agent.getMaxProgress() <= 0) {
-                return LibMisc.LANG.localize("gui.status.processing", 0);
-            }
+            if (agent.getMaxProgress() <= 0) return LibMisc.LANG.localize("gui.status.processing", 0);
             int percent = (int) (agent.getProgressPercent() * 100);
             return LibMisc.LANG.localize("gui.status.processing", percent);
         }
 
         if (agent.isWaitingForOutput()) {
-            String blocked = diagnoseBlockedOutputs(controller.getOutputPorts());
-            return LibMisc.LANG.localize("gui.status.output_full", blocked);
+            return LibMisc.LANG.localize("gui.status.output_full", diagnoseBlockedOutputs(controller.getOutputPorts()));
         }
 
         return LibMisc.LANG.localize("gui.status.idle");
@@ -170,7 +162,6 @@ public class GuiManager {
      * Returns the status message when machine is idle.
      */
     private String getIdleStatusMessage() {
-        // Check if no recipes are registered for this group
         if (RecipeLoader.getInstance()
             .getRecipes(controller.getRecipeGroup())
             .isEmpty()) {
@@ -180,9 +171,10 @@ public class GuiManager {
         ErrorReason lastError = controller.getLastProcessErrorReason();
 
         // Check specific error reasons
-        if (lastError == ErrorReason.NO_MATCHING_RECIPE) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
-        if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
-        if (lastError == ErrorReason.INPUT_MISSING) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        if (lastError == ErrorReason.NO_MATCHING_RECIPE || lastError == ErrorReason.NO_ENERGY
+            || lastError == ErrorReason.INPUT_MISSING) {
+            return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        }
 
         // Default idle state
         return LibMisc.LANG.localize("gui.status.idle");
