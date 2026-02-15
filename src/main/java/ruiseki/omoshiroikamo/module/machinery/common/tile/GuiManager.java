@@ -3,10 +3,16 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.util.EnumChatFormatting;
+
+import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.GuiDraw;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.screen.viewport.GuiContext;
+import com.cleanroommc.modularui.theme.WidgetTheme;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
@@ -46,29 +52,32 @@ public class GuiManager {
         // Title
         panel.child(new TileWidget(controller.getLocalizedName()));
 
-        // Structure Name
-        panel.child(
-            IKey.dynamic(this::getStructureNameText)
-                .asWidget()
-                .pos(8, 16));
+        // Info Display (Black Rectangle)
+        panel.child(new Column().background(new IDrawable() {
+
+            @Override
+            public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
+                GuiDraw.drawRect(x, y, width, height, 0xFF000000);
+            }
+        })
+            .pos(7, 14)
+            .size(138, 60)
+            .padding(4)
+            .child(
+                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStructureNameText())
+                    .asWidget())
+            .child(
+                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStatusText())
+                    .asWidget())
+            .child(
+                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getValidationErrorText())
+                    .asWidget()));
 
         // Blueprint slot (Helper function)
         addBlueprintSlot(panel, 151, 8);
 
         // Redstone Control Button (Helper function)
         addRedstoneButton(panel, syncManager, 151, 30);
-
-        // Status display
-        panel.child(
-            IKey.dynamic(this::getStatusText)
-                .asWidget()
-                .pos(8, 25));
-
-        // Error display (validation)
-        panel.child(
-            IKey.dynamic(this::getValidationErrorText)
-                .asWidget()
-                .pos(8, 35));
 
         // Sync progress values
         IntSyncValue progressSyncer = new IntSyncValue(
