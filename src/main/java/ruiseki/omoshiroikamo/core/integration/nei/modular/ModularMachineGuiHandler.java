@@ -3,11 +3,8 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular;
 import static blockrenderer6343.client.utils.BRUtil.FAKE_PLAYER;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +15,6 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
 import blockrenderer6343.api.utils.CreativeItemSource;
-import blockrenderer6343.client.renderer.WorldSceneRenderer;
 import blockrenderer6343.client.utils.ConstructableData;
 import blockrenderer6343.integration.nei.GuiMultiblockHandler;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
@@ -238,51 +234,52 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
     }
 
     // ==========================================
-    // TODO: Delete this section
-    private final RenderBlocks renderBlocks = new RenderBlocks();
+    // Blockrenderer6343 debugging section
 
-    @Override
-    public void onRendererRender(WorldSceneRenderer renderer) {
-        super.onRendererRender(renderer);
-        renderAxisBlocks(renderer);
-    }
+    // private final RenderBlocks renderBlocks = new RenderBlocks();
 
-    private void renderAxisBlocks(WorldSceneRenderer renderer) {
-        renderBlocks.blockAccess = renderer.world;
-        renderBlocks.setRenderBounds(0, 0, 0, 1, 1, 1);
-        renderBlocks.renderAllFaces = true;
+    // @Override
+    // public void onRendererRender(WorldSceneRenderer renderer) {
+    // super.onRendererRender(renderer);
+    // renderAxisBlocks(renderer);
+    // }
 
-        // X Axis (Red) - 3 blocks
-        IIcon redIcon = Blocks.stained_glass.getIcon(0, 14);
-        for (int i = 1; i <= 3; i++) {
-            renderBlocks.renderBlockUsingTexture(
-                Blocks.stained_glass,
-                MB_PLACE_POS.x + i,
-                MB_PLACE_POS.y,
-                MB_PLACE_POS.z,
-                redIcon);
-        }
+    // private void renderAxisBlocks(WorldSceneRenderer renderer) {
+    // renderBlocks.blockAccess = renderer.world;
+    // renderBlocks.setRenderBounds(0, 0, 0, 1, 1, 1);
+    // renderBlocks.renderAllFaces = true;
 
-        // Y Axis (Green/Lime) - 3 blocks (Lime = 5)
-        IIcon greenIcon = Blocks.stained_glass.getIcon(0, 5);
-        for (int i = 1; i <= 3; i++) {
-            renderBlocks.renderBlockUsingTexture(
-                Blocks.stained_glass,
-                MB_PLACE_POS.x,
-                MB_PLACE_POS.y + i,
-                MB_PLACE_POS.z,
-                greenIcon);
-        }
+    // // X Axis (Red) - 3 blocks
+    // IIcon redIcon = Blocks.stained_glass.getIcon(0, 14);
+    // for (int i = 1; i <= 3; i++) {
+    // renderBlocks.renderBlockUsingTexture(
+    // Blocks.stained_glass,
+    // MB_PLACE_POS.x + i,
+    // MB_PLACE_POS.y,
+    // MB_PLACE_POS.z,
+    // redIcon);
+    // }
 
-        // Z Axis (Blue) - 3 blocks (Blue = 11)
-        IIcon blueIcon = Blocks.stained_glass.getIcon(0, 11);
-        for (int i = 1; i <= 3; i++) {
-            renderBlocks.renderBlockUsingTexture(
-                Blocks.stained_glass,
-                MB_PLACE_POS.x,
-                MB_PLACE_POS.y,
-                MB_PLACE_POS.z + i,
-                blueIcon);
-        }
-    }
+    // // Y Axis (Green/Lime) - 3 blocks (Lime = 5)
+    // IIcon greenIcon = Blocks.stained_glass.getIcon(0, 5);
+    // for (int i = 1; i <= 3; i++) {
+    // renderBlocks.renderBlockUsingTexture(
+    // Blocks.stained_glass,
+    // MB_PLACE_POS.x,
+    // MB_PLACE_POS.y + i,
+    // MB_PLACE_POS.z,
+    // greenIcon);
+    // }
+
+    // // Z Axis (Blue) - 3 blocks (Blue = 11)
+    // IIcon blueIcon = Blocks.stained_glass.getIcon(0, 11);
+    // for (int i = 1; i <= 3; i++) {
+    // renderBlocks.renderBlockUsingTexture(
+    // Blocks.stained_glass,
+    // MB_PLACE_POS.x,
+    // MB_PLACE_POS.y,
+    // MB_PLACE_POS.z + i,
+    // blueIcon);
+    // }
+    // }
 }
