@@ -7,6 +7,7 @@ import java.util.List;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import ruiseki.omoshiroikamo.module.ids.common.block.cable.CableUtils;
 
 public class IDsNetworkTickHandler {
 
@@ -52,6 +53,8 @@ public class IDsNetworkTickHandler {
     }
 
     public void tickEnd(TickEvent.ServerTickEvent event) {
+        CableUtils.processRebuildQueue();
+
         for (TickListener h : listeners) {
             h.tickEnd(event);
         }

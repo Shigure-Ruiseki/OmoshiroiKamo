@@ -10,10 +10,12 @@ import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
 public abstract class BackpackGuiHolder {
@@ -61,6 +63,11 @@ public abstract class BackpackGuiHolder {
         }
 
         @Override
+        public ModularScreen createScreen(SidedPosGuiData data, ModularPanel mainPanel) {
+            return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+        }
+
+        @Override
         public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
             TileEntity tileEntity = data.getTileEntity();
             BackpackPanel panel = createPanel(syncManager, settings, data.getPlayer(), tileEntity, null, null);
@@ -74,6 +81,11 @@ public abstract class BackpackGuiHolder {
 
         public ItemStackGuiHolder(BackpackHandler handler) {
             super(handler);
+        }
+
+        @Override
+        public ModularScreen createScreen(PlayerInventoryGuiData data, ModularPanel mainPanel) {
+            return new ModularScreen(LibMisc.MOD_ID, mainPanel);
         }
 
         @Override

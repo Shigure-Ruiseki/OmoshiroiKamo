@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.api.ids.ICablePartItem;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
-import ruiseki.omoshiroikamo.module.ids.common.cable.TECable;
+import ruiseki.omoshiroikamo.module.ids.common.block.cable.TECable;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 
 public abstract class AbstractPartItem extends ItemOK implements ICablePartItem {

@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable;
 
 import com.cleanroommc.modularui.widget.ParentWidget;
 
-import ruiseki.omoshiroikamo.module.ids.common.programmer.ProgrammerPanel;
+import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerPanel;
 
 public abstract class BaseVariableWidget extends ParentWidget<BaseVariableWidget> {
 

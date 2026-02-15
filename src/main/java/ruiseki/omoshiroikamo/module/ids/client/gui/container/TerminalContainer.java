@@ -8,8 +8,8 @@ import com.cleanroommc.modularui.api.inventory.ClickType;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.StorageTerminalPanel;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminalPanel;
 
 public class TerminalContainer extends ModularContainer {
 

@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
@@ -22,6 +23,7 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerDataModel;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPolymerClay;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
@@ -233,6 +235,11 @@ public class TESimulationChamber extends AbstractMachineTE
         float hitZ) {
         openGui(player);
         return true;
+    }
+
+    @Override
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
     }
 
     @Override
