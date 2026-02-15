@@ -182,48 +182,15 @@ public class RenderUtils {
         float[] u = new float[4];
         float[] v = new float[4];
 
-        // Then rotate
-        switch (rotation) {
-            case CLOCKWISE:
-                u[0] = minU;
-                v[0] = maxV;
-                u[1] = minU;
-                v[1] = minV;
-                u[2] = maxU;
-                v[2] = minV;
-                u[3] = maxU;
-                v[3] = maxV;
-                break;
-            case UPSIDE_DOWN:
-                u[0] = maxU;
-                v[0] = maxV;
-                u[1] = minU;
-                v[1] = maxV;
-                u[2] = minU;
-                v[2] = minV;
-                u[3] = maxU;
-                v[3] = minV;
-                break;
-            case COUNTER_CLOCKWISE:
-                u[0] = maxU;
-                v[0] = minV;
-                u[1] = maxU;
-                v[1] = maxV;
-                u[2] = minU;
-                v[2] = maxV;
-                u[3] = minU;
-                v[3] = minV;
-                break;
-            default:
-                u[0] = minU;
-                v[0] = minV;
-                u[1] = maxU;
-                v[1] = minV;
-                u[2] = maxU;
-                v[2] = maxV;
-                u[3] = minU;
-                v[3] = maxV;
-                break;
+        // UV corners: TL(0), TR(1), BR(2), BL(3)
+        // Rotation cyclically shifts which corner maps to which vertex
+        float[] cu = { minU, maxU, maxU, minU };
+        float[] cv = { minV, minV, maxV, maxV };
+        int r = rotation.ordinal();
+        for (int i = 0; i < 4; i++) {
+            int ci = (i - r) & 3;
+            u[i] = cu[ci];
+            v[i] = cv[ci];
         }
 
         double eps = offset;
