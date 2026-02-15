@@ -45,7 +45,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * Corresponds to the 'Q' symbol in structure definitions.
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
- * TODO: Do not consume blueprint when auto-construct
+ * TODO: Improve holo indicator
  */
 public class TEMachineController extends AbstractMBModifierTE
     implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {
@@ -122,6 +122,7 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public int getTier() {
+        // TODO: recognize tier by block type, structure change, or controller
         return 1;
     }
 
