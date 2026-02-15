@@ -281,13 +281,11 @@ public class RenderUtils {
             flip = Flip.VALUES[flip.ordinal() ^ 1];
         }
 
-        // A single-axis flip (H or V) reverses visual rotation direction
+        // A single-axis flip (H or V) reverses CW↔CCW (ordinal 1↔3 via XOR 2)
         if (flip == Flip.HORIZONTAL || flip == Flip.VERTICAL) {
-            rotation = switch (rotation) {
-                case CLOCKWISE -> Rotation.COUNTER_CLOCKWISE;
-                case COUNTER_CLOCKWISE -> Rotation.CLOCKWISE;
-                default -> rotation;
-            };
+            if (rotation == Rotation.CLOCKWISE || rotation == Rotation.COUNTER_CLOCKWISE) {
+                rotation = Rotation.VALUES[rotation.ordinal() ^ 2];
+            }
         }
 
         renderFace(t, dir, x, y, z, icon, offset, rotation, flip);
