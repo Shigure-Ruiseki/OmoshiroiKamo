@@ -123,7 +123,6 @@ public class GuiManager {
             return LibMisc.LANG.localize("gui.status.structure_not_formed");
         }
 
-
         if (!controller.isRedstoneActive()) {
             return LibMisc.LANG.localize(ErrorReason.PAUSED.getUnlocalizedName());
         }
