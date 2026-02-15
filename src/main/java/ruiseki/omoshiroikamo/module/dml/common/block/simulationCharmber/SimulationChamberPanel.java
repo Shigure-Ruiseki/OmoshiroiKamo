@@ -6,8 +6,6 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.EMPTY_SLOT;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.drawable.AdaptableUITexture;
@@ -84,7 +82,7 @@ public class SimulationChamberPanel extends ModularPanel {
     private static final int REDSTONE_DEACTIVATED_LINE_LENGTH = 28;
     private static final int BLINKING_CURSOR_SPEED = 16;
     private static final int ROW_SPACING = 12;
-    private FloatSyncValue processSyncer;
+    private final FloatSyncValue processSyncer;
 
     private final StringAnimator<AnimatedString> progressAnimator = new StringAnimator<>(); // Used to display
                                                                                             // simulation progress
@@ -113,8 +111,6 @@ public class SimulationChamberPanel extends ModularPanel {
     protected float lastRedrawTime = 0; // Time when GUI was last drawn (= ticks + partial tick)
     protected float deltaTime = 0; // Time since last redraw (partial ticks)
 
-    protected final FontRenderer fontRenderer;
-
     public SimulationChamberPanel(TESimulationChamber tileEntity, PosGuiData data, PanelSyncManager syncManager,
         UISettings settings) {
         super("simulation_chamber_gui");
@@ -125,7 +121,6 @@ public class SimulationChamberPanel extends ModularPanel {
         this.settings = settings;
 
         dataModel = tileEntity.getDataModel();
-        this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
         prepareStringAnimators();
 
         size(216, 234);
@@ -342,7 +337,7 @@ public class SimulationChamberPanel extends ModularPanel {
         updatePanelString();
     }
 
-    private void drawInfoboxText(float advanceAmount, int left, int top) {
+    private void drawInfoboxText(ModularGuiContext context, float advanceAmount, int left, int top) {
         List<String> strings = new ArrayList<>();
 
         if (dataModelError == DataModelError.NONE) {
@@ -359,12 +354,13 @@ public class SimulationChamberPanel extends ModularPanel {
 
         int y = top;
         for (String s : strings) {
-            fontRenderer.drawString(s, left, y, Color.WHITE.main);
+            context.getFontRenderer()
+                .drawString(s, left, y, Color.WHITE.main);
             y += ROW_SPACING;
         }
     }
 
-    private void drawConsoleText(float advanceAmount, int left, int top) {
+    private void drawConsoleText(ModularGuiContext context, float advanceAmount, int left, int top) {
         List<String> strings;
 
         if (dataModelError != DataModelError.NONE) {
@@ -396,7 +392,8 @@ public class SimulationChamberPanel extends ModularPanel {
 
         int y = top;
         for (String s : strings) {
-            fontRenderer.drawString(s, left, y, Color.WHITE.main);
+            context.getFontRenderer()
+                .drawString(s, left, y, Color.WHITE.main);
             y += ROW_SPACING;
         }
     }
@@ -444,8 +441,8 @@ public class SimulationChamberPanel extends ModularPanel {
         DATA_MODEL_SLOT.draw(-20, 0, 18, 18);
         getDeltaTime(context.getPartialTicks());
 
-        drawConsoleText(deltaTime, 22, 52);
-        drawInfoboxText(deltaTime, 9, 9);
+        drawConsoleText(context, deltaTime, 22, 52);
+        drawInfoboxText(context, deltaTime, 9, 9);
     }
 
     public enum AnimatedString {

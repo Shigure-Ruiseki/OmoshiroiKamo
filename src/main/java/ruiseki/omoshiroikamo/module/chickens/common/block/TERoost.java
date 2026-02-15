@@ -9,6 +9,7 @@ import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
@@ -95,7 +96,7 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
                         .topRel(0.25f)
                         .alignX(Alignment.CENTER))
                 .child(
-                    new ProgressWidget().progress(this::getProgress)
+                    new ProgressWidget().value(new DoubleSyncValue(this::getProgress))
                         .tooltipDynamic(richTooltip -> {
                             richTooltip.add(WailaUtils.getProgress(this));
                             richTooltip.markDirty();
