@@ -1169,36 +1169,25 @@ gui.machinery.use_ic2=IC2を使用
 
 
 # Status
-gui.craftingState.idle=待機中
-gui.craftingState.running=稼働中
-gui.craftingState.error=エラー
-gui.craftingState.paused=一時停止中
-gui.craftingState.no_input=材料不足
-gui.craftingState.no_matching_recipe=レシピ不一致
-gui.craftingState.missing_blueprint=ブループリント未挿入
-
-
-# Status Messages
 gui.status.insert_blueprint=ブループリントを挿入してください
 gui.status.structure_mismatch=構造が一致しません
 gui.status.structure_not_formed=構造が形成されていません
 gui.status.processing=処理中: %d%%
 gui.status.output_full=出力満杯: %s
 gui.status.idle=待機中
-
-
-# Errors
-gui.error.requirements_not_met=構造体の要件を満たしていません
-gui.error.block_mismatch=ブロック不一致または構造体が不完全です
-gui.error.invalid_definition=無効な構造定義です
-gui.error.missing_definition=構造定義が見つかりません
-gui.error.incomplete=構造体が不完全です
-gui.error.paused=レッドストーンで一時停止
-gui.error.no_recipes=レシピがありません
-gui.error.no_matching_recipe=一致しているレシピが見つかりません
-gui.error.no_energy=エネルギーが不足しています
-gui.error.input_missing=入力が不足しています
-gui.error.unknown=不明なエラー
+gui.status.requirements_not_met=構造体の要件を満たしていません
+gui.status.block_mismatch=ブロック不一致または構造体が不完全です
+gui.status.invalid_definition=無効な構造定義です
+gui.status.missing_definition=構造定義が見つかりません
+gui.status.incomplete=構造体が不完全です
+gui.status.paused=レッドストーンで一時停止
+gui.status.no_recipes=レシピがありません
+gui.status.no_matching_recipe=一致しているレシピが見つかりません
+gui.status.no_energy=エネルギーが不足しています
+gui.status.input_missing=入力が不足しています
+gui.status.unknown=不明なエラー
+gui.status.missing_blueprint=ブループリント未挿入
+gui.status.no_input=材料不足
 
 
 # Machine Blueprint

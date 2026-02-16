@@ -38,7 +38,7 @@ public enum ErrorReason {
     }
 
     public String getUnlocalizedName() {
-        return "gui.error." + id;
+        return "gui.status." + id;
     }
 
     public ErrorReason withDetail(String detail) {

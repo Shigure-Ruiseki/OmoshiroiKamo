@@ -1169,36 +1169,25 @@ gui.machinery.use_ic2=Use IC2
 
 
 # Status
-gui.craftingState.idle=Idle
-gui.craftingState.running=Processing
-gui.craftingState.error=Error
-gui.craftingState.paused=Paused
-gui.craftingState.no_input=No Input
-gui.craftingState.no_matching_recipe=No Recipe
-gui.craftingState.missing_blueprint=No Blueprint
-
-
-# Status Messages
 gui.status.insert_blueprint=Insert Blueprint
-gui.status.structure_mismatch=Structure Mismatch
-gui.status.structure_not_formed=Structure Not Formed
-gui.status.processing=Processing %d%%
+gui.status.structure_mismatch=Structure mismatch
+gui.status.structure_not_formed=Structure not formed
+gui.status.processing=Processing: %d%%
 gui.status.output_full=Output Full: %s
 gui.status.idle=Idle
-
-
-# Errors
-gui.error.requirements_not_met=Structure requirements not met
-gui.error.block_mismatch=Block mismatch or incomplete structure
-gui.error.invalid_definition=Invalid structure definition
-gui.error.missing_definition=Missing structure definition
-gui.error.incomplete=Structure incomplete or mismatch
-gui.error.paused=Paused by Redstone
-gui.error.no_recipes=No Recipes
-gui.error.no_matching_recipe=No Matching Recipe
-gui.error.no_energy=No Energy
-gui.error.input_missing=Input Missing
-gui.error.unknown=Unknown Error
+gui.status.requirements_not_met=Requirement not met
+gui.status.block_mismatch=Block mismatch or incomplete structure
+gui.status.invalid_definition=Invalid structure definition
+gui.status.missing_definition=Structure definition missing
+gui.status.incomplete=Structure incomplete
+gui.status.paused=Paused by Redstone
+gui.status.no_recipes=No recipes registered
+gui.status.no_matching_recipe=No matching recipe
+gui.status.no_energy=Insufficient energy
+gui.status.input_missing=Input missing
+gui.status.unknown=Unknown error
+gui.status.missing_blueprint=No Blueprint
+gui.status.no_input=No Input
 
 
 # Machine Blueprint
