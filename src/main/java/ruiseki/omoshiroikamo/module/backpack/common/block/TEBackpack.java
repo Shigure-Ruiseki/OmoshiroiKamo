@@ -54,6 +54,9 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, int side) {
+        if (slot < 0 || slot >= getSizeInventory()) {
+            return false;
+        }
         if (!handler.canInsert(stack)) {
             return false;
         }
@@ -66,6 +69,9 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public boolean canExtractItem(int slot, ItemStack stack, int side) {
+        if (slot < 0 || slot >= getSizeInventory()) {
+            return false;
+        }
         ItemStack existing = handler.getStackInSlot(slot);
         if (existing == null || existing.stackSize < stack.stackSize) {
             return false;
@@ -83,11 +89,17 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public ItemStack getStackInSlot(int slot) {
+        if (slot < 0 || slot >= getSizeInventory()) {
+            return null;
+        }
         return handler.getStackInSlot(slot);
     }
 
     @Override
     public ItemStack decrStackSize(int slot, int amount) {
+        if (slot < 0 || slot >= getSizeInventory()) {
+            return null;
+        }
         ItemStack fromStack = handler.getStackInSlot(slot);
         if (fromStack == null) {
             return null;
@@ -108,6 +120,10 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
+        if (slot < 0 || slot >= getSizeInventory()) {
+            return;
+        }
+
         if (stack == null) {
             handler.setStackInSlot(slot, null);
             return;
