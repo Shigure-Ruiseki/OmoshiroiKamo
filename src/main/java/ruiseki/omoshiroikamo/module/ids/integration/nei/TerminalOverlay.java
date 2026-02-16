@@ -19,7 +19,7 @@ import ruiseki.omoshiroikamo.api.item.ItemStackKey;
 import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalContainer;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemIndexClient;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndexClient;
 
 public class TerminalOverlay implements IOverlayHandler {
 

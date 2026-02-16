@@ -11,7 +11,7 @@ import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.BaseVariableWidget;
-import ruiseki.omoshiroikamo.module.ids.common.programmer.ProgrammerPanel;
+import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerPanel;
 
 public class NorVariable extends BaseVariableWidget {
 

@@ -9,6 +9,7 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.DoubleValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
@@ -26,6 +27,7 @@ import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
@@ -38,8 +40,10 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
 public abstract class AbstractGasPortTE extends AbstractTE
     implements IModularPort, IGasHandler, ITubeConnection, IGuiHolder<PosGuiData> {
 
+    @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
 
+    @NBTPersist
     protected final SmartGasTank tank;
     protected boolean tankDirty = false;
 
@@ -95,26 +99,8 @@ public abstract class AbstractGasPortTE extends AbstractTE
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        int[] sideData = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sideData[i] = sides[i].ordinal();
-        }
-        root.setIntArray("sideIO", sideData);
-        tank.writeCommon(root);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        if (root.hasKey("sideIO")) {
-            int[] sideData = root.getIntArray("sideIO");
-            for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = EnumIO.values()[sideData[i]];
-            }
-        }
-        tank.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -213,6 +199,11 @@ public abstract class AbstractGasPortTE extends AbstractTE
         float hitZ) {
         openGui(player);
         return true;
+    }
+
+    @Override
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
     }
 
     @Override

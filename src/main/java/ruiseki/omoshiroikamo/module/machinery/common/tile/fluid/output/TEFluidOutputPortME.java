@@ -237,8 +237,8 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     // ========== NBT Handling ==========
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
 
         // Sync ME status to client (for Waila) - use cached values to avoid AE2 calls
         root.setBoolean("meActive", proxyReady);
@@ -265,8 +265,8 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
 
         // Read synced ME status (for Waila on client)
         clientIsActive = root.getBoolean("meActive");

@@ -5,8 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import crazypants.enderio.conduit.gas.GasUtil;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 
-public class SmartGasTank extends GasTank implements IGasTank {
+public class SmartGasTank extends GasTank implements IGasTank, INBTSerializable {
 
     private int capacity;
 
@@ -150,4 +151,16 @@ public class SmartGasTank extends GasTank implements IGasTank {
     }
 
     protected void onContentsChanged() {}
+
+    @Override
+    public NBTTagCompound toNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeCommon(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        readCommon(tag);
+    }
 }

@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import thaumcraft.api.aspects.Aspect;
@@ -24,8 +25,11 @@ import thaumcraft.api.aspects.IAspectContainer;
  */
 public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer {
 
+    @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
+
     protected AspectList aspects = new AspectList();
+    @NBTPersist
     protected int maxCapacityPerAspect;
 
     public AbstractEssentiaPortTE(int maxCapacityPerAspect) {
@@ -169,15 +173,8 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        root.setInteger("maxCapacity", maxCapacityPerAspect);
-
-        int[] sideData = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sideData[i] = sides[i].ordinal();
-        }
-        root.setIntArray("sideIO", sideData);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
 
         NBTTagList aspectList = new NBTTagList();
         for (Aspect aspect : aspects.getAspects()) {
@@ -192,16 +189,8 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        maxCapacityPerAspect = root.getInteger("maxCapacity");
-
-        if (root.hasKey("sideIO")) {
-            int[] sideData = root.getIntArray("sideIO");
-            for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = EnumIO.values()[sideData[i]];
-            }
-        }
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
 
         aspects = new AspectList();
         NBTTagList aspectList = root.getTagList("aspects", 10);

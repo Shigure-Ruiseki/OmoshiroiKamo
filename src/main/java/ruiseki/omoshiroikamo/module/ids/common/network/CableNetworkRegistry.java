@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.module.ids.common.network.crafting.CraftingNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.crafting.ICraftingNet;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.CraftingNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.ICraftingNet;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.EnergyNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyNet;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.IItemNet;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.ids.common.network.logic.LogicNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.EnergyNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.IEnergyNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.IItemNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.ItemNetwork;
 
 public final class CableNetworkRegistry {
 

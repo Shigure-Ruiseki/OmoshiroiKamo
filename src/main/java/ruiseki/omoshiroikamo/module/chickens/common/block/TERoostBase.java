@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.api.block.SlotDefinition;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
@@ -21,7 +22,9 @@ import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
 
+    @NBTPersist
     protected int timeUntilNextDrop = 0;
+    @NBTPersist
     protected int timeElapsed = 0;
     protected int progress = 0;
 
@@ -354,17 +357,8 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
      */
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        root.setInteger("timeUntilNextDrop", timeUntilNextDrop);
-        root.setInteger("timeElapsed", timeElapsed);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        timeUntilNextDrop = root.getInteger("timeUntilNextDrop");
-        timeElapsed = root.getInteger("timeElapsed");
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         needsCacheRefresh();
     }
 

@@ -17,6 +17,7 @@ import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -27,22 +28,30 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
 
     public static final int amount = FluidContainerRegistry.BUCKET_VOLUME * 10;
 
+    @NBTPersist
     public final SmartTank tank = new SmartTank(amount);
     protected int lastUpdateLevel = -1;
 
     private boolean tankDirty = false;
     private Fluid lastFluid = null;
 
+    @NBTPersist
     private int progress;
     @Getter
+    @NBTPersist
     private int maxProgress;
 
     @Getter
+    @NBTPersist
     private int cowType;
+    @NBTPersist
     private int cowGain;
+    @NBTPersist
     private int cowGrowth;
+    @NBTPersist
     private boolean cowIsChild;
     @Getter
+    @NBTPersist
     private NBTTagCompound cowNBT;
 
     private final Random rand = new Random();
@@ -133,6 +142,8 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         if (worldObj.isRemote || !hasCow() || cowIsChild) {
             return false;
         }
+
+        cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
 
         if (maxProgress <= 0) {
             resetMaxProgress();
@@ -245,42 +256,5 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         return new FluidTankInfo[] { tank.getInfo() };
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-
-        tank.writeCommon("tank", root);
-
-        root.setInteger("progress", progress);
-        root.setInteger("maxProgress", maxProgress);
-        root.setInteger("cowType", cowType);
-        root.setInteger("cowGain", cowGain);
-        root.setInteger("cowGrowth", cowGrowth);
-        root.setBoolean("cowIsChild", cowIsChild);
-
-        if (cowNBT != null) {
-            root.setTag("cowNBT", cowNBT);
-        }
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-
-        tank.readCommon("tank", root);
-
-        progress = root.getInteger("progress");
-        maxProgress = root.getInteger("maxProgress");
-        cowType = root.getInteger("cowType");
-        cowGain = root.getInteger("cowGain");
-        cowGrowth = root.getInteger("cowGrowth");
-        cowIsChild = root.getBoolean("cowIsChild");
-
-        if (root.hasKey("cowNBT")) {
-            cowNBT = root.getCompoundTag("cowNBT");
-            cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
-        }
     }
 }

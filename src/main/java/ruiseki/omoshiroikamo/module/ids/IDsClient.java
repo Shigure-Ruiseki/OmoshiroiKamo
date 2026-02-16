@@ -14,8 +14,8 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.module.ids.client.render.CableISBRH;
 import ruiseki.omoshiroikamo.module.ids.client.render.ItemPartRenderer;
 import ruiseki.omoshiroikamo.module.ids.client.render.PartTESR;
-import ruiseki.omoshiroikamo.module.ids.common.cable.BlockCable;
-import ruiseki.omoshiroikamo.module.ids.common.cable.TECable;
+import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
+import ruiseki.omoshiroikamo.module.ids.common.block.cable.TECable;
 import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
 
 public class IDsClient implements IModuleClient {

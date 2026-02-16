@@ -13,6 +13,7 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
@@ -20,6 +21,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemDeepLearner extends ItemOK implements IGuiHolder<PlayerInventoryGuiData> {
 
@@ -27,6 +29,11 @@ public class ItemDeepLearner extends ItemOK implements IGuiHolder<PlayerInventor
         super(ModObject.itemDeepLearner.unlocalisedName);
         setMaxStackSize(1);
         setTextureName("dml/deep_learner");
+    }
+
+    @Override
+    public ModularScreen createScreen(PlayerInventoryGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
     }
 
     @Override

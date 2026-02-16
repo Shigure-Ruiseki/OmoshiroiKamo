@@ -5,13 +5,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
@@ -19,9 +19,11 @@ import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerDataModel;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPolymerClay;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemDataModel;
@@ -35,6 +37,7 @@ public class TESimulationChamber extends AbstractMachineTE
     private static final int SLOT_LIVING = 2;
     private static final int SLOT_PRISTINE = 3;
 
+    @NBTPersist
     public final ItemHandlerDataModel inputDataModel = new ItemHandlerDataModel() {
 
         @Override
@@ -42,10 +45,14 @@ public class TESimulationChamber extends AbstractMachineTE
             onDataModelChanged();
         }
     };
+    @NBTPersist
     public final ItemHandlerPolymerClay inputPolymer = new ItemHandlerPolymerClay();
+    @NBTPersist
     public final ItemStackHandlerBase outputLiving = new ItemStackHandlerBase();
+    @NBTPersist
     public final ItemStackHandlerBase outputPristine = new ItemStackHandlerBase();
 
+    @NBTPersist
     private boolean pristineSuccess = false;
 
     public TESimulationChamber() {
@@ -200,39 +207,15 @@ public class TESimulationChamber extends AbstractMachineTE
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-
-        NBTTagCompound inventory = new NBTTagCompound();
-        inventory.setTag("inputDataModel", inputDataModel.serializeNBT());
-        inventory.setTag("inputPolymer", inputPolymer.serializeNBT());
-        inventory.setTag("outputLiving", outputLiving.serializeNBT());
-        inventory.setTag("outputPristine", outputPristine.serializeNBT());
-        root.setTag(INVENTORY_TAG, inventory);
-
-        root.getCompoundTag(CRAFTING_TAG)
-            .setBoolean("pristineSuccess", pristineSuccess);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-
-        NBTTagCompound inventory = root.getCompoundTag(INVENTORY_TAG);
-        inputDataModel.deserializeNBT(inventory.getCompoundTag("inputDataModel"));
-        inputPolymer.deserializeNBT(inventory.getCompoundTag("inputPolymer"));
-        outputLiving.deserializeNBT(inventory.getCompoundTag("outputLiving"));
-        outputPristine.deserializeNBT(inventory.getCompoundTag("outputPristine"));
-
-        pristineSuccess = root.getCompoundTag(CRAFTING_TAG)
-            .getBoolean("pristineSuccess");
-    }
-
-    @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
         openGui(player);
         return true;
+    }
+
+    @Override
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
     }
 
     @Override

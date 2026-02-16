@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.common.util.NetworkUtils;
 
@@ -28,9 +29,10 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
         nbtRoot = new NBTTagCompound();
         NBTTagCompound tanksTag = new NBTTagCompound();
 
-        for (int i = 0; i < tile.fluidTanks.length; i++) {
+        for (int i = 0; i < tile.fluidTanks.size(); i++) {
             NBTTagCompound tankTag = new NBTTagCompound();
-            tile.fluidTanks[i].writeToNBT(tankTag);
+            tile.fluidTanks.get(i)
+                .writeToNBT(tankTag);
             tanksTag.setTag("Tank" + i, tankTag);
         }
         nbtRoot.setTag("FluidTanks", tanksTag);
@@ -66,12 +68,14 @@ public class PacketFluidTanks implements IMessage, IMessageHandler<PacketFluidTa
         }
 
         NBTTagCompound tanksTag = message.nbtRoot.getCompoundTag("FluidTanks");
-        for (int i = 0; i < storage.fluidTanks.length; i++) {
+        for (int i = 0; i < storage.fluidTanks.size(); i++) {
             String key = "Tank" + i;
+            SmartTank tank = storage.fluidTanks.get(i);
+
             if (tanksTag.hasKey(key)) {
-                storage.fluidTanks[i].readFromNBT(tanksTag.getCompoundTag(key));
+                tank.readFromNBT(tanksTag.getCompoundTag(key));
             } else {
-                storage.fluidTanks[i].setFluid(null);
+                tank.setFluid(null);
             }
         }
 

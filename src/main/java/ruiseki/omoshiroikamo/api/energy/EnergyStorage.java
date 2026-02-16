@@ -6,6 +6,7 @@ import cofh.api.energy.IEnergyStorage;
 import cpw.mods.fml.common.Optional;
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 
 /**
  * Reference implementation of {@link cofh.api.energy.IEnergyStorage}. Use/extend this or implement your own.
@@ -14,7 +15,7 @@ import lombok.Setter;
  */
 
 @Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyStorage", striprefs = true)
-public class EnergyStorage implements IEnergyStorage {
+public class EnergyStorage implements IEnergyStorage, INBTSerializable {
 
     protected int energy;
     protected int capacity;
@@ -144,6 +145,18 @@ public class EnergyStorage implements IEnergyStorage {
             this.energy = newEnergy;
             onEnergyChanged();
         }
+    }
+
+    @Override
+    public NBTTagCompound toNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        readFromNBT(tag);
     }
 
 }

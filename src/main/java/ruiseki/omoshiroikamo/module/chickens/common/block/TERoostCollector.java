@@ -10,6 +10,7 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
@@ -24,6 +25,7 @@ import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.block.SlotDefinition;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
 public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<PosGuiData> {
@@ -92,6 +94,11 @@ public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<Po
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.RichTooltip;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
@@ -31,6 +32,7 @@ import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
@@ -47,14 +49,17 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.ToggleWidget;
  */
 public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements IModularPort, IGuiHolder<PosGuiData> {
 
+    @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
 
     @Getter
     @Setter
+    @NBTPersist
     private EnergyMode energyMode = EnergyMode.RF;
 
     @Getter
     @Setter
+    @NBTPersist
     public boolean useIC2Compat = false;
 
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
@@ -108,30 +113,8 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     }
 
     @Override
-    public void writeCommon(NBTTagCompound tag) {
-        super.writeCommon(tag);
-
-        int[] sideData = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sideData[i] = sides[i].ordinal();
-        }
-        tag.setIntArray("sideIO", sideData);
-        tag.setInteger("energyMode", energyMode.ordinal());
-        tag.setBoolean("useIC2", useIC2Compat);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound tag) {
-        super.readCommon(tag);
-
-        if (tag.hasKey("sideIO")) {
-            int[] sideData = tag.getIntArray("sideIO");
-            for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = EnumIO.values()[sideData[i]];
-            }
-        }
-        energyMode = EnergyMode.byIndex(tag.getInteger("energyMode"));
-        useIC2Compat = tag.getBoolean("useIC2");
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -230,6 +213,11 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     private static final List<CyclicVariantButtonWidget.Variant> ENERGY_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.energy_mode.rf"), RF_MODE),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.energy_mode.eu"), EU_MODE));
+
+    @Override
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+    }
 
     @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
