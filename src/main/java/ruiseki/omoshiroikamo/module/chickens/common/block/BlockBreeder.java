@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 
 public class BlockBreeder extends AbstractBlock<TEBreeder> {
+    // TODO: Add specific conditions for breeding
 
     protected BlockBreeder() {
         super(ModObject.blockBreeder.unlocalisedName, TEBreeder.class, Material.wood);
