@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.minecraft.util.EnumChatFormatting;
 
+import com.cleanroommc.modularui.api.IThemeApi;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.GuiDraw;
@@ -12,6 +13,7 @@ import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.screen.viewport.GuiContext;
+import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetTheme;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
@@ -27,7 +29,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
@@ -97,25 +98,22 @@ public class GuiManager {
     }
 
     private void addBlueprintSlot(ModularPanel panel, int x, int y) {
-        panel.child(
-            new Column().background(OKGuiTextures.VARIABLE_SLOT)
-                .pos(x - 2, y - 2)
-                .size(22, 22));
 
         panel.child(
             new ItemSlot()
                 .slot(
                     new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
                         .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                .background(OKGuiTextures.EMPTY_SLOT)
+                .background(
+                    (c, x1, y1, w, h, t) -> ((ModularGuiContext) c).getTheme()
+                        .getWidgetTheme(IThemeApi.ITEM_SLOT)
+                        .getTheme()
+                        .getBackground()
+                        .draw(c, x1, y1, w, h, t))
                 .pos(x, y));
     }
 
     private void addRedstoneButton(ModularPanel panel, PanelSyncManager syncManager, int x, int y) {
-        panel.child(
-            new Column().background(OKGuiTextures.VARIABLE_SLOT)
-                .pos(x - 2, y - 2)
-                .size(22, 22));
 
         EnumSyncValue<RedstoneMode> redstoneMode = new EnumSyncValue<>(
             RedstoneMode.class,
@@ -236,11 +234,6 @@ public class GuiManager {
         return error != null && !error.isEmpty();
     }
 
-    private float getProgressPercent() {
-        return controller.getProcessAgent()
-            .getProgressPercent();
-    }
-
     /**
      * Diagnose which output types are blocked when waiting for output.
      */
@@ -275,4 +268,5 @@ public class GuiManager {
 
         return LibMisc.LANG.localize("gui.error.unknown");
     }
+
 }
