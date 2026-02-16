@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.backpack.common.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -16,6 +15,7 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -25,6 +25,8 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
+
+    @NBTPersist
     private final BackpackHandler handler;
 
     public TEBackpack() {
@@ -175,18 +177,6 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return true;
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        handler.writeToNBT(root);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        handler.readFromNBT(root);
     }
 
     public int getMainColor() {

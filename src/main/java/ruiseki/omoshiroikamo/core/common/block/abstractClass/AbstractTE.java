@@ -19,6 +19,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
@@ -51,14 +52,17 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
 
     /** Redstone mode of the machine (ALWAYS_ON, PULSE, etc.). */
     @Getter
+    @NBTPersist
     protected RedstoneMode redstoneMode = RedstoneMode.ALWAYS_ON;
 
     /** Current redstone power state. */
     @Setter
+    @NBTPersist
     protected boolean redstonePowered = false;
 
     /** Current redstone power level (0-15). */
     @Setter
+    @NBTPersist
     protected int redstoneLevel = 0;
 
     /** Cached redstone result */
@@ -228,26 +232,6 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
             requestRenderUpdate();
             forceClientUpdate = false;
         }
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-
-        NBTTagCompound redstoneTag = new NBTTagCompound();
-        redstoneTag.setInteger("level", redstoneLevel);
-        redstoneTag.setBoolean("powered", redstonePowered);
-        redstoneTag.setInteger("mode", redstoneMode.getIndex());
-        root.setTag("redstone", redstoneTag);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-
-        NBTTagCompound redstoneTag = root.getCompoundTag("redstone");
-        redstoneLevel = redstoneTag.getInteger("level");
-        redstonePowered = redstoneTag.getBoolean("powered");
-        redstoneMode = RedstoneMode.byIndex(redstoneTag.getInteger("mode"));
-        redstoneStateDirty = true;
     }
 
     public void readFromItemStack(ItemStack stack) {

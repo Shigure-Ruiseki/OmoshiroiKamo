@@ -6,8 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 
-public class ProgrammerHandler {
+public class ProgrammerHandler implements INBTSerializable {
 
     @Getter
     private final ItemStack itemStack;
@@ -34,5 +35,17 @@ public class ProgrammerHandler {
         if (tag.hasKey(INVENTORY)) {
             handler.deserializeNBT(tag.getCompoundTag(INVENTORY));
         }
+    }
+
+    @Override
+    public NBTTagCompound toNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return tag;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        readFromNBT(tag);
     }
 }

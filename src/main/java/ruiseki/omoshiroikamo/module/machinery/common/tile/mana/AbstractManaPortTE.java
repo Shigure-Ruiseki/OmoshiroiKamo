@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -14,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.api.util.ManaStorage;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -24,9 +24,9 @@ import vazkii.botania.api.mana.spark.ISparkEntity;
 import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.common.core.handler.ManaNetworkHandler;
 
-// Mana Port doesn't have Side Config because mana will transfer directly
 public abstract class AbstractManaPortTE extends AbstractTE implements IModularPort, ISparkAttachable, IManaPool {
 
+    @NBTPersist
     protected ManaStorage manaStorage;
 
     public AbstractManaPortTE(int manaCapacity, int manaMaxReceive) {
@@ -164,18 +164,6 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
     }
 
     public abstract int getTier();
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        manaStorage.writeToNBT(root);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        manaStorage.readFromNBT(root);
-    }
 
     @Override
     public IPortType.Type getPortType() {

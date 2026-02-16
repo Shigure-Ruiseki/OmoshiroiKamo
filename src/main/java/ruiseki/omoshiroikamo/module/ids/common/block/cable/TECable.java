@@ -45,6 +45,7 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
@@ -57,7 +58,9 @@ import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
 public class TECable extends AbstractTE
     implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
 
+    @NBTPersist
     private byte connectionMask;
+    @NBTPersist
     private byte blockedMask;
 
     private final Map<ForgeDirection, ICableEndpoint> endpoints = new EnumMap<>(ForgeDirection.class);
@@ -65,6 +68,7 @@ public class TECable extends AbstractTE
 
     private Map<Class<? extends ICableNode>, AbstractCableNetwork<?>> networks = new HashMap<>();
 
+    @NBTPersist
     private boolean hasCore = true;
 
     public boolean clientUpdated = false;
@@ -73,10 +77,8 @@ public class TECable extends AbstractTE
     public TECable() {}
 
     @Override
-    public void writeCommon(NBTTagCompound tag) {
-        tag.setBoolean("hasCore", hasCore);
-        tag.setByte("blockedMask", blockedMask);
-        tag.setByte("connectionMask", connectionMask);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
 
         NBTTagCompound partsTag = new NBTTagCompound();
         for (Map.Entry<ForgeDirection, ICablePart> entry : parts.entrySet()) {
@@ -93,24 +95,17 @@ public class TECable extends AbstractTE
             partsTag.setTag(dir.name(), partTag);
         }
 
-        tag.setTag("Parts", partsTag);
+        root.setTag("Parts", partsTag);
     }
 
     @Override
-    public void readCommon(NBTTagCompound tag) {
-        if (tag.hasKey("hasCore")) {
-            hasCore = tag.getBoolean("hasCore");
-        } else {
-            hasCore = true;
-        }
-
-        blockedMask = tag.getByte("blockedMask");
-        connectionMask = tag.getByte("connectionMask");
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
 
         // parts
         parts.clear();
-        if (tag.hasKey("Parts")) {
-            NBTTagCompound partsTag = tag.getCompoundTag("Parts");
+        if (root.hasKey("Parts")) {
+            NBTTagCompound partsTag = root.getCompoundTag("Parts");
 
             for (String key : partsTag.func_150296_c()) {
                 ForgeDirection side = ForgeDirection.valueOf(key);

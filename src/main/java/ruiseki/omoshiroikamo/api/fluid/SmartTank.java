@@ -8,7 +8,9 @@ import net.minecraftforge.fluids.FluidTank;
 
 import com.google.common.base.Strings;
 
-public class SmartTank extends FluidTank {
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+
+public class SmartTank extends FluidTank implements INBTSerializable {
 
     protected Fluid restriction;
 
@@ -194,4 +196,16 @@ public class SmartTank extends FluidTank {
     }
 
     protected void onContentsChanged() {}
+
+    @Override
+    public NBTTagCompound toNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeCommon(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        readCommon(tag);
+    }
 }

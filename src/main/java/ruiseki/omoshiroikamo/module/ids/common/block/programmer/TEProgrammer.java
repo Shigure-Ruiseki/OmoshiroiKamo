@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.block.programmer;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -12,11 +11,13 @@ import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class TEProgrammer extends AbstractTE implements IGuiHolder<PosGuiData> {
 
+    @NBTPersist
     private final ProgrammerHandler handler;
 
     public TEProgrammer() {
@@ -49,15 +50,5 @@ public class TEProgrammer extends AbstractTE implements IGuiHolder<PosGuiData> {
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
         return false;
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        handler.writeToNBT(root);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        handler.readFromNBT(root);
     }
 }

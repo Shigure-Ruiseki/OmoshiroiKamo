@@ -2,10 +2,12 @@ package ruiseki.omoshiroikamo.api.util;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+
 /**
  * Simple mana storage implementation (similar to CoFH EnergyStorage)
  */
-public class ManaStorage {
+public class ManaStorage implements INBTSerializable {
 
     protected int mana;
     protected int capacity;
@@ -112,5 +114,17 @@ public class ManaStorage {
         mana = tag.getInteger("Mana");
         capacity = tag.getInteger("Capacity");
         if (mana > capacity) mana = capacity;
+    }
+
+    @Override
+    public NBTTagCompound toNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return tag;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        readFromNBT(tag);
     }
 }

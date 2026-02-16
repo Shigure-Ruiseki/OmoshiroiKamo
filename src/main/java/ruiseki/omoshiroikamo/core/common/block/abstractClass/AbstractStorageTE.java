@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +20,7 @@ import com.gtnewhorizon.gtnhlib.item.InventoryItemSource;
 import ruiseki.omoshiroikamo.api.block.SlotDefinition;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.network.PacketFluidTanks;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -25,9 +28,13 @@ import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory, CapabilityProvider {
 
     protected final SlotDefinition slotDefinition;
+
+    @NBTPersist("item_inv")
     public ItemStackHandlerBase inv;
     private final int[] allSlots;
-    public SmartTank[] fluidTanks;
+
+    @NBTPersist("FluidTanks")
+    public List<SmartTank> fluidTanks;
     protected boolean tanksDirty = false;
 
     public AbstractStorageTE(SlotDefinition slotDefinition) {
@@ -43,9 +50,9 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
         };
 
         int fluidSlots = slotDefinition.getFluidSlots();
-        fluidTanks = new SmartTank[fluidSlots];
+        fluidTanks = new ArrayList<>(fluidSlots);
         for (int i = 0; i < fluidSlots; i++) {
-            fluidTanks[i] = new SmartTank(8000);
+            fluidTanks.add(new SmartTank(8000));
         }
 
         allSlots = new int[inv.getSlots()];
@@ -62,35 +69,6 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        root.setTag("item_inv", this.inv.serializeNBT());
-
-        NBTTagCompound tanksTag = new NBTTagCompound();
-        for (int i = 0; i < fluidTanks.length; i++) {
-            NBTTagCompound tankTag = new NBTTagCompound();
-            fluidTanks[i].writeToNBT(tankTag);
-            tanksTag.setTag("Tank" + i, tankTag);
-        }
-        root.setTag("FluidTanks", tanksTag);
-
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        this.inv.deserializeNBT(root.getCompoundTag("item_inv"));
-
-        NBTTagCompound tanksTag = root.getCompoundTag("FluidTanks");
-        for (int i = 0; i < fluidTanks.length; i++) {
-            String key = "Tank" + i;
-            if (tanksTag.hasKey(key)) {
-                fluidTanks[i].readFromNBT(tanksTag.getCompoundTag(key));
-            }
-        }
     }
 
     @Override

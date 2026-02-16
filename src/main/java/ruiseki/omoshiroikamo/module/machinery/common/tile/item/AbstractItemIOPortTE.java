@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.api.block.SlotDefinition;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -38,6 +39,7 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  */
 public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData> {
 
+    @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
 
     public AbstractItemIOPortTE(int numInputs, int numOutput) {
@@ -79,26 +81,8 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-
-        int[] sideData = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sideData[i] = sides[i].ordinal();
-        }
-        root.setIntArray("sideIO", sideData);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-
-        if (root.hasKey("sideIO")) {
-            int[] sideData = root.getIntArray("sideIO");
-            for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = EnumIO.values()[sideData[i]];
-            }
-        }
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -14,6 +13,7 @@ import com.mojang.authlib.GameProfile;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.block.CraftingState;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 
 /**
@@ -29,10 +29,12 @@ import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 public abstract class AbstractMBModifierTE extends AbstractMachineTE {
 
     /** Owner of the multiblock machine. */
+    @NBTPersist
     protected GameProfile player;
 
     /** Flag indicating whether the multiblock structure is fully formed. */
     @Getter
+    @NBTPersist
     protected boolean isFormed = false;
 
     /**
@@ -228,29 +230,6 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
         int duration = (int) (baseDuration * speedMultiplier);
 
         return Math.max(getMinDuration(), Math.min(duration, getMaxDuration()));
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        NBTTagCompound multiblock = new NBTTagCompound();
-        multiblock.setBoolean("isFormed", this.isFormed);
-        if (this.player != null) {
-            multiblock.setTag("profile", PlayerUtils.proifleToNBT(this.player));
-        }
-        root.setTag("multiblock", multiblock);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        NBTTagCompound multiblock = root.getCompoundTag("multiblock");
-        this.isFormed = multiblock.getBoolean("isFormed");
-        if (multiblock.hasKey("profile")) {
-            this.player = PlayerUtils.profileFromNBT(multiblock.getCompoundTag("profile"));
-        } else {
-            this.player = null;
-        }
     }
 
     /**

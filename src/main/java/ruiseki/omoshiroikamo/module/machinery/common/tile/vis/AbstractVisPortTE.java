@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import thaumcraft.api.aspects.Aspect;
@@ -22,6 +23,7 @@ import thaumcraft.api.aspects.AspectList;
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 
+    @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
     protected AspectList visStored = new AspectList();
     protected int maxVisPerAspect;
@@ -131,15 +133,9 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
         root.setInteger("maxVis", maxVisPerAspect);
-
-        int[] sideData = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sideData[i] = sides[i].ordinal();
-        }
-        root.setIntArray("sideIO", sideData);
 
         NBTTagList visList = new NBTTagList();
         for (Aspect aspect : visStored.getAspects()) {
@@ -154,20 +150,13 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         // Only load if saved, otherwise keep constructor default
         if (root.hasKey("maxVis")) {
             int savedMax = root.getInteger("maxVis");
             if (savedMax > 0) {
                 maxVisPerAspect = savedMax;
-            }
-        }
-
-        if (root.hasKey("sideIO")) {
-            int[] sideData = root.getIntArray("sideIO");
-            for (int i = 0; i < 6 && i < sideData.length; i++) {
-                sides[i] = EnumIO.values()[sideData[i]];
             }
         }
 

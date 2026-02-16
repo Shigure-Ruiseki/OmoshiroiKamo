@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -20,7 +19,7 @@ import lombok.Getter;
 import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
@@ -36,6 +35,7 @@ public class TELootFabricator extends AbstractMachineTE
     private static final int OUTPUT_START = 1;
     private static final int OUTPUT_SIZE = 16;
 
+    @NBTPersist
     public final ItemHandlerPristineMatter input = new ItemHandlerPristineMatter() {
 
         @Override
@@ -45,9 +45,11 @@ public class TELootFabricator extends AbstractMachineTE
         }
     };
 
+    @NBTPersist
     public final ItemStackHandlerBase output = new ItemStackHandlerBase(16);
 
     @Getter
+    @NBTPersist
     public ItemStack outputItem = null;
 
     public TELootFabricator() {
@@ -156,34 +158,6 @@ public class TELootFabricator extends AbstractMachineTE
     @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
         return energyStorage.receiveEnergy(amount, simulate);
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        NBTTagCompound inventory = new NBTTagCompound();
-        inventory.setTag("input", input.serializeNBT());
-        inventory.setTag("output", output.serializeNBT());
-        root.setTag(INVENTORY_TAG, inventory);
-
-        if (outputItem != null) {
-            NBTTagCompound crafting = root.getCompoundTag(CRAFTING_TAG);
-            crafting.setTag("outputItem", ItemNBTUtils.stackToNbt(outputItem));
-            root.setTag(CRAFTING_TAG, crafting);
-        }
-
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        NBTTagCompound inventory = root.getCompoundTag(INVENTORY_TAG);
-        input.deserializeNBT(inventory.getCompoundTag("input"));
-        output.deserializeNBT(inventory.getCompoundTag("output"));
-
-        NBTTagCompound crafting = root.getCompoundTag(CRAFTING_TAG);
-        outputItem = ItemNBTUtils.nbtToStack(crafting.getCompoundTag("outputItem"));
-
     }
 
     @Override
