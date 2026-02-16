@@ -208,7 +208,7 @@ public class StructureAgent {
         if (valid && controller.isFormed()) {
             // Perform additional requirements check for CustomStructure
             if (!checkRequirements()) {
-                lastValidationError = LibMisc.LANG.localize("gui.error.structure.requirements_not_met");
+                lastValidationError = LibMisc.LANG.localize("gui.error.requirements_not_met");
                 controller.setFormed(false);
                 if (!controller.getWorldObj().isRemote) {
                     // Clear both old and current
@@ -235,7 +235,7 @@ public class StructureAgent {
                 // Perform detailed scan to find the first error
                 lastValidationError = checkStructureDetails(ox, oy, oz);
                 if (lastValidationError.isEmpty()) {
-                    lastValidationError = LibMisc.LANG.localize("gui.error.structure.block_mismatch");
+                    lastValidationError = LibMisc.LANG.localize("gui.error.block_mismatch");
                 }
             }
         }
@@ -248,15 +248,14 @@ public class StructureAgent {
 
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.layers == null)
-            return LibMisc.LANG.localize("gui.error.structure.invalid_definition");
+        if (entry == null || entry.layers == null) return LibMisc.LANG.localize("gui.error.invalid_definition");
 
         // Retrieve definition to get mapped elements
         // This is a bit redundant but we need the exact elements used in validation
         IStructureDefinition<TEMachineController> def = getStructureDefinition();
-        if (def == null) return LibMisc.LANG.localize("gui.error.structure.missing_definition");
+        if (def == null) return LibMisc.LANG.localize("gui.error.missing_definition");
 
-        return LibMisc.LANG.localize("gui.error.structure.block_mismatch");
+        return LibMisc.LANG.localize("gui.error.block_mismatch");
     }
 
     /**

@@ -1,5 +1,13 @@
-#Creative Tabs
+# General
 
+
+# Common
+power.rf=RF
+fluid.millibucket=mB
+tooltip.holdshift=§7- §r§oSHIFT§r§7キーで詳細を表示§r
+
+
+# Creative Tabs
 creativetab.okBackpack=OK バックパック
 creativetab.okMultiblock=OK マルチブロック
 creativetab.okChicken=OK ニワトリ
@@ -7,85 +15,26 @@ creativetab.okCow=OK ウシ
 creativetab.okDML=OK モブラーニング
 creativetab.okIDs=OK インテグレーテッドダイナミクス
 
-#Config
 
+# Config
 config.generalConfig=一般設定
-
 config.itemConfig=アイテム設定
-
 config.blockConfig=ブロック設定
-
 config.backportConfig=バックポート設定
-
-config.multiblockConfig=マルチブロックの設定
-config.quantumExtractorConfig=クアンタムエクストラクターの設定
-config.oreMinerConfig=鉱石採掘機
-config.resMinerConfig=資源採掘機
-config.extractorModifiers=モディファイア
-config.quantumBeaconConfig=クアンタムビーコンの設定
-config.beaconGeneral=基本設定
-config.beaconEffectLevels=エフェクトレベル
-config.beaconRange=効果範囲
-config.solarArrayConfig=ソーラーアレイの設定
-config.solarTierEnergy=Tier別ピーク出力
-config.solarCellSettings=セル設定
-config.eTWorldGenConfig=ワールド生成の設定
-config.hardenedStoneGen=硬化石
-config.alabasterGen=アラバスター
-config.basaltGen=玄武岩
-
-config.chickenConfig=ニワトリの設定
-
-config.cowConfig=ウシの設定
-
-config.backpackConfig=バックパックの設定
-config.feedingConfig=自動食事アップグレードの設定
-config.magnetConfig=マグネットアップグレードの設定
-
-config.deepMobLearningConfig=モブラーニングの設定
-
 config.energyConfig=エネルギーの設定
 
-# Waila
 
-option.omoshiroikamo.breedingTime=繁殖時間
-option.omoshiroikamo.grownTime=成長時間
+# Key binding
+category.omoshiroikamo=Omoshiroi Kamo
+keybind.backpackOpenToggle=バックパックを開く
 
-# NEI
-nei.dml.simulation_chamber=シミュレーションチャンバー
-nei.dml.loot_fabricator=ルートファブリケーター
-nei.multiblock.lens_bonus=%s ボーナス
 
-#Gui
-
+# Gui
 gui.powerMonitor.of=の
 gui.progress=進捗: %.2f%%
 gui.efficiency=効率: %.2f%%
 gui.sunlightBlocked=空が見えない！
-
 gui.empty=空
-
-gui.craftingState.idle=待機中
-gui.craftingState.running=稼働中
-gui.craftingState.error=エラー
-gui.craftingState.paused=一時停止中
-gui.craftingState.no_input=材料不足
-gui.craftingState.no_matching_recipe=レシピ不一致
-gui.craftingState.missing_blueprint=ブループリント未挿入
-
-gui.redstone_mode.always_on=常にオン
-gui.redstone_mode.high_on=レッドストーン信号でオン
-gui.redstone_mode.high_off=レッドストーン信号でオフ
-gui.redstone_mode.always_off=常にオフ
-
-gui.sort_type.by_mod_id=Mod ID
-gui.sort_type.by_name=名前
-gui.sort_type.by_count=数
-gui.sort_type.by_ore_dict=鉱石辞書
-
-gui.sort_order.asc=昇順
-gui.sort_order.desc=降順
-
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
 gui.energy_transfer=転送量: %s RF/t
@@ -97,160 +46,155 @@ gui.io.none=なし
 gui.io.isActivated=有効
 gui.io.enabled=有効
 gui.io.disabled=無効
-
 gui.search_bar.tool_tip=右クリックで検索バーをクリア
-
 gui.syncNEI=NEIと同期
 
-gui.crafting_filter.storage=ストレージ内アイテム
-gui.crafting_filter.craftable=クラフト可能
-gui.crafting_filter.both=両方
 
-#Cable
+# Redstone mode
+gui.redstone_mode.always_on=常にオン
+gui.redstone_mode.high_on=レッドストーン信号でオン
+gui.redstone_mode.high_off=レッドストーン信号でオフ
+gui.redstone_mode.always_off=常にオフ
 
-gui.ids.part_settings=パーツ設定
 
-gui.ids.index_channel=チャンネル: 
-gui.ids.id=ID
-gui.ids.length=長さ
-gui.ids.transferLimit=転送制限
-gui.ids.roundRobin=順番
-gui.ids.nbt=NBT
-gui.ids.stackSize=スタックサイズ
-gui.ids.allowInsertions=搬入できる
-gui.ids.allowExtractions=搬出できる
-gui.ids.blackList=ブラックリスト
+# Sort
+gui.sort_type.by_mod_id=Mod ID
+gui.sort_type.by_name=名前
+gui.sort_type.by_count=数
+gui.sort_type.by_ore_dict=鉱石辞書
+gui.sort_order.asc=昇順
+gui.sort_order.desc=降順
 
-gui.ids.redstoneReader.lowRedstone=レッドストーン信号 低 | 真偽値
-gui.ids.redstoneReader.hasRedstone=レッドストーン信号 | 真偽値
-gui.ids.redstoneReader.highRedstone=レッドストーン信号 高 | 真偽値
-gui.ids.redstoneReader.redstoneValue=レッドストーン信号 | 数値
 
-gui.ids.blockReader.hasBlock=ブロックがあるか | 真偽値
-gui.ids.blockReader.dimension=次元
-gui.ids.blockReader.coord.x=X | 座標
-gui.ids.blockReader.coord.y=Y | 座標
-gui.ids.blockReader.coord.z=Z | 座標
-gui.ids.blockReader.block=ブロック | 文字列
-gui.ids.blockReader.biome=バイオーム | 文字列
-gui.ids.blockReader.light=明るさ | 数値
+# Items
+item.wrench.name=レンチ
+item.structureWand.name=ストラクチャーワンド
 
-gui.ids.inventoryReader.isInventory=インベントリがあるか | 真偽値
-gui.ids.inventoryReader.inventoryFull=インベントリがいっぱいか | 真偽値
-gui.ids.inventoryReader.inventoryEmpty=インベントリが空か | 真偽値
-gui.ids.inventoryReader.inventoryNotEmpty=インベントリが空でないか | 真偽値
-gui.ids.inventoryReader.inventoryCount=インベントリの数 | 整数
-gui.ids.inventoryReader.inventorySlots=インベントリのスロット | 整数
-gui.ids.inventoryReader.slotsFilled=埋まっているスロットの数 | 整数
-gui.ids.inventoryReader.fillRatio=埋まっている割合 | 少数
-gui.ids.inventoryReader.itemsList=アイテム | リスト
-gui.ids.inventoryReader.slotItem=スロットのアイテム | アイテムスタック
 
-gui.ids.fluidReader.isTank=タンクがあるか | 真偽値
-gui.ids.fluidReader.tankEmpty=タンクが空か | 真偽値
-gui.ids.fluidReader.tankNotEmpty=タンクが空でない | 真偽値
-gui.ids.fluidReader.tankFull=タンクがいっぱいか | 真偽値
-gui.ids.fluidReader.tankCount=タンクの数 | 整数
-gui.ids.fluidReader.fluidAmount=液体の量 | 整数
-gui.ids.fluidReader.totalAmount=液体の総量 | 整数
-gui.ids.fluidReader.fluidCapacity=液体の容量 | 整数
-gui.ids.fluidReader.totalCapacity=液体の総容量 | 整数
-gui.ids.fluidReader.fillRatio=液体の割合 | 少数
-gui.ids.fluidReader.tankFluids=タンクの液体 | リスト
-gui.ids.fluidReader.tankCapacities=タンクの容量 | リスト
-gui.ids.fluidReader.tankFluid=タンクの液体 | 液体スタック
+# Tooltips
+tooltip.spawn_egg.tier=Tier: %1$s
+tooltip.spawn_egg.notbreedable=繁殖できない
+tooltip.spawn_egg.breedable=繁殖できる
+tooltip.spawn_egg.spawnType=スポーンタイプ
+tooltip.spawn_egg.layitem=産卵するもの: %1$s
+tooltip.spawn_egg.nolayitem=産卵するもの: なし
+tooltip.spawn_egg.milkfluid=絞れる液体: %1$s
+tooltip.spawn_egg.nomilkfluid=絞れる液体: なし
 
-gui.ids.redstoneWriter.redstoneBoolean=レッドストーン信号 | 真偽値
-gui.ids.redstoneWriter.redstoneInt=レッドストーン信号 | 整数
-gui.ids.redstoneWriter.pulseBoolean=パルス | 真偽値
-gui.ids.redstoneWriter.pulseInt=パルス | 整数
+tooltip.mob.tier=Tier: %1$s
+tooltip.mob.strength=強さ: %s
+tooltip.mob.gain=生産量: %s
+tooltip.mob.growth=生産速度: %s
+tooltip.mob.parent1=親: %s
+tooltip.mob.parent2=と %s
+tooltip.mob.spawnType=スポーンタイプ
+tooltip.mob.fluid=液体
+tooltip.mob.layProgress=次の産卵まで: %1$s
+tooltip.mob.milkProgress=次の搾乳まで: %1$s
+tooltip.mob.breedCountdown=次の繁殖まで: %1$s
+tooltip.mob.childGrowUp=大人になるまで: %1$s
 
-gui.ids.itemImporter.allItem=全てのアイテムを搬入 | 真偽値
-gui.ids.itemImporter.itemAmount=搬入アイテムの数 | 整数
-gui.ids.itemImporter.itemSlot=搬入アイテムのスロット | 整数
-gui.ids.itemImporter.item=搬入アイテム | アイテムスタック
-gui.ids.itemImporter.items=搬入アイテム | リスト
 
-gui.ids.itemExporter.allItem=全てのアイテムを搬出 | 真偽値
-gui.ids.itemExporter.itemAmount=搬出アイテムの数 | 整数
-gui.ids.itemExporter.itemSlot=搬出アイテムのスロット | 整数
-gui.ids.itemExporter.item=搬出アイテム | アイテムスタック
-gui.ids.itemExporter.items=搬出アイテム | リスト
+# NEI
+neiintegration.chance=確率: %s
+neiintegration.chance.never=検討します
+neiintegration.chance.lessThan1=<1%
 
-gui.ids.itemFilterInterface.all=全て | 真偽値
-gui.ids.itemFilterInterface.item=フィルター | アイテムスタック
-gui.ids.itemFilterInterface.items=フィルター | リスト
 
-gui.ids.energyImporter.boolean=エネルギーを搬入 | 真偽値
-gui.ids.energyImporter.amount=エネルギーの搬入量 | 整数
+#Structure Wand
+chat.wand.pos1_set=[OmoshiroiKamo] 位置1を設定: (%d, %d, %d)
+chat.wand.pos2_set=[OmoshiroiKamo] 位置2を設定: (%d, %d, %d)
+chat.wand.scan_ready=[OmoshiroiKamo] スキャン準備完了! (%d ブロック)
+chat.wand.cleared=[OmoshiroiKamo] 全ての位置設定をリセット
+chat.wand.set_pos1_first=[OmoshiroiKamo] まず位置1を設定してください! (ブロックを右クリック)
+chat.wand.area_too_large=[OmoshiroiKamo] 範囲が広すぎます! 最大 %s ブロック, 現在 %s
+chat.wand.use_save_command=保存コマンド: /ok wand save <名前>
+chat.wand.shift_right=Shift+右クリックで位置2を設定
 
-gui.ids.energyExporter.boolean=エネルギーを搬出 | 真偽値
-gui.ids.energyExporter.amount=エネルギーの搬出量 | 整数
+tooltip.wand.right_click=右クリック: 位置1を設定
+tooltip.wand.shift_right_click=Shift+右クリック: 位置2を設定 & 準備
+tooltip.wand.shift_left_click=Shift+左クリック: 全ての位置設定をクリア
+tooltip.wand.shift_left_clear=Shift+左クリックでクリア
+tooltip.wand.pos1=Pos1: (%d, %d, %d)
+tooltip.wand.pos2=Pos2: (%d, %d, %d)
+tooltip.wand.pos_not_set=未設定
+tooltip.wand.size=サイズ: %dx%dx%d
 
-gui.ids.energyFilterInterface.all=全て | 真偽値
 
-gui.ids.side=搬入出面
-gui.ids.tick=何ティック毎に動作するか
-gui.ids.priority=優先度
-gui.ids.channel=チャンネル
+# Commands
+command.ok.main_usage_title=使用法:
+command.ok.main_usage_structure=/ok structure - ストラクチャー管理コマンド
 
-gui.ids.type.boolean=真偽値
-gui.ids.type.int=整数
-gui.ids.type.long=整数 (Long)
-gui.ids.type.float=小数 (Float)
-gui.ids.type.double=小数 (Double)
-gui.ids.type.string=文字列
+command.ok.reloading=[OmoshiroiKamo] ストラクチャー設定を再読み込み中...
+command.ok.reload_success=[OmoshiroiKamo] ストラクチャー設定の再読み込みに成功しました!
+command.ok.reload_errors=[OmoshiroiKamo] 再読み込み完了 (%d エラー)!
+command.ok.reload_check_file=確認: config/omoshiroikamo/structures/errors.txt
+command.ok.reload_failed=[OmoshiroiKamo] 再読み込み失敗: %s
 
-gui.ids.op.if=条件
+command.ok.status_header=== OmoshiroiKamo ストラクチャーステータス ===
+command.ok.status_initialized=初期化済み:
+command.ok.status_yes=はい
+command.ok.status_no=いいえ
+command.ok.status_errors=エラー:
+command.ok.status_none=なし
 
-gui.ids.op.and=AND && 
-gui.ids.op.nand=NAND !&&
-gui.ids.op.or=OR || 
-gui.ids.op.nor=NOR !|| 
-gui.ids.op.xor=XOR ^
+command.ok.scan_usage=使用法: /ok structure scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.scan_example=例: /ok structure scan myStructure 0 64 0 10 70 10
+command.ok.scan_invalid_coords=無効な座標: %s
+command.ok.scan_no_world=ワールドインスタンスを取得できませんでした
+command.ok.scan_area_too_large=範囲が広すぎます! 最大 %d ブロック, 現在 %d
+command.ok.scan_scanning=%dx%dx%d の範囲をスキャン中...
+command.ok.scan_file=ファイル: config/omoshiroikamo/structures/custom/%s.json
+command.ok.scan_failed=[OmoshiroiKamo] スキャン失敗: %s
 
-gui.ids.op.eq=EQ (等しい) ==
-gui.ids.op.neq=NEQ (等しくない) !=
-gui.ids.op.gtr=GTR (より大きい) >
-gui.ids.op.geq=GEQ (以上) >=
-gui.ids.op.lss=LSS (より小さい) <
-gui.ids.op.leq=LEQ (以下) <=
+command.ok.usage_title=使用法:
+command.ok.usage_reload=/ok structure reload - ストラクチャー設定を再読み込み
+command.ok.usage_status=/ok structure status - 現在のステータスを表示
+command.ok.usage_scan=/ok structure scan <名前> <x1> <y1> <z1> <x2> <y2> <z2> - 範囲をスキャンしてJSONに保存
+command.ok.usage_wand_save=/ok wand save <名前> - ワンドの選択範囲をJSONに保存
 
-#Modular Machinery
+command.ok.wand_players_only=[OmoshiroiKamo] このコマンドはプレイヤーのみ使用可能です!
+command.ok.wand_usage=使用法: /ok wand save <名前>
+command.ok.wand_no_pending=[OmoshiroiKamo] 保留中のスキャンがありません! 先にストラクチャーワンドを使用してください。
+command.ok.wand_different_dimension=[OmoshiroiKamo] 選択範囲が異なるディメンションにあります!
+command.ok.wand_scanning=[OmoshiroiKamo] %d ブロックをスキャン中...
+command.ok.wand_cleared=[OmoshiroiKamo] ワンドの選択範囲をクリアしました。
+command.ok.wand_no_selection=[OmoshiroiKamo] クリアする保留中の選択範囲がありません。
 
-gui.machinery.energy_used=消費電力: %s
-gui.machinery.use_ic2=IC2を使用
+# Backpack ==============================================
 
-# Backpack Gui Elements
 
+# Config
+config.backpackConfig=バックパックの設定
+config.feedingConfig=自動食事アップグレードの設定
+config.magnetConfig=マグネットアップグレードの設定
+
+
+# GUI
 container.backpack=バックパック
+gui.backpack=バックパック
+gui.backpack.settings=設定
+gui.configuration_tab=設定タブ
 
 gui.backpack.pickup_settings=拾うアップグレードの設定
 gui.backpack.advanced_pickup_settings=詳細な拾うアップグレードの設定
-
 gui.backpack.magnet_settings=マグネットの設定
 gui.backpack.advanced_magnet_settings=詳細なマグネットアップグレードの設定
-
 gui.backpack.feeding_settings=自動食事アップグレードの設定
 gui.backpack.advanced_feeding_settings=詳細な自動食事アップグレードの設定
-
 gui.backpack.filter_settings=フィルターの設定
 gui.backpack.advanced_filter_settings=詳細なフィルターの設定
-
 gui.backpack.backpack_settings=バックパックの設定
 gui.backpack.memory_settings=メモリーの設定
 gui.backpack.sorting_settings=ソートの設定
-
 gui.backpack.crafting_settings=クラフトアップグレードの設定
-
 gui.backpack.void_settings=自動廃棄アップグレードの設定
 gui.backpack.advanced_void_settings=詳細な自動廃棄アップグレードの設定
 
-# Backpack Gui Tooltips
 
+# Tooltips
 gui.backpack.stack_size_extra=数: %s / %s
 gui.backpack.not_in_effect=無効
-
 gui.backpack.whitelist=ホワイトリスト
 gui.backpack.blacklist=ブラックリスト
 
@@ -297,10 +241,6 @@ gui.backpack.transfer_to_backpack_inv=全てのアイテムをバックパック
 gui.backpack.transfer_to_backpack_inv_matched_1=一致するアイテムをバックパックへ移動
 gui.backpack.transfer_to_backpack_inv_matched_2=Shiftキーで全て移動
 
-gui.backpack.settings=設定
-gui.backpack=バックパック
-gui.configuration_tab=設定タブ
-
 gui.backpack.memorized_slot=記憶済みのスロット
 gui.backpack.memorize_all=全スロットを記憶
 gui.backpack.unmemorize_all=全スロットの記憶を抹消
@@ -330,213 +270,8 @@ gui.backpack.void_overflow=あふれた分を廃棄
 gui.backpack.void_all=GUI内でも機能する
 gui.backpack.void_automation=他のアップグレード/自動化でのみ機能する
 
-# Deep Mob Learning
 
-gui.deep_learner.hud=メインハンドまたはオフハンドに持ち、データモデルが入っているとHUDを表示します
-gui.deep_learner.contains=以下のモデルが含まれています
-
-gui.deep_learner.heading_name=名前
-gui.deep_learner.heading_information=情報
-gui.deep_learner.model_tier=モデルレベル: %s
-gui.deep_learner.defeated=討伐数: %s
-gui.deep_learner.required=%2$sに到達するにはあと%1$s体の討伐が必要
-gui.deep_learner.maximum=最大レベル到達済み
-gui.deep_learner.health_points=体力
-
-gui.deep_learner.button_next=次のデータモデル
-gui.deep_learner.button_prev=前のデータモデル
-
-gui.loot_fabricator.tooltip.crafting_cost=稼働コスト: %d RF/t
-gui.loot_fabricator.tooltip.deselect=クリックで出力アイテム選択を解除
-
-gui.loot_fabricator.error.no_energy=クラフトに必要なエネルギーが不足しています
-gui.loot_fabricator.error.redstone=レッドストーン信号により停止中
-gui.loot_fabricator.error.no_pristine=入力バッファにプリスティンマターがありません
-gui.loot_fabricator.error.no_output_selected=出力アイテムが選択されていません
-gui.loot_fabricator.error.output_full=出力バッファが一杯です
-
-gui.simulation_chamber.simulation_text.launching=ランタイムを起動中
-gui.simulation_chamber.simulation_text.iteration=イテレーション #%d 開始
-gui.simulation_chamber.simulation_text.loading=チップメモリからモデルをロード中
-gui.simulation_chamber.simulation_text.assessing=脅威レベルを評価中
-gui.simulation_chamber.simulation_text.engaged=敵と交戦中
-gui.simulation_chamber.simulation_text.pristine=プリスティンマターを調達
-gui.simulation_chamber.simulation_text.pristine_success=成功
-gui.simulation_chamber.simulation_text.pristine_failure=失敗
-gui.simulation_chamber.simulation_text.processing=結果を処理中
-
-gui.simulation_chamber.error_text.error=エラー！シミュレーションを開始できません
-gui.simulation_chamber.error_text.no_data_model_1=データモデルが見つかりません
-gui.simulation_chamber.error_text.no_data_model_2=データモデルを挿入してください
-gui.simulation_chamber.error_text.model_cannot_simulate_1=モデル内のデータ量が不正です
-gui.simulation_chamber.error_text.model_cannot_simulate_2=有効なモデルを挿入してください
-gui.simulation_chamber.error_text.no_polymer=ポリマー媒体が不足しています
-gui.simulation_chamber.error_text.no_energy=エネルギー不足！動作を停止します！
-gui.simulation_chamber.error_text.output_full=出力バッファが一杯です
-
-gui.simulation_chamber.redstone_deactivated_1=レッドストーン信号により
-gui.simulation_chamber.redstone_deactivated_2=システム停止中
-
-gui.simulation_chamber.data_model_info.tier=レベル
-gui.simulation_chamber.data_model_info.iterations=試行数
-gui.simulation_chamber.data_model_info.pristine=プリスティンマターの出る確率
-
-gui.simulation_chamber.tooltip.model_data=%s データ収集済み
-gui.simulation_chamber.tooltip.model_max=データモデルは最大レベルに到達しています
-gui.simulation_chamber.tooltip.model_missing=マシンにデータモデルがありません
-gui.simulation_chamber.tooltip.model_cannot_simulate=現在のデータモデルレベルではシミュレーションを実行できません
-gui.simulation_chamber.tooltip.sim_cost=現在のデータモデルでシミュレーションするための消費エネルギー: %d RF/t
-
-gui.button_page_select.next=次のページ
-gui.button_page_select.prev=前のページ
-
-#Display
-
-power.rf=RF
-fluid.millibucket=mB
-
-#TOOLTIPS
-
-tooltip.holdshift=§7- §r§oSHIFT§r§7キーで詳細を表示§r
-
-tooltip.backpack.inventory_size=インベントリサイズ: %d
-tooltip.backpack.upgrade_slots_size=アップグレードスロット: %d
-tooltip.backpack.stack_multiplier=-> スタック倍率: %d%s
-
-tooltip.backpack.magnet_upgrade=近くのエンティティを自動で拾います
-tooltip.backpack.advanced_magnet_upgrade=近くのエンティティを自動で拾います（詳細設定可能）
-tooltip.backpack.everlasting_upgrade=バックパックを無敵にし、デスポーンや奈落への落下を防ぎます。奈落に落ちても回収可能です。(バグで消えたように見えるかもしれません)
-tooltip.backpack.upgrade_base=何もしません！アップグレードスロットに入れてみてください！
-tooltip.backpack.stack_upgrade=スタックサイズを %d 倍にします
-tooltip.backpack.crafting_upgrade=バックパックの横にクラフトグリッドを追加します
-tooltip.backpack.inception_upgrade=バックパックの中にバックパックを入れられるようになります
-tooltip.backpack.pickup_upgrade=バックパックがアイテムを拾えるようにします
-tooltip.backpack.advanced_pickup_upgrade=バックパックがアイテムを拾えるようにします（詳細設定可能）
-tooltip.backpack.feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします
-tooltip.backpack.advanced_feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします（詳細設定可能）
-tooltip.backpack.filter_upgrade=ワールドに設置する際に搬入アイテムをフィルタリングします
-tooltip.backpack.advanced_filter_upgrade=ワールドに設置する際に搬入アイテムをフィルタリングします（詳細設定可能）
-tooltip.backpack.void_upgrade=フィルターで選択されたアイテムを消去します
-tooltip.backpack.advanced_void_upgrade=フィルターで選択されたアイテムを消去します。より詳細なフィルタリングオプションがあります
-
-tooltip.spawn_egg.tier=Tier: %1$s
-tooltip.spawn_egg.notbreedable=繁殖できない
-tooltip.spawn_egg.breedable=繁殖できる
-tooltip.spawn_egg.spawnType=スポーンタイプ
-tooltip.spawn_egg.layitem=産卵するもの: %1$s
-tooltip.spawn_egg.nolayitem=産卵するもの: なし
-tooltip.spawn_egg.milkfluid=絞れる液体: %1$s
-tooltip.spawn_egg.nomilkfluid=絞れる液体: なし
-
-tooltip.catcher.name=チキンキャッチャー
-tooltip.mob.tier=Tier: %1$s
-tooltip.mob.strength=強さ: %s
-tooltip.mob.gain=生産量: %s
-tooltip.mob.growth=生産速度: %s
-tooltip.mob.parent1=親: %s
-tooltip.mob.parent2=と %s
-tooltip.mob.spawnType=スポーンタイプ
-tooltip.mob.fluid=液体
-tooltip.mob.layProgress=次の産卵まで: %1$s
-tooltip.mob.milkProgress=次の搾乳まで: %1$s
-tooltip.mob.breedCountdown=次の繁殖まで: %1$s
-tooltip.mob.childGrowUp=大人になるまで: %1$s
-
-tooltip.assembler.l1=Shift + 右クリックでコントローラーに向けて使用すると組み立てます。
-tooltip.assembler.l2=左クリックでマルチブロックのブロックを即座に破壊します。
-
-tooltip.liquid_egg.l1=使い切りのバケツのようなものです。
-tooltip.colored_egg.l1=投げるとニワトリがスポーンするかも？
-
-tooltip.analyzer.l1=ニワトリに使用してステータスを確認します。
-tooltip.analyzer.l2= - "ニワトリが一番嫌いな曜日は？ フライデー（Fry-day）！"
-
-tooltip.data_model.type=タイプ: %s
-tooltip.data_model.tier=レベル: %s
-tooltip.data_model.data_collected=収集したデータ量: %s/%s
-tooltip.data_model.kill_multiplier=1体倒して集められるデータ量: %s
-tooltip.data_model.rf_cost=シミュレーションコスト: %s RF/t
-tooltip.data_model.cannot_simulate=このレベルではシミュレーションチャンバーでデータモデルを使用できません
-tooltip.data_model.reached_tier=%s は %s レベルに到達しました
-
-tooltip.living_matter.consume_for_xp=%s で消費して経験値を獲得
-tooltip.living_matter.consume_stack=%s 押しながら使用でスタックごと消費
-tooltip.living_matter.xp=1アイテムあたり %s 経験値
-
-tooltip.pristine_matter.loot_items=入手可能なアイテム:
-
-tooltip.soot_covered_redstone=%s を %s (%s) にぶつけて作成
-
-#ACHIEVEMENT
-
-achievement.omoshiroikamo.craft_assembler=組み立て準備OK！
-achievement.omoshiroikamo.craft_assembler.desc=アセンブラーを作成する
-achievement.omoshiroikamo.craft_solar_array_t1=あっ倉庫が停電しちゃった
-achievement.omoshiroikamo.craft_solar_array_t1.desc=Tier 1 ソーラーアレイを作成する
-achievement.omoshiroikamo.craft_solar_array_t4=あっアップグレード積みすぎて停電しちゃった
-achievement.omoshiroikamo.craft_solar_array_t4.desc=Tier 4 ソーラーアレイを作成する
-achievement.omoshiroikamo.craft_void_ore_t1=鉱石が足りない！
-achievement.omoshiroikamo.craft_void_ore_t1.desc=Tier 1 ボイド鉱石採掘機を作成する
-achievement.omoshiroikamo.craft_void_ore_t4=鉱石がないなら掘れば良いじゃない
-achievement.omoshiroikamo.craft_void_ore_t4.desc=Tier 4 ボイド鉱石採掘機を作成する
-
-achievement.omoshiroikamo.assemble_void_ore_miner_t1=無限の鉱石！わくわく
-achievement.omoshiroikamo.assemble_void_ore_miner_t1.desc=アセンブラーで Tier 1 ボイド鉱石採掘機を組み立てる
-achievement.omoshiroikamo.assemble_void_ore_miner_t4=無限鉱石の達人
-achievement.omoshiroikamo.assemble_void_ore_miner_t4.desc=アセンブラーで Tier 4 ボイド鉱石採掘機を組み立てる
-achievement.omoshiroikamo.assemble_void_res_miner_t1=粘土粘土粘土粘土圧縮圧縮圧縮圧縮
-achievement.omoshiroikamo.assemble_void_res_miner_t1.desc=アセンブラーで Tier 1 ボイド資源採掘機を組み立てる
-achievement.omoshiroikamo.assemble_void_res_miner_t4=ウィザーが真っ青になる量のソウルサンド
-achievement.omoshiroikamo.assemble_void_res_miner_t4.desc=アセンブラーで Tier 4 ボイド資源採掘機を組み立てる
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t1=デイリー8等級
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t1.desc=アセンブラーで Tier 1 ビーコンを組み立てる
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t4=全盛り15等級
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t4.desc=アセンブラーで Tier 4 ビーコンを組み立てる
-achievement.omoshiroikamo.assemble_solar_array_t1=全世界をソーラーで覆ってやる！
-achievement.omoshiroikamo.assemble_solar_array_t1.desc=アセンブラーで Tier 1 ソーラーアレイを組み立てる
-achievement.omoshiroikamo.assemble_solar_array_t4=ダイソンスフィアが作りたいなぁ
-achievement.omoshiroikamo.assemble_solar_array_t4.desc=アセンブラーで Tier 4 ソーラーアレイを組み立てる
-
-achievement.omoshiroikamo.craft_colored_lens=レーザー集中！
-achievement.omoshiroikamo.craft_colored_lens.desc=レンズを染色する
-achievement.omoshiroikamo.craft_modifier_core=イーブイ
-achievement.omoshiroikamo.craft_modifier_core.desc=空のモディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_speed=スピードアーップ！
-achievement.omoshiroikamo.craft_modifier_speed.desc=スピードモディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_piezo=振動特攻
-achievement.omoshiroikamo.craft_modifier_piezo.desc=ピエゾモディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_accuracy=狙撃位置確保......具体的な位置までは知らなくていい。
-achievement.omoshiroikamo.craft_modifier_accuracy.desc=精度モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_jump_boost=太陽まで飛んでいける
-achievement.omoshiroikamo.craft_modifier_jump_boost.desc=跳躍力上昇モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_flight=空を舞う感覚、味わってみない？
-achievement.omoshiroikamo.craft_modifier_flight.desc=飛行モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_resistance=痛くない…！痛くなぁい…！
-achievement.omoshiroikamo.craft_modifier_resistance.desc=耐性モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_fire_res=バーベキューやろーぜ！
-achievement.omoshiroikamo.craft_modifier_fire_res.desc=火炎耐性モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_haste=わざマシン028 (ZA)
-achievement.omoshiroikamo.craft_modifier_haste.desc=採掘速度上昇モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_strength=攻撃は専門外なんだけどなー。
-achievement.omoshiroikamo.craft_modifier_strength.desc=攻撃力上昇モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_night_vision=ホークビジョン
-achievement.omoshiroikamo.craft_modifier_night_vision.desc=暗視モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_water_breathing=エーギルまで泳いで行けるかな？
-achievement.omoshiroikamo.craft_modifier_water_breathing.desc=水中呼吸モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_regen=誰がっ！毒ガスでっ！HP回復するんだよっ！
-achievement.omoshiroikamo.craft_modifier_regen.desc=再生モディファイアを作成する
-achievement.omoshiroikamo.craft_modifier_saturation=リンゴちゃん、今日もよろしくね！
-achievement.omoshiroikamo.craft_modifier_saturation.desc=満腹モディファイアを作成する
-
-#KeyBinding
-
-category.omoshiroikamo=Omoshiroi Kamo
-keybind.backpackOpenToggle=バックパックを開く
-
-#Item
-
-item.wrench.name=レンチ
-
+# Items
 tile.backpackLeather.name=革のバックパック
 tile.backpackIron.name=鉄のバックパック
 tile.backpackGold.name=金のバックパック
@@ -573,23 +308,37 @@ item.inceptionUpgrade.name=インセプションアップグレード
 item.voidUpgrade.name=廃棄アップグレード
 item.advancedVoidUpgrade.name=詳細な廃棄アップグレード
 
-item.stabilizedEnderPear.name=安定化エンダーパール
-item.photovoltaicCell.name=太陽電池セル
-item.assembler.name=アセンブラー
 
-item.crystal.tier_1.name=ルミナイトクリスタル
-item.crystal.tier_2.name=ソラリスクリスタル
-item.crystal.tier_3.name=アビサルクリスタル
-item.crystal.tier_4.name=オーロラクリスタル
-item.crystal.tier_5.name=エクリプスクリスタル
-item.crystal.tier_6.name=ネビュラクリスタル
-item.crystal.tier_7.name=プリズマティッククリスタル
-item.crystal.tier_8.name=セレスティアルクリスタル
+# Tooltips
+tooltip.backpack.inventory_size=インベントリサイズ: %d
+tooltip.backpack.upgrade_slots_size=アップグレードスロット: %d
+tooltip.backpack.stack_multiplier=-> スタック倍率: %d%s
 
-item.cowHalter.name=ウシ用手綱
-item.analyzer.name=アナライザー
-item.solidXp.name=固形経験値
+tooltip.backpack.magnet_upgrade=近くのエンティティを自動で拾います
+tooltip.backpack.advanced_magnet_upgrade=近くのエンティティを自動で拾います（詳細設定可能）
+tooltip.backpack.everlasting_upgrade=バックパックを無敵にし、デスポーンや奈落への落下を防ぎます。奈落に落ちても回収可能です。(バグで消えたように見えるかもしれません)
+tooltip.backpack.upgrade_base=何もしません！アップグレードスロットに入れてみてください！
+tooltip.backpack.stack_upgrade=スタックサイズを %d 倍にします
+tooltip.backpack.crafting_upgrade=バックパックの横にクラフトグリッドを追加します
+tooltip.backpack.inception_upgrade=バックパックの中にバックパックを入れられるようになります
+tooltip.backpack.pickup_upgrade=バックパックがアイテムを拾えるようにします
+tooltip.backpack.advanced_pickup_upgrade=バックパックがアイテムを拾えるようにします（詳細設定可能）
+tooltip.backpack.feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします
+tooltip.backpack.advanced_feeding_upgrade=バックパックがプレイヤーに自動で食事を与えられるようにします（詳細設定可能）
+tooltip.backpack.filter_upgrade=ワールドに設置する際に搬入アイテムをフィルタリングします
+tooltip.backpack.advanced_filter_upgrade=ワールドに設置する際に搬入アイテムをフィルタリングします（詳細設定可能）
+tooltip.backpack.void_upgrade=フィルターで選択されたアイテムを消去します
+tooltip.backpack.advanced_void_upgrade=フィルターで選択されたアイテムを消去します。より詳細なフィルタリングオプションがあります
 
+
+# Chicken ==============================================
+
+
+# Config
+config.chickenConfig=ニワトリの設定
+
+
+# Items
 item.chickenCatcher.name=チキンキャッチャー
 item.liquidEgg.water.name=水入りの卵
 item.liquidEgg.lava.name=溶岩入りの卵
@@ -610,302 +359,26 @@ item.coloredEgg.green.name=サボテン色の卵
 item.coloredEgg.red.name=赤色の卵
 item.coloredEgg.black.name=イカスミ色の卵
 
-item.creativeModelLearner.name=クリエイティブモデルラーナー (WIP)
-item.dataModelBlank.name=空のデータモデル
-item.deepLearner.name=§bディープラーナー§r
-item.polymerClay.name=ポリマークレイ
-item.sootCoveredRedstone.name=煤まみれのレッドストーン
-item.sootCoveredPlate.name=煤まみれのプレート
+item.solidXp.name=固形経験値
 
-item.structureWand.name=ストラクチャーワンド
+item.analyzer.name=アナライザー
 
-item.variableCard.name=変数カード
 
-item.energyInterface.name=エネルギーインターフェース
-item.energyFilterInterface.name=エネルギーフィルターインターフェース
-item.energyImporter.name=エネルギー搬入口
-item.energyExporter.name=エネルギー搬出口
-item.itemInterface.name=アイテムインターフェース
-item.itemFilterInterface.name=アイテムフィルターインターフェース
-item.itemImporter.name=アイテム搬入口
-item.itemExporter.name=アイテム搬出口
-item.storageTerminal.name=ストレージターミナル
-item.craftingInterface.name=クラフティングインターフェース
-item.redstoneReader.name=レッドストーン読み取り器
-item.blockReader.name=ブロック読み取り器
-item.inventoryReader.name=インベントリ読み取り器
-item.fluidReader.name=液体読み取り器
-item.redstoneWriter.name=レッドストーン書き込み器
-
-#Block
-
-tile.electrolyzer.name=電解槽
-tile.anvil.name=金床
-tile.furnace.name=かまど
-
-tile.basalt.name=玄武岩
-tile.alabaster.name=アラバスター
-tile.hardenedStone.name=硬化石
-
-tile.mica.name=マイカ
-
-tile.structureFrame.basalt_structure_1.name=ストラクチャーフレーム Tier 1 (次のアップデートで削除)
-tile.structureFrame.basalt_structure_2.name=ストラクチャーフレーム Tier 2 (次のアップデートで削除)
-tile.structureFrame.basalt_structure_3.name=ストラクチャーフレーム Tier 3 (次のアップデートで削除)
-tile.structureFrame.basalt_structure_4.name=ストラクチャーフレーム Tier 4 (次のアップデートで削除)
-tile.hardened_stone_structure_1.name=ストラクチャーフレーム Tier 1 (次のアップデートで削除)
-tile.hardened_stone_structure_2.name=ストラクチャーフレーム Tier 2 (次のアップデートで削除)
-tile.hardened_stone_structure_3.name=ストラクチャーフレーム Tier 3 (次のアップデートで削除)
-tile.hardened_stone_structure_4.name=ストラクチャーフレーム Tier 4 (次のアップデートで削除)
-tile.alabaster_structure_1.name=ストラクチャーフレーム Tier 1 (次のアップデートで削除)
-tile.alabaster_structure_2.name=ストラクチャーフレーム Tier 2 (次のアップデートで削除)
-tile.alabaster_structure_3.name=ストラクチャーフレーム Tier 3 (次のアップデートで削除)
-tile.alabaster_structure_4.name=ストラクチャーフレーム Tier 4 (次のアップデートで削除)
-
-tile.machineBase.basalt_machine_base.name=マシンベース
-tile.machineBase.hardened_stone_machine_base.name=マシンベース
-tile.machineBase.alabaster_machine_base.name=マシンベース
-
-tile.modifierNull.name=空のモディファイア
-tile.modifierAccuracy.name=精度モディファイア
-tile.modifierSpeed.name=スピードモディファイア
-tile.modifierLuck.name=ラックモディファイア
-tile.modifierPiezo.name=ピエゾモディファイア
-tile.modifierFlight.name=飛行モディファイア
-tile.modifierNightVision.name=暗視モディファイア
-tile.modifierHaste.name=採掘速度上昇モディファイア
-tile.modifierStrength.name=攻撃力上昇モディファイア
-tile.modifierWaterBreathing.name=水中呼吸モディファイア
-tile.modifierRegeneration.name=再生モディファイア
-tile.modifierSaturation.name=満腹モディファイア
-tile.modifierResistance.name=耐性モディファイア
-tile.modifierJumpBoost.name=跳躍力上昇モディファイア
-tile.modifierFireResistance.name=火炎耐性モディファイア
-
-tile.lens.tier_1.name=クリアレンズ
-tile.lens.tier_2.name=クリスタルレンズ
-tile.coloredLens.black.name=黒色のレンズ
-tile.coloredLens.red.name=赤色のレンズ
-tile.coloredLens.green.name=緑色のレンズ
-tile.coloredLens.brown.name=茶色のレンズ
-tile.coloredLens.blue.name=青色のレンズ
-tile.coloredLens.purple.name=紫色のレンズ
-tile.coloredLens.cyan.name=水色のレンズ
-tile.coloredLens.light_gray.name=薄灰色のレンズ
-tile.coloredLens.gray.name=灰色のレンズ
-tile.coloredLens.pink.name=桃色のレンズ
-tile.coloredLens.lime.name=黄緑色のレンズ
-tile.coloredLens.yellow.name=黄色のレンズ
-tile.coloredLens.light_blue.name=空色のレンズ
-tile.coloredLens.magenta.name=赤紫色のレンズ
-tile.coloredLens.orange.name=橙色のレンズ
-tile.coloredLens.white.name=白色のレンズ
-
-tile.quantumBeacon.tier_1.name=クアンタムビーコン Tier 1
-tile.quantumBeacon.tier_2.name=クアンタムビーコン Tier 2
-tile.quantumBeacon.tier_3.name=クアンタムビーコン Tier 3
-tile.quantumBeacon.tier_4.name=クアンタムビーコン Tier 4
-tile.quantumBeacon.tier_5.name=クアンタムビーコン Tier 5
-tile.quantumBeacon.tier_6.name=クアンタムビーコン Tier 6
-
-tile.laserCore.name=レーザーコア
-
-tile.solarCell.tier_1.name=ルミナイトソーラーセル
-tile.solarCell.tier_2.name=ソラリスソーラーセル
-tile.solarCell.tier_3.name=アビサルソーラーセル
-tile.solarCell.tier_4.name=オーロラソーラーセル
-tile.solarCell.tier_5.name=エクリプスソーラーセル
-tile.solarCell.tier_6.name=ネビュラソーラーセル
-
-tile.blockCrystal.tier_1.name=ルミナイトブロック
-tile.blockCrystal.tier_2.name=ソラリスブロック
-tile.blockCrystal.tier_3.name=アビサルブロック
-tile.blockCrystal.tier_4.name=オーロラブロック
-tile.blockCrystal.tier_5.name=エクリプスブロック
-tile.blockCrystal.tier_6.name=ネビュラブロック
-tile.blockCrystal.tier_7.name=プリズマティックブロック
-tile.blockCrystal.tier_8.name=セレスティアルブロック
-
-tile.solarArray.tier_1.name=ソーラーアレイ Tier 1
-tile.solarArray.tier_2.name=ソーラーアレイ Tier 2
-tile.solarArray.tier_3.name=ソーラーアレイ Tier 3
-tile.solarArray.tier_4.name=ソーラーアレイ Tier 4
-tile.solarArray.tier_5.name=ソーラーアレイ Tier 5
-tile.solarArray.tier_6.name=ソーラーアレイ Tier 6
-
-tile.quantumOreExtractor.tier_1.name=ボイド鉱石採掘機 Tier 1
-tile.quantumOreExtractor.tier_2.name=ボイド鉱石採掘機 Tier 2
-tile.quantumOreExtractor.tier_3.name=ボイド鉱石採掘機 Tier 3
-tile.quantumOreExtractor.tier_4.name=ボイド鉱石採掘機 Tier 4
-tile.quantumOreExtractor.tier_5.name=ボイド鉱石採掘機 Tier 5
-tile.quantumOreExtractor.tier_6.name=ボイド鉱石採掘機 Tier 6
-
-tile.quantumResExtractor.tier_1.name=ボイド資源採掘機 Tier 1
-tile.quantumResExtractor.tier_2.name=ボイド資源採掘機 Tier 2
-tile.quantumResExtractor.tier_3.name=ボイド資源採掘機 Tier 3
-tile.quantumResExtractor.tier_4.name=ボイド資源採掘機 Tier 4
-tile.quantumResExtractor.tier_5.name=ボイド資源採掘機 Tier 5
-tile.quantumResExtractor.tier_6.name=ボイド資源採掘機 Tier 6
-
-tile.basaltStructure.tier_1.name=玄武岩ストラクチャーフレーム Tier 1
-tile.basaltStructure.tier_2.name=玄武岩ストラクチャーフレーム Tier 2
-tile.basaltStructure.tier_3.name=玄武岩ストラクチャーフレーム Tier 3
-tile.basaltStructure.tier_4.name=玄武岩ストラクチャーフレーム Tier 4
-tile.basaltStructure.tier_5.name=玄武岩ストラクチャーフレーム Tier 5
-tile.basaltStructure.tier_6.name=玄武岩ストラクチャーフレーム Tier 6
-
-tile.hardenedStructure.tier_1.name=硬化ストラクチャーフレーム Tier 1
-tile.hardenedStructure.tier_2.name=硬化ストラクチャーフレーム Tier 2
-tile.hardenedStructure.tier_3.name=硬化ストラクチャーフレーム Tier 3
-tile.hardenedStructure.tier_4.name=硬化ストラクチャーフレーム Tier 4
-tile.hardenedStructure.tier_5.name=硬化ストラクチャーフレーム Tier 5
-tile.hardenedStructure.tier_6.name=硬化ストラクチャーフレーム Tier 6
-
-tile.alabasterStructure.tier_1.name=アラバスターストラクチャーフレーム Tier 1
-tile.alabasterStructure.tier_2.name=アラバスターストラクチャーフレーム Tier 2
-tile.alabasterStructure.tier_3.name=アラバスターストラクチャーフレーム Tier 3
-tile.alabasterStructure.tier_4.name=アラバスターストラクチャーフレーム Tier 4
-tile.alabasterStructure.tier_5.name=アラバスターストラクチャーフレーム Tier 5
-tile.alabasterStructure.tier_6.name=アラバスターストラクチャーフレーム Tier 6
-
+# Blocks
 tile.roost.name=ルースト
 tile.roostCollector.name=ルーストコレクター
 tile.breeder.name=チキンブリーダー
-tile.stall.name=ストール
 
-tile.lootFabricator.name=ルートファブリケーター
-tile.simulationChamber.name=シミュレーションチャンバー
-tile.machineCasing.name=マシンケーシング
 
-tile.cable.name=ロジックケーブル
-tile.programmer.name=プログラマー
+# Tooltips
+tooltip.liquid_egg.l1=使い切りのバケツのようなものです。
+tooltip.colored_egg.l1=投げるとニワトリがスポーンするかも？
+tooltip.analyzer.l1=ニワトリに使用してステータスを確認します。
+tooltip.analyzer.l2=- "ニワトリが一番嫌いな曜日は？ フライデー（Fry-day）！"
+tooltip.catcher.name=チキンキャッチャー
 
-#ME Output Bus
-tile.modularItemOutputME.me.name=MEアイテム出力バス
-tile.modularFluidOutputME.me.name=ME液体出力バス
-waila.me.online=装置はオンラインです
-waila.me.no_channel=装置でチャンネルが見つかりません
-waila.me.offline=装置はオフラインです
-tooltip.me_output.desc=アイテムを直接MEネットワークに出力する
-tooltip.me_fluid_output.desc=液体を直接MEネットワークに出力する
-tooltip.me_output.wip=開発中
-tooltip.me_output.lag_warning=警告: MEネットワーク接続時にラグが発生する可能性があります
 
-#ENTITY
-
-#NEI INTEGRATION
-neiintegration.chance=確率: %s
-neiintegration.chance.never=検討します
-neiintegration.chance.lessThan1=<1%
-
-#Modifier Tooltips
-tooltip.modifier.speed.effect=§a採掘速度 %.2f倍§r
-tooltip.modifier.speed.penalty=§c消費エネルギー %.2f倍§r
-tooltip.modifier.accuracy.effect=§aレンズ精度 %.2f倍§r
-tooltip.modifier.accuracy.penalty=§c採掘速度 %.2f倍§r, §c消費エネルギー %.2f倍§r
-tooltip.modifier.piezo.effect=§a雨天時発電ボーナス§r
-tooltip.modifier.luck.effect=§aダブルアウトプット +%d%%§r
-tooltip.modifier.luck.penalty=§c消費エネルギー %.2f倍§r
-
-#Beacon Modifiers
-tooltip.modifier.flight.effect=§bクリエイティブ飛行§r
-tooltip.modifier.night_vision.effect=§b暗視§r
-tooltip.modifier.haste.effect=§b採掘速度上昇§r
-tooltip.modifier.strength.effect=§b攻撃力上昇§r
-tooltip.modifier.regeneration.effect=§b再生§r
-tooltip.modifier.resistance.effect=§b耐性§r
-tooltip.modifier.saturation.effect=§b満腹§r
-tooltip.modifier.jump_boost.effect=§b跳躍力上昇§r
-tooltip.modifier.fire_resistance.effect=§b火炎耐性§r
-tooltip.modifier.water_breathing.effect=§b水中呼吸§r
-tooltip.modifier.beacon.energy=§7効果ごとに %d RF/t 消費§r
-
-#Beacon Effect Tooltip
-tooltip.beacon.shift_for_effects=§eSHIFT§rを押すと効果一覧を表示
-tooltip.beacon.effect_list=利用可能な効果:
-tooltip.beacon.effect.speed=移動速度上昇
-tooltip.beacon.effect.haste=採掘速度上昇
-tooltip.beacon.effect.strength=攻撃力上昇
-tooltip.beacon.effect.resistance=耐性
-tooltip.beacon.effect.regeneration=再生
-tooltip.beacon.effect.saturation=満腹
-tooltip.beacon.effect.jump_boost=跳躍力上昇
-tooltip.beacon.effect.night_vision=暗視
-tooltip.beacon.effect.water_breathing=水中呼吸
-tooltip.beacon.effect.fire_resistance=火炎耐性
-tooltip.beacon.range=効果範囲:
-tooltip.beacon.range.horizontal=横方向
-tooltip.beacon.range.upward=上方向
-tooltip.beacon.range.downward=下方向
-
-#Solar Tooltips
-tooltip.solar.cell.power=§aピーク出力: %d RF/t§r
-tooltip.solar.array.peak=§a最大出力: %d RF/t§r
-
-#Miner Tooltips
-tooltip.miner.speed=§aサイクル時間: %.1fs§r
-tooltip.miner.energy=§7エネルギーコスト: %d RF§r
-
-#Structure Wand
-chat.wand.pos1_set=[OmoshiroiKamo] 位置1を設定: (%d, %d, %d)
-chat.wand.pos2_set=[OmoshiroiKamo] 位置2を設定: (%d, %d, %d)
-chat.wand.scan_ready=[OmoshiroiKamo] スキャン準備完了! (%d ブロック)
-chat.wand.cleared=[OmoshiroiKamo] 全ての位置設定をリセット
-chat.wand.set_pos1_first=[OmoshiroiKamo] まず位置1を設定してください! (ブロックを右クリック)
-chat.wand.area_too_large=[OmoshiroiKamo] 範囲が広すぎます! 最大 %s ブロック, 現在 %s
-chat.wand.use_save_command=保存コマンド: /ok wand save <名前>
-chat.wand.shift_right=Shift+右クリックで位置2を設定
-
-tooltip.wand.right_click=右クリック: 位置1を設定
-tooltip.wand.shift_right_click=Shift+右クリック: 位置2を設定 & 準備
-tooltip.wand.shift_left_click=Shift+左クリック: 全ての位置設定をクリア
-tooltip.wand.shift_left_clear=Shift+左クリックでクリア
-tooltip.wand.pos1=Pos1: (%d, %d, %d)
-tooltip.wand.pos2=Pos2: (%d, %d, %d)
-tooltip.wand.pos_not_set=未設定
-tooltip.wand.size=サイズ: %dx%dx%d
-
-#Structure Commands
-command.ok.main_usage_title=使用法:
-command.ok.main_usage_structure=/ok structure - ストラクチャー管理コマンド
-
-command.ok.reloading=[OmoshiroiKamo] ストラクチャー設定を再読み込み中...
-command.ok.reload_success=[OmoshiroiKamo] ストラクチャー設定の再読み込みに成功しました!
-command.ok.reload_errors=[OmoshiroiKamo] 再読み込み完了 (%d エラー)!
-command.ok.reload_check_file=確認: config/omoshiroikamo/structures/errors.txt
-command.ok.reload_failed=[OmoshiroiKamo] 再読み込み失敗: %s
-
-command.ok.status_header=== OmoshiroiKamo ストラクチャーステータス ===
-command.ok.status_initialized=初期化済み: 
-command.ok.status_yes=はい
-command.ok.status_no=いいえ
-command.ok.status_errors=エラー: 
-command.ok.status_none=なし
-
-command.ok.scan_usage=使用法: /ok structure scan <名前> <x1> <y1> <z1> <x2> <y2> <z2>
-command.ok.scan_example=例: /ok structure scan myStructure 0 64 0 10 70 10
-command.ok.scan_invalid_coords=無効な座標: %s
-command.ok.scan_no_world=ワールドインスタンスを取得できませんでした
-command.ok.scan_area_too_large=範囲が広すぎます! 最大 %d ブロック, 現在 %d
-command.ok.scan_scanning=%dx%dx%d の範囲をスキャン中...
-command.ok.scan_file=ファイル: config/omoshiroikamo/structures/custom/%s.json
-command.ok.scan_failed=[OmoshiroiKamo] スキャン失敗: %s
-
-command.ok.usage_title=使用法:
-command.ok.usage_reload=/ok structure reload - ストラクチャー設定を再読み込み
-command.ok.usage_status=/ok structure status - 現在のステータスを表示
-command.ok.usage_scan=/ok structure scan <名前> <x1> <y1> <z1> <x2> <y2> <z2> - 範囲をスキャンしてJSONに保存
-command.ok.usage_wand_save=/ok wand save <名前> - ワンドの選択範囲をJSONに保存
-
-command.ok.wand_players_only=[OmoshiroiKamo] このコマンドはプレイヤーのみ使用可能です!
-command.ok.wand_usage=使用法: /ok wand save <名前>
-command.ok.wand_no_pending=[OmoshiroiKamo] 保留中のスキャンがありません! 先にストラクチャーワンドを使用してください。
-command.ok.wand_different_dimension=[OmoshiroiKamo] 選択範囲が異なるディメンションにあります!
-command.ok.wand_scanning=[OmoshiroiKamo] %d ブロックをスキャン中...
-command.ok.wand_cleared=[OmoshiroiKamo] ワンドの選択範囲をクリアしました。
-command.ok.wand_no_selection=[OmoshiroiKamo] クリアする保留中の選択範囲がありません。
-
-# Chickens
+# Mobs
 entity.RestoniaCrystalChicken.name=レストニアクリスタルのニワトリ
 entity.PalisCrystalChicken.name=パリスクリスタルのニワトリ
 entity.DiamantineCrystalChicken.name=ディアマンティンクリスタルのニワトリ
@@ -1025,7 +498,29 @@ entity.PigIronChicken.name=豚鉄のニワトリ
 entity.BloodSlimeChicken.name=ブラッドスライムのニワトリ
 entity.BlueSlimeChicken.name=ブルースライムのニワトリ
 
-# Cows
+
+# Waila
+option.omoshiroikamo.breedingTime=繁殖時間
+option.omoshiroikamo.grownTime=成長時間
+
+
+
+# Cow ==============================================
+
+
+# Config
+config.cowConfig=ウシの設定
+
+
+# Items
+item.cowHalter.name=ウシ用手綱
+
+
+# Blocks
+tile.stall.name=ストール
+
+
+# Mobs
 entity.WaterCow.name=水牛
 entity.LavaCow.name=溶岩ウシ
 entity.YelloriumCow.name=イエロリウムウシ
@@ -1081,7 +576,84 @@ entity.MithrilCow.name=ミスリルウシ
 entity.EnderiumCow.name=エンダリウムウシ
 entity.PigIronCow.name=豚鉄ウシ
 
-# DML
+
+# Deep Mob Learning ==============================================
+
+
+# Config
+config.deepMobLearningConfig=モブラーニングの設定
+
+
+# NEI
+nei.dml.simulation_chamber=シミュレーションチャンバー
+nei.dml.loot_fabricator=ルートファブリケーター
+
+
+# GUI
+gui.button_page_select.next=次のページ
+gui.button_page_select.prev=前のページ
+
+
+# Deep Learner GUI
+gui.deep_learner.heading_name=名前
+gui.deep_learner.heading_information=情報
+gui.deep_learner.model_tier=モデルレベル: %s
+gui.deep_learner.defeated=討伐数: %s
+gui.deep_learner.required=%2$sに到達するにはあと%1$s体の討伐が必要
+gui.deep_learner.maximum=最大レベル到達済み
+gui.deep_learner.health_points=体力
+gui.deep_learner.button_next=次のデータモデル
+gui.deep_learner.button_prev=前のデータモデル
+gui.deep_learner.hud=メインハンドまたはオフハンドに持ち、データモデルが入っているとHUDを表示します
+gui.deep_learner.contains=以下のモデルが含まれています
+
+
+# Loot Fabricator GUI
+gui.loot_fabricator.tooltip.crafting_cost=稼働コスト: %d RF/t
+gui.loot_fabricator.tooltip.deselect=クリックで出力アイテム選択を解除
+
+gui.loot_fabricator.error.no_energy=クラフトに必要なエネルギーが不足しています
+gui.loot_fabricator.error.redstone=レッドストーン信号により停止中
+gui.loot_fabricator.error.no_pristine=入力バッファにプリスティンマターがありません
+gui.loot_fabricator.error.no_output_selected=出力アイテムが選択されていません
+gui.loot_fabricator.error.output_full=出力バッファが一杯です
+
+
+# Simulation Chamber GUI
+gui.simulation_chamber.simulation_text.launching=ランタイムを起動中
+gui.simulation_chamber.simulation_text.iteration=イテレーション #%d 開始
+gui.simulation_chamber.simulation_text.loading=チップメモリからモデルをロード中
+gui.simulation_chamber.simulation_text.assessing=脅威レベルを評価中
+gui.simulation_chamber.simulation_text.engaged=敵と交戦中
+gui.simulation_chamber.simulation_text.pristine=プリスティンマターを調達
+gui.simulation_chamber.simulation_text.pristine_success=成功
+gui.simulation_chamber.simulation_text.pristine_failure=失敗
+gui.simulation_chamber.simulation_text.processing=結果を処理中
+
+gui.simulation_chamber.error_text.error=エラー！シミュレーションを開始できません
+gui.simulation_chamber.error_text.no_data_model_1=データモデルが見つかりません
+gui.simulation_chamber.error_text.no_data_model_2=データモデルを挿入してください
+gui.simulation_chamber.error_text.model_cannot_simulate_1=モデル内のデータ量が不正です
+gui.simulation_chamber.error_text.model_cannot_simulate_2=有効なモデルを挿入してください
+gui.simulation_chamber.error_text.no_polymer=ポリマー媒体が不足しています
+gui.simulation_chamber.error_text.no_energy=エネルギー不足！動作を停止します！
+gui.simulation_chamber.error_text.output_full=出力バッファが一杯です
+
+gui.simulation_chamber.redstone_deactivated_1=レッドストーン信号により
+gui.simulation_chamber.redstone_deactivated_2=システム停止中
+
+gui.simulation_chamber.data_model_info.tier=レベル
+gui.simulation_chamber.data_model_info.iterations=試行数
+gui.simulation_chamber.data_model_info.pristine=プリスティンマターの出る確率
+
+gui.simulation_chamber.tooltip.model_data=%s データ収集済み
+gui.simulation_chamber.tooltip.model_max=データモデルは最大レベルに到達しています
+gui.simulation_chamber.tooltip.model_missing=マシンにデータモデルがありません
+gui.simulation_chamber.tooltip.model_cannot_simulate=現在のデータモデルレベルではシミュレーションを実行できません
+gui.simulation_chamber.tooltip.sim_cost=現在のデータモデルでシミュレーションするための消費エネルギー: %d RF/t
+
+
+# Items
 item.living_matter.overworldian.name=§9オーバーワールド系マター
 item.living_matter.hellish.name=§c地獄系マター
 item.living_matter.extraterrestrial.name=§d宇宙系マター
@@ -1111,6 +683,50 @@ item.pristine.Wither Skeleton.name=純粋なウィザースケルトンマター
 item.model.Zombie.name=§bゾンビデータモデル§r
 item.pristine.Zombie.name=純粋なゾンビマター
 
+item.creativeModelLearner.name=クリエイティブモデルラーナー (WIP)
+item.dataModelBlank.name=空のデータモデル
+item.deepLearner.name=§bディープラーナー§r
+item.polymerClay.name=ポリマークレイ
+item.sootCoveredRedstone.name=煤まみれのレッドストーン
+item.sootCoveredPlate.name=煤まみれのプレート
+
+
+# Blocks
+tile.machineCasing.name=マシンケーシング
+tile.lootFabricator.name=ルートファブリケーター
+tile.simulationChamber.name=シミュレーションチャンバー
+
+
+# Tooltips
+tooltip.data_model.type=タイプ: %s
+tooltip.data_model.tier=レベル: %s
+tooltip.data_model.data_collected=収集したデータ量: %s/%s
+tooltip.data_model.kill_multiplier=1体倒して集められるデータ量: %s
+tooltip.data_model.rf_cost=シミュレーションコスト: %s RF/t
+tooltip.data_model.cannot_simulate=このレベルではシミュレーションチャンバーでデータモデルを使用できません
+tooltip.data_model.reached_tier=%s は %s レベルに到達しました
+
+tooltip.living_matter.consume_for_xp=%s で消費して経験値を獲得
+tooltip.living_matter.consume_stack=%s 押しながら使用でスタックごと消費
+tooltip.living_matter.xp=1アイテムあたり %s 経験値
+
+tooltip.pristine_matter.loot_items=入手可能なアイテム:
+
+tooltip.soot_covered_redstone=%s を %s (%s) にぶつけて作成
+
+tooltip.creative_model_learner.desc=ディープラーナー内のデータモデルをレベルアップさせるクリエイティブアイテム。
+tooltip.creative_model_learner.shift=§r§oシフト§r§7 + §r§o右クリック§rでティアを上昇させます。§r
+tooltip.creative_model_learner.ctrl=§r§oコントロール§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
+
+
+# Tier
+model.tier_0.name=§7欠陥品§r
+model.tier_1.name=§a普通§r
+model.tier_2.name=§9高度§r
+model.tier_3.name=§d素晴らしい§r
+model.tier_4.name=§6自己認識§r
+
+
 # Trivia
 dml.trivia.blaze.1=水入りバケツを持っていけば、蒸発する様子を絶望と共に見守ることになるし、辺り一面火の海だ。
 dml.trivia.blaze.2=君は燃えている。
@@ -1137,105 +753,453 @@ dml.trivia.wither_skeleton.2=牛乳を持っていけ！
 dml.trivia.zombie.1=夜に唸り声を上げる。
 dml.trivia.zombie.2=パーソナルスペースの必要性を理解していない。
 
-# Modular Machinery
-tile.modularMachineCasing.name=モジュラーマシンケーシング
-tile.modularMachineController.name=モジュラーマシンコントローラー
-tile.visBridge.name=ビスブリッジ
 
-# Item Input Port
-tile.modularItemInput.tier_1.name=アイテム搬入口 ティア1
-tile.modularItemInput.tier_2.name=アイテム搬入口 ティア2
-tile.modularItemInput.tier_3.name=アイテム搬入口 ティア3
-tile.modularItemInput.tier_4.name=アイテム搬入口 ティア4
-tile.modularItemInput.tier_5.name=アイテム搬入口 ティア5
-tile.modularItemInput.tier_6.name=アイテム搬入口 ティア6
+# Integrated Dynamics ==============================================
 
-# Item Output Port
-tile.modularItemOutput.tier_1.name=アイテム搬出口 ティア1
-tile.modularItemOutput.tier_2.name=アイテム搬出口 ティア2
-tile.modularItemOutput.tier_3.name=アイテム搬出口 ティア3
-tile.modularItemOutput.tier_4.name=アイテム搬出口 ティア4
-tile.modularItemOutput.tier_5.name=アイテム搬出口 ティア5
-tile.modularItemOutput.tier_6.name=アイテム搬出口 ティア6
 
-# Fluid Input Port
-tile.modularFluidInput.tier_1.name=液体搬入口 ティア1
-tile.modularFluidInput.tier_2.name=液体搬入口 ティア2
-tile.modularFluidInput.tier_3.name=液体搬入口 ティア3
-tile.modularFluidInput.tier_4.name=液体搬入口 ティア4
-tile.modularFluidInput.tier_5.name=液体搬入口 ティア5
-tile.modularFluidInput.tier_6.name=液体搬入口 ティア6
+# GUI
+gui.crafting_filter.storage=ストレージ内アイテム
+gui.crafting_filter.craftable=クラフト可能
+gui.crafting_filter.both=両方
 
-# Fluid Output Port
-tile.modularFluidOutput.tier_1.name=液体搬出口 ティア1
-tile.modularFluidOutput.tier_2.name=液体搬出口 ティア2
-tile.modularFluidOutput.tier_3.name=液体搬出口 ティア3
-tile.modularFluidOutput.tier_4.name=液体搬出口 ティア4
-tile.modularFluidOutput.tier_5.name=液体搬出口 ティア5
-tile.modularFluidOutput.tier_6.name=液体搬出口 ティア6
+gui.ids.part_settings=パーツ設定
+gui.ids.index_channel=チャンネル:
+gui.ids.id=ID
+gui.ids.length=長さ
+gui.ids.transferLimit=転送制限
+gui.ids.roundRobin=順番
+gui.ids.nbt=NBT
+gui.ids.stackSize=スタックサイズ
+gui.ids.allowInsertions=搬入できる
+gui.ids.allowExtractions=搬出できる
+gui.ids.blackList=ブラックリスト
 
-# Energy Input Port
-tile.modularEnergyInput.tier_1.name=エネルギー搬入口 ティア1
-tile.modularEnergyInput.tier_2.name=エネルギー搬入口 ティア2
-tile.modularEnergyInput.tier_3.name=エネルギー搬入口 ティア3
-tile.modularEnergyInput.tier_4.name=エネルギー搬入口 ティア4
-tile.modularEnergyInput.tier_5.name=エネルギー搬入口 ティア5
-tile.modularEnergyInput.tier_6.name=エネルギー搬入口 ティア6
+gui.ids.redstoneReader.lowRedstone=レッドストーン信号 低 | 真偽値
+gui.ids.redstoneReader.hasRedstone=レッドストーン信号 | 真偽値
+gui.ids.redstoneReader.highRedstone=レッドストーン信号 高 | 真偽値
+gui.ids.redstoneReader.redstoneValue=レッドストーン信号 | 数値
 
-# Energy Output Port
-tile.modularEnergyOutput.tier_1.name=エネルギー搬出口 ティア1
-tile.modularEnergyOutput.tier_2.name=エネルギー搬出口 ティア2
-tile.modularEnergyOutput.tier_3.name=エネルギー搬出口 ティア3
-tile.modularEnergyOutput.tier_4.name=エネルギー搬出口 ティア4
-tile.modularEnergyOutput.tier_5.name=エネルギー搬出口 ティア5
-tile.modularEnergyOutput.tier_6.name=エネルギー搬出口 ティア6
+gui.ids.blockReader.hasBlock=ブロックがあるか | 真偽値
+gui.ids.blockReader.dimension=次元
+gui.ids.blockReader.coord.x=X | 座標
+gui.ids.blockReader.coord.y=Y | 座標
+gui.ids.blockReader.coord.z=Z | 座標
+gui.ids.blockReader.block=ブロック | 文字列
+gui.ids.blockReader.biome=バイオーム | 文字列
+gui.ids.blockReader.light=明るさ | 数値
 
-# Gas Input Port
-tile.modularGasInput.tier_1.name=ガス搬入口 ティア1
-tile.modularGasInput.tier_2.name=ガス搬入口 ティア2
-tile.modularGasInput.tier_3.name=ガス搬入口 ティア3
-tile.modularGasInput.tier_4.name=ガス搬入口 ティア4
-tile.modularGasInput.tier_5.name=ガス搬入口 ティア5
-tile.modularGasInput.tier_6.name=ガス搬入口 ティア6
+gui.ids.inventoryReader.isInventory=インベントリがあるか | 真偽値
+gui.ids.inventoryReader.inventoryFull=インベントリがいっぱいか | 真偽値
+gui.ids.inventoryReader.inventoryEmpty=インベントリが空か | 真偽値
+gui.ids.inventoryReader.inventoryNotEmpty=インベントリが空でないか | 真偽値
+gui.ids.inventoryReader.inventoryCount=インベントリの数 | 整数
+gui.ids.inventoryReader.inventorySlots=インベントリのスロット | 整数
+gui.ids.inventoryReader.slotsFilled=埋まっているスロットの数 | 整数
+gui.ids.inventoryReader.fillRatio=埋まっている割合 | 少数
+gui.ids.inventoryReader.itemsList=アイテム | リスト
+gui.ids.inventoryReader.slotItem=スロットのアイテム | アイテムスタック
 
-# Gas Output Port
-tile.modularGasOutput.tier_1.name=ガス搬出口 ティア1
-tile.modularGasOutput.tier_2.name=ガス搬出口 ティア2
-tile.modularGasOutput.tier_3.name=ガス搬出口 ティア3
-tile.modularGasOutput.tier_4.name=ガス搬出口 ティア4
-tile.modularGasOutput.tier_5.name=ガス搬出口 ティア5
-tile.modularGasOutput.tier_6.name=ガス搬出口 ティア6
+gui.ids.fluidReader.isTank=タンクがあるか | 真偽値
+gui.ids.fluidReader.tankEmpty=タンクが空か | 真偽値
+gui.ids.fluidReader.tankNotEmpty=タンクが空でない | 真偽値
+gui.ids.fluidReader.tankFull=タンクがいっぱいか | 真偽値
+gui.ids.fluidReader.tankCount=タンクの数 | 整数
+gui.ids.fluidReader.fluidAmount=液体の量 | 整数
+gui.ids.fluidReader.totalAmount=液体の総量 | 整数
+gui.ids.fluidReader.fluidCapacity=液体の容量 | 整数
+gui.ids.fluidReader.totalCapacity=液体の総容量 | 整数
+gui.ids.fluidReader.fillRatio=液体の割合 | 少数
+gui.ids.fluidReader.tankFluids=タンクの液体 | リスト
+gui.ids.fluidReader.tankCapacities=タンクの容量 | リスト
+gui.ids.fluidReader.tankFluid=タンクの液体 | 液体スタック
 
-# Mana Ports
-tile.modularManaInput.tier_1.name=マナ搬入口
-tile.modularManaOutput.tier_1.name=マナ搬出口
+gui.ids.redstoneWriter.redstoneBoolean=レッドストーン信号 | 真偽値
+gui.ids.redstoneWriter.redstoneInt=レッドストーン信号 | 整数
+gui.ids.redstoneWriter.pulseBoolean=パルス | 真偽値
+gui.ids.redstoneWriter.pulseInt=パルス | 整数
 
-# Vis Ports
-tile.modularVisInput.tier_1.name=ビス搬入口
-tile.modularVisOutput.tier_1.name=ビス搬出口
+gui.ids.itemImporter.allItem=全てのアイテムを搬入 | 真偽値
+gui.ids.itemImporter.itemAmount=搬入アイテムの数 | 整数
+gui.ids.itemImporter.itemSlot=搬入アイテムのスロット | 整数
+gui.ids.itemImporter.item=搬入アイテム | アイテムスタック
+gui.ids.itemImporter.items=搬入アイテム | リスト
 
-# Essentia Ports
-tile.modularEssentiaInput.tier_1.name=エッセンシア搬入口
-tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出口
+gui.ids.itemExporter.allItem=全てのアイテムを搬出 | 真偽値
+gui.ids.itemExporter.itemAmount=搬出アイテムの数 | 整数
+gui.ids.itemExporter.itemSlot=搬出アイテムのスロット | 整数
+gui.ids.itemExporter.item=搬出アイテム | アイテムスタック
+gui.ids.itemExporter.items=搬出アイテム | リスト
 
-# ME Ports
-tile.modularItemOutputME.me.name=MEアイテム搬出口
-tile.modularFluidOutputME.me.name=ME液体搬出口
-tile.modularEssentiaInputME.me.name=MEエッセンシア搬入口
+gui.ids.itemFilterInterface.all=全て | 真偽値
+gui.ids.itemFilterInterface.item=フィルター | アイテムスタック
+gui.ids.itemFilterInterface.items=フィルター | リスト
 
-# Deep Mob Learning
-model.tier_0.name=§7欠陥品§r
-model.tier_1.name=§a普通§r
-model.tier_2.name=§9高度§r
-model.tier_3.name=§d素晴らしい§r
-model.tier_4.name=§6自己認識§r
+gui.ids.energyImporter.boolean=エネルギーを搬入 | 真偽値
+gui.ids.energyImporter.amount=エネルギーの搬入量 | 整数
 
-tooltip.creative_model_learner.desc=ディープラーナー内のデータモデルをレベルアップさせるクリエイティブアイテム。
-tooltip.creative_model_learner.shift=§r§oシフト§r§7 + §r§o右クリック§rでティアを上昇させます。§r
-tooltip.creative_model_learner.ctrl=§r§oコントロール§r§7 + §r§o右クリック§rでキルシミュレーションを行います。§r
+gui.ids.energyExporter.boolean=エネルギーを搬出 | 真偽値
+gui.ids.energyExporter.amount=エネルギーの搬出量 | 整数
 
-# Integrated Dynamics
+gui.ids.energyFilterInterface.all=全て | 真偽値
+
+gui.ids.side=搬入出面
+gui.ids.tick=何ティック毎に動作するか
+gui.ids.priority=優先度
+gui.ids.channel=チャンネル
+
+
+# Programming
+gui.ids.type.boolean=真偽値
+gui.ids.type.int=整数
+gui.ids.type.long=整数 (Long)
+gui.ids.type.float=小数 (Float)
+gui.ids.type.double=小数 (Double)
+gui.ids.type.string=文字列
+
+gui.ids.op.if=条件
+
+gui.ids.op.and=AND &&
+gui.ids.op.nand=NAND !&&
+gui.ids.op.or=OR ||
+gui.ids.op.nor=NOR !||
+gui.ids.op.xor=XOR ^
+
+gui.ids.op.eq=EQ (等しい) ==
+gui.ids.op.neq=NEQ (等しくない) !=
+gui.ids.op.gtr=GTR (より大きい) >
+gui.ids.op.geq=GEQ (以上) >=
+gui.ids.op.lss=LSS (より小さい) <
+gui.ids.op.leq=LEQ (以下) <=
+
+
+# Items
+item.variableCard.name=変数カード
+item.itemImporter.name=アイテム搬入口
+item.itemExporter.name=アイテム搬出口
+item.itemInterface.name=アイテムインターフェース
+item.itemFilterInterface.name=アイテムフィルターインターフェース
+item.energyImporter.name=エネルギー搬入口
+item.energyExporter.name=エネルギー搬出口
+item.energyInterface.name=エネルギーインターフェース
+item.energyFilterInterface.name=エネルギーフィルターインターフェース
+item.storageTerminal.name=ストレージターミナル
+item.redstoneReader.name=レッドストーン読み取り器
+item.blockReader.name=ブロック読み取り器
+item.inventoryReader.name=インベントリ読み取り器
+item.fluidReader.name=液体読み取り器
+item.redstoneWriter.name=レッドストーン書き込み器
+item.craftingInterface.name=クラフティングインターフェース
+
+
+# Blocks
+tile.cable.name=ロジックケーブル
+tile.programmer.name=プログラマー
+
+
+# Tooltips
 tooltip.variable_card.empty=§7ロジックデータなし
+
+
+# Multiblock ==============================================
+
+
+# Config
+config.multiblockConfig=マルチブロックの設定
+config.quantumExtractorConfig=クアンタムエクストラクターの設定
+config.oreMinerConfig=鉱石採掘機
+config.resMinerConfig=資源採掘機
+config.extractorModifiers=モディファイア
+config.quantumBeaconConfig=クアンタムビーコンの設定
+config.beaconGeneral=基本設定
+config.beaconEffectLevels=エフェクトレベル
+config.beaconRange=効果範囲
+config.solarArrayConfig=ソーラーアレイの設定
+config.solarTierEnergy=Tier別ピーク出力
+config.solarCellSettings=セル設定
+config.eTWorldGenConfig=ワールド生成の設定
+config.hardenedStoneGen=硬化石
+config.alabasterGen=アラバスター
+config.basaltGen=玄武岩
+
+
+# NEI
+nei.multiblock.lens_bonus=%s ボーナス
+
+
+# Items
+item.stabilizedEnderPear.name=安定化エンダーパール
+item.photovoltaicCell.name=太陽電池セル
+item.assembler.name=アセンブラー
+item.crystal.tier_1.name=ルミナイトクリスタル
+item.crystal.tier_2.name=ソラリスクリスタル
+item.crystal.tier_3.name=アビサルクリスタル
+item.crystal.tier_4.name=オーロラクリスタル
+item.crystal.tier_5.name=エクリプスクリスタル
+item.crystal.tier_6.name=ネビュラクリスタル
+item.crystal.tier_7.name=プリズマティッククリスタル
+item.crystal.tier_8.name=セレスティアルクリスタル
+
+
+# Blocks
+tile.mica.name=マイカ
+tile.basalt.name=玄武岩
+tile.alabaster.name=アラバスター
+tile.hardenedStone.name=硬化石
+
+tile.machineBase.basalt_machine_base.name=マシンベース
+tile.machineBase.hardened_stone_machine_base.name=マシンベース
+tile.machineBase.alabaster_machine_base.name=マシンベース
+
+tile.basaltStructure.tier_1.name=玄武岩ストラクチャーフレーム Tier 1
+tile.basaltStructure.tier_2.name=玄武岩ストラクチャーフレーム Tier 2
+tile.basaltStructure.tier_3.name=玄武岩ストラクチャーフレーム Tier 3
+tile.basaltStructure.tier_4.name=玄武岩ストラクチャーフレーム Tier 4
+tile.basaltStructure.tier_5.name=玄武岩ストラクチャーフレーム Tier 5
+tile.basaltStructure.tier_6.name=玄武岩ストラクチャーフレーム Tier 6
+
+tile.hardenedStructure.tier_1.name=硬化ストラクチャーフレーム Tier 1
+tile.hardenedStructure.tier_2.name=硬化ストラクチャーフレーム Tier 2
+tile.hardenedStructure.tier_3.name=硬化ストラクチャーフレーム Tier 3
+tile.hardenedStructure.tier_4.name=硬化ストラクチャーフレーム Tier 4
+tile.hardenedStructure.tier_5.name=硬化ストラクチャーフレーム Tier 5
+tile.hardenedStructure.tier_6.name=硬化ストラクチャーフレーム Tier 6
+
+tile.alabasterStructure.tier_1.name=アラバスターストラクチャーフレーム Tier 1
+tile.alabasterStructure.tier_2.name=アラバスターストラクチャーフレーム Tier 2
+tile.alabasterStructure.tier_3.name=アラバスターストラクチャーフレーム Tier 3
+tile.alabasterStructure.tier_4.name=アラバスターストラクチャーフレーム Tier 4
+tile.alabasterStructure.tier_5.name=アラバスターストラクチャーフレーム Tier 5
+tile.alabasterStructure.tier_6.name=アラバスターストラクチャーフレーム Tier 6
+
+tile.blockCrystal.tier_1.name=ルミナイトブロック
+tile.blockCrystal.tier_2.name=ソラリスブロック
+tile.blockCrystal.tier_3.name=アビサルブロック
+tile.blockCrystal.tier_4.name=オーロラブロック
+tile.blockCrystal.tier_5.name=エクリプスブロック
+tile.blockCrystal.tier_6.name=ネビュラブロック
+tile.blockCrystal.tier_7.name=プリズマティックブロック
+tile.blockCrystal.tier_8.name=セレスティアルブロック
+
+tile.modifierNull.name=空のモディファイア
+tile.modifierAccuracy.name=精度モディファイア
+tile.modifierSpeed.name=スピードモディファイア
+tile.modifierLuck.name=ラックモディファイア
+tile.modifierPiezo.name=ピエゾモディファイア
+tile.modifierFlight.name=飛行モディファイア
+tile.modifierNightVision.name=暗視モディファイア
+tile.modifierHaste.name=採掘速度上昇モディファイア
+tile.modifierStrength.name=攻撃力上昇モディファイア
+tile.modifierWaterBreathing.name=水中呼吸モディファイア
+tile.modifierRegeneration.name=再生モディファイア
+tile.modifierSaturation.name=満腹モディファイア
+tile.modifierResistance.name=耐性モディファイア
+tile.modifierJumpBoost.name=跳躍力上昇モディファイア
+tile.modifierFireResistance.name=火炎耐性モディファイア
+
+tile.laserCore.name=レーザーコア
+tile.lens.tier_1.name=クリアレンズ
+tile.lens.tier_2.name=クリスタルレンズ
+tile.coloredLens.black.name=黒色のレンズ
+tile.coloredLens.red.name=赤色のレンズ
+tile.coloredLens.green.name=緑色のレンズ
+tile.coloredLens.brown.name=茶色のレンズ
+tile.coloredLens.blue.name=青色のレンズ
+tile.coloredLens.purple.name=紫色のレンズ
+tile.coloredLens.cyan.name=水色のレンズ
+tile.coloredLens.light_gray.name=薄灰色のレンズ
+tile.coloredLens.gray.name=灰色のレンズ
+tile.coloredLens.pink.name=桃色のレンズ
+tile.coloredLens.lime.name=黄緑色のレンズ
+tile.coloredLens.yellow.name=黄色のレンズ
+tile.coloredLens.light_blue.name=空色のレンズ
+tile.coloredLens.magenta.name=赤紫色のレンズ
+tile.coloredLens.orange.name=橙色のレンズ
+tile.coloredLens.white.name=白色のレンズ
+
+tile.solarCell.tier_1.name=ルミナイトソーラーセル
+tile.solarCell.tier_2.name=ソラリスソーラーセル
+tile.solarCell.tier_3.name=アビサルソーラーセル
+tile.solarCell.tier_4.name=オーロラソーラーセル
+tile.solarCell.tier_5.name=エクリプスソーラーセル
+tile.solarCell.tier_6.name=ネビュラソーラーセル
+
+tile.quantumBeacon.tier_1.name=クアンタムビーコン Tier 1
+tile.quantumBeacon.tier_2.name=クアンタムビーコン Tier 2
+tile.quantumBeacon.tier_3.name=クアンタムビーコン Tier 3
+tile.quantumBeacon.tier_4.name=クアンタムビーコン Tier 4
+tile.quantumBeacon.tier_5.name=クアンタムビーコン Tier 5
+tile.quantumBeacon.tier_6.name=クアンタムビーコン Tier 6
+
+tile.solarArray.tier_1.name=ソーラーアレイ Tier 1
+tile.solarArray.tier_2.name=ソーラーアレイ Tier 2
+tile.solarArray.tier_3.name=ソーラーアレイ Tier 3
+tile.solarArray.tier_4.name=ソーラーアレイ Tier 4
+tile.solarArray.tier_5.name=ソーラーアレイ Tier 5
+tile.solarArray.tier_6.name=ソーラーアレイ Tier 6
+
+tile.quantumOreExtractor.tier_1.name=ボイド鉱石採掘機 Tier 1
+tile.quantumOreExtractor.tier_2.name=ボイド鉱石採掘機 Tier 2
+tile.quantumOreExtractor.tier_3.name=ボイド鉱石採掘機 Tier 3
+tile.quantumOreExtractor.tier_4.name=ボイド鉱石採掘機 Tier 4
+tile.quantumOreExtractor.tier_5.name=ボイド鉱石採掘機 Tier 5
+tile.quantumOreExtractor.tier_6.name=ボイド鉱石採掘機 Tier 6
+
+tile.quantumResExtractor.tier_1.name=ボイド資源採掘機 Tier 1
+tile.quantumResExtractor.tier_2.name=ボイド資源採掘機 Tier 2
+tile.quantumResExtractor.tier_3.name=ボイド資源採掘機 Tier 3
+tile.quantumResExtractor.tier_4.name=ボイド資源採掘機 Tier 4
+tile.quantumResExtractor.tier_5.name=ボイド資源採掘機 Tier 5
+tile.quantumResExtractor.tier_6.name=ボイド資源採掘機 Tier 6
+
+
+# Tooltips
+tooltip.assembler.l1=Shift + 右クリックでコントローラーに向けて使用すると組み立てます。
+tooltip.assembler.l2=左クリックでマルチブロックのブロックを即座に破壊します。
+
+tooltip.modifier.speed.effect=§a採掘速度 %.2f倍§r
+tooltip.modifier.speed.penalty=§c消費エネルギー %.2f倍§r
+tooltip.modifier.accuracy.effect=§aレンズ精度 %.2f倍§r
+tooltip.modifier.accuracy.penalty=§c採掘速度 %.2f倍§r, §c消費エネルギー %.2f倍§r
+tooltip.modifier.piezo.effect=§a雨天時発電ボーナス§r
+tooltip.modifier.luck.effect=§aダブルアウトプット +%d%%§r
+tooltip.modifier.luck.penalty=§c消費エネルギー %.2f倍§r
+tooltip.modifier.flight.effect=§bクリエイティブ飛行§r
+tooltip.modifier.night_vision.effect=§b暗視§r
+tooltip.modifier.haste.effect=§b採掘速度上昇§r
+tooltip.modifier.strength.effect=§b攻撃力上昇§r
+tooltip.modifier.regeneration.effect=§b再生§r
+tooltip.modifier.resistance.effect=§b耐性§r
+tooltip.modifier.saturation.effect=§b満腹§r
+tooltip.modifier.jump_boost.effect=§b跳躍力上昇§r
+tooltip.modifier.fire_resistance.effect=§b火炎耐性§r
+tooltip.modifier.water_breathing.effect=§b水中呼吸§r
+tooltip.modifier.beacon.energy=§7効果ごとに %d RF/t 消費§r
+
+tooltip.beacon.shift_for_effects=§eSHIFT§rを押すと効果一覧を表示
+tooltip.beacon.effect_list=利用可能な効果:
+tooltip.beacon.effect.speed=移動速度上昇
+tooltip.beacon.effect.haste=採掘速度上昇
+tooltip.beacon.effect.strength=攻撃力上昇
+tooltip.beacon.effect.resistance=耐性
+tooltip.beacon.effect.regeneration=再生
+tooltip.beacon.effect.saturation=満腹
+tooltip.beacon.effect.jump_boost=跳躍力上昇
+tooltip.beacon.effect.night_vision=暗視
+tooltip.beacon.effect.water_breathing=水中呼吸
+tooltip.beacon.effect.fire_resistance=火炎耐性
+tooltip.beacon.range=効果範囲:
+tooltip.beacon.range.horizontal=横方向
+tooltip.beacon.range.upward=上方向
+tooltip.beacon.range.downward=下方向
+
+tooltip.solar.cell.power=§aピーク出力: %d RF/t§r
+tooltip.solar.array.peak=§a最大出力: %d RF/t§r
+
+tooltip.miner.speed=§aサイクル時間: %.1fs§r
+tooltip.miner.energy=§7エネルギーコスト: %d RF§r
+
+
+# Archievement
+achievement.omoshiroikamo.craft_assembler=組み立て準備OK！
+achievement.omoshiroikamo.craft_assembler.desc=アセンブラーを作成する
+achievement.omoshiroikamo.craft_solar_array_t1=あっ倉庫が停電しちゃった
+achievement.omoshiroikamo.craft_solar_array_t1.desc=Tier 1 ソーラーアレイを作成する
+achievement.omoshiroikamo.craft_solar_array_t4=あっアップグレード積みすぎて停電しちゃった
+achievement.omoshiroikamo.craft_solar_array_t4.desc=Tier 4 ソーラーアレイを作成する
+achievement.omoshiroikamo.craft_void_ore_t1=鉱石が足りない！
+achievement.omoshiroikamo.craft_void_ore_t1.desc=Tier 1 ボイド鉱石採掘機を作成する
+achievement.omoshiroikamo.craft_void_ore_t4=鉱石がないなら掘れば良いじゃない
+achievement.omoshiroikamo.craft_void_ore_t4.desc=Tier 4 ボイド鉱石採掘機を作成する
+
+achievement.omoshiroikamo.assemble_void_ore_miner_t1=無限の鉱石！わくわく
+achievement.omoshiroikamo.assemble_void_ore_miner_t1.desc=アセンブラーで Tier 1 ボイド鉱石採掘機を組み立てる
+achievement.omoshiroikamo.assemble_void_ore_miner_t4=無限鉱石の達人
+achievement.omoshiroikamo.assemble_void_ore_miner_t4.desc=アセンブラーで Tier 4 ボイド鉱石採掘機を組み立てる
+achievement.omoshiroikamo.assemble_void_res_miner_t1=粘土粘土粘土粘土圧縮圧縮圧縮圧縮
+achievement.omoshiroikamo.assemble_void_res_miner_t1.desc=アセンブラーで Tier 1 ボイド資源採掘機を組み立てる
+achievement.omoshiroikamo.assemble_void_res_miner_t4=ウィザーが真っ青になる量のソウルサンド
+achievement.omoshiroikamo.assemble_void_res_miner_t4.desc=アセンブラーで Tier 4 ボイド資源採掘機を組み立てる
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t1=デイリー8等級
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t1.desc=アセンブラーで Tier 1 ビーコンを組み立てる
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t4=全盛り15等級
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t4.desc=アセンブラーで Tier 4 ビーコンを組み立てる
+achievement.omoshiroikamo.assemble_solar_array_t1=全世界をソーラーで覆ってやる！
+achievement.omoshiroikamo.assemble_solar_array_t1.desc=アセンブラーで Tier 1 ソーラーアレイを組み立てる
+achievement.omoshiroikamo.assemble_solar_array_t4=ダイソンスフィアが作りたいなぁ
+achievement.omoshiroikamo.assemble_solar_array_t4.desc=アセンブラーで Tier 4 ソーラーアレイを組み立てる
+
+achievement.omoshiroikamo.craft_colored_lens=レーザー集中！
+achievement.omoshiroikamo.craft_colored_lens.desc=レンズを染色する
+achievement.omoshiroikamo.craft_modifier_core=イーブイ
+achievement.omoshiroikamo.craft_modifier_core.desc=空のモディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_speed=スピードアーップ！
+achievement.omoshiroikamo.craft_modifier_speed.desc=スピードモディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_piezo=振動特攻
+achievement.omoshiroikamo.craft_modifier_piezo.desc=ピエゾモディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_accuracy=狙撃位置確保......具体的な位置までは知らなくていい。
+achievement.omoshiroikamo.craft_modifier_accuracy.desc=精度モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_jump_boost=太陽まで飛んでいける
+achievement.omoshiroikamo.craft_modifier_jump_boost.desc=跳躍力上昇モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_flight=空を舞う感覚、味わってみない？
+achievement.omoshiroikamo.craft_modifier_flight.desc=飛行モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_resistance=痛くない…！痛くなぁい…！
+achievement.omoshiroikamo.craft_modifier_resistance.desc=耐性モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_fire_res=バーベキューやろーぜ！
+achievement.omoshiroikamo.craft_modifier_fire_res.desc=火炎耐性モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_haste=わざマシン028 (ZA)
+achievement.omoshiroikamo.craft_modifier_haste.desc=採掘速度上昇モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_strength=攻撃は専門外なんだけどなー。
+achievement.omoshiroikamo.craft_modifier_strength.desc=攻撃力上昇モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_night_vision=ホークビジョン
+achievement.omoshiroikamo.craft_modifier_night_vision.desc=暗視モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_water_breathing=エーギルまで泳いで行けるかな？
+achievement.omoshiroikamo.craft_modifier_water_breathing.desc=水中呼吸モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_regen=誰がっ！毒ガスでっ！HP回復するんだよっ！
+achievement.omoshiroikamo.craft_modifier_regen.desc=再生モディファイアを作成する
+achievement.omoshiroikamo.craft_modifier_saturation=リンゴちゃん、今日もよろしくね！
+achievement.omoshiroikamo.craft_modifier_saturation.desc=満腹モディファイアを作成する
+
+
+# Modular machines ==============================================
+
+
+# Gui
+gui.machinery.energy_used=消費電力: %s
+gui.machinery.use_ic2=IC2を使用
+
+
+# Status
+gui.craftingState.idle=待機中
+gui.craftingState.running=稼働中
+gui.craftingState.error=エラー
+gui.craftingState.paused=一時停止中
+gui.craftingState.no_input=材料不足
+gui.craftingState.no_matching_recipe=レシピ不一致
+gui.craftingState.missing_blueprint=ブループリント未挿入
+
+
+# Status Messages
+gui.status.insert_blueprint=ブループリントを挿入してください
+gui.status.structure_mismatch=構造が一致しません
+gui.status.structure_not_formed=構造が形成されていません
+gui.status.processing=処理中: %d%%
+gui.status.output_full=出力満杯: %s
+gui.status.idle=待機中
+
+
+# Errors
+gui.error.requirements_not_met=構造体の要件を満たしていません
+gui.error.block_mismatch=ブロック不一致または構造体が不完全です
+gui.error.invalid_definition=無効な構造定義です
+gui.error.missing_definition=構造定義が見つかりません
+gui.error.incomplete=構造体が不完全です
+gui.error.paused=レッドストーンで一時停止
+gui.error.no_recipes=レシピがありません
+gui.error.no_matching_recipe=一致しているレシピが見つかりません
+gui.error.no_energy=エネルギーが不足しています
+gui.error.input_missing=入力が不足しています
+gui.error.unknown=不明なエラー
+
 
 # Machine Blueprint
 item.machineBlueprint.display.name.format=設計図: %s
@@ -1250,21 +1214,6 @@ tooltip.machineBlueprint.build=コントローラーにシフト右クリック�
 
 message.machineBlueprint.empty=この設計図は空です
 
-# Status Messages
-gui.status.insert_blueprint=ブループリントを挿入してください
-gui.status.structure_mismatch=構造が一致しません
-gui.status.structure_not_formed=構造が形成されていません
-gui.status.processing=処理中: %d%%
-gui.status.output_full=出力満杯: %s
-gui.status.idle=待機中
-
-# Error Reasons
-gui.error.paused=レッドストーンで一時停止
-gui.error.no_recipes=レシピがありません
-gui.error.no_matching_recipe=一致しているレシピが見つかりません
-gui.error.no_energy=エネルギーが不足しています
-gui.error.input_missing=入力が不足しています
-gui.error.unknown=不明なエラー
 
 # Port Types
 gui.port_type.ITEM=アイテム
@@ -1274,10 +1223,108 @@ gui.port_type.GAS=ガス
 gui.port_type.ESSENTIA=エッセンシア
 gui.port_type.VIS=Vis
 
-# Structure Errors
-gui.error.structure.requirements_not_met=構造体の要件を満たしていません
-gui.error.structure.block_mismatch=ブロック不一致または構造体が不完全です
-gui.error.structure.invalid_definition=無効な構造定義です
-gui.error.structure.missing_definition=構造定義が見つかりません
-gui.error.structure.incomplete=構造体が不完全です
 
+# Tiles
+tile.modularMachineCasing.name=モジュラーマシンケーシング
+tile.modularMachineController.name=モジュラーマシンコントローラー
+tile.visBridge.name=ビスブリッジ
+
+
+# Item Input Port
+tile.modularItemInput.tier_1.name=アイテム搬入口 ティア1
+tile.modularItemInput.tier_2.name=アイテム搬入口 ティア2
+tile.modularItemInput.tier_3.name=アイテム搬入口 ティア3
+tile.modularItemInput.tier_4.name=アイテム搬入口 ティア4
+tile.modularItemInput.tier_5.name=アイテム搬入口 ティア5
+tile.modularItemInput.tier_6.name=アイテム搬入口 ティア6
+
+
+# Item Output Port
+tile.modularItemOutput.tier_1.name=アイテム搬出口 ティア1
+tile.modularItemOutput.tier_2.name=アイテム搬出口 ティア2
+tile.modularItemOutput.tier_3.name=アイテム搬出口 ティア3
+tile.modularItemOutput.tier_4.name=アイテム搬出口 ティア4
+tile.modularItemOutput.tier_5.name=アイテム搬出口 ティア5
+tile.modularItemOutput.tier_6.name=アイテム搬出口 ティア6
+
+
+# Fluid Input Port
+tile.modularFluidInput.tier_1.name=液体搬入口 ティア1
+tile.modularFluidInput.tier_2.name=液体搬入口 ティア2
+tile.modularFluidInput.tier_3.name=液体搬入口 ティア3
+tile.modularFluidInput.tier_4.name=液体搬入口 ティア4
+tile.modularFluidInput.tier_5.name=液体搬入口 ティア5
+tile.modularFluidInput.tier_6.name=液体搬入口 ティア6
+
+
+# Fluid Output Port
+tile.modularFluidOutput.tier_1.name=液体搬出口 ティア1
+tile.modularFluidOutput.tier_2.name=液体搬出口 ティア2
+tile.modularFluidOutput.tier_3.name=液体搬出口 ティア3
+tile.modularFluidOutput.tier_4.name=液体搬出口 ティア4
+tile.modularFluidOutput.tier_5.name=液体搬出口 ティア5
+tile.modularFluidOutput.tier_6.name=液体搬出口 ティア6
+
+
+# Energy Input Port
+tile.modularEnergyInput.tier_1.name=エネルギー搬入口 ティア1
+tile.modularEnergyInput.tier_2.name=エネルギー搬入口 ティア2
+tile.modularEnergyInput.tier_3.name=エネルギー搬入口 ティア3
+tile.modularEnergyInput.tier_4.name=エネルギー搬入口 ティア4
+tile.modularEnergyInput.tier_5.name=エネルギー搬入口 ティア5
+tile.modularEnergyInput.tier_6.name=エネルギー搬入口 ティア6
+
+
+# Energy Output Port
+tile.modularEnergyOutput.tier_1.name=エネルギー搬出口 ティア1
+tile.modularEnergyOutput.tier_2.name=エネルギー搬出口 ティア2
+tile.modularEnergyOutput.tier_3.name=エネルギー搬出口 ティア3
+tile.modularEnergyOutput.tier_4.name=エネルギー搬出口 ティア4
+tile.modularEnergyOutput.tier_5.name=エネルギー搬出口 ティア5
+tile.modularEnergyOutput.tier_6.name=エネルギー搬出口 ティア6
+
+
+# Gas Input Port
+tile.modularGasInput.tier_1.name=ガス搬入口 ティア1
+tile.modularGasInput.tier_2.name=ガス搬入口 ティア2
+tile.modularGasInput.tier_3.name=ガス搬入口 ティア3
+tile.modularGasInput.tier_4.name=ガス搬入口 ティア4
+tile.modularGasInput.tier_5.name=ガス搬入口 ティア5
+tile.modularGasInput.tier_6.name=ガス搬入口 ティア6
+
+
+# Gas Output Port
+tile.modularGasOutput.tier_1.name=ガス搬出口 ティア1
+tile.modularGasOutput.tier_2.name=ガス搬出口 ティア2
+tile.modularGasOutput.tier_3.name=ガス搬出口 ティア3
+tile.modularGasOutput.tier_4.name=ガス搬出口 ティア4
+tile.modularGasOutput.tier_5.name=ガス搬出口 ティア5
+tile.modularGasOutput.tier_6.name=ガス搬出口 ティア6
+
+
+# Mana Ports
+tile.modularManaInput.tier_1.name=マナ搬入口
+tile.modularManaOutput.tier_1.name=マナ搬出口
+
+
+# Vis Ports
+tile.modularVisInput.tier_1.name=ビス搬入口
+tile.modularVisOutput.tier_1.name=ビス搬出口
+
+
+# Essentia Ports
+tile.modularEssentiaInput.tier_1.name=エッセンシア搬入口
+tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出口
+
+
+# ME Ports
+tile.modularItemOutputME.me.name=MEアイテム搬出口
+tile.modularFluidOutputME.me.name=ME液体搬出口
+tile.modularEssentiaInputME.me.name=MEエッセンシア搬入口
+waila.me.online=装置はオンラインです
+waila.me.no_channel=装置でチャンネルが見つかりません
+waila.me.offline=装置はオフラインです
+tooltip.me_output.desc=アイテムを直接MEネットワークに出力する
+tooltip.me_fluid_output.desc=液体を直接MEネットワークに出力する
+tooltip.me_output.wip=開発中
+tooltip.me_output.lag_warning=警告: MEネットワーク接続時にラグが発生する可能性があります
