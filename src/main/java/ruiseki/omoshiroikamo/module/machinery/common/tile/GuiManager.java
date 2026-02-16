@@ -66,13 +66,16 @@ public class GuiManager {
             .padding(4)
             .child(
                 IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStructureNameText())
-                    .asWidget())
+                    .asWidget()
+                    .alignX(0f))
             .child(
                 IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStatusText())
-                    .asWidget())
+                    .asWidget()
+                    .alignX(0f))
             .child(
                 IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getValidationErrorText())
-                    .asWidget()));
+                    .asWidget()
+                    .alignX(0f)));
 
         // Blueprint slot (Helper function)
         addBlueprintSlot(panel, 151, 8);
