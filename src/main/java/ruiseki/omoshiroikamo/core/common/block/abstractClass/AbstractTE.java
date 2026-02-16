@@ -236,13 +236,13 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
 
     public void readFromItemStack(ItemStack stack) {
         if (stack == null || stack.stackTagCompound == null) return;
-        readCommon(stack.stackTagCompound);
+        readFromNBT(stack.stackTagCompound);
     }
 
     public void writeToItemStack(ItemStack stack) {
         if (stack == null) return;
         NBTTagCompound root = ItemNBTUtils.getNBT(stack);
-        writeCommon(root);
+        writeToNBT(root);
     }
 
     public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {

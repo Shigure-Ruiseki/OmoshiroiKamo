@@ -41,6 +41,7 @@ import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
  * @param <T> The field class type.
  * @see NBTPersist
  */
+@SuppressWarnings({ "unchecked", "unsafe", "rawtypes" })
 public abstract class NBTClassType<T> {
 
     /**
@@ -660,13 +661,13 @@ public abstract class NBTClassType<T> {
         String fieldName = field.getName();
 
         // Make editable, will set back to the original at the end of this call.
-        boolean wasAccessible = field.isAccessible();
+        boolean wasAccessible = field.canAccess(provider);
         try {
             Field modifiersField = Field.class.getDeclaredField("modifiers");
             modifiersField.setAccessible(true);
             modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            Logger.error(e.getMessage());
         }
         field.setAccessible(true);
 
@@ -708,7 +709,7 @@ public abstract class NBTClassType<T> {
                     try {
                         writePersistedField(name, object, tag);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Logger.error(e.getMessage());
                         throw new RuntimeException(
                             "Something went from with the field " + field
                                 .getName() + " in " + castTile + ": " + e.getMessage());
