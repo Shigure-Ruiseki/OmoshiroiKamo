@@ -661,7 +661,7 @@ public abstract class NBTClassType<T> {
         String fieldName = field.getName();
 
         // Make editable, will set back to the original at the end of this call.
-        boolean wasAccessible = field.canAccess(provider);
+        boolean wasAccessible = field.isAccessible();
         try {
             Field modifiersField = Field.class.getDeclaredField("modifiers");
             modifiersField.setAccessible(true);
