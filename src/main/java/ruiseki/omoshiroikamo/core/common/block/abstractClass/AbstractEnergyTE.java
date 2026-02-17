@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -15,7 +17,6 @@ import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 
 /**
  * Abstract base class for tile entities that store and manage energy.
@@ -84,7 +85,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
         boolean powerChanged = (lastSyncPowerStored != getEnergyStored() && shouldDoWorkThisTick(5));
         if (powerChanged) {
             lastSyncPowerStored = getEnergyStored();
-            PacketHandler.sendToAllAround(new PacketEnergy(this), this);
+            NETWORK.sendToAllAround(new PacketEnergy(this), this);
         }
 
         return false;

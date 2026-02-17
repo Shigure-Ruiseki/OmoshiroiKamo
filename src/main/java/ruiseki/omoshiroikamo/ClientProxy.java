@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -22,8 +21,6 @@ import ruiseki.omoshiroikamo.module.cows.CowsClient;
 import ruiseki.omoshiroikamo.module.dml.DMLClient;
 import ruiseki.omoshiroikamo.module.ids.IDsClient;
 import ruiseki.omoshiroikamo.module.machinery.MachineryClient;
-import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockClient;
 
 @SuppressWarnings("unused")
@@ -89,31 +86,5 @@ public class ClientProxy extends CommonProxy {
             .isGamePaused() && Minecraft.getMinecraft().theWorld != null) {
             ++clientTickCount;
         }
-    }
-
-    @Override
-    public void handleStructureTint(PacketStructureTint message) {
-        Minecraft.getMinecraft()
-            .func_152344_a(() -> {
-                World world = Minecraft.getMinecraft().theWorld;
-                if (world == null || world.provider.dimensionId != message.getDimensionId()) {
-                    return;
-                }
-
-                if (message.isClear()) {
-                    // Clear colors and trigger re-render
-                    StructureTintCache.clearAll(world, message.getPositions());
-                } else {
-                    // Set colors
-                    for (ChunkCoordinates pos : message.getPositions()) {
-                        StructureTintCache.put(world, pos.posX, pos.posY, pos.posZ, message.getColor());
-                    }
-                }
-
-                // Trigger block re-renders
-                for (ChunkCoordinates pos : message.getPositions()) {
-                    world.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
-                }
-            });
     }
 }

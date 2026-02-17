@@ -1,16 +1,16 @@
 package ruiseki.omoshiroikamo.core.common.network;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
+import ruiseki.omoshiroikamo.api.network.CodecField;
+import ruiseki.omoshiroikamo.api.network.PacketCodec;
 
-public class PacketSyncCarriedItem implements IMessage, IMessageHandler<PacketSyncCarriedItem, IMessage> {
+public class PacketSyncCarriedItem extends PacketCodec {
 
+    @CodecField
     private ItemStack stack;
 
     public PacketSyncCarriedItem() {}
@@ -20,21 +20,18 @@ public class PacketSyncCarriedItem implements IMessage, IMessageHandler<PacketSy
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        this.stack = ByteBufUtils.readItemStack(buf);
+    public boolean isAsync() {
+        return false;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeItemStack(buf, stack);
+    public void actionClient(World world, EntityPlayer player) {
+
     }
 
     @Override
-    public IMessage onMessage(PacketSyncCarriedItem msg, MessageContext ctx) {
-        EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-        player.inventory.setItemStack(msg.stack);
+    public void actionServer(World world, EntityPlayerMP player) {
+        player.inventory.setItemStack(stack);
         player.inventory.markDirty();
-
-        return null;
     }
 }

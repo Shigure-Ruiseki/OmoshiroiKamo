@@ -1,49 +1,45 @@
 package ruiseki.omoshiroikamo.module.machinery.common.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
+import ruiseki.omoshiroikamo.api.network.CodecField;
+import ruiseki.omoshiroikamo.api.network.PacketCodec;
 
-public class PacketToggleSide implements IMessage, IMessageHandler<PacketToggleSide, IMessage> {
+public class PacketToggleSide extends PacketCodec {
 
-    public byte side;
+    @CodecField
+    public int side;
+    @CodecField
     public BlockPos pos;
 
     public PacketToggleSide() {}
 
     public PacketToggleSide(ISidedIO tile, ForgeDirection side) {
         this.pos = tile.getPos();
-        this.side = (byte) side.ordinal();
+        this.side = side.ordinal();
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        pos = BlockPos.fromLong(buf.readLong());
-        side = buf.readByte();
+    public boolean isAsync() {
+        return false;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeLong(pos.toLong());
-        buf.writeByte(side);
+    public void actionClient(World world, EntityPlayer player) {
+
     }
 
     @Override
-    public IMessage onMessage(PacketToggleSide message, MessageContext ctx) {
-        EntityPlayer player = ctx.getServerHandler().playerEntity;
-        World world = player.worldObj;
-        TileEntity te = world.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
+    public void actionServer(World world, EntityPlayerMP player) {
+        TileEntity te = world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
         if (te instanceof ISidedIO io) {
-            io.toggleSide(ForgeDirection.getOrientation(message.side));
+            io.toggleSide(ForgeDirection.getOrientation(side));
         }
-        return null;
     }
 }

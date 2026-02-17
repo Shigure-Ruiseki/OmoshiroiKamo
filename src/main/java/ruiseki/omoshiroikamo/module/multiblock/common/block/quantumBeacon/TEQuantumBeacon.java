@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +25,6 @@ import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.client.render.BeamSegment;
@@ -98,7 +99,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
                 plr.capabilities.isFlying = false;
             }
             plr.sendPlayerAbilities();
-            PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
+            NETWORK.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
         }
     }
 
@@ -266,7 +267,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
             if (!plr.capabilities.allowFlying) {
                 plr.capabilities.allowFlying = true;
                 plr.sendPlayerAbilities();
-                PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), true), plr);
+                NETWORK.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), true), plr);
             }
             wasFlightGrantedByBeacon = true;
             // Register in global tracking (for re-granting after dimension change)
@@ -283,7 +284,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
                 plr.capabilities.isFlying = false;
             }
             plr.sendPlayerAbilities();
-            PacketHandler.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
+            NETWORK.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
         }
         // If shouldHaveFlight=false and wasFlightGrantedByBeacon=false, do nothing
         // (another mod may have granted flight)
@@ -402,7 +403,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
      * Get cached beam segments for rendering.
      * Segments are recalculated every SEGMENT_CACHE_INTERVAL ticks to reduce
      * per-frame overhead.
-     * 
+     *
      * @return List of beam segments with color information
      */
     @SideOnly(Side.CLIENT)

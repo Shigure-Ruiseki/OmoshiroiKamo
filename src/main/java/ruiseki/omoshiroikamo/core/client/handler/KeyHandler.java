@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.client.handler;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -24,7 +26,6 @@ import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import ruiseki.omoshiroikamo.api.item.BaublesUtils;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketQuickDraw;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
@@ -141,7 +142,7 @@ public class KeyHandler {
 
         if (result != null && mc.theWorld.isRemote) {
             int slot = player.inventory.currentItem;
-            PacketHandler.INSTANCE.sendToServer(new PacketQuickDraw(slot, result));
+            NETWORK.sendToServer(new PacketQuickDraw(slot, result));
         }
     }
 

@@ -1,25 +1,26 @@
 package ruiseki.omoshiroikamo.module.cows.common.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.core.common.network.MessageTileEntity;
-import ruiseki.omoshiroikamo.core.common.network.PacketUtil;
+import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.network.CodecField;
+import ruiseki.omoshiroikamo.api.network.PacketCodec;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 
-public class PacketStall extends MessageTileEntity<TEStall> implements IMessageHandler<PacketStall, IMessage> {
+public class PacketStall extends PacketCodec {
 
+    @CodecField
     private NBTTagCompound nbtRoot;
+
+    @CodecField
+    protected BlockPos pos;
 
     public PacketStall() {}
 
     public PacketStall(TEStall tile) {
-        super(tile);
         nbtRoot = new NBTTagCompound();
         if (tile.tank.getFluidAmount() > 0) {
             NBTTagCompound tankRoot = new NBTTagCompound();
@@ -29,30 +30,23 @@ public class PacketStall extends MessageTileEntity<TEStall> implements IMessageH
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
-        PacketUtil.writeNBTTagCompound(nbtRoot, buf);
+    public boolean isAsync() {
+        return false;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
-        nbtRoot = PacketUtil.readNBTTagCompound(buf);
-    }
-
-    @Override
-    public IMessage onMessage(PacketStall message, MessageContext ctx) {
-        EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
-        TEStall tile = message.getTileEntity(player.worldObj);
-        if (tile == null) {
-            return null;
-        }
-        if (message.nbtRoot.hasKey("tank")) {
-            NBTTagCompound tankRoot = message.nbtRoot.getCompoundTag("tank");
+    public void actionClient(World world, EntityPlayer player) {
+        TEStall tile = (TEStall) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
+        if (nbtRoot.hasKey("tank")) {
+            NBTTagCompound tankRoot = nbtRoot.getCompoundTag("tank");
             tile.tank.readFromNBT(tankRoot);
         } else {
             tile.tank.setFluid(null);
         }
-        return null;
+    }
+
+    @Override
+    public void actionServer(World world, EntityPlayerMP player) {
+
     }
 }

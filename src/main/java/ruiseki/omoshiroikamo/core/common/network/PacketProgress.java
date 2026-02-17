@@ -1,19 +1,20 @@
 package ruiseki.omoshiroikamo.core.common.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
+import ruiseki.omoshiroikamo.api.network.CodecField;
+import ruiseki.omoshiroikamo.api.network.PacketCodec;
 
-public class PacketProgress implements IMessageHandler<PacketProgress, IMessage>, IMessage {
+public class PacketProgress extends PacketCodec {
 
+    @CodecField
     private BlockPos pos;
+    @CodecField
     private float progress;
 
     public PacketProgress() {}
@@ -27,25 +28,20 @@ public class PacketProgress implements IMessageHandler<PacketProgress, IMessage>
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeFloat(progress);
-        buf.writeLong(pos.toLong());
+    public boolean isAsync() {
+        return false;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        progress = buf.readFloat();
-        pos = BlockPos.fromLong(buf.readLong());
-    }
-
-    @Override
-    public IMessage onMessage(PacketProgress message, MessageContext ctx) {
-        EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
-        if (player == null) return null;
-        TileEntity tile = player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
-        if (tile instanceof IProgressTile) {
-            ((IProgressTile) tile).setProgress(message.progress);
+    public void actionClient(World world, EntityPlayer player) {
+        TileEntity tile = world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
+        if (tile instanceof IProgressTile progressTile) {
+            progressTile.setProgress(progress);
         }
-        return null;
+    }
+
+    @Override
+    public void actionServer(World world, EntityPlayerMP player) {
+
     }
 }

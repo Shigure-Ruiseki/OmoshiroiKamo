@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.item;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +16,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
 
 /**
@@ -47,7 +48,7 @@ public class ItemWrench extends ItemOK implements IToolHammer {
         ForgeDirection clicked = ForgeDirection.getOrientation(side);
         ForgeDirection target = getClickedSide(clicked, hitX, hitY, hitZ);
 
-        PacketHandler.INSTANCE.sendToServer(new PacketToggleSide(io, target));
+        NETWORK.sendToServer(new PacketToggleSide(io, target));
 
         return true;
     }

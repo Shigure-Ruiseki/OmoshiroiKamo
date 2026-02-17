@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.block;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -13,7 +15,6 @@ import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.persist.nbt.INBTProvider;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTProviderComponent;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
 
 public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTProvider {
@@ -67,7 +68,7 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
 
     protected void requestProgressSync() {
         if (!isProgressTile || worldObj.isRemote) return;
-        PacketHandler.sendToAllAround(new PacketProgress((IProgressTile) this), this);
+        NETWORK.sendToAllAround(new PacketProgress((IProgressTile) this), this);
         ticksSinceLastProgressUpdate = 0;
     }
 

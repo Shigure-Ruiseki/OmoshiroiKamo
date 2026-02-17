@@ -1,19 +1,21 @@
 package ruiseki.omoshiroikamo.core.common.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.api.network.CodecField;
+import ruiseki.omoshiroikamo.api.network.PacketCodec;
 
-public class PacketEnergy implements IMessage, IMessageHandler<PacketEnergy, IMessage> {
+public class PacketEnergy extends PacketCodec {
 
+    @CodecField
     private BlockPos pos;
+
+    @CodecField
     private int storedEnergy;
 
     public PacketEnergy() {}
@@ -24,25 +26,21 @@ public class PacketEnergy implements IMessage, IMessageHandler<PacketEnergy, IMe
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(storedEnergy);
-        buf.writeLong(pos.toLong());
+    public boolean isAsync() {
+        return false;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        storedEnergy = buf.readInt();
-        pos = BlockPos.fromLong(buf.readLong());
-    }
-
-    @Override
-    public IMessage onMessage(PacketEnergy message, MessageContext ctx) {
-        EntityPlayer player = OmoshiroiKamo.proxy.getClientPlayer();
-        if (player == null) return null;
-        TileEntity tile = player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z);
-        if (tile instanceof IOKEnergyTile te) {
-            te.setEnergyStored(message.storedEnergy);
+    public void actionClient(World world, EntityPlayer player) {
+        TileEntity te = world.getTileEntity(pos.getZ(), pos.getY(), pos.getZ());
+        if (te instanceof IOKEnergyTile energyTile) {
+            energyTile.setEnergyStored(storedEnergy);
         }
-        return null;
     }
+
+    @Override
+    public void actionServer(World world, EntityPlayerMP player) {
+
+    }
+
 }

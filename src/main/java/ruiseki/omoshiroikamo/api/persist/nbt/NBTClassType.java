@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.persist.nbt;
 
+import static codechicken.nei.NEIClientConfig.world;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -473,6 +475,29 @@ public abstract class NBTClassType<T> {
 
             @Override
             public DimPos getDefaultValue() {
+                return null;
+            }
+        });
+
+        NBTYPES.put(BlockPos.class, new NBTClassType<BlockPos>() {
+
+            @Override
+            public void writePersistedField(String name, BlockPos object, NBTTagCompound tag) {
+                NBTTagCompound pos = new NBTTagCompound();
+                pos.setInteger("x", object.getX());
+                pos.setInteger("y", object.getY());
+                pos.setInteger("z", object.getZ());
+                tag.setTag(name, pos);
+            }
+
+            @Override
+            public BlockPos readPersistedField(String name, NBTTagCompound tag) {
+                NBTTagCompound pos = tag.getCompoundTag(name);
+                return new BlockPos(pos.getInteger("x"), pos.getInteger("y"), pos.getInteger("z"));
+            }
+
+            @Override
+            public BlockPos getDefaultValue() {
                 return null;
             }
         });

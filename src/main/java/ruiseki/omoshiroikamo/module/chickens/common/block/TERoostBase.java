@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.chickens.common.block;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
@@ -17,7 +19,6 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
@@ -165,7 +166,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             timeElapsed = 0;
             timeUntilNextDrop = 0;
             if (wasRunning) {
-                PacketHandler.sendToAllAround(new PacketProgress(this), this);
+                NETWORK.sendToAllAround(new PacketProgress(this), this);
             }
             return;
         }
@@ -173,7 +174,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         progress = timeUntilNextDrop == 0 ? 0 : (timeElapsed * 1000 / timeUntilNextDrop);
 
         if (worldObj.getTotalWorldTime() % 5 == 0) {
-            PacketHandler.sendToAllAround(new PacketProgress(this), this);
+            NETWORK.sendToAllAround(new PacketProgress(this), this);
         }
     }
 

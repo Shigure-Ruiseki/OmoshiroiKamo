@@ -1,17 +1,18 @@
 package ruiseki.omoshiroikamo.core.common.network;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
+import ruiseki.omoshiroikamo.api.network.CodecField;
+import ruiseki.omoshiroikamo.api.network.PacketCodec;
 
-public class PacketQuickDraw implements IMessage, IMessageHandler<PacketQuickDraw, IMessage> {
+public class PacketQuickDraw extends PacketCodec {
 
+    @CodecField
     public int slot;
+    @CodecField
     public ItemStack stack;
 
     public PacketQuickDraw() {}
@@ -22,25 +23,17 @@ public class PacketQuickDraw implements IMessage, IMessageHandler<PacketQuickDra
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        slot = buf.readInt();
-        stack = ItemStack.loadItemStackFromNBT(PacketUtil.readNBTTagCompound(buf));
+    public boolean isAsync() {
+        return false;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(slot);
-        if (stack == null) {
-            PacketUtil.writeNBTTagCompound(null, buf);
-        } else {
-            PacketUtil.writeNBTTagCompound(stack.writeToNBT(new NBTTagCompound()), buf);
-        }
+    public void actionClient(World world, EntityPlayer player) {
+
     }
 
     @Override
-    public IMessage onMessage(PacketQuickDraw message, MessageContext ctx) {
-        EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-        player.inventory.setInventorySlotContents(message.slot, message.stack);
-        return null;
+    public void actionServer(World world, EntityPlayerMP player) {
+        player.inventory.setInventorySlotContents(slot, stack);
     }
 }
