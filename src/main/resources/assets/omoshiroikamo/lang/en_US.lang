@@ -1174,6 +1174,7 @@ gui.status.structure_mismatch=Structure mismatch
 gui.status.structure_not_formed=Structure not formed
 gui.status.processing=Processing: %d%%
 gui.status.output_full=Output Full: %s
+gui.status.output_capacity_insufficient=Output Capacity Insufficient: %s
 gui.status.idle=Idle
 gui.status.requirements_not_met=Requirement not met
 gui.status.block_mismatch=Block mismatch or incomplete structure

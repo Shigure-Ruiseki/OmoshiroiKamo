@@ -1174,6 +1174,7 @@ gui.status.structure_mismatch=構造が一致しません
 gui.status.structure_not_formed=構造が形成されていません
 gui.status.processing=処理中: %d%%
 gui.status.output_full=出力満杯: %s
+gui.status.output_capacity_insufficient=出力容量不足: %s
 gui.status.idle=待機中
 gui.status.requirements_not_met=構造体の要件を満たしていません
 gui.status.block_mismatch=ブロック不一致または構造体が不完全です

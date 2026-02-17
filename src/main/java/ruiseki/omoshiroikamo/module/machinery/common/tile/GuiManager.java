@@ -19,6 +19,7 @@ import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
@@ -93,6 +94,17 @@ public class GuiManager {
 
         syncManager.syncValue("processProgress", progressSyncer);
         syncManager.syncValue("processMaxProgress", maxProgressSyncer);
+
+        EnumSyncValue<ErrorReason> errorReasonSyncer = new EnumSyncValue<>(
+            ErrorReason.class,
+            controller::getLastProcessErrorReason,
+            controller::setLastProcessErrorReason);
+        syncManager.syncValue("lastErrorReason", errorReasonSyncer);
+
+        StringSyncValue errorDetailSyncer = new StringSyncValue(
+            controller::getLastProcessErrorDetail,
+            controller::setLastProcessErrorDetail);
+        syncManager.syncValue("lastErrorDetail", errorDetailSyncer);
 
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
@@ -181,6 +193,14 @@ public class GuiManager {
         // Show energy error even during processing
         if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
 
+        if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
+            String detail = controller.getLastProcessErrorDetail();
+            if (detail != null && !detail.isEmpty()) {
+                return LibMisc.LANG.localize(lastError.getUnlocalizedName(), detail);
+            }
+            return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        }
+
         if (agent.isRunning() && !agent.isWaitingForOutput()) {
             if (agent.getMaxProgress() <= 0) return LibMisc.LANG.localize("gui.status.processing", 0);
             int percent = (int) (agent.getProgressPercent() * 100);
@@ -208,7 +228,16 @@ public class GuiManager {
 
         // Check specific error reasons
         if (lastError == ErrorReason.NO_MATCHING_RECIPE || lastError == ErrorReason.NO_ENERGY
-            || lastError == ErrorReason.INPUT_MISSING) {
+            || lastError == ErrorReason.INPUT_MISSING
+            || lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT
+            || lastError == ErrorReason.OUTPUT_FULL) {
+
+            if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
+                String detail = controller.getLastProcessErrorDetail();
+                if (detail != null && !detail.isEmpty()) {
+                    return LibMisc.LANG.localize(lastError.getUnlocalizedName(), detail);
+                }
+            }
             return LibMisc.LANG.localize(lastError.getUnlocalizedName());
         }
 

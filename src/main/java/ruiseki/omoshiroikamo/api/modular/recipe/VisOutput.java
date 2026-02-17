@@ -64,6 +64,22 @@ public class VisOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
+    @Override
+    public boolean checkCapacity(List<IModularPort> ports) {
+        long totalCapacity = 0;
+
+        for (IModularPort port : ports) {
+            if (port.getPortType() != IPortType.Type.VIS) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractVisPortTE)) continue;
+
+            AbstractVisPortTE visPort = (AbstractVisPortTE) port;
+            totalCapacity += visPort.getMaxVisPerAspect();
+        }
+
+        return totalCapacity >= amountCentiVis;
+    }
+
     public static VisOutput fromJson(JsonObject json) {
         String aspectTag = json.get("vis")
             .getAsString();

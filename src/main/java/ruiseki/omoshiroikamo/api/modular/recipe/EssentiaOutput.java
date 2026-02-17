@@ -60,6 +60,22 @@ public class EssentiaOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
+    @Override
+    public boolean checkCapacity(List<IModularPort> ports) {
+        long totalCapacity = 0;
+
+        for (IModularPort port : ports) {
+            if (port.getPortType() != IPortType.Type.ESSENTIA) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractEssentiaPortTE)) continue;
+
+            AbstractEssentiaPortTE essentiaPort = (AbstractEssentiaPortTE) port;
+            totalCapacity += essentiaPort.getMaxCapacityPerAspect();
+        }
+
+        return totalCapacity >= amount;
+    }
+
     public static EssentiaOutput fromJson(JsonObject json) {
         String aspectTag = json.get("essentia")
             .getAsString();

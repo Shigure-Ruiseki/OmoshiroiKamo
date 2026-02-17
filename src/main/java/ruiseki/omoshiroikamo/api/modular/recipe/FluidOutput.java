@@ -66,6 +66,27 @@ public class FluidOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
+    @Override
+    public boolean checkCapacity(List<IModularPort> ports) {
+        long totalCapacity = 0;
+
+        for (IModularPort port : ports) {
+            if (port.getPortType() != IPortType.Type.FLUID) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractFluidPortTE)) continue;
+
+            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
+            FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
+            if (tankInfo != null) {
+                for (FluidTankInfo info : tankInfo) {
+                    totalCapacity += info.capacity;
+                }
+            }
+        }
+
+        return totalCapacity >= output.amount;
+    }
+
     public static FluidOutput fromJson(JsonObject json) {
         FluidJson fluidJson = new FluidJson();
         fluidJson.name = json.get("fluid")

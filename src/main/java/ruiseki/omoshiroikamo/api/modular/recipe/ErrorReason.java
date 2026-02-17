@@ -18,7 +18,8 @@ public enum ErrorReason {
     WAITING_OUTPUT("waiting_output", "Waiting for output space"),
     NO_INPUT("no_input", "No input resources"),
     PAUSED("paused", "Paused by Redstone"),
-    MISSING_BLUEPRINT("missing_blueprint", "No Blueprint");
+    MISSING_BLUEPRINT("missing_blueprint", "No Blueprint"),
+    OUTPUT_CAPACITY_INSUFFICIENT("output_capacity_insufficient", "Output Capacity Insufficient");
 
     private final String id;
     private final String defaultMessage;

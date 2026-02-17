@@ -83,6 +83,24 @@ public class ItemOutput implements IRecipeOutput {
         return ItemStack.areItemStackTagsEqual(a, b);
     }
 
+    @Override
+    public boolean checkCapacity(List<IModularPort> ports) {
+        long totalCapacity = 0;
+        int maxStackSize = output.getMaxStackSize();
+
+        for (IModularPort port : ports) {
+            if (port.getPortType() != IPortType.Type.ITEM) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractItemIOPortTE)) continue;
+
+            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+            int limit = Math.min(itemPort.getInventoryStackLimit(), maxStackSize);
+            totalCapacity += (long) itemPort.getSizeInventory() * limit;
+        }
+
+        return totalCapacity >= output.stackSize;
+    }
+
     public static ItemOutput fromJson(JsonObject json) {
         ItemJson itemJson = new ItemJson();
         String itemId = json.get("item")

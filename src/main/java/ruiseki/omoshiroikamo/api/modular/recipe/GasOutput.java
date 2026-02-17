@@ -2,11 +2,14 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.google.gson.JsonObject;
 
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
+import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -56,6 +59,27 @@ public class GasOutput implements IRecipeOutput {
         }
 
         return remaining <= 0;
+    }
+
+    @Override
+    public boolean checkCapacity(List<IModularPort> ports) {
+        long totalCapacity = 0;
+
+        for (IModularPort port : ports) {
+            if (port.getPortType() != IPortType.Type.GAS) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractGasPortTE)) continue;
+
+            AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+            GasTankInfo[] tankInfo = gasPort.getTankInfo(ForgeDirection.UNKNOWN);
+            if (tankInfo != null) {
+                for (GasTankInfo info : tankInfo) {
+                    totalCapacity += info.capacity;
+                }
+            }
+        }
+
+        return totalCapacity >= amount;
     }
 
     public static GasOutput fromJson(JsonObject json) {

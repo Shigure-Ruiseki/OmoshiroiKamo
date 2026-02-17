@@ -49,6 +49,26 @@ public class ManaOutput implements IRecipeOutput {
         return remaining <= 0;
     }
 
+    @Override
+    public boolean checkCapacity(List<IModularPort> ports) {
+        long totalCapacity = 0;
+
+        for (IModularPort port : ports) {
+            if (port.getPortType() != IPortType.Type.MANA) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (!(port instanceof AbstractManaPortTE)) continue;
+
+            AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
+            if (manaPort.isFull()) {
+                totalCapacity += manaPort.getCurrentMana(); // Max capacity if full
+            } else {
+                totalCapacity += (long) manaPort.getCurrentMana() + manaPort.getAvailableSpaceForMana();
+            }
+        }
+
+        return totalCapacity >= amount;
+    }
+
     public static ManaOutput fromJson(JsonObject json) {
         int amount = json.get("mana")
             .getAsInt();

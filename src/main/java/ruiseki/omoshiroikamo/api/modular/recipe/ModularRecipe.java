@@ -103,6 +103,15 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return processOutputs(outputPorts, true);
     }
 
+    public IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts) {
+        for (IRecipeOutput output : outputs) {
+            if (!output.checkCapacity(outputPorts)) {
+                return output.getPortType();
+            }
+        }
+        return null;
+    }
+
     private List<IModularPort> filterByType(List<IModularPort> ports, IPortType.Type type) {
         List<IModularPort> filtered = new ArrayList<>();
         for (IModularPort port : ports) {

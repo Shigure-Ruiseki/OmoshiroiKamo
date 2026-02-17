@@ -36,6 +36,7 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierT
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
@@ -183,6 +184,11 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // Last process error reason for GUI display
     private ErrorReason lastProcessErrorReason = ErrorReason.NONE;
+    private String lastProcessErrorDetail = null;
+
+    public String getLastProcessErrorDetail() {
+        return lastProcessErrorDetail;
+    }
 
     @Override
     protected boolean structureCheck(String piece, int ox, int oy, int oz) {
@@ -340,6 +346,20 @@ public class TEMachineController extends AbstractMBModifierTE
         nextRecipe = null; // Clear cache
 
         if (recipe != null) {
+            // Check if output fits before starting
+            IPortType.Type insufficientType = recipe.checkOutputCapacity(getOutputPorts());
+            if (insufficientType != null) {
+                setProcessError(
+                    ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT,
+                    LibMisc.LANG.localize("gui.port_type." + insufficientType.name()));
+                return;
+            }
+
+            if (!recipe.canOutput(getOutputPorts())) {
+                setProcessError(ErrorReason.OUTPUT_FULL);
+                return;
+            }
+
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
             processAgent.start(recipe, getInputPorts(), energyPorts);
             lastProcessErrorReason = ErrorReason.NONE;
@@ -660,6 +680,20 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public void setLastProcessErrorReason(ErrorReason reason) {
         this.lastProcessErrorReason = reason;
+        this.lastProcessErrorDetail = null; // Reset detail when setting reason directly
+    }
+
+    public void setLastProcessErrorDetail(String detail) {
+        this.lastProcessErrorDetail = detail;
+    }
+
+    public void setProcessError(ErrorReason reason) {
+        setProcessError(reason, null);
+    }
+
+    public void setProcessError(ErrorReason reason, String detail) {
+        this.lastProcessErrorReason = reason;
+        this.lastProcessErrorDetail = detail;
     }
 
     public boolean isFormed() {
