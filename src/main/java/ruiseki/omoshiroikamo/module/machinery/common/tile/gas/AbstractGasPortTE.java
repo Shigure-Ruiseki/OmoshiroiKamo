@@ -57,11 +57,13 @@ public abstract class AbstractGasPortTE extends AbstractTE
             }
         };
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public Type getPortType() {

@@ -44,7 +44,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     public AbstractItemIOPortTE(int numInputs, int numOutput) {
         super(new SlotDefinition().setItemSlots(numInputs, numOutput));
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
@@ -54,6 +54,8 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public IPortType.Type getPortType() {
@@ -70,6 +72,9 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 

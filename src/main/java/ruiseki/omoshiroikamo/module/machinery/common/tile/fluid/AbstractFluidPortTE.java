@@ -51,11 +51,13 @@ public abstract class AbstractFluidPortTE extends AbstractTE
             }
         };
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public Type getPortType() {
@@ -77,6 +79,9 @@ public abstract class AbstractFluidPortTE extends AbstractTE
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 

@@ -65,11 +65,13 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public IPortType.Type getPortType() {
@@ -103,6 +105,9 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 
