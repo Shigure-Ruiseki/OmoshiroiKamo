@@ -13,8 +13,9 @@ import net.minecraftforge.common.util.Constants;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 
-public class ItemStackHandlerBase extends ItemStackHandler {
+public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerializable {
 
     public ItemStackHandlerBase() {
         super(1);
@@ -235,8 +236,8 @@ public class ItemStackHandlerBase extends ItemStackHandler {
             if (slot >= 0 && slot < stacks.size()) {
                 ItemStack loadedStack = ItemStack.loadItemStackFromNBT(itemTags);
                 if (loadedStack != null) {
-                    if (itemTags.hasKey("RealCount", Constants.NBT.TAG_INT)) {
-                        loadedStack.stackSize = itemTags.getInteger("RealCount");
+                    if (itemTags.hasKey("Count", Constants.NBT.TAG_INT)) {
+                        loadedStack.stackSize = itemTags.getInteger("Count");
                     }
                 }
                 stacks.set(slot, loadedStack);
@@ -246,4 +247,13 @@ public class ItemStackHandlerBase extends ItemStackHandler {
         this.onLoad();
     }
 
+    @Override
+    public NBTTagCompound toNBT() {
+        return this.serializeNBT();
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        this.deserializeNBT(tag);
+    }
 }

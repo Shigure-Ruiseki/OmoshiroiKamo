@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -48,7 +49,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperF
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
 
-public class BackpackHandler implements IItemHandlerModifiable {
+public class BackpackHandler implements IItemHandlerModifiable, INBTSerializable {
 
     @Getter
     private final ItemStack backpack;
@@ -721,5 +722,17 @@ public class BackpackHandler implements IItemHandlerModifiable {
         if (type != null) {
             PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
         }
+    }
+
+    @Override
+    public NBTTagCompound toNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag) {
+        readFromNBT(tag);
     }
 }

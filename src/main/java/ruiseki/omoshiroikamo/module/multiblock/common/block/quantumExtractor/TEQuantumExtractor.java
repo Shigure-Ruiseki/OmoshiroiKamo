@@ -11,14 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
-import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import cpw.mods.fml.relauncher.Side;
@@ -30,7 +28,9 @@ import ruiseki.omoshiroikamo.api.enums.ExtractorType;
 import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -45,7 +45,8 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecip
 
 public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements IOKEnergySink, ISidedInventory {
 
-    protected ItemStackHandler output;
+    @NBTPersist
+    protected ItemStackHandlerBase output;
     protected final int[] allSlots;
 
     protected final List<BlockPos> modifiers = new ArrayList<>();
@@ -74,7 +75,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     public TEQuantumExtractor() {
         energyStorage.setEnergyStorage(1000000);
-        this.output = new ItemStackHandler(4);
+        this.output = new ItemStackHandlerBase(4);
 
         this.allSlots = new int[output.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
@@ -147,22 +148,6 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         modifiers.clear();
         modifierHandler.setModifiers(Collections.emptyList());
         lens = null;
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        energyStorage.writeToNBT(root);
-        root.setTag("output_inv", this.output.serializeNBT());
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        energyStorage.readFromNBT(root);
-        if (root.hasKey("output_inv")) {
-            this.output.deserializeNBT(root.getCompoundTag("output_inv"));
-        }
     }
 
     private boolean isPathToVoidClear() {
@@ -293,7 +278,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
      * Get cached beam segments for rendering.
      * Segments are recalculated every SEGMENT_CACHE_INTERVAL ticks to reduce
      * per-frame overhead.
-     * 
+     *
      * @return List of beam segments with color information
      */
     @SideOnly(Side.CLIENT)

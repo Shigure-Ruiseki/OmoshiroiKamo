@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.structurelib.alignment.IAlignment;
@@ -394,6 +395,11 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
+    }
+
+    @Override
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return guiManager.buildUI(data, syncManager, settings);
     }
@@ -483,8 +489,9 @@ public class TEMachineController extends AbstractMBModifierTE
     // ========== NBT Persistence ==========
 
     @Override
-    public void writeCommon(NBTTagCompound nbt) {
-        super.writeCommon(nbt);
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+
         nbt.setString("recipeGroup", recipeGroup);
         structureAgent.writeToNBT(nbt);
         // Save blueprint inventory
@@ -498,8 +505,9 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
-    public void readCommon(NBTTagCompound nbt) {
-        super.readCommon(nbt);
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
         recipeGroup = nbt.getString("recipeGroup");
         if (recipeGroup.isEmpty()) recipeGroup = "default";
         // Load blueprint inventory

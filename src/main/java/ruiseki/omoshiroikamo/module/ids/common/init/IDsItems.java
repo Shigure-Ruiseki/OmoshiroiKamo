@@ -6,22 +6,22 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.ids.common.network.crafting.interfacebus.ItemCraftingInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.block.ItemBlockReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.fluid.ItemFluidReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.inventory.ItemInventoryReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneReader;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.redstone.ItemRedstoneWriter;
-import ruiseki.omoshiroikamo.module.ids.common.network.terminal.storage.ItemStorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.input.ItemEnergyImporter;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyFilterInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.interfacebus.ItemEnergyInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.energy.output.ItemEnergyExporter;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.input.ItemItemImporter;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemItemFilterInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.interfacebus.ItemItemInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.tunnel.item.output.ItemItemExporter;
-import ruiseki.omoshiroikamo.module.ids.common.variable.ItemVariableCard;
+import ruiseki.omoshiroikamo.module.ids.common.item.ItemVariableCard;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.interfacebus.ItemCraftingInterface;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.block.ItemBlockReader;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.fluid.ItemFluidReader;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.inventory.ItemInventoryReader;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.ItemRedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.ItemRedstoneWriter;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.ItemStorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.input.ItemEnergyImporter;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus.ItemEnergyFilterInterface;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus.ItemEnergyInterface;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.output.ItemEnergyExporter;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.input.ItemItemImporter;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfacebus.ItemItemFilterInterface;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfacebus.ItemItemInterface;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.output.ItemItemExporter;
 
 public enum IDsItems {
 

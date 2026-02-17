@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,6 +12,7 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -32,6 +32,7 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     private int lastSyncPowerStored;
 
     /** Internal energy storage instance. */
+    @NBTPersist
     protected EnergyStorage energyStorage;
 
     /** Flag indicating if IC2 registration was completed. */
@@ -102,22 +103,25 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
 
     @Override
     public int getEnergyStored() {
-        return energyStorage.getEnergyStored();
+        return energyStorage == null ? 0 : energyStorage.getEnergyStored();
     }
 
     @Override
     public void setEnergyStored(int storedEnergy) {
+        if (energyStorage == null) {
+            return;
+        }
         energyStorage.setEnergyStored(storedEnergy);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return energyStorage.getMaxEnergyStored();
+        return energyStorage == null ? 0 : energyStorage.getMaxEnergyStored();
     }
 
     @Override
     public int getEnergyTransfer() {
-        return energyStorage.getMaxReceive();
+        return energyStorage == null ? 0 : energyStorage.getMaxReceive();
     }
 
     @Override
@@ -221,17 +225,5 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     @Optional.Method(modid = "IC2")
     public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
         return canConnectEnergy(direction);
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        energyStorage.writeToNBT(root, ENERGY_TAG);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        energyStorage.readFromNBT(root, ENERGY_TAG);
     }
 }

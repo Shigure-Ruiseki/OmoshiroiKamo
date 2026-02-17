@@ -7,13 +7,19 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
+import lombok.experimental.Delegate;
 import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTProvider;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTProviderComponent;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
 
-public abstract class TileEntityOK extends TileEntity implements IOKTile {
+public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTProvider {
+
+    @Delegate
+    private INBTProvider nbtProviderComponent = new NBTProviderComponent(this);
 
     private final int checkOffset = (int) (Math.random() * 20);
     protected final boolean isProgressTile;
@@ -74,15 +80,15 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
     }
 
     @Override
-    public final void readFromNBT(NBTTagCompound root) {
+    public void readFromNBT(NBTTagCompound root) {
         super.readFromNBT(root);
-        readCommon(root);
+        readGeneratedFieldsFromNBT(root);
     }
 
     @Override
-    public final void writeToNBT(NBTTagCompound root) {
+    public void writeToNBT(NBTTagCompound root) {
         super.writeToNBT(root);
-        writeCommon(root);
+        writeGeneratedFieldsToNBT(root);
     }
 
     @Override
@@ -100,10 +106,6 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile {
     public boolean canPlayerAccess(EntityPlayer player) {
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
-
-    public abstract void writeCommon(NBTTagCompound root);
-
-    public abstract void readCommon(NBTTagCompound root);
 
     private BlockPos cachedPos = null;
 

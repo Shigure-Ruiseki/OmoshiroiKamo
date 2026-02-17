@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.backpack.common.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -11,18 +10,23 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
+
+    @NBTPersist
     private final BackpackHandler handler;
 
     public TEBackpack() {
@@ -175,18 +179,6 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         return true;
     }
 
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-        handler.writeToNBT(root);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        handler.readFromNBT(root);
-    }
-
     public int getMainColor() {
         return handler.getMainColor();
     }
@@ -210,6 +202,11 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
             GuiFactories.sidedTileEntity()
                 .open(player, xCoord, yCoord, zCoord, ForgeDirection.UNKNOWN);
         }
+    }
+
+    @Override
+    public ModularScreen createScreen(SidedPosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(LibMisc.MOD_ID, mainPanel);
     }
 
     @Override

@@ -1,10 +1,9 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.block.ICraftingTile;
+import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.common.network.PacketCraftingState;
 import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
@@ -40,20 +39,20 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
 
     /** Current crafting state (IDLE, CRAFTING, FINISH, etc.). */
     @Getter
+    @NBTPersist
     private CraftingState craftingState = CraftingState.IDLE;
 
-    /**
-     * Whether the machine is currently crafting.
-     * -- GETTER --
-     * Returns true if currently crafting.
-     */
+    /** Whether the machine is currently crafting. */
     @Getter
+    @NBTPersist
     protected boolean crafting = false;
 
     /** Current progress in ticks of the ongoing crafting operation. */
+    @NBTPersist
     protected int craftingProgress = 0;
 
     /** Total duration of the current crafting operation in ticks. */
+    @NBTPersist
     private int currentCraftingDuration = 0;
 
     /** NBT tag name for crafting-related data. */
@@ -214,28 +213,5 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
         if (worldObj != null && worldObj.isRemote) {
             craftingProgress = Math.round(progress * currentCraftingDuration);
         }
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
-
-        NBTTagCompound craftingTag = new NBTTagCompound();
-        craftingTag.setBoolean("isCrafting", crafting);
-        craftingTag.setInteger("progress", craftingProgress);
-        craftingTag.setInteger("cDuration", currentCraftingDuration);
-        craftingTag.setInteger("craftingState", craftingState.ordinal());
-        root.setTag(CRAFTING_TAG, craftingTag);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-
-        NBTTagCompound craftingTag = root.getCompoundTag(CRAFTING_TAG);
-        crafting = craftingTag.getBoolean("isCrafting");
-        craftingProgress = craftingTag.getInteger("progress");
-        currentCraftingDuration = craftingTag.getInteger("cDuration");
-        craftingState = CraftingState.values()[craftingTag.getInteger("craftingState")];
     }
 }

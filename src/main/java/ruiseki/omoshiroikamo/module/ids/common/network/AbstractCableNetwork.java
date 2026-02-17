@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.module.ids.IDsCommon;
 
 public abstract class AbstractCableNetwork<T extends ICableNode> {
 
+    private CableGrid grid;
     protected final List<T> nodes = new ArrayList<>();
     protected final Class<T> baseNodeClass;
 
@@ -39,6 +40,9 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
     }
 
     public void destroyNetwork() {
+
+        onDestroy();
+
         for (T part : nodes) {
             ICable cable = part.getCable();
             if (cable != null) {
@@ -51,7 +55,23 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
         IDsCommon.IDsNetworkTickHandler.unregisterNetwork(this);
     }
 
+    public Class<T> getBaseNodeClass() {
+        return baseNodeClass;
+    }
+
+    public void setGrid(CableGrid grid) {
+        this.grid = grid;
+    }
+
+    public CableGrid getGrid() {
+        return grid;
+    }
+
     public abstract void doNetworkTick();
+
+    public void onConstruct() {}
+
+    public void onDestroy() {}
 
     @Override
     public String toString() {
