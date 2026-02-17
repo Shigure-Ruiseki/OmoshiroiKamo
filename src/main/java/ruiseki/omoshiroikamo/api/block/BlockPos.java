@@ -217,15 +217,14 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos impleme
         return pos;
     }
 
-    public static BlockPos readFromNBT(NBTTagCompound compound) {
+    public BlockPos readFromNBT(NBTTagCompound compound) {
         return new BlockPos(compound.getInteger("X"), compound.getInteger("Y"), compound.getInteger("Z"));
     }
 
-    public static NBTTagCompound writeToNBT(BlockPos pos) {
-        NBTTagCompound compound = new NBTTagCompound();
-        compound.setInteger("X", pos.getX());
-        compound.setInteger("Y", pos.getY());
-        compound.setInteger("Z", pos.getZ());
-        return compound;
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        tag.setInteger("X", getZ());
+        tag.setInteger("Y", getY());
+        tag.setInteger("Z", getZ());
+        return tag;
     }
 }

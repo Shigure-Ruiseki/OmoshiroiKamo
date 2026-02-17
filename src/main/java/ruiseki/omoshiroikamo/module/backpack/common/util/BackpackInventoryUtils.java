@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.common.util;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +19,6 @@ import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
@@ -365,7 +366,7 @@ public class BackpackInventoryUtils {
             BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
             ItemStack extracted = handler.extractItem(wanted, wanted.getMaxStackSize(), false);
 
-            PacketHandler.INSTANCE.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
+            NETWORK.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             if (extracted != null && extracted.stackSize > 0) {
                 return extracted;
             }
