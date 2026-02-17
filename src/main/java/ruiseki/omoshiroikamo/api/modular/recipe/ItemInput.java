@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -13,7 +11,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-public class ItemInput implements IRecipeInput {
+public class ItemInput extends AbstractRecipeInput {
 
     private final ItemStack required;
 
@@ -39,35 +37,35 @@ public class ItemInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-        int remaining = required.stackSize;
+    protected long getRequiredAmount() {
+        return required.stackSize;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.ITEM) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractItemIOPortTE)) {
-                throw new IllegalStateException(
-                    "ITEM INPUT port must be AbstractItemIOPortTE, got: " + port.getClass()
-                        .getName());
-            }
-            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractItemIOPortTE;
+    }
 
-            for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
-                ItemStack stack = itemPort.getStackInSlot(i);
-                if (stack != null && stacksMatch(stack, required)) {
-                    int consume = Math.min(stack.stackSize, remaining);
-                    if (!simulate) {
-                        stack.stackSize -= consume;
-                        if (stack.stackSize <= 0) {
-                            itemPort.setInventorySlotContents(i, null);
-                        }
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
+        AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+        long consumed = 0;
+
+        for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
+            ItemStack stack = itemPort.getStackInSlot(i);
+            if (stack != null && stacksMatch(stack, required)) {
+                int consume = (int) Math.min(stack.stackSize, remaining);
+                if (!simulate) {
+                    stack.stackSize -= consume;
+                    if (stack.stackSize <= 0) {
+                        itemPort.setInventorySlotContents(i, null);
                     }
-                    remaining -= consume;
                 }
+                remaining -= consume;
+                consumed += consume;
             }
         }
-
-        return remaining <= 0;
+        return consumed;
     }
 
     private boolean stacksMatch(ItemStack a, ItemStack b) {

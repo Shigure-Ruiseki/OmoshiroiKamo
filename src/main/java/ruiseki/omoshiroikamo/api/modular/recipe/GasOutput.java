@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
-public class GasOutput implements IRecipeOutput {
+public class GasOutput extends AbstractRecipeOutput {
 
     private final String gasName;
     private final int amount;
@@ -48,7 +48,11 @@ public class GasOutput implements IRecipeOutput {
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.GAS) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractGasPortTE)) continue;
+            if (!(port instanceof AbstractGasPortTE)) {
+                throw new IllegalStateException(
+                    "GAS OUTPUT port must be AbstractGasPortTE, got: " + port.getClass()
+                        .getName());
+            }
 
             AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
             GasStack insertStack = new GasStack(gas, remaining);
@@ -62,24 +66,27 @@ public class GasOutput implements IRecipeOutput {
     }
 
     @Override
-    public boolean checkCapacity(List<IModularPort> ports) {
-        long totalCapacity = 0;
+    protected boolean isCorrectPort(IModularPort port) {
+        return port.getPortType() == IPortType.Type.GAS && port instanceof AbstractGasPortTE;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.GAS) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractGasPortTE)) continue;
-
-            AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
-            GasTankInfo[] tankInfo = gasPort.getTankInfo(ForgeDirection.UNKNOWN);
-            if (tankInfo != null) {
-                for (GasTankInfo info : tankInfo) {
-                    totalCapacity += info.capacity;
-                }
+    @Override
+    protected long getPortCapacity(IModularPort port) {
+        AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+        GasTankInfo[] tankInfo = gasPort.getTankInfo(ForgeDirection.UNKNOWN);
+        if (tankInfo != null && tankInfo.length > 0) {
+            long total = 0;
+            for (GasTankInfo info : tankInfo) {
+                total += info.capacity;
             }
+            return total;
         }
+        return 0;
+    }
 
-        return totalCapacity >= amount;
+    @Override
+    protected long getRequiredAmount() {
+        return amount;
     }
 
     public static GasOutput fromJson(JsonObject json) {

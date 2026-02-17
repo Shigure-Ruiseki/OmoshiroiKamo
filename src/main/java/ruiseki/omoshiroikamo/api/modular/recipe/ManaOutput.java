@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 
-public class ManaOutput implements IRecipeOutput {
+public class ManaOutput extends AbstractRecipeOutput {
 
     private final int amount;
 
@@ -32,10 +32,15 @@ public class ManaOutput implements IRecipeOutput {
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.MANA) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) continue;
+            if (!(port instanceof AbstractManaPortTE)) {
+                throw new IllegalStateException(
+                    "MANA OUTPUT port must be AbstractManaPortTE, got: " + port.getClass()
+                        .getName());
+            }
 
             AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
             int space = manaPort.getAvailableSpaceForMana();
+
             if (space > 0) {
                 int toAdd = Math.min(remaining, space);
                 if (!simulate) {
@@ -50,23 +55,20 @@ public class ManaOutput implements IRecipeOutput {
     }
 
     @Override
-    public boolean checkCapacity(List<IModularPort> ports) {
-        long totalCapacity = 0;
+    protected boolean isCorrectPort(IModularPort port) {
+        return port.getPortType() == IPortType.Type.MANA && port instanceof AbstractManaPortTE;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.MANA) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) continue;
+    @Override
+    protected long getPortCapacity(IModularPort port) {
+        AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
+        // Total capacity = current mana + available space
+        return (long) manaPort.getCurrentMana() + manaPort.getAvailableSpaceForMana();
+    }
 
-            AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-            if (manaPort.isFull()) {
-                totalCapacity += manaPort.getCurrentMana(); // Max capacity if full
-            } else {
-                totalCapacity += (long) manaPort.getCurrentMana() + manaPort.getAvailableSpaceForMana();
-            }
-        }
-
-        return totalCapacity >= amount;
+    @Override
+    protected long getRequiredAmount() {
+        return amount;
     }
 
     public static ManaOutput fromJson(JsonObject json) {

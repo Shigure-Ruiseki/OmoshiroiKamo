@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 import java.util.List;
 
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
@@ -14,16 +15,22 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
-public class FluidOutput implements IRecipeOutput {
+public class FluidOutput extends AbstractRecipeOutput {
 
-    private final FluidStack output;
+    private final String fluidName;
+    private final int amount;
 
-    public FluidOutput(FluidStack output) {
-        this.output = output.copy();
+    public FluidOutput(String fluidName, int amount) {
+        this.fluidName = fluidName;
+        this.amount = amount;
     }
 
-    public FluidStack getOutput() {
-        return output.copy();
+    public String getFluidName() {
+        return fluidName;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 
     @Override
@@ -33,6 +40,9 @@ public class FluidOutput implements IRecipeOutput {
 
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
+        FluidStack output = FluidRegistry.getFluidStack(fluidName, amount);
+        if (output == null) return false;
+
         int remaining = output.amount;
 
         for (IModularPort port : ports) {
@@ -50,15 +60,20 @@ public class FluidOutput implements IRecipeOutput {
 
             int tankCapacity = tankInfo[0].capacity;
             FluidStack stored = fluidPort.getStoredFluid();
+            int currentAmount = stored != null ? stored.amount : 0;
+            int space = tankCapacity - currentAmount;
+
+            // Only output if compatible fluid or empty
             if (stored == null || stored.isFluidEqual(output)) {
-                int capacity = tankCapacity - (stored != null ? stored.amount : 0);
-                int fill = Math.min(remaining, capacity);
-                if (!simulate) {
-                    FluidStack toFill = output.copy();
-                    toFill.amount = fill;
-                    fluidPort.internalFill(toFill, true);
+                int fill = Math.min(remaining, space);
+                if (fill > 0) {
+                    if (!simulate) {
+                        FluidStack toFill = output.copy();
+                        toFill.amount = fill;
+                        fluidPort.fill(ForgeDirection.UNKNOWN, toFill, true);
+                    }
+                    remaining -= fill;
                 }
-                remaining -= fill;
             }
             if (remaining <= 0) break;
         }
@@ -67,24 +82,27 @@ public class FluidOutput implements IRecipeOutput {
     }
 
     @Override
-    public boolean checkCapacity(List<IModularPort> ports) {
-        long totalCapacity = 0;
+    protected boolean isCorrectPort(IModularPort port) {
+        return port.getPortType() == IPortType.Type.FLUID && port instanceof AbstractFluidPortTE;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.FLUID) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractFluidPortTE)) continue;
-
-            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
-            FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
-            if (tankInfo != null) {
-                for (FluidTankInfo info : tankInfo) {
-                    totalCapacity += info.capacity;
-                }
+    @Override
+    protected long getPortCapacity(IModularPort port) {
+        AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
+        FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
+        if (tankInfo != null && tankInfo.length > 0) {
+            long total = 0;
+            for (FluidTankInfo info : tankInfo) {
+                total += info.capacity;
             }
+            return total;
         }
+        return 0;
+    }
 
-        return totalCapacity >= output.amount;
+    @Override
+    protected long getRequiredAmount() {
+        return amount;
     }
 
     public static FluidOutput fromJson(JsonObject json) {
@@ -99,6 +117,9 @@ public class FluidOutput implements IRecipeOutput {
             Logger.warn("Unknown fluid in recipe: {}", fluidJson.name);
             return null;
         }
-        return new FluidOutput(stack);
+        return new FluidOutput(
+            stack.getFluid()
+                .getName(),
+            stack.amount);
     }
 }

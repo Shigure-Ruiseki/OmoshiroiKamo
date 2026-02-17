@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
 
-public class VisOutput implements IRecipeOutput {
+public class VisOutput extends AbstractRecipeOutput {
 
     private final String aspectTag;
     private final int amountCentiVis;
@@ -24,7 +24,7 @@ public class VisOutput implements IRecipeOutput {
         return aspectTag;
     }
 
-    public int getAmount() {
+    public int getAmountCentiVis() {
         return amountCentiVis;
     }
 
@@ -43,13 +43,17 @@ public class VisOutput implements IRecipeOutput {
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.VIS) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractVisPortTE)) continue;
+            if (!(port instanceof AbstractVisPortTE)) {
+                throw new IllegalStateException(
+                    "VIS OUTPUT port must be AbstractVisPortTE, got: " + port.getClass()
+                        .getName());
+            }
 
             AbstractVisPortTE visPort = (AbstractVisPortTE) port;
             // Check available space
-            int currentAmount = visPort.getVisAmount(aspect);
-            int maxCapacity = visPort.getMaxVisPerAspect();
-            int space = maxCapacity - currentAmount;
+            int currentVis = visPort.getVisAmount(aspect);
+            int maxVis = visPort.getMaxVisPerAspect();
+            int space = maxVis - currentVis;
 
             if (space > 0) {
                 int toAdd = Math.min(remaining, space);
@@ -65,19 +69,19 @@ public class VisOutput implements IRecipeOutput {
     }
 
     @Override
-    public boolean checkCapacity(List<IModularPort> ports) {
-        long totalCapacity = 0;
+    protected boolean isCorrectPort(IModularPort port) {
+        return port.getPortType() == IPortType.Type.VIS && port instanceof AbstractVisPortTE;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.VIS) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractVisPortTE)) continue;
+    @Override
+    protected long getPortCapacity(IModularPort port) {
+        AbstractVisPortTE visPort = (AbstractVisPortTE) port;
+        return visPort.getMaxVisPerAspect();
+    }
 
-            AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-            totalCapacity += visPort.getMaxVisPerAspect();
-        }
-
-        return totalCapacity >= amountCentiVis;
+    @Override
+    protected long getRequiredAmount() {
+        return amountCentiVis;
     }
 
     public static VisOutput fromJson(JsonObject json) {

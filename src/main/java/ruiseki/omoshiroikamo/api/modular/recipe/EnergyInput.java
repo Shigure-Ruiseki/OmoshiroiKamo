@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -12,7 +10,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
  * perTick=true: Energy consumed every tick during processing.
  * perTick=false: Energy consumed once at recipe start.
  */
-public class EnergyInput implements IRecipeInput {
+public class EnergyInput extends AbstractRecipeInput {
 
     private final int amount;
     private final boolean perTick;
@@ -40,31 +38,27 @@ public class EnergyInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-        int remaining = amount;
+    protected long getRequiredAmount() {
+        return amount;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.ENERGY) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractEnergyIOPortTE)) {
-                throw new IllegalStateException(
-                    "ENERGY INPUT port must be AbstractEnergyIOPortTE, got: " + port.getClass()
-                        .getName());
-            }
-            AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractEnergyIOPortTE;
+    }
 
-            int stored = energyPort.getEnergyStored();
-            if (stored > 0) {
-                int extract = Math.min(stored, remaining);
-                if (!simulate) {
-                    energyPort.extractEnergy(extract);
-                }
-                remaining -= extract;
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
+        AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
+        int stored = energyPort.getEnergyStored();
+        if (stored > 0) {
+            int extract = (int) Math.min(stored, remaining);
+            if (!simulate) {
+                energyPort.extractEnergy(extract);
             }
-            if (remaining <= 0) break;
+            return extract;
         }
-
-        return remaining <= 0;
+        return 0;
     }
 
     public static EnergyInput fromJson(JsonObject json) {

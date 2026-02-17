@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import com.google.gson.JsonObject;
 
 import mekanism.api.gas.GasStack;
@@ -9,7 +7,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
-public class GasInput implements IRecipeInput {
+public class GasInput extends AbstractRecipeInput {
 
     private final String gasName;
     private final int amount;
@@ -33,33 +31,33 @@ public class GasInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-        int remaining = amount;
+    protected long getRequiredAmount() {
+        return amount;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.GAS) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractGasPortTE)) continue;
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractGasPortTE;
+    }
 
-            AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
-            // Use internalDrawGas to bypass side IO checks
-            GasStack drawn = gasPort.internalDrawGas(remaining, false);
-            if (drawn != null && drawn.amount > 0) {
-                // Check if gas type matches (null gasName = any gas)
-                if (gasName == null || gasName.isEmpty()
-                    || drawn.getGas()
-                        .getName()
-                        .equals(gasName)) {
-                    if (!simulate) {
-                        gasPort.internalDrawGas(drawn.amount, true);
-                    }
-                    remaining -= drawn.amount;
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
+        AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+        // Use internalDrawGas to bypass side IO checks
+        GasStack drawn = gasPort.internalDrawGas((int) remaining, false);
+        if (drawn != null && drawn.amount > 0) {
+            // Check if gas type matches (null gasName = any gas)
+            if (gasName == null || gasName.isEmpty()
+                || drawn.getGas()
+                    .getName()
+                    .equals(gasName)) {
+                if (!simulate) {
+                    gasPort.internalDrawGas(drawn.amount, true);
                 }
+                return drawn.amount;
             }
-            if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
+        return 0;
     }
 
     public static GasInput fromJson(JsonObject json) {
