@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,6 +23,7 @@ import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
@@ -32,6 +34,10 @@ import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T>
     implements IModularBlock, IModularBlockTint {
@@ -145,7 +151,54 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     protected abstract Class<? extends AbstractPortItemBlock> getItemBlockClass();
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        ForgeDirection facing = ForgeDirection.NORTH;
+
+        if (Math.abs(player.rotationPitch) > 50) {
+            facing = player.rotationPitch > 0 ? ForgeDirection.UP : ForgeDirection.DOWN;
+        } else {
+            int rotation = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            switch (rotation) {
+                case 0:
+                    facing = ForgeDirection.SOUTH;
+                    break;
+                case 1:
+                    facing = ForgeDirection.WEST;
+                    break;
+                case 2:
+                    facing = ForgeDirection.NORTH;
+                    break;
+                case 3:
+                    facing = ForgeDirection.EAST;
+                    break;
+            }
+        }
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof IModularPort) {
+            EnumIO ioLimit = EnumIO.NONE;
+            // Determine limit based on type
+
+            if (te instanceof AbstractFluidPortTE portTE) {
+                ioLimit = portTE.getIOLimit();
+            } else if (te instanceof AbstractEnergyIOPortTE portTE) {
+                ioLimit = portTE.getIOLimit();
+            } else if (te instanceof AbstractItemIOPortTE portTE) {
+                ioLimit = portTE.getIOLimit();
+            } else if (te instanceof AbstractGasPortTE portTE) {
+                ioLimit = portTE.getIOLimit();
+            }
+
+            if (ioLimit != EnumIO.NONE) {
+                IModularPort port = (IModularPort) te;
+                // Reset all to NONE first
+                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                    port.setSideIO(dir, EnumIO.NONE);
+                }
+                // Set facing side
+                port.setSideIO(facing.getOpposite(), ioLimit);
+            }
+        }
+    }
 
     @Override
     protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}

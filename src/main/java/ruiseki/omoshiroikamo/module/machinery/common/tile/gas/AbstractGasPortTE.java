@@ -56,9 +56,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
                 markDirty();
             }
         };
-        for (int i = 0; i < 6; i++) {
-            sides[i] = getIOLimit();
-        }
+        // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
     public abstract int getTier();

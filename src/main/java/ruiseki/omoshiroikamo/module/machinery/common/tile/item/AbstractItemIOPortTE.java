@@ -43,9 +43,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
     public AbstractItemIOPortTE(int numInputs, int numOutput) {
         super(new SlotDefinition().setItemSlots(numInputs, numOutput));
-        for (int i = 0; i < 6; i++) {
-            sides[i] = getIOLimit();
-        }
+        // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
     @Override
