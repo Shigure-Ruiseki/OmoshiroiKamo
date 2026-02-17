@@ -13,7 +13,8 @@ public abstract class AbstractRecipeOutput implements IRecipeOutput {
 
         for (IModularPort port : ports) {
             // Common check for all outputs
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
             if (isCorrectPort(port)) {
                 totalCapacity += getPortCapacity(port);

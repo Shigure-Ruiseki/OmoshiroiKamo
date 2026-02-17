@@ -51,7 +51,8 @@ public class FluidOutput extends AbstractRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.FLUID) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
             if (!(port instanceof AbstractFluidPortTE)) {
                 throw new IllegalStateException(
                     "FLUID OUTPUT port must be AbstractFluidPortTE, got: " + port.getClass()
@@ -74,7 +75,7 @@ public class FluidOutput extends AbstractRecipeOutput {
                     if (!simulate) {
                         FluidStack toFill = output.copy();
                         toFill.amount = fill;
-                        fluidPort.fill(ForgeDirection.UNKNOWN, toFill, true);
+                        fluidPort.internalFill(toFill, true);
                     }
                     remaining -= fill;
                 }

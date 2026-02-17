@@ -103,6 +103,9 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 

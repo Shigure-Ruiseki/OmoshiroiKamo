@@ -13,7 +13,8 @@ public abstract class AbstractRecipeInput implements IRecipeInput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != getPortType()) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.INPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
             if (!isCorrectPort(port)) {
                 throw new IllegalStateException(

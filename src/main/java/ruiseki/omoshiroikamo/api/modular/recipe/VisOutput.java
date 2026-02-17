@@ -42,7 +42,8 @@ public class VisOutput extends AbstractRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.VIS) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
             if (!(port instanceof AbstractVisPortTE)) {
                 throw new IllegalStateException(
                     "VIS OUTPUT port must be AbstractVisPortTE, got: " + port.getClass()
