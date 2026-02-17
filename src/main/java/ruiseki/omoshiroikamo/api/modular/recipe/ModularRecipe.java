@@ -152,7 +152,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         int total = 0;
         for (IRecipeInput input : inputs) {
             if (input instanceof ItemInput) {
-                total += ((ItemInput) input).getRequired().stackSize;
+                total += (int) ((ItemInput) input).getRequiredAmount();
             }
         }
         return total;
