@@ -64,8 +64,14 @@ public class EnergyInput extends AbstractRecipeInput {
     public static EnergyInput fromJson(JsonObject json) {
         int amount = json.get("energy")
             .getAsInt();
-        boolean perTick = json.has("perTick") ? json.get("perTick")
-            .getAsBoolean() : true;
+        boolean perTick = true;
+        if (json.has("perTick")) {
+            perTick = json.get("perTick")
+                .getAsBoolean();
+        } else if (json.has("pertick")) {
+            perTick = json.get("pertick")
+                .getAsBoolean();
+        }
         return new EnergyInput(amount, perTick);
     }
 }
