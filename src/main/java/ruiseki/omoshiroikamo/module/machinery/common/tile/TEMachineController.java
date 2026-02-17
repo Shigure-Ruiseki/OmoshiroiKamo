@@ -296,8 +296,9 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // If running, tick and look-ahead search for next recipe
         if (processAgent.isRunning()) {
-            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            ProcessAgent.TickResult result = processAgent.tick(energyPorts);
+            List<IModularPort> inputEnergyPorts = getInputPorts(IPortType.Type.ENERGY);
+            List<IModularPort> outputEnergyPorts = getOutputPorts(IPortType.Type.ENERGY);
+            ProcessAgent.TickResult result = processAgent.tick(inputEnergyPorts, outputEnergyPorts);
 
             if (result == ProcessAgent.TickResult.NO_ENERGY) {
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
@@ -305,6 +306,8 @@ public class TEMachineController extends AbstractMBModifierTE
                 lastProcessErrorReason = ErrorReason.INPUT_MISSING;
             } else if (result == ProcessAgent.TickResult.PAUSED) {
                 lastProcessErrorReason = ErrorReason.PAUSED;
+            } else if (result == ProcessAgent.TickResult.OUTPUT_FULL) {
+                lastProcessErrorReason = ErrorReason.OUTPUT_FULL;
             } else {
                 lastProcessErrorReason = ErrorReason.NONE;
             }

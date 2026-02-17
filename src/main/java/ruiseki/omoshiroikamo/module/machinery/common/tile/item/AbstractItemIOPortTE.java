@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.item;
 
+import java.util.Arrays;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -43,6 +45,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
     public AbstractItemIOPortTE(int numInputs, int numOutput) {
         super(new SlotDefinition().setItemSlots(numInputs, numOutput));
+        Arrays.fill(sides, EnumIO.NONE);
         // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 

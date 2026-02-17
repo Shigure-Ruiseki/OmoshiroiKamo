@@ -64,6 +64,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
+        Arrays.fill(sides, EnumIO.NONE);
         // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
@@ -102,11 +103,21 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     }
 
     /**
-     * Internal method to receive energy for machine processing (outputs).
-     * Bypasses side checks.
+     * Internal method to receive energy for machine processing.
      */
     public int internalReceiveEnergy(int amount, boolean simulate) {
-        return energyStorage.receiveEnergy(amount, simulate);
+        int capacity = energyStorage.getMaxEnergyStored();
+        int stored = energyStorage.getEnergyStored();
+        int receivable = Math.min(amount, capacity - stored);
+
+        if (receivable <= 0) {
+            return 0;
+        }
+
+        if (!simulate) {
+            energyStorage.modifyEnergyStored(receivable);
+        }
+        return receivable;
     }
 
     @Override

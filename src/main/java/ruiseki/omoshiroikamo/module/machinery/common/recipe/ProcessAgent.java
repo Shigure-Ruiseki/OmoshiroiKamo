@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.EnergyOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.GasOutput;
@@ -29,6 +30,7 @@ public class ProcessAgent {
     private int progress;
     private int maxProgress;
     private int energyPerTick;
+    private int energyOutputPerTick;
     private boolean running;
     private boolean waitingForOutput;
 
@@ -39,6 +41,7 @@ public class ProcessAgent {
     private List<String[]> cachedGasOutputs = new ArrayList<>(); // [gasName, amount]
     private List<String[]> cachedEssentiaOutputs = new ArrayList<>(); // [aspectTag, amount]
     private List<String[]> cachedVisOutputs = new ArrayList<>(); // [aspectTag, amountCentiVis]
+    private List<Integer> cachedEnergyOutputs = new ArrayList<>(); // [amount]
 
     private transient ModularRecipe currentRecipe;
 
@@ -62,6 +65,7 @@ public class ProcessAgent {
         }
 
         energyPerTick = 0;
+        energyOutputPerTick = 0;
         for (IRecipeInput input : recipe.getInputs()) {
             if (input instanceof EnergyInput) {
                 EnergyInput energyInput = (EnergyInput) input;
@@ -75,12 +79,24 @@ public class ProcessAgent {
             }
         }
 
+        // Calculate per-tick energy output
+        for (IRecipeOutput output : recipe.getOutputs()) {
+            if (output instanceof EnergyOutput) {
+                EnergyOutput eOut = (EnergyOutput) output;
+                if (eOut.isPerTick()) {
+                    energyOutputPerTick += eOut.getAmount();
+                }
+            }
+        }
+
         cachedItemOutputs.clear();
         cachedFluidOutputs.clear();
         cachedManaOutputs.clear();
         cachedGasOutputs.clear();
         cachedEssentiaOutputs.clear();
         cachedVisOutputs.clear();
+        cachedEnergyOutputs.clear();
+
         for (IRecipeOutput output : recipe.getOutputs()) {
             if (output instanceof ItemOutput) {
                 ItemStack stack = ((ItemOutput) output).getOutput();
@@ -101,6 +117,11 @@ public class ProcessAgent {
                 VisOutput visOut = (VisOutput) output;
                 cachedVisOutputs
                     .add(new String[] { visOut.getAspectTag(), String.valueOf(visOut.getAmountCentiVis()) });
+            } else if (output instanceof EnergyOutput) {
+                EnergyOutput eOut = (EnergyOutput) output;
+                if (!eOut.isPerTick()) {
+                    cachedEnergyOutputs.add(eOut.getAmount());
+                }
             }
         }
 
@@ -113,7 +134,7 @@ public class ProcessAgent {
         return true;
     }
 
-    public TickResult tick(List<IModularPort> energyPorts) {
+    public TickResult tick(List<IModularPort> inputEnergyPorts, List<IModularPort> outputEnergyPorts) {
         if (!running) return TickResult.IDLE;
 
         if (waitingForOutput) {
@@ -122,8 +143,15 @@ public class ProcessAgent {
 
         if (energyPerTick > 0) {
             EnergyInput energyReq = new EnergyInput(energyPerTick, true);
-            if (!energyReq.process(energyPorts, false)) {
+            if (!energyReq.process(inputEnergyPorts, false)) {
                 return TickResult.NO_ENERGY;
+            }
+        }
+
+        if (energyOutputPerTick > 0) {
+            EnergyOutput energyOut = new EnergyOutput(energyOutputPerTick, true);
+            if (!energyOut.process(outputEnergyPorts, false)) {
+                return TickResult.OUTPUT_FULL;
             }
         }
 
@@ -177,6 +205,9 @@ public class ProcessAgent {
         for (String[] visData : cachedVisOutputs) {
             outputs.add(new VisOutput(visData[0], Integer.parseInt(visData[1])));
         }
+        for (Integer energyAmount : cachedEnergyOutputs) {
+            outputs.add(new EnergyOutput(energyAmount, false));
+        }
 
         for (IRecipeOutput output : outputs) {
             if (!output.process(outputPorts, true)) {
@@ -203,12 +234,14 @@ public class ProcessAgent {
         running = false;
         waitingForOutput = false;
         energyPerTick = 0;
+        energyOutputPerTick = 0;
         cachedItemOutputs.clear();
         cachedFluidOutputs.clear();
         cachedManaOutputs.clear();
         cachedGasOutputs.clear();
         cachedEssentiaOutputs.clear();
         cachedVisOutputs.clear();
+        cachedEnergyOutputs.clear();
     }
 
     public boolean isRunning() {
@@ -258,6 +291,7 @@ public class ProcessAgent {
         if (!cachedGasOutputs.isEmpty()) types.add(IPortType.Type.GAS);
         if (!cachedEssentiaOutputs.isEmpty()) types.add(IPortType.Type.ESSENTIA);
         if (!cachedVisOutputs.isEmpty()) types.add(IPortType.Type.VIS);
+        if (!cachedEnergyOutputs.isEmpty()) types.add(IPortType.Type.ENERGY);
         return types;
     }
 
@@ -324,6 +358,7 @@ public class ProcessAgent {
         nbt.setInteger("progress", progress);
         nbt.setInteger("maxProgress", maxProgress);
         nbt.setInteger("energyPerTick", energyPerTick);
+        nbt.setInteger("energyOutputPerTick", energyOutputPerTick);
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
 
@@ -378,6 +413,13 @@ public class ProcessAgent {
                 visList.appendTag(tag);
             }
             nbt.setTag("visOutputs", visList);
+
+            // Energy outputs
+            int[] energyArray = new int[cachedEnergyOutputs.size()];
+            for (int i = 0; i < cachedEnergyOutputs.size(); i++) {
+                energyArray[i] = cachedEnergyOutputs.get(i);
+            }
+            nbt.setIntArray("energyOutputs", energyArray);
         }
     }
 
@@ -385,6 +427,7 @@ public class ProcessAgent {
         progress = nbt.getInteger("progress");
         maxProgress = nbt.getInteger("maxProgress");
         energyPerTick = nbt.getInteger("energyPerTick");
+        energyOutputPerTick = nbt.getInteger("energyOutputPerTick");
         running = nbt.getBoolean("running");
         waitingForOutput = nbt.getBoolean("waitingForOutput");
 
@@ -395,6 +438,7 @@ public class ProcessAgent {
         cachedGasOutputs.clear();
         cachedEssentiaOutputs.clear();
         cachedVisOutputs.clear();
+        cachedEnergyOutputs.clear();
 
         if (running || waitingForOutput) {
             // Item outputs
@@ -435,6 +479,14 @@ public class ProcessAgent {
                 NBTTagCompound tag = visList.getCompoundTagAt(i);
                 cachedVisOutputs.add(new String[] { tag.getString("aspect"), tag.getString("amount") });
             }
+
+            // Energy outputs
+            if (nbt.hasKey("energyOutputs")) {
+                int[] energyArray = nbt.getIntArray("energyOutputs");
+                for (int e : energyArray) {
+                    cachedEnergyOutputs.add(e);
+                }
+            }
         }
     }
 
@@ -446,6 +498,7 @@ public class ProcessAgent {
         WAITING_OUTPUT,
         NO_INPUT,
         NO_MATCHING_RECIPE,
+        OUTPUT_FULL,
         PAUSED
     }
 }
