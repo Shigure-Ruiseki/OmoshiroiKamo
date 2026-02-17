@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.api.util.MinecraftHelpers;
 
 /**
  * A simple data class for a block position inside a world.
- * 
+ *
  * @author rubensworks
  */
 @Data(staticConstructor = "of")
@@ -23,5 +23,17 @@ public class DimPos implements Comparable<DimPos> {
             return MinecraftHelpers.compareBlockPos(getBlockPos(), o.getBlockPos());
         }
         return compareDim;
+    }
+
+    public BlockPos getBlockPos() {
+        return blockPos;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public int getDimensionId() {
+        return world.provider.dimensionId;
     }
 }

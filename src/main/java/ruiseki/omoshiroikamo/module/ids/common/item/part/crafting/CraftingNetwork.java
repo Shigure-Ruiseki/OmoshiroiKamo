@@ -3,9 +3,9 @@ package ruiseki.omoshiroikamo.module.ids.common.item.part.crafting;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.interfacebus.CraftingInterface;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
 
 public class CraftingNetwork extends AbstractCableNetwork<ICraftingNet> {
 

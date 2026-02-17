@@ -13,11 +13,13 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import ruiseki.omoshiroikamo.api.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.api.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.CoreCommon;
 import ruiseki.omoshiroikamo.core.ModuleManager;
@@ -47,6 +49,10 @@ public class CommonProxy {
     public CommonProxy() {}
 
     public void onConstruction(FMLConstructionEvent event) {
+        CapabilityManager.INSTANCE.injectCapabilities(
+            event.getASMHarvestedData()
+        );
+
         ModuleManager.onConstruction(event);
     }
 
@@ -95,6 +101,10 @@ public class CommonProxy {
 
     public void serverStarted(FMLServerStartedEvent event) {
         ModuleManager.serverStarted(event);
+    }
+
+    public void serverStopping(FMLServerStoppingEvent event) {
+        ModuleManager.serverStopping(event);
     }
 
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {

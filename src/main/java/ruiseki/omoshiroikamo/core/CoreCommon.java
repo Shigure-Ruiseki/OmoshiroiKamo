@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
@@ -62,6 +63,11 @@ public class CoreCommon implements IModuleCommon {
 
     @Override
     public void serverStarted(FMLServerStartedEvent event) {
+
+    }
+
+    @Override
+    public void serverStopping(FMLServerStoppingEvent event) {
 
     }
 

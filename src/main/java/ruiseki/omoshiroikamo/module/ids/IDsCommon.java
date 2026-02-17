@@ -9,14 +9,17 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.CablePartRegistry;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.IDsNetworkTickHandler;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypes;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
-import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.network.IDsNetworkTickHandler;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeys;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.type.LogicTypes;
+import ruiseki.omoshiroikamo.module.ids.common.persist.world.NetworkWorldStorage;
 
 public class IDsCommon implements IModuleCommon {
 
@@ -66,7 +69,14 @@ public class IDsCommon implements IModuleCommon {
 
     @Override
     public void serverStarted(FMLServerStartedEvent event) {
+        NetworkWorldStorage.getInstance(LibMisc.MOD_ID)
+            .onStartedEvent(event);
+    }
 
+    @Override
+    public void serverStopping(FMLServerStoppingEvent event) {
+        NetworkWorldStorage.getInstance(LibMisc.MOD_ID)
+            .onStoppingEvent(event);
     }
 
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {

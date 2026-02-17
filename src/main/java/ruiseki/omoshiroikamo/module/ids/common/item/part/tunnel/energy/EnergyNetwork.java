@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy;
 import java.util.ArrayList;
 import java.util.List;
 
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
 
 public class EnergyNetwork extends AbstractCableNetwork<IEnergyNet> {
 
