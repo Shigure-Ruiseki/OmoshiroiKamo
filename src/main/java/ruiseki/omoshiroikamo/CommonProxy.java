@@ -49,9 +49,7 @@ public class CommonProxy {
     public CommonProxy() {}
 
     public void onConstruction(FMLConstructionEvent event) {
-        CapabilityManager.INSTANCE.injectCapabilities(
-            event.getASMHarvestedData()
-        );
+        CapabilityManager.INSTANCE.injectCapabilities(event.getASMHarvestedData());
 
         ModuleManager.onConstruction(event);
     }

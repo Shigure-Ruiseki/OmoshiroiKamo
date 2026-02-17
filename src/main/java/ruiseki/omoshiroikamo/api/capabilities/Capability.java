@@ -1,29 +1,27 @@
 /*
  * Minecraft Forge
  * Copyright (c) 2016-2020.
- *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version 2.1
  * of the License.
- *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 package ruiseki.omoshiroikamo.api.capabilities;
 
+import java.util.concurrent.Callable;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.Callable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This is the core holder object Capabilities.
@@ -34,8 +32,8 @@ import java.util.concurrent.Callable;
  */
 public class Capability<T> {
 
-    public static interface IStorage<T>
-    {
+    public static interface IStorage<T> {
+
         /**
          * Serialize the capability instance to a NBTTag.
          * This allows for a central implementation of saving the data.
@@ -50,8 +48,8 @@ public class Capability<T> {
          * Review the API docs for more info.
          *
          * @param capability The Capability being stored.
-         * @param instance An instance of that capabilities interface.
-         * @param side The side of the object the instance is associated with.
+         * @param instance   An instance of that capabilities interface.
+         * @param side       The side of the object the instance is associated with.
          * @return a NBT holding the data. Null if no data needs to be stored.
          */
         @Nullable
@@ -69,33 +67,38 @@ public class Capability<T> {
          * implementations MAY require that the 'instance' be an instance
          * of the 'default' implementation.
          *
-         * Review the API docs for more info.         *
+         * Review the API docs for more info. *
          *
          * @param capability The Capability being stored.
-         * @param instance An instance of that capabilities interface.
-         * @param side The side of the object the instance is associated with.
-         * @param nbt A NBT holding the data. Must not be null, as doesn't make sense to call this function with nothing to read...
+         * @param instance   An instance of that capabilities interface.
+         * @param side       The side of the object the instance is associated with.
+         * @param nbt        A NBT holding the data. Must not be null, as doesn't make sense to call this function with
+         *                   nothing to read...
          */
         void readNBT(Capability<T> capability, T instance, ForgeDirection side, NBTBase nbt);
     }
 
     /**
      * @return The unique name of this capability, typically this is
-     * the fully qualified class name for the target interface.
+     *         the fully qualified class name for the target interface.
      */
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     /**
-     * @return An instance of the default storage handler. You can safely use this store your default implementation in NBT.
+     * @return An instance of the default storage handler. You can safely use this store your default implementation in
+     *         NBT.
      */
-    public IStorage<T> getStorage() { return storage; }
+    public IStorage<T> getStorage() {
+        return storage;
+    }
 
     /**
      * Quick access to the IStorage's readNBT.
-     * See {@link IStorage#readNBT(Capability, Object, ForgeDirection, NBTBase)}  for documentation.
+     * See {@link IStorage#readNBT(Capability, Object, ForgeDirection, NBTBase)} for documentation.
      */
-    public void readNBT(T instance, ForgeDirection side, NBTBase nbt)
-    {
+    public void readNBT(T instance, ForgeDirection side, NBTBase nbt) {
         storage.readNBT(this, instance, side, nbt);
     }
 
@@ -104,8 +107,7 @@ public class Capability<T> {
      * See {@link IStorage#writeNBT(Capability, Object, ForgeDirection)} for documentation.
      */
     @Nullable
-    public NBTBase writeNBT(T instance, ForgeDirection side)
-    {
+    public NBTBase writeNBT(T instance, ForgeDirection side) {
         return storage.writeNBT(this, instance, side);
     }
 
@@ -119,14 +121,10 @@ public class Capability<T> {
      * @return A NEW instance of the default implementation.
      */
     @Nullable
-    public T getDefaultInstance()
-    {
-        try
-        {
+    public T getDefaultInstance() {
+        try {
             return this.factory.call();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -137,9 +135,8 @@ public class Capability<T> {
      * Use with caution;
      */
     @SuppressWarnings("unchecked")
-    public <R> R cast(T instance)
-    {
-        return (R)instance;
+    public <R> R cast(T instance) {
+        return (R) instance;
     }
 
     // INTERNAL
@@ -147,12 +144,10 @@ public class Capability<T> {
     private final IStorage<T> storage;
     private final Callable<? extends T> factory;
 
-    Capability(String name, IStorage<T> storage, Callable<? extends T> factory)
-    {
+    Capability(String name, IStorage<T> storage, Callable<? extends T> factory) {
         this.name = name;
         this.storage = storage;
         this.factory = factory;
     }
-
 
 }

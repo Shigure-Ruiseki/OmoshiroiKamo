@@ -1,24 +1,20 @@
 /*
  * Minecraft Forge
  * Copyright (c) 2016-2020.
- *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version 2.1
  * of the License.
- *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 package ruiseki.omoshiroikamo.api.capabilities;
-
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,26 +28,27 @@ import java.lang.annotation.Target;
  * of 'Capability'
  *
  * Example:
- *  @CapabilityInject(IExampleCapability.class)
- *  private static final Capability<IExampleCapability> TEST_CAP = null;
+ * 
+ * @CapabilityInject(IExampleCapability.class)
+ *                                             private static final Capability<IExampleCapability> TEST_CAP = null;
  *
- * When placed on a METHOD, the method will be invoked once the
- * capability is registered. This allows you to have a 'enable features'
- * callback. It MUST have one parameter of type 'Capability;
+ *                                             When placed on a METHOD, the method will be invoked once the
+ *                                             capability is registered. This allows you to have a 'enable features'
+ *                                             callback. It MUST have one parameter of type 'Capability;
  *
- * Example:
- *  @CapabilityInject(IExampleCapability.class)
- *  private static void capRegistered(Capability<IExampleCapability> cap) {}
+ *                                             Example:
+ * @CapabilityInject(IExampleCapability.class)
+ *                                             private static void capRegistered(Capability<IExampleCapability> cap) {}
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-public @interface CapabilityInject
-{
+@Target({ ElementType.FIELD, ElementType.METHOD })
+public @interface CapabilityInject {
+
     /**
      * The capability interface to listen for registration.
      * Note:
-     *   When reading annotations, DO NOT call this function as it will cause a hard dependency on the class.
+     * When reading annotations, DO NOT call this function as it will cause a hard dependency on the class.
      */
     Class<?> value();
 }
