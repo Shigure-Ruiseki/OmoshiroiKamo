@@ -28,12 +28,6 @@ public class BlockEssentiaInputPortME extends AbstractPortBlock<TEEssentiaInputP
         setTextureName("modularmachineryOverlay/base_modularports");
     }
 
-    @Override
-    public boolean canRenderInPass(int pass) {
-        super.canRenderInPass(pass); // keep render-pass thread local in sync
-        return pass == 0; // suppress block render pass 1; TESR handles overlay
-    }
-
     public static BlockEssentiaInputPortME create() {
         return new BlockEssentiaInputPortME();
     }

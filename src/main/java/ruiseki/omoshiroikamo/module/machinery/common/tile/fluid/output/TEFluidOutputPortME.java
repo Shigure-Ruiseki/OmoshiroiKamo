@@ -2,13 +2,11 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -319,9 +317,18 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     }
 
     @Override
-    public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
-        float hitZ) {
-        return false;
+    public EnumIO getSideIO(ForgeDirection side) {
+        return EnumIO.OUTPUT;
+    }
+
+    @Override
+    public void setSideIO(ForgeDirection side, EnumIO state) {
+        // Disable IO configuration for ME ports
+    }
+
+    @Override
+    public void toggleSide(ForgeDirection side) {
+        // Disable IO configuration for ME ports
     }
 
     @Override
@@ -330,9 +337,6 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
-            if (getSideIO(side) == EnumIO.NONE) {
-                return null;
-            }
             return IconRegistry.getIcon("overlay_fluidoutput_me");
         }
         return AbstractPortBlock.baseIcon;

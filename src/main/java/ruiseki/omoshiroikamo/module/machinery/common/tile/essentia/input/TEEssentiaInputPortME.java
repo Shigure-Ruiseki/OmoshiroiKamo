@@ -17,7 +17,6 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
-import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import thaumcraft.api.aspects.Aspect;
@@ -167,10 +166,17 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
+    public EnumIO getSideIO(ForgeDirection side) {
+        return EnumIO.INPUT;
+    }
+
+    @Override
+    public void setSideIO(ForgeDirection side, EnumIO state) {
+        // Disable IO configuration for ME ports
+    }
+
+    @Override
     public IIcon getOverlayIcon(ForgeDirection side) {
-        if (getSideIO(side) == EnumIO.NONE) {
-            return null;
-        }
         return IconRegistry.getIcon("overlay_essentiainput_me");
     }
 
@@ -180,8 +186,13 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
-            return getOverlayIcon(side);
+            return IconRegistry.getIcon("overlay_essentiainput_me");
         }
         return AbstractPortBlock.baseIcon;
+    }
+
+    @Override
+    public void toggleSide(ForgeDirection side) {
+        // Disable IO configuration for ME ports
     }
 }

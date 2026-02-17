@@ -349,14 +349,26 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     }
 
     @Override
+    public EnumIO getSideIO(ForgeDirection side) {
+        return EnumIO.OUTPUT;
+    }
+
+    @Override
+    public void setSideIO(ForgeDirection side, EnumIO state) {
+        // Disable IO configuration for ME ports
+    }
+
+    @Override
+    public void toggleSide(ForgeDirection side) {
+        // Disable IO configuration for ME ports
+    }
+
+    @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
-            if (getSideIO(side) == EnumIO.NONE) {
-                return null;
-            }
             return IconRegistry.getIcon("overlay_itemoutput_me");
         }
         return AbstractPortBlock.baseIcon;
