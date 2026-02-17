@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.gas.input;
 
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+
 public class TEGasInputPortT1 extends TEGasInputPort {
 
     public TEGasInputPortT1() {
-        super(1000);
+        super(MachineryConfig.getGasPortCapacity(1));
     }
 
     @Override

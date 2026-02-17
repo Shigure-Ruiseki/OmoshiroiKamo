@@ -5,6 +5,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
@@ -18,11 +19,10 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  */
 public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEssentiaTransport {
 
-    private static final int DEFAULT_CAPACITY = 64;
     private static final int SUCTION_AMOUNT = 128;
 
     public TEEssentiaInputPort() {
-        super(DEFAULT_CAPACITY);
+        super(MachineryConfig.essentiaPortCapacity);
     }
 
     @Override

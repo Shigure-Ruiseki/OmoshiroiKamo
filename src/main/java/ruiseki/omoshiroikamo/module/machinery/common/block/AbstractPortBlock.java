@@ -26,8 +26,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T>
     implements IModularBlock, IModularBlockTint {
     // TODO: Accept front I/O by default
-    // TODO: Change (configurable) capacity of ports
-    // TODO: Change (configurable) transfer rate of ports
 
     /** Render ID for ISBRH, set during client init */
     public static int portRendererId = -1;

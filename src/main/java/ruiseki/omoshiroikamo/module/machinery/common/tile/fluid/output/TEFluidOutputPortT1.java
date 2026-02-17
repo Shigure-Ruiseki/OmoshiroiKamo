@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output;
 
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+
 public class TEFluidOutputPortT1 extends TEFluidOutputPort {
 
     public TEFluidOutputPortT1() {
-        super(1000);
+        super(MachineryConfig.getFluidPortCapacity(1));
     }
 
     @Override

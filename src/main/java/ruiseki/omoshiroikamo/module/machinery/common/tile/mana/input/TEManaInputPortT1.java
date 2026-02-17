@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.mana.input;
 
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+
 public class TEManaInputPortT1 extends TEManaInputPort {
 
     public TEManaInputPortT1() {
-        super(2048, 128);
+        super(MachineryConfig.manaPortCapacity, MachineryConfig.manaPortTransfer);
     }
 
     @Override

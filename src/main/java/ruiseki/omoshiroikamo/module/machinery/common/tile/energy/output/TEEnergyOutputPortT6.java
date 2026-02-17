@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output;
 
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+
 /**
  * Energy Input Port TileEntity.
  * Accepts RF energy for machine processing.
@@ -7,7 +9,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output;
 public class TEEnergyOutputPortT6 extends TEEnergyOutputPort {
 
     public TEEnergyOutputPortT6() {
-        super(131072, 32768);
+        super(MachineryConfig.getEnergyPortCapacity(6), MachineryConfig.getEnergyPortTransfer(6));
     }
 
     @Override

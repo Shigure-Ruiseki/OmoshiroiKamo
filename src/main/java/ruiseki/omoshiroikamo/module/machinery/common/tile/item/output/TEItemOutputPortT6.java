@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.item.output;
 
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+
 public class TEItemOutputPortT6 extends TEItemOutputPort {
 
     public TEItemOutputPortT6() {
-        super(16);
+        super(MachineryConfig.getItemPortSlots(6));
     }
 
     @Override
