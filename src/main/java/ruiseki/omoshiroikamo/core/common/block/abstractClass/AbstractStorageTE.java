@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,6 @@ import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.network.PacketFluidTanks;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 
 public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory, CapabilityProvider {
 
@@ -64,7 +65,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     @Override
     public boolean processTasks(boolean redstoneChecksPassed) {
         if (tanksDirty && shouldDoWorkThisTick(10)) {
-            PacketHandler.sendToAllAround(new PacketFluidTanks(this), this);
+            NETWORK.sendToAllAround(new PacketFluidTanks(this), this);
             tanksDirty = false;
             return true;
         }

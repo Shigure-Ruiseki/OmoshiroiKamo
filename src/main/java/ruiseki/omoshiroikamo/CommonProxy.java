@@ -18,6 +18,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import ruiseki.omoshiroikamo.api.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.CoreCommon;
 import ruiseki.omoshiroikamo.core.ModuleManager;
 import ruiseki.omoshiroikamo.core.common.command.CommandOK;
@@ -26,13 +27,13 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.NEICompat;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.BackpackCommon;
 import ruiseki.omoshiroikamo.module.chickens.ChickensCommon;
 import ruiseki.omoshiroikamo.module.cows.CowsCommon;
 import ruiseki.omoshiroikamo.module.dml.DMLCommon;
 import ruiseki.omoshiroikamo.module.ids.IDsCommon;
 import ruiseki.omoshiroikamo.module.machinery.MachineryCommon;
-import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockCommon;
 
 public class CommonProxy {
@@ -40,6 +41,8 @@ public class CommonProxy {
     protected long serverTickCount = 0;
     protected long clientTickCount = 0;
     protected final TickTimer tickTimer = new TickTimer();
+
+    public static final PacketHandler NETWORK = new PacketHandler(LibMisc.MOD_ID);
 
     public CommonProxy() {}
 
@@ -64,6 +67,9 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         Logger.setPhase("INIT");
+
+        NETWORK.init();
+
         FMLCommonHandler.instance()
             .bus()
             .register(tickTimer);
@@ -124,10 +130,6 @@ public class CommonProxy {
 
     public double getReachDistanceForPlayer(EntityPlayer entityPlayer) {
         return 5;
-    }
-
-    public void handleStructureTint(PacketStructureTint message) {
-        // No-op on server
     }
 
     public final class TickTimer {

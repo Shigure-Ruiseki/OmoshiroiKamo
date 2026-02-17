@@ -11,8 +11,8 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
+import ruiseki.omoshiroikamo.core.common.init.CorePacket;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 
 public class CoreCommon implements IModuleCommon {
@@ -47,7 +47,7 @@ public class CoreCommon implements IModuleCommon {
     public void init(FMLInitializationEvent event) {
         CoreOreDict.init();
         CoreRecipes.init();
-        PacketHandler.init();
+        CorePacket.init();
     }
 
     @Override

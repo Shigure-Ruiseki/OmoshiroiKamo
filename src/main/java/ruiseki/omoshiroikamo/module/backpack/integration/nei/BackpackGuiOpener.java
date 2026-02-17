@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.backpack.integration.nei;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +17,6 @@ import com.cleanroommc.modularui.utils.Platform;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerInputHandler;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.common.network.PacketSyncCarriedItem;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
@@ -88,9 +89,9 @@ public class BackpackGuiOpener implements IContainerInputHandler {
         } else {
             player.inventory.setItemStack(remain);
         }
-        PacketHandler.INSTANCE
+        NETWORK
             .sendToServer(new PacketBackpackNBT(slot.getSlotIndex(), handler.getTagCompound(), InventoryTypes.PLAYER));
-        PacketHandler.INSTANCE.sendToServer(new PacketSyncCarriedItem(player.inventory.getItemStack()));
+        NETWORK.sendToServer(new PacketSyncCarriedItem(player.inventory.getItemStack()));
         return true;
     }
 

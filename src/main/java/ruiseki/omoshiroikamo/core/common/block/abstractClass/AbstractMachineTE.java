@@ -1,12 +1,13 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.block.ICraftingTile;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
 import ruiseki.omoshiroikamo.core.common.network.PacketCraftingState;
-import ruiseki.omoshiroikamo.core.common.network.PacketHandler;
 
 /**
  * Abstract base class for machines that consume energy to perform crafting tasks over time.
@@ -122,7 +123,7 @@ public abstract class AbstractMachineTE extends AbstractEnergyTE implements ICra
                 BlockStateUtils.setCraftingState(worldObj, xCoord, yCoord, zCoord, craftingState);
             }
 
-            PacketHandler.sendToAllAround(new PacketCraftingState(this), this);
+            NETWORK.sendToAllAround(new PacketCraftingState(this), this);
             markDirty();
         }
     }
