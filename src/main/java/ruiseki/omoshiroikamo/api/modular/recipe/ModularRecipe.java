@@ -199,14 +199,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
             if (recipeGroup == null || recipeGroup.isEmpty()) {
                 throw new IllegalStateException("Recipe recipeGroup is required");
             }
-            if (inputs.isEmpty()) {
-                // TODO: Nullable
-                throw new IllegalStateException("Recipe must have at least one input");
-            }
-            if (outputs.isEmpty()) {
-                // TODO: Nullable
-                throw new IllegalStateException("Recipe must have at least one output");
-            }
             return new ModularRecipe(this);
         }
     }
