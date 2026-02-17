@@ -53,27 +53,19 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
     }
 
     @Override
+    public String getOverlayPrefix() {
+        return "overlay_energyinput_";
+    }
+
+    @Override
     public void registerPortOverlays(IIconRegister reg) {
+        for (int i = 1; i <= 6; i++) {
+            IconRegistry.addIcon(
+                getOverlayPrefix() + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + getOverlayPrefix() + i));
+        }
         IconRegistry.addIcon(
-            "overlay_energyinput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_1"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_2",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_2"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_3",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_3"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_4",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_4"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_5",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_5"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_6",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_6"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_disabled",
+            getOverlayPrefix() + "disabled",
             reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
@@ -127,7 +119,7 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
         @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            // TODO: Add tooltips
+            super.addInformation(stack, player, list, flag);
         }
     }
 

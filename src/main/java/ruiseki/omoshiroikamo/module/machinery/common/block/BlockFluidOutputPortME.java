@@ -40,6 +40,11 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
     }
 
     @Override
+    public String getOverlayPrefix() {
+        return "overlay_fluidoutput_me";
+    }
+
+    @Override
     public void registerPortOverlays(IIconRegister reg) {
         IconRegistry.addIcon(
             "overlay_fluidoutput_me",

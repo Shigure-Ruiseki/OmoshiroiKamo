@@ -537,7 +537,6 @@ public class TEMachineController extends AbstractMBModifierTE
                 extendedFacing = ExtendedFacing.VALUES[ordinal];
             }
         }
-        super.readCommon(nbt);
 
         if (worldObj != null && worldObj.isRemote && !Objects.equals(previousFacing, extendedFacing)) {
             worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);

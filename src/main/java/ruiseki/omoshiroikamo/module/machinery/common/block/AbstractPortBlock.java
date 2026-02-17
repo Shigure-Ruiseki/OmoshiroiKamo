@@ -1,41 +1,53 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T>
     implements IModularBlock, IModularBlockTint {
-    // TODO: Accept front I/O by default
 
-    /** Render ID for ISBRH, set during client init */
+    // Render ID for ISBRH, set during client init
     public static int portRendererId = -1;
 
     public static IIcon baseIcon;
     public static IIcon casingIcon;
 
+    protected final int tierCount;
+
     @SafeVarargs
     protected AbstractPortBlock(String name, Class<? extends TileEntity>... teClasses) {
         super(name, teClasses);
+        this.tierCount = teClasses.length;
         this.useNeighborBrightness = true;
     }
 
@@ -116,7 +128,19 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
         registerPortOverlays(reg);
     }
 
-    public abstract void registerPortOverlays(IIconRegister reg);
+    public void registerPortOverlays(IIconRegister reg) {
+        String prefix = getOverlayPrefix();
+        for (int i = 0; i < tierCount; i++) {
+            int tier = i + 1;
+            IconRegistry.addIcon(
+                prefix + tier,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + tier));
+        }
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+    }
+
+    public abstract String getOverlayPrefix();
 
     protected abstract Class<? extends AbstractPortItemBlock> getItemBlockClass();
 
@@ -125,4 +149,33 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
+
+    @Override
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        for (int i = 0; i < tierCount; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
+    }
+
+    @Override
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        TileEntity te = accessor.getTileEntity();
+        if (te instanceof ISidedIO io) {
+            Vec3 hit = WailaUtils.getLocalHit(accessor);
+            if (hit == null) return;
+            ForgeDirection side = ItemWrench
+                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
+            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
+        }
+    }
+
+    public void addTooltip(List<String> list, int tier) {
+        addCapacityTooltip(list, tier);
+        addTransferTooltip(list, tier);
+    }
+
+    protected void addCapacityTooltip(List<String> list, int tier) {}
+
+    protected void addTransferTooltip(List<String> list, int tier) {}
 }

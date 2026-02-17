@@ -99,7 +99,8 @@ public class ProcessAgent {
                     .add(new String[] { essentiaOut.getAspectTag(), String.valueOf(essentiaOut.getAmount()) });
             } else if (output instanceof VisOutput) {
                 VisOutput visOut = (VisOutput) output;
-                cachedVisOutputs.add(new String[] { visOut.getAspectTag(), String.valueOf(visOut.getAmount()) });
+                cachedVisOutputs
+                    .add(new String[] { visOut.getAspectTag(), String.valueOf(visOut.getAmountCentiVis()) });
             }
         }
 
@@ -158,7 +159,11 @@ public class ProcessAgent {
             outputs.add(new ItemOutput(stack.copy()));
         }
         for (FluidStack stack : cachedFluidOutputs) {
-            outputs.add(new FluidOutput(stack.copy()));
+            outputs.add(
+                new FluidOutput(
+                    stack.getFluid()
+                        .getName(),
+                    stack.amount));
         }
         for (Integer manaAmount : cachedManaOutputs) {
             outputs.add(new ManaOutput(manaAmount));

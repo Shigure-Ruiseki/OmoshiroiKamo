@@ -39,6 +39,11 @@ public class BlockEssentiaInputPortME extends AbstractPortBlock<TEEssentiaInputP
     }
 
     @Override
+    public String getOverlayPrefix() {
+        return "overlay_essentiainput_me";
+    }
+
+    @Override
     public void registerPortOverlays(IIconRegister reg) {
         IconRegistry.addIcon(
             "overlay_essentiainput_me",
