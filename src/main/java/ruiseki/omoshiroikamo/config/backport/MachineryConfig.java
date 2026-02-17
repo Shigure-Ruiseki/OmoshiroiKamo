@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @Config.LangKey(LibResources.CONFIG + "modularConfig")
 @Config(
     modid = LibMisc.MOD_ID,
-    category = "tinting",
+    category = "Modular",
     configSubDirectory = LibMisc.MOD_ID + "/modular",
     filename = "modular")
 public class MachineryConfig {
@@ -18,46 +18,51 @@ public class MachineryConfig {
     @Config.DefaultString("#FFFFFF")
     public static String defaultTintColor;
 
-    @Config.Comment("Item Input/Output Port Slots (Tier 1-6) - Comma separated")
+    @Config.Comment("Item Input/Output Port Slots (Tier 1-6)")
     @Config.DefaultString("1,4,6,9,12,16")
-    public static String itemPortSlots;
+    public static String itemPortSlots = "1,4,6,9,12,16";
 
-    @Config.Comment("Fluid Input/Output Port Capacity in mB (Tier 1-6) - Comma separated")
+    @Config.Comment("Fluid Input/Output Port Capacity in mB (Tier 1-6)")
     @Config.DefaultString("1000,2000,4000,8000,16000,32000")
-    public static String fluidPortCapacity;
+    public static String fluidPortCapacity = "1000,2000,4000,8000,16000,32000";
 
-    @Config.Comment("Gas Input/Output Port Capacity in mB (Tier 1-6) - Comma separated")
+    @Config.Comment("Gas Input/Output Port Capacity in mB (Tier 1-6)")
     @Config.DefaultString("1000,2000,4000,8000,16000,32000")
-    public static String gasPortCapacity;
+    public static String gasPortCapacity = "1000,2000,4000,8000,16000,32000";
 
-    @Config.Comment("Energy Input/Output Port Capacity in RF (Tier 1-6) - Comma separated")
+    @Config.Comment("Energy Input/Output Port Capacity in RF (Tier 1-6)")
     @Config.DefaultString("2048,8192,32768,131072,524288,2097152")
-    public static String energyPortCapacity;
+    public static String energyPortCapacity = "2048,8192,32768,131072,524288,2097152";
 
-    @Config.Comment("Energy Input/Output Port Transfer Rate in RF/t (Tier 1-6) - Comma separated")
+    @Config.Comment("Energy Input/Output Port Transfer Rate in RF/t (Tier 1-6)")
     @Config.DefaultString("128,512,2048,8192,32768,131072")
-    public static String energyPortTransfer;
+    public static String energyPortTransfer = "128,512,2048,8192,32768,131072";
 
     @Config.Comment("Mana Input/Output Port Capacity")
     @Config.DefaultInt(1000000)
-    public static int manaPortCapacity;
+    public static int manaPortCapacity = 100000;
 
     @Config.Comment("Mana Input/Output Port Transfer Rate")
     @Config.DefaultInt(10000)
-    public static int manaPortTransfer;
+    public static int manaPortTransfer = 10000;
 
     @Config.Comment("Essentia Input/Output Port Capacity per Aspect")
     @Config.DefaultInt(64)
-    public static int essentiaPortCapacity;
+    public static int essentiaPortCapacity = 64;
 
     @Config.Comment("Vis Input/Output Port Capacity per Aspect")
     @Config.DefaultInt(100)
-    public static int visPortCapacity;
+    public static int visPortCapacity = 100;
 
+    @Config.Ignore
     private static int[] _itemPortSlots;
+    @Config.Ignore
     private static int[] _fluidPortCapacity;
+    @Config.Ignore
     private static int[] _gasPortCapacity;
+    @Config.Ignore
     private static int[] _energyPortCapacity;
+    @Config.Ignore
     private static int[] _energyPortTransfer;
 
     public static int[] getItemPortSlots() {
