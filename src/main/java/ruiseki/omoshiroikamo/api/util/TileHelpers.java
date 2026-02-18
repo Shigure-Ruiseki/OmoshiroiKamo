@@ -5,10 +5,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.DimPos;
 import ruiseki.omoshiroikamo.api.capabilities.Capability;
 import ruiseki.omoshiroikamo.api.capabilities.ICapabilityProvider;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 
 /**
  * Contains helper methods for various tile entity specific things.

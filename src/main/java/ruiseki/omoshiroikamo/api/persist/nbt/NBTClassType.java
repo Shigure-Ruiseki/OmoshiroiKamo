@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.persist.nbt;
 
-import static codechicken.nei.NEIClientConfig.world;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -30,8 +28,8 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.util.MinecraftHelpers;
 import ruiseki.omoshiroikamo.api.util.Vec3i;
 import ruiseki.omoshiroikamo.core.common.util.Logger;

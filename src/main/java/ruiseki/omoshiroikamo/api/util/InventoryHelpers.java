@@ -12,11 +12,11 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 
 /**
  * Contains helper methods involving {@link net.minecraft.inventory.IInventory}S.
- * 
+ *
  * @author immortaleeb
  *
  */
@@ -24,7 +24,7 @@ public class InventoryHelpers {
 
     /**
      * Erase a complete inventory
-     * 
+     *
      * @param inventory inventory to clear
      */
     public static void clearInventory(IInventory inventory) {
@@ -37,7 +37,7 @@ public class InventoryHelpers {
      * Try adding a new item stack originating from the given original stack to the same original stack.
      * The original item stack should not have it's stack-size decreased yet, this method does this.
      * Otherwise it will add the new stack to another inventory slot and in the worst case drop it on the floor.
-     * 
+     *
      * @param player        The player.
      * @param originalStack The original item stack from which the new item stack originated.
      * @param newStackPart  The new item stack.
@@ -60,7 +60,7 @@ public class InventoryHelpers {
     /**
      * Validate the NBT storage of the given inventory in the given item.
      * Should be called in constructors of inventories.
-     * 
+     *
      * @param inventory The inventory.
      * @param itemStack The item stack to read/write.
      * @param tagName   The tag name to read from.
@@ -79,7 +79,7 @@ public class InventoryHelpers {
 
     /**
      * Read an inventory from NBT.
-     * 
+     *
      * @param inventory The inventory.
      * @param data      The tag to read from.
      * @param tagName   The tag name to read from.
@@ -107,7 +107,7 @@ public class InventoryHelpers {
 
     /**
      * Write the given inventory to NBT.
-     * 
+     *
      * @param inventory The inventory.
      * @param data      The tag to write to.
      * @param tagName   The tag name to write into.
@@ -128,7 +128,7 @@ public class InventoryHelpers {
 
     /**
      * Get the item stack from the given index in the player inventory.
-     * 
+     *
      * @param player    The player.
      * @param itemIndex The index of the item in the inventory.
      * @return The item stack.
@@ -139,7 +139,7 @@ public class InventoryHelpers {
 
     /**
      * Try to add the given item to the given slot.
-     * 
+     *
      * @param inventory The inventory.
      * @param slot      The slot to add to.
      * @param itemStack The item to try to put in the production slot.
@@ -151,7 +151,7 @@ public class InventoryHelpers {
 
     /**
      * Try to add the given item to the given slot.
-     * 
+     *
      * @param inventory The inventory.
      * @param slot      The slot to add to.
      * @param itemStack The item to try to put in the production slot.

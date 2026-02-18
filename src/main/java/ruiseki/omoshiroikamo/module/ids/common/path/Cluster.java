@@ -13,7 +13,7 @@ import com.google.common.collect.Sets;
 
 import lombok.Data;
 import lombok.experimental.Delegate;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElementProvider;
 import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;

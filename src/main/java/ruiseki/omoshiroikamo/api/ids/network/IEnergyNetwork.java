@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.ids.network;
 
 import java.util.Map;
 
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.block.IEnergyBatteryFacade;
 
 /**

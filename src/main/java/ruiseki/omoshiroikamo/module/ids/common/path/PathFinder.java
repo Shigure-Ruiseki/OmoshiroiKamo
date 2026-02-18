@@ -5,12 +5,12 @@ import java.util.TreeSet;
 
 import com.google.common.collect.Sets;
 
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
 
 /**
  * Algorithm to construct paths/clusters of {@link IPathElement}s.
- * 
+ *
  * @author rubensworks
  */
 public final class PathFinder {

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.block;
+package ruiseki.omoshiroikamo.api.datastructure;
 
 import java.lang.ref.WeakReference;
 

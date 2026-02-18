@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.block;
+package ruiseki.omoshiroikamo.api.datastructure;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

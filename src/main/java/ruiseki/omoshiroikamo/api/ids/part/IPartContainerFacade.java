@@ -7,19 +7,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 
 /**
  * Facade for a {@link IPartContainer} at a certain position.
  * Must be implemented by a block.
- * 
+ *
  * @author rubensworks
  */
 public interface IPartContainerFacade {
 
     /**
      * Get the part container at a given position.
-     * 
+     *
      * @param world The world.
      * @param pos   The position.
      * @return The part container.
@@ -28,7 +28,7 @@ public interface IPartContainerFacade {
 
     /**
      * Get the side the player is watching.
-     * 
+     *
      * @param world  The world.
      * @param pos    The block position to perform a ray trace for.
      * @param player The player.

@@ -1,10 +1,10 @@
 package ruiseki.omoshiroikamo.api.ids.block;
 
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 
 /**
  * An interface for containers that can hold energy.
- * 
+ *
  * @author rubensworks
  */
 public interface IEnergyBattery {
@@ -26,7 +26,7 @@ public interface IEnergyBattery {
 
     /**
      * Add the given energy amount to the battery.
-     * 
+     *
      * @param energy   The energy amount to add.
      * @param simulate If the addition should be stimulated.
      * @return The amount of energy that was added.
@@ -35,7 +35,7 @@ public interface IEnergyBattery {
 
     /**
      * Remove the given energy amount from the battery.
-     * 
+     *
      * @param energy   The energy amount to remove.
      * @param simulate If the consumption should be stimulated.
      * @return The amount of energy that was consumed.

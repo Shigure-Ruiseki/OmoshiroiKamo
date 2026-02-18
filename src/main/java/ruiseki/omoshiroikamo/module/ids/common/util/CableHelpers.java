@@ -7,13 +7,13 @@ import net.minecraft.world.IBlockAccess;
 
 import com.google.common.collect.Lists;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.util.TileHelpers;
 
 /**
  * Helpers related to cables.
- * 
+ *
  * @author rubensworks
  */
 public class CableHelpers {
@@ -42,7 +42,7 @@ public class CableHelpers {
 
     /**
      * Check for the given interface at the given position.
-     * 
+     *
      * @param world The world.
      * @param pos   The position.
      * @param clazz The class to find.
@@ -62,7 +62,7 @@ public class CableHelpers {
 
     /**
      * Check for the given interface at the given position.
-     * 
+     *
      * @param dimPos The dimensional position.
      * @param clazz  The class to find.
      * @param <C>    The class type.
@@ -87,7 +87,7 @@ public class CableHelpers {
 
         /**
          * Attempt to get a given interface instance.
-         * 
+         *
          * @param world The world.
          * @param pos   The position.
          * @param clazz The class to find.

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.ids.block.cable.ICable;
 import ruiseki.omoshiroikamo.api.ids.network.IEventListenableNetworkElement;
 import ruiseki.omoshiroikamo.api.ids.network.INetwork;

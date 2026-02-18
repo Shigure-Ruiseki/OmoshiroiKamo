@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.ids.network;
 
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.evaluate.expression.ILazyExpressionValueCache;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IValue;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IVariable;

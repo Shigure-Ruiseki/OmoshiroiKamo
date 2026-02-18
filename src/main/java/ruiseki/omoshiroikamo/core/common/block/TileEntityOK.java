@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.Delegate;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.api.capabilities.Capability;
 import ruiseki.omoshiroikamo.api.capabilities.CapabilityDispatcher;
 import ruiseki.omoshiroikamo.api.capabilities.ICapabilitySerializable;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.persist.nbt.INBTProvider;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTProviderComponent;
 import ruiseki.omoshiroikamo.core.common.event.OKEventFactory;

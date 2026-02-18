@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import lombok.Data;
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.network.IEnergyConsumingNetworkElement;
 import ruiseki.omoshiroikamo.api.ids.network.INetworkElement;
 import ruiseki.omoshiroikamo.api.ids.network.IPartNetwork;

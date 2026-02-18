@@ -5,15 +5,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.network.IPartNetwork;
 import ruiseki.omoshiroikamo.api.ids.tileentity.ITileCableNetwork;
 import ruiseki.omoshiroikamo.api.util.TileHelpers;
 
 /**
  * Object holder to refer to a block side and position.
- * 
+ *
  * @author rubensworks
  */
 public class PartPos {
@@ -68,7 +68,7 @@ public class PartPos {
 
     /**
      * Get part data from the given position.
-     * 
+     *
      * @param pos The part position.
      * @return A pair of part type and part state or null if not found.
      */
@@ -91,7 +91,7 @@ public class PartPos {
 
     /**
      * Get the network at the given position.
-     * 
+     *
      * @param pos The part position.
      * @return The network or null if not found.
      */

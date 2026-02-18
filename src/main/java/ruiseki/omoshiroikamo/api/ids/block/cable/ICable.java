@@ -6,20 +6,20 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElementProvider;
 
 /**
  * Interface for blocks that can connect with cables.
- * 
+ *
  * @author rubensworks
  */
 public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<E> {
 
     /**
      * Check if the given position should connect with this.
-     * 
+     *
      * @param world        The world.
      * @param selfPosition The position for this block.
      * @param connector    The connecting block.
@@ -31,7 +31,7 @@ public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<
     /**
      * Update the cable connections at the given position.
      * This will not trigger neighbour cable connection updates.
-     * 
+     *
      * @param world The world.
      * @param pos   The position of this block.
      */
@@ -40,7 +40,7 @@ public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<
     /**
      * Trigger a call of {@link ICable#updateConnections(World, BlockPos)}
      * for all connected neighbours
-     * 
+     *
      * @param world The world.
      * @param pos   The position of this block.
      */
@@ -48,7 +48,7 @@ public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<
 
     /**
      * Check if this cable is connected to a side.
-     * 
+     *
      * @param world The world.
      * @param pos   The position of this block.
      * @param side  The side to check a connection for.
@@ -58,7 +58,7 @@ public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<
 
     /**
      * Disconnect the cable connection for a side.
-     * 
+     *
      * @param world The world.
      * @param pos   The position of this block.
      * @param side  The side to block the connection for.
@@ -68,7 +68,7 @@ public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<
     /**
      * Reconnect the cable connection for a side.
      * Will only do something if the cable was previously disconnected.
-     * 
+     *
      * @param world The world.
      * @param pos   The position of this block.
      * @param side  The side to remake the connection for.
@@ -77,7 +77,7 @@ public interface ICable<E extends IPathElement<E>> extends IPathElementProvider<
 
     /**
      * Remove this cable from the world and drop it.
-     * 
+     *
      * @param world  The world.
      * @param pos    The position.
      * @param player The player removing the cable.

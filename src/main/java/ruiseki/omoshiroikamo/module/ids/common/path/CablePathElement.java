@@ -8,8 +8,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.google.common.collect.Sets;
 
 import lombok.Data;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.block.cable.ICable;
 import ruiseki.omoshiroikamo.api.ids.path.ICablePathElement;
 import ruiseki.omoshiroikamo.core.common.util.Logger;

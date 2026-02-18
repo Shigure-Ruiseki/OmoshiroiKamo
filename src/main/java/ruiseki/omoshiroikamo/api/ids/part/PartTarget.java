@@ -3,12 +3,12 @@ package ruiseki.omoshiroikamo.api.ids.part;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
-import ruiseki.omoshiroikamo.api.block.DimPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 
 /**
  * Object holder to refer to another block side and its origin.
- * 
+ *
  * @author rubensworks
  */
 public class PartTarget {
@@ -18,7 +18,7 @@ public class PartTarget {
 
     /**
      * Get the target from a center block that is targeted at another block.
-     * 
+     *
      * @param pos  The central position that is referring to the target.
      * @param side The side on the central position that points to the target.
      * @return The target referral.
@@ -36,7 +36,7 @@ public class PartTarget {
 
     /**
      * Get the target from a center block that is targeted at another block.
-     * 
+     *
      * @param pos The central position that is referring to the target.
      * @return The target referral.
      */
@@ -46,7 +46,7 @@ public class PartTarget {
 
     /**
      * Get the target from a center block that is targeted at another block.
-     * 
+     *
      * @param world The world.
      * @param pos   The central position that is referring to the target.
      * @param side  The side on the central position that points to the target.
@@ -58,7 +58,7 @@ public class PartTarget {
 
     /**
      * Create a new instance.
-     * 
+     *
      * @param center The center position.
      * @param target The target position.
      * @return The target.
