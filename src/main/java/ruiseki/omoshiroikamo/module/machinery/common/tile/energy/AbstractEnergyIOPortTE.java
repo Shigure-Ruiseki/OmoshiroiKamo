@@ -192,10 +192,10 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     public String getEnergyUsedText() {
         if (energyMode == EnergyMode.EU) {
-            double eu = (double) energyStorage.getMaxReceive() / EnergyConfig.rftToEU;
+            double eu = (double) energyStorage.getEnergyStored() / EnergyConfig.rftToEU;
             return LibMisc.LANG.localize("gui.machinery.energy_used", String.format("%.1f EU/t", eu));
         } else {
-            return LibMisc.LANG.localize("gui.machinery.energy_used", energyStorage.getMaxReceive() + " RF/t");
+            return LibMisc.LANG.localize("gui.machinery.energy_used", energyStorage.getEnergyStored() + " RF/t");
         }
     }
 

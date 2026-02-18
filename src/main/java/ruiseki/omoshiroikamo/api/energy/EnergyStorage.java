@@ -27,17 +27,22 @@ public class EnergyStorage implements IEnergyStorage, INBTSerializable {
     protected int maxExtract;
 
     public EnergyStorage(int capacity) {
-        this(capacity, capacity, capacity);
+        this(capacity, capacity, capacity, 0);
     }
 
     public EnergyStorage(int capacity, int maxTransfer) {
-        this(capacity, maxTransfer, maxTransfer);
+        this(capacity, maxTransfer, maxTransfer, 0);
     }
 
     public EnergyStorage(int capacity, int maxReceive, int maxExtract) {
+        this(capacity, maxReceive, maxExtract, 0);
+    }
+
+    public EnergyStorage(int capacity, int maxReceive, int maxExtract, int energy) {
         this.capacity = capacity;
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
+        this.energy = Math.max(0, Math.min(capacity, energy));
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -102,34 +107,40 @@ public class EnergyStorage implements IEnergyStorage, INBTSerializable {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        int receivable = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+        if (!canReceive()) return 0;
 
-        if (receivable <= 0) return 0;
-
-        if (!simulate) {
-            setEnergyInternal(energy + receivable);
-        }
-        return receivable;
+        int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+        if (!simulate) setEnergyInternal(energy + energyReceived);
+        return energyReceived;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        int extractable = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+        if (!canExtract()) return 0;
 
-        if (extractable <= 0) return 0;
-
-        if (!simulate) {
-            setEnergyInternal(energy - extractable);
-        }
-        return extractable;
+        int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+        if (!simulate) setEnergyInternal(energy - energyExtracted);
+        return energyExtracted;
     }
 
+    @Override
     public int getEnergyStored() {
-        return this.energy;
+        return energy;
     }
 
+    @Override
     public int getMaxEnergyStored() {
-        return this.capacity;
+        return capacity;
+    }
+
+    @Override
+    public boolean canExtract() {
+        return this.maxExtract > 0;
+    }
+
+    @Override
+    public boolean canReceive() {
+        return this.maxReceive > 0;
     }
 
     public void onEnergyChanged() {}

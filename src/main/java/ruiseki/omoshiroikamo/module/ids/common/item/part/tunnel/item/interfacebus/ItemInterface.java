@@ -32,15 +32,15 @@ import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractPart;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.IItemNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.IItemPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.IItemQueryable;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndex;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
 
 public class ItemInterface extends AbstractPart implements IItemPart, IItemQueryable, IItemInterface {
 

@@ -1,16 +1,19 @@
 package ruiseki.omoshiroikamo.api.fluid;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import com.google.common.base.Strings;
 
 import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 
-public class SmartTank extends FluidTank implements INBTSerializable {
+public class SmartTank extends FluidTank implements IFluidHandler, INBTSerializable {
 
     protected Fluid restriction;
 
@@ -172,7 +175,12 @@ public class SmartTank extends FluidTank implements INBTSerializable {
     }
 
     public void readCommon(String name, NBTTagCompound nbtRoot) {
-        NBTTagCompound tankRoot = (NBTTagCompound) nbtRoot.getTag(name);
+        if (!nbtRoot.hasKey(name)) {
+            setFluid(null);
+            return;
+        }
+
+        NBTTagCompound tankRoot = nbtRoot.getCompoundTag(name);
         if (tankRoot != null) {
             readFromNBT(tankRoot);
             restriction = null;
@@ -207,5 +215,36 @@ public class SmartTank extends FluidTank implements INBTSerializable {
     @Override
     public void fromNBT(NBTTagCompound tag) {
         readCommon(tag);
+    }
+
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+        return fill(resource, doFill);
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+        if (resource == null) return null;
+        return drain(resource.amount, doDrain);
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+        return drain(maxDrain, doDrain);
+    }
+
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid) {
+        return canFill(fluid);
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+        return canDrainFluidType(fluid);
+    }
+
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+        return new FluidTankInfo[] { new FluidTankInfo(this) };
     }
 }

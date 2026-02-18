@@ -1,95 +1,147 @@
 package ruiseki.omoshiroikamo.core.common.block;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.Delegate;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
 import ruiseki.omoshiroikamo.api.block.IOKTile;
-import ruiseki.omoshiroikamo.api.client.IProgressTile;
+import ruiseki.omoshiroikamo.api.capabilities.Capability;
+import ruiseki.omoshiroikamo.api.capabilities.CapabilityDispatcher;
+import ruiseki.omoshiroikamo.api.capabilities.ICapabilitySerializable;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.persist.nbt.INBTProvider;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTProviderComponent;
-import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
+import ruiseki.omoshiroikamo.core.common.event.OKEventFactory;
 
-public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTProvider {
+public abstract class TileEntityOK extends TileEntity
+    implements IOKTile, INBTProvider, ICapabilitySerializable<NBTTagCompound> {
+
+    private static final int UPDATE_BACKOFF_TICKS = 1;
+
+    private final CapabilityDispatcher capabilities;
 
     @Delegate
-    private INBTProvider nbtProviderComponent = new NBTProviderComponent(this);
+    private final INBTProvider nbtProvider = new NBTProviderComponent(this);
 
+    private boolean shouldSendUpdate = false;
+    private int sendUpdateBackoff = 0;
+    private final boolean ticking;
+
+    private BlockPos cachedPos;
     private final int checkOffset = (int) (Math.random() * 20);
-    protected final boolean isProgressTile;
-
-    protected int lastProgressScaled = -1;
-    protected int ticksSinceLastProgressUpdate;
 
     public TileEntityOK() {
-        isProgressTile = this instanceof IProgressTile;
+        this.capabilities = OKEventFactory.gatherCapabilities(this);
+
+        this.sendUpdateBackoff = (int) (Math.random() * UPDATE_BACKOFF_TICKS);
+
+        this.ticking = this instanceof ITickingTile;
     }
 
     @Override
     public final boolean canUpdate() {
-        return shouldUpdate() || isProgressTile;
-    }
-
-    protected boolean shouldUpdate() {
         return true;
     }
 
     @Override
+    public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y,
+        int z) {
+        return (oldBlock != newBlock);
+    }
+
+    protected boolean isTicking() {
+        return ticking;
+    }
+
+    /**
+     * Send a world update for the coordinates of this tile entity.
+     * This will always send lag-safe updates, so calling this many times per tick will
+     * not cause multiple packets to be sent, more info in the class javadoc.
+     */
+    public final void sendUpdate() {
+        if (!isTicking()) {
+            throw new RuntimeException("If you want to update, you must implement ITickingTile. This is a mod error.");
+        }
+        shouldSendUpdate = true;
+    }
+
+    /**
+     * Send an immediate world update for the coordinates of this tile entity.
+     * This does the same as {@link TileEntityOK#sendUpdate()} but will
+     * ignore the update backoff.
+     */
+    public final void sendImmediateUpdate() {
+        sendUpdate();
+        sendUpdateBackoff = 0;
+    }
+
+    @Override
     public final void updateEntity() {
+        if (isTicking()) {
+            ((ITickingTile) this).update();
+        }
+    }
+
+    /**
+     * Do not override this method (you won't even be able to do so).
+     * Use updateTileEntity() instead.
+     */
+    private void updateTicking() {
         doUpdate();
-        if (isProgressTile && !worldObj.isRemote) {
-            int curScaled = getProgressScaled(16);
-            if (++ticksSinceLastProgressUpdate >= getProgressUpdateFreq() || curScaled != lastProgressScaled) {
-                requestProgressSync();
-                lastProgressScaled = curScaled;
+        trySendActualUpdate();
+    }
+
+    /**
+     * Override this method instead of {@link TileEntityOK#updateEntity()}.
+     * This method is called each tick.
+     */
+    protected void doUpdate() {}
+
+    private void trySendActualUpdate() {
+        sendUpdateBackoff--;
+        if (sendUpdateBackoff <= 0) {
+            sendUpdateBackoff = getUpdateBackoffTicks();
+
+            if (shouldSendUpdate) {
+                shouldSendUpdate = false;
+
+                beforeSendUpdate();
+                onSendUpdate();
+                afterSendUpdate();
             }
         }
     }
 
-    public final int getProgressScaled(int scale) {
-        if (isProgressTile) {
-            return getProgressScaled(scale, (IProgressTile) this);
-        }
-        return 0;
-    }
-
-    public static int getProgressScaled(int scale, IProgressTile tile) {
-        return (int) (tile.getProgress() * scale);
-    }
-
-    protected void doUpdate() {}
-
-    protected void requestProgressSync() {
-        if (!isProgressTile || worldObj.isRemote) return;
-        NETWORK.sendToAllAround(new PacketProgress((IProgressTile) this), this);
-        ticksSinceLastProgressUpdate = 0;
+    /**
+     * Called when an update will is sent.
+     * This contains the logic to send the update, so make sure to call the super!
+     */
+    protected void onSendUpdate() {
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     /**
-     * Controls how often progress updates.
-     * Has no effect if your TE is not IProgressTile.
+     * Called when before update is sent.
      */
-    protected int getProgressUpdateFreq() {
-        return 20;
+    protected void beforeSendUpdate() {
+
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
-        readGeneratedFieldsFromNBT(root);
-    }
+    /**
+     * Called when after update is sent. (Not necessarily received yet!)
+     */
+    protected void afterSendUpdate() {
 
-    @Override
-    public void writeToNBT(NBTTagCompound root) {
-        super.writeToNBT(root);
-        writeGeneratedFieldsToNBT(root);
     }
 
     @Override
@@ -101,14 +153,102 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
         readFromNBT(pkt.func_148857_g());
+        onUpdateReceived();
     }
 
-    public boolean canPlayerAccess(EntityPlayer player) {
+    /**
+     * This method is called when the tile entity receives
+     * an update (ie a data packet) from the server.
+     * If this tile entity uses NBT, then the NBT will have
+     * already been updated when this method is called.
+     */
+    public void onUpdateReceived() {
+
+    }
+
+    /**
+     * @return The minimum amount of ticks between two consecutive sent packets.
+     */
+    protected int getUpdateBackoffTicks() {
+        return UPDATE_BACKOFF_TICKS;
+    }
+
+    /**
+     * Called when the blockState of this tile entity is destroyed.
+     */
+    public void destroy() {
+        invalidate();
+    }
+
+    /**
+     * If this entity is interactable with a player.
+     *
+     * @param player The player that is checked.
+     * @return If the given player can interact.
+     */
+    public boolean canInteractWith(EntityPlayer player) {
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
 
-    private BlockPos cachedPos = null;
+    @Override
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
+        writeGeneratedFieldsToNBT(root);
+
+        if (capabilities != null) {
+            root.setTag("OKCaps", capabilities.serializeNBT());
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
+        readGeneratedFieldsFromNBT(root);
+
+        if (capabilities != null && root.hasKey("OKCaps")) {
+            capabilities.deserializeNBT(root.getCompoundTag("OKCaps"));
+        }
+    }
+
+    /**
+     * Get the NBT tag for this tile entity.
+     *
+     * @return The NBT tag that is created with the
+     *         {@link TileEntityOK#writeToNBT(net.minecraft.nbt.NBTTagCompound)} method.
+     */
+    public NBTTagCompound getNBTTagCompound() {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return tag;
+    }
+
+    public NBTTagCompound getUpdateTag() {
+        return getNBTTagCompound();
+    }
+
+    @Override
+    public boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
+        return capabilities != null && capabilities.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(@NotNull Capability<T> capability, @Nullable ForgeDirection facing) {
+        return capabilities == null ? null : capabilities.getCapability(capability, facing);
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        this.readFromNBT(nbt);
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound ret = new NBTTagCompound();
+        this.writeToNBT(ret);
+        return ret;
+    }
 
     @Override
     public BlockPos getPos() {
@@ -116,6 +256,7 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
             || cachedPos.getY() != yCoord
             || cachedPos.getZ() != zCoord
             || cachedPos.getWorld() != worldObj) {
+
             cachedPos = new BlockPos(this);
         }
         return cachedPos;
@@ -126,23 +267,31 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
         return this;
     }
 
-    /**
-     * Call this with an interval (in ticks) to find out if the current tick is the one you want to do some work. This
-     * is staggered so the work of different TEs is stretched out over time.
-     *
-     * @see #shouldDoWorkThisTick(int, int) If you need to offset work ticks
-     */
     protected boolean shouldDoWorkThisTick(int interval) {
         return shouldDoWorkThisTick(interval, 0);
     }
 
-    /**
-     * Call this with an interval (in ticks) to find out if the current tick is the one you want to do some work. This
-     * is staggered so the work of different TEs is stretched out over time.
-     * <p>
-     * If you have different work items in your TE, use this variant to stagger your work.
-     */
     protected boolean shouldDoWorkThisTick(int interval, int offset) {
         return (worldObj.getTotalWorldTime() + checkOffset + offset) % interval == 0;
     }
+
+    public interface ITickingTile {
+
+        void update();
+    }
+
+    public static class TickingTileComponent implements ITickingTile {
+
+        private final TileEntityOK tile;
+
+        public TickingTileComponent(TileEntityOK tile) {
+            this.tile = tile;
+        }
+
+        @Override
+        public void update() {
+            tile.updateTicking();
+        }
+    }
+
 }

@@ -251,7 +251,7 @@ public class TELootFabricator extends AbstractMachineTE
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return canPlayerAccess(player);
+        return canInteractWith(player);
     }
 
     @Override

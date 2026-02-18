@@ -84,7 +84,7 @@ public class ItemLivingMatter extends ItemOK {
             LivingRegistryItem item = LivingRegistry.INSTANCE.getByType(stack.getItemDamage());
             if (item == null) return stack;
 
-            boolean consumeAll = KeyboardUtils.isHoldingShift();
+            boolean consumeAll = player.isSneaking();
             int consumeCount = consumeAll ? stack.stackSize : 1;
 
             int xp = item.getXpValue() * consumeCount;

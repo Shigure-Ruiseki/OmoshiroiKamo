@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyIO;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
 
 public interface ICable extends IOKTile, IOKEnergyIO {
 

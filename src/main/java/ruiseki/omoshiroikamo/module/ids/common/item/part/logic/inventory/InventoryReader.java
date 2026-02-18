@@ -46,14 +46,14 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.ILogicValue;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.LogicValues;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.AbstractReaderPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKeys;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.LogicValues;
 
 public class InventoryReader extends AbstractReaderPart implements IInventoryPart {
 

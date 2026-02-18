@@ -27,12 +27,12 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractPart;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.PartSettingPanel;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.ICraftingNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.ICraftingPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.ICraftingPattern;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
 
 public class CraftingInterface extends AbstractPart implements ICraftingPart {
 

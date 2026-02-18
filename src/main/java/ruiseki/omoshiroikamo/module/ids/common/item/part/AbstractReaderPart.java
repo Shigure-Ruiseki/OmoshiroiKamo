@@ -23,10 +23,10 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractPart;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKey;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.part.ILogicReader;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.key.LogicKey;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.part.ILogicReader;
 
 public abstract class AbstractReaderPart extends AbstractPart implements ILogicReader {
 

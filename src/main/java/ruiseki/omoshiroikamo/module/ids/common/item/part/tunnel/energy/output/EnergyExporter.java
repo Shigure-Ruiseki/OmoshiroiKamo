@@ -45,6 +45,9 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.AbstractWriterPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.EnergyNetwork;
@@ -52,9 +55,6 @@ import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyNe
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyPart;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus.IEnergyInterface;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus.InterfaceEnergySource;
-import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 
 public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
 

@@ -22,15 +22,15 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractPart;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.ILogicNet;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.LogicNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.node.EvalContext;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.node.ILogicNode;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.node.LogicEvaluator;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.node.LogicNodeFactory;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.ILogicValue;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.LogicNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.EvalContext;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.ILogicNode;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.LogicEvaluator;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.node.LogicNodeFactory;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.value.ILogicValue;
 
 public abstract class AbstractWriterPart extends AbstractPart {
 
