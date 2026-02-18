@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.module.ids.common.cableNet.IDsNetworkTickHandler;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypes;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
+import ruiseki.omoshiroikamo.module.ids.common.init.IDsCapabilities;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.persist.world.NetworkWorldStorage;
 
@@ -46,6 +47,8 @@ public class IDsCommon implements IModuleCommon {
         LogicKeys.preInit();
 
         CablePartRegistry.init();
+
+        IDsCapabilities.preInit();
 
         IDsBlocks.preInit();
         IDsItems.preInit();

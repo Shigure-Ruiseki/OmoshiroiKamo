@@ -469,8 +469,9 @@ public abstract class NBTClassType<T> {
                                 world.provider.dimensionId));
                     }
                 }
-                return DimPos
-                    .of(world, new BlockPos(dimPos.getInteger("x"), dimPos.getInteger("y"), dimPos.getInteger("z")));
+                return DimPos.of(
+                    world.provider.dimensionId,
+                    new BlockPos(dimPos.getInteger("x"), dimPos.getInteger("y"), dimPos.getInteger("z")));
             }
 
             @Override

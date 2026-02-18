@@ -49,7 +49,6 @@ public enum CapabilityManager {
      * @param implementation A default implementation of the interface.
      * @deprecated Use the overload that takes a factory instead of a class.
      *             You can easily do this by passing a constructor reference
-     *             (MyImpl::new instead of MyImpl.class). TODO remove in 1.13.
      */
     @Deprecated
     public <T> void register(Class<T> type, Capability.IStorage<T> storage, final Class<? extends T> implementation) {

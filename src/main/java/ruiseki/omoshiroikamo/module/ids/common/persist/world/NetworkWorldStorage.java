@@ -16,7 +16,7 @@ import ruiseki.omoshiroikamo.module.ids.common.network.Network;
 
 /**
  * World NBT storage for all active networks.
- * 
+ *
  * @author rubensworks
  */
 public class NetworkWorldStorage extends WorldStorage {
@@ -39,7 +39,6 @@ public class NetworkWorldStorage extends WorldStorage {
 
     @Override
     public void readGeneratedFieldsFromNBT(NBTTagCompound tag) {
-        // TODO: backwards compat, remove in next major MC update.
         if (tag.hasKey("networks", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal())
             && "org.cyclops.integrateddynamics.core.network.PartNetwork".equals(
                 tag.getCompoundTag("networks")
@@ -73,7 +72,7 @@ public class NetworkWorldStorage extends WorldStorage {
 
     /**
      * Add a network that needs persistence.
-     * 
+     *
      * @param network The network.
      */
     public synchronized void addNewNetwork(INetwork network) {
@@ -83,7 +82,7 @@ public class NetworkWorldStorage extends WorldStorage {
     /**
      * Remove a network that was invalidated and does not need persistence anymore.
      * This is allowed to be called if the network was already removed.
-     * 
+     *
      * @param network The network.
      */
     public synchronized void removeInvalidatedNetwork(INetwork network) {

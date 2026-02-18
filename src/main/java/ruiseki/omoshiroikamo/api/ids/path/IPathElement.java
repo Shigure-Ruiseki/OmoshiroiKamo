@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.block.DimPos;
  * 
  * @author rubensworks
  */
-public interface IPathElement extends Comparable<IPathElement> {
+public interface IPathElement<E extends IPathElement<E>> extends Comparable<E> {
 
     /**
      * @return The position of this element.
@@ -23,6 +23,6 @@ public interface IPathElement extends Comparable<IPathElement> {
     /**
      * @return The set of all path elements that can be reached from here.
      */
-    public Set<ISidedPathElement> getReachableElements();
+    public Set<E> getReachableElements();
 
 }

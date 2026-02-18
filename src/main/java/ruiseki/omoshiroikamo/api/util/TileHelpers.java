@@ -12,14 +12,14 @@ import ruiseki.omoshiroikamo.api.capabilities.ICapabilityProvider;
 
 /**
  * Contains helper methods for various tile entity specific things.
- * 
+ *
  * @author rubensworks
  */
 public final class TileHelpers {
 
     /**
      * Safely cast a tile entity.
-     * 
+     *
      * @param dimPos      The dimensional position of the block providing the tile entity.
      * @param targetClazz The class to cast to.
      * @param <T>         The type of tile to cast at.
@@ -35,7 +35,7 @@ public final class TileHelpers {
 
     /**
      * Safely cast a tile entity.
-     * 
+     *
      * @param world       The world.
      * @param pos         The position of the block providing the tile entity.
      * @param targetClazz The class to cast to.
@@ -53,7 +53,7 @@ public final class TileHelpers {
 
     /**
      * Safely get a capability from a tile.
-     * 
+     *
      * @param dimPos     The dimensional position of the block providing the tile entity.
      * @param capability The capability.
      * @param <C>        The capability instance.
@@ -69,7 +69,7 @@ public final class TileHelpers {
 
     /**
      * Safely get a capability from a tile.
-     * 
+     *
      * @param dimPos     The dimensional position of the block providing the tile entity.
      * @param side       The side to get the capability from.
      * @param capability The capability.
@@ -86,7 +86,7 @@ public final class TileHelpers {
 
     /**
      * Safely get a capability from a tile.
-     * 
+     *
      * @param world      The world.
      * @param pos        The position of the block of the tile entity providing the capability.
      * @param side       The side to get the capability from.
@@ -100,7 +100,7 @@ public final class TileHelpers {
 
     /**
      * Safely get a capability from a tile.
-     * 
+     *
      * @param world      The world.
      * @param pos        The position of the block of the tile entity providing the capability.
      * @param capability The capability.
@@ -113,7 +113,7 @@ public final class TileHelpers {
 
     /**
      * Safely get a capability from a tile.
-     * 
+     *
      * @param world      The world.
      * @param pos        The position of the block of the tile entity providing the capability.
      * @param side       The side to get the capability from.
@@ -122,24 +122,10 @@ public final class TileHelpers {
      * @return The capability or null.
      */
     public static <C> C getCapability(IBlockAccess world, BlockPos pos, ForgeDirection side, Capability<C> capability) {
-
         TileEntity tile = TileHelpers.getSafeTile(world, pos, TileEntity.class);
-
-        if (tile == null) {
-            return null;
-        }
-
-        if (side == null) {
-            side = ForgeDirection.UNKNOWN;
-        }
-
         if (tile instanceof ICapabilityProvider provider) {
-
-            if (provider.hasCapability(capability, side)) {
-                return provider.getCapability(capability, side);
-            }
+            return provider.getCapability(capability, side);
         }
-
         return null;
     }
 

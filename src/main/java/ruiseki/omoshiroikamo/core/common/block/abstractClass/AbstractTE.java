@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.block.abstractClass;
 
+import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -15,13 +17,16 @@ import com.cleanroommc.modularui.factory.GuiFactories;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Delegate;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
+import ruiseki.omoshiroikamo.core.common.network.PacketProgress;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -36,7 +41,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
  * <li>Interaction with ItemStacks for saving/loading</li>
  * </ul>
  */
-public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoProvider {
+public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.ITickingTile, IWailaTileInfoProvider {
 
     /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
@@ -76,6 +81,17 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
 
     /** NBT tag name for inventory data. */
     public static String INVENTORY_TAG = "inventory";
+
+    @Delegate
+    protected final ITickingTile tickingTileComponent = new TickingTileComponent(this);
+
+    private final boolean isProgressTile;
+    protected int lastProgressScaled = -1;
+    protected int ticksSinceLastProgressUpdate;
+
+    public AbstractTE() {
+        this.isProgressTile = this instanceof IProgressTile;
+    }
 
     /**
      * Returns the facing direction of the tile entity based on block state.
@@ -186,6 +202,8 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
             return;
         }
 
+        handleProgressUpdate();
+
         boolean requiresClientSync = forceClientUpdate;
         boolean prevRedCheck = redstoneCheckPassed;
 
@@ -294,6 +312,27 @@ public abstract class AbstractTE extends TileEntityOK implements IWailaTileInfoP
             GuiFactories.tileEntity()
                 .open(player, xCoord, yCoord, zCoord);
         }
+    }
+
+    private void handleProgressUpdate() {
+        if (!isProgressTile || worldObj.isRemote) return;
+
+        int current = getProgressScaled(16);
+
+        if (++ticksSinceLastProgressUpdate >= getProgressUpdateFreq() || current != lastProgressScaled) {
+
+            NETWORK.sendToAllAround(new PacketProgress((IProgressTile) this), this);
+            ticksSinceLastProgressUpdate = 0;
+            lastProgressScaled = current;
+        }
+    }
+
+    public final int getProgressScaled(int scale) {
+        return isProgressTile ? (int) (((IProgressTile) this).getProgress() * scale) : 0;
+    }
+
+    protected int getProgressUpdateFreq() {
+        return 20;
     }
 
     @Override

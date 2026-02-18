@@ -609,7 +609,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return canPlayerAccess(player);
+        return canInteractWith(player);
     }
 
     @Override
