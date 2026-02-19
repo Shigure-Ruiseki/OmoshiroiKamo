@@ -121,6 +121,7 @@ public class GuiManager {
         syncManager.syncValue("processRecipeName", recipeNameSyncer);
 
         syncManager.bindPlayerInventory(data.getPlayer());
+        syncManager.registerSlotGroup("blueprint", 1, true);
         panel.bindPlayerInventory();
 
         return panel;
@@ -132,7 +133,8 @@ public class GuiManager {
             new ItemSlot()
                 .slot(
                     new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
-                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
+                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint)
+                        .slotGroup("blueprint"))
                 .background(
                     (c, x1, y1, w, h, t) -> ((ModularGuiContext) c).getTheme()
                         .getWidgetTheme(IThemeApi.ITEM_SLOT)
