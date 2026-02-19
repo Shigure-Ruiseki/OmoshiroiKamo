@@ -22,7 +22,6 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
@@ -254,13 +253,13 @@ public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.IT
 
     public void readFromItemStack(ItemStack stack) {
         if (stack == null || stack.stackTagCompound == null) return;
-        readFromNBT(stack.stackTagCompound);
+        readCommon(stack.stackTagCompound);
     }
 
     public void writeToItemStack(ItemStack stack) {
         if (stack == null) return;
-        NBTTagCompound root = ItemNBTUtils.getNBT(stack);
-        writeToNBT(root);
+        NBTTagCompound tag = new NBTTagCompound();
+        writeCommon(tag);
     }
 
     public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
