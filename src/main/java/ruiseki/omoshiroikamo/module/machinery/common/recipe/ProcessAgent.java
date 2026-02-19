@@ -43,6 +43,7 @@ public class ProcessAgent {
     private List<String[]> cachedVisOutputs = new ArrayList<>(); // [aspectTag, amountCentiVis]
     private List<Integer> cachedEnergyOutputs = new ArrayList<>(); // [amount]
 
+    private String currentRecipeName;
     private transient ModularRecipe currentRecipe;
 
     public ProcessAgent() {
@@ -126,6 +127,7 @@ public class ProcessAgent {
         }
 
         currentRecipe = recipe;
+        currentRecipeName = recipe.getName();
         maxProgress = recipe.getDuration();
         progress = 0;
         running = true;
@@ -229,6 +231,7 @@ public class ProcessAgent {
 
     private void reset() {
         currentRecipe = null;
+        currentRecipeName = null;
         progress = 0;
         maxProgress = 0;
         running = false;
@@ -278,6 +281,14 @@ public class ProcessAgent {
 
     public ModularRecipe getCurrentRecipe() {
         return currentRecipe;
+    }
+
+    public String getCurrentRecipeName() {
+        return currentRecipeName;
+    }
+
+    public void setCurrentRecipeName(String name) {
+        this.currentRecipeName = name;
     }
 
     /**
@@ -361,6 +372,9 @@ public class ProcessAgent {
         nbt.setInteger("energyOutputPerTick", energyOutputPerTick);
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
+        if (currentRecipeName != null) {
+            nbt.setString("recipeName", currentRecipeName);
+        }
 
         if (running || waitingForOutput) {
             // Item outputs
@@ -430,6 +444,7 @@ public class ProcessAgent {
         energyOutputPerTick = nbt.getInteger("energyOutputPerTick");
         running = nbt.getBoolean("running");
         waitingForOutput = nbt.getBoolean("waitingForOutput");
+        currentRecipeName = nbt.hasKey("recipeName") ? nbt.getString("recipeName") : null;
 
         // Clear all caches
         cachedItemOutputs.clear();

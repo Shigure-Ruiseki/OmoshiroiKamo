@@ -588,6 +588,21 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     /**
+     * Get the custom structure display name.
+     */
+    public String getCustomStructureDisplayName() {
+        String name = getCustomStructureName();
+        if (name != null && !name.isEmpty()) {
+            StructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(name);
+            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
+                return entry.displayName;
+            }
+        }
+        return name;
+    }
+
+    /**
      * Get the current recipe group.
      */
     public String getRecipeGroup() {

@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 public class ModularRecipe implements Comparable<ModularRecipe> {
 
     private final String recipeGroup;
+    private final String name;
     private final int duration;
     private final int priority;
     private final List<IRecipeInput> inputs;
@@ -21,12 +22,17 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         this.recipeGroup = builder.recipeGroup;
         this.duration = builder.duration;
         this.priority = builder.priority;
+        this.name = builder.name;
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
     }
 
     public String getRecipeGroup() {
         return recipeGroup;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getDuration() {
@@ -165,6 +171,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
     public static class Builder {
 
         private String recipeGroup;
+        private String name;
         private int duration = 100;
         private int priority = 0;
         private List<IRecipeInput> inputs = new ArrayList<>();
@@ -172,6 +179,11 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
         public Builder recipeGroup(String recipeGroup) {
             this.recipeGroup = recipeGroup;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 

@@ -90,8 +90,12 @@ public class JSONLoader {
             int priority = json.has("priority") ? json.get("priority")
                 .getAsInt() : 0;
 
+            String name = json.has("name") ? json.get("name")
+                .getAsString() : "";
+
             ModularRecipe.Builder builder = ModularRecipe.builder()
                 .recipeGroup(group)
+                .name(name)
                 .duration(duration)
                 .priority(priority);
 

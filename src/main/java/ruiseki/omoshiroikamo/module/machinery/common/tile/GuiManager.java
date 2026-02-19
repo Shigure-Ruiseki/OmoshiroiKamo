@@ -52,7 +52,11 @@ public class GuiManager {
         ModularPanel panel = new ModularPanel("machine_controller_gui");
 
         // Title
-        panel.child(new TileWidget(controller.getLocalizedName()));
+        String title = this.getStructureNameText();
+        if (title == null || title.isEmpty()) {
+            title = controller.getLocalizedName();
+        }
+        panel.child(new TileWidget(title));
 
         // Info Display (Black Rectangle)
         panel.child(new Column().background(new IDrawable() {
@@ -62,26 +66,31 @@ public class GuiManager {
                 GuiDraw.drawRect(x, y, width, height, 0xFF000000);
             }
         })
-            .pos(7, 14)
-            .size(138, 60)
+            .pos(7, 6)
+            .size(137, 72)
             .padding(4)
-            .child(
-                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStructureNameText())
-                    .asWidget()
-                    .alignX(0f))
+            .child(IKey.dynamic(() -> {
+                String name = this.getRecipeNameText();
+                if (name.isEmpty()) return EnumChatFormatting.WHITE + LibMisc.LANG.localize("gui.status.idle");
+                return EnumChatFormatting.GOLD + name;
+            })
+                .asWidget()
+                .alignX(0f)
+                .marginBottom(2))
             .child(
                 IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStatusText())
                     .asWidget()
-                    .alignX(0f))
+                    .alignX(0f)
+                    .marginBottom(2))
             .child(
-                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getValidationErrorText())
+                IKey.dynamic(() -> EnumChatFormatting.RED + this.getValidationErrorText())
                     .asWidget()
                     .alignX(0f)));
 
-        // Blueprint slot (Helper function)
+        // Blueprint slot
         addBlueprintSlot(panel, 151, 8);
 
-        // Redstone Control Button (Helper function)
+        // Redstone Control Button
         addRedstoneButton(panel, syncManager, 151, 30);
 
         // Sync progress values
@@ -105,6 +114,11 @@ public class GuiManager {
             controller::getLastProcessErrorDetail,
             controller::setLastProcessErrorDetail);
         syncManager.syncValue("lastErrorDetail", errorDetailSyncer);
+
+        StringSyncValue recipeNameSyncer = new StringSyncValue(
+            controller.getProcessAgent()::getCurrentRecipeName,
+            controller.getProcessAgent()::setCurrentRecipeName);
+        syncManager.syncValue("processRecipeName", recipeNameSyncer);
 
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
@@ -146,7 +160,7 @@ public class GuiManager {
 
     private String getStructureNameText() {
         if (controller.isFormed()) {
-            String name = controller.getCustomStructureName();
+            String name = controller.getCustomStructureDisplayName();
             if (name != null && !name.isEmpty()) {
                 // TODO: return LibMisc.LANG.localize("structure." + name + ".name");
                 return name;
@@ -161,8 +175,8 @@ public class GuiManager {
      * 1. Blueprint missing
      * 2. Structure not formed
      * 3. Paused by redstone
-     * 4. Processing status (running/waiting)
-     * 5. Idle status (with error reasons)
+     * 4. Idle/Error status
+     * 5. Processing status
      */
     private String getStatusText() {
         if (!hasBlueprint()) return LibMisc.LANG.localize("gui.status.insert_blueprint");
@@ -202,9 +216,11 @@ public class GuiManager {
         }
 
         if (agent.isRunning() && !agent.isWaitingForOutput()) {
-            if (agent.getMaxProgress() <= 0) return LibMisc.LANG.localize("gui.status.processing", 0);
             int percent = (int) (agent.getProgressPercent() * 100);
-            return LibMisc.LANG.localize("gui.status.processing", percent);
+            if (agent.getMaxProgress() <= 0) percent = 0;
+
+            String status = LibMisc.LANG.localize("gui.status.processing", percent);
+            return status;
         }
 
         if (agent.isWaitingForOutput()) {
@@ -264,6 +280,17 @@ public class GuiManager {
     private boolean hasValidationError() {
         String error = controller.getLastValidationError();
         return error != null && !error.isEmpty();
+    }
+
+    private String getRecipeNameText() {
+        ProcessAgent agent = controller.getProcessAgent();
+        if (agent.isRunning() && !agent.isWaitingForOutput()) {
+            String name = agent.getCurrentRecipeName();
+            if (name != null && !name.isEmpty()) {
+                return name;
+            }
+        }
+        return "";
     }
 
     /**
