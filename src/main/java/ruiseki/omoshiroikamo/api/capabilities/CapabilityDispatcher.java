@@ -22,18 +22,18 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.cleanroommc.modularui.utils.item.INBTSerializable;
 import com.google.common.collect.Lists;
 
-public class CapabilityDispatcher implements INBTSerializable<NBTTagCompound>, ICapabilityProvider {
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+
+public class CapabilityDispatcher implements INBTSerializable, ICapabilityProvider {
 
     private ICapabilityProvider[] caps;
-    private INBTSerializable<NBTBase>[] writers;
+    private INBTSerializable[] writers;
     private String[] names;
 
     public CapabilityDispatcher(Map<ResourceLocation, ICapabilityProvider> list) {
@@ -43,14 +43,14 @@ public class CapabilityDispatcher implements INBTSerializable<NBTTagCompound>, I
     @SuppressWarnings("unchecked")
     public CapabilityDispatcher(Map<ResourceLocation, ICapabilityProvider> list, @Nullable ICapabilityProvider parent) {
         List<ICapabilityProvider> lstCaps = Lists.newArrayList();
-        List<INBTSerializable<NBTBase>> lstWriters = Lists.newArrayList();
+        List<INBTSerializable> lstWriters = Lists.newArrayList();
         List<String> lstNames = Lists.newArrayList();
 
         if (parent != null) // Parents go first!
         {
             lstCaps.add(parent);
             if (parent instanceof INBTSerializable) {
-                lstWriters.add((INBTSerializable<NBTBase>) parent);
+                lstWriters.add((INBTSerializable) parent);
                 lstNames.add("Parent");
             }
         }
@@ -59,7 +59,7 @@ public class CapabilityDispatcher implements INBTSerializable<NBTTagCompound>, I
             ICapabilityProvider prov = entry.getValue();
             lstCaps.add(prov);
             if (prov instanceof INBTSerializable) {
-                lstWriters.add((INBTSerializable<NBTBase>) prov);
+                lstWriters.add((INBTSerializable) prov);
                 lstNames.add(
                     entry.getKey()
                         .toString());
@@ -106,7 +106,7 @@ public class CapabilityDispatcher implements INBTSerializable<NBTTagCompound>, I
     public void deserializeNBT(NBTTagCompound nbt) {
         for (int x = 0; x < writers.length; x++) {
             if (nbt.hasKey(names[x])) {
-                writers[x].deserializeNBT(nbt.getTag(names[x]));
+                writers[x].deserializeNBT((NBTTagCompound) nbt.getTag(names[x]));
             }
         }
     }

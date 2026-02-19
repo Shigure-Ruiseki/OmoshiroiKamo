@@ -24,7 +24,7 @@ import ruiseki.omoshiroikamo.api.persist.nbt.NBTProviderComponent;
 import ruiseki.omoshiroikamo.core.common.event.OKEventFactory;
 
 public abstract class TileEntityOK extends TileEntity
-    implements IOKTile, INBTProvider, ICapabilitySerializable<NBTTagCompound> {
+    implements IOKTile, INBTProvider, ICapabilitySerializable {
 
     private static final int UPDATE_BACKOFF_TICKS = 1;
 
