@@ -25,15 +25,18 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandl
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackPositioner;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenDropsRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenLayingRecipeHandler;
 import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenThrowsRecipeHandler;
 import ruiseki.omoshiroikamo.module.cows.integration.nei.CowBreedingRecipeHandler;
 import ruiseki.omoshiroikamo.module.cows.integration.nei.CowMilkingRecipeHandler;
+import ruiseki.omoshiroikamo.module.dml.common.init.DMLBlocks;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
@@ -83,6 +86,7 @@ public class NEIConfig implements IConfigureNEI {
                 registerHandler(ore);
                 API.addRecipeCatalyst(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i), ore.getRecipeID());
                 registerDimensionCatalysts(ore.getRecipeID());
+                sendHandlerInfo(ore.getRecipeID(), MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i), 48, 8);
             }
 
             // Register Res Extractors
@@ -91,13 +95,55 @@ public class NEIConfig implements IConfigureNEI {
                 registerHandler(res);
                 API.addRecipeCatalyst(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), res.getRecipeID());
                 registerDimensionCatalysts(res.getRecipeID());
+                sendHandlerInfo(res.getRecipeID(), MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), 48, 8);
             }
         }
         if (BackportConfigs.enableChicken) {
             registerHandler(new ChickenLayingRecipeHandler());
+            sendHandlerImage(
+                ChickenLayingRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
+            sendCatalyst(ChickenLayingRecipeHandler.UID, ChickensBlocks.ROOST.newItemStack());
+
             registerHandler(new ChickenBreedingRecipeHandler());
+            sendHandlerImage(
+                ChickenBreedingRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
+            sendCatalyst(ChickenBreedingRecipeHandler.UID, ChickensBlocks.BREEDER.newItemStack());
+
             registerHandler(new ChickenDropsRecipeHandler());
+            sendHandlerImage(
+                ChickenDropsRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
+
             registerHandler(new ChickenThrowsRecipeHandler());
+            sendHandlerImage(
+                ChickenThrowsRecipeHandler.UID,
+                LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
+                1,
+                0,
+                16,
+                16,
+                64,
+                6);
         }
 
         if (BackportConfigs.enableCow) {
@@ -117,7 +163,10 @@ public class NEIConfig implements IConfigureNEI {
 
         if (BackportConfigs.enableDML) {
             registerHandler(new LootFabricatorRecipeHandler());
+            sendHandlerInfo(LootFabricatorRecipeHandler.UID, DMLBlocks.LOOT_FABRICATOR.newItemStack(), 48, 8);
+
             registerHandler(new SimulationChamberRecipeHandler());
+            sendHandlerInfo(SimulationChamberRecipeHandler.UID, DMLBlocks.SIMULATION_CHAMBER.newItemStack(), 48, 8);
         }
 
         // Register Modular Machine structure preview handlers (one per structure)
@@ -200,6 +249,46 @@ public class NEIConfig implements IConfigureNEI {
         tag.setString("modId", LibMisc.MOD_ID);
         tag.setBoolean("modRequired", true);
         FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
+    }
+
+    private static void sendHandlerImage(String handler, String imageResource, int imageX, int imageY, int imageW,
+        int imageH, int handlerHeight, int recipesPerPage) {
+
+        NBTTagCompound tag = new NBTTagCompound();
+
+        // ID of recipe handler
+        tag.setString("handler", handler);
+
+        // === IMAGE ICON ===
+        tag.setString("imageResource", imageResource);
+        tag.setInteger("imageX", imageX);
+        tag.setInteger("imageY", imageY);
+        tag.setInteger("imageWidth", imageW);
+        tag.setInteger("imageHeight", imageH);
+
+        tag.setInteger("handlerHeight", handlerHeight);
+        tag.setInteger("maxRecipesPerPage", recipesPerPage);
+
+        tag.setString("modName", LibMisc.MOD_NAME);
+        tag.setString("modId", LibMisc.MOD_ID);
+        tag.setBoolean("modRequired", true);
+
+        FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
+    }
+
+    private static void sendCatalyst(String handlerID, ItemStack stack) {
+        if (stack == null) return;
+        NBTTagCompound nbt = new NBTTagCompound();
+        GameRegistry.UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+        if (uid == null) return;
+        String regName = uid.modId + ":" + uid.name;
+        int meta = stack.getItemDamage();
+        if (meta > 0) regName = regName + ":" + meta;
+
+        nbt.setString("handlerID", handlerID);
+        nbt.setString("itemName", regName);
+        nbt.setInteger("priority", 0);
+        FMLInterModComms.sendMessage("NotEnoughItems", "registerCatalystInfo", nbt);
     }
 
     protected static void registerHandler(IRecipeHandlerBase handler) {

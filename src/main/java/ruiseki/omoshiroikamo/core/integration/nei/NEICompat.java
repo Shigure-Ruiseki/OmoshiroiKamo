@@ -200,20 +200,4 @@ public class NEICompat {
         sendCatalyst(handlerID, stack, 0);
     }
 
-    private static void sendCatalyst(String handler, String itemName, int priority) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("handlerID", handler);
-        nbt.setString("itemName", itemName);
-        nbt.setInteger("priority", priority);
-        FMLInterModComms.sendMessage("NotEnoughItems", "registerCatalystInfo", nbt);
-    }
-
-    private static void sendCatalyst(String handlerName, String stack) {
-        sendCatalyst(handlerName, stack, 0);
-    }
-
-    private static void sendCatalyst(String handler) {
-        sendCatalyst(handler, handler, 0);
-    }
-
 }

@@ -43,10 +43,30 @@ public class PositionedGasTank implements INEIPositionedRenderer {
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+        // Tiled rendering for vertical tank
+        int x = position.x;
+        int y = position.y;
+        int w = position.width;
+        int h = position.height;
+
         Gui gui = new Gui();
-        gui.drawTexturedModelRectFromIcon(position.x, position.y, icon, 16, 16);
+        for (int i = 0; i < w; i += 16) {
+            for (int j = 0; j < h; j += 16) {
+                int drawW = Math.min(16, w - i);
+                int drawH = Math.min(16, h - j);
+                gui.drawTexturedModelRectFromIcon(x + i, y + j, icon, drawW, drawH);
+            }
+        }
 
         GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f); // Grey
+
+        for (int i = 1; i < 5; i++) {
+            int tickY = y + (h / 5) * i;
+            GuiDraw.drawRect(x, tickY, w, 1, 0x88000000); // Semi-transparent black line
+        }
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         // Amount
         if (gasStack.amount > 0) {

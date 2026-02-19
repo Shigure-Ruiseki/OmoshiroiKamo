@@ -5,11 +5,11 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
-import vazkii.botania.client.core.handler.HUDHandler;
 
 public class PositionedManaBar implements INEIPositionedRenderer {
 
@@ -29,15 +29,22 @@ public class PositionedManaBar implements INEIPositionedRenderer {
             return;
         }
 
+        // Use Botania's mana HUD texture
         Minecraft mc = Minecraft.getMinecraft();
-        mc.renderEngine.bindTexture(HUDHandler.manaBar);
+        mc.renderEngine.bindTexture(new ResourceLocation("botania", "textures/gui/manaHud.png"));
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
-        // Actually, let's try to simulate a bar.
-        GuiDraw.drawTexturedModalRect(position.x, position.y, 0, 0, position.width, position.height);
+        GuiDraw.drawGradientRect(position.x, position.y + 20, 100, 8, 0xFF0000AA, 0xFF0000FF); // Example blue bar
+
+        int barHeight = 8;
+        int barWidth = position.width; // Use full width of slot
+        int x = position.x;
+        int y = position.y + (position.height - barHeight) / 2;
+
+        GuiDraw.drawGradientRect(x, y, barWidth, barHeight, 0xFF00FFFF, 0xFF0000AA); // Light blue to dark blue
 
         // Draw amount text
         String amountStr = amount + (perTick ? " Mana/t" : " Mana");
