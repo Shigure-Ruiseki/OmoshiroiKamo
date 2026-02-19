@@ -39,7 +39,6 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
  * TODO: Add auto-sort
- * TODO: Support shift-click
  * TODO: enable both IO from NONE side to export catalyst items like GTNH
  */
 public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData> {
