@@ -5,6 +5,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
@@ -17,16 +18,15 @@ import thaumcraft.api.aspects.IEssentiaTransport;
  * Provides Essentia to Infusion Altar and Essentia Tubes.
  * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
  * for Tubes.
- * TODO: Create TEEssentiaOutputPortME subclass (export Essentia to ME network)
+ * TODO: Create TEEssentiaOutputPortME
  */
 
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
 
-    private static final int DEFAULT_CAPACITY = 64;
     private static final int MINIMUM_SUCTION = 32;
 
     public TEEssentiaOutputPort() {
-        super(DEFAULT_CAPACITY);
+        super(MachineryConfig.essentiaPortCapacity);
     }
 
     @Override

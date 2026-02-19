@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -17,10 +16,12 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
@@ -31,16 +32,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergy
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT6;
 
-/**
- * Energy Input Port - accepts energy (RF) for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for energy level (texture animation or overlay)
- * - Implement BlockColor tinting for machine color customization
- * - Add Tesla coil-style wireless energy input
- */
+// TODO: Add wireless energy output
 public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort> {
 
     protected BlockEnergyOutputPort() {
@@ -117,6 +109,26 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
         }
     }
 
+    @Override
+    public String getOverlayPrefix() {
+        return "overlay_energyoutput_";
+    }
+
+    @Override
+    protected void addCapacityTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG.localize(
+                "tooltip.machinery.capacity",
+                String.format("%,d", MachineryConfig.getEnergyPortCapacity(tier)) + " RF"));
+    }
+
+    @Override
+    protected void addTransferTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG
+                .localize("gui.energy_transfer", String.format("%,d", MachineryConfig.getEnergyPortTransfer(tier))));
+    }
+
     public static class ItemBlockEnergyOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockEnergyOutputPort(Block block) {
@@ -124,19 +136,8 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
         }
 
         @Override
-        public String getUnlocalizedName(ItemStack stack) {
-            int tier = stack.getItemDamage() + 1;
-            return super.getUnlocalizedName() + ".tier_" + tier;
-        }
-
-        @Override
-        public IIcon getOverlayIcon(int tier) {
-            return IconRegistry.getIcon("overlay_energyoutput_" + tier);
-        }
-
-        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            // TODO: Add tooltips
+            super.addInformation(stack, player, list, flag);
         }
     }
 

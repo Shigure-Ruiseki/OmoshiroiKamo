@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-public class ItemOutput implements IRecipeOutput {
+public class ItemOutput extends AbstractRecipeOutput {
 
     private final ItemStack output;
 
@@ -40,6 +40,12 @@ public class ItemOutput implements IRecipeOutput {
 
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
+
+        // If not simulating, first check if we CAN output everything by simulating
+        if (!simulate) {
+            if (!process(ports, true)) return false;
+        }
+
         int remaining = output.stackSize;
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ITEM) continue;
@@ -52,6 +58,7 @@ public class ItemOutput implements IRecipeOutput {
             }
 
             AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+
             for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack == null) {
@@ -71,6 +78,8 @@ public class ItemOutput implements IRecipeOutput {
                     remaining -= insert;
                 }
             }
+
+            if (remaining <= 0) break;
         }
 
         return remaining <= 0;
@@ -81,6 +90,24 @@ public class ItemOutput implements IRecipeOutput {
         if (a.getItem() != b.getItem()) return false;
         if (a.getItemDamage() != b.getItemDamage()) return false;
         return ItemStack.areItemStackTagsEqual(a, b);
+    }
+
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port.getPortType() == IPortType.Type.ITEM && port instanceof AbstractItemIOPortTE;
+    }
+
+    @Override
+    protected long getPortCapacity(IModularPort port) {
+        AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+        int maxStackSize = output.getMaxStackSize();
+        int limit = Math.min(itemPort.getInventoryStackLimit(), maxStackSize);
+        return (long) itemPort.getSizeInventory() * limit;
+    }
+
+    @Override
+    protected long getRequiredAmount() {
+        return output.stackSize;
     }
 
     public static ItemOutput fromJson(JsonObject json) {

@@ -5,14 +5,18 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -25,20 +29,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 /**
  * Machine Controller - the brain of a Modular Machinery structure.
  * This block is mapped to the 'Q' symbol in structure definitions.
- * When right-clicked, it validates and forms the multiblock structure.
- * Uses JSON model with base + overlay textures via GTNHLib.
- * TODO List:
- * - Implement GUI for machine management and status display
- * - State management (IDLE, WORKING, PAUSED, ERROR)
- * - Redstone control modes (Ignore, Low, High, Pulse)
- * - Working particles and sound effects
- * - Completion effects (particles, sounds)
- * - Block state visual changes based on status
- * - NEI recipe integration
- * - Implement BlockColor tinting for machine-wide color customization
- * - Drop blueprint when broken
- * - Rotate controller texture
- * - Make controller face shows only front side
+ * TODO: Working particles and sound effects
+ * TODO: Completion effects (particles, sounds)
+ * TODO: Block state visual changes based on status
+ * TODO: NEI recipe integration
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
@@ -53,6 +47,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     }
 
     private IIcon overlayIcon;
+    private IIcon sideOverlayIcon;
 
     @Override
     public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
@@ -69,10 +64,15 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     public void registerBlockIcons(IIconRegister reg) {
         super.registerBlockIcons(reg);
         this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller");
+        this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/base_modularports");
     }
 
     public IIcon getOverlayIcon() {
         return overlayIcon;
+    }
+
+    public IIcon getSideOverlayIcon() {
+        return sideOverlayIcon;
     }
 
     @Override
@@ -95,24 +95,44 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         world.markBlockForUpdate(x, y, z);
 
         ForgeDirection direction;
+        Rotation rotation = Rotation.NORMAL;
         float pitch = placer.rotationPitch;
-        if (pitch > 60.0F) {
+        int heading = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+        if (pitch > 50.0F) {
             direction = ForgeDirection.UP;
-        } else if (pitch < -60.0F) {
+            // Determine rotation based on heading for UP
+            // 0: South (Z+), 1: West (X-), 2: North (Z-), 3: East (X+)
+            rotation = switch (heading) {
+                case 0 -> Rotation.UPSIDE_DOWN; // South
+                case 1 -> Rotation.COUNTER_CLOCKWISE; // West
+                case 2 -> Rotation.NORMAL; // North
+                case 3 -> Rotation.CLOCKWISE; // East
+                default -> Rotation.NORMAL;
+            };
+        } else if (pitch < -50.0F) {
             direction = ForgeDirection.DOWN;
+            // Determine rotation based on heading for DOWN
+            rotation = switch (heading) {
+                case 0 -> Rotation.NORMAL; // South
+                case 1 -> Rotation.COUNTER_CLOCKWISE; // West
+                case 2 -> Rotation.UPSIDE_DOWN; // North
+                case 3 -> Rotation.CLOCKWISE; // East
+                default -> Rotation.NORMAL;
+            };
         } else {
-            // Calculate facing from player's yaw (block front faces player)
-            int facing = MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-            direction = switch (facing) {
+            // Horizontal facing
+            direction = switch (heading) {
                 case 0 -> ForgeDirection.NORTH;
                 case 1 -> ForgeDirection.EAST;
                 case 2 -> ForgeDirection.SOUTH;
                 case 3 -> ForgeDirection.WEST;
                 default -> ForgeDirection.NORTH;
             };
+            rotation = Rotation.NORMAL;
         }
 
-        te.setExtendedFacing(ExtendedFacing.of(direction));
+        te.setExtendedFacing(ExtendedFacing.of(direction, rotation, Flip.NONE));
     }
 
     @Override
@@ -137,4 +157,10 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
 
         super.breakBlock(world, x, y, z, block, meta);
     }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
+        return new ItemStack(this, 1, 0);
+    }
+
 }

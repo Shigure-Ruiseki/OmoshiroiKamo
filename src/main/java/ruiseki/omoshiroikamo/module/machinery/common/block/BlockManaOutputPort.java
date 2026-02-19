@@ -5,21 +5,17 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.output.TEManaOutputPort;
@@ -27,17 +23,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.output.TEManaOutp
 import vazkii.botania.api.mana.IManaBlock;
 import vazkii.botania.api.wand.IWandHUD;
 
-/**
- * Mana Output Port - accepts mana for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for mana level (texture animation or overlay)
- * - Add model and textures
- * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving mana
- */
 public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> implements IWandHUD {
 
     protected BlockManaOutputPort() {
@@ -52,20 +37,13 @@ public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> imp
     }
 
     @Override
-    public void registerPortOverlays(IIconRegister reg) {
-        IconRegistry.addIcon(
-            "overlay_manaoutput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_manaoutput_1"));
+    public String getOverlayPrefix() {
+        return "overlay_manaoutput_";
     }
 
     @Override
     protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockManaOutputPort.class;
-    }
-
-    @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, 0));
     }
 
     @Override
@@ -82,6 +60,21 @@ public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> imp
         ((AbstractManaPortTE) world.getTileEntity(x, y, z)).renderHUD(mc, res);
     }
 
+    @Override
+    protected void addCapacityTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG.localize(
+                "tooltip.machinery.capacity",
+                String.format("%,d", MachineryConfig.manaPortCapacity) + " Mana"));
+    }
+
+    @Override
+    protected void addTransferTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG
+                .localize("tooltip.machinery.mana_transfer", String.format("%,d", MachineryConfig.manaPortTransfer)));
+    }
+
     public static class ItemBlockManaOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockManaOutputPort(Block block) {
@@ -89,19 +82,8 @@ public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> imp
         }
 
         @Override
-        public String getUnlocalizedName(ItemStack stack) {
-            int tier = stack.getItemDamage() + 1;
-            return super.getUnlocalizedName() + ".tier_" + tier;
-        }
-
-        @Override
-        public IIcon getOverlayIcon(int tier) {
-            return IconRegistry.getIcon("overlay_manaoutput_" + tier);
-        }
-
-        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            // TODO: Add tooltips
+            super.addInformation(stack, player, list, flag);
         }
     }
 

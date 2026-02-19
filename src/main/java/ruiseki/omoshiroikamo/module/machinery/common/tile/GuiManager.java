@@ -1,21 +1,40 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
+import java.util.List;
+import java.util.Set;
+
+import net.minecraft.util.EnumChatFormatting;
+
+import com.cleanroommc.modularui.api.IThemeApi;
+import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.GuiDraw;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.screen.viewport.GuiContext;
+import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
+import com.cleanroommc.modularui.theme.WidgetTheme;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
-import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.EnumSyncValue;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
-import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 /**
@@ -33,115 +52,286 @@ public class GuiManager {
         ModularPanel panel = new ModularPanel("machine_controller_gui");
 
         // Title
-        panel.child(new TileWidget(controller.getLocalizedName()));
+        String title = this.getStructureNameText();
+        if (title == null || title.isEmpty()) {
+            title = controller.getLocalizedName();
+        }
+        panel.child(new TileWidget(title));
 
-        // Blueprint slot (right side)
-        panel.child(
-            new ItemSlot()
-                .slot(
-                    new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
-                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint))
-                .background(OKGuiTextures.EMPTY_SLOT)
-                .pos(151, 8));
+        // Info Display (Black Rectangle)
+        panel.child(new Column().background(new IDrawable() {
 
-        // Status display
-        panel.child(
-            IKey.dynamic(this::getStatusText)
+            @Override
+            public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
+                GuiDraw.drawRect(x, y, width, height, 0xFF000000);
+            }
+        })
+            .pos(7, 6)
+            .size(137, 72)
+            .padding(4)
+            .child(IKey.dynamic(() -> {
+                String name = this.getRecipeNameText();
+                if (name.isEmpty()) return EnumChatFormatting.WHITE + LibMisc.LANG.localize("gui.status.idle");
+                return EnumChatFormatting.GOLD + name;
+            })
                 .asWidget()
-                .pos(8, 25));
+                .alignX(0f)
+                .marginBottom(2))
+            .child(
+                IKey.dynamic(() -> EnumChatFormatting.WHITE + this.getStatusText())
+                    .asWidget()
+                    .alignX(0f)
+                    .marginBottom(2))
+            .child(
+                IKey.dynamic(() -> EnumChatFormatting.RED + this.getValidationErrorText())
+                    .asWidget()
+                    .alignX(0f)));
 
-        // Error display (validation)
-        panel.child(
-            IKey.dynamic(this::getErrorText)
-                .asWidget()
-                .pos(8, 35));
+        // Blueprint slot
+        addBlueprintSlot(panel, 151, 8);
 
+        // Redstone Control Button
+        addRedstoneButton(panel, syncManager, 151, 30);
+
+        // Sync progress values
         IntSyncValue progressSyncer = new IntSyncValue(
             controller.getProcessAgent()::getProgress,
             controller.getProcessAgent()::setProgress);
         IntSyncValue maxProgressSyncer = new IntSyncValue(
             controller.getProcessAgent()::getMaxProgress,
             controller.getProcessAgent()::setMaxProgress);
-        BooleanSyncValue runningSyncer = new BooleanSyncValue(
-            controller.getProcessAgent()::isRunning,
-            controller.getProcessAgent()::setRunning);
-        BooleanSyncValue waitingSyncer = new BooleanSyncValue(
-            controller.getProcessAgent()::isWaitingForOutput,
-            controller.getProcessAgent()::setWaitingForOutput);
 
-        syncManager.syncValue("processProgressSyncer", progressSyncer);
-        syncManager.syncValue("processMaxSyncer", maxProgressSyncer);
-        syncManager.syncValue("processRunningSyncer", runningSyncer);
-        syncManager.syncValue("processWaitingSyncer", waitingSyncer);
+        syncManager.syncValue("processProgress", progressSyncer);
+        syncManager.syncValue("processMaxProgress", maxProgressSyncer);
 
-        // Progress bar
-        panel.child(
-            new ProgressWidget().value(new DoubleSyncValue(() -> (double) getProgressPercent()))
-                .texture(OKGuiTextures.SOLID_UP_ARROW_ICON, 20)
-                .pos(80, 45));
+        EnumSyncValue<ErrorReason> errorReasonSyncer = new EnumSyncValue<>(
+            ErrorReason.class,
+            controller::getLastProcessErrorReason,
+            controller::setLastProcessErrorReason);
+        syncManager.syncValue("lastErrorReason", errorReasonSyncer);
+
+        StringSyncValue errorDetailSyncer = new StringSyncValue(
+            controller::getLastProcessErrorDetail,
+            controller::setLastProcessErrorDetail);
+        syncManager.syncValue("lastErrorDetail", errorDetailSyncer);
+
+        StringSyncValue recipeNameSyncer = new StringSyncValue(
+            controller.getProcessAgent()::getCurrentRecipeName,
+            controller.getProcessAgent()::setCurrentRecipeName);
+        syncManager.syncValue("processRecipeName", recipeNameSyncer);
 
         syncManager.bindPlayerInventory(data.getPlayer());
+        syncManager.registerSlotGroup("blueprint", 1, true);
         panel.bindPlayerInventory();
 
         return panel;
     }
 
-    private String getStatusText() {
-        if (controller.getCustomStructureName() == null || controller.getCustomStructureName()
-            .isEmpty()) {
-            return "Insert Blueprint";
-        }
-        if (!controller.isFormed()) {
-            return "Structure Not Formed";
-        }
-        if (controller.getProcessAgent()
-            .isRunning()
-            || controller.getProcessAgent()
-                .isWaitingForOutput()) {
-            if (controller.getLastProcessErrorReason() == ErrorReason.NO_ENERGY) {
-                return ErrorReason.NO_ENERGY.getMessage();
-            }
-            return controller.getProcessAgent()
-                .getStatusMessage(controller.getOutputPorts());
-        }
+    private void addBlueprintSlot(ModularPanel panel, int x, int y) {
 
-        ErrorReason reason = getIdleErrorReason();
-        if (reason == ErrorReason.NONE) {
-            return "Idle";
-        }
-        return reason.getMessage();
+        panel.child(
+            new ItemSlot()
+                .slot(
+                    new ModularSlot(controller.getInventory(), TEMachineController.BLUEPRINT_SLOT)
+                        .filter(stack -> stack != null && stack.getItem() instanceof ItemMachineBlueprint)
+                        .slotGroup("blueprint"))
+                .background(
+                    (c, x1, y1, w, h, t) -> ((ModularGuiContext) c).getTheme()
+                        .getWidgetTheme(IThemeApi.ITEM_SLOT)
+                        .getTheme()
+                        .getBackground()
+                        .draw(c, x1, y1, w, h, t))
+                .pos(x, y));
     }
 
-    private ErrorReason getIdleErrorReason() {
-        if (controller.getInputPorts()
-            .isEmpty()) return ErrorReason.NO_INPUT_PORTS;
-        if (controller.getOutputPorts()
-            .isEmpty()) return ErrorReason.NO_OUTPUT_PORTS;
+    private void addRedstoneButton(ModularPanel panel, PanelSyncManager syncManager, int x, int y) {
+
+        EnumSyncValue<RedstoneMode> redstoneMode = new EnumSyncValue<>(
+            RedstoneMode.class,
+            controller::getRedstoneMode,
+            controller::setRedstoneMode);
+        syncManager.syncValue("redstoneMode", redstoneMode);
+
+        BooleanSyncValue redstonePowered = new BooleanSyncValue(
+            controller::isRedstonePowered,
+            controller::setRedstonePowered);
+        syncManager.syncValue("redstonePowered", redstonePowered);
+
+        panel.child(new RedstoneModeWidget(redstoneMode).pos(x, y));
+    }
+
+    private String getStructureNameText() {
+        if (controller.isFormed()) {
+            String name = controller.getCustomStructureDisplayName();
+            if (name != null && !name.isEmpty()) {
+                // TODO: return LibMisc.LANG.localize("structure." + name + ".name");
+                return name;
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Determines the primary status message to display in the GUI.
+     * Priority order:
+     * 1. Blueprint missing
+     * 2. Structure not formed
+     * 3. Paused by redstone
+     * 4. Idle/Error status
+     * 5. Processing status
+     */
+    private String getStatusText() {
+        if (!hasBlueprint()) return LibMisc.LANG.localize("gui.status.insert_blueprint");
+
+        if (!controller.isFormed()) {
+            if (hasValidationError()) return LibMisc.LANG.localize("gui.status.structure_mismatch");
+            return LibMisc.LANG.localize("gui.status.structure_not_formed");
+        }
+
+        if (!controller.isRedstoneActive()) {
+            return LibMisc.LANG.localize(ErrorReason.PAUSED.getUnlocalizedName());
+        }
+
+        ProcessAgent agent = controller.getProcessAgent();
+        if (agent.isRunning() || agent.isWaitingForOutput()) {
+            return getProcessingStatusMessage(agent);
+        }
+
+        return getIdleStatusMessage();
+    }
+
+    /**
+     * Returns the status message when machine is actively processing.
+     */
+    private String getProcessingStatusMessage(ProcessAgent agent) {
+        ErrorReason lastError = controller.getLastProcessErrorReason();
+
+        // Show energy error even during processing
+        if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        if (lastError == ErrorReason.OUTPUT_FULL) {
+            return LibMisc.LANG
+                .localize(lastError.getUnlocalizedName(), diagnoseBlockedOutputs(controller.getOutputPorts()));
+        }
+
+        if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
+            String detail = controller.getLastProcessErrorDetail();
+            if (detail != null && !detail.isEmpty()) {
+                return LibMisc.LANG.localize(lastError.getUnlocalizedName(), detail);
+            }
+            return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        }
+
+        if (agent.isRunning() && !agent.isWaitingForOutput()) {
+            int percent = (int) (agent.getProgressPercent() * 100);
+            if (agent.getMaxProgress() <= 0) percent = 0;
+
+            String status = LibMisc.LANG.localize("gui.status.processing", percent);
+            return status;
+        }
+
+        if (agent.isWaitingForOutput()) {
+            return LibMisc.LANG.localize("gui.status.output_full", diagnoseBlockedOutputs(controller.getOutputPorts()));
+        }
+
+        return LibMisc.LANG.localize("gui.status.idle");
+    }
+
+    /**
+     * Returns the status message when machine is idle.
+     */
+    private String getIdleStatusMessage() {
         if (RecipeLoader.getInstance()
             .getRecipes(controller.getRecipeGroup())
             .isEmpty()) {
-            return ErrorReason.NO_RECIPES;
+            return LibMisc.LANG.localize(ErrorReason.NO_RECIPES.getUnlocalizedName());
         }
-        if (controller.getLastProcessErrorReason() == ErrorReason.NO_MATCHING_RECIPE) {
-            return ErrorReason.NO_MATCHING_RECIPE;
+
+        ErrorReason lastError = controller.getLastProcessErrorReason();
+
+        // Check specific error reasons
+        if (lastError == ErrorReason.NO_MATCHING_RECIPE || lastError == ErrorReason.NO_ENERGY
+            || lastError == ErrorReason.INPUT_MISSING
+            || lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT
+            || lastError == ErrorReason.OUTPUT_FULL) {
+
+            if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
+                String detail = controller.getLastProcessErrorDetail();
+                if (detail != null && !detail.isEmpty()) {
+                    return LibMisc.LANG.localize(lastError.getUnlocalizedName(), detail);
+                }
+            }
+            return LibMisc.LANG.localize(lastError.getUnlocalizedName());
         }
-        if (controller.getLastProcessErrorReason() == ErrorReason.NO_ENERGY) {
-            return ErrorReason.NO_ENERGY;
-        }
-        return ErrorReason.IDLE;
+
+        // Default idle state
+        return LibMisc.LANG.localize("gui.status.idle");
     }
 
-    private String getErrorText() {
-        if (controller.getCustomStructureName() == null || controller.getCustomStructureName()
-            .isEmpty()) return "";
+    /**
+     * Returns validation error text for display below status.
+     * Only shown when structure is not formed and there's a specific error.
+     */
+    private String getValidationErrorText() {
+        if (!hasBlueprint()) return "";
         if (controller.isFormed()) return "";
-        if (controller.getLastValidationError() == null || controller.getLastValidationError()
-            .isEmpty()) return "";
+        if (!hasValidationError()) return "";
         return controller.getLastValidationError();
     }
 
-    private float getProgressPercent() {
-        return controller.getProcessAgent()
-            .getProgressPercent();
+    private boolean hasBlueprint() {
+        String name = controller.getCustomStructureName();
+        return name != null && !name.isEmpty();
     }
+
+    private boolean hasValidationError() {
+        String error = controller.getLastValidationError();
+        return error != null && !error.isEmpty();
+    }
+
+    private String getRecipeNameText() {
+        ProcessAgent agent = controller.getProcessAgent();
+        if (agent.isRunning() && !agent.isWaitingForOutput()) {
+            String name = agent.getCurrentRecipeName();
+            if (name != null && !name.isEmpty()) {
+                return name;
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Diagnose which output types are blocked when waiting for output.
+     */
+    private String diagnoseBlockedOutputs(List<IModularPort> outputPorts) {
+        ProcessAgent agent = controller.getProcessAgent();
+        ModularRecipe currentRecipe = agent.getCurrentRecipe();
+
+        if (currentRecipe != null) {
+            StringBuilder blocked = new StringBuilder();
+            for (IRecipeOutput output : currentRecipe.getOutputs()) {
+                if (!output.process(outputPorts, true)) {
+                    if (blocked.length() > 0) blocked.append(", ");
+                    blocked.append(
+                        LibMisc.LANG.localize(
+                            "gui.port_type." + output.getPortType()
+                                .name()));
+                }
+            }
+            if (blocked.length() > 0) return blocked.toString();
+        }
+
+        // Fallback: use cached output types
+        Set<IPortType.Type> cachedTypes = agent.getCachedOutputTypes();
+        if (!cachedTypes.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (IPortType.Type type : cachedTypes) {
+                if (sb.length() > 0) sb.append(", ");
+                sb.append(LibMisc.LANG.localize("gui.port_type." + type.name()));
+            }
+            return sb.toString();
+        }
+
+        return LibMisc.LANG.localize("gui.status.unknown");
+    }
+
 }

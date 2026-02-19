@@ -25,4 +25,13 @@ public interface IRecipeOutput {
      * @return true if the output can be/was inserted
      */
     boolean process(List<IModularPort> ports, boolean simulate);
+
+    /**
+     * Check if the connected ports have enough total capacity for this output.
+     * This checks if the output *could* fit if the ports were empty.
+     *
+     * @param ports List of output ports to check
+     * @return true if total capacity is sufficient
+     */
+    boolean checkCapacity(List<IModularPort> ports);
 }

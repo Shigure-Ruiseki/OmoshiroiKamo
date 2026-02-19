@@ -90,8 +90,12 @@ public class JSONLoader {
             int priority = json.has("priority") ? json.get("priority")
                 .getAsInt() : 0;
 
+            String name = json.has("name") ? json.get("name")
+                .getAsString() : "";
+
             ModularRecipe.Builder builder = ModularRecipe.builder()
                 .recipeGroup(group)
+                .name(name)
                 .duration(duration)
                 .priority(priority);
 
@@ -100,6 +104,9 @@ public class JSONLoader {
                 IRecipeInput input = InputParserRegistry.parse(inputElem.getAsJsonObject());
                 if (input != null) {
                     builder.addInput(input);
+                } else {
+                    Logger.warn("Failed to parse input or invalid item in recipe group: {}", group);
+                    return null;
                 }
             }
 
@@ -108,6 +115,9 @@ public class JSONLoader {
                 IRecipeOutput output = OutputParserRegistry.parse(outputElem.getAsJsonObject());
                 if (output != null) {
                     builder.addOutput(output);
+                } else {
+                    Logger.warn("Failed to parse output or invalid item in recipe group: {}", group);
+                    return null;
                 }
             }
 

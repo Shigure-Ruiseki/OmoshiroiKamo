@@ -68,10 +68,10 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         StructureTintCache.clearDimension(Integer.MAX_VALUE);
 
         String structureName = currentStructure.getStructureName();
-        IStructureDefinition<TEMachineController> def = currentStructure.getDefinition();
+        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
 
         if (def == null) {
-            def = CustomStructureRegistry.getDefinition(structureName);
+            def = currentStructure.getDefinition();
         }
 
         if (def == null) {
@@ -88,16 +88,47 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             return;
         }
 
-        // Set the structure name on the controller
-        controller.setCustomStructureName(structureName);
-
         // Get offset for the structure
         int[] offset = currentStructure.getOffset();
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
-        if (entry != null && entry.controllerOffset != null) {
-            offset = entry.controllerOffset;
+
+        ExtendedFacing facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+        if (entry != null) {
+            if (entry.controllerOffset != null) {
+                offset = entry.controllerOffset;
+            }
+            if (entry.defaultFacing != null) {
+                try {
+                    String facingName = entry.defaultFacing.toUpperCase();
+                    // Simple mapping attempt
+                    switch (facingName) {
+                        case "DOWN" -> facing = ExtendedFacing.DOWN_NORMAL_NONE;
+                        case "UP" -> facing = ExtendedFacing.UP_NORMAL_NONE;
+                        case "NORTH" -> facing = ExtendedFacing.NORTH_NORMAL_NONE;
+                        case "SOUTH" -> facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+                        case "WEST" -> facing = ExtendedFacing.WEST_NORMAL_NONE;
+                        case "EAST" -> facing = ExtendedFacing.EAST_NORMAL_NONE;
+                        default -> {
+                            // Try to valueOf full name
+                            try {
+                                facing = ExtendedFacing.valueOf(facingName);
+                            } catch (IllegalArgumentException e) {
+                                // Fallback to SOUTH if invalid
+                                facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    // Ignore invalid facing
+                }
+            }
         }
+
+        // Set the structure name on the controller
+        controller.setCustomStructureName(structureName);
+        // Force controller facing to match defaultFacing
+        controller.setExtendedFacing(facing);
 
         // Build the structure using the definition
         FAKE_PLAYER.setWorld(renderer.world);
@@ -109,7 +140,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                ExtendedFacing.SOUTH_NORMAL_NONE,
+                facing,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
@@ -129,7 +160,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                 getBuildTriggerStack(),
                 structureName,
                 renderer.world,
-                ExtendedFacing.SOUTH_NORMAL_NONE,
+                facing,
                 MB_PLACE_POS.x,
                 MB_PLACE_POS.y,
                 MB_PLACE_POS.z,
@@ -140,7 +171,6 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         }
 
         // Store tint color for use in beforeRender callback
-        // (Actual tint application happens via callback set in loadMultiblock)
         if (entry != null && entry.properties != null && entry.properties.tintColor != null) {
             try {
                 String hex = entry.properties.tintColor.replace("#", "");
@@ -202,4 +232,55 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             renderer.setBeforeWorldRender(r -> applyTintToRenderedBlocks());
         }
     }
+
+    // ==========================================
+    // Blockrenderer6343 debugging section
+    // I'd like to remain this for future tests and implementations
+
+    // private final RenderBlocks renderBlocks = new RenderBlocks();
+
+    // @Override
+    // public void onRendererRender(WorldSceneRenderer renderer) {
+    // super.onRendererRender(renderer);
+    // renderAxisBlocks(renderer);
+    // }
+
+    // private void renderAxisBlocks(WorldSceneRenderer renderer) {
+    // renderBlocks.blockAccess = renderer.world;
+    // renderBlocks.setRenderBounds(0, 0, 0, 1, 1, 1);
+    // renderBlocks.renderAllFaces = true;
+
+    // // X Axis (Red) - 3 blocks
+    // IIcon redIcon = Blocks.stained_glass.getIcon(0, 14);
+    // for (int i = 1; i <= 3; i++) {
+    // renderBlocks.renderBlockUsingTexture(
+    // Blocks.stained_glass,
+    // MB_PLACE_POS.x + i,
+    // MB_PLACE_POS.y,
+    // MB_PLACE_POS.z,
+    // redIcon);
+    // }
+
+    // // Y Axis (Green/Lime) - 3 blocks (Lime = 5)
+    // IIcon greenIcon = Blocks.stained_glass.getIcon(0, 5);
+    // for (int i = 1; i <= 3; i++) {
+    // renderBlocks.renderBlockUsingTexture(
+    // Blocks.stained_glass,
+    // MB_PLACE_POS.x,
+    // MB_PLACE_POS.y + i,
+    // MB_PLACE_POS.z,
+    // greenIcon);
+    // }
+
+    // // Z Axis (Blue) - 3 blocks (Blue = 11)
+    // IIcon blueIcon = Blocks.stained_glass.getIcon(0, 11);
+    // for (int i = 1; i <= 3; i++) {
+    // renderBlocks.renderBlockUsingTexture(
+    // Blocks.stained_glass,
+    // MB_PLACE_POS.x,
+    // MB_PLACE_POS.y,
+    // MB_PLACE_POS.z + i,
+    // blueIcon);
+    // }
+    // }
 }

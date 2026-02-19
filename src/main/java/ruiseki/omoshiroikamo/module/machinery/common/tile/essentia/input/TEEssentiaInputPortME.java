@@ -167,10 +167,17 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
+    public EnumIO getSideIO(ForgeDirection side) {
+        return EnumIO.INPUT;
+    }
+
+    @Override
+    public void setSideIO(ForgeDirection side, EnumIO state) {
+        // Disable IO configuration for ME ports
+    }
+
+    @Override
     public IIcon getOverlayIcon(ForgeDirection side) {
-        if (getSideIO(side) == EnumIO.NONE) {
-            return null;
-        }
         return IconRegistry.getIcon("overlay_essentiainput_me");
     }
 
@@ -180,8 +187,13 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
             return AbstractPortBlock.baseIcon;
         }
         if (renderPass == 1) {
-            return getOverlayIcon(side);
+            return IconRegistry.getIcon("overlay_essentiainput_me");
         }
         return AbstractPortBlock.baseIcon;
+    }
+
+    @Override
+    public void toggleSide(ForgeDirection side) {
+        // Disable IO configuration for ME ports
     }
 }

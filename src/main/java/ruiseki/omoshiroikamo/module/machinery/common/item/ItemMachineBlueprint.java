@@ -20,6 +20,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -36,7 +38,7 @@ public class ItemMachineBlueprint extends ItemOK {
     public ItemMachineBlueprint() {
         super("machineBlueprint");
         setMaxStackSize(1);
-        setTextureName("machineBlueprint");
+        setTextureName("modular/machineBlueprint");
     }
 
     /**
@@ -89,6 +91,11 @@ public class ItemMachineBlueprint extends ItemOK {
     public String getItemStackDisplayName(ItemStack stack) {
         String structureName = getStructureName(stack);
         if (structureName != null && !structureName.isEmpty()) {
+            StructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(structureName);
+            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
+                return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", entry.displayName);
+            }
             return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", structureName);
         }
         return LibMisc.LANG.localize("item.machineBlueprint.display.name.empty");

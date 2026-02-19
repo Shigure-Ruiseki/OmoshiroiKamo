@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -385,6 +386,22 @@ public abstract class PacketCodec extends PacketBase {
             @Override
             public Object decode(ByteArrayDataInput input) {
                 return ForgeDirection.values()[input.readInt()];
+            }
+        });
+
+        codecActions.put(ChunkCoordinates.class, new ICodecAction() {
+
+            @Override
+            public void encode(Object object, ByteArrayDataOutput output) {
+                ChunkCoordinates coords = (ChunkCoordinates) object;
+                output.writeInt(coords.posX);
+                output.writeInt(coords.posY);
+                output.writeInt(coords.posZ);
+            }
+
+            @Override
+            public Object decode(ByteArrayDataInput input) {
+                return new ChunkCoordinates(input.readInt(), input.readInt(), input.readInt());
             }
         });
     }

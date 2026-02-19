@@ -1,23 +1,31 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 
-public class ManaInput implements IRecipeInput {
+public class ManaInput extends AbstractRecipeInput {
 
     private final int amount;
+    private final boolean perTick;
+
+    public ManaInput(int amount, boolean perTick) {
+        this.amount = amount;
+        this.perTick = perTick;
+    }
 
     public ManaInput(int amount) {
-        this.amount = amount;
+        this(amount, true);
     }
 
     public int getAmount() {
         return amount;
+    }
+
+    public boolean isPerTick() {
+        return perTick;
     }
 
     @Override
@@ -26,32 +34,40 @@ public class ManaInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-        int remaining = amount;
+    protected long getRequiredAmount() {
+        return amount;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.MANA) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) continue;
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractManaPortTE;
+    }
 
-            AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-            int stored = manaPort.getCurrentMana();
-            if (stored > 0) {
-                int extract = Math.min(stored, remaining);
-                if (!simulate) {
-                    manaPort.extractMana(extract);
-                }
-                remaining -= extract;
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
+        AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
+        int stored = manaPort.getCurrentMana();
+        if (stored > 0) {
+            int extract = (int) Math.min(stored, remaining);
+            if (!simulate) {
+                manaPort.extractMana(extract);
             }
-            if (remaining <= 0) break;
+            return extract;
         }
-
-        return remaining <= 0;
+        return 0;
     }
 
     public static ManaInput fromJson(JsonObject json) {
         int amount = json.get("mana")
             .getAsInt();
-        return new ManaInput(amount);
+        boolean perTick = true;
+        if (json.has("perTick")) {
+            perTick = json.get("perTick")
+                .getAsBoolean();
+        } else if (json.has("pertick")) {
+            perTick = json.get("pertick")
+                .getAsBoolean();
+        }
+        return new ManaInput(amount, perTick);
     }
 }

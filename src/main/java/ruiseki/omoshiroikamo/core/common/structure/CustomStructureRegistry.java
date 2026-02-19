@@ -86,9 +86,16 @@ public class CustomStructureRegistry {
             }
             Logger.info("  Controller 'Q' found: " + qCount);
 
-            // Apply 180-degree rotation to align JSON definition with StructureLib
-            // This ensures Top of JSON = Front of Machine for in-game placement
-            String[][] rotatedShape = rotate180(shape);
+            // Apply rotation based on defaultFacing
+            // SOUTH/NORTH etc: standard 180 rotation to align with StructureLib
+            // UP/DOWN: transform layers (Y) to depth (Z) so it builds upright
+            String[][] rotatedShape;
+            if (entry.defaultFacing != null
+                && (entry.defaultFacing.equalsIgnoreCase("UP") || entry.defaultFacing.equalsIgnoreCase("DOWN"))) {
+                rotatedShape = transformForVertical(shape, entry.defaultFacing);
+            } else {
+                rotatedShape = rotate180(shape);
+            }
 
             // Calculate controller offset from rotated shape
             entry.controllerOffset = findControllerOffset(rotatedShape);
@@ -253,6 +260,31 @@ public class CustomStructureRegistry {
             }
         }
         return rotated;
+    }
+
+    private static String[][] transformForVertical(String[][] shape, String facing) {
+        int originalLayers = shape.length;
+        if (originalLayers == 0) return shape;
+
+        int originalRows = shape[0].length;
+        boolean isDown = "DOWN".equalsIgnoreCase(facing);
+
+        String[][] transformed = new String[originalRows][originalLayers];
+
+        for (int originalZ = 0; originalZ < originalRows; originalZ++) {
+            for (int originalY = 0; originalY < originalLayers; originalY++) {
+
+                int targetLayerIndex = originalZ;
+                int targetRowIndex = isDown ? (originalLayers - 1 - originalY) : originalY;
+
+                if (shape[originalY].length > originalZ) {
+                    transformed[targetLayerIndex][targetRowIndex] = shape[originalY][originalZ];
+                } else {
+                    transformed[targetLayerIndex][targetRowIndex] = "";
+                }
+            }
+        }
+        return transformed;
     }
 
     /**

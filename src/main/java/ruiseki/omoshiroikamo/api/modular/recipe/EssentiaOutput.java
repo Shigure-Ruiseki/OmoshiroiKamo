@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
 
-public class EssentiaOutput implements IRecipeOutput {
+public class EssentiaOutput extends AbstractRecipeOutput {
 
     private final String aspectTag;
     private final int amount;
@@ -35,6 +35,12 @@ public class EssentiaOutput implements IRecipeOutput {
 
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
+
+        // If not simulating, first check if we CAN output everything by simulating
+        if (!simulate) {
+            if (!process(ports, true)) return false;
+        }
+
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return false;
 
@@ -43,10 +49,15 @@ public class EssentiaOutput implements IRecipeOutput {
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ESSENTIA) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractEssentiaPortTE)) continue;
+            if (!(port instanceof AbstractEssentiaPortTE)) {
+                throw new IllegalStateException(
+                    "ESSENTIA OUTPUT port must be AbstractEssentiaPortTE, got: " + port.getClass()
+                        .getName());
+            }
 
             AbstractEssentiaPortTE essentiaPort = (AbstractEssentiaPortTE) port;
             int space = essentiaPort.getMaxCapacityPerAspect() - essentiaPort.containerContains(aspect);
+
             if (space > 0) {
                 int toAdd = Math.min(remaining, space);
                 if (!simulate) {
@@ -58,6 +69,22 @@ public class EssentiaOutput implements IRecipeOutput {
         }
 
         return remaining <= 0;
+    }
+
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port.getPortType() == IPortType.Type.ESSENTIA && port instanceof AbstractEssentiaPortTE;
+    }
+
+    @Override
+    protected long getPortCapacity(IModularPort port) {
+        AbstractEssentiaPortTE essentiaPort = (AbstractEssentiaPortTE) port;
+        return essentiaPort.getMaxCapacityPerAspect();
+    }
+
+    @Override
+    protected long getRequiredAmount() {
+        return amount;
     }
 
     public static EssentiaOutput fromJson(JsonObject json) {

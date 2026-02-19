@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.gas;
 
+import java.util.Arrays;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -56,12 +58,13 @@ public abstract class AbstractGasPortTE extends AbstractTE
                 markDirty();
             }
         };
-        for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
-        }
+        Arrays.fill(sides, EnumIO.NONE);
+        // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public Type getPortType() {

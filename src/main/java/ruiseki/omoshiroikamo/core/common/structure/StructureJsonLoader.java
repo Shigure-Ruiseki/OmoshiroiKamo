@@ -207,6 +207,13 @@ public class StructureJsonLoader {
             entry.properties = parseProperties(obj.getAsJsonObject("properties"));
         }
 
+        // Parse defaultFacing
+        if (obj.has("defaultFacing") && !obj.get("defaultFacing")
+            .isJsonNull()) {
+            entry.defaultFacing = obj.get("defaultFacing")
+                .getAsString();
+        }
+
         return entry;
     }
 

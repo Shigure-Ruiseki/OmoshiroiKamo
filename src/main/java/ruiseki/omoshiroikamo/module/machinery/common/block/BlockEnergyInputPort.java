@@ -17,10 +17,12 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPort;
@@ -31,16 +33,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyI
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT6;
 
-/**
- * Energy Input Port - accepts energy (RF) for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for energy level (texture animation or overlay)
- * - Implement BlockColor tinting for machine color customization
- * - Add Tesla coil-style wireless energy input
- */
+// TODO: Add wireless energy input
 public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
     protected BlockEnergyInputPort() {
@@ -62,27 +55,19 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
     }
 
     @Override
+    public String getOverlayPrefix() {
+        return "overlay_energyinput_";
+    }
+
+    @Override
     public void registerPortOverlays(IIconRegister reg) {
+        for (int i = 1; i <= 6; i++) {
+            IconRegistry.addIcon(
+                getOverlayPrefix() + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + getOverlayPrefix() + i));
+        }
         IconRegistry.addIcon(
-            "overlay_energyinput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_1"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_2",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_2"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_3",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_3"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_4",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_4"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_5",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_5"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_6",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyinput_6"));
-        IconRegistry.addIcon(
-            "overlay_energyinput_disabled",
+            getOverlayPrefix() + "disabled",
             reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
@@ -136,7 +121,7 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
         @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            // TODO: Add tooltips
+            super.addInformation(stack, player, list, flag);
         }
     }
 
@@ -148,5 +133,20 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
     @Override
     public Direction getPortDirection() {
         return Direction.INPUT;
+    }
+
+    @Override
+    protected void addCapacityTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG.localize(
+                "tooltip.machinery.capacity",
+                String.format("%,d", MachineryConfig.getEnergyPortCapacity(tier)) + " RF"));
+    }
+
+    @Override
+    protected void addTransferTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG
+                .localize("gui.energy_transfer", String.format("%,d", MachineryConfig.getEnergyPortTransfer(tier))));
     }
 }

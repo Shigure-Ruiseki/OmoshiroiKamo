@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -9,7 +7,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
 
-public class VisInput implements IRecipeInput {
+public class VisInput extends AbstractRecipeInput {
 
     private final String aspectTag;
     private final int amountCentiVis;
@@ -33,30 +31,30 @@ public class VisInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
+    protected long getRequiredAmount() {
+        return amountCentiVis;
+    }
+
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractVisPortTE;
+    }
+
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
         Aspect aspect = Aspect.getAspect(aspectTag);
-        if (aspect == null) return false;
+        if (aspect == null) return 0;
 
-        int remaining = amountCentiVis;
-
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.VIS) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractVisPortTE)) continue;
-
-            AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-            int stored = visPort.getVisAmount(aspect);
-            if (stored > 0) {
-                int extract = Math.min(stored, remaining);
-                if (!simulate) {
-                    visPort.drainVis(aspect, extract);
-                }
-                remaining -= extract;
+        AbstractVisPortTE visPort = (AbstractVisPortTE) port;
+        int stored = visPort.getVisAmount(aspect);
+        if (stored > 0) {
+            int extract = (int) Math.min(stored, remaining);
+            if (!simulate) {
+                visPort.drainVis(aspect, extract);
             }
-            if (remaining <= 0) break;
+            return extract;
         }
-
-        return remaining <= 0;
+        return 0;
     }
 
     public static VisInput fromJson(JsonObject json) {

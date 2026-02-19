@@ -3,25 +3,17 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT1;
@@ -31,17 +23,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInp
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT5;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.input.TEFluidInputPortT6;
 
-/**
- * Mana Input Port - accepts mana for machine processing.
- * Can be placed at IO slot positions in machine structures.
- * Uses JSON model with base + overlay textures via GTNHLib.
- *
- * TODO List:
- * - Add visual indicator for mana level (texture animation or overlay)
- * - Add model and textures
- * - Implement BlockColor tinting for machine color customization
- * - Add animation/particle effects when receiving mana
- */
 public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> {
 
     protected BlockFluidInputPort() {
@@ -63,28 +44,8 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> {
     }
 
     @Override
-    public void registerPortOverlays(IIconRegister reg) {
-        IconRegistry.addIcon(
-            "overlay_fluidinput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_1"));
-        IconRegistry.addIcon(
-            "overlay_fluidinput_2",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_2"));
-        IconRegistry.addIcon(
-            "overlay_fluidinput_3",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_3"));
-        IconRegistry.addIcon(
-            "overlay_fluidinput_4",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_4"));
-        IconRegistry.addIcon(
-            "overlay_fluidinput_5",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_5"));
-        IconRegistry.addIcon(
-            "overlay_fluidinput_6",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_fluidinput_6"));
-        IconRegistry.addIcon(
-            "overlay_fluidinput_disabled",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+    public String getOverlayPrefix() {
+        return "overlay_fluidinput_";
     }
 
     @Override
@@ -93,29 +54,21 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> {
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, 0));
-        list.add(new ItemStack(itemIn, 1, 1));
-        list.add(new ItemStack(itemIn, 1, 2));
-        list.add(new ItemStack(itemIn, 1, 3));
-        list.add(new ItemStack(itemIn, 1, 4));
-        list.add(new ItemStack(itemIn, 1, 5));
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        super.getWailaInfo(tooltip, itemStack, accessor, config);
+        TileEntity te = accessor.getTileEntity();
+        if (te instanceof IFluidHandler) {
+            tooltip.addAll(WailaUtils.getFluidTooltip((IFluidHandler) te));
+        }
     }
 
     @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
-        IWailaConfigHandler config) {
-        TileEntity tileEntity = accessor.getTileEntity();
-        if (!config.getConfig("IFluidHandler") && tileEntity instanceof IFluidHandler handler) {
-            tooltip.addAll(WailaUtils.getFluidTooltip(handler));
-        }
-        if (tileEntity instanceof ISidedIO io) {
-            Vec3 hit = WailaUtils.getLocalHit(accessor);
-            if (hit == null) return;
-            ForgeDirection side = ItemWrench
-                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
-            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
-        }
+    protected void addCapacityTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG.localize(
+                "tooltip.machinery.capacity",
+                String.format("%,d", MachineryConfig.getFluidPortCapacity(tier)) + " mB"));
     }
 
     public static class ItemBlockFluidInputPort extends AbstractPortItemBlock {
@@ -125,19 +78,8 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> {
         }
 
         @Override
-        public String getUnlocalizedName(ItemStack stack) {
-            int tier = stack.getItemDamage() + 1;
-            return super.getUnlocalizedName() + ".tier_" + tier;
-        }
-
-        @Override
-        public IIcon getOverlayIcon(int tier) {
-            return IconRegistry.getIcon("overlay_fluidinput_" + tier);
-        }
-
-        @Override
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            // TODO: Add tooltips
+            super.addInformation(stack, player, list, flag);
         }
     }
 
