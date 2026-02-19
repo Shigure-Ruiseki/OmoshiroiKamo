@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.backpack.common.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -15,7 +16,6 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -26,7 +26,6 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     private final int[] allSlots;
 
-    @NBTPersist
     private final BackpackHandler handler;
 
     public TEBackpack() {
@@ -212,5 +211,17 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     @Override
     public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return new BackpackGuiHolder.TileEntityGuiHolder(handler).buildUI(data, syncManager, settings);
+    }
+
+    @Override
+    public void writeCommon(NBTTagCompound tag) {
+        super.writeCommon(tag);
+        handler.writeToNBT(tag);
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound tag) {
+        super.readCommon(tag);
+        handler.readFromNBT(tag);
     }
 }

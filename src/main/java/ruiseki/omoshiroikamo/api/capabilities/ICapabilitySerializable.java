@@ -16,9 +16,7 @@
 
 package ruiseki.omoshiroikamo.api.capabilities;
 
-import net.minecraft.nbt.NBTBase;
+import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
 
-import com.cleanroommc.modularui.utils.item.INBTSerializable;
-
-public interface ICapabilitySerializable<T extends NBTBase> extends ICapabilityProvider, INBTSerializable<T> {
+public interface ICapabilitySerializable extends ICapabilityProvider, INBTSerializable {
 }

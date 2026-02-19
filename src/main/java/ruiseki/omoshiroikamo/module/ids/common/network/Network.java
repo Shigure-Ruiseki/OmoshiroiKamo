@@ -141,15 +141,15 @@ public class Network<N extends INetwork<N>> implements INetwork<N> {
     }
 
     @Override
-    public NBTTagCompound toNBT() {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag("baseCluster", this.baseCluster.toNBT());
+        tag.setTag("baseCluster", this.baseCluster.serializeNBT());
         return tag;
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag) {
-        this.baseCluster.fromNBT(tag.getCompoundTag("baseCluster"));
+    public void deserializeNBT(NBTTagCompound tag) {
+        this.baseCluster.deserializeNBT(tag.getCompoundTag("baseCluster"));
         deriveNetworkElements(baseCluster);
         initialize(true);
     }

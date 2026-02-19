@@ -51,7 +51,7 @@ public class NetworkWorldStorage extends WorldStorage {
                 for (int i = 0; i < list.tagCount(); i++) {
                     NBTTagCompound entryTag = list.getCompoundTagAt(i);
                     Network network = new Network();
-                    network.fromNBT(entryTag.getCompoundTag("element"));
+                    network.deserializeNBT(entryTag.getCompoundTag("element"));
                     networks.add(network);
                 }
             }

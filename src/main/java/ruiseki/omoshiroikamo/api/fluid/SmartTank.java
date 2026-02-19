@@ -206,14 +206,14 @@ public class SmartTank extends FluidTank implements IFluidHandler, INBTSerializa
     protected void onContentsChanged() {}
 
     @Override
-    public NBTTagCompound toNBT() {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         writeCommon(nbt);
         return nbt;
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag) {
+    public void deserializeNBT(NBTTagCompound tag) {
         readCommon(tag);
     }
 

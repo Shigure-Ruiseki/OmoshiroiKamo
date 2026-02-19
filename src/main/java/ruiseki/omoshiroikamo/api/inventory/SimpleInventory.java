@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.api.util.MinecraftHelpers;
 
 /**
  * A basic inventory implementation.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -34,7 +34,7 @@ public class SimpleInventory implements INBTInventory {
 
     /**
      * Make a new instance.
-     * 
+     *
      * @param size       The amount of slots in the inventory.
      * @param name       The name of the inventory, used for NBT storage.
      * @param stackLimit The stack limit for each slot.
@@ -47,7 +47,7 @@ public class SimpleInventory implements INBTInventory {
 
     /**
      * Add a dirty marking listener.
-     * 
+     *
      * @param dirtyMarkListener The dirty mark listener.
      */
     public synchronized void addDirtyMarkListener(IDirtyMarkListener dirtyMarkListener) {
@@ -56,7 +56,7 @@ public class SimpleInventory implements INBTInventory {
 
     /**
      * Remove a dirty marking listener.
-     * 
+     *
      * @param dirtyMarkListener The dirty mark listener.
      */
     public synchronized void removeDirtyMarkListener(IDirtyMarkListener dirtyMarkListener) {
@@ -155,7 +155,7 @@ public class SimpleInventory implements INBTInventory {
 
     /**
      * Read inventory data from the given NBT.
-     * 
+     *
      * @param data The NBT data containing inventory data.
      * @param tag  The NBT tag name where the info is located.
      */
@@ -185,7 +185,7 @@ public class SimpleInventory implements INBTInventory {
 
     /**
      * Write inventory data to the given NBT.
-     * 
+     *
      * @param data The NBT tag that will receive inventory data.
      * @param tag  The NBT tag name where the info must be located.
      */
@@ -204,7 +204,7 @@ public class SimpleInventory implements INBTInventory {
 
     /**
      * Get the array of {@link net.minecraft.item.ItemStack} inside this inventory.
-     * 
+     *
      * @return The items in this inventory.
      */
     public ItemStack[] getItemStacks() {
@@ -238,14 +238,14 @@ public class SimpleInventory implements INBTInventory {
     }
 
     @Override
-    public NBTTagCompound toNBT() {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
         return tag;
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag) {
+    public void deserializeNBT(NBTTagCompound tag) {
         readFromNBT(tag);
     }
 }

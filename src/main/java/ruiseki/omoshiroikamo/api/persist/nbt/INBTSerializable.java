@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * Objects that are serializable to NBT.
  * Classes implementing must have a public default constructor which will be used
  * for NBT reading instantiation.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -23,19 +23,19 @@ public interface INBTSerializable {
 
     /**
      * Convert the data to an NBT tag.
-     * 
+     *
      * @return The NBT tag.
      */
-    public NBTTagCompound toNBT();
+    NBTTagCompound serializeNBT();
 
     /**
      * Read the data from an NBT tag and place it in this object.
      * The given tag will never be null, so make sure that all fields have a correct default value in case
      * the received tag would be null anyways.
-     * 
+     *
      * @param tag The tag to read from.
      */
-    public void fromNBT(NBTTagCompound tag);
+    void deserializeNBT(NBTTagCompound tag);
 
     @SuppressWarnings("unchecked")
     @EqualsAndHashCode(callSuper = false)
@@ -47,21 +47,21 @@ public interface INBTSerializable {
         @Override
         public void writePersistedField(String name, INBTSerializable object, NBTTagCompound tag) {
             try {
-                Method method = fieldType.getMethod("toNBT");
+                Method method = fieldType.getMethod("serializeNBT");
                 tag.setTag(name, (NBTBase) method.invoke(object));
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(
-                    "No method toNBT for field " + name + " of class " + fieldType + " was found.");
+                    "No method serializeNBT for field " + name + " of class " + fieldType + " was found.");
             } catch (InvocationTargetException e) {
                 e.getTargetException()
                     .printStackTrace();
                 throw new RuntimeException(
-                    "Error in toNBT for field " + name
+                    "Error in serializeNBT for field " + name
                         + ". Error: "
                         + e.getTargetException()
                             .getMessage());
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Could invoke toNBT for " + name + ".");
+                throw new RuntimeException("Could invoke serializeNBT for " + name + ".");
             }
 
         }
@@ -78,7 +78,7 @@ public interface INBTSerializable {
                             + " must "
                             + "have a constructor without parameters.");
                 }
-                Method method = fieldType.getMethod("fromNBT", NBTTagCompound.class);
+                Method method = fieldType.getMethod("deserializeNBT", NBTTagCompound.class);
                 INBTSerializable obj = (INBTSerializable) constructor.newInstance();
                 if (tag.hasKey(name)) {
                     method.invoke(obj, tag.getTag(name));
@@ -89,17 +89,17 @@ public interface INBTSerializable {
                 return obj;
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(
-                    "No method fromNBT for field " + name + " of class " + fieldType + " was found.");
+                    "No method deserializeNBT for field " + name + " of class " + fieldType + " was found.");
             } catch (InvocationTargetException e) {
                 e.getTargetException()
                     .printStackTrace();
                 throw new RuntimeException(
-                    "Error in fromNBT for field " + name
+                    "Error in deserializeNBT for field " + name
                         + ". Error: "
                         + e.getTargetException()
                             .getMessage());
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Could invoke fromNBT for " + name + ".");
+                throw new RuntimeException("Could invoke deserializeNBT for " + name + ".");
             } catch (InstantiationException e) {
                 e.printStackTrace();
                 throw new RuntimeException(

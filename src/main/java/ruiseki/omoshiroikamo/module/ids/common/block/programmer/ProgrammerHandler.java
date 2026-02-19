@@ -38,14 +38,14 @@ public class ProgrammerHandler implements INBTSerializable {
     }
 
     @Override
-    public NBTTagCompound toNBT() {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
         return tag;
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag) {
+    public void deserializeNBT(NBTTagCompound tag) {
         readFromNBT(tag);
     }
 }
