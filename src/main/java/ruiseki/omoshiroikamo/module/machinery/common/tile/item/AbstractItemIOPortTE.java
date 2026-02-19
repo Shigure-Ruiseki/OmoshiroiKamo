@@ -92,8 +92,8 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
         // ItemStackHandlerBase resizes to NBT size on load.
         int configSlots = slotDefinition.getItemSlots();
         int currentSlots = inv.getSlots();

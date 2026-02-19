@@ -128,7 +128,7 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound root) {
+    public void writeCommon(NBTTagCompound root) {
         super.writeToNBT(root);
         if (gridProxy != null) {
             gridProxy.writeToNBT(root);
@@ -136,8 +136,8 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
         getProxy().readFromNBT(root);
     }
 

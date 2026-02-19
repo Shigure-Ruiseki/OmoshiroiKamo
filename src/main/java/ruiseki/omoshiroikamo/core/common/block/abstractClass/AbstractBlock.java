@@ -87,6 +87,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, player, stack);
         AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
         te.readFromItemStack(stack);
         world.markBlockForUpdate(x, y, z);

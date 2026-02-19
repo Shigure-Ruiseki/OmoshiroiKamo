@@ -77,8 +77,8 @@ public class TECable extends AbstractTE
     public TECable() {}
 
     @Override
-    public void writeToNBT(NBTTagCompound root) {
-        super.writeToNBT(root);
+    public void writeCommon(NBTTagCompound root) {
+        super.writeCommon(root);
 
         NBTTagCompound partsTag = new NBTTagCompound();
         for (Map.Entry<ForgeDirection, ICablePart> entry : parts.entrySet()) {
@@ -99,8 +99,8 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
 
         // parts
         parts.clear();

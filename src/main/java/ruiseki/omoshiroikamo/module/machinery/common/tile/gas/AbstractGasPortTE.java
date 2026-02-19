@@ -102,8 +102,8 @@ public abstract class AbstractGasPortTE extends AbstractTE
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
+    public void readCommon(NBTTagCompound root) {
+        super.readCommon(root);
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
