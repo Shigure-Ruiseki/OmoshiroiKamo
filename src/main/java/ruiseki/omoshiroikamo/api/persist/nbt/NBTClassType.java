@@ -749,7 +749,7 @@ public abstract class NBTClassType<T> {
                     INBTSerializable existing = (INBTSerializable) field.get(castTile);
 
                     if (existing != null) {
-                        existing.fromNBT(tag.getCompoundTag(name));
+                        existing.deserializeNBT(tag.getCompoundTag(name));
                     }
                 } else {
                     T object = readPersistedField(name, tag);

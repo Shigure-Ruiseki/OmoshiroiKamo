@@ -157,14 +157,14 @@ public class EnergyStorage implements IEnergyStorage, INBTSerializable {
     }
 
     @Override
-    public NBTTagCompound toNBT() {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
         return nbt;
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag) {
+    public void deserializeNBT(NBTTagCompound tag) {
         readFromNBT(tag);
     }
 

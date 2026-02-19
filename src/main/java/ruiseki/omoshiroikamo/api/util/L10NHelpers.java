@@ -53,13 +53,13 @@ public final class L10NHelpers {
         }
 
         @Override
-        public NBTTagCompound toNBT() {
+        public NBTTagCompound serializeNBT() {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setString("parameterizedString", parameterizedString);
             NBTTagList list = new NBTTagList();
             for (Object parameter : parameters) {
                 if (parameter instanceof UnlocalizedString) {
-                    NBTTagCompound objectTag = ((UnlocalizedString) parameter).toNBT();
+                    NBTTagCompound objectTag = ((UnlocalizedString) parameter).serializeNBT();
                     objectTag.setString("type", "object");
                     list.appendTag(objectTag);
                 } else {
@@ -74,7 +74,7 @@ public final class L10NHelpers {
         }
 
         @Override
-        public void fromNBT(NBTTagCompound tag) {
+        public void deserializeNBT(NBTTagCompound tag) {
             this.parameterizedString = tag.getString("parameterizedString");
             NBTTagList list = tag.getTagList("parameters", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
             this.parameters = new Object[list.tagCount()];
@@ -82,7 +82,7 @@ public final class L10NHelpers {
                 NBTTagCompound elementTag = list.getCompoundTagAt(i);
                 if ("object".equals(elementTag.getString("type"))) {
                     UnlocalizedString object = new UnlocalizedString();
-                    object.fromNBT(elementTag);
+                    object.deserializeNBT(elementTag);
                     this.parameters[i] = object;
                 } else {
                     this.parameters[i] = elementTag.getString("value");

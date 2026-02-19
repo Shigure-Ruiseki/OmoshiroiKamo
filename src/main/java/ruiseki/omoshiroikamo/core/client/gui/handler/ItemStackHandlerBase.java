@@ -246,14 +246,4 @@ public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerial
 
         this.onLoad();
     }
-
-    @Override
-    public NBTTagCompound toNBT() {
-        return this.serializeNBT();
-    }
-
-    @Override
-    public void fromNBT(NBTTagCompound tag) {
-        this.deserializeNBT(tag);
-    }
 }

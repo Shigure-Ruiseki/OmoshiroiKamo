@@ -44,7 +44,7 @@ public class Cluster<E extends IPathElement> implements Collection<E>, INBTSeria
     }
 
     @Override
-    public NBTTagCompound toNBT() {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
 
@@ -67,7 +67,7 @@ public class Cluster<E extends IPathElement> implements Collection<E>, INBTSeria
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag) {
+    public void deserializeNBT(NBTTagCompound tag) {
         NBTTagList list = tag.getTagList("list", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
 
         for (int i = 0; i < list.tagCount(); i++) {
