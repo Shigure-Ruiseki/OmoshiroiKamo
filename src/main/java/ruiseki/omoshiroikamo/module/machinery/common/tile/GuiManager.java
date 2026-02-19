@@ -206,6 +206,10 @@ public class GuiManager {
 
         // Show energy error even during processing
         if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        if (lastError == ErrorReason.OUTPUT_FULL) {
+            return LibMisc.LANG
+                .localize(lastError.getUnlocalizedName(), diagnoseBlockedOutputs(controller.getOutputPorts()));
+        }
 
         if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
             String detail = controller.getLastProcessErrorDetail();
@@ -325,7 +329,7 @@ public class GuiManager {
             return sb.toString();
         }
 
-        return LibMisc.LANG.localize("gui.error.unknown");
+        return LibMisc.LANG.localize("gui.status.unknown");
     }
 
 }

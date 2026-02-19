@@ -302,7 +302,7 @@ public class ProcessAgent {
         if (!cachedGasOutputs.isEmpty()) types.add(IPortType.Type.GAS);
         if (!cachedEssentiaOutputs.isEmpty()) types.add(IPortType.Type.ESSENTIA);
         if (!cachedVisOutputs.isEmpty()) types.add(IPortType.Type.VIS);
-        if (!cachedEnergyOutputs.isEmpty()) types.add(IPortType.Type.ENERGY);
+        if (!cachedEnergyOutputs.isEmpty() || energyOutputPerTick > 0) types.add(IPortType.Type.ENERGY);
         return types;
     }
 
