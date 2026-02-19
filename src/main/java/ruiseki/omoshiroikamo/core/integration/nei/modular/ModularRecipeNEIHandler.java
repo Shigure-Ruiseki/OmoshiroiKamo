@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +11,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.EnergyOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
@@ -19,6 +24,9 @@ import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositionedRenderer;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.NEIRendererFactory;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedEnergy;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -27,6 +35,11 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     public ModularRecipeNEIHandler(String recipeGroup) {
         this.recipeGroup = recipeGroup;
+    }
+
+    @Override
+    public TemplateRecipeHandler newInstance() {
+        return new ModularRecipeNEIHandler(recipeGroup);
     }
 
     @Override
@@ -54,6 +67,23 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     public void drawBackground(int recipe) {
         CachedModularRecipe crecipe = (CachedModularRecipe) arecipes.get(recipe);
         crecipe.drawSlots();
+    }
+
+    @Override
+    public void drawForeground(int recipe) {
+        super.drawForeground(recipe);
+        CachedModularRecipe crecipe = (CachedModularRecipe) arecipes.get(recipe);
+        crecipe.drawExtras();
+    }
+
+    @Override
+    public List<String> provideTooltip(GuiRecipe<?> guiRecipe, List<String> currenttip, CachedBaseRecipe crecipe,
+        Point relMouse) {
+        super.provideTooltip(guiRecipe, currenttip, crecipe, relMouse);
+        if (crecipe instanceof CachedModularRecipe) {
+            ((CachedModularRecipe) crecipe).handleTooltip(relMouse, currenttip);
+        }
+        return currenttip;
     }
 
     @Override
@@ -175,6 +205,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         private final List<PositionedStack> inputStacks = new ArrayList<>();
         private final List<PositionedStack> outputStacks = new ArrayList<>();
         private final List<PositionedFluidTank> fluidTanks = new ArrayList<>();
+        private final List<INEIPositionedRenderer> extraRenderers = new ArrayList<>();
 
         public CachedModularRecipe(ModularRecipe recipe) {
             this.recipe = recipe;
@@ -209,6 +240,23 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                     Rectangle rect = new Rectangle(inputX, inputY, 18, 50); // Tall tank
                     fluidTanks.add(new PositionedFluidTank(fluidIn.getFluid(), rect)); // Max capacity dummy
                     inputX += slotSize + gap; // Fluid takes space
+                } else if (input instanceof EnergyInput) {
+                    EnergyInput energyIn = (EnergyInput) input;
+                    Rectangle rect = new Rectangle(inputX, inputY, 18, 50);
+                    extraRenderers.add(new PositionedEnergy(energyIn.getAmount(), energyIn.isPerTick(), true, rect));
+                    inputX += slotSize + gap;
+                } else {
+                    // Try extended renderers
+                    Rectangle rect = new Rectangle(inputX, inputY, 18, 50); // Default space
+                    // Check Gas
+                    INEIPositionedRenderer renderer = NEIRendererFactory.createGasRenderer(input, null, rect);
+                    if (renderer == null) renderer = NEIRendererFactory.createAspectRenderer(input, null, rect);
+                    if (renderer == null) renderer = NEIRendererFactory.createManaRenderer(input, null, rect);
+
+                    if (renderer != null) {
+                        extraRenderers.add(renderer);
+                        inputX += slotSize + gap;
+                    }
                 }
             }
 
@@ -237,6 +285,23 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                     Rectangle rect = new Rectangle(outputX, outputY, 18, 50);
                     fluidTanks.add(new PositionedFluidTank(fluidOut.getOutput(), rect));
                     outputX += slotSize + gap;
+                } else if (output instanceof EnergyOutput) {
+                    EnergyOutput energyOut = (EnergyOutput) output;
+                    Rectangle rect = new Rectangle(outputX, outputY, 18, 50);
+                    extraRenderers.add(new PositionedEnergy(energyOut.getAmount(), energyOut.isPerTick(), false, rect));
+                    outputX += slotSize + gap;
+                } else {
+                    // Try extended renderers for output
+                    Rectangle rect = new Rectangle(outputX, outputY, 18, 50);
+                    // Check Gas
+                    INEIPositionedRenderer renderer = NEIRendererFactory.createGasRenderer(null, output, rect);
+                    if (renderer == null) renderer = NEIRendererFactory.createAspectRenderer(null, output, rect);
+                    if (renderer == null) renderer = NEIRendererFactory.createManaRenderer(null, output, rect);
+
+                    if (renderer != null) {
+                        extraRenderers.add(renderer);
+                        outputX += slotSize + gap;
+                    }
                 }
             }
         }
@@ -248,6 +313,30 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             }
             for (PositionedStack stack : outputStacks) {
                 drawItemSlot(stack.relx, stack.rely);
+            }
+            // Draw slots for fluids
+            for (PositionedFluidTank tank : fluidTanks) {
+                drawStretchedFluidSlot(tank.position.x, tank.position.y, tank.position.width, tank.position.height);
+            }
+            // Draw slots for extras
+            for (INEIPositionedRenderer renderer : extraRenderers) {
+                Rectangle rect = renderer.getPosition();
+                drawStretchedItemSlot(rect.x, rect.y, rect.width, rect.height);
+            }
+        }
+
+        public void drawExtras() {
+            for (INEIPositionedRenderer renderer : extraRenderers) {
+                renderer.draw();
+            }
+        }
+
+        public void handleTooltip(Point relMouse, List<String> currenttip) {
+            for (INEIPositionedRenderer renderer : extraRenderers) {
+                if (renderer.getPosition()
+                    .contains(relMouse)) {
+                    renderer.handleTooltip(currenttip);
+                }
             }
         }
 

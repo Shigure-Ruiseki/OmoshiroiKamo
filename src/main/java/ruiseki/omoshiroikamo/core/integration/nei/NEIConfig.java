@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
@@ -13,11 +14,15 @@ import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.RecipeCatalysts;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
@@ -37,6 +42,7 @@ import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalPositioner;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
@@ -68,7 +74,9 @@ public class NEIConfig implements IConfigureNEI {
     public void loadConfig() {
         Logger.info("Loading NeiConfig: {}", getName());
         if (BackportConfigs.enableMultiBlock) {
-            // TODO: Change Void Miner structure preview to Tier-based because buttons do not work now
+            // TODO: Change Void Miner structure preview to Tier-based
+            // buttons do not work now
+
             // Register Ore Extractors
             for (int i = 0; i < 6; i++) {
                 QuantumOreExtractorRecipeHandler ore = new QuantumOreExtractorRecipeHandler(i);
@@ -137,7 +145,61 @@ public class NEIConfig implements IConfigureNEI {
                 "Registered {} Modular Machine NEI handlers",
                 CustomStructureRegistry.getRegisteredNames()
                     .size());
+
+            // Register Modular Machine Recipes (JSON)
+            registerModularMachineryRecipes();
         }
+    }
+
+    private void registerModularMachineryRecipes() {
+        // Collect all recipe groups
+        List<String> groups = new ArrayList<>();
+        List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
+            .getAllRecipes();
+
+        if (allRecipes.isEmpty()) {
+            Logger.warn("NEIConfig: No Modular Recipes found. RecipeLoader might not have loaded yet.");
+        }
+
+        for (ModularRecipe recipe : allRecipes) {
+            String group = recipe.getRecipeGroup();
+            if (!groups.contains(group)) {
+                groups.add(group);
+            }
+        }
+
+        Logger.info("NEIConfig: Registering " + groups.size() + " Modular Recipe groups.");
+
+        for (String group : groups) {
+            ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
+            registerHandler(handler);
+
+            sendHandlerInfo(
+                handler.getRecipeID(),
+                new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()),
+                100,
+                1);
+        }
+    }
+
+    private void sendHandlerInfo(String handler, ItemStack stack, int height, int recipesPerPage) {
+        if (stack == null) return;
+        NBTTagCompound tag = new NBTTagCompound();
+        GameRegistry.UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+        if (uid == null) return;
+
+        String regName = uid.modId + ":" + uid.name;
+        int meta = stack.getItemDamage();
+        if (meta > 0) regName = regName + ":" + meta;
+
+        tag.setString("handler", handler);
+        tag.setString("itemName", regName);
+        tag.setInteger("handlerHeight", height);
+        tag.setInteger("maxRecipesPerPage", recipesPerPage);
+        tag.setString("modName", LibMisc.MOD_NAME);
+        tag.setString("modId", LibMisc.MOD_ID);
+        tag.setBoolean("modRequired", true);
+        FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
     }
 
     protected static void registerHandler(IRecipeHandlerBase handler) {

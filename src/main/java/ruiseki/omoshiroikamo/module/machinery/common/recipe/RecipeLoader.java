@@ -34,6 +34,7 @@ public class RecipeLoader {
 
     public void loadAll(File configDir) {
         File recipesDir = new File(configDir, "omoshiroikamo/modular/recipes");
+        Logger.info("Loading recipes from: " + recipesDir.getAbsolutePath());
         if (!recipesDir.exists()) {
             recipesDir.mkdirs();
             Logger.info("Created recipe directory: {}", recipesDir.getAbsolutePath());
