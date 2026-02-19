@@ -260,6 +260,7 @@ public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.IT
         if (stack == null) return;
         NBTTagCompound tag = new NBTTagCompound();
         writeCommon(tag);
+        stack.setTagCompound(tag);
     }
 
     public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {

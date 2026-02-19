@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  * Objects that are serializable to NBT.
  * Classes implementing must have a public default constructor which will be used
  * for NBT reading instantiation.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -23,19 +23,19 @@ public interface INBTSerializable {
 
     /**
      * Convert the data to an NBT tag.
-     * 
+     *
      * @return The NBT tag.
      */
-    public NBTTagCompound toNBT();
+    public NBTTagCompound serializeNBT();
 
     /**
      * Read the data from an NBT tag and place it in this object.
      * The given tag will never be null, so make sure that all fields have a correct default value in case
      * the received tag would be null anyways.
-     * 
+     *
      * @param tag The tag to read from.
      */
-    public void fromNBT(NBTTagCompound tag);
+    public void deserializeNBT(NBTTagCompound tag);
 
     @SuppressWarnings("unchecked")
     @EqualsAndHashCode(callSuper = false)
