@@ -50,10 +50,10 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.CablePartRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.IRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.CablePartRegistry;
 
 public class TECable extends AbstractTE
     implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {

@@ -11,8 +11,8 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import ruiseki.omoshiroikamo.api.item.ItemStackKey;
 import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfacebus.IItemInterface;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
 
 public class ItemNetwork extends AbstractCableNetwork<IItemNet> {
 

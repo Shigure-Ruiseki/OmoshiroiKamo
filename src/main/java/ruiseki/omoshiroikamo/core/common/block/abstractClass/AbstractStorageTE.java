@@ -166,7 +166,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return canPlayerAccess(player);
+        return canInteractWith(player);
     }
 
     @Override

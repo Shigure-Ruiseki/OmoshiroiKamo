@@ -17,9 +17,9 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractCableNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.CableGrid;
-import ruiseki.omoshiroikamo.module.ids.common.network.CableNetworkRegistry;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.CableGrid;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.CableNetworkRegistry;
 
 public class CableUtils {
 

@@ -157,4 +157,14 @@ public class EnergyStorage implements IEnergyStorage {
         return capacity;
     }
 
+    @Override
+    public boolean canExtract() {
+        return true;
+    }
+
+    @Override
+    public boolean canReceive() {
+        return true;
+    }
+
 }

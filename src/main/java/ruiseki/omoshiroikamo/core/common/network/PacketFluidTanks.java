@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.api.network.CodecField;
 import ruiseki.omoshiroikamo.api.network.PacketCodec;

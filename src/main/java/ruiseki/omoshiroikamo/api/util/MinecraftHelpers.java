@@ -18,11 +18,11 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.block.BlockPos;
+import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 
 /**
  * Contains helper methods for various minecraft specific things.
- * 
+ *
  * @author immortaleeb
  *
  */
@@ -44,7 +44,7 @@ public class MinecraftHelpers {
     /**
      * The types of NBT Tags, used for the second parameter in
      * {@link net.minecraft.nbt.NBTTagCompound#getTagList(String, int)}.
-     * 
+     *
      * @author rubensworks
      *
      */
@@ -79,7 +79,7 @@ public class MinecraftHelpers {
 
     /**
      * A list of all the {@link net.minecraftforge.common.ChestGenHooks}.
-     * 
+     *
      * @see net.minecraftforge.common.ChestGenHooks
      */
     public static List<String> CHESTGENCATEGORIES = new LinkedList<String>();
@@ -98,7 +98,7 @@ public class MinecraftHelpers {
 
     /**
      * Check if it's day in this world.
-     * 
+     *
      * @param world The world.
      * @return If it is day in the world, checked with the world time.
      */
@@ -108,7 +108,7 @@ public class MinecraftHelpers {
 
     /**
      * Set the world time to day or night.
-     * 
+     *
      * @param world the world to manipulate time in.
      * @param toDay if true, set to day, otherwise to night.
      */
@@ -120,7 +120,7 @@ public class MinecraftHelpers {
 
     /**
      * Drop an ItemStack into the world
-     * 
+     *
      * @param world    the world
      * @param stack    ItemStack to drop
      * @param blockPos The position.
@@ -145,7 +145,7 @@ public class MinecraftHelpers {
 
     /**
      * Drop an ItemStack into the world
-     * 
+     *
      * @param world     the world
      * @param inventory inventory with ItemStacks
      * @param blockPos  The position.
@@ -163,7 +163,7 @@ public class MinecraftHelpers {
 
     /**
      * Check if the given player inventory is full.
-     * 
+     *
      * @param player The player.
      * @return If the player does not have a free spot in it's inventory.
      */
@@ -173,7 +173,7 @@ public class MinecraftHelpers {
 
     /**
      * Check if we are inside a modded minecraft environment.
-     * 
+     *
      * @return If in minecraft.
      */
     public static boolean isModdedEnvironment() {
@@ -182,7 +182,7 @@ public class MinecraftHelpers {
 
     /**
      * Check if this code is ran on client side.
-     * 
+     *
      * @return If we are at client side.
      */
     public static boolean isClientSide() {
@@ -195,7 +195,7 @@ public class MinecraftHelpers {
 
     /**
      * Check if two fluid stacks contain the same fluid and have the same amount of that fluid.
-     * 
+     *
      * @param fluid1 A fluid stack.
      * @param fluid2 A fluid stack.
      * @return If they are equal.
@@ -224,7 +224,7 @@ public class MinecraftHelpers {
 
     /**
      * This method should be called after a BlockContainer is destroyed
-     * 
+     *
      * @param world    world
      * @param blockPos The position.
      */
@@ -234,7 +234,7 @@ public class MinecraftHelpers {
 
     /**
      * Comparator for {@link BlockPos}.
-     * 
+     *
      * @param pos1 First pos.
      * @param pos2 Second pos.
      * @return The compared value.

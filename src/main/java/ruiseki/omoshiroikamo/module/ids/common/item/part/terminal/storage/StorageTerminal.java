@@ -31,13 +31,13 @@ import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractPart;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.CraftingNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.ICraftingNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.IItemNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
 
 public class StorageTerminal extends AbstractPart {
 

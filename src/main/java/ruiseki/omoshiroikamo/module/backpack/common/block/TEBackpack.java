@@ -165,7 +165,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return canPlayerAccess(player);
+        return canInteractWith(player);
     }
 
     @Override

@@ -11,6 +11,7 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 
@@ -49,6 +50,10 @@ public final class ModuleManager {
 
     public static void serverStarted(FMLServerStartedEvent e) {
         for (IModuleCommon m : COMMON) if (m.isEnabled()) m.serverStarted(e);
+    }
+
+    public static void serverStopping(FMLServerStoppingEvent e) {
+        for (IModuleCommon m : COMMON) if (m.isEnabled()) m.serverStopping(e);
     }
 
     public static void onServerAboutToStart(FMLServerAboutToStartEvent e) {

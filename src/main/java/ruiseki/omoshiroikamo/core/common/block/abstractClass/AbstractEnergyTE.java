@@ -6,16 +6,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
+import ruiseki.omoshiroikamo.api.capabilities.Capability;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
+import ruiseki.omoshiroikamo.core.common.capabilities.CapabilityEnergy;
 import ruiseki.omoshiroikamo.core.common.network.PacketEnergy;
 
 /**
@@ -38,9 +43,6 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
 
     /** Flag indicating if IC2 registration was completed. */
     public boolean ic2Registered = false;
-
-    /** NBT tag name for energy-related data. */
-    public static String ENERGY_TAG = "energy";
 
     /**
      * Constructor specifying capacity and max receive rate.
@@ -226,5 +228,22 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     @Optional.Method(modid = "IC2")
     public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
         return canConnectEnergy(direction);
+    }
+
+    @Override
+    public boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
+        if (capability == CapabilityEnergy.ENERGY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(@NotNull Capability<T> capability, @Nullable ForgeDirection facing) {
+        if (capability == CapabilityEnergy.ENERGY) {
+            return (T) energyStorage;
+        }
+        return super.getCapability(capability, facing);
     }
 }

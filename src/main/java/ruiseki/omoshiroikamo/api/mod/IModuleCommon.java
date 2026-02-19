@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 public interface IModuleCommon extends IModule {
 
@@ -22,6 +23,8 @@ public interface IModuleCommon extends IModule {
     void serverLoad(FMLServerStartingEvent event);
 
     void serverStarted(FMLServerStartedEvent event);
+
+    void serverStopping(FMLServerStoppingEvent event);
 
     void onServerAboutToStart(FMLServerAboutToStartEvent event);
 

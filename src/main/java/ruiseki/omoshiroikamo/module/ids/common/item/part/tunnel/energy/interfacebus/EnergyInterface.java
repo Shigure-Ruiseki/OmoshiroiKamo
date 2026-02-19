@@ -29,12 +29,12 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractPart;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.PartSettingPanel;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.ILogicNet;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.network.PartSettingPanel;
-import ruiseki.omoshiroikamo.module.ids.common.network.logic.ILogicNet;
 
 public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnergyInterface {
 
