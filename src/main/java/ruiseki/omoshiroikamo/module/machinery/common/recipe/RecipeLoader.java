@@ -74,6 +74,15 @@ public class RecipeLoader {
         return result;
     }
 
+    public List<ModularRecipe> getAllRecipes() {
+        List<ModularRecipe> result = new ArrayList<>();
+        for (List<ModularRecipe> list : recipesByGroup.values()) {
+            result.addAll(list);
+        }
+        Collections.sort(result);
+        return result;
+    }
+
     public ModularRecipe findMatch(String[] groups, List<IModularPort> inputPorts) {
         List<ModularRecipe> candidates = getRecipes(groups);
         for (ModularRecipe recipe : candidates) {

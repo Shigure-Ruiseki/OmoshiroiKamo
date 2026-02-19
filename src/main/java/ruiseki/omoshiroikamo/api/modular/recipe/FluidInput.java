@@ -22,6 +22,10 @@ public class FluidInput extends AbstractRecipeInput {
         return required.copy();
     }
 
+    public FluidStack getFluid() {
+        return getRequired();
+    }
+
     @Override
     public IPortType.Type getPortType() {
         return IPortType.Type.FLUID;

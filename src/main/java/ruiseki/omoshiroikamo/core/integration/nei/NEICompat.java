@@ -1,13 +1,19 @@
 package ruiseki.omoshiroikamo.core.integration.nei;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import codechicken.nei.api.API;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -20,6 +26,8 @@ import ruiseki.omoshiroikamo.module.chickens.integration.nei.ChickenThrowsRecipe
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLBlocks;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.LootFabricatorRecipeHandler;
 import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeHandler;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public class NEICompat {
@@ -103,6 +111,37 @@ public class NEICompat {
             sendCatalyst(LootFabricatorRecipeHandler.UID, DMLBlocks.LOOT_FABRICATOR.newItemStack());
             sendHandler(SimulationChamberRecipeHandler.UID, DMLBlocks.SIMULATION_CHAMBER.newItemStack(), 48, 8);
             sendCatalyst(SimulationChamberRecipeHandler.UID, DMLBlocks.SIMULATION_CHAMBER.newItemStack());
+        }
+
+        // Modular Machine Integration
+        Set<String> groups = new HashSet<>();
+        for (ModularRecipe recipe : RecipeLoader.getInstance()
+            .getAllRecipes()) {
+            groups.add(recipe.getRecipeGroup());
+        }
+        for (String group : groups) {
+            String handlerId = "modular_" + group;
+            // Register handler
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setString("handler", handlerId);
+
+            GameRegistry.UniqueIdentifier uid = GameRegistry
+                .findUniqueIdentifierFor(MachineryBlocks.MACHINE_CONTROLLER.getItem());
+            if (uid != null) {
+                tag.setString("itemName", uid.modId + ":" + uid.name);
+            }
+
+            tag.setInteger("handlerHeight", 100);
+            tag.setInteger("maxRecipesPerPage", 1);
+            tag.setString("modName", LibMisc.MOD_NAME);
+            tag.setString("modId", LibMisc.MOD_ID);
+            tag.setBoolean("modRequired", true);
+
+            FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
+
+            ModularRecipeNEIHandler recipeHandler = new ModularRecipeNEIHandler(group);
+            API.registerRecipeHandler(recipeHandler);
+            API.registerUsageHandler(recipeHandler);
         }
 
         Logger.info("Loaded IMCForNEI");

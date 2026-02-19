@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -40,6 +43,15 @@ public class ItemInput extends AbstractRecipeInput {
 
     public ItemStack getRequired() {
         return required != null ? required.copy() : null;
+    }
+
+    public List<ItemStack> getItems() {
+        if (required != null) {
+            return Collections.singletonList(required);
+        } else if (oreDict != null) {
+            return OreDictionary.getOres(oreDict);
+        }
+        return Collections.emptyList();
     }
 
     @Override
