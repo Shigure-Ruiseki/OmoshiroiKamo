@@ -23,12 +23,12 @@ public class MachineryConfig {
     public static String itemPortSlots = "1,4,6,9,12,16";
 
     @Config.Comment("Fluid Input/Output Port Capacity in mB (Tier 1-6)")
-    @Config.DefaultString("1000,2000,4000,8000,16000,32000")
-    public static String fluidPortCapacity = "1000,2000,4000,8000,16000,32000";
+    @Config.DefaultString("1000,4000,16000,64000,256000,1024000")
+    public static String fluidPortCapacity = "1000,4000,16000,64000,256000,1024000";
 
     @Config.Comment("Gas Input/Output Port Capacity in mB (Tier 1-6)")
-    @Config.DefaultString("1000,2000,4000,8000,16000,32000")
-    public static String gasPortCapacity = "1000,2000,4000,8000,16000,32000";
+    @Config.DefaultString("1000,4000,16000,64000,256000,1024000")
+    public static String gasPortCapacity = "1000,4000,16000,64000,256000,1024000";
 
     @Config.Comment("Energy Input/Output Port Capacity in RF (Tier 1-6)")
     @Config.DefaultString("2048,8192,32768,131072,524288,2097152")
