@@ -26,7 +26,7 @@ public interface INBTSerializable {
      *
      * @return The NBT tag.
      */
-    public NBTTagCompound serializeNBT();
+    NBTTagCompound serializeNBT();
 
     /**
      * Read the data from an NBT tag and place it in this object.
@@ -35,7 +35,7 @@ public interface INBTSerializable {
      *
      * @param tag The tag to read from.
      */
-    public void deserializeNBT(NBTTagCompound tag);
+    void deserializeNBT(NBTTagCompound tag);
 
     @SuppressWarnings("unchecked")
     @EqualsAndHashCode(callSuper = false)
