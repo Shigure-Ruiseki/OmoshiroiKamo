@@ -159,18 +159,10 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
         } else {
             int rotation = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             switch (rotation) {
-                case 0:
-                    facing = ForgeDirection.SOUTH;
-                    break;
-                case 1:
-                    facing = ForgeDirection.WEST;
-                    break;
-                case 2:
-                    facing = ForgeDirection.NORTH;
-                    break;
-                case 3:
-                    facing = ForgeDirection.EAST;
-                    break;
+                case 0 -> facing = ForgeDirection.SOUTH;
+                case 1 -> facing = ForgeDirection.WEST;
+                case 2 -> facing = ForgeDirection.NORTH;
+                case 3 -> facing = ForgeDirection.EAST;
             }
         }
         TileEntity te = world.getTileEntity(x, y, z);
@@ -178,15 +170,10 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
             EnumIO ioLimit = EnumIO.NONE;
             // Determine limit based on type
 
-            if (te instanceof AbstractFluidPortTE portTE) {
-                ioLimit = portTE.getIOLimit();
-            } else if (te instanceof AbstractEnergyIOPortTE portTE) {
-                ioLimit = portTE.getIOLimit();
-            } else if (te instanceof AbstractItemIOPortTE portTE) {
-                ioLimit = portTE.getIOLimit();
-            } else if (te instanceof AbstractGasPortTE portTE) {
-                ioLimit = portTE.getIOLimit();
-            }
+            if (te instanceof AbstractFluidPortTE portTE) ioLimit = portTE.getIOLimit();
+            else if (te instanceof AbstractEnergyIOPortTE portTE) ioLimit = portTE.getIOLimit();
+            else if (te instanceof AbstractItemIOPortTE portTE) ioLimit = portTE.getIOLimit();
+            else if (te instanceof AbstractGasPortTE portTE) ioLimit = portTE.getIOLimit();
 
             if (ioLimit != EnumIO.NONE) {
                 IModularPort port = (IModularPort) te;

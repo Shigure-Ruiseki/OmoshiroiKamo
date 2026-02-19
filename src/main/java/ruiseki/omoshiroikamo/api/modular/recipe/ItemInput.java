@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.JsonObject;
 
@@ -82,8 +83,8 @@ public class ItemInput extends AbstractRecipeInput {
         if (input == null) return false;
 
         if (oreDict != null) {
-            int[] ids = net.minecraftforge.oredict.OreDictionary.getOreIDs(input);
-            int targetId = net.minecraftforge.oredict.OreDictionary.getOreID(oreDict);
+            int[] ids = OreDictionary.getOreIDs(input);
+            int targetId = OreDictionary.getOreID(oreDict);
             for (int id : ids) {
                 if (id == targetId) return true;
             }

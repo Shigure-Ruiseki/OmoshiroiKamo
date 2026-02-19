@@ -235,6 +235,7 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
     // ==========================================
     // Blockrenderer6343 debugging section
+    // I'd like to remain this for future tests and implementations
 
     // private final RenderBlocks renderBlocks = new RenderBlocks();
 

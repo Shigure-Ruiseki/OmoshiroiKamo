@@ -50,7 +50,7 @@ public class MachineryConfig {
     @Config.DefaultInt(64)
     public static int essentiaPortCapacity = 64;
 
-    @Config.Comment("Vis Input/Output Port Capacity per Aspect")
+    @Config.Comment("Vis Input/Output Port Capacity per Aspect (centi-vis)")
     @Config.DefaultInt(100)
     public static int visPortCapacity = 100;
 
