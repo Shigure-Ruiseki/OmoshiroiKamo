@@ -29,7 +29,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 /**
  * Machine Controller - the brain of a Modular Machinery structure.
  * This block is mapped to the 'Q' symbol in structure definitions.
- * TODO: Implement GUI for machine management and status display
  * TODO: Working particles and sound effects
  * TODO: Completion effects (particles, sounds)
  * TODO: Block state visual changes based on status

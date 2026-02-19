@@ -387,9 +387,6 @@ public class TEMachineController extends AbstractMBModifierTE
         return 0; // Energy is managed by ProcessAgent
     }
 
-    // ========== ModularUI GUI ==========
-    // TODO: GUI enhance
-
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
