@@ -8,13 +8,8 @@ import ruiseki.omoshiroikamo.core.common.block.BlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
- * Machine Casing - basic structural block for Modular Machinery.
- * Used as the main building block for machine structures.
- * TODO List:
- * - Implement BlockColor tinting for machine color customization
- * - Add variant types (reinforced, vented, circuitry, etc.)
- * - Add crafting recipe
- * - Consider adding TileEntity for dynamic color from controller
+ * TODO: Add variant types (reinforced, vented, circuitry, etc.)
+ * TODO: Add crafting recipe
  */
 public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
 

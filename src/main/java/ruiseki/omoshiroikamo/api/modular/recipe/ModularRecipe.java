@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 public class ModularRecipe implements Comparable<ModularRecipe> {
 
     private final String recipeGroup;
+    private final String name;
     private final int duration;
     private final int priority;
     private final List<IRecipeInput> inputs;
@@ -21,12 +22,17 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         this.recipeGroup = builder.recipeGroup;
         this.duration = builder.duration;
         this.priority = builder.priority;
+        this.name = builder.name;
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
     }
 
     public String getRecipeGroup() {
         return recipeGroup;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getDuration() {
@@ -103,6 +109,15 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         return processOutputs(outputPorts, true);
     }
 
+    public IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts) {
+        for (IRecipeOutput output : outputs) {
+            if (!output.checkCapacity(outputPorts)) {
+                return output.getPortType();
+            }
+        }
+        return null;
+    }
+
     private List<IModularPort> filterByType(List<IModularPort> ports, IPortType.Type type) {
         List<IModularPort> filtered = new ArrayList<>();
         for (IModularPort port : ports) {
@@ -143,7 +158,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         int total = 0;
         for (IRecipeInput input : inputs) {
             if (input instanceof ItemInput) {
-                total += ((ItemInput) input).getRequired().stackSize;
+                total += (int) ((ItemInput) input).getRequiredAmount();
             }
         }
         return total;
@@ -156,6 +171,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
     public static class Builder {
 
         private String recipeGroup;
+        private String name;
         private int duration = 100;
         private int priority = 0;
         private List<IRecipeInput> inputs = new ArrayList<>();
@@ -163,6 +179,11 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
         public Builder recipeGroup(String recipeGroup) {
             this.recipeGroup = recipeGroup;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
@@ -189,14 +210,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         public ModularRecipe build() {
             if (recipeGroup == null || recipeGroup.isEmpty()) {
                 throw new IllegalStateException("Recipe recipeGroup is required");
-            }
-            if (inputs.isEmpty()) {
-                // TODO: Nullable
-                throw new IllegalStateException("Recipe must have at least one input");
-            }
-            if (outputs.isEmpty()) {
-                // TODO: Nullable
-                throw new IllegalStateException("Recipe must have at least one output");
             }
             return new ModularRecipe(this);
         }

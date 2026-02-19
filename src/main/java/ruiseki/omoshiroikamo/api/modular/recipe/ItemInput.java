@@ -1,9 +1,8 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.JsonObject;
 
@@ -13,13 +12,23 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-public class ItemInput implements IRecipeInput {
+public class ItemInput extends AbstractRecipeInput {
 
+    private final String oreDict;
     private final ItemStack required;
 
     public ItemInput(ItemStack required) {
         this.required = required.copy();
+        this.oreDict = null;
     }
+
+    public ItemInput(String oreDict, int count) {
+        this.required = null;
+        this.oreDict = oreDict;
+        this.count = count;
+    }
+
+    private int count = 1;
 
     public ItemInput(Item item, int count) {
         this(new ItemStack(item, count));
@@ -30,7 +39,7 @@ public class ItemInput implements IRecipeInput {
     }
 
     public ItemStack getRequired() {
-        return required.copy();
+        return required != null ? required.copy() : null;
     }
 
     @Override
@@ -39,55 +48,74 @@ public class ItemInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-        int remaining = required.stackSize;
-
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.ITEM) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractItemIOPortTE)) {
-                throw new IllegalStateException(
-                    "ITEM INPUT port must be AbstractItemIOPortTE, got: " + port.getClass()
-                        .getName());
-            }
-            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
-
-            for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
-                ItemStack stack = itemPort.getStackInSlot(i);
-                if (stack != null && stacksMatch(stack, required)) {
-                    int consume = Math.min(stack.stackSize, remaining);
-                    if (!simulate) {
-                        stack.stackSize -= consume;
-                        if (stack.stackSize <= 0) {
-                            itemPort.setInventorySlotContents(i, null);
-                        }
-                    }
-                    remaining -= consume;
-                }
-            }
-        }
-
-        return remaining <= 0;
+    protected long getRequiredAmount() {
+        return required != null ? required.stackSize : count;
     }
 
-    private boolean stacksMatch(ItemStack a, ItemStack b) {
-        if (a == null || b == null) return false;
-        if (a.getItem() != b.getItem()) return false;
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractItemIOPortTE;
+    }
+
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
+        AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+        long consumed = 0;
+
+        for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
+            ItemStack stack = itemPort.getStackInSlot(i);
+            if (stack != null && stacksMatch(stack)) {
+                int consume = (int) Math.min(stack.stackSize, remaining);
+                if (!simulate) {
+                    stack.stackSize -= consume;
+                    if (stack.stackSize <= 0) {
+                        itemPort.setInventorySlotContents(i, null);
+                    }
+                }
+                remaining -= consume;
+                consumed += consume;
+            }
+        }
+        return consumed;
+    }
+
+    private boolean stacksMatch(ItemStack input) {
+        if (input == null) return false;
+
+        if (oreDict != null) {
+            int[] ids = OreDictionary.getOreIDs(input);
+            int targetId = OreDictionary.getOreID(oreDict);
+            for (int id : ids) {
+                if (id == targetId) return true;
+            }
+            return false;
+        }
+
+        if (required == null) return false;
+        if (required.getItem() != input.getItem()) return false;
         // 32767 is wildcard
-        if (b.getItemDamage() != 32767 && a.getItemDamage() != b.getItemDamage()) return false;
+        if (required.getItemDamage() != 32767 && required.getItemDamage() != input.getItemDamage()) return false;
         return true;
     }
 
     public static ItemInput fromJson(JsonObject json) {
-        ItemJson itemJson = new ItemJson();
         if (json.has("ore")) {
-            itemJson.ore = json.get("ore")
+            String ore = json.get("ore")
                 .getAsString();
-        } else if (json.has("item")) {
+            int amount = json.has("amount") ? json.get("amount")
+                .getAsInt() : 1;
+            return new ItemInput(ore, amount);
+        }
+
+        ItemJson itemJson = new ItemJson();
+        if (json.has("item")) {
             String itemId = json.get("item")
                 .getAsString();
             if (itemId.startsWith("ore:")) {
-                itemJson.ore = itemId.substring(4);
+                String ore = itemId.substring(4);
+                int amount = json.has("amount") ? json.get("amount")
+                    .getAsInt() : 1;
+                return new ItemInput(ore, amount);
             } else {
                 itemJson.name = itemId;
             }
@@ -103,7 +131,7 @@ public class ItemInput implements IRecipeInput {
 
         ItemStack stack = ItemJson.resolveItemStack(itemJson);
         if (stack == null) {
-            Logger.warn("Unknown item in recipe: {}", json);
+            // Don't warn here, let JSONLoader handle the null return
             return null;
         }
         return new ItemInput(stack);

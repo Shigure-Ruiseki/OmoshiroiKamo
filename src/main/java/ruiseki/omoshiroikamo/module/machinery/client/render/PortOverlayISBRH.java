@@ -11,6 +11,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
+import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -24,6 +26,7 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * ISBRH for rendering port overlays.
@@ -42,10 +45,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
         Tessellator tess = TessellatorManager.get();
-        IIcon baseIcon = AbstractPortBlock.baseIcon;
-        if (baseIcon == null) {
-            baseIcon = block.getIcon(0, metadata);
-        }
+        IIcon baseIcon = block.getIcon(0, metadata);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -64,19 +64,31 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
         tess.startDrawingQuads();
         tess.setColorOpaque_F(r, g, b);
-        tess.setNormal(0.0F, 1.0F, 0.0F);
-        RenderUtils.renderCube(tess, 0, 0, 0, 1, 1, 1, baseIcon);
+        RenderUtils.renderCubeRotatedTopBottom(tess, 0, 0, 0, 1, 1, 1, baseIcon);
         tess.draw();
 
         // Render Controller Overlay if applicable
-        if (block instanceof BlockMachineController controllerBlock) {
+        if (block instanceof BlockMachineController) {
+            BlockMachineController controllerBlock = (BlockMachineController) block;
             IIcon overlayIcon = controllerBlock.getOverlayIcon();
+
             if (overlayIcon != null) {
                 tess.startDrawingQuads();
-                tess.setColorOpaque_F(1.0f, 1.0f, 1.0f); // White (untinted)
-                tess.setNormal(0.0F, 1.0F, 0.0F);
-                // Render slightly larger to prevent z-fighting in inventory
-                RenderUtils.renderCube(tess, -0.001, -0.001, -0.001, 1.002, 1.002, 1.002, overlayIcon);
+                tess.setColorOpaque_F(0.75f, 0.75f, 0.75f); // Slightly dimmed from pure white
+
+                double eps = 0.001; // Slightly larger than base
+                tess.setNormal(1.0F, 0.0F, 0.0F);
+                RenderUtils.renderFaceCorrected(
+                    tess,
+                    ForgeDirection.EAST,
+                    0,
+                    0,
+                    0,
+                    overlayIcon,
+                    (float) eps,
+                    Rotation.NORMAL,
+                    Flip.NONE);
+
                 tess.draw();
             }
         }
@@ -107,39 +119,19 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         ISidedIO ioConfig = te instanceof ISidedIO ? (ISidedIO) te : null;
         ISidedTexture sidedTexture = te instanceof ISidedTexture ? (ISidedTexture) te : null;
 
-        // Prepare base icon - use port base for all faces
-        // (Disabled faces will simply not have an overlay rendered)
-        // IIcon portBaseIcon = AbstractPortBlock.baseIcon != null ?
-        // AbstractPortBlock.baseIcon : block.getIcon(0, 0);
-
-        // Render base block with proper AO and lighting using
-        // renderStandardBlockWithColorMultiplier
-        // This handles all lighting, AO, and face culling automatically
         renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
 
-        // CRITICAL: Enable renderAllFaces to prevent face culling issues
-        // Without this, faces may not render if block returns
-        // shouldSideBeRendered=false
         boolean prevRenderAllFaces = renderer.renderAllFaces;
         renderer.renderAllFaces = true;
-
-        // Render all faces with port base icon
-        // Uses block.getIcon(world, x,y,z, side) which handles casing switch
         renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
-
-        // Render Overlays (Manual with Offset) on top of base
         Tessellator t = Tessellator.instance;
         for (int i = 0; i < 6; i++) {
             ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
 
-            // Skip overlay for disabled faces
             if (ioConfig != null && ioConfig.getSideIO(dir) == EnumIO.NONE) {
                 continue;
             }
 
-            // Allow disabled overlay to render (let TE decide texture via ISidedTexture)
-
-            // Check neighbor opacity to prevent rendering internal overlays
             int ax = x + dir.offsetX;
             int ay = y + dir.offsetY;
             int az = z + dir.offsetZ;
@@ -155,27 +147,26 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                     int neighborBrightness = world.getLightBrightnessForSkyBlocks(ax, ay, az, 0);
                     t.setBrightness(neighborBrightness);
 
-                    // Set color to white (untinted) + Shade
-                    float shade;
-                    switch (dir) {
-                        case DOWN:
-                            shade = 0.5f;
-                            break;
-                        case UP:
-                            shade = 1.0f;
-                            break;
-                        case NORTH:
-                        case SOUTH:
-                            shade = 0.8f;
-                            break;
-                        default:
-                            shade = 0.6f;
-                            break;
-                    }
+                    // Vanilla-style face shading
+                    float shade = switch (dir) {
+                        case DOWN -> 0.5f;
+                        case UP -> 1.0f;
+                        case NORTH, SOUTH -> 0.8f;
+                        default -> 0.6f;
+                    };
                     t.setColorOpaque_F(shade, shade, shade);
                     t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
-                    renderFace(t, dir, x, y, z, overlayIcon, EPS);
+                    // Determine rotation and flip for overlay texture
+                    Rotation rotation = Rotation.NORMAL;
+                    Flip flip = Flip.NONE;
+                    if (te instanceof TEMachineController) {
+                        var extFacing = ((TEMachineController) te).getExtendedFacing();
+                        rotation = extFacing.getRotation();
+                        flip = extFacing.getFlip();
+                    }
+
+                    RenderUtils.renderFaceCorrected(t, dir, x, y, z, overlayIcon, EPS, rotation, flip);
                 }
             }
         }
@@ -184,64 +175,6 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         renderer.renderAllFaces = prevRenderAllFaces;
 
         return true;
-    }
-
-    /**
-     * Helper to render a single face with given icon and offset.
-     */
-    private void renderFace(Tessellator t, ForgeDirection dir, double x, double y, double z, IIcon icon, float offset) {
-        float minU = icon.getMinU();
-        float maxU = icon.getMaxU();
-        float minV = icon.getMinV();
-        float maxV = icon.getMaxV();
-
-        // Apply offset based on direction to expand/contract the face
-        // Use offset for overlay render (EPS)
-        double eps = offset;
-
-        // Set normal to ensure correct lighting calculation
-        t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
-
-        switch (dir) {
-            case DOWN:
-                t.addVertexWithUV(x, y - eps, z, minU, minV);
-                t.addVertexWithUV(x + 1, y - eps, z, maxU, minV);
-                t.addVertexWithUV(x + 1, y - eps, z + 1, maxU, maxV);
-                t.addVertexWithUV(x, y - eps, z + 1, minU, maxV);
-                break;
-            case UP:
-                t.addVertexWithUV(x, y + 1 + eps, z + 1, minU, maxV);
-                t.addVertexWithUV(x + 1, y + 1 + eps, z + 1, maxU, maxV);
-                t.addVertexWithUV(x + 1, y + 1 + eps, z, maxU, minV);
-                t.addVertexWithUV(x, y + 1 + eps, z, minU, minV);
-                break;
-            case NORTH:
-                t.addVertexWithUV(x + 1, y, z - eps, maxU, maxV);
-                t.addVertexWithUV(x, y, z - eps, minU, maxV);
-                t.addVertexWithUV(x, y + 1, z - eps, minU, minV);
-                t.addVertexWithUV(x + 1, y + 1, z - eps, maxU, minV);
-                break;
-            case SOUTH:
-                t.addVertexWithUV(x, y, z + 1 + eps, minU, maxV);
-                t.addVertexWithUV(x + 1, y, z + 1 + eps, maxU, maxV);
-                t.addVertexWithUV(x + 1, y + 1, z + 1 + eps, maxU, minV);
-                t.addVertexWithUV(x, y + 1, z + 1 + eps, minU, minV);
-                break;
-            case WEST:
-                t.addVertexWithUV(x - eps, y, z, minU, maxV);
-                t.addVertexWithUV(x - eps, y, z + 1, maxU, maxV);
-                t.addVertexWithUV(x - eps, y + 1, z + 1, maxU, minV);
-                t.addVertexWithUV(x - eps, y + 1, z, minU, minV);
-                break;
-            case EAST:
-                t.addVertexWithUV(x + 1 + eps, y, z + 1, maxU, maxV);
-                t.addVertexWithUV(x + 1 + eps, y, z, minU, maxV);
-                t.addVertexWithUV(x + 1 + eps, y + 1, z, minU, minV);
-                t.addVertexWithUV(x + 1 + eps, y + 1, z + 1, maxU, minV);
-                break;
-            default:
-                break;
-        }
     }
 
     @Override

@@ -1,43 +1,59 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
+import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredBlock;
+import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTieredBlock<T>
     implements IModularBlock, IModularBlockTint {
-    // TODO: Accept front I/O by default
-    // TODO: Change (configurable) capacity of ports
-    // TODO: Change (configurable) transfer rate of ports
 
-    /** Render ID for ISBRH, set during client init */
+    // Render ID for ISBRH, set during client init
     public static int portRendererId = -1;
 
     public static IIcon baseIcon;
     public static IIcon casingIcon;
 
+    protected final int tierCount;
+
     @SafeVarargs
     protected AbstractPortBlock(String name, Class<? extends TileEntity>... teClasses) {
         super(name, teClasses);
+        this.tierCount = teClasses.length;
         this.useNeighborBrightness = true;
     }
 
@@ -118,13 +134,88 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
         registerPortOverlays(reg);
     }
 
-    public abstract void registerPortOverlays(IIconRegister reg);
+    public void registerPortOverlays(IIconRegister reg) {
+        String prefix = getOverlayPrefix();
+        for (int i = 0; i < tierCount; i++) {
+            int tier = i + 1;
+            IconRegistry.addIcon(
+                prefix + tier,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + tier));
+        }
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+    }
+
+    public abstract String getOverlayPrefix();
 
     protected abstract Class<? extends AbstractPortItemBlock> getItemBlockClass();
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        ForgeDirection facing = ForgeDirection.NORTH;
+
+        if (Math.abs(player.rotationPitch) > 50) {
+            facing = player.rotationPitch > 0 ? ForgeDirection.UP : ForgeDirection.DOWN;
+        } else {
+            int rotation = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+            switch (rotation) {
+                case 0 -> facing = ForgeDirection.SOUTH;
+                case 1 -> facing = ForgeDirection.WEST;
+                case 2 -> facing = ForgeDirection.NORTH;
+                case 3 -> facing = ForgeDirection.EAST;
+            }
+        }
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof IModularPort) {
+            EnumIO ioLimit = EnumIO.NONE;
+            // Determine limit based on type
+
+            if (te instanceof AbstractFluidPortTE portTE) ioLimit = portTE.getIOLimit();
+            else if (te instanceof AbstractEnergyIOPortTE portTE) ioLimit = portTE.getIOLimit();
+            else if (te instanceof AbstractItemIOPortTE portTE) ioLimit = portTE.getIOLimit();
+            else if (te instanceof AbstractGasPortTE portTE) ioLimit = portTE.getIOLimit();
+
+            if (ioLimit != EnumIO.NONE) {
+                IModularPort port = (IModularPort) te;
+                // Reset all to NONE first
+                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                    port.setSideIO(dir, EnumIO.NONE);
+                }
+                // Set facing side
+                port.setSideIO(facing.getOpposite(), ioLimit);
+            }
+        }
+    }
 
     @Override
     protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
+
+    @Override
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        for (int i = 0; i < tierCount; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
+    }
+
+    @Override
+    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        TileEntity te = accessor.getTileEntity();
+        if (te instanceof ISidedIO io) {
+            Vec3 hit = WailaUtils.getLocalHit(accessor);
+            if (hit == null) return;
+            ForgeDirection side = ItemWrench
+                .getClickedSide(accessor.getSide(), (float) hit.xCoord, (float) hit.yCoord, (float) hit.zCoord);
+            tooltip.add(WailaUtils.getSideIOTooltip(io, side));
+        }
+    }
+
+    public void addTooltip(List<String> list, int tier) {
+        addCapacityTooltip(list, tier);
+        addTransferTooltip(list, tier);
+    }
+
+    protected void addCapacityTooltip(List<String> list, int tier) {}
+
+    protected void addTransferTooltip(List<String> list, int tier) {}
 }

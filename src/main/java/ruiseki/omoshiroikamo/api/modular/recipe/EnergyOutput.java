@@ -6,19 +6,19 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
-public class ManaOutput extends AbstractRecipeOutput {
+public class EnergyOutput extends AbstractRecipeOutput {
 
     private final int amount;
     private final boolean perTick;
 
-    public ManaOutput(int amount, boolean perTick) {
+    public EnergyOutput(int amount, boolean perTick) {
         this.amount = amount;
         this.perTick = perTick;
     }
 
-    public ManaOutput(int amount) {
+    public EnergyOutput(int amount) {
         this(amount, true);
     }
 
@@ -32,7 +32,7 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     public IPortType.Type getPortType() {
-        return IPortType.Type.MANA;
+        return IPortType.Type.ENERGY;
     }
 
     @Override
@@ -43,27 +43,22 @@ public class ManaOutput extends AbstractRecipeOutput {
             if (!process(ports, true)) return false;
         }
 
-        int remaining = amount;
+        long remaining = amount;
 
         for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.MANA) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) {
-                throw new IllegalStateException(
-                    "MANA OUTPUT port must be AbstractManaPortTE, got: " + port.getClass()
-                        .getName());
-            }
+            // Check compatibility
+            if (port.getPortType() != IPortType.Type.ENERGY) continue;
+            // Allow OUTPUT and BOTH
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-            int space = manaPort.getAvailableSpaceForMana();
+            if (!(port instanceof AbstractEnergyIOPortTE)) continue;
 
-            if (space > 0) {
-                int toAdd = Math.min(remaining, space);
-                if (!simulate) {
-                    manaPort.recieveMana(toAdd);
-                }
-                remaining -= toAdd;
-            }
+            AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
+
+            int accepted = energyPort.internalReceiveEnergy((int) remaining, simulate);
+            remaining -= accepted;
+
             if (remaining <= 0) break;
         }
 
@@ -72,14 +67,13 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.MANA && port instanceof AbstractManaPortTE;
+        return port instanceof AbstractEnergyIOPortTE;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-        // Total capacity = current mana + available space
-        return (long) manaPort.getCurrentMana() + manaPort.getAvailableSpaceForMana();
+        AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
+        return energyPort.getMaxEnergyStored() - energyPort.getEnergyStored();
     }
 
     @Override
@@ -87,8 +81,8 @@ public class ManaOutput extends AbstractRecipeOutput {
         return amount;
     }
 
-    public static ManaOutput fromJson(JsonObject json) {
-        int amount = json.get("mana")
+    public static EnergyOutput fromJson(JsonObject json) {
+        int amount = json.get("energy")
             .getAsInt();
         boolean perTick = true;
         if (json.has("perTick")) {
@@ -98,6 +92,6 @@ public class ManaOutput extends AbstractRecipeOutput {
             perTick = json.get("pertick")
                 .getAsBoolean();
         }
-        return new ManaOutput(amount, perTick);
+        return new EnergyOutput(amount, perTick);
     }
 }

@@ -1,6 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.item;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -23,6 +28,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -33,8 +39,6 @@ import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidg
  * Holds slots for inputting items into machine processing.
  * Extends AbstractStorageTE to leverage existing inventory management system.
  * TODO: Add auto-sort
- * TODO: Support shift-click
- * TODO: Fix item count sync? issue
  * TODO: enable both IO from NONE side to export catalyst items like GTNH
  */
 public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements IModularPort, IGuiHolder<PosGuiData> {
@@ -42,11 +46,13 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
 
+    // Temporary buffer for items to drop when inventory shrinks on config change
+    private final List<ItemStack> pendingDrops = new ArrayList<>();
+
     public AbstractItemIOPortTE(int numInputs, int numOutput) {
         super(new SlotDefinition().setItemSlots(numInputs, numOutput));
-        for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
-        }
+        Arrays.fill(sides, EnumIO.NONE);
+        // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
     @Override
@@ -55,6 +61,8 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public IPortType.Type getPortType() {
@@ -71,6 +79,9 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 
@@ -83,8 +94,35 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
+        // ItemStackHandlerBase resizes to NBT size on load.
+        int configSlots = slotDefinition.getItemSlots();
+        int currentSlots = inv.getSlots();
+
+        if (currentSlots != configSlots) {
+            // If shrinking, buffer items from removed slots
+            if (currentSlots > configSlots) {
+                for (int i = configSlots; i < currentSlots; i++) {
+                    ItemStack stack = inv.getStackInSlot(i);
+                    if (stack != null && stack.stackSize > 0) {
+                        pendingDrops.add(stack);
+                    }
+                }
+            }
+            inv.resize(configSlots);
+        }
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public void doUpdate() {
+        super.doUpdate();
+        if (!worldObj.isRemote && !pendingDrops.isEmpty()) {
+            for (ItemStack stack : pendingDrops) {
+                ItemStackHandlerBase.dropStack(worldObj, xCoord, yCoord, zCoord, stack);
+            }
+            pendingDrops.clear();
         }
     }
 

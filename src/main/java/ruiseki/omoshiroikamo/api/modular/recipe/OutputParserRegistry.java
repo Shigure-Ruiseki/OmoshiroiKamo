@@ -17,6 +17,7 @@ public class OutputParserRegistry {
         register("gas", GasOutput::fromJson);
         register("essentia", EssentiaOutput::fromJson);
         register("vis", VisOutput::fromJson);
+        register("energy", EnergyOutput::fromJson);
     }
 
     /**

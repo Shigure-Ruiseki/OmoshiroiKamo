@@ -64,12 +64,13 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     public AbstractEnergyIOPortTE(int energyCapacity, int energyMaxReceive) {
         super(energyCapacity, energyMaxReceive);
-        for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
-        }
+        Arrays.fill(sides, EnumIO.NONE);
+        // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
     public abstract int getTier();
+
+    public abstract EnumIO getIOLimit();
 
     @Override
     public IPortType.Type getPortType() {
@@ -101,8 +102,29 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
         return extracted;
     }
 
+    /**
+     * Internal method to receive energy for machine processing.
+     */
+    public int internalReceiveEnergy(int amount, boolean simulate) {
+        int capacity = energyStorage.getMaxEnergyStored();
+        int stored = energyStorage.getEnergyStored();
+        int receivable = Math.min(amount, capacity - stored);
+
+        if (receivable <= 0) {
+            return 0;
+        }
+
+        if (!simulate) {
+            energyStorage.modifyEnergyStored(receivable);
+        }
+        return receivable;
+    }
+
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 

@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.item.input;
 
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+
 public class TEItemInputPortT1 extends TEItemInputPort {
 
     public TEItemInputPortT1() {
-        super(1);
+        super(MachineryConfig.getItemPortSlots(1));
     }
 
     @Override

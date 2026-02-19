@@ -40,6 +40,11 @@ public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME>
     }
 
     @Override
+    public String getOverlayPrefix() {
+        return "overlay_itemoutput_me";
+    }
+
+    @Override
     public void registerPortOverlays(IIconRegister reg) {
         IconRegistry.addIcon(
             "overlay_itemoutput_me",

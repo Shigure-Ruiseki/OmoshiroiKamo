@@ -3,15 +3,12 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPort;
 
@@ -37,22 +34,13 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
     }
 
     @Override
-    public void registerPortOverlays(IIconRegister reg) {
-        IconRegistry.addIcon(
-            "overlay_essentiainput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_essentiainput_1"));
-        IconRegistry
-            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+    public String getOverlayPrefix() {
+        return "overlay_essentiainput_";
     }
 
     @Override
     protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockEssentiaInputPort.class;
-    }
-
-    @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, 0));
     }
 
     @Override
@@ -65,6 +53,14 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
         return Direction.INPUT;
     }
 
+    @Override
+    protected void addCapacityTooltip(List<String> list, int tier) {
+        list.add(
+            LibMisc.LANG.localize(
+                "tooltip.machinery.capacity",
+                String.format("%,d", MachineryConfig.essentiaPortCapacity) + " Essentia / type"));
+    }
+
     public static class ItemBlockEssentiaInputPort extends AbstractPortItemBlock {
 
         public ItemBlockEssentiaInputPort(Block block) {
@@ -72,14 +68,8 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
         }
 
         @Override
-        public String getUnlocalizedName(ItemStack stack) {
-            int tier = stack.getItemDamage() + 1;
-            return super.getUnlocalizedName() + ".tier_" + tier;
-        }
-
-        @Override
-        public IIcon getOverlayIcon(int tier) {
-            return IconRegistry.getIcon("overlay_essentiainput_" + tier);
+        public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
+            super.addInformation(stack, player, list, flag);
         }
     }
 }

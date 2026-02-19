@@ -25,6 +25,8 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.omoshiroikamo.api.block.CraftingState;
+import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
@@ -42,16 +44,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 /**
- * Machine Controller TileEntity - manages a Modular Machinery multiblock.
- * Extends AbstractMBModifierTE to leverage existing structure validation and
- * crafting logic.
  * Corresponds to the 'Q' symbol in structure definitions.
- * Blueprint slot provides GUI-based structure selection.
  * The controller reads the structure name from the inserted blueprint
  * and validates the surrounding blocks against that structure definition.
- * TODO: Do not consume blueprint when auto-construct
- * TODO: Prevent NBT pickup on controller middle-click
- * TODO: Support shift-click
+ * TODO: Improve holo indicator
  */
 public class TEMachineController extends AbstractMBModifierTE
     implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {
@@ -98,9 +94,9 @@ public class TEMachineController extends AbstractMBModifierTE
     // GUI management
     private final GuiManager guiManager = new GuiManager(this);
 
-    // Controller facing (rotation state) - used by IAlignment
-    // Controller facing (rotation state) - used by IAlignment
     private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
+
+    // Redstone Control - Inherited from AbstractTE
 
     // Transient flag to trigger tint packet resend on load
     private boolean needsTintResend = false;
@@ -128,6 +124,7 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public int getTier() {
+        // TODO: recognize tier by block type, structure change, or controller
         return 1;
     }
 
@@ -153,7 +150,8 @@ public class TEMachineController extends AbstractMBModifierTE
     public void addPortFromStructure(IModularPort port, boolean isInput) {
         portManager.addPort(port, isInput);
         // Also add the port's position to structure block positions
-        if (port instanceof TileEntity te) {
+        if (port instanceof TileEntity) {
+            TileEntity te = (TileEntity) port;
             structureAgent.addStructurePosition(te.xCoord, te.yCoord, te.zCoord);
         }
     }
@@ -167,11 +165,31 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     // ========== Crafting Configuration ==========
-    // TODO: These methods are inherited from AbstractMBModifierTE but unused
-    // Consider removing or refactoring the parent class.
+    // We disable AbstractMachineTE's built-in crafting logic to rely solely on
+    // ProcessAgent.
+
+    @Override
+    public boolean canStartCrafting() {
+        return false;
+    }
+
+    @Override
+    protected boolean canContinueCrafting() {
+        return false;
+    }
+
+    @Override
+    protected CraftingState updateCraftingState() {
+        return CraftingState.IDLE;
+    }
 
     // Last process error reason for GUI display
     private ErrorReason lastProcessErrorReason = ErrorReason.NONE;
+    private String lastProcessErrorDetail = null;
+
+    public String getLastProcessErrorDetail() {
+        return lastProcessErrorDetail;
+    }
 
     @Override
     protected boolean structureCheck(String piece, int ox, int oy, int oz) {
@@ -217,27 +235,41 @@ public class TEMachineController extends AbstractMBModifierTE
         }
 
         // Sync customStructureName from blueprint if blueprint is present in GUI
-        // Only update if blueprint has a structure name
         String blueprintName = getStructureNameFromBlueprint();
-        if (blueprintName != null && !blueprintName.isEmpty()
-            && !Objects.equals(blueprintName, structureAgent.getCustomStructureName())) {
+        String currentName = structureAgent.getCustomStructureName();
+
+        // Update if blueprint changed (including removal)
+        if (!Objects.equals(blueprintName, currentName)) {
             structureAgent.setCustomStructureName(blueprintName);
-            updateRecipeGroupFromStructure();
             setFormed(false);
             clearStructureParts();
             processAgent.abort();
             markDirty();
+
+            if (blueprintName != null && !blueprintName.isEmpty()) {
+                updateRecipeGroupFromStructure();
+            }
         }
 
         // Blueprint required - no operation without it
         if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
             .isEmpty()) {
+            lastProcessErrorReason = ErrorReason.MISSING_BLUEPRINT;
             return;
         }
 
         // Use StructureLib-based structure checking (calls super.doUpdate())
         // Super handles IC2 registration, energy sync, and structure validation
         super.doUpdate();
+
+        if (worldObj.isRemote) {
+            return;
+        }
+        // Check Redstone signal for suspension
+        if (!isRedstoneActive()) {
+            lastProcessErrorReason = ErrorReason.PAUSED;
+            return;
+        }
 
         // Process recipes when formed
         if (isFormed) {
@@ -264,11 +296,18 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // If running, tick and look-ahead search for next recipe
         if (processAgent.isRunning()) {
-            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            ProcessAgent.TickResult result = processAgent.tick(energyPorts);
+            ProcessAgent.TickResult result = processAgent.tick(getInputPorts(), getOutputPorts());
 
             if (result == ProcessAgent.TickResult.NO_ENERGY) {
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
+            } else if (result == ProcessAgent.TickResult.NO_MANA) {
+                lastProcessErrorReason = ErrorReason.NO_MANA;
+            } else if (result == ProcessAgent.TickResult.NO_INPUT) {
+                lastProcessErrorReason = ErrorReason.INPUT_MISSING;
+            } else if (result == ProcessAgent.TickResult.PAUSED) {
+                lastProcessErrorReason = ErrorReason.PAUSED;
+            } else if (result == ProcessAgent.TickResult.OUTPUT_FULL) {
+                lastProcessErrorReason = ErrorReason.OUTPUT_FULL;
             } else {
                 lastProcessErrorReason = ErrorReason.NONE;
             }
@@ -311,11 +350,30 @@ public class TEMachineController extends AbstractMBModifierTE
         nextRecipe = null; // Clear cache
 
         if (recipe != null) {
+            // Check if output fits before starting
+            IPortType.Type insufficientType = recipe.checkOutputCapacity(getOutputPorts());
+            if (insufficientType != null) {
+                setProcessError(
+                    ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT,
+                    LibMisc.LANG.localize("gui.port_type." + insufficientType.name()));
+                return;
+            }
+
+            if (!recipe.canOutput(getOutputPorts())) {
+                setProcessError(ErrorReason.OUTPUT_FULL);
+                return;
+            }
+
             List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
             processAgent.start(recipe, getInputPorts(), energyPorts);
             lastProcessErrorReason = ErrorReason.NONE;
         } else {
             lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
+
+            // Check if it's actually NO_INPUT
+            if (processAgent.diagnoseIdle(getInputPorts()) == ProcessAgent.TickResult.NO_INPUT) {
+                lastProcessErrorReason = ErrorReason.INPUT_MISSING;
+            }
         }
     }
 
@@ -328,9 +386,6 @@ public class TEMachineController extends AbstractMBModifierTE
     public int getCraftingEnergyCost() {
         return 0; // Energy is managed by ProcessAgent
     }
-
-    // ========== ModularUI GUI ==========
-    // TODO: GUI enhance
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
@@ -475,12 +530,32 @@ public class TEMachineController extends AbstractMBModifierTE
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
         }
         // Load ExtendedFacing
+        ExtendedFacing previousFacing = this.extendedFacing;
         if (nbt.hasKey("extendedFacing")) {
             int ordinal = nbt.getByte("extendedFacing") & 0xFF;
             if (ordinal < ExtendedFacing.VALUES.length) {
                 extendedFacing = ExtendedFacing.VALUES[ordinal];
             }
         }
+
+        if (worldObj != null && worldObj.isRemote && !Objects.equals(previousFacing, extendedFacing)) {
+            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+        }
+    }
+
+    // ========== Redstone Control ==========
+
+    public boolean isRedstonePowered() {
+        return this.redstonePowered;
+    }
+
+    public void setRedstonePowered(boolean powered) {
+        this.redstonePowered = powered;
+    }
+
+    @Override
+    public boolean isRedstoneActive() {
+        return RedstoneMode.isActive(redstoneMode, redstonePowered);
     }
 
     // ========== CustomStructure ==========
@@ -507,6 +582,21 @@ public class TEMachineController extends AbstractMBModifierTE
      */
     public String getCustomStructureName() {
         return structureAgent.getCustomStructureName();
+    }
+
+    /**
+     * Get the custom structure display name.
+     */
+    public String getCustomStructureDisplayName() {
+        String name = getCustomStructureName();
+        if (name != null && !name.isEmpty()) {
+            StructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(name);
+            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
+                return entry.displayName;
+            }
+        }
+        return name;
     }
 
     /**
@@ -567,17 +657,8 @@ public class TEMachineController extends AbstractMBModifierTE
         return structureAgent.getStructureTintColor();
     }
 
-    /**
-     * Update rendering for all blocks in the structure.
-     * Called when structure is formed or unformed to apply/remove tint.
-     */
-    private void updateStructureBlocksRendering() {
-        structureAgent.updateStructureBlocksRendering();
-    }
-
     // ========== IAlignment Implementation ==========
-    // TODO: In the future, load alignment limits from structure JSON config
-    // to allow per-structure rotation restrictions.
+    // TODO: load rotation limits from config.
 
     @Override
     public ExtendedFacing getExtendedFacing() {
@@ -602,7 +683,6 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public IAlignmentLimits getAlignmentLimits() {
         // Allow all directions
-        // TODO: Load from structure JSON config in the future
         return IAlignmentLimits.UNLIMITED;
     }
 
@@ -622,6 +702,20 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public void setLastProcessErrorReason(ErrorReason reason) {
         this.lastProcessErrorReason = reason;
+        this.lastProcessErrorDetail = null; // Reset detail when setting reason directly
+    }
+
+    public void setLastProcessErrorDetail(String detail) {
+        this.lastProcessErrorDetail = detail;
+    }
+
+    public void setProcessError(ErrorReason reason) {
+        setProcessError(reason, null);
+    }
+
+    public void setProcessError(ErrorReason reason, String detail) {
+        this.lastProcessErrorReason = reason;
+        this.lastProcessErrorDetail = detail;
     }
 
     public boolean isFormed() {
@@ -641,11 +735,41 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public IIcon getTexture(ForgeDirection side, int pass) {
         if (pass == 1) { // Overlay pass
+            if (side != extendedFacing.getDirection()) {
+                return null;
+            }
             Block block = getBlockType();
-            if (block instanceof BlockMachineController controllerBlock) {
+            if (block instanceof BlockMachineController) {
+                BlockMachineController controllerBlock = (BlockMachineController) block;
                 return controllerBlock.getOverlayIcon();
             }
         }
         return null; // Base pass handled by ISBRH using standard block render
     }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        structureAgent.resetStructure();
+    }
+
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+        structureAgent.resetStructure();
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        super.onNeighborBlockChange(world, x, y, z, block);
+        if (!world.isRemote) {
+            boolean powered = world.isBlockIndirectlyGettingPowered(x, y, z);
+            if (this.redstonePowered != powered) {
+                this.redstonePowered = powered;
+                this.redstoneStateDirty = true;
+                this.forceClientUpdate = true;
+            }
+        }
+    }
+
 }

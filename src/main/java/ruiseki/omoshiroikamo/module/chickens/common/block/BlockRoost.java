@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 
 public class BlockRoost extends AbstractBlock<TERoost> {
+    // TODO: Add specific or tiered food for chicken
 
     protected BlockRoost() {
         super(ModObject.blockRoost.unlocalisedName, TERoost.class, Material.wood);

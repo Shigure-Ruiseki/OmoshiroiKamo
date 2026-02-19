@@ -5,6 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
@@ -16,10 +17,8 @@ import thaumcraft.api.visnet.VisNetHandler;
  */
 public class TEVisInputPort extends AbstractVisPortTE {
 
-    private static final int DEFAULT_VIS_CAPACITY = 100;
-
     public TEVisInputPort() {
-        super(DEFAULT_VIS_CAPACITY);
+        super(MachineryConfig.visPortCapacity);
     }
 
     @Override

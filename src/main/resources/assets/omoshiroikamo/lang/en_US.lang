@@ -1,5 +1,13 @@
-#Creative Tabs
+# General
 
+
+# Common
+power.rf=RF
+fluid.millibucket=mB
+tooltip.holdshift=§7- hold §r§oSHIFT§r§7 for more info§r
+
+
+# Creative Tabs
 creativetab.okBackpack=OK Backpack
 creativetab.okMultiblock=OK Multiblock
 creativetab.okChicken=OK Chicken
@@ -7,81 +15,26 @@ creativetab.okCow=OK Cow
 creativetab.okDML=OK Deep Mob Learning
 creativetab.okIDs=OK Integrated Dynamics
 
-#Config
 
+# Config
 config.generalConfig=General Settings
-
 config.itemConfig=Item Settings
-
 config.blockConfig=Block Settings
-
 config.backportConfig=Backport Settings
-
-config.multiblockConfig=MultiBlock Settings
-config.quantumExtractorConfig=Quantum Extractor Settings
-config.oreMinerConfig=Ore Miner
-config.resMinerConfig=Resource Miner
-config.extractorModifiers=Modifiers
-config.quantumBeaconConfig=Quantum Beacon Settings
-config.beaconGeneral=General
-config.beaconEffectLevels=Effect Levels
-config.beaconRange=Range Settings
-config.solarArrayConfig=Solar Array Settings
-config.solarTierEnergy=Peak Energy per Tier
-config.solarCellSettings=Cell Settings
-config.eTWorldGenConfig=World Generation Settings
-config.hardenedStoneGen=Hardened Stone
-config.alabasterGen=Alabaster
-config.basaltGen=Basalt
-
-config.chickenConfig=Chicken Settings
-
-config.cowConfig=Cow Settings
-
-config.backpackConfig=Backpack Settings
-config.feedingConfig=Feeding Settings
-config.magnetConfig=Magnet Settings
-
-config.deepMobLearningConfig=Deep Mob Learning Settings
-
 config.energyConfig=Energy Settings
 
-# Waila
 
-option.omoshiroikamo.breedingTime=Breeding Time
-option.omoshiroikamo.grownTime=Grown Time
+# Key binding
+category.omoshiroikamo=Omoshiroi Kamo
+keybind.backpackOpenToggle=Open Backpack
 
-# NEI
-nei.dml.simulation_chamber=Simulation Chamber
-nei.dml.loot_fabricator=Loot Fabricator
-nei.multiblock.lens_bonus=%s Bonus
 
-#Gui
-
+# Gui
 gui.powerMonitor.of=of
 gui.progress=Progress: %.1f%%
 gui.efficiency=Efficiency: %.1f%%
 gui.sunlightBlocked=Sky Blocked!
-
 gui.empty=Empty
-
-gui.craftingState.idle=Idle
-gui.craftingState.running=Processing
-gui.craftingState.error=Error
-
-gui.redstone_mode.always_on=Always on
-gui.redstone_mode.high_on=On with redstone signal
-gui.redstone_mode.high_off=Off with redstone signal
-gui.redstone_mode.always_off=Always off
-
-gui.sort_type.by_mod_id=Mod ID
-gui.sort_type.by_name=Name
-gui.sort_type.by_count=Count
-gui.sort_type.by_ore_dict=OreDict
-
-gui.sort_order.asc=Ascending
-gui.sort_order.desc=Descending
-
 gui.energy_mode.rf=RF
 gui.energy_mode.eu=EU
 gui.energy_transfer=Transfer: %s RF/t
@@ -93,160 +46,155 @@ gui.io.none=None
 gui.io.isActivated=Active
 gui.io.enabled=Enabled
 gui.io.disabled=Disabled
-
 gui.search_bar.tool_tip=Right click to clear the search bar
-
 gui.syncNEI=Sync NEI
 
-gui.crafting_filter.storage=Storage
-gui.crafting_filter.craftable=Craftable
-gui.crafting_filter.both=Both
 
-#Cable
+# Redstone mode
+gui.redstone_mode.always_on=Always on
+gui.redstone_mode.high_on=On with redstone signal
+gui.redstone_mode.high_off=Off with redstone signal
+gui.redstone_mode.always_off=Always off
 
-gui.ids.part_settings=Part Settings
 
-gui.ids.index_channel=Chan: 
-gui.ids.id=ID
-gui.ids.length=Length
-gui.ids.transferLimit=Transfer Limit
-gui.ids.roundRobin=Round Robin
-gui.ids.nbt=NBT
-gui.ids.stackSize=Stack Size
-gui.ids.allowInsertions=Allow Insert
-gui.ids.allowExtractions=Allow Extract
-gui.ids.blackList=Black List
+# Sort
+gui.sort_type.by_mod_id=Mod ID
+gui.sort_type.by_name=Name
+gui.sort_type.by_count=Count
+gui.sort_type.by_ore_dict=OreDict
+gui.sort_order.asc=Ascending
+gui.sort_order.desc=Descending
 
-gui.ids.redstoneReader.lowRedstone=Redstone Low | Boolean
-gui.ids.redstoneReader.hasRedstone=Redstone | Boolean
-gui.ids.redstoneReader.highRedstone=Redstone High | Boolean
-gui.ids.redstoneReader.redstoneValue=Redstone | Int
 
-gui.ids.blockReader.hasBlock=Has Block | Boolean
-gui.ids.blockReader.dimension=Dimension
-gui.ids.blockReader.coord.x=X | Int
-gui.ids.blockReader.coord.y=Y | Int
-gui.ids.blockReader.coord.z=Z | Int
-gui.ids.blockReader.block=Block | String
-gui.ids.blockReader.biome=Biome | String
-gui.ids.blockReader.light=Light Level | Int
+# Items
+item.wrench.name=Wrench
+item.structureWand.name=Structure Wand
 
-gui.ids.inventoryReader.isInventory=Is Inventory | Boolean
-gui.ids.inventoryReader.inventoryFull=Inventory Full | Boolean
-gui.ids.inventoryReader.inventoryEmpty=Inventory Empty | Boolean
-gui.ids.inventoryReader.inventoryNotEmpty=Inventory Not Empty | Boolean
-gui.ids.inventoryReader.inventoryCount=Inventory Count | Int
-gui.ids.inventoryReader.inventorySlots=Inventory Slots | Int
-gui.ids.inventoryReader.slotsFilled=Slots Filled | Int
-gui.ids.inventoryReader.fillRatio=Fill Ratio | Double
-gui.ids.inventoryReader.itemsList=Items | List
-gui.ids.inventoryReader.slotItem=Slot Item | ItemStack
 
-gui.ids.fluidReader.isTank=Is Tank | Boolean
-gui.ids.fluidReader.tankEmpty=Tank Empty | Boolean
-gui.ids.fluidReader.tankNotEmpty=Tank Not Empty | Boolean
-gui.ids.fluidReader.tankFull=Tank Full | Boolean
-gui.ids.fluidReader.tankCount=Tank Count | Int
-gui.ids.fluidReader.fluidAmount=Fluid Amount | Int
-gui.ids.fluidReader.totalAmount=Total Fluid Amount | Int
-gui.ids.fluidReader.fluidCapacity=Fluid Capacity | Int
-gui.ids.fluidReader.totalCapacity=Total Fluid Capacity | Int
-gui.ids.fluidReader.fillRatio=Fluid Fill Ratio | Double
-gui.ids.fluidReader.tankFluids=Tank Fluids | List
-gui.ids.fluidReader.tankCapacities=Tank Capacities | List
-gui.ids.fluidReader.tankFluid=Tank Fluid | FluidStack
+# Tooltips
+tooltip.spawn_egg.tier=Tier: %1$s
+tooltip.spawn_egg.notbreedable=Can't be bred
+tooltip.spawn_egg.breedable=Breed
+tooltip.spawn_egg.spawnType=SpawnType
+tooltip.spawn_egg.layitem=Lay Item: %1$s
+tooltip.spawn_egg.nolayitem=Lay Item: Null
+tooltip.spawn_egg.milkfluid=Milk Fluid: %1$s
+tooltip.spawn_egg.nomilkfluid=Milk Fluid: Null
 
-gui.ids.redstoneWriter.redstoneBoolean=Redstone | Boolean
-gui.ids.redstoneWriter.redstoneInt=Redstone | Int
-gui.ids.redstoneWriter.pulseBoolean=Pulse | Boolean
-gui.ids.redstoneWriter.pulseInt=Pulse | Int
+tooltip.mob.tier=Tier: %1$s
+tooltip.mob.strength=Strength: %s
+tooltip.mob.gain=Gain: %s
+tooltip.mob.growth=Growth: %s
+tooltip.mob.parent1=Bred from %s
+tooltip.mob.parent2=and %s
+tooltip.mob.spawnType=SpawnType
+tooltip.mob.fluid=Fluid
+tooltip.mob.layProgress=Next egg in %1$s
+tooltip.mob.milkProgress=Next milk in %1$s
+tooltip.mob.breedCountdown=Next breeding in %1$s
+tooltip.mob.childGrowUp=Grows up in %1$s
 
-gui.ids.itemImporter.allItem=Import All Item | Boolean
-gui.ids.itemImporter.itemAmount=Import Item Amount | Int
-gui.ids.itemImporter.itemSlot=Import Item Slot | Int
-gui.ids.itemImporter.item=Import Item | ItemStack
-gui.ids.itemImporter.items=Import Items | List
 
-gui.ids.itemExporter.allItem=Export All Item | Boolean
-gui.ids.itemExporter.itemAmount=Export Item Amount | Int
-gui.ids.itemExporter.itemSlot=Export Item Slot | Int
-gui.ids.itemExporter.item=Export Item | ItemStack
-gui.ids.itemExporter.items=Export Items | List
+# NEI
+neiintegration.chance=Chance: %s
+neiintegration.chance.never=Never
+neiintegration.chance.lessThan1=<1%
 
-gui.ids.itemFilterInterface.all=Filter All | Boolean
-gui.ids.itemFilterInterface.item=Filter Item | ItemStack
-gui.ids.itemFilterInterface.items=Filter Items | List
 
-gui.ids.energyImporter.boolean=Import Energy | Boolean
-gui.ids.energyImporter.amount=Import Energy Amount | Int
+#Structure Wand
+chat.wand.pos1_set=[OmoshiroiKamo] Position 1 set: (%d, %d, %d)
+chat.wand.pos2_set=[OmoshiroiKamo] Position 2 set: (%d, %d, %d)
+chat.wand.scan_ready=[OmoshiroiKamo] Scan ready! (%d blocks)
+chat.wand.cleared=[OmoshiroiKamo] All positions cleared.
+chat.wand.set_pos1_first=[OmoshiroiKamo] Set Position 1 first! (Right-click a block)
+chat.wand.area_too_large=[OmoshiroiKamo] Area too large! Max %s blocks, got %s
+chat.wand.use_save_command=Use: /ok wand save <name>
+chat.wand.shift_right=Shift+Right-click to set Position 2
 
-gui.ids.energyExporter.boolean=Export Energy | Boolean
-gui.ids.energyExporter.amount=Export Energy Amount | Int
+tooltip.wand.right_click=Right-click: Set Position 1
+tooltip.wand.shift_right_click=Shift+Right-click: Set Position 2 & Prepare
+tooltip.wand.shift_left_click=Shift+Left-click: Clear all positions
+tooltip.wand.shift_left_clear=Shift+Left-click to clear
+tooltip.wand.pos1=Pos1: (%d, %d, %d)
+tooltip.wand.pos2=Pos2: (%d, %d, %d)
+tooltip.wand.pos_not_set=Not set
+tooltip.wand.size=Size: %dx%dx%d
 
-gui.ids.energyFilterInterface.all=Filter All | Boolean
 
-gui.ids.side=Target Side
-gui.ids.tick=Ticks / Operation
-gui.ids.priority=Priority
-gui.ids.channel=Channel
+# Commands
+command.ok.main_usage_title=Usage:
+command.ok.main_usage_structure=/ok structure - Structure management commands
 
-gui.ids.type.boolean=Boolean
-gui.ids.type.int=Integer
-gui.ids.type.long=Long
-gui.ids.type.float=Float
-gui.ids.type.double=Double
-gui.ids.type.string=String
+command.ok.reloading=[OmoshiroiKamo] Reloading structure configurations...
+command.ok.reload_success=[OmoshiroiKamo] Structure configurations reloaded successfully!
+command.ok.reload_errors=[OmoshiroiKamo] Reload completed with %d error(s)!
+command.ok.reload_check_file=Check: config/omoshiroikamo/structures/errors.txt
+command.ok.reload_failed=[OmoshiroiKamo] Reload failed: %s
 
-gui.ids.op.if=IF
+command.ok.status_header=== OmoshiroiKamo Structure Status ===
+command.ok.status_initialized=Initialized: 
+command.ok.status_yes=Yes
+command.ok.status_no=No
+command.ok.status_errors=Errors: 
+command.ok.status_none=None
 
-gui.ids.op.and=AND && 
-gui.ids.op.nand=NAND !&&
-gui.ids.op.or=OR || 
-gui.ids.op.nor=NOR !|| 
-gui.ids.op.xor=XOR ^
+command.ok.scan_usage=Usage: /ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.scan_example=Example: /ok structure scan myStructure 0 64 0 10 70 10
+command.ok.scan_invalid_coords=Invalid coordinates: %s
+command.ok.scan_no_world=Could not get world instance
+command.ok.scan_area_too_large=Area too large! Max %d blocks, got %d
+command.ok.scan_scanning=Scanning %dx%dx%d area...
+command.ok.scan_file=File: config/omoshiroikamo/structures/custom/%s.json
+command.ok.scan_failed=[OmoshiroiKamo] Scan failed: %s
 
-gui.ids.op.eq=EQ ==
-gui.ids.op.neq=NEQ !=
-gui.ids.op.gtr=GTR >
-gui.ids.op.geq=GEQ >=
-gui.ids.op.lss=LSS <
-gui.ids.op.leq=LEQ <=
+command.ok.usage_title=Usage:
+command.ok.usage_reload=/ok structure reload - Reload structure configurations
+command.ok.usage_status=/ok structure status - Show current status
+command.ok.usage_scan=/ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - Scan area to JSON
+command.ok.usage_wand_save=/ok structure wand save <name> - Save wand selection to JSON
 
-#Modular Machinery
+command.ok.wand_players_only=[OmoshiroiKamo] This command can only be used by players!
+command.ok.wand_usage=Usage: /ok structure wand save <name>
+command.ok.wand_no_pending=[OmoshiroiKamo] No pending scan! Use the Structure Wand first.
+command.ok.wand_different_dimension=[OmoshiroiKamo] Selection is in a different dimension!
+command.ok.wand_scanning=[OmoshiroiKamo] Scanning %d blocks...
+command.ok.wand_cleared=[OmoshiroiKamo] Wand selection cleared.
+command.ok.wand_no_selection=[OmoshiroiKamo] No pending selection to clear.
 
-gui.machinery.energy_used=Energy Used: %s
-gui.machinery.use_ic2=Use IC2
+# Backpack ==============================================
 
-# Backpack Gui Elements
 
+# Config
+config.backpackConfig=Backpack Settings
+config.feedingConfig=Feeding Settings
+config.magnetConfig=Magnet Settings
+
+
+# GUI
 container.backpack=Backpack
+gui.backpack=Backpack
+gui.backpack.settings=Settings
+gui.configuration_tab=Configuration Tab
 
 gui.backpack.pickup_settings=Pickup Settings
 gui.backpack.advanced_pickup_settings=Adv. Pickup Settings
-
 gui.backpack.magnet_settings=Magnet Settings
 gui.backpack.advanced_magnet_settings=Adv. Magnet Settings
-
 gui.backpack.feeding_settings=Feeding Settings
 gui.backpack.advanced_feeding_settings=Adv. Feeding Settings
-
 gui.backpack.filter_settings=Filter Settings
 gui.backpack.advanced_filter_settings=Adv. Filter Settings
-
 gui.backpack.backpack_settings=Backpack Settings
 gui.backpack.memory_settings=Memory Settings
 gui.backpack.sorting_settings=Sorting Settings
-
 gui.backpack.crafting_settings=Crafting Settings
-
 gui.backpack.void_settings=Void Settings
 gui.backpack.advanced_void_settings=Adv. Void Settings
 
-# Backpack Gui Tooltips
 
+# Tooltips
 gui.backpack.stack_size_extra=Count: %s / %s
 gui.backpack.not_in_effect=Not in effect
-
 gui.backpack.whitelist=Whitelist
 gui.backpack.blacklist=Blacklist
 
@@ -293,10 +241,6 @@ gui.backpack.transfer_to_backpack_inv=Transfer All Items to Backpack Inventory
 gui.backpack.transfer_to_backpack_inv_matched_1=Transfer Matched Items to Backpack Inventory
 gui.backpack.transfer_to_backpack_inv_matched_2=Shift To Transfer All
 
-gui.backpack=Backpack
-gui.backpack.settings=Settings
-gui.configuration_tab=Configuration Tab
-
 gui.backpack.memorized_slot=Memorized Slot
 gui.backpack.memorize_all=Memorize All Slots
 gui.backpack.unmemorize_all=Forget All Slots
@@ -326,213 +270,8 @@ gui.backpack.void_overflow=Void Overflow
 gui.backpack.void_all=Works in Gui as well
 gui.backpack.void_automation=Only works with other upgrade/automation
 
-# Deep Mob Learning
 
-gui.deep_learner.hud=Will display a HUD when in main hand or offhand and populated with data models
-gui.deep_learner.contains=Contains the following models
-
-gui.deep_learner.heading_name=Name
-gui.deep_learner.heading_information=Information
-gui.deep_learner.model_tier=Model Tier: %s
-gui.deep_learner.defeated=Defeated: %s
-gui.deep_learner.required=Defeat %s more to reach %s
-gui.deep_learner.maximum=Maximum tier achieved
-gui.deep_learner.health_points=Health points
-
-gui.deep_learner.button_next=Next data model
-gui.deep_learner.button_prev=Previous data model
-
-gui.loot_fabricator.tooltip.crafting_cost=Operational cost: %d RF/t
-gui.loot_fabricator.tooltip.deselect=Click to deselect output item
-
-gui.loot_fabricator.error.no_energy=Not enough energy for crafting
-gui.loot_fabricator.error.redstone=Machine disabled by redstone signal
-gui.loot_fabricator.error.no_pristine=No Pristine Matter in input buffer
-gui.loot_fabricator.error.no_output_selected=No output item selected
-gui.loot_fabricator.error.output_full=Output buffer full
-
-gui.simulation_chamber.simulation_text.launching=Launching runtime
-gui.simulation_chamber.simulation_text.iteration=Iteration #%d started
-gui.simulation_chamber.simulation_text.loading=Loading model from chip memory
-gui.simulation_chamber.simulation_text.assessing=Assessing threat level
-gui.simulation_chamber.simulation_text.engaged=Engaged enemy
-gui.simulation_chamber.simulation_text.pristine=Pristine procurement
-gui.simulation_chamber.simulation_text.pristine_success=succeeded
-gui.simulation_chamber.simulation_text.pristine_failure=failed
-gui.simulation_chamber.simulation_text.processing=Processing results
-
-gui.simulation_chamber.error_text.error=ERROR: Cannot begin simulation
-gui.simulation_chamber.error_text.no_data_model_1=No data model found
-gui.simulation_chamber.error_text.no_data_model_2=Please insert data model
-gui.simulation_chamber.error_text.model_cannot_simulate_1=Invalid amount of data in model
-gui.simulation_chamber.error_text.model_cannot_simulate_2=Please insert valid model
-gui.simulation_chamber.error_text.no_polymer=Missing polymer medium
-gui.simulation_chamber.error_text.no_energy=System energy levels critical
-gui.simulation_chamber.error_text.output_full=Output buffer full
-
-gui.simulation_chamber.redstone_deactivated_1=System deactivated
-gui.simulation_chamber.redstone_deactivated_2=by redstone signal
-
-gui.simulation_chamber.data_model_info.tier=Tier
-gui.simulation_chamber.data_model_info.iterations=Iterations
-gui.simulation_chamber.data_model_info.pristine=Pristine chance
-
-gui.simulation_chamber.tooltip.model_data=%s data collected
-gui.simulation_chamber.tooltip.model_max=Data model has reached the max tier
-gui.simulation_chamber.tooltip.model_missing=Machine is missing a data model
-gui.simulation_chamber.tooltip.model_cannot_simulate=Cannot run simulation at current data model tier
-gui.simulation_chamber.tooltip.sim_cost=Simulation with current data model uses %d RF/t
-
-gui.button_page_select.next=Next page
-gui.button_page_select.prev=Previous page
-
-#Display
-
-power.rf=RF
-fluid.millibucket=mB
-
-#TOOLTIPS
-
-tooltip.holdshift=§7- hold §r§oSHIFT§r§7 for more info§r
-
-tooltip.backpack.inventory_size=Inventory size: %d
-tooltip.backpack.upgrade_slots_size=Upgrade slots: %d
-tooltip.backpack.stack_multiplier=-> Stack multiplier: %d%s
-
-tooltip.backpack.magnet_upgrade=Automatically picks up nearby entities
-tooltip.backpack.advanced_magnet_upgrade=Automatically picks up nearby entities with more configurations
-tooltip.backpack.everlasting_upgrade=Makes the backpack invincible, preventing despawning or falling into the void. Ensures retrieval even when thrown into the void.
-tooltip.backpack.upgrade_base=It does nothing! Feel free to put it in your upgrade slots!
-tooltip.backpack.stack_upgrade=Multiplies stack size by %d
-tooltip.backpack.crafting_upgrade=Adds additional crafting grid to side of backpack
-tooltip.backpack.inception_upgrade=Allows backpacks to be stored inside backpack
-tooltip.backpack.pickup_upgrade=Allows backpacks to pickup items
-tooltip.backpack.advanced_pickup_upgrade=Allows backpack to pickup items with more configurations
-tooltip.backpack.feeding_upgrade=Allows backpacks to automatically feed player
-tooltip.backpack.advanced_feeding_upgrade=Allows backpack to automatically feed player with more configurations
-tooltip.backpack.filter_upgrade=Filters inserted items when placing in world
-tooltip.backpack.advanced_filter_upgrade=Filters inserted items when placing in world with more configurations
-tooltip.backpack.void_upgrade=Voids items selected in filter
-tooltip.backpack.advanced_void_upgrade=Voids items selected in filter. Has more filtering options
-
-tooltip.spawn_egg.tier=Tier: %1$s
-tooltip.spawn_egg.notbreedable=Can't be bred
-tooltip.spawn_egg.breedable=Breed
-tooltip.spawn_egg.spawnType=SpawnType
-tooltip.spawn_egg.layitem=Lay Item: %1$s
-tooltip.spawn_egg.nolayitem=Lay Item: Null
-tooltip.spawn_egg.milkfluid=Milk Fluid: %1$s
-tooltip.spawn_egg.nomilkfluid=Milk Fluid: Null
-
-tooltip.catcher.name=Chicken Catcher
-tooltip.mob.tier=Tier: %1$s
-tooltip.mob.strength=Strength: %s
-tooltip.mob.gain=Gain: %s
-tooltip.mob.growth=Growth: %s
-tooltip.mob.parent1=Bred from %s
-tooltip.mob.parent2=and %s
-tooltip.mob.spawnType=SpawnType
-tooltip.mob.fluid=Fluid
-tooltip.mob.layProgress=Next egg in %1$s
-tooltip.mob.milkProgress=Next milk in %1$s
-tooltip.mob.breedCountdown=Next breeding in %1$s
-tooltip.mob.childGrowUp=Grows up in %1$s
-
-tooltip.assembler.l1=Shift + Right-click on controllers to assemble.
-tooltip.assembler.l2=Left-click to instantly break any multiblock block.
-
-tooltip.liquid_egg.l1=It's like one-off bucket.
-tooltip.colored_egg.l1=Throw it to have a chance to spawn the chicken.
-
-tooltip.analyzer.l1=Use it on chickens to determine their stats.
-tooltip.analyzer.l2= - "Which day of the week do chickens hate most? Fry-day!"
-
-tooltip.data_model.type=Type: %s
-tooltip.data_model.tier=Tier: %s
-tooltip.data_model.data_collected=Data collected: %s/%s
-tooltip.data_model.kill_multiplier=Data per kill: %s
-tooltip.data_model.rf_cost=Simulation cost: %s RF/t
-tooltip.data_model.cannot_simulate=Data Model cannot be used in a Simulation Chamber at this tier.
-tooltip.data_model.reached_tier=%s reached the %s tier
-
-tooltip.living_matter.consume_for_xp=%s to consume for experience.
-tooltip.living_matter.consume_stack=Hold %s to consume entire stack.
-tooltip.living_matter.xp=Experience per item: %s
-
-tooltip.pristine_matter.loot_items=Available loot items:
-
-tooltip.soot_covered_redstone=Crafted by crushing %s against a %s (%s)
-
-#ACHIEVEMENT
-
-achievement.omoshiroikamo.craft_assembler=Ready To Assemble
-achievement.omoshiroikamo.craft_assembler.desc=Craft the Assembler
-achievement.omoshiroikamo.craft_solar_array_t1=Entry Level Solar Array
-achievement.omoshiroikamo.craft_solar_array_t1.desc=Craft a Tier 1 Solar Array
-achievement.omoshiroikamo.craft_solar_array_t4=Ultimate Solar Array
-achievement.omoshiroikamo.craft_solar_array_t4.desc=Craft a Tier 4 Solar Array
-achievement.omoshiroikamo.craft_void_ore_t1=Entry Level Infinite Ore
-achievement.omoshiroikamo.craft_void_ore_t1.desc=Craft a Tier 1 Void Ore Miner
-achievement.omoshiroikamo.craft_void_ore_t4=Ultimate Infinite Ore Setup
-achievement.omoshiroikamo.craft_void_ore_t4.desc=Craft a Tier 4 Void Ore Miner
-
-achievement.omoshiroikamo.assemble_void_ore_miner_t1=Entry Level Infinite Ore
-achievement.omoshiroikamo.assemble_void_ore_miner_t1.desc=Assemble a Tier 1 Void Ore Miner with the Assembler
-achievement.omoshiroikamo.assemble_void_ore_miner_t4=Ultimate Infinite Ore Setup
-achievement.omoshiroikamo.assemble_void_ore_miner_t4.desc=Assemble a Tier 4 Void Ore Miner with the Assembler.
-achievement.omoshiroikamo.assemble_void_res_miner_t1=Entry Level Infinite Resources
-achievement.omoshiroikamo.assemble_void_res_miner_t1.desc=Assemble a Tier 1 Void Resource Miner with the Assembler.
-achievement.omoshiroikamo.assemble_void_res_miner_t4=Ultimate Infinite Resources
-achievement.omoshiroikamo.assemble_void_res_miner_t4.desc=Assemble a Tier 4 Void Resource Miner with the Assembler.
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t1=Entry Level Nano Bot Beacon
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t1.desc=Assemble a Tier 1 Nano Bot Beacon with the Assembler.
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t4=Ultimate Nano Bot Beacon
-achievement.omoshiroikamo.assemble_nano_bot_beacon_t4.desc=Assemble a Tier 4 Nano Bot Beacon with the Assembler.
-achievement.omoshiroikamo.assemble_solar_array_t1=Entry Level Solar Array
-achievement.omoshiroikamo.assemble_solar_array_t1.desc=Assemble a Tier 1 Solar Array with the Assembler.
-achievement.omoshiroikamo.assemble_solar_array_t4=Ultimate Solar Array
-achievement.omoshiroikamo.assemble_solar_array_t4.desc=Assemble a Tier 4 Solar Array with the Assembler.
-
-achievement.omoshiroikamo.craft_colored_lens=Focus That Laser
-achievement.omoshiroikamo.craft_colored_lens.desc=Dye a Lens.
-achievement.omoshiroikamo.craft_modifier_core=Modifications
-achievement.omoshiroikamo.craft_modifier_core.desc=Craft a Modifier Core.
-achievement.omoshiroikamo.craft_modifier_speed=Speed it up
-achievement.omoshiroikamo.craft_modifier_speed.desc=Craft a Speed Modifier.
-achievement.omoshiroikamo.craft_modifier_piezo=Energy From Vibrations
-achievement.omoshiroikamo.craft_modifier_piezo.desc=Craft a Piezo Modifier.
-achievement.omoshiroikamo.craft_modifier_accuracy=Increase That Focus
-achievement.omoshiroikamo.craft_modifier_accuracy.desc=Craft a Accuracy Modifier.
-achievement.omoshiroikamo.craft_modifier_jump_boost=Springs in my Legs
-achievement.omoshiroikamo.craft_modifier_jump_boost.desc=Craft a Jump Boost Modifier.
-achievement.omoshiroikamo.craft_modifier_flight=Nano Bot Assisted Flight
-achievement.omoshiroikamo.craft_modifier_flight.desc=Craft a Flight Modifier.
-achievement.omoshiroikamo.craft_modifier_resistance=Resist That Damage
-achievement.omoshiroikamo.craft_modifier_resistance.desc=Craft a Resistance Modifier.
-achievement.omoshiroikamo.craft_modifier_fire_res=Resist That Fire Damage
-achievement.omoshiroikamo.craft_modifier_fire_res.desc=Craft a Fire Resistance Modifier.
-achievement.omoshiroikamo.craft_modifier_haste=Mine Faster
-achievement.omoshiroikamo.craft_modifier_haste.desc=Craft a Haste Modifier.
-achievement.omoshiroikamo.craft_modifier_strength=Increase Your Damage
-achievement.omoshiroikamo.craft_modifier_strength.desc=Craft a Strength Modifier.
-achievement.omoshiroikamo.craft_modifier_night_vision=See in the dark
-achievement.omoshiroikamo.craft_modifier_night_vision.desc=Craft a Night Vision Modifier.
-achievement.omoshiroikamo.craft_modifier_water_breathing=Breath Under Water
-achievement.omoshiroikamo.craft_modifier_water_breathing.desc=Craft a Wather Breathing Modifier.
-achievement.omoshiroikamo.craft_modifier_regen=Speedy Healing
-achievement.omoshiroikamo.craft_modifier_regen.desc=Craft a Regen Modifier.
-achievement.omoshiroikamo.craft_modifier_saturation=Auto Feeding
-achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modifier.
-
-#KeyBinding
-
-category.omoshiroikamo=Omoshiroi Kamo
-keybind.backpackOpenToggle=Open Backpack
-
-#Item
-
-item.wrench.name=Wrench
-
+# Items
 tile.backpackLeather.name=Leather Backpack
 tile.backpackIron.name=Iron Backpack
 tile.backpackGold.name=Gold Backpack
@@ -569,23 +308,37 @@ item.inceptionUpgrade.name=Inception Upgrade
 item.voidUpgrade.name=Void Upgrade
 item.advancedVoidUpgrade.name=Adv. Void Upgrade
 
-item.stabilizedEnderPear.name=Stabilized Ender Pearl
-item.photovoltaicCell.name=Photovoltaic Cell
-item.assembler.name=Assembler
 
-item.crystal.tier_1.name=Luminite Crystal
-item.crystal.tier_2.name=Solaris Crystal
-item.crystal.tier_3.name=Abyssal Crystal
-item.crystal.tier_4.name=Aurora Crystal
-item.crystal.tier_5.name=Eclipse Crystal
-item.crystal.tier_6.name=Nebula Crystal
-item.crystal.tier_7.name=Prismatic Crystal
-item.crystal.tier_8.name=Celestial Crystal
+# Tooltips
+tooltip.backpack.inventory_size=Inventory size: %d
+tooltip.backpack.upgrade_slots_size=Upgrade slots: %d
+tooltip.backpack.stack_multiplier=-> Stack multiplier: %d%s
 
-item.cowHalter.name=Cow Halter
-item.analyzer.name=Analyzer
-item.solidXp.name=Solid Experience
+tooltip.backpack.magnet_upgrade=Automatically picks up nearby entities
+tooltip.backpack.advanced_magnet_upgrade=Automatically picks up nearby entities with more configurations
+tooltip.backpack.everlasting_upgrade=Makes the backpack invincible, preventing despawning or falling into the void. Ensures retrieval even when thrown into the void.
+tooltip.backpack.upgrade_base=It does nothing! Feel free to put it in your upgrade slots!
+tooltip.backpack.stack_upgrade=Multiplies stack size by %d
+tooltip.backpack.crafting_upgrade=Adds additional crafting grid to side of backpack
+tooltip.backpack.inception_upgrade=Allows backpacks to be stored inside backpack
+tooltip.backpack.pickup_upgrade=Allows backpacks to pickup items
+tooltip.backpack.advanced_pickup_upgrade=Allows backpack to pickup items with more configurations
+tooltip.backpack.feeding_upgrade=Allows backpacks to automatically feed player
+tooltip.backpack.advanced_feeding_upgrade=Allows backpack to automatically feed player with more configurations
+tooltip.backpack.filter_upgrade=Filters inserted items when placing in world
+tooltip.backpack.advanced_filter_upgrade=Filters inserted items when placing in world with more configurations
+tooltip.backpack.void_upgrade=Voids items selected in filter
+tooltip.backpack.advanced_void_upgrade=Voids items selected in filter. Has more filtering options
 
+
+# Chicken ==============================================
+
+
+# Config
+config.chickenConfig=Chicken Settings
+
+
+# Items
 item.chickenCatcher.name=Chicken Catcher
 item.liquidEgg.water.name=Water Egg
 item.liquidEgg.lava.name=Lava Egg
@@ -606,302 +359,26 @@ item.coloredEgg.green.name=Cactus Green Chicken Egg
 item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
 
-item.creativeModelLearner.name=Creative Model Learner (WIP)
-item.dataModelBlank.name=Blank Data Model
-item.deepLearner.name=§bDeep Learner§r
-item.polymerClay.name=Polymer Clay
-item.sootCoveredRedstone.name=Soot-covered Redstone
-item.sootCoveredPlate.name=Soot-covered Plate
+item.solidXp.name=Solid Experience
 
-item.structureWand.name=Structure Wand
+item.analyzer.name=Analyzer
 
-item.variableCard.name=Variable Card
 
-item.itemImporter.name=Item Importer
-item.itemExporter.name=Item Exporter
-item.itemInterface.name=Item Interface
-item.itemFilterInterface.name=Item Filter Interface
-item.energyImporter.name=Energy Importer
-item.energyExporter.name=Energy Exporter
-item.energyInterface.name=Energy Interface
-item.energyFilterInterface.name=Energy Filter Interface
-item.storageTerminal.name=Storage Terminal
-item.redstoneReader.name=Redstone Reader
-item.blockReader.name=Block Reader
-item.inventoryReader.name=Inventory Reader
-item.fluidReader.name=Fluid Reader
-item.redstoneWriter.name=Redstone Writer
-item.craftingInterface.name=Crafting Interface
-
-#Block
-
-tile.electrolyzer.name=Electrolyzer
-tile.anvil.name=Anvil
-tile.furnace.name=Furnace
-
-tile.basalt.name=Basalt
-tile.alabaster.name=Alabaster
-tile.hardenedStone.name=Hardened Stone
-
-tile.mica.name=Mica
-
-tile.structureFrame.basalt_structure_1.name=Structure Frame Tier 1 (Will Remove Next Update)
-tile.structureFrame.basalt_structure_2.name=Structure Frame Tier 2 (Will Remove Next Update)
-tile.structureFrame.basalt_structure_3.name=Structure Frame Tier 3 (Will Remove Next Update)
-tile.structureFrame.basalt_structure_4.name=Structure Frame Tier 4 (Will Remove Next Update)
-tile.structureFrame.hardened_stone_structure_1.name=Structure Frame Tier 1 (Will Remove Next Update)
-tile.structureFrame.hardened_stone_structure_2.name=Structure Frame Tier 2 (Will Remove Next Update)
-tile.structureFrame.hardened_stone_structure_3.name=Structure Frame Tier 3 (Will Remove Next Update)
-tile.structureFrame.hardened_stone_structure_4.name=Structure Frame Tier 4 (Will Remove Next Update)
-tile.structureFrame.alabaster_structure_1.name=Structure Frame Tier 1 (Will Remove Next Update)
-tile.structureFrame.alabaster_structure_2.name=Structure Frame Tier 2 (Will Remove Next Update)
-tile.structureFrame.alabaster_structure_3.name=Structure Frame Tier 3 (Will Remove Next Update)
-tile.structureFrame.alabaster_structure_4.name=Structure Frame Tier 4 (Will Remove Next Update)
-
-tile.machineBase.basalt_machine_base.name=Machine Base
-tile.machineBase.hardened_stone_machine_base.name=Machine Base
-tile.machineBase.alabaster_machine_base.name=Machine Base
-
-tile.modifierNull.name=Null Modifier
-tile.modifierAccuracy.name=Accuracy Modifier
-tile.modifierSpeed.name=Speed Modifier
-tile.modifierLuck.name=Luck Modifier
-tile.modifierPiezo.name=Piezo Modifier
-tile.modifierFlight.name=Flight Modifier
-tile.modifierNightVision.name=Night Vision Modifier
-tile.modifierHaste.name=Haste Modifier
-tile.modifierStrength.name=Strength Modifier
-tile.modifierWaterBreathing.name=Water Breathing Modifier
-tile.modifierRegeneration.name=Regeneration Modifier
-tile.modifierSaturation.name=Saturation Modifier
-tile.modifierResistance.name=Resistance Modifier
-tile.modifierJumpBoost.name=Jump Boost Modifier
-tile.modifierFireResistance.name=Fire Resistance Modifier
-
-tile.lens.tier_1.name=Clear Lens
-tile.lens.tier_2.name=Crystal Lens
-tile.coloredLens.black.name=Black Lens
-tile.coloredLens.red.name=Red Lens
-tile.coloredLens.green.name=Green Lens
-tile.coloredLens.brown.name=Brown Lens
-tile.coloredLens.blue.name=Blue Lens
-tile.coloredLens.purple.name=Purple Lens
-tile.coloredLens.cyan.name=Cyan Lens
-tile.coloredLens.light_gray.name=Light Gray Lens
-tile.coloredLens.gray.name=Gray Lens
-tile.coloredLens.pink.name=Pink Lens
-tile.coloredLens.lime.name=Lime Lens
-tile.coloredLens.yellow.name=Yellow Lens
-tile.coloredLens.light_blue.name=Light Blue Lens
-tile.coloredLens.magenta.name=Magenta Lens
-tile.coloredLens.orange.name=Orange Lens
-tile.coloredLens.white.name=White Lens
-
-tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
-tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
-tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
-tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
-tile.quantumBeacon.tier_5.name=Quantum Beacon Tier 5
-tile.quantumBeacon.tier_6.name=Quantum Beacon Tier 6
-
-tile.laserCore.name=Laser Core
-
-tile.solarCell.tier_1.name=Luminite Solar Cell
-tile.solarCell.tier_2.name=Solaris Solar Cell
-tile.solarCell.tier_3.name=Abyssal Solar Cell
-tile.solarCell.tier_4.name=Aurora Solar Cell
-tile.solarCell.tier_5.name=Eclipse Solar Cell
-tile.solarCell.tier_6.name=Nebula Solar Cell
-
-tile.blockCrystal.tier_1.name=Block of Luminite 
-tile.blockCrystal.tier_2.name=Block of Solaris
-tile.blockCrystal.tier_3.name=Block of Abyssal
-tile.blockCrystal.tier_4.name=Block of Aurora
-tile.blockCrystal.tier_5.name=Block of Eclipse
-tile.blockCrystal.tier_6.name=Block of Nebula
-tile.blockCrystal.tier_7.name=Block of Prismatic
-tile.blockCrystal.tier_8.name=Block of Celestial
-
-tile.solarArray.tier_1.name=Solar Array Tier 1
-tile.solarArray.tier_2.name=Solar Array Tier 2
-tile.solarArray.tier_3.name=Solar Array Tier 3
-tile.solarArray.tier_4.name=Solar Array Tier 4
-tile.solarArray.tier_5.name=Solar Array Tier 5
-tile.solarArray.tier_6.name=Solar Array Tier 6
-
-tile.quantumOreExtractor.tier_1.name=Quantum Ore Extractor Tier 1
-tile.quantumOreExtractor.tier_2.name=Quantum Ore Extractor Tier 2
-tile.quantumOreExtractor.tier_3.name=Quantum Ore Extractor Tier 3
-tile.quantumOreExtractor.tier_4.name=Quantum Ore Extractor Tier 4
-tile.quantumOreExtractor.tier_5.name=Quantum Ore Extractor Tier 5
-tile.quantumOreExtractor.tier_6.name=Quantum Ore Extractor Tier 6
-
-tile.quantumResExtractor.tier_1.name=Quantum Resource Extractor Tier 1
-tile.quantumResExtractor.tier_2.name=Quantum Resource Extractor Tier 2
-tile.quantumResExtractor.tier_3.name=Quantum Resource Extractor Tier 3
-tile.quantumResExtractor.tier_4.name=Quantum Resource Extractor Tier 4
-tile.quantumResExtractor.tier_5.name=Quantum Resource Extractor Tier 5
-tile.quantumResExtractor.tier_6.name=Quantum Resource Extractor Tier 6
-
-tile.basaltStructure.tier_1.name=Basalt Structure Frame Tier 1
-tile.basaltStructure.tier_2.name=Basalt Structure Frame Tier 2
-tile.basaltStructure.tier_3.name=Basalt Structure Frame Tier 3
-tile.basaltStructure.tier_4.name=Basalt Structure Frame Tier 4
-tile.basaltStructure.tier_5.name=Basalt Structure Frame Tier 5
-tile.basaltStructure.tier_6.name=Basalt Structure Frame Tier 6
-
-tile.hardenedStructure.tier_1.name=Hardened Structure Frame Tier 1
-tile.hardenedStructure.tier_2.name=Hardened Structure Frame Tier 2
-tile.hardenedStructure.tier_3.name=Hardened Structure Frame Tier 3
-tile.hardenedStructure.tier_4.name=Hardened Structure Frame Tier 4
-tile.hardenedStructure.tier_5.name=Hardened Structure Frame Tier 5
-tile.hardenedStructure.tier_6.name=Hardened Structure Frame Tier 6
-
-tile.alabasterStructure.tier_1.name=Alabaster Structure Frame Tier 1
-tile.alabasterStructure.tier_2.name=Alabaster Structure Frame Tier 2
-tile.alabasterStructure.tier_3.name=Alabaster Structure Frame Tier 3
-tile.alabasterStructure.tier_4.name=Alabaster Structure Frame Tier 4
-tile.alabasterStructure.tier_5.name=Alabaster Structure Frame Tier 5
-tile.alabasterStructure.tier_6.name=Alabaster Structure Frame Tier 6
-
+# Blocks
 tile.roost.name=Roost
 tile.roostCollector.name=Roost Collector
 tile.breeder.name=Chicken Breeder
-tile.stall.name=Stall
 
-tile.lootFabricator.name=Loot Fabricator
-tile.simulationChamber.name=Simulation Chamber
-tile.machineCasing.name=Machine Casing
 
-tile.cable.name=Logic Cable
-tile.programmer.name=Programmer
+# Tooltips
+tooltip.liquid_egg.l1=It's like one-off bucket.
+tooltip.colored_egg.l1=Throw it to have a chance to spawn the chicken.
+tooltip.analyzer.l1=Use it on chickens to determine their stats.
+tooltip.analyzer.l2= - "Which day of the week do chickens hate most? Fry-day!"
+tooltip.catcher.name=Chicken Catcher
 
-#ME Output Bus
-tile.modularItemOutputME.me.name=ME Item Output Bus
-tile.modularFluidOutputME.me.name=ME Fluid Output Bus
-waila.me.online=Device Online
-waila.me.no_channel=Device Missing Channel
-waila.me.offline=Device Offline
-tooltip.me_output.desc=Outputs items directly to ME Network
-tooltip.me_fluid_output.desc=Outputs fluids directly to ME Network
-tooltip.me_output.wip=Work In Progress
-tooltip.me_output.lag_warning=Warning: May cause lag when connected to ME Network
 
-#ENTITY
-
-#NEI INTEGRATION
-neiintegration.chance=Chance: %s
-neiintegration.chance.never=Never
-neiintegration.chance.lessThan1=<1%
-
-#Modifier Tooltips
-tooltip.modifier.speed.effect=§aMining Speed %.2fx§r
-tooltip.modifier.speed.penalty=§cEnergy Cost %.2fx§r
-tooltip.modifier.accuracy.effect=§aFocus %.2fx§r
-tooltip.modifier.accuracy.penalty=§cMining Speed %.2fx§r, §cEnergy Cost %.2fx§r
-tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
-tooltip.modifier.luck.effect=§aDouble Output +%d%%§r
-tooltip.modifier.luck.penalty=§cEnergy Cost %.2fx§r
-
-#Beacon Modifiers
-tooltip.modifier.flight.effect=§bCreative Flight§r
-tooltip.modifier.night_vision.effect=§bNight Vision§r
-tooltip.modifier.haste.effect=§bHaste§r
-tooltip.modifier.strength.effect=§bStrength§r
-tooltip.modifier.regeneration.effect=§bRegeneration§r
-tooltip.modifier.resistance.effect=§bResistance§r
-tooltip.modifier.saturation.effect=§bSaturation§r
-tooltip.modifier.jump_boost.effect=§bJump Boost§r
-tooltip.modifier.fire_resistance.effect=§bFire Resistance§r
-tooltip.modifier.water_breathing.effect=§bWater Breathing§r
-tooltip.modifier.beacon.energy=§7Uses %d RF/t per effect§r
-
-#Beacon Effect Tooltip
-tooltip.beacon.shift_for_effects=Hold §eSHIFT§r for effect list
-tooltip.beacon.effect_list=Available Effects:
-tooltip.beacon.effect.speed=Speed
-tooltip.beacon.effect.haste=Haste
-tooltip.beacon.effect.strength=Strength
-tooltip.beacon.effect.resistance=Resistance
-tooltip.beacon.effect.regeneration=Regeneration
-tooltip.beacon.effect.saturation=Saturation
-tooltip.beacon.effect.jump_boost=Jump Boost
-tooltip.beacon.effect.night_vision=Night Vision
-tooltip.beacon.effect.water_breathing=Water Breathing
-tooltip.beacon.effect.fire_resistance=Fire Resistance
-tooltip.beacon.range=Effect Range:
-tooltip.beacon.range.horizontal=Horizontal
-tooltip.beacon.range.upward=Upward
-tooltip.beacon.range.downward=Downward
-
-#Solar Tooltips
-tooltip.solar.cell.power=§aPeak Output: %d RF/t§r
-tooltip.solar.array.peak=§aMax Output: %d RF/t§r
-
-#Miner Tooltips
-tooltip.miner.speed=§aCycle Time: %.1fs§r
-tooltip.miner.energy=§7Energy Cost: %d RF§r
-
-#Structure Wand
-chat.wand.pos1_set=[OmoshiroiKamo] Position 1 set: (%d, %d, %d)
-chat.wand.pos2_set=[OmoshiroiKamo] Position 2 set: (%d, %d, %d)
-chat.wand.scan_ready=[OmoshiroiKamo] Scan ready! (%d blocks)
-chat.wand.cleared=[OmoshiroiKamo] All positions cleared.
-chat.wand.set_pos1_first=[OmoshiroiKamo] Set Position 1 first! (Right-click a block)
-chat.wand.area_too_large=[OmoshiroiKamo] Area too large! Max %s blocks, got %s
-chat.wand.use_save_command=Use: /ok wand save <name>
-chat.wand.shift_right=Shift+Right-click to set Position 2
-
-tooltip.wand.right_click=Right-click: Set Position 1
-tooltip.wand.shift_right_click=Shift+Right-click: Set Position 2 & Prepare
-tooltip.wand.shift_left_click=Shift+Left-click: Clear all positions
-tooltip.wand.shift_left_clear=Shift+Left-click to clear
-tooltip.wand.pos1=Pos1: (%d, %d, %d)
-tooltip.wand.pos2=Pos2: (%d, %d, %d)
-tooltip.wand.pos_not_set=Not set
-tooltip.wand.size=Size: %dx%dx%d
-
-#Structure Commands
-command.ok.main_usage_title=Usage:
-command.ok.main_usage_structure=/ok structure - Structure management commands
-
-command.ok.reloading=[OmoshiroiKamo] Reloading structure configurations...
-command.ok.reload_success=[OmoshiroiKamo] Structure configurations reloaded successfully!
-command.ok.reload_errors=[OmoshiroiKamo] Reload completed with %d error(s)!
-command.ok.reload_check_file=Check: config/omoshiroikamo/structures/errors.txt
-command.ok.reload_failed=[OmoshiroiKamo] Reload failed: %s
-
-command.ok.status_header=== OmoshiroiKamo Structure Status ===
-command.ok.status_initialized=Initialized: 
-command.ok.status_yes=Yes
-command.ok.status_no=No
-command.ok.status_errors=Errors: 
-command.ok.status_none=None
-
-command.ok.scan_usage=Usage: /ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
-command.ok.scan_example=Example: /ok structure scan myStructure 0 64 0 10 70 10
-command.ok.scan_invalid_coords=Invalid coordinates: %s
-command.ok.scan_no_world=Could not get world instance
-command.ok.scan_area_too_large=Area too large! Max %d blocks, got %d
-command.ok.scan_scanning=Scanning %dx%dx%d area...
-command.ok.scan_file=File: config/omoshiroikamo/structures/custom/%s.json
-command.ok.scan_failed=[OmoshiroiKamo] Scan failed: %s
-
-command.ok.usage_title=Usage:
-command.ok.usage_reload=/ok structure reload - Reload structure configurations
-command.ok.usage_status=/ok structure status - Show current status
-command.ok.usage_scan=/ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - Scan area to JSON
-command.ok.usage_wand_save=/ok structure wand save <name> - Save wand selection to JSON
-
-command.ok.wand_players_only=[OmoshiroiKamo] This command can only be used by players!
-command.ok.wand_usage=Usage: /ok structure wand save <name>
-command.ok.wand_no_pending=[OmoshiroiKamo] No pending scan! Use the Structure Wand first.
-command.ok.wand_different_dimension=[OmoshiroiKamo] Selection is in a different dimension!
-command.ok.wand_scanning=[OmoshiroiKamo] Scanning %d blocks...
-command.ok.wand_cleared=[OmoshiroiKamo] Wand selection cleared.
-command.ok.wand_no_selection=[OmoshiroiKamo] No pending selection to clear.
-
-# Chickens
+# Mobs
 entity.RestoniaCrystalChicken.name=Restonia Crystal Chicken
 entity.PalisCrystalChicken.name=Palis Crystal Chicken
 entity.DiamantineCrystalChicken.name=Diamantine Crystal Chicken
@@ -1021,7 +498,29 @@ entity.PigIronChicken.name=Pig Iron Chicken
 entity.BloodSlimeChicken.name=Blood Slime Chicken
 entity.BlueSlimeChicken.name=Blue Slime Chicken
 
-# Cows
+
+# Waila
+option.omoshiroikamo.breedingTime=Breeding Time
+option.omoshiroikamo.grownTime=Grown Time
+
+
+
+# Cow ==============================================
+
+
+# Config
+config.cowConfig=Cow Settings
+
+
+# Items
+item.cowHalter.name=Cow Halter
+
+
+# Blocks
+tile.stall.name=Stall
+
+
+# Mobs
 entity.WaterCow.name=Water Cow
 entity.LavaCow.name=Lava Cow
 entity.YelloriumCow.name=Yellorium Cow
@@ -1077,7 +576,84 @@ entity.MithrilCow.name=Mithril Cow
 entity.EnderiumCow.name=Enderium Cow
 entity.PigIronCow.name=Pig Iron Cow
 
-# DML
+
+# Deep Mob Learning ==============================================
+
+
+# Config
+config.deepMobLearningConfig=Deep Mob Learning Settings
+
+
+# NEI
+nei.dml.simulation_chamber=Simulation Chamber
+nei.dml.loot_fabricator=Loot Fabricator
+
+
+# GUI
+gui.button_page_select.next=Next page
+gui.button_page_select.prev=Previous page
+
+
+# Deep Learner GUI
+gui.deep_learner.heading_name=Name
+gui.deep_learner.heading_information=Information
+gui.deep_learner.model_tier=Model Tier: %s
+gui.deep_learner.defeated=Defeated: %s
+gui.deep_learner.required=Defeat %s more to reach %s
+gui.deep_learner.maximum=Maximum tier achieved
+gui.deep_learner.health_points=Health points
+gui.deep_learner.button_next=Next data model
+gui.deep_learner.button_prev=Previous data model
+gui.deep_learner.hud=Will display a HUD when in main hand or offhand and populated with data models
+gui.deep_learner.contains=Contains the following models
+
+
+# Loot Fabricator GUI
+gui.loot_fabricator.tooltip.crafting_cost=Operational cost: %d RF/t
+gui.loot_fabricator.tooltip.deselect=Click to deselect output item
+
+gui.loot_fabricator.error.no_energy=Not enough energy for crafting
+gui.loot_fabricator.error.redstone=Machine disabled by redstone signal
+gui.loot_fabricator.error.no_pristine=No Pristine Matter in input buffer
+gui.loot_fabricator.error.no_output_selected=No output item selected
+gui.loot_fabricator.error.output_full=Output buffer full
+
+
+# Simulation Chamber GUI
+gui.simulation_chamber.simulation_text.launching=Launching runtime
+gui.simulation_chamber.simulation_text.iteration=Iteration #%d started
+gui.simulation_chamber.simulation_text.loading=Loading model from chip memory
+gui.simulation_chamber.simulation_text.assessing=Assessing threat level
+gui.simulation_chamber.simulation_text.engaged=Engaged enemy
+gui.simulation_chamber.simulation_text.pristine=Pristine procurement
+gui.simulation_chamber.simulation_text.pristine_success=succeeded
+gui.simulation_chamber.simulation_text.pristine_failure=failed
+gui.simulation_chamber.simulation_text.processing=Processing results
+
+gui.simulation_chamber.error_text.error=ERROR: Cannot begin simulation
+gui.simulation_chamber.error_text.no_data_model_1=No data model found
+gui.simulation_chamber.error_text.no_data_model_2=Please insert data model
+gui.simulation_chamber.error_text.model_cannot_simulate_1=Invalid amount of data in model
+gui.simulation_chamber.error_text.model_cannot_simulate_2=Please insert valid model
+gui.simulation_chamber.error_text.no_polymer=Missing polymer medium
+gui.simulation_chamber.error_text.no_energy=System energy levels critical
+gui.simulation_chamber.error_text.output_full=Output buffer full
+
+gui.simulation_chamber.redstone_deactivated_1=System deactivated
+gui.simulation_chamber.redstone_deactivated_2=by redstone signal
+
+gui.simulation_chamber.data_model_info.tier=Tier
+gui.simulation_chamber.data_model_info.iterations=Iterations
+gui.simulation_chamber.data_model_info.pristine=Pristine chance
+
+gui.simulation_chamber.tooltip.model_data=%s data collected
+gui.simulation_chamber.tooltip.model_max=Data model has reached the max tier
+gui.simulation_chamber.tooltip.model_missing=Machine is missing a data model
+gui.simulation_chamber.tooltip.model_cannot_simulate=Cannot run simulation at current data model tier
+gui.simulation_chamber.tooltip.sim_cost=Simulation with current data model uses %d RF/t
+
+
+# Items
 item.living_matter.overworldian.name=§9Overworldian Matter
 item.living_matter.hellish.name=§cHellish Matter
 item.living_matter.extraterrestrial.name=§dExtraterrestrial Matter
@@ -1107,6 +683,50 @@ item.pristine.Wither Skeleton.name=Pristine Wither Skeleton Matter
 item.model.Zombie.name=§bZombie Data Model§r
 item.pristine.Zombie.name=Pristine Zombie Matter
 
+item.creativeModelLearner.name=Creative Model Learner (WIP)
+item.dataModelBlank.name=Blank Data Model
+item.deepLearner.name=§bDeep Learner§r
+item.polymerClay.name=Polymer Clay
+item.sootCoveredRedstone.name=Soot-covered Redstone
+item.sootCoveredPlate.name=Soot-covered Plate
+
+
+# Blocks
+tile.machineCasing.name=Machine Casing
+tile.lootFabricator.name=Loot Fabricator
+tile.simulationChamber.name=Simulation Chamber
+
+
+# Tooltips
+tooltip.data_model.type=Type: %s
+tooltip.data_model.tier=Tier: %s
+tooltip.data_model.data_collected=Data collected: %s/%s
+tooltip.data_model.kill_multiplier=Data per kill: %s
+tooltip.data_model.rf_cost=Simulation cost: %s RF/t
+tooltip.data_model.cannot_simulate=Data Model cannot be used in a Simulation Chamber at this tier.
+tooltip.data_model.reached_tier=%s reached the %s tier
+
+tooltip.living_matter.consume_for_xp=%s to consume for experience.
+tooltip.living_matter.consume_stack=Hold %s to consume entire stack.
+tooltip.living_matter.xp=Experience per item: %s
+
+tooltip.pristine_matter.loot_items=Available loot items:
+
+tooltip.soot_covered_redstone=Crafted by crushing %s against a %s (%s)
+
+tooltip.creative_model_learner.desc=A creative item that levels up data models inside the Deep Learner.
+tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r
+tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r
+
+
+# Tier
+model.tier_0.name=§7Faulty§r
+model.tier_1.name=§aBasic§r
+model.tier_2.name=§9Advanced§r
+model.tier_3.name=§dSuperior§r
+model.tier_4.name=§6Self-Aware§r
+
+
 # Trivia
 dml.trivia.blaze.1=Bring buckets of water, and watch in despair as it evaporates, and everything is on fire.
 dml.trivia.blaze.2=You are on fire.
@@ -1133,115 +753,576 @@ dml.trivia.wither_skeleton.2=Bring milk!
 dml.trivia.zombie.1=They go moan in the night.
 dml.trivia.zombie.2=Does not understand the need for personal space.
 
-# Modular Machinery
+
+# Integrated Dynamics ==============================================
+
+
+# GUI
+gui.crafting_filter.storage=Storage
+gui.crafting_filter.craftable=Craftable
+gui.crafting_filter.both=Both
+
+gui.ids.part_settings=Part Settings
+gui.ids.index_channel=Chan: 
+gui.ids.id=ID
+gui.ids.length=Length
+gui.ids.transferLimit=Transfer Limit
+gui.ids.roundRobin=Round Robin
+gui.ids.nbt=NBT
+gui.ids.stackSize=Stack Size
+gui.ids.allowInsertions=Allow Insert
+gui.ids.allowExtractions=Allow Extract
+gui.ids.blackList=Black List
+
+gui.ids.redstoneReader.lowRedstone=Redstone Low | Boolean
+gui.ids.redstoneReader.hasRedstone=Redstone | Boolean
+gui.ids.redstoneReader.highRedstone=Redstone High | Boolean
+gui.ids.redstoneReader.redstoneValue=Redstone | Int
+
+gui.ids.blockReader.hasBlock=Has Block | Boolean
+gui.ids.blockReader.dimension=Dimension
+gui.ids.blockReader.coord.x=X | Int
+gui.ids.blockReader.coord.y=Y | Int
+gui.ids.blockReader.coord.z=Z | Int
+gui.ids.blockReader.block=Block | String
+gui.ids.blockReader.biome=Biome | String
+gui.ids.blockReader.light=Light Level | Int
+
+gui.ids.inventoryReader.isInventory=Is Inventory | Boolean
+gui.ids.inventoryReader.inventoryFull=Inventory Full | Boolean
+gui.ids.inventoryReader.inventoryEmpty=Inventory Empty | Boolean
+gui.ids.inventoryReader.inventoryNotEmpty=Inventory Not Empty | Boolean
+gui.ids.inventoryReader.inventoryCount=Inventory Count | Int
+gui.ids.inventoryReader.inventorySlots=Inventory Slots | Int
+gui.ids.inventoryReader.slotsFilled=Slots Filled | Int
+gui.ids.inventoryReader.fillRatio=Fill Ratio | Double
+gui.ids.inventoryReader.itemsList=Items | List
+gui.ids.inventoryReader.slotItem=Slot Item | ItemStack
+
+gui.ids.fluidReader.isTank=Is Tank | Boolean
+gui.ids.fluidReader.tankEmpty=Tank Empty | Boolean
+gui.ids.fluidReader.tankNotEmpty=Tank Not Empty | Boolean
+gui.ids.fluidReader.tankFull=Tank Full | Boolean
+gui.ids.fluidReader.tankCount=Tank Count | Int
+gui.ids.fluidReader.fluidAmount=Fluid Amount | Int
+gui.ids.fluidReader.totalAmount=Total Fluid Amount | Int
+gui.ids.fluidReader.fluidCapacity=Fluid Capacity | Int
+gui.ids.fluidReader.totalCapacity=Total Fluid Capacity | Int
+gui.ids.fluidReader.fillRatio=Fluid Fill Ratio | Double
+gui.ids.fluidReader.tankFluids=Tank Fluids | List
+gui.ids.fluidReader.tankCapacities=Tank Capacities | List
+gui.ids.fluidReader.tankFluid=Tank Fluid | FluidStack
+
+gui.ids.redstoneWriter.redstoneBoolean=Redstone | Boolean
+gui.ids.redstoneWriter.redstoneInt=Redstone | Int
+gui.ids.redstoneWriter.pulseBoolean=Pulse | Boolean
+gui.ids.redstoneWriter.pulseInt=Pulse | Int
+
+gui.ids.itemImporter.allItem=Import All Item | Boolean
+gui.ids.itemImporter.itemAmount=Import Item Amount | Int
+gui.ids.itemImporter.itemSlot=Import Item Slot | Int
+gui.ids.itemImporter.item=Import Item | ItemStack
+gui.ids.itemImporter.items=Import Items | List
+
+gui.ids.itemExporter.allItem=Export All Item | Boolean
+gui.ids.itemExporter.itemAmount=Export Item Amount | Int
+gui.ids.itemExporter.itemSlot=Export Item Slot | Int
+gui.ids.itemExporter.item=Export Item | ItemStack
+gui.ids.itemExporter.items=Export Items | List
+
+gui.ids.itemFilterInterface.all=Filter All | Boolean
+gui.ids.itemFilterInterface.item=Filter Item | ItemStack
+gui.ids.itemFilterInterface.items=Filter Items | List
+
+gui.ids.energyImporter.boolean=Import Energy | Boolean
+gui.ids.energyImporter.amount=Import Energy Amount | Int
+
+gui.ids.energyExporter.boolean=Export Energy | Boolean
+gui.ids.energyExporter.amount=Export Energy Amount | Int
+
+gui.ids.energyFilterInterface.all=Filter All | Boolean
+
+gui.ids.side=Target Side
+gui.ids.tick=Ticks / Operation
+gui.ids.priority=Priority
+gui.ids.channel=Channel
+
+
+# Programming
+gui.ids.type.boolean=Boolean
+gui.ids.type.int=Integer
+gui.ids.type.long=Long
+gui.ids.type.float=Float
+gui.ids.type.double=Double
+gui.ids.type.string=String
+
+gui.ids.op.if=IF
+
+gui.ids.op.and=AND && 
+gui.ids.op.nand=NAND !&&
+gui.ids.op.or=OR || 
+gui.ids.op.nor=NOR !|| 
+gui.ids.op.xor=XOR ^
+
+gui.ids.op.eq=EQ ==
+gui.ids.op.neq=NEQ !=
+gui.ids.op.gtr=GTR >
+gui.ids.op.geq=GEQ >=
+gui.ids.op.lss=LSS <
+gui.ids.op.leq=LEQ <=
+
+
+# Items
+item.variableCard.name=Variable Card
+item.itemImporter.name=Item Importer
+item.itemExporter.name=Item Exporter
+item.itemInterface.name=Item Interface
+item.itemFilterInterface.name=Item Filter Interface
+item.energyImporter.name=Energy Importer
+item.energyExporter.name=Energy Exporter
+item.energyInterface.name=Energy Interface
+item.energyFilterInterface.name=Energy Filter Interface
+item.storageTerminal.name=Storage Terminal
+item.redstoneReader.name=Redstone Reader
+item.blockReader.name=Block Reader
+item.inventoryReader.name=Inventory Reader
+item.fluidReader.name=Fluid Reader
+item.redstoneWriter.name=Redstone Writer
+item.craftingInterface.name=Crafting Interface
+
+
+# Blocks
+tile.cable.name=Logic Cable
+tile.programmer.name=Programmer
+
+
+# Tooltips
+tooltip.variable_card.empty=§7No logic data
+
+
+# Multiblock ==============================================
+
+
+# Config
+config.multiblockConfig=MultiBlock Settings
+config.quantumExtractorConfig=Quantum Extractor Settings
+config.oreMinerConfig=Ore Miner
+config.resMinerConfig=Resource Miner
+config.extractorModifiers=Modifiers
+config.quantumBeaconConfig=Quantum Beacon Settings
+config.beaconGeneral=General
+config.beaconEffectLevels=Effect Levels
+config.beaconRange=Range Settings
+config.solarArrayConfig=Solar Array Settings
+config.solarTierEnergy=Peak Energy per Tier
+config.solarCellSettings=Cell Settings
+config.eTWorldGenConfig=World Generation Settings
+config.hardenedStoneGen=Hardened Stone
+config.alabasterGen=Alabaster
+config.basaltGen=Basalt
+
+
+# NEI
+nei.multiblock.lens_bonus=%s Bonus
+
+
+# Items
+item.stabilizedEnderPear.name=Stabilized Ender Pearl
+item.photovoltaicCell.name=Photovoltaic Cell
+item.assembler.name=Assembler
+item.crystal.tier_1.name=Luminite Crystal
+item.crystal.tier_2.name=Solaris Crystal
+item.crystal.tier_3.name=Abyssal Crystal
+item.crystal.tier_4.name=Aurora Crystal
+item.crystal.tier_5.name=Eclipse Crystal
+item.crystal.tier_6.name=Nebula Crystal
+item.crystal.tier_7.name=Prismatic Crystal
+item.crystal.tier_8.name=Celestial Crystal
+
+
+# Blocks
+tile.mica.name=Mica
+tile.basalt.name=Basalt
+tile.alabaster.name=Alabaster
+tile.hardenedStone.name=Hardened Stone
+
+tile.machineBase.basalt_machine_base.name=Machine Base
+tile.machineBase.hardened_stone_machine_base.name=Machine Base
+tile.machineBase.alabaster_machine_base.name=Machine Base
+
+tile.basaltStructure.tier_1.name=Basalt Structure Frame Tier 1
+tile.basaltStructure.tier_2.name=Basalt Structure Frame Tier 2
+tile.basaltStructure.tier_3.name=Basalt Structure Frame Tier 3
+tile.basaltStructure.tier_4.name=Basalt Structure Frame Tier 4
+tile.basaltStructure.tier_5.name=Basalt Structure Frame Tier 5
+tile.basaltStructure.tier_6.name=Basalt Structure Frame Tier 6
+
+tile.hardenedStructure.tier_1.name=Hardened Structure Frame Tier 1
+tile.hardenedStructure.tier_2.name=Hardened Structure Frame Tier 2
+tile.hardenedStructure.tier_3.name=Hardened Structure Frame Tier 3
+tile.hardenedStructure.tier_4.name=Hardened Structure Frame Tier 4
+tile.hardenedStructure.tier_5.name=Hardened Structure Frame Tier 5
+tile.hardenedStructure.tier_6.name=Hardened Structure Frame Tier 6
+
+tile.alabasterStructure.tier_1.name=Alabaster Structure Frame Tier 1
+tile.alabasterStructure.tier_2.name=Alabaster Structure Frame Tier 2
+tile.alabasterStructure.tier_3.name=Alabaster Structure Frame Tier 3
+tile.alabasterStructure.tier_4.name=Alabaster Structure Frame Tier 4
+tile.alabasterStructure.tier_5.name=Alabaster Structure Frame Tier 5
+tile.alabasterStructure.tier_6.name=Alabaster Structure Frame Tier 6
+
+tile.blockCrystal.tier_1.name=Block of Luminite 
+tile.blockCrystal.tier_2.name=Block of Solaris
+tile.blockCrystal.tier_3.name=Block of Abyssal
+tile.blockCrystal.tier_4.name=Block of Aurora
+tile.blockCrystal.tier_5.name=Block of Eclipse
+tile.blockCrystal.tier_6.name=Block of Nebula
+tile.blockCrystal.tier_7.name=Block of Prismatic
+tile.blockCrystal.tier_8.name=Block of Celestial
+
+tile.modifierNull.name=Null Modifier
+tile.modifierAccuracy.name=Accuracy Modifier
+tile.modifierSpeed.name=Speed Modifier
+tile.modifierLuck.name=Luck Modifier
+tile.modifierPiezo.name=Piezo Modifier
+tile.modifierFlight.name=Flight Modifier
+tile.modifierNightVision.name=Night Vision Modifier
+tile.modifierHaste.name=Haste Modifier
+tile.modifierStrength.name=Strength Modifier
+tile.modifierWaterBreathing.name=Water Breathing Modifier
+tile.modifierRegeneration.name=Regeneration Modifier
+tile.modifierSaturation.name=Saturation Modifier
+tile.modifierResistance.name=Resistance Modifier
+tile.modifierJumpBoost.name=Jump Boost Modifier
+tile.modifierFireResistance.name=Fire Resistance Modifier
+
+tile.laserCore.name=Laser Core
+tile.lens.tier_1.name=Clear Lens
+tile.lens.tier_2.name=Crystal Lens
+tile.coloredLens.black.name=Black Lens
+tile.coloredLens.red.name=Red Lens
+tile.coloredLens.green.name=Green Lens
+tile.coloredLens.brown.name=Brown Lens
+tile.coloredLens.blue.name=Blue Lens
+tile.coloredLens.purple.name=Purple Lens
+tile.coloredLens.cyan.name=Cyan Lens
+tile.coloredLens.light_gray.name=Light Gray Lens
+tile.coloredLens.gray.name=Gray Lens
+tile.coloredLens.pink.name=Pink Lens
+tile.coloredLens.lime.name=Lime Lens
+tile.coloredLens.yellow.name=Yellow Lens
+tile.coloredLens.light_blue.name=Light Blue Lens
+tile.coloredLens.magenta.name=Magenta Lens
+tile.coloredLens.orange.name=Orange Lens
+tile.coloredLens.white.name=White Lens
+
+tile.solarCell.tier_1.name=Luminite Solar Cell
+tile.solarCell.tier_2.name=Solaris Solar Cell
+tile.solarCell.tier_3.name=Abyssal Solar Cell
+tile.solarCell.tier_4.name=Aurora Solar Cell
+tile.solarCell.tier_5.name=Eclipse Solar Cell
+tile.solarCell.tier_6.name=Nebula Solar Cell
+
+tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
+tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
+tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
+tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
+tile.quantumBeacon.tier_5.name=Quantum Beacon Tier 5
+tile.quantumBeacon.tier_6.name=Quantum Beacon Tier 6
+
+tile.solarArray.tier_1.name=Solar Array Tier 1
+tile.solarArray.tier_2.name=Solar Array Tier 2
+tile.solarArray.tier_3.name=Solar Array Tier 3
+tile.solarArray.tier_4.name=Solar Array Tier 4
+tile.solarArray.tier_5.name=Solar Array Tier 5
+tile.solarArray.tier_6.name=Solar Array Tier 6
+
+tile.quantumOreExtractor.tier_1.name=Quantum Ore Extractor Tier 1
+tile.quantumOreExtractor.tier_2.name=Quantum Ore Extractor Tier 2
+tile.quantumOreExtractor.tier_3.name=Quantum Ore Extractor Tier 3
+tile.quantumOreExtractor.tier_4.name=Quantum Ore Extractor Tier 4
+tile.quantumOreExtractor.tier_5.name=Quantum Ore Extractor Tier 5
+tile.quantumOreExtractor.tier_6.name=Quantum Ore Extractor Tier 6
+
+tile.quantumResExtractor.tier_1.name=Quantum Resource Extractor Tier 1
+tile.quantumResExtractor.tier_2.name=Quantum Resource Extractor Tier 2
+tile.quantumResExtractor.tier_3.name=Quantum Resource Extractor Tier 3
+tile.quantumResExtractor.tier_4.name=Quantum Resource Extractor Tier 4
+tile.quantumResExtractor.tier_5.name=Quantum Resource Extractor Tier 5
+tile.quantumResExtractor.tier_6.name=Quantum Resource Extractor Tier 6
+
+
+# Tooltips
+tooltip.assembler.l1=Shift + Right-click on controllers to assemble.
+tooltip.assembler.l2=Left-click to instantly break any multiblock block.
+
+tooltip.modifier.speed.effect=§aMining Speed %.2fx§r
+tooltip.modifier.speed.penalty=§cEnergy Cost %.2fx§r
+tooltip.modifier.accuracy.effect=§aFocus %.2fx§r
+tooltip.modifier.accuracy.penalty=§cMining Speed %.2fx§r, §cEnergy Cost %.2fx§r
+tooltip.modifier.piezo.effect=§aLittle generation bonus when raining§r
+tooltip.modifier.luck.effect=§aDouble Output +%d%%§r
+tooltip.modifier.luck.penalty=§cEnergy Cost %.2fx§r
+tooltip.modifier.flight.effect=§bCreative Flight§r
+tooltip.modifier.night_vision.effect=§bNight Vision§r
+tooltip.modifier.haste.effect=§bHaste§r
+tooltip.modifier.strength.effect=§bStrength§r
+tooltip.modifier.regeneration.effect=§bRegeneration§r
+tooltip.modifier.resistance.effect=§bResistance§r
+tooltip.modifier.saturation.effect=§bSaturation§r
+tooltip.modifier.jump_boost.effect=§bJump Boost§r
+tooltip.modifier.fire_resistance.effect=§bFire Resistance§r
+tooltip.modifier.water_breathing.effect=§bWater Breathing§r
+tooltip.modifier.beacon.energy=§7Uses %d RF/t per effect§r
+
+tooltip.beacon.shift_for_effects=Hold §eSHIFT§r for effect list
+tooltip.beacon.effect_list=Available Effects:
+tooltip.beacon.effect.speed=Speed
+tooltip.beacon.effect.haste=Haste
+tooltip.beacon.effect.strength=Strength
+tooltip.beacon.effect.resistance=Resistance
+tooltip.beacon.effect.regeneration=Regeneration
+tooltip.beacon.effect.saturation=Saturation
+tooltip.beacon.effect.jump_boost=Jump Boost
+tooltip.beacon.effect.night_vision=Night Vision
+tooltip.beacon.effect.water_breathing=Water Breathing
+tooltip.beacon.effect.fire_resistance=Fire Resistance
+tooltip.beacon.range=Effect Range:
+tooltip.beacon.range.horizontal=Horizontal
+tooltip.beacon.range.upward=Upward
+tooltip.beacon.range.downward=Downward
+
+tooltip.solar.cell.power=§aPeak Output: %d RF/t§r
+tooltip.solar.array.peak=§aMax Output: %d RF/t§r
+
+tooltip.miner.speed=§aCycle Time: %.1fs§r
+tooltip.miner.energy=§7Energy Cost: %d RF§r
+
+
+# Archievement
+achievement.omoshiroikamo.craft_assembler=Ready To Assemble
+achievement.omoshiroikamo.craft_assembler.desc=Craft the Assembler
+achievement.omoshiroikamo.craft_solar_array_t1=Entry Level Solar Array
+achievement.omoshiroikamo.craft_solar_array_t1.desc=Craft a Tier 1 Solar Array
+achievement.omoshiroikamo.craft_solar_array_t4=Ultimate Solar Array
+achievement.omoshiroikamo.craft_solar_array_t4.desc=Craft a Tier 4 Solar Array
+achievement.omoshiroikamo.craft_void_ore_t1=Entry Level Infinite Ore
+achievement.omoshiroikamo.craft_void_ore_t1.desc=Craft a Tier 1 Void Ore Miner
+achievement.omoshiroikamo.craft_void_ore_t4=Ultimate Infinite Ore Setup
+achievement.omoshiroikamo.craft_void_ore_t4.desc=Craft a Tier 4 Void Ore Miner
+
+achievement.omoshiroikamo.assemble_void_ore_miner_t1=Entry Level Infinite Ore
+achievement.omoshiroikamo.assemble_void_ore_miner_t1.desc=Assemble a Tier 1 Void Ore Miner with the Assembler
+achievement.omoshiroikamo.assemble_void_ore_miner_t4=Ultimate Infinite Ore Setup
+achievement.omoshiroikamo.assemble_void_ore_miner_t4.desc=Assemble a Tier 4 Void Ore Miner with the Assembler.
+achievement.omoshiroikamo.assemble_void_res_miner_t1=Entry Level Infinite Resources
+achievement.omoshiroikamo.assemble_void_res_miner_t1.desc=Assemble a Tier 1 Void Resource Miner with the Assembler.
+achievement.omoshiroikamo.assemble_void_res_miner_t4=Ultimate Infinite Resources
+achievement.omoshiroikamo.assemble_void_res_miner_t4.desc=Assemble a Tier 4 Void Resource Miner with the Assembler.
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t1=Entry Level Nano Bot Beacon
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t1.desc=Assemble a Tier 1 Nano Bot Beacon with the Assembler.
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t4=Ultimate Nano Bot Beacon
+achievement.omoshiroikamo.assemble_nano_bot_beacon_t4.desc=Assemble a Tier 4 Nano Bot Beacon with the Assembler.
+achievement.omoshiroikamo.assemble_solar_array_t1=Entry Level Solar Array
+achievement.omoshiroikamo.assemble_solar_array_t1.desc=Assemble a Tier 1 Solar Array with the Assembler.
+achievement.omoshiroikamo.assemble_solar_array_t4=Ultimate Solar Array
+achievement.omoshiroikamo.assemble_solar_array_t4.desc=Assemble a Tier 4 Solar Array with the Assembler.
+
+achievement.omoshiroikamo.craft_colored_lens=Focus That Laser
+achievement.omoshiroikamo.craft_colored_lens.desc=Dye a Lens.
+achievement.omoshiroikamo.craft_modifier_core=Modifications
+achievement.omoshiroikamo.craft_modifier_core.desc=Craft a Modifier Core.
+achievement.omoshiroikamo.craft_modifier_speed=Speed it up
+achievement.omoshiroikamo.craft_modifier_speed.desc=Craft a Speed Modifier.
+achievement.omoshiroikamo.craft_modifier_piezo=Energy From Vibrations
+achievement.omoshiroikamo.craft_modifier_piezo.desc=Craft a Piezo Modifier.
+achievement.omoshiroikamo.craft_modifier_accuracy=Increase That Focus
+achievement.omoshiroikamo.craft_modifier_accuracy.desc=Craft a Accuracy Modifier.
+achievement.omoshiroikamo.craft_modifier_jump_boost=Springs in my Legs
+achievement.omoshiroikamo.craft_modifier_jump_boost.desc=Craft a Jump Boost Modifier.
+achievement.omoshiroikamo.craft_modifier_flight=Nano Bot Assisted Flight
+achievement.omoshiroikamo.craft_modifier_flight.desc=Craft a Flight Modifier.
+achievement.omoshiroikamo.craft_modifier_resistance=Resist That Damage
+achievement.omoshiroikamo.craft_modifier_resistance.desc=Craft a Resistance Modifier.
+achievement.omoshiroikamo.craft_modifier_fire_res=Resist That Fire Damage
+achievement.omoshiroikamo.craft_modifier_fire_res.desc=Craft a Fire Resistance Modifier.
+achievement.omoshiroikamo.craft_modifier_haste=Mine Faster
+achievement.omoshiroikamo.craft_modifier_haste.desc=Craft a Haste Modifier.
+achievement.omoshiroikamo.craft_modifier_strength=Increase Your Damage
+achievement.omoshiroikamo.craft_modifier_strength.desc=Craft a Strength Modifier.
+achievement.omoshiroikamo.craft_modifier_night_vision=See in the dark
+achievement.omoshiroikamo.craft_modifier_night_vision.desc=Craft a Night Vision Modifier.
+achievement.omoshiroikamo.craft_modifier_water_breathing=Breath Under Water
+achievement.omoshiroikamo.craft_modifier_water_breathing.desc=Craft a Wather Breathing Modifier.
+achievement.omoshiroikamo.craft_modifier_regen=Speedy Healing
+achievement.omoshiroikamo.craft_modifier_regen.desc=Craft a Regen Modifier.
+achievement.omoshiroikamo.craft_modifier_saturation=Auto Feeding
+achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modifier.
+
+
+# Modular machines ==============================================
+
+
+# Gui
+gui.machinery.energy_used=Energy Used: %s
+gui.machinery.use_ic2=Use IC2
+
+
+# Status
+gui.status.insert_blueprint=Insert Blueprint
+gui.status.structure_mismatch=Structure mismatch
+gui.status.structure_not_formed=Structure not formed
+gui.status.processing=Processing: %d%%
+gui.status.output_full=Output Full: %s
+gui.status.output_capacity_insufficient=Output Capacity Insufficient: %s
+gui.status.idle=Idle
+gui.status.requirements_not_met=Requirement not met
+gui.status.block_mismatch=Block mismatch or incomplete structure
+gui.status.invalid_definition=Invalid structure definition
+gui.status.missing_definition=Structure definition missing
+gui.status.incomplete=Structure incomplete
+gui.status.paused=Paused by Redstone
+gui.status.no_recipes=No recipes registered
+gui.status.no_matching_recipe=No matching recipe
+gui.status.no_energy=Insufficient energy
+gui.status.input_missing=Input missing
+gui.status.missing_blueprint=No Blueprint
+gui.status.no_mana=Insufficient Mana
+gui.status.unknown=Unknown error
+
+
+# Machine Blueprint
+item.machineBlueprint.display.name.format=Blueprint: %s
+item.machineBlueprint.display.name.empty=Blank Blueprint
+
+tooltip.machineBlueprint.structure=Structure: %s
+tooltip.machineBlueprint.valid=Valid structure definition
+tooltip.machineBlueprint.invalid=Structure not found!
+tooltip.machineBlueprint.null=Blueprint is blank!
+tooltip.machineBlueprint.show=Right-click controller to show structure
+tooltip.machineBlueprint.build=Sneak+Right-click controller to build
+
+message.machineBlueprint.empty=This blueprint is blank
+
+
+# Port Types
+gui.port_type.ITEM=Item
+gui.port_type.FLUID=Fluid
+gui.port_type.ENERGY=Energy
+gui.port_type.MANA=Mana
+gui.port_type.GAS=Gas
+gui.port_type.ESSENTIA=Essentia
+gui.port_type.VIS=Vis
+
+
+# Tiles
 tile.modularMachineCasing.name=Machine Casing
 tile.modularMachineController.name=Machine Controller
 tile.visBridge.name=Vis Bridge
 
+
 # Item Input Port
-tile.modularItemInput.tier_1.name=Item Input Bus Tier 1
-tile.modularItemInput.tier_2.name=Item Input Bus Tier 2
-tile.modularItemInput.tier_3.name=Item Input Bus Tier 3
-tile.modularItemInput.tier_4.name=Item Input Bus Tier 4
-tile.modularItemInput.tier_5.name=Item Input Bus Tier 5
-tile.modularItemInput.tier_6.name=Item Input Bus Tier 6
+tile.modularItemInput.tier_1.name=Item Input Port Tier 1
+tile.modularItemInput.tier_2.name=Item Input Port Tier 2
+tile.modularItemInput.tier_3.name=Item Input Port Tier 3
+tile.modularItemInput.tier_4.name=Item Input Port Tier 4
+tile.modularItemInput.tier_5.name=Item Input Port Tier 5
+tile.modularItemInput.tier_6.name=Item Input Port Tier 6
+
 
 # Item Output Port
-tile.modularItemOutput.tier_1.name=Item Output Bus Tier 1
-tile.modularItemOutput.tier_2.name=Item Output Bus Tier 2
-tile.modularItemOutput.tier_3.name=Item Output Bus Tier 3
-tile.modularItemOutput.tier_4.name=Item Output Bus Tier 4
-tile.modularItemOutput.tier_5.name=Item Output Bus Tier 5
-tile.modularItemOutput.tier_6.name=Item Output Bus Tier 6
+tile.modularItemOutput.tier_1.name=Item Output Port Tier 1
+tile.modularItemOutput.tier_2.name=Item Output Port Tier 2
+tile.modularItemOutput.tier_3.name=Item Output Port Tier 3
+tile.modularItemOutput.tier_4.name=Item Output Port Tier 4
+tile.modularItemOutput.tier_5.name=Item Output Port Tier 5
+tile.modularItemOutput.tier_6.name=Item Output Port Tier 6
+
 
 # Fluid Input Port
-tile.modularFluidInput.tier_1.name=Fluid Input Hatch Tier 1
-tile.modularFluidInput.tier_2.name=Fluid Input Hatch Tier 2
-tile.modularFluidInput.tier_3.name=Fluid Input Hatch Tier 3
-tile.modularFluidInput.tier_4.name=Fluid Input Hatch Tier 4
-tile.modularFluidInput.tier_5.name=Fluid Input Hatch Tier 5
-tile.modularFluidInput.tier_6.name=Fluid Input Hatch Tier 6
+tile.modularFluidInput.tier_1.name=Fluid Input Port Tier 1
+tile.modularFluidInput.tier_2.name=Fluid Input Port Tier 2
+tile.modularFluidInput.tier_3.name=Fluid Input Port Tier 3
+tile.modularFluidInput.tier_4.name=Fluid Input Port Tier 4
+tile.modularFluidInput.tier_5.name=Fluid Input Port Tier 5
+tile.modularFluidInput.tier_6.name=Fluid Input Port Tier 6
+
 
 # Fluid Output Port
-tile.modularFluidOutput.tier_1.name=Fluid Output Hatch Tier 1
-tile.modularFluidOutput.tier_2.name=Fluid Output Hatch Tier 2
-tile.modularFluidOutput.tier_3.name=Fluid Output Hatch Tier 3
-tile.modularFluidOutput.tier_4.name=Fluid Output Hatch Tier 4
-tile.modularFluidOutput.tier_5.name=Fluid Output Hatch Tier 5
-tile.modularFluidOutput.tier_6.name=Fluid Output Hatch Tier 6
+tile.modularFluidOutput.tier_1.name=Fluid Output Port Tier 1
+tile.modularFluidOutput.tier_2.name=Fluid Output Port Tier 2
+tile.modularFluidOutput.tier_3.name=Fluid Output Port Tier 3
+tile.modularFluidOutput.tier_4.name=Fluid Output Port Tier 4
+tile.modularFluidOutput.tier_5.name=Fluid Output Port Tier 5
+tile.modularFluidOutput.tier_6.name=Fluid Output Port Tier 6
+
 
 # Energy Input Port
-tile.modularEnergyInput.tier_1.name=Energy Input Hatch Tier 1
-tile.modularEnergyInput.tier_2.name=Energy Input Hatch Tier 2
-tile.modularEnergyInput.tier_3.name=Energy Input Hatch Tier 3
-tile.modularEnergyInput.tier_4.name=Energy Input Hatch Tier 4
-tile.modularEnergyInput.tier_5.name=Energy Input Hatch Tier 5
-tile.modularEnergyInput.tier_6.name=Energy Input Hatch Tier 6
+tile.modularEnergyInput.tier_1.name=Energy Input Port Tier 1
+tile.modularEnergyInput.tier_2.name=Energy Input Port Tier 2
+tile.modularEnergyInput.tier_3.name=Energy Input Port Tier 3
+tile.modularEnergyInput.tier_4.name=Energy Input Port Tier 4
+tile.modularEnergyInput.tier_5.name=Energy Input Port Tier 5
+tile.modularEnergyInput.tier_6.name=Energy Input Port Tier 6
+
 
 # Energy Output Port
-tile.modularEnergyOutput.tier_1.name=Energy Output Hatch Tier 1
-tile.modularEnergyOutput.tier_2.name=Energy Output Hatch Tier 2
-tile.modularEnergyOutput.tier_3.name=Energy Output Hatch Tier 3
-tile.modularEnergyOutput.tier_4.name=Energy Output Hatch Tier 4
-tile.modularEnergyOutput.tier_5.name=Energy Output Hatch Tier 5
-tile.modularEnergyOutput.tier_6.name=Energy Output Hatch Tier 6
+tile.modularEnergyOutput.tier_1.name=Energy Output Port Tier 1
+tile.modularEnergyOutput.tier_2.name=Energy Output Port Tier 2
+tile.modularEnergyOutput.tier_3.name=Energy Output Port Tier 3
+tile.modularEnergyOutput.tier_4.name=Energy Output Port Tier 4
+tile.modularEnergyOutput.tier_5.name=Energy Output Port Tier 5
+tile.modularEnergyOutput.tier_6.name=Energy Output Port Tier 6
+
 
 # Gas Input Port
-tile.modularGasInput.tier_1.name=Gas Input Hatch Tier 1
-tile.modularGasInput.tier_2.name=Gas Input Hatch Tier 2
-tile.modularGasInput.tier_3.name=Gas Input Hatch Tier 3
-tile.modularGasInput.tier_4.name=Gas Input Hatch Tier 4
-tile.modularGasInput.tier_5.name=Gas Input Hatch Tier 5
-tile.modularGasInput.tier_6.name=Gas Input Hatch Tier 6
+tile.modularGasInput.tier_1.name=Gas Input Port Tier 1
+tile.modularGasInput.tier_2.name=Gas Input Port Tier 2
+tile.modularGasInput.tier_3.name=Gas Input Port Tier 3
+tile.modularGasInput.tier_4.name=Gas Input Port Tier 4
+tile.modularGasInput.tier_5.name=Gas Input Port Tier 5
+tile.modularGasInput.tier_6.name=Gas Input Port Tier 6
+
 
 # Gas Output Port
-tile.modularGasOutput.tier_1.name=Gas Output Hatch Tier 1
-tile.modularGasOutput.tier_2.name=Gas Output Hatch Tier 2
-tile.modularGasOutput.tier_3.name=Gas Output Hatch Tier 3
-tile.modularGasOutput.tier_4.name=Gas Output Hatch Tier 4
-tile.modularGasOutput.tier_5.name=Gas Output Hatch Tier 5
-tile.modularGasOutput.tier_6.name=Gas Output Hatch Tier 6
+tile.modularGasOutput.tier_1.name=Gas Output Port Tier 1
+tile.modularGasOutput.tier_2.name=Gas Output Port Tier 2
+tile.modularGasOutput.tier_3.name=Gas Output Port Tier 3
+tile.modularGasOutput.tier_4.name=Gas Output Port Tier 4
+tile.modularGasOutput.tier_5.name=Gas Output Port Tier 5
+tile.modularGasOutput.tier_6.name=Gas Output Port Tier 6
+
 
 # Mana Ports
-tile.modularManaInput.tier_1.name=Mana Input Hatch
-tile.modularManaOutput.tier_1.name=Mana Output Hatch
+tile.modularManaInput.tier_1.name=Mana Input Port
+tile.modularManaOutput.tier_1.name=Mana Output Port
+
 
 # Vis Ports
 tile.modularVisInput.tier_1.name=Vis Input Relay
 tile.modularVisOutput.tier_1.name=Vis Output Relay
 
+
 # Essentia Ports
-tile.modularEssentiaInput.tier_1.name=Essentia Input Hatch
-tile.modularEssentiaOutput.tier_1.name=Essentia Output Hatch
+tile.modularEssentiaInput.tier_1.name=Essentia Input Port
+tile.modularEssentiaOutput.tier_1.name=Essentia Output Port
+
 
 # ME Ports
-tile.modularItemOutputME.me.name=ME Item Output Bus
-tile.modularFluidOutputME.me.name=ME Fluid Output Hatch
-tile.modularEssentiaInputME.me.name=ME Essentia Input Hatch
+tile.modularItemOutputME.me.name=ME Item Output Port
+tile.modularFluidOutputME.me.name=ME Fluid Output Port
+tile.modularEssentiaInputME.me.name=ME Essentia Input Port
+waila.me.online=Device Online
+waila.me.no_channel=Device Missing Channel
+waila.me.offline=Device Offline
+tooltip.me_output.desc=Outputs items directly to ME Network
+tooltip.me_fluid_output.desc=Outputs fluids directly to ME Network
+tooltip.me_output.wip=Work In Progress
+tooltip.me_output.lag_warning=Warning: May cause lag when connected to ME Network
 
-# Deep Mob Learning
-model.tier_0.name=§7Faulty§r
-model.tier_1.name=§aBasic§r
-model.tier_2.name=§9Advanced§r
-model.tier_3.name=§dSuperior§r
-model.tier_4.name=§6Self-Aware§r
 
-tooltip.creative_model_learner.desc=A creative item that levels up data models inside the Deep Learner.
-tooltip.creative_model_learner.shift=§r§oSHIFT§r§7 + §r§oRIGHT§r§7 click to increase tier.§r
-tooltip.creative_model_learner.ctrl=§r§oCTRL§r§7 + §r§oRIGHT§r§7 click to simulate kills.§r
+# Tooltips
+tooltip.machinery.capacity=Capacity: %s
+tooltip.machinery.slots=Slots: %s
+tooltip.machinery.mana_transfer=Transfer: %s /t
 
-# Integrated Dynamics
-tooltip.variable_card.empty=§7No logic data
-
-# Machine Blueprint
-item.machineBlueprint.display.name.format=Blueprint: %s
-item.machineBlueprint.display.name.empty=Empty Blueprint
-
-tooltip.machineBlueprint.structure=Structure: %s
-tooltip.machineBlueprint.valid=Valid structure definition
-tooltip.machineBlueprint.invalid=Structure not found!
-tooltip.machineBlueprint.null=Blueprint is empty!
-tooltip.machineBlueprint.show=Right-click controller to show structure
-tooltip.machineBlueprint.build=Sneak+Right-click to build
-
-message.machineBlueprint.empty=This blueprint is empty

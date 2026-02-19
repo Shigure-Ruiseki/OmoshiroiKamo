@@ -11,6 +11,7 @@ public class ManaStorage implements INBTSerializable {
 
     protected int mana;
     protected int capacity;
+    // Are these fields effective?
     protected int maxReceive;
     protected int maxExtract;
 

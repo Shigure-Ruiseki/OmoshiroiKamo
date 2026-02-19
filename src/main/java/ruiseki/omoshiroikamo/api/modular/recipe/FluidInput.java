@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import net.minecraftforge.fluids.FluidStack;
 
 import com.google.gson.JsonObject;
@@ -12,7 +10,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
-public class FluidInput implements IRecipeInput {
+public class FluidInput extends AbstractRecipeInput {
 
     private final FluidStack required;
 
@@ -30,31 +28,27 @@ public class FluidInput implements IRecipeInput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-        int remaining = required.amount;
+    protected long getRequiredAmount() {
+        return required.amount;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != IPortType.Type.FLUID) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT) continue;
-            if (!(port instanceof AbstractFluidPortTE)) {
-                throw new IllegalStateException(
-                    "FLUID INPUT port must be AbstractFluidPortTE, got: " + port.getClass()
-                        .getName());
-            }
-            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
+    @Override
+    protected boolean isCorrectPort(IModularPort port) {
+        return port instanceof AbstractFluidPortTE;
+    }
 
-            FluidStack stored = fluidPort.getStoredFluid();
-            if (stored != null && stored.isFluidEqual(required)) {
-                int drain = Math.min(stored.amount, remaining);
-                if (!simulate) {
-                    fluidPort.internalDrain(drain, true);
-                }
-                remaining -= drain;
+    @Override
+    protected long consume(IModularPort port, long remaining, boolean simulate) {
+        AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
+        FluidStack stored = fluidPort.getStoredFluid();
+        if (stored != null && stored.isFluidEqual(required)) {
+            int drain = (int) Math.min(stored.amount, remaining);
+            if (!simulate) {
+                fluidPort.internalDrain(drain, true);
             }
-            if (remaining <= 0) break;
+            return drain;
         }
-
-        return remaining <= 0;
+        return 0;
     }
 
     public static FluidInput fromJson(JsonObject json) {

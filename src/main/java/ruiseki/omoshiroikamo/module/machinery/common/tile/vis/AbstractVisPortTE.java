@@ -15,11 +15,9 @@ import thaumcraft.api.aspects.AspectList;
 
 /**
  * Abstract base class for Vis ports.
- * Stores Vis as AspectList (primal aspects).
- *
- * TODO: Use sides array or remove if unnecessary
+ * Stores Vis as AspectList.
  * TODO: Add tiered blocks/TEs
- * TODO: All sides should be IN, OUT like mana port
+ * TODO: Add vis filter
  */
 public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
 
@@ -32,7 +30,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     public AbstractVisPortTE(int maxVisPerAspect) {
         this.maxVisPerAspect = maxVisPerAspect;
         for (int i = 0; i < 6; i++) {
-            sides[i] = EnumIO.NONE;
+            sides[i] = getIOLimit();
         }
     }
 
@@ -105,13 +103,15 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public EnumIO getSideIO(ForgeDirection side) {
+        if (side == ForgeDirection.UNKNOWN || side.ordinal() >= 6) {
+            return EnumIO.NONE;
+        }
         return sides[side.ordinal()];
     }
 
     @Override
     public void setSideIO(ForgeDirection side, EnumIO state) {
-        sides[side.ordinal()] = state;
-        forceRenderUpdate();
+        // Disabled for Vis ports
     }
 
     @Override
