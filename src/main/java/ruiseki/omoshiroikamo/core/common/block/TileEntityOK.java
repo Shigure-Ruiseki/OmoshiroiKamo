@@ -193,23 +193,15 @@ public abstract class TileEntityOK extends TileEntity
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound root) {
+    public final void writeToNBT(NBTTagCompound root) {
         super.writeToNBT(root);
-        writeGeneratedFieldsToNBT(root);
-
-        if (capabilities != null) {
-            root.setTag("OKCaps", capabilities.serializeNBT());
-        }
+        writeCommon(root);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound root) {
+    public final void readFromNBT(NBTTagCompound root) {
         super.readFromNBT(root);
-        readGeneratedFieldsFromNBT(root);
-
-        if (capabilities != null && root.hasKey("OKCaps")) {
-            capabilities.deserializeNBT(root.getCompoundTag("OKCaps"));
-        }
+        readCommon(root);
     }
 
     /**
@@ -248,6 +240,22 @@ public abstract class TileEntityOK extends TileEntity
         NBTTagCompound ret = new NBTTagCompound();
         this.writeToNBT(ret);
         return ret;
+    }
+
+    public void writeCommon(NBTTagCompound tag) {
+        writeGeneratedFieldsToNBT(tag);
+
+        if (capabilities != null) {
+            tag.setTag("OKCaps", capabilities.serializeNBT());
+        }
+    }
+
+    public void readCommon(NBTTagCompound tag) {
+        readGeneratedFieldsFromNBT(tag);
+
+        if (capabilities != null && tag.hasKey("OKCaps")) {
+            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
+        }
     }
 
     @Override

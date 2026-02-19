@@ -2,16 +2,21 @@ package ruiseki.omoshiroikamo.core.common.item;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.capabilities.ICapabilityProvider;
+import ruiseki.omoshiroikamo.api.capabilities.IItemCapability;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
-public class ItemOK extends Item {
+public class ItemOK extends Item implements IItemCapability {
 
     protected String name;
 
@@ -70,5 +75,11 @@ public class ItemOK extends Item {
     @Override
     public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, 0));
+    }
+
+    @Nullable
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return null;
     }
 }

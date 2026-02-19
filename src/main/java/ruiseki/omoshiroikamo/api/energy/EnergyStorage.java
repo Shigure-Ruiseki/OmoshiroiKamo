@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.api.energy;
 import net.minecraft.nbt.NBTTagCompound;
 
 import cofh.api.energy.IEnergyStorage;
-import cpw.mods.fml.common.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
@@ -14,7 +13,6 @@ import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
  * @author King Lemming
  */
 
-@Optional.Interface(modid = "CoFHLib", iface = "cofh.api.energy.IEnergyStorage", striprefs = true)
 public class EnergyStorage implements IEnergyStorage, INBTSerializable {
 
     protected int energy;

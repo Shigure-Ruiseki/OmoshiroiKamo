@@ -1,26 +1,11 @@
-package ruiseki.omoshiroikamo.core.common.block;
+package ruiseki.omoshiroikamo.api.capabilities;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.api.capabilities.ICapabilityProvider;
-import ruiseki.omoshiroikamo.api.capabilities.IItemCapability;
-
-public class ItemBlockOK extends ItemBlockWithMetadata implements IItemCapability {
-
-    public ItemBlockOK(Block blockA, Block blockB) {
-        super(blockA, blockB);
-        this.setMaxDamage(0);
-        this.setHasSubtypes(true);
-    }
-
-    public ItemBlockOK(Block blockA) {
-        this(blockA, null);
-    }
+public interface IItemCapability {
 
     /**
      * Called from ItemStack.setItem, will hold extra data for the life of this ItemStack.
@@ -37,7 +22,5 @@ public class ItemBlockOK extends ItemBlockWithMetadata implements IItemCapabilit
      *         item.
      */
     @Nullable
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-        return null;
-    }
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt);
 }

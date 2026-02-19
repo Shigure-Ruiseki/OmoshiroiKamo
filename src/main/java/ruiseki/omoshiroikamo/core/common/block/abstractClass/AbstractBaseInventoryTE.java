@@ -103,8 +103,8 @@ public abstract class AbstractBaseInventoryTE extends AbstractSideCapabilityTE i
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
+    public void readCommon(NBTTagCompound tag) {
+        super.readCommon(tag);
         INBTInventory inventory = getInventory();
         if (inventory != null) {
             inventory.readFromNBT(tag);
@@ -112,8 +112,8 @@ public abstract class AbstractBaseInventoryTE extends AbstractSideCapabilityTE i
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
+    public void writeCommon(NBTTagCompound tag) {
+        super.writeCommon(tag);
         INBTInventory inventory = getInventory();
         if (inventory != null) {
             inventory.writeToNBT(tag);
