@@ -40,6 +40,12 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     @Override
     public boolean process(List<IModularPort> ports, boolean simulate) {
+
+        // If not simulating, first check if we CAN output everything by simulating
+        if (!simulate) {
+            if (!process(ports, true)) return false;
+        }
+
         int remaining = output.stackSize;
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ITEM) continue;

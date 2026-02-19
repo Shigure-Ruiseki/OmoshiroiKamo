@@ -152,9 +152,10 @@ public class ProcessAgent {
 
         if (energyOutputPerTick > 0) {
             EnergyOutput energyOut = new EnergyOutput(energyOutputPerTick, true);
-            if (!energyOut.process(outputEnergyPorts, false)) {
+            if (!energyOut.process(outputEnergyPorts, true)) {
                 return TickResult.OUTPUT_FULL;
             }
+            energyOut.process(outputEnergyPorts, false);
         }
 
         progress++;
