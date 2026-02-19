@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.api.modular.recipe.GasOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
@@ -31,6 +32,8 @@ public class ProcessAgent {
     private int maxProgress;
     private int energyPerTick;
     private int energyOutputPerTick;
+    private int manaPerTick;
+    private int manaOutputPerTick;
     private boolean running;
     private boolean waitingForOutput;
 
@@ -60,6 +63,12 @@ public class ProcessAgent {
                 if (!energyInput.process(energyPorts, true)) {
                     return false;
                 }
+            } else if (input instanceof ManaInput) {
+                ManaInput manaInput = (ManaInput) input;
+                if (manaInput.isPerTick()) continue;
+                if (!manaInput.process(inputPorts, true)) {
+                    return false;
+                }
             } else if (!input.process(inputPorts, true)) {
                 return false;
             }
@@ -67,6 +76,9 @@ public class ProcessAgent {
 
         energyPerTick = 0;
         energyOutputPerTick = 0;
+        manaPerTick = 0;
+        manaOutputPerTick = 0;
+
         for (IRecipeInput input : recipe.getInputs()) {
             if (input instanceof EnergyInput) {
                 EnergyInput energyInput = (EnergyInput) input;
@@ -75,17 +87,29 @@ public class ProcessAgent {
                 } else {
                     energyInput.process(energyPorts, false);
                 }
+            } else if (input instanceof ManaInput) {
+                ManaInput manaInput = (ManaInput) input;
+                if (manaInput.isPerTick()) {
+                    manaPerTick += manaInput.getAmount();
+                } else {
+                    manaInput.process(inputPorts, false);
+                }
             } else {
                 input.process(inputPorts, false);
             }
         }
 
-        // Calculate per-tick energy output
+        // Calculate per-tick outputs
         for (IRecipeOutput output : recipe.getOutputs()) {
             if (output instanceof EnergyOutput) {
                 EnergyOutput eOut = (EnergyOutput) output;
                 if (eOut.isPerTick()) {
                     energyOutputPerTick += eOut.getAmount();
+                }
+            } else if (output instanceof ManaOutput) {
+                ManaOutput mOut = (ManaOutput) output;
+                if (mOut.isPerTick()) {
+                    manaOutputPerTick += mOut.getAmount();
                 }
             }
         }
@@ -106,7 +130,10 @@ public class ProcessAgent {
                 FluidStack stack = ((FluidOutput) output).getOutput();
                 cachedFluidOutputs.add(stack.copy());
             } else if (output instanceof ManaOutput) {
-                cachedManaOutputs.add(((ManaOutput) output).getAmount());
+                ManaOutput mOut = (ManaOutput) output;
+                if (!mOut.isPerTick()) {
+                    cachedManaOutputs.add(mOut.getAmount());
+                }
             } else if (output instanceof GasOutput) {
                 GasOutput gasOut = (GasOutput) output;
                 cachedGasOutputs.add(new String[] { gasOut.getGasName(), String.valueOf(gasOut.getAmount()) });
@@ -136,7 +163,7 @@ public class ProcessAgent {
         return true;
     }
 
-    public TickResult tick(List<IModularPort> inputEnergyPorts, List<IModularPort> outputEnergyPorts) {
+    public TickResult tick(List<IModularPort> inputPorts, List<IModularPort> outputPorts) {
         if (!running) return TickResult.IDLE;
 
         if (waitingForOutput) {
@@ -145,17 +172,32 @@ public class ProcessAgent {
 
         if (energyPerTick > 0) {
             EnergyInput energyReq = new EnergyInput(energyPerTick, true);
-            if (!energyReq.process(inputEnergyPorts, false)) {
+            if (!energyReq.process(inputPorts, false)) {
                 return TickResult.NO_ENERGY;
+            }
+        }
+
+        if (manaPerTick > 0) {
+            ManaInput manaReq = new ManaInput(manaPerTick, true);
+            if (!manaReq.process(inputPorts, false)) {
+                return TickResult.NO_MANA;
             }
         }
 
         if (energyOutputPerTick > 0) {
             EnergyOutput energyOut = new EnergyOutput(energyOutputPerTick, true);
-            if (!energyOut.process(outputEnergyPorts, true)) {
+            if (!energyOut.process(outputPorts, true)) {
                 return TickResult.OUTPUT_FULL;
             }
-            energyOut.process(outputEnergyPorts, false);
+            energyOut.process(outputPorts, false);
+        }
+
+        if (manaOutputPerTick > 0) {
+            ManaOutput manaOut = new ManaOutput(manaOutputPerTick, true);
+            if (!manaOut.process(outputPorts, true)) {
+                return TickResult.OUTPUT_FULL;
+            }
+            manaOut.process(outputPorts, false);
         }
 
         progress++;
@@ -239,6 +281,8 @@ public class ProcessAgent {
         waitingForOutput = false;
         energyPerTick = 0;
         energyOutputPerTick = 0;
+        manaPerTick = 0;
+        manaOutputPerTick = 0;
         cachedItemOutputs.clear();
         cachedFluidOutputs.clear();
         cachedManaOutputs.clear();
@@ -299,7 +343,7 @@ public class ProcessAgent {
         Set<IPortType.Type> types = new HashSet<>();
         if (!cachedItemOutputs.isEmpty()) types.add(IPortType.Type.ITEM);
         if (!cachedFluidOutputs.isEmpty()) types.add(IPortType.Type.FLUID);
-        if (!cachedManaOutputs.isEmpty()) types.add(IPortType.Type.MANA);
+        if (!cachedManaOutputs.isEmpty() || manaOutputPerTick > 0) types.add(IPortType.Type.MANA);
         if (!cachedGasOutputs.isEmpty()) types.add(IPortType.Type.GAS);
         if (!cachedEssentiaOutputs.isEmpty()) types.add(IPortType.Type.ESSENTIA);
         if (!cachedVisOutputs.isEmpty()) types.add(IPortType.Type.VIS);
@@ -371,6 +415,8 @@ public class ProcessAgent {
         nbt.setInteger("maxProgress", maxProgress);
         nbt.setInteger("energyPerTick", energyPerTick);
         nbt.setInteger("energyOutputPerTick", energyOutputPerTick);
+        nbt.setInteger("manaPerTick", manaPerTick);
+        nbt.setInteger("manaOutputPerTick", manaOutputPerTick);
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
         if (currentRecipeName != null) {
@@ -443,6 +489,8 @@ public class ProcessAgent {
         maxProgress = nbt.getInteger("maxProgress");
         energyPerTick = nbt.getInteger("energyPerTick");
         energyOutputPerTick = nbt.getInteger("energyOutputPerTick");
+        manaPerTick = nbt.getInteger("manaPerTick");
+        manaOutputPerTick = nbt.getInteger("manaOutputPerTick");
         running = nbt.getBoolean("running");
         waitingForOutput = nbt.getBoolean("waitingForOutput");
         currentRecipeName = nbt.hasKey("recipeName") ? nbt.getString("recipeName") : null;
@@ -515,6 +563,7 @@ public class ProcessAgent {
         NO_INPUT,
         NO_MATCHING_RECIPE,
         OUTPUT_FULL,
-        PAUSED
+        PAUSED,
+        NO_MANA
     }
 }

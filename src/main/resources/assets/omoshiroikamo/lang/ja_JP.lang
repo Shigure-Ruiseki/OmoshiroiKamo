@@ -1172,24 +1172,23 @@ gui.machinery.use_ic2=IC2を使用
 gui.status.insert_blueprint=ブループリントを挿入してください
 gui.status.structure_mismatch=構造が一致しません
 gui.status.structure_not_formed=構造が形成されていません
-gui.status.processing=処理中: %d%%
-gui.status.output_full=出力満杯: %s
-gui.status.output_capacity_insufficient=出力容量不足: %s
+gui.status.processing=レシピ処理中: %d%%
+gui.status.output_full=出力が満杯です: %s
+gui.status.output_capacity_insufficient=出力容量が不足しています: %s
 gui.status.idle=待機中
 gui.status.requirements_not_met=構造体の要件を満たしていません
 gui.status.block_mismatch=ブロック不一致または構造体が不完全です
 gui.status.invalid_definition=無効な構造定義です
 gui.status.missing_definition=構造定義が見つかりません
 gui.status.incomplete=構造体が不完全です
-gui.status.paused=レッドストーンで一時停止
+gui.status.paused=レッドストーン信号により停止中
 gui.status.no_recipes=レシピがありません
 gui.status.no_matching_recipe=一致しているレシピが見つかりません
 gui.status.no_energy=エネルギーが不足しています
 gui.status.input_missing=入力が不足しています
+gui.status.missing_blueprint=ブループリントがありません
+gui.status.no_mana=マナが不足しています
 gui.status.unknown=不明なエラー
-gui.status.missing_blueprint=ブループリント未挿入
-gui.status.no_input=材料不足
-
 
 # Machine Blueprint
 item.machineBlueprint.display.name.format=設計図: %s
@@ -1197,12 +1196,12 @@ item.machineBlueprint.display.name.empty=空の設計図
 
 tooltip.machineBlueprint.structure=構造体: %s
 tooltip.machineBlueprint.valid=有効な構造体です
-tooltip.machineBlueprint.invalid=構造体が無効です！
-tooltip.machineBlueprint.null=ブループリントが空です！
-tooltip.machineBlueprint.show=コントローラーに使うことで構造体を表示
+tooltip.machineBlueprint.invalid=構造体が無効です
+tooltip.machineBlueprint.null=設計図に構造体が登録されていません
+tooltip.machineBlueprint.show=コントローラーに右クリックで構造体をホロ表示
 tooltip.machineBlueprint.build=コントローラーにシフト右クリックで建造
 
-message.machineBlueprint.empty=この設計図は空です
+message.machineBlueprint.empty=この設計図は白紙です
 
 
 # Port Types
@@ -1210,9 +1209,9 @@ gui.port_type.ITEM=アイテム
 gui.port_type.FLUID=液体
 gui.port_type.ENERGY=エネルギー
 gui.port_type.MANA=マナ
-gui.port_type.GAS=ガス
+gui.port_type.GAS=気体
 gui.port_type.ESSENTIA=エッセンシア
-gui.port_type.VIS=Vis
+gui.port_type.VIS=ビス
 
 
 # Tiles

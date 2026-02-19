@@ -19,7 +19,8 @@ public enum ErrorReason {
     NO_INPUT("no_input", "No input resources"),
     PAUSED("paused", "Paused by Redstone"),
     MISSING_BLUEPRINT("missing_blueprint", "No Blueprint"),
-    OUTPUT_CAPACITY_INSUFFICIENT("output_capacity_insufficient", "Output Capacity Insufficient");
+    OUTPUT_CAPACITY_INSUFFICIENT("output_capacity_insufficient", "Output Capacity Insufficient"),
+    NO_MANA("no_mana", "Insufficient Mana");
 
     private final String id;
     private final String defaultMessage;

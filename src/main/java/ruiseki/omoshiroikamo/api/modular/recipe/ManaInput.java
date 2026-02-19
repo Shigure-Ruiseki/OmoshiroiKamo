@@ -9,13 +9,23 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortT
 public class ManaInput extends AbstractRecipeInput {
 
     private final int amount;
+    private final boolean perTick;
+
+    public ManaInput(int amount, boolean perTick) {
+        this.amount = amount;
+        this.perTick = perTick;
+    }
 
     public ManaInput(int amount) {
-        this.amount = amount;
+        this(amount, true);
     }
 
     public int getAmount() {
         return amount;
+    }
+
+    public boolean isPerTick() {
+        return perTick;
     }
 
     @Override
@@ -50,6 +60,14 @@ public class ManaInput extends AbstractRecipeInput {
     public static ManaInput fromJson(JsonObject json) {
         int amount = json.get("mana")
             .getAsInt();
-        return new ManaInput(amount);
+        boolean perTick = true;
+        if (json.has("perTick")) {
+            perTick = json.get("perTick")
+                .getAsBoolean();
+        } else if (json.has("pertick")) {
+            perTick = json.get("pertick")
+                .getAsBoolean();
+        }
+        return new ManaInput(amount, perTick);
     }
 }
