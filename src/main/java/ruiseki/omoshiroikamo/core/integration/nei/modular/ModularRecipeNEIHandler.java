@@ -235,7 +235,59 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             collectParts(recipe.getInputs(), inputParts, true);
             collectPartsErrors(recipe.getOutputs(), outputParts, false);
 
-            // Separate inputs by type
+            int currentX = 5;
+            int currentY = 18;
+            String recipeName = recipe.getName();
+            if (recipeName != null) {
+                PositionedText text = new PositionedText(
+                    recipeName,
+                    0x222222,
+                    new Rectangle(currentX, currentY - 12, 100, 10));
+                allParts.add(new LayoutPartRenderer(text));
+            }
+
+            // Layout Inputs
+            if (!inputParts.isEmpty()) {
+                PositionedText inText = new PositionedText(
+                    "Inputs",
+                    0x444444,
+                    new Rectangle(currentX, currentY, 100, 10));
+                allParts.add(new LayoutPartRenderer(inText));
+                currentY += 12;
+
+                currentY = layoutSection(inputParts, currentX, currentY);
+            } else {
+                PositionedText text = new PositionedText(
+                    "No Input",
+                    0x222222,
+                    new Rectangle(currentX, currentY, 100, 10));
+                allParts.add(new LayoutPartRenderer(text));
+            }
+
+            // Layout Outputs
+            if (!outputParts.isEmpty()) {
+                currentY += 10;
+                PositionedText outText = new PositionedText(
+                    "Outputs",
+                    0x444444,
+                    new Rectangle(currentX, currentY, 100, 10));
+                allParts.add(new LayoutPartRenderer(outText));
+                currentY += 12;
+
+                layoutSection(outputParts, currentX, currentY);
+            } else {
+                PositionedText text = new PositionedText(
+                    "No Output",
+                    0x222222,
+                    new Rectangle(currentX, currentY, 100, 10));
+                allParts.add(new LayoutPartRenderer(text));
+            }
+
+            populateLegacyLists(inputParts, true);
+            populateLegacyLists(outputParts, false);
+        }
+
+        private int layoutSection(List<RecipeLayoutPart<?>> parts, int startX, int startY) {
             List<LayoutPartMana> manaParts = new ArrayList<>();
             List<LayoutPartEnergy> energyParts = new ArrayList<>();
             List<LayoutPartItem> itemParts = new ArrayList<>();
@@ -244,7 +296,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             List<LayoutPartFluid> fluidParts = new ArrayList<>();
             List<LayoutPartGas> gasParts = new ArrayList<>();
 
-            for (RecipeLayoutPart<?> part : inputParts) {
+            for (RecipeLayoutPart<?> part : parts) {
                 if (part instanceof LayoutPartMana) manaParts.add((LayoutPartMana) part);
                 else if (part instanceof LayoutPartEnergy) energyParts.add((LayoutPartEnergy) part);
                 else if (part instanceof LayoutPartItem) itemParts.add((LayoutPartItem) part);
@@ -254,74 +306,71 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 else if (part instanceof LayoutPartGas) gasParts.add((LayoutPartGas) part);
             }
 
-            // --- LAYOUT LOGIC ---
+            int currentX = startX;
+            int maxY = startY;
 
-            int mainY = 18;
-            int currentX = 5;
-
-            String recipeName = recipe.getName();
-            if (recipeName != null) {
-                PositionedText text = new PositionedText(
-                    recipeName,
-                    0x222222,
-                    new Rectangle(currentX, mainY - 12, 100, 10));
-                allParts.add(new LayoutPartRenderer(text));
+            // 1. Items (Grid)
+            if (!itemParts.isEmpty()) {
+                int cols = Math.min(itemParts.size(), 3); // Max 3 columns
+                int rows = (int) Math.ceil((double) itemParts.size() / cols);
+                layoutGrid(itemParts, currentX, startY, cols, 18);
+                currentX += (cols * 18) + 4;
+                maxY = Math.max(maxY, startY + (rows * 18));
             }
 
-            // 1. Items (Center Grid)
-            int itemStartX = currentX;
-            layoutGrid(itemParts, itemStartX, mainY, 3, 18);
+            // 2. Essentia (Grid)
+            if (!essentiaParts.isEmpty()) {
+                int cols = Math.min(essentiaParts.size(), 2);
+                int rows = (int) Math.ceil((double) essentiaParts.size() / cols);
+                layoutGrid(essentiaParts, currentX, startY, cols, 16);
+                currentX += (cols * 16) + 4;
+                maxY = Math.max(maxY, startY + (rows * 16));
+            }
 
-            // 2. Essentia (Bottom Left, below items)
-            int essentiaY = mainY + (3 * 18) + 8;
-            layoutGrid(essentiaParts, itemStartX, essentiaY, 4, 16);
+            // 3. Vis (Grid)
+            if (!visParts.isEmpty()) {
+                int cols = Math.min(visParts.size(), 2);
+                int rows = (int) Math.ceil((double) visParts.size() / cols);
+                layoutGrid(visParts, currentX, startY, cols, 16);
+                currentX += (cols * 16) + 4;
+                maxY = Math.max(maxY, startY + (rows * 16));
+            }
 
-            // 3. Vis (Right of items)
-            int visStartX = itemStartX + (3 * 18) + 4;
-            layoutGrid(visParts, visStartX, mainY, 2, 16);
-
-            // 4. Energy (Right of Vis)
-            int energyStartX = visStartX + (2 * 16) + 4;
+            // 4. Energy
             if (!energyParts.isEmpty()) {
                 LayoutPartEnergy energy = energyParts.get(0);
-                energy.setPosition(energyStartX, mainY);
+                energy.setPosition(currentX, startY);
                 allParts.add(energy);
+                currentX += energy.getWidth() + 4;
+                maxY = Math.max(maxY, startY + energy.getHeight());
             }
 
             // 5. Fluids/Gas (Far Right)
-            int tankStartX = energyStartX + 16 + 4;
-            int currentTankX = tankStartX;
-
             for (LayoutPartFluid fluid : fluidParts) {
-                fluid.setPosition(currentTankX, mainY);
-                currentTankX += fluid.getWidth() + 2;
+                fluid.setPosition(currentX, startY);
+                currentX += fluid.getWidth() + 2;
+                maxY = Math.max(maxY, startY + fluid.getHeight());
             }
             for (LayoutPartGas gas : gasParts) {
-                gas.setPosition(currentTankX, mainY);
+                gas.setPosition(currentX, startY);
                 allParts.add(gas);
-                currentTankX += gas.getWidth() + 2;
+                currentX += gas.getWidth() + 2;
+                maxY = Math.max(maxY, startY + gas.getHeight());
             }
 
-            // 6. Output Area
-            int outputY = 115;
-            int outputStartX = 10;
-            layoutComponents(outputParts, outputStartX, outputY, false);
-
-            // 7. Mana (Bottom Bar)
-            int manaY = 80;
+            // 6. Mana (Bottom Bar)
             if (!manaParts.isEmpty()) {
                 LayoutPartMana mana = manaParts.get(0);
-                mana.setPosition(5, manaY);
+                mana.setPosition(startX, maxY + 4);
                 allParts.add(mana);
+                maxY += mana.getHeight() + 4;
             }
 
-            // Populate legacy lists for NEI compatibility
             for (RecipeLayoutPart<?> part : itemParts) allParts.add(part);
             for (RecipeLayoutPart<?> part : essentiaParts) allParts.add(part);
             for (RecipeLayoutPart<?> part : visParts) allParts.add(part);
 
-            populateLegacyLists(inputParts, true);
-            populateLegacyLists(outputParts, false);
+            return maxY;
         }
 
         private void layoutGrid(List<? extends RecipeLayoutPart<?>> parts, int x, int y, int cols, int cellSize) {
@@ -355,59 +404,6 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                     parts.add(part);
                 }
             }
-        }
-
-        /**
-         * Lays out components starting from x, y.
-         * Returns the maximum X used.
-         */
-        private int layoutComponents(List<RecipeLayoutPart<?>> parts, int startX, int startY, boolean isInput) {
-            int currentX = startX;
-            int currentY = startY;
-            int maxYInRow = 0;
-            int maxX = startX;
-
-            RecipeLayoutPart<?> lastPart = null;
-            int itemsInRow = 0;
-
-            for (RecipeLayoutPart<?> part : parts) {
-                // Check if we need a new line
-                boolean newline = false;
-
-                // If max horizontal count exceeded
-                if (lastPart != null && lastPart.getClass() == part.getClass()) {
-                    if (itemsInRow >= part.getMaxHorizontalCount()) {
-                        newline = true;
-                    }
-                } else if (lastPart != null && lastPart.getClass() != part.getClass()) {
-                    // Type changed, reset row count, maybe force newline if height is different?
-                    itemsInRow = 0;
-                }
-
-                // Check bounds
-                if (currentX + part.getWidth() > 166) {
-                    newline = true;
-                }
-
-                if (newline) {
-                    currentX = startX;
-                    currentY += maxYInRow + 4; // Gap
-                    maxYInRow = 0;
-                    itemsInRow = 0;
-                }
-
-                part.setPosition(currentX, currentY);
-
-                // Update metrics
-                currentX += part.getWidth() + 2; // Gap X
-                if (currentX > maxX) maxX = currentX;
-                if (part.getHeight() > maxYInRow) maxYInRow = part.getHeight();
-
-                itemsInRow++;
-                lastPart = part;
-            }
-
-            return maxX;
         }
 
         private void populateLegacyLists(List<RecipeLayoutPart<?>> parts, boolean isInput) {
