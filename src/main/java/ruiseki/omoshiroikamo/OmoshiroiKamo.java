@@ -27,8 +27,10 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.CoreModule;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
+import ruiseki.omoshiroikamo.core.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.command.CommandOK;
+import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.integration.nei.NEICompat;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
@@ -102,7 +104,9 @@ public class OmoshiroiKamo extends ModBase {
     @Override
     public final void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
-        ModelRegistry.registerModid(LibMisc.MOD_ID);
+        if (MinecraftHelpers.isClientSide()) {
+            ModelRegistry.registerModid(LibMisc.MOD_ID);
+        }
         WailaCompat.init();
         NEICompat.init();
     }
@@ -116,6 +120,9 @@ public class OmoshiroiKamo extends ModBase {
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
         StructureCompat.postInit();
+        if (MinecraftHelpers.isClientSide()) {
+            TextureLoader.loadFromConfig(LibMisc.MOD_ID, LibMisc.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
+        }
     }
 
     @Mod.EventHandler
