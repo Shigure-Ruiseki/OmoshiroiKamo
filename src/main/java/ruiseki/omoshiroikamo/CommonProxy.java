@@ -81,7 +81,7 @@ public class CommonProxy {
         ModuleManager.initCommon(event);
 
         WailaCompat.init();
-
+        NEICompat.init();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
@@ -90,7 +90,6 @@ public class CommonProxy {
         ModuleManager.postInitCommon(event);
 
         StructureCompat.postInit();
-        NEICompat.init();
     }
 
     public void serverLoad(FMLServerStartingEvent event) {
