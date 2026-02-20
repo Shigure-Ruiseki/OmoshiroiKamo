@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +30,10 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartFluid
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartGas;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartItem;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartMana;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartRenderer;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartVis;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.RecipeLayoutPart;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedText;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -253,8 +256,17 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
             // --- LAYOUT LOGIC ---
 
-            int mainY = 12;
+            int mainY = 18;
             int currentX = 5;
+
+            String recipeName = recipe.getName();
+            if (recipeName != null) {
+                PositionedText text = new PositionedText(
+                    recipeName,
+                    0x222222,
+                    new Rectangle(currentX, mainY - 12, 100, 10));
+                allParts.add(new LayoutPartRenderer(text));
+            }
 
             // 1. Items (Center Grid)
             int itemStartX = currentX;
@@ -296,7 +308,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             layoutComponents(outputParts, outputStartX, outputY, false);
 
             // 7. Mana (Bottom Bar)
-            int manaY = 142;
+            int manaY = 80;
             if (!manaParts.isEmpty()) {
                 LayoutPartMana mana = manaParts.get(0);
                 mana.setPosition(5, manaY);
