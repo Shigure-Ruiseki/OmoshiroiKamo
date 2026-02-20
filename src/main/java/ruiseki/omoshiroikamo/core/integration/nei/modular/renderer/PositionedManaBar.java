@@ -3,13 +3,12 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular.renderer;
 import java.awt.Rectangle;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
+import vazkii.botania.client.core.handler.HUDHandler;
 
 public class PositionedManaBar implements INEIPositionedRenderer {
 
@@ -29,22 +28,20 @@ public class PositionedManaBar implements INEIPositionedRenderer {
             return;
         }
 
-        // Use Botania's mana HUD texture
-        Minecraft mc = Minecraft.getMinecraft();
-        mc.renderEngine.bindTexture(new ResourceLocation("botania", "textures/gui/manaHud.png"));
-
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
-        int barHeight = Math.min(8, position.height);
-        int barWidth = position.width;
         int x = position.x;
-        int y = position.y + (position.height - barHeight) / 2;
+        int y = position.y; // renderManaBar draws at y
 
-        // Draw background
-        GuiDraw.drawGradientRect(x, y, barWidth, barHeight, 0xFF000044, 0xFF000088);
-        GuiDraw.drawGradientRect(x, y, barWidth, barHeight, 0xFF00FFFF, 0xFF0000AA); // Light blue to dark blue
+        // Note: renderManaBar might take 'ticks' or direct values.
+        // Signature in 1.7.10 Botania API
+        // (vazkii.botania.client.core.handler.HUDHandler):
+        // public static void renderManaBar(int x, int y, int color, float alpha, int
+        // mana, int maxMana)
+
+        HUDHandler.renderManaBar(x, y, 0x0000FF, 1.0F, amount, amount);
 
         // Draw amount text
         String amountStr = amount + (perTick ? " Mana/t" : " Mana");

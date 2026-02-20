@@ -37,25 +37,28 @@ public class PositionedEnergy implements INEIPositionedRenderer {
             GuiContainerManager.drawItem(position.x + 1, position.y - 18, displayStack);
         }
 
-        // Draw Energy Bar Background and Foreground
+        // Texture 16x128. Background at (0,0), Foreground at (0,64). Both 16x64.
         Minecraft.getMinecraft().renderEngine
             .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/progress_energy.png"));
 
-        int barWidth = 12;
-        int barHeight = 48;
+        int barWidth = 16;
+        int barHeight = Math.min(64, position.height); // Our bar is 60px
         int x = position.x + (position.width - barWidth) / 2;
         int y = position.y + (position.height - barHeight) / 2;
 
-        GuiDraw.drawTexturedModalRect(x, y, 0, 0, 16, barHeight);
-        GuiDraw.drawGradientRect(x, y, barWidth, barHeight, 0xFF550000, 0xFF330000);
+        // Draw Background
+        GuiDraw.drawTexturedModalRect(x, y, 0, 64 - barHeight, barWidth, barHeight);
 
-        int fillHeight = barHeight; // Full for recipe view
+        // Draw Foreground (based on amount)
+        if (amount > 0) {
+            int max = 10000;
 
-        GuiDraw.drawGradientRect(x, y + barHeight - fillHeight, barWidth, fillHeight, 0xFFFF0000, 0xFFAA0000);
+            int drawHeight = barHeight;
+            GuiDraw.drawTexturedModalRect(x, y + barHeight - drawHeight, 0, 128 - drawHeight, barWidth, drawHeight);
+        }
 
         if (amount > 0) {
             String amountStr = amount + (perTick ? " RF/t" : " RF");
-            // Draw amount string, maybe scaled down
             float scale = 0.5f;
             int realX = this.position.x + this.position.width / 2;
             int realY = this.position.y + this.position.height - 5;
