@@ -23,10 +23,11 @@ public class NEIRendererFactory {
     }
 
     public static INEIPositionedRenderer createAspectRenderer(Object input, Object output, Rectangle rect) {
-        if (Loader.isModLoaded("Thaumcraft")) {
+        if (Loader.isModLoaded("thaumcraftneiplugin")) {
             return ThaumcraftHelper.createAspectRenderer(input, output, rect);
+        } else {
+            return new PositionedText("Require TC NEI Plugin for Essentia/Vis recipe display", 0xFF5555, rect);
         }
-        return null;
     }
 
     public static INEIPositionedRenderer createManaRenderer(Object input, Object output, Rectangle rect) {
