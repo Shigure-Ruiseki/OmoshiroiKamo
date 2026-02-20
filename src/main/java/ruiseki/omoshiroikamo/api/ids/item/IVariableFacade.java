@@ -10,11 +10,11 @@ import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IValue;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IValueType;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IVariable;
 import ruiseki.omoshiroikamo.api.ids.network.IPartNetwork;
-import ruiseki.omoshiroikamo.api.util.L10NHelpers;
+import ruiseki.omoshiroikamo.core.helper.L10NHelpers;
 
 /**
  * A facade for retrieving a variable.
- * 
+ *
  * @author rubensworks
  */
 public interface IVariableFacade {
@@ -31,7 +31,7 @@ public interface IVariableFacade {
 
     /**
      * Get the variable.
-     * 
+     *
      * @param <V>     The value type.
      * @param network The object used to look for the variable.
      * @return The variable.
@@ -45,7 +45,7 @@ public interface IVariableFacade {
 
     /**
      * Check if this facade is valid, otherwise notify the validator of any errors.
-     * 
+     *
      * @param network             The object used to look for the variable.
      * @param validator           The object to notify errors to.
      * @param containingValueType The value type in which this variable facade is being used.
@@ -59,7 +59,7 @@ public interface IVariableFacade {
 
     /**
      * Add information about this variable facade to the list.
-     * 
+     *
      * @param list         The list to add lines to.
      * @param entityPlayer The player that will see the information.
      */
@@ -68,7 +68,7 @@ public interface IVariableFacade {
 
     /**
      * Handle the quads for the given baked model.
-     * 
+     *
      * @param variableModelBaked The baked model.
      * @param quads              The quads that can be added to.
      */
@@ -79,7 +79,7 @@ public interface IVariableFacade {
 
         /**
          * Set the current error for the given aspect.
-         * 
+         *
          * @param error The error to set, or null to clear.
          */
         public void addError(L10NHelpers.UnlocalizedString error);

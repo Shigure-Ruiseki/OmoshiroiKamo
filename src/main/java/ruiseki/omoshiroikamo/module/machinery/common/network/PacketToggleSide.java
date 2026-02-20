@@ -7,9 +7,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.api.network.CodecField;
-import ruiseki.omoshiroikamo.api.network.PacketCodec;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.network.CodecField;
+import ruiseki.omoshiroikamo.core.network.PacketCodec;
 
 public class PacketToggleSide extends PacketCodec {
 

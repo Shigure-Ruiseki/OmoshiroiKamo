@@ -18,14 +18,14 @@ import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
-import ruiseki.omoshiroikamo.core.common.handler.NetherPopulateHandler;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.event.NetherPopulateEvent;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 
 public class ModChickens {
 
     public static void preInit() {
-        if (!BackportConfigs.enableChicken) return;
+        if (!BackportConfigs.enableChickens) return;
 
         EntityRegistry.registerModEntity(
             EntityChickensChicken.class,
@@ -42,12 +42,12 @@ public class ModChickens {
     }
 
     public static void init() {
-        if (!BackportConfigs.enableChicken) return;
+        if (!BackportConfigs.enableChickens) return;
         registerModAddons();
     }
 
     public static void postInit() {
-        if (!BackportConfigs.enableChicken) return;
+        if (!BackportConfigs.enableChickens) return;
 
         loadConfiguration();
 
@@ -62,7 +62,7 @@ public class ModChickens {
                 biomesForSpawning.toArray(new BiomeGenBase[biomesForSpawning.size()]));
             if (biomesForSpawning.contains(BiomeGenBase.hell)) {
                 MinecraftForge.TERRAIN_GEN_BUS.register(
-                    new NetherPopulateHandler(ChickenConfig.netherSpawnChanceMultiplier, EntityChickensChicken.class));
+                    new NetherPopulateEvent(ChickenConfig.netherSpawnChanceMultiplier, EntityChickensChicken.class));
             }
         }
     }

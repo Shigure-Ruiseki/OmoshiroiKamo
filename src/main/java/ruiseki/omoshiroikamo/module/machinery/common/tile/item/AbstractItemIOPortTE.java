@@ -27,11 +27,11 @@ import ruiseki.omoshiroikamo.api.block.SlotDefinition;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 /**

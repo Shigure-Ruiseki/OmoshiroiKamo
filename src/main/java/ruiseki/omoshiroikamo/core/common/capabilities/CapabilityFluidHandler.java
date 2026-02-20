@@ -12,12 +12,12 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-import ruiseki.omoshiroikamo.api.capabilities.Capability;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityInject;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityManager;
-import ruiseki.omoshiroikamo.api.fluid.FluidHandlerItemStack;
-import ruiseki.omoshiroikamo.api.fluid.IFluidHandlerItem;
-import ruiseki.omoshiroikamo.api.fluid.SmartTank;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
+import ruiseki.omoshiroikamo.core.fluid.FluidHandlerItemStack;
+import ruiseki.omoshiroikamo.core.fluid.IFluidHandlerItem;
+import ruiseki.omoshiroikamo.core.fluid.SmartTank;
 
 public class CapabilityFluidHandler {
 

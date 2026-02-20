@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.common.handler;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,9 +25,10 @@ import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
+import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
@@ -724,7 +723,8 @@ public class BackpackHandler implements IItemHandlerModifiable {
     public void syncToServer() {
         writeToItem();
         if (type != null) {
-            NETWORK.sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
         }
     }
 }

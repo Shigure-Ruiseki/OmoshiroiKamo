@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cows.common.block;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
 import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,13 +13,14 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import lombok.Getter;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.api.fluid.SmartTank;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.fluid.SmartTank;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 import ruiseki.omoshiroikamo.module.cows.common.network.PacketStall;
 
@@ -166,7 +165,8 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         }
 
         if (tankDirty && shouldDoWorkThisTick(10)) {
-            NETWORK.sendToAllAround(new PacketStall(this), this);
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToAllAround(new PacketStall(this), this);
             worldObj.func_147453_f(xCoord, yCoord, zCoord, getBlockType());
             Fluid held = tank.getFluid() == null ? null
                 : tank.getFluid()

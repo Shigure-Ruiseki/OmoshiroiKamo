@@ -6,7 +6,7 @@ import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandl
 import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ruiseki.omoshiroikamo.core.common.recipe.NBTShapedOreRecipe;
+import ruiseki.omoshiroikamo.core.recipe.NBTShapedOreRecipe;
 
 public class BackpackDyeRecipes {
 

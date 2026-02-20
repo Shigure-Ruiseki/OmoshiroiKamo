@@ -24,13 +24,13 @@ import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.fluid.SmartTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.fluid.SmartTank;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 public abstract class AbstractFluidPortTE extends AbstractTE

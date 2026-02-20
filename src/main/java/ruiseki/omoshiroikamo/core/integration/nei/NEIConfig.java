@@ -85,14 +85,14 @@ public class NEIConfig implements IConfigureNEI {
                 registerDimensionCatalysts(res.getRecipeID());
             }
         }
-        if (BackportConfigs.enableChicken) {
+        if (BackportConfigs.enableChickens) {
             registerHandler(new ChickenLayingRecipeHandler());
             registerHandler(new ChickenBreedingRecipeHandler());
             registerHandler(new ChickenDropsRecipeHandler());
             registerHandler(new ChickenThrowsRecipeHandler());
         }
 
-        if (BackportConfigs.enableCow) {
+        if (BackportConfigs.enableCows) {
             registerHandler(new CowBreedingRecipeHandler());
             registerHandler(new CowMilkingRecipeHandler());
         }

@@ -14,14 +14,14 @@ import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
-import ruiseki.omoshiroikamo.core.common.handler.NetherPopulateHandler;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.event.NetherPopulateEvent;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class ModCows {
 
     public static void preInit() {
-        if (!BackportConfigs.enableCow) return;
+        if (!BackportConfigs.enableCows) return;
 
         EntityRegistry
             .registerModEntity(EntityCowsCow.class, "cow", CowConfig.cowEntityId, OmoshiroiKamo.instance, 64, 1, true);
@@ -29,12 +29,12 @@ public class ModCows {
     }
 
     public static void init() {
-        if (!BackportConfigs.enableCow) return;
+        if (!BackportConfigs.enableCows) return;
         registerModAddons();
     }
 
     public static void postInit() {
-        if (!BackportConfigs.enableCow) return;
+        if (!BackportConfigs.enableCows) return;
 
         loadConfiguration();
 
@@ -49,7 +49,7 @@ public class ModCows {
                 biomesForSpawning.toArray(new BiomeGenBase[biomesForSpawning.size()]));
             if (biomesForSpawning.contains(BiomeGenBase.hell)) {
                 MinecraftForge.TERRAIN_GEN_BUS
-                    .register(new NetherPopulateHandler(CowConfig.netherSpawnChanceMultiplier, EntityCowsCow.class));
+                    .register(new NetherPopulateEvent(CowConfig.netherSpawnChanceMultiplier, EntityCowsCow.class));
             }
         }
     }

@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public interface IAdvancedFilterable extends IBasicFilterable {

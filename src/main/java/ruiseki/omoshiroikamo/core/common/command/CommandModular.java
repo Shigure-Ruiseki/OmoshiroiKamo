@@ -9,7 +9,7 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
-import ruiseki.omoshiroikamo.module.machinery.MachineryCommon;
+import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 /**
@@ -60,7 +60,7 @@ public class CommandModular {
         // Reload recipes
         try {
             RecipeLoader.getInstance()
-                .reload(MachineryCommon.getConfigDir());
+                .reload(MachineryModule.getConfigDir());
             sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  Recipes reloaded"));
         } catch (Exception e) {
             sender

@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.module.ids.common.capability.path;
 
-import ruiseki.omoshiroikamo.api.capabilities.Capability;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityInject;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
 
 public class PathElementConfig {
 

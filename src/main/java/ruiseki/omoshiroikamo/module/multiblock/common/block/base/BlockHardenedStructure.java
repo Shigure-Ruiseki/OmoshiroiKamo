@@ -17,8 +17,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockHardenedStructure extends BlockOK implements IMBBlock {
 
@@ -109,7 +109,7 @@ public class BlockHardenedStructure extends BlockOK implements IMBBlock {
     public static class ItemBlockHardenedStructure extends ItemBlockOK {
 
         public ItemBlockHardenedStructure(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

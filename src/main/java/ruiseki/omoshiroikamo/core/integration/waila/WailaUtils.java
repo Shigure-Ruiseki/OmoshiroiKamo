@@ -19,8 +19,8 @@ import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
-import ruiseki.omoshiroikamo.api.gas.IGasHandler;
+import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import vazkii.botania.api.mana.IManaBlock;
 

@@ -20,8 +20,8 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 

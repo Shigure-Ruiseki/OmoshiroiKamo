@@ -11,8 +11,8 @@ import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 

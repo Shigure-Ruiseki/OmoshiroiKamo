@@ -17,9 +17,9 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
+import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
@@ -83,7 +83,7 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
     public static class ItemBlockSolarArray extends ItemBlockOK {
 
         public ItemBlockSolarArray(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

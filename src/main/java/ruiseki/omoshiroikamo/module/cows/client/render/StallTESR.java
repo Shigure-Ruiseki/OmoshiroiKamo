@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
+import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
@@ -54,7 +54,7 @@ public class StallTESR extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5, y + 0.1, z + 0.5);
         ForgeDirection facing = tile.getFacing();
-        GL11.glRotatef(BlockStateUtils.getFacingAngle(facing), 0F, 1F, 0F);
+        GL11.glRotatef(BlockStateHelpers.getFacingAngle(facing), 0F, 1F, 0F);
         GL11.glRotatef(180, 0F, 1F, 0F);
         GL11.glScalef(0.5f, 0.5f, 0.5f);
 

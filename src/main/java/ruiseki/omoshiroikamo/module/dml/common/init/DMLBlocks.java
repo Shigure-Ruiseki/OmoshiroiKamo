@@ -4,7 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;

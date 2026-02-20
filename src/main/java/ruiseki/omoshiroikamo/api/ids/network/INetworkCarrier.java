@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.ids.network;
 
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Interface for blocks that are network-aware.

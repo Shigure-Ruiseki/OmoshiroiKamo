@@ -8,13 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 
 public abstract class AbstractPortItemBlock extends ItemBlockOK {
 
-    public AbstractPortItemBlock(Block blockA, Block blockB) {
-        super(blockA, blockB);
+    public AbstractPortItemBlock(Block block) {
+        super(block);
     }
 
     public IIcon getOverlayIcon(int tier) {

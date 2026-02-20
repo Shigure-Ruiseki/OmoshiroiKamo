@@ -18,4 +18,6 @@ public class LibResources {
     public static final String GUI_CHICKEN_DROPS = PREFIX_GUI + "nei/chicken/drops.png";
     public static final String GUI_CHICKEN_THROWS = PREFIX_GUI + "nei/chicken/throws.png";
     public static final String GUI_SLOT = PREFIX_GUI + "nei/slot.png";
+
+    public static final String MOD_VANILLA = "Minecraft";
 }

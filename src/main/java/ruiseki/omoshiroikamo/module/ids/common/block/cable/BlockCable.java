@@ -18,9 +18,9 @@ import ruiseki.omoshiroikamo.api.block.ICustomCollision;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.IRedstoneLogic;
 
@@ -224,7 +224,7 @@ public class BlockCable extends BlockOK {
     public static class ItemBlockCable extends ItemBlockOK {
 
         public ItemBlockCable(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

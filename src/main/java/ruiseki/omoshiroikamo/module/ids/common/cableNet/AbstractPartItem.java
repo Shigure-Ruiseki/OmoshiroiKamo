@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.api.ids.ICablePartItem;
-import ruiseki.omoshiroikamo.core.common.item.ItemOK;
+import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.module.ids.common.block.cable.TECable;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 

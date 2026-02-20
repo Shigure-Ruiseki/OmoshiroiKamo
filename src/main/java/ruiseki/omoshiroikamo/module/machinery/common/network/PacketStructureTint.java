@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.network.CodecField;
-import ruiseki.omoshiroikamo.api.network.PacketCodec;
+import ruiseki.omoshiroikamo.core.network.CodecField;
+import ruiseki.omoshiroikamo.core.network.PacketCodec;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**

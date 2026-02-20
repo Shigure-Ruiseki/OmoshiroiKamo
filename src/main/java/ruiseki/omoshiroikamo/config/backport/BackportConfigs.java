@@ -14,7 +14,7 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean enableChicken;
+    public static boolean enableChickens;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
@@ -22,7 +22,7 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
-    public static boolean enableCow;
+    public static boolean enableCows;
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart

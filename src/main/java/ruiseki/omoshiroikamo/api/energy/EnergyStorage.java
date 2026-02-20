@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import cofh.api.energy.IEnergyStorage;
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 /**
  * Reference implementation of {@link cofh.api.energy.IEnergyStorage}. Use/extend this or implement your own.

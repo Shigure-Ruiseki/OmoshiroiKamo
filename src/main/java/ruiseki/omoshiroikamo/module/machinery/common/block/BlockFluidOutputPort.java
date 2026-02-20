@@ -74,7 +74,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
     public static class ItemBlockFluidOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockFluidOutputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.gas.IGasHandler;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
@@ -84,7 +84,7 @@ public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> {
     public static class ItemBlockGasOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockGasOutputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

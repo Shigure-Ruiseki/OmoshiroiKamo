@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockAlabasterStructure;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.base.BlockBasaltStructure;

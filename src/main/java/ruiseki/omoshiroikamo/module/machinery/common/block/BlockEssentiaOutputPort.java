@@ -66,7 +66,7 @@ public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputP
     public static class ItemBlockEssentiaOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockEssentiaOutputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

@@ -5,8 +5,8 @@ import java.util.TreeSet;
 
 import com.google.common.collect.Sets;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * Algorithm to construct paths/clusters of {@link IPathElement}s.

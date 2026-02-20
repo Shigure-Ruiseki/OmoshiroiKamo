@@ -11,8 +11,8 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockCrystal extends BlockOK {
 
@@ -66,8 +66,8 @@ public class BlockCrystal extends BlockOK {
 
     public static class ItemBlockCrystal extends ItemBlockOK {
 
-        public ItemBlockCrystal(Block blockA) {
-            super(blockA, blockA);
+        public ItemBlockCrystal(Block block) {
+            super(block);
         }
 
         @Override

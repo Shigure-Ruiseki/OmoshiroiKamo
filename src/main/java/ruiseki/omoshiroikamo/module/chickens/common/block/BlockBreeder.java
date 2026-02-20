@@ -16,7 +16,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 
 public class BlockBreeder extends AbstractBlock<TEBreeder> {

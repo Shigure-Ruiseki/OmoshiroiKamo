@@ -9,9 +9,10 @@ import net.minecraft.nbt.NBTTagList;
 import com.google.common.collect.Sets;
 
 import ruiseki.omoshiroikamo.api.ids.network.INetwork;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
-import ruiseki.omoshiroikamo.api.persist.world.WorldStorage;
-import ruiseki.omoshiroikamo.api.util.MinecraftHelpers;
+import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
+import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.persist.world.WorldStorage;
 import ruiseki.omoshiroikamo.module.ids.common.network.Network;
 
 /**
@@ -26,11 +27,11 @@ public class NetworkWorldStorage extends WorldStorage {
     @NBTPersist
     private Set<INetwork> networks = Sets.newHashSet();
 
-    private NetworkWorldStorage(String mod) {
+    private NetworkWorldStorage(ModBase mod) {
         super(mod);
     }
 
-    public static NetworkWorldStorage getInstance(String mod) {
+    public static NetworkWorldStorage getInstance(ModBase mod) {
         if (INSTANCE == null) {
             INSTANCE = new NetworkWorldStorage(mod);
         }

@@ -22,7 +22,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 

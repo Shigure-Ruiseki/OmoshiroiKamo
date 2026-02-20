@@ -5,7 +5,7 @@ import net.minecraft.stats.Achievement;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 
 public class AchievementTrigger {
 

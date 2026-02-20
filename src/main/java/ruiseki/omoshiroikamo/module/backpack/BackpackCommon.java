@@ -1,80 +1,21 @@
 package ruiseki.omoshiroikamo.module.backpack;
 
-import cpw.mods.fml.common.event.FMLConstructionEvent;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
-import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackPackets;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackRecipes;
-import ruiseki.omoshiroikamo.module.backpack.integration.bauble.BackpackBaubleCompat;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
-public class BackpackCommon implements IModuleCommon {
+public class BackpackCommon extends CommonProxyComponent {
 
     @Override
-    public String getId() {
-        return "Backpack";
+    public ModBase getMod() {
+        return OmoshiroiKamo.instance;
     }
 
     @Override
-    public boolean isEnabled() {
-        return BackportConfigs.enableBackpack;
-    }
-
-    @Override
-    public void onConstruction(FMLConstructionEvent event) {
-
-    }
-
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        BackpackBlocks.preInit();
-        BackpackItems.preInit();
-        BackpackCreative.preInit();
-        BackpackBaubleCompat.preInit();
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event) {
-        BackpackRecipes.init();
-        BackpackPackets.init();
-    }
-
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-        BackpackBaubleCompat.postInit();
-    }
-
-    @Override
-    public void serverLoad(FMLServerStartingEvent event) {
-
-    }
-
-    @Override
-    public void serverStarted(FMLServerStartedEvent event) {
-
-    }
-
-    @Override
-    public void serverStopping(FMLServerStoppingEvent event) {
-
-    }
-
-    @Override
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-
-    }
-
-    @Override
-    public void onServerStopped(FMLServerStoppedEvent event) {
-
+    public void registerPacketHandlers(PacketHandler packetHandler) {
+        super.registerPacketHandlers(packetHandler);
+        packetHandler.register(PacketBackpackNBT.class);
     }
 }

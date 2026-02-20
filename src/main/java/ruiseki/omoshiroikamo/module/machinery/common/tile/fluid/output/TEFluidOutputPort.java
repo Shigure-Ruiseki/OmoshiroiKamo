@@ -5,8 +5,8 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.fluid.FluidTransfer;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.fluid.FluidTransfer;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 

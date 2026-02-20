@@ -2,9 +2,9 @@ package ruiseki.omoshiroikamo.api.ids.part;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.api.capabilities.Capability;
 import ruiseki.omoshiroikamo.api.ids.part.aspect.IAspect;
 import ruiseki.omoshiroikamo.api.ids.part.aspect.IAspectProperties;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
 
 /**
  * A value holder for an {@link IPartType}.

@@ -12,10 +12,10 @@ import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
+import ruiseki.omoshiroikamo.core.block.AbstractBlock;
+import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class BlockLootFabricator extends AbstractBlock<TELootFabricator> {
 
@@ -29,7 +29,7 @@ public class BlockLootFabricator extends AbstractBlock<TELootFabricator> {
 
     @Override
     public void init() {
-        BlockStateUtils.registerCraftingStateProp(this.getClass());
+        BlockStateHelpers.registerCraftingStateProp(this.getClass());
         super.init();
     }
 

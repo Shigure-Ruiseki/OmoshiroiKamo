@@ -12,8 +12,8 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.MobTrait;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemAnalyzer extends ItemOK {

@@ -18,11 +18,11 @@ import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractEnergyTE;
-import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;
@@ -132,7 +132,7 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
     public static class ItemBlockEnergyOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockEnergyOutputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

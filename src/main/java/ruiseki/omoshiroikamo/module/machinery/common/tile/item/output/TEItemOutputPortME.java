@@ -28,8 +28,8 @@ import appeng.me.helpers.IGridProxyable;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 

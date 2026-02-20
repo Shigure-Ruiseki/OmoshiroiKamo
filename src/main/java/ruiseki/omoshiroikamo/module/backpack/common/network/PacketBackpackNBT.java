@@ -10,10 +10,10 @@ import net.minecraft.world.World;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 
-import ruiseki.omoshiroikamo.api.item.BaublesUtils;
-import ruiseki.omoshiroikamo.api.network.CodecField;
-import ruiseki.omoshiroikamo.api.network.PacketCodec;
+import ruiseki.omoshiroikamo.core.item.BaublesUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.network.CodecField;
+import ruiseki.omoshiroikamo.core.network.PacketCodec;
 
 public class PacketBackpackNBT extends PacketCodec {
 
