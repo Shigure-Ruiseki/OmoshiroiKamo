@@ -37,20 +37,20 @@ public class PositionedManaBar implements INEIPositionedRenderer {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
-        GuiDraw.drawGradientRect(position.x, position.y + 20, 100, 8, 0xFF0000AA, 0xFF0000FF); // Example blue bar
-
-        int barHeight = 8;
-        int barWidth = position.width; // Use full width of slot
+        int barHeight = Math.min(8, position.height);
+        int barWidth = position.width;
         int x = position.x;
         int y = position.y + (position.height - barHeight) / 2;
 
+        // Draw background
+        GuiDraw.drawGradientRect(x, y, barWidth, barHeight, 0xFF000044, 0xFF000088);
         GuiDraw.drawGradientRect(x, y, barWidth, barHeight, 0xFF00FFFF, 0xFF0000AA); // Light blue to dark blue
 
         // Draw amount text
         String amountStr = amount + (perTick ? " Mana/t" : " Mana");
         float scale = 0.5f;
         int realX = position.x + position.width / 2;
-        int realY = position.y + position.height - 5;
+        int realY = position.y - 6; // Draw above the bar
 
         GL11.glPushMatrix();
         GL11.glTranslatef(realX, realY, 0.0f);

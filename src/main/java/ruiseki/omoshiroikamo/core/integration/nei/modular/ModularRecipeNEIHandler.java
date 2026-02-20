@@ -4,8 +4,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -25,17 +27,21 @@ import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartArrow;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartFluid;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartItem;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartRenderer;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.RecipeLayoutPart;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositionedRenderer;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.NEIRendererFactory;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedEnergy;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedEssentia;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedGasTank;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedVis;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -219,254 +225,229 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         private final List<PositionedStack> inputStacks = new ArrayList<>();
         private final List<PositionedStack> outputStacks = new ArrayList<>();
         private final List<PositionedFluidTank> fluidTanks = new ArrayList<>();
-        private final List<INEIPositionedRenderer> extraRenderers = new ArrayList<>();
+
+        // New list for all parts
+        private final List<RecipeLayoutPart<?>> allParts = new ArrayList<>();
 
         public CachedModularRecipe(ModularRecipe recipe) {
             this.recipe = recipe;
             layout();
         }
 
-        // Dynamic layout logic
         private void layout() {
-            int startX = 4;
-            int startY = 4;
-            int maxRowWidth = 80;
-            int slotSize = 18;
-            int gap = 2;
+            clearLists();
 
-            int currentX = startX;
-            int currentY = startY;
-            int maxHeightInRow = 0;
+            // 1. Collect all parts
+            List<RecipeLayoutPart<?>> inputParts = new ArrayList<>();
+            List<RecipeLayoutPart<?>> outputParts = new ArrayList<>();
 
-            // --- Process Inputs (Main: Item, Fluid, Energy, Gas) ---
-            for (IRecipeInput input : recipe.getInputs()) {
-                if (input instanceof VisInput || input instanceof EssentiaInput) {
-                    continue;
+            collectParts(recipe.getInputs(), inputParts, true);
+            collectPartsErrors(recipe.getOutputs(), outputParts, false);
+
+            // 2. Sort parts
+            Comparator<RecipeLayoutPart<?>> sorter = (p1, p2) -> Integer.compare(p2.getSortOrder(), p1.getSortOrder());
+            inputParts.sort(sorter);
+            outputParts.sort(sorter);
+
+            // 3. Layout Inputs
+            int startX = 5;
+            int startY = 10;
+            int inputEndX = layoutComponents(inputParts, startX, startY, true);
+
+            // 4. Layout Arrow and Outputs
+            int arrowSpace = 24;
+            int outputStartX = Math.max(inputEndX + arrowSpace + 4, 80);
+            if (outputStartX > 166 - 20) outputStartX = 166 - 20; // Safety clamp
+
+            // Add Arrow
+            LayoutPartArrow arrow = new LayoutPartArrow();
+            arrow.setPosition(outputStartX - arrowSpace - 2, startY + 18);
+            allParts.add(arrow);
+
+            layoutComponents(outputParts, outputStartX, startY, false);
+
+            // 5. Add to allParts using newly calculated positions
+            allParts.addAll(inputParts);
+            allParts.addAll(outputParts);
+
+            // 6. Populate legacy lists for NEI compatibility
+            for (RecipeLayoutPart<?> part : allParts) {
+                if (part instanceof LayoutPartItem) {
+                    PositionedStack stack = ((LayoutPartItem) part).getStack();
                 }
+            }
 
-                int width = slotSize;
-                int height = slotSize;
+            populateLegacyLists(inputParts, true);
+            populateLegacyLists(outputParts, false);
+        }
 
-                if (input instanceof FluidInput || input instanceof EnergyInput || input instanceof GasInput) {
-                    height = 50;
-                }
-
-                if (currentX + width > startX + maxRowWidth) {
-                    currentX = startX;
-                    currentY += maxHeightInRow + gap;
-                    maxHeightInRow = 0;
-                }
-
-                // Rect for SLOT (Outer)
-                Rectangle slotRect = new Rectangle(currentX, currentY, width, height);
-                // Rect for CONTENT (Inner)
-                Rectangle contentRect = new Rectangle(currentX + 1, currentY + 1, width - 2, height - 2);
-
+        private void collectParts(List<? extends IRecipeInput> inputs, List<RecipeLayoutPart<?>> parts,
+            boolean isInput) {
+            for (IRecipeInput input : inputs) {
                 if (input instanceof ItemInput) {
                     ItemInput itemIn = (ItemInput) input;
                     if (!itemIn.getItems()
                         .isEmpty()) {
-                        inputStacks.add(new PositionedStack(itemIn.getItems(), contentRect.x, contentRect.y));
+                        parts.add(new LayoutPartItem(itemIn.getItems()));
                     }
                 } else if (input instanceof FluidInput) {
                     FluidInput fluidIn = (FluidInput) input;
-                    fluidTanks.add(new PositionedFluidTank(fluidIn.getFluid(), contentRect));
+                    parts.add(
+                        new LayoutPartFluid(new PositionedFluidTank(fluidIn.getFluid(), new Rectangle(0, 0, 18, 50))));
                 } else if (input instanceof EnergyInput) {
                     EnergyInput energyIn = (EnergyInput) input;
-                    extraRenderers
-                        .add(new PositionedEnergy(energyIn.getAmount(), energyIn.isPerTick(), true, slotRect));
-                } else {
-                    INEIPositionedRenderer renderer = NEIRendererFactory.createGasRenderer(input, null, contentRect);
-                    if (renderer == null) renderer = NEIRendererFactory.createManaRenderer(input, null, slotRect);
+                    // PositionedEnergy constructor takes Rectangle
+                    parts.add(
+                        new LayoutPartRenderer(
+                            new PositionedEnergy(
+                                energyIn.getAmount(),
+                                energyIn.isPerTick(),
+                                true,
+                                new Rectangle(0, 0, 18, 50))));
+                } else if (input instanceof ManaInput) {
+                    ManaInput manaIn = (ManaInput) input;
+                    INEIPositionedRenderer r = NEIRendererFactory
+                        .createManaRenderer(input, null, new Rectangle(0, 0, 100, 8));
+                    if (r != null) parts.add(new LayoutPartRenderer(r));
+                } else if (input instanceof VisInput || input instanceof EssentiaInput || input instanceof GasInput) {
+                    // Generic factory usage
+                    INEIPositionedRenderer r = null;
+                    if (input instanceof GasInput)
+                        r = NEIRendererFactory.createGasRenderer(input, null, new Rectangle(0, 0, 18, 50));
+                    else if (input instanceof VisInput || input instanceof EssentiaInput)
+                        r = NEIRendererFactory.createAspectRenderer(input, null, new Rectangle(0, 0, 16, 16));
 
-                    if (renderer != null) {
-                        extraRenderers.add(renderer);
-                    }
+                    if (r != null) parts.add(new LayoutPartRenderer(r));
                 }
-
-                currentX += width + gap;
-                maxHeightInRow = Math.max(maxHeightInRow, height);
             }
+        }
 
-            // --- Process Outputs (Main: Item, Fluid, Energy, Gas) ---
-            int outputStartX = 100;
-            int outputStartY = 4;
-            int maxOutputWidth = 60;
-
-            currentX = outputStartX;
-            currentY = outputStartY;
-            maxHeightInRow = 0;
-
-            for (IRecipeOutput output : recipe.getOutputs()) {
-                if (output instanceof VisOutput || output instanceof EssentiaOutput) {
-                    continue;
-                }
-
-                int width = slotSize;
-                int height = slotSize;
-
-                if (output instanceof FluidOutput || output instanceof EnergyOutput || output instanceof GasOutput) {
-                    height = 50;
-                }
-
-                if (currentX + width > outputStartX + maxOutputWidth) {
-                    currentX = outputStartX;
-                    currentY += maxHeightInRow + gap;
-                    maxHeightInRow = 0;
-                }
-
-                Rectangle slotRect = new Rectangle(currentX, currentY, width, height);
-                Rectangle contentRect = new Rectangle(currentX + 1, currentY + 1, width - 2, height - 2);
-
+        private void collectPartsErrors(List<? extends IRecipeOutput> outputs, List<RecipeLayoutPart<?>> parts,
+            boolean isInput) {
+            for (IRecipeOutput output : outputs) {
                 if (output instanceof ItemOutput) {
                     ItemOutput itemOut = (ItemOutput) output;
                     if (!itemOut.getItems()
                         .isEmpty()) {
-                        outputStacks.add(
-                            new PositionedStack(
-                                itemOut.getItems()
-                                    .get(0),
-                                contentRect.x,
-                                contentRect.y));
+                        parts.add(new LayoutPartItem(itemOut.getItems()));
                     }
                 } else if (output instanceof FluidOutput) {
                     FluidOutput fluidOut = (FluidOutput) output;
-                    fluidTanks.add(new PositionedFluidTank(fluidOut.getOutput(), contentRect));
+                    parts.add(
+                        new LayoutPartFluid(new PositionedFluidTank(fluidOut.getFluid(), new Rectangle(0, 0, 18, 50))));
                 } else if (output instanceof EnergyOutput) {
                     EnergyOutput energyOut = (EnergyOutput) output;
-                    extraRenderers
-                        .add(new PositionedEnergy(energyOut.getAmount(), energyOut.isPerTick(), false, slotRect));
-                } else {
-                    INEIPositionedRenderer renderer = NEIRendererFactory.createGasRenderer(null, output, contentRect);
-                    if (renderer == null) renderer = NEIRendererFactory.createManaRenderer(null, output, slotRect);
+                    parts.add(
+                        new LayoutPartRenderer(
+                            new PositionedEnergy(
+                                energyOut.getAmount(),
+                                energyOut.isPerTick(),
+                                false,
+                                new Rectangle(0, 0, 18, 50))));
+                } else if (output instanceof ManaOutput) {
+                    ManaOutput manaOut = (ManaOutput) output;
+                    INEIPositionedRenderer r = NEIRendererFactory
+                        .createManaRenderer(null, output, new Rectangle(0, 0, 100, 8));
+                    if (r != null) parts.add(new LayoutPartRenderer(r));
+                } else if (output instanceof VisOutput || output instanceof EssentiaOutput
+                    || output instanceof GasOutput) {
+                        INEIPositionedRenderer r = null;
+                        if (output instanceof GasOutput)
+                            r = NEIRendererFactory.createGasRenderer(null, output, new Rectangle(0, 0, 18, 50));
+                        else if (output instanceof VisOutput || output instanceof EssentiaOutput)
+                            r = NEIRendererFactory.createAspectRenderer(null, output, new Rectangle(0, 0, 16, 16));
 
-                    if (renderer != null) {
-                        extraRenderers.add(renderer);
+                        if (r != null) parts.add(new LayoutPartRenderer(r));
                     }
-                }
-
-                currentX += width + gap;
-                maxHeightInRow = Math.max(maxHeightInRow, height);
             }
+        }
 
-            // --- Aspects (Vis & Essentia) Section ---
-            int aspectSectionY = 85;
-            int aspectX = 4;
+        /**
+         * Lays out components starting from x, y.
+         * Returns the maximum X used.
+         */
+        private int layoutComponents(List<RecipeLayoutPart<?>> parts, int startX, int startY, boolean isInput) {
+            int currentX = startX;
+            int currentY = startY;
+            int maxYInRow = 0;
+            int maxX = startX;
 
-            // Vis Grid (Thaumcraft Primal Aspects) - Fixed 6 slots
-            boolean hasVis = false;
-            for (IRecipeInput i : recipe.getInputs()) if (i instanceof VisInput) hasVis = true;
-            for (IRecipeOutput o : recipe.getOutputs()) if (o instanceof VisOutput) hasVis = true;
+            RecipeLayoutPart<?> lastPart = null;
+            int itemsInRow = 0;
 
-            if (hasVis) {
-                String[] aspects = { "aer", "terra", "ignis", "aqua", "ordo", "perditio" };
+            for (RecipeLayoutPart<?> part : parts) {
+                // Check if we need a new line
+                boolean newline = false;
 
-                for (int i = 0; i < 6; i++) {
-                    Rectangle r = new Rectangle(aspectX + i * 18 + 1, aspectSectionY + 1, 16, 16);
-                    for (IRecipeInput input : recipe.getInputs()) {
-                        if (input instanceof VisInput) {
-                            VisInput vis = (VisInput) input;
-                            if (vis.getAspectTag()
-                                .equals(aspects[i])) {
-                                extraRenderers.add(NEIRendererFactory.createAspectRenderer(input, null, r));
-                            }
-                        }
+                // If max horizontal count exceeded
+                if (lastPart != null && lastPart.getClass() == part.getClass()) {
+                    if (itemsInRow >= part.getMaxHorizontalCount()) {
+                        newline = true;
                     }
-                    for (IRecipeOutput output : recipe.getOutputs()) {
-                        if (output instanceof VisOutput) {
-                            VisOutput vis = (VisOutput) output;
-                            if (vis.getAspectTag()
-                                .equals(aspects[i])) {
-                                extraRenderers.add(NEIRendererFactory.createAspectRenderer(null, output, r));
-                            }
-                        }
-                    }
+                } else if (lastPart != null && lastPart.getClass() != part.getClass()) {
+                    // Type changed, reset row count, maybe force newline if height is different?
+                    itemsInRow = 0;
                 }
-                aspectSectionY += 20;
+
+                // Check bounds
+                if (currentX + part.getWidth() > 166) {
+                    newline = true;
+                }
+
+                if (newline) {
+                    currentX = startX;
+                    currentY += maxYInRow + 4; // Gap
+                    maxYInRow = 0;
+                    itemsInRow = 0;
+                }
+
+                part.setPosition(currentX, currentY);
+
+                // Update metrics
+                currentX += part.getWidth() + 2; // Gap X
+                if (currentX > maxX) maxX = currentX;
+                if (part.getHeight() > maxYInRow) maxYInRow = part.getHeight();
+
+                itemsInRow++;
+                lastPart = part;
             }
 
-            // Essentia Row
-            int essX = 4;
-            for (IRecipeInput input : recipe.getInputs()) {
-                if (input instanceof EssentiaInput) {
-                    Rectangle r = new Rectangle(essX + 1, aspectSectionY + 1, 16, 16);
-                    extraRenderers.add(NEIRendererFactory.createAspectRenderer(input, null, r));
-                    essX += 18;
+            return maxX;
+        }
+
+        private void populateLegacyLists(List<RecipeLayoutPart<?>> parts, boolean isInput) {
+            for (RecipeLayoutPart<?> part : parts) {
+                if (part instanceof LayoutPartItem) {
+                    PositionedStack stack = ((LayoutPartItem) part).getStack();
+                    if (isInput) inputStacks.add(stack);
+                    else outputStacks.add(stack);
+                } else if (part instanceof LayoutPartFluid) {
+                    PositionedFluidTank tank = ((LayoutPartFluid) part).getTank();
+                    fluidTanks.add(tank);
                 }
             }
-            for (IRecipeOutput output : recipe.getOutputs()) {
-                if (output instanceof EssentiaOutput) {
-                    Rectangle r = new Rectangle(essX + 1, aspectSectionY + 1, 16, 16);
-                    extraRenderers.add(NEIRendererFactory.createAspectRenderer(null, output, r));
-                    essX += 18;
-                }
-            }
+        }
+
+        private void clearLists() {
+            inputStacks.clear();
+            outputStacks.clear();
+            fluidTanks.clear();
+            allParts.clear();
         }
 
         public void drawSlots() {
-            // Draw slots under items
-            for (PositionedStack stack : inputStacks) {
-                drawItemSlot(stack.relx - 1, stack.rely - 1);
-            }
-            for (PositionedStack stack : outputStacks) {
-                drawItemSlot(stack.relx - 1, stack.rely - 1);
-            }
-            // Draw slots for fluids
-            for (PositionedFluidTank tank : fluidTanks) {
-                drawStretchedFluidSlot(
-                    tank.position.x - 1,
-                    tank.position.y - 1,
-                    tank.position.width + 2,
-                    tank.position.height + 2);
-            }
-            // Draw slots for extras
-            for (INEIPositionedRenderer renderer : extraRenderers) {
-                Rectangle rect = renderer.getPosition();
-                if (renderer instanceof PositionedEnergy) {
-                    // Handled internally or skip
-                } else if (renderer instanceof PositionedVis) {
-                    // Drawn by grid below
-                } else if (renderer instanceof PositionedEssentia) {
-                    drawItemSlot(rect.x - 1, rect.y - 1);
-                } else if (renderer instanceof PositionedGasTank) {
-                    drawStretchedFluidSlot(rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 2);
-                } else {
-                    if (rect.height > 18) {
-                        drawStretchedItemSlot(rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 2);
-                    } else {
-                        drawItemSlot(rect.x - 1, rect.y - 1);
-                    }
-                }
+            // Draw backgrounds for all parts
+            for (RecipeLayoutPart<?> part : allParts) {
+                // We pass Minecraft instance to draw
+                part.draw(Minecraft.getMinecraft());
             }
         }
 
-        public void drawExtras() {
-            // Draw Vis Grid Background if needed
-            boolean hasVis = false;
-            if (recipe != null) {
-                for (IRecipeInput i : recipe.getInputs()) if (i instanceof VisInput) hasVis = true;
-                for (IRecipeOutput o : recipe.getOutputs()) if (o instanceof VisOutput) hasVis = true;
-            }
-
-            if (hasVis) {
-                int aspectY = 85;
-                int aspectX = 4;
-                for (int i = 0; i < 6; i++) {
-                    drawItemSlot(aspectX + i * 18, aspectY);
-                }
-            }
-
-            for (INEIPositionedRenderer renderer : extraRenderers) {
-                renderer.draw();
-            }
-        }
+        public void drawExtras() {}
 
         public void handleTooltip(Point relMouse, List<String> currenttip) {
-            for (INEIPositionedRenderer renderer : extraRenderers) {
-                if (renderer.getPosition()
-                    .contains(relMouse)) {
-                    renderer.handleTooltip(currenttip);
-                }
+            for (RecipeLayoutPart<?> part : allParts) {
+                part.handleTooltip(relMouse, currenttip);
             }
         }
 
@@ -482,14 +463,11 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
         @Override
         public PositionedStack getResult() {
-            // TemplateRecipeHandler needs getResult() to return something, usually first
-            // output
             return outputStacks.isEmpty() ? null : outputStacks.get(0);
         }
 
         @Override
         public List<PositionedStack> getOtherStacks() {
-            // Return remaining outputs
             if (outputStacks.size() <= 1) return Collections.emptyList();
             return outputStacks.subList(1, outputStacks.size());
         }
