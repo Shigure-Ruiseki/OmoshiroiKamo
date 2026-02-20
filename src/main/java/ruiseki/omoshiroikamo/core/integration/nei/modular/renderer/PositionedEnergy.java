@@ -32,11 +32,6 @@ public class PositionedEnergy implements INEIPositionedRenderer {
 
     @Override
     public void draw() {
-        // Draw Energy Port Icon
-        if (displayStack != null) {
-            GuiContainerManager.drawItem(position.x + 1, position.y - 18, displayStack);
-        }
-
         // Texture 16x128. Background at (0,0), Foreground at (0,64). Both 16x64.
         Minecraft.getMinecraft().renderEngine
             .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/progress_energy.png"));
