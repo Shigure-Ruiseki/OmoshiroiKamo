@@ -157,6 +157,10 @@ public class PositionedFluidTank {
             return;
         }
 
+        if (position.height <= 16) {
+            RecipeHandlerBase.drawItemSlot(position.x - 1, position.y - 1);
+        }
+
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glEnable(GL11.GL_BLEND);
@@ -188,14 +192,16 @@ public class PositionedFluidTank {
         GL11.glDisable(GL11.GL_BLEND);
 
         // Draw Gauge lines (Tick marks)
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f); // Grey
+        if (h > 16) {
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f); // Grey
 
-        for (int i = 1; i < 5; i++) {
-            int tickY = y + (h / 5) * i;
-            GuiDraw.drawRect(x, tickY, w, 1, 0x88000000); // Semi-transparent black line
+            for (int i = 1; i < 5; i++) {
+                int tickY = y + (h / 5) * i;
+                GuiDraw.drawRect(x, tickY, w, 1, 0x88000000); // Semi-transparent black line
+            }
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         // Amount Text
         if (this.showAmount && this.tank.getFluid() != null) {

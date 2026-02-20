@@ -47,7 +47,7 @@ public class PositionedManaBar implements INEIPositionedRenderer {
         String amountStr = amount + (perTick ? " Mana/t" : " Mana");
         float scale = 0.5f;
         int realX = position.x + position.width / 2;
-        int realY = position.y - 6; // Draw above the bar
+        int realY = position.y - 5; // Draw above the bar
 
         GL11.glPushMatrix();
         GL11.glTranslatef(realX, realY, 0.0f);

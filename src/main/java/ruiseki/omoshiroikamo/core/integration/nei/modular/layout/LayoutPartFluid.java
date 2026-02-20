@@ -31,12 +31,12 @@ public class LayoutPartFluid extends RecipeLayoutPart<FluidStack> {
 
     @Override
     public int getWidth() {
-        return 18;
+        return 16;
     }
 
     @Override
     public int getHeight() {
-        return 60;
+        return 16;
     }
 
     @Override

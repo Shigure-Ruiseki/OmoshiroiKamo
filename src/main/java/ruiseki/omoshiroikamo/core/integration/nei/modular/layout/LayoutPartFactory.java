@@ -44,23 +44,23 @@ public class LayoutPartFactory {
         // --- Fluids ---
         register(FluidInput.class, in -> {
             FluidInput fluidIn = (FluidInput) in;
-            return new LayoutPartFluid(new PositionedFluidTank(fluidIn.getFluid(), new Rectangle(0, 0, 18, 60)));
+            return new LayoutPartFluid(new PositionedFluidTank(fluidIn.getFluid(), new Rectangle(0, 0, 16, 16)));
         });
         register(FluidOutput.class, out -> {
             FluidOutput fluidOut = (FluidOutput) out;
-            return new LayoutPartFluid(new PositionedFluidTank(fluidOut.getFluid(), new Rectangle(0, 0, 18, 60)));
+            return new LayoutPartFluid(new PositionedFluidTank(fluidOut.getFluid(), new Rectangle(0, 0, 16, 16)));
         });
 
         // --- Energy ---
         register(EnergyInput.class, in -> {
             EnergyInput energyIn = (EnergyInput) in;
             return new LayoutPartEnergy(
-                new PositionedEnergy(energyIn.getAmount(), energyIn.isPerTick(), true, new Rectangle(0, 0, 16, 60)));
+                new PositionedEnergy(energyIn.getAmount(), energyIn.isPerTick(), true, new Rectangle(0, 0, 16, 64)));
         });
         register(EnergyOutput.class, out -> {
             EnergyOutput energyOut = (EnergyOutput) out;
             return new LayoutPartEnergy(
-                new PositionedEnergy(energyOut.getAmount(), energyOut.isPerTick(), false, new Rectangle(0, 0, 16, 60)));
+                new PositionedEnergy(energyOut.getAmount(), energyOut.isPerTick(), false, new Rectangle(0, 0, 16, 64)));
         });
 
         // --- Mana ---
@@ -75,11 +75,11 @@ public class LayoutPartFactory {
 
         // --- Gas ---
         register(GasInput.class, in -> {
-            INEIPositionedRenderer r = NEIRendererFactory.createGasRenderer(in, null, new Rectangle(0, 0, 18, 60));
+            INEIPositionedRenderer r = NEIRendererFactory.createGasRenderer(in, null, new Rectangle(0, 0, 16, 16));
             return r != null ? new LayoutPartGas(r) : null;
         });
         register(GasOutput.class, out -> {
-            INEIPositionedRenderer r = NEIRendererFactory.createGasRenderer(null, out, new Rectangle(0, 0, 18, 60));
+            INEIPositionedRenderer r = NEIRendererFactory.createGasRenderer(null, out, new Rectangle(0, 0, 16, 16));
             return r != null ? new LayoutPartGas(r) : null;
         });
 

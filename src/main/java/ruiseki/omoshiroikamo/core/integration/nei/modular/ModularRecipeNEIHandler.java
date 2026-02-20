@@ -7,12 +7,20 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.lwjgl.opengl.GL11;
+
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.NEIClientUtils;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
@@ -33,7 +41,9 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartMana;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartRenderer;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartVis;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.RecipeLayoutPart;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositionedRenderer;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedText;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -104,6 +114,26 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             return crecipe.calculatedHeight;
         }
         return 130;
+    }
+
+    @Override
+    public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
+        if (button == 0 || button == 1) {
+            CachedModularRecipe crecipe = (CachedModularRecipe) arecipes.get(recipe);
+            if (crecipe.arrowRect != null) {
+                Point offset = gui.getRecipePosition(recipe);
+                Point pos = GuiDraw.getMousePosition();
+                Point relMouse = new Point(pos.x - gui.guiLeft - offset.x, pos.y - gui.guiTop - offset.y);
+                if (crecipe.arrowRect.contains(relMouse)) {
+                    if (button == 0) {
+                        return GuiCraftingRecipe.openRecipeGui(getRecipeID());
+                    } else {
+                        return GuiUsageRecipe.openRecipeGui(getRecipeID());
+                    }
+                }
+            }
+        }
+        return super.mouseClicked(gui, button, recipe);
     }
 
     @Override
@@ -230,6 +260,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         private final List<RecipeLayoutPart<?>> allParts = new ArrayList<>();
 
         public int calculatedHeight = 130;
+        public Rectangle arrowRect;
 
         public CachedModularRecipe(ModularRecipe recipe) {
             this.recipe = recipe;
@@ -271,6 +302,39 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             }
 
             // Layout Outputs
+            currentY += 4;
+            final int arrowY = currentY;
+            final int duration = recipe.getDuration();
+            this.arrowRect = new Rectangle(166 / 2 - 6, arrowY, 12, 12);
+            allParts.add(new LayoutPartRenderer(new INEIPositionedRenderer() {
+
+                @Override
+                public void draw() {
+                    Minecraft.getMinecraft().renderEngine
+                        .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/icons.png"));
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    Gui.func_146110_a(166 / 2 - 6, arrowY, 12, 156, 12, 12, 256.0f, 256.0f);
+                }
+
+                @Override
+                public Rectangle getPosition() {
+                    return arrowRect;
+                }
+
+                @Override
+                public void handleTooltip(List<String> currenttip) {
+                    currenttip.add(NEIClientUtils.translate("recipe.tooltip"));
+                }
+            }));
+
+            PositionedText timeText = new PositionedText(
+                duration + " t",
+                0x888888,
+                new Rectangle(166 / 2 + 10, arrowY + 2, 50, 10),
+                false);
+            allParts.add(new LayoutPartRenderer(timeText));
+            currentY += 16;
+
             if (!outputParts.isEmpty()) {
                 currentY += 10;
                 PositionedText outText = new PositionedText("Outputs", 0x444444, new Rectangle(0, currentY, 166, 10));
@@ -324,18 +388,18 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             if (!essentiaParts.isEmpty()) {
                 int cols = Math.min(essentiaParts.size(), 2);
                 int rows = (int) Math.ceil((double) essentiaParts.size() / cols);
-                layoutGrid(essentiaParts, currentX, startY, cols, 16);
-                currentX += (cols * 16) + 4;
-                maxY = Math.max(maxY, startY + (rows * 16));
+                layoutGrid(essentiaParts, currentX, startY, cols, 18);
+                currentX += (cols * 18) + 4;
+                maxY = Math.max(maxY, startY + (rows * 18));
             }
 
             // 3. Vis (Grid)
             if (!visParts.isEmpty()) {
                 int cols = Math.min(visParts.size(), 2);
                 int rows = (int) Math.ceil((double) visParts.size() / cols);
-                layoutGrid(visParts, currentX, startY, cols, 16);
-                currentX += (cols * 16) + 4;
-                maxY = Math.max(maxY, startY + (rows * 16));
+                layoutGrid(visParts, currentX, startY, cols, 18);
+                currentX += (cols * 18) + 4;
+                maxY = Math.max(maxY, startY + (rows * 18));
             }
 
             // 4. Energy
@@ -347,30 +411,37 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 maxY = Math.max(maxY, startY + energy.getHeight());
             }
 
-            // 5. Fluids/Gas (Far Right)
-            for (LayoutPartFluid fluid : fluidParts) {
-                fluid.setPosition(currentX, startY);
-                currentX += fluid.getWidth() + 2;
-                maxY = Math.max(maxY, startY + fluid.getHeight());
-            }
-            for (LayoutPartGas gas : gasParts) {
-                gas.setPosition(currentX, startY);
-                allParts.add(gas);
-                currentX += gas.getWidth() + 2;
-                maxY = Math.max(maxY, startY + gas.getHeight());
+            // 5. Fluids (Grid)
+            if (!fluidParts.isEmpty()) {
+                int cols = Math.min(fluidParts.size(), 2);
+                int rows = (int) Math.ceil((double) fluidParts.size() / cols);
+                layoutGrid(fluidParts, currentX, startY, cols, 18);
+                currentX += (cols * 18) + 4;
+                maxY = Math.max(maxY, startY + (rows * 18));
             }
 
-            // 6. Mana (Bottom Bar)
+            // 6. Gas (Grid)
+            if (!gasParts.isEmpty()) {
+                int cols = Math.min(gasParts.size(), 2);
+                int rows = (int) Math.ceil((double) gasParts.size() / cols);
+                layoutGrid(gasParts, currentX, startY, cols, 18);
+                currentX += (cols * 18) + 4;
+                maxY = Math.max(maxY, startY + (rows * 18));
+            }
+
+            // 7. Mana (Bottom Bar)
             if (!manaParts.isEmpty()) {
                 LayoutPartMana mana = manaParts.get(0);
                 mana.setPosition(startX, maxY + 4);
                 allParts.add(mana);
-                maxY += mana.getHeight() + 4;
+                maxY += mana.getHeight() + 8;
             }
 
             for (RecipeLayoutPart<?> part : itemParts) allParts.add(part);
             for (RecipeLayoutPart<?> part : essentiaParts) allParts.add(part);
             for (RecipeLayoutPart<?> part : visParts) allParts.add(part);
+            for (RecipeLayoutPart<?> part : fluidParts) allParts.add(part);
+            for (RecipeLayoutPart<?> part : gasParts) allParts.add(part);
 
             return maxY;
         }

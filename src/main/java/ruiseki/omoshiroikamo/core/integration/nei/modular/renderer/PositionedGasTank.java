@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import codechicken.lib.gui.GuiDraw;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
+import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 
 public class PositionedGasTank implements INEIPositionedRenderer {
 
@@ -34,6 +35,10 @@ public class PositionedGasTank implements INEIPositionedRenderer {
         IIcon icon = gas.getIcon();
         if (icon == null) {
             return;
+        }
+
+        if (position.height <= 16) {
+            RecipeHandlerBase.drawItemSlot(position.x - 1, position.y - 1);
         }
 
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
@@ -59,14 +64,16 @@ public class PositionedGasTank implements INEIPositionedRenderer {
         }
 
         GL11.glDisable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f); // Grey
+        if (h > 16) {
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f); // Grey
 
-        for (int i = 1; i < 5; i++) {
-            int tickY = y + (h / 5) * i;
-            GuiDraw.drawRect(x, tickY, w, 1, 0x88000000); // Semi-transparent black line
+            for (int i = 1; i < 5; i++) {
+                int tickY = y + (h / 5) * i;
+                codechicken.lib.gui.GuiDraw.drawRect(x, tickY, w, 1, 0x88000000); // Semi-transparent black line
+            }
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         // Amount
         if (gasStack.amount > 0) {

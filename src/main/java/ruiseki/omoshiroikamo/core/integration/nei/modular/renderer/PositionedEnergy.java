@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
@@ -41,14 +42,12 @@ public class PositionedEnergy implements INEIPositionedRenderer {
         int y = position.y + (position.height - barHeight) / 2;
 
         // Draw Background
-        GuiDraw.drawTexturedModalRect(x, y, 0, 64 - barHeight, barWidth, barHeight);
+        Gui.func_146110_a(x, y, 0, 64 - barHeight, barWidth, barHeight, 16.0f, 128.0f);
 
         // Draw Foreground (based on amount)
         if (amount > 0) {
-            int max = 10000;
-
             int drawHeight = barHeight;
-            GuiDraw.drawTexturedModalRect(x, y + barHeight - drawHeight, 0, 128 - drawHeight, barWidth, drawHeight);
+            Gui.func_146110_a(x, y + barHeight - drawHeight, 0, 128 - drawHeight, barWidth, drawHeight, 16.0f, 128.0f);
         }
 
         if (amount > 0) {

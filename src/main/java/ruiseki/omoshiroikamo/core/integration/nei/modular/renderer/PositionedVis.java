@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
+import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.client.lib.UtilsFX;
 
@@ -32,6 +33,10 @@ public class PositionedVis implements INEIPositionedRenderer {
         }
 
         GL11.glEnable(GL11.GL_BLEND);
+
+        // Draw slot background first
+        RecipeHandlerBase.drawItemSlot(position.x - 1, position.y - 1);
+
         try {
             UtilsFX.drawTag(position.x, position.y, aspect, amountCentiVis, 0, 0.0D);
         } catch (Throwable e) {
