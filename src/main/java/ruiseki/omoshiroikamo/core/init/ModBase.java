@@ -66,6 +66,8 @@ public abstract class ModBase {
     private final Set<IInitListener> initListeners;
     private final Map<EnumReferenceKey, Object> genericReference = Maps.newHashMap();
     private final List<WorldStorage> worldStorages = Lists.newLinkedList();
+    private CommandMod baseCommand;
+
     private final RegistryManager registryManager;
     // private final RecipeHandler recipeHandler;
     private final IKeyRegistry keyRegistry;
@@ -117,7 +119,7 @@ public abstract class ModBase {
         return new IMCHandler(this);
     }
 
-    protected ICommand constructBaseCommand() {
+    protected CommandMod constructBaseCommand() {
         return new CommandMod(this, Maps.<String, ICommand>newHashMap());
     }
 
@@ -204,6 +206,10 @@ public abstract class ModBase {
         synchronized (moduleManager) {
             moduleManager.register(module);
         }
+    }
+
+    public void registerSubCommand(Map<String, ICommand> subcommand) {
+
     }
 
     /**
@@ -316,7 +322,11 @@ public abstract class ModBase {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         moduleManager.onServerStarting(event);
-        event.registerServerCommand(constructBaseCommand());
+
+        this.baseCommand = constructBaseCommand();
+        registerSubCommand(baseCommand.getSubcommands());
+        moduleManager.registerSubCommand(baseCommand.getSubcommands());
+        event.registerServerCommand(baseCommand);
     }
 
     /**

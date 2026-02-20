@@ -1,9 +1,14 @@
 package ruiseki.omoshiroikamo.core;
 
+import java.util.Map;
+
+import net.minecraft.command.ICommand;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.core.command.structure.CommandStructure;
 import ruiseki.omoshiroikamo.core.common.init.CoreCapabilities;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
@@ -49,6 +54,12 @@ public class CoreModule extends ModModuleBase {
 
         CoreCapabilities.preInit();
 
+    }
+
+    @Override
+    protected void registerSubCommand(Map<String, ICommand> subcommand) {
+        super.registerSubCommand(subcommand);
+        subcommand.put(CommandStructure.NAME, new CommandStructure(this.getMod()));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.creative;
+package ruiseki.omoshiroikamo.core.creative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.mod.ICreativeTabModule;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class OKCreativeTab extends CreativeTabs {

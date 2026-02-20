@@ -14,9 +14,4 @@ public class ClientProxy extends ClientProxyComponent {
     public ModBase getMod() {
         return OmoshiroiKamo.instance;
     }
-
-    @Override
-    public void registerRenderers() {
-        super.registerRenderers();
-    }
 }

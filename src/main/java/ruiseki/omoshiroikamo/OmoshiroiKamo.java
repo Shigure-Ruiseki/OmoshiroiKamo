@@ -19,17 +19,15 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.CoreModule;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.common.command.CommandOK;
+import ruiseki.omoshiroikamo.core.command.CommandOK;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.integration.nei.NEICompat;
@@ -73,6 +71,9 @@ public class OmoshiroiKamo extends ModBase {
         putGenericReference(REFKEY_MOD_VERSION, LibMisc.VERSION);
     }
 
+    @Override
+    protected void loadModCompats(ModCompatLoader modCompatLoader) {}
+
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
         CapabilityManager.INSTANCE.injectCapabilities(event.getASMHarvestedData());
@@ -87,15 +88,9 @@ public class OmoshiroiKamo extends ModBase {
     }
 
     @Override
-    protected void loadModCompats(ModCompatLoader modCompatLoader) {
-        // TODO: add version checker
-        // modCompatLoader.addModCompat(new VersionCheckerModCompat());
-    }
-
-    @Override
-    protected ICommand constructBaseCommand() {
+    protected CommandMod constructBaseCommand() {
         Map<String, ICommand> commands = Maps.newHashMap();
-        CommandMod command = new CommandMod(this, commands);
+        CommandMod command = new CommandOK(this, commands);
         command.addAlias("ok");
         return command;
     }
@@ -129,12 +124,7 @@ public class OmoshiroiKamo extends ModBase {
     @Override
     public void onServerStarting(FMLServerStartingEvent event) {
         super.onServerStarting(event);
-        event.registerServerCommand(new CommandOK());
-    }
-
-    @Override
-    public CreativeTabs constructDefaultCreativeTab() {
-        return null;
+        // event.registerServerCommand(new CommandOK());
     }
 
     @EventHandler
@@ -147,11 +137,10 @@ public class OmoshiroiKamo extends ModBase {
         super.onServerStopping(event);
     }
 
-    @EventHandler
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {}
-
-    @EventHandler
-    public void onServerStopped(FMLServerStoppedEvent event) {}
+    @Override
+    public CreativeTabs constructDefaultCreativeTab() {
+        return null;
+    }
 
     @Override
     public ICommonProxy getProxy() {
