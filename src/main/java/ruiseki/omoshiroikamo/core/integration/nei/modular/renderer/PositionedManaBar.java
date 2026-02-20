@@ -52,7 +52,7 @@ public class PositionedManaBar implements INEIPositionedRenderer {
         GL11.glPushMatrix();
         GL11.glTranslatef(realX, realY, 0.0f);
         GL11.glScalef(scale, scale, 1.0f);
-        GuiDraw.drawStringC(amountStr, 0, 0, 0x0000FF, true);
+        GuiDraw.drawStringC(amountStr, 0, 0, 0x0000FF, false);
         GL11.glPopMatrix();
 
         GL11.glDisable(GL11.GL_BLEND);

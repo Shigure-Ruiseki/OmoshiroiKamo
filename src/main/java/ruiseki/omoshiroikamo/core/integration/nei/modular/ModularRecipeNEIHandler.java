@@ -98,6 +98,15 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     }
 
     @Override
+    public int getRecipeHeight(int recipe) {
+        if (recipe >= 0 && recipe < arecipes.size()) {
+            CachedModularRecipe crecipe = (CachedModularRecipe) arecipes.get(recipe);
+            return crecipe.calculatedHeight;
+        }
+        return 130;
+    }
+
+    @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
         if (outputId.equals(getRecipeID())) {
             for (ModularRecipe recipe : RecipeLoader.getInstance()
@@ -220,6 +229,8 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         // New list for all parts
         private final List<RecipeLayoutPart<?>> allParts = new ArrayList<>();
 
+        public int calculatedHeight = 130;
+
         public CachedModularRecipe(ModularRecipe recipe) {
             this.recipe = recipe;
             layout();
@@ -242,46 +253,37 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 PositionedText text = new PositionedText(
                     recipeName,
                     0x222222,
-                    new Rectangle(currentX, currentY - 12, 100, 10));
+                    new Rectangle(0, currentY - 12, 166, 10),
+                    false);
                 allParts.add(new LayoutPartRenderer(text));
             }
 
             // Layout Inputs
             if (!inputParts.isEmpty()) {
-                PositionedText inText = new PositionedText(
-                    "Inputs",
-                    0x444444,
-                    new Rectangle(currentX, currentY, 100, 10));
+                PositionedText inText = new PositionedText("Inputs", 0x444444, new Rectangle(0, currentY, 166, 10));
                 allParts.add(new LayoutPartRenderer(inText));
                 currentY += 12;
 
                 currentY = layoutSection(inputParts, currentX, currentY);
             } else {
-                PositionedText text = new PositionedText(
-                    "No Input",
-                    0x222222,
-                    new Rectangle(currentX, currentY, 100, 10));
+                PositionedText text = new PositionedText("No Input", 0x222222, new Rectangle(0, currentY, 166, 10));
                 allParts.add(new LayoutPartRenderer(text));
             }
 
             // Layout Outputs
             if (!outputParts.isEmpty()) {
                 currentY += 10;
-                PositionedText outText = new PositionedText(
-                    "Outputs",
-                    0x444444,
-                    new Rectangle(currentX, currentY, 100, 10));
+                PositionedText outText = new PositionedText("Outputs", 0x444444, new Rectangle(0, currentY, 166, 10));
                 allParts.add(new LayoutPartRenderer(outText));
                 currentY += 12;
 
-                layoutSection(outputParts, currentX, currentY);
+                currentY = layoutSection(outputParts, currentX, currentY);
             } else {
-                PositionedText text = new PositionedText(
-                    "No Output",
-                    0x222222,
-                    new Rectangle(currentX, currentY, 100, 10));
+                PositionedText text = new PositionedText("No Output", 0x222222, new Rectangle(0, currentY, 166, 10));
                 allParts.add(new LayoutPartRenderer(text));
             }
+
+            this.calculatedHeight = currentY + 10;
 
             populateLegacyLists(inputParts, true);
             populateLegacyLists(outputParts, false);

@@ -248,6 +248,7 @@ public class NEIConfig implements IConfigureNEI {
         tag.setString("modName", LibMisc.MOD_NAME);
         tag.setString("modId", LibMisc.MOD_ID);
         tag.setBoolean("modRequired", true);
+        tag.setBoolean("useCustomScroll", true);
         FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
     }
 
