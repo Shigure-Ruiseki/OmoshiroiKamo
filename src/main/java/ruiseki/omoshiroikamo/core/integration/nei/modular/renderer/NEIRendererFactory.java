@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular.renderer;
 
 import java.awt.Rectangle;
 
-import cpw.mods.fml.common.Loader;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.GasInput;
@@ -11,27 +10,26 @@ import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
-import thaumcraft.api.aspects.Aspect;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 
 public class NEIRendererFactory {
 
     public static INEIPositionedRenderer createGasRenderer(Object input, Object output, Rectangle rect) {
-        if (Loader.isModLoaded("Mekanism")) {
+        if (LibMods.Mekanism.isLoaded()) {
             return MekanismHelper.createGasRenderer(input, output, rect);
         }
         return null;
     }
 
     public static INEIPositionedRenderer createAspectRenderer(Object input, Object output, Rectangle rect) {
-        if (Loader.isModLoaded("thaumcraftneiplugin")) {
+        if (LibMods.Thaumcraft.isLoaded()) {
             return ThaumcraftHelper.createAspectRenderer(input, output, rect);
-        } else {
-            return new PositionedText("Require TC NEI Plugin for Essentia/Vis recipe display", 0xFF5555, rect);
         }
+        return null;
     }
 
     public static INEIPositionedRenderer createManaRenderer(Object input, Object output, Rectangle rect) {
-        if (Loader.isModLoaded("Botania")) {
+        if (LibMods.Botania.isLoaded()) {
             return BotaniaHelper.createManaRenderer(input, output, rect);
         }
         return null;
@@ -67,27 +65,28 @@ public class NEIRendererFactory {
 
         public static INEIPositionedRenderer createAspectRenderer(Object input, Object output, Rectangle rect) {
             try {
+                thaumcraft.api.aspects.Aspect aspect;
                 if (input instanceof VisInput) {
                     VisInput visIn = (VisInput) input;
-                    Aspect aspect = Aspect.getAspect(visIn.getAspectTag());
+                    aspect = thaumcraft.api.aspects.Aspect.getAspect(visIn.getAspectTag());
                     if (aspect != null) {
                         return new PositionedVis(aspect, visIn.getAmount(), rect);
                     }
                 } else if (output instanceof VisOutput) {
                     VisOutput visOut = (VisOutput) output;
-                    Aspect aspect = Aspect.getAspect(visOut.getAspectTag());
+                    aspect = thaumcraft.api.aspects.Aspect.getAspect(visOut.getAspectTag());
                     if (aspect != null) {
                         return new PositionedVis(aspect, visOut.getAmountCentiVis(), rect);
                     }
                 } else if (input instanceof EssentiaInput) {
                     EssentiaInput essIn = (EssentiaInput) input;
-                    Aspect aspect = Aspect.getAspect(essIn.getAspectTag());
+                    aspect = thaumcraft.api.aspects.Aspect.getAspect(essIn.getAspectTag());
                     if (aspect != null) {
                         return new PositionedEssentia(aspect, essIn.getAmount(), rect);
                     }
                 } else if (output instanceof EssentiaOutput) {
                     EssentiaOutput essOut = (EssentiaOutput) output;
-                    Aspect aspect = Aspect.getAspect(essOut.getAspectTag());
+                    aspect = thaumcraft.api.aspects.Aspect.getAspect(essOut.getAspectTag());
                     if (aspect != null) {
                         return new PositionedEssentia(aspect, essOut.getAmount(), rect);
                     }
