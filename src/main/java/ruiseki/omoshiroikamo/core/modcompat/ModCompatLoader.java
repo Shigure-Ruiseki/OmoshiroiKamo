@@ -159,7 +159,7 @@ public class ModCompatLoader implements IInitListener {
         // if (config.hasChanged()) {
         // config.save();
         // }
-        return false;
+        return true;
     }
 
     private boolean isNotCrashed(String id) {

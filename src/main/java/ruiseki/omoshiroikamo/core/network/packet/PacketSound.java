@@ -4,8 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.network.CodecField;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
@@ -13,7 +15,7 @@ import ruiseki.omoshiroikamo.core.network.PacketCodec;
 /**
  * Packet for playing a sound at a location.
  * Override this to enable your mod.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -40,7 +42,7 @@ public class PacketSound extends PacketCodec {
 
     /**
      * Creates a packet with coordinates.
-     * 
+     *
      * @param x         The X coordinate.
      * @param y         The Y coordinate.
      * @param z         The Z coordinate.
@@ -59,7 +61,7 @@ public class PacketSound extends PacketCodec {
 
     /**
      * Creates a packet with coordinates.
-     * 
+     *
      * @param x         The X coordinate.
      * @param y         The Y coordinate.
      * @param z         The Z coordinate.
@@ -75,7 +77,7 @@ public class PacketSound extends PacketCodec {
 
     /**
      * Creates a packet which contains the location data.
-     * 
+     *
      * @param location  The location data.
      * @param sound     The sound name to play.
      * @param volume    The volume of the sound.
@@ -93,14 +95,15 @@ public class PacketSound extends PacketCodec {
     @Override
     @SideOnly(Side.CLIENT)
     public void actionClient(World world, EntityPlayer player) {
-        // TODO: add after complete proxy
-        // CyclopsCore._instance.getProxy().playSound(x, y, z, sound, volume, frequency, mod);
+        OmoshiroiKamo.instance.getProxy()
+            .playSound(x, y, z, sound, volume, frequency, mod);
     }
 
     @Override
     public void actionServer(World world, EntityPlayerMP player) {
-        // CyclopsCore._instance.getPacketHandler().sendToAllAround(new PacketSound(x, y, z, sound, volume, frequency,
-        // mod),
-        // new NetworkRegistry.TargetPoint(world.provider.dimensionId, x, y, z, RANGE));
+        OmoshiroiKamo.instance.getPacketHandler()
+            .sendToAllAround(
+                new PacketSound(x, y, z, sound, volume, frequency, mod),
+                new NetworkRegistry.TargetPoint(world.provider.dimensionId, x, y, z, RANGE));
     }
 }

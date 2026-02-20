@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.creative;
+package ruiseki.omoshiroikamo.core.creative;
 
 import java.util.List;
 
@@ -6,8 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import ruiseki.omoshiroikamo.api.mod.ICreativeTabModule;
 
 public abstract class BaseCreativeTab implements ICreativeTabModule {
 

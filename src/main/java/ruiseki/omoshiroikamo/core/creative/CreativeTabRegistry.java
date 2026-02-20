@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.creative;
+package ruiseki.omoshiroikamo.core.creative;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;

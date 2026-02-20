@@ -9,7 +9,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +21,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * The mod base command.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -35,8 +34,7 @@ public class CommandMod implements ICommand {
     public CommandMod(ModBase mod, Map<String, ICommand> subCommands) {
         this.mod = mod;
         this.subCommands = subCommands;
-        // this.subCommands.put(CommandConfig.NAME, new CommandConfig(mod));
-        // this.subCommands.put(CommandVersion.NAME, new CommandVersion(mod));
+        this.subCommands.put(CommandVersion.NAME, new CommandVersion(mod));
         addAlias(mod.getModId());
     }
 
@@ -62,8 +60,12 @@ public class CommandMod implements ICommand {
         return aliases;
     }
 
-    protected Map<String, ICommand> getSubcommands() {
+    public Map<String, ICommand> getSubcommands() {
         return subCommands;
+    }
+
+    public void addSubcommands(String name, ICommand command) {
+        subCommands.put(name, command);
     }
 
     private List<String> getSubCommands(String cmd) {
@@ -101,9 +103,8 @@ public class CommandMod implements ICommand {
         return it.hasNext() ? joinStrings(command + " <", it, " | ", ">") : command;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public List getCommandAliases() {
+    public List<String> getCommandAliases() {
         return this.getAliases();
     }
 
@@ -118,47 +119,51 @@ public class CommandMod implements ICommand {
      * should either print out a friendly message explaining how to use the given (sub)command,
      * or throw a CommandException with extra helpful information.
      *
-     * @param icommandsender Use this commandsender to print chat message.
-     * @param astring        The list of strings that were entered as subcommands to the current command by the user.
+     * @param sender Use this commandsender to print chat message.
+     * @param args   The list of strings that were entered as subcommands to the current command by the user.
      * @throws CommandException Thrown when the user entered something wrong, should contain some helpful information as
      *                          to what wrong.
      */
-    public void processCommandHelp(ICommandSender icommandsender, String[] astring) throws CommandException {
-        throw new WrongUsageException(getCommandUsage(icommandsender));
+    public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
+        throw new WrongUsageException(getCommandUsage(sender));
     }
 
     @Override
-    public void processCommand(ICommandSender icommandsender, String[] astring) throws CommandException {
-        if (astring.length == 0) {
-            processCommandHelp(icommandsender, astring);
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+        if (args.length == 0) {
+            processCommandHelp(sender, args);
         } else {
-            ICommand subcommand = getSubcommands().get(astring[0]);
+            ICommand subcommand = getSubcommands().get(args[0]);
             if (subcommand != null) {
-                String[] asubstring = shortenArgumentList(astring);
-                subcommand.processCommand(icommandsender, asubstring);
+                String[] asubstring = shortenArgumentList(args);
+                subcommand.processCommand(sender, asubstring);
             } else {
-                throw new WrongUsageException(LibMisc.LANG.localize("chat.cyclopscore.command.invalidSubcommand"));
+                throw new WrongUsageException(LibMisc.LANG.localize("command.ok.invalidSubcommand"));
             }
         }
     }
 
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender icommandsender) {
-        return icommandsender.canCommandSenderUseCommand(
-            MinecraftServer.getServer()
-                .getOpPermissionLevel(),
-            getCommandName());
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel() {
+        return 0;
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender icommandsender, String[] astring) {
-        if (astring.length != 0) {
-            ICommand subcommand = getSubcommands().get(astring[0]);
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        return sender.canCommandSenderUseCommand(this.getRequiredPermissionLevel(), this.getCommandName());
+    }
+
+    @Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
+        if (args.length != 0) {
+            ICommand subcommand = getSubcommands().get(args[0]);
             if (subcommand != null) {
-                String[] asubstring = shortenArgumentList(astring);
-                return subcommand.addTabCompletionOptions(icommandsender, asubstring);
+                String[] asubstring = shortenArgumentList(args);
+                return subcommand.addTabCompletionOptions(sender, asubstring);
             } else {
-                return getSubCommands(astring[0]);
+                return getSubCommands(args[0]);
             }
         } else {
             return getSubCommands("");
@@ -166,7 +171,7 @@ public class CommandMod implements ICommand {
     }
 
     @Override
-    public boolean isUsernameIndex(String[] astring, int i) {
+    public boolean isUsernameIndex(String[] args, int i) {
         return false;
     }
 

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Annotation that can be added to fields of type {@link net.minecraft.client.renderer.texture.TextureAtlasSprite}
  * to automatically populate the field after texture stitching.
  *
- * Register objects that use these annotations to your mod's {@link org.cyclops.cyclopscore.client.icon.IconProvider}.
+ * Register objects that use these annotations to your mod's {@link IconProvider}.
  *
  * @author rubensworks
  */

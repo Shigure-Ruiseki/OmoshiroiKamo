@@ -2,6 +2,9 @@ package ruiseki.omoshiroikamo.core.init;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import net.minecraft.command.ICommand;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -87,6 +90,13 @@ public class ModuleManager {
         for (ModModuleBase module : modules) {
             if (!module.isEnable()) continue;
             module.onServerStopping(event);
+        }
+    }
+
+    public void registerSubCommand(Map<String, ICommand> subcommand) {
+        for (ModModuleBase module : modules) {
+            if (!module.isEnable()) continue;
+            module.registerSubCommand(subcommand);
         }
     }
 }

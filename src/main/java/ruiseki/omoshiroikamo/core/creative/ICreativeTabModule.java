@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.api.mod;
+package ruiseki.omoshiroikamo.core.creative;
 
 import java.util.List;
 

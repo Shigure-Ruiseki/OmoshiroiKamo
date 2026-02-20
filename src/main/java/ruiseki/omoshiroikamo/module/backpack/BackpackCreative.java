@@ -5,9 +5,9 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.common.creative.BaseCreativeTab;
-import ruiseki.omoshiroikamo.core.common.creative.CreativeTabRegistry;
-import ruiseki.omoshiroikamo.core.common.creative.OKCreativeTab;
+import ruiseki.omoshiroikamo.core.creative.BaseCreativeTab;
+import ruiseki.omoshiroikamo.core.creative.CreativeTabRegistry;
+import ruiseki.omoshiroikamo.core.creative.OKCreativeTab;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 

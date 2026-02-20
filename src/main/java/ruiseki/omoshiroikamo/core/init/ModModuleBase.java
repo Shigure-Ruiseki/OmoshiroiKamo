@@ -1,5 +1,9 @@
 package ruiseki.omoshiroikamo.core.init;
 
+import java.util.Map;
+
+import net.minecraft.command.ICommand;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -32,6 +36,8 @@ public abstract class ModModuleBase {
     protected void registerWorldStorage(WorldStorage storage) {
         mod.registerWorldStorage(storage);
     }
+
+    protected void registerSubCommand(Map<String, ICommand> subcommand) {}
 
     public ICommonProxy getModuleProxy() {
         return moduleProxy;
