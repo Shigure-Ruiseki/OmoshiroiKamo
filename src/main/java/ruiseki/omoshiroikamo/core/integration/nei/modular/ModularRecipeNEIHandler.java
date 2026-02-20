@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,36 +13,24 @@ import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.EnergyOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.GasInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.GasOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.VisInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartEnergy;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartEssentia;
+import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartFactory;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartFluid;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartGas;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartItem;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartMana;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartVis;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.RecipeLayoutPart;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositionedRenderer;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.NEIRendererFactory;
-import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedEnergy;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -81,8 +68,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     @Override
     public void loadTransferRects() {
-        // Dynamic transfer rect based on layout, but fixed for simplicity for now
-        this.addTransferRect(76, 20, 24, 18);
+        // Removed central bounding box
     }
 
     @Override
@@ -267,48 +253,35 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
             // --- LAYOUT LOGIC ---
 
-            // 1. Mana (Top Bar)
-            // x: 5, y: 0, w: 156, h: 4
-            int manaY = 0;
-            if (!manaParts.isEmpty()) {
-                LayoutPartMana mana = manaParts.get(0);
-                mana.setPosition(5, manaY);
-                allParts.add(mana);
-            }
-
-            // 2. Energy (Left Bar)
-            // x: 5, y: 12, w: 16, h: 60
-            int energyX = 5;
             int mainY = 12;
+            int currentX = 5;
+
+            // 1. Items (Center Grid)
+            int itemStartX = currentX;
+            layoutGrid(itemParts, itemStartX, mainY, 3, 18);
+
+            // 2. Essentia (Bottom Left, below items)
+            int essentiaY = mainY + (3 * 18) + 8;
+            layoutGrid(essentiaParts, itemStartX, essentiaY, 4, 16);
+
+            // 3. Vis (Right of items)
+            int visStartX = itemStartX + (3 * 18) + 4;
+            layoutGrid(visParts, visStartX, mainY, 2, 16);
+
+            // 4. Energy (Right of Vis)
+            int energyStartX = visStartX + (2 * 16) + 4;
             if (!energyParts.isEmpty()) {
                 LayoutPartEnergy energy = energyParts.get(0);
-                energy.setPosition(energyX, mainY);
+                energy.setPosition(energyStartX, mainY);
                 allParts.add(energy);
             }
 
-            // 3. Items (Center Grid)
-            // x: 26 (5 + 16 + 5 padding)
-            int itemStartX = 26;
-            int itemStartY = mainY;
-            layoutGrid(itemParts, itemStartX, itemStartY, 3, 18);
-
-            // 4. Essentia (Bottom Left, below items)
-            // y: itemStartY + (rows * 18) + padding
-            int essentiaY = itemStartY + (3 * 18) + 8;
-            layoutGrid(essentiaParts, itemStartX, essentiaY, 4, 16);
-
-            // 5. Vis (Right of items)
-            // x: itemStartX + (3 * 18) + gap
-            int visStartX = itemStartX + (3 * 18) + 8;
-            layoutGrid(visParts, visStartX, itemStartY, 2, 16);
-
-            // 6. Fluids/Gas (Far Right)
-            int tankStartX = visStartX + (2 * 16) + 8;
+            // 5. Fluids/Gas (Far Right)
+            int tankStartX = energyStartX + 16 + 4;
             int currentTankX = tankStartX;
 
             for (LayoutPartFluid fluid : fluidParts) {
                 fluid.setPosition(currentTankX, mainY);
-                allParts.add(fluid);
                 currentTankX += fluid.getWidth() + 2;
             }
             for (LayoutPartGas gas : gasParts) {
@@ -317,26 +290,24 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 currentTankX += gas.getWidth() + 2;
             }
 
-            // 7. Arrow and Outputs (Bottom Area)
+            // 6. Output Area
             int outputY = 115;
-
-            // LayoutPartArrow arrow = new LayoutPartArrow();
-            // arrow.setPosition(76, outputY - 22);
-            // allParts.add(arrow);
-
             int outputStartX = 10;
             layoutComponents(outputParts, outputStartX, outputY, false);
 
-            // Add all inputs to allParts
+            // 7. Mana (Bottom Bar)
+            int manaY = 142;
+            if (!manaParts.isEmpty()) {
+                LayoutPartMana mana = manaParts.get(0);
+                mana.setPosition(5, manaY);
+                allParts.add(mana);
+            }
 
-            // 6. Populate legacy lists for NEI compatibility
-            // (Parts are already added to allParts during layout steps or below)
+            // Populate legacy lists for NEI compatibility
             for (RecipeLayoutPart<?> part : itemParts) allParts.add(part);
             for (RecipeLayoutPart<?> part : essentiaParts) allParts.add(part);
             for (RecipeLayoutPart<?> part : visParts) allParts.add(part);
-            // fluids, gas, energy, mana added manually above
 
-            // Populate legacy
             populateLegacyLists(inputParts, true);
             populateLegacyLists(outputParts, false);
         }
@@ -357,44 +328,9 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         private void collectParts(List<? extends IRecipeInput> inputs, List<RecipeLayoutPart<?>> parts,
             boolean isInput) {
             for (IRecipeInput input : inputs) {
-                if (input instanceof ItemInput) {
-                    ItemInput itemIn = (ItemInput) input;
-                    if (!itemIn.getItems()
-                        .isEmpty()) {
-                        parts.add(new LayoutPartItem(itemIn.getItems()));
-                    }
-                } else if (input instanceof FluidInput) {
-                    FluidInput fluidIn = (FluidInput) input;
-                    parts.add(
-                        new LayoutPartFluid(new PositionedFluidTank(fluidIn.getFluid(), new Rectangle(0, 0, 18, 50))));
-                } else if (input instanceof EnergyInput) {
-                    EnergyInput energyIn = (EnergyInput) input;
-                    // PositionedEnergy constructor takes Rectangle
-                    parts.add(
-                        new LayoutPartEnergy(
-                            new PositionedEnergy(
-                                energyIn.getAmount(),
-                                energyIn.isPerTick(),
-                                true,
-                                new Rectangle(0, 0, 16, 60))));
-                } else if (input instanceof ManaInput) {
-                    ManaInput manaIn = (ManaInput) input;
-                    INEIPositionedRenderer r = NEIRendererFactory
-                        .createManaRenderer(input, null, new Rectangle(0, 0, 100, 8));
-                    if (r != null) parts.add(new LayoutPartMana(r));
-                } else if (input instanceof VisInput || input instanceof EssentiaInput || input instanceof GasInput) {
-                    // Generic factory usage
-                    INEIPositionedRenderer r = null;
-                    if (input instanceof GasInput) {
-                        r = NEIRendererFactory.createGasRenderer(input, null, new Rectangle(0, 0, 18, 50));
-                        if (r != null) parts.add(new LayoutPartGas(r));
-                    } else if (input instanceof VisInput) {
-                        r = NEIRendererFactory.createAspectRenderer(input, null, new Rectangle(0, 0, 16, 16));
-                        if (r != null) parts.add(new LayoutPartVis(r));
-                    } else if (input instanceof EssentiaInput) {
-                        r = NEIRendererFactory.createAspectRenderer(input, null, new Rectangle(0, 0, 16, 16));
-                        if (r != null) parts.add(new LayoutPartEssentia(r));
-                    }
+                RecipeLayoutPart<?> part = LayoutPartFactory.create(input);
+                if (part != null) {
+                    parts.add(part);
                 }
             }
         }
@@ -402,46 +338,10 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         private void collectPartsErrors(List<? extends IRecipeOutput> outputs, List<RecipeLayoutPart<?>> parts,
             boolean isInput) {
             for (IRecipeOutput output : outputs) {
-                if (output instanceof ItemOutput) {
-                    ItemOutput itemOut = (ItemOutput) output;
-                    if (!itemOut.getItems()
-                        .isEmpty()) {
-                        parts.add(new LayoutPartItem(itemOut.getItems()));
-                    }
-                } else if (output instanceof FluidOutput) {
-                    FluidOutput fluidOut = (FluidOutput) output;
-                    parts.add(
-                        new LayoutPartFluid(new PositionedFluidTank(fluidOut.getFluid(), new Rectangle(0, 0, 18, 50))));
-                } else if (output instanceof EnergyOutput) {
-                    EnergyOutput energyOut = (EnergyOutput) output;
-                    parts.add(
-                        new LayoutPartEnergy(
-                            new PositionedEnergy(
-                                energyOut.getAmount(),
-                                energyOut.isPerTick(),
-                                false,
-                                new Rectangle(0, 0, 16, 60))));
-                } else if (output instanceof ManaOutput) {
-                    ManaOutput manaOut = (ManaOutput) output;
-                    INEIPositionedRenderer r = NEIRendererFactory
-                        .createManaRenderer(null, output, new Rectangle(0, 0, 100, 8));
-                    if (r != null) parts.add(new LayoutPartMana(r));
-                } else if (output instanceof VisOutput || output instanceof EssentiaOutput
-                    || output instanceof GasOutput) {
-                        if (output instanceof GasOutput) {
-                            INEIPositionedRenderer r = NEIRendererFactory
-                                .createGasRenderer(null, output, new Rectangle(0, 0, 18, 50));
-                            if (r != null) parts.add(new LayoutPartGas(r));
-                        } else if (output instanceof VisOutput) {
-                            INEIPositionedRenderer r = NEIRendererFactory
-                                .createAspectRenderer(null, output, new Rectangle(0, 0, 16, 16));
-                            if (r != null) parts.add(new LayoutPartVis(r));
-                        } else if (output instanceof EssentiaOutput) {
-                            INEIPositionedRenderer r = NEIRendererFactory
-                                .createAspectRenderer(null, output, new Rectangle(0, 0, 16, 16));
-                            if (r != null) parts.add(new LayoutPartEssentia(r));
-                        }
-                    }
+                RecipeLayoutPart<?> part = LayoutPartFactory.create(output);
+                if (part != null) {
+                    parts.add(part);
+                }
             }
         }
 

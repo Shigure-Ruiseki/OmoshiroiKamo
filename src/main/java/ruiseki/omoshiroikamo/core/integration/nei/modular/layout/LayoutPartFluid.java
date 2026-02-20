@@ -36,7 +36,7 @@ public class LayoutPartFluid extends RecipeLayoutPart<FluidStack> {
 
     @Override
     public int getHeight() {
-        return 50;
+        return 60;
     }
 
     @Override
