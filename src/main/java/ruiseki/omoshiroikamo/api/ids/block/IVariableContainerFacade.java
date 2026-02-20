@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.ids.block;
 
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Facade for a {@link IVariableContainer} at a certain position.

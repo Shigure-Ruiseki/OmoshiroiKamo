@@ -7,11 +7,11 @@ import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
-import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.client.gui.widget.SearchBarWidget;
 import ruiseki.omoshiroikamo.core.common.search.SearchNode;
 import ruiseki.omoshiroikamo.core.common.search.SearchParser;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 

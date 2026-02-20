@@ -13,14 +13,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.network.INetworkElement;
 import ruiseki.omoshiroikamo.api.ids.network.INetworkEventListener;
 import ruiseki.omoshiroikamo.api.ids.network.IPartNetwork;
 import ruiseki.omoshiroikamo.api.ids.network.IPartNetworkElement;
-import ruiseki.omoshiroikamo.api.mod.IInitListener;
-import ruiseki.omoshiroikamo.api.util.MatrixHelpers;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.helper.MatrixHelpers;
+import ruiseki.omoshiroikamo.core.init.IInitListener;
 
 /**
  * A type of part that can be inserted into a {@link IPartContainer}.

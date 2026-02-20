@@ -16,9 +16,9 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
+import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
 
@@ -78,7 +78,7 @@ public class BlockQuantumOreExtractor extends AbstractTieredMBBlock<TEQuantumExt
     public static class ItemBlockQuantumOreExtractor extends ItemBlockOK {
 
         public ItemBlockQuantumOreExtractor(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

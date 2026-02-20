@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.core.common.search;
 
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
 final class TooltipNode implements SearchNode {
 

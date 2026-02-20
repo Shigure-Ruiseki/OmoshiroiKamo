@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.ids.block;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * An interface for containers that can hold energy.

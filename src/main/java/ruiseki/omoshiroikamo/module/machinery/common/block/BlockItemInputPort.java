@@ -80,7 +80,7 @@ public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> {
     public static class ItemBlockItemInputPort extends AbstractPortItemBlock {
 
         public ItemBlockItemInputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

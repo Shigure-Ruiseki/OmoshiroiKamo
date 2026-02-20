@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.api.block.BlockStack;
+import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypes;
 

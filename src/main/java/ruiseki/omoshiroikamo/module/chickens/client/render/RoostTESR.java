@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
-import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
+import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.module.chickens.client.model.ModelChickensChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.block.TERoost;
 
@@ -36,7 +36,7 @@ public class RoostTESR extends TileEntitySpecialRenderer {
         GL11.glTranslated(x + 0.5, y, z + 0.5);
 
         ForgeDirection facing = tile.getFacing();
-        GL11.glRotatef(BlockStateUtils.getFacingAngle(facing), 0F, 1F, 0F);
+        GL11.glRotatef(BlockStateHelpers.getFacingAngle(facing), 0F, 1F, 0F);
 
         ResourceLocation texture = chicken.getItem()
             .getTexture();

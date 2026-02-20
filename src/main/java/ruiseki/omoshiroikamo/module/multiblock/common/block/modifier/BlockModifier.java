@@ -7,7 +7,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.api.multiblock.ModifierRegistry;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 
 public abstract class BlockModifier extends BlockOK implements IModifierBlock {
 

@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.api.ids.network.IPartNetwork;
 import ruiseki.omoshiroikamo.api.ids.part.IPartState;
 import ruiseki.omoshiroikamo.api.ids.part.IPartType;
 import ruiseki.omoshiroikamo.api.ids.part.PartTarget;
-import ruiseki.omoshiroikamo.api.inventory.IGuiContainerProvider;
+import ruiseki.omoshiroikamo.core.inventory.IGuiContainerProvider;
 
 /**
  * An element that can be used inside parts to access a specific aspect of something to read/write.

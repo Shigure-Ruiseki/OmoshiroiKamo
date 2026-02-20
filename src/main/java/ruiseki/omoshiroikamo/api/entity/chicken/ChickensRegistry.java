@@ -68,7 +68,7 @@ public class ChickensRegistry extends BaseRegistry<ChickensRegistryItem> {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.enableChicken;
+        return BackportConfigs.enableChickens;
     }
 
     /**

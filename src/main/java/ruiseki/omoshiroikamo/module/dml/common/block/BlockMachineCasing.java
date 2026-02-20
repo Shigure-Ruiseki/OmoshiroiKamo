@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 
 public class BlockMachineCasing extends BlockOK {
 

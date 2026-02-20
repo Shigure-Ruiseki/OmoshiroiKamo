@@ -59,7 +59,7 @@ public class BlockVisInputPort extends AbstractPortBlock<TEVisInputPort> {
     public static class ItemBlockVisInputPort extends AbstractPortItemBlock {
 
         public ItemBlockVisInputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

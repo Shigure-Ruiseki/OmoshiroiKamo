@@ -12,8 +12,8 @@ import net.minecraftforge.common.util.Constants;
 
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerializable {
 

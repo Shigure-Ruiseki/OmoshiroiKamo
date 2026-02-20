@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 public class ProgrammerHandler implements INBTSerializable {
 

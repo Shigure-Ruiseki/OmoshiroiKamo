@@ -14,8 +14,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class BlockMachineBase extends BlockOK implements IMBBlock {
@@ -74,7 +74,7 @@ public class BlockMachineBase extends BlockOK implements IMBBlock {
     public static class ItemBlockMachineBase extends ItemBlockOK {
 
         public ItemBlockMachineBase(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

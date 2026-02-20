@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfacebus.IItemInterface;
 

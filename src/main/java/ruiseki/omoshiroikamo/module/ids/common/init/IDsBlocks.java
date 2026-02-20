@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.common.init;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.BlockProgrammer;

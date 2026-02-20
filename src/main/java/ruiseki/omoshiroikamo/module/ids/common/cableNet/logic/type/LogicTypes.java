@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import ruiseki.omoshiroikamo.api.block.BlockStack;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class LogicTypes {

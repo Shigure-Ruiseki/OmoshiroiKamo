@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.common.handler;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -22,9 +20,10 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import ruiseki.omoshiroikamo.api.item.BaublesUtils;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.item.BaublesUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
@@ -114,7 +113,8 @@ public class BackpackEventHandler {
 
             stack = handler.insertItem(stack, false);
 
-            NETWORK.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             if (stack == null) {
                 break;
             }
@@ -192,7 +192,8 @@ public class BackpackEventHandler {
 
             feedingStack.onFoodEaten(player.worldObj, player);
 
-            NETWORK.sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
             return true;
         }
 

@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.core.common.search;
 
 import java.util.List;
 
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
 final class OrNode implements SearchNode {
 

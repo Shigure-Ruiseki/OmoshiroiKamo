@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.chickens.common.init;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockBreeder;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockRoost;

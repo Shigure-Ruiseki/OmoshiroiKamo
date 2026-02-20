@@ -7,9 +7,9 @@ import java.util.Map;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
+import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.multiblock.common.registries.FocusableHandler;

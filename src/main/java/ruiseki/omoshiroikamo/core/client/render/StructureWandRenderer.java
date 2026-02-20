@@ -17,7 +17,7 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
-import ruiseki.omoshiroikamo.core.common.item.ItemStructureWand;
+import ruiseki.omoshiroikamo.core.item.ItemStructureWand;
 
 /**
  * Renders the Structure Wand selection with a translucent cyan outline.

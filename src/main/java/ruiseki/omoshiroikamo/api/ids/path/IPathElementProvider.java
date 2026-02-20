@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.ids.path;
 
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Classes that can create instances of an {@link IPathElement}.

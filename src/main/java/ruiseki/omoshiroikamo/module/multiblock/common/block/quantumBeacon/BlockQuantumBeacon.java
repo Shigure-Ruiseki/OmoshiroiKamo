@@ -22,9 +22,9 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig.BeaconTierConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig.BeaconTierRangeConfig;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTieredMBBlock;
+import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
@@ -82,7 +82,7 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
     public static class ItemBlockQuantumBeacon extends ItemBlockOK {
 
         public ItemBlockQuantumBeacon(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

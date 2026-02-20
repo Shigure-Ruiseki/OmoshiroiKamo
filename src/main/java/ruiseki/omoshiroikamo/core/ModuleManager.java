@@ -15,7 +15,9 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.api.mod.IModuleClient;
 import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
 
-public final class ModuleManager {
+public class ModuleManager {
+
+    public ModuleManager() {}
 
     private static final List<IModuleCommon> COMMON = new ArrayList<>();
     private static final List<IModuleClient> CLIENT = new ArrayList<>();

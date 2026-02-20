@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.core.common.search;
 
 import net.minecraftforge.oredict.OreDictionary;
 
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
 final class OreNode implements SearchNode {
 

@@ -38,10 +38,10 @@ import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.api.client.JsonModelISBRH;
 import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockBauble;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
-import ruiseki.omoshiroikamo.core.common.block.state.BlockStateUtils;
+import ruiseki.omoshiroikamo.core.block.AbstractBlock;
+import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
+import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
+import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
@@ -89,7 +89,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     public void init() {
         GameRegistry.registerBlock(this, ItemBackpack.class, name);
         GameRegistry.registerTileEntity(teClass, name + "TileEntity");
-        BlockStateUtils.registerFacingProp(this.getClass());
+        BlockStateHelpers.registerFacingProp(this.getClass());
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override
@@ -137,7 +137,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         private int upgradeSlots = 1;
 
         public ItemBackpack(Block block) {
-            super(block, block);
+            super(block);
             if (block instanceof BlockBackpack backpack) {
                 this.backpackSlots = backpack.getBackpackSlots();
                 this.upgradeSlots = backpack.getUpgradeSlots();

@@ -22,12 +22,12 @@ import cpw.mods.fml.common.Loader;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
-import ruiseki.omoshiroikamo.api.json.FluidJson;
-import ruiseki.omoshiroikamo.api.json.JsonUtils;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
+import ruiseki.omoshiroikamo.core.json.FluidJson;
+import ruiseki.omoshiroikamo.core.json.JsonUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 // Refactor base on OriginalChicken by Chlorine0808

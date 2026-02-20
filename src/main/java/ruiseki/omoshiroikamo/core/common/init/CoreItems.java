@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.common.item.ItemStructureWand;
-import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.item.ItemStructureWand;
+import ruiseki.omoshiroikamo.core.item.ItemWrench;
 
 public enum CoreItems {
 

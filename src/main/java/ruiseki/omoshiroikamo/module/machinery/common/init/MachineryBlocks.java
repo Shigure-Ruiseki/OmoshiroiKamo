@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery.common.init;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineControlle
 /**
  * Block registration for the Machinery module.
  * Uses enum pattern consistent with other modules.
- * 
+ *
  * Optional mod blocks are initialized lazily in preInit() to avoid
  * ClassNotFoundException when the mod is not present.
  * Each mod's blocks are initialized in a separate helper class to ensure

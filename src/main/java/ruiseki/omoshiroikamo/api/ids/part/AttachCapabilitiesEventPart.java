@@ -1,10 +1,10 @@
 package ruiseki.omoshiroikamo.api.ids.part;
 
-import ruiseki.omoshiroikamo.api.capabilities.AttachCapabilitiesEvent;
+import ruiseki.omoshiroikamo.core.capabilities.AttachCapabilitiesEvent;
 
 /**
  * Event for when an {@link IPartState} is being constructed.
- * 
+ *
  * @author rubensworks
  */
 public class AttachCapabilitiesEventPart extends AttachCapabilitiesEvent<IPartState> {

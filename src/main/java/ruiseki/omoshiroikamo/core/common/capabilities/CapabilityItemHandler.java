@@ -10,9 +10,9 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
-import ruiseki.omoshiroikamo.api.capabilities.Capability;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityInject;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityManager;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 
 public class CapabilityItemHandler {
 

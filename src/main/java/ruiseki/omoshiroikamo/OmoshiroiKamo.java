@@ -1,5 +1,14 @@
 package ruiseki.omoshiroikamo;
 
+import java.util.Map;
+
+import net.minecraft.command.ICommand;
+import net.minecraft.creativetab.CreativeTabs;
+
+import org.apache.logging.log4j.Level;
+
+import com.google.common.collect.Maps;
+import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 
 import cpw.mods.fml.common.Mod;
@@ -16,7 +25,24 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
+import ruiseki.omoshiroikamo.core.CoreModule;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
+import ruiseki.omoshiroikamo.core.command.CommandMod;
+import ruiseki.omoshiroikamo.core.common.command.CommandOK;
+import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.integration.nei.NEICompat;
+import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
+import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.modcompat.ModCompatLoader;
+import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
+import ruiseki.omoshiroikamo.module.backpack.BackpackModule;
+import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
+import ruiseki.omoshiroikamo.module.cows.CowsModule;
+import ruiseki.omoshiroikamo.module.dml.DMLModule;
+import ruiseki.omoshiroikamo.module.ids.IDsModule;
+import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
+import ruiseki.omoshiroikamo.module.multiblock.MultiBlockModule;
 
 @Mod(
     modid = LibMisc.MOD_ID,
@@ -24,7 +50,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
     version = LibMisc.VERSION,
     dependencies = LibMisc.DEPENDENCIES,
     guiFactory = LibMisc.GUI_FACTORY)
-public class OmoshiroiKamo {
+public class OmoshiroiKamo extends ModBase {
 
     static {
         try {
@@ -34,54 +60,113 @@ public class OmoshiroiKamo {
         }
     }
 
+    @SidedProxy(serverSide = LibMisc.PROXY_COMMON, clientSide = LibMisc.PROXY_CLIENT)
+    public static ICommonProxy proxy;
+
     @Instance(LibMisc.MOD_ID)
     public static OmoshiroiKamo instance;
 
-    @SidedProxy(serverSide = LibMisc.PROXY_COMMON, clientSide = LibMisc.PROXY_CLIENT)
-    public static CommonProxy proxy;
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit(event);
-    }
-
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
-        proxy.init(event);
-    }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit(event);
-    }
-
-    @EventHandler
-    public void serverLoad(FMLServerStartingEvent event) {
-        proxy.serverLoad(event);
-    }
-
-    @EventHandler
-    public void serverStarted(FMLServerStartedEvent event) {
-        proxy.serverStarted(event);
-    }
-
-    @EventHandler
-    public void serverStopping(FMLServerStoppingEvent event) {
-        proxy.serverStopping(event);
+    public OmoshiroiKamo() {
+        super(LibMisc.MOD_ID, LibMisc.MOD_NAME);
+        putGenericReference(REFKEY_MOD_VERSION, LibMisc.VERSION);
     }
 
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {
-        proxy.onConstruction(event);
+        CapabilityManager.INSTANCE.injectCapabilities(event.getASMHarvestedData());
+        registerModule(new CoreModule());
+        registerModule(new ChickensModule());
+        registerModule(new CowsModule());
+        registerModule(new DMLModule());
+        registerModule(new BackpackModule());
+        registerModule(new IDsModule());
+        registerModule(new MachineryModule());
+        registerModule(new MultiBlockModule());
+    }
+
+    @Override
+    protected void loadModCompats(ModCompatLoader modCompatLoader) {
+        // TODO: add version checker
+        // modCompatLoader.addModCompat(new VersionCheckerModCompat());
+    }
+
+    @Override
+    protected ICommand constructBaseCommand() {
+        Map<String, ICommand> commands = Maps.newHashMap();
+        CommandMod command = new CommandMod(this, commands);
+        command.addAlias("ok");
+        return command;
+    }
+
+    @Mod.EventHandler
+    @Override
+    public final void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        ModelRegistry.registerModid(LibMisc.MOD_ID);
+        WailaCompat.init();
+        NEICompat.init();
     }
 
     @EventHandler
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-        proxy.onServerAboutToStart(event);
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
     }
 
     @EventHandler
-    public void onServerStopped(FMLServerStoppedEvent event) {
-        proxy.onServerStopped(event);
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
+        StructureCompat.postInit();
+    }
+
+    @Mod.EventHandler
+    @Override
+    public void onServerStarting(FMLServerStartingEvent event) {
+        super.onServerStarting(event);
+        event.registerServerCommand(new CommandOK());
+    }
+
+    @Override
+    public CreativeTabs constructDefaultCreativeTab() {
+        return null;
+    }
+
+    @EventHandler
+    public void onServerStarted(FMLServerStartedEvent event) {
+        super.onServerStarted(event);
+    }
+
+    @EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        super.onServerStopping(event);
+    }
+
+    @EventHandler
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {}
+
+    @EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event) {}
+
+    @Override
+    public ICommonProxy getProxy() {
+        return proxy;
+    }
+
+    /**
+     * Log a new info message for this mod.
+     *
+     * @param message The message to show.
+     */
+    public static void okLog(String message) {
+        OmoshiroiKamo.instance.log(Level.INFO, message);
+    }
+
+    /**
+     * Log a new message of the given level for this mod.
+     *
+     * @param level   The level in which the message must be shown.
+     * @param message The message to show.
+     */
+    public static void okLog(Level level, String message) {
+        OmoshiroiKamo.instance.log(level, message);
     }
 }

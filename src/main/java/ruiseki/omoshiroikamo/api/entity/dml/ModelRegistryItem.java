@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import lombok.Getter;
 import lombok.Setter;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 public class ModelRegistryItem {
