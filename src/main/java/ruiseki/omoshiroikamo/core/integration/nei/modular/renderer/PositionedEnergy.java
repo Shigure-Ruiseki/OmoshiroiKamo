@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.guihook.GuiContainerManager;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 

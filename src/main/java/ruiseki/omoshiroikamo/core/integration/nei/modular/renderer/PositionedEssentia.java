@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.client.lib.UtilsFX;
 
 public class PositionedEssentia implements INEIPositionedRenderer {
 
@@ -30,34 +31,33 @@ public class PositionedEssentia implements INEIPositionedRenderer {
             return;
         }
 
-        ResourceLocation icon = aspect.getImage();
-        if (icon == null) {
-            return;
-        }
-
-        Minecraft.getMinecraft().renderEngine.bindTexture(icon);
-
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        try {
+            // Draw tag with amount
+            UtilsFX.drawTag(position.x, position.y, aspect, amount, 0, 0.0D);
+        } catch (Throwable e) {
+            // Fallback
+            ResourceLocation icon = aspect.getImage();
+            if (icon == null) return;
+            Minecraft.getMinecraft().renderEngine.bindTexture(icon);
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            GuiDraw.drawTexturedModalRect(position.x, position.y, 0, 0, 16, 16);
 
-        GuiDraw.drawTexturedModalRect(position.x, position.y, 0, 0, 16, 16);
+            // Amount
+            if (amount > 0) {
+                String amountStr = Integer.toString(amount);
+                float scale = 0.5f;
+                int realX = position.x + position.width / 2;
+                int realY = position.y + position.height - 5;
 
-        GL11.glDisable(GL11.GL_BLEND);
-
-        // Amount
-        if (amount > 0) {
-            String amountStr = Integer.toString(amount);
-            float scale = 0.5f;
-            int realX = position.x + position.width / 2;
-            int realY = position.y + position.height - 5;
-
-            GL11.glPushMatrix();
-            GL11.glTranslatef(realX, realY, 0.0f);
-            GL11.glScalef(scale, scale, 1.0f);
-            GuiDraw.drawStringC(amountStr, 0, 0, 0xFFFFFF, true);
-            GL11.glPopMatrix();
+                GL11.glPushMatrix();
+                GL11.glTranslatef(realX, realY, 0.0f);
+                GL11.glScalef(scale, scale, 1.0f);
+                GuiDraw.drawStringC(amountStr, 0, 0, 0xFFFFFF, true);
+                GL11.glPopMatrix();
+            }
         }
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     @Override

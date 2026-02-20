@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular.renderer;
 
 import java.awt.Rectangle;
-import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
