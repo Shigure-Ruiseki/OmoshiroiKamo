@@ -32,7 +32,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * TODO: Working particles and sound effects
  * TODO: Completion effects (particles, sounds)
  * TODO: Block state visual changes based on status
- * TODO: NEI recipe integration
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 

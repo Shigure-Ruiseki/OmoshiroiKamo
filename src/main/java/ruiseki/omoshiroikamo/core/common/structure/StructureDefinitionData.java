@@ -29,7 +29,7 @@ public class StructureDefinitionData {
         public String displayName;
 
         // Recipe group to use (CustomStructure only).
-        public String recipeGroup;
+        public List<String> recipeGroup;
 
         // Layer array (null for default entries).
         public List<Layer> layers;

@@ -20,6 +20,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularRecipeNEIHandler;
@@ -170,10 +172,7 @@ public class NEIConfig implements IConfigureNEI {
         }
 
         // Register Modular Machine structure preview handlers (one per structure)
-        // Only register as usage handlers - structure preview shows on Usage (U), not
-        // Recipe (R)
         // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
-        // TODO: Add Recipe of Modular Machines
         // TODO: Enable 'P' button in structure preview (Name is currently null)
         if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
@@ -222,6 +221,20 @@ public class NEIConfig implements IConfigureNEI {
         for (String group : groups) {
             ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
             registerHandler(handler);
+
+            // Add controller as catalyst
+            API.addRecipeCatalyst(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()), handler.getRecipeID());
+
+            // Add blueprints as catalysts if they support this group
+            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+                StructureEntry entry = StructureManager.getInstance()
+                    .getCustomStructure(structureName);
+                if (entry != null && entry.recipeGroup != null && entry.recipeGroup.contains(group)) {
+                    ItemStack blueprint = ItemMachineBlueprint
+                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
+                    API.addRecipeCatalyst(blueprint, handler.getRecipeID());
+                }
+            }
 
             sendHandlerInfo(
                 handler.getRecipeID(),

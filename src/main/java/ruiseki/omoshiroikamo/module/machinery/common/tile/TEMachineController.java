@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +11,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -84,8 +88,8 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // Recipe processing
     private final ProcessAgent processAgent = new ProcessAgent();
-    // Recipe group - obtained from custom structure or GUI
-    private String recipeGroup = "default";
+    // Recipe groups - obtained from custom structure or GUI
+    private List<String> recipeGroups = new ArrayList<>(Collections.singletonList("default"));
     // Look-ahead: next recipe cached during current processing
     private transient ModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
@@ -315,7 +319,7 @@ public class TEMachineController extends AbstractMBModifierTE
             // Look-ahead: search for next recipe while processing (only once)
             if (nextRecipe == null) {
                 nextRecipe = RecipeLoader.getInstance()
-                    .findMatch(new String[] { recipeGroup }, getInputPorts());
+                    .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());
                 cachedRecipeVersion = RecipeLoader.getInstance()
                     .getRecipeVersion();
             }
@@ -345,7 +349,7 @@ public class TEMachineController extends AbstractMBModifierTE
         ModularRecipe recipe = nextRecipe;
         if (recipe == null) {
             recipe = RecipeLoader.getInstance()
-                .findMatch(new String[] { recipeGroup }, getInputPorts());
+                .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());
         }
         nextRecipe = null; // Clear cache
 
@@ -492,7 +496,11 @@ public class TEMachineController extends AbstractMBModifierTE
     public void writeCommon(NBTTagCompound nbt) {
         super.writeCommon(nbt);
 
-        nbt.setString("recipeGroup", recipeGroup);
+        NBTTagList groupList = new NBTTagList();
+        for (String group : recipeGroups) {
+            groupList.appendTag(new NBTTagString(group));
+        }
+        nbt.setTag("recipeGroups", groupList);
         structureAgent.writeToNBT(nbt);
         // Save blueprint inventory
         nbt.setTag("inventory", inventory.serializeNBT());
@@ -508,8 +516,17 @@ public class TEMachineController extends AbstractMBModifierTE
     public void readCommon(NBTTagCompound nbt) {
         super.readCommon(nbt);
 
-        recipeGroup = nbt.getString("recipeGroup");
-        if (recipeGroup.isEmpty()) recipeGroup = "default";
+        recipeGroups = new ArrayList<>();
+        if (nbt.hasKey("recipeGroups", 9)) {
+            NBTTagList list = nbt.getTagList("recipeGroups", 8);
+            for (int i = 0; i < list.tagCount(); i++) {
+                recipeGroups.add(list.getStringTagAt(i));
+            }
+        } else if (nbt.hasKey("recipeGroup")) {
+            String group = nbt.getString("recipeGroup");
+            if (!group.isEmpty()) recipeGroups.add(group);
+        }
+        if (recipeGroups.isEmpty()) recipeGroups.add("default");
         // Load blueprint inventory
         if (nbt.hasKey("inventory")) {
             inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
@@ -600,17 +617,31 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     /**
-     * Get the current recipe group.
+     * Get the primary recipe group.
      */
     public String getRecipeGroup() {
-        return recipeGroup;
+        return recipeGroups.isEmpty() ? "default" : recipeGroups.get(0);
     }
 
     /**
-     * Set the recipe group manually.
+     * Get all recipe groups.
+     */
+    public List<String> getRecipeGroups() {
+        return recipeGroups;
+    }
+
+    /**
+     * Set the recipe groups manually (single group).
      */
     public void setRecipeGroup(String recipeGroup) {
-        this.recipeGroup = recipeGroup;
+        this.recipeGroups = new ArrayList<>(Collections.singletonList(recipeGroup));
+    }
+
+    /**
+     * Set the recipe groups manually.
+     */
+    public void setRecipeGroups(List<String> recipeGroups) {
+        this.recipeGroups = new ArrayList<>(recipeGroups);
     }
 
     /**
@@ -624,7 +655,7 @@ public class TEMachineController extends AbstractMBModifierTE
         StructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureAgent.getCustomStructureName());
         if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
-            this.recipeGroup = entry.recipeGroup;
+            this.recipeGroups = new ArrayList<>(entry.recipeGroup);
         }
     }
 
