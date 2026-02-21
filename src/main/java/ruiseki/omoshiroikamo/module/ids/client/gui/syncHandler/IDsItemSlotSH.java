@@ -9,9 +9,9 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.CraftingNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.crafting.CraftingNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemNetwork;
 
 public class IDsItemSlotSH extends SyncHandler {
 

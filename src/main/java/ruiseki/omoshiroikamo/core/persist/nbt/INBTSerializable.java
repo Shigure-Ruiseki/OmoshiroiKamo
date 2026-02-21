@@ -7,9 +7,11 @@ import java.lang.reflect.Method;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import org.apache.logging.log4j.Level;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 
 /**
  * Objects that are serializable to NBT.
@@ -37,6 +39,7 @@ public interface INBTSerializable {
      */
     void deserializeNBT(NBTTagCompound tag);
 
+    @SuppressWarnings("unchecked")
     @EqualsAndHashCode(callSuper = false)
     @Data
     public static class SelfNBTClassType extends NBTClassType<INBTSerializable> {
@@ -68,7 +71,7 @@ public interface INBTSerializable {
         @Override
         public INBTSerializable readPersistedField(String name, NBTTagCompound tag) {
             try {
-                Constructor<?> constructor = fieldType.getConstructor();
+                Constructor constructor = fieldType.getConstructor();
                 if (constructor == null) {
                     throw new RuntimeException(
                         "The NBT serializable " + name
@@ -82,7 +85,8 @@ public interface INBTSerializable {
                 if (tag.hasKey(name)) {
                     method.invoke(obj, tag.getTag(name));
                 } else {
-                    Logger.warn(
+                    OmoshiroiKamo.okLog(
+                        Level.WARN,
                         String.format("The tag %s did not contain the key %s, skipping " + "reading.", tag, name));
                 }
                 return obj;

@@ -18,6 +18,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
@@ -302,6 +303,20 @@ public abstract class ModBase {
         registerSubCommand(baseCommand.getSubcommands());
         moduleManager.registerSubCommand(baseCommand.getSubcommands());
         event.registerServerCommand(baseCommand);
+    }
+
+    /**
+     * Override this, call super and annotate with {@link cpw.mods.fml.common.Mod.EventHandler}.
+     * Register the things that are related to when the server is starting.
+     *
+     * @param event The Forge event required for this.
+     */
+    @Mod.EventHandler
+    public void onAboutToStartEvent(FMLServerAboutToStartEvent event) {
+        moduleManager.onAboutToStartEvent(event);
+        for (WorldStorage worldStorage : worldStorages) {
+            worldStorage.onAboutToStartEvent(event);
+        }
     }
 
     /**

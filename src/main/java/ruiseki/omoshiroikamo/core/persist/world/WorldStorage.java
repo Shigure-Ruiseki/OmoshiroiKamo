@@ -31,7 +31,7 @@ public abstract class WorldStorage implements INBTProvider {
 
     /**
      * Read the counters.
-     * 
+     *
      * @param tag The tag to read from.
      */
     public void readFromNBT(NBTTagCompound tag) {
@@ -40,7 +40,7 @@ public abstract class WorldStorage implements INBTProvider {
 
     /**
      * Write the counters.
-     * 
+     *
      * @param tag The tag to write to.
      */
     public void writeToNBT(NBTTagCompound tag) {
@@ -54,7 +54,7 @@ public abstract class WorldStorage implements INBTProvider {
 
     /**
      * When a server is started.
-     * 
+     *
      * @param event The received event.
      */
     public void onAboutToStartEvent(FMLServerAboutToStartEvent event) {
@@ -63,7 +63,7 @@ public abstract class WorldStorage implements INBTProvider {
 
     /**
      * When a server is started.
-     * 
+     *
      * @param event The received event.
      */
     public void onStartedEvent(FMLServerStartedEvent event) {
@@ -74,7 +74,7 @@ public abstract class WorldStorage implements INBTProvider {
 
     /**
      * When a server is stopping.
-     * 
+     *
      * @param event The received event.
      */
     public void onStoppingEvent(FMLServerStoppingEvent event) {
@@ -134,7 +134,7 @@ public abstract class WorldStorage implements INBTProvider {
 
         /**
          * Make a new instance.
-         * 
+         *
          * @param key The key for the global counter data.
          */
         public NBTDataHolder(String key) {
@@ -152,8 +152,11 @@ public abstract class WorldStorage implements INBTProvider {
 
         @Override
         public void writeToNBT(NBTTagCompound tag) {
-            parentStorage.writeToNBT(tag);
-            tag.setTag(KEY, tag);
+            NBTTagCompound dataTag = new NBTTagCompound();
+
+            parentStorage.writeToNBT(dataTag);
+
+            tag.setTag(KEY, dataTag);
         }
 
         @Override

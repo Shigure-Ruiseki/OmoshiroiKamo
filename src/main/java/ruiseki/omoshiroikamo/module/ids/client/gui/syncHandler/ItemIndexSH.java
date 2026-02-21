@@ -10,11 +10,11 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.CraftingNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminalPanel;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndexClient;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.crafting.CraftingNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminalPanel;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemIndexClient;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.util.ItemStackKeyUtils;
 
 public class ItemIndexSH extends SyncHandler {

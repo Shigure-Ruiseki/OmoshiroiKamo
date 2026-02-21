@@ -11,9 +11,9 @@ import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.ids.client.render.CableISBRH;
 import ruiseki.omoshiroikamo.module.ids.client.render.ItemPartRenderer;
 import ruiseki.omoshiroikamo.module.ids.client.render.PartTESR;
-import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
-import ruiseki.omoshiroikamo.module.ids.common.block.cable.TECable;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.CablePartRegistry;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.BlockCable;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.TECable;
 
 public class IDsClient extends ClientProxyComponent {
 
