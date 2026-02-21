@@ -29,8 +29,6 @@ import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
 import ruiseki.omoshiroikamo.core.client.key.KeyRegistry;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.helper.LoggerHelper;
-import ruiseki.omoshiroikamo.core.modcompat.IMCHandler;
-import ruiseki.omoshiroikamo.core.modcompat.ModCompatLoader;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.persist.world.WorldStorage;
 import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
@@ -72,8 +70,6 @@ public abstract class ModBase {
     // private final RecipeHandler recipeHandler;
     private final IKeyRegistry keyRegistry;
     private final PacketHandler packetHandler;
-    private final ModCompatLoader modCompatLoader;
-    private final IMCHandler imcHandler;
     private final ModuleManager moduleManager;
 
     private CreativeTabs defaultCreativeTab = null;
@@ -88,13 +84,9 @@ public abstract class ModBase {
         // this.recipeHandler = constructRecipeHandler();
         this.keyRegistry = new KeyRegistry();
         this.packetHandler = constructPacketHandler();
-        this.modCompatLoader = constructModCompatLoader();
-        this.imcHandler = constructIMCHandler();
         this.moduleManager = constructModuleManager();
 
         populateDefaultGenericReferences();
-        addInitListeners(getModCompatLoader());
-        loadModCompats(getModCompatLoader());
     }
 
     protected LoggerHelper constructLoggerHelper() {
@@ -109,14 +101,6 @@ public abstract class ModBase {
 
     protected PacketHandler constructPacketHandler() {
         return new PacketHandler(this);
-    }
-
-    protected ModCompatLoader constructModCompatLoader() {
-        return new ModCompatLoader(this);
-    }
-
-    protected IMCHandler constructIMCHandler() {
-        return new IMCHandler(this);
     }
 
     protected CommandMod constructBaseCommand() {
@@ -154,15 +138,6 @@ public abstract class ModBase {
         putGenericReference(REFKEY_DEBUGCONFIG, false);
         putGenericReference(REFKEY_CRASH_ON_INVALID_RECIPE, false);
         putGenericReference(REFKEY_CRASH_ON_MODCOMPAT_CRASH, false);
-    }
-
-    /**
-     * This is called only once to let the mod compatibilities register themselves.
-     *
-     * @param modCompatLoader The loader.
-     */
-    protected void loadModCompats(ModCompatLoader modCompatLoader) {
-
     }
 
     /**
