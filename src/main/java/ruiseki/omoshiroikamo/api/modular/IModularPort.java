@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.modular;
 
-import ruiseki.omoshiroikamo.api.block.ISidedIO;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
 /**
  * Base marker interface for modular machinery IO ports.

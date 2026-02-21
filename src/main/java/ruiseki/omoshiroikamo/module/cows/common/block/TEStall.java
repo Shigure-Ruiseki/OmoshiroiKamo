@@ -14,13 +14,13 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
+import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 import ruiseki.omoshiroikamo.module.cows.common.network.PacketStall;
 

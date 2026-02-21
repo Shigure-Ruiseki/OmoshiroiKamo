@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus;
 
-import ruiseki.omoshiroikamo.api.energy.capability.EnergySink;
+import ruiseki.omoshiroikamo.core.energy.capability.EnergySink;
 
 public class InterfaceEnergySink implements EnergySink {
 

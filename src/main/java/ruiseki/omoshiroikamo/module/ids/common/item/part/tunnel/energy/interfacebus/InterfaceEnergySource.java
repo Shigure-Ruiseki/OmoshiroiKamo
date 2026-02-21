@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus;
 
-import ruiseki.omoshiroikamo.api.energy.capability.EnergySource;
+import ruiseki.omoshiroikamo.core.energy.capability.EnergySource;
 
 public class InterfaceEnergySource implements EnergySource {
 
