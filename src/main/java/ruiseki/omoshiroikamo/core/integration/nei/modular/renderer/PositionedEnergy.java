@@ -3,16 +3,13 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular.renderer;
 import java.awt.Rectangle;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 
 public class PositionedEnergy implements INEIPositionedRenderer {
@@ -32,22 +29,18 @@ public class PositionedEnergy implements INEIPositionedRenderer {
 
     @Override
     public void draw() {
-        // Texture 16x128. Background at (0,0), Foreground at (0,64). Both 16x64.
-        Minecraft.getMinecraft().renderEngine
-            .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/progress_energy.png"));
-
         int barWidth = 16;
-        int barHeight = Math.min(64, position.height); // Our bar is 60px
+        int barHeight = Math.min(64, position.height);
         int x = position.x + (position.width - barWidth) / 2;
         int y = position.y + (position.height - barHeight) / 2;
 
         // Draw Background
-        Gui.func_146110_a(x, y, 0, 64 - barHeight, barWidth, barHeight, 16.0f, 128.0f);
+        OKGuiTextures.ENERGY_BAR_BACKGROUND.draw(x, y, barWidth, barHeight);
 
         // Draw Foreground (based on amount)
         if (amount > 0) {
             int drawHeight = barHeight;
-            Gui.func_146110_a(x, y + barHeight - drawHeight, 0, 128 - drawHeight, barWidth, drawHeight, 16.0f, 128.0f);
+            OKGuiTextures.ENERGY_BAR_FOREGROUND.draw(x, y + barHeight - drawHeight, barWidth, drawHeight);
         }
 
         if (amount > 0) {
