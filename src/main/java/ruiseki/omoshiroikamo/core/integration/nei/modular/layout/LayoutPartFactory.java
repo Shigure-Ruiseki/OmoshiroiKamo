@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import net.minecraft.item.ItemStack;
+
 import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EnergyOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaInput;
@@ -95,10 +97,22 @@ public class LayoutPartFactory {
 
         // --- Essentia ---
         register(EssentiaInput.class, in -> {
+            EssentiaInput essIn = (EssentiaInput) in;
+            ItemStack aspectStack = NEIRendererFactory.createEssentiaItemStack(essIn.getAspectTag());
+            if (aspectStack != null) {
+                aspectStack.stackSize = essIn.getAmount();
+                return new LayoutPartItem(aspectStack);
+            }
             INEIPositionedRenderer r = NEIRendererFactory.createAspectRenderer(in, null, new Rectangle(0, 0, 16, 16));
             return r != null ? new LayoutPartEssentia(r) : null;
         });
         register(EssentiaOutput.class, out -> {
+            EssentiaOutput essOut = (EssentiaOutput) out;
+            ItemStack aspectStack = NEIRendererFactory.createEssentiaItemStack(essOut.getAspectTag());
+            if (aspectStack != null) {
+                aspectStack.stackSize = essOut.getAmount();
+                return new LayoutPartItem(aspectStack);
+            }
             INEIPositionedRenderer r = NEIRendererFactory.createAspectRenderer(null, out, new Rectangle(0, 0, 16, 16));
             return r != null ? new LayoutPartEssentia(r) : null;
         });

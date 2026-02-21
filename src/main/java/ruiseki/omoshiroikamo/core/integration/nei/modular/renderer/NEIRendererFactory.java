@@ -2,6 +2,9 @@ package ruiseki.omoshiroikamo.core.integration.nei.modular.renderer;
 
 import java.awt.Rectangle;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.GasInput;
@@ -95,6 +98,36 @@ public class NEIRendererFactory {
                 e.printStackTrace();
             }
             return null;
+        }
+    }
+
+    /**
+     * Creates an ItemAspect ItemStack from ThaumcraftNEIPlugin for the given aspect
+     * tag.
+     * Returns null if ThaumcraftNEIPlugin is not loaded or the aspect is not found.
+     */
+    public static ItemStack createEssentiaItemStack(String aspectTag) {
+        if (LibMods.ThaumcraftNEIPlugin.isLoaded()) {
+            return ThaumcraftNEIPluginHelper.createItemStack(aspectTag);
+        }
+        return null;
+    }
+
+    private static class ThaumcraftNEIPluginHelper {
+
+        public static ItemStack createItemStack(String aspectTag) {
+            try {
+                thaumcraft.api.aspects.Aspect aspect = thaumcraft.api.aspects.Aspect.getAspect(aspectTag);
+                if (aspect == null) return null;
+                Item item = com.djgiannuzz.thaumcraftneiplugin.ModItems.itemAspect;
+                if (item == null) return null;
+                ItemStack stack = new ItemStack(item, 1, 0);
+                com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect.setAspect(stack, aspect);
+                return stack;
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 
