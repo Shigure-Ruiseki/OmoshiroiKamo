@@ -138,13 +138,20 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
         if (outputId.equals(getRecipeID())) {
-            for (ModularRecipe recipe : RecipeLoader.getInstance()
-                .getAllRecipes()) {
+            List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
+                .getAllRecipes();
+            codechicken.nei.NEIClientConfig.logger.info(
+                "[NEI-Debug] loadCraftingRecipes for {}. RecipeLoader has {} total recipes",
+                getRecipeID(),
+                allRecipes.size());
+            for (ModularRecipe recipe : allRecipes) {
                 if (recipe.getRecipeGroup()
                     .equals(recipeGroup)) {
                     arecipes.add(new CachedModularRecipe(recipe));
                 }
             }
+            codechicken.nei.NEIClientConfig.logger
+                .info("[NEI-Debug] Added {} recipes to handler {}", arecipes.size(), getRecipeID());
         } else {
             super.loadCraftingRecipes(outputId, results);
         }

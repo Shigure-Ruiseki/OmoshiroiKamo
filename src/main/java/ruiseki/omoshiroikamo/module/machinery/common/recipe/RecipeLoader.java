@@ -1,15 +1,20 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class RecipeLoader {
 
@@ -102,5 +107,46 @@ public class RecipeLoader {
 
     public void clearGroup(String group) {
         recipesByGroup.remove(group);
+    }
+
+    /**
+     * Scan recipe JSON files to collect group names without full recipe parsing.
+     * This is safe to call at any time (even before loadAll) since it only reads
+     * the "group" field from each JSON file.
+     */
+    public static List<String> scanGroupNames(File configDir) {
+        List<String> groups = new ArrayList<>();
+        File recipesDir = new File(configDir, LibMisc.MOD_ID + "/modular/recipes");
+        Logger.info("[scanGroupNames] Scanning dir: {} (exists={})", recipesDir.getAbsolutePath(), recipesDir.exists());
+        if (!recipesDir.exists() || !recipesDir.isDirectory()) {
+            Logger.warn("[scanGroupNames] Directory not found or not a directory!");
+            return groups;
+        }
+
+        File[] files = recipesDir.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files == null) return groups;
+        Logger.info("[scanGroupNames] Found {} JSON files", files.length);
+
+        JsonParser parser = new JsonParser();
+        for (File file : files) {
+            try (FileReader reader = new FileReader(file)) {
+                JsonObject root = parser.parse(reader)
+                    .getAsJsonObject();
+                if (root.has("group")) {
+                    String group = root.get("group")
+                        .getAsString();
+                    Logger.info("[scanGroupNames] File '{}' -> group '{}'", file.getName(), group);
+                    if (!groups.contains(group)) {
+                        groups.add(group);
+                    }
+                } else {
+                    Logger.warn("[scanGroupNames] File '{}' has no 'group' field", file.getName());
+                }
+            } catch (Exception e) {
+                Logger.warn("[scanGroupNames] Failed to scan group from: {} - {}", file.getName(), e.getMessage());
+            }
+        }
+        Logger.info("[scanGroupNames] Total groups found: {}", groups);
+        return groups;
     }
 }

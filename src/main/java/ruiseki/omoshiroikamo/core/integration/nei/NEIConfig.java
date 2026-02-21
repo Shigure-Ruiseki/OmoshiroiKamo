@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-
-import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
+import net.minecraft.util.ResourceLocation;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
@@ -14,9 +12,7 @@ import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.RecipeCatalysts;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
@@ -29,6 +25,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackOverlay;
 import ruiseki.omoshiroikamo.module.backpack.integration.nei.BackpackPositioner;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensBlocks;
@@ -44,6 +41,7 @@ import ruiseki.omoshiroikamo.module.dml.integration.nei.SimulationChamberRecipeH
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalOverlay;
 import ruiseki.omoshiroikamo.module.ids.integration.nei.TerminalPositioner;
+import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
@@ -53,8 +51,6 @@ import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfi
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
 
-@EventBusSubscriber
-@SuppressWarnings("unused")
 public class NEIConfig implements IConfigureNEI {
 
     /**
@@ -62,21 +58,103 @@ public class NEIConfig implements IConfigureNEI {
      * This controls the appearance of the recipe tab in NEI.
      */
     @SubscribeEvent
-    public static void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
+    public void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
+        Logger.info("[NEI] Catching NEIRegisterHandlerInfosEvent (Instance handler)");
         if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
+            // Register icon for the generic preview handler
             event.registerHandlerInfo(
-                new HandlerInfo.Builder(ModularMachineNEIHandler.class, "Modular Machine", LibMisc.MOD_ID)
+                new HandlerInfo.Builder(ModularMachineNEIHandler.class.getName(), LibMisc.MOD_NAME, LibMisc.MOD_ID)
                     .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
                     .setHeight(168)
                     .setWidth(192)
                     .setShiftY(6)
                     .build());
-            Logger.info("Registered Modular Machine NEI handler info");
+
+            // Register icons for EACH structure (because they use separate IDs in
+            // getOverlayIdentifier)
+            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+                String handlerID = "modular_structure_" + structureName;
+                event.registerHandlerInfo(
+                    new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                        .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
+                        .setHeight(168)
+                        .setWidth(192)
+                        .setShiftY(6)
+                        .build());
+                Logger.info("[NEI] Registered handler info for structure: {}", handlerID);
+            }
+
+            // Register dynamic Modular Machine recipe groups
+            for (String group : MachineryModule.getCachedGroupNames()) {
+                String handlerID = "modular_" + group;
+                event.registerHandlerInfo(
+                    new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                        .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
+                        .setHeight(100)
+                        .setWidth(166)
+                        .build());
+                Logger.info("[NEI] Registered handler info for dynamic group: {}", handlerID);
+            }
         }
+
+        if (BackportConfigs.enableMultiBlock) {
+            for (int i = 0; i < 6; i++) {
+                String oreId = "modular_ore_extractor_" + i;
+                event.registerHandlerInfo(
+                    new HandlerInfo.Builder(oreId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                        .setDisplayStack(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i))
+                        .setHeight(48)
+                        .setWidth(166)
+                        .build());
+
+                String resId = "modular_res_extractor_" + i;
+                event.registerHandlerInfo(
+                    new HandlerInfo.Builder(resId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                        .setDisplayStack(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i))
+                        .setHeight(48)
+                        .setWidth(166)
+                        .build());
+            }
+        }
+
+        if (BackportConfigs.enableChickens) {
+            registerHandlerImage(event, ChickenLayingRecipeHandler.UID, "nei/chicken/laying_icon.png", 64, 6);
+            registerHandlerImage(event, ChickenBreedingRecipeHandler.UID, "nei/chicken/breeding_icon.png", 64, 6);
+            registerHandlerImage(event, ChickenDropsRecipeHandler.UID, "nei/chicken/drops_icon.png", 64, 6);
+            registerHandlerImage(event, ChickenThrowsRecipeHandler.UID, "nei/chicken/throws_icon.png", 64, 6);
+        }
+
+        if (BackportConfigs.enableDML) {
+            event.registerHandlerInfo(
+                new HandlerInfo.Builder(LootFabricatorRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    .setDisplayStack(DMLBlocks.LOOT_FABRICATOR.newItemStack())
+                    .setHeight(48)
+                    .setWidth(166)
+                    .build());
+            event.registerHandlerInfo(
+                new HandlerInfo.Builder(SimulationChamberRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    .setDisplayStack(DMLBlocks.SIMULATION_CHAMBER.newItemStack())
+                    .setHeight(48)
+                    .setWidth(166)
+                    .build());
+        }
+    }
+
+    private void registerHandlerImage(NEIRegisterHandlerInfosEvent event, String handlerID, String iconPath, int height,
+        int maxPerPage) {
+        event.registerHandlerInfo(
+            new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                .setDisplayImage(new ResourceLocation(LibResources.PREFIX_GUI + iconPath), 0, 0, 16, 16)
+                .setHeight(height)
+                .setWidth(166)
+                .build());
     }
 
     @Override
     public void loadConfig() {
+        System.out.println(
+            "========== [DEBUG] NEIConfig.loadConfig() CALLED on thread: " + Thread.currentThread()
+                .getName() + " ==========");
         Logger.info("Loading NeiConfig: {}", getName());
         if (BackportConfigs.enableMultiBlock) {
             // TODO: Change Void Miner structure preview to Tier-based
@@ -88,7 +166,6 @@ public class NEIConfig implements IConfigureNEI {
                 registerHandler(ore);
                 API.addRecipeCatalyst(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i), ore.getRecipeID());
                 registerDimensionCatalysts(ore.getRecipeID());
-                sendHandlerInfo(ore.getRecipeID(), MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i), 48, 8);
             }
 
             // Register Res Extractors
@@ -97,55 +174,17 @@ public class NEIConfig implements IConfigureNEI {
                 registerHandler(res);
                 API.addRecipeCatalyst(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), res.getRecipeID());
                 registerDimensionCatalysts(res.getRecipeID());
-                sendHandlerInfo(res.getRecipeID(), MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), 48, 8);
             }
         }
         if (BackportConfigs.enableChickens) {
             registerHandler(new ChickenLayingRecipeHandler());
-            sendHandlerImage(
-                ChickenLayingRecipeHandler.UID,
-                LibResources.PREFIX_GUI + "nei/chicken/laying_icon.png",
-                1,
-                0,
-                16,
-                16,
-                64,
-                6);
-            sendCatalyst(ChickenLayingRecipeHandler.UID, ChickensBlocks.ROOST.newItemStack());
+            API.addRecipeCatalyst(ChickensBlocks.ROOST.newItemStack(), ChickenLayingRecipeHandler.UID);
 
             registerHandler(new ChickenBreedingRecipeHandler());
-            sendHandlerImage(
-                ChickenBreedingRecipeHandler.UID,
-                LibResources.PREFIX_GUI + "nei/chicken/breeding_icon.png",
-                1,
-                0,
-                16,
-                16,
-                64,
-                6);
-            sendCatalyst(ChickenBreedingRecipeHandler.UID, ChickensBlocks.BREEDER.newItemStack());
+            API.addRecipeCatalyst(ChickensBlocks.BREEDER.newItemStack(), ChickenBreedingRecipeHandler.UID);
 
             registerHandler(new ChickenDropsRecipeHandler());
-            sendHandlerImage(
-                ChickenDropsRecipeHandler.UID,
-                LibResources.PREFIX_GUI + "nei/chicken/drops_icon.png",
-                1,
-                0,
-                16,
-                16,
-                64,
-                6);
-
             registerHandler(new ChickenThrowsRecipeHandler());
-            sendHandlerImage(
-                ChickenThrowsRecipeHandler.UID,
-                LibResources.PREFIX_GUI + "nei/chicken/throws_icon.png",
-                1,
-                0,
-                16,
-                16,
-                64,
-                6);
         }
 
         if (BackportConfigs.enableCows) {
@@ -156,6 +195,7 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.enableBackpack) {
             API.registerGuiOverlay(BackpackGuiContainer.class, "crafting", new BackpackPositioner());
             API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
+            API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
         }
 
         if (BackportConfigs.enableIDs) {
@@ -165,32 +205,32 @@ public class NEIConfig implements IConfigureNEI {
 
         if (BackportConfigs.enableDML) {
             registerHandler(new LootFabricatorRecipeHandler());
-            sendHandlerInfo(LootFabricatorRecipeHandler.UID, DMLBlocks.LOOT_FABRICATOR.newItemStack(), 48, 8);
-
             registerHandler(new SimulationChamberRecipeHandler());
-            sendHandlerInfo(SimulationChamberRecipeHandler.UID, DMLBlocks.SIMULATION_CHAMBER.newItemStack(), 48, 8);
         }
 
         // Register Modular Machine structure preview handlers (one per structure)
         // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
         // TODO: Enable 'P' button in structure preview (Name is currently null)
-        if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
-            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
-                // Register ONLY as usage handler - structure preview is Usage-only
-                GuiUsageRecipe.usagehandlers.add(handler);
+        if (BackportConfigs.enableMachinery) {
+            Logger.info("[NEIRegister] Registering Modular Machine NEI handlers");
+            if (LibMods.BlockRenderer6343.isLoaded()) {
+                Logger.info("[NEIRegister] BlockRenderer6343 is loaded");
+                for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+                    ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
+                    GuiUsageRecipe.usagehandlers.add(handler);
 
-                // Register blueprint and controller as catalysts
-                String overlayId = handler.getOverlayIdentifier();
-                List<ItemStack> catalysts = new ArrayList<>();
-                catalysts.add(
-                    ItemMachineBlueprint.createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName));
-                catalysts.add(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()));
-                RecipeCatalysts.putRecipeCatalysts(overlayId, catalysts);
+                    String overlayId = handler.getOverlayIdentifier();
+                    List<ItemStack> catalysts = new ArrayList<>();
+                    catalysts.add(
+                        ItemMachineBlueprint
+                            .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName));
+                    catalysts.add(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()));
+                    RecipeCatalysts.putRecipeCatalysts(overlayId, catalysts);
+                }
             }
 
             Logger.info(
-                "Registered {} Modular Machine NEI handlers",
+                "[NEIRegister] Registered {} Modular Machine NEI handlers",
                 CustomStructureRegistry.getRegisteredNames()
                     .size());
 
@@ -200,15 +240,12 @@ public class NEIConfig implements IConfigureNEI {
     }
 
     private void registerModularMachineryRecipes() {
-        // Collect all recipe groups
-        List<String> groups = new ArrayList<>();
+        List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
+        Logger.info("[NEI] Cached groups from preInit: {}", groups);
+
         List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
             .getAllRecipes();
-
-        if (allRecipes.isEmpty()) {
-            Logger.warn("NEIConfig: No Modular Recipes found. RecipeLoader might not have loaded yet.");
-        }
-
+        Logger.info("[NEI] RecipeLoader has {} recipes loaded", allRecipes.size());
         for (ModularRecipe recipe : allRecipes) {
             String group = recipe.getRecipeGroup();
             if (!groups.contains(group)) {
@@ -216,16 +253,16 @@ public class NEIConfig implements IConfigureNEI {
             }
         }
 
-        Logger.info("NEIConfig: Registering " + groups.size() + " Modular Recipe groups.");
+        Logger.info("[NEI] Final groups to register: {} (count={})", groups, groups.size());
 
         for (String group : groups) {
             ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
+            Logger.info("[NEI] Registering handler for group '{}', recipeID='{}'", group, handler.getRecipeID());
             registerHandler(handler);
 
-            // Add controller as catalyst
-            API.addRecipeCatalyst(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()), handler.getRecipeID());
-
-            // Add blueprints as catalysts if they support this group
+            ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+            API.addRecipeCatalyst(catalyst, handler.getRecipeID());
+            Logger.info("[NEI] Added catalyst for group '{}'", group);
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 StructureEntry entry = StructureManager.getInstance()
                     .getCustomStructure(structureName);
@@ -235,74 +272,7 @@ public class NEIConfig implements IConfigureNEI {
                     API.addRecipeCatalyst(blueprint, handler.getRecipeID());
                 }
             }
-
-            sendHandlerInfo(
-                handler.getRecipeID(),
-                new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()),
-                100,
-                1);
         }
-    }
-
-    private void sendHandlerInfo(String handler, ItemStack stack, int height, int recipesPerPage) {
-        if (stack == null) return;
-        NBTTagCompound tag = new NBTTagCompound();
-        GameRegistry.UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-        if (uid == null) return;
-
-        String regName = uid.modId + ":" + uid.name;
-        int meta = stack.getItemDamage();
-        if (meta > 0) regName = regName + ":" + meta;
-
-        tag.setString("handler", handler);
-        tag.setString("itemName", regName);
-        tag.setInteger("handlerHeight", height);
-        tag.setInteger("maxRecipesPerPage", recipesPerPage);
-        tag.setString("modName", LibMisc.MOD_NAME);
-        tag.setString("modId", LibMisc.MOD_ID);
-        tag.setBoolean("modRequired", true);
-        tag.setBoolean("useCustomScroll", true);
-        FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
-    }
-
-    private static void sendHandlerImage(String handler, String imageResource, int imageX, int imageY, int imageW,
-        int imageH, int handlerHeight, int recipesPerPage) {
-
-        NBTTagCompound tag = new NBTTagCompound();
-
-        // ID of recipe handler
-        tag.setString("handler", handler);
-
-        // === IMAGE ICON ===
-        tag.setString("imageResource", imageResource);
-        tag.setInteger("imageX", imageX);
-        tag.setInteger("imageY", imageY);
-        tag.setInteger("imageWidth", imageW);
-        tag.setInteger("imageHeight", imageH);
-
-        tag.setInteger("handlerHeight", handlerHeight);
-        tag.setInteger("maxRecipesPerPage", recipesPerPage);
-
-        tag.setString("modName", LibMisc.MOD_NAME);
-        tag.setString("modId", LibMisc.MOD_ID);
-        tag.setBoolean("modRequired", true);
-
-        FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", tag);
-    }
-
-    private static void sendCatalyst(String handlerID, ItemStack stack) {
-        if (stack == null) return;
-        NBTTagCompound nbt = new NBTTagCompound();
-        GameRegistry.UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-        if (uid == null) return;
-        String regName = uid.modId + ":" + uid.name;
-        int meta = stack.getItemDamage();
-        if (meta > 0) regName = regName + ":" + meta;
-
-        nbt.setString("handlerID", handlerID);
-        nbt.setString("itemName", regName);
-        nbt.setInteger("priority", 0);
-        FMLInterModComms.sendMessage("NotEnoughItems", "registerCatalystInfo", nbt);
     }
 
     protected static void registerHandler(IRecipeHandlerBase handler) {
