@@ -432,9 +432,9 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             // 7. Mana (Bottom Bar)
             if (!manaParts.isEmpty()) {
                 LayoutPartMana mana = manaParts.get(0);
-                mana.setPosition(startX, maxY + 4);
+                mana.setPosition(startX, maxY + 8);
                 allParts.add(mana);
-                maxY += mana.getHeight() + 8;
+                maxY += mana.getHeight() + 12;
             }
 
             for (RecipeLayoutPart<?> part : itemParts) allParts.add(part);
