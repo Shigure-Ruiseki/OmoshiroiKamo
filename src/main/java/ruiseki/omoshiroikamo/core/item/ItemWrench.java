@@ -13,8 +13,8 @@ import cofh.api.item.IToolHammer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
 
 /**

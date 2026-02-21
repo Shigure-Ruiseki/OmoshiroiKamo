@@ -18,12 +18,12 @@ import com.gtnewhorizon.gtnhlib.item.InventoryItemSink;
 import com.gtnewhorizon.gtnhlib.item.InventoryItemSource;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.block.SlotDefinition;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.network.packet.PacketFluidTanks;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 
 public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory, CapabilityProvider {
 

@@ -14,7 +14,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
@@ -23,6 +22,7 @@ import ruiseki.omoshiroikamo.core.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;

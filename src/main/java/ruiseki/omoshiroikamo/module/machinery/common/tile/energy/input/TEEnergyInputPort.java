@@ -6,10 +6,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.Optional;
 import mekanism.api.lasers.ILaserReceptor;
-import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 

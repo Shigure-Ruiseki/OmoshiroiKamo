@@ -14,14 +14,14 @@ import net.minecraftforge.fluids.IFluidHandler;
 import cpw.mods.fml.common.registry.GameData;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
-import ruiseki.omoshiroikamo.api.block.ICraftingTile;
-import ruiseki.omoshiroikamo.api.block.ISidedIO;
-import ruiseki.omoshiroikamo.api.client.IProgressTile;
-import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.tileentity.ICraftingTile;
+import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import vazkii.botania.api.mana.IManaBlock;
 
 public class WailaUtils {

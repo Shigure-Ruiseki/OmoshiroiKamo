@@ -2,8 +2,7 @@ package ruiseki.omoshiroikamo.core.tileentity;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.block.CraftingState;
-import ruiseki.omoshiroikamo.api.block.ICraftingTile;
+import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.network.packet.PacketCraftingState;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;

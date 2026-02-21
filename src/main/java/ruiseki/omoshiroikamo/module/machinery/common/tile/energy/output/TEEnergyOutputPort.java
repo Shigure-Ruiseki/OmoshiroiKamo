@@ -4,10 +4,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.api.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 

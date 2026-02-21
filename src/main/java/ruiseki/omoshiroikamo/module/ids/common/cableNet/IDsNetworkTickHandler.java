@@ -7,7 +7,7 @@ import java.util.List;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import ruiseki.omoshiroikamo.module.ids.common.block.cable.CableUtils;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.CableUtils;
 
 public class IDsNetworkTickHandler {
 

@@ -14,9 +14,9 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
-import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.item.ItemWrench;
+import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
 @EventBusSubscriber(side = Side.CLIENT)
 public class WrenchOverlayRenderer {

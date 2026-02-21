@@ -1,0 +1,24 @@
+package ruiseki.omoshiroikamo.core.energy;
+
+import net.minecraftforge.common.util.ForgeDirection;
+
+import cofh.api.energy.IEnergyReceiver;
+
+/**
+ * Interface for tile entities that can receive energy.
+ * IC2 integration is handled separately by IC2EnergyAdapter.
+ */
+public interface IOKEnergySink extends IEnergyReceiver, IOKEnergyTile {
+
+    int receiveEnergy(ForgeDirection side, int amount, boolean simulate);
+
+    @Override
+    default int getEnergyStored(ForgeDirection side) {
+        return getEnergyStored();
+    }
+
+    @Override
+    default int getMaxEnergyStored(ForgeDirection side) {
+        return getMaxEnergyStored();
+    }
+}

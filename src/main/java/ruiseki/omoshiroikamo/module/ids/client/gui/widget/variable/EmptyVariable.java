@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.widgets.TextWidget;
 
-import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerPanel;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.programmer.ProgrammerPanel;
 
 public class EmptyVariable extends BaseVariableWidget {
 

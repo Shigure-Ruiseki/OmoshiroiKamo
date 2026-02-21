@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.Delegate;
-import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityDispatcher;
 import ruiseki.omoshiroikamo.core.capabilities.ICapabilitySerializable;
