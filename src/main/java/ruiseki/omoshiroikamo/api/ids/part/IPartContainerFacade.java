@@ -7,7 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Facade for a {@link IPartContainer} at a certain position.

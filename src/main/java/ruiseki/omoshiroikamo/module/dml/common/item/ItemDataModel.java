@@ -20,9 +20,9 @@ import ruiseki.omoshiroikamo.api.entity.dml.DataModelExperience;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemDataModel extends ItemOK {

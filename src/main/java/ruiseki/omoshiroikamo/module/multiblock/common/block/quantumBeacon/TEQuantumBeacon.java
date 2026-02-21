@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,15 +16,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
-import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.client.render.BeamSegment;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.handler.QuantumBeaconEventHandler;
@@ -99,7 +98,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
                 plr.capabilities.isFlying = false;
             }
             plr.sendPlayerAbilities();
-            NETWORK.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
         }
     }
 
@@ -267,7 +267,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
             if (!plr.capabilities.allowFlying) {
                 plr.capabilities.allowFlying = true;
                 plr.sendPlayerAbilities();
-                NETWORK.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), true), plr);
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToAllAround(new PacketClientFlight(plr.getUniqueID(), true), plr);
             }
             wasFlightGrantedByBeacon = true;
             // Register in global tracking (for re-granting after dimension change)
@@ -284,7 +285,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
                 plr.capabilities.isFlying = false;
             }
             plr.sendPlayerAbilities();
-            NETWORK.sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToAllAround(new PacketClientFlight(plr.getUniqueID(), false), plr);
         }
         // If shouldHaveFlight=false and wasFlightGrantedByBeacon=false, do nothing
         // (another mod may have granted flight)

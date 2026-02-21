@@ -7,9 +7,9 @@ import net.minecraft.world.IBlockAccess;
 
 import com.google.common.collect.Lists;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
-import ruiseki.omoshiroikamo.api.util.TileHelpers;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 
 /**
  * Helpers related to cables.

@@ -16,7 +16,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import ruiseki.omoshiroikamo.api.block.ISidedIO;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.common.item.ItemWrench;
+import ruiseki.omoshiroikamo.core.item.ItemWrench;
 
 @EventBusSubscriber(side = Side.CLIENT)
 public class WrenchOverlayRenderer {

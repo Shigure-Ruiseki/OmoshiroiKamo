@@ -15,8 +15,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
-import ruiseki.omoshiroikamo.core.common.block.ItemBlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 public class BlockLens extends BlockOK implements IMBBlock {
 
@@ -68,7 +68,7 @@ public class BlockLens extends BlockOK implements IMBBlock {
     public static class ItemBlockLens extends ItemBlockOK {
 
         public ItemBlockLens(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

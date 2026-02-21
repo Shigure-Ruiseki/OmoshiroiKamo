@@ -78,7 +78,7 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
     public static class ItemBlockItemOutputPort extends AbstractPortItemBlock {
 
         public ItemBlockItemOutputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

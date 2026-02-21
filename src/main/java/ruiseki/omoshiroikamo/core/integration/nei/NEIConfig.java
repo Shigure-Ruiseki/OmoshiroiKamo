@@ -98,7 +98,7 @@ public class NEIConfig implements IConfigureNEI {
                 sendHandlerInfo(res.getRecipeID(), MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i), 48, 8);
             }
         }
-        if (BackportConfigs.enableChicken) {
+        if (BackportConfigs.enableChickens) {
             registerHandler(new ChickenLayingRecipeHandler());
             sendHandlerImage(
                 ChickenLayingRecipeHandler.UID,
@@ -146,7 +146,7 @@ public class NEIConfig implements IConfigureNEI {
                 6);
         }
 
-        if (BackportConfigs.enableCow) {
+        if (BackportConfigs.enableCows) {
             registerHandler(new CowBreedingRecipeHandler());
             registerHandler(new CowMilkingRecipeHandler());
         }

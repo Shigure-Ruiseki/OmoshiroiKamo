@@ -2,8 +2,8 @@ package ruiseki.omoshiroikamo.api.ids.block;
 
 import java.util.Map;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.item.IVariableFacade;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * An interface for containers that can hold {@link IVariableFacade}s.

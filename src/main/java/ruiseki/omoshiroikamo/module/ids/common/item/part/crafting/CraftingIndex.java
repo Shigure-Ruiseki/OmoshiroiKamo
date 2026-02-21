@@ -6,7 +6,7 @@ import java.util.List;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
 public class CraftingIndex {
 

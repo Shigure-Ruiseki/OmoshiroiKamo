@@ -2,10 +2,10 @@ package ruiseki.omoshiroikamo.api.ids.block.cable;
 
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.ids.network.INetwork;
 import ruiseki.omoshiroikamo.api.ids.network.INetworkCarrier;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Interface for cables that are network-aware.

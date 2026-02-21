@@ -17,9 +17,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemLivingMatter extends ItemOK {

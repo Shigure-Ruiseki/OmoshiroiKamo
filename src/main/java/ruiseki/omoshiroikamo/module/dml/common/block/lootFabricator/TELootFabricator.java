@@ -19,12 +19,12 @@ import lombok.Getter;
 import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMachineTE;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractMachineTE;
 import ruiseki.omoshiroikamo.module.dml.client.gui.handler.ItemHandlerPristineMatter;
 import ruiseki.omoshiroikamo.module.dml.common.item.ItemPristineMatter;
 

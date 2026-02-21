@@ -78,7 +78,7 @@ public class BlockManaInputPort extends AbstractPortBlock<TEManaInputPort> imple
     public static class ItemBlockManaInputPort extends AbstractPortItemBlock {
 
         public ItemBlockManaInputPort(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

@@ -13,8 +13,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
-import ruiseki.omoshiroikamo.core.common.recipe.NBTShapedOreRecipe;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.recipe.NBTShapedOreRecipe;
 
 public class BackpackRecipes {
 

@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.api.ids.network;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.evaluate.expression.ILazyExpressionValueCache;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IValue;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IVariable;
@@ -9,6 +8,7 @@ import ruiseki.omoshiroikamo.api.ids.part.IPartState;
 import ruiseki.omoshiroikamo.api.ids.part.IPartType;
 import ruiseki.omoshiroikamo.api.ids.part.PartPos;
 import ruiseki.omoshiroikamo.api.ids.part.aspect.IAspectRead;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * A network that can hold parts.

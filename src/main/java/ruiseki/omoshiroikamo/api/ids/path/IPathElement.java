@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.api.ids.path;
 
 import java.util.Set;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * An element that can be used to construct paths using the

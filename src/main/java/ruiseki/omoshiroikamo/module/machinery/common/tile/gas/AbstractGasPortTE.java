@@ -25,15 +25,15 @@ import mekanism.api.gas.GasStack;
 import mekanism.api.gas.ITubeConnection;
 import ruiseki.omoshiroikamo.api.block.RedstoneMode;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.gas.GasTankInfo;
-import ruiseki.omoshiroikamo.api.gas.IGasHandler;
-import ruiseki.omoshiroikamo.api.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractTE;
+import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
+import ruiseki.omoshiroikamo.core.gas.SmartGasTank;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 
 /*

@@ -15,9 +15,9 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.IRecipeHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
-import ruiseki.omoshiroikamo.api.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalContainer;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndexClient;
 

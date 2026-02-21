@@ -6,9 +6,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElement;
 import ruiseki.omoshiroikamo.api.ids.path.IPathElementProvider;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Interface for blocks that can connect with cables.

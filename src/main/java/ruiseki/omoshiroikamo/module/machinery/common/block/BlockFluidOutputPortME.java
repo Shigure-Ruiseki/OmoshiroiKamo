@@ -100,7 +100,7 @@ public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortM
     public static class ItemBlockFluidOutputPortME extends AbstractPortItemBlock {
 
         public ItemBlockFluidOutputPortME(Block block) {
-            super(block, block);
+            super(block);
         }
 
         @Override

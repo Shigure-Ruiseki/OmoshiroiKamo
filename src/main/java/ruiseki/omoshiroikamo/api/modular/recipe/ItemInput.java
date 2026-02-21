@@ -9,10 +9,10 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.JsonObject;
 
-import ruiseki.omoshiroikamo.api.json.ItemJson;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 public class ItemInput extends AbstractRecipeInput {

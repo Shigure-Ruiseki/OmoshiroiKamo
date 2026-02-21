@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.item.ItemOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.module.multiblock.common.item.ItemAssembler;
 import ruiseki.omoshiroikamo.module.multiblock.common.item.ItemCrystal;
 

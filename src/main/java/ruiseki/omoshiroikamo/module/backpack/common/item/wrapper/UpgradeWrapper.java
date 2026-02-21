@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 
 public class UpgradeWrapper implements IUpgrade {
 

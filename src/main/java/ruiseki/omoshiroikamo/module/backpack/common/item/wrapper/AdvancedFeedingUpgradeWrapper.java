@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implements IFeedingUpgrade {

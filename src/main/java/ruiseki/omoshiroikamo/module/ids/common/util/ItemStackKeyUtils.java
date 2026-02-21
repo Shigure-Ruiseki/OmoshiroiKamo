@@ -7,7 +7,7 @@ import net.minecraft.network.PacketBuffer;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndex;
 
 public final class ItemStackKeyUtils {

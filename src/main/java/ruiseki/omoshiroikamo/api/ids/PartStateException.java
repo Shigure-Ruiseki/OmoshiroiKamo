@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.api.ids;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.DimensionManager;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * A runtime exception that can be thrown when a part is in an invalid state.

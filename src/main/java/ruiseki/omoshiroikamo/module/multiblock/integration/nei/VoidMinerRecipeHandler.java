@@ -20,11 +20,11 @@ import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
+import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.BlockColoredLens;
@@ -75,7 +75,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
 
     /**
      * Get registry for NEI display with dimension filter applied.
-     * 
+     *
      * @param tier  The miner tier
      * @param dimId The dimension ID for filter
      * @return Registry containing ores available in that dimension with correct
@@ -96,7 +96,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
     /**
      * Find the first dimension ID where this item can be mined.
      * Used for automatic dimension filter when viewing crafting recipes.
-     * 
+     *
      * @param stack The item to search for
      * @return The dimension ID, or NEIDimensionConfig.DIMENSION_COMMON if not found
      */

@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 
 public class BlockLaserCore extends BlockOK implements IMBBlock {
 

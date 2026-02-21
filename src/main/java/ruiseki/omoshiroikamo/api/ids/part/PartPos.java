@@ -5,11 +5,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.network.IPartNetwork;
 import ruiseki.omoshiroikamo.api.ids.tileentity.ITileCableNetwork;
-import ruiseki.omoshiroikamo.api.util.TileHelpers;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 
 /**
  * Object holder to refer to a block side and position.

@@ -2,8 +2,8 @@ package ruiseki.omoshiroikamo.api.ids.network;
 
 import java.util.Map;
 
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
 import ruiseki.omoshiroikamo.api.ids.block.IEnergyBatteryFacade;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * A network that accepts energy.

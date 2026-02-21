@@ -22,10 +22,10 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 
 import ruiseki.omoshiroikamo.api.block.SlotDefinition;
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.api.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractStorageTE;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.module.chickens.client.gui.container.ChickenContainer;
 
 public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<PosGuiData> {

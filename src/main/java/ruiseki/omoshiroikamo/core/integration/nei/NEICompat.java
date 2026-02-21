@@ -49,7 +49,7 @@ public class NEICompat {
             }
         }
 
-        if (BackportConfigs.enableChicken) {
+        if (BackportConfigs.enableChickens) {
 
             sendHandlerImage(
                 ChickenLayingRecipeHandler.UID,

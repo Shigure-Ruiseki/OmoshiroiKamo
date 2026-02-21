@@ -9,10 +9,10 @@ import net.minecraftforge.fluids.FluidTankInfo;
 
 import com.google.gson.JsonObject;
 
-import ruiseki.omoshiroikamo.api.json.FluidJson;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.json.FluidJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
 public class FluidOutput extends AbstractRecipeOutput {

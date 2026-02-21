@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.ids.block.cable.ICable;
 import ruiseki.omoshiroikamo.api.ids.network.IEventListenableNetworkElement;
 import ruiseki.omoshiroikamo.api.ids.network.INetwork;
@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.api.ids.network.event.INetworkEvent;
 import ruiseki.omoshiroikamo.api.ids.network.event.INetworkEventBus;
 import ruiseki.omoshiroikamo.api.ids.path.ICablePathElement;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.module.ids.common.network.event.NetworkElementAddEvent;
 import ruiseki.omoshiroikamo.module.ids.common.network.event.NetworkElementRemoveEvent;
 import ruiseki.omoshiroikamo.module.ids.common.network.event.NetworkEventBus;
@@ -61,7 +61,7 @@ public class Network<N extends INetwork<N>> implements INetwork<N> {
      * Create a new network from a given cluster of cables.
      * Each cable will be checked if it is an instance of {@link INetworkElementProvider} and will add all its
      * elements to the network in that case.
-     * Each cable that is an instance of {@link IPartContainerFacade}
+     * Each cable that is an instance of {@link ruiseki.omoshiroikamo.api.ids.part.IPartContainerFacade}
      * will have the network stored in its part container.
      *
      * @param cables The cables that make up the connections in the network which can potentially provide network
@@ -270,7 +270,7 @@ public class Network<N extends INetwork<N>> implements INetwork<N> {
     @Override
     public final void update() {
         if (killIfEmpty() || killed) {
-            NetworkWorldStorage.getInstance(LibMisc.MOD_ID)
+            NetworkWorldStorage.getInstance(OmoshiroiKamo.instance)
                 .removeInvalidatedNetwork(this);
         } else {
             onUpdate();

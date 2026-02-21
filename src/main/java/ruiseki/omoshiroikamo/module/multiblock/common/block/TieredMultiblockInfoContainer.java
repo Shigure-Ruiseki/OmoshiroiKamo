@@ -7,7 +7,7 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractMBModifierTE;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 
 public class TieredMultiblockInfoContainer<T extends AbstractMBModifierTE> implements IMultiblockInfoContainer<T> {
 

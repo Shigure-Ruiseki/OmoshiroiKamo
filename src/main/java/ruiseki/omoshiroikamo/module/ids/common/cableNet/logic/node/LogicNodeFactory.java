@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.node.operator.ILogicOperator;

@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.handler;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -14,8 +12,9 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.common.network.PacketClientFlight;
+import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
 
 /**
  * Event handler for re-syncing flight state after dimension change or respawn
@@ -97,7 +96,8 @@ public class QuantumBeaconEventHandler {
             if (event.toDim == info.dimensionId) {
                 player.capabilities.allowFlying = true;
                 player.sendPlayerAbilities();
-                NETWORK.sendToAllAround(new PacketClientFlight(playerId, true), player);
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToAllAround(new PacketClientFlight(playerId, true), player);
             } else {
                 // Disable flight when moving to a different dimension (keep flag for return)
                 player.capabilities.allowFlying = false;
@@ -105,7 +105,8 @@ public class QuantumBeaconEventHandler {
                     player.capabilities.isFlying = false;
                 }
                 player.sendPlayerAbilities();
-                NETWORK.sendToAllAround(new PacketClientFlight(playerId, false), player);
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToAllAround(new PacketClientFlight(playerId, false), player);
             }
         }
     }
@@ -125,7 +126,8 @@ public class QuantumBeaconEventHandler {
         if (info != null && player.dimension == info.dimensionId) {
             player.capabilities.allowFlying = true;
             player.sendPlayerAbilities();
-            NETWORK.sendToAllAround(new PacketClientFlight(playerId, true), player);
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToAllAround(new PacketClientFlight(playerId, true), player);
         }
     }
 
@@ -146,7 +148,8 @@ public class QuantumBeaconEventHandler {
                 if (!player.capabilities.allowFlying) {
                     player.capabilities.allowFlying = true;
                     player.sendPlayerAbilities();
-                    NETWORK.sendToAllAround(new PacketClientFlight(playerId, true), player);
+                    OmoshiroiKamo.instance.getPacketHandler()
+                        .sendToAllAround(new PacketClientFlight(playerId, true), player);
                 }
             }
         }

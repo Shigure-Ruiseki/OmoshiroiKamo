@@ -8,10 +8,10 @@ import java.util.List;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.api.item.CraftingFilter;
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
 import ruiseki.omoshiroikamo.core.common.search.SearchNode;
 import ruiseki.omoshiroikamo.core.common.search.SearchParser;
+import ruiseki.omoshiroikamo.core.item.CraftingFilter;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
 public class ItemIndexClient {
 

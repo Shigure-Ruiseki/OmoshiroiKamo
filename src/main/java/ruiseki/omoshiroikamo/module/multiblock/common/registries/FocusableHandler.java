@@ -26,10 +26,10 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameData;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
-import ruiseki.omoshiroikamo.api.item.weighted.IFocusableRegistry;
-import ruiseki.omoshiroikamo.api.item.weighted.WeightedItemStack;
-import ruiseki.omoshiroikamo.api.item.weighted.WeightedOreStack;
-import ruiseki.omoshiroikamo.api.item.weighted.WeightedStackBase;
+import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
+import ruiseki.omoshiroikamo.core.item.weighted.WeightedItemStack;
+import ruiseki.omoshiroikamo.core.item.weighted.WeightedOreStack;
+import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
 
 public class FocusableHandler {
 

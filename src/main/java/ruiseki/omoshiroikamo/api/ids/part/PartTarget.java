@@ -3,8 +3,8 @@ package ruiseki.omoshiroikamo.api.ids.part;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.api.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 /**
  * Object holder to refer to another block side and its origin.

@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.api.ids.network.INetworkElement;
 import ruiseki.omoshiroikamo.api.ids.network.event.ICancelableNetworkEvent;
 import ruiseki.omoshiroikamo.api.ids.network.event.INetworkEvent;
 import ruiseki.omoshiroikamo.api.ids.network.event.INetworkEventBus;
-import ruiseki.omoshiroikamo.api.util.CollectionHelpers;
+import ruiseki.omoshiroikamo.core.helper.CollectionHelpers;
 
 /**
  * An event bus for {@link ruiseki.omoshiroikamo.api.ids.network.IPartNetwork} events where

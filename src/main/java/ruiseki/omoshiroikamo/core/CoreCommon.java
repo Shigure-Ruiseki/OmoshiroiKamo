@@ -1,86 +1,40 @@
 package ruiseki.omoshiroikamo.core;
 
-import cpw.mods.fml.common.event.FMLConstructionEvent;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
-import ruiseki.omoshiroikamo.core.common.init.CoreCapabilities;
-import ruiseki.omoshiroikamo.core.common.init.CoreItems;
-import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
-import ruiseki.omoshiroikamo.core.common.init.CorePacket;
-import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
-import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
+import ruiseki.omoshiroikamo.core.network.packet.PacketCraftingState;
+import ruiseki.omoshiroikamo.core.network.packet.PacketEnergy;
+import ruiseki.omoshiroikamo.core.network.packet.PacketFluidTanks;
+import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
+import ruiseki.omoshiroikamo.core.network.packet.PacketQuickDraw;
+import ruiseki.omoshiroikamo.core.network.packet.PacketSound;
+import ruiseki.omoshiroikamo.core.network.packet.PacketSyncCarriedItem;
+import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
 
-public class CoreCommon implements IModuleCommon {
+public class CoreCommon extends CommonProxyComponent {
 
     @Override
-    public String getId() {
-        return "Core";
+    public ModBase getMod() {
+        return OmoshiroiKamo.instance;
     }
 
     @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    public void registerPacketHandlers(PacketHandler packetHandler) {
+        super.registerPacketHandlers(packetHandler);
 
-    @Override
-    public void onConstruction(FMLConstructionEvent event) {
+        // Client
+        packetHandler.register(PacketEnergy.class);
+        packetHandler.register(PacketProgress.class);
+        packetHandler.register(PacketFluidTanks.class);
+        packetHandler.register(PacketClientFlight.class);
+        packetHandler.register(PacketCraftingState.class);
 
-    }
+        // Server
+        packetHandler.register(PacketQuickDraw.class);
+        packetHandler.register(PacketSyncCarriedItem.class);
 
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        CoreItems.preInit();
-
-        // Initialize the custom structure system
-        StructureManager.getInstance()
-            .initialize(
-                event.getModConfigurationDirectory()
-                    .getParentFile());
-
-        CoreCapabilities.preInit();
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event) {
-        CoreOreDict.init();
-        CoreRecipes.init();
-        CorePacket.init();
-    }
-
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-
-    }
-
-    @Override
-    public void serverLoad(FMLServerStartingEvent event) {
-
-    }
-
-    @Override
-    public void serverStarted(FMLServerStartedEvent event) {
-
-    }
-
-    @Override
-    public void serverStopping(FMLServerStoppingEvent event) {
-
-    }
-
-    @Override
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-
-    }
-
-    @Override
-    public void onServerStopped(FMLServerStoppedEvent event) {
-
+        packetHandler.register(PacketSound.class);
     }
 }

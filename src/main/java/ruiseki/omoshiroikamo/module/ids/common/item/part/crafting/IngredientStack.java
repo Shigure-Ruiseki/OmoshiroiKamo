@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.ids.common.item.part.crafting;
 
-import ruiseki.omoshiroikamo.api.item.ItemStackKey;
+import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
 public class IngredientStack {
 

@@ -122,6 +122,15 @@ tooltip.wand.size=Size: %dx%dx%d
 
 
 # Commands
+command.ok.invalidSubcommand=Invalid Subcommand
+command.ok.invalidArguments=Invalid Arguments
+command.ok.onlyOneValue=Please define one new value
+command.ok.invalidNewValue=Invalid new value
+command.ok.updatedValue=Updated %s to: %s
+command.ok.invalidPlayer=The player '%s' was not found
+command.ok.ignitedPlayer=The player '%s' was lit on fire for %s seconds
+command.ok.noConfigsFound=There were no config values found that can be set
+
 command.ok.main_usage_title=Usage:
 command.ok.main_usage_structure=/ok structure - Structure management commands
 

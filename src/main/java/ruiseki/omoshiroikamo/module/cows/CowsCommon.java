@@ -1,81 +1,21 @@
 package ruiseki.omoshiroikamo.module.cows;
 
-import cpw.mods.fml.common.event.FMLConstructionEvent;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import ruiseki.omoshiroikamo.api.mod.IModuleCommon;
-import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.module.cows.common.init.CowsBlocks;
-import ruiseki.omoshiroikamo.module.cows.common.init.CowsItems;
-import ruiseki.omoshiroikamo.module.cows.common.init.CowsPackets;
-import ruiseki.omoshiroikamo.module.cows.common.init.CowsRecipes;
-import ruiseki.omoshiroikamo.module.cows.common.registries.ModCows;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.network.PacketHandler;
+import ruiseki.omoshiroikamo.core.proxy.CommonProxyComponent;
+import ruiseki.omoshiroikamo.module.cows.common.network.PacketStall;
 
-public class CowsCommon implements IModuleCommon {
+public class CowsCommon extends CommonProxyComponent {
 
     @Override
-    public String getId() {
-        return "Cows";
+    public ModBase getMod() {
+        return OmoshiroiKamo.instance;
     }
 
     @Override
-    public boolean isEnabled() {
-        return BackportConfigs.enableCow;
-    }
-
-    @Override
-    public void onConstruction(FMLConstructionEvent event) {
-
-    }
-
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        CowsBlocks.preInit();
-        CowsItems.preInit();
-        CowsCreative.preInit();
-        ModCows.preInit();
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event) {
-        ModCows.init();
-        CowsRecipes.init();
-        CowsPackets.init();
-    }
-
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-        ModCows.postInit();
-    }
-
-    @Override
-    public void serverLoad(FMLServerStartingEvent event) {
-
-    }
-
-    @Override
-    public void serverStarted(FMLServerStartedEvent event) {
-
-    }
-
-    @Override
-    public void serverStopping(FMLServerStoppingEvent event) {
-
-    }
-
-    @Override
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-
-    }
-
-    @Override
-    public void onServerStopped(FMLServerStoppedEvent event) {
-
+    public void registerPacketHandlers(PacketHandler packetHandler) {
+        super.registerPacketHandlers(packetHandler);
+        packetHandler.register(PacketStall.class);
     }
 }

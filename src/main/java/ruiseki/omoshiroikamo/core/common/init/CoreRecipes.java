@@ -2,9 +2,9 @@ package ruiseki.omoshiroikamo.core.common.init;
 
 import net.minecraftforge.oredict.RecipeSorter;
 
-import ruiseki.omoshiroikamo.core.common.recipe.NBTShapedOreRecipe;
-import ruiseki.omoshiroikamo.core.common.recipe.NBTShapelessOreRecipe;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.recipe.NBTShapedOreRecipe;
+import ruiseki.omoshiroikamo.core.recipe.NBTShapelessOreRecipe;
 
 public class CoreRecipes {
 

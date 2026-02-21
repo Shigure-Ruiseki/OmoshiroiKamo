@@ -1,54 +1,69 @@
 package ruiseki.omoshiroikamo.core;
 
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.MinecraftForgeClient;
 
-import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
-
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.mod.IModuleClient;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
+import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
 import ruiseki.omoshiroikamo.core.client.render.PufferFishRenderer;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 
 @SideOnly(Side.CLIENT)
-public class CoreClient implements IModuleClient {
+public class CoreClient extends ClientProxyComponent {
 
-    @Override
-    public String getId() {
-        return "Core";
+    public CoreClient() {
+        super(new CoreCommon());
     }
 
     @Override
-    public boolean isEnabled() {
-        return true;
+    public ModBase getMod() {
+        return OmoshiroiKamo.instance;
     }
 
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        ModelRegistry.registerModid(LibMisc.MOD_ID);
+    public void registerEventHooks() {
+        super.registerEventHooks();
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void registerRenderer(Class<? extends Entity> clazz, Render renderer) {
+        super.registerRenderer(clazz, renderer);
+    }
 
-        FMLCommonHandler.instance()
-            .bus()
-            .register(KeyHandler.instance);
+    @Override
+    public void registerRenderer(Class<? extends TileEntity> clazz, TileEntitySpecialRenderer renderer) {
+        super.registerRenderer(clazz, renderer);
+    }
 
+    @Override
+    public void registerRenderers() {
+        super.registerRenderers();
         if (ItemConfigs.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());
         }
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event) {
+    public void registerKeyBindings(IKeyRegistry keyRegistry) {
+        super.registerKeyBindings(keyRegistry);
 
+        FMLCommonHandler.instance()
+            .bus()
+            .register(KeyHandler.instance);
+    }
+
+    @Override
+    public void registerTickHandlers() {
+        super.registerTickHandlers();
     }
 }

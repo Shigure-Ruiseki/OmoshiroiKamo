@@ -15,11 +15,11 @@ import net.minecraftforge.fluids.FluidStack;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.block.TileEntityOK;
-import ruiseki.omoshiroikamo.core.common.block.abstractClass.AbstractBlock;
+import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class BlockStall extends AbstractBlock<TEStall> {

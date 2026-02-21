@@ -6,7 +6,7 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.module.ids.IDsCommon;
+import ruiseki.omoshiroikamo.module.ids.IDsModule;
 
 public abstract class AbstractCableNetwork<T extends ICableNode> {
 
@@ -30,7 +30,7 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
         }
 
         if (nodes.isEmpty()) {
-            IDsCommon.IDsNetworkTickHandler.registerNetwork(this);
+            IDsModule.IDsNetworkTickHandler.registerNetwork(this);
         }
         nodes.add((T) part);
     }
@@ -52,7 +52,7 @@ public abstract class AbstractCableNetwork<T extends ICableNode> {
         }
 
         nodes.clear();
-        IDsCommon.IDsNetworkTickHandler.unregisterNetwork(this);
+        IDsModule.IDsNetworkTickHandler.unregisterNetwork(this);
     }
 
     public Class<T> getBaseNodeClass() {

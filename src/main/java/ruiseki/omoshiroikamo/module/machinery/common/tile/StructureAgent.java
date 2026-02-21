@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
-import static ruiseki.omoshiroikamo.CommonProxy.NETWORK;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +15,7 @@ import net.minecraft.util.ChunkCoordinates;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
@@ -114,7 +113,8 @@ public class StructureAgent {
 
         PacketStructureTint clearPacket = PacketStructureTint
             .createClear(controller.getWorldObj().provider.dimensionId, allPositions);
-        NETWORK.sendToAllAround(clearPacket, controller);
+        OmoshiroiKamo.instance.getPacketHandler()
+            .sendToAllAround(clearPacket, controller);
 
         // Trigger block updates on server
         for (ChunkCoordinates pos : positions) {
@@ -347,7 +347,8 @@ public class StructureAgent {
                 controller.getWorldObj().provider.dimensionId,
                 structureTintColor,
                 allPositions);
-            NETWORK.sendToAllAround(colorPacket, controller);
+            OmoshiroiKamo.instance.getPacketHandler()
+                .sendToAllAround(colorPacket, controller);
         }
 
         // Trigger block updates

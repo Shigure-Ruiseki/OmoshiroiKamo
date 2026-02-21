@@ -5,7 +5,7 @@ import java.util.Set;
 import ruiseki.omoshiroikamo.api.ids.block.cable.ICable;
 import ruiseki.omoshiroikamo.api.ids.network.event.INetworkEventBus;
 import ruiseki.omoshiroikamo.api.ids.path.ICablePathElement;
-import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 /**
  * A network can hold a set of {@link INetworkElement}s.

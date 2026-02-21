@@ -4,7 +4,7 @@ import net.minecraft.world.IBlockAccess;
 
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.common.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**

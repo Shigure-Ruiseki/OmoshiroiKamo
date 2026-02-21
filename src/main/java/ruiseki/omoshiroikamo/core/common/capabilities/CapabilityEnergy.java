@@ -5,10 +5,10 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyStorage;
-import ruiseki.omoshiroikamo.api.capabilities.Capability;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityInject;
-import ruiseki.omoshiroikamo.api.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 
 public class CapabilityEnergy {
 

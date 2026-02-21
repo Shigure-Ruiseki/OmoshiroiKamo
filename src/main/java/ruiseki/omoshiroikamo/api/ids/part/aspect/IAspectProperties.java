@@ -4,11 +4,11 @@ import java.util.Collection;
 
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IValue;
 import ruiseki.omoshiroikamo.api.ids.evaluate.variable.IValueType;
-import ruiseki.omoshiroikamo.api.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 /**
  * A property that can be used inside aspects.
- * 
+ *
  * @author rubensworks
  */
 public interface IAspectProperties extends INBTSerializable {
@@ -16,7 +16,7 @@ public interface IAspectProperties extends INBTSerializable {
     /**
      * Use this with caution!
      * Better to use {@link IAspect#getPropertyTypes()} instead because this object might hold deprecated elements.
-     * 
+     *
      * @deprecated Use {@link IAspect#getPropertyTypes()}.
      * @return The types.
      */
@@ -25,7 +25,7 @@ public interface IAspectProperties extends INBTSerializable {
 
     /**
      * Get the value of the given type.
-     * 
+     *
      * @param type The type to get the value from.
      * @param <T>  The value type type.
      * @param <V>  The value type.
@@ -36,7 +36,7 @@ public interface IAspectProperties extends INBTSerializable {
 
     /**
      * Set the value for the given type.
-     * 
+     *
      * @param type  The type to get the value from.
      * @param <T>   The value type type.
      * @param <V>   The value type.
