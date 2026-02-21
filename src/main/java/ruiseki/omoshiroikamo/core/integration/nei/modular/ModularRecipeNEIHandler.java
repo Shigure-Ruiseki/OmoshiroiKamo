@@ -100,7 +100,6 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     @Override
     public List<String> provideTooltip(GuiRecipe<?> guiRecipe, List<String> currenttip, CachedBaseRecipe crecipe,
         Point relMouse) {
-        super.provideTooltip(guiRecipe, currenttip, crecipe, relMouse);
         if (crecipe instanceof CachedModularRecipe) {
             ((CachedModularRecipe) crecipe).handleTooltip(relMouse, currenttip);
         }
@@ -284,9 +283,14 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 PositionedText text = new PositionedText(
                     recipeName,
                     0x222222,
-                    new Rectangle(0, currentY - 12, 166, 10),
+                    new Rectangle(4, currentY - 12, 162, 10),
                     false);
                 allParts.add(new LayoutPartRenderer(text));
+                // Adjust for word-wrapped text height
+                int extraHeight = text.getRenderedHeight() - 10;
+                if (extraHeight > 0) {
+                    currentY += extraHeight;
+                }
             }
 
             // Layout Inputs
@@ -327,10 +331,13 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 }
             }));
 
+            float timeInSeconds = duration / 20.0f;
+            String timeString = String.format("%.2f", timeInSeconds) + "seconds";
+
             PositionedText timeText = new PositionedText(
-                duration + " t",
-                0x888888,
-                new Rectangle(166 / 2 + 10, arrowY + 2, 50, 10),
+                timeString,
+                0x444444,
+                new Rectangle(166 / 2 + 10, arrowY + 2, 100, 10),
                 false);
             allParts.add(new LayoutPartRenderer(timeText));
             currentY += 16;
