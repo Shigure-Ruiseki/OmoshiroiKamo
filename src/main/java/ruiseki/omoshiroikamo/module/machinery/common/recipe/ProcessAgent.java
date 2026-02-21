@@ -172,16 +172,26 @@ public class ProcessAgent {
 
         if (energyPerTick > 0) {
             EnergyInput energyReq = new EnergyInput(energyPerTick, true);
-            if (!energyReq.process(inputPorts, false)) {
+            if (!energyReq.process(inputPorts, true)) {
                 return TickResult.NO_ENERGY;
             }
         }
 
         if (manaPerTick > 0) {
             ManaInput manaReq = new ManaInput(manaPerTick, true);
-            if (!manaReq.process(inputPorts, false)) {
+            if (!manaReq.process(inputPorts, true)) {
                 return TickResult.NO_MANA;
             }
+        }
+
+        if (energyPerTick > 0) {
+            EnergyInput energyReq = new EnergyInput(energyPerTick, true);
+            energyReq.process(inputPorts, false);
+        }
+
+        if (manaPerTick > 0) {
+            ManaInput manaReq = new ManaInput(manaPerTick, true);
+            manaReq.process(inputPorts, false);
         }
 
         if (energyOutputPerTick > 0) {

@@ -49,7 +49,11 @@ public class ItemInput extends AbstractRecipeInput {
         if (required != null) {
             return Collections.singletonList(required);
         } else if (oreDict != null) {
-            return OreDictionary.getOres(oreDict);
+            List<ItemStack> ores = OreDictionary.getOres(oreDict);
+            for (ItemStack ore : ores) {
+                ore.stackSize = count;
+            }
+            return ores;
         }
         return Collections.emptyList();
     }
