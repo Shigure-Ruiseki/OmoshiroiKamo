@@ -29,7 +29,6 @@ import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartEnergy;
@@ -146,17 +145,12 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         if (outputId.equals(getRecipeID())) {
             List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
                 .getAllRecipes();
-            Logger.info(
-                "[NEI-Debug] loadCraftingRecipes for {}. RecipeLoader has {} total recipes",
-                getRecipeID(),
-                allRecipes.size());
             for (ModularRecipe recipe : allRecipes) {
                 if (recipe.getRecipeGroup()
                     .equals(recipeGroup)) {
                     arecipes.add(new CachedModularRecipe(recipe));
                 }
             }
-            Logger.info("[NEI-Debug] Added {} recipes to handler {}", arecipes.size(), getRecipeID());
         } else {
             super.loadCraftingRecipes(outputId, results);
         }

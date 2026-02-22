@@ -59,7 +59,6 @@ public class NEIConfig implements IConfigureNEI {
      */
     @SubscribeEvent
     public void registerHandlerInfo(NEIRegisterHandlerInfosEvent event) {
-        Logger.info("[NEI] Catching NEIRegisterHandlerInfosEvent (Instance handler)");
         if (BackportConfigs.enableMachinery && LibMods.BlockRenderer6343.isLoaded()) {
             // Register icon for the generic preview handler
             event.registerHandlerInfo(
@@ -81,7 +80,6 @@ public class NEIConfig implements IConfigureNEI {
                         .setWidth(192)
                         .setShiftY(6)
                         .build());
-                Logger.info("[NEI] Registered handler info for structure: {}", handlerID);
             }
 
             // Register dynamic Modular Machine recipe groups
@@ -93,7 +91,6 @@ public class NEIConfig implements IConfigureNEI {
                         .setHeight(100)
                         .setWidth(166)
                         .build());
-                Logger.info("[NEI] Registered handler info for dynamic group: {}", handlerID);
             }
         }
 
@@ -152,10 +149,7 @@ public class NEIConfig implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
-        System.out.println(
-            "========== [DEBUG] NEIConfig.loadConfig() CALLED on thread: " + Thread.currentThread()
-                .getName() + " ==========");
-        Logger.info("Loading NeiConfig: {}", getName());
+        Logger.info("Loading NEIConfig: {}", getName());
         if (BackportConfigs.enableMultiBlock) {
             // TODO: Change Void Miner structure preview to Tier-based
             // buttons do not work now
@@ -212,9 +206,7 @@ public class NEIConfig implements IConfigureNEI {
         // TODO: Fix catalyst blueprints appear briefly in left tab then disappear.
         // TODO: Enable 'P' button in structure preview (Name is currently null)
         if (BackportConfigs.enableMachinery) {
-            Logger.info("[NEIRegister] Registering Modular Machine NEI handlers");
             if (LibMods.BlockRenderer6343.isLoaded()) {
-                Logger.info("[NEIRegister] BlockRenderer6343 is loaded");
                 for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                     ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
                     GuiUsageRecipe.usagehandlers.add(handler);
@@ -229,11 +221,6 @@ public class NEIConfig implements IConfigureNEI {
                 }
             }
 
-            Logger.info(
-                "[NEIRegister] Registered {} Modular Machine NEI handlers",
-                CustomStructureRegistry.getRegisteredNames()
-                    .size());
-
             // Register Modular Machine Recipes (JSON)
             registerModularMachineryRecipes();
         }
@@ -241,11 +228,9 @@ public class NEIConfig implements IConfigureNEI {
 
     private void registerModularMachineryRecipes() {
         List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
-        Logger.info("[NEI] Cached groups from preInit: {}", groups);
 
         List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
             .getAllRecipes();
-        Logger.info("[NEI] RecipeLoader has {} recipes loaded", allRecipes.size());
         for (ModularRecipe recipe : allRecipes) {
             String group = recipe.getRecipeGroup();
             if (!groups.contains(group)) {
@@ -253,16 +238,12 @@ public class NEIConfig implements IConfigureNEI {
             }
         }
 
-        Logger.info("[NEI] Final groups to register: {} (count={})", groups, groups.size());
-
         for (String group : groups) {
             ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
-            Logger.info("[NEI] Registering handler for group '{}', recipeID='{}'", group, handler.getRecipeID());
             registerHandler(handler);
 
             ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
             API.addRecipeCatalyst(catalyst, handler.getRecipeID());
-            Logger.info("[NEI] Added catalyst for group '{}'", group);
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 StructureEntry entry = StructureManager.getInstance()
                     .getCustomStructure(structureName);
