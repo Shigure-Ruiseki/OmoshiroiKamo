@@ -24,6 +24,7 @@ public class BlockAlabasterStructure extends BlockOK implements IMBBlock {
 
     protected BlockAlabasterStructure() {
         super(ModObject.blockAlabasterStructure.unlocalisedName);
+        hasSubtypes = true;
     }
 
     public static BlockAlabasterStructure create() {

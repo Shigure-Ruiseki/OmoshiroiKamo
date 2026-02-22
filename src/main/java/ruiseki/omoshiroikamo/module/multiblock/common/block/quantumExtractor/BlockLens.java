@@ -22,6 +22,7 @@ public class BlockLens extends BlockOK implements IMBBlock {
 
     protected BlockLens() {
         super(ModObject.blockLens.unlocalisedName, Material.glass);
+        hasSubtypes = true;
     }
 
     public static BlockLens create() {

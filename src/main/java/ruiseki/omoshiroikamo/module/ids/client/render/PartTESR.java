@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
 
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.TECable;
+import ruiseki.omoshiroikamo.module.ids.common.block.cable.TECable;
 
 public class PartTESR extends TileEntitySpecialRenderer {
 

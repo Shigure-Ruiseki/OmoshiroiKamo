@@ -2,8 +2,8 @@ package ruiseki.omoshiroikamo.module.ids.common.util;
 
 import java.util.Objects;
 
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicType;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.ILogicValue;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.value.ILogicValue;
 
 public class LogicOperationUtils {
 

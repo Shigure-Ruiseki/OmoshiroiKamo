@@ -32,11 +32,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 import lombok.experimental.Delegate;
 import ruiseki.omoshiroikamo.core.block.property.BlockPropertyProviderComponent;
 import ruiseki.omoshiroikamo.core.block.property.IBlockPropertyProvider;
+import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
+import ruiseki.omoshiroikamo.core.client.render.BlockRenderInfo;
+import ruiseki.omoshiroikamo.core.client.render.block.WorldRender;
+import ruiseki.omoshiroikamo.core.client.texture.FlippableIcon;
+import ruiseki.omoshiroikamo.core.client.texture.MissingIcon;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class BlockOK extends Block implements IBlockPropertyProvider {
@@ -53,6 +61,11 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
 
     @Delegate(types = IBlockPropertyProvider.class)
     private final IBlockPropertyProvider propertyComponent = new BlockPropertyProviderComponent(this);
+
+    @SideOnly(Side.CLIENT)
+    private BlockRenderInfo renderInfo;
+
+    public boolean hasSubtypes = false;
 
     protected BlockOK(String name) {
         this(name, null, new Material(MapColor.ironColor));
@@ -101,6 +114,47 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
 
     protected void registerComponent() {
         registerProperties();
+    }
+
+    public void registerNoIcons() {
+        final BlockRenderInfo info = this.getRendererInstance();
+        final FlippableIcon i = new FlippableIcon(new MissingIcon(this));
+        info.updateIcons(i, i, i, i, i, i);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public BlockRenderInfo getRendererInstance() {
+        if (this.renderInfo != null) {
+            return this.renderInfo;
+        }
+
+        final BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> renderer = this.getRenderer();
+        this.renderInfo = new BlockRenderInfo(renderer);
+
+        return this.renderInfo;
+    }
+
+    /**
+     * Factory method to create a new render instance.
+     *
+     * @return the newly created instance.
+     */
+    @SideOnly(Side.CLIENT)
+    protected BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> getRenderer() {
+        return new BaseBlockRender<>();
+    }
+
+    public boolean hasSubtypes() {
+        return this.hasSubtypes;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setRenderStateByMeta(final int itemDamage) {}
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderType() {
+        return WorldRender.INSTANCE.getRenderId();
     }
 
     @Override
@@ -161,18 +215,19 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         if (doNormalDrops(world, x, y, z)) {
             return super.getDrops(world, x, y, z, metadata, fortune);
         }
-        return Lists.newArrayList(getNBTDrop(world, x, y, z, (TileEntityOK) world.getTileEntity(x, y, z)));
-    }
-
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-        return getPickBlock(target, world, x, y, z, null);
+        return Lists
+            .newArrayList(getNBTDrop(world, x, y, z, TileHelpers.getSafeTile(DimPos.of(world, x, y, z), teClass)));
     }
 
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z,
         @Nullable EntityPlayer player) {
-        return getNBTDrop(world, x, y, z, teClass != null ? getTileEntityOK(world, x, y, z) : null);
+        return getNBTDrop(
+            world,
+            x,
+            y,
+            z,
+            teClass != null ? TileHelpers.getSafeTile(DimPos.of(world, x, y, z), teClass) : null);
     }
 
     public ItemStack getNBTDrop(World world, int x, int y, int z, @Nullable TileEntityOK te) {
@@ -183,18 +238,6 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     }
 
     protected void processDrop(World world, int x, int y, int z, @Nullable TileEntityOK te, ItemStack drop) {}
-
-    @SuppressWarnings("null")
-    protected @Nullable TileEntityOK getTileEntityOK(IBlockAccess world, int x, int y, int z) {
-        if (teClass != null) {
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (teClass.isInstance(te)) { // no need to null-check teClass here, it was checked 2 lines above and is
-                // *final*
-                return (TileEntityOK) te;
-            }
-        }
-        return null;
-    }
 
     // Collision
 
@@ -377,4 +420,12 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     public BlockState getBlockState(ItemStack stack) {
         return BlockPropertyRegistry.getBlockState(stack);
     }
+
+    public IOrientable getOrientable(final IBlockAccess w, final int x, final int y, final int z) {
+        if (this instanceof IOrientableBlock) {
+            return this.getOrientable(w, x, y, z);
+        }
+        return null;
+    }
+
 }

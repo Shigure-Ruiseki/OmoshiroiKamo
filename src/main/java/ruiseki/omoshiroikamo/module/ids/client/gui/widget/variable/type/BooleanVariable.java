@@ -7,7 +7,7 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.BaseVariableWidget;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.programmer.ProgrammerPanel;
+import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerPanel;
 
 public class BooleanVariable extends BaseVariableWidget {
 

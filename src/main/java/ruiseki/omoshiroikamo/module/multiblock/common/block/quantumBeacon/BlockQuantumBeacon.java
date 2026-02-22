@@ -39,6 +39,7 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
             TEQuantumBeaconT5.class,
             TEQuantumBeaconT6.class);
         this.setLightLevel(1.0F);
+        hasSubtypes = true;
     }
 
     public static BlockQuantumBeacon create() {

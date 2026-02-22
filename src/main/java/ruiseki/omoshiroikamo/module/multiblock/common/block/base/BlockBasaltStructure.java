@@ -24,6 +24,7 @@ public class BlockBasaltStructure extends BlockOK implements IMBBlock {
 
     protected BlockBasaltStructure() {
         super(ModObject.blockBasaltStructure.unlocalisedName);
+        hasSubtypes = true;
     }
 
     public static BlockBasaltStructure create() {

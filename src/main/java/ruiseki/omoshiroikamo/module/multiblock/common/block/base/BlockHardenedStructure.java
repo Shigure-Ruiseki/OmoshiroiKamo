@@ -24,6 +24,7 @@ public class BlockHardenedStructure extends BlockOK implements IMBBlock {
 
     protected BlockHardenedStructure() {
         super(ModObject.blockHardenedStructure.unlocalisedName);
+        hasSubtypes = true;
     }
 
     public static BlockHardenedStructure create() {

@@ -32,6 +32,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
 
     protected BlockColoredLens() {
         super(ModObject.blockColoredLens.unlocalisedName, Material.glass);
+        hasSubtypes = true;
     }
 
     public static BlockColoredLens create() {

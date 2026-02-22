@@ -312,6 +312,10 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
         return (worldObj.getTotalWorldTime() + randomOffset) % interval == 0;
     }
 
+    public boolean requiresTESR() {
+        return false;
+    }
+
     public interface ITickingTile {
 
         void updateEntity();

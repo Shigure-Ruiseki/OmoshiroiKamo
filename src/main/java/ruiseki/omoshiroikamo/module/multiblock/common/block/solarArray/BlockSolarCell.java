@@ -29,6 +29,7 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
 
     protected BlockSolarCell() {
         super(ModObject.blockSolarCell.unlocalisedName);
+        hasSubtypes = true;
     }
 
     public static BlockSolarCell create() {

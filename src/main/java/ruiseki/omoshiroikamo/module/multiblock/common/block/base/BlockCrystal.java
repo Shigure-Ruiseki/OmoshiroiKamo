@@ -21,6 +21,7 @@ public class BlockCrystal extends BlockOK {
     protected BlockCrystal() {
         super(ModObject.blockBlockCrystal.unlocalisedName);
         setTextureName("multiblock/crystal_block");
+        hasSubtypes = true;
     }
 
     public static BlockCrystal create() {

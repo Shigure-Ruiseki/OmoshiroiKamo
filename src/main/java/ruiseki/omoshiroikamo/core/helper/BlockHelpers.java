@@ -17,7 +17,12 @@ import com.gtnewhorizon.gtnhlib.blockstate.core.BlockProperty;
 import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
 import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
+import ruiseki.omoshiroikamo.core.client.render.tileentity.TESRWrapper;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 /**
  * Contains helper methods for various block specific things.
@@ -147,4 +152,31 @@ public final class BlockHelpers {
     public static float getFacingAngle(int side) {
         return getFacingAngle(ForgeDirection.getOrientation(side));
     }
+
+    public static ForgeDirection crossProduct(final ForgeDirection forward, final ForgeDirection up) {
+        final int west_x = forward.offsetY * up.offsetZ - forward.offsetZ * up.offsetY;
+        final int west_y = forward.offsetZ * up.offsetX - forward.offsetX * up.offsetZ;
+        final int west_z = forward.offsetX * up.offsetY - forward.offsetY * up.offsetX;
+
+        return switch (west_x + west_y * 2 + west_z * 3) {
+            case 1 -> ForgeDirection.EAST;
+            case -1 -> ForgeDirection.WEST;
+            case 2 -> ForgeDirection.UP;
+            case -2 -> ForgeDirection.DOWN;
+            case 3 -> ForgeDirection.SOUTH;
+            case -3 -> ForgeDirection.NORTH;
+            default -> ForgeDirection.UNKNOWN;
+        };
+
+    }
+
+    public <T extends TileEntityOK> void bindTileEntitySpecialRenderer(final Class<T> tile, final BlockOK blk) {
+        final BaseBlockRender bbr = blk.getRendererInstance()
+            .getRendererInstance();
+
+        if (bbr.hasTESR()) {
+            ClientRegistry.bindTileEntitySpecialRenderer(tile, new TESRWrapper<T>(bbr));
+        }
+    }
+
 }

@@ -7,7 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
 
 public interface ICableNode {
 
