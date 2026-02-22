@@ -196,6 +196,7 @@ public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.IT
     public void doUpdate() {
         if (worldObj.isRemote) {
             updateEntityClient();
+            processRenderUpdates();
             return;
         }
 
@@ -215,6 +216,7 @@ public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.IT
         if (requiresClientSync) {
             requestRenderUpdate();
             markDirty();
+            forceClientUpdate = false;
         }
 
         if (notifyNeighbours) {

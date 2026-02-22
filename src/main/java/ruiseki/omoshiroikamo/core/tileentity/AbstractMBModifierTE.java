@@ -36,6 +36,7 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
     @Getter
     @NBTPersist
     protected boolean isFormed = false;
+    private transient boolean lastIsFormed = false;
 
     /**
      * Returns the multiblock structure definition used for validation.
@@ -87,8 +88,10 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
         if (valid && !isFormed) {
             isFormed = true;
             onFormed();
+            forceRenderUpdate();
         } else if (!valid && isFormed) {
             isFormed = false;
+            forceRenderUpdate();
         }
 
         return isFormed;
@@ -135,9 +138,22 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      * Checks multiblock structure before processing tasks.
      */
     @Override
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (isFormed != lastIsFormed) {
+            lastIsFormed = isFormed;
+            forceRenderUpdate();
+        }
+    }
+
+    @Override
     public void doUpdate() {
         // Always call super first to ensure IC2 registration and energy sync
         super.doUpdate();
+
+        if (worldObj.isRemote) {
+            return;
+        }
 
         if (!shouldDoWorkThisTick(5) && isFormed) {
             return;
