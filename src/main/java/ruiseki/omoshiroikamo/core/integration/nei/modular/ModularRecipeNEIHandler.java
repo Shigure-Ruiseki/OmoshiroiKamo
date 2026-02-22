@@ -29,6 +29,8 @@ import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.LayoutPartEnergy;
@@ -45,6 +47,7 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositione
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedText;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
+import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -215,6 +218,19 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                 if (recipe.getRecipeGroup()
                     .equals(recipeGroup)) {
                     arecipes.add(new CachedModularRecipe(recipe));
+                }
+            }
+        } else if (ingredient.getItem() instanceof ItemMachineBlueprint) {
+            String structure = ItemMachineBlueprint.getStructureName(ingredient);
+            StructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(structure);
+            if (entry != null && entry.recipeGroup != null && entry.recipeGroup.contains(recipeGroup)) {
+                for (ModularRecipe recipe : RecipeLoader.getInstance()
+                    .getAllRecipes()) {
+                    if (recipe.getRecipeGroup()
+                        .equals(recipeGroup)) {
+                        arecipes.add(new CachedModularRecipe(recipe));
+                    }
                 }
             }
         }

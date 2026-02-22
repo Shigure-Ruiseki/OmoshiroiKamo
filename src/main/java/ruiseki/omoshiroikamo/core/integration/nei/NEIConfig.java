@@ -10,9 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
-import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
-import codechicken.nei.recipe.RecipeCatalysts;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -212,15 +210,15 @@ public class NEIConfig implements IConfigureNEI {
             if (LibMods.BlockRenderer6343.isLoaded()) {
                 for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                     ModularMachineNEIHandler handler = new ModularMachineNEIHandler(structureName);
-                    GuiUsageRecipe.usagehandlers.add(handler);
+                    API.registerUsageHandler(handler);
 
-                    String overlayId = handler.getOverlayIdentifier();
-                    List<ItemStack> catalysts = new ArrayList<>();
-                    catalysts.add(
-                        ItemMachineBlueprint
-                            .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName));
-                    catalysts.add(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()));
-                    RecipeCatalysts.putRecipeCatalysts(overlayId, catalysts);
+                    String recipeID = handler.getHandlerId();
+                    ItemStack blueprint = ItemMachineBlueprint
+                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
+                    ItemStack controller = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+
+                    API.addRecipeCatalyst(blueprint, recipeID);
+                    API.addRecipeCatalyst(controller, recipeID);
                 }
             }
 

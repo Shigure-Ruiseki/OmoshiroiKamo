@@ -48,6 +48,9 @@ gui.io.enabled=Enabled
 gui.io.disabled=Disabled
 gui.search_bar.tool_tip=Right click to clear the search bar
 gui.syncNEI=Sync NEI
+gui.craftingState.idle=Idle
+gui.craftingState.running=Running
+gui.craftingState.error=Error
 
 
 # Redstone mode
