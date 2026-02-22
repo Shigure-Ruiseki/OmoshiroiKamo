@@ -76,7 +76,7 @@ public final class L10NHelpers {
         @Override
         public void deserializeNBT(NBTTagCompound tag) {
             this.parameterizedString = tag.getString("parameterizedString");
-            NBTTagList list = tag.getTagList("parameters", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+            NBTTagList list = tag.getTagList("parameters", MinecraftHelpers.NBTTag_Types.NBTTagCompound.getId());
             this.parameters = new Object[list.tagCount()];
             for (int i = 0; i < this.parameters.length; i++) {
                 NBTTagCompound elementTag = list.getCompoundTagAt(i);

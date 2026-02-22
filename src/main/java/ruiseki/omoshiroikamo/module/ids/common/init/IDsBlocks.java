@@ -5,15 +5,17 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.BlockCable;
+import ruiseki.omoshiroikamo.module.ids.common.block.BlockCable;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.programmer.BlockProgrammer;
 
 public enum IDsBlocks {
 
     // spotless: off
 
-    CABLE(new BlockCable()),
+    CABLE(new ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.BlockCable()),
     PROGRAMMER(new BlockProgrammer()),
+
+    MULTI_PART_TICKING(new BlockCable()),
 
     ;
     // spotless: on

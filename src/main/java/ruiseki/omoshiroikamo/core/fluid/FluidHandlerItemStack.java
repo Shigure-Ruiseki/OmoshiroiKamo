@@ -1,14 +1,14 @@
 package ruiseki.omoshiroikamo.core.fluid;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.ICapabilityProvider;
@@ -25,7 +25,7 @@ public class FluidHandlerItemStack implements IFluidHandlerItem, ICapabilityProv
 
     public static final String FLUID_NBT_KEY = "Fluid";
 
-    @Nonnull
+    @NotNull
     protected ItemStack container;
     protected int capacity;
 
@@ -33,12 +33,12 @@ public class FluidHandlerItemStack implements IFluidHandlerItem, ICapabilityProv
      * @param container The container itemStack, data is stored on it directly as NBT.
      * @param capacity  The maximum capacity of this fluid tank.
      */
-    public FluidHandlerItemStack(@Nonnull ItemStack container, int capacity) {
+    public FluidHandlerItemStack(@NotNull ItemStack container, int capacity) {
         this.container = container;
         this.capacity = capacity;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getContainer() {
         return container;
@@ -172,14 +172,14 @@ public class FluidHandlerItemStack implements IFluidHandlerItem, ICapabilityProv
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable ForgeDirection facing) {
+    public boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
         return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable ForgeDirection facing) {
+    public <T> T getCapability(@NotNull Capability<T> capability, @Nullable ForgeDirection facing) {
         return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY ? (T) this : null;
     }
 

@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
-import ruiseki.omoshiroikamo.core.client.render.PufferFishRenderer;
+import ruiseki.omoshiroikamo.core.client.render.item.PufferFishRenderer;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 

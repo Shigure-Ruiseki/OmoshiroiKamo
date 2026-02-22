@@ -142,7 +142,7 @@ public class CableUtils {
             ICable cable = queue.poll();
             cluster.cables.add(cable);
 
-            TileEntity te = cable.getTileEntity();
+            TileEntity te = cable.getTile();
             if (te == null) continue;
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {

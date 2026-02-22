@@ -3,12 +3,13 @@ package ruiseki.omoshiroikamo.core.helper;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.fluids.FluidStack;
@@ -50,18 +51,29 @@ public class MinecraftHelpers {
      */
     @SuppressWarnings("javadoc")
     public enum NBTTag_Types {
-        NBTTagEnd,
-        NBTTagByte,
-        NBTTagShort,
-        NBTTagInt,
-        NBTTagLong,
-        NBTTagFloat,
-        NBTTagDouble,
-        NBTTagByteArray,
-        NBTTagString,
-        NBTTagList,
-        NBTTagCompound,
-        NBTTagIntArray
+
+        NBTTagEnd(0),
+        NBTTagByte(1),
+        NBTTagShort(2),
+        NBTTagInt(3),
+        NBTTagLong(4),
+        NBTTagFloat(5),
+        NBTTagDouble(6),
+        NBTTagByteArray(7),
+        NBTTagString(8),
+        NBTTagList(9),
+        NBTTagCompound(10),
+        NBTTagIntArray(11);
+
+        private final int id;
+
+        NBTTag_Types(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     /**
@@ -116,6 +128,20 @@ public class MinecraftHelpers {
         int currentTime = (int) world.getWorldTime();
         int newTime = currentTime - (currentTime % (MINECRAFT_DAY / 2)) + MINECRAFT_DAY / 2;
         world.setWorldTime(newTime);
+    }
+
+    /**
+     * Spawns the creature specified by the egg's type in the location specified by the last three parameters.
+     * 
+     * @param world    The world.
+     * @param entityID The name of the entity.
+     * @param x        X coordinate.
+     * @param y        Y coordinate.
+     * @param z        Z coordinate.
+     * @return the entity that was spawned.
+     */
+    public static Entity spawnCreature(World world, int entityID, double x, double y, double z) {
+        return ItemMonsterPlacer.spawnCreature(world, entityID, x, y, z);
     }
 
     /**
@@ -220,16 +246,6 @@ public class MinecraftHelpers {
     @SideOnly(Side.CLIENT)
     public static boolean isShifted() {
         return Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-    }
-
-    /**
-     * This method should be called after a BlockContainer is destroyed
-     *
-     * @param world    world
-     * @param blockPos The position.
-     */
-    public static void postDestroyBlock(IBlockAccess world, BlockPos blockPos) {
-        // Does nothing for now.
     }
 
     /**

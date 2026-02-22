@@ -61,7 +61,7 @@ public class BackpackOverlay implements IOverlayHandler {
 
     private List<DefaultOverlayHandler.DistributedIngred> getPermutationIngredients(List<PositionedStack> ingredients) {
         ArrayList<DefaultOverlayHandler.DistributedIngred> ingredStacks = new ArrayList<>();
-        for (PositionedStack posstack : ingredients) /* work out what we need */ {
+        for (PositionedStack posstack : ingredients) {
             for (ItemStack pstack : posstack.items) {
                 DefaultOverlayHandler.DistributedIngred istack = findIngred(ingredStacks, pstack);
                 if (istack == null) ingredStacks.add(istack = new DefaultOverlayHandler.DistributedIngred(pstack));
