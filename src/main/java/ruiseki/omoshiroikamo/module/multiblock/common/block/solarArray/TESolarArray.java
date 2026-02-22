@@ -76,7 +76,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
         List<IModifierBlock> mods = new ArrayList<>();
 
         for (BlockPos pos : this.modifiers) {
-            Block block = pos.getBlock();
+            Block block = pos.getBlock(worldObj);
             if (block instanceof IModifierBlock) {
                 mods.add((IModifierBlock) block);
             }
@@ -102,7 +102,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getPos().getTileEntity();
+        TileEntity tileEntity = getPos().getTileEntity(worldObj);
         if (tileEntity instanceof TESolarArrayT1) {
             player.triggerAchievement(MultiBlockAchievements.ASSEMBLE_SOLAR_ARRAY_T1.get());
         }
@@ -192,7 +192,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
             return false;
         }
 
-        BlockPos pos = new BlockPos(x, y, z, getWorldObj());
+        BlockPos pos = new BlockPos(x, y, z);
         if (block == MultiBlockBlocks.SOLAR_CELL.getBlock() && !cellTiers.containsKey(pos)) {
             cellTiers.put(pos, meta);
             return true;

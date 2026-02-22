@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -34,6 +35,7 @@ import ruiseki.omoshiroikamo.core.block.property.IBlockPropertyProvider;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
@@ -72,14 +74,33 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         setBlockName(name);
         setStepSound(Block.soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
-        registerProperties();
     }
 
     public void init() {
-        GameRegistry.registerBlock(this, name);
+        registerBlock();
+        registerTileEntity();
+        registerBlockColor();
+        registerComponent();
+    }
+
+    protected void registerBlock() {
+        GameRegistry.registerBlock(this, getItemBlockClass(), name);
+    }
+
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockOK.class;
+    }
+
+    protected void registerTileEntity() {
         if (teClass != null) {
             GameRegistry.registerTileEntity(teClass, name + "TileEntity");
         }
+    }
+
+    protected void registerBlockColor() {}
+
+    protected void registerComponent() {
+        registerProperties();
     }
 
     @Override
@@ -350,7 +371,7 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     }
 
     public BlockState getBlockState(IBlockAccess world, BlockPos pos) {
-        return BlockPropertyRegistry.getBlockState(world, pos.getX(), pos.getY(), pos.getZ());
+        return getBlockState(world, pos.getX(), pos.getY(), pos.getZ());
     }
 
     public BlockState getBlockState(ItemStack stack) {

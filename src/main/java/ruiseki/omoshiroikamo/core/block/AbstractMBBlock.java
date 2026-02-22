@@ -26,7 +26,8 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
         super(name, teClass);
     }
 
-    public void registerBlockColor() {
+    @Override
+    protected void registerBlockColor() {
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

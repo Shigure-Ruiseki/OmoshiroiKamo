@@ -22,7 +22,6 @@ import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.input.I
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.interfacebus.ItemItemFilterInterface;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.interfacebus.ItemItemInterface;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.output.ItemItemExporter;
-import ruiseki.omoshiroikamo.module.ids.common.item.ItemPartRedstone;
 
 public enum IDsItems {
 
@@ -49,8 +48,6 @@ public enum IDsItems {
     FLUID_READER(new ItemFluidReader()),
 
     REDSTONE_WRITER(new ItemRedstoneWriter()),
-
-    REDSTONE_PART(new ItemPartRedstone())
 
     ;
     // spotless: on

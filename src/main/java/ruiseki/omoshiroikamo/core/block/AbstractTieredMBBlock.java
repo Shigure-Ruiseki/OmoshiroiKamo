@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.core.block;
 
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -19,23 +18,13 @@ public abstract class AbstractTieredMBBlock<T extends AbstractMBModifierTE> exte
     }
 
     @Override
-    public void init() {
-        registerBlock();
-
+    protected void registerTileEntity() {
         for (Class<? extends TileEntity> teClass : teClasses) {
             // Naming convention: ClassSimpleName + "TileEntity"
             // Example: "TEQuantumOreExtractorT1TileEntity"
             GameRegistry.registerTileEntity(teClass, teClass.getSimpleName() + "TileEntity");
         }
-
-        registerBlockColor();
     }
-
-    protected void registerBlock() {
-        GameRegistry.registerBlock(this, getItemBlockClass(), name);
-    }
-
-    protected abstract Class<? extends ItemBlock> getItemBlockClass();
 
     @Override
     public TileEntity createTileEntity(World world, int meta) {

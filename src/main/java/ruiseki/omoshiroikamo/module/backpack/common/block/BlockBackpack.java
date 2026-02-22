@@ -11,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,7 +30,6 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
@@ -85,9 +85,12 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBackpack.class, name);
-        GameRegistry.registerTileEntity(teClass, name + "TileEntity");
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBackpack.class;
+    }
+
+    @Override
+    protected void registerBlockColor() {
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

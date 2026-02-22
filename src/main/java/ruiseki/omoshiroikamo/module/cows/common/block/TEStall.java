@@ -67,7 +67,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         cowIsChild = cow.isChild();
 
         cachedCowDesc = CowsRegistry.INSTANCE.getByType(cowType);
-        getPos().markBlockForUpdate();
+        getPos().markBlockForUpdate(worldObj);
         resetMaxProgress();
     }
 
@@ -95,7 +95,7 @@ public class TEStall extends AbstractTE implements IFluidHandler, IProgressTile 
         maxProgress = 0;
 
         cachedCowDesc = null;
-        getPos().markBlockForUpdate();
+        getPos().markBlockForUpdate(worldObj);
     }
 
     @Override

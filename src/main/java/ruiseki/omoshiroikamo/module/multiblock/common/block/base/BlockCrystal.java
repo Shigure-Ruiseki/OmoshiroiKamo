@@ -5,10 +5,10 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
@@ -28,8 +28,8 @@ public class BlockCrystal extends BlockOK {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockCrystal.class, name);
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockCrystal.class;
     }
 
     @Override

@@ -83,7 +83,7 @@ public class ItemCowSpawnEgg extends ItemOK {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            BlockPos pos = correctPosition(new BlockPos(x, y, z, world), side);
+            BlockPos pos = correctPosition(new BlockPos(x, y, z), side);
             activate(stack, world, pos);
             if (!player.capabilities.isCreativeMode) {
                 stack.stackSize--;
@@ -101,7 +101,7 @@ public class ItemCowSpawnEgg extends ItemOK {
         int posY = pos.y + offsetsYForSide[side];
         int posZ = pos.z + offsetsZForSide[side];
 
-        return new BlockPos(posX, posY, posZ, pos.world);
+        return new BlockPos(posX, posY, posZ);
     }
 
     private void activate(ItemStack stack, World worldIn, BlockPos pos) {

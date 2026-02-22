@@ -52,13 +52,13 @@ public class TERoostCollector extends AbstractStorageTE implements IGuiHolder<Po
         for (int x = -4; x < 5; x++) {
             int y = searchOffset / 9;
             int z = (searchOffset % 9) - 4;
-            BlockPos targetPos = new BlockPos(xCoord + x, yCoord + y, zCoord + z, worldObj);
+            BlockPos targetPos = new BlockPos(xCoord + x, yCoord + y, zCoord + z);
             gatherItemAtPos(targetPos);
         }
     }
 
     private void gatherItemAtPos(BlockPos pos) {
-        TileEntity tileEntity = pos.getTileEntity();
+        TileEntity tileEntity = pos.getTileEntity(worldObj);
         if (!(tileEntity instanceof TERoost teRoost)) {
             return;
         }

@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityDispatcher;
 import ruiseki.omoshiroikamo.core.capabilities.ICapabilitySerializable;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 import ruiseki.omoshiroikamo.core.event.OKEventFactory;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTProvider;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTProviderComponent;
@@ -206,10 +207,6 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
         return tag;
     }
 
-    public NBTTagCompound getUpdateTag() {
-        return getNBTTagCompound();
-    }
-
     @Override
     public boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
         return capabilities != null && capabilities.hasCapability(capability, facing);
@@ -252,12 +249,16 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
     public BlockPos getPos() {
         if (cachedPos == null || cachedPos.getX() != xCoord
             || cachedPos.getY() != yCoord
-            || cachedPos.getZ() != zCoord
-            || cachedPos.getWorld() != worldObj) {
+            || cachedPos.getZ() != zCoord) {
 
             cachedPos = new BlockPos(this);
         }
         return cachedPos;
+    }
+
+    @Override
+    public DimPos getDimPos() {
+        return DimPos.of(worldObj, getPos());
     }
 
     @Override

@@ -103,7 +103,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getPos().getTileEntity();
+        TileEntity tileEntity = getPos().getTileEntity(worldObj);
         if (tileEntity instanceof TEQuantumOreExtractorT1) {
             player.triggerAchievement(MultiBlockAchievements.ASSEMBLE_VOID_ORE_MINER_T1.get());
         }
@@ -124,10 +124,10 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
             return false;
         }
 
-        BlockPos pos = new BlockPos(x, y, z, worldObj);
+        BlockPos pos = new BlockPos(x, y, z);
         if ((block == MultiBlockBlocks.COLORED_LENS.getBlock() || block == MultiBlockBlocks.LENS.getBlock())
             && lens != pos) {
-            lens = new BlockPos(x, y, z, worldObj);
+            lens = new BlockPos(x, y, z);
             return true;
         }
 
@@ -463,7 +463,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
         List<IModifierBlock> mods = new ArrayList<>();
         for (BlockPos pos : this.modifiers) {
-            Block block = pos.getBlock();
+            Block block = pos.getBlock(worldObj);
             if (block instanceof IModifierBlock) {
                 mods.add((IModifierBlock) block);
             }
@@ -475,15 +475,15 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         possibleResults.clear();
 
         if (lens != null) {
-            Block block = lens.getBlock();
+            Block block = lens.getBlock(worldObj);
             if (block instanceof BlockColoredLens) {
-                int meta = lens.getBlockMetadata();
+                int meta = lens.getBlockMetadata(worldObj);
                 this.focusColor = ((BlockColoredLens) block).getFocusColor(meta);
                 this.possibleResults.addAll(
                     this.getRegistry()
                         .getFocusedList(this.focusColor, this.focusBoostModifier));
             } else {
-                if (lens.getBlockMetadata() == 1) {
+                if (lens.getBlockMetadata(worldObj) == 1) {
                     this.focusColor = EnumDye.CRYSTAL;
                     this.possibleResults.addAll(
                         this.getRegistry()

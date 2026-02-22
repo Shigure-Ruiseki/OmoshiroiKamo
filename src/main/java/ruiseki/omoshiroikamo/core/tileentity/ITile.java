@@ -5,10 +5,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 public interface ITile {
 
     BlockPos getPos();
+
+    DimPos getDimPos();
 
     public World getWorld();
 
@@ -35,9 +38,5 @@ public interface ITile {
     public void updateTELight();
 
     public Block getBlock();
-
-    default boolean shouldBatchUpdate() {
-        return true;
-    }
 
 }

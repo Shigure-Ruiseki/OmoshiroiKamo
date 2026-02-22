@@ -58,9 +58,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     }
 
     @Override
-    public void init() {
-        super.init();
-
+    protected void registerBlockColor() {
         BlockColor.registerBlockColors(new IModularBlockTint() {
 
             @Override
