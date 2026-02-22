@@ -44,6 +44,7 @@ import ruiseki.omoshiroikamo.core.integration.nei.modular.layout.RecipeLayoutPar
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.INEIPositionedRenderer;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.renderer.PositionedText;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class ModularRecipeNEIHandler extends RecipeHandlerBase {
@@ -207,6 +208,17 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
+        if (NEIServerUtils
+            .areStacksSameTypeCrafting(ingredient, new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))) {
+            for (ModularRecipe recipe : RecipeLoader.getInstance()
+                .getAllRecipes()) {
+                if (recipe.getRecipeGroup()
+                    .equals(recipeGroup)) {
+                    arecipes.add(new CachedModularRecipe(recipe));
+                }
+            }
+        }
+
         for (ModularRecipe recipe : RecipeLoader.getInstance()
             .getAllRecipes()) {
             if (!recipe.getRecipeGroup()

@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.core.integration.nei;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -13,6 +14,8 @@ import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.RecipeCatalysts;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
@@ -63,7 +66,7 @@ public class NEIConfig implements IConfigureNEI {
             // Register icon for the generic preview handler
             event.registerHandlerInfo(
                 new HandlerInfo.Builder(ModularMachineNEIHandler.class.getName(), LibMisc.MOD_NAME, LibMisc.MOD_ID)
-                    .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
+                    .setDisplayStack(getStructureLibTrigger())
                     .setHeight(168)
                     .setWidth(192)
                     .setShiftY(6)
@@ -75,7 +78,7 @@ public class NEIConfig implements IConfigureNEI {
                 String handlerID = "modular_structure_" + structureName;
                 event.registerHandlerInfo(
                     new HandlerInfo.Builder(handlerID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
-                        .setDisplayStack(new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))
+                        .setDisplayStack(getStructureLibTrigger())
                         .setHeight(168)
                         .setWidth(192)
                         .setShiftY(6)
@@ -96,7 +99,7 @@ public class NEIConfig implements IConfigureNEI {
 
         if (BackportConfigs.enableMultiBlock) {
             for (int i = 0; i < 6; i++) {
-                String oreId = "modular_ore_extractor_" + i;
+                String oreId = ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + i;
                 event.registerHandlerInfo(
                     new HandlerInfo.Builder(oreId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
                         .setDisplayStack(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i))
@@ -104,7 +107,7 @@ public class NEIConfig implements IConfigureNEI {
                         .setWidth(166)
                         .build());
 
-                String resId = "modular_res_extractor_" + i;
+                String resId = ModObject.blockQuantumResExtractor.getRegistryName() + ".tier" + i;
                 event.registerHandlerInfo(
                     new HandlerInfo.Builder(resId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
                         .setDisplayStack(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i))
@@ -269,6 +272,14 @@ public class NEIConfig implements IConfigureNEI {
                 API.addRecipeCatalyst(catalyst, recipeId);
             }
         }
+    }
+
+    private static ItemStack getStructureLibTrigger() {
+        Item trigger = GameRegistry.findItem("structurelib", "item.structurelib.constructableTrigger");
+        if (trigger != null) {
+            return new ItemStack(trigger);
+        }
+        return new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
     }
 
     @Override
