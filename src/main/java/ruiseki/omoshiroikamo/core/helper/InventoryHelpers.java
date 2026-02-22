@@ -85,7 +85,7 @@ public class InventoryHelpers {
      * @param tagName   The tag name to read from.
      */
     public static void readFromNBT(IInventory inventory, NBTTagCompound data, String tagName) {
-        NBTTagList nbttaglist = data.getTagList(tagName, MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+        NBTTagList nbttaglist = data.getTagList(tagName, MinecraftHelpers.NBTTag_Types.NBTTagCompound.getId());
 
         for (int j = 0; j < inventory.getSizeInventory(); j++) {
             inventory.setInventorySlotContents(j, null);

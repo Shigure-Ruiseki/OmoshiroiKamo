@@ -39,7 +39,6 @@ import ruiseki.omoshiroikamo.core.client.IBaubleRender;
 import ruiseki.omoshiroikamo.core.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.core.client.render.JsonModelISBRH;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
-import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -89,7 +88,6 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     public void init() {
         GameRegistry.registerBlock(this, ItemBackpack.class, name);
         GameRegistry.registerTileEntity(teClass, name + "TileEntity");
-        BlockStateHelpers.registerFacingProp(this.getClass());
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

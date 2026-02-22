@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.client.render;
+package ruiseki.omoshiroikamo.core.client.render.item;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +19,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 @SideOnly(Side.CLIENT)
 public class PufferFishRenderer implements IItemRenderer {
 
-    public static final IModelCustom model = AdvancedModelLoader
-        .loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "pufferfish.obj"));
+    public static IModelCustom model;
 
     private static final ResourceLocation texture = new ResourceLocation(LibResources.PREFIX_ITEM + "pufferfish.png");
 
@@ -36,6 +35,9 @@ public class PufferFishRenderer implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+        if (model == null) {
+            model = AdvancedModelLoader.loadModel(new ResourceLocation(LibResources.PREFIX_MODEL + "pufferfish.obj"));
+        }
         if (item.getItem() == Items.fish && item.getItemDamage() == 3) {
             GL11.glPushMatrix();
 

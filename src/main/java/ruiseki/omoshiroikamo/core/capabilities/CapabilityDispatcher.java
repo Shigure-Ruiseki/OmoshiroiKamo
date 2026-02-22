@@ -19,12 +19,12 @@ package ruiseki.omoshiroikamo.core.capabilities;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -72,7 +72,7 @@ public class CapabilityDispatcher implements INBTSerializable, ICapabilityProvid
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable ForgeDirection facing) {
+    public boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
         for (ICapabilityProvider cap : caps) {
             if (cap.hasCapability(capability, facing)) {
                 return true;
@@ -83,7 +83,7 @@ public class CapabilityDispatcher implements INBTSerializable, ICapabilityProvid
 
     @Override
     @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable ForgeDirection facing) {
+    public <T> T getCapability(@NotNull Capability<T> capability, @Nullable ForgeDirection facing) {
         for (ICapabilityProvider cap : caps) {
             T ret = cap.getCapability(capability, facing);
             if (ret != null) {

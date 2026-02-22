@@ -4,7 +4,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 
-public interface ISidedIO extends IOKTile {
+public interface ISidedIO extends ITile {
 
     default EnumIO getIOLimit() {
         return EnumIO.BOTH;

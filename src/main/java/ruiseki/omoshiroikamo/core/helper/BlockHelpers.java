@@ -2,8 +2,6 @@ package ruiseki.omoshiroikamo.core.helper;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -11,6 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.gtnewhorizon.gtnhlib.blockstate.core.BlockProperty;
 import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
@@ -131,5 +132,19 @@ public final class BlockHelpers {
     public static boolean isValidCreativeTab(Block block, @Nullable CreativeTabs creativeTab) {
         return creativeTab == null || creativeTab == CreativeTabs.tabAllSearch
             || block.getCreativeTabToDisplayOn() == creativeTab;
+    }
+
+    public static float getFacingAngle(ForgeDirection dir) {
+        return switch (dir) {
+            case SOUTH -> 0F;
+            case EAST -> (float) (Math.PI / 2F);
+            case NORTH -> (float) Math.PI;
+            case WEST -> (float) (3F * Math.PI / 2F);
+            default -> 0F;
+        };
+    }
+
+    public static float getFacingAngle(int side) {
+        return getFacingAngle(ForgeDirection.getOrientation(side));
     }
 }

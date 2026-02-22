@@ -26,10 +26,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.jetbrains.annotations.NotNull;
 
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -67,7 +66,7 @@ public class OKFileUtils {
      *
      * @return The folder extracted to
      */
-    @Nonnull
+    @NotNull
     public static File extractZip(File zip) {
         String zipPath = zip.getParent() + "/extracted";
         File temp = new File(zipPath);
@@ -188,7 +187,7 @@ public class OKFileUtils {
         }
     }
 
-    @Nonnull
+    @NotNull
     public static File writeToFile(String filepath, String json) {
         File file = new File(filepath);
 
@@ -204,7 +203,7 @@ public class OKFileUtils {
         }
     }
 
-    @Nonnull
+    @NotNull
     public static void safeDelete(File file) {
         try {
             file.delete();
@@ -213,7 +212,7 @@ public class OKFileUtils {
         }
     }
 
-    @Nonnull
+    @NotNull
     public static void safeDeleteDirectory(File file) {
         try {
             FileUtils.deleteDirectory(file);

@@ -2,8 +2,6 @@ package ruiseki.omoshiroikamo.core.helper;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -11,12 +9,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 
+import org.jetbrains.annotations.Nullable;
+
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Helpers for world related logic.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -32,7 +32,7 @@ public class WorldHelpers {
     /**
      * Set the biome for the given coordinates.
      * CAN ONLY BE CALLED ON SERVERS!
-     * 
+     *
      * @param world The world.
      * @param pos   The position.
      * @param biome The biome to change to.
@@ -65,7 +65,7 @@ public class WorldHelpers {
     /**
      * Check if an efficient tick can happen.
      * This is useful for opererations that should happen frequently, but not strictly every tick.
-     * 
+     *
      * @param world       The world to tick in.
      * @param baseModulus The amount of ticks that could be skipped.
      * @param params      Optional parameters to further vary the tick occurences.
@@ -82,7 +82,7 @@ public class WorldHelpers {
     /**
      * Check if an efficient tick can happen.
      * This is useful for opererations that should happen frequently, but not strictly every tick.
-     * 
+     *
      * @param world       The world to tick in.
      * @param baseModulus The amount of ticks that could be skipped.
      * @param blockPos    The position to use as param.
@@ -94,7 +94,7 @@ public class WorldHelpers {
 
     /**
      * Get the chunk location (coordinates within one chunk.) from a world location.
-     * 
+     *
      * @param x The world X.
      * @param y The world Y.
      * @param z The world Z.
@@ -106,7 +106,7 @@ public class WorldHelpers {
 
     /**
      * Loop over a 3D area while accumulating a value.
-     * 
+     *
      * @param world    The world.
      * @param areaMin  Radius array to start from {x, y, z}.
      * @param areaMax  Radius array to end at (inclusive) {x, y, z}.
@@ -133,7 +133,7 @@ public class WorldHelpers {
 
     /**
      * Loop over a 3D area while accumulating a value.
-     * 
+     *
      * @param world    The world.
      * @param area     Radius.
      * @param blockPos The position.

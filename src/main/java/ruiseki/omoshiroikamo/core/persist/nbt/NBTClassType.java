@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3i;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -33,7 +34,6 @@ import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
-import ruiseki.omoshiroikamo.core.util.Vec3i;
 
 /**
  * @author rubensworks
@@ -264,7 +264,7 @@ public abstract class NBTClassType<T> {
             public Map readPersistedField(String name, NBTTagCompound tag) {
                 NBTTagCompound mapTag = tag.getCompoundTag(name);
                 Map map = Maps.newHashMap();
-                NBTTagList list = mapTag.getTagList("map", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+                NBTTagList list = mapTag.getTagList("map", MinecraftHelpers.NBTTag_Types.NBTTagCompound.getId());
                 if (list.tagCount() > 0) {
                     NBTClassType keyNBTClassType;
                     NBTClassType valueNBTClassType = null; // Remains null when all map values are null.
@@ -310,21 +310,21 @@ public abstract class NBTClassType<T> {
             }
         });
 
-        NBTYPES.put(Vec3i.class, new NBTClassType<Vec3i>() {
+        NBTYPES.put(Vector3i.class, new NBTClassType<Vector3i>() {
 
             @Override
-            public void writePersistedField(String name, Vec3i object, NBTTagCompound tag) {
-                tag.setIntArray(name, new int[] { object.getX(), object.getY(), object.getZ() });
+            public void writePersistedField(String name, Vector3i object, NBTTagCompound tag) {
+                tag.setIntArray(name, new int[] { object.x(), object.y(), object.z() });
             }
 
             @Override
-            public Vec3i readPersistedField(String name, NBTTagCompound tag) {
+            public Vector3i readPersistedField(String name, NBTTagCompound tag) {
                 int[] array = tag.getIntArray(name);
-                return new Vec3i(array[0], array[1], array[2]);
+                return new Vector3i(array[0], array[1], array[2]);
             }
 
             @Override
-            public Vec3i getDefaultValue() {
+            public Vector3i getDefaultValue() {
                 return null;
             }
         });
@@ -605,7 +605,7 @@ public abstract class NBTClassType<T> {
                 public Object[] readPersistedField(String name, NBTTagCompound tag) {
                     NBTTagCompound arrayTag = tag.getCompoundTag(name);
                     NBTTagList list = arrayTag
-                        .getTagList("array", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+                        .getTagList("array", MinecraftHelpers.NBTTag_Types.NBTTagCompound.getId());
 
                     try {
                         Class<?> componentType = Class.forName(arrayTag.getString("componentType"));
@@ -802,7 +802,7 @@ public abstract class NBTClassType<T> {
             NBTTagCompound collectionTag = tag.getCompoundTag(name);
             C collection = createNewCollection();
             NBTTagList list = collectionTag
-                .getTagList("collection", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+                .getTagList("collection", MinecraftHelpers.NBTTag_Types.NBTTagCompound.getId());
             if (list.tagCount() > 0) {
                 NBTClassType elementNBTClassType;
                 try {

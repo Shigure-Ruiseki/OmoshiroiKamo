@@ -24,6 +24,7 @@ public class ResourcePackAssembler {
         ITEM,
         BLOCK,
         ENTITY,
+        MODEL,
         BOTH
     }
 
@@ -40,7 +41,18 @@ public class ResourcePackAssembler {
         }
     }
 
-    private List<IconEntry> icons = new ArrayList<IconEntry>();
+    private static class ModelEntry {
+
+        File obj;
+        File mtl;
+        String subPath;
+
+        ModelEntry(File obj, File mtl, String subPath) {
+            this.obj = obj;
+            this.mtl = mtl;
+            this.subPath = subPath == null ? "" : subPath;
+        }
+    }
 
     private static class CustomFile {
 
@@ -53,7 +65,9 @@ public class ResourcePackAssembler {
         }
     }
 
+    private List<IconEntry> icons = new ArrayList<IconEntry>();
     private List<File> langs = new ArrayList<File>();
+    private List<ModelEntry> models = new ArrayList<ModelEntry>();
     private List<CustomFile> customs = new ArrayList<CustomFile>();
 
     private static List<IResourcePack> defaultResourcePacks;
@@ -96,6 +110,14 @@ public class ResourcePackAssembler {
         customs.add(new CustomFile(path, file));
     }
 
+    public void addModel(File objFile, File mtlFile) {
+        addModel(null, objFile, mtlFile);
+    }
+
+    public void addModel(String subPath, File objFile, File mtlFile) {
+        models.add(new ModelEntry(objFile, mtlFile, normalize(subPath)));
+    }
+
     public void addCustomFile(File file) {
         addCustomFile(null, file);
     }
@@ -121,6 +143,7 @@ public class ResourcePackAssembler {
             String itemsDir = root + "/assets/" + modid + "/textures/items";
             String blocksDir = root + "/assets/" + modid + "/textures/blocks";
             String entityDir = root + "/assets/" + modid + "/textures/entity";
+            String modelDir = root + "/assets/" + modid + "/models";
             String langDir = root + "/assets/" + modid + "/lang";
 
             /* ---- ICONS ---- */
@@ -154,6 +177,23 @@ public class ResourcePackAssembler {
             /* ---- LANG ---- */
             for (File lang : langs) {
                 FileUtils.copyFile(lang, new File(langDir + "/" + lang.getName()));
+            }
+
+            /* ---- MODELS ---- */
+
+            for (ModelEntry m : models) {
+
+                File outDir = new File(modelDir + "/" + (m.subPath.isEmpty() ? "" : m.subPath));
+
+                outDir.mkdirs();
+
+                if (m.obj != null && m.obj.exists()) {
+                    FileUtils.copyFile(m.obj, new File(outDir, m.obj.getName()));
+                }
+
+                if (m.mtl != null && m.mtl.exists()) {
+                    FileUtils.copyFile(m.mtl, new File(outDir, m.mtl.getName()));
+                }
             }
 
             /* ---- CUSTOM ---- */

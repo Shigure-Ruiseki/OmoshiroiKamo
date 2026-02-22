@@ -70,6 +70,64 @@ public final class ResourcePackUtils {
         }
     }
 
+    public static void addModelsFromConfig(ResourcePackAssembler assembler, File baseDir) {
+        File modelRoot = new File(baseDir, "models");
+        scanModels(modelRoot, assembler);
+    }
+
+    private static void scanModels(File root, ResourcePackAssembler assembler) {
+        if (!root.exists()) return;
+        scanModelsRecursive(root, root, assembler);
+    }
+
+    private static void scanModelsRecursive(File root, File current, ResourcePackAssembler assembler) {
+        File[] files = current.listFiles();
+        if (files == null) return;
+
+        for (File f : files) {
+
+            if (f.isDirectory()) {
+                scanModelsRecursive(root, f, assembler);
+            }
+
+            else if (isObjFile(f)) {
+
+                String subPath = root.toURI()
+                    .relativize(
+                        f.getParentFile()
+                            .toURI())
+                    .getPath();
+
+                if (subPath.endsWith("/")) {
+                    subPath = subPath.substring(0, subPath.length() - 1);
+                }
+
+                File mtl = findMtlForObj(f);
+
+                assembler.addModel(subPath, f, mtl);
+            }
+        }
+    }
+
+    private static boolean isObjFile(File f) {
+        return f.getName()
+            .toLowerCase()
+            .endsWith(".obj");
+    }
+
+    private static File findMtlForObj(File objFile) {
+
+        String base = objFile.getName();
+        int i = base.lastIndexOf('.');
+        if (i > 0) {
+            base = base.substring(0, i);
+        }
+
+        File mtl = new File(objFile.getParentFile(), base + ".mtl");
+
+        return mtl.exists() ? mtl : null;
+    }
+
     private static void ensureDir(File dir) {
         if (!dir.exists()) {
             dir.mkdirs();

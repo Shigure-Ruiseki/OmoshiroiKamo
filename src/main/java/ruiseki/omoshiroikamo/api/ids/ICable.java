@@ -11,10 +11,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyIO;
-import ruiseki.omoshiroikamo.core.tileentity.IOKTile;
+import ruiseki.omoshiroikamo.core.tileentity.ITile;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
 
-public interface ICable extends IOKTile, IOKEnergyIO {
+public interface ICable extends ITile, IOKEnergyIO {
 
     // Part
 

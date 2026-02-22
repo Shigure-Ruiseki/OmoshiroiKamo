@@ -37,11 +37,13 @@ public class TextureLoader {
 
             File assetsRoot = new File(configDir, "assets/" + modid + "/textures");
             File langFolder = new File(configDir, "assets/" + modid + "/lang");
+            File modelFolder = new File(configDir, "assets/" + modid + "/models");
 
             if (!assetsRoot.exists()) {
                 new File(assetsRoot, "items").mkdirs();
                 new File(assetsRoot, "blocks").mkdirs();
                 new File(assetsRoot, "entity").mkdirs();
+                if (!modelFolder.exists()) modelFolder.mkdirs();
                 if (!langFolder.exists()) langFolder.mkdirs();
                 Logger.info("[TextureLoader] Created vanilla texture skeleton for {}", modid);
                 return;
@@ -56,6 +58,10 @@ public class TextureLoader {
             ResourcePackUtils
                 .scanVanillaLike(assembler, new File(assetsRoot, "entity"), ResourcePackAssembler.IconTarget.ENTITY);
 
+            if (modelFolder.exists()) {
+                ResourcePackUtils.addModelsFromConfig(assembler, new File(configDir, "assets/" + modid));
+            }
+
             if (langFolder.exists() && langFolder.isDirectory()) {
                 File[] langFiles = langFolder.listFiles((dir, name) -> name.endsWith(".lang"));
                 if (langFiles != null) {
@@ -65,6 +71,10 @@ public class TextureLoader {
                         }
                     }
                 }
+            }
+
+            if (modelFolder.exists()) {
+                ResourcePackUtils.addModelsFromConfig(assembler, new File(configDir, "assets/" + modid));
             }
 
             assembler.assemble()

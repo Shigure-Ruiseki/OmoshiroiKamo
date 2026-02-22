@@ -2,13 +2,13 @@ package ruiseki.omoshiroikamo.core.energy;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.tileentity.IOKTile;
+import ruiseki.omoshiroikamo.core.tileentity.ITile;
 
 /**
  * Base interface for tile entities that store and manage energy.
  * IC2 integration is handled separately by IC2EnergyAdapter.
  */
-public interface IOKEnergyTile extends IOKTile {
+public interface IOKEnergyTile extends ITile {
 
     int getEnergyStored();
 
