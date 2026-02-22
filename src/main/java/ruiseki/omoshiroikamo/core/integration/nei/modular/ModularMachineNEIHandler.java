@@ -285,6 +285,11 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         return structureName;
     }
 
+    @Override
+    public String getHandlerId() {
+        return getOverlayIdentifier();
+    }
+
     /**
      * Override to use structure name as the unique handler ID.
      * This is critical for catalyst registration.
