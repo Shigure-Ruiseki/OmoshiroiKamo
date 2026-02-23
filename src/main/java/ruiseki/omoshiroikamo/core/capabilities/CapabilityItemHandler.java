@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.capabilities;
+package ruiseki.omoshiroikamo.core.capabilities;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -9,10 +9,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
-
-import ruiseki.omoshiroikamo.core.capabilities.Capability;
-import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
-import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 
 public class CapabilityItemHandler {
 

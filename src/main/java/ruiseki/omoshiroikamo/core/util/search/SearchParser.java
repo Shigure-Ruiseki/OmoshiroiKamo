@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.search;
+package ruiseki.omoshiroikamo.core.util.search;
 
 import java.util.ArrayList;
 import java.util.List;

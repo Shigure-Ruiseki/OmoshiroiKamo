@@ -52,12 +52,8 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     protected final Class<? extends TileEntityOK> teClass;
     protected final String name;
 
-    protected float baseMinX = 0f;
-    protected float baseMinY = 0f;
-    protected float baseMinZ = 0f;
-    protected float baseMaxX = 1f;
-    protected float baseMaxY = 1f;
-    protected float baseMaxZ = 1f;
+    protected float baseMinX = 0f, baseMinY = 0f, baseMinZ = 0f;
+    protected float baseMaxX = 1f, baseMaxY = 1f, baseMaxZ = 1f;
 
     @Delegate(types = IBlockPropertyProvider.class)
     private final IBlockPropertyProvider propertyComponent = new BlockPropertyProviderComponent(this);
@@ -85,8 +81,17 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         this.name = name;
         setHardness(0.5F);
         setBlockName(name);
-        setStepSound(Block.soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
+
+        if (mat == Material.glass) {
+            this.setStepSound(Block.soundTypeGlass);
+        } else if (mat == Material.rock) {
+            this.setStepSound(Block.soundTypeStone);
+        } else if (mat == Material.wood) {
+            this.setStepSound(Block.soundTypeWood);
+        } else {
+            this.setStepSound(Block.soundTypeMetal);
+        }
     }
 
     public void init() {
@@ -421,11 +426,11 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         return BlockPropertyRegistry.getBlockState(stack);
     }
 
-    public IOrientable getOrientable(final IBlockAccess w, final int x, final int y, final int z) {
+    // Orientable
+    public IOrientable getOrientable(final IBlockAccess world, final int x, final int y, final int z) {
         if (this instanceof IOrientableBlock) {
-            return this.getOrientable(w, x, y, z);
+            return ((IOrientableBlock) this).getOrientable(world, x, y, z);
         }
-        return null;
+        return TileHelpers.getSafeTile(world, x, y, z, IOrientable.class);
     }
-
 }

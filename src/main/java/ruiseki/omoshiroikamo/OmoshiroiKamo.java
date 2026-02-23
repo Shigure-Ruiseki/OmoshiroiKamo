@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import ruiseki.omoshiroikamo.config.GeneralConfig;
 import ruiseki.omoshiroikamo.core.CoreModule;
@@ -91,8 +92,8 @@ public class OmoshiroiKamo extends ModBase {
         return command;
     }
 
-    @Mod.EventHandler
     @Override
+    @EventHandler
     public final void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         if (MinecraftHelpers.isClientSide()) {
@@ -102,11 +103,13 @@ public class OmoshiroiKamo extends ModBase {
         NEICompat.init();
     }
 
+    @Override
     @EventHandler
     public void init(FMLInitializationEvent event) {
         super.init(event);
     }
 
+    @Override
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
@@ -116,21 +119,28 @@ public class OmoshiroiKamo extends ModBase {
         }
     }
 
-    @Mod.EventHandler
     @Override
+    @EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         super.onServerStarting(event);
-        // event.registerServerCommand(new CommandOK());
     }
 
+    @Override
     @EventHandler
     public void onServerStarted(FMLServerStartedEvent event) {
         super.onServerStarted(event);
     }
 
+    @Override
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
         super.onServerStopping(event);
+    }
+
+    @Override
+    @EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event) {
+        super.onServerStopped(event);
     }
 
     @Override
@@ -139,6 +149,7 @@ public class OmoshiroiKamo extends ModBase {
     }
 
     @Override
+    @EventHandler
     public ICommonProxy getProxy() {
         return proxy;
     }

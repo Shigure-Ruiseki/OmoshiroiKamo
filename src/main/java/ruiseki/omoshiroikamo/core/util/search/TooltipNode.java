@@ -1,19 +1,17 @@
-package ruiseki.omoshiroikamo.core.common.search;
+package ruiseki.omoshiroikamo.core.util.search;
 
 import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 
-final class TextNode implements SearchNode {
+final class TooltipNode implements SearchNode {
 
     private final String text;
 
-    TextNode(String text) {
+    TooltipNode(String text) {
         this.text = text;
     }
 
     @Override
     public boolean matches(ItemStackKey k) {
-        if (k.getDisplayName()
-            .contains(text)) return true;
         for (String line : k.getTooltipLower()) {
             if (line.contains(text)) return true;
         }

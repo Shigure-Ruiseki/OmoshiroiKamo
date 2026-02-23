@@ -16,14 +16,14 @@ import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Interface used to access the parent methods from a {@link ICollidable}.
- * 
+ *
  * @author rubensworks
  */
 public interface ICollidableParent {
 
     /**
      * Simply forward this call to the super.
-     * 
+     *
      * @param worldIn         The world
      * @param pos             The position
      * @param state           The block state
@@ -32,11 +32,11 @@ public interface ICollidableParent {
      * @param collidingEntity The entity that is colliding
      */
     public void addCollisionBoxesToListParent(World worldIn, BlockPos pos, BlockState state, AxisAlignedBB mask,
-        List list, Entity collidingEntity);
+        List<AxisAlignedBB> list, Entity collidingEntity);
 
     /**
      * Simply forward this call to the super.
-     * 
+     *
      * @param worldIn The world
      * @param pos     The position
      * @return The selected bounding box
@@ -46,7 +46,7 @@ public interface ICollidableParent {
 
     /**
      * Simply forward this call to the super.
-     * 
+     *
      * @param world     The world
      * @param pos       The position
      * @param origin    The origin vector

@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityFluidHandler;
 import ruiseki.omoshiroikamo.core.capabilities.ICapabilityProvider;
-import ruiseki.omoshiroikamo.core.common.capabilities.CapabilityFluidHandler;
 
 /**
  * FluidHandlerItemStack is a template capability provider for ItemStacks.

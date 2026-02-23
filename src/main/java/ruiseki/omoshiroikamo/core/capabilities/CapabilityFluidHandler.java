@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.capabilities;
+package ruiseki.omoshiroikamo.core.capabilities;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -12,9 +12,6 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-import ruiseki.omoshiroikamo.core.capabilities.Capability;
-import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
-import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.fluid.FluidHandlerItemStack;
 import ruiseki.omoshiroikamo.core.fluid.IFluidHandlerItem;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;

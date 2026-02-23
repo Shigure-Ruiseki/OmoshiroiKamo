@@ -22,7 +22,7 @@ import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 /**
  * Interface for blocks that have a collidable component.
  * Delegate calls to {@link CollidableComponent}.
- * 
+ *
  * @param <P> The type of positions this component type can provide.
  * @author rubensworks
  */
@@ -35,7 +35,7 @@ public interface ICollidable<P> {
 
     /**
      * Add the current block bounding box to the given list.
-     * 
+     *
      * @param world           The world
      * @param pos             The position
      * @param state           The block state
@@ -43,12 +43,12 @@ public interface ICollidable<P> {
      * @param list            The list to add to
      * @param collidingEntity The entity that is colliding
      */
-    public void addCollisionBoxesToList(World world, BlockPos pos, BlockState state, AxisAlignedBB mask, List list,
-        Entity collidingEntity);
+    public void addCollisionBoxesToList(World world, BlockPos pos, BlockState state, AxisAlignedBB mask,
+        List<AxisAlignedBB> list, Entity collidingEntity);
 
     /**
      * The the selected bounding box.
-     * 
+     *
      * @param worldIn The world
      * @param pos     The position
      * @return The selected bounding box
@@ -58,7 +58,7 @@ public interface ICollidable<P> {
 
     /**
      * Do a ray trace for the current look direction of the player.
-     * 
+     *
      * @param world  The world.
      * @param pos    The block position to perform a ray trace for.
      * @param player The player.
@@ -68,7 +68,7 @@ public interface ICollidable<P> {
 
     /**
      * Ray trace the given direction.
-     * 
+     *
      * @param world     The world
      * @param pos       The position
      * @param origin    The origin vector
@@ -79,7 +79,7 @@ public interface ICollidable<P> {
 
     /**
      * Result from ray tracing
-     * 
+     *
      * @param <P> The type of position that can be hit.
      */
     @Data
@@ -98,7 +98,7 @@ public interface ICollidable<P> {
 
     /**
      * A component that can be part of the collision detection for a block.
-     * 
+     *
      * @param <P> The type of positions this component type can provide.
      * @param <B> The type of block this component is part of.
      */
@@ -116,7 +116,7 @@ public interface ICollidable<P> {
 
         /**
          * Destroy this component
-         * 
+         *
          * @param world    The world
          * @param pos      The position
          * @param position The component position
@@ -124,15 +124,6 @@ public interface ICollidable<P> {
          * @return If the complete block was destroyed
          */
         public boolean destroy(World world, BlockPos pos, P position, EntityPlayer player);
-
-        /**
-         * @param world    The world
-         * @param pos      The position
-         * @param position The component position
-         * @return The model that will be used to render the breaking overlay.
-         */
-        // @SideOnly(Side.CLIENT)
-        // public @Nullable IBakedModel getBreakingBaseModel(World world, BlockPos pos, P position);
     }
 
 }

@@ -1,6 +1,10 @@
 package ruiseki.omoshiroikamo.core;
 
+import net.minecraftforge.common.MinecraftForge;
+
+import cpw.mods.fml.common.FMLCommonHandler;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.core.event.TickHandler;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
@@ -36,5 +40,14 @@ public class CoreCommon extends CommonProxyComponent {
         packetHandler.register(PacketSyncCarriedItem.class);
 
         packetHandler.register(PacketSound.class);
+    }
+
+    @Override
+    public void registerTickHandlers() {
+        super.registerTickHandlers();
+        FMLCommonHandler.instance()
+            .bus()
+            .register(TickHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(TickHandler.INSTANCE);
     }
 }

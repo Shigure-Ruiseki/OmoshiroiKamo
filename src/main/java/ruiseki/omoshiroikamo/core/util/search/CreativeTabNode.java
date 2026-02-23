@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.search;
+package ruiseki.omoshiroikamo.core.util.search;
 
 import ruiseki.omoshiroikamo.core.item.ItemStackKey;
 

@@ -132,7 +132,7 @@ public class MinecraftHelpers {
 
     /**
      * Spawns the creature specified by the egg's type in the location specified by the last three parameters.
-     * 
+     *
      * @param world    The world.
      * @param entityID The name of the entity.
      * @param x        X coordinate.
@@ -214,9 +214,24 @@ public class MinecraftHelpers {
     public static boolean isClientSide() {
         if (isModdedEnvironment()) {
             return FMLCommonHandler.instance()
-                .getEffectiveSide() == Side.CLIENT;
+                .getEffectiveSide()
+                .isClient();
         }
         return true;
+    }
+
+    /**
+     * Check if this code is ran on server side.
+     *
+     * @return true if the code is on the server.
+     */
+    public static boolean isServerSide() {
+        if (isModdedEnvironment()) {
+            return FMLCommonHandler.instance()
+                .getEffectiveSide()
+                .isServer();
+        }
+        return false;
     }
 
     /**
@@ -266,5 +281,4 @@ public class MinecraftHelpers {
         }
         return compX;
     }
-
 }
