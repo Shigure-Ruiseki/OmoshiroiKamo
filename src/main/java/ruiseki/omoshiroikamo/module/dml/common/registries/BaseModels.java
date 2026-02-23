@@ -32,7 +32,7 @@ public class BaseModels extends BaseModelHandler {
                 .setLivingMatter("hellish")
                 .setSimulationRFCost(256)
                 .setCraftingStrings(new String[] { "minecraft:blaze_powder" })
-                .setLootStrings(new String[] { "minecraft:blaze_rod,22", "ThermalFoundation:material,32,771" });
+                .setLootStrings(new String[] { "minecraft:blaze_rod,22", "ThermalFoundation:material,32,16" });
         allModels.add(blaze);
 
         ModelRegistryItem creeper = addModel(
