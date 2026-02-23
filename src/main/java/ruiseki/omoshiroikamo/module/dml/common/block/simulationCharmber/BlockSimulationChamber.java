@@ -15,7 +15,6 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.block.property.AutoBlockProperty;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
@@ -48,11 +47,6 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
     @Override
     public int damageDropped(int meta) {
         return 0;
-    }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-
     }
 
     @Override

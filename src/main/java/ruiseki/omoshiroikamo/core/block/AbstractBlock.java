@@ -81,11 +81,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        if (te != null) {
-            ((AbstractTE) te).processDrop(world, x, y, z, te, stack);
-        }
-    }
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
@@ -143,8 +139,14 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropStacks(world, x, y, z);
+        if (shouldDropInventory(world, x, y, z)) {
+            dropStacks(world, x, y, z);
+        }
         super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    protected boolean shouldDropInventory(World world, int x, int y, int z) {
+        return true;
     }
 
     // Util Method
@@ -155,6 +157,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
                 ItemStack stack = te.getStackInSlot(i);
                 if (stack != null) {
                     dropStack(world, x, y, z, stack);
+                    te.setInventorySlotContents(i, null);
                 }
             }
         }

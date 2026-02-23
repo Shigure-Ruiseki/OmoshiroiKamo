@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -52,12 +51,6 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
     @Override
     protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockItemOutputPort.class;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropStacks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
     }
 
     @Override

@@ -14,7 +14,6 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlock<T> implements IMBBlock {
 
@@ -76,6 +75,4 @@ public class AbstractMBBlock<T extends AbstractMBModifierTE> extends AbstractBlo
         }
     }
 
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 }
