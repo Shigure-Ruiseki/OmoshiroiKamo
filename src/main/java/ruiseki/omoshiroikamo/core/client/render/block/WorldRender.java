@@ -30,6 +30,7 @@ import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
 
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = true)
+@SuppressWarnings("unchecked")
 public final class WorldRender implements ISimpleBlockRenderingHandler {
 
     public static final WorldRender INSTANCE = new WorldRender();

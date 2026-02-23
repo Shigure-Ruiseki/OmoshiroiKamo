@@ -77,6 +77,11 @@ public class TECable extends AbstractTE
     public TECable() {}
 
     @Override
+    public boolean requiresTESR() {
+        return true;
+    }
+
+    @Override
     public void writeCommon(NBTTagCompound root) {
         super.writeCommon(root);
 
@@ -610,18 +615,6 @@ public class TECable extends AbstractTE
                 i++;
             }
         }
-    }
-
-    @Override
-    public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        EntityPlayer player = accessor.getPlayer();
-        CableHit hit = rayTraceCable(player);
-
-        if (hit != null && hit.type == CableHit.Type.PART && hit.part != null) {
-            return hit.part.getItemStack();
-        }
-
-        return null;
     }
 
     private AxisAlignedBB getCoreBox() {

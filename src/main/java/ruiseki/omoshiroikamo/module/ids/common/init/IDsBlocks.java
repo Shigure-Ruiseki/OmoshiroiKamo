@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.module.ids.common.block.BlockCableBus;
 import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.BlockProgrammer;
 
@@ -15,8 +14,6 @@ public enum IDsBlocks {
 
     CABLE(new BlockCable()),
     PROGRAMMER(new BlockProgrammer()),
-
-    CABLE_B(new BlockCableBus()),
 
     ;
     // spotless: on

@@ -37,6 +37,10 @@ public class BlockProvider implements IWailaDataProvider {
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
+        Block block = accessor.getBlock();
+        if (block instanceof IWailaBlockInfoProvider provider) {
+            return provider.getWailaStack(accessor, config);
+        }
         if (tile instanceof IWailaTileInfoProvider provider) {
             return provider.getWailaStack(accessor, config);
         }
@@ -74,6 +78,10 @@ public class BlockProvider implements IWailaDataProvider {
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
+        Block block = accessor.getBlock();
+        if (block instanceof IWailaBlockInfoProvider provider) {
+            provider.getWailaTail(itemStack, currenttip, accessor, config);
+        }
         if (tile instanceof IWailaTileInfoProvider provider) {
             provider.getWailaTail(itemStack, currenttip, accessor, config);
         }

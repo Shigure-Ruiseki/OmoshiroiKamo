@@ -170,7 +170,7 @@ public final class BlockHelpers {
 
     }
 
-    public <T extends TileEntityOK> void bindTileEntitySpecialRenderer(final Class<T> tile, final BlockOK blk) {
+    public static  <T extends TileEntityOK> void bindTileEntitySpecialRenderer(final Class<T> tile, final BlockOK blk) {
         final BaseBlockRender bbr = blk.getRendererInstance()
             .getRendererInstance();
 

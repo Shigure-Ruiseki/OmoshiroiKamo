@@ -183,9 +183,36 @@ public abstract class TileEntityOK extends TileEntity
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        super.onDataPacket(net, pkt);
         readFromNBT(pkt.func_148857_g());
         onUpdateReceived();
+    }
+
+    @Override
+    public final void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
+        writeCommon(root);
+    }
+
+    @Override
+    public final void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
+        readCommon(root);
+    }
+
+    public void writeCommon(NBTTagCompound tag) {
+        writeGeneratedFieldsToNBT(tag);
+
+        if (capabilities != null) {
+            tag.setTag("OKCaps", capabilities.serializeNBT());
+        }
+    }
+
+    public void readCommon(NBTTagCompound tag) {
+        readGeneratedFieldsFromNBT(tag);
+
+        if (capabilities != null && tag.hasKey("OKCaps")) {
+            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
+        }
     }
 
     /**
@@ -222,18 +249,6 @@ public abstract class TileEntityOK extends TileEntity
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
 
-    @Override
-    public final void writeToNBT(NBTTagCompound root) {
-        super.writeToNBT(root);
-        writeCommon(root);
-    }
-
-    @Override
-    public final void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
-        readCommon(root);
-    }
-
     /**
      * Get the NBT tag for this tile entity.
      *
@@ -266,22 +281,6 @@ public abstract class TileEntityOK extends TileEntity
         NBTTagCompound ret = new NBTTagCompound();
         this.writeToNBT(ret);
         return ret;
-    }
-
-    public void writeCommon(NBTTagCompound tag) {
-        writeGeneratedFieldsToNBT(tag);
-
-        if (capabilities != null) {
-            tag.setTag("OKCaps", capabilities.serializeNBT());
-        }
-    }
-
-    public void readCommon(NBTTagCompound tag) {
-        readGeneratedFieldsFromNBT(tag);
-
-        if (capabilities != null && tag.hasKey("OKCaps")) {
-            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
-        }
     }
 
     @Override

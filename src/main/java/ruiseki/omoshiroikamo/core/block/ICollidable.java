@@ -12,12 +12,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Data;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * Interface for blocks that have a collidable component.
@@ -37,45 +34,44 @@ public interface ICollidable<P> {
      * Add the current block bounding box to the given list.
      *
      * @param world           The world
-     * @param pos             The position
-     * @param state           The block state
+     * @param x,              y, z The position
      * @param mask            The bounding boxes mask
      * @param list            The list to add to
      * @param collidingEntity The entity that is colliding
      */
-    public void addCollisionBoxesToList(World world, BlockPos pos, BlockState state, AxisAlignedBB mask,
-        List<AxisAlignedBB> list, Entity collidingEntity);
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> list,
+        Entity collidingEntity);
 
     /**
      * The the selected bounding box.
      *
-     * @param worldIn The world
-     * @param pos     The position
+     * @param world The world
+     * @param x,    y, z The position
      * @return The selected bounding box
      */
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos);
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z);
 
     /**
      * Do a ray trace for the current look direction of the player.
      *
      * @param world  The world.
-     * @param pos    The block position to perform a ray trace for.
+     * @param x,     y, z The block position to perform a ray trace for.
      * @param player The player.
      * @return A holder object with information on the ray tracing.
      */
-    public RayTraceResult<P> doRayTrace(World world, BlockPos pos, EntityPlayer player);
+    public RayTraceResult<P> doRayTrace(World world, int x, int y, int z, EntityPlayer player);
 
     /**
      * Ray trace the given direction.
      *
      * @param world     The world
-     * @param pos       The position
+     * @param x,        y, z The position
      * @param origin    The origin vector
      * @param direction The direction vector
      * @return The position object holder
      */
-    public MovingObjectPosition collisionRayTrace(World world, BlockPos pos, Vec3 origin, Vec3 direction);
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 origin, Vec3 direction);
 
     /**
      * Result from ray tracing
@@ -108,22 +104,22 @@ public interface ICollidable<P> {
 
         public int getBoundsCount(P position);
 
-        public boolean isActive(B block, World world, BlockPos pos, P position);
+        public boolean isActive(B block, World world, int x, int y, int z, P position);
 
-        public List<AxisAlignedBB> getBounds(B block, World world, BlockPos pos, P position);
+        public List<AxisAlignedBB> getBounds(B block, World world, int x, int y, int z, P position);
 
-        public ItemStack getPickBlock(World world, BlockPos pos, P position);
+        public ItemStack getPickBlock(World world, int x, int y, int z, P position);
 
         /**
          * Destroy this component
          *
          * @param world    The world
-         * @param pos      The position
+         * @param x,       y, z The position
          * @param position The component position
          * @param player   The player destroying the component.
          * @return If the complete block was destroyed
          */
-        public boolean destroy(World world, BlockPos pos, P position, EntityPlayer player);
+        public boolean destroy(World world, int x, int y, int z, P position, EntityPlayer player);
     }
 
 }
