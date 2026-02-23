@@ -7,6 +7,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -14,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.Delegate;
-import ruiseki.omoshiroikamo.api.block.IOKTile;
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityDispatcher;
 import ruiseki.omoshiroikamo.core.capabilities.ICapabilitySerializable;
@@ -23,7 +23,7 @@ import ruiseki.omoshiroikamo.core.event.OKEventFactory;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTProvider;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTProviderComponent;
 
-public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTProvider, ICapabilitySerializable {
+public abstract class TileEntityOK extends TileEntity implements ITile, INBTProvider, ICapabilitySerializable {
 
     private static final int UPDATE_BACKOFF_TICKS = 1;
 
@@ -37,13 +37,11 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
     private final boolean ticking;
 
     private BlockPos cachedPos;
-    private final int checkOffset = (int) (Math.random() * 20);
+    private final int randomOffset = (int) (Math.random() * 20);
 
     public TileEntityOK() {
         this.capabilities = OKEventFactory.gatherCapabilities(this);
-
         this.sendUpdateBackoff = (int) (Math.random() * UPDATE_BACKOFF_TICKS);
-
         this.ticking = this instanceof ITickingTile;
     }
 
@@ -82,13 +80,6 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
     public final void sendImmediateUpdate() {
         sendUpdate();
         sendUpdateBackoff = 0;
-    }
-
-    @Override
-    public final void updateEntity() {
-        if (isTicking()) {
-            ((ITickingTile) this).update();
-        }
     }
 
     /**
@@ -270,25 +261,59 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
     }
 
     @Override
-    public TileEntity getTileEntity() {
-        return this;
+    public int getX() {
+        return xCoord;
+    }
+
+    @Override
+    public int getY() {
+        return yCoord;
+    }
+
+    @Override
+    public int getZ() {
+        return zCoord;
+    }
+
+    @Override
+    public World getWorld() {
+        return worldObj;
+    }
+
+    @Override
+    public int getWorldID() {
+        return worldObj.provider.dimensionId;
+    }
+
+    @Override
+    public Block getBlock() {
+        return getBlockType();
+    }
+
+    @Override
+    public void mark() {
+        markDirty();
+    }
+
+    @Override
+    public void updateTEState() {
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public void updateTELight() {
+        worldObj.updateLightByType(EnumSkyBlock.Sky, xCoord, yCoord, zCoord);
+        worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
     }
 
     protected boolean shouldDoWorkThisTick(int interval) {
-        return shouldDoWorkThisTick(interval, 0);
-    }
-
-    protected boolean shouldDoWorkThisTick(int interval, int offset) {
-        return (worldObj.getTotalWorldTime() + checkOffset + offset) % interval == 0;
-    }
-
-    public Block getBlock() {
-        return worldObj.getBlock(xCoord, yCoord, zCoord);
+        return (worldObj.getTotalWorldTime() + randomOffset) % interval == 0;
     }
 
     public interface ITickingTile {
 
-        void update();
+        void updateEntity();
     }
 
     public static class TickingTileComponent implements ITickingTile {
@@ -300,7 +325,7 @@ public abstract class TileEntityOK extends TileEntity implements IOKTile, INBTPr
         }
 
         @Override
-        public void update() {
+        public final void updateEntity() {
             tile.updateTicking();
         }
     }

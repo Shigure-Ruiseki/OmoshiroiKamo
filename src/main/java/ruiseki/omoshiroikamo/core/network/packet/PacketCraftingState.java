@@ -5,11 +5,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.api.block.CraftingState;
-import ruiseki.omoshiroikamo.api.block.ICraftingTile;
+import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.network.CodecField;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
+import ruiseki.omoshiroikamo.core.tileentity.ICraftingTile;
 
 public class PacketCraftingState extends PacketCodec {
 

@@ -36,7 +36,6 @@ import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.core.modcompat.ModCompatLoader;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.backpack.BackpackModule;
 import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
@@ -72,9 +71,6 @@ public class OmoshiroiKamo extends ModBase {
         super(LibMisc.MOD_ID, LibMisc.MOD_NAME);
         putGenericReference(REFKEY_MOD_VERSION, LibMisc.VERSION);
     }
-
-    @Override
-    protected void loadModCompats(ModCompatLoader modCompatLoader) {}
 
     @EventHandler
     public void onConstruction(FMLConstructionEvent event) {

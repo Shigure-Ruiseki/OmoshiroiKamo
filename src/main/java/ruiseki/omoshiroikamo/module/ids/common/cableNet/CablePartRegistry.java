@@ -7,21 +7,21 @@ import java.util.function.Supplier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.interfacebus.CraftingInterface;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.block.BlockReader;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.fluid.FluidReader;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.inventory.InventoryReader;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.RedstoneReader;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.RedstoneWriter;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.input.EnergyImporter;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus.EnergyFilterInterface;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.interfacebus.EnergyInterface;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.output.EnergyExporter;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.input.ItemImporter;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfacebus.ItemFilterInterface;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.interfacebus.ItemInterface;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.output.ItemExporter;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.crafting.interfacebus.CraftingInterface;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.logic.block.BlockReader;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.logic.fluid.FluidReader;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.logic.inventory.InventoryReader;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.logic.redstone.RedstoneReader;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.logic.redstone.RedstoneWriter;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.energy.input.EnergyImporter;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.energy.interfacebus.EnergyFilterInterface;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.energy.interfacebus.EnergyInterface;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.energy.output.EnergyExporter;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.input.ItemImporter;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.interfacebus.ItemFilterInterface;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.interfacebus.ItemInterface;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.output.ItemExporter;
 
 public class CablePartRegistry {
 

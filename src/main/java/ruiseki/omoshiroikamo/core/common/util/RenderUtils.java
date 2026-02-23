@@ -3,9 +3,12 @@ package ruiseki.omoshiroikamo.core.common.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
 
 import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
@@ -139,6 +142,51 @@ public class RenderUtils {
         engine().bindTexture(tex);
     }
 
+    public static void rotateIfSneaking(EntityPlayer player) {
+        if (player.isSneaking()) {
+            applySneakingRotation();
+        }
+    }
+
+    public static void applySneakingRotation() {
+        GL11.glRotatef(28.65F, 1F, 0F, 0F);
+    }
+
+    public static void translateToChest() {
+        GL11.glTranslatef(0F, 0.9F, 0F);
+    }
+
+    public static void translateToHead(EntityPlayer player) {
+        GL11.glTranslated(
+            0,
+            (player != Minecraft.getMinecraft().thePlayer ? 1.62F : 0F) - player.getDefaultEyeHeight()
+                + (player.isSneaking() ? 0.0625 : 0),
+            0);
+    }
+
+    public static void translateToLeftArm() {
+        GL11.glTranslatef(0.35F, 1.2F, 0F);
+    }
+
+    public static void translateToRightArm() {
+        GL11.glTranslatef(-0.35F, 1.2F, 0F);
+    }
+
+    public static void translateToLegs() {
+        GL11.glTranslatef(0F, 0.5F, 0F);
+    }
+
+    public static void translateToBoots() {
+        GL11.glTranslatef(0F, 0.1F, 0F);
+    }
+
+    public static enum RenderType {
+
+        BODY,
+
+        HEAD;
+    }
+
     /**
      * Renders a single face with the specified icon, offset, and UV rotation.
      */
@@ -256,5 +304,58 @@ public class RenderUtils {
         }
 
         renderFace(t, dir, x, y, z, icon, offset, rotation, flip);
+    }
+
+    public static void renderOverlay(Tessellator t, IIcon icon) {
+        if (icon == null) return;
+
+        float min = 0f;
+        float max = 1f;
+        float eps = 0.001f;
+
+        float u0 = icon.getMinU();
+        float u1 = icon.getMaxU();
+        float v0 = icon.getMinV();
+        float v1 = icon.getMaxV();
+
+        t.startDrawingQuads();
+
+        // +Z (FRONT)
+        t.addVertexWithUV(min, min, max + eps, u0, v1);
+        t.addVertexWithUV(max, min, max + eps, u1, v1);
+        t.addVertexWithUV(max, max, max + eps, u1, v0);
+        t.addVertexWithUV(min, max, max + eps, u0, v0);
+
+        // -Z (BACK)
+        t.addVertexWithUV(max, min, min - eps, u0, v1);
+        t.addVertexWithUV(min, min, min - eps, u1, v1);
+        t.addVertexWithUV(min, max, min - eps, u1, v0);
+        t.addVertexWithUV(max, max, min - eps, u0, v0);
+
+        // -X (LEFT)
+        t.addVertexWithUV(min - eps, min, min, u0, v1);
+        t.addVertexWithUV(min - eps, min, max, u1, v1);
+        t.addVertexWithUV(min - eps, max, max, u1, v0);
+        t.addVertexWithUV(min - eps, max, min, u0, v0);
+
+        // +X (RIGHT)
+        t.addVertexWithUV(max + eps, min, max, u0, v1);
+        t.addVertexWithUV(max + eps, min, min, u1, v1);
+        t.addVertexWithUV(max + eps, max, min, u1, v0);
+        t.addVertexWithUV(max + eps, max, max, u0, v0);
+
+        // +Y (TOP)
+        t.addVertexWithUV(min, max + eps, max, u0, v1);
+        t.addVertexWithUV(max, max + eps, max, u1, v1);
+        t.addVertexWithUV(max, max + eps, min, u1, v0);
+        t.addVertexWithUV(min, max + eps, min, u0, v0);
+
+        // -Y (BOTTOM)
+        t.addVertexWithUV(min, min - eps, min, u0, v1);
+        t.addVertexWithUV(max, min - eps, min, u1, v1);
+        t.addVertexWithUV(max, min - eps, max, u1, v0);
+        t.addVertexWithUV(min, min - eps, max, u0, v0);
+
+        t.draw();
     }
 }

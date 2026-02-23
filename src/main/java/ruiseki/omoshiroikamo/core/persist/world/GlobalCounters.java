@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 
 /**
  * Global counter that is shared over all dimensions, persisted, and consistent over server and clients.
- *
+ * 
  * @author rubensworks
  */
 public class GlobalCounters extends WorldStorage {
@@ -23,16 +23,27 @@ public class GlobalCounters extends WorldStorage {
 
     /**
      * Get the next counter value for the given key.
-     *
+     * 
      * @param key the key for the counter.
      * @return The next counter value.
      */
     public synchronized int getNext(String key) {
+        // Get value from counter map
+        Integer nextObject = counters.get(key);
         int next = 0;
-        if (counters.containsKey(key)) {
-            next = counters.get(key);
+        if (nextObject != null) {
+            next = nextObject;
         }
-        counters.put(key, next + 1);
+
+        // Handle overflows
+        int incr = next + 1;
+        if (incr < 0) {
+            incr = 0;
+        }
+
+        // Store value for next call
+        counters.put(key, incr);
+
         return next;
     }
 

@@ -21,8 +21,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.core.block.property.AutoBlockProperty;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
@@ -30,6 +33,21 @@ import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
     // TODO: Change block meta to extendedFacing for all the tileentities
+
+    @AutoBlockProperty
+    public static final DirectionBlockProperty FACING = DirectionBlockProperty.facing(0b0011, dir -> switch (dir) {
+        case SOUTH -> 0;
+        case EAST -> 1;
+        case NORTH -> 2;
+        case WEST -> 3;
+        default -> 0;
+    }, meta -> switch (meta & 0b0011) {
+        case 0 -> SOUTH;
+        case 1 -> EAST;
+        case 2 -> NORTH;
+        case 3 -> WEST;
+        default -> NORTH;
+    });
 
     protected AbstractBlock(String name, Class<T> teClass, Material mat) {
         super(name, teClass, mat);
@@ -40,12 +58,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
 
     protected AbstractBlock(String name, Class<T> teClass) {
         this(name, teClass, Material.iron);
-    }
-
-    @Override
-    public void init() {
-        BlockStateHelpers.registerFacingProp(this.getClass());
-        super.init();
     }
 
     @Override

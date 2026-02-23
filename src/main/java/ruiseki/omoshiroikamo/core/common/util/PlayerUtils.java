@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.mojang.authlib.GameProfile;
 
-import ruiseki.omoshiroikamo.api.block.LookDirection;
+import ruiseki.omoshiroikamo.core.util.LookDirection;
 
 public class PlayerUtils {
 

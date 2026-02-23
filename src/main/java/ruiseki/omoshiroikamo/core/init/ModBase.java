@@ -18,6 +18,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
@@ -29,8 +30,6 @@ import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
 import ruiseki.omoshiroikamo.core.client.key.KeyRegistry;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.helper.LoggerHelper;
-import ruiseki.omoshiroikamo.core.modcompat.IMCHandler;
-import ruiseki.omoshiroikamo.core.modcompat.ModCompatLoader;
 import ruiseki.omoshiroikamo.core.network.PacketHandler;
 import ruiseki.omoshiroikamo.core.persist.world.WorldStorage;
 import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
@@ -72,8 +71,6 @@ public abstract class ModBase {
     // private final RecipeHandler recipeHandler;
     private final IKeyRegistry keyRegistry;
     private final PacketHandler packetHandler;
-    private final ModCompatLoader modCompatLoader;
-    private final IMCHandler imcHandler;
     private final ModuleManager moduleManager;
 
     private CreativeTabs defaultCreativeTab = null;
@@ -88,13 +85,9 @@ public abstract class ModBase {
         // this.recipeHandler = constructRecipeHandler();
         this.keyRegistry = new KeyRegistry();
         this.packetHandler = constructPacketHandler();
-        this.modCompatLoader = constructModCompatLoader();
-        this.imcHandler = constructIMCHandler();
         this.moduleManager = constructModuleManager();
 
         populateDefaultGenericReferences();
-        addInitListeners(getModCompatLoader());
-        loadModCompats(getModCompatLoader());
     }
 
     protected LoggerHelper constructLoggerHelper() {
@@ -109,14 +102,6 @@ public abstract class ModBase {
 
     protected PacketHandler constructPacketHandler() {
         return new PacketHandler(this);
-    }
-
-    protected ModCompatLoader constructModCompatLoader() {
-        return new ModCompatLoader(this);
-    }
-
-    protected IMCHandler constructIMCHandler() {
-        return new IMCHandler(this);
     }
 
     protected CommandMod constructBaseCommand() {
@@ -154,15 +139,6 @@ public abstract class ModBase {
         putGenericReference(REFKEY_DEBUGCONFIG, false);
         putGenericReference(REFKEY_CRASH_ON_INVALID_RECIPE, false);
         putGenericReference(REFKEY_CRASH_ON_MODCOMPAT_CRASH, false);
-    }
-
-    /**
-     * This is called only once to let the mod compatibilities register themselves.
-     *
-     * @param modCompatLoader The loader.
-     */
-    protected void loadModCompats(ModCompatLoader modCompatLoader) {
-
     }
 
     /**
@@ -327,6 +303,20 @@ public abstract class ModBase {
         registerSubCommand(baseCommand.getSubcommands());
         moduleManager.registerSubCommand(baseCommand.getSubcommands());
         event.registerServerCommand(baseCommand);
+    }
+
+    /**
+     * Override this, call super and annotate with {@link cpw.mods.fml.common.Mod.EventHandler}.
+     * Register the things that are related to when the server is starting.
+     *
+     * @param event The Forge event required for this.
+     */
+    @Mod.EventHandler
+    public void onAboutToStartEvent(FMLServerAboutToStartEvent event) {
+        moduleManager.onAboutToStartEvent(event);
+        for (WorldStorage worldStorage : worldStorages) {
+            worldStorage.onAboutToStartEvent(event);
+        }
     }
 
     /**

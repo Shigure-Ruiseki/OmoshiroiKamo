@@ -14,11 +14,11 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.api.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.common.capabilities.CapabilityEnergy;
+import ruiseki.omoshiroikamo.core.energy.EnergyStorage;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.core.network.packet.PacketEnergy;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 

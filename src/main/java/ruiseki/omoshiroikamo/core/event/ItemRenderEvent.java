@@ -24,10 +24,10 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ruiseki.omoshiroikamo.api.client.IBaubleRender;
-import ruiseki.omoshiroikamo.api.client.IItemJSONRender;
-import ruiseki.omoshiroikamo.api.client.RenderUtils;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
+import ruiseki.omoshiroikamo.core.client.IBaubleRender;
+import ruiseki.omoshiroikamo.core.client.IItemJSONRender;
+import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 
 @EventBusSubscriber

@@ -4,10 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,21 +25,21 @@ public abstract class PacketBase implements IMessage {
 
     /**
      * Encode this packet.
-     *
+     * 
      * @param output The byte array to encode to.
      */
-    public abstract void encode(ByteArrayDataOutput output);
+    public abstract void encode(ExtendedBuffer output);
 
     /**
      * Decode for this packet.
-     *
+     * 
      * @param input The byte array to decode from.
      */
-    public abstract void decode(ByteArrayDataInput input);
+    public abstract void decode(ExtendedBuffer input);
 
     /**
      * Actions for client-side.
-     *
+     * 
      * @param world  The world.
      * @param player The player. Can be null if this packet is asynchronous.
      */
@@ -52,7 +48,7 @@ public abstract class PacketBase implements IMessage {
 
     /**
      * Actions for server-side.
-     *
+     * 
      * @param world  The world.
      * @param player The player.
      */
@@ -60,16 +56,12 @@ public abstract class PacketBase implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf source) {
-        byte[] bytes = new byte[source.readableBytes()];
-        source.readBytes(bytes);
-        ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
-        decode(input);
+        decode(new ExtendedBuffer(source));
     }
 
     @Override
     public void toBytes(ByteBuf target) {
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        encode(output);
-        target.writeBytes(output.toByteArray());
+        encode(new ExtendedBuffer(target));
     }
+
 }

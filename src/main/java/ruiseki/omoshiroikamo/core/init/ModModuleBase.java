@@ -7,6 +7,7 @@ import net.minecraft.command.ICommand;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
@@ -50,6 +51,8 @@ public abstract class ModModuleBase {
     public abstract void postInit(FMLPostInitializationEvent event);
 
     public void onServerStarting(FMLServerStartingEvent event) {};
+
+    public void onAboutToStartEvent(FMLServerAboutToStartEvent event) {};
 
     public void onServerStarted(FMLServerStartedEvent event) {};
 

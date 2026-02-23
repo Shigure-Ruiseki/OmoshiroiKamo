@@ -160,7 +160,7 @@ public class SimpleInventory implements INBTInventory {
      * @param tag  The NBT tag name where the info is located.
      */
     public void readFromNBT(NBTTagCompound data, String tag) {
-        NBTTagList nbttaglist = data.getTagList(tag, MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+        NBTTagList nbttaglist = data.getTagList(tag, MinecraftHelpers.NBTTag_Types.NBTTagCompound.getId());
 
         for (int j = 0; j < contents.length; ++j) contents[j] = null;
 

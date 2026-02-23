@@ -17,9 +17,7 @@ import ruiseki.omoshiroikamo.module.ids.common.cableNet.IDsNetworkTickHandler;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKeys;
 import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypes;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
-import ruiseki.omoshiroikamo.module.ids.common.init.IDsCapabilities;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
-import ruiseki.omoshiroikamo.module.ids.common.persist.world.NetworkWorldStorage;
 
 public class IDsModule extends ModModuleBase {
 
@@ -29,7 +27,6 @@ public class IDsModule extends ModModuleBase {
 
     public IDsModule() {
         super(OmoshiroiKamo.instance);
-        registerWorldStorage(NetworkWorldStorage.getInstance(this.getMod()));
         registerWorldStorage(globalCounters = new GlobalCounters(this.getMod()));
     }
 
@@ -58,12 +55,9 @@ public class IDsModule extends ModModuleBase {
 
         CablePartRegistry.init();
 
-        IDsCapabilities.preInit();
-
         IDsBlocks.preInit();
         IDsItems.preInit();
         IDsCreative.preInit();
-
     }
 
     @Override

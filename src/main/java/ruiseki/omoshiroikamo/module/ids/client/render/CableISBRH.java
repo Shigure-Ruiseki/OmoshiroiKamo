@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
-import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
+import ruiseki.omoshiroikamo.module.ids.common.cableNet.cable.BlockCable;
 
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = false)

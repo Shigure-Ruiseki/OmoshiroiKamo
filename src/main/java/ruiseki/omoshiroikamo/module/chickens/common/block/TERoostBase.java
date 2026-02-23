@@ -9,8 +9,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.block.SlotDefinition;
-import ruiseki.omoshiroikamo.api.client.IProgressTile;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -18,7 +16,9 @@ import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
+import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
+import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
 

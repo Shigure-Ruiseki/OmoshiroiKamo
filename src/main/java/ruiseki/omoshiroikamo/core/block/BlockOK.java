@@ -21,18 +21,23 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
+import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
+import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.api.block.ICustomCollision;
+import lombok.experimental.Delegate;
+import ruiseki.omoshiroikamo.core.block.property.BlockPropertyProviderComponent;
+import ruiseki.omoshiroikamo.core.block.property.IBlockPropertyProvider;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
-public class BlockOK extends Block {
+public class BlockOK extends Block implements IBlockPropertyProvider {
 
     protected final Class<? extends TileEntityOK> teClass;
     protected final String name;
@@ -43,6 +48,9 @@ public class BlockOK extends Block {
     protected float baseMaxX = 1f;
     protected float baseMaxY = 1f;
     protected float baseMaxZ = 1f;
+
+    @Delegate(types = IBlockPropertyProvider.class)
+    private final IBlockPropertyProvider propertyComponent = new BlockPropertyProviderComponent(this);
 
     protected BlockOK(String name) {
         this(name, null, new Material(MapColor.ironColor));
@@ -64,6 +72,7 @@ public class BlockOK extends Block {
         setBlockName(name);
         setStepSound(Block.soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
+        registerProperties();
     }
 
     public void init() {
@@ -165,6 +174,8 @@ public class BlockOK extends Block {
         }
         return null;
     }
+
+    // Collision
 
     // Because the vanilla method takes floats...
     public void setBlockBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
@@ -331,5 +342,18 @@ public class BlockOK extends Block {
         this.baseMaxY = maxY;
         this.baseMaxZ = maxZ;
         this.setBlockBounds(baseMinX, baseMinY, baseMinZ, baseMaxX, baseMaxY, baseMaxZ);
+    }
+
+    // BlockSate
+    public BlockState getBlockState(IBlockAccess world, int x, int y, int z) {
+        return BlockPropertyRegistry.getBlockState(world, x, y, z);
+    }
+
+    public BlockState getBlockState(IBlockAccess world, BlockPos pos) {
+        return BlockPropertyRegistry.getBlockState(world, pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public BlockState getBlockState(ItemStack stack) {
+        return BlockPropertyRegistry.getBlockState(stack);
     }
 }

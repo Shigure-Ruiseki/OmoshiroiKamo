@@ -33,6 +33,8 @@ import ruiseki.omoshiroikamo.core.init.ModBase;
  */
 public class PacketHandler {
 
+    private static final int MAX_CHANNELNAME_LENGTH = 20;
+
     private static Map<Pair<String, IDType>, Integer> ID_COUNTER = new HashMap<Pair<String, IDType>, Integer>();
 
     private SimpleNetworkWrapper networkWrapper = null;
@@ -42,20 +44,22 @@ public class PacketHandler {
 
     private HandlerServer handlerServer;
 
-    private ModBase mod;
-    private String modID;
+    private final ModBase mod;
 
     public PacketHandler(ModBase mod) {
         this.mod = mod;
     }
 
-    public PacketHandler(String modID) {
-        this.modID = modID;
-    }
-
     public void init() {
         if (networkWrapper == null) {
-            networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(modID != null ? modID : mod.getModId());
+            networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(
+                mod.getModId()
+                    .substring(
+                        0,
+                        Math.min(
+                            mod.getModId()
+                                .length(),
+                            MAX_CHANNELNAME_LENGTH)));
             if (MinecraftHelpers.isClientSide()) {
                 handlerClient = new HandlerClient();
             }
@@ -69,7 +73,7 @@ public class PacketHandler {
      * @param packetType The class of the packet.
      */
     public void register(Class<? extends PacketBase> packetType) {
-        int discriminator = getNewId(modID != null ? modID : mod.getModId(), IDType.PACKET);
+        int discriminator = getNewId(mod.getModId(), IDType.PACKET);
         if (MinecraftHelpers.isClientSide()) {
             networkWrapper.registerMessage(handlerClient, packetType, discriminator, Side.CLIENT);
         }

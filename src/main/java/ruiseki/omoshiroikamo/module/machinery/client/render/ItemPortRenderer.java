@@ -9,7 +9,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import ruiseki.omoshiroikamo.api.client.RenderUtils;
+import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 
 public class ItemPortRenderer implements IItemRenderer {

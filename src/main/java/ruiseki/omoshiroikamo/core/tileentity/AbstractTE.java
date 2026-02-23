@@ -15,12 +15,10 @@ import com.cleanroommc.modularui.factory.GuiFactories;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Delegate;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.block.RedstoneMode;
-import ruiseki.omoshiroikamo.api.client.IProgressTile;
+import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -38,7 +36,8 @@ import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
  * <li>Interaction with ItemStacks for saving/loading</li>
  * </ul>
  */
-public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.ITickingTile, IWailaTileInfoProvider {
+public abstract class AbstractTE extends AbstractTickingTE
+    implements TileEntityOK.ITickingTile, IWailaTileInfoProvider {
 
     /** Forces client-side update to render changes. */
     protected boolean forceClientUpdate = true;
@@ -75,12 +74,6 @@ public abstract class AbstractTE extends TileEntityOK implements TileEntityOK.IT
 
     /** Flag indicating that neighbor blocks need notification. */
     protected boolean notifyNeighbours = false;
-
-    /** NBT tag name for inventory data. */
-    public static String INVENTORY_TAG = "inventory";
-
-    @Delegate
-    protected final ITickingTile tickingTileComponent = new TickingTileComponent(this);
 
     private final boolean isProgressTile;
     protected int lastProgressScaled = -1;
