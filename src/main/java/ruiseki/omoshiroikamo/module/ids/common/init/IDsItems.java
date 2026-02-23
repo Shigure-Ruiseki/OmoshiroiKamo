@@ -7,7 +7,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.ids.common.item.ItemVariableCard;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.interfacebus.ItemCraftingInterface;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.block.ItemBlockReader;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.fluid.ItemFluidReader;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.inventory.ItemInventoryReader;
@@ -40,7 +39,6 @@ public enum IDsItems {
     ITEM_EXPORTER(new ItemItemExporter()),
 
     STORAGE_TERMINAL(new ItemStorageTerminal()),
-    CRAFTING_INTERFACE(new ItemCraftingInterface()),
 
     REDSTONE_READER(new ItemRedstoneReader()),
     BLOCK_READER(new ItemBlockReader()),

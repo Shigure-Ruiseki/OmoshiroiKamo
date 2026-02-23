@@ -1,25 +1,19 @@
 package ruiseki.omoshiroikamo.module.ids.common.block.cable;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -44,8 +38,7 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.core.block.ICustomCollision;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.block.ICollidable;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
@@ -56,7 +49,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.IRedston
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyPart;
 
 public class TECable extends AbstractTE
-    implements ICable, ICustomCollision, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
+    implements ICable, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
 
     @NBTPersist
     private byte connectionMask;
@@ -370,53 +363,59 @@ public class TECable extends AbstractTE
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, ForgeDirection side,
         float hitX, float hitY, float hitZ) {
+        ICollidable.RayTraceResult<ForgeDirection> result = ((BlockCable) getBlock())
+            .doRayTrace(worldObj, xCoord, yCoord, zCoord, player);
+
+        if (result == null || result.getCollisionType() == null) {
+            return false;
+        }
+
+        ForgeDirection positionHit = result.getPositionHit();
         ItemStack held = player.getHeldItem();
+        if (!worldObj.isRemote) {
+            if (result.getCollisionType() == BlockCable.PARTS_COMPONENT) {
 
-        CableHit hit = this.rayTraceCable(player);
-        if (hit != null) {
-            if (!worldObj.isRemote) {
-                if (hit.type == CableHit.Type.CONNECTION) {
-                    if (held != null && held.getItem() instanceof IToolHammer hammer) {
-                        blockSide(hit.side);
-                        hammer.toolUsed(held, player, x, y, z);
-                        return true;
+                ICablePart part = getPart(positionHit);
+
+                if (held != null && held.getItem() instanceof IToolHammer hammer) {
+                    if (!hammer.isUsable(held, player, xCoord, yCoord, zCoord)) {
+                        return false;
                     }
-                    return false;
+
+                    ItemStack drop = part.getItemStack();
+                    if (drop != null) {
+                        dropStack(worldObj, xCoord, yCoord, zCoord, drop);
+                    }
+
+                    removePart(positionHit);
+                    hammer.toolUsed(held, player, xCoord, yCoord, zCoord);
+                    return true;
                 }
 
-                if (hit.type == CableHit.Type.CORE) {
-                    if (held != null && held.getItem() instanceof IToolHammer hammer) {
-                        unblockSide(side);
-                        hammer.toolUsed(held, player, x, y, z);
-                        return true;
-                    }
-                }
-
-                if (hit.type == CableHit.Type.PART) {
-                    ICablePart part = getPart(hit.side);
-                    if (held != null && held.getItem() instanceof IToolHammer hammer) {
-                        if (!hammer.isUsable(held, player, x, y, z)) {
-                            return false;
-                        }
-
-                        ItemStack drop = part.getItemStack();
-                        if (drop != null) {
-                            dropStack(world, xCoord, yCoord, zCoord, drop);
-                        }
-
-                        removePart(hit.side);
-                        hammer.toolUsed(held, player, x, y, z);
-                        return true;
-                    }
-
-                    if (hasCore()) {
-                        GuiFactories.sidedTileEntity()
-                            .open(player, x, y, z, hit.side);
-                        return true;
-                    }
-                }
+                GuiFactories.sidedTileEntity()
+                    .open(player, xCoord, yCoord, zCoord, positionHit);
+                return true;
             }
 
+            if (result.getCollisionType() == BlockCable.CONNECTIONS_COMPONENT) {
+
+                if (held != null && held.getItem() instanceof IToolHammer hammer) {
+                    blockSide(positionHit);
+                    hammer.toolUsed(held, player, xCoord, yCoord, zCoord);
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (result.getCollisionType() == BlockCable.CENTER_COMPONENT) {
+
+                if (held != null && held.getItem() instanceof IToolHammer hammer) {
+                    unblockSide(positionHit);
+                    hammer.toolUsed(held, player, xCoord, yCoord, zCoord);
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -540,59 +539,60 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public Iterable<AxisAlignedBB> getSelectedBoundingBoxesFromPool(World world, int x, int y, int z, Entity entity,
-        boolean visual) {
-
-        if (!(entity instanceof EntityPlayer player) || !visual) {
-            return getCableParts();
-        }
-
-        CableHit hit = rayTraceCable(player);
-        if (hit != null) {
-            return Collections.singletonList(hit.box);
-        }
-
-        return getCableParts();
-    }
-
-    @Override
-    public void addCollidingBlockToList(World w, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> out,
-        Entity e) {
-        for (final AxisAlignedBB bx : this.getSelectedBoundingBoxesFromPool(w, x, y, z, e, false)) {
-            out.add(AxisAlignedBB.getBoundingBox(bx.minX, bx.minY, bx.minZ, bx.maxX, bx.maxY, bx.maxZ));
-        }
-    }
-
-    @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
 
         EntityPlayer player = accessor.getPlayer();
-        // HIT INFO
-        CableHit hit = rayTraceCable(player);
-        if (hit != null) {
-            switch (hit.type) {
-                case PART -> tooltip.add("Part: " + hit.part.getId() + " (" + hit.side + ")");
-                case CONNECTION -> tooltip.add("Connection: " + hit.side);
-                case CORE -> tooltip.add("Core cable");
+
+        if (player != null) {
+
+            ICollidable.RayTraceResult<ForgeDirection> result = ((BlockCable) getBlock())
+                .doRayTrace(worldObj, xCoord, yCoord, zCoord, player);
+
+            if (result != null && result.getCollisionType() != null) {
+
+                ForgeDirection side = result.getPositionHit();
+
+                if (result.getCollisionType() == BlockCable.PARTS_COMPONENT) {
+
+                    ICablePart part = getPart(side);
+                    if (part != null) {
+                        tooltip.add("Part: " + part.getId() + " (" + side + ")");
+                    }
+
+                } else if (result.getCollisionType() == BlockCable.CONNECTIONS_COMPONENT) {
+
+                    tooltip.add("Connection: " + side);
+
+                } else if (result.getCollisionType() == BlockCable.CENTER_COMPONENT) {
+
+                    tooltip.add("Core cable");
+                }
             }
         }
+
         tooltip.add(getPos().toString());
 
-        if (accessor.getPlayer()
-            .isSneaking()) {
-            // NETWORK INFO
+        if (player != null && player.isSneaking()) {
+
             NBTTagCompound tag = accessor.getNBTData();
-            int networkCount = tag.getInteger("networkCount");
+            if (tag != null && tag.hasKey("networkCount")) {
 
-            if (networkCount == 0) {
-                tooltip.add("Networks: none");
-                return;
-            }
+                int networkCount = tag.getInteger("networkCount");
 
-            tooltip.add("Networks: " + networkCount);
-            for (int i = 0; i < networkCount; i++) {
-                tooltip.add(" - " + tag.getString("networkName" + i));
+                if (networkCount <= 0) {
+                    tooltip.add("Networks: none");
+                    return;
+                }
+
+                tooltip.add("Networks: " + networkCount);
+
+                for (int i = 0; i < networkCount; i++) {
+                    String key = "networkName" + i;
+                    if (tag.hasKey(key)) {
+                        tooltip.add(" - " + tag.getString(key));
+                    }
+                }
             }
         }
     }
@@ -615,123 +615,6 @@ public class TECable extends AbstractTE
                 i++;
             }
         }
-    }
-
-    private AxisAlignedBB getCoreBox() {
-        float min = 6f / 16f;
-        float max = 10f / 16f;
-        return AxisAlignedBB.getBoundingBox(min, min, min, max, max, max);
-    }
-
-    private AxisAlignedBB getConnectionBox(ForgeDirection dir) {
-        float min = 6f / 16f;
-        float max = 10f / 16f;
-
-        return switch (dir) {
-            case WEST -> AxisAlignedBB.getBoundingBox(0, min, min, min, max, max);
-            case EAST -> AxisAlignedBB.getBoundingBox(max, min, min, 1, max, max);
-            case DOWN -> AxisAlignedBB.getBoundingBox(min, 0, min, max, min, max);
-            case UP -> AxisAlignedBB.getBoundingBox(min, max, min, max, 1, max);
-            case SOUTH -> AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1);
-            default -> AxisAlignedBB.getBoundingBox(min, min, 0, max, max, min);
-        };
-    }
-
-    public Iterable<AxisAlignedBB> getCableParts() {
-        List<AxisAlignedBB> parts = new ArrayList<>();
-
-        float min = 6f / 16f;
-        float max = 10f / 16f;
-
-        // core
-        if (hasCore()) {
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, min, max, max, max));
-        }
-
-        if (hasVisualConnection(ForgeDirection.WEST))
-            parts.add(AxisAlignedBB.getBoundingBox(0f, min, min, min, max, max));
-
-        if (hasVisualConnection(ForgeDirection.EAST))
-            parts.add(AxisAlignedBB.getBoundingBox(max, min, min, 1f, max, max));
-
-        if (hasVisualConnection(ForgeDirection.DOWN))
-            parts.add(AxisAlignedBB.getBoundingBox(min, 0f, min, max, min, max));
-
-        if (hasVisualConnection(ForgeDirection.UP))
-            parts.add(AxisAlignedBB.getBoundingBox(min, max, min, max, 1f, max));
-
-        if (hasVisualConnection(ForgeDirection.NORTH))
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, 0f, max, max, min));
-
-        if (hasVisualConnection(ForgeDirection.SOUTH))
-            parts.add(AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1f));
-
-        for (ICablePart part : this.parts.values()) {
-            AxisAlignedBB bb = part.getCollisionBox();
-            if (bb != null) parts.add(bb);
-        }
-
-        return parts;
-    }
-
-    public CableHit rayTraceCable(EntityPlayer player) {
-        Vec3 start = PlayerUtils.getEyePosition(player);
-        Vec3 end = start
-            .addVector(player.getLookVec().xCoord * 5, player.getLookVec().yCoord * 5, player.getLookVec().zCoord * 5);
-
-        CableHit best = null;
-        double bestDist = Double.MAX_VALUE;
-
-        // PARTS
-        for (Map.Entry<ForgeDirection, ICablePart> e : parts.entrySet()) {
-            AxisAlignedBB bb = e.getValue()
-                .getCollisionBox();
-            if (bb == null) continue;
-
-            AxisAlignedBB wbb = bb.getOffsetBoundingBox(xCoord, yCoord, zCoord);
-            MovingObjectPosition mop = wbb.calculateIntercept(start, end);
-
-            if (mop != null) {
-                double d = mop.hitVec.distanceTo(start);
-                if (d < bestDist) {
-                    bestDist = d;
-                    best = new CableHit(CableHit.Type.PART, e.getKey(), e.getValue(), bb, mop.hitVec);
-                }
-            }
-        }
-
-        // CONNECTIONS
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            if (!hasVisualConnection(dir)) continue;
-
-            AxisAlignedBB bb = getConnectionBox(dir);
-            AxisAlignedBB wbb = bb.getOffsetBoundingBox(xCoord, yCoord, zCoord);
-            MovingObjectPosition mop = wbb.calculateIntercept(start, end);
-
-            if (mop != null) {
-                double d = mop.hitVec.distanceTo(start);
-                if (d < bestDist) {
-                    bestDist = d;
-                    best = new CableHit(CableHit.Type.CONNECTION, dir, null, bb, mop.hitVec);
-                }
-            }
-        }
-
-        // CORE
-        if (hasCore()) {
-            AxisAlignedBB core = getCoreBox();
-            AxisAlignedBB wcore = core.getOffsetBoundingBox(xCoord, yCoord, zCoord);
-            MovingObjectPosition mop = wcore.calculateIntercept(start, end);
-
-            if (mop != null) {
-                double d = mop.hitVec.distanceTo(start);
-                if (d < bestDist) {
-                    best = new CableHit(CableHit.Type.CORE, null, null, core, mop.hitVec);
-                }
-            }
-        }
-
-        return best;
     }
 
     @Override
@@ -794,28 +677,4 @@ public class TECable extends AbstractTE
     private static byte bit(ForgeDirection dir) {
         return (byte) (1 << dir.ordinal());
     }
-
-    public static class CableHit {
-
-        enum Type {
-            PART,
-            CONNECTION,
-            CORE
-        }
-
-        final Type type;
-        final ForgeDirection side;
-        final ICablePart part;
-        final AxisAlignedBB box;
-        final Vec3 hitVec;
-
-        CableHit(Type type, ForgeDirection side, ICablePart part, AxisAlignedBB box, Vec3 hitVec) {
-            this.type = type;
-            this.side = side;
-            this.part = part;
-            this.box = box;
-            this.hitVec = hitVec;
-        }
-    }
-
 }

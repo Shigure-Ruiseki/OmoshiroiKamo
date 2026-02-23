@@ -9,7 +9,6 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.CraftingNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
 
@@ -21,13 +20,11 @@ public class IDsItemSlotSH extends SyncHandler {
     public static final int RESP_MOUSE = 100;
 
     public final ItemNetwork itemNetwork;
-    public final CraftingNetwork craftingNetwork;
     public final StorageTerminal terminal;
 
     public IDsItemSlotSH(StorageTerminal terminal) {
         this.terminal = terminal;
         this.itemNetwork = terminal.getItemNetwork();
-        this.craftingNetwork = terminal.getCraftingNetwork();
     }
 
     public void requestClick(ItemStack slotStack, ItemStack cursorStack, int slotAmount, boolean toInventory) {

@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.interfacebus.CraftingInterface;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.block.BlockReader;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.fluid.FluidReader;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.inventory.InventoryReader;
@@ -56,7 +55,6 @@ public class CablePartRegistry {
         CablePartRegistry.register("item_filter_interface", ItemFilterInterface::new);
 
         CablePartRegistry.register("storage_terminal", StorageTerminal::new);
-        CablePartRegistry.register("crafting_interface", CraftingInterface::new);
 
         CablePartRegistry.register("redstone_reader", RedstoneReader::new);
         CablePartRegistry.register("block_reader", BlockReader::new);

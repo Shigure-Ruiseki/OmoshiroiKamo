@@ -1,13 +1,9 @@
 package ruiseki.omoshiroikamo.module.ids.common.block.cable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,226 +26,36 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.ids.ICable;
-import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.CollidableComponent;
 import ruiseki.omoshiroikamo.core.block.ICollidable;
 import ruiseki.omoshiroikamo.core.block.ICollidableParent;
 import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
-import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.helper.BlockHelpers;
+import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.ids.client.render.RenderCable;
-import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.IRedstoneLogic;
 
 public class BlockCable extends BlockOK
     implements ICollidable<ForgeDirection>, ICollidableParent, IWailaBlockInfoProvider {
 
-    public static final float BLOCK_HARDNESS = 3.0F;
-    public static final Material BLOCK_MATERIAL = Material.glass;
+    protected static final float BLOCK_HARDNESS = 3.0F;
+    protected static final Material BLOCK_MATERIAL = Material.glass;
 
-    private static final List<IComponent<ForgeDirection, BlockCable>> COLLIDABLE_COMPONENTS = Lists.newLinkedList();
-
-    private static final IComponent<ForgeDirection, BlockCable> CENTER_COMPONENT = new IComponent<>() {
-
-        @Override
-        public Collection<ForgeDirection> getPossiblePositions() {
-            return Collections.singletonList(null);
-        }
-
-        @Override
-        public int getBoundsCount(ForgeDirection position) {
-            return 1;
-        }
-
-        @Override
-        public boolean isActive(BlockCable block, World world, int x, int y, int z, ForgeDirection position) {
-            TileEntity te = world.getTileEntity(x, y, z);
-            return te instanceof TECable cable && cable.hasCore();
-        }
-
-        @Override
-        public List<AxisAlignedBB> getBounds(BlockCable block, World world, int x, int y, int z,
-            ForgeDirection position) {
-
-            float min = 6f / 16f;
-            float max = 10f / 16f;
-
-            AxisAlignedBB box = AxisAlignedBB.getBoundingBox(min, min, min, max, max, max);
-
-            return Collections.singletonList(box);
-        }
-
-        @Override
-        public ItemStack getPickBlock(World world, int x, int y, int z, ForgeDirection position) {
-            return IDsBlocks.CABLE.newItemStack();
-        }
-
-        @Override
-        public boolean destroy(World world, int x, int y, int z, ForgeDirection position, EntityPlayer player) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (!(te instanceof TECable cable)) return false;
-
-            if (!player.capabilities.isCreativeMode) {
-
-                // Drop all parts
-                for (ICablePart part : cable.getParts()) {
-                    if (part != null) {
-                        ItemStack stack = part.getItemStack();
-                        if (stack != null) {
-                            TECable.dropStack(world, x, y, z, stack);
-                        }
-                    }
-                }
-
-                // Drop core
-                ItemStack core = IDsBlocks.CABLE.newItemStack();
-                if (core != null) {
-                    TECable.dropStack(world, x, y, z, core);
-                }
-            }
-
-            // Remove block AFTER drop
-            world.setBlockToAir(x, y, z);
-
-            return true;
-        }
-    };
-
-    private static final IComponent<ForgeDirection, BlockCable> CONNECTIONS_COMPONENT = new IComponent<>() {
-
-        @Override
-        public Collection<ForgeDirection> getPossiblePositions() {
-            return Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
-        }
-
-        @Override
-        public int getBoundsCount(ForgeDirection position) {
-            return 1;
-        }
-
-        @Override
-        public boolean isActive(BlockCable block, World world, int x, int y, int z, ForgeDirection position) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            return te instanceof TECable cable && cable.isConnected(position);
-        }
-
-        @Override
-        public List<AxisAlignedBB> getBounds(BlockCable block, World world, int x, int y, int z, ForgeDirection dir) {
-
-            float min = 6f / 16f;
-            float max = 10f / 16f;
-
-            AxisAlignedBB box = switch (dir) {
-                case DOWN -> AxisAlignedBB.getBoundingBox(min, 0, min, max, min, max);
-                case UP -> AxisAlignedBB.getBoundingBox(min, max, min, max, 1, max);
-                case NORTH -> AxisAlignedBB.getBoundingBox(min, min, 0, max, max, min);
-                case SOUTH -> AxisAlignedBB.getBoundingBox(min, min, max, max, max, 1);
-                case WEST -> AxisAlignedBB.getBoundingBox(0, min, min, min, max, max);
-                case EAST -> AxisAlignedBB.getBoundingBox(max, min, min, 1, max, max);
-                default -> null;
-            };
-
-            return box == null ? Collections.emptyList() : Collections.singletonList(box);
-        }
-
-        @Override
-        public ItemStack getPickBlock(World world, int x, int y, int z, ForgeDirection position) {
-            return IDsBlocks.CABLE.newItemStack();
-        }
-
-        @Override
-        public boolean destroy(World world, int x, int y, int z, ForgeDirection position, EntityPlayer player) {
-            return false;
-        }
-    };
-
-    private static final IComponent<ForgeDirection, BlockCable> PARTS_COMPONENT = new IComponent<>() {
-
-        @Override
-        public Collection<ForgeDirection> getPossiblePositions() {
-            return Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
-        }
-
-        @Override
-        public int getBoundsCount(ForgeDirection position) {
-            return 1;
-        }
-
-        @Override
-        public boolean isActive(BlockCable block, World world, int x, int y, int z, ForgeDirection position) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            return te instanceof TECable cable && cable.getPart(position) != null;
-        }
-
-        @Override
-        public List<AxisAlignedBB> getBounds(BlockCable block, World world, int x, int y, int z,
-            ForgeDirection position) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (!(te instanceof TECable cable)) return Collections.emptyList();
-
-            ICablePart part = cable.getPart(position);
-            if (part == null) return Collections.emptyList();
-
-            AxisAlignedBB box = part.getCollisionBox();
-            return box == null ? Collections.emptyList() : Collections.singletonList(box);
-        }
-
-        @Override
-        public ItemStack getPickBlock(World world, int x, int y, int z, ForgeDirection position) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (!(te instanceof TECable cable)) return null;
-
-            ICablePart part = cable.getPart(position);
-            return part != null ? part.getItemStack() : null;
-        }
-
-        @Override
-        public boolean destroy(World world, int x, int y, int z, ForgeDirection side, EntityPlayer player) {
-
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (!(te instanceof TECable cable)) return false;
-
-            ICablePart part = cable.getPart(side);
-            if (part == null) return false;
-
-            if (!player.capabilities.isCreativeMode) {
-                ItemStack stack = part.getItemStack();
-                if (stack != null) {
-                    TECable.dropStack(world, x, y, z, stack);
-                }
-            }
-
-            cable.removePart(side);
-            cable.updateConnections();
-
-            // Nếu không còn gì → xoá block
-            if (!cable.hasCore() && cable.getParts()
-                .isEmpty()) {
-                world.setBlockToAir(x, y, z);
-            }
-
-            return true;
-        }
-    };
-
+    protected static final List<IComponent<ForgeDirection, BlockCable>> COLLIDABLE_COMPONENTS = Lists.newLinkedList();
+    protected static final IComponent<ForgeDirection, BlockCable> CENTER_COMPONENT = new CollidableComponentCableCenter();
+    protected static final IComponent<ForgeDirection, BlockCable> CONNECTIONS_COMPONENT = new CollidableComponentCableConnections();
+    protected static final IComponent<ForgeDirection, BlockCable> PARTS_COMPONENT = new CollidableComponentParts();
     static {
         COLLIDABLE_COMPONENTS.add(PARTS_COMPONENT);
         COLLIDABLE_COMPONENTS.add(CONNECTIONS_COMPONENT);
         COLLIDABLE_COMPONENTS.add(CENTER_COMPONENT);
     }
-
     @Delegate
-    public final CollidableComponent<ForgeDirection, BlockCable> collision = new CollidableComponent<>(
+    protected final CollidableComponent<ForgeDirection, BlockCable> collision = new CollidableComponent<>(
         this,
         COLLIDABLE_COMPONENTS);
 
@@ -257,23 +63,20 @@ public class BlockCable extends BlockOK
         super(ModObject.blockCable.unlocalisedName, TECable.class, BLOCK_MATERIAL);
         setHardness(BLOCK_HARDNESS);
         setStepSound(soundTypeStone);
+        setBlockTextureName("ids/cable");
     }
 
     @Override
     protected void registerComponent() {
         super.registerComponent();
-        BlockHelpers.bindTileEntitySpecialRenderer(TECable.class, this);
+        if (MinecraftHelpers.isClientSide()) {
+            BlockHelpers.bindTileEntitySpecialRenderer(TECable.class, this);
+        }
     }
 
     @Override
     protected Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockCable.class;
-    }
-
-    @Override
-    public void registerBlockIcons(IIconRegister reg) {
-        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + "ids/cable");
-        IconRegistry.addIcon("energy_input_bus", reg.registerIcon(LibResources.PREFIX_MOD + "ids/energy_input_bus"));
     }
 
     @Override

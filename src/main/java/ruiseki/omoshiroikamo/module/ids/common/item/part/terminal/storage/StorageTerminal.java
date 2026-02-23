@@ -33,8 +33,6 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPart;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.CraftingNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.crafting.ICraftingNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.IItemNet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
@@ -77,7 +75,7 @@ public class StorageTerminal extends AbstractPart {
 
     @Override
     public List<Class<? extends ICableNode>> getBaseNodeTypes() {
-        return Arrays.asList(IItemNet.class, IEnergyNet.class, ICraftingNet.class);
+        return Arrays.asList(IItemNet.class, IEnergyNet.class);
     }
 
     @Override
@@ -143,10 +141,6 @@ public class StorageTerminal extends AbstractPart {
 
     public ItemNetwork getItemNetwork() {
         return (ItemNetwork) getCable().getNetwork(IItemNet.class);
-    }
-
-    public CraftingNetwork getCraftingNetwork() {
-        return (CraftingNetwork) getCable().getNetwork(ICraftingNet.class);
     }
 
     public SortType getSortType() {
