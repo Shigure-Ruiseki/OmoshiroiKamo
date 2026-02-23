@@ -203,6 +203,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         boolean hasEnergy = plr.capabilities.isCreativeMode || hasEnergyForCrafting();
 
         // Check flight first, explicitly disable if energy is insufficient
+        updateModifierHandler();
         updatePlayerFlight();
         if (!hasEnergy) return;
 
@@ -314,8 +315,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         return 0.0F;
     }
 
-    @Override
-    public boolean canStartCrafting() {
+    private void updateModifierHandler() {
         List<IModifierBlock> mods = new ArrayList<>();
         for (BlockPos pos : this.modifiers) {
             Block block = pos.getBlock();
@@ -326,7 +326,12 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
         modifierHandler.setModifiers(mods);
         modifierHandler.calculateAttributeMultipliers();
-        return super.canStartCrafting();
+    }
+
+    @Override
+    public boolean canStartCrafting() {
+        updateModifierHandler();
+        return isRedstoneActive() && isFormed && hasEnergyForCrafting();
     }
 
     @Override

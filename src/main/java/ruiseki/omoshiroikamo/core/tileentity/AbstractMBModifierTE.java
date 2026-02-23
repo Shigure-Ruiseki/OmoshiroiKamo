@@ -295,6 +295,11 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
         return isCrafting();
     }
 
+    @Override
+    protected boolean canContinueCrafting() {
+        return isFormed && super.canContinueCrafting();
+    }
+
     /**
      * Processes tasks only if the multiblock structure is formed.
      *
@@ -303,7 +308,12 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      */
     @Override
     public boolean processTasks(boolean redstone) {
+        if (this.worldObj.isRemote) {
+            return super.processTasks(redstone);
+        }
+
         if (!isFormed) {
+            syncCraftingState();
             return false;
         }
 

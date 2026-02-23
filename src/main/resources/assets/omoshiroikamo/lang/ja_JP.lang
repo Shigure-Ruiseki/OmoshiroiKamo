@@ -1090,6 +1090,7 @@ tooltip.beacon.effect.jump_boost=跳躍力上昇
 tooltip.beacon.effect.night_vision=暗視
 tooltip.beacon.effect.water_breathing=水中呼吸
 tooltip.beacon.effect.fire_resistance=火炎耐性
+tooltip.beacon.effect.flight=クリエイティブ飛行
 tooltip.beacon.range=効果範囲:
 tooltip.beacon.range.horizontal=横方向
 tooltip.beacon.range.upward=上方向
