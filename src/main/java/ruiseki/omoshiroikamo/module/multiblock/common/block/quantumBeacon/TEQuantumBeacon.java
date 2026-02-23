@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.block.CraftingState;
 import ruiseki.omoshiroikamo.api.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
@@ -110,6 +111,9 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         // Only disable flight when the structure breaks
         if (wasFormed && !isFormed) {
             disablePlayerFlight();
+        }
+        if (isFormed) {
+            updatePlayerFlight();
         }
     }
 
@@ -261,7 +265,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
         boolean hasFlightModifier = modifierHandler
             .hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
-        boolean shouldHaveFlight = hasFlightModifier && hasEnergyForCrafting();
+        boolean shouldHaveFlight = hasFlightModifier && getCraftingState() == CraftingState.RUNNING;
 
         // Grant flight if Beacon should provide it
         if (shouldHaveFlight) {
@@ -332,6 +336,12 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     public boolean canStartCrafting() {
         updateModifierHandler();
         return isRedstoneActive() && isFormed && hasEnergyForCrafting();
+    }
+
+    @Override
+    protected boolean canContinueCrafting() {
+        updateModifierHandler();
+        return super.canContinueCrafting();
     }
 
     @Override

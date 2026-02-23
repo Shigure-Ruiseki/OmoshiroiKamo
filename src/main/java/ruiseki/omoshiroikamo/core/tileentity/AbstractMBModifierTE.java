@@ -194,15 +194,26 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
 
     @Override
     protected CraftingState updateCraftingState() {
-        if (!isCrafting()) {
-            return CraftingState.IDLE;
-        }
-
-        if (!canContinueCrafting() || (!isCrafting() && !canStartCrafting())) {
+        if (!isFormed) {
             return CraftingState.ERROR;
         }
 
-        return CraftingState.RUNNING;
+        if (!isRedstoneActive()) {
+            return CraftingState.IDLE;
+        }
+
+        if (isCrafting()) {
+            if (!canContinueCrafting()) {
+                return CraftingState.ERROR;
+            }
+            return CraftingState.RUNNING;
+        }
+
+        if (!canStartCrafting()) {
+            return CraftingState.ERROR;
+        }
+
+        return CraftingState.IDLE;
     }
 
     /**
