@@ -136,6 +136,12 @@ public class SimulationChamberPanel extends ModularPanel {
             tileEntity::setRedstoneMode);
         syncManager.syncValue("redstoneModeSyncer", redstoneModeSyncer);
 
+        syncManager.bindPlayerInventory(data.getPlayer());
+        syncManager.registerSlotGroup("data_model", 1, true);
+        syncManager.registerSlotGroup("polymer", 1, true);
+        syncManager.registerSlotGroup("living", 1, true);
+        syncManager.registerSlotGroup("pristine", 1, true);
+
         this.child(new ProgressWidget().value(new DoubleSyncValue(() -> {
             if (!tileEntity.hasDataModel()) return 0.0;
 
@@ -199,32 +205,38 @@ public class SimulationChamberPanel extends ModularPanel {
                 .excludeAreaInRecipeViewer());
 
         this.child(
-            new ItemSlot().slot(new ModularSlot(tileEntity.inputDataModel, 0))
+            new ItemSlot().slot(new ModularSlot(tileEntity.inputDataModel, 0).slotGroup("data_model"))
                 .background(EMPTY_SLOT)
                 .background(EMPTY_SLOT)
                 .pos(-20, 0)
                 .excludeAreaInRecipeViewer());
 
         this.child(
-            new ItemSlot().slot(new ModularSlot(tileEntity.inputPolymer, 0))
+            new ItemSlot().slot(new ModularSlot(tileEntity.inputPolymer, 0).slotGroup("polymer"))
                 .background(EMPTY_SLOT)
                 .background(EMPTY_SLOT)
                 .pos(183, 6)
                 .excludeAreaInRecipeViewer());
 
         this.child(
-            new ItemSlot().slot(new ModularSlot(tileEntity.outputLiving, 0).accessibility(false, true))
+            new ItemSlot().slot(
+                new ModularSlot(tileEntity.outputLiving, 0).accessibility(false, true)
+                    .slotGroup("living"))
                 .background(EMPTY_SLOT)
                 .background(EMPTY_SLOT)
                 .pos(173, 26)
                 .excludeAreaInRecipeViewer());
 
         this.child(
-            new ItemSlot().slot(new ModularSlot(tileEntity.outputPristine, 0).accessibility(false, true))
+            new ItemSlot().slot(
+                new ModularSlot(tileEntity.outputPristine, 0).accessibility(false, true)
+                    .slotGroup("pristine"))
                 .background(EMPTY_SLOT)
                 .background(EMPTY_SLOT)
                 .pos(193, 26)
                 .excludeAreaInRecipeViewer());
+
+        this.bindPlayerInventory();
     }
 
     private void updatePanelString() {
