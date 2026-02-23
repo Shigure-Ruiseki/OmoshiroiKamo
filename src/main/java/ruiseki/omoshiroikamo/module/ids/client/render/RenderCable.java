@@ -10,6 +10,7 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
+
 import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
@@ -81,7 +82,8 @@ public class RenderCable extends BaseBlockRender<BlockCable, TECable> {
     }
 
     @Override
-    public void renderTile(BlockCable block, TECable tile, Tessellator tess, double x, double y, double z, float f, RenderBlocks renderer) {
+    public void renderTile(BlockCable block, TECable tile, Tessellator tess, double x, double y, double z, float f,
+        RenderBlocks renderer) {
         GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5, y, z + 0.5);
         for (ICablePart part : tile.getParts()) {
