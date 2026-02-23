@@ -32,18 +32,23 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
     @Override
     protected void spawnChickenDrop() {
         DataChicken chicken = getChickenData(0);
-        ItemStack chickenStack = getStackInSlot(0);
+        ItemStack foodStack = getStackInSlot(2);
 
-        if (chicken == null || chickenStack == null) {
+        if (chicken == null || foodStack == null) {
             return;
         }
 
-        ItemStack drop = chicken.createLayStack();
-        if (drop == null) {
-            return;
+        ItemStack template = chicken.getItem()
+            .getOutputFromFood(foodStack);
+        ItemStack drop = template != null ? template.copy() : chicken.createLayStack();
+
+        if (template != null) {
+            // Apply gain factor to the custom drop
+            int factor = DataChicken.calculateLayStackFactor(chicken.getGainStat());
+            drop.stackSize *= factor;
         }
 
-        if (drop.stackSize > 0) {
+        if (drop != null && drop.stackSize > 0) {
             putStackInOutput(drop);
             playSpawnSound();
         }
@@ -56,7 +61,7 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
 
     @Override
     protected int requiredSeedsForDrop() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -88,7 +93,7 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
                         .align(Alignment.TopLeft))
                 .child(
                     SlotGroupWidget.builder()
-                        .matrix("I  OOO")
+                        .matrix("SI  OOO")
                         .key(
                             'I',
                             index -> new ItemSlot().background(OKGuiTextures.ROOST_SLOT)
@@ -96,6 +101,11 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
                                 .slot(
                                     new ModularSlot(inv, index).slotGroup("input")
                                         .filter(stack -> isItemValidForSlot(index, stack))))
+                        .key(
+                            'S',
+                            new ItemSlot().slot(
+                                new ModularSlot(inv, 2).slotGroup("input")
+                                    .filter(stack -> isItemValidForSlot(2, stack))))
                         .key(
                             'O',
                             index -> new ItemSlot().slot(new ModularSlot(inv, index + 3).accessibility(false, true)))
@@ -109,7 +119,7 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
                             richTooltip.markDirty();
                         })
                         .topRel(0.25f)
-                        .leftRel(0.375f)
+                        .leftRel(0.45f)
                         .texture(GuiTextures.PROGRESS_ARROW, 20)));
         panel.bindPlayerInventory();
         return panel;

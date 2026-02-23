@@ -1,8 +1,6 @@
 package ruiseki.omoshiroikamo.module.chickens.common.block;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -113,12 +111,28 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             return true;
         }
 
-        ItemStack seedStack = getStackInSlot(getSizeChickenInventory());
-        if (seedStack == null || seedStack.getItem() == null) {
+        ItemStack foodStack = getStackInSlot(2);
+        if (foodStack == null) {
             return false;
         }
 
-        return seedStack.stackSize >= needed;
+        if (foodStack.stackSize < needed) {
+            return false;
+        }
+
+        // Mutation check for Breeder
+        if (isMutationFood(foodStack)) {
+            return true;
+        }
+
+        for (int i = 0; i < getSizeChickenInventory(); i++) {
+            DataChicken chicken = getChickenData(i);
+            if (chicken != null && chicken.getItem()
+                .isFood(foodStack)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -209,7 +223,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         if (isFullChickens() && isFullSeeds() && hasFreeOutputSlot() && timeElapsed >= timeUntilNextDrop) {
 
             if (timeUntilNextDrop > 0) {
-                decrStackSize(getSizeChickenInventory(), requiredSeedsForDrop());
+                decrStackSize(2, requiredSeedsForDrop());
                 spawnChickenDrop();
             }
 
@@ -309,7 +323,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     public ItemStack decrStackSize(int slot, int amount) {
         ItemStack stack = super.decrStackSize(slot, amount);
         needsCacheRefresh();
-        resetTimer();
+        if (slot < 3) {
+            resetTimer();
+        }
 
         return stack;
     }
@@ -327,7 +343,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         }
 
         needsCacheRefresh();
-        resetTimer();
+        if (slot < 3) {
+            resetTimer();
+        }
     }
 
     @Override
@@ -342,14 +360,26 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) {
-            return requiredSeedsForDrop() > 0 && isSeed(stack);
+            if (requiredSeedsForDrop() <= 0) {
+                return false;
+            }
+            // Broad check: is it food for ANY registered chicken?
+            // Better: is it food for CURRENT chickens in the roost?
+            for (int i = 0; i < getSizeChickenInventory(); i++) {
+                DataChicken chicken = getChickenData(i);
+                if (chicken != null && chicken.getItem()
+                    .isFood(stack)) {
+                    return true;
+                }
+            }
+            // Also allow it if it's a mutation food (for Breeder)
+            return isMutationFood(stack);
         }
         return slot < getSizeChickenInventory() && slotDefinition.isInputSlot(slot) && DataChicken.isChicken(stack);
     }
 
-    public static boolean isSeed(ItemStack stack) {
-        Item item = stack.getItem();
-        return item instanceof ItemSeeds;
+    protected boolean isMutationFood(ItemStack stack) {
+        return false; // Overridden in TEBreeder
     }
 
     /**
