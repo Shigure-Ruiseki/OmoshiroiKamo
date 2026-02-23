@@ -54,7 +54,7 @@ public class DataChicken {
      * @param chickenIn The registry item defining the chicken type
      * @param compound  Optional NBT data to load stats from
      */
-    private DataChicken(ChickensRegistryItem chickenIn, NBTTagCompound compound) {
+    public DataChicken(ChickensRegistryItem chickenIn, NBTTagCompound compound) {
         chicken = chickenIn;
         if (compound != null) {
             gain = clampStat(compound.getInteger(GAIN_NBT), ChickenConfig.getMaxGainStat());

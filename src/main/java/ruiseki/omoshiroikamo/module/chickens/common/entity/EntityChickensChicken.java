@@ -51,6 +51,18 @@ public class EntityChickensChicken extends EntityChicken
     }
 
     @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+        ChickensRegistryItem description = getChickenDescription();
+        if (description != null && description.isFood(stack)) {
+            return true;
+        }
+        return super.isBreedingItem(stack);
+    }
+
+    @Override
     public boolean getStatsAnalyzed() {
         return this.dataWatcher.getWatchableObjectByte(25) != 0;
     }

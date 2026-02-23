@@ -43,9 +43,8 @@ public class ItemChickenFood extends ItemOK {
         if (chicken == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localizeExact(
-                "item.chickenFood.name",
-                LibMisc.LANG.localizeExact(chicken.getDisplayName()));
+        return LibMisc.LANG
+            .localizeExact("item.chickenFood.name", LibMisc.LANG.localizeExact(chicken.getDisplayName()));
     }
 
     @Override
@@ -60,7 +59,7 @@ public class ItemChickenFood extends ItemOK {
         DataChicken chicken = DataChicken.getDataFromStack(stack);
         if (chicken != null) {
             return chicken.getItem()
-                    .getBgColor(); // Use BG color of the chicken for the food tint
+                .getBgColor(); // Use BG color of the chicken for the food tint
         }
         return super.getColorFromItemStack(stack, pass);
     }

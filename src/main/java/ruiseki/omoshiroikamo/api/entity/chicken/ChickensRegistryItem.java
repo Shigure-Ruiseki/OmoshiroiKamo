@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.api.entity.chicken;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -32,6 +35,8 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
      */
     private ItemStack layItem;
     private String layString;
+
+    private List<ChickenRecipe> recipes = new ArrayList<>();
 
     private int tintColor = 0xFFFFFF;
     private ResourceLocation textureOverlay;
@@ -77,6 +82,39 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
     public ChickensRegistryItem setLayString(String layString) {
         this.layString = layString;
         return this;
+    }
+
+    public ChickensRegistryItem addRecipe(ChickenRecipe recipe) {
+        this.recipes.add(recipe);
+        return this;
+    }
+
+    public ChickensRegistryItem addRecipe(ItemStack input, ItemStack output) {
+        return addRecipe(new ChickenRecipe(input, output));
+    }
+
+    public List<ChickenRecipe> getRecipes() {
+        return recipes;
+    }
+
+    public boolean isFood(ItemStack stack) {
+        for (ChickenRecipe recipe : recipes) {
+            if (recipe.matches(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public ItemStack getOutputFromFood(ItemStack food) {
+        for (ChickenRecipe recipe : recipes) {
+            if (recipe.matches(food)) {
+                ItemStack output = recipe.getOutput();
+                return output != null ? output.copy() : null;
+            }
+        }
+        return null;
     }
 
     public ChickensRegistryItem setTextureOverlay(ResourceLocation textureOverlay) {

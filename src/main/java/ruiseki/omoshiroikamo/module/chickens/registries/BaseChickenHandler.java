@@ -25,6 +25,7 @@ import com.google.gson.stream.JsonReader;
 import cpw.mods.fml.common.Loader;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickenRecipe;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.config.ConfigUpdater;
@@ -35,6 +36,7 @@ import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.core.json.JsonUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 // Refactor base on OriginalChicken by Chlorine0808
 public abstract class BaseChickenHandler {
@@ -83,6 +85,7 @@ public abstract class BaseChickenHandler {
         String parent1;
         String parent2;
         float coefficient = 1.0f;
+        List<ItemJson> foods;
         Map<String, String> lang;
     }
 
@@ -178,6 +181,20 @@ public abstract class BaseChickenHandler {
                         chicken.setLayItem(layItem);
                         if (dropItem != null) {
                             chicken.setDropItem(dropItem);
+                        }
+
+                        // Food / Recipes
+                        if (data.foods != null && !data.foods.isEmpty()) {
+                            for (ItemJson foodJson : data.foods) {
+                                ItemStack foodStack = ItemJson.resolveItemStack(foodJson);
+                                if (foodStack != null) {
+                                    chicken.addRecipe(foodStack, layItem);
+                                }
+                            }
+                        } else {
+                            // Default Food logic: Create a specific food item for this chicken
+                            ItemStack defaultFood = ChickensItems.CHICKEN_FOOD.newItemStack(1, chicken.getId());
+                            chicken.addRecipe(defaultFood, layItem);
                         }
 
                         if (data.lang != null) {
@@ -282,15 +299,21 @@ public abstract class BaseChickenHandler {
         }
     }
 
-    protected ChickensRegistryItem addChicken(String chickenName, int chickenID, String texture, int bgColor,
-        int fgColor, SpawnType spawntype) {
-
-        return new ChickensRegistryItem(
-            chickenID,
-            chickenName,
-            new ResourceLocation(LibMisc.MOD_ID, this.texturesLocation + texture + ".png"),
+    protected ChickensRegistryItem addChicken(String entityName, int id, String texture, int bgColor, int fgColor,
+        SpawnType spawnType) {
+        ChickensRegistryItem chicken = new ChickensRegistryItem(
+            id,
+            entityName,
+            new ResourceLocation(LibMisc.MOD_ID, texturesLocation + texture + ".png"),
             bgColor,
-            fgColor).setSpawnType(spawntype);
+            fgColor);
+        chicken.setSpawnType(spawnType);
+
+        // Add default food recipe
+        ItemStack defaultFood = ChickensItems.CHICKEN_FOOD.newItemStack(1, id);
+        chicken.addRecipe(defaultFood, null); // Lay item will be set later via setLayItem in many cases
+
+        return chicken;
     }
 
     protected void setParents(ChickensRegistryItem child, Object parent1, Object parent2) {
@@ -406,6 +429,15 @@ public abstract class BaseChickenHandler {
         if (chicken.getDropItem() != null) {
             json.dropItem = ItemJson.parseItemStack((chicken.getDropItem()));
         }
+
+        if (chicken.getRecipes() != null && !chicken.getRecipes()
+            .isEmpty()) {
+            json.foods = new ArrayList<>();
+            for (ChickenRecipe recipe : chicken.getRecipes()) {
+                json.foods.add(ItemJson.parseItemStack(recipe.getInput()));
+            }
+        }
+
         json.lang = chicken.getLang();
 
         return json;
