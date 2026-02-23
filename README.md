@@ -20,7 +20,7 @@ Each backport module can be individually enabled or disabled in the config.
 - Chickens, More Chickens and Roost (Backport)
 - Fluid Cows (Backport WIP)
 - RetroSophisticated Backpacks (Backport)
-- Modular Machinery (Backport WIP)
+- Modular Machinery (Basic function only for now)
 - Deep Mob Learning
 - Cable system from Integrated Dynamics
 
@@ -49,16 +49,36 @@ All code has been rewritten, and all textures are original.
 - Dimension-specific ore mining
 - Customizable structures
 
-### Custom Structure (WIP Modular Machinery backport)
+### Custom Structure
 - JSON Custom structures
 - Structure in-game reload
 - Structure in-game scan by command or Structure wand
 - Structure NEI integration
 - [See CUSTOM_STRUCTURES.md for details](./CUSTOM_STRUCTURES.md)
-- Basic recipe processing
 
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
+
+### Modular Machinery Backport (Actively Developing)
+
+A backport and enhancement of the original Modular Machinery mod.
+
+- **Multiblock System**: 
+    - Create custom machines via JSON configuration.
+    - Rotation and flip structures
+- **IO Ports**:
+    - Items (WIP ME output port)
+    - Fluids (WIP ME output port)
+    - Energy (RF/EU)
+    - Gas (Mekanism)
+    - Mana (Botania)
+    - Vis & Essentia (Thaumcraft, WIP ME Essentia IO)
+- **NEI Integration**: 
+    - Support for viewing recipes and structure previews. (WIP enhanced view)
+    - Structure preview
+- **Dynamic Reload**: Reload recipes and structures via `/ok modular reload`.
+- **Customizable Logic**: Detailed recipe control and processing via JSON. (tons of future plans https://github.com/Shigure-Ruiseki/OmoshiroiKamo/issues/101)
+
 
 ### Chickens, More Chickens & Roost (Backport)
 
