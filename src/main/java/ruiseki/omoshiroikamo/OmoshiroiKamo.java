@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.Level;
 
@@ -30,10 +31,11 @@ import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.command.CommandOK;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.integration.nei.NEICompat;
+import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.backpack.BackpackModule;
 import ruiseki.omoshiroikamo.module.chickens.ChickensModule;
@@ -97,9 +99,13 @@ public class OmoshiroiKamo extends ModBase {
         super.preInit(event);
         if (MinecraftHelpers.isClientSide()) {
             ModelRegistry.registerModid(LibMisc.MOD_ID);
+            if (LibMods.NotEnoughItems.isLoaded()) {
+                NEIConfig config = new NEIConfig();
+                MinecraftForge.EVENT_BUS.register(config);
+                config.loadConfig();
+            }
         }
         WailaCompat.init();
-        NEICompat.init();
     }
 
     @EventHandler

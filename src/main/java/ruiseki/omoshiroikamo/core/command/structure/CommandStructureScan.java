@@ -28,8 +28,8 @@ public class CommandStructureScan extends CommandMod {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         // /ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
-        // args[0] = "structure", args[1] = "scan", args[2] = name, ...
-        if (args.length < 9) {
+        // args[0] = name, ...
+        if (args.length < 7) {
             sender.addChatMessage(
                 new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.scan_usage")));
             sender.addChatMessage(
@@ -37,16 +37,16 @@ public class CommandStructureScan extends CommandMod {
             return;
         }
 
-        String name = args[2];
+        String name = args[0];
         int x1, y1, z1, x2, y2, z2;
 
         try {
-            x1 = parseInt(sender, args[3]);
-            y1 = parseInt(sender, args[4]);
-            z1 = parseInt(sender, args[5]);
-            x2 = parseInt(sender, args[6]);
-            y2 = parseInt(sender, args[7]);
-            z2 = parseInt(sender, args[8]);
+            x1 = parseInt(sender, args[1]);
+            y1 = parseInt(sender, args[2]);
+            z1 = parseInt(sender, args[3]);
+            x2 = parseInt(sender, args[4]);
+            y2 = parseInt(sender, args[5]);
+            z2 = parseInt(sender, args[6]);
         } catch (Exception e) {
             sender.addChatMessage(
                 new ChatComponentText(

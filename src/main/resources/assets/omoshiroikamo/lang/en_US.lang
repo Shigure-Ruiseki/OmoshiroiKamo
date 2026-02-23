@@ -48,6 +48,9 @@ gui.io.enabled=Enabled
 gui.io.disabled=Disabled
 gui.search_bar.tool_tip=Right click to clear the search bar
 gui.syncNEI=Sync NEI
+gui.craftingState.idle=Idle
+gui.craftingState.running=Running
+gui.craftingState.error=Error
 
 
 # Redstone mode
@@ -1096,6 +1099,7 @@ tooltip.beacon.effect.jump_boost=Jump Boost
 tooltip.beacon.effect.night_vision=Night Vision
 tooltip.beacon.effect.water_breathing=Water Breathing
 tooltip.beacon.effect.fire_resistance=Fire Resistance
+tooltip.beacon.effect.flight=Creative Flight
 tooltip.beacon.range=Effect Range:
 tooltip.beacon.range.horizontal=Horizontal
 tooltip.beacon.range.upward=Upward

@@ -28,6 +28,7 @@ public enum LibMods {
     MinefactoryReloaded("MinefactoryReloaded"),
     NotEnoughItems("NotEnoughItems"),
     Thaumcraft("Thaumcraft"),
+    ThaumcraftNEIPlugin("thaumcraftneiplugin"),
     ThaumicEnergistics("thaumicenergistics"),
     TConstruct("TConstruct"),
     ThermalFoundation("ThermalFoundation"),

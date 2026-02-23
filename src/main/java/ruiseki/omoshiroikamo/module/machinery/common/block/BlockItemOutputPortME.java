@@ -63,7 +63,6 @@ public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME>
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropStacks(world, x, y, z);
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TEItemOutputPortME me) {
             me.dropCachedItems();

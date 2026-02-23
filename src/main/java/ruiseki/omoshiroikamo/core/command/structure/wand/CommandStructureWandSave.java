@@ -28,14 +28,14 @@ public class CommandStructureWandSave extends CommandMod {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         EntityPlayer player = (EntityPlayer) sender;
-        // args[0] = "structure", args[1] = "wand", args[2] = "save", args[3] = name
-        if (args.length < 4) {
+        // args[0] = name
+        if (args.length < 1) {
             player.addChatMessage(
                 new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_usage")));
             return;
         }
 
-        String name = args[3];
+        String name = args[0];
 
         WandSelectionManager.PendingScan pending = WandSelectionManager.getInstance()
             .getPendingScan(player.getUniqueID());

@@ -266,7 +266,7 @@ public abstract class RecipeHandlerBase extends TemplateRecipeHandler implements
         return this.getRecipeID();
     }
 
-    public void drawItemSlot(int x, int y) {
+    public static void drawItemSlot(int x, int y) {
         Minecraft.getMinecraft()
             .getTextureManager()
             .bindTexture(new ResourceLocation(LibResources.GUI_SLOT));

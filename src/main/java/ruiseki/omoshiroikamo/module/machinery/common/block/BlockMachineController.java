@@ -32,7 +32,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * TODO: Working particles and sound effects
  * TODO: Completion effects (particles, sounds)
  * TODO: Block state visual changes based on status
- * TODO: NEI recipe integration
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
@@ -152,6 +151,8 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
             ItemStack blueprint = controller.getBlueprintStack();
             if (blueprint != null && blueprint.stackSize > 0) {
                 dropStack(world, x, y, z, blueprint.copy());
+                controller.getInventory()
+                    .setStackInSlot(TEMachineController.BLUEPRINT_SLOT, null);
             }
         }
 

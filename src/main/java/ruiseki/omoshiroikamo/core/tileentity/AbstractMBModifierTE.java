@@ -36,6 +36,7 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
     @Getter
     @NBTPersist
     protected boolean isFormed = false;
+    private transient boolean lastIsFormed = false;
 
     /**
      * Returns the multiblock structure definition used for validation.
@@ -87,8 +88,10 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
         if (valid && !isFormed) {
             isFormed = true;
             onFormed();
+            forceRenderUpdate();
         } else if (!valid && isFormed) {
             isFormed = false;
+            forceRenderUpdate();
         }
 
         return isFormed;
@@ -135,9 +138,22 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      * Checks multiblock structure before processing tasks.
      */
     @Override
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (isFormed != lastIsFormed) {
+            lastIsFormed = isFormed;
+            forceRenderUpdate();
+        }
+    }
+
+    @Override
     public void doUpdate() {
         // Always call super first to ensure IC2 registration and energy sync
         super.doUpdate();
+
+        if (worldObj.isRemote) {
+            return;
+        }
 
         if (!shouldDoWorkThisTick(5) && isFormed) {
             return;
@@ -178,15 +194,26 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
 
     @Override
     protected CraftingState updateCraftingState() {
-        if (!isCrafting()) {
-            return CraftingState.IDLE;
-        }
-
-        if (!canContinueCrafting() || (!isCrafting() && !canStartCrafting())) {
+        if (!isFormed) {
             return CraftingState.ERROR;
         }
 
-        return CraftingState.RUNNING;
+        if (!isRedstoneActive()) {
+            return CraftingState.IDLE;
+        }
+
+        if (isCrafting()) {
+            if (!canContinueCrafting()) {
+                return CraftingState.ERROR;
+            }
+            return CraftingState.RUNNING;
+        }
+
+        if (!canStartCrafting()) {
+            return CraftingState.ERROR;
+        }
+
+        return CraftingState.IDLE;
     }
 
     /**
@@ -279,6 +306,11 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
         return isCrafting();
     }
 
+    @Override
+    protected boolean canContinueCrafting() {
+        return isFormed && super.canContinueCrafting();
+    }
+
     /**
      * Processes tasks only if the multiblock structure is formed.
      *
@@ -287,7 +319,12 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      */
     @Override
     public boolean processTasks(boolean redstone) {
+        if (this.worldObj.isRemote) {
+            return super.processTasks(redstone);
+        }
+
         if (!isFormed) {
+            syncCraftingState();
             return false;
         }
 

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.item.Item;
@@ -31,6 +32,10 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     public ItemStack getOutput() {
         return output.copy();
+    }
+
+    public List<ItemStack> getItems() {
+        return Collections.singletonList(output);
     }
 
     @Override

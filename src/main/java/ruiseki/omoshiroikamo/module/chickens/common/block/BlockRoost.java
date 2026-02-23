@@ -4,7 +4,6 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -46,12 +45,6 @@ public class BlockRoost extends AbstractBlock<TERoost> {
     @Override
     public int damageDropped(int meta) {
         return 0;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropStacks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
     }
 
     @Override

@@ -189,6 +189,7 @@ public abstract class AbstractTE extends AbstractTickingTE
     public void doUpdate() {
         if (worldObj.isRemote) {
             updateEntityClient();
+            processRenderUpdates();
             return;
         }
 
@@ -208,6 +209,7 @@ public abstract class AbstractTE extends AbstractTickingTE
         if (requiresClientSync) {
             requestRenderUpdate();
             markDirty();
+            forceClientUpdate = false;
         }
 
         if (notifyNeighbours) {

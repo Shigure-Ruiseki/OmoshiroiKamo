@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -16,7 +15,6 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.block.property.AutoBlockProperty;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class BlockLootFabricator extends AbstractBlock<TELootFabricator> {
 
@@ -49,17 +47,6 @@ public class BlockLootFabricator extends AbstractBlock<TELootFabricator> {
     @Override
     public int damageDropped(int meta) {
         return 0;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropStacks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
-    }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-
     }
 
     @Override

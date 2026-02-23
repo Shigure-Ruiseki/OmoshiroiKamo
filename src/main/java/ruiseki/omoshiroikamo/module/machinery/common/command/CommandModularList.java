@@ -39,7 +39,10 @@ public class CommandModularList extends CommandMod {
             StructureDefinitionData.StructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(name);
             String displayName = entry != null && entry.displayName != null ? entry.displayName : name;
-            String recipeGroup = entry != null && entry.recipeGroup != null ? entry.recipeGroup : "default";
+            String recipeGroupDisplay = "default";
+            if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
+                recipeGroupDisplay = String.join(", ", entry.recipeGroup);
+            }
             boolean hasStructureDef = CustomStructureRegistry.hasDefinition(name);
 
             sender.addChatMessage(
@@ -52,7 +55,7 @@ public class CommandModularList extends CommandMod {
                         + ")"
                         + EnumChatFormatting.AQUA
                         + " -> "
-                        + recipeGroup
+                        + recipeGroupDisplay
                         + (hasStructureDef ? EnumChatFormatting.GREEN + " [OK]" : EnumChatFormatting.RED + " [ERR]")));
         }
     }

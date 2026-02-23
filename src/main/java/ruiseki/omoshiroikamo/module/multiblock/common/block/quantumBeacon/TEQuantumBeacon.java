@@ -111,6 +111,9 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         if (wasFormed && !isFormed) {
             disablePlayerFlight();
         }
+        if (isFormed) {
+            updatePlayerFlight();
+        }
     }
 
     @Override
@@ -189,24 +192,13 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
             return;
         }
 
-        // Check if player is within effect range
-        if (!isPlayerInRange(plr)) {
-            // Out of range: disable flight immediately if we granted it
-            if (wasFlightGrantedByBeacon) {
-                disablePlayerFlight();
-            }
-            return;
-        }
-
-        int potionDuration = getBaseDuration() * 2 + 300;
-
-        boolean hasEnergy = plr.capabilities.isCreativeMode || hasEnergyForCrafting();
-
-        // Check flight first, explicitly disable if energy is insufficient
+        updateModifierHandler();
         updatePlayerFlight();
-        if (!hasEnergy) return;
 
-        applyPotionEffects(plr, potionDuration);
+        if (hasEnergyForCrafting() || plr.capabilities.isCreativeMode) {
+            int potionDuration = getBaseDuration() * 2 + 300;
+            applyPotionEffects(plr, potionDuration);
+        }
     }
 
     @Override
@@ -260,7 +252,10 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
         boolean hasFlightModifier = modifierHandler
             .hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
-        boolean shouldHaveFlight = hasFlightModifier && hasEnergyForCrafting();
+        boolean shouldHaveFlight = isFormed && isRedstoneActive()
+            && hasEnergyForCrafting()
+            && hasFlightModifier
+            && isPlayerInRange(plr);
 
         // Grant flight if Beacon should provide it
         if (shouldHaveFlight) {
@@ -314,8 +309,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         return 0.0F;
     }
 
-    @Override
-    public boolean canStartCrafting() {
+    private void updateModifierHandler() {
         List<IModifierBlock> mods = new ArrayList<>();
         for (BlockPos pos : this.modifiers) {
             Block block = pos.getBlock();
@@ -326,7 +320,18 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
         modifierHandler.setModifiers(mods);
         modifierHandler.calculateAttributeMultipliers();
-        return super.canStartCrafting();
+    }
+
+    @Override
+    public boolean canStartCrafting() {
+        updateModifierHandler();
+        return isRedstoneActive() && isFormed && hasEnergyForCrafting();
+    }
+
+    @Override
+    protected boolean canContinueCrafting() {
+        updateModifierHandler();
+        return super.canContinueCrafting();
     }
 
     @Override

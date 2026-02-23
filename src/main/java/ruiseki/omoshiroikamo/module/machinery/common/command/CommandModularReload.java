@@ -21,7 +21,6 @@ public class CommandModularReload extends CommandMod {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        super.processCommand(sender, args);
         sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading..."));
 
         boolean hasErrors = false;
