@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemChickenFood extends ItemOK {
 
+    // Add NEI compat
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemChickenFood() {
