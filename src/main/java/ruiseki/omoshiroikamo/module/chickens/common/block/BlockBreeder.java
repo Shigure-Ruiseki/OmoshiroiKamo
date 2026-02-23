@@ -5,7 +5,6 @@ import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -59,12 +58,6 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        dropStacks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
-    }
 
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,

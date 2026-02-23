@@ -173,9 +173,17 @@ public class StructureJsonLoader {
         }
 
         // Parse recipeGroup (CustomStructure)
-        if (obj.has("recipeGroup")) {
-            entry.recipeGroup = obj.get("recipeGroup")
-                .getAsString();
+        if (obj.has("recipeGroup") && !obj.get("recipeGroup")
+            .isJsonNull()) {
+            JsonElement groupElement = obj.get("recipeGroup");
+            entry.recipeGroup = new ArrayList<>();
+            if (groupElement.isJsonArray()) {
+                for (JsonElement ge : groupElement.getAsJsonArray()) {
+                    entry.recipeGroup.add(ge.getAsString());
+                }
+            } else {
+                entry.recipeGroup.add(groupElement.getAsString());
+            }
         }
 
         // Parse layers

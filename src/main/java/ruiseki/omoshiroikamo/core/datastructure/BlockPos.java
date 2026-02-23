@@ -177,7 +177,7 @@ public class BlockPos extends com.gtnewhorizon.gtnhlib.blockpos.BlockPos {
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        tag.setInteger("X", getZ());
+        tag.setInteger("X", getX());
         tag.setInteger("Y", getY());
         tag.setInteger("Z", getZ());
         return tag;

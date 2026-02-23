@@ -44,53 +44,53 @@ public class QuantumBeaconConfig {
     public static class ModifierEnergyCost {
 
         @Config.Comment("Flight Modifier: Energy cost per tick (RF)")
-        @Config.DefaultInt(2048)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.DefaultInt(8192)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int flight;
 
         @Config.Comment("Haste Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(512)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int haste;
 
         @Config.Comment("Regeneration Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(1024)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int regeneration;
 
         @Config.Comment("Jump Boost Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int jumpBoost;
 
         @Config.Comment("Night Vision Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int nightVision;
 
         @Config.Comment("Resistance Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(512)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int resistance;
 
         @Config.Comment("Saturation Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(2048)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int saturation;
 
         @Config.Comment("Strength Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int strength;
 
         @Config.Comment("Water Breathing Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int waterBreathing;
 
         @Config.Comment("Fire Resistance Modifier: Energy cost per tick (RF)")
         @Config.DefaultInt(256)
-        @Config.RangeInt(min = 0, max = 1000000)
+        @Config.RangeInt(min = 0, max = 100000000)
         public int fireResistance;
     }
 
@@ -99,344 +99,375 @@ public class QuantumBeaconConfig {
         // Speed
         @Config.Comment("Tier 1: Speed effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int speedTier1;
 
         @Config.Comment("Tier 2: Speed effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int speedTier2;
 
         @Config.Comment("Tier 3: Speed effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int speedTier3;
 
         @Config.Comment("Tier 4: Speed effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int speedTier4;
 
         @Config.Comment("Tier 5: Speed effect level")
         @Config.DefaultInt(5)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int speedTier5;
 
         @Config.Comment("Tier 6: Speed effect level")
         @Config.DefaultInt(6)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int speedTier6;
 
         // Haste
         @Config.Comment("Tier 1: Haste effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int hasteTier1;
 
         @Config.Comment("Tier 2: Haste effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int hasteTier2;
 
         @Config.Comment("Tier 3: Haste effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int hasteTier3;
 
         @Config.Comment("Tier 4: Haste effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int hasteTier4;
 
         @Config.Comment("Tier 5: Haste effect level")
         @Config.DefaultInt(5)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int hasteTier5;
 
         @Config.Comment("Tier 6: Haste effect level")
         @Config.DefaultInt(6)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int hasteTier6;
 
         // Strength
         @Config.Comment("Tier 1: Strength effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int strengthTier1;
 
         @Config.Comment("Tier 2: Strength effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int strengthTier2;
 
         @Config.Comment("Tier 3: Strength effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int strengthTier3;
 
         @Config.Comment("Tier 4: Strength effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int strengthTier4;
 
         @Config.Comment("Tier 5: Strength effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int strengthTier5;
 
         @Config.Comment("Tier 6: Strength effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int strengthTier6;
 
         // Regeneration
         @Config.Comment("Tier 1: Regeneration effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int regenerationTier1;
 
         @Config.Comment("Tier 2: Regeneration effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int regenerationTier2;
 
         @Config.Comment("Tier 3: Regeneration effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int regenerationTier3;
 
         @Config.Comment("Tier 4: Regeneration effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int regenerationTier4;
 
         @Config.Comment("Tier 5: Regeneration effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int regenerationTier5;
 
         @Config.Comment("Tier 6: Regeneration effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int regenerationTier6;
 
         // Resistance
         @Config.Comment("Tier 1: Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int resistanceTier1;
 
         @Config.Comment("Tier 2: Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int resistanceTier2;
 
         @Config.Comment("Tier 3: Resistance effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int resistanceTier3;
 
         @Config.Comment("Tier 4: Resistance effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int resistanceTier4;
 
         @Config.Comment("Tier 5: Resistance effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int resistanceTier5;
 
         @Config.Comment("Tier 6: Resistance effect level")
         @Config.DefaultInt(5)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int resistanceTier6;
 
         // Saturation
         @Config.Comment("Tier 1: Saturation effect level (0 = disabled)")
         @Config.DefaultInt(0)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int saturationTier1;
 
         @Config.Comment("Tier 2: Saturation effect level (0 = disabled)")
         @Config.DefaultInt(0)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int saturationTier2;
 
-        @Config.Comment("Tier 3: Saturation effect level")
-        @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.Comment("Tier 3: Saturation effect level (0 = disabled)")
+        @Config.DefaultInt(0)
+        @Config.RangeInt(min = 0, max = 255)
         public int saturationTier3;
 
         @Config.Comment("Tier 4: Saturation effect level")
-        @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.DefaultInt(1)
+        @Config.RangeInt(min = 0, max = 255)
         public int saturationTier4;
 
         @Config.Comment("Tier 5: Saturation effect level")
-        @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.DefaultInt(2)
+        @Config.RangeInt(min = 0, max = 255)
         public int saturationTier5;
 
         @Config.Comment("Tier 6: Saturation effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int saturationTier6;
 
         // Jump Boost
         @Config.Comment("Tier 1: Jump Boost effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int jumpBoostTier1;
 
         @Config.Comment("Tier 2: Jump Boost effect level")
         @Config.DefaultInt(2)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int jumpBoostTier2;
 
         @Config.Comment("Tier 3: Jump Boost effect level")
         @Config.DefaultInt(3)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int jumpBoostTier3;
 
         @Config.Comment("Tier 4: Jump Boost effect level")
         @Config.DefaultInt(4)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int jumpBoostTier4;
 
         @Config.Comment("Tier 5: Jump Boost effect level")
         @Config.DefaultInt(5)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int jumpBoostTier5;
 
         @Config.Comment("Tier 6: Jump Boost effect level")
         @Config.DefaultInt(6)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int jumpBoostTier6;
 
         // Night Vision (usually 1)
         @Config.Comment("Tier 1: Night Vision effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int nightVisionTier1;
 
         @Config.Comment("Tier 2: Night Vision effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int nightVisionTier2;
 
         @Config.Comment("Tier 3: Night Vision effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int nightVisionTier3;
 
         @Config.Comment("Tier 4: Night Vision effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int nightVisionTier4;
 
         @Config.Comment("Tier 5: Night Vision effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int nightVisionTier5;
 
         @Config.Comment("Tier 6: Night Vision effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int nightVisionTier6;
 
-        // Water Breathing (usually 1)
+        // Water Breathing
         @Config.Comment("Tier 1: Water Breathing effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int waterBreathingTier1;
 
         @Config.Comment("Tier 2: Water Breathing effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int waterBreathingTier2;
 
         @Config.Comment("Tier 3: Water Breathing effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int waterBreathingTier3;
 
         @Config.Comment("Tier 4: Water Breathing effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int waterBreathingTier4;
 
         @Config.Comment("Tier 5: Water Breathing effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int waterBreathingTier5;
 
         @Config.Comment("Tier 6: Water Breathing effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int waterBreathingTier6;
 
-        // Fire Resistance (usually 1)
+        // Fire Resistance
         @Config.Comment("Tier 1: Fire Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int fireResistanceTier1;
 
         @Config.Comment("Tier 2: Fire Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int fireResistanceTier2;
 
         @Config.Comment("Tier 3: Fire Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int fireResistanceTier3;
 
         @Config.Comment("Tier 4: Fire Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int fireResistanceTier4;
 
         @Config.Comment("Tier 5: Fire Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int fireResistanceTier5;
 
         @Config.Comment("Tier 6: Fire Resistance effect level")
         @Config.DefaultInt(1)
-        @Config.RangeInt(min = 0, max = 10)
+        @Config.RangeInt(min = 0, max = 255)
         public int fireResistanceTier6;
+
+        // Flight
+        @Config.Comment("Tier 1: Flight effect level (0 = disabled)")
+        @Config.DefaultInt(0)
+        @Config.RangeInt(min = 0, max = 255)
+        public int flightTier1;
+
+        @Config.Comment("Tier 2: Flight effect level (0 = disabled)")
+        @Config.DefaultInt(0)
+        @Config.RangeInt(min = 0, max = 255)
+        public int flightTier2;
+
+        @Config.Comment("Tier 3: Flight effect level (0 = disabled)")
+        @Config.DefaultInt(0)
+        @Config.RangeInt(min = 0, max = 255)
+        public int flightTier3;
+
+        @Config.Comment("Tier 4: Flight effect level (0 = disabled)")
+        @Config.DefaultInt(0)
+        @Config.RangeInt(min = 0, max = 255)
+        public int flightTier4;
+
+        @Config.Comment("Tier 5: Flight effect level (0 = disabled)")
+        @Config.DefaultInt(0)
+        @Config.RangeInt(min = 0, max = 255)
+        public int flightTier5;
+
+        @Config.Comment("Tier 6: Flight effect level")
+        @Config.DefaultInt(1)
+        @Config.RangeInt(min = 0, max = 255)
+        public int flightTier6;
     }
 
     public static class RangeSettings {
 
         @Config.Comment("Tier 1: Horizontal range (blocks)")
         @Config.DefaultInt(30)
-        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RangeInt(min = 0, max = 100000)
         public int horizontalTier1;
 
         @Config.Comment("Tier 2: Horizontal range (blocks)")
         @Config.DefaultInt(50)
-        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RangeInt(min = 0, max = 100000)
         public int horizontalTier2;
 
         @Config.Comment("Tier 3: Horizontal range (blocks)")
         @Config.DefaultInt(70)
-        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RangeInt(min = 0, max = 100000)
         public int horizontalTier3;
 
         @Config.Comment("Tier 4: Horizontal range (blocks)")
         @Config.DefaultInt(90)
-        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RangeInt(min = 0, max = 100000)
         public int horizontalTier4;
 
         @Config.Comment("Tier 5: Horizontal range (blocks)")
         @Config.DefaultInt(110)
-        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RangeInt(min = 0, max = 100000)
         public int horizontalTier5;
 
         @Config.Comment("Tier 6: Horizontal range (blocks)")
         @Config.DefaultInt(130)
-        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RangeInt(min = 0, max = 100000)
         public int horizontalTier6;
 
         @Config.Comment("Tier 1: Upward range (blocks)")
@@ -759,6 +790,25 @@ public class QuantumBeaconConfig {
                     return effectLevels.jumpBoostTier6;
                 default:
                     return 1;
+            }
+        }
+
+        public int getFlightLevel() {
+            switch (tier) {
+                case 1:
+                    return effectLevels.flightTier1;
+                case 2:
+                    return effectLevels.flightTier2;
+                case 3:
+                    return effectLevels.flightTier3;
+                case 4:
+                    return effectLevels.flightTier4;
+                case 5:
+                    return effectLevels.flightTier5;
+                case 6:
+                    return effectLevels.flightTier6;
+                default:
+                    return 0;
             }
         }
     }

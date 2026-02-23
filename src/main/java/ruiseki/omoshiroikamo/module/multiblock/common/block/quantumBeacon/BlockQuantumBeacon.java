@@ -112,6 +112,7 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
                 addEffectLine(list, "night_vision", config.getNightVisionLevel());
                 addEffectLine(list, "water_breathing", config.getWaterBreathingLevel());
                 addEffectLine(list, "fire_resistance", config.getFireResistanceLevel());
+                addEffectLine(list, "flight", config.getFlightLevel());
 
             } else {
                 // Range information

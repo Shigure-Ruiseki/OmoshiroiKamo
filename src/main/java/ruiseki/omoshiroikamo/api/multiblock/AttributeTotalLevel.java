@@ -18,7 +18,12 @@ public class AttributeTotalLevel implements IModifierAttribute {
         return this.attributeName;
     }
 
+    @Override
+    public float getModificationFactor() {
+        return this.factor;
+    }
+
     public float getMultiplier(float totalModificationFactor) {
-        return (float) ((int) totalModificationFactor);
+        return totalModificationFactor;
     }
 }

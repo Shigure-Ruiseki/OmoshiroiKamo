@@ -156,6 +156,11 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
 
     @Override
     public void doUpdate() {
+        if (worldObj.isRemote) {
+            super.doUpdate();
+            return;
+        }
+
         if (!ic2Registered && EnergyConfig.ic2Capability) {
             register();
         }

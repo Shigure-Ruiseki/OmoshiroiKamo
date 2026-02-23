@@ -6,6 +6,7 @@ import static ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures.EMPTY_SLOT;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
 import org.jetbrains.annotations.Nullable;
@@ -402,6 +403,9 @@ public class LootFabricatorPanel extends ModularPanel {
         private int index = -1;
 
         @Getter
+        private ItemStack stack;
+
+        @Getter
         @Setter
         private boolean selected = false;
 
@@ -415,10 +419,21 @@ public class LootFabricatorPanel extends ModularPanel {
                 }
                 return false;
             });
+            tooltipDynamic(tooltip -> {
+                if (this.stack != null) {
+                    List<String> list = this.stack.getTooltip(
+                        Minecraft.getMinecraft().thePlayer,
+                        Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+                    for (String line : list) {
+                        tooltip.addLine(line);
+                    }
+                }
+            });
         }
 
         public void setItem(int index, ItemStack stack, boolean selected) {
             this.index = index;
+            this.stack = stack;
             if (stack == null || stack.getItem() == null) {
                 overlay(new ItemStackDrawable());
             } else {

@@ -19,7 +19,6 @@ import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 
 public class BlockStall extends AbstractBlock<TEStall> {
@@ -75,11 +74,6 @@ public class BlockStall extends AbstractBlock<TEStall> {
         cow.setPosition(x + 0.5, y, z + 0.5);
         cow.setType(TEStall.getCowType());
         world.spawnEntityInWorld(cow);
-    }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-
     }
 
     @Override

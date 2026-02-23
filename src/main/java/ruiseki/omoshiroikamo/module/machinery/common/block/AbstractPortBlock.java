@@ -31,7 +31,6 @@ import ruiseki.omoshiroikamo.core.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -184,9 +183,6 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
             }
         }
     }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     @Override
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {

@@ -31,6 +31,18 @@ public final class OKGuiTextures {
         .imageSize(16, 128)
         .build();
 
+    public static final UITexture ENERGY_BAR_BACKGROUND = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/progress_energy")
+        .imageSize(16, 128)
+        .xy(0, 0, 16, 64)
+        .build();
+
+    public static final UITexture ENERGY_BAR_FOREGROUND = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/progress_energy")
+        .imageSize(16, 128)
+        .xy(0, 64, 16, 64)
+        .build();
+
     public static final UITexture BASIC_BAR = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/progress_white")
         .imageSize(64, 32)

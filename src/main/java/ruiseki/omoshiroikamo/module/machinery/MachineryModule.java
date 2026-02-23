@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.module.machinery;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.command.ICommand;
@@ -21,6 +23,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 public class MachineryModule extends ModModuleBase {
 
     private static File configDir;
+    private static List<String> cachedGroupNames = new ArrayList<>();
 
     public MachineryModule() {
         super(OmoshiroiKamo.instance);
@@ -28,6 +31,14 @@ public class MachineryModule extends ModModuleBase {
 
     public static File getConfigDir() {
         return configDir;
+    }
+
+    /**
+     * Get cached recipe group names, scanned during preInit.
+     * Available before RecipeLoader.loadAll() completes.
+     */
+    public static List<String> getCachedGroupNames() {
+        return cachedGroupNames;
     }
 
     @Override
@@ -59,6 +70,10 @@ public class MachineryModule extends ModModuleBase {
         configDir = event.getModConfigurationDirectory();
         MachineryBlocks.preInit();
         MachineryItems.preInit();
+
+        // Pre-scan recipe group names so NEI can register handlers
+        // before RecipeLoader.loadAll() runs in postInit
+        cachedGroupNames = RecipeLoader.scanGroupNames(configDir);
     }
 
     @Override

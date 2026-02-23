@@ -42,6 +42,7 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
@@ -127,6 +128,18 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
         return new TEBackpack(backpackSlots, upgradeSlots);
+    }
+
+    @Override
+    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
+        if (te != null) {
+            ((TEBackpack) te).processDrop(world, x, y, z, te, stack);
+        }
+    }
+
+    @Override
+    protected boolean shouldDropInventory(World world, int x, int y, int z) {
+        return false;
     }
 
     public static class ItemBackpack extends ItemBlockBauble

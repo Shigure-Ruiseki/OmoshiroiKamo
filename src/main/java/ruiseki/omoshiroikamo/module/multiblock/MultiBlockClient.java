@@ -23,9 +23,14 @@ public class MultiBlockClient extends ClientProxyComponent {
     }
 
     @Override
-    public void registerTickHandlers() {
+    public void registerRenderers() {
         registerRenderer(TEQuantumBeacon.class, new QuantumBeaconTESR());
         registerRenderer(TEQuantumExtractor.class, new QuantumExtractorTESR());
+        super.registerRenderers();
+    }
+
+    @Override
+    public void registerTickHandlers() {
         super.registerTickHandlers();
     }
 }
