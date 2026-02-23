@@ -123,10 +123,10 @@ public class ModelTier {
         ModelTierRegistryItem tier2 = addTier(2, 10, 300, true, 11, 8, 4, 1, 3);
         allTiers.add(tier2);
 
-        ModelTierRegistryItem tier3 = addTier(3, 18, 900, true, 12, 24, 5, 2, 6);
+        ModelTierRegistryItem tier3 = addTier(3, 18, 900, true, 18, 24, 5, 2, 6);
         allTiers.add(tier3);
 
-        ModelTierRegistryItem tier4 = addTier(4, 0, 0, true, 18, 42, 7, 3, 11);
+        ModelTierRegistryItem tier4 = addTier(4, 0, 0, true, 26, 42, 7, 3, 11);
         allTiers.add(tier4);
 
         return allTiers;

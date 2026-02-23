@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.entity.dml;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
+import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 public class ModelRegistryItem {
@@ -95,7 +97,18 @@ public class ModelRegistryItem {
     }
 
     public ModelRegistryItem setLootStrings(String[] lootStrings) {
-        this.lootStrings = lootStrings;
+        if (lootStrings == null) {
+            this.lootStrings = null;
+            return this;
+        }
+        List<String> filtered = new ArrayList<>();
+        for (String s : lootStrings) {
+            ItemJson json = ItemJson.parseItemString(s);
+            if (json != null && ItemJson.resolveItemStack(json) != null) {
+                filtered.add(s);
+            }
+        }
+        this.lootStrings = filtered.toArray(new String[0]);
         return this;
     }
 
