@@ -17,7 +17,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
-import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
@@ -193,25 +192,13 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
             return;
         }
 
-        // Check if player is within effect range
-        if (!isPlayerInRange(plr)) {
-            // Out of range: disable flight immediately if we granted it
-            if (wasFlightGrantedByBeacon) {
-                disablePlayerFlight();
-            }
-            return;
-        }
-
-        int potionDuration = getBaseDuration() * 2 + 300;
-
-        boolean hasEnergy = plr.capabilities.isCreativeMode || hasEnergyForCrafting();
-
-        // Check flight first, explicitly disable if energy is insufficient
         updateModifierHandler();
         updatePlayerFlight();
-        if (!hasEnergy) return;
 
-        applyPotionEffects(plr, potionDuration);
+        if (hasEnergyForCrafting() || plr.capabilities.isCreativeMode) {
+            int potionDuration = getBaseDuration() * 2 + 300;
+            applyPotionEffects(plr, potionDuration);
+        }
     }
 
     @Override
@@ -265,7 +252,10 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
         boolean hasFlightModifier = modifierHandler
             .hasAttribute(ModifierAttribute.E_FLIGHT_CREATIVE.getAttributeName());
-        boolean shouldHaveFlight = hasFlightModifier && getCraftingState() == CraftingState.RUNNING;
+        boolean shouldHaveFlight = isFormed && isRedstoneActive()
+            && hasEnergyForCrafting()
+            && hasFlightModifier
+            && isPlayerInRange(plr);
 
         // Grant flight if Beacon should provide it
         if (shouldHaveFlight) {
