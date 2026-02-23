@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -24,7 +25,6 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
-import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
@@ -129,10 +129,16 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
         return false;
     }
 
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        dropStacks(world, x, y, z);
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+
     // Util Method
     public static void dropStacks(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof AbstractStorageTE te) {
+        if (tileEntity instanceof IInventory te) {
             for (int i = 0; i < te.getSizeInventory(); i++) {
                 ItemStack stack = te.getStackInSlot(i);
                 if (stack != null) {
