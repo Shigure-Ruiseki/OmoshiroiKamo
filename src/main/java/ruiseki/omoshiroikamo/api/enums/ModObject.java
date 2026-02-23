@@ -109,6 +109,7 @@ public enum ModObject {
     itemLiquidEgg,
     itemAnalyzer,
     itemSolidXp,
+    itemChickenFood,
     itemCowSpawnEgg,
 
     itemSyringe,

@@ -370,6 +370,7 @@ item.coloredEgg.brown.name=Cocoa Brown Chicken Egg
 item.coloredEgg.green.name=Cactus Green Chicken Egg
 item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
+item.chickenFood.name=%s's Food
 
 item.solidXp.name=Solid Experience
 
