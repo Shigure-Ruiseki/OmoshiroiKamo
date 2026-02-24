@@ -51,7 +51,7 @@ public class ItemChickenFood extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister reg) {
-        this.itemIcon = reg.registerIcon(LibMisc.MOD_ID + ":chicken_food");
+        this.itemIcon = reg.registerIcon(LibMisc.MOD_ID + ":chicken/chicken_food");
     }
 
     @Override

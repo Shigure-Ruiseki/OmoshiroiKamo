@@ -242,9 +242,11 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
                                         .filter(stack -> isItemValidForSlot(index, stack))))
                         .key(
                             'S',
-                            new ItemSlot().slot(
-                                new ModularSlot(inv, 2).slotGroup("input")
-                                    .filter(stack -> isItemValidForSlot(2, stack))))
+                            new ItemSlot().background(OKGuiTextures.FOOD_SLOT)
+                                .hoverBackground(OKGuiTextures.FOOD_SLOT)
+                                .slot(
+                                    new ModularSlot(inv, 2).slotGroup("input")
+                                        .filter(stack -> isItemValidForSlot(2, stack))))
                         .key('+', new Widget<>().background(GuiTextures.ADD))
                         .key(
                             'O',

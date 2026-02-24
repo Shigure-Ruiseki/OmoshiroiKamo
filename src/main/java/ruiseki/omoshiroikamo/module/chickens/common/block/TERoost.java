@@ -103,9 +103,11 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
                                         .filter(stack -> isItemValidForSlot(index, stack))))
                         .key(
                             'S',
-                            new ItemSlot().slot(
-                                new ModularSlot(inv, 2).slotGroup("input")
-                                    .filter(stack -> isItemValidForSlot(2, stack))))
+                            new ItemSlot().background(OKGuiTextures.FOOD_SLOT)
+                                .hoverBackground(OKGuiTextures.FOOD_SLOT)
+                                .slot(
+                                    new ModularSlot(inv, 2).slotGroup("input")
+                                        .filter(stack -> isItemValidForSlot(2, stack))))
                         .key(
                             'O',
                             index -> new ItemSlot().slot(new ModularSlot(inv, index + 3).accessibility(false, true)))
