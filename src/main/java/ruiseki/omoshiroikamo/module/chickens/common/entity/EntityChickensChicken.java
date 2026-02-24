@@ -70,8 +70,8 @@ public class EntityChickensChicken extends EntityChicken
             return false;
         }
         ChickensRegistryItem description = getChickenDescription();
-        if (description != null && description.isFood(stack)) {
-            return true;
+        if (description != null) {
+            return description.isFood(stack) || description.isFallbackFood(stack);
         }
         return false;
     }
@@ -416,6 +416,12 @@ public class EntityChickensChicken extends EntityChicken
         if (j != null) {
             drops.add(
                 MobDrop.create(j)
+                    .withLooting());
+        }
+        ItemStack specDrop = getChickenDescription().createDropItem();
+        if (specDrop != null && specDrop.getItem() != null) {
+            drops.add(
+                MobDrop.create(specDrop.getItem())
                     .withLooting());
         }
     }

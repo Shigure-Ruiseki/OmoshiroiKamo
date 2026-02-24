@@ -106,6 +106,10 @@ public class ChickensRegistry extends BaseRegistry<ChickensRegistryItem> {
         event.setCanceled(true);
     }
 
+    public static boolean isFallbackFood(ItemStack stack) {
+        return stack != null && stack.getItem() == Items.wheat_seeds;
+    }
+
     /**
      * Converts a vanilla chicken entity into a {@link EntityChickensChicken} while copying
      * key attributes like position, rotation, type, and growing age.

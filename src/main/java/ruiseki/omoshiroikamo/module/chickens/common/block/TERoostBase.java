@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -376,6 +377,10 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             }
             // Allow if it's a mutation food
             if (isMutationFood(stack)) {
+                return true;
+            }
+            // Breeder fallback: Allow wheat seeds even if no specific food is required
+            if (this instanceof TEBreeder && ChickensRegistry.isFallbackFood(stack)) {
                 return true;
             }
             // Check if any current chicken requires food and this stack satisfies it
