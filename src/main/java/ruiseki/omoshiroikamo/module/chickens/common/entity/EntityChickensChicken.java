@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.chickens.common.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
+import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -37,6 +40,7 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaEntityInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.chickens.common.entity.ai.EntityAIChickenTempt;
 
 @Optional.Interface(iface = "com.kuba6000.mobsinfo.api.IMobInfoProvider", modid = "mobsinfo")
 public class EntityChickensChicken extends EntityChicken
@@ -48,6 +52,16 @@ public class EntityChickensChicken extends EntityChicken
 
     public EntityChickensChicken(World world) {
         super(world);
+        // Remove vanilla tempt task
+        Iterator<EntityAITaskEntry> iterator = this.tasks.taskEntries.iterator();
+        while (iterator.hasNext()) {
+            EntityAITaskEntry entry = iterator.next();
+            if (entry.action instanceof EntityAITempt) {
+                iterator.remove();
+            }
+        }
+        // Add custom tempt task
+        this.tasks.addTask(3, new EntityAIChickenTempt(this, 1.0D, false));
     }
 
     @Override
@@ -59,7 +73,7 @@ public class EntityChickensChicken extends EntityChicken
         if (description != null && description.isFood(stack)) {
             return true;
         }
-        return super.isBreedingItem(stack);
+        return false;
     }
 
     @Override
