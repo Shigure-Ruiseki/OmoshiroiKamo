@@ -9,6 +9,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+
 public class ChickensRecipes {
 
     public static void init() {
@@ -93,6 +96,24 @@ public class ChickensRecipes {
                 "stickWood",
                 'F',
                 Items.feather));
+
+        // Chicken Food Recipes: 1 Lay Item + 8 Seeds = 8 Chicken Food
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE
+            .getItems()) {
+            ItemStack layItem = chicken.createLayItem();
+            if (layItem != null && chicken.isEnabled()) {
+                GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                        ChickensItems.CHICKEN_FOOD.newItemStack(8, chicken.getId()),
+                        "SSS",
+                        "SIS",
+                        "SSS",
+                        'S',
+                        Items.wheat_seeds,
+                        'I',
+                        layItem.copy()));
+            }
+        }
 
         GameRegistry.addSmelting(ChickensItems.CHICKEN.getItem(), new ItemStack(Items.cooked_chicken), 0.35f);
     }

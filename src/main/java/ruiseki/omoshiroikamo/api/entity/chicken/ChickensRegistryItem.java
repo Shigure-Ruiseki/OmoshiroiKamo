@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.api.entity.BaseRegistryItem;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 /**
  * Represents a single chicken type registered in {@link ChickensRegistry}.
@@ -43,6 +44,8 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
 
     private String iconName;
     private String iconOverlayName;
+
+    private float mutationChance = -1.0f;
 
     /**
      * Creates a new chicken registry item.
@@ -198,5 +201,15 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
 
     public String getLayString() {
         return layString;
+    }
+
+    public float getMutationChance() {
+        return mutationChance < 0 ? ChickenConfig.getMutationChance()
+            : mutationChance;
+    }
+
+    public ChickensRegistryItem setMutationChance(float mutationChance) {
+        this.mutationChance = mutationChance;
+        return this;
     }
 }

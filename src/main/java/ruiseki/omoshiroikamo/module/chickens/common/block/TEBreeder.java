@@ -73,17 +73,29 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
 
         if (left != null && right != null && foodStack != null) {
             ItemStack childStack = null;
+            Random random = worldObj != null ? worldObj.rand : new Random();
 
             // Find potential children (including parents)
             List<ChickensRegistryItem> possibleChildren = ChickensRegistry.INSTANCE
                 .getChildren(left.getItem(), right.getItem());
 
             ChickensRegistryItem selectedSpecies = null;
+
             for (ChickensRegistryItem candidate : possibleChildren) {
-                if (candidate.isFood(foodStack)) {
-                    selectedSpecies = candidate;
-                    break;
+                // Mutation is a species different from both parents
+                boolean isPotentialMutation = candidate != left.getItem() && candidate != right.getItem();
+                if (isPotentialMutation && candidate.isFood(foodStack)) {
+                    // Use individual mutation chance
+                    if (random.nextFloat() < candidate.getMutationChance()) {
+                        selectedSpecies = candidate;
+                        break;
+                    }
                 }
+            }
+
+            // Fallback to parents if mutation failed or no mutation food matched
+            if (selectedSpecies == null) {
+                selectedSpecies = random.nextBoolean() ? left.getItem() : right.getItem();
             }
 
             if (selectedSpecies != null) {

@@ -85,6 +85,7 @@ public abstract class BaseChickenHandler {
         String parent1;
         String parent2;
         float coefficient = 1.0f;
+        Float mutationChance;
         List<ItemJson> foods;
         Map<String, String> lang;
     }
@@ -195,6 +196,10 @@ public abstract class BaseChickenHandler {
                             // Default Food logic: Create a specific food item for this chicken
                             ItemStack defaultFood = ChickensItems.CHICKEN_FOOD.newItemStack(1, chicken.getId());
                             chicken.addRecipe(defaultFood, layItem);
+                        }
+
+                        if (data.mutationChance != null) {
+                            chicken.setMutationChance(data.mutationChance);
                         }
 
                         if (data.lang != null) {
@@ -437,6 +442,8 @@ public abstract class BaseChickenHandler {
                 json.foods.add(ItemJson.parseItemStack(recipe.getInput()));
             }
         }
+
+        json.mutationChance = chicken.getMutationChance();
 
         json.lang = chicken.getLang();
 
