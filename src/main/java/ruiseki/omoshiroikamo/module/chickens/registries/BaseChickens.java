@@ -139,7 +139,7 @@ public class BaseChickens extends BaseChickenHandler {
         allChickens.add(smartChicken);
 
         // BASE CHICKENS
-        flintChicken = addChicken("FlintChicken", this.nextID(), "FlintChicken", 0x2a2a2a, 0xa3a375, SpawnType.NONE)
+        flintChicken = addChicken("FlintChicken", this.nextID(), "FlintChicken", 0x2a2a2a, 0xa3a375, SpawnType.NORMAL)
             .setLayItem(new ItemStack(Items.flint));
         allChickens.add(flintChicken);
 
@@ -147,11 +147,11 @@ public class BaseChickens extends BaseChickenHandler {
             .setLayItem(new ItemStack(Items.quartz));
         allChickens.add(quartzChicken);
 
-        logChicken = addChicken("LogChicken", this.nextID(), "LogChicken", 0x98846d, 0x528358, SpawnType.NONE)
+        logChicken = addChicken("LogChicken", this.nextID(), "LogChicken", 0x98846d, 0x528358, SpawnType.NORMAL)
             .setLayItem(new ItemStack(Blocks.log));
         allChickens.add(logChicken);
 
-        sandChicken = addChicken("SandChicken", this.nextID(), "SandChicken", 0xece5b1, 0xa7a06c, SpawnType.NONE)
+        sandChicken = addChicken("SandChicken", this.nextID(), "SandChicken", 0xece5b1, 0xa7a06c, SpawnType.NORMAL)
             .setLayItem(new ItemStack(Blocks.sand));
         allChickens.add(sandChicken);
 
