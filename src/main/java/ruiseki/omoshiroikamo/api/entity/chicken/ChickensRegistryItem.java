@@ -109,6 +109,10 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
         return false;
     }
 
+    public boolean isFallbackFood(ItemStack stack) {
+        return stack != null && stack.getItem() == Items.wheat_seeds && recipes.isEmpty();
+    }
+
     @Nullable
     public ItemStack getOutputFromFood(ItemStack food) {
         for (ChickenRecipe recipe : recipes) {

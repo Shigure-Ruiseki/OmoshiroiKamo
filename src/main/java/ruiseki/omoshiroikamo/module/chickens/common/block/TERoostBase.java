@@ -132,6 +132,12 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
                             .isFood(foodStack)) {
                         return false;
                     }
+                } else {
+                    // If 'no food' set, require wheat seeds for Breeder
+                    if (this instanceof TEBreeder && !chicken.getItem()
+                        .isFallbackFood(foodStack)) {
+                        return false;
+                    }
                 }
             }
         }
