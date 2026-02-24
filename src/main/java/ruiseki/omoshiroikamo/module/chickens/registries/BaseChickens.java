@@ -134,16 +134,16 @@ public class BaseChickens extends BaseChickenHandler {
         allChickens.add(brownChicken);
 
         // SMART CHICKEN
-        smartChicken = addChicken("SmartChicken", this.nextID(), "SmartChicken", 0xffffff, 0xffff00, SpawnType.NONE)
+        smartChicken = addChicken("SmartChicken", this.nextID(), "SmartChicken", 0x1c77ff, 0xffff00, SpawnType.NONE)
             .setLayItem(new ItemStack(Items.egg));
         allChickens.add(smartChicken);
 
         // BASE CHICKENS
-        flintChicken = addChicken("FlintChicken", this.nextID(), "FlintChicken", 0x6b6b47, 0xa3a375, SpawnType.NONE)
+        flintChicken = addChicken("FlintChicken", this.nextID(), "FlintChicken", 0x2a2a2a, 0xa3a375, SpawnType.NONE)
             .setLayItem(new ItemStack(Items.flint));
         allChickens.add(flintChicken);
 
-        quartzChicken = addChicken("QuartzChicken", this.nextID(), "QuartzChicken", 0x4d0000, 0x1a0000, SpawnType.HELL)
+        quartzChicken = addChicken("QuartzChicken", this.nextID(), "QuartzChicken", 0xeeeeee, 0x1a0000, SpawnType.HELL)
             .setLayItem(new ItemStack(Items.quartz));
         allChickens.add(quartzChicken);
 
@@ -230,8 +230,8 @@ public class BaseChickens extends BaseChickenHandler {
             "LeatherChicken",
             this.nextID(),
             "LeatherChicken",
-            0xA7A06C,
-            0x919191,
+            0x222222,
+            0xc5c5c5,
             SpawnType.NONE).setLayItem(new ItemStack(Items.leather));
         allChickens.add(leatherChicken);
 
@@ -280,7 +280,7 @@ public class BaseChickens extends BaseChickenHandler {
             SpawnType.NONE).setLayItem(new ItemStack(Items.emerald));
         allChickens.add(emeraldChicken);
 
-        magmaChicken = addChicken("MagmaChicken", this.nextID(), "MagmaChicken", 0x1a0500, 0x000000, SpawnType.NONE)
+        magmaChicken = addChicken("MagmaChicken", this.nextID(), "MagmaChicken", 0xc54901, 0x7dea65, SpawnType.NONE)
             .setLayItem(new ItemStack(Items.magma_cream));
         allChickens.add(magmaChicken);
 
@@ -386,8 +386,8 @@ public class BaseChickens extends BaseChickenHandler {
             this.nextID(),
             name,
             new ResourceLocation(LibMisc.MOD_ID, texturesLocation + name + ".png"),
-            0xf2f2f2,
-            color.getColor()).setSpawnType(SpawnType.NONE)
+            color.getColor(),
+            0xf2f2f2).setSpawnType(SpawnType.NONE)
                 .setLayItem(new ItemStack(Items.dye, 1, color.ordinal()));
     }
 

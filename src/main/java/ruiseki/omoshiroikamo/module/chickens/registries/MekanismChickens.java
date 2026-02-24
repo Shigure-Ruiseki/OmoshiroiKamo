@@ -19,8 +19,7 @@ public class MekanismChickens extends BaseChickenHandler {
     public List<ChickensRegistryItem> registerChickens() {
         List<ChickensRegistryItem> allChickens = new ArrayList<>();
 
-        osmiumChicken = addChicken("OsmiumChicken", this.nextID(), "OsmiumChicken", 0x989585, 0xd1ccb6, SpawnType.NONE)
-
+        osmiumChicken = addChicken("OsmiumChicken", this.nextID(), "OsmiumChicken", 0x0d1bb7, 0xadb4d6, SpawnType.NONE)
             .setLayString("ore:ingotOsmium");
         allChickens.add(osmiumChicken);
 
