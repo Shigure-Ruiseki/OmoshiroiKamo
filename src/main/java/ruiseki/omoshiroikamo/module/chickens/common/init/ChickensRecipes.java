@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
@@ -98,8 +97,7 @@ public class ChickensRecipes {
                 Items.feather));
 
         // Chicken Food Recipes: 1 Lay Item + 8 Seeds = 8 Chicken Food
-        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE
-            .getItems()) {
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             ItemStack layItem = chicken.createLayItem();
             if (layItem != null && chicken.isEnabled()) {
                 GameRegistry.addRecipe(

@@ -73,7 +73,7 @@ public class ThermalChickens extends BaseChickenHandler {
         setParents(blitzRodChicken, basalzRodChicken, MetalsChickens.sulfurChicken);
         setParents(blizzRodChicken, blitzRodChicken, BaseChickens.snowballChicken);
         setParents(cinnabarChicken, BaseChickens.redstoneChicken, BaseChickens.diamondChicken);
-        setParents(signalumChicken, MetalsChickens.copperChicken, MetalsChickens.silverOreChicken);
+        setParents(signalumChicken, MetalsChickens.copperChicken, MetalsChickens.silverChicken);
         setParents(enderiumChicken, MetalsChickens.platinumChicken, BaseChickens.enderChicken);
         setParents(lumiumChicken, MetalsChickens.tinChicken, BaseChickens.glowstoneChicken);
         setParents(mithrilChicken, MetalsChickens.nickelChicken, BaseChickens.goldChicken);

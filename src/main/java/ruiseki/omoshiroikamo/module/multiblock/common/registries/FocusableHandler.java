@@ -531,7 +531,7 @@ public class FocusableHandler {
         LIME(EnumDye.LIME),
         PINK(EnumDye.PINK),
         GRAY(EnumDye.GRAY),
-        SILVER(EnumDye.SILVER),
+        LIGHT_GRAY(EnumDye.LIGHT_GRAY),
         CYAN(EnumDye.CYAN),
         PURPLE(EnumDye.PURPLE),
         BLUE(EnumDye.BLUE),

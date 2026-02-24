@@ -23,7 +23,7 @@ public class MetalsChickens extends BaseChickenHandler {
     public static ChickensRegistryItem leadChicken;
     public static ChickensRegistryItem nickelChicken;
     public static ChickensRegistryItem platinumChicken;
-    public static ChickensRegistryItem silverOreChicken;
+    public static ChickensRegistryItem silverChicken;
     public static ChickensRegistryItem tinChicken;
     public static ChickensRegistryItem zincChicken;
     public static ChickensRegistryItem steelChicken;
@@ -68,9 +68,9 @@ public class MetalsChickens extends BaseChickenHandler {
             .setLayString("ore:ingotSteel");
         allChickens.add(steelChicken);
 
-        silverOreChicken = addChicken("SilverChicken", nextID(), "SilverChicken", 0xbebebe, 0xffffff, SpawnType.NONE)
+        silverChicken = addChicken("SilverChicken", nextID(), "SilverChicken", 0xbebebe, 0xffffff, SpawnType.NONE)
             .setLayString("ore:ingotSilver");
-        allChickens.add(silverOreChicken);
+        allChickens.add(silverChicken);
 
         platinumChicken = addChicken("PlatinumChicken", nextID(), "PlatinumChicken", 0xffffff, 0x8d9a96, SpawnType.NONE)
             .setLayString("ore:ingotPlatinum");
@@ -198,15 +198,15 @@ public class MetalsChickens extends BaseChickenHandler {
         setParents(bronzeChicken, copperChicken, tinChicken);
         setParents(invarChicken, BaseChickens.ironChicken, nickelChicken);
         setParents(cupronickelChicken, copperChicken, nickelChicken);
-        setParents(electrumChicken, silverOreChicken, BaseChickens.goldChicken);
+        setParents(electrumChicken, silverChicken, BaseChickens.goldChicken);
         setParents(steelChicken, BaseChickens.ironChicken, BaseChickens.coalChicken);
         setParents(copperChicken, BaseChickens.yellowChicken, BaseChickens.brownChicken);
         setParents(leadChicken, BaseChickens.ironChicken, BaseChickens.cyanChicken);
         setParents(tinChicken, BaseChickens.whiteChicken, BaseChickens.clayChicken);
         setParents(nickelChicken, BaseChickens.whiteChicken, BaseChickens.greenChicken);
         setParents(zincChicken, BaseChickens.whiteChicken, BaseChickens.clayChicken);
-        setParents(silverOreChicken, BaseChickens.ironChicken, BaseChickens.whiteChicken);
-        setParents(platinumChicken, nickelChicken, silverOreChicken);
+        setParents(silverChicken, BaseChickens.ironChicken, BaseChickens.whiteChicken);
+        setParents(platinumChicken, nickelChicken, silverChicken);
         setParents(sulfurChicken, BaseChickens.gunpowderChicken, BaseChickens.flintChicken);
         setParents(saltpeterChicken, sulfurChicken, BaseChickens.redstoneChicken);
         setParents(siliconChicken, BaseChickens.clayChicken, BaseChickens.sandChicken);

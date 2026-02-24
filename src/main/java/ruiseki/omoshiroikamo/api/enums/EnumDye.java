@@ -13,7 +13,7 @@ public enum EnumDye {
     BLUE,
     PURPLE,
     CYAN,
-    SILVER,
+    LIGHT_GRAY,
     GRAY,
     PINK,
     LIME,
@@ -27,17 +27,6 @@ public enum EnumDye {
     public static final String[] DYE_ORE_NAMES = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple",
         "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta",
         "dyeOrange", "dyeWhite" };
-
-    public static final String[] DYE_ORE_UNLOCAL_NAMES = {
-
-        "item.fireworksCharge.black", "item.fireworksCharge.red", "item.fireworksCharge.green",
-        "item.fireworksCharge.brown", "item.fireworksCharge.blue", "item.fireworksCharge.purple",
-        "item.fireworksCharge.cyan", "item.fireworksCharge.silver", "item.fireworksCharge.gray",
-        "item.fireworksCharge.pink", "item.fireworksCharge.lime", "item.fireworksCharge.yellow",
-        "item.fireworksCharge.lightBlue", "item.fireworksCharge.magenta", "item.fireworksCharge.orange",
-        "item.fireworksCharge.white"
-
-    };
 
     public static EnumDye getNext(EnumDye col) {
         int ord = col.ordinal() + 1;

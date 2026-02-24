@@ -33,7 +33,7 @@ public class BaseChickens extends BaseChickenHandler {
     public static ChickensRegistryItem limeChicken;
     public static ChickensRegistryItem grayChicken;
     public static ChickensRegistryItem cyanChicken;
-    public static ChickensRegistryItem silverChicken;
+    public static ChickensRegistryItem lightGrayChicken;
     public static ChickensRegistryItem magentaChicken;
 
     public static ChickensRegistryItem flintChicken;
@@ -124,8 +124,8 @@ public class BaseChickens extends BaseChickenHandler {
         cyanChicken = addDye(EnumDye.CYAN, "CyanChicken");
         allChickens.add(cyanChicken);
 
-        silverChicken = addDye(EnumDye.SILVER, "SilverDyeChicken");
-        allChickens.add(silverChicken);
+        lightGrayChicken = addDye(EnumDye.LIGHT_GRAY, "LightGrayChicken");
+        allChickens.add(lightGrayChicken);
 
         magentaChicken = addDye(EnumDye.MAGENTA, "MagentaChicken");
         allChickens.add(magentaChicken);
@@ -341,7 +341,7 @@ public class BaseChickens extends BaseChickenHandler {
         setParents(limeChicken, greenChicken, whiteChicken);
         setParents(grayChicken, blackChicken, whiteChicken);
         setParents(cyanChicken, blueChicken, greenChicken);
-        setParents(silverChicken, grayChicken, whiteChicken);
+        setParents(lightGrayChicken, grayChicken, whiteChicken);
         setParents(magentaChicken, purpleChicken, pinkChicken);
 
         // === T2 ===
