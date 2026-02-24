@@ -100,6 +100,20 @@ public class ChickensRecipes {
         for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             ItemStack layItem = chicken.createLayItem();
             if (layItem != null && chicken.isEnabled()) {
+                Object inputItem = layItem.copy();
+
+                // Override for specific chickens to make crafting easier/logical
+                if (chicken.getEntityName()
+                    .equals("WaterChicken")) {
+                    inputItem = Items.water_bucket;
+                } else if (chicken.getEntityName()
+                    .equals("LavaChicken")) {
+                        inputItem = Items.lava_bucket;
+                    } else if (chicken.getEntityName()
+                        .equals("XpChicken")) {
+                            inputItem = Blocks.quartz_ore;
+                        }
+
                 GameRegistry.addRecipe(
                     new ShapedOreRecipe(
                         ChickensItems.CHICKEN_FOOD.newItemStack(8, chicken.getId()),
@@ -109,7 +123,7 @@ public class ChickensRecipes {
                         'S',
                         Items.wheat_seeds,
                         'I',
-                        layItem.copy()));
+                        inputItem));
             }
         }
 
