@@ -84,11 +84,15 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
             for (ChickensRegistryItem candidate : possibleChildren) {
                 // Mutation is a species different from both parents
                 boolean isPotentialMutation = candidate != left.getItem() && candidate != right.getItem();
-                if (isPotentialMutation && candidate.isFood(foodStack)) {
-                    // Use individual mutation chance
-                    if (random.nextFloat() < candidate.getMutationChance()) {
-                        selectedSpecies = candidate;
-                        break;
+                if (isPotentialMutation) {
+                    // Check if candidate requires no food OR if food matches
+                    if (candidate.getRecipes()
+                        .isEmpty() || (foodStack != null && candidate.isFood(foodStack))) {
+                        // Use individual mutation chance
+                        if (random.nextFloat() < candidate.getMutationChance()) {
+                            selectedSpecies = candidate;
+                            break;
+                        }
                     }
                 }
             }
@@ -175,7 +179,9 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
         List<ChickensRegistryItem> possibleChildren = ChickensRegistry.INSTANCE
             .getChildren(left.getItem(), right.getItem());
         for (ChickensRegistryItem candidate : possibleChildren) {
-            if (candidate.isFood(stack)) {
+            boolean isPotentialMutation = candidate != left.getItem() && candidate != right.getItem();
+            if (isPotentialMutation && (candidate.getRecipes()
+                .isEmpty() || (stack != null && candidate.isFood(stack)))) {
                 return true;
             }
         }

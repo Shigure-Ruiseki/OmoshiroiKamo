@@ -112,27 +112,32 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         }
 
         ItemStack foodStack = getStackInSlot(2);
-        if (foodStack == null) {
-            return false;
-        }
-
-        if (foodStack.stackSize < needed) {
-            return false;
-        }
 
         // Mutation check for Breeder
         if (isMutationFood(foodStack)) {
-            return true;
+            if (foodStack != null && foodStack.stackSize >= needed) {
+                return true;
+            }
         }
 
         for (int i = 0; i < getSizeChickenInventory(); i++) {
             DataChicken chicken = getChickenData(i);
-            if (chicken != null && chicken.getItem()
-                .isFood(foodStack)) {
-                return true;
+            if (chicken != null) {
+                if (!chicken.getItem()
+                    .getRecipes()
+                    .isEmpty()) {
+                    // If this specific chicken requires food, check if foodStack satisfies it
+                    if (foodStack == null || foodStack.stackSize < needed
+                        || !chicken.getItem()
+                            .isFood(foodStack)) {
+                        return false;
+                    }
+                }
             }
         }
-        return false;
+
+        // If no chickens require food, or all required food is present
+        return true;
     }
 
     /**
@@ -363,17 +368,23 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             if (requiredSeedsForDrop() <= 0) {
                 return false;
             }
-            // Broad check: is it food for ANY registered chicken?
-            // Better: is it food for CURRENT chickens in the roost?
+            // Allow if it's a mutation food
+            if (isMutationFood(stack)) {
+                return true;
+            }
+            // Check if any current chicken requires food and this stack satisfies it
             for (int i = 0; i < getSizeChickenInventory(); i++) {
                 DataChicken chicken = getChickenData(i);
-                if (chicken != null && chicken.getItem()
-                    .isFood(stack)) {
-                    return true;
+                if (chicken != null && !chicken.getItem()
+                    .getRecipes()
+                    .isEmpty()) {
+                    if (chicken.getItem()
+                        .isFood(stack)) {
+                        return true;
+                    }
                 }
             }
-            // Also allow it if it's a mutation food (for Breeder)
-            return isMutationFood(stack);
+            return false;
         }
         return slot < getSizeChickenInventory() && slotDefinition.isInputSlot(slot) && DataChicken.isChicken(stack);
     }

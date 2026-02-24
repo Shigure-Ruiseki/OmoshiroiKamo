@@ -169,75 +169,71 @@ public abstract class BaseChickenHandler {
                         fgColor,
                         type);
 
-                    if (chicken != null) {
-                        Logger.debug(
-                            "Registering ({}) Chicken: '{}':{}:{}",
-                            this.modID,
-                            chicken.getEntityName(),
-                            chicken.getId(),
-                            layItem.getDisplayName());
+                    if (chicken == null) continue;
+                    Logger.debug(
+                        "Registering ({}) Chicken: '{}':{}:{}",
+                        this.modID,
+                        chicken.getEntityName(),
+                        chicken.getId(),
+                        layItem.getDisplayName());
 
-                        chicken.setEnabled(data.enabled);
-                        chicken.setCoefficient(data.coefficient);
-                        chicken.setLayItem(layItem);
-                        if (dropItem != null) {
-                            chicken.setDropItem(dropItem);
-                        }
-
-                        // Food / Recipes
-                        if (data.foods != null && !data.foods.isEmpty()) {
-                            for (ItemJson foodJson : data.foods) {
-                                ItemStack foodStack = ItemJson.resolveItemStack(foodJson);
-                                if (foodStack != null) {
-                                    chicken.addRecipe(foodStack, layItem);
-                                }
-                            }
-                        } else {
-                            // Default Food logic: Create a specific food item for this chicken
-                            ItemStack defaultFood = ChickensItems.CHICKEN_FOOD.newItemStack(1, chicken.getId());
-                            chicken.addRecipe(defaultFood, layItem);
-                        }
-
-                        if (data.mutationChance != null) {
-                            chicken.setMutationChance(data.mutationChance);
-                        }
-
-                        if (data.lang != null) {
-                            String langKey = "entity." + data.name + ".name";
-                            JsonUtils.registerLang(langKey, data.lang);
-                        }
-
-                        // Entity
-                        if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
-                            chicken.setTintColor(tint);
-                            chicken.setTextureOverlay(
-                                new ResourceLocation(
-                                    LibMisc.MOD_ID,
-                                    this.texturesLocation + data.textureOverlay + ".png"));
-                        }
-
-                        // Item
-                        if (data.texture != null && !data.texture.isEmpty()) {
-                            String iconName = data.texture;
-                            String itemSubPath = this.texturesLocation.replace("textures/entity/", "")
-                                .replaceAll("/$", "");
-
-                            chicken.setIconName(LibResources.PREFIX_MOD + itemSubPath + "/" + iconName);
-                        }
-
-                        if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
-                            String iconOverlayName = data.textureOverlay;
-                            String itemSubPath = this.texturesLocation.replace("textures/entity/", "")
-                                .replaceAll("/$", "");
-                            chicken.setIconOverlayName(LibResources.PREFIX_MOD + itemSubPath + "/" + iconOverlayName);
-                        }
-
-                        ModCompatInformation.addInformation(
-                            chicken.getId(),
-                            new ModCompatInformation(this.getModID(), "", this.getModName()));
-
-                        allChickens.add(chicken);
+                    chicken.setEnabled(data.enabled);
+                    chicken.setCoefficient(data.coefficient);
+                    chicken.setLayItem(layItem);
+                    if (dropItem != null) {
+                        chicken.setDropItem(dropItem);
                     }
+
+                    // Food / Recipes
+                    A: if (data.foods != null) {
+                        if (data.foods.isEmpty()) break A;
+                        for (ItemJson foodJson : data.foods) {
+                            ItemStack foodStack = ItemJson.resolveItemStack(foodJson);
+                            if (foodStack != null) chicken.addRecipe(foodStack, layItem);
+                        }
+                    } else {
+                        // Default Food logic: Create a specific food item for this chicken
+                        ItemStack defaultFood = ChickensItems.CHICKEN_FOOD.newItemStack(1, chicken.getId());
+                        chicken.addRecipe(defaultFood, layItem);
+                    }
+
+                    if (data.mutationChance != null) {
+                        chicken.setMutationChance(data.mutationChance);
+                    }
+
+                    if (data.lang != null) {
+                        String langKey = "entity." + data.name + ".name";
+                        JsonUtils.registerLang(langKey, data.lang);
+                    }
+
+                    // Entity
+                    if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
+                        chicken.setTintColor(tint);
+                        chicken.setTextureOverlay(
+                            new ResourceLocation(LibMisc.MOD_ID, this.texturesLocation + data.textureOverlay + ".png"));
+                    }
+
+                    // Item
+                    if (data.texture != null && !data.texture.isEmpty()) {
+                        String iconName = data.texture;
+                        String itemSubPath = this.texturesLocation.replace("textures/entity/", "")
+                            .replaceAll("/$", "");
+
+                        chicken.setIconName(LibResources.PREFIX_MOD + itemSubPath + "/" + iconName);
+                    }
+
+                    if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
+                        String iconOverlayName = data.textureOverlay;
+                        String itemSubPath = this.texturesLocation.replace("textures/entity/", "")
+                            .replaceAll("/$", "");
+                        chicken.setIconOverlayName(LibResources.PREFIX_MOD + itemSubPath + "/" + iconOverlayName);
+                    }
+
+                    ModCompatInformation.addInformation(
+                        chicken.getId(),
+                        new ModCompatInformation(this.getModID(), "", this.getModName()));
+
+                    allChickens.add(chicken);
 
                 } catch (Exception e) {
                     Logger.error("Error registering custom chicken {}", data.name, e);

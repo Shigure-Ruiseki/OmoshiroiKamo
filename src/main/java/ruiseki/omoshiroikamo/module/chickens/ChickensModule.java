@@ -49,12 +49,12 @@ public class ChickensModule extends ModModuleBase {
     @Override
     public void init(FMLInitializationEvent event) {
         ModChickens.init();
-        ChickensRecipes.init();
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         ModChickens.postInit();
+        ChickensRecipes.init();
         TextureGenerator.generateCustomChickenTextures();
     }
 }

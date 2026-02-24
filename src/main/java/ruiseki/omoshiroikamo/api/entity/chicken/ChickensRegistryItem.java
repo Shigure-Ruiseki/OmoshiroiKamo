@@ -204,8 +204,7 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
     }
 
     public float getMutationChance() {
-        return mutationChance < 0 ? ChickenConfig.getMutationChance()
-            : mutationChance;
+        return mutationChance < 0 ? ChickenConfig.getMutationChance() : mutationChance;
     }
 
     public ChickensRegistryItem setMutationChance(float mutationChance) {
