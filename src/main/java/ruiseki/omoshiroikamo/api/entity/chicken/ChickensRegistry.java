@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.api.entity.chicken;
 
-import static ruiseki.omoshiroikamo.module.chickens.registries.BaseChickens.smartChicken;
-
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -63,7 +61,12 @@ public class ChickensRegistry extends BaseRegistry<ChickensRegistryItem> {
      */
     @Nullable
     public ChickensRegistryItem getSmartChicken() {
-        return items.get(smartChicken.getId());
+        for (ChickensRegistryItem chicken : items.values()) {
+            if ("SmartChicken".equalsIgnoreCase(chicken.getEntityName())) {
+                return chicken;
+            }
+        }
+        return null;
     }
 
     @EventBusSubscriber.Condition
@@ -99,9 +102,8 @@ public class ChickensRegistry extends BaseRegistry<ChickensRegistryItem> {
 
         EntityChickensChicken smartChicken = convertToSmart(chicken, event.entityPlayer.worldObj, smart);
 
-        event.entityPlayer.worldObj.removeEntity(chicken);
+        chicken.setDead();
         event.entityPlayer.worldObj.spawnEntityInWorld(smartChicken);
-        smartChicken.spawnExplosionParticle();
 
         event.setCanceled(true);
     }
