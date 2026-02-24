@@ -57,10 +57,9 @@ public class ItemChickenFood extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack stack, int pass) {
-        DataChicken chicken = DataChicken.getDataFromStack(stack);
+        ChickensRegistryItem chicken = ChickensRegistry.INSTANCE.getByType(stack.getItemDamage());
         if (chicken != null) {
-            return chicken.getItem()
-                .getBgColor(); // Use BG color of the chicken for the food tint
+            return chicken.getBgColor();
         }
         return super.getColorFromItemStack(stack, pass);
     }
