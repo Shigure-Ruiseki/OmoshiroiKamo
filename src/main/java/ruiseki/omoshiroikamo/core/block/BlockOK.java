@@ -6,17 +6,20 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.Lists;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,11 +34,12 @@ import ruiseki.omoshiroikamo.core.client.render.block.WorldRender;
 import ruiseki.omoshiroikamo.core.client.texture.FlippableIcon;
 import ruiseki.omoshiroikamo.core.client.texture.MissingIcon;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityNBTStorage;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class BlockOK extends Block implements IBlockPropertyProvider {
@@ -52,6 +56,8 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     protected boolean isOpaque = true;
     protected boolean isFullSize = true;
     public boolean hasSubtypes = false;
+
+    private boolean rotatable;
 
     protected BlockOK(String name) {
         this(name, null, new Material(MapColor.ironColor));
@@ -196,53 +202,6 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         return Block.soundTypeMetal;
     }
 
-    public boolean doNormalDrops(World world, int x, int y, int z) {
-        return true;
-    }
-
-    @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-        if (willHarvest) {
-            return true;
-        }
-        return super.removedByPlayer(world, player, x, y, z, willHarvest);
-    }
-
-    @Override
-    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
-        super.harvestBlock(world, player, x, y, z, meta);
-        world.setBlockToAir(x, y, z);
-    }
-
-    @Override
-    public final ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        if (doNormalDrops(world, x, y, z)) {
-            return super.getDrops(world, x, y, z, metadata, fortune);
-        }
-        return Lists
-            .newArrayList(getNBTDrop(world, x, y, z, TileHelpers.getSafeTile(DimPos.of(world, x, y, z), teClass)));
-    }
-
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z,
-        @Nullable EntityPlayer player) {
-        return getNBTDrop(
-            world,
-            x,
-            y,
-            z,
-            teClass != null ? TileHelpers.getSafeTile(DimPos.of(world, x, y, z), teClass) : null);
-    }
-
-    public ItemStack getNBTDrop(World world, int x, int y, int z, @Nullable TileEntityOK te) {
-        int meta = te != null ? damageDropped(te.getBlockMetadata()) : world.getBlockMetadata(x, y, z);
-        ItemStack itemStack = new ItemStack(this, 1, meta);
-        processDrop(world, x, y, z, te, itemStack);
-        return itemStack;
-    }
-
-    protected void processDrop(World world, int x, int y, int z, @Nullable TileEntityOK te, ItemStack drop) {}
-
     // Because the vanilla method takes floats...
     public void setBlockBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         this.minX = minX;
@@ -259,5 +218,191 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
             return ((IOrientableBlock) this).getOrientable(world, x, y, z);
         }
         return TileHelpers.getSafeTile(world, x, y, z, IOrientable.class);
+    }
+
+    // Block Destroy
+
+    /**
+     * If the NBT data of this tile entity should be added to the dropped meta.
+     *
+     * @return If the NBT data should be added.
+     */
+    public boolean saveNBTToDroppedItem() {
+        return true;
+    }
+
+    /**
+     * @return If the items should be dropped.
+     */
+    public boolean shouldDropInventory(World world, int x, int y, int z) {
+        return true;
+    }
+
+    /**
+     * Sets a block to air, but also plays the sound and particles and can spawn drops.
+     * This includes calls to {@link BlockOK#onPreBlockDestroyed(World, int x, int y, int z, EntityPlayer)}
+     * and {@link BlockOK#onPostBlockDestroyed(World, int x, int y, int z)}.
+     *
+     * @param world     The world.
+     * @param x,        y, z The position.
+     * @param dropBlock If this should produce item drops.
+     * @return If the block was destroyed and not air.
+     */
+    public boolean destroyBlock(World world, int x, int y, int z, boolean dropBlock) {
+        onPreBlockDestroyedPersistence(world, x, y, z);
+        boolean result = world.func_147480_a(x, y, z, dropBlock);
+        onPostBlockDestroyed(world, x, y, z);
+        return result;
+    }
+
+    /**
+     * Called before the block is broken or destroyed.
+     *
+     * @param world  The world.
+     * @param x,     y, z The position of the to-be-destroyed block.
+     * @param player The player destroying the block.
+     */
+    protected void onPreBlockDestroyed(World world, int x, int y, int z, @Nullable EntityPlayer player) {
+        onPreBlockDestroyedPersistence(world, x, y, z);
+    }
+
+    /**
+     * Called before the block is broken or destroyed when the tile data needs to be persisted.
+     *
+     * @param world The world.
+     * @param x,    y, z The position of the to-be-destroyed block.
+     */
+    protected void onPreBlockDestroyedPersistence(World world, int x, int y, int z) {
+        if (!world.isRemote) {
+            MinecraftHelpers.preDestroyBlock(this, world, x, y, z, saveNBTToDroppedItem());
+        }
+    }
+
+    /**
+     * Called before the block is broken or destroyed.
+     *
+     * @param world The world.
+     * @param x,    y, z The position of the to-be-destroyed block.
+     */
+    protected void onPostBlockDestroyed(World world, int x, int y, int z) {
+
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+        onPreBlockDestroyed(world, x, y, z, null);
+        super.breakBlock(world, x, y, z, blockBroken, meta);
+        onPostBlockDestroyed(world, x, y, z);
+    }
+
+    @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        onPreBlockDestroyed(world, x, y, z, player);
+        if (willHarvest) return true;
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    }
+
+    @Override
+    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+        onPreBlockDestroyed(world, x, y, z, null);
+        super.onBlockExploded(world, x, y, z, explosion);
+        onPostBlockDestroyed(world, x, y, z);
+    }
+
+    @Override
+    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+        super.harvestBlock(world, player, x, y, z, meta);
+        world.setBlockToAir(x, y, z);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+        if (entity != null) {
+            TileEntityOK tile = (TileEntityOK) world.getTileEntity(x, y, z);
+            if (tile != null && stack.getTagCompound() != null) {
+                stack.getTagCompound()
+                    .setInteger("x", x);
+                stack.getTagCompound()
+                    .setInteger("y", y);
+                stack.getTagCompound()
+                    .setInteger("z", z);
+                tile.readFromNBT(stack.getTagCompound());
+            }
+
+            if (tile instanceof TileEntityOK.ITickingTile) {
+                ((TileEntityOK.ITickingTile) tile).updateEntity();
+            }
+        }
+        super.onBlockPlacedBy(world, x, y, z, entity, stack);
+    }
+
+    /**
+     * Write additional info about the tile into the item.
+     *
+     * @param tile The tile that is being broken.
+     * @param tag  The tag that will be added to the dropped item.
+     */
+    public void writeAdditionalInfo(TileEntity tile, NBTTagCompound tag) {
+
+    }
+
+    /**
+     * If this block should drop its block item.
+     *
+     * @param world   The world.
+     * @param x,      y, z The position.
+     * @param fortune Fortune level.
+     * @return If the item should drop.
+     */
+    public boolean isDropBlockItem(IBlockAccess world, int x, int y, int z, int fortune) {
+        return true;
+    }
+
+    @Override
+    public final ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
+        ArrayList<ItemStack> drops = new ArrayList<>();
+
+        Item item = getItemDropped(meta, world.rand, fortune);
+        if (item != null && isDropBlockItem(world, x, y, z, fortune)) {
+            ItemStack itemStack = new ItemStack(item, 1, damageDropped(meta));
+            if (TileEntityNBTStorage.TILE != null) {
+                itemStack = tileDataToItemStack(TileEntityNBTStorage.TILE, itemStack);
+            }
+            drops.add(itemStack);
+        }
+        return drops;
+    }
+
+    protected ItemStack tileDataToItemStack(TileEntityOK tile, ItemStack itemStack) {
+        if (isKeepNBTOnDrop()) {
+            if (TileEntityNBTStorage.TAG != null) {
+                itemStack.setTagCompound(TileEntityNBTStorage.TAG);
+            }
+            if (TileEntityNBTStorage.NAME != null) {
+                itemStack.setStackDisplayName(TileEntityNBTStorage.NAME);
+            }
+        }
+        return itemStack;
+    }
+
+    /**
+     * If the NBT data of this blockState should be preserved in the item when it
+     * is broken into an item.
+     *
+     * @return If it should keep NBT data.
+     */
+    public boolean isKeepNBTOnDrop() {
+        return true;
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z,
+        @Nullable EntityPlayer player) {
+        ItemStack itemStack = super.getPickBlock(target, world, x, y, z, player);
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileEntityOK teok && isKeepNBTOnDrop()) {
+            itemStack.setTagCompound(teok.getNBTTagCompound());
+        }
+        return itemStack;
     }
 }

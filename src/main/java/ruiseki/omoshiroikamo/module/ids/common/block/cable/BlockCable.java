@@ -85,20 +85,14 @@ public class BlockCable extends BlockOK
         return ItemBlockCable.class;
     }
 
-    @Override
-    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof ICable cable) return cable.hasPart(side);
-        return false;
-    }
-
     @SideOnly(Side.CLIENT)
     protected BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> getRenderer() {
         return new RenderCable();
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, entity, stack);
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof ICable cable) cable.updateConnections();
     }
@@ -145,15 +139,16 @@ public class BlockCable extends BlockOK
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
         if (world.isRemote) return false;
         RayTraceResult<ForgeDirection> result = doRayTrace(world, x, y, z, player);
-        if (result != null && result.getCollisionType() != null) {
-            return result.getCollisionType()
-                .destroy(world, x, y, z, result.getPositionHit(), player);
+        if (result != null && result.getCollisionType() != null
+            && result.getCollisionType()
+                .destroy(world, x, y, z, result.getPositionHit(), player)) {
+            return true;
         }
-        return false;
+        return result != null && super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
 
     @Override
-    public boolean doNormalDrops(World world, int x, int y, int z) {
+    public boolean saveNBTToDroppedItem() {
         return false;
     }
 
@@ -174,7 +169,6 @@ public class BlockCable extends BlockOK
             .getOpposite();
         IDynamicRedstone cap = TileHelpers
             .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-
         return cap != null && (cap.getRedstoneLevel() > 0 || cap.isAllowRedstoneInput());
     }
 
@@ -182,20 +176,17 @@ public class BlockCable extends BlockOK
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection dir = ForgeDirection.getOrientation(side)
             .getOpposite();
-
         IDynamicRedstone cap = TileHelpers
             .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-
         return cap != null ? cap.getRedstoneLevel() : 0;
     }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection direction = ForgeDirection.getOrientation(side);
-
+        ForgeDirection dir = ForgeDirection.getOrientation(side)
+            .getOpposite();
         IDynamicRedstone cap = TileHelpers
-            .getCapability(world, new BlockPos(x, y, z), direction, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
-
+            .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
         return cap != null && cap.isStrong() ? cap.getRedstoneLevel() : 0;
     }
 
@@ -213,7 +204,7 @@ public class BlockCable extends BlockOK
         return light;
     }
 
-    // Collision
+    // ICollidable & ICollidableParent
     @Override
     public void addCollisionBoxesToListParent(World world, int x, int y, int z, AxisAlignedBB mask,
         List<AxisAlignedBB> list, Entity collidingEntity) {
@@ -230,7 +221,7 @@ public class BlockCable extends BlockOK
         return super.collisionRayTrace(world, x, y, z, origin, direction);
     }
 
-    // Waila
+    // IWailaBlockInfoProvider
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
         World world = accessor.getWorld();
@@ -257,8 +248,8 @@ public class BlockCable extends BlockOK
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
             float hitX, float hitY, float hitZ) {
 
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (te instanceof ICable cable) {
+            ICable cable = TileHelpers.getSafeTile(world, x, y, z, ICable.class);
+            if (cable != null) {
                 if (!cable.hasCore()) {
                     cable.setHasCore(true);
                     if (!player.capabilities.isCreativeMode) {

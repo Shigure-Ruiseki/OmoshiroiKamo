@@ -244,22 +244,6 @@ public abstract class AbstractTE extends AbstractTickingTE
         }
     }
 
-    public void readFromItemStack(ItemStack stack) {
-        if (stack == null || stack.stackTagCompound == null) return;
-        readCommon(stack.stackTagCompound);
-    }
-
-    public void writeToItemStack(ItemStack stack) {
-        if (stack == null) return;
-        NBTTagCompound tag = new NBTTagCompound();
-        writeCommon(tag);
-        stack.setTagCompound(tag);
-    }
-
-    public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        writeToItemStack(stack);
-    }
-
     /** Cooldown for render updates to prevent excessive chunk rebuilds */
     private int renderUpdateCooldown = 0;
     private static final int RENDER_UPDATE_INTERVAL = 20; // Only update every 20 ticks

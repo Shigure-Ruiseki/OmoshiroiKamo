@@ -23,6 +23,8 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.helper.InventoryHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -90,7 +92,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         if (te == null) return;
 
         // Preserve TileEntity data but avoid block metadata-based facing.
-        te.readFromItemStack(stack);
+        te.readCommon(stack.stackTagCompound);
         world.markBlockForUpdate(x, y, z);
 
         ForgeDirection direction;
@@ -150,7 +152,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         if (controller != null) {
             ItemStack blueprint = controller.getBlueprintStack();
             if (blueprint != null && blueprint.stackSize > 0) {
-                dropStack(world, x, y, z, blueprint.copy());
+                InventoryHelpers.dropItems(world, blueprint.copy(), new BlockPos(x, y, z));
                 controller.getInventory()
                     .setStackInSlot(TEMachineController.BLUEPRINT_SLOT, null);
             }

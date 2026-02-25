@@ -25,6 +25,7 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.PlayerInventoryGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
@@ -42,7 +43,6 @@ import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
 
@@ -122,14 +122,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     }
 
     @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {
-        if (te != null) {
-            ((TEBackpack) te).processDrop(world, x, y, z, te, stack);
-        }
-    }
-
-    @Override
-    protected boolean shouldDropInventory(World world, int x, int y, int z) {
+    public boolean shouldDropInventory(World world, int x, int y, int z) {
         return false;
     }
 
@@ -233,6 +226,11 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             ItemStack stack = data.getUsedItemStack();
             BackpackHandler cap = new BackpackHandler(stack, null, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
+        }
+
+        @Override
+        public ModularScreen createScreen(PlayerInventoryGuiData data, ModularPanel mainPanel) {
+            return new ModularScreen(LibMisc.MOD_ID, mainPanel);
         }
 
         @Override
