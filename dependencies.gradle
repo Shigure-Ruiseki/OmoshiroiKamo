@@ -54,6 +54,7 @@ dependencies {
     devOnlyNonPublishable('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
     devOnlyNonPublishable(rfg.deobf('curse.maven:thaumcraft-nei-plugin-225095:2241913'))
+    devOnlyNonPublishable(rfg.deobf("curse.maven:jaopca-266936:6878966"))
 
     runtimeOnlyNonPublishable(rfg.deobf("curse.maven:cofh-core-69162:2388750"))
     runtimeOnlyNonPublishable(rfg.deobf('curse.maven:tc4tweaks-431297:7441877'))

@@ -24,6 +24,7 @@ public enum LibMods {
     EtFuturum("etfuturum"),
     EnderIO("EnderIO"),
     IC2("IC2"),
+    JAOPCA("JAOPCA"),
     Mekanism("Mekanism"),
     MinefactoryReloaded("MinefactoryReloaded"),
     NotEnoughItems("NotEnoughItems"),
