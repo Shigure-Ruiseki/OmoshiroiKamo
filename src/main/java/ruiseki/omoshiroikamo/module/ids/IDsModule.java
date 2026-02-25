@@ -12,12 +12,12 @@ import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.persist.world.GlobalCounters;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.CablePartRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.IDsNetworkTickHandler;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.key.LogicKeys;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypes;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
+import ruiseki.omoshiroikamo.module.ids.common.item.CablePartRegistry;
+import ruiseki.omoshiroikamo.module.ids.common.item.IDsNetworkTickHandler;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKeys;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;
 
 public class IDsModule extends ModModuleBase {
 

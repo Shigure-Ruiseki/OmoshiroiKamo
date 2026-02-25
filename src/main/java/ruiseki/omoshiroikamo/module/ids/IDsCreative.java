@@ -44,7 +44,6 @@ public class IDsCreative extends BaseCreativeTab {
         addItem(tab, list, IDsItems.ENERGY_INTERFACE.getItem());
         addItem(tab, list, IDsItems.ENERGY_FILTER_INTERFACE.getItem());
 
-        addItem(tab, list, IDsItems.CRAFTING_INTERFACE.getItem());
         addItem(tab, list, IDsItems.STORAGE_TERMINAL.getItem());
     }
 }

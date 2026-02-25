@@ -8,12 +8,24 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPortME;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaOutputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisBridge;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort;
 
 /**
  * Block registration for the Machinery module.
@@ -143,53 +155,48 @@ public enum MachineryBlocks {
     private static class AE2BlockHelper {
 
         static void init() {
-            ITEM_OUTPUT_PORT_ME.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME
-                .create();
+            ITEM_OUTPUT_PORT_ME.block = BlockItemOutputPortME.create();
         }
     }
 
     private static class AE2FluidBlockHelper {
 
         static void init() {
-            FLUID_OUTPUT_PORT_ME.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPortME
-                .create();
+            FLUID_OUTPUT_PORT_ME.block = BlockFluidOutputPortME.create();
         }
     }
 
     private static class BotaniaBlockHelper {
 
         static void init() {
-            MANA_INPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort.create();
-            MANA_OUTPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaOutputPort.create();
+            MANA_INPUT_PORT.block = BlockManaInputPort.create();
+            MANA_OUTPUT_PORT.block = BlockManaOutputPort.create();
         }
     }
 
     private static class MekanismBlockHelper {
 
         static void init() {
-            GAS_INPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasInputPort.create();
-            GAS_OUTPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasOutputPort.create();
+            GAS_INPUT_PORT.block = BlockGasInputPort.create();
+            GAS_OUTPUT_PORT.block = BlockGasOutputPort.create();
         }
     }
 
     private static class ThaumcraftBlockHelper {
 
         static void init() {
-            VIS_INPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort.create();
-            VIS_OUTPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort.create();
-            ESSENTIA_INPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort
-                .create();
-            ESSENTIA_OUTPUT_PORT.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort
-                .create();
-            ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisBridge.create();
+            VIS_INPUT_PORT.block = BlockVisInputPort.create();
+            VIS_OUTPUT_PORT.block = BlockVisOutputPort.create();
+            ESSENTIA_INPUT_PORT.block = BlockEssentiaInputPort.create();
+            ESSENTIA_OUTPUT_PORT.block = BlockEssentiaOutputPort.create();
+            BlockVisBridge.create();
         }
     }
 
     private static class ThaumicEnergisticsBlockHelper {
 
         static void init() {
-            ESSENTIA_INPUT_PORT_ME.block = ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME
-                .create();
+            ESSENTIA_INPUT_PORT_ME.block = BlockEssentiaInputPortME.create();
         }
     }
 }

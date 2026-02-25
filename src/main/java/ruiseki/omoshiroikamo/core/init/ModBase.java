@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -344,6 +345,20 @@ public abstract class ModBase {
         moduleManager.onServerStopping(event);
         for (WorldStorage worldStorage : worldStorages) {
             worldStorage.onStoppingEvent(event);
+        }
+    }
+
+    /**
+     * Override this, call super and annotate with {@link cpw.mods.fml.common.Mod.EventHandler}.
+     * Register the things that are related to server stopping, like persistent storage.
+     *
+     * @param event The Forge event required for this.
+     */
+    @Mod.EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event) {
+        moduleManager.onServerStopped(event);
+        for (WorldStorage worldStorage : worldStorages) {
+            worldStorage.onServerStopped(event);
         }
     }
 

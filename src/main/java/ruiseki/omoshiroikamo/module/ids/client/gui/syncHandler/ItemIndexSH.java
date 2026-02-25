@@ -10,11 +10,10 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.crafting.CraftingNetwork;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminalPanel;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemIndexClient;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminalPanel;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndexClient;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.util.ItemStackKeyUtils;
 
 public class ItemIndexSH extends SyncHandler {
@@ -32,13 +31,11 @@ public class ItemIndexSH extends SyncHandler {
     private final StorageTerminal terminal;
     private final StorageTerminalPanel panel;
     private final ItemNetwork itemNetwork;
-    private final CraftingNetwork craftingNetwork;
     private final ItemIndexClient clientIndex;
 
     public ItemIndexSH(StorageTerminal terminal, StorageTerminalPanel panel, ItemIndexClient clientIndex) {
         this.terminal = terminal;
         this.itemNetwork = terminal.getItemNetwork();
-        this.craftingNetwork = terminal.getCraftingNetwork();
         this.panel = panel;
         this.clientIndex = clientIndex;
     }
@@ -55,22 +52,16 @@ public class ItemIndexSH extends SyncHandler {
                     b,
                     itemNetwork.getIndex()
                         .view());
-                ItemStackKeyUtils.writeKeys(
-                    b,
-                    craftingNetwork.getIndex()
-                        .getKeys());
             });
             return;
         }
 
         if (clientVersion != serverVer) {
-            syncToClient(SYNC_DELTA, b -> {
-                ItemStackKeyUtils.writeDelta(b, itemNetwork.getLastSnapshot(), itemNetwork.getIndex(), serverVer);
-                ItemStackKeyUtils.writeKeys(
-                    b,
-                    craftingNetwork.getIndex()
-                        .getKeys());
-            });
+            syncToClient(
+                SYNC_DELTA,
+                b -> {
+                    ItemStackKeyUtils.writeDelta(b, itemNetwork.getLastSnapshot(), itemNetwork.getIndex(), serverVer);
+                });
         }
     }
 

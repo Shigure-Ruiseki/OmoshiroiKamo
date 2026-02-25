@@ -25,6 +25,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
 
     protected BlockStall() {
         super(ModObject.blockStall.unlocalisedName, TEStall.class, Material.rock);
+        isOpaque = false;
     }
 
     public static BlockStall create() {
@@ -34,11 +35,6 @@ public class BlockStall extends AbstractBlock<TEStall> {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

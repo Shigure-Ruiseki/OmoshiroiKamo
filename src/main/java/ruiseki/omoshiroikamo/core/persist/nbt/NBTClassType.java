@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.Level;
 import org.joml.Vector3i;
 
 import com.google.common.collect.Lists;
@@ -29,10 +30,12 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
+import ruiseki.omoshiroikamo.core.datastructure.EnumFacingMap;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 
 /**
@@ -418,6 +421,80 @@ public abstract class NBTClassType<T> {
             @Override
             public Pair getDefaultValue() {
                 return Pair.of(null, null);
+            }
+        });
+
+        NBTYPES.put(EnumFacingMap.class, new NBTClassType<EnumFacingMap>() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void writePersistedField(String name, EnumFacingMap object, NBTTagCompound tag) {
+                NBTTagCompound mapTag = new NBTTagCompound();
+                NBTTagList list = new NBTTagList();
+                boolean setValueType = false;
+                for (Map.Entry entry : (Set<Map.Entry>) object.entrySet()) {
+                    NBTTagCompound entryTag = new NBTTagCompound();
+                    entryTag.setInteger("key", ((ForgeDirection) entry.getKey()).ordinal());
+                    if (entry.getValue() != null) {
+                        getType(
+                            entry.getValue()
+                                .getClass(),
+                            object).writePersistedField("value", entry.getValue(), entryTag);
+                    }
+                    list.appendTag(entryTag);
+
+                    if (!setValueType && entry.getValue() != null) {
+                        setValueType = true;
+                        mapTag.setString(
+                            "valueType",
+                            entry.getValue()
+                                .getClass()
+                                .getName());
+                    }
+                }
+                mapTag.setTag("map", list);
+                tag.setTag(name, mapTag);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public EnumFacingMap readPersistedField(String name, NBTTagCompound tag) {
+                NBTTagCompound mapTag = tag.getCompoundTag(name);
+                EnumFacingMap map = EnumFacingMap.newMap();
+                NBTTagList list = mapTag.getTagList("map", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal());
+                if (list.tagCount() > 0) {
+                    NBTClassType valueNBTClassType = null; // Remains null when all map values are null.
+                    if (mapTag.hasKey("valueType")) {
+                        try {
+                            Class<?> valueType = Class.forName(mapTag.getString("valueType"));
+                            valueNBTClassType = getType(valueType, map);
+                        } catch (ClassNotFoundException e) {
+                            OmoshiroiKamo.okLog(
+                                Level.WARN,
+                                "No class found for NBT type map value '" + mapTag.getString("valueType")
+                                    + "', this could be a mod error.");
+                            return map;
+                        }
+                    }
+                    for (int i = 0; i < list.tagCount(); i++) {
+                        NBTTagCompound entryTag = list.getCompoundTagAt(i);
+                        ForgeDirection key = ForgeDirection.values()[entryTag.getInteger("key")];
+                        Object value = null;
+                        // If the class type is null, this means all map values are null, so
+                        // we won't have any problems with just inserting nulls for all values here.
+                        // Also check if it has a 'value' tag, since later elements can still be null.
+                        if (valueNBTClassType != null && entryTag.hasKey("value")) {
+                            value = valueNBTClassType.readPersistedField("value", entryTag);
+                        }
+                        map.put(key, value);
+                    }
+                }
+                return map;
+            }
+
+            @Override
+            public EnumFacingMap getDefaultValue() {
+                return EnumFacingMap.newMap();
             }
         });
 

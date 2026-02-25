@@ -12,6 +12,7 @@ public class BlockMachineCasing extends BlockOK {
 
     protected BlockMachineCasing() {
         super(ModObject.blockMachineCasing.unlocalisedName, Material.rock);
+        isOpaque = false;
     }
 
     public static BlockMachineCasing create() {
@@ -21,11 +22,6 @@ public class BlockMachineCasing extends BlockOK {
     @Override
     public int getRenderType() {
         return ModelISBRH.JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

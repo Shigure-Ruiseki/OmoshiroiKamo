@@ -20,8 +20,8 @@ import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.CraftingSlotSH;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.terminal.storage.StorageTerminal;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemNetwork;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemNetwork;
 
 public class IDsCraftingSlot extends ModularCraftingMatrixSlot {
 

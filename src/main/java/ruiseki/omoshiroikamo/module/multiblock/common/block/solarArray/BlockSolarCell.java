@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -16,7 +17,6 @@ import net.minecraft.world.World;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
@@ -29,6 +29,8 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
 
     protected BlockSolarCell() {
         super(ModObject.blockSolarCell.unlocalisedName);
+        hasSubtypes = true;
+        isFullSize = false;
     }
 
     public static BlockSolarCell create() {
@@ -36,8 +38,12 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockSolar.class, name);
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockSolar.class;
+    }
+
+    @Override
+    protected void registerBlockColor() {
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override
@@ -104,16 +110,6 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

@@ -8,8 +8,12 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.core.capabilities.energy.CapabilityEnergy;
+import ruiseki.omoshiroikamo.core.capabilities.fluid.CapabilityFluidHandler;
+import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
+import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
+import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.command.structure.CommandStructure;
-import ruiseki.omoshiroikamo.core.common.init.CoreCapabilities;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
@@ -52,7 +56,11 @@ public class CoreModule extends ModModuleBase {
                 event.getModConfigurationDirectory()
                     .getParentFile());
 
-        CoreCapabilities.preInit();
+        CapabilityItemHandler.register();
+        CapabilityEnergy.register();
+        CapabilityFluidHandler.register();
+        CapabilityRedstone.register();
+        CapabilityLight.register();
 
     }
 
@@ -72,5 +80,4 @@ public class CoreModule extends ModModuleBase {
     public void postInit(FMLPostInitializationEvent event) {
 
     }
-
 }

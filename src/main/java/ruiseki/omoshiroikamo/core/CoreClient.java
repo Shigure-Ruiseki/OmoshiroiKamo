@@ -1,12 +1,9 @@
 package ruiseki.omoshiroikamo.core;
 
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,6 +11,7 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.item.ItemConfigs;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.core.client.key.IKeyRegistry;
+import ruiseki.omoshiroikamo.core.client.render.block.WorldRender;
 import ruiseki.omoshiroikamo.core.client.render.item.PufferFishRenderer;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
@@ -31,23 +29,9 @@ public class CoreClient extends ClientProxyComponent {
     }
 
     @Override
-    public void registerEventHooks() {
-        super.registerEventHooks();
-    }
-
-    @Override
-    public void registerRenderer(Class<? extends Entity> clazz, Render renderer) {
-        super.registerRenderer(clazz, renderer);
-    }
-
-    @Override
-    public void registerRenderer(Class<? extends TileEntity> clazz, TileEntitySpecialRenderer renderer) {
-        super.registerRenderer(clazz, renderer);
-    }
-
-    @Override
     public void registerRenderers() {
         super.registerRenderers();
+        RenderingRegistry.registerBlockHandler(WorldRender.INSTANCE);
         if (ItemConfigs.renderPufferFish) {
             MinecraftForgeClient.registerItemRenderer(Items.fish, new PufferFishRenderer());
         }
@@ -60,10 +44,5 @@ public class CoreClient extends ClientProxyComponent {
         FMLCommonHandler.instance()
             .bus()
             .register(KeyHandler.instance);
-    }
-
-    @Override
-    public void registerTickHandlers() {
-        super.registerTickHandlers();
     }
 }

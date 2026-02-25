@@ -130,7 +130,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
             return false;
         }
 
-        BlockPos coord = new BlockPos(x, y, z, worldObj);
+        BlockPos coord = new BlockPos(x, y, z);
 
         if (isModifierBlock(block) && !modifiers.contains(coord)) {
             modifiers.add(coord);
@@ -312,7 +312,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     private void updateModifierHandler() {
         List<IModifierBlock> mods = new ArrayList<>();
         for (BlockPos pos : this.modifiers) {
-            Block block = pos.getBlock();
+            Block block = pos.getBlock(worldObj);
             if (block instanceof IModifierBlock) {
                 mods.add((IModifierBlock) block);
             }
@@ -349,7 +349,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         if (player == null) {
             return;
         }
-        TileEntity tileEntity = getPos().getTileEntity();
+        TileEntity tileEntity = getPos().getTileEntity(worldObj);
         if (tileEntity instanceof TEQuantumBeaconT1) {
             player.triggerAchievement(MultiBlockAchievements.ASSEMBLE_NANO_BOT_BEACON_T1.get());
         }

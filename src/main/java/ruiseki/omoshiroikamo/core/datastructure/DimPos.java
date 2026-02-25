@@ -15,30 +15,46 @@ import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
  *
  * @author rubensworks
  */
-@Data(staticConstructor = "of")
+@Data
 public class DimPos implements Comparable<DimPos> {
 
     private final int dimensionId;
     private final BlockPos blockPos;
     private WeakReference<World> worldReference;
 
-    private DimPos(int dimensionId, BlockPos blockPos, World world) {
+    private DimPos(int dimensionId, BlockPos blockPos, @Nullable World world) {
         this.dimensionId = dimensionId;
         this.blockPos = blockPos;
-        this.worldReference = world != null && world.isRemote ? new WeakReference<>(world) : null;
+        this.worldReference = world != null ? new WeakReference<>(world) : null;
     }
 
-    private DimPos(int dimensionId, BlockPos blockPos) {
-        this(dimensionId, blockPos, null);
+    public static DimPos of(int dimensionId, int x, int y, int z) {
+        return new DimPos(dimensionId, new BlockPos(x, y, z), null);
     }
 
-    public @Nullable World getWorld() {
-        if (worldReference == null) {
-            return DimensionManager.getWorld(dimensionId);
+    public static DimPos of(int dimensionId, BlockPos pos) {
+        return new DimPos(dimensionId, pos, null);
+    }
+
+    public static DimPos of(World world, int x, int y, int z) {
+        return new DimPos(world.provider.dimensionId, new BlockPos(x, y, z), world);
+    }
+
+    public static DimPos of(World world, BlockPos pos) {
+        return new DimPos(world.provider.dimensionId, pos, world);
+    }
+
+    @Nullable
+    public World getWorld() {
+        if (worldReference != null) {
+            World world = worldReference.get();
+            if (world != null) {
+                return world;
+            }
         }
-        World world = worldReference.get();
-        if (world == null) {
-            world = DimensionManager.getWorld(dimensionId);
+
+        World world = DimensionManager.getWorld(dimensionId);
+        if (world != null) {
             worldReference = new WeakReference<>(world);
         }
         return world;
@@ -46,26 +62,38 @@ public class DimPos implements Comparable<DimPos> {
 
     public boolean isLoaded() {
         World world = getWorld();
-        return world != null && getBlockPos().isLoaded(world);
+        return world != null && blockPos.isLoaded(world);
     }
 
     @Override
     public int compareTo(DimPos o) {
-        int compareDim = Integer.compare(getDimensionId(), o.getDimensionId());
-        if (compareDim == 0) {
-            return MinecraftHelpers.compareBlockPos(getBlockPos(), o.getBlockPos());
-        }
-        return compareDim;
+        int dimCompare = Integer.compare(dimensionId, o.dimensionId);
+        if (dimCompare != 0) return dimCompare;
+
+        return MinecraftHelpers.compareBlockPos(blockPos, o.blockPos);
     }
 
     @Override
-    public boolean equals(Object o) {
-        return o instanceof DimPos && compareTo((DimPos) o) == 0;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof DimPos)) return false;
+        return compareTo((DimPos) obj) == 0;
     }
 
     @Override
     public int hashCode() {
-        return 31 * getDimensionId() + getBlockPos().hashCode();
+        return 31 * dimensionId + blockPos.hashCode();
     }
 
+    public int getX() {
+        return blockPos.getX();
+    }
+
+    public int getY() {
+        return blockPos.getY();
+    }
+
+    public int getZ() {
+        return blockPos.getZ();
+    }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
@@ -23,6 +22,7 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
     protected BlockSimulationChamber() {
         super(ModObject.blockSimulationChamber.unlocalisedName, TESimulationChamber.class);
+        isOpaque = false;
     }
 
     public static BlockSimulationChamber create() {
@@ -32,16 +32,6 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
     @Override
     public int getRenderType() {
         return ModelISBRH.JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        return new TESimulationChamber();
     }
 
     @Override

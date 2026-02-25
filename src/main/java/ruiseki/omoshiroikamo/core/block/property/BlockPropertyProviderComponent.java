@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.core.block.property;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class BlockPropertyProviderComponent implements IBlockPropertyProvider {
 
     private void register(BlockProperty<?> property, AutoBlockProperty annotation) {
         if (annotation.byClass()) {
-            BlockPropertyRegistry.registerProperty(block.getClass(), property);
+            BlockPropertyRegistry.registerProperty((Type) block.getClass(), property);
         } else {
             BlockPropertyRegistry.registerProperty(block, property);
         }

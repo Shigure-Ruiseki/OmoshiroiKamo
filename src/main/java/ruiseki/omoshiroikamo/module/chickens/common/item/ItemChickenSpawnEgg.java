@@ -102,8 +102,8 @@ public class ItemChickenSpawnEgg extends ItemOK {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
         float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            BlockPos pos = correctPosition(new BlockPos(x, y, z, world), side);
-            activate(stack, pos);
+            BlockPos pos = correctPosition(new BlockPos(x, y, z), side);
+            activate(stack, pos, world);
             if (!player.capabilities.isCreativeMode) {
                 stack.stackSize--;
             }
@@ -120,11 +120,11 @@ public class ItemChickenSpawnEgg extends ItemOK {
         int posY = pos.y + offsetsYForSide[side];
         int posZ = pos.z + offsetsZForSide[side];
 
-        return new BlockPos(posX, posY, posZ, pos.world);
+        return new BlockPos(posX, posY, posZ);
     }
 
-    private void activate(ItemStack stack, BlockPos pos) {
-        EntityChickensChicken entity = new EntityChickensChicken(pos.getWorld());
+    private void activate(ItemStack stack, BlockPos pos, World world) {
+        EntityChickensChicken entity = new EntityChickensChicken(world);
 
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
@@ -148,8 +148,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
             entity.readEntityFromNBT(entityNBT);
         }
 
-        pos.getWorld()
-            .spawnEntityInWorld(entity);
+        world.spawnEntityInWorld(entity);
     }
 
     @Override
