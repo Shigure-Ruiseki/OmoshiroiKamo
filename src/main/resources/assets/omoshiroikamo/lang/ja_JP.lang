@@ -125,6 +125,15 @@ tooltip.wand.size=サイズ: %dx%dx%d
 
 
 # Commands
+command.ok.invalidSubcommand=無効なサブコマンド
+command.ok.invalidArguments=無効な引数
+command.ok.onlyOneValue=1つの新しい値を定義してください
+command.ok.invalidNewValue=無効な新しい値
+command.ok.updatedValue=%sを%sに更新しました
+command.ok.invalidPlayer=プレイヤー '%s' は見つかりませんでした
+command.ok.ignitedPlayer=プレイヤー '%s' は%s秒間燃焼しました
+command.ok.noConfigsFound=設定可能なコンフィグ値は見つかりませんでした
+
 command.ok.main_usage_title=使用法:
 command.ok.main_usage_structure=/ok structure - ストラクチャー管理コマンド
 
@@ -345,6 +354,7 @@ config.chickenConfig=ニワトリの設定
 item.chickenCatcher.name=チキンキャッチャー
 item.liquidEgg.water.name=水入りの卵
 item.liquidEgg.lava.name=溶岩入りの卵
+item.emptyEgg.name=空の卵
 item.coloredEgg.white.name=骨粉色の卵
 item.coloredEgg.orange.name=オレンジ色の卵
 item.coloredEgg.magenta.name=赤紫色の卵

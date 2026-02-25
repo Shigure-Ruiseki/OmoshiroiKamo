@@ -354,6 +354,7 @@ config.chickenConfig=Chicken Settings
 item.chickenCatcher.name=Chicken Catcher
 item.liquidEgg.water.name=Water Egg
 item.liquidEgg.lava.name=Lava Egg
+item.emptyEgg.name=Empty Egg
 item.coloredEgg.white.name=Bone White Chicken Egg
 item.coloredEgg.orange.name=Orange Chicken Egg
 item.coloredEgg.magenta.name=Magenta Chicken Egg

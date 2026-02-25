@@ -25,6 +25,33 @@ public class ItemStackHandlerBase extends ItemStackHandler implements INBTSerial
         super(size);
     }
 
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        validateSlot(slot);
+        return super.getStackInSlot(slot);
+    }
+
+    @Override
+    public void setStackInSlot(int slot, ItemStack stack) {
+        if (stack != null && stack.stackSize <= 0) {
+            stack = null;
+        }
+        super.setStackInSlot(slot, stack);
+    }
+
+    protected void validateSlot(int slot) {
+        ItemStack stack = super.getStackInSlot(slot);
+        if (stack != null && stack.stackSize <= 0) {
+            super.setStackInSlot(slot, null);
+        }
+    }
+
+    public void cleanup() {
+        for (int i = 0; i < getSlots(); i++) {
+            validateSlot(i);
+        }
+    }
+
     public int voidItem(int slot, int amount) {
         if (amount <= 0) return 0;
 
