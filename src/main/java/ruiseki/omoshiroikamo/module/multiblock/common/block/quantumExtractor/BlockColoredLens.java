@@ -33,6 +33,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
     protected BlockColoredLens() {
         super(ModObject.blockColoredLens.unlocalisedName, Material.glass);
         hasSubtypes = true;
+        isFullSize = isOpaque = false;
     }
 
     public static BlockColoredLens create() {
@@ -76,16 +77,6 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
     @Override
     public int damageDropped(int meta) {
         return meta;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

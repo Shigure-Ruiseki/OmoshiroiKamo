@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -18,8 +17,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
-import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
-import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -34,7 +31,6 @@ import ruiseki.omoshiroikamo.core.client.render.block.WorldRender;
 import ruiseki.omoshiroikamo.core.client.texture.FlippableIcon;
 import ruiseki.omoshiroikamo.core.client.texture.MissingIcon;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
@@ -53,6 +49,8 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     @SideOnly(Side.CLIENT)
     private BlockRenderInfo renderInfo;
 
+    protected boolean isOpaque = true;
+    protected boolean isFullSize = true;
     public boolean hasSubtypes = false;
 
     protected BlockOK(String name) {
@@ -74,16 +72,7 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         setHardness(0.5F);
         setBlockName(name);
         setHarvestLevel("pickaxe", 0);
-
-        if (mat == Material.glass) {
-            this.setStepSound(Block.soundTypeGlass);
-        } else if (mat == Material.rock) {
-            this.setStepSound(Block.soundTypeStone);
-        } else if (mat == Material.wood) {
-            this.setStepSound(Block.soundTypeWood);
-        } else {
-            this.setStepSound(Block.soundTypeMetal);
-        }
+        this.setStepSound(getSoundForMaterial(mat));
     }
 
     public void init() {
@@ -184,6 +173,29 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     }
 
     /* Subclass Helpers */
+
+    @Override
+    public final boolean isOpaqueCube() {
+        return this.isOpaque;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return this.isFullSize && this.isOpaque;
+    }
+
+    @Override
+    public final boolean isNormalCube(final IBlockAccess world, final int x, final int y, final int z) {
+        return this.isFullSize;
+    }
+
+    public SoundType getSoundForMaterial(Material mat) {
+        if (mat == Material.glass) return Block.soundTypeGlass;
+        if (mat == Material.rock) return Block.soundTypeStone;
+        if (mat == Material.wood) return Block.soundTypeWood;
+        return Block.soundTypeMetal;
+    }
+
     public boolean doNormalDrops(World world, int x, int y, int z) {
         return true;
     }
@@ -231,8 +243,6 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
 
     protected void processDrop(World world, int x, int y, int z, @Nullable TileEntityOK te, ItemStack drop) {}
 
-    // Collision
-
     // Because the vanilla method takes floats...
     public void setBlockBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         this.minX = minX;
@@ -241,23 +251,6 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         this.maxX = maxX;
         this.maxY = maxY;
         this.maxZ = maxZ;
-    }
-
-    public void setBlockBounds(AxisAlignedBB bb) {
-        setBlockBounds(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
-    }
-
-    // BlockSate
-    public BlockState getBlockState(IBlockAccess world, int x, int y, int z) {
-        return BlockPropertyRegistry.getBlockState(world, x, y, z);
-    }
-
-    public BlockState getBlockState(IBlockAccess world, BlockPos pos) {
-        return getBlockState(world, pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    public BlockState getBlockState(ItemStack stack) {
-        return BlockPropertyRegistry.getBlockState(stack);
     }
 
     // Orientable

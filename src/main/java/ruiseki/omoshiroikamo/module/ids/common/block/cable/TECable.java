@@ -13,13 +13,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
@@ -31,6 +29,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 
 import cofh.api.item.IToolHammer;
+import lombok.Getter;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
@@ -39,16 +38,21 @@ import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
 import ruiseki.omoshiroikamo.core.block.ICollidable;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
+import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
+import ruiseki.omoshiroikamo.core.datastructure.EnumFacingMap;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
-import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
+import ruiseki.omoshiroikamo.core.tileentity.AbstractTickingTE;
+import ruiseki.omoshiroikamo.module.ids.common.capabilities.SidedDynamicLight;
+import ruiseki.omoshiroikamo.module.ids.common.capabilities.SidedDynamicRedstone;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
 import ruiseki.omoshiroikamo.module.ids.common.item.CablePartRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.IRedstoneWriter;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.energy.IEnergyPart;
 
-public class TECable extends AbstractTE
+public class TECable extends AbstractTickingTE
     implements ICable, IWailaTileInfoProvider, CapabilityProvider, IGuiHolder<SidedPosGuiData> {
 
     @NBTPersist
@@ -67,7 +71,32 @@ public class TECable extends AbstractTE
     public boolean clientUpdated = false;
     public boolean needsNetworkRebuild = false;
 
-    public TECable() {}
+    @Getter
+    @NBTPersist
+    private EnumFacingMap<Integer> redstoneLevels = EnumFacingMap.newMap();
+    @Getter
+    @NBTPersist
+    private EnumFacingMap<Boolean> redstoneInputs = EnumFacingMap.newMap();
+    @Getter
+    @NBTPersist
+    private EnumFacingMap<Boolean> redstoneStrong = EnumFacingMap.newMap();
+    @Getter
+    @NBTPersist
+    private EnumFacingMap<Integer> lastRedstonePulses = EnumFacingMap.newMap();
+    @Getter
+    @NBTPersist
+    private EnumFacingMap<Integer> lightLevels = EnumFacingMap.newMap();
+    private EnumFacingMap<Integer> previousLightLevels;
+
+    public TECable() {
+        for (ForgeDirection facing : ForgeDirection.VALID_DIRECTIONS) {
+            addCapabilitySided(CapabilityLight.DYNAMIC_LIGHT_CAPABILITY, facing, new SidedDynamicLight(this, facing));
+            addCapabilitySided(
+                CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY,
+                facing,
+                new SidedDynamicRedstone(this, facing));
+        }
+    }
 
     @Override
     public boolean requiresTESR() {
@@ -126,6 +155,14 @@ public class TECable extends AbstractTE
         needsNetworkRebuild = true;
         if (worldObj != null && worldObj.isRemote) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public void onUpdateReceived() {
+        if (!lightLevels.equals(previousLightLevels)) {
+            previousLightLevels = lightLevels;
+            updateTELight();
         }
     }
 
@@ -470,12 +507,8 @@ public class TECable extends AbstractTE
     }
 
     @Override
-    public boolean isActive() {
-        return false;
-    }
-
-    @Override
-    public boolean processTasks(boolean redstoneCheckPassed) {
+    protected void doUpdate() {
+        super.doUpdate();
         if (!worldObj.isRemote && needsNetworkRebuild) {
             CableUtils.scheduleRebuild(this);
             needsNetworkRebuild = false;
@@ -485,7 +518,9 @@ public class TECable extends AbstractTE
             conduit.doUpdate();
         }
 
-        return worldObj.isRemote && clientUpdated;
+        if (worldObj.isRemote && clientUpdated) {
+            onSendUpdate();
+        }
     }
 
     @Override
@@ -502,18 +537,6 @@ public class TECable extends AbstractTE
             }
             networks.clear();
         }
-    }
-
-    public int getRedstonePower(ForgeDirection side) {
-        if (worldObj == null) return 0;
-        if (isSideBlocked(side)) return 0;
-
-        ICablePart part = getPart(side);
-        if (!(part instanceof IRedstoneWriter rs)) {
-            return 0;
-        }
-
-        return MathHelper.clamp_int(rs.getRedstoneOutput(), 0, 15);
     }
 
     @Override
@@ -669,12 +692,43 @@ public class TECable extends AbstractTE
         return new ModularPanel("baseCable");
     }
 
-    @Override
-    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
-        return null;
+    public void updateLightInfo() {
+        sendUpdate();
+    }
+
+    public void updateRedstoneInfo(ForgeDirection side, boolean strongPower) {
+        this.markDirty();
+
+        World world = getWorldObj();
+        if (world == null) return;
+
+        int x = xCoord + side.offsetX;
+        int y = yCoord + side.offsetY;
+        int z = zCoord + side.offsetZ;
+
+        if (world.blockExists(x, y, z)) {
+
+            // equivalent of neighborChanged(...)
+            world.notifyBlockOfNeighborChange(x, y, z, this.getBlockType());
+
+            if (strongPower) {
+                // strong power → notify all neighbours of that block
+                world.notifyBlocksOfNeighborChange(x, y, z, this.getBlockType());
+            }
+        }
     }
 
     private static byte bit(ForgeDirection dir) {
         return (byte) (1 << dir.ordinal());
+    }
+
+    @Override
+    public boolean hasCapability(@NotNull Capability<?> capability, ForgeDirection facing) {
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(@NotNull Capability<T> capability, ForgeDirection facing) {
+        return super.getCapability(capability, facing);
     }
 }

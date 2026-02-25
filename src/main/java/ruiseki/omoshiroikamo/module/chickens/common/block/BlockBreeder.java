@@ -24,6 +24,7 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
     protected BlockBreeder() {
         super(ModObject.blockBreeder.unlocalisedName, TEBreeder.class, Material.wood);
         this.setTickRandomly(true);
+        isOpaque = false;
     }
 
     public static BlockBreeder create() {
@@ -33,11 +34,6 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

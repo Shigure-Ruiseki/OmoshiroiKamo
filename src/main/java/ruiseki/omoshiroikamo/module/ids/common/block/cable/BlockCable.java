@@ -30,14 +30,19 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.CollidableComponent;
 import ruiseki.omoshiroikamo.core.block.ICollidable;
 import ruiseki.omoshiroikamo.core.block.ICollidableParent;
+import ruiseki.omoshiroikamo.core.block.IDynamicLight;
+import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
+import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
+import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.BlockHelpers;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.module.ids.client.render.RenderCable;
-import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.redstone.IRedstoneLogic;
 
 public class BlockCable extends BlockOK
     implements ICollidable<ForgeDirection>, ICollidableParent, IWailaBlockInfoProvider {
@@ -64,6 +69,7 @@ public class BlockCable extends BlockOK
         setHardness(BLOCK_HARDNESS);
         setStepSound(soundTypeStone);
         setBlockTextureName("ids/cable");
+        isFullSize = isOpaque = false;
     }
 
     @Override
@@ -80,22 +86,9 @@ public class BlockCable extends BlockOK
     }
 
     @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof ICable cable) return cable.hasPart(side);
         return false;
     }
 
@@ -169,6 +162,7 @@ public class BlockCable extends BlockOK
         // DO NOTHING
     }
 
+    // IDynamicRedstone
     @Override
     public boolean canProvidePower() {
         return true;
@@ -176,29 +170,50 @@ public class BlockCable extends BlockOK
 
     @Override
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-        if (side < 0) return false;
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (!(te instanceof TECable cable)) return false;
         ForgeDirection dir = ForgeDirection.getOrientation(side)
             .getOpposite();
-        return cable.getPart(dir) instanceof IRedstoneLogic;
+        IDynamicRedstone cap = TileHelpers
+            .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
+
+        return cap != null && (cap.getRedstoneLevel() > 0 || cap.isAllowRedstoneInput());
     }
 
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (!(te instanceof TECable cable)) return 0;
-
         ForgeDirection dir = ForgeDirection.getOrientation(side)
             .getOpposite();
-        return cable.getRedstonePower(dir);
+
+        IDynamicRedstone cap = TileHelpers
+            .getCapability(world, new BlockPos(x, y, z), dir, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
+
+        return cap != null ? cap.getRedstoneLevel() : 0;
     }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-        return isProvidingWeakPower(world, x, y, z, side);
+        ForgeDirection direction = ForgeDirection.getOrientation(side);
+
+        IDynamicRedstone cap = TileHelpers
+            .getCapability(world, new BlockPos(x, y, z), direction, CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
+
+        return cap != null && cap.isStrong() ? cap.getRedstoneLevel() : 0;
     }
 
+    // IDynamicLight
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z) {
+        int light = 0;
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+            IDynamicLight dynamicLight = TileHelpers
+                .getCapability(world, new BlockPos(x, y, z), side, CapabilityLight.DYNAMIC_LIGHT_CAPABILITY);
+            if (dynamicLight != null) {
+                light = Math.max(light, dynamicLight.getLightLevel());
+            }
+        }
+        return light;
+    }
+
+    // Collision
     @Override
     public void addCollisionBoxesToListParent(World world, int x, int y, int z, AxisAlignedBB mask,
         List<AxisAlignedBB> list, Entity collidingEntity) {
@@ -215,6 +230,7 @@ public class BlockCable extends BlockOK
         return super.collisionRayTrace(world, x, y, z, origin, direction);
     }
 
+    // Waila
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
         World world = accessor.getWorld();

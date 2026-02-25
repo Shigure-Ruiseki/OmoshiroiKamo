@@ -23,6 +23,7 @@ public class BlockLens extends BlockOK implements IMBBlock {
     protected BlockLens() {
         super(ModObject.blockLens.unlocalisedName, Material.glass);
         hasSubtypes = true;
+        isFullSize = isOpaque = false;
     }
 
     public static BlockLens create() {
@@ -37,16 +38,6 @@ public class BlockLens extends BlockOK implements IMBBlock {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

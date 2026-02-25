@@ -21,6 +21,7 @@ public class BlockRoost extends AbstractBlock<TERoost> {
 
     protected BlockRoost() {
         super(ModObject.blockRoost.unlocalisedName, TERoost.class, Material.wood);
+        isOpaque = false;
     }
 
     public static BlockRoost create() {
@@ -35,11 +36,6 @@ public class BlockRoost extends AbstractBlock<TERoost> {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

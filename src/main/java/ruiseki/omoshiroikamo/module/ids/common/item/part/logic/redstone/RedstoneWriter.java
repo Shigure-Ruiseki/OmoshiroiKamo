@@ -38,9 +38,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
+import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
+import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
@@ -413,11 +416,11 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
     private void setOutput(int value) {
         value = Math.max(0, Math.min(15, value));
-
         if (value == lastOutput) return;
         lastOutput = value;
-        markDirty();
-        notifyNeighbors();
+        IDynamicRedstone cap = TileHelpers
+            .getCapability(getWorld(), getPos(), getSide(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
+        cap.setRedstoneLevel(lastOutput, lastOutput > 8);
     }
 
     @Override

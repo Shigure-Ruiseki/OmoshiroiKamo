@@ -34,9 +34,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
+import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
+import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
@@ -100,6 +103,22 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
     @Override
     public ItemStack getItemStack() {
         return IDsItems.REDSTONE_READER.newItemStack();
+    }
+
+    @Override
+    public void onAttached() {
+        super.onAttached();
+        IDynamicRedstone cap = TileHelpers
+            .getCapability(getWorld(), getPos(), getSide(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
+        cap.setAllowRedstoneInput(true);
+    }
+
+    @Override
+    public void onDetached() {
+        super.onDetached();
+        IDynamicRedstone cap = TileHelpers
+            .getCapability(getWorld(), getPos(), getSide(), CapabilityRedstone.DYNAMIC_REDSTONE_CAPABILITY);
+        cap.setAllowRedstoneInput(false);
     }
 
     @Override

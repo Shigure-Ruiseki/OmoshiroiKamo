@@ -59,6 +59,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         setHardness(1f);
         this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
+        isFullSize = isOpaque = false;
     }
 
     public static BlockBackpack create(String name, int slots, int upgradeSlots) {
@@ -68,16 +69,6 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

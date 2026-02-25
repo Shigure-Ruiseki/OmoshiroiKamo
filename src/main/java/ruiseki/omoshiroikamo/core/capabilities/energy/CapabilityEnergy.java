@@ -1,10 +1,13 @@
-package ruiseki.omoshiroikamo.core.capabilities;
+package ruiseki.omoshiroikamo.core.capabilities.energy;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.IEnergyStorage;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityInject;
+import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.energy.EnergyStorage;
 
 public class CapabilityEnergy {

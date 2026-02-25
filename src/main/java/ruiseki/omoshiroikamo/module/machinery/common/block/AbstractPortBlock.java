@@ -54,6 +54,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
         super(name, teClasses);
         this.tierCount = teClasses.length;
         this.useNeighborBrightness = true;
+        isFullSize = isOpaque = false;
     }
 
     @Override
@@ -91,18 +92,8 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     }
 
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube(IBlockAccess world, int x, int y, int z) {
-        return false;
-    }
-
-    @Override
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
-        return true;
+        return false;
     }
 
     @Override

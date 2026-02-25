@@ -40,6 +40,7 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
             TEQuantumBeaconT6.class);
         this.setLightLevel(1.0F);
         hasSubtypes = true;
+        isOpaque = false;
     }
 
     public static BlockQuantumBeacon create() {
@@ -59,11 +60,6 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

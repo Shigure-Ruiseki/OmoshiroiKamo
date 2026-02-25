@@ -30,6 +30,7 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
     protected BlockSolarCell() {
         super(ModObject.blockSolarCell.unlocalisedName);
         hasSubtypes = true;
+        isFullSize = false;
     }
 
     public static BlockSolarCell create() {
@@ -109,16 +110,6 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

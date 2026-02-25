@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.google.common.collect.Maps;
 
-import ruiseki.omoshiroikamo.core.capabilities.CapabilityItemHandler;
+import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
 import ruiseki.omoshiroikamo.core.inventory.INBTInventory;
 import ruiseki.omoshiroikamo.core.item.SidedInvWrapper;
 
