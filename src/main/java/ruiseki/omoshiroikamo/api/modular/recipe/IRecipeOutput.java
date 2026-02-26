@@ -1,37 +1,37 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
-import java.util.List;
-
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.json.IJsonMaterial;
 
 /**
- * Interface for recipe output production.
- * Implementations define how to check space and produce outputs to ports.
+ * Interface for recipe output requirements.
+ * Implementations define how to check and produce outputs in ports.
  */
-public interface IRecipeOutput {
+public interface IRecipeOutput extends IJsonMaterial {
 
     /**
-     * Get the port type this output produces.
+     * Get the port type this output requires.
      */
     IPortType.Type getPortType();
 
     /**
-     * Check if this output can be inserted and optionally produce it.
-     *
-     * @param ports    List of output ports to check/produce to
-     * @param simulate If true, only check without producing. If false, actually
-     *                 produce.
-     * @return true if the output can be/was inserted
+     * Check if the ports have enough capacity to store this output.
      */
-    boolean process(List<IModularPort> ports, boolean simulate);
+    boolean checkCapacity(java.util.List<IModularPort> ports);
 
     /**
-     * Check if the connected ports have enough total capacity for this output.
-     * This checks if the output *could* fit if the ports were empty.
-     *
-     * @param ports List of output ports to check
-     * @return true if total capacity is sufficient
+     * Produce the output and store it in the provided ports.
      */
-    boolean checkCapacity(List<IModularPort> ports);
+    void apply(java.util.List<IModularPort> ports);
+
+    /**
+     * Check if this output is satisfied (legacy support for process if needed).
+     * Now use checkCapacity and apply separately in ModularRecipe.
+     */
+    default boolean process(java.util.List<IModularPort> ports, boolean simulate) {
+        if (simulate) return checkCapacity(ports);
+        apply(ports);
+        return true;
+    }
 }

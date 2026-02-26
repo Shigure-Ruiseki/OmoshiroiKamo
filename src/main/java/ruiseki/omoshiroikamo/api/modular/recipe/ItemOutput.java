@@ -8,18 +8,18 @@ import net.minecraft.item.ItemStack;
 
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.common.registry.GameData;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 public class ItemOutput extends AbstractRecipeOutput {
 
-    private final ItemStack output;
+    private ItemStack output;
 
     public ItemOutput(ItemStack output) {
-        this.output = output.copy();
+        this.output = output != null ? output.copy() : null;
     }
 
     public ItemOutput(Item item, int count) {
@@ -31,11 +31,11 @@ public class ItemOutput extends AbstractRecipeOutput {
     }
 
     public ItemStack getOutput() {
-        return output.copy();
+        return output != null ? output.copy() : null;
     }
 
     public List<ItemStack> getItems() {
-        return Collections.singletonList(output);
+        return output != null ? Collections.singletonList(output) : Collections.emptyList();
     }
 
     @Override
@@ -44,17 +44,13 @@ public class ItemOutput extends AbstractRecipeOutput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-
-        // If not simulating, first check if we CAN output everything by simulating
-        if (!simulate) {
-            if (!process(ports, true)) return false;
-        }
-
+    public void apply(List<IModularPort> ports) {
+        if (output == null) return;
         int remaining = output.stackSize;
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ITEM) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
             if (!(port instanceof AbstractItemIOPortTE)) {
                 throw new IllegalStateException(
@@ -68,26 +64,20 @@ public class ItemOutput extends AbstractRecipeOutput {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack == null) {
                     int insert = Math.min(remaining, output.getMaxStackSize());
-                    if (!simulate) {
-                        ItemStack newStack = output.copy();
-                        newStack.stackSize = insert;
-                        itemPort.setInventorySlotContents(i, newStack);
-                    }
+                    ItemStack newStack = output.copy();
+                    newStack.stackSize = insert;
+                    itemPort.setInventorySlotContents(i, newStack);
                     remaining -= insert;
                 } else if (stacksMatch(stack, output)) {
                     int space = stack.getMaxStackSize() - stack.stackSize;
                     int insert = Math.min(remaining, space);
-                    if (!simulate) {
-                        stack.stackSize += insert;
-                    }
+                    stack.stackSize += insert;
                     remaining -= insert;
                 }
             }
 
             if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     private boolean stacksMatch(ItemStack a, ItemStack b) {
@@ -104,6 +94,7 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     @Override
     protected long getPortCapacity(IModularPort port) {
+        if (output == null) return 0;
         AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
         int maxStackSize = output.getMaxStackSize();
         int limit = Math.min(itemPort.getInventoryStackLimit(), maxStackSize);
@@ -112,27 +103,56 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     @Override
     protected long getRequiredAmount() {
-        return output.stackSize;
+        return output != null ? output.stackSize : 0;
     }
 
-    public static ItemOutput fromJson(JsonObject json) {
+    @Override
+    public void read(JsonObject json) {
         ItemJson itemJson = new ItemJson();
-        String itemId = json.get("item")
-            .getAsString();
-        if (itemId.startsWith("ore:")) {
-            itemJson.ore = itemId.substring(4);
-        } else {
-            itemJson.name = itemId;
+        if (json.has("item")) {
+            String itemId = json.get("item")
+                .getAsString();
+            if (itemId.startsWith("ore:")) {
+                itemJson.ore = itemId.substring(4);
+            } else {
+                itemJson.name = itemId;
+            }
         }
         itemJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1;
         itemJson.meta = json.has("meta") ? json.get("meta")
             .getAsInt() : 0;
-        ItemStack stack = ItemJson.resolveItemStack(itemJson);
-        if (stack == null) {
-            Logger.warn("Unknown item in recipe: {}", itemId);
-            return null;
+        this.output = ItemJson.resolveItemStack(itemJson);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        if (output != null) {
+            json.addProperty(
+                "item",
+                GameData.getItemRegistry()
+                    .getNameForObject(output.getItem()));
+            if (output.stackSize != 1) json.addProperty("amount", output.stackSize);
+            if (output.getItemDamage() != 0) json.addProperty("meta", output.getItemDamage());
         }
-        return new ItemOutput(stack);
+    }
+
+    @Override
+    public boolean validate() {
+        return output != null;
+    }
+
+    @Override
+    public void set(String key, Object value) {}
+
+    @Override
+    public Object get(String key) {
+        return null;
+    }
+
+    public static ItemOutput fromJson(JsonObject json) {
+        ItemOutput out = new ItemOutput((ItemStack) null);
+        out.read(json);
+        return out.validate() ? out : null;
     }
 }

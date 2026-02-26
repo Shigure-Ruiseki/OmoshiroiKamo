@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 
 public class ModularRecipe implements Comparable<ModularRecipe> {
 
+    private final String registryName;
     private final String recipeGroup;
     private final String name;
     private final int duration;
@@ -22,6 +23,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
     private final List<ICondition> conditions;
 
     private ModularRecipe(Builder builder) {
+        this.registryName = builder.registryName;
         this.recipeGroup = builder.recipeGroup;
         this.duration = builder.duration;
         this.priority = builder.priority;
@@ -29,6 +31,10 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
         this.conditions = Collections.unmodifiableList(new ArrayList<>(builder.conditions));
+    }
+
+    public String getRegistryName() {
+        return registryName;
     }
 
     public String getRecipeGroup() {
@@ -104,7 +110,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
         for (IRecipeOutput output : outputs) {
             List<IModularPort> filtered = filterByType(outputPorts, output.getPortType());
-            if (!output.process(filtered, true)) {
+            if (!output.checkCapacity(filtered)) {
                 return false;
             }
         }
@@ -112,7 +118,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         if (!simulate) {
             for (IRecipeOutput output : outputs) {
                 List<IModularPort> filtered = filterByType(outputPorts, output.getPortType());
-                output.process(filtered, false);
+                output.apply(filtered);
             }
         }
         return true;
@@ -187,12 +193,18 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     public static class Builder {
 
+        private String registryName;
         private String recipeGroup;
         private String name;
         private int duration = 100;
         private int priority = 0;
         private List<IRecipeInput> inputs = new ArrayList<>();
         private List<IRecipeOutput> outputs = new ArrayList<>();
+
+        public Builder registryName(String registryName) {
+            this.registryName = registryName;
+            return this;
+        }
 
         public Builder recipeGroup(String recipeGroup) {
             this.recipeGroup = recipeGroup;

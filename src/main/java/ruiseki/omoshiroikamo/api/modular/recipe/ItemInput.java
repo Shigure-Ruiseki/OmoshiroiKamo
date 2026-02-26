@@ -17,12 +17,14 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
 
 public class ItemInput extends AbstractRecipeInput {
 
-    private final String oreDict;
-    private final ItemStack required;
+    private String oreDict;
+    private ItemStack required;
+    private int count = 1;
 
     public ItemInput(ItemStack required) {
-        this.required = required.copy();
+        this.required = required != null ? required.copy() : null;
         this.oreDict = null;
+        if (this.required != null) this.count = this.required.stackSize;
     }
 
     public ItemInput(String oreDict, int count) {
@@ -30,8 +32,6 @@ public class ItemInput extends AbstractRecipeInput {
         this.oreDict = oreDict;
         this.count = count;
     }
-
-    private int count = 1;
 
     public ItemInput(Item item, int count) {
         this(new ItemStack(item, count));
@@ -64,7 +64,7 @@ public class ItemInput extends AbstractRecipeInput {
     }
 
     @Override
-    protected long getRequiredAmount() {
+    public long getRequiredAmount() {
         return required != null ? required.stackSize : count;
     }
 
@@ -114,13 +114,15 @@ public class ItemInput extends AbstractRecipeInput {
         return true;
     }
 
-    public static ItemInput fromJson(JsonObject json) {
+    @Override
+    public void read(JsonObject json) {
         if (json.has("ore")) {
-            String ore = json.get("ore")
+            this.required = null;
+            this.oreDict = json.get("ore")
                 .getAsString();
-            int amount = json.has("amount") ? json.get("amount")
+            this.count = json.has("amount") ? json.get("amount")
                 .getAsInt() : 1;
-            return new ItemInput(ore, amount);
+            return;
         }
 
         ItemJson itemJson = new ItemJson();
@@ -128,16 +130,17 @@ public class ItemInput extends AbstractRecipeInput {
             String itemId = json.get("item")
                 .getAsString();
             if (itemId.startsWith("ore:")) {
-                String ore = itemId.substring(4);
-                int amount = json.has("amount") ? json.get("amount")
+                this.required = null;
+                this.oreDict = itemId.substring(4);
+                this.count = json.has("amount") ? json.get("amount")
                     .getAsInt() : 1;
-                return new ItemInput(ore, amount);
+                return;
             } else {
                 itemJson.name = itemId;
             }
         } else {
             Logger.warn("ItemInput requires 'item' or 'ore' key: {}", json);
-            return null;
+            return;
         }
 
         itemJson.amount = json.has("amount") ? json.get("amount")
@@ -146,10 +149,44 @@ public class ItemInput extends AbstractRecipeInput {
             .getAsInt() : 0;
 
         ItemStack stack = ItemJson.resolveItemStack(itemJson);
-        if (stack == null) {
-            // Don't warn here, let JSONLoader handle the null return
-            return null;
+        if (stack != null) {
+            this.required = stack;
+            this.oreDict = null;
+            this.count = stack.stackSize;
         }
-        return new ItemInput(stack);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        if (oreDict != null) {
+            json.addProperty("ore", oreDict);
+            if (count != 1) json.addProperty("amount", count);
+        } else if (required != null) {
+            ItemJson data = ItemJson.parseItemStack(required);
+            if (data != null) {
+                json.addProperty("item", data.name);
+                if (data.amount != 1) json.addProperty("amount", data.amount);
+                if (data.meta != 0) json.addProperty("meta", data.meta);
+            }
+        }
+    }
+
+    @Override
+    public boolean validate() {
+        return required != null || oreDict != null;
+    }
+
+    @Override
+    public void set(String key, Object value) {}
+
+    @Override
+    public Object get(String key) {
+        return null;
+    }
+
+    public static ItemInput fromJson(JsonObject json) {
+        ItemInput input = new ItemInput((ItemStack) null);
+        input.read(json);
+        return input.validate() ? input : null;
     }
 }

@@ -4,8 +4,9 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
-public abstract class AbstractRecipeOutput implements IRecipeOutput {
+public abstract class AbstractRecipeOutput extends AbstractJsonMaterial implements IRecipeOutput {
 
     @Override
     public boolean checkCapacity(List<IModularPort> ports) {

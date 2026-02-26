@@ -4,12 +4,13 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.core.json.IJsonMaterial;
 
 /**
  * Interface for recipe input requirements.
  * Implementations define how to check and consume inputs from ports.
  */
-public interface IRecipeInput {
+public interface IRecipeInput extends IJsonMaterial {
 
     /**
      * Get the port type this input requires.
