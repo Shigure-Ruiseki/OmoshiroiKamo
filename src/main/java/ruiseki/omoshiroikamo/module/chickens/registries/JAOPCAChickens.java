@@ -235,6 +235,7 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
             String oredict = miscHelper.getOredictName(prefix, material.getName());
             chicken.setLayString("ore:" + oredict);
 
+            // TODO: Add multi language support
             String enName = name + " Chicken";
             String jaName = name + "のニワトリ";
 
