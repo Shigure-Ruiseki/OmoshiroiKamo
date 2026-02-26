@@ -19,12 +19,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 
+import ruiseki.omoshiroikamo.core.block.orientable.IOrientableBlock;
+import ruiseki.omoshiroikamo.core.block.orientable.MetaRotation;
 import ruiseki.omoshiroikamo.core.block.property.AutoBlockProperty;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
+import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
 
-public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
+public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
+    implements IWailaBlockInfoProvider, IOrientableBlock {
     // TODO: Change block meta to extendedFacing for all the tileentities
 
     @AutoBlockProperty
@@ -45,8 +49,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
     protected AbstractBlock(String name, Class<T> teClass, Material mat) {
         super(name, teClass, mat);
         setHardness(2.0F);
-        setStepSound(soundTypeMetal);
-        setHarvestLevel("pickaxe", 0);
     }
 
     protected AbstractBlock(String name, Class<T> teClass) {
@@ -82,9 +84,11 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
-        int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        ForgeDirection facing = getDirectionForHeading(heading);
-        BlockStateHelpers.setFacingProp(world, x, y, z, facing);
+        if (isRotatable()) {
+            int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+            ForgeDirection facing = getDirectionForHeading(heading);
+            BlockStateHelpers.setFacingProp(world, x, y, z, facing);
+        }
     }
 
     private ForgeDirection getDirectionForHeading(int heading) {
@@ -110,11 +114,21 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
         }
     }
 
-    public boolean isActive(IBlockAccess blockAccess, int x, int y, int z) {
-        TileEntity te = blockAccess.getTileEntity(x, y, z);
+    public boolean isActive(IBlockAccess world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof AbstractTE) {
             return ((AbstractTE) te).isActive();
         }
         return false;
+    }
+
+    @Override
+    public IOrientable getOrientable(IBlockAccess world, int x, int y, int z) {
+        return new MetaRotation(world, x, y, z);
+    }
+
+    @Override
+    public boolean usesMetadata() {
+        return true;
     }
 }

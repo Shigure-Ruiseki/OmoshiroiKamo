@@ -135,8 +135,8 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }

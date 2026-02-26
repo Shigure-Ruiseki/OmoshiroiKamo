@@ -11,7 +11,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ruiseki.omoshiroikamo.core.block;
+package ruiseki.omoshiroikamo.core.block.orientable;
 
 import net.minecraft.world.IBlockAccess;
 

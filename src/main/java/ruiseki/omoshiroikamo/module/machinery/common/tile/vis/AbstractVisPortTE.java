@@ -133,8 +133,8 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
         root.setInteger("maxVis", maxVisPerAspect);
 
         NBTTagList visList = new NBTTagList();
@@ -150,8 +150,8 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         // Only load if saved, otherwise keep constructor default
         if (root.hasKey("maxVis")) {
             int savedMax = root.getInteger("maxVis");

@@ -493,8 +493,8 @@ public class TEMachineController extends AbstractMBModifierTE
     // ========== NBT Persistence ==========
 
     @Override
-    public void writeCommon(NBTTagCompound nbt) {
-        super.writeCommon(nbt);
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
         NBTTagList groupList = new NBTTagList();
         for (String group : recipeGroups) {
@@ -513,8 +513,8 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
-    public void readCommon(NBTTagCompound nbt) {
-        super.readCommon(nbt);
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
         recipeGroups = new ArrayList<>();
         if (nbt.hasKey("recipeGroups", 9)) {

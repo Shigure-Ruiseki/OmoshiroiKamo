@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.block;
+package ruiseki.omoshiroikamo.core.block.collidable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Data;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 
 /**
  * Component for blocks that require complex collision detection.

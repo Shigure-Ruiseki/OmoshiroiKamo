@@ -22,6 +22,7 @@ public class BlockRoost extends AbstractBlock<TERoost> {
     protected BlockRoost() {
         super(ModObject.blockRoost.unlocalisedName, TERoost.class, Material.wood);
         isOpaque = false;
+        rotatable = true;
     }
 
     public static BlockRoost create() {

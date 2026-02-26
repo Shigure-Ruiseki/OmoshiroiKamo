@@ -16,7 +16,7 @@ package ruiseki.omoshiroikamo.core.tileentity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Nearly all of AE's Tile Entities implement IOrientable.
+ * Nearly all of Tile Entities implement IOrientable.
  * <p>
  * and it can be used to manipulate the direction of some machines, most of these orientations are purely visual.
  * <p>

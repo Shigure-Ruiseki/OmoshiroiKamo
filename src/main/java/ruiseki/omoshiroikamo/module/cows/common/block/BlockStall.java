@@ -26,6 +26,7 @@ public class BlockStall extends AbstractBlock<TEStall> {
     protected BlockStall() {
         super(ModObject.blockStall.unlocalisedName, TEStall.class, Material.rock);
         isOpaque = false;
+        rotatable = true;
     }
 
     public static BlockStall create() {

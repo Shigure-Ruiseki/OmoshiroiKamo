@@ -60,6 +60,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
         isFullSize = isOpaque = false;
+        rotatable = true;
     }
 
     public static BlockBackpack create(String name, int slots, int upgradeSlots) {

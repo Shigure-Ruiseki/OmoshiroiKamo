@@ -33,11 +33,14 @@ public abstract class TileEntityOK extends TileEntity
     private final INBTProvider nbtProvider = new NBTProviderComponent(this);
 
     @NBTPersist
+    private Boolean rotatable = false;
+    @NBTPersist
     private ForgeDirection forward = ForgeDirection.UNKNOWN;
     @NBTPersist
     private ForgeDirection up = ForgeDirection.UNKNOWN;
 
     private static final int UPDATE_BACKOFF_TICKS = 1;
+
     private boolean shouldSendUpdate = false;
     private int sendUpdateBackoff = 0;
     private final boolean ticking;
@@ -53,6 +56,21 @@ public abstract class TileEntityOK extends TileEntity
         this.ticking = this instanceof ITickingTile;
     }
 
+    @Override
+    public final boolean canUpdate() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y,
+        int z) {
+        return (oldBlock != newBlock);
+    }
+
+    protected boolean isTicking() {
+        return ticking;
+    }
+
     /**
      * for dormant chunk cache.
      */
@@ -62,9 +80,18 @@ public abstract class TileEntityOK extends TileEntity
         }
     }
 
+    /**
+     * Set whether or not the blockState that has this tile entity can be rotated.
+     * 
+     * @param rotatable If it can be rotated.
+     */
+    public void setRotatable(boolean rotatable) {
+        this.rotatable = rotatable;
+    }
+
     @Override
     public boolean canBeRotated() {
-        return true;
+        return rotatable;
     }
 
     @Override
@@ -83,21 +110,6 @@ public abstract class TileEntityOK extends TileEntity
         this.up = inUp;
         this.onSendUpdate();
         worldObj.notifyBlockOfNeighborChange(xCoord, yCoord, zCoord, Blocks.air);
-    }
-
-    @Override
-    public final boolean canUpdate() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y,
-        int z) {
-        return (oldBlock != newBlock);
-    }
-
-    protected boolean isTicking() {
-        return ticking;
     }
 
     /**
@@ -176,43 +188,15 @@ public abstract class TileEntityOK extends TileEntity
 
     @Override
     public Packet getDescriptionPacket() {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, getNBTTagCompound());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.func_148857_g());
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        super.onDataPacket(net, packet);
+        NBTTagCompound tag = packet.func_148857_g();
+        readFromNBT(tag);
         onUpdateReceived();
-    }
-
-    @Override
-    public final void writeToNBT(NBTTagCompound root) {
-        super.writeToNBT(root);
-        writeCommon(root);
-    }
-
-    @Override
-    public final void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
-        readCommon(root);
-    }
-
-    public void writeCommon(NBTTagCompound tag) {
-        writeGeneratedFieldsToNBT(tag);
-
-        if (capabilities != null) {
-            tag.setTag("OKCaps", capabilities.serializeNBT());
-        }
-    }
-
-    public void readCommon(NBTTagCompound tag) {
-        readGeneratedFieldsFromNBT(tag);
-
-        if (capabilities != null && tag.hasKey("OKCaps")) {
-            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
-        }
     }
 
     /**
@@ -233,7 +217,7 @@ public abstract class TileEntityOK extends TileEntity
     }
 
     /**
-     * Called when the blockState of this tile entity is destroyed.
+     * Called when the block of this tile entity is destroyed.
      */
     public void destroy() {
         invalidate();
@@ -248,6 +232,32 @@ public abstract class TileEntityOK extends TileEntity
     public boolean canInteractWith(EntityPlayer player) {
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        writeGeneratedFieldsToNBT(tag);
+
+        if (capabilities != null) {
+            tag.setTag("OKCaps", capabilities.serializeNBT());
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        readGeneratedFieldsFromNBT(tag);
+
+        if (capabilities != null && tag.hasKey("OKCaps")) {
+            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
+        }
+        onLoad();
+    }
+
+    /**
+     * When the tile is loaded or created.
+     */
+    public void onLoad() {}
 
     /**
      * Get the NBT tag for this tile entity.

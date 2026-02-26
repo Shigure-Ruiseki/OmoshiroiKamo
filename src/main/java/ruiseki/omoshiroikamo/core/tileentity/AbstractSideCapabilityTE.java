@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.core.tileentity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraftforge.common.util.ForgeDirection;
@@ -7,6 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
@@ -14,10 +16,20 @@ import ruiseki.omoshiroikamo.core.event.OKEventFactory;
 
 public abstract class AbstractSideCapabilityTE extends TileEntityOK {
 
-    private final Map<Pair<Capability<?>, ForgeDirection>, Object> capabilities = Maps.newHashMap();
+    private Map<Pair<Capability<?>, ForgeDirection>, Object> capabilities = Maps.newHashMap();
 
     public AbstractSideCapabilityTE() {
         OKEventFactory.attachCapability(this);
+    }
+
+    /**
+     * When the tile is loaded or created.
+     */
+    @Override
+    public void onLoad() {
+        if (capabilities instanceof HashMap) {
+            capabilities = ImmutableMap.copyOf(capabilities);
+        }
     }
 
     public <T> void addCapabilityInternal(Capability<T> capability, T value) {

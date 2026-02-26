@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.block;
+package ruiseki.omoshiroikamo.core.block.collidable;
 
 import java.util.List;
 

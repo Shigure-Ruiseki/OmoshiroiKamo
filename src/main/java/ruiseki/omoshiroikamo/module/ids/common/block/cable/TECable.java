@@ -37,7 +37,7 @@ import ruiseki.omoshiroikamo.api.ids.ICable;
 import ruiseki.omoshiroikamo.api.ids.ICableEndpoint;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.api.ids.ICablePart;
-import ruiseki.omoshiroikamo.core.block.ICollidable;
+import ruiseki.omoshiroikamo.core.block.collidable.ICollidable;
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
@@ -104,8 +104,8 @@ public class TECable extends AbstractTickingTE
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
 
         NBTTagCompound partsTag = new NBTTagCompound();
         for (Map.Entry<ForgeDirection, ICablePart> entry : parts.entrySet()) {
@@ -126,8 +126,8 @@ public class TECable extends AbstractTickingTE
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
 
         // parts
         parts.clear();

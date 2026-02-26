@@ -243,8 +243,8 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     // ========== NBT Handling ==========
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
 
         // Sync ME status to client (for Waila) - use cached values to avoid AE2 calls
         // These are updated in processTasks, not here
@@ -272,8 +272,8 @@ public class TEItemOutputPortME extends TEItemOutputPort implements IGridProxyab
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
 
         // Read synced ME status (for Waila on client)
         clientIsActive = root.getBoolean("meActive");

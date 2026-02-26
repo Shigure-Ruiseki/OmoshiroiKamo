@@ -170,8 +170,8 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     }
 
     @Override
-    public void writeCommon(NBTTagCompound root) {
-        super.writeCommon(root);
+    public void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
 
         NBTTagList aspectList = new NBTTagList();
         for (Aspect aspect : aspects.getAspects()) {
@@ -186,8 +186,8 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     }
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
 
         aspects = new AspectList();
         NBTTagList aspectList = root.getTagList("aspects", 10);

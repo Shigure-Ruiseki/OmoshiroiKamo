@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -51,9 +50,6 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
             world.scheduleBlockUpdate(x, y, z, this, 2);
         }
     }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {}
 
     @Override
     public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,

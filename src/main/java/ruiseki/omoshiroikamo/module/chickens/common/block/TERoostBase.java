@@ -358,8 +358,8 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
      */
 
     @Override
-    public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
+    public void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
         needsCacheRefresh();
     }
 
