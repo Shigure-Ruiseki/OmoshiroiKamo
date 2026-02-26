@@ -35,6 +35,10 @@ public class FluidOutput extends AbstractRecipeOutput {
         return FluidRegistry.getFluidStack(fluidName, amount);
     }
 
+    public FluidStack getFluid() {
+        return getOutput();
+    }
+
     @Override
     public IPortType.Type getPortType() {
         return IPortType.Type.FLUID;
