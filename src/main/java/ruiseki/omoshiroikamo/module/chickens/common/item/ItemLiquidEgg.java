@@ -24,10 +24,9 @@ import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
-    // TODO: When use in Fluid port, it will be consumed.
-    // For now, empty egg is returned.
 
     public ItemLiquidEgg() {
         super(ModObject.itemLiquidEgg);
@@ -227,7 +226,18 @@ public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
             setFluid(container, fluidStack);
 
             if (fluidStack.amount <= 0) {
-                container.stackSize--;
+                if (container.stackSize > 1) {
+                    container.stackSize--;
+                } else {
+                    // Last item consumed -> return EMPTY_EGG
+                    ItemStack emptyStack = ChickensItems.EMPTY_EGG.newItemStack();
+                    container.func_150996_a(emptyStack.getItem());
+                    container.setItemDamage(emptyStack.getItemDamage());
+                    container.stackSize = 1;
+                    if (container.stackTagCompound != null) {
+                        container.stackTagCompound.removeTag("Fluid");
+                    }
+                }
             }
         }
 

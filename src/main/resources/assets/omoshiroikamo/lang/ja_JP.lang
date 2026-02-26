@@ -125,6 +125,15 @@ tooltip.wand.size=サイズ: %dx%dx%d
 
 
 # Commands
+command.ok.invalidSubcommand=無効なサブコマンド
+command.ok.invalidArguments=無効な引数
+command.ok.onlyOneValue=1つの新しい値を定義してください
+command.ok.invalidNewValue=無効な新しい値
+command.ok.updatedValue=%sを%sに更新しました
+command.ok.invalidPlayer=プレイヤー '%s' は見つかりませんでした
+command.ok.ignitedPlayer=プレイヤー '%s' は%s秒間燃焼しました
+command.ok.noConfigsFound=設定可能なコンフィグ値は見つかりませんでした
+
 command.ok.main_usage_title=使用法:
 command.ok.main_usage_structure=/ok structure - ストラクチャー管理コマンド
 
@@ -335,6 +344,8 @@ tooltip.backpack.advanced_void_upgrade=フィルターで選択されたアイ�
 
 
 # Chicken ==============================================
+jaopca.chicken=%sのニワトリ
+
 
 
 # Config
@@ -345,6 +356,7 @@ config.chickenConfig=ニワトリの設定
 item.chickenCatcher.name=チキンキャッチャー
 item.liquidEgg.water.name=水入りの卵
 item.liquidEgg.lava.name=溶岩入りの卵
+item.emptyEgg.name=空の卵
 item.coloredEgg.white.name=骨粉色の卵
 item.coloredEgg.orange.name=オレンジ色の卵
 item.coloredEgg.magenta.name=赤紫色の卵
@@ -353,7 +365,7 @@ item.coloredEgg.yellow.name=黄色の卵
 item.coloredEgg.lime.name=黄緑色の卵
 item.coloredEgg.pink.name=桃色の卵
 item.coloredEgg.gray.name=灰色の卵
-item.coloredEgg.silverDye.name=薄灰色の卵
+item.coloredEgg.light_gray.name=薄灰色の卵
 item.coloredEgg.cyan.name=青緑色の卵
 item.coloredEgg.purple.name=紫色の卵
 item.coloredEgg.blue.name=ラピス色の卵
@@ -361,6 +373,7 @@ item.coloredEgg.brown.name=カカオ色の卵
 item.coloredEgg.green.name=サボテン色の卵
 item.coloredEgg.red.name=赤色の卵
 item.coloredEgg.black.name=イカスミ色の卵
+item.chickenFood.name=%sの餌
 
 item.solidXp.name=固形経験値
 
@@ -402,7 +415,7 @@ entity.LightBlueChicken.name=水色のニワトリ
 entity.LimeChicken.name=黄緑のニワトリ
 entity.GrayChicken.name=灰色のニワトリ
 entity.CyanChicken.name=シアンのニワトリ
-entity.SilverDyeChicken.name=薄灰色のニワトリ
+entity.LightGrayChicken.name=薄灰色のニワトリ
 entity.MagentaChicken.name=マゼンタのニワトリ
 entity.BrownChicken.name=茶色のニワトリ
 entity.SmartChicken.name=スマートなニワトリ

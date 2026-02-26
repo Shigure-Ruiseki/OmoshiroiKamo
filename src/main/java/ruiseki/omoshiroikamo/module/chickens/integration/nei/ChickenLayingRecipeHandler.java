@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.module.chickens.integration.nei;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
@@ -9,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickenRecipe;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
@@ -70,7 +73,7 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
         for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             ItemStack egg = ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId());
             ItemStack item = ChickensItems.CHICKEN.newItemStack(1, chicken.getId());
-            if (egg.isItemEqual(ingredient) || item.isItemEqual(ingredient)) {
+            if (egg.isItemEqual(ingredient) || item.isItemEqual(ingredient) || chicken.isFood(ingredient)) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }
@@ -101,8 +104,23 @@ public class ChickenLayingRecipeHandler extends RecipeHandlerBase {
         }
 
         @Override
-        public PositionedStack getIngredient() {
-            return new PositionedStack(ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId()), 53, 26);
+        public List<PositionedStack> getIngredients() {
+            List<PositionedStack> stacks = new ArrayList<>();
+            // Parent Chicken
+            stacks.add(new PositionedStack(ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId()), 53, 26));
+
+            // Food
+            List<ItemStack> foods = new ArrayList<>();
+            for (ChickenRecipe recipe : chicken.getRecipes()) {
+                if (recipe.getInput() != null) {
+                    foods.add(recipe.getInput());
+                }
+            }
+            if (!foods.isEmpty()) {
+                stacks.add(new PositionedStack(foods, 21, 26));
+            }
+
+            return stacks;
         }
 
         @Override

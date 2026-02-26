@@ -1,14 +1,13 @@
 package ruiseki.omoshiroikamo.module.chickens.common.block;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -112,12 +111,39 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
             return true;
         }
 
-        ItemStack seedStack = getStackInSlot(getSizeChickenInventory());
-        if (seedStack == null || seedStack.getItem() == null) {
-            return false;
+        ItemStack foodStack = getStackInSlot(2);
+
+        // Mutation check for Breeder
+        if (isMutationFood(foodStack)) {
+            if (foodStack != null && foodStack.stackSize >= needed) {
+                return true;
+            }
         }
 
-        return seedStack.stackSize >= needed;
+        for (int i = 0; i < getSizeChickenInventory(); i++) {
+            DataChicken chicken = getChickenData(i);
+            if (chicken != null) {
+                if (!chicken.getItem()
+                    .getRecipes()
+                    .isEmpty()) {
+                    // If this specific chicken requires food, check if foodStack satisfies it
+                    if (foodStack == null || foodStack.stackSize < needed
+                        || !chicken.getItem()
+                            .isFood(foodStack)) {
+                        return false;
+                    }
+                } else {
+                    // If 'no food' set, require wheat seeds for Breeder
+                    if (this instanceof TEBreeder && !chicken.getItem()
+                        .isFallbackFood(foodStack)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // If no chickens require food, or all required food is present
+        return true;
     }
 
     /**
@@ -208,7 +234,7 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         if (isFullChickens() && isFullSeeds() && hasFreeOutputSlot() && timeElapsed >= timeUntilNextDrop) {
 
             if (timeUntilNextDrop > 0) {
-                decrStackSize(getSizeChickenInventory(), requiredSeedsForDrop());
+                decrStackSize(2, requiredSeedsForDrop());
                 spawnChickenDrop();
             }
 
@@ -308,7 +334,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     public ItemStack decrStackSize(int slot, int amount) {
         ItemStack stack = super.decrStackSize(slot, amount);
         needsCacheRefresh();
-        resetTimer();
+        if (slot < 3) {
+            resetTimer();
+        }
 
         return stack;
     }
@@ -326,7 +354,9 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         }
 
         needsCacheRefresh();
-        resetTimer();
+        if (slot < 3) {
+            resetTimer();
+        }
     }
 
     @Override
@@ -341,14 +371,36 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) {
-            return requiredSeedsForDrop() > 0 && isSeed(stack);
+            if (requiredSeedsForDrop() <= 0) {
+                return false;
+            }
+            // Allow if it's a mutation food
+            if (isMutationFood(stack)) {
+                return true;
+            }
+            // Breeder fallback: Allow wheat seeds even if no specific food is required
+            if (this instanceof TEBreeder && ChickensRegistry.isFallbackFood(stack)) {
+                return true;
+            }
+            // Check if any current chicken requires food and this stack satisfies it
+            for (int i = 0; i < getSizeChickenInventory(); i++) {
+                DataChicken chicken = getChickenData(i);
+                if (chicken != null && !chicken.getItem()
+                    .getRecipes()
+                    .isEmpty()) {
+                    if (chicken.getItem()
+                        .isFood(stack)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         return slot < getSizeChickenInventory() && slotDefinition.isInputSlot(slot) && DataChicken.isChicken(stack);
     }
 
-    public static boolean isSeed(ItemStack stack) {
-        Item item = stack.getItem();
-        return item instanceof ItemSeeds;
+    protected boolean isMutationFood(ItemStack stack) {
+        return false; // Overridden in TEBreeder
     }
 
     /**

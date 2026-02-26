@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickenRecipe;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
@@ -60,6 +61,7 @@ public class ChickenBreedingRecipeHandler extends RecipeHandlerBase {
         for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
             ItemStack egg = ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, chicken.getId());
             ItemStack item = ChickensItems.CHICKEN.newItemStack(1, chicken.getId());
+
             if ((egg.isItemEqual(result) || item.isItemEqual(result))
                 && (chicken.getParent1() != null || chicken.getParent2() != null)) {
                 if (added.add(chicken)) {
@@ -85,7 +87,7 @@ public class ChickenBreedingRecipeHandler extends RecipeHandlerBase {
             ItemStack egg1 = ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, p1.getId());
             ItemStack egg2 = ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, p2.getId());
 
-            if (egg1.isItemEqual(ingredient) || egg2.isItemEqual(ingredient)) {
+            if (egg1.isItemEqual(ingredient) || egg2.isItemEqual(ingredient) || chicken.isFood(ingredient)) {
                 if (added.add(chicken)) {
                     arecipes.add(new CachedChickensRecipe(chicken));
                 }
@@ -105,6 +107,12 @@ public class ChickenBreedingRecipeHandler extends RecipeHandlerBase {
     public void drawExtras(int recipe) {
         super.drawExtras(recipe);
         drawProgressBar(77, 14, 82, 0, 8, 7, 200, 0);
+
+        CachedChickensRecipe r = (CachedChickensRecipe) arecipes.get(recipe);
+        float chance = r.getChicken()
+            .getMutationChance() * 100.0f;
+        String s = String.format("%.0f%%", chance);
+        GuiDraw.drawStringC(s, 105, 12, 0xFF404040, false);
     }
 
     @Override
@@ -137,6 +145,17 @@ public class ChickenBreedingRecipeHandler extends RecipeHandlerBase {
                 ItemStack egg2 = ChickensItems.CHICKEN_SPAWN_EGG.newItemStack(1, parent2.getId());
                 PositionedStack parent2Egg = new PositionedStack(egg2, 95, 26);
                 stacks.add(parent2Egg);
+
+                // Mutation Food
+                List<ItemStack> foods = new ArrayList<>();
+                for (ChickenRecipe recipe : chicken.getRecipes()) {
+                    if (recipe.getInput() != null) {
+                        foods.add(recipe.getInput());
+                    }
+                }
+                if (!foods.isEmpty()) {
+                    stacks.add(new PositionedStack(foods, 50, 8));
+                }
             }
             return stacks;
         }

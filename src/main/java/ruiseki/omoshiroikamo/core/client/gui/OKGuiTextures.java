@@ -53,6 +53,11 @@ public final class OKGuiTextures {
         .imageSize(18, 18)
         .build();
 
+    public static final UITexture FOOD_SLOT = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/slot/food_slot")
+        .imageSize(18, 18)
+        .build();
+
     public static final UITexture EMPTY_SLOT = UITexture.builder()
         .location(LibMisc.MOD_ID, "gui/slot/empty_slot")
         .imageSize(18, 18)

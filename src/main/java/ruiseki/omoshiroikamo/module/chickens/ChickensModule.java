@@ -49,12 +49,14 @@ public class ChickensModule extends ModModuleBase {
     @Override
     public void init(FMLInitializationEvent event) {
         ModChickens.init();
-        ChickensRecipes.init();
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         ModChickens.postInit();
-        TextureGenerator.generateCustomChickenTextures();
+        ChickensRecipes.init();
+        if (MinecraftHelpers.isClientSide()) {
+            TextureGenerator.generateCustomChickenTextures();
+        }
     }
 }
