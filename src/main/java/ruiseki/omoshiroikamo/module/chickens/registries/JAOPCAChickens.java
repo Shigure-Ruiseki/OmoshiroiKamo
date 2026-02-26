@@ -235,17 +235,11 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
             String oredict = miscHelper.getOredictName(prefix, material.getName());
             chicken.setLayString("ore:" + oredict);
 
-            // IItemInfo chickenInfo = itemFormType.getMaterialFormInfo(chickenForm, material);
+            String enName = name + " Chicken";
+            String jaName = name + "のニワトリ";
 
-			// IDynamicSpecConfig config = configs.get(material);
-
-            // Default Food: Automatically generated in BaseChickenHandler.addChicken
-
-            // Default Lang
-            // String enFormat = StatCollector.translateToLocal("jaopca.chicken");
-            // String jaFormat = StatCollector.translateToLocal("jaopca.chicken");
-            // chicken.getLang().put("en_US", String.format(enFormat, name));
-            // chicken.getLang().put("ja_JP", String.format(jaFormat, name));
+            chicken.getLang().put("en_US", enName);
+            chicken.getLang().put("ja_JP", jaName);
 
             chickens.add(chicken);
         }
