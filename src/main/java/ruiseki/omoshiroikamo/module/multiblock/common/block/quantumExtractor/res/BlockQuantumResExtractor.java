@@ -34,6 +34,8 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
             TEQuantumResExtractorT5.class,
             TEQuantumResExtractorT6.class);
         this.setLightLevel(0.8F);
+        hasSubtypes = true;
+        isOpaque = false;
     }
 
     public static BlockQuantumResExtractor create() {
@@ -53,11 +55,6 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

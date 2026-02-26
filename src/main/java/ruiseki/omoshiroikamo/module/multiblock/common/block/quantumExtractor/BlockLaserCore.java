@@ -16,6 +16,7 @@ public class BlockLaserCore extends BlockOK implements IMBBlock {
 
     protected BlockLaserCore() {
         super(ModObject.blockLaserCore.unlocalisedName);
+        isFullSize = isOpaque = false;
     }
 
     public static BlockLaserCore create() {
@@ -30,16 +31,6 @@ public class BlockLaserCore extends BlockOK implements IMBBlock {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
 }

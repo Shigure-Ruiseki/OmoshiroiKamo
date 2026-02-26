@@ -4,14 +4,15 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 
 /**
  * Custom ItemBlock for Modifier blocks that displays tooltips from
  * BlockModifier.getTooltipLines()
  */
-public class ItemBlockModifier extends ItemBlock {
+public class ItemBlockModifier extends ItemBlockOK {
 
     public ItemBlockModifier(Block block) {
         super(block);

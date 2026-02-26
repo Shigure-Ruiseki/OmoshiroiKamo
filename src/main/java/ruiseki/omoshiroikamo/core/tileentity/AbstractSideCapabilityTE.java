@@ -5,6 +5,7 @@ import java.util.Map;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.Maps;
 
@@ -32,13 +33,13 @@ public abstract class AbstractSideCapabilityTE extends TileEntityOK {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, ForgeDirection facing) {
+    public boolean hasCapability(@NotNull Capability<?> capability, ForgeDirection facing) {
         return capabilities.containsKey(Pair.<Capability<?>, ForgeDirection>of(capability, facing))
             || (facing != null && capabilities.containsKey(Pair.<Capability<?>, ForgeDirection>of(capability, null)));
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, ForgeDirection facing) {
+    public <T> T getCapability(@NotNull Capability<T> capability, ForgeDirection facing) {
         Object value = capabilities.get(Pair.<Capability<?>, ForgeDirection>of(capability, facing));
         if (value == null && facing != null) {
             value = capabilities.get(Pair.<Capability<?>, ForgeDirection>of(capability, null));

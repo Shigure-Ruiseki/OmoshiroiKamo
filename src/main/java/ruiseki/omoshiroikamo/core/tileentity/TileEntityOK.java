@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.core.tileentity;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -19,19 +20,24 @@ import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.CapabilityDispatcher;
 import ruiseki.omoshiroikamo.core.capabilities.ICapabilitySerializable;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 import ruiseki.omoshiroikamo.core.event.OKEventFactory;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTProvider;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTProviderComponent;
 
-public abstract class TileEntityOK extends TileEntity implements ITile, INBTProvider, ICapabilitySerializable {
-
-    private static final int UPDATE_BACKOFF_TICKS = 1;
-
-    private final CapabilityDispatcher capabilities;
+public abstract class TileEntityOK extends TileEntity
+    implements ITile, INBTProvider, ICapabilitySerializable, IOrientable {
 
     @Delegate
     private final INBTProvider nbtProvider = new NBTProviderComponent(this);
 
+    @NBTPersist
+    private ForgeDirection forward = ForgeDirection.UNKNOWN;
+    @NBTPersist
+    private ForgeDirection up = ForgeDirection.UNKNOWN;
+
+    private static final int UPDATE_BACKOFF_TICKS = 1;
     private boolean shouldSendUpdate = false;
     private int sendUpdateBackoff = 0;
     private final boolean ticking;
@@ -39,10 +45,44 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
     private BlockPos cachedPos;
     private final int randomOffset = (int) (Math.random() * 20);
 
+    private final CapabilityDispatcher capabilities;
+
     public TileEntityOK() {
         this.capabilities = OKEventFactory.gatherCapabilities(this);
         this.sendUpdateBackoff = (int) (Math.random() * UPDATE_BACKOFF_TICKS);
         this.ticking = this instanceof ITickingTile;
+    }
+
+    /**
+     * for dormant chunk cache.
+     */
+    public void onChunkLoad() {
+        if (this.isInvalid()) {
+            this.validate();
+        }
+    }
+
+    @Override
+    public boolean canBeRotated() {
+        return true;
+    }
+
+    @Override
+    public ForgeDirection getForward() {
+        return this.forward;
+    }
+
+    @Override
+    public ForgeDirection getUp() {
+        return this.up;
+    }
+
+    @Override
+    public void setOrientation(final ForgeDirection inForward, final ForgeDirection inUp) {
+        this.forward = inForward;
+        this.up = inUp;
+        this.onSendUpdate();
+        worldObj.notifyBlockOfNeighborChange(xCoord, yCoord, zCoord, Blocks.air);
     }
 
     @Override
@@ -143,9 +183,36 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        super.onDataPacket(net, pkt);
         readFromNBT(pkt.func_148857_g());
         onUpdateReceived();
+    }
+
+    @Override
+    public final void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
+        writeCommon(root);
+    }
+
+    @Override
+    public final void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
+        readCommon(root);
+    }
+
+    public void writeCommon(NBTTagCompound tag) {
+        writeGeneratedFieldsToNBT(tag);
+
+        if (capabilities != null) {
+            tag.setTag("OKCaps", capabilities.serializeNBT());
+        }
+    }
+
+    public void readCommon(NBTTagCompound tag) {
+        readGeneratedFieldsFromNBT(tag);
+
+        if (capabilities != null && tag.hasKey("OKCaps")) {
+            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
+        }
     }
 
     /**
@@ -182,18 +249,6 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
         return !isInvalid() && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
 
-    @Override
-    public final void writeToNBT(NBTTagCompound root) {
-        super.writeToNBT(root);
-        writeCommon(root);
-    }
-
-    @Override
-    public final void readFromNBT(NBTTagCompound root) {
-        super.readFromNBT(root);
-        readCommon(root);
-    }
-
     /**
      * Get the NBT tag for this tile entity.
      *
@@ -204,10 +259,6 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
         return tag;
-    }
-
-    public NBTTagCompound getUpdateTag() {
-        return getNBTTagCompound();
     }
 
     @Override
@@ -232,32 +283,20 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
         return ret;
     }
 
-    public void writeCommon(NBTTagCompound tag) {
-        writeGeneratedFieldsToNBT(tag);
-
-        if (capabilities != null) {
-            tag.setTag("OKCaps", capabilities.serializeNBT());
-        }
-    }
-
-    public void readCommon(NBTTagCompound tag) {
-        readGeneratedFieldsFromNBT(tag);
-
-        if (capabilities != null && tag.hasKey("OKCaps")) {
-            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
-        }
-    }
-
     @Override
     public BlockPos getPos() {
         if (cachedPos == null || cachedPos.getX() != xCoord
             || cachedPos.getY() != yCoord
-            || cachedPos.getZ() != zCoord
-            || cachedPos.getWorld() != worldObj) {
+            || cachedPos.getZ() != zCoord) {
 
             cachedPos = new BlockPos(this);
         }
         return cachedPos;
+    }
+
+    @Override
+    public DimPos getDimPos() {
+        return DimPos.of(worldObj, getPos());
     }
 
     @Override
@@ -291,6 +330,16 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
     }
 
     @Override
+    public int getMeta() {
+        return getBlockMetadata();
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
+    }
+
+    @Override
     public void mark() {
         markDirty();
     }
@@ -309,6 +358,10 @@ public abstract class TileEntityOK extends TileEntity implements ITile, INBTProv
 
     protected boolean shouldDoWorkThisTick(int interval) {
         return (worldObj.getTotalWorldTime() + randomOffset) % interval == 0;
+    }
+
+    public boolean requiresTESR() {
+        return false;
     }
 
     public interface ITickingTile {

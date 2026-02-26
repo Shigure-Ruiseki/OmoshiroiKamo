@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
@@ -16,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
@@ -32,6 +32,8 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
 
     protected BlockColoredLens() {
         super(ModObject.blockColoredLens.unlocalisedName, Material.glass);
+        hasSubtypes = true;
+        isFullSize = isOpaque = false;
     }
 
     public static BlockColoredLens create() {
@@ -39,8 +41,12 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockColoredLens.class, name);
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockColoredLens.class;
+    }
+
+    @Override
+    protected void registerBlockColor() {
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override
@@ -71,16 +77,6 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
     @Override
     public int damageDropped(int meta) {
         return meta;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

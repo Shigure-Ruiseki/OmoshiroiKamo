@@ -34,6 +34,7 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
             TESolarArrayT5.class,
             TESolarArrayT6.class);
         this.setLightLevel(0.5F);
+        isOpaque = false;
     }
 
     public static BlockSolarArray create() {
@@ -53,11 +54,6 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 
     @Override

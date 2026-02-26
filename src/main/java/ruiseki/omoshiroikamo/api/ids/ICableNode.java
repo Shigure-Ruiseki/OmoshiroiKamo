@@ -5,11 +5,16 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.AbstractCableNetwork;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public interface ICableNode {
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.core.capabilities.Capability;
+import ruiseki.omoshiroikamo.core.capabilities.ICapabilityProvider;
+import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.module.ids.common.item.AbstractCableNetwork;
+
+public interface ICableNode extends ICapabilityProvider {
 
     String getId();
 
@@ -48,5 +53,16 @@ public interface ICableNode {
     default AbstractCableNetwork<?> getNetwork(Class<? extends ICableNode> network) {
         ICable cable = getCable();
         return cable != null ? cable.getNetwork(network) : null;
+    }
+
+    @Override
+    @Nullable
+    default <T> T getCapability(Capability<T> capability, ForgeDirection facing) {
+        return null;
+    }
+
+    @Override
+    default boolean hasCapability(@NotNull Capability<?> capability, @Nullable ForgeDirection facing) {
+        return false;
     }
 }

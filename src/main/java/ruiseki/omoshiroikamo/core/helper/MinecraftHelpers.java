@@ -4,12 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemMonsterPlacer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,7 +19,10 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityNBTStorage;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 /**
  * Contains helper methods for various minecraft specific things.
@@ -132,7 +135,7 @@ public class MinecraftHelpers {
 
     /**
      * Spawns the creature specified by the egg's type in the location specified by the last three parameters.
-     * 
+     *
      * @param world    The world.
      * @param entityID The name of the entity.
      * @param x        X coordinate.
@@ -142,49 +145,6 @@ public class MinecraftHelpers {
      */
     public static Entity spawnCreature(World world, int entityID, double x, double y, double z) {
         return ItemMonsterPlacer.spawnCreature(world, entityID, x, y, z);
-    }
-
-    /**
-     * Drop an ItemStack into the world
-     *
-     * @param world    the world
-     * @param stack    ItemStack to drop
-     * @param blockPos The position.
-     */
-    public static void dropItems(World world, ItemStack stack, BlockPos blockPos) {
-        if (stack.stackSize > 0) {
-            float offsetMultiply = 0.7F;
-            double offsetX = (world.rand.nextFloat() * offsetMultiply) + (1.0F - offsetMultiply) * 0.5D;
-            double offsetY = (world.rand.nextFloat() * offsetMultiply) + (1.0F - offsetMultiply) * 0.5D;
-            double offsetZ = (world.rand.nextFloat() * offsetMultiply) + (1.0F - offsetMultiply) * 0.5D;
-            EntityItem entityitem = new EntityItem(
-                world,
-                blockPos.getX() + offsetX,
-                blockPos.getY() + offsetY,
-                blockPos.getZ() + offsetZ,
-                stack);
-            entityitem.delayBeforeCanPickup = 10;
-
-            world.spawnEntityInWorld(entityitem);
-        }
-    }
-
-    /**
-     * Drop an ItemStack into the world
-     *
-     * @param world     the world
-     * @param inventory inventory with ItemStacks
-     * @param blockPos  The position.
-     */
-    public static void dropItems(World world, IInventory inventory, BlockPos blockPos) {
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack itemStack = inventory.getStackInSlot(i);
-            if (itemStack != null && itemStack.stackSize > 0) dropItems(
-                world,
-                inventory.getStackInSlot(i)
-                    .copy(),
-                blockPos);
-        }
     }
 
     /**
@@ -214,9 +174,24 @@ public class MinecraftHelpers {
     public static boolean isClientSide() {
         if (isModdedEnvironment()) {
             return FMLCommonHandler.instance()
-                .getEffectiveSide() == Side.CLIENT;
+                .getEffectiveSide()
+                .isClient();
         }
         return true;
+    }
+
+    /**
+     * Check if this code is ran on server side.
+     *
+     * @return true if the code is on the server.
+     */
+    public static boolean isServerSide() {
+        if (isModdedEnvironment()) {
+            return FMLCommonHandler.instance()
+                .getEffectiveSide()
+                .isServer();
+        }
+        return false;
     }
 
     /**
@@ -249,6 +224,54 @@ public class MinecraftHelpers {
     }
 
     /**
+     * This method should be called when a BlockContainer is destroyed
+     *
+     * @param block   The blockState.
+     * @param world   world
+     * @param x,      y, z The position.
+     * @param saveNBT If the NBT data should be saved to the dropped item.
+     */
+    public static void preDestroyBlock(BlockOK block, World world, int x, int y, int z, boolean saveNBT) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+
+        if (block.shouldDropInventory(world, x, y, z) && tile instanceof IInventory && !world.isRemote) {
+            InventoryHelpers.dropItems(world, (IInventory) tile, new BlockPos(x, y, z));
+            InventoryHelpers.clearInventory((IInventory) tile);
+        }
+
+        if (tile instanceof TileEntityOK teok && saveNBT) {
+            // Cache
+            TileEntityNBTStorage.TAG = teok.getNBTTagCompound();
+            TileEntityNBTStorage.TILE = teok;
+            block.writeAdditionalInfo(tile, TileEntityNBTStorage.TAG);
+
+            teok.destroy();
+        } else {
+            TileEntityNBTStorage.TAG = null;
+        }
+
+        // TODO: add IWorldNameable
+        // if (tile instanceof IWorldNameable && ((IWorldNameable) tile).hasCustomName()) {
+        // // Cache
+        // IWorldNameable ecTile = ((IWorldNameable) tile);
+        // TileEntityNBTStorage.NAME = ecTile.getName();
+        // } else {
+        // TileEntityNBTStorage.NAME = null;
+        // }
+        TileEntityNBTStorage.NAME = null;
+    }
+
+    /**
+     * This method should be called after a BlockContainer is destroyed
+     *
+     * @param world world
+     * @param x,    y, z The position.
+     */
+    public static void postDestroyBlock(IBlockAccess world, int x, int y, int z) {
+        // Does nothing for now.
+    }
+
+    /**
      * Comparator for {@link BlockPos}.
      *
      * @param pos1 First pos.
@@ -266,5 +289,4 @@ public class MinecraftHelpers {
         }
         return compX;
     }
-
 }

@@ -1,28 +1,25 @@
 package ruiseki.omoshiroikamo.core.block;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.Lists;
-import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
-import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,10 +28,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 import lombok.experimental.Delegate;
 import ruiseki.omoshiroikamo.core.block.property.BlockPropertyProviderComponent;
 import ruiseki.omoshiroikamo.core.block.property.IBlockPropertyProvider;
+import ruiseki.omoshiroikamo.core.client.render.BaseBlockRender;
+import ruiseki.omoshiroikamo.core.client.render.BlockRenderInfo;
+import ruiseki.omoshiroikamo.core.client.render.block.WorldRender;
+import ruiseki.omoshiroikamo.core.client.texture.FlippableIcon;
+import ruiseki.omoshiroikamo.core.client.texture.MissingIcon;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
-import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
+import ruiseki.omoshiroikamo.core.helper.TileHelpers;
+import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
+import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
+import ruiseki.omoshiroikamo.core.tileentity.TileEntityNBTStorage;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public class BlockOK extends Block implements IBlockPropertyProvider {
@@ -42,15 +47,17 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     protected final Class<? extends TileEntityOK> teClass;
     protected final String name;
 
-    protected float baseMinX = 0f;
-    protected float baseMinY = 0f;
-    protected float baseMinZ = 0f;
-    protected float baseMaxX = 1f;
-    protected float baseMaxY = 1f;
-    protected float baseMaxZ = 1f;
-
     @Delegate(types = IBlockPropertyProvider.class)
     private final IBlockPropertyProvider propertyComponent = new BlockPropertyProviderComponent(this);
+
+    @SideOnly(Side.CLIENT)
+    private BlockRenderInfo renderInfo;
+
+    protected boolean isOpaque = true;
+    protected boolean isFullSize = true;
+    public boolean hasSubtypes = false;
+
+    private boolean rotatable;
 
     protected BlockOK(String name) {
         this(name, null, new Material(MapColor.ironColor));
@@ -70,16 +77,71 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         this.name = name;
         setHardness(0.5F);
         setBlockName(name);
-        setStepSound(Block.soundTypeMetal);
         setHarvestLevel("pickaxe", 0);
-        registerProperties();
+        this.setStepSound(getSoundForMaterial(mat));
     }
 
     public void init() {
-        GameRegistry.registerBlock(this, name);
+        registerBlock();
+        registerTileEntity();
+        registerBlockColor();
+        registerComponent();
+    }
+
+    protected void registerBlock() {
+        GameRegistry.registerBlock(this, getItemBlockClass(), name);
+    }
+
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockOK.class;
+    }
+
+    protected void registerTileEntity() {
         if (teClass != null) {
             GameRegistry.registerTileEntity(teClass, name + "TileEntity");
         }
+    }
+
+    protected void registerBlockColor() {}
+
+    protected void registerComponent() {
+        registerProperties();
+    }
+
+    public void registerNoIcons() {
+        final BlockRenderInfo info = this.getRendererInstance();
+        final FlippableIcon i = new FlippableIcon(new MissingIcon(this));
+        info.updateIcons(i, i, i, i, i, i);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public BlockRenderInfo getRendererInstance() {
+        if (this.renderInfo != null) {
+            return this.renderInfo;
+        }
+
+        final BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> renderer = this.getRenderer();
+        this.renderInfo = new BlockRenderInfo(renderer);
+
+        return this.renderInfo;
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> getRenderer() {
+        return new BaseBlockRender<>();
+    }
+
+    public boolean hasSubtypes() {
+        return this.hasSubtypes;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setRenderStateByMeta(final int itemDamage) {}
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderType() {
+        return WorldRender.INSTANCE.getRenderId();
     }
 
     @Override
@@ -117,65 +179,28 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     }
 
     /* Subclass Helpers */
-    public boolean doNormalDrops(World world, int x, int y, int z) {
-        return true;
+
+    @Override
+    public final boolean isOpaqueCube() {
+        return this.isOpaque;
     }
 
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-        if (willHarvest) {
-            return true;
-        }
-        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    public boolean renderAsNormalBlock() {
+        return this.isFullSize && this.isOpaque;
     }
 
     @Override
-    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
-        super.harvestBlock(world, player, x, y, z, meta);
-        world.setBlockToAir(x, y, z);
+    public final boolean isNormalCube(final IBlockAccess world, final int x, final int y, final int z) {
+        return this.isFullSize;
     }
 
-    @Override
-    public final ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        if (doNormalDrops(world, x, y, z)) {
-            return super.getDrops(world, x, y, z, metadata, fortune);
-        }
-        return Lists.newArrayList(getNBTDrop(world, x, y, z, (TileEntityOK) world.getTileEntity(x, y, z)));
+    public SoundType getSoundForMaterial(Material mat) {
+        if (mat == Material.glass) return Block.soundTypeGlass;
+        if (mat == Material.rock) return Block.soundTypeStone;
+        if (mat == Material.wood) return Block.soundTypeWood;
+        return Block.soundTypeMetal;
     }
-
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-        return getPickBlock(target, world, x, y, z, null);
-    }
-
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z,
-        @Nullable EntityPlayer player) {
-        return getNBTDrop(world, x, y, z, teClass != null ? getTileEntityOK(world, x, y, z) : null);
-    }
-
-    public ItemStack getNBTDrop(World world, int x, int y, int z, @Nullable TileEntityOK te) {
-        int meta = te != null ? damageDropped(te.getBlockMetadata()) : world.getBlockMetadata(x, y, z);
-        ItemStack itemStack = new ItemStack(this, 1, meta);
-        processDrop(world, x, y, z, te, itemStack);
-        return itemStack;
-    }
-
-    protected void processDrop(World world, int x, int y, int z, @Nullable TileEntityOK te, ItemStack drop) {}
-
-    @SuppressWarnings("null")
-    protected @Nullable TileEntityOK getTileEntityOK(IBlockAccess world, int x, int y, int z) {
-        if (teClass != null) {
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (teClass.isInstance(te)) { // no need to null-check teClass here, it was checked 2 lines above and is
-                // *final*
-                return (TileEntityOK) te;
-            }
-        }
-        return null;
-    }
-
-    // Collision
 
     // Because the vanilla method takes floats...
     public void setBlockBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
@@ -187,173 +212,197 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         this.maxZ = maxZ;
     }
 
-    public void setBlockBounds(AxisAlignedBB bb) {
-        setBlockBounds(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+    // Orientable
+    public IOrientable getOrientable(final IBlockAccess world, final int x, final int y, final int z) {
+        if (this instanceof IOrientableBlock) {
+            return ((IOrientableBlock) this).getOrientable(world, x, y, z);
+        }
+        return TileHelpers.getSafeTile(world, x, y, z, IOrientable.class);
     }
 
-    protected ICustomCollision getCustomCollision(World w, int x, int y, int z) {
-        if (this instanceof ICustomCollision) {
-            return (ICustomCollision) this;
+    // Block Destroy
+
+    /**
+     * If the NBT data of this tile entity should be added to the dropped meta.
+     *
+     * @return If the NBT data should be added.
+     */
+    public boolean saveNBTToDroppedItem() {
+        return true;
+    }
+
+    /**
+     * @return If the items should be dropped.
+     */
+    public boolean shouldDropInventory(World world, int x, int y, int z) {
+        return true;
+    }
+
+    /**
+     * Sets a block to air, but also plays the sound and particles and can spawn drops.
+     * This includes calls to {@link BlockOK#onPreBlockDestroyed(World, int x, int y, int z, EntityPlayer)}
+     * and {@link BlockOK#onPostBlockDestroyed(World, int x, int y, int z)}.
+     *
+     * @param world     The world.
+     * @param x,        y, z The position.
+     * @param dropBlock If this should produce item drops.
+     * @return If the block was destroyed and not air.
+     */
+    public boolean destroyBlock(World world, int x, int y, int z, boolean dropBlock) {
+        onPreBlockDestroyedPersistence(world, x, y, z);
+        boolean result = world.func_147480_a(x, y, z, dropBlock);
+        onPostBlockDestroyed(world, x, y, z);
+        return result;
+    }
+
+    /**
+     * Called before the block is broken or destroyed.
+     *
+     * @param world  The world.
+     * @param x,     y, z The position of the to-be-destroyed block.
+     * @param player The player destroying the block.
+     */
+    protected void onPreBlockDestroyed(World world, int x, int y, int z, @Nullable EntityPlayer player) {
+        onPreBlockDestroyedPersistence(world, x, y, z);
+    }
+
+    /**
+     * Called before the block is broken or destroyed when the tile data needs to be persisted.
+     *
+     * @param world The world.
+     * @param x,    y, z The position of the to-be-destroyed block.
+     */
+    protected void onPreBlockDestroyedPersistence(World world, int x, int y, int z) {
+        if (!world.isRemote) {
+            MinecraftHelpers.preDestroyBlock(this, world, x, y, z, saveNBTToDroppedItem());
         }
-        return null;
+    }
+
+    /**
+     * Called before the block is broken or destroyed.
+     *
+     * @param world The world.
+     * @param x,    y, z The position of the to-be-destroyed block.
+     */
+    protected void onPostBlockDestroyed(World world, int x, int y, int z) {
+
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addCollisionBoxesToList(final World w, final int x, final int y, final int z, final AxisAlignedBB bb,
-        final List<AxisAlignedBB> out, final Entity e) {
-        ICustomCollision collisionHandler = this.getCustomCollision(w, x, y, z);
-        if (collisionHandler != null && bb != null) {
-            List<AxisAlignedBB> tmp = new ArrayList<>();
-            collisionHandler.addCollidingBlockToList(w, x, y, z, bb, tmp, e);
-            for (AxisAlignedBB b : tmp) {
-                b.minX += x;
-                b.minY += y;
-                b.minZ += z;
-                b.maxX += x;
-                b.maxY += y;
-                b.maxZ += z;
-                if (bb.intersectsWith(b)) {
-                    out.add(b);
-                }
-            }
-        } else {
-            super.addCollisionBoxesToList(w, x, y, z, bb, out, e);
-        }
+    public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+        onPreBlockDestroyed(world, x, y, z, null);
+        super.breakBlock(world, x, y, z, blockBroken, meta);
+        onPostBlockDestroyed(world, x, y, z);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World w, int x, int y, int z) {
-        ICustomCollision collision = getCustomCollision(w, x, y, z);
-
-        if (collision != null) {
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-            if (player != null) {
-                Vec3 start = PlayerUtils.getEyePosition(player);
-                Vec3 look = player.getLookVec();
-                Vec3 end = start.addVector(look.xCoord * 5.0, look.yCoord * 5.0, look.zCoord * 5.0);
-
-                AxisAlignedBB closest = null;
-                double minDist = Double.MAX_VALUE;
-
-                for (AxisAlignedBB bb : collision.getSelectedBoundingBoxesFromPool(w, x, y, z, player, true)) {
-
-                    // fake block bounds = part
-                    this.setBlockBounds(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
-
-                    MovingObjectPosition mop = super.collisionRayTrace(w, x, y, z, start, end);
-
-                    this.setBlockBounds(baseMinX, baseMinY, baseMinZ, baseMaxX, baseMaxY, baseMaxZ);
-
-                    if (mop != null) {
-                        double dist = mop.hitVec.distanceTo(start);
-                        if (closest == null || dist < minDist) {
-                            minDist = dist;
-                            closest = bb;
-                        }
-                    }
-                }
-
-                if (closest != null) {
-                    return AxisAlignedBB.getBoundingBox(
-                        closest.minX + x,
-                        closest.minY + y,
-                        closest.minZ + z,
-                        closest.maxX + x,
-                        closest.maxY + y,
-                        closest.maxZ + z);
-                }
-            }
-
-            AxisAlignedBB merged = AxisAlignedBB.getBoundingBox(16, 16, 16, 0, 0, 0);
-            for (AxisAlignedBB bb : collision.getSelectedBoundingBoxesFromPool(w, x, y, z, null, false)) {
-
-                merged.setBounds(
-                    Math.min(merged.minX, bb.minX),
-                    Math.min(merged.minY, bb.minY),
-                    Math.min(merged.minZ, bb.minZ),
-                    Math.max(merged.maxX, bb.maxX),
-                    Math.max(merged.maxY, bb.maxY),
-                    Math.max(merged.maxZ, bb.maxZ));
-            }
-
-            return AxisAlignedBB.getBoundingBox(
-                merged.minX + x,
-                merged.minY + y,
-                merged.minZ + z,
-                merged.maxX + x,
-                merged.maxY + y,
-                merged.maxZ + z);
-        }
-
-        return super.getSelectedBoundingBoxFromPool(w, x, y, z);
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        onPreBlockDestroyed(world, x, y, z, player);
+        if (willHarvest) return true;
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
 
     @Override
-    public MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 a, Vec3 b) {
-        ICustomCollision collisionHandler = this.getCustomCollision(w, x, y, z);
-
-        if (collisionHandler != null) {
-            Iterable<AxisAlignedBB> bbs = collisionHandler.getSelectedBoundingBoxesFromPool(w, x, y, z, null, false);
-            MovingObjectPosition br = null;
-
-            double lastDist = 0;
-
-            for (AxisAlignedBB bb : bbs) {
-                this.setBlockBounds(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
-
-                MovingObjectPosition r = super.collisionRayTrace(w, x, y, z, a, b);
-
-                this.setBlockBounds(baseMinX, baseMinY, baseMinZ, baseMaxX, baseMaxY, baseMaxZ);
-
-                if (r != null) {
-                    double xLen = (a.xCoord - r.hitVec.xCoord);
-                    double yLen = (a.yCoord - r.hitVec.yCoord);
-                    double zLen = (a.zCoord - r.hitVec.zCoord);
-
-                    double thisDist = xLen * xLen + yLen * yLen + zLen * zLen;
-                    if (br == null || lastDist > thisDist) {
-                        lastDist = thisDist;
-                        br = r;
-                    }
-                }
-            }
-
-            return br;
-        }
-
-        this.setBlockBounds(baseMinX, baseMinY, baseMinZ, baseMaxX, baseMaxY, baseMaxZ);
-        return super.collisionRayTrace(w, x, y, z, a, b);
+    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+        onPreBlockDestroyed(world, x, y, z, null);
+        super.onBlockExploded(world, x, y, z, explosion);
+        onPostBlockDestroyed(world, x, y, z);
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z) {
-        return AxisAlignedBB
-            .getBoundingBox(x + baseMinX, y + baseMinY, z + baseMinZ, x + baseMaxX, y + baseMaxY, z + baseMaxZ);
+    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+        super.harvestBlock(world, player, x, y, z, meta);
+        world.setBlockToAir(x, y, z);
     }
 
-    public void setBaseBounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-        this.baseMinX = minX;
-        this.baseMinY = minY;
-        this.baseMinZ = minZ;
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+        if (entity != null) {
+            TileEntityOK tile = (TileEntityOK) world.getTileEntity(x, y, z);
+            if (tile != null && stack.getTagCompound() != null) {
+                stack.getTagCompound()
+                    .setInteger("x", x);
+                stack.getTagCompound()
+                    .setInteger("y", y);
+                stack.getTagCompound()
+                    .setInteger("z", z);
+                tile.readFromNBT(stack.getTagCompound());
+            }
 
-        this.baseMaxX = maxX;
-        this.baseMaxY = maxY;
-        this.baseMaxZ = maxZ;
-        this.setBlockBounds(baseMinX, baseMinY, baseMinZ, baseMaxX, baseMaxY, baseMaxZ);
+            if (tile instanceof TileEntityOK.ITickingTile) {
+                ((TileEntityOK.ITickingTile) tile).updateEntity();
+            }
+        }
+        super.onBlockPlacedBy(world, x, y, z, entity, stack);
     }
 
-    // BlockSate
-    public BlockState getBlockState(IBlockAccess world, int x, int y, int z) {
-        return BlockPropertyRegistry.getBlockState(world, x, y, z);
+    /**
+     * Write additional info about the tile into the item.
+     *
+     * @param tile The tile that is being broken.
+     * @param tag  The tag that will be added to the dropped item.
+     */
+    public void writeAdditionalInfo(TileEntity tile, NBTTagCompound tag) {
+
     }
 
-    public BlockState getBlockState(IBlockAccess world, BlockPos pos) {
-        return BlockPropertyRegistry.getBlockState(world, pos.getX(), pos.getY(), pos.getZ());
+    /**
+     * If this block should drop its block item.
+     *
+     * @param world   The world.
+     * @param x,      y, z The position.
+     * @param fortune Fortune level.
+     * @return If the item should drop.
+     */
+    public boolean isDropBlockItem(IBlockAccess world, int x, int y, int z, int fortune) {
+        return true;
     }
 
-    public BlockState getBlockState(ItemStack stack) {
-        return BlockPropertyRegistry.getBlockState(stack);
+    @Override
+    public final ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
+        ArrayList<ItemStack> drops = new ArrayList<>();
+
+        Item item = getItemDropped(meta, world.rand, fortune);
+        if (item != null && isDropBlockItem(world, x, y, z, fortune)) {
+            ItemStack itemStack = new ItemStack(item, 1, damageDropped(meta));
+            if (TileEntityNBTStorage.TILE != null) {
+                itemStack = tileDataToItemStack(TileEntityNBTStorage.TILE, itemStack);
+            }
+            drops.add(itemStack);
+        }
+        return drops;
+    }
+
+    protected ItemStack tileDataToItemStack(TileEntityOK tile, ItemStack itemStack) {
+        if (isKeepNBTOnDrop()) {
+            if (TileEntityNBTStorage.TAG != null) {
+                itemStack.setTagCompound(TileEntityNBTStorage.TAG);
+            }
+            if (TileEntityNBTStorage.NAME != null) {
+                itemStack.setStackDisplayName(TileEntityNBTStorage.NAME);
+            }
+        }
+        return itemStack;
+    }
+
+    /**
+     * If the NBT data of this blockState should be preserved in the item when it
+     * is broken into an item.
+     *
+     * @return If it should keep NBT data.
+     */
+    public boolean isKeepNBTOnDrop() {
+        return true;
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z,
+        @Nullable EntityPlayer player) {
+        ItemStack itemStack = super.getPickBlock(target, world, x, y, z, player);
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileEntityOK teok && isKeepNBTOnDrop()) {
+            itemStack.setTagCompound(teok.getNBTTagCompound());
+        }
+        return itemStack;
     }
 }

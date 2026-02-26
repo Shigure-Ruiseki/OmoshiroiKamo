@@ -9,11 +9,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicType;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypeRegistry;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.type.LogicTypes;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.ILogicValue;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.logic.value.LogicValues;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypeRegistry;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.value.ILogicValue;
+import ruiseki.omoshiroikamo.module.ids.common.item.logic.value.LogicValues;
 
 public class LogicNBTUtils {
 

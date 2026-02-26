@@ -5,15 +5,11 @@ import static net.minecraftforge.common.util.ForgeDirection.NORTH;
 import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.util.ForgeDirection.WEST;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -23,13 +19,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.core.block.property.AutoBlockProperty;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
 public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implements IWailaBlockInfoProvider {
     // TODO: Change block meta to extendedFacing for all the tileentities
@@ -76,14 +69,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
     }
 
     @Override
-    public boolean doNormalDrops(World world, int x, int y, int z) {
-        return false;
-    }
-
-    @Override
-    protected void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
-
-    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
         float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(x, y, z);
@@ -97,10 +82,6 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, player, stack);
-        AbstractTE te = (AbstractTE) world.getTileEntity(x, y, z);
-        te.readFromItemStack(stack);
-        world.markBlockForUpdate(x, y, z);
-
         int heading = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         ForgeDirection facing = getDirectionForHeading(heading);
         BlockStateHelpers.setFacingProp(world, x, y, z, facing);
@@ -135,57 +116,5 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK implem
             return ((AbstractTE) te).isActive();
         }
         return false;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        if (shouldDropInventory(world, x, y, z)) {
-            dropStacks(world, x, y, z);
-        }
-        super.breakBlock(world, x, y, z, block, meta);
-    }
-
-    protected boolean shouldDropInventory(World world, int x, int y, int z) {
-        return true;
-    }
-
-    // Util Method
-    public static void dropStacks(World world, int x, int y, int z) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof IInventory te) {
-            for (int i = 0; i < te.getSizeInventory(); i++) {
-                ItemStack stack = te.getStackInSlot(i);
-                if (stack != null) {
-                    dropStack(world, x, y, z, stack);
-                    te.setInventorySlotContents(i, null);
-                }
-            }
-        }
-    }
-
-    // Util Method
-    public static void dropStack(World world, int x, int y, int z, ItemStack stack) {
-        if (stack == null || stack.stackSize <= 0) {
-            return;
-        }
-
-        float dx = world.rand.nextFloat() * 0.8F + 0.1F;
-        float dy = world.rand.nextFloat() * 0.8F + 0.1F;
-        float dz = world.rand.nextFloat() * 0.8F + 0.1F;
-
-        EntityItem entityItem = new EntityItem(world, x + dx, y + dy, z + dz, stack.copy());
-
-        float motion = 0.05F;
-        entityItem.motionX = world.rand.nextGaussian() * motion;
-        entityItem.motionY = world.rand.nextGaussian() * motion + 0.2F;
-        entityItem.motionZ = world.rand.nextGaussian() * motion;
-
-        world.spawnEntityInWorld(entityItem);
-    }
-
-    @Override
-    public void getWailaInfo(List<String> tooltip, ItemStack itemStack, IWailaDataAccessor accessor,
-        IWailaConfigHandler config) {
-
     }
 }

@@ -15,6 +15,7 @@ public abstract class AbstractPortItemBlock extends ItemBlockOK {
 
     public AbstractPortItemBlock(Block block) {
         super(block);
+        hasSubtypes = true;
     }
 
     public IIcon getOverlayIcon(int tier) {

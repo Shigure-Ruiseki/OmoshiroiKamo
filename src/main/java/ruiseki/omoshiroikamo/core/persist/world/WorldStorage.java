@@ -6,6 +6,7 @@ import net.minecraft.world.WorldSavedData;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import lombok.experimental.Delegate;
 import ruiseki.omoshiroikamo.core.init.ModBase;
@@ -81,6 +82,13 @@ public abstract class WorldStorage implements INBTProvider {
         beforeSave();
         saveData();
     }
+
+    /**
+     * When a server is stopping.
+     *
+     * @param event The received event.
+     */
+    public void onServerStopped(FMLServerStoppedEvent event) {}
 
     protected abstract String getDataId();
 

@@ -3,7 +3,8 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.ItemBlock;
+
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.api.multiblock.ModifierRegistry;
@@ -36,8 +37,8 @@ public abstract class BlockModifier extends BlockOK implements IModifierBlock {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockModifier.class, name);
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockModifier.class;
     }
 
     @Override

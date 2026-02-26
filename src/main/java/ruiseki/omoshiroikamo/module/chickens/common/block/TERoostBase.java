@@ -16,7 +16,6 @@ import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractStorageTE;
 import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
-import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 
 public abstract class TERoostBase extends AbstractStorageTE implements IProgressTile {
@@ -415,9 +414,6 @@ public abstract class TERoostBase extends AbstractStorageTE implements IProgress
         super.readCommon(root);
         needsCacheRefresh();
     }
-
-    @Override
-    public void processDrop(World world, int x, int y, int z, TileEntityOK te, ItemStack stack) {}
 
     /**
      * -----------------------------------------------------------

@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.persist.world.WorldStorage;
@@ -57,4 +58,6 @@ public abstract class ModModuleBase {
     public void onServerStarted(FMLServerStartedEvent event) {};
 
     public void onServerStopping(FMLServerStoppingEvent event) {};
+
+    public void onServerStopped(FMLServerStoppedEvent event) {};
 }

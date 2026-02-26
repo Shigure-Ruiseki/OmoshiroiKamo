@@ -27,8 +27,8 @@ public class NetherPopulateEvent {
     @SuppressWarnings("unused")
     @SubscribeEvent
     public void populateChunk(PopulateChunkEvent.Populate event) {
-        BlockPos chunkCentrePos = new BlockPos(event.chunkX * 16 + 8, 0, event.chunkZ * 16 + 8, event.world);
-        BiomeGenBase biome = chunkCentrePos.getBiomeGen();
+        BlockPos chunkCentrePos = new BlockPos(event.chunkX * 16 + 8, 0, event.chunkZ * 16 + 8);
+        BiomeGenBase biome = chunkCentrePos.getBiomeGen(event.world);
         if (biome != BiomeGenBase.hell) {
             return;
         }
@@ -36,39 +36,37 @@ public class NetherPopulateEvent {
         if (event.world.rand.nextFloat() < biome.getSpawningChance() * chanceMultiplier) {
 
             BlockPos spawnCenter = getRandomChunkPosition(event.chunkX, event.chunkZ, event.world);
-            spawnCenter = findFloor(spawnCenter);
+            spawnCenter = findFloor(spawnCenter, event.world);
 
             IEntityLivingData data = null;
-            data = spawn(data, spawnCenter);
-            data = spawn(data, new BlockPos(spawnCenter.x + 1, spawnCenter.y, spawnCenter.z, spawnCenter.world));
-            data = spawn(data, new BlockPos(spawnCenter.x - 1, spawnCenter.y, spawnCenter.z, spawnCenter.world));
-            data = spawn(data, new BlockPos(spawnCenter.x, spawnCenter.y, spawnCenter.z + 1, spawnCenter.world));
-            spawn(data, new BlockPos(spawnCenter.x, spawnCenter.y, spawnCenter.z - 1, spawnCenter.world));
+            data = spawn(data, spawnCenter, event.world);
+            data = spawn(data, new BlockPos(spawnCenter.x + 1, spawnCenter.y, spawnCenter.z), event.world);
+            data = spawn(data, new BlockPos(spawnCenter.x - 1, spawnCenter.y, spawnCenter.z), event.world);
+            data = spawn(data, new BlockPos(spawnCenter.x, spawnCenter.y, spawnCenter.z + 1), event.world);
+            spawn(data, new BlockPos(spawnCenter.x, spawnCenter.y, spawnCenter.z - 1), event.world);
         }
     }
 
-    private BlockPos findFloor(BlockPos pos) {
+    private BlockPos findFloor(BlockPos pos, World world) {
         BlockPos p = pos;
-        while (p.y < 100 && !World.doesBlockHaveSolidTopSurface(p.getWorld(), p.x, p.y - 1, p.z)) {
-            p = new BlockPos(p.x, p.y + 1, p.z, p.getWorld());
+        while (p.y < 100 && !World.doesBlockHaveSolidTopSurface(world, p.x, p.y - 1, p.z)) {
+            p = new BlockPos(p.x, p.y + 1, p.z);
         }
         return p;
     }
 
     @Nullable
-    private IEntityLivingData spawn(IEntityLivingData data, BlockPos pos) {
-        if (!pos.getWorld()
-            .checkNoEntityCollision(getBoundingBox(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1))) {
+    private IEntityLivingData spawn(IEntityLivingData data, BlockPos pos, World world) {
+        if (!world.checkNoEntityCollision(getBoundingBox(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1))) {
             return data;
         }
 
-        EntityLiving chicken = createEntity(pos.getWorld());
-        chicken.setLocationAndAngles(pos.x + 0.5, pos.y, pos.z + 0.5, pos.getWorld().rand.nextFloat() * 360F, 0.0F);
+        EntityLiving chicken = createEntity(world);
+        chicken.setLocationAndAngles(pos.x + 0.5, pos.y, pos.z + 0.5, world.rand.nextFloat() * 360F, 0.0F);
 
         data = chicken.onSpawnWithEgg(data);
 
-        pos.getWorld()
-            .spawnEntityInWorld(chicken);
+        world.spawnEntityInWorld(chicken);
         return data;
     }
 
@@ -91,6 +89,6 @@ public class NetherPopulateEvent {
         int height = chunk.getTopFilledSegment() + 16;
         int y = world.rand.nextInt(height);
 
-        return new BlockPos(x, y, z, world);
+        return new BlockPos(x, y, z);
     }
 }

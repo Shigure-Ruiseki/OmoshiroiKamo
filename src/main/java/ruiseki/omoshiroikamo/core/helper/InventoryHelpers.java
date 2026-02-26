@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.core.helper;
 
-import java.util.Random;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -175,49 +173,46 @@ public class InventoryHelpers {
         return false;
     }
 
-    public static void dropInventoryItems(World world, BlockPos pos, IInventory inventory) {
-        Random random = new Random();
-
-        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-            ItemStack stack = inventory.getStackInSlot(i);
-
-            if (stack != null) {
-                float offsetX = random.nextFloat() * 0.8F + 0.1F;
-                float offsetY = random.nextFloat() * 0.8F + 0.1F;
-                float offsetZ = random.nextFloat() * 0.8F + 0.1F;
-
-                while (stack.stackSize > 0) {
-                    int dropAmount = random.nextInt(21) + 10;
-
-                    if (dropAmount > stack.stackSize) {
-                        dropAmount = stack.stackSize;
-                    }
-
-                    stack.stackSize -= dropAmount;
-
-                    EntityItem entityItem = new EntityItem(
-                        world,
-                        pos.getX() + offsetX,
-                        pos.getY() + offsetY,
-                        pos.getZ() + offsetZ,
-                        new ItemStack(stack.getItem(), dropAmount, stack.getItemDamage()));
-
-                    if (stack.hasTagCompound()) {
-                        entityItem.getEntityItem()
-                            .setTagCompound(stack.getTagCompound());
-                    }
-
-                    float motion = 0.05F;
-                    entityItem.motionX = random.nextGaussian() * motion;
-                    entityItem.motionY = random.nextGaussian() * motion + 0.2F;
-                    entityItem.motionZ = random.nextGaussian() * motion;
-
-                    world.spawnEntityInWorld(entityItem);
-                }
-
-                inventory.setInventorySlotContents(i, null);
-            }
+    /**
+     * Drop an ItemStack into the world
+     *
+     * @param world     the world
+     * @param inventory inventory with ItemStacks
+     * @param blockPos  The position.
+     */
+    public static void dropItems(World world, IInventory inventory, BlockPos blockPos) {
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            ItemStack itemStack = inventory.getStackInSlot(i);
+            if (itemStack != null && itemStack.stackSize > 0) dropItems(
+                world,
+                inventory.getStackInSlot(i)
+                    .copy(),
+                blockPos);
         }
     }
 
+    /**
+     * Drop an ItemStack into the world
+     *
+     * @param world    the world
+     * @param stack    ItemStack to drop
+     * @param blockPos The position.
+     */
+    public static void dropItems(World world, ItemStack stack, BlockPos blockPos) {
+        if (stack.stackSize > 0) {
+            float offsetMultiply = 0.7F;
+            double offsetX = (world.rand.nextFloat() * offsetMultiply) + (1.0F - offsetMultiply) * 0.5D;
+            double offsetY = (world.rand.nextFloat() * offsetMultiply) + (1.0F - offsetMultiply) * 0.5D;
+            double offsetZ = (world.rand.nextFloat() * offsetMultiply) + (1.0F - offsetMultiply) * 0.5D;
+            EntityItem entityitem = new EntityItem(
+                world,
+                blockPos.getX() + offsetX,
+                blockPos.getY() + offsetY,
+                blockPos.getZ() + offsetZ,
+                stack);
+            entityitem.delayBeforeCanPickup = 10;
+
+            world.spawnEntityInWorld(entityitem);
+        }
+    }
 }

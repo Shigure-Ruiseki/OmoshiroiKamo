@@ -8,9 +8,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -22,6 +22,8 @@ public class BlockLens extends BlockOK implements IMBBlock {
 
     protected BlockLens() {
         super(ModObject.blockLens.unlocalisedName, Material.glass);
+        hasSubtypes = true;
+        isFullSize = isOpaque = false;
     }
 
     public static BlockLens create() {
@@ -29,23 +31,13 @@ public class BlockLens extends BlockOK implements IMBBlock {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockLens.class, name);
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockLens.class;
     }
 
     @Override
     public int getRenderType() {
         return JSON_ISBRH_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
     }
 
     @Override

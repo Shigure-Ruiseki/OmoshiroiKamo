@@ -7,13 +7,13 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
@@ -24,6 +24,7 @@ public class BlockBasaltStructure extends BlockOK implements IMBBlock {
 
     protected BlockBasaltStructure() {
         super(ModObject.blockBasaltStructure.unlocalisedName);
+        hasSubtypes = true;
     }
 
     public static BlockBasaltStructure create() {
@@ -31,8 +32,12 @@ public class BlockBasaltStructure extends BlockOK implements IMBBlock {
     }
 
     @Override
-    public void init() {
-        GameRegistry.registerBlock(this, ItemBlockBasaltStructure.class, name);
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        return ItemBlockBasaltStructure.class;
+    }
+
+    @Override
+    protected void registerBlockColor() {
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override

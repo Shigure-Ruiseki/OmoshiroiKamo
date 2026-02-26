@@ -151,14 +151,14 @@ public class DataChicken {
     /**
      * Spawns the chicken at a block coordinate
      */
-    public void spawnEntity(BlockPos pos) {
-        EntityChickensChicken entity = buildEntity(pos.world);
+    public void spawnEntity(BlockPos pos, World world) {
+        EntityChickensChicken entity = buildEntity(world);
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
         entity.setGrowingAge(0);
         entity.setStatsAnalyzed(true);
         entity.setType(getId());
-        pos.world.spawnEntityInWorld(entity);
+        world.spawnEntityInWorld(entity);
     }
 
     /**

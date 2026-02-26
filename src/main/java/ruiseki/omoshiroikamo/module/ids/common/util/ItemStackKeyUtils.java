@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import ruiseki.omoshiroikamo.core.item.ItemStackKey;
-import ruiseki.omoshiroikamo.module.ids.common.cableNet.part.tunnel.item.ItemIndex;
+import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndex;
 
 public final class ItemStackKeyUtils {
 

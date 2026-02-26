@@ -5,10 +5,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
 public interface ITile {
 
     BlockPos getPos();
+
+    DimPos getDimPos();
 
     public World getWorld();
 
@@ -22,22 +25,14 @@ public interface ITile {
 
     public int getWorldID();
 
-    default TileEntity getTile() {
-        return getWorld().getTileEntity(getX(), getY(), getZ());
-    }
+    public TileEntity getTile();
 
-    default int getMeta() {
-        return getWorld().getBlockMetadata(getX(), getY(), getZ());
-    }
+    public int getMeta();
 
     public void updateTEState();
 
     public void updateTELight();
 
     public Block getBlock();
-
-    default boolean shouldBatchUpdate() {
-        return true;
-    }
 
 }
