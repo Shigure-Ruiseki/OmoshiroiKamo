@@ -10,17 +10,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import ruiseki.omoshiroikamo.api.entity.SpawnType;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import thelm.jaopca.api.config.IDynamicSpecConfig;
-import thelm.jaopca.api.forms.IForm;
-import thelm.jaopca.api.forms.IFormRequest;
 import thelm.jaopca.api.helpers.IMiscHelper;
 import thelm.jaopca.api.materials.IMaterial;
 import thelm.jaopca.api.materials.MaterialType;
@@ -28,11 +25,9 @@ import thelm.jaopca.api.modules.IModule;
 import thelm.jaopca.api.modules.IModuleData;
 import thelm.jaopca.api.modules.JAOPCAModule;
 import thelm.jaopca.items.ItemFormType;
-import thelm.jaopca.api.items.IItemInfo;
-import thelm.jaopca.modules.ModuleHandler;
-import thelm.jaopca.utils.ApiImpl;
-import thelm.jaopca.utils.MiscHelper;
 import thelm.jaopca.materials.MaterialHandler;
+import thelm.jaopca.modules.ModuleHandler;
+import thelm.jaopca.utils.MiscHelper;
 
 @JAOPCAModule
 public class JAOPCAChickens extends BaseChickenHandler implements IModule {
@@ -137,10 +132,6 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
         this.setStartID(3000);
     }
 
-    // private final IForm chickenForm = ApiImpl.INSTANCE.newForm(this, "chicken", ItemFormType.INSTANCE)
-	// 		.setMaterialTypes(MaterialType.values()).setSecondaryName("chicken").setDefaultMaterialBlacklist(BLACKLIST)
-	// 		.setSettings(ItemFormType.INSTANCE.getNewSettings());
-
     private Map<IMaterial, IDynamicSpecConfig> configs;
 
     @Override
@@ -157,11 +148,6 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
     public Set<MaterialType> getMaterialTypes() {
         return EnumSet.allOf(MaterialType.class);
     }
-
-    // @Override
-    // public List<IFormRequest> getFormRequests() {
-    //     return Collections.singletonList(chickenForm.toRequest());
-    // }
 
     @Override
     public Set<String> getDefaultMaterialBlacklist() {
@@ -189,27 +175,22 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
 
         IMiscHelper miscHelper = MiscHelper.INSTANCE;
         ItemFormType itemFormType = ItemFormType.INSTANCE;
-        // Logger.info("JAOPCA Chicken Form has {} materials.", chickenForm.getMaterials().size());
-        Logger.info("JAOPCA Form has {} materials.", MaterialHandler.getMaterials().size());
-
-
-        // if (chickenForm.getMaterials().isEmpty()) {
-        //     Logger.info("JAOPCA Chicken Form has no materials.");
-        //     return chickens;
-        // }
+        Logger.info(
+            "JAOPCA Form has {} materials.",
+            MaterialHandler.getMaterials()
+                .size());
 
         IModuleData moduleData = ModuleHandler.getModuleData(this);
 
         for (IMaterial material : MaterialHandler.getMaterials()) {
             if (material == null) {
                 Logger.info("Material {} is null.", material);
-                continue;}
-            String name = material.getName();
-            if (BLACKLIST.contains(name))
                 continue;
+            }
+            String name = material.getName();
+            if (BLACKLIST.contains(name)) continue;
             MaterialType type = material.getType();
-            if (!(type.isIngot() || type.isGem() || type.isDust()))
-                continue; 
+            if (!(type.isIngot() || type.isGem() || type.isDust())) continue;
 
             int color = material.getColor();
             int bgColor = color;
@@ -239,8 +220,10 @@ public class JAOPCAChickens extends BaseChickenHandler implements IModule {
             String enName = name + " Chicken";
             String jaName = name + "のニワトリ";
 
-            chicken.getLang().put("en_US", enName);
-            chicken.getLang().put("ja_JP", jaName);
+            chicken.getLang()
+                .put("en_US", enName);
+            chicken.getLang()
+                .put("ja_JP", jaName);
 
             chickens.add(chicken);
         }

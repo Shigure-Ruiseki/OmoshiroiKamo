@@ -155,6 +155,7 @@ public class DataChicken {
         EntityChickensChicken entity = buildEntity(pos.world);
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
+        entity.setGrowingAge(0);
         entity.setStatsAnalyzed(true);
         entity.setType(getId());
         pos.world.spawnEntityInWorld(entity);

@@ -410,8 +410,12 @@ public abstract class BaseChickenHandler {
                         .lastIndexOf("/") + 1));
         if (chicken.getTextureOverlay() != null) {
             json.textureOverlay = JsonUtils.stripPng(
-                chicken.getTextureOverlay().getResourcePath()
-                    .substring(chicken.getTextureOverlay().getResourcePath().lastIndexOf("/") + 1));
+                chicken.getTextureOverlay()
+                    .getResourcePath()
+                    .substring(
+                        chicken.getTextureOverlay()
+                            .getResourcePath()
+                            .lastIndexOf("/") + 1));
         }
         json.tintColor = JsonUtils.parseColor(chicken.getTintColor());
         json.bgColor = JsonUtils.parseColor(chicken.getBgColor());
