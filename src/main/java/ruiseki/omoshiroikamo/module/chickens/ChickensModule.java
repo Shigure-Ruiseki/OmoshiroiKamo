@@ -4,6 +4,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.condition.Conditions;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
@@ -40,6 +41,7 @@ public class ChickensModule extends ModModuleBase {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        Conditions.registerDefaults();
         ChickensBlocks.preInit();
         ChickensItems.preInit();
         ChickensCreative.preInit();

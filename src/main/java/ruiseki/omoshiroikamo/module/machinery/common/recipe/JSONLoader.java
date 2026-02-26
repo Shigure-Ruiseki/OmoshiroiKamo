@@ -11,6 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionParserRegistry;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.InputParserRegistry;
@@ -118,6 +120,16 @@ public class JSONLoader {
                 } else {
                     Logger.warn("Failed to parse output or invalid item in recipe group: {}", group);
                     return null;
+                }
+            }
+
+            if (json.has("conditions")) {
+                JsonArray conditions = json.getAsJsonArray("conditions");
+                for (JsonElement condElem : conditions) {
+                    ICondition condition = ConditionParserRegistry.parse(condElem.getAsJsonObject());
+                    if (condition != null) {
+                        builder.addCondition(condition);
+                    }
                 }
             }
 

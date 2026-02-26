@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
@@ -17,6 +19,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
     private final int priority;
     private final List<IRecipeInput> inputs;
     private final List<IRecipeOutput> outputs;
+    private final List<ICondition> conditions;
 
     private ModularRecipe(Builder builder) {
         this.recipeGroup = builder.recipeGroup;
@@ -25,6 +28,7 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
         this.name = builder.name;
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
+        this.conditions = Collections.unmodifiableList(new ArrayList<>(builder.conditions));
     }
 
     public String getRecipeGroup() {
@@ -49,6 +53,19 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
     public List<IRecipeOutput> getOutputs() {
         return outputs;
+    }
+
+    public List<ICondition> getConditions() {
+        return conditions;
+    }
+
+    public boolean isConditionMet(ConditionContext context) {
+        for (ICondition condition : conditions) {
+            if (!condition.isMet(context)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -204,6 +221,13 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
 
         public Builder addOutput(IRecipeOutput output) {
             this.outputs.add(output);
+            return this;
+        }
+
+        private List<ICondition> conditions = new ArrayList<>();
+
+        public Builder addCondition(ICondition condition) {
+            this.conditions.add(condition);
             return this;
         }
 
