@@ -87,13 +87,15 @@ public abstract class AbstractJsonMaterial implements IJsonMaterial {
      * Generic getter for properties. Subclasses should override this if they want
      * to expose fields.
      */
-    public abstract Object get(String key);
+    public Object get(String key) {
+        return null;
+    }
 
     /**
      * Generic setter for properties. Subclasses should override this if they want
      * to allow updates.
      */
-    public abstract void set(String key, Object value);
+    public void set(String key, Object value) {}
 
     /**
      * Validates the material data. Returns true if valid.

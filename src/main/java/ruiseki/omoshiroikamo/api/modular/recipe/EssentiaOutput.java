@@ -6,14 +6,13 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
 
 public class EssentiaOutput extends AbstractRecipeOutput {
 
-    private final String aspectTag;
-    private final int amount;
+    private String aspectTag;
+    private int amount;
 
     public EssentiaOutput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
@@ -34,41 +33,27 @@ public class EssentiaOutput extends AbstractRecipeOutput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-
-        // If not simulating, first check if we CAN output everything by simulating
-        if (!simulate) {
-            if (!process(ports, true)) return false;
-        }
-
+    public void apply(List<IModularPort> ports) {
         Aspect aspect = Aspect.getAspect(aspectTag);
-        if (aspect == null) return false;
+        if (aspect == null) return;
 
         int remaining = amount;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ESSENTIA) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractEssentiaPortTE)) {
-                throw new IllegalStateException(
-                    "ESSENTIA OUTPUT port must be AbstractEssentiaPortTE, got: " + port.getClass()
-                        .getName());
-            }
+            if (!(port instanceof AbstractEssentiaPortTE)) continue;
 
             AbstractEssentiaPortTE essentiaPort = (AbstractEssentiaPortTE) port;
             int space = essentiaPort.getMaxCapacityPerAspect() - essentiaPort.containerContains(aspect);
 
             if (space > 0) {
                 int toAdd = Math.min(remaining, space);
-                if (!simulate) {
-                    essentiaPort.addToContainer(aspect, toAdd);
-                }
+                essentiaPort.addToContainer(aspect, toAdd);
                 remaining -= toAdd;
             }
             if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     @Override
@@ -87,16 +72,28 @@ public class EssentiaOutput extends AbstractRecipeOutput {
         return amount;
     }
 
-    public static EssentiaOutput fromJson(JsonObject json) {
-        String aspectTag = json.get("essentia")
+    @Override
+    public void read(JsonObject json) {
+        this.aspectTag = json.get("essentia")
             .getAsString();
-        int amount = json.has("amount") ? json.get("amount")
+        this.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1;
-        Aspect aspect = Aspect.getAspect(aspectTag);
-        if (aspect == null) {
-            Logger.warn("Unknown aspect in recipe: {}", aspectTag);
-            return null;
-        }
-        return new EssentiaOutput(aspectTag, amount);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("essentia", aspectTag);
+        json.addProperty("amount", amount);
+    }
+
+    @Override
+    public boolean validate() {
+        return aspectTag != null && !aspectTag.isEmpty() && amount > 0;
+    }
+
+    public static EssentiaOutput fromJson(JsonObject json) {
+        EssentiaOutput output = new EssentiaOutput("", 0);
+        output.read(json);
+        return output.validate() ? output : null;
     }
 }

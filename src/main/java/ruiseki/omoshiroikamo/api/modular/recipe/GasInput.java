@@ -9,8 +9,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
 public class GasInput extends AbstractRecipeInput {
 
-    private final String gasName;
-    private final int amount;
+    private String gasName;
+    private int amount;
 
     public GasInput(String gasName, int amount) {
         this.gasName = gasName;
@@ -43,10 +43,8 @@ public class GasInput extends AbstractRecipeInput {
     @Override
     protected long consume(IModularPort port, long remaining, boolean simulate) {
         AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
-        // Use internalDrawGas to bypass side IO checks
         GasStack drawn = gasPort.internalDrawGas((int) remaining, false);
         if (drawn != null && drawn.amount > 0) {
-            // Check if gas type matches (null gasName = any gas)
             if (gasName == null || gasName.isEmpty()
                 || drawn.getGas()
                     .getName()
@@ -60,11 +58,28 @@ public class GasInput extends AbstractRecipeInput {
         return 0;
     }
 
-    public static GasInput fromJson(JsonObject json) {
-        String gasName = json.has("gas") ? json.get("gas")
+    @Override
+    public void read(JsonObject json) {
+        this.gasName = json.has("gas") ? json.get("gas")
             .getAsString() : null;
-        int amount = json.get("amount")
+        this.amount = json.get("amount")
             .getAsInt();
-        return new GasInput(gasName, amount);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        if (gasName != null) json.addProperty("gas", gasName);
+        json.addProperty("amount", amount);
+    }
+
+    @Override
+    public boolean validate() {
+        return amount > 0;
+    }
+
+    public static GasInput fromJson(JsonObject json) {
+        GasInput input = new GasInput(null, 0);
+        input.read(json);
+        return input.validate() ? input : null;
     }
 }

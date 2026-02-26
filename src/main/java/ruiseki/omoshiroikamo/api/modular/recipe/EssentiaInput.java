@@ -9,8 +9,8 @@ import thaumcraft.api.aspects.Aspect;
 
 public class EssentiaInput extends AbstractRecipeInput {
 
-    private final String aspectTag;
-    private final int amount;
+    private String aspectTag;
+    private int amount;
 
     public EssentiaInput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
@@ -57,11 +57,28 @@ public class EssentiaInput extends AbstractRecipeInput {
         return 0;
     }
 
-    public static EssentiaInput fromJson(JsonObject json) {
-        String aspectTag = json.get("essentia")
+    @Override
+    public void read(JsonObject json) {
+        this.aspectTag = json.get("essentia")
             .getAsString();
-        int amount = json.get("amount")
+        this.amount = json.get("amount")
             .getAsInt();
-        return new EssentiaInput(aspectTag, amount);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("essentia", aspectTag);
+        json.addProperty("amount", amount);
+    }
+
+    @Override
+    public boolean validate() {
+        return aspectTag != null && !aspectTag.isEmpty() && amount > 0;
+    }
+
+    public static EssentiaInput fromJson(JsonObject json) {
+        EssentiaInput input = new EssentiaInput("", 0);
+        input.read(json);
+        return input.validate() ? input : null;
     }
 }

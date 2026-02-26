@@ -6,13 +6,12 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.FluidJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
 public class FluidInput extends AbstractRecipeInput {
 
-    private final FluidStack required;
+    private FluidStack required;
 
     public FluidInput(FluidStack required) {
         this.required = required.copy();
@@ -55,18 +54,35 @@ public class FluidInput extends AbstractRecipeInput {
         return 0;
     }
 
-    public static FluidInput fromJson(JsonObject json) {
+    @Override
+    public void read(JsonObject json) {
         FluidJson fluidJson = new FluidJson();
         fluidJson.name = json.get("fluid")
             .getAsString();
         fluidJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1000;
+        this.required = FluidJson.resolveFluidStack(fluidJson);
+    }
 
-        FluidStack stack = FluidJson.resolveFluidStack(fluidJson);
-        if (stack == null) {
-            Logger.warn("Unknown fluid in recipe: {}", fluidJson.name);
-            return null;
+    @Override
+    public void write(JsonObject json) {
+        if (required != null && required.getFluid() != null) {
+            json.addProperty(
+                "fluid",
+                required.getFluid()
+                    .getName());
+            json.addProperty("amount", required.amount);
         }
-        return new FluidInput(stack);
+    }
+
+    @Override
+    public boolean validate() {
+        return required != null;
+    }
+
+    public static FluidInput fromJson(JsonObject json) {
+        FluidInput input = new FluidInput(new FluidStack(net.minecraftforge.fluids.FluidRegistry.WATER, 0));
+        input.read(json);
+        return input.validate() ? input : null;
     }
 }

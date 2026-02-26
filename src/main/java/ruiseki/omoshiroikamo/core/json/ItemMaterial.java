@@ -41,6 +41,25 @@ public class ItemMaterial extends AbstractJsonMaterial {
         if (meta != 0) json.addProperty("meta", meta);
     }
 
+    @Override
+    public Object get(String key) {
+        if ("name".equals(key)) return name;
+        if ("ore".equals(key)) return ore;
+        if ("amount".equals(key)) return amount;
+        if ("meta".equals(key)) return meta;
+        return null;
+    }
+
+    @Override
+    public void set(String key, Object value) {
+        if ("name".equals(key)) this.name = (String) value;
+        if ("ore".equals(key)) this.ore = (String) value;
+        if ("amount".equals(key))
+            this.amount = value instanceof Integer ? (Integer) value : Integer.parseInt(value.toString());
+        if ("meta".equals(key))
+            this.meta = value instanceof Integer ? (Integer) value : Integer.parseInt(value.toString());
+    }
+
     public ItemStack resolve() {
         return ItemJson.resolveItemStack(toItemJson());
     }

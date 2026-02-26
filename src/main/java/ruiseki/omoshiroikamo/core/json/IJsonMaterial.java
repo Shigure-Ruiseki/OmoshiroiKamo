@@ -22,4 +22,10 @@ public interface IJsonMaterial {
      */
     void write(JsonObject json);
 
+    /**
+     * Validates the material data. Returns true if valid.
+     */
+    default boolean validate() {
+        return true;
+    }
 }

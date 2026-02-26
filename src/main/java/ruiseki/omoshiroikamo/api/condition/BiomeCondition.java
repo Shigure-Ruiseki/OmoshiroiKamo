@@ -47,7 +47,7 @@ public class BiomeCondition implements ICondition {
         json.addProperty("type", "biome");
         JsonArray array = new JsonArray();
         for (String biome : allowedBiomes) {
-            array.add(biome);
+            array.add(new com.google.gson.JsonPrimitive(biome));
         }
         json.add("biomes", array);
     }

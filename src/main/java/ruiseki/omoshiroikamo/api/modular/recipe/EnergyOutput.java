@@ -10,8 +10,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
 
 public class EnergyOutput extends AbstractRecipeOutput {
 
-    private final int amount;
-    private final boolean perTick;
+    private int amount;
+    private boolean perTick;
 
     public EnergyOutput(int amount, boolean perTick) {
         this.amount = amount;
@@ -36,33 +36,22 @@ public class EnergyOutput extends AbstractRecipeOutput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-
-        // If not simulating, first check if we CAN output everything by simulating
-        if (!simulate) {
-            if (!process(ports, true)) return false;
-        }
-
+    public void apply(List<IModularPort> ports) {
         long remaining = amount;
 
         for (IModularPort port : ports) {
-            // Check compatibility
             if (port.getPortType() != IPortType.Type.ENERGY) continue;
-            // Allow OUTPUT and BOTH
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
             if (!(port instanceof AbstractEnergyIOPortTE)) continue;
 
             AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
-
-            int accepted = energyPort.internalReceiveEnergy((int) remaining, simulate);
+            int accepted = energyPort.internalReceiveEnergy((int) remaining, false);
             remaining -= accepted;
 
             if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     @Override
@@ -81,17 +70,34 @@ public class EnergyOutput extends AbstractRecipeOutput {
         return amount;
     }
 
-    public static EnergyOutput fromJson(JsonObject json) {
-        int amount = json.get("energy")
+    @Override
+    public void read(JsonObject json) {
+        this.amount = json.get("energy")
             .getAsInt();
-        boolean perTick = true;
+        this.perTick = true;
         if (json.has("perTick")) {
-            perTick = json.get("perTick")
+            this.perTick = json.get("perTick")
                 .getAsBoolean();
         } else if (json.has("pertick")) {
-            perTick = json.get("pertick")
+            this.perTick = json.get("pertick")
                 .getAsBoolean();
         }
-        return new EnergyOutput(amount, perTick);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("energy", amount);
+        if (!perTick) json.addProperty("perTick", false);
+    }
+
+    @Override
+    public boolean validate() {
+        return amount > 0;
+    }
+
+    public static EnergyOutput fromJson(JsonObject json) {
+        EnergyOutput output = new EnergyOutput(0, true);
+        output.read(json);
+        return output.validate() ? output : null;
     }
 }

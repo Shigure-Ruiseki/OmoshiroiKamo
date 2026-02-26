@@ -9,8 +9,8 @@ import thaumcraft.api.aspects.Aspect;
 
 public class VisInput extends AbstractRecipeInput {
 
-    private final String aspectTag;
-    private final int amountCentiVis;
+    private String aspectTag;
+    private int amountCentiVis;
 
     public VisInput(String aspectTag, int amountCentiVis) {
         this.aspectTag = aspectTag;
@@ -57,11 +57,28 @@ public class VisInput extends AbstractRecipeInput {
         return 0;
     }
 
-    public static VisInput fromJson(JsonObject json) {
-        String aspectTag = json.get("vis")
+    @Override
+    public void read(JsonObject json) {
+        this.aspectTag = json.get("vis")
             .getAsString();
-        int centiVis = json.get("amount")
+        this.amountCentiVis = json.get("amount")
             .getAsInt();
-        return new VisInput(aspectTag, centiVis);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("vis", aspectTag);
+        json.addProperty("amount", amountCentiVis);
+    }
+
+    @Override
+    public boolean validate() {
+        return aspectTag != null && !aspectTag.isEmpty() && amountCentiVis > 0;
+    }
+
+    public static VisInput fromJson(JsonObject json) {
+        VisInput input = new VisInput("", 0);
+        input.read(json);
+        return input.validate() ? input : null;
     }
 }

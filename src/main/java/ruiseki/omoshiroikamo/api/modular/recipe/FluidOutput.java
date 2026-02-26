@@ -11,14 +11,12 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.json.FluidJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
 public class FluidOutput extends AbstractRecipeOutput {
 
-    private final String fluidName;
-    private final int amount;
+    private String fluidName;
+    private int amount;
 
     public FluidOutput(String fluidName, int amount) {
         this.fluidName = fluidName;
@@ -37,25 +35,15 @@ public class FluidOutput extends AbstractRecipeOutput {
         return FluidRegistry.getFluidStack(fluidName, amount);
     }
 
-    public FluidStack getFluid() {
-        return getOutput();
-    }
-
     @Override
     public IPortType.Type getPortType() {
         return IPortType.Type.FLUID;
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-
-        // If not simulating, first check if we CAN output everything by simulating
-        if (!simulate) {
-            if (!process(ports, true)) return false;
-        }
-
+    public void apply(List<IModularPort> ports) {
         FluidStack output = FluidRegistry.getFluidStack(fluidName, amount);
-        if (output == null) return false;
+        if (output == null) return;
 
         int remaining = output.amount;
 
@@ -63,13 +51,10 @@ public class FluidOutput extends AbstractRecipeOutput {
             if (port.getPortType() != IPortType.Type.FLUID) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
-            if (!(port instanceof AbstractFluidPortTE)) {
-                throw new IllegalStateException(
-                    "FLUID OUTPUT port must be AbstractFluidPortTE, got: " + port.getClass()
-                        .getName());
-            }
-            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
 
+            if (!(port instanceof AbstractFluidPortTE)) continue;
+
+            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
             FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
             if (tankInfo == null || tankInfo.length == 0) continue;
 
@@ -78,22 +63,17 @@ public class FluidOutput extends AbstractRecipeOutput {
             int currentAmount = stored != null ? stored.amount : 0;
             int space = tankCapacity - currentAmount;
 
-            // Only output if compatible fluid or empty
             if (stored == null || stored.isFluidEqual(output)) {
                 int fill = Math.min(remaining, space);
                 if (fill > 0) {
-                    if (!simulate) {
-                        FluidStack toFill = output.copy();
-                        toFill.amount = fill;
-                        fluidPort.internalFill(toFill, true);
-                    }
+                    FluidStack toFill = output.copy();
+                    toFill.amount = fill;
+                    fluidPort.internalFill(toFill, true);
                     remaining -= fill;
                 }
             }
             if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     @Override
@@ -120,21 +100,28 @@ public class FluidOutput extends AbstractRecipeOutput {
         return amount;
     }
 
-    public static FluidOutput fromJson(JsonObject json) {
-        FluidJson fluidJson = new FluidJson();
-        fluidJson.name = json.get("fluid")
+    @Override
+    public void read(JsonObject json) {
+        this.fluidName = json.get("fluid")
             .getAsString();
-        fluidJson.amount = json.has("amount") ? json.get("amount")
+        this.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1000;
+    }
 
-        FluidStack stack = FluidJson.resolveFluidStack(fluidJson);
-        if (stack == null) {
-            Logger.warn("Unknown fluid in recipe: {}", fluidJson.name);
-            return null;
-        }
-        return new FluidOutput(
-            stack.getFluid()
-                .getName(),
-            stack.amount);
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("fluid", fluidName);
+        json.addProperty("amount", amount);
+    }
+
+    @Override
+    public boolean validate() {
+        return fluidName != null && !fluidName.isEmpty() && amount > 0;
+    }
+
+    public static FluidOutput fromJson(JsonObject json) {
+        FluidOutput output = new FluidOutput("", 0);
+        output.read(json);
+        return output.validate() ? output : null;
     }
 }

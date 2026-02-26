@@ -11,14 +11,13 @@ import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
 public class GasOutput extends AbstractRecipeOutput {
 
-    private final String gasName;
-    private final int amount;
+    private String gasName;
+    private int amount;
 
     public GasOutput(String gasName, int amount) {
         this.gasName = gasName;
@@ -39,36 +38,24 @@ public class GasOutput extends AbstractRecipeOutput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-
-        // If not simulating, first check if we CAN output everything by simulating
-        if (!simulate) {
-            if (!process(ports, true)) return false;
-        }
-
+    public void apply(List<IModularPort> ports) {
         Gas gas = GasRegistry.getGas(gasName);
-        if (gas == null) return false;
+        if (gas == null) return;
 
         int remaining = amount;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.GAS) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractGasPortTE)) {
-                throw new IllegalStateException(
-                    "GAS OUTPUT port must be AbstractGasPortTE, got: " + port.getClass()
-                        .getName());
-            }
+
+            if (!(port instanceof AbstractGasPortTE)) continue;
 
             AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
             GasStack insertStack = new GasStack(gas, remaining);
-            // Use internalReceiveGas to bypass side IO checks
-            int accepted = gasPort.internalReceiveGas(insertStack, !simulate);
+            int accepted = gasPort.internalReceiveGas(insertStack, true);
             remaining -= accepted;
             if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     @Override
@@ -95,16 +82,28 @@ public class GasOutput extends AbstractRecipeOutput {
         return amount;
     }
 
-    public static GasOutput fromJson(JsonObject json) {
-        String gasName = json.get("gas")
+    @Override
+    public void read(JsonObject json) {
+        this.gasName = json.get("gas")
             .getAsString();
-        int amount = json.has("amount") ? json.get("amount")
+        this.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1000;
-        Gas gas = GasRegistry.getGas(gasName);
-        if (gas == null) {
-            Logger.warn("Unknown gas in recipe: {}", gasName);
-            return null;
-        }
-        return new GasOutput(gasName, amount);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("gas", gasName);
+        json.addProperty("amount", amount);
+    }
+
+    @Override
+    public boolean validate() {
+        return gasName != null && !gasName.isEmpty() && amount > 0;
+    }
+
+    public static GasOutput fromJson(JsonObject json) {
+        GasOutput output = new GasOutput("", 0);
+        output.read(json);
+        return output.validate() ? output : null;
     }
 }

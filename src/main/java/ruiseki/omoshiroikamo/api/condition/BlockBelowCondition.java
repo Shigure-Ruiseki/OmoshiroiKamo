@@ -60,7 +60,8 @@ public class BlockBelowCondition implements ICondition {
     public static ICondition fromJson(JsonObject json) {
         if (json.has("block")) {
             JsonObject blockJson = json.getAsJsonObject("block");
-            ItemStack stack = ItemJson.resolveItemStack(ItemJson.fromJson(blockJson));
+            ItemJson itemData = ItemJson.fromJson(blockJson);
+            ItemStack stack = ItemJson.resolveItemStack(itemData);
             if (stack != null && stack.getItem() != null) {
                 Block block = Block.getBlockFromItem(stack.getItem());
                 int meta = stack.getItemDamage();

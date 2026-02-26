@@ -10,8 +10,8 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortT
 
 public class ManaOutput extends AbstractRecipeOutput {
 
-    private final int amount;
-    private final boolean perTick;
+    private int amount;
+    private boolean perTick;
 
     public ManaOutput(int amount, boolean perTick) {
         this.amount = amount;
@@ -36,38 +36,24 @@ public class ManaOutput extends AbstractRecipeOutput {
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, boolean simulate) {
-
-        // If not simulating, first check if we CAN output everything by simulating
-        if (!simulate) {
-            if (!process(ports, true)) return false;
-        }
-
+    public void apply(List<IModularPort> ports) {
         int remaining = amount;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.MANA) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) {
-                throw new IllegalStateException(
-                    "MANA OUTPUT port must be AbstractManaPortTE, got: " + port.getClass()
-                        .getName());
-            }
+            if (!(port instanceof AbstractManaPortTE)) continue;
 
             AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
             int space = manaPort.getAvailableSpaceForMana();
 
             if (space > 0) {
                 int toAdd = Math.min(remaining, space);
-                if (!simulate) {
-                    manaPort.recieveMana(toAdd);
-                }
+                manaPort.recieveMana(toAdd);
                 remaining -= toAdd;
             }
             if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     @Override
@@ -78,7 +64,6 @@ public class ManaOutput extends AbstractRecipeOutput {
     @Override
     protected long getPortCapacity(IModularPort port) {
         AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-        // Total capacity = current mana + available space
         return (long) manaPort.getCurrentMana() + manaPort.getAvailableSpaceForMana();
     }
 
@@ -87,17 +72,34 @@ public class ManaOutput extends AbstractRecipeOutput {
         return amount;
     }
 
-    public static ManaOutput fromJson(JsonObject json) {
-        int amount = json.get("mana")
+    @Override
+    public void read(JsonObject json) {
+        this.amount = json.get("mana")
             .getAsInt();
-        boolean perTick = true;
+        this.perTick = true;
         if (json.has("perTick")) {
-            perTick = json.get("perTick")
+            this.perTick = json.get("perTick")
                 .getAsBoolean();
         } else if (json.has("pertick")) {
-            perTick = json.get("pertick")
+            this.perTick = json.get("pertick")
                 .getAsBoolean();
         }
-        return new ManaOutput(amount, perTick);
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("mana", amount);
+        if (!perTick) json.addProperty("perTick", false);
+    }
+
+    @Override
+    public boolean validate() {
+        return amount > 0;
+    }
+
+    public static ManaOutput fromJson(JsonObject json) {
+        ManaOutput output = new ManaOutput(0, true);
+        output.read(json);
+        return output.validate() ? output : null;
     }
 }
