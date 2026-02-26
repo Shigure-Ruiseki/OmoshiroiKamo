@@ -14,6 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
+import com.gtnewhorizon.structurelib.structure.StructureDefinition;
+import com.gtnewhorizon.structurelib.structure.StructureUtility;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -24,6 +26,7 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Struc
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**
@@ -31,7 +34,14 @@ import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint
  */
 public class StructureAgent {
 
-    private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
+    private static final IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
+
+    static {
+        STRUCTURE_DEFINITION = StructureDefinition.<TEMachineController>builder()
+            .addShape("main", new String[][] { { "Q" } })
+            .addElement('Q', StructureUtility.ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0))
+            .build();
+    }
 
     private final TEMachineController controller;
 
@@ -179,7 +189,13 @@ public class StructureAgent {
 
         clearInternalData();
 
-        boolean valid = getStructureDefinition().check(
+        IStructureDefinition<TEMachineController> def = getStructureDefinition();
+        if (def == null) {
+            Logger.error("StructureAgent: Structure definition is null for piece '{}'!", piece);
+            return false;
+        }
+
+        boolean valid = def.check(
             controller,
             piece,
             controller.getWorldObj(),
