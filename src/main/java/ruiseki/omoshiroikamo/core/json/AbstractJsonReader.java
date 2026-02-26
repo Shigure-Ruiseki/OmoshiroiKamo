@@ -88,12 +88,23 @@ public abstract class AbstractJsonReader<T> {
      */
     protected List<File> listJsonFiles(File dir) {
         List<File> files = new ArrayList<>();
+        listJsonFilesRecursive(dir, files);
+        return files;
+    }
+
+    private void listJsonFilesRecursive(File dir, List<File> files) {
         if (dir.exists() && dir.isDirectory()) {
-            File[] found = dir.listFiles((d, name) -> name.endsWith(".json"));
+            File[] found = dir.listFiles();
             if (found != null) {
-                for (File f : found) files.add(f);
+                for (File f : found) {
+                    if (f.isDirectory()) {
+                        listJsonFilesRecursive(f, files);
+                    } else if (f.getName()
+                        .endsWith(".json")) {
+                            files.add(f);
+                        }
+                }
             }
         }
-        return files;
     }
 }

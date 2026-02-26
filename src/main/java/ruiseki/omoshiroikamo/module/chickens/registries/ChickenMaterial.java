@@ -51,11 +51,11 @@ public class ChickenMaterial extends AbstractJsonMaterial {
         this.tintColor = getString(json, "tintColor", null);
         if (json.has("layItem")) {
             this.layItem = new ItemMaterial();
-            this.layItem.read(json.getAsJsonObject("layItem"));
+            this.layItem.read(json.get("layItem"));
         }
         if (json.has("dropItem")) {
             this.dropItem = new ItemMaterial();
-            this.dropItem.read(json.getAsJsonObject("dropItem"));
+            this.dropItem.read(json.get("dropItem"));
         }
         this.bgColor = getString(json, "bgColor", null);
         this.fgColor = getString(json, "fgColor", null);
@@ -70,7 +70,7 @@ public class ChickenMaterial extends AbstractJsonMaterial {
             JsonArray foodArray = json.getAsJsonArray("foods");
             for (JsonElement e : foodArray) {
                 ItemMaterial item = new ItemMaterial();
-                item.read(e.getAsJsonObject());
+                item.read(e);
                 this.foods.add(item);
             }
         }

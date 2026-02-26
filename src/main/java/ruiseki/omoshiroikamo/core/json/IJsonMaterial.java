@@ -16,6 +16,19 @@ public interface IJsonMaterial {
     void read(JsonObject json);
 
     /**
+     * Populates this material's data from a JsonElement.
+     * Default implementation delegates to read(JsonObject) if the element is an
+     * object.
+     *
+     * @param json the source JSON element
+     */
+    default void read(com.google.gson.JsonElement json) {
+        if (json != null && json.isJsonObject()) {
+            read(json.getAsJsonObject());
+        }
+    }
+
+    /**
      * Serializes this material's data to a JsonObject.
      *
      * @param json the target JSON object

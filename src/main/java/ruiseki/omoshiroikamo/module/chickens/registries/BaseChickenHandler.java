@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.config.ConfigUpdater;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
+import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.core.json.ItemMaterial;
 import ruiseki.omoshiroikamo.core.json.JsonUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -276,13 +277,35 @@ public abstract class BaseChickenHandler {
         mat.spawnType = chicken.getSpawnType()
             .name();
         mat.coefficient = chicken.getCoefficient();
-        if (chicken.getLayItem() != null) mat.layItem = ItemMaterial.parseItemStack(chicken.getLayItem());
-        if (chicken.getDropItem() != null) mat.dropItem = ItemMaterial.parseItemStack(chicken.getDropItem());
+
+        // Items
+        if (chicken.getLayItem() != null) {
+            mat.layItem = ItemMaterial.parseItemStack(chicken.getLayItem());
+        } else if (chicken.getLayString() != null) {
+            mat.layItem = new ItemMaterial();
+            ItemJson parsed = ItemJson.parseItemString(chicken.getLayString());
+            if (parsed != null) {
+                mat.layItem.name = parsed.name;
+                mat.layItem.ore = parsed.ore;
+                mat.layItem.amount = parsed.amount;
+                mat.layItem.meta = parsed.meta;
+            }
+        }
+
+        if (chicken.getDropItem() != null) {
+            mat.dropItem = ItemMaterial.parseItemStack(chicken.getDropItem());
+        }
+
+        // Foods from recipes
         if (chicken.getRecipes() != null && !chicken.getRecipes()
             .isEmpty()) {
-            for (ChickenRecipe recipe : chicken.getRecipes())
-                mat.foods.add(ItemMaterial.parseItemStack(recipe.getInput()));
+            for (ChickenRecipe recipe : chicken.getRecipes()) {
+                if (recipe.getInput() != null) {
+                    mat.foods.add(ItemMaterial.parseItemStack(recipe.getInput()));
+                }
+            }
         }
+
         mat.mutationChance = chicken.getMutationChance();
         mat.lang = chicken.getLang();
         return mat;

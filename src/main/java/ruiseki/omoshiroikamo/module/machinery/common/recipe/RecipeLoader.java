@@ -49,7 +49,8 @@ public class RecipeLoader {
 
         List<ModularRecipe> recipes = JSONLoader.loadRecipes(recipesDir);
         for (ModularRecipe recipe : recipes) {
-            String group = recipe.getRecipeGroup();
+            String group = recipe.getRecipeGroup()
+                .toLowerCase();
             recipesByGroup.computeIfAbsent(group, k -> new ArrayList<>())
                 .add(recipe);
         }
@@ -71,7 +72,7 @@ public class RecipeLoader {
     public List<ModularRecipe> getRecipes(String... groups) {
         List<ModularRecipe> result = new ArrayList<>();
         for (String group : groups) {
-            List<ModularRecipe> list = recipesByGroup.get(group);
+            List<ModularRecipe> list = recipesByGroup.get(group.toLowerCase());
             if (list != null) {
                 result.addAll(list);
             }

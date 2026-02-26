@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 
 /**
@@ -21,13 +24,17 @@ public class MachineryJsonReader extends AbstractJsonReader<List<MachineryMateri
     @Override
     public List<MachineryMaterial> read() throws IOException {
         List<MachineryMaterial> materials = new ArrayList<>();
+        Logger.info("[MachineryJsonReader] Starting scan at: " + path.getAbsolutePath());
         if (path.isDirectory()) {
-            for (File file : listJsonFiles(path)) {
+            List<File> files = listJsonFiles(path);
+            Logger.info("[MachineryJsonReader] Found " + files.size() + " JSON files");
+            for (File file : files) {
                 materials.addAll(readFile(file));
             }
         } else if (path.exists()) {
             materials.addAll(readFile(path));
         }
+        Logger.info("[MachineryJsonReader] Total materials read: " + materials.size());
         this.cache = materials;
         return materials;
     }
@@ -35,15 +42,79 @@ public class MachineryJsonReader extends AbstractJsonReader<List<MachineryMateri
     private List<MachineryMaterial> readFile(File file) throws IOException {
         List<MachineryMaterial> list = new ArrayList<>();
         JsonElement root = readJsonElement(file);
+        Logger.debug("[MachineryJsonReader] Reading file: " + file.getName());
 
         if (root.isJsonObject()) {
-            list.add(parseEntry(root, file));
+            JsonObject obj = root.getAsJsonObject();
+            if (obj.has("recipes") && obj.get("recipes")
+                .isJsonArray()) {
+                // Header format: { "group": "...", "recipes": [...] }
+                String group = obj.has("group") ? obj.get("group")
+                    .getAsString()
+                    : (obj.has("machine") ? obj.get("machine")
+                        .getAsString() : null);
+
+                JsonArray recipesArr = obj.getAsJsonArray("recipes");
+                Logger.debug(
+                    "[MachineryJsonReader] Found nested recipes array with " + recipesArr.size()
+                        + " entries in "
+                        + file.getName());
+
+                for (JsonElement element : recipesArr) {
+                    MachineryMaterial m = parseEntry(element, file);
+                    if (m != null) {
+                        if (m.machine == null) m.machine = group;
+                        if (m.validate()) {
+                            list.add(m);
+                        } else {
+                            Logger.warn(
+                                "[MachineryJsonReader] Recipe validation failed in " + file.getName()
+                                    + " (group="
+                                    + group
+                                    + ", name="
+                                    + m.localizedName
+                                    + ", regName="
+                                    + m.registryName
+                                    + ")");
+                        }
+                    }
+                }
+            } else {
+                MachineryMaterial m = parseEntry(obj, file);
+                if (m != null) {
+                    if (m.validate()) {
+                        list.add(m);
+                    } else {
+                        Logger.warn(
+                            "[MachineryJsonReader] Single recipe validation failed in " + file
+                                .getName() + " (name=" + m.localizedName + ", regName=" + m.registryName + ")");
+                    }
+                }
+            }
         } else if (root.isJsonArray()) {
-            for (JsonElement e : root.getAsJsonArray()) {
-                list.add(parseEntry(e, file));
+            JsonArray arr = root.getAsJsonArray();
+            Logger.debug(
+                "[MachineryJsonReader] Found top-level recipes array with " + arr.size()
+                    + " entries in "
+                    + file.getName());
+            for (JsonElement e : arr) {
+                MachineryMaterial m = parseEntry(e, file);
+                if (m != null) {
+                    if (m.validate()) {
+                        list.add(m);
+                    } else {
+                        Logger.warn(
+                            "[MachineryJsonReader] Array recipe validation failed in " + file
+                                .getName() + " (name=" + m.localizedName + ", regName=" + m.registryName + ")");
+                    }
+                }
             }
         }
 
+        if (list.size() > 0) {
+            Logger
+                .debug("[MachineryJsonReader] Successfully loaded " + list.size() + " recipes from " + file.getName());
+        }
         return list;
     }
 

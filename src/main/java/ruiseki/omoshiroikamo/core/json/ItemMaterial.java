@@ -26,6 +26,22 @@ public class ItemMaterial extends AbstractJsonMaterial {
     }
 
     @Override
+    public void read(com.google.gson.JsonElement json) {
+        if (json.isJsonPrimitive() && json.getAsJsonPrimitive()
+            .isString()) {
+            ItemJson parsed = ItemJson.parseItemString(json.getAsString());
+            if (parsed != null) {
+                this.name = parsed.name;
+                this.ore = parsed.ore;
+                this.amount = parsed.amount;
+                this.meta = parsed.meta;
+            }
+        } else if (json.isJsonObject()) {
+            read(json.getAsJsonObject());
+        }
+    }
+
+    @Override
     public void read(JsonObject json) {
         this.name = getString(json, "name", null);
         this.ore = getString(json, "ore", null);

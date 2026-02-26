@@ -28,12 +28,19 @@ public class MachineryMaterial extends AbstractJsonMaterial {
     @Override
     public void read(JsonObject json) {
         this.registryName = getString(json, "registryName", null);
-        this.localizedName = getString(json, "localizedName", null);
-        this.machine = getString(json, "machine", null);
-        this.time = getInt(json, "time", 20);
+        this.localizedName = getString(json, "localizedName", getString(json, "name", null));
+        this.machine = getString(json, "machine", getString(json, "group", null));
+        this.time = getInt(json, "duration", getInt(json, "time", 20));
 
-        if (json.has("input")) {
-            JsonArray arr = json.getAsJsonArray("input");
+        // Auto-generate registryName if missing
+        if ((this.registryName == null || this.registryName.isEmpty()) && this.localizedName != null) {
+            this.registryName = this.localizedName.toLowerCase()
+                .replaceAll("\\s+", "_")
+                .replaceAll("[^a-z0-9_]", "");
+        }
+
+        if (json.has("input") || json.has("inputs")) {
+            JsonArray arr = json.has("input") ? json.getAsJsonArray("input") : json.getAsJsonArray("inputs");
             for (JsonElement e : arr) {
                 if (e.isJsonObject()) {
                     IRecipeInput input = InputParserRegistry.parse(e.getAsJsonObject());
@@ -42,8 +49,8 @@ public class MachineryMaterial extends AbstractJsonMaterial {
             }
         }
 
-        if (json.has("output")) {
-            JsonArray arr = json.getAsJsonArray("output");
+        if (json.has("output") || json.has("outputs")) {
+            JsonArray arr = json.has("output") ? json.getAsJsonArray("output") : json.getAsJsonArray("outputs");
             for (JsonElement e : arr) {
                 if (e.isJsonObject()) {
                     IRecipeOutput output = OutputParserRegistry.parse(e.getAsJsonObject());

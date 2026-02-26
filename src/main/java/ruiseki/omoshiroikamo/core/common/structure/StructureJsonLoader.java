@@ -82,13 +82,17 @@ public class StructureJsonLoader {
             if (rootElement.isJsonObject()) {
                 // Single object format (CustomStructure)
                 JsonObject obj = rootElement.getAsJsonObject();
-                if (!obj.has("name") || obj.get("name")
-                    .isJsonNull()) {
-                    Logger.warn("Structure object missing 'name' field: " + file.getName());
+                if (!obj.has("layers")) {
+                    Logger.debug("Skipping JSON object without 'layers' field: " + file.getName());
                     return false;
                 }
                 String name = obj.get("name")
                     .getAsString();
+                // Skip internal-looking names
+                if (name.equalsIgnoreCase("MachineController") || name.equalsIgnoreCase("defaults")) {
+                    Logger.debug("Skipping system name: " + name);
+                    return false;
+                }
                 StructureEntry entry = parseStructureEntry(obj);
                 structureCache.put(name, entry);
                 Logger.info("Loaded single structure: " + name + " from " + file.getName());
@@ -124,11 +128,11 @@ public class StructureJsonLoader {
                 String name = obj.get("name")
                     .getAsString();
 
-                if ("default".equals(name)) {
+                if ("default".equals(name) || "defaults".equals(name)) {
                     // Parse default mappings
                     parseDefaultMappings(obj);
-                } else {
-                    // Parse a structure entry
+                } else if (obj.has("layers")) {
+                    // Parse a structure entry only if it has layers
                     StructureEntry entry = parseStructureEntry(obj);
                     structureCache.put(name, entry);
                 }
