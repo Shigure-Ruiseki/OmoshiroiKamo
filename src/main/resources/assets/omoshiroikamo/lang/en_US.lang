@@ -344,6 +344,8 @@ tooltip.backpack.advanced_void_upgrade=Voids items selected in filter. Has more 
 
 
 # Chicken ==============================================
+jaopca.chicken=%s Chicken
+
 
 
 # Config
@@ -354,6 +356,7 @@ config.chickenConfig=Chicken Settings
 item.chickenCatcher.name=Chicken Catcher
 item.liquidEgg.water.name=Water Egg
 item.liquidEgg.lava.name=Lava Egg
+item.emptyEgg.name=Empty Egg
 item.coloredEgg.white.name=Bone White Chicken Egg
 item.coloredEgg.orange.name=Orange Chicken Egg
 item.coloredEgg.magenta.name=Magenta Chicken Egg
@@ -362,7 +365,7 @@ item.coloredEgg.yellow.name=Yellow Chicken Egg
 item.coloredEgg.lime.name=Lime Chicken Egg
 item.coloredEgg.pink.name=Pink Chicken Egg
 item.coloredEgg.gray.name=Gray Chicken Egg
-item.coloredEgg.silverDye.name=Light Gray Chicken Egg
+item.coloredEgg.light_gray.name=Light Gray Chicken Egg
 item.coloredEgg.cyan.name=Cyan Chicken Egg
 item.coloredEgg.purple.name=Purple Chicken Egg
 item.coloredEgg.blue.name=Lapis Blue Chicken Egg
@@ -370,6 +373,7 @@ item.coloredEgg.brown.name=Cocoa Brown Chicken Egg
 item.coloredEgg.green.name=Cactus Green Chicken Egg
 item.coloredEgg.red.name=Red Chicken Egg
 item.coloredEgg.black.name=Ink Black Chicken Egg
+item.chickenFood.name=%s's Food
 
 item.solidXp.name=Solid Experience
 
@@ -411,7 +415,7 @@ entity.LightBlueChicken.name=Light Blue Chicken
 entity.LimeChicken.name=Lime Chicken
 entity.GrayChicken.name=Gray Chicken
 entity.CyanChicken.name=Cyan Chicken
-entity.SilverDyeChicken.name=Silver Chicken
+entity.LightGrayChicken.name=Light Gray Chicken
 entity.MagentaChicken.name=Magenta Chicken
 entity.BrownChicken.name=Brown Chicken
 entity.SmartChicken.name=Smart Chicken

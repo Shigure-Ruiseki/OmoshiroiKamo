@@ -30,8 +30,8 @@ public class ThermalChickens extends BaseChickenHandler {
             "BasalzRodChicken",
             nextID(),
             "BasalzRodChicken",
-            0x980000,
             0x6E6664,
+            0x980000,
             SpawnType.NONE).setLayString("ore:rodBasalz");
         allChickens.add(basalzRodChicken);
 
@@ -51,7 +51,7 @@ public class ThermalChickens extends BaseChickenHandler {
             .setLayString("ore:nuggetEnderium");
         allChickens.add(enderiumChicken);
 
-        lumiumChicken = addChicken("LumiumChicken", nextID(), "LumiumChicken", 0xEEF4DF, 0xF4B134, SpawnType.NONE)
+        lumiumChicken = addChicken("LumiumChicken", nextID(), "LumiumChicken", 0xfcffb4, 0xF4B134, SpawnType.NONE)
             .setLayString("ore:ingotLumium");
         allChickens.add(lumiumChicken);
 
@@ -73,7 +73,7 @@ public class ThermalChickens extends BaseChickenHandler {
         setParents(blitzRodChicken, basalzRodChicken, MetalsChickens.sulfurChicken);
         setParents(blizzRodChicken, blitzRodChicken, BaseChickens.snowballChicken);
         setParents(cinnabarChicken, BaseChickens.redstoneChicken, BaseChickens.diamondChicken);
-        setParents(signalumChicken, MetalsChickens.copperChicken, MetalsChickens.silverOreChicken);
+        setParents(signalumChicken, MetalsChickens.copperChicken, MetalsChickens.silverChicken);
         setParents(enderiumChicken, MetalsChickens.platinumChicken, BaseChickens.enderChicken);
         setParents(lumiumChicken, MetalsChickens.tinChicken, BaseChickens.glowstoneChicken);
         setParents(mithrilChicken, MetalsChickens.nickelChicken, BaseChickens.goldChicken);

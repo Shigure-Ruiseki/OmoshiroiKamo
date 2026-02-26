@@ -6,9 +6,12 @@ import java.util.List;
 
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
@@ -21,6 +24,8 @@ import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.event.NetherPopulateEvent;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
+import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
+import ruiseki.omoshiroikamo.module.chickens.common.item.ItemLiquidEgg;
 
 public class ModChickens {
 
@@ -44,6 +49,13 @@ public class ModChickens {
     public static void init() {
         if (!BackportConfigs.enableChickens) return;
         registerModAddons();
+
+        ItemStack emptyEgg = ChickensItems.EMPTY_EGG.newItemStack();
+        for (LiquidEggRegistryItem egg : LiquidEggRegistry.getAll()) {
+            ItemStack filled = ChickensItems.LIQUID_EGG.newItemStack(1, egg.getId());
+            ItemLiquidEgg.setFluid(filled, new FluidStack(egg.getFluid(), 1000));
+            FluidContainerRegistry.registerFluidContainer(new FluidStack(egg.getFluid(), 1000), filled, emptyEgg);
+        }
     }
 
     public static void postInit() {

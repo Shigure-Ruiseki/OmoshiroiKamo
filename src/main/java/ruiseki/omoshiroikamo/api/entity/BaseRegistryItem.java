@@ -63,6 +63,7 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.spawnType = SpawnType.NORMAL;
+        this.lang = new HashMap<>();
     }
 
     /**

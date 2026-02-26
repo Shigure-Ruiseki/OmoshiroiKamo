@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,7 +130,14 @@ public class FluidHandlerItemStack implements IFluidHandlerItem, ICapabilityProv
     }
 
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        if (container.stackSize != 1 || maxDrain <= 0) return null;
+        if (container == null || maxDrain <= 0) return null;
+
+        if (container.getItem() instanceof IFluidContainerItem containerItem) {
+            FluidStack drained = containerItem.drain(container, maxDrain, doDrain);
+            return drained;
+        }
+
+        if (container.stackSize != 1) return null;
 
         FluidStack contained = getFluid();
         if (contained == null || contained.amount <= 0) return null;

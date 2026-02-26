@@ -280,7 +280,10 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(
             new FocusableHandler.FocusableOre("oreGold", EnumDye.YELLOW, new double[] { 0, 0, 311, 311, 311, 311 }));
         defaults.addEntry(
-            new FocusableHandler.FocusableOre("oreSilver", EnumDye.SILVER, new double[] { 0, 0, 381, 381, 381, 381 }));
+            new FocusableHandler.FocusableOre(
+                "oreSilver",
+                EnumDye.LIGHT_GRAY,
+                new double[] { 0, 0, 381, 381, 381, 381 }));
         defaults.addEntry(
             new FocusableHandler.FocusableOre("oreLead", EnumDye.PURPLE, new double[] { 0, 0, 500, 500, 500, 500 }));
         defaults.addEntry(
@@ -314,7 +317,10 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(
             new FocusableHandler.FocusableOre("oreAmber", EnumDye.ORANGE, new double[] { 0, 0, 184, 184, 184, 184 }));
         defaults.addEntry(
-            new FocusableHandler.FocusableOre("oreBoron", EnumDye.SILVER, new double[] { 0, 0, 199, 199, 199, 199 }));
+            new FocusableHandler.FocusableOre(
+                "oreBoron",
+                EnumDye.LIGHT_GRAY,
+                new double[] { 0, 0, 199, 199, 199, 199 }));
         defaults.addEntry(
             new FocusableHandler.FocusableOre("oreThorium", EnumDye.BLACK, new double[] { 0, 0, 222, 222, 222, 222 }));
         defaults.addEntry(
@@ -560,7 +566,7 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(new FocusableHandler.FocusableBlock("etfuturum:stone", 1, EnumDye.PINK, 30));
         defaults.addEntry(new FocusableHandler.FocusableBlock("etfuturum:stone", 3, EnumDye.WHITE, 30));
         defaults.addEntry(new FocusableHandler.FocusableBlock("etfuturum:stone", 5, EnumDye.GRAY, 30));
-        defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:gravel", 0, EnumDye.SILVER, 30));
+        defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:gravel", 0, EnumDye.LIGHT_GRAY, 30));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:grass", 0, EnumDye.GREEN, 10));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:dirt", 0, EnumDye.BROWN, 20));
         defaults.addEntry(new FocusableHandler.FocusableBlock("etfuturum:coarse_dirt", 0, EnumDye.BROWN, 10));
@@ -570,7 +576,7 @@ public class QuantumExtractorRecipes {
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:cobblestone", 0, EnumDye.GRAY, 28));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:mossy_cobblestone", 0, EnumDye.GREEN, 6));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:obsidian", 0, EnumDye.PURPLE, 10));
-        defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:clay", 0, EnumDye.SILVER, 12));
+        defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:clay", 0, EnumDye.LIGHT_GRAY, 12));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:netherrack", 0, EnumDye.RED, 500.0, -1));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:soul_sand", 0, EnumDye.BROWN, 400.0, -1));
         defaults.addEntry(new FocusableHandler.FocusableBlock("minecraft:mycelium", 0, EnumDye.PURPLE, 8));
@@ -593,8 +599,8 @@ public class QuantumExtractorRecipes {
             .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 6, EnumDye.PINK, 2, 0));
         defaults
             .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 7, EnumDye.GRAY, 2, 0));
-        defaults
-            .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 8, EnumDye.SILVER, 2, 0));
+        defaults.addEntry(
+            new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 8, EnumDye.LIGHT_GRAY, 2, 0));
         defaults
             .addEntry(new FocusableHandler.FocusableBlock("minecraft:stained_hardened_clay", 9, EnumDye.CYAN, 2, 0));
         defaults

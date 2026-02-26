@@ -54,7 +54,7 @@ public class DataChicken {
      * @param chickenIn The registry item defining the chicken type
      * @param compound  Optional NBT data to load stats from
      */
-    private DataChicken(ChickensRegistryItem chickenIn, NBTTagCompound compound) {
+    public DataChicken(ChickensRegistryItem chickenIn, NBTTagCompound compound) {
         chicken = chickenIn;
         if (compound != null) {
             gain = clampStat(compound.getInteger(GAIN_NBT), ChickenConfig.getMaxGainStat());
@@ -155,6 +155,7 @@ public class DataChicken {
         EntityChickensChicken entity = buildEntity(world);
         entity.setPosition(pos.x + 0.5, pos.y, pos.z + 0.5);
         entity.onSpawnWithEgg(null);
+        entity.setGrowingAge(0);
         entity.setStatsAnalyzed(true);
         entity.setType(getId());
         world.spawnEntityInWorld(entity);

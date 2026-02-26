@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
+import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 
 public class ChickensRecipes {
 
@@ -93,6 +95,37 @@ public class ChickensRecipes {
                 "stickWood",
                 'F',
                 Items.feather));
+
+        // Chicken Food Recipes: 1 Lay Item + 8 Seeds = 8 Chicken Food
+        for (ChickensRegistryItem chicken : ChickensRegistry.INSTANCE.getItems()) {
+            ItemStack layItem = chicken.createLayItem();
+            if (layItem != null && chicken.isEnabled()) {
+                Object inputItem = layItem.copy();
+
+                // Override for specific chickens to make crafting easier/logical
+                if (chicken.getEntityName()
+                    .equals("WaterChicken")) {
+                    inputItem = Items.water_bucket;
+                } else if (chicken.getEntityName()
+                    .equals("LavaChicken")) {
+                        inputItem = Items.lava_bucket;
+                    } else if (chicken.getEntityName()
+                        .equals("XpChicken")) {
+                            inputItem = Blocks.quartz_ore;
+                        }
+
+                GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                        ChickensItems.CHICKEN_FOOD.newItemStack(8, chicken.getId()),
+                        "SSS",
+                        "SIS",
+                        "SSS",
+                        'S',
+                        Items.wheat_seeds,
+                        'I',
+                        inputItem));
+            }
+        }
 
         GameRegistry.addSmelting(ChickensItems.CHICKEN.getItem(), new ItemStack(Items.cooked_chicken), 0.35f);
     }

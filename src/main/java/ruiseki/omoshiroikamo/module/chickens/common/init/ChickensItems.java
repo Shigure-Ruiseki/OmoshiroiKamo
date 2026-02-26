@@ -9,8 +9,10 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemAnalyzer;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemChickenCatcher;
+import ruiseki.omoshiroikamo.module.chickens.common.item.ItemChickenFood;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemChickenSpawnEgg;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemColoredEgg;
+import ruiseki.omoshiroikamo.module.chickens.common.item.ItemEmptyEgg;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemLiquidEgg;
 import ruiseki.omoshiroikamo.module.chickens.common.item.ItemSolidXp;
 
@@ -24,7 +26,9 @@ public enum ChickensItems {
     CHICKEN(new ItemChicken()),
     COLORED_EGG(new ItemColoredEgg()),
     LIQUID_EGG(new ItemLiquidEgg()),
+    EMPTY_EGG(new ItemEmptyEgg()),
     SOLID_XP(new ItemSolidXp()),
+    CHICKEN_FOOD(new ItemChickenFood()),
 
     //
     ;

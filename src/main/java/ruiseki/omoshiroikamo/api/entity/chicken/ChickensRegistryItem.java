@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.api.entity.chicken;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -7,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.api.entity.BaseRegistryItem;
+import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
 /**
  * Represents a single chicken type registered in {@link ChickensRegistry}.
@@ -33,11 +37,15 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
     private ItemStack layItem;
     private String layString;
 
+    private List<ChickenRecipe> recipes = new ArrayList<>();
+
     private int tintColor = 0xFFFFFF;
     private ResourceLocation textureOverlay;
 
     private String iconName;
     private String iconOverlayName;
+
+    private float mutationChance = -1.0f;
 
     /**
      * Creates a new chicken registry item.
@@ -77,6 +85,43 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
     public ChickensRegistryItem setLayString(String layString) {
         this.layString = layString;
         return this;
+    }
+
+    public ChickensRegistryItem addRecipe(ChickenRecipe recipe) {
+        this.recipes.add(recipe);
+        return this;
+    }
+
+    public ChickensRegistryItem addRecipe(ItemStack input, ItemStack output) {
+        return addRecipe(new ChickenRecipe(input, output));
+    }
+
+    public List<ChickenRecipe> getRecipes() {
+        return recipes;
+    }
+
+    public boolean isFood(ItemStack stack) {
+        for (ChickenRecipe recipe : recipes) {
+            if (recipe.matches(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isFallbackFood(ItemStack stack) {
+        return stack != null && stack.getItem() == Items.wheat_seeds && recipes.isEmpty();
+    }
+
+    @Nullable
+    public ItemStack getOutputFromFood(ItemStack food) {
+        for (ChickenRecipe recipe : recipes) {
+            if (recipe.matches(food)) {
+                ItemStack output = recipe.getOutput();
+                return output != null ? output.copy() : null;
+            }
+        }
+        return null;
     }
 
     public ChickensRegistryItem setTextureOverlay(ResourceLocation textureOverlay) {
@@ -160,5 +205,14 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
 
     public String getLayString() {
         return layString;
+    }
+
+    public float getMutationChance() {
+        return mutationChance < 0 ? ChickenConfig.getMutationChance() : mutationChance;
+    }
+
+    public ChickensRegistryItem setMutationChance(float mutationChance) {
+        this.mutationChance = mutationChance;
+        return this;
     }
 }

@@ -31,9 +31,6 @@ public class ItemColoredEgg extends ItemOK {
     public String getItemStackDisplayName(ItemStack stack) {
         EnumDye color = EnumDye.fromIndex(stack.getItemDamage());
         String unlocalizedName = color.getName();
-        if (unlocalizedName.equals("silver")) {
-            unlocalizedName += "Dye";
-        }
         return LibMisc.LANG.localize(getUnlocalizedName() + "." + unlocalizedName + ".name");
     }
 
