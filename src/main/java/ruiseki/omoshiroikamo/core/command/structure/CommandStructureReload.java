@@ -7,6 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class CommandStructureReload extends CommandMod {
@@ -27,10 +28,16 @@ public class CommandStructureReload extends CommandMod {
                 .reload();
 
             if (StructureManager.getInstance()
-                .hasErrors()) {
+                .hasErrors()
+                || JsonErrorCollector.getInstance()
+                    .hasErrors()) {
+                JsonErrorCollector.getInstance()
+                    .writeToFile();
                 int errorCount = StructureManager.getInstance()
                     .getErrorCollector()
-                    .getErrorCount();
+                    .getErrorCount()
+                    + JsonErrorCollector.getInstance()
+                        .getErrorCount();
                 sender.addChatMessage(
                     new ChatComponentText(
                         EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.reload_errors", errorCount)));

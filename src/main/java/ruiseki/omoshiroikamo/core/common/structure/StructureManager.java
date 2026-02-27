@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Struc
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 
 /**
  * Main manager for the custom structure system.
@@ -104,6 +105,8 @@ public class StructureManager {
      */
     public void notifyPlayerIfNeeded(EntityPlayer player) {
         errorCollector.notifyPlayer(player);
+        JsonErrorCollector.getInstance()
+            .notifyPlayer(player);
     }
 
     /**

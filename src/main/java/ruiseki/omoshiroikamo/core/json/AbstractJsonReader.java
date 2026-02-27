@@ -14,6 +14,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+import ruiseki.omoshiroikamo.core.common.util.Logger;
+
 /**
  * Base class for JSON readers.
  * Supports reading from a single file or a directory of files.
@@ -38,10 +40,8 @@ public abstract class AbstractJsonReader<T> {
     }
 
     /**
-     * Reads the JSON data and converts it to the ta
-     * rn the parsed object(s)
-     * 
-     * @throws IOException if an I/O error occurs
+     * Reads the JSON data and converts it to the target type.
+     * Subclasses should use this to fill their cache.
      */
     public abstract T read() throws IOException;
 
@@ -75,6 +75,9 @@ public abstract class AbstractJsonReader<T> {
         return cache;
     }
 
+    /**
+     * Internal helper to read a JSON element from a file with error handling.
+     */
     protected JsonElement readJsonElement(File file) throws IOException {
         try (FileReader fileReader = new FileReader(file)) {
             JsonReader reader = new JsonReader(fileReader);
@@ -82,6 +85,30 @@ public abstract class AbstractJsonReader<T> {
             return new JsonParser().parse(reader);
         }
     }
+
+    /**
+     * Reads a single JSON file and converts it to a list of materials.
+     * This is the entry point for scanning multiple files.
+     */
+    public List<T> readFile(File file) {
+        ParsingContext.setCurrentFile(file);
+        try {
+            JsonElement root = readJsonElement(file);
+            if (root == null) return new ArrayList<>();
+            return readFile(root, file);
+        } catch (IOException e) {
+            Logger.error("Failed to read JSON file: " + file.getName(), e);
+            return new ArrayList<>();
+        } finally {
+            ParsingContext.clear();
+        }
+    }
+
+    /**
+     * Implementation-specific logic to parse a JSON element into materials.
+     * This usually handles both single objects and arrays.
+     */
+    protected abstract List<T> readFile(JsonElement root, File file);
 
     /**
      * Helper to list all JSON files in a directory.

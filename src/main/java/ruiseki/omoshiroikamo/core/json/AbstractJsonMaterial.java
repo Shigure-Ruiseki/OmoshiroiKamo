@@ -105,10 +105,15 @@ public abstract class AbstractJsonMaterial implements IJsonMaterial {
     }
 
     protected void logValidationError(String message) {
-        Logger.error(
-            "Validation error in {}: {}",
-            this.getClass()
-                .getSimpleName(),
-            message);
+        String fileName = ParsingContext.getCurrentFileName();
+        String className = this.getClass()
+            .getSimpleName();
+
+        // Log to terminal
+        Logger.error("Validation error in {} ({}): {}", className, fileName, message);
+
+        // Collect to unified error system
+        JsonErrorCollector.getInstance()
+            .collect(className, message);
     }
 }

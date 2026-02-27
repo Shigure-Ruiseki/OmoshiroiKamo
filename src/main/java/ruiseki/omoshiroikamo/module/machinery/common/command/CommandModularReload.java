@@ -8,6 +8,7 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
@@ -47,9 +48,13 @@ public class CommandModularReload extends CommandMod {
             hasErrors = true;
         }
 
-        if (hasErrors) {
+        if (hasErrors || JsonErrorCollector.getInstance()
+            .hasErrors()) {
+            JsonErrorCollector.getInstance()
+                .writeToFile();
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reload completed with errors"));
+                new ChatComponentText(
+                    EnumChatFormatting.RED + "[OmoshiroiKamo] Reload completed with errors. Check json_errors.txt"));
         } else {
             sender
                 .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Reload completed!"));

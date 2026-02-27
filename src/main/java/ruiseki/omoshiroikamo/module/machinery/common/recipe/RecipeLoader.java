@@ -14,6 +14,7 @@ import com.google.gson.JsonParser;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class RecipeLoader {
@@ -64,6 +65,12 @@ public class RecipeLoader {
     }
 
     public void reload(File configDir) {
+        // Clear errors before reloading
+        JsonErrorCollector.getInstance()
+            .clear();
+        JsonErrorCollector.getInstance()
+            .setConfigDir(new File(configDir, LibMisc.MOD_ID));
+
         Logger.info("Reloading recipes...");
         recipeVersion++;
         loadAll(configDir);

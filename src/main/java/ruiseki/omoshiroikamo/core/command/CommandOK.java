@@ -34,6 +34,8 @@ public class CommandOK extends CommandMod {
             new ChatComponentText(
                 EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.main_usage_structure")));
         sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok structure reload - Reload structure data"));
+        sender.addChatMessage(
             new ChatComponentText(EnumChatFormatting.WHITE + "  /ok modular reload - Reload modular data"));
     }
 }
