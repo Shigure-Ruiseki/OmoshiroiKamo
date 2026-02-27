@@ -41,7 +41,7 @@ import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityNBTStorage;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
 
-public class BlockOK extends Block implements IBlockPropertyProvider {
+public class BlockOK extends Block implements IBlockPropertyProvider, IBlock {
 
     protected final Class<? extends TileEntityOK> teClass;
     protected final String name;
@@ -80,11 +80,22 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
         this.setStepSound(getSoundForMaterial(mat));
     }
 
+    @Override
     public void init() {
         registerBlock();
         registerTileEntity();
         registerBlockColor();
         registerComponent();
+    }
+
+    @Override
+    public Block getBlock() {
+        return this;
+    }
+
+    @Override
+    public boolean isHasSubtypes() {
+        return this.hasSubtypes;
     }
 
     protected void registerBlock() {
@@ -128,10 +139,6 @@ public class BlockOK extends Block implements IBlockPropertyProvider {
     @SideOnly(Side.CLIENT)
     protected BaseBlockRender<? extends BlockOK, ? extends TileEntityOK> getRenderer() {
         return new BaseBlockRender<>();
-    }
-
-    public boolean hasSubtypes() {
-        return this.hasSubtypes;
     }
 
     @SideOnly(Side.CLIENT)

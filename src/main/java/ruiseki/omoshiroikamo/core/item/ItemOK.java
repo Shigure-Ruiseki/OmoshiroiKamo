@@ -11,7 +11,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
-public class ItemOK extends Item {
+public class ItemOK extends Item implements IItem {
 
     protected String name;
 
@@ -31,6 +31,11 @@ public class ItemOK extends Item {
 
     public void init() {
         GameRegistry.registerItem(this, name);
+    }
+
+    @Override
+    public Item getItem() {
+        return this;
     }
 
     public ItemOK setName(String name) {

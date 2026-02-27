@@ -1,10 +1,10 @@
 package ruiseki.omoshiroikamo.module.dml.common.init;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import lombok.Getter;
-import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.dml.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;
@@ -26,8 +26,7 @@ public enum DMLBlocks {
     public static void preInit() {
         for (DMLBlocks block : VALUES) {
             try {
-                block.getBlock()
-                    .init();
+                block.block.init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());
@@ -35,15 +34,18 @@ public enum DMLBlocks {
         }
     }
 
-    @Getter
-    private final BlockOK block;
+    private final IBlock block;
 
-    DMLBlocks(BlockOK block) {
+    DMLBlocks(IBlock block) {
         this.block = block;
     }
 
+    public Block getBlock() {
+        return block.getBlock();
+    }
+
     public Item getItem() {
-        return Item.getItemFromBlock(block);
+        return Item.getItemFromBlock(getBlock());
     }
 
     public ItemStack newItemStack() {

@@ -1,12 +1,13 @@
 package ruiseki.omoshiroikamo.module.backpack.common.init;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 
@@ -43,8 +44,7 @@ public enum BackpackBlocks {
     public static void preInit() {
         for (BackpackBlocks block : VALUES) {
             try {
-                block.getBlock()
-                    .init();
+                block.block.init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());
@@ -52,15 +52,18 @@ public enum BackpackBlocks {
         }
     }
 
-    @Getter
-    private final BlockOK block;
+    private final IBlock block;
 
     BackpackBlocks(BlockOK block) {
         this.block = block;
     }
 
+    public Block getBlock() {
+        return block.getBlock();
+    }
+
     public Item getItem() {
-        return Item.getItemFromBlock(block);
+        return Item.getItemFromBlock(getBlock());
     }
 
     public ItemStack newItemStack() {

@@ -1,10 +1,11 @@
 package ruiseki.omoshiroikamo.module.cows.common.init;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import lombok.Getter;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.cows.common.block.BlockStall;
 
@@ -22,8 +23,7 @@ public enum CowsBlocks {
     public static void preInit() {
         for (CowsBlocks block : VALUES) {
             try {
-                block.getBlock()
-                    .init();
+                block.block.init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());
@@ -31,15 +31,18 @@ public enum CowsBlocks {
         }
     }
 
-    @Getter
-    private final BlockOK block;
+    private final IBlock block;
 
     CowsBlocks(BlockOK block) {
         this.block = block;
     }
 
+    public Block getBlock() {
+        return block.getBlock();
+    }
+
     public Item getItem() {
-        return Item.getItemFromBlock(block);
+        return Item.getItemFromBlock(getBlock());
     }
 
     public ItemStack newItemStack() {

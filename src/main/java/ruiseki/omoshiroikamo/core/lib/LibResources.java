@@ -22,4 +22,6 @@ public class LibResources {
     public static final String MOD_VANILLA = "Minecraft";
     public static final String MOD_MC_VERSION = "@MC_VERSION@";
     public static final String MOD_VERSION_CHECKER = "VersionChecker";
+
+    public static final int BIOME_MENEGLIN = 193;
 }

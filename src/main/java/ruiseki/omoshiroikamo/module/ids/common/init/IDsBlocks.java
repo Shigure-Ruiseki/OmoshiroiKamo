@@ -1,10 +1,14 @@
 package ruiseki.omoshiroikamo.module.ids.common.init;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilLeaves;
+import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilLog;
+import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilSapling;
 import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.BlockProgrammer;
 
@@ -14,8 +18,12 @@ public enum IDsBlocks {
 
     CABLE(new BlockCable()),
     PROGRAMMER(new BlockProgrammer()),
+    MENRIL_LOG(new BlockMenrilLog()),
+    MENRIL_SAPLING(new BlockMenrilSapling()),
+    MENRIL_LEAVES(new BlockMenrilLeaves()),
 
     ;
+
     // spotless: on
 
     public static final IDsBlocks[] VALUES = values();
@@ -26,8 +34,7 @@ public enum IDsBlocks {
                 continue;
             }
             try {
-                block.getBlock()
-                    .init();
+                block.block.init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());
@@ -36,14 +43,14 @@ public enum IDsBlocks {
     }
 
     private final boolean enabled;
-    private final BlockOK block;
+    private final IBlock block;
 
-    IDsBlocks(BlockOK block) {
+    IDsBlocks(IBlock block) {
         this.enabled = true;
         this.block = block;
     }
 
-    IDsBlocks(boolean enabled, BlockOK block) {
+    IDsBlocks(boolean enabled, IBlock block) {
         this.enabled = enabled;
         this.block = block;
     }
@@ -52,12 +59,12 @@ public enum IDsBlocks {
         return enabled;
     }
 
-    public BlockOK getBlock() {
-        return block;
+    public Block getBlock() {
+        return block.getBlock();
     }
 
     public Item getItem() {
-        return block != null ? Item.getItemFromBlock(block) : null;
+        return block != null ? Item.getItemFromBlock(getBlock()) : null;
     }
 
     public ItemStack newItemStack() {

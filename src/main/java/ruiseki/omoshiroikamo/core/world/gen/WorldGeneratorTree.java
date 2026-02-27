@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 
 /**
  * WorldGenerator for trees.
- * 
+ *
  * @author rubensworks
  *
  */
@@ -23,7 +23,7 @@ public abstract class WorldGeneratorTree extends WorldGenerator {
 
     /**
      * Make a new instance.
-     * 
+     *
      * @param doNotify If the generator should notify the world.
      */
     public WorldGeneratorTree(boolean doNotify) {
@@ -62,7 +62,7 @@ public abstract class WorldGeneratorTree extends WorldGenerator {
 
     /**
      * Grow an Undead Tree at the given location.
-     * 
+     *
      * @param world The world.
      * @param rand  Random object.
      * @param x,    y, z The position.

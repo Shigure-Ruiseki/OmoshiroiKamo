@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.init;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
@@ -96,8 +98,7 @@ public enum MachineryBlocks {
                 continue;
             }
             try {
-                block.getBlock()
-                    .init();
+                block.block.init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: {}", block.name());
@@ -108,7 +109,7 @@ public enum MachineryBlocks {
     // ==================== Enum Fields and Methods ====================
 
     private boolean enabled;
-    private BlockOK block;
+    private IBlock block;
 
     MachineryBlocks() {
         this.enabled = false;
@@ -124,12 +125,12 @@ public enum MachineryBlocks {
         return enabled;
     }
 
-    public BlockOK getBlock() {
-        return block;
+    public Block getBlock() {
+        return block.getBlock();
     }
 
     public Item getItem() {
-        return block != null ? Item.getItemFromBlock(block) : null;
+        return block != null ? Item.getItemFromBlock(getBlock()) : null;
     }
 
     public ItemStack newItemStack() {

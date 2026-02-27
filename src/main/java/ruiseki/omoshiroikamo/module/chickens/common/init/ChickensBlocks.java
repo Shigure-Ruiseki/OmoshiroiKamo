@@ -1,9 +1,11 @@
 package ruiseki.omoshiroikamo.module.chickens.common.init;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockBreeder;
 import ruiseki.omoshiroikamo.module.chickens.common.block.BlockRoost;
@@ -25,8 +27,7 @@ public enum ChickensBlocks {
     public static void preInit() {
         for (ChickensBlocks block : VALUES) {
             try {
-                block.getBlock()
-                    .init();
+                block.block.init();
                 Logger.info("Successfully initialized {}", block.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize block: +{}", block.name());
@@ -34,18 +35,18 @@ public enum ChickensBlocks {
         }
     }
 
-    private final BlockOK block;
+    private final IBlock block;
 
     ChickensBlocks(BlockOK block) {
         this.block = block;
     }
 
-    public BlockOK getBlock() {
-        return block;
+    public Block getBlock() {
+        return block.getBlock();
     }
 
     public Item getItem() {
-        return Item.getItemFromBlock(block);
+        return Item.getItemFromBlock(getBlock());
     }
 
     public ItemStack newItemStack() {

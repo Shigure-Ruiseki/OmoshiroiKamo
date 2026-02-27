@@ -268,14 +268,14 @@ public class BaseBlockRender<B extends BlockOK, T extends TileEntityOK> {
         final BlockRenderInfo info = block.getRendererInstance();
         int meta = 0;
 
-        if (block.hasSubtypes() && item != null) {
+        if (block.isHasSubtypes() && item != null) {
             meta = item.getItemDamage();
         }
 
         int color = block.getRenderColor(meta);
 
         if (info.isValid()) {
-            if (block.hasSubtypes()) {
+            if (block.isHasSubtypes()) {
                 block.setRenderStateByMeta(meta);
             }
 
@@ -297,7 +297,7 @@ public class BaseBlockRender<B extends BlockOK, T extends TileEntityOK> {
 
         this.renderInvBlock(EnumSet.allOf(ForgeDirection.class), block, item, tess, color, renderer);
 
-        if (block.hasSubtypes()) {
+        if (block.isHasSubtypes()) {
             info.setTemporaryRenderIcon(null);
         }
 
@@ -328,7 +328,7 @@ public class BaseBlockRender<B extends BlockOK, T extends TileEntityOK> {
 
         int meta = 0;
 
-        if (block.hasSubtypes() && item != null) {
+        if (block.isHasSubtypes() && item != null) {
             meta = item.getItemDamage();
         }
 

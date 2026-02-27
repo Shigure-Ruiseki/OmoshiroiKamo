@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.persist.world.GlobalCounters;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
+import ruiseki.omoshiroikamo.module.ids.common.init.IDsBiomes;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.CablePartRegistry;
@@ -57,13 +58,12 @@ public class IDsModule extends ModModuleBase {
 
         IDsBlocks.preInit();
         IDsItems.preInit();
+        IDsBiomes.preInit();
         IDsCreative.preInit();
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
-
-    }
+    public void init(FMLInitializationEvent event) {}
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {

@@ -77,6 +77,9 @@ public enum ModObject {
 
     blockCable,
     blockProgrammer,
+    blockMenrilSapling,
+    blockMenrilLog,
+    blockMenrilLeaves,
 
     itemBackPack,
     itemUpgrade,
@@ -170,13 +173,5 @@ public enum ModObject {
 
     public String getRegistryName() {
         return LibMisc.MOD_ID + ":" + unlocalisedName;
-    }
-
-    public void setBlock(Block block) {
-        this.blockInstance = block;
-    }
-
-    public Block getBlock() {
-        return this.blockInstance;
     }
 }
