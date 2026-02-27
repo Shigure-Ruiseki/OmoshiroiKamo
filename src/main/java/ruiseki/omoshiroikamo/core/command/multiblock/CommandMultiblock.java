@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure;
+package ruiseki.omoshiroikamo.core.command.multiblock;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -10,21 +10,24 @@ import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
- * Structure management subcommand handler.
- * Handles: /ok structure <reload|status|scan|wand>
+ * Multiblock management subcommand handler.
+ * Handles: /ok multiblock <reload|status|scan|wand>
  * This class is called by CommandOK with args already shifted.
  */
-public class CommandStructure extends CommandMod {
+public class CommandMultiblock extends CommandMod {
 
-    public static final String NAME = "structure";
+    public static final String NAME = "multiblock";
 
-    public CommandStructure(ModBase mod) {
+    public CommandMultiblock(ModBase mod) {
         super(mod, NAME);
 
-        addSubcommands(CommandStructureReload.NAME, new CommandStructureReload(mod));
-        addSubcommands(CommandStructureStatus.NAME, new CommandStructureStatus(mod));
-        addSubcommands(CommandStructureScan.NAME, new CommandStructureScan(mod));
-        addSubcommands(CommandStructureWand.NAME, new CommandStructureWand(mod));
+        addSubcommands(CommandMultiblockReload.NAME, new CommandMultiblockReload(mod));
+        // Note: For now, keeping Status, Scan, and Wand as stubs or referencing old
+        // ones if not renamed yet.
+        // But to be clean, let's assume we rename them all.
+        addSubcommands("status", new CommandMultiblockStatus(mod));
+        addSubcommands("scan", new CommandMultiblockScan(mod));
+        addSubcommands("wand", new CommandMultiblockWand(mod));
     }
 
     @Override

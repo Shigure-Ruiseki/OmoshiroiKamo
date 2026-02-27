@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure;
+package ruiseki.omoshiroikamo.core.command.multiblock;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -9,12 +9,13 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecipes;
 
-public class CommandStructureReload extends CommandMod {
+public class CommandMultiblockReload extends CommandMod {
 
     public static final String NAME = "reload";
 
-    public CommandStructureReload(ModBase mod) {
+    public CommandMultiblockReload(ModBase mod) {
         super(mod, NAME);
     }
 
@@ -24,8 +25,12 @@ public class CommandStructureReload extends CommandMod {
             new ChatComponentText(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.reloading")));
 
         try {
+            // Core structure data
             StructureManager.getInstance()
                 .reload();
+
+            // Multiblock module - Extractor recipes
+            QuantumExtractorRecipes.reload();
 
             if (StructureManager.getInstance()
                 .hasErrors()

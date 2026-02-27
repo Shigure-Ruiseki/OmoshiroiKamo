@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure;
+package ruiseki.omoshiroikamo.core.command.multiblock;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -9,11 +9,11 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public class CommandStructureStatus extends CommandMod {
+public class CommandMultiblockStatus extends CommandMod {
 
     public static final String NAME = "status";
 
-    public CommandStructureStatus(ModBase mod) {
+    public CommandMultiblockStatus(ModBase mod) {
         super(mod, NAME);
     }
 

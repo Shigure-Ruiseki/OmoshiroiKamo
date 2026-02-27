@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure.wand;
+package ruiseki.omoshiroikamo.core.command.multiblock.wand;
 
 import java.io.File;
 
@@ -16,19 +16,17 @@ import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public class CommandStructureWandSave extends CommandMod {
+public class CommandMultiblockWandSave extends CommandMod {
 
     public static final String NAME = "save";
 
-    public CommandStructureWandSave(ModBase mod) {
+    public CommandMultiblockWandSave(ModBase mod) {
         super(mod, NAME);
-
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         EntityPlayer player = (EntityPlayer) sender;
-        // args[0] = name
         if (args.length < 1) {
             player.addChatMessage(
                 new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_usage")));
@@ -46,7 +44,6 @@ public class CommandStructureWandSave extends CommandMod {
             return;
         }
 
-        // Dimension guard
         if (pending.dimensionId != player.worldObj.provider.dimensionId) {
             player.addChatMessage(
                 new ChatComponentText(
@@ -54,7 +51,6 @@ public class CommandStructureWandSave extends CommandMod {
             return;
         }
 
-        // Size guard
         int blockCount = pending.getBlockCount();
         if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
             player.addChatMessage(
@@ -70,14 +66,12 @@ public class CommandStructureWandSave extends CommandMod {
             new ChatComponentText(
                 EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.wand_scanning", blockCount)));
 
-        // Locate the config directory
         File configDir = new File(
             FMLCommonHandler.instance()
                 .getMinecraftServerInstance()
                 .getFile("."),
             "config/" + LibMisc.MOD_ID);
 
-        // Execute the scan
         StructureScanner.ScanResult result = StructureScanner.scan(
             player.worldObj,
             name,
@@ -100,7 +94,6 @@ public class CommandStructureWandSave extends CommandMod {
                         + name
                         + ".json"));
 
-            // Clear the pending selection
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
         } else {

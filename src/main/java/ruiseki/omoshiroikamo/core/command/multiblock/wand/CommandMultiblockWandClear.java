@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure.wand;
+package ruiseki.omoshiroikamo.core.command.multiblock.wand;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -11,13 +11,12 @@ import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public class CommandStructureWandClear extends CommandMod {
+public class CommandMultiblockWandClear extends CommandMod {
 
     public static final String NAME = "clear";
 
-    public CommandStructureWandClear(ModBase mod) {
+    public CommandMultiblockWandClear(ModBase mod) {
         super(mod, NAME);
-
     }
 
     @Override

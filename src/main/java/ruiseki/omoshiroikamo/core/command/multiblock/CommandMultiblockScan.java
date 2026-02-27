@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure;
+package ruiseki.omoshiroikamo.core.command.multiblock;
 
 import java.io.File;
 
@@ -16,19 +16,16 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public class CommandStructureScan extends CommandMod {
+public class CommandMultiblockScan extends CommandMod {
 
     public static final String NAME = "scan";
 
-    public CommandStructureScan(ModBase mod) {
+    public CommandMultiblockScan(ModBase mod) {
         super(mod, NAME);
-
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        // /ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
-        // args[0] = name, ...
         if (args.length < 7) {
             sender.addChatMessage(
                 new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.scan_usage")));
@@ -54,7 +51,6 @@ public class CommandStructureScan extends CommandMod {
             return;
         }
 
-        // Resolve the target world
         World world = null;
         if (sender instanceof EntityPlayer) {
             world = ((EntityPlayer) sender).worldObj;
@@ -70,7 +66,6 @@ public class CommandStructureScan extends CommandMod {
             return;
         }
 
-        // Size guard
         int sizeX = Math.abs(x2 - x1) + 1;
         int sizeY = Math.abs(y2 - y1) + 1;
         int sizeZ = Math.abs(z2 - z1) + 1;
@@ -90,14 +85,12 @@ public class CommandStructureScan extends CommandMod {
             new ChatComponentText(
                 EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.scan_scanning", sizeX, sizeY, sizeZ)));
 
-        // Locate the config directory
         File configDir = new File(
             FMLCommonHandler.instance()
                 .getMinecraftServerInstance()
                 .getFile("."),
             "config/" + LibMisc.MOD_ID);
 
-        // Execute the scan
         StructureScanner.ScanResult result = StructureScanner.scan(world, name, x1, y1, z1, x2, y2, z2, configDir);
 
         if (result.success) {
@@ -112,7 +105,6 @@ public class CommandStructureScan extends CommandMod {
         }
     }
 
-    // Helper method to parse integers (since we no longer extend CommandBase)
     private int parseInt(ICommandSender sender, String value) throws NumberFormatException {
         return Integer.parseInt(value);
     }

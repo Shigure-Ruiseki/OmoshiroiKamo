@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.command.structure;
+package ruiseki.omoshiroikamo.core.command.multiblock;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -7,19 +7,19 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
-import ruiseki.omoshiroikamo.core.command.structure.wand.CommandStructureWandClear;
-import ruiseki.omoshiroikamo.core.command.structure.wand.CommandStructureWandSave;
+import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandClear;
+import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandSave;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
-public class CommandStructureWand extends CommandMod {
+public class CommandMultiblockWand extends CommandMod {
 
     public static final String NAME = "wand";
 
-    public CommandStructureWand(ModBase mod) {
+    public CommandMultiblockWand(ModBase mod) {
         super(mod, NAME);
-        addSubcommands(CommandStructureWandClear.NAME, new CommandStructureWandClear(mod));
-        addSubcommands(CommandStructureWandSave.NAME, new CommandStructureWandSave(mod));
+        addSubcommands(CommandMultiblockWandClear.NAME, new CommandMultiblockWandClear(mod));
+        addSubcommands(CommandMultiblockWandSave.NAME, new CommandMultiblockWandSave(mod));
     }
 
     @Override

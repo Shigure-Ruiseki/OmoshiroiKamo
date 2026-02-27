@@ -135,23 +135,23 @@ command.ok.ignitedPlayer=The player '%s' was lit on fire for %s seconds
 command.ok.noConfigsFound=There were no config values found that can be set
 
 command.ok.main_usage_title=Usage:
-command.ok.main_usage_structure=/ok structure - Structure management commands
+command.ok.main_usage_multiblock=/ok multiblock - Multiblock management commands
 
-command.ok.reloading=[OmoshiroiKamo] Reloading structure configurations...
-command.ok.reload_success=[OmoshiroiKamo] Structure configurations reloaded successfully!
+command.ok.reloading=[OmoshiroiKamo] Reloading configurations...
+command.ok.reload_success=[OmoshiroiKamo] Configurations reloaded successfully!
 command.ok.reload_errors=[OmoshiroiKamo] Reload completed with %d error(s)!
-command.ok.reload_check_file=Check: config/omoshiroikamo/structures/errors.txt
+command.ok.reload_check_file=Check: config/omoshiroikamo/json_errors.txt
 command.ok.reload_failed=[OmoshiroiKamo] Reload failed: %s
 
-command.ok.status_header=== OmoshiroiKamo Structure Status ===
+command.ok.status_header=== OmoshiroiKamo Multiblock Status ===
 command.ok.status_initialized=Initialized: 
 command.ok.status_yes=Yes
 command.ok.status_no=No
 command.ok.status_errors=Errors: 
 command.ok.status_none=None
 
-command.ok.scan_usage=Usage: /ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
-command.ok.scan_example=Example: /ok structure scan myStructure 0 64 0 10 70 10
+command.ok.scan_usage=Usage: /ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2>
+command.ok.scan_example=Example: /ok multiblock scan myStructure 0 64 0 10 70 10
 command.ok.scan_invalid_coords=Invalid coordinates: %s
 command.ok.scan_no_world=Could not get world instance
 command.ok.scan_area_too_large=Area too large! Max %d blocks, got %d
@@ -160,10 +160,10 @@ command.ok.scan_file=File: config/omoshiroikamo/structures/custom/%s.json
 command.ok.scan_failed=[OmoshiroiKamo] Scan failed: %s
 
 command.ok.usage_title=Usage:
-command.ok.usage_reload=/ok structure reload - Reload structure configurations
-command.ok.usage_status=/ok structure status - Show current status
-command.ok.usage_scan=/ok structure scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - Scan area to JSON
-command.ok.usage_wand_save=/ok structure wand save <name> - Save wand selection to JSON
+command.ok.usage_reload=/ok multiblock reload - Reload configurations
+command.ok.usage_status=/ok multiblock status - Show current status
+command.ok.usage_scan=/ok multiblock scan <name> <x1> <y1> <z1> <x2> <y2> <z2> - Scan area to JSON
+command.ok.usage_wand_save=/ok multiblock wand save <name> - Save wand selection to JSON
 
 command.ok.wand_players_only=[OmoshiroiKamo] This command can only be used by players!
 command.ok.wand_usage=Usage: /ok structure wand save <name>
