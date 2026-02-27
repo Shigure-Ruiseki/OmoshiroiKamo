@@ -12,8 +12,8 @@ import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Block
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Main manager for the custom structure system.
