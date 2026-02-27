@@ -84,7 +84,11 @@ public class MachineryMaterial extends AbstractJsonMaterial {
             "machine",
             "time",
             "input",
+            "inputs",
             "output",
+            "outputs",
+            "condition",
+            "conditions",
             "decorators");
     }
 

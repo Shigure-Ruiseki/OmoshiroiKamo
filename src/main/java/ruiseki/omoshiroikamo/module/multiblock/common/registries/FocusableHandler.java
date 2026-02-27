@@ -63,13 +63,18 @@ public class FocusableHandler {
 
     private static FocusableEntry fromMaterial(FocusableMaterial mat) {
         if (mat == null) return null;
+        FocusableEntry entry;
         if (mat.type == FocusableType.ORE) {
-            return new FocusableOre(mat.id, mat.focusColor, mat.weights, mat.focusedWeights);
+            entry = new FocusableOre(mat.id, mat.focusColor, mat.weights, mat.focusedWeights);
         } else if (mat.type == FocusableType.BLOCK) {
-            return new FocusableBlock(mat.id, mat.meta, mat.focusColor, mat.weights, mat.focusedWeights);
+            entry = new FocusableBlock(mat.id, mat.meta, mat.focusColor, mat.weights, mat.focusedWeights);
         } else {
-            return new FocusableItem(mat.id, mat.meta, mat.focusColor, mat.weights, mat.focusedWeights, mat.isOreDict);
+            entry = new FocusableItem(mat.id, mat.meta, mat.focusColor, mat.weights, mat.focusedWeights, mat.isOreDict);
         }
+        if (entry != null) {
+            entry.dimensions = mat.dimensions;
+        }
+        return entry;
     }
 
     public static void loadRegistryFromJson(File file, IFocusableRegistry registry) {
