@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
@@ -73,5 +77,17 @@ public class BonusOutputDecorator extends RecipeDecorator {
 
     public List<IRecipeOutput> getBonusOutputs() {
         return bonusOutputs;
+    }
+
+    public static IModularRecipe fromJson(IModularRecipe recipe, JsonObject json) {
+        IExpression chance = ExpressionsParser.parse(json.get("chance"));
+        List<IRecipeOutput> outputs = new ArrayList<>();
+        JsonArray arr = json.getAsJsonArray("outputs");
+        for (JsonElement e : arr) {
+            outputs.add(OutputParserRegistry.parse(e.getAsJsonObject()));
+        }
+        String key = json.has("modifierKey") ? json.get("modifierKey")
+            .getAsString() : null;
+        return new BonusOutputDecorator(recipe, chance, outputs, key);
     }
 }

@@ -6,6 +6,10 @@ import java.util.Random;
 
 import net.minecraft.util.WeightedRandom;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
@@ -75,5 +79,20 @@ public class WeightedRandomDecorator extends RecipeDecorator {
 
     public int getRolls() {
         return rolls;
+    }
+
+    public static IModularRecipe fromJson(IModularRecipe recipe, JsonObject json) {
+        int rolls = json.get("rolls")
+            .getAsInt();
+        List<WeightedOutputEntry> pool = new ArrayList<>();
+        JsonArray arr = json.getAsJsonArray("pool");
+        for (JsonElement e : arr) {
+            JsonObject obj = e.getAsJsonObject();
+            int weight = obj.get("weight")
+                .getAsInt();
+            IRecipeOutput out = OutputParserRegistry.parse(obj.getAsJsonObject("output"));
+            pool.add(new WeightedOutputEntry(out, weight));
+        }
+        return new WeightedRandomDecorator(recipe, pool, rolls);
     }
 }

@@ -1,6 +1,9 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
+import com.google.gson.JsonObject;
+
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.condition.ConditionParserRegistry;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 
 /**
@@ -23,5 +26,10 @@ public class RequirementDecorator extends RecipeDecorator {
 
     public ICondition getExtraCondition() {
         return extraCondition;
+    }
+
+    public static IModularRecipe fromJson(IModularRecipe recipe, JsonObject json) {
+        ICondition condition = ConditionParserRegistry.parse(json.getAsJsonObject("condition"));
+        return new RequirementDecorator(recipe, condition);
     }
 }

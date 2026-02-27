@@ -2,6 +2,8 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.Random;
 
+import com.google.gson.JsonObject;
+
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 
 /**
@@ -26,5 +28,10 @@ public class ChanceRecipeDecorator extends RecipeDecorator {
 
     public IExpression getChanceExpression() {
         return chanceExpr;
+    }
+
+    public static IModularRecipe fromJson(IModularRecipe recipe, JsonObject json) {
+        IExpression chance = ExpressionsParser.parse(json.get("chance"));
+        return new ChanceRecipeDecorator(recipe, chance);
     }
 }
