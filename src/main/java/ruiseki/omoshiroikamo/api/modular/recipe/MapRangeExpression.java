@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
+import com.google.gson.JsonObject;
+
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 
 /**
@@ -38,5 +40,20 @@ public class MapRangeExpression implements IExpression {
         }
 
         return result;
+    }
+
+    public static IExpression fromJson(JsonObject json) {
+        IExpression input = ExpressionsParser.parse(json.get("input"));
+        double minIn = json.get("minIn")
+            .getAsDouble();
+        double maxIn = json.get("maxIn")
+            .getAsDouble();
+        double minOut = json.get("minOut")
+            .getAsDouble();
+        double maxOut = json.get("maxOut")
+            .getAsDouble();
+        boolean clamp = json.has("clamp") && json.get("clamp")
+            .getAsBoolean();
+        return new MapRangeExpression(input, minIn, maxIn, minOut, maxOut, clamp);
     }
 }

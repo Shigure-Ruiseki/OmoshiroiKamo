@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import com.google.gson.JsonObject;
+
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 
 /**
@@ -31,5 +33,13 @@ public class NbtExpression implements IExpression {
             }
         }
         return defaultValue;
+    }
+
+    public static IExpression fromJson(JsonObject json) {
+        String key = json.get("key")
+            .getAsString();
+        double def = json.has("default") ? json.get("default")
+            .getAsDouble() : 0.0;
+        return new NbtExpression(key, def);
     }
 }
