@@ -14,7 +14,7 @@ import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
@@ -230,9 +230,9 @@ public class NEIConfig implements IConfigureNEI {
     private void registerModularMachineryRecipes() {
         List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
 
-        List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
+        List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
             .getAllRecipes();
-        for (ModularRecipe recipe : allRecipes) {
+        for (IModularRecipe recipe : allRecipes) {
             String group = recipe.getRecipeGroup();
             if (!groups.contains(group)) {
                 groups.add(group);

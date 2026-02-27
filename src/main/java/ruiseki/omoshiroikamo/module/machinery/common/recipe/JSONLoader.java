@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
@@ -59,6 +60,10 @@ public class JSONLoader {
 
             for (IRecipeOutput output : mat.outputs) {
                 builder.addOutput(output);
+            }
+
+            for (ICondition condition : mat.conditions) {
+                builder.addCondition(condition);
             }
 
             IModularRecipe recipe = builder.build();

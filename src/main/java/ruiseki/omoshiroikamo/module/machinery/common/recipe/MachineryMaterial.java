@@ -7,6 +7,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionParserRegistry;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.recipe.DecoratorParser;
 import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
@@ -26,6 +28,7 @@ public class MachineryMaterial extends AbstractJsonMaterial {
     public int time = 20;
     public final List<IRecipeInput> inputs = new ArrayList<>();
     public final List<IRecipeOutput> outputs = new ArrayList<>();
+    public final List<ICondition> conditions = new ArrayList<>();
     private JsonObject rawJson;
 
     @Override
@@ -59,6 +62,17 @@ public class MachineryMaterial extends AbstractJsonMaterial {
                 if (e.isJsonObject()) {
                     IRecipeOutput output = OutputParserRegistry.parse(e.getAsJsonObject());
                     if (output != null) outputs.add(output);
+                }
+            }
+        }
+
+        if (json.has("condition") || json.has("conditions")) {
+            JsonArray arr = json.has("condition") ? json.getAsJsonArray("condition")
+                : json.getAsJsonArray("conditions");
+            for (JsonElement e : arr) {
+                if (e.isJsonObject()) {
+                    ICondition condition = ConditionParserRegistry.parse(e.getAsJsonObject());
+                    if (condition != null) conditions.add(condition);
                 }
             }
         }
@@ -110,6 +124,16 @@ public class MachineryMaterial extends AbstractJsonMaterial {
                 arr.add(obj);
             }
             json.add("output", arr);
+        }
+
+        if (!conditions.isEmpty()) {
+            JsonArray arr = new JsonArray();
+            for (ICondition condition : conditions) {
+                JsonObject obj = new JsonObject();
+                condition.write(obj);
+                arr.add(obj);
+            }
+            json.add("condition", arr);
         }
 
         unknownProperties.forEach(json::add);
