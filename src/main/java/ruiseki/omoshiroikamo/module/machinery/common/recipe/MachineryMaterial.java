@@ -7,6 +7,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.modular.recipe.DecoratorParser;
+import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.InputParserRegistry;
@@ -24,9 +26,11 @@ public class MachineryMaterial extends AbstractJsonMaterial {
     public int time = 20;
     public final List<IRecipeInput> inputs = new ArrayList<>();
     public final List<IRecipeOutput> outputs = new ArrayList<>();
+    private JsonObject rawJson;
 
     @Override
     public void read(JsonObject json) {
+        this.rawJson = json;
         this.registryName = getString(json, "registryName", null);
         this.localizedName = getString(json, "localizedName", getString(json, "name", null));
         this.machine = getString(json, "machine", getString(json, "group", null));
@@ -59,7 +63,26 @@ public class MachineryMaterial extends AbstractJsonMaterial {
             }
         }
 
-        captureUnknownProperties(json, "registryName", "localizedName", "machine", "time", "input", "output");
+        captureUnknownProperties(
+            json,
+            "registryName",
+            "localizedName",
+            "machine",
+            "time",
+            "input",
+            "output",
+            "decorators");
+    }
+
+    public IModularRecipe applyDecorators(IModularRecipe recipe, JsonObject json) {
+        if (json.has("decorators")) {
+            return DecoratorParser.parse(recipe, json.get("decorators"));
+        }
+        return recipe;
+    }
+
+    public JsonObject getRawJson() {
+        return rawJson;
     }
 
     @Override

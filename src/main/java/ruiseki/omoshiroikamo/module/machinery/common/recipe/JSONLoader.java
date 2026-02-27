@@ -61,10 +61,14 @@ public class JSONLoader {
                 builder.addOutput(output);
             }
 
-            // Conditions are now handled within Material if needed,
-            // but for now keeping it simple as per original JSONLoader.
+            IModularRecipe recipe = builder.build();
 
-            return builder.build();
+            // Apply decorators if present in the original JSON
+            if (mat.getRawJson() != null) {
+                recipe = mat.applyDecorators(recipe, mat.getRawJson());
+            }
+
+            return recipe;
         } catch (Exception e) {
             Logger.warn("Failed to convert material to recipe: {}", e.getMessage());
             return null;
