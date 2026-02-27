@@ -165,8 +165,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 return def;
             }
         }
-        // Fallback to controller's default structure
-        return ctx.getStructureDefinition();
+        return null;
     }
 
     /**

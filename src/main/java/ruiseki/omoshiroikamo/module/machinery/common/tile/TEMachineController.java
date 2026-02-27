@@ -520,6 +520,9 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public void readCommon(NBTTagCompound nbt) {
+        if (nbt == null) {
+            return;
+        }
         super.readCommon(nbt);
 
         recipeGroups = new ArrayList<>();
