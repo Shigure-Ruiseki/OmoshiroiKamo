@@ -519,6 +519,10 @@ entity.BlueSlimeChicken.name=Blue Slime Chicken
 omoshiroikamo.condition.dimension=Required Dimensions: %s
 omoshiroikamo.condition.biome=Required Biomes: %s
 omoshiroikamo.condition.block_below=Required Block Below: %s
+omoshiroikamo.condition.tile_nbt=Machine State (%s %s %s)
+omoshiroikamo.condition.nand=NAND (If not all are met)
+omoshiroikamo.condition.nor=NOR (If none are met)
+omoshiroikamo.condition.xor=XOR (If exactly one is met)
 option.omoshiroikamo.breedingTime=Breeding Time
 option.omoshiroikamo.grownTime=Grown Time
 
