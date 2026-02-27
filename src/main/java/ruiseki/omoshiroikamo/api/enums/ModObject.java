@@ -80,6 +80,8 @@ public enum ModObject {
     blockMenrilSapling,
     blockMenrilLog,
     blockMenrilLeaves,
+    blockMenrilDoor,
+    blockMenrilPlanks,
 
     itemBackPack,
     itemUpgrade,
@@ -116,8 +118,6 @@ public enum ModObject {
     itemChickenFood,
     itemCowSpawnEgg,
 
-    itemSyringe,
-
     itemCreativeModelLearner,
     itemDeepLearner,
     itemDataModel,
@@ -133,6 +133,7 @@ public enum ModObject {
     itemWrench,
 
     itemVariableCard,
+    itemMenrilBerries,
 
     itemEnergyInterface,
     itemEnergyFilterInterface,

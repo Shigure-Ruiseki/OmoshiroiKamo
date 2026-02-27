@@ -185,8 +185,7 @@ public abstract class BlockLeavesOK extends BlockLeaves implements IBlock {
                 if (l1 >= 0) {
                     worldIn.setBlockMetadataWithNotify(x, y, z, l & -9, 4);
                 } else {
-                    this.dropBlockAsItem(worldIn, x, y, z, worldIn.getBlockMetadata(x, y, z), 0);
-                    worldIn.setBlockToAir(x, y, z);
+                    this.removeLeaves(worldIn, x, y, z);
                 }
             }
         }

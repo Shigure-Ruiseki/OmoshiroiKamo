@@ -3,9 +3,9 @@ package ruiseki.omoshiroikamo.module.ids.common.init;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.item.IItem;
+import ruiseki.omoshiroikamo.module.ids.common.item.ItemMenrilBerries;
 import ruiseki.omoshiroikamo.module.ids.common.item.ItemVariableCard;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.block.ItemBlockReader;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.logic.fluid.ItemFluidReader;
@@ -47,6 +47,8 @@ public enum IDsItems {
 
     REDSTONE_WRITER(new ItemRedstoneWriter()),
 
+    MENRIL_BERRIES(new ItemMenrilBerries()),
+
     ;
     // spotless: on
 
@@ -55,7 +57,7 @@ public enum IDsItems {
     public static void preInit() {
         for (IDsItems item : VALUES) {
             try {
-                GameRegistry.registerItem(item.getItem(), item.getName());
+                item.item.init();
                 Logger.info("Successfully initialized " + item.name());
             } catch (Exception e) {
                 Logger.error("Failed to initialize item: +" + item.name());
@@ -63,15 +65,19 @@ public enum IDsItems {
         }
     }
 
-    @Getter
-    private final Item item;
+    private final IItem item;
 
-    IDsItems(Item item) {
+    IDsItems(IItem item) {
         this.item = item;
     }
 
+    public Item getItem() {
+        return item.getItem();
+    }
+
     public String getName() {
-        return getItem().getUnlocalizedName()
+        return item.getItem()
+            .getUnlocalizedName()
             .replace("item.", "");
     }
 

@@ -6,8 +6,10 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilDoor;
 import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilLeaves;
 import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilLog;
+import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilPlanks;
 import ruiseki.omoshiroikamo.module.ids.common.block.BlockMenrilSapling;
 import ruiseki.omoshiroikamo.module.ids.common.block.cable.BlockCable;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.BlockProgrammer;
@@ -21,6 +23,8 @@ public enum IDsBlocks {
     MENRIL_LOG(new BlockMenrilLog()),
     MENRIL_SAPLING(new BlockMenrilSapling()),
     MENRIL_LEAVES(new BlockMenrilLeaves()),
+    MENRIL_DOOR(new BlockMenrilDoor()),
+    MENRIL_PLANKS(new BlockMenrilPlanks()),
 
     ;
 

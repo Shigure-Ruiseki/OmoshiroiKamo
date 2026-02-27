@@ -906,10 +906,18 @@ item.fluidReader.name=Fluid Reader
 item.redstoneWriter.name=Redstone Writer
 item.craftingInterface.name=Crafting Interface
 
+item.menrilBerries.name=Menril Berries
+item.itemMenrilDoor.name=Menril Door
+
 
 # Blocks
 tile.cable.name=Logic Cable
 tile.programmer.name=Programmer
+tile.menrilSapling.name=Menril Sapling
+tile.menrilLog.name=Menril Log
+tile.menrilLeaves.name=Menril Leaves
+tile.menrilDoor.name=Menril Door
+tile.menrilPlanks.name=Menril Planks
 
 
 # Tooltips
