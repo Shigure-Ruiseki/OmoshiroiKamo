@@ -34,9 +34,9 @@ public class FocusableJsonReader extends AbstractJsonReader<List<FocusableMateri
         return materials;
     }
 
-    private List<FocusableMaterial> readFile(File file) throws IOException {
+    @Override
+    protected List<FocusableMaterial> readFile(JsonElement root, File file) {
         List<FocusableMaterial> list = new ArrayList<>();
-        JsonElement root = readJsonElement(file);
 
         if (root.isJsonObject()) {
             JsonObject obj = root.getAsJsonObject();

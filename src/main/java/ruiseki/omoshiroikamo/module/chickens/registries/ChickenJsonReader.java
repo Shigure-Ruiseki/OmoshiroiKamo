@@ -32,9 +32,9 @@ public class ChickenJsonReader extends AbstractJsonReader<List<ChickenMaterial>>
         return materials;
     }
 
-    private List<ChickenMaterial> readFile(File file) throws IOException {
+    @Override
+    protected List<ChickenMaterial> readFile(JsonElement root, File file) {
         List<ChickenMaterial> list = new ArrayList<>();
-        JsonElement root = readJsonElement(file);
         if (root.isJsonArray()) {
             for (JsonElement e : root.getAsJsonArray()) {
                 if (e.isJsonObject()) {

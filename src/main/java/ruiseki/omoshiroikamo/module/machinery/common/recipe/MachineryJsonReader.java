@@ -39,9 +39,9 @@ public class MachineryJsonReader extends AbstractJsonReader<List<MachineryMateri
         return materials;
     }
 
-    private List<MachineryMaterial> readFile(File file) throws IOException {
+    @Override
+    protected List<MachineryMaterial> readFile(JsonElement root, File file) {
         List<MachineryMaterial> list = new ArrayList<>();
-        JsonElement root = readJsonElement(file);
         Logger.debug("[MachineryJsonReader] Reading file: " + file.getName());
 
         if (root.isJsonObject()) {

@@ -87,28 +87,27 @@ public abstract class AbstractJsonReader<T> {
     }
 
     /**
-     * Reads a single JSON file and converts it to a list of materials.
+     * Reads a single JSON file and converts it to the target type.
      * This is the entry point for scanning multiple files.
      */
-    public List<T> readFile(File file) {
+    public T readFile(File file) {
         ParsingContext.setCurrentFile(file);
         try {
             JsonElement root = readJsonElement(file);
-            if (root == null) return new ArrayList<>();
+            if (root == null) return null;
             return readFile(root, file);
         } catch (IOException e) {
             Logger.error("Failed to read JSON file: " + file.getName(), e);
-            return new ArrayList<>();
+            return null;
         } finally {
             ParsingContext.clear();
         }
     }
 
     /**
-     * Implementation-specific logic to parse a JSON element into materials.
-     * This usually handles both single objects and arrays.
+     * Implementation-specific logic to parse a JSON element into the target type.
      */
-    protected abstract List<T> readFile(JsonElement root, File file);
+    protected abstract T readFile(JsonElement root, File file);
 
     /**
      * Helper to list all JSON files in a directory.

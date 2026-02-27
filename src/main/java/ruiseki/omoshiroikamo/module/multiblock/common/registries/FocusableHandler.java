@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedItemStack;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedOreStack;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 
 public class FocusableHandler {
 
@@ -87,7 +88,8 @@ public class FocusableHandler {
                 loadIntoRegistry(list, registry);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            JsonErrorCollector.getInstance()
+                .collect("MultiblockFocusable", "Failed to load Focusable registry: " + e.getMessage());
         }
     }
 
@@ -108,7 +110,8 @@ public class FocusableHandler {
             }
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
+            JsonErrorCollector.getInstance()
+                .collect("MultiblockFocusable", "Failed to load Focusable list: " + e.getMessage());
             return null;
         }
     }
