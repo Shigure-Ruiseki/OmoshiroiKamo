@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
@@ -18,8 +19,8 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public class JSONLoader {
 
-    public static List<ModularRecipe> loadRecipes(File recipesDir) {
-        List<ModularRecipe> recipes = new ArrayList<>();
+    public static List<IModularRecipe> loadRecipes(File recipesDir) {
+        List<IModularRecipe> recipes = new ArrayList<>();
 
         if (!recipesDir.exists() || !recipesDir.isDirectory()) {
             Logger.warn("Recipe directory does not exist: {}", recipesDir.getAbsolutePath());
@@ -30,7 +31,7 @@ public class JSONLoader {
             MachineryJsonReader reader = new MachineryJsonReader(recipesDir);
             List<MachineryMaterial> materials = reader.read();
             for (MachineryMaterial mat : materials) {
-                ModularRecipe recipe = toRecipe(mat);
+                IModularRecipe recipe = toRecipe(mat);
                 if (recipe != null) {
                     recipes.add(recipe);
                 }
@@ -43,7 +44,7 @@ public class JSONLoader {
         return recipes;
     }
 
-    private static ModularRecipe toRecipe(MachineryMaterial mat) {
+    private static IModularRecipe toRecipe(MachineryMaterial mat) {
         try {
             ModularRecipe.Builder builder = ModularRecipe.builder()
                 .registryName(mat.registryName)

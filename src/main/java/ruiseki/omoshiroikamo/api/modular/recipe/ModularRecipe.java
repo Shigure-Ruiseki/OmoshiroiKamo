@@ -2,16 +2,14 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
-public class ModularRecipe implements Comparable<ModularRecipe> {
+public class ModularRecipe implements IModularRecipe {
 
     private final String registryName;
     private final String recipeGroup;
@@ -149,42 +147,6 @@ public class ModularRecipe implements Comparable<ModularRecipe> {
             }
         }
         return filtered;
-    }
-
-    @Override
-    public int compareTo(ModularRecipe other) {
-        // 1. Higher priority comes first
-        int priorityCompare = Integer.compare(other.priority, this.priority);
-        if (priorityCompare != 0) return priorityCompare;
-
-        // 2. More input types comes first
-        int thisInputTypes = countDistinctInputTypes();
-        int otherInputTypes = other.countDistinctInputTypes();
-        int inputTypeCompare = Integer.compare(otherInputTypes, thisInputTypes);
-        if (inputTypeCompare != 0) return inputTypeCompare;
-
-        // 3. Larger item stack count comes first
-        int thisItemCount = getTotalItemInputCount();
-        int otherItemCount = other.getTotalItemInputCount();
-        return Integer.compare(otherItemCount, thisItemCount);
-    }
-
-    private int countDistinctInputTypes() {
-        Set<IPortType.Type> types = new HashSet<>();
-        for (IRecipeInput input : inputs) {
-            types.add(input.getPortType());
-        }
-        return types.size();
-    }
-
-    private int getTotalItemInputCount() {
-        int total = 0;
-        for (IRecipeInput input : inputs) {
-            if (input instanceof ItemInput) {
-                total += (int) ((ItemInput) input).getRequiredAmount();
-            }
-        }
-        return total;
     }
 
     public static Builder builder() {
