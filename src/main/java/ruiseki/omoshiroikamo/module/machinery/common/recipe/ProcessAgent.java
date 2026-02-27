@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
@@ -18,12 +19,12 @@ import ruiseki.omoshiroikamo.api.modular.recipe.EnergyOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.GasOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
 
 public class ProcessAgent {
@@ -47,13 +48,13 @@ public class ProcessAgent {
     private List<Integer> cachedEnergyOutputs = new ArrayList<>(); // [amount]
 
     private String currentRecipeName;
-    private transient ModularRecipe currentRecipe;
+    private transient IModularRecipe currentRecipe;
 
     public ProcessAgent() {
         reset();
     }
 
-    public boolean start(ModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
+    public boolean start(IModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
         if (running) return false;
 
         for (IRecipeInput input : recipe.getInputs()) {
@@ -163,11 +164,16 @@ public class ProcessAgent {
         return true;
     }
 
-    public TickResult tick(List<IModularPort> inputPorts, List<IModularPort> outputPorts) {
+    public TickResult tick(List<IModularPort> inputPorts, List<IModularPort> outputPorts, ConditionContext context) {
         if (!running) return TickResult.IDLE;
 
         if (waitingForOutput) {
             return TickResult.WAITING_OUTPUT;
+        }
+
+        // Call onTick for decorators
+        if (currentRecipe != null) {
+            currentRecipe.onTick(context);
         }
 
         if (energyPerTick > 0) {
@@ -334,7 +340,7 @@ public class ProcessAgent {
         this.maxProgress = Math.max(0, maxProgress);
     }
 
-    public ModularRecipe getCurrentRecipe() {
+    public IModularRecipe getCurrentRecipe() {
         return currentRecipe;
     }
 

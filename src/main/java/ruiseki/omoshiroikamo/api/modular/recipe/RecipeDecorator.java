@@ -5,6 +5,7 @@ import java.util.List;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 
 /**
  * Basic decorator for IModularRecipe.
@@ -81,5 +82,15 @@ public abstract class RecipeDecorator implements IModularRecipe {
     @Override
     public boolean canOutput(List<IModularPort> outputPorts) {
         return internal.canOutput(outputPorts);
+    }
+
+    @Override
+    public IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts) {
+        return internal.checkOutputCapacity(outputPorts);
+    }
+
+    @Override
+    public void onTick(ConditionContext context) {
+        internal.onTick(context);
     }
 }

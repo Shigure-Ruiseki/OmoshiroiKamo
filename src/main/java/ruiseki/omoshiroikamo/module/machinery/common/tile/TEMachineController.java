@@ -29,13 +29,14 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
@@ -91,7 +92,7 @@ public class TEMachineController extends AbstractMBModifierTE
     // Recipe groups - obtained from custom structure or GUI
     private List<String> recipeGroups = new ArrayList<>(Collections.singletonList("default"));
     // Look-ahead: next recipe cached during current processing
-    private transient ModularRecipe nextRecipe = null;
+    private transient IModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
@@ -300,7 +301,12 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // If running, tick and look-ahead search for next recipe
         if (processAgent.isRunning()) {
-            ProcessAgent.TickResult result = processAgent.tick(getInputPorts(), getOutputPorts());
+            ConditionContext context = new ruiseki.omoshiroikamo.api.condition.ConditionContext(
+                worldObj,
+                xCoord,
+                yCoord,
+                zCoord);
+            ProcessAgent.TickResult result = processAgent.tick(getInputPorts(), getOutputPorts(), context);
 
             if (result == ProcessAgent.TickResult.NO_ENERGY) {
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
@@ -346,7 +352,7 @@ public class TEMachineController extends AbstractMBModifierTE
         }
 
         // Use cached recipe if available, otherwise search
-        ModularRecipe recipe = nextRecipe;
+        IModularRecipe recipe = nextRecipe;
         if (recipe == null) {
             recipe = RecipeLoader.getInstance()
                 .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());

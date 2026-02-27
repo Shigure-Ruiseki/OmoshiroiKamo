@@ -130,6 +130,7 @@ public class ModularRecipe implements IModularRecipe {
         return processOutputs(outputPorts, true);
     }
 
+    @Override
     public IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts) {
         for (IRecipeOutput output : outputs) {
             if (!output.checkCapacity(outputPorts)) {

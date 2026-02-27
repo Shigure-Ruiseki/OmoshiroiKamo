@@ -12,15 +12,15 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
  */
 public class BonusOutputDecorator extends RecipeDecorator {
 
-    private final float baseChance;
+    private final IExpression baseChanceExpr;
     private final List<IRecipeOutput> bonusOutputs;
     private final String modifierKey;
     private final Random rand = new Random();
 
-    public BonusOutputDecorator(IModularRecipe internal, float baseChance, List<IRecipeOutput> bonusOutputs,
+    public BonusOutputDecorator(IModularRecipe internal, IExpression baseChanceExpr, List<IRecipeOutput> bonusOutputs,
         String modifierKey) {
         super(internal);
-        this.baseChance = baseChance;
+        this.baseChanceExpr = baseChanceExpr;
         this.bonusOutputs = bonusOutputs;
         this.modifierKey = modifierKey;
     }
@@ -35,7 +35,9 @@ public class BonusOutputDecorator extends RecipeDecorator {
 
         // Only process bonus if we are not simulating
         if (!simulate) {
-            float finalChance = baseChance;
+            // Context needs current machine state
+            // TODO: Pass context to processOutputs or store it in TE
+            double finalChance = baseChanceExpr.evaluate(null);
             // TODO: In the future, fetch modifier value from context or machine state using
             // modifierKey
 
@@ -65,8 +67,8 @@ public class BonusOutputDecorator extends RecipeDecorator {
         return filtered;
     }
 
-    public float getBaseChance() {
-        return baseChance;
+    public IExpression getBaseChanceExpression() {
+        return baseChanceExpr;
     }
 
     public List<IRecipeOutput> getBonusOutputs() {

@@ -5,6 +5,7 @@ import java.util.List;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 
 /**
  * Interface for modular recipes.
@@ -49,6 +50,8 @@ public interface IModularRecipe extends Comparable<IModularRecipe> {
 
     boolean canOutput(List<IModularPort> outputPorts);
 
+    IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts);
+
     @Override
     default int compareTo(IModularRecipe other) {
         // 1. Higher priority comes first
@@ -78,5 +81,14 @@ public interface IModularRecipe extends Comparable<IModularRecipe> {
             .filter(i -> i instanceof ItemInput)
             .mapToInt(i -> (int) ((ItemInput) i).getRequiredAmount())
             .sum();
+    }
+
+    /**
+     * Called every tick while the recipe is being processed.
+     * 
+     * @param context The context of the machine processing this recipe.
+     */
+    default void onTick(ConditionContext context) {
+        // Default implementation does nothing
     }
 }
