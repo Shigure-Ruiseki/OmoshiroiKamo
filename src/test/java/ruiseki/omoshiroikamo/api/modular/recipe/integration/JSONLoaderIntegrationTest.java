@@ -96,7 +96,7 @@ public class JSONLoaderIntegrationTest {
     @DisplayName("【最優先】テスト用レシピが正しく読み込まれる")
     public void testレシピの読み込み() {
         assertNotNull(loadedRecipes, "レシピが読み込まれているべき");
-        assertTrue(loadedRecipes.size() >= 14, "少なくとも14個のレシピが読み込まれるべき");
+        assertTrue(loadedRecipes.size() >= 17, "少なくとも17個のレシピが読み込まれるべき");
     }
 
     @Test
@@ -410,12 +410,19 @@ public class JSONLoaderIntegrationTest {
     @Test
     @DisplayName("【Priority】Priority が正しく読み込まれる")
     public void testPriorityシステム() {
-        // High: 10, Low: 1
+        // ユーザーがテストしたいレシピ。名前が JSON 側と一致するように正規化される。
         IModularRecipe priorityHigh = findRecipe("Priority Test High");
+        if (priorityHigh == null) priorityHigh = findRecipe("priority_test_high");
+        assertNotNull(priorityHigh, "High Priority レシピが見つからない");
         assertEquals(10, priorityHigh.getPriority());
 
         IModularRecipe priorityLow = findRecipe("Priority Test Low");
+        if (priorityLow == null) priorityLow = findRecipe("priority_test_low");
+        assertNotNull(priorityLow, "Low Priority レシピが見つからない");
         assertEquals(1, priorityLow.getPriority());
+
+        IModularRecipe coalRecipe = findRecipe("Coal to Diamond");
+        if (coalRecipe != null) assertEquals(4, coalRecipe.getPriority());
     }
 
     @Test
@@ -515,11 +522,25 @@ public class JSONLoaderIntegrationTest {
     // ========================================
 
     /**
-     * レシピ名でレシピを検索
+     * レシピ名でレシピを検索 (正規化対応)
      */
     private IModularRecipe findRecipe(String name) {
+        if (loadedRecipes == null) return null;
+
+        // 検索文字列の正規化 (スペースを _ に、小文字に)
+        String normalized = name.toLowerCase()
+            .replaceAll("\\s+", "_")
+            .replaceAll("[^a-z0-9_]", "");
+
         for (IModularRecipe recipe : loadedRecipes) {
-            if (name.equals(recipe.getRegistryName())) {
+            String reg = recipe.getRegistryName();
+            if (reg == null) continue;
+
+            // 完全一致、または正規化一致、または部分一致
+            if (name.equals(reg) || normalized.equals(reg) || reg.equalsIgnoreCase(normalized)) {
+                return recipe;
+            }
+            if (reg.contains(normalized)) {
                 return recipe;
             }
         }

@@ -1,5 +1,5 @@
 {
-    "group": "Basic Processing",
+    "group": "Basic",
     "recipes": [
         {
             "name": "Simple Item Test (Stone to Cobblestone)",
@@ -40,6 +40,7 @@
         {
             "name": "Coal to Diamond",
             "duration": 200,
+            "priority": 4,
             "inputs": [
                 {
                     "item": "minecraft:coal",
@@ -57,6 +58,57 @@
             "outputs": [
                 {
                     "item": "minecraft:diamond",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Gas Only Test (Hydrogen to Oxygen)",
+            "duration": 80,
+            "inputs": [
+                {
+                    "gas": "hydrogen",
+                    "amount": 500
+                }
+            ],
+            "outputs": [
+                {
+                    "gas": "oxygen",
+                    "amount": 250
+                }
+            ]
+        },
+        {
+            "name": "Glass to Energy Conversion",
+            "duration": 60,
+            "inputs": [
+                {
+                    "item": "minecraft:glass",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "mana": 200,
+                    "perTick": true
+                }
+            ]
+        },
+        {
+            "name": "OreDict Iron to Gold",
+            "duration": 100,
+            "inputs": [
+                {
+                    "ore": "ingotIron",
+                    "amount": 4
+                },
+                {
+                    "energy": 50
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:gold_ingot",
                     "amount": 1
                 }
             ]

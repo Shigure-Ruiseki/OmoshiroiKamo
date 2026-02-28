@@ -1,5 +1,5 @@
 {
-    "group": "Advanced Magic",
+    "group": "Magic",
     "recipes": [
         {
             "name": "Mana Processing",
@@ -26,6 +26,7 @@
         {
             "name": "Essentia Extraction",
             "duration": 200,
+            "priority": 1,
             "inputs": [
                 {
                     "essentia": "ignis",
@@ -60,8 +61,7 @@
                     "amount": 50
                 },
                 {
-                    "item": "IC2:itemIngot",
-                    "meta": 6,
+                    "item": "minecraft:quartz",
                     "amount": 1
                 }
             ],
@@ -69,6 +69,47 @@
                 {
                     "item": "minecraft:quartz",
                     "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Vis Generation from Ender Pearl",
+            "duration": 120,
+            "inputs": [
+                {
+                    "item": "minecraft:ender_pearl",
+                    "amount": 4
+                }
+            ],
+            "outputs": [
+                {
+                    "vis": "perditio",
+                    "amount": 20
+                },
+                {
+                    "vis": "aer",
+                    "amount": 20
+                }
+            ]
+        },
+        {
+            "name": "Lava test",
+            "duration": 100,
+            "priority": 2,
+            "inputs": [
+                {
+                    "item": "minecraft:cobblestone",
+                    "amount": 1
+                },
+                {
+                    "mana": 1000,
+                    "perTick": true
+                }
+            ],
+            "outputs": [
+                {
+                    "fluid": "lava",
+                    "amount": 100
                 }
             ]
         }
