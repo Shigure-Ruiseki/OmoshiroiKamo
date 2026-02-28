@@ -19,9 +19,11 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPor
 public class ItemOutput extends AbstractRecipeOutput {
 
     private ItemStack output;
+    private int count = 0;
 
     public ItemOutput(ItemStack output) {
         this.output = output != null ? output.copy() : null;
+        if (this.output != null) this.count = this.output.stackSize;
     }
 
     public ItemOutput(Item item, int count) {
@@ -105,7 +107,7 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     @Override
     public long getRequiredAmount() {
-        return output != null ? output.stackSize : 0;
+        return output != null ? output.stackSize : count;
     }
 
     @Override
@@ -122,6 +124,7 @@ public class ItemOutput extends AbstractRecipeOutput {
         }
         itemJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1;
+        this.count = itemJson.amount;
         itemJson.meta = json.has("meta") ? json.get("meta")
             .getAsInt() : 0;
         this.output = ItemJson.resolveItemStack(itemJson);
@@ -155,7 +158,7 @@ public class ItemOutput extends AbstractRecipeOutput {
     public static ItemOutput fromJson(JsonObject json) {
         ItemOutput out = new ItemOutput((ItemStack) null);
         out.read(json);
-        return out.validate() ? out : null;
+        return out;
     }
 
     @Override

@@ -128,7 +128,7 @@ public class FluidOutput extends AbstractRecipeOutput {
     public static FluidOutput fromJson(JsonObject json) {
         FluidOutput output = new FluidOutput("", 0);
         output.read(json);
-        return output.validate() ? output : null;
+        return output;
     }
 
     @Override

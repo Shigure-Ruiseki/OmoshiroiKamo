@@ -220,6 +220,9 @@ public class ModularRecipe implements IModularRecipe {
         }
 
         public ModularRecipe build() {
+            if (registryName == null || registryName.isEmpty()) {
+                throw new IllegalStateException("Recipe registryName is required");
+            }
             if (recipeGroup == null || recipeGroup.isEmpty()) {
                 throw new IllegalStateException("Recipe recipeGroup is required");
             }

@@ -79,7 +79,7 @@ public class EnergyInput extends AbstractRecipeInput {
     @Override
     public void write(JsonObject json) {
         json.addProperty("energy", amount);
-        if (!perTick) json.addProperty("perTick", false);
+        json.addProperty("perTick", perTick);
     }
 
     @Override

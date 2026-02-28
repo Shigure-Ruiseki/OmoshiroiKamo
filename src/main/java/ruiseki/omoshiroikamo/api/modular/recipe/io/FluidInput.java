@@ -13,13 +13,15 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPor
 public class FluidInput extends AbstractRecipeInput {
 
     private FluidStack required;
+    private int count = 0;
 
     public FluidInput(FluidStack required) {
-        this.required = required.copy();
+        this.required = required != null ? required.copy() : null;
+        if (this.required != null) this.count = this.required.amount;
     }
 
     public FluidStack getRequired() {
-        return required.copy();
+        return required != null ? required.copy() : null;
     }
 
     public FluidStack getFluid() {
@@ -33,7 +35,7 @@ public class FluidInput extends AbstractRecipeInput {
 
     @Override
     public long getRequiredAmount() {
-        return required.amount;
+        return required != null ? required.amount : count;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class FluidInput extends AbstractRecipeInput {
             .getAsString();
         fluidJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1000;
+        this.count = fluidJson.amount;
         this.required = FluidJson.resolveFluidStack(fluidJson);
     }
 
@@ -82,9 +85,9 @@ public class FluidInput extends AbstractRecipeInput {
     }
 
     public static FluidInput fromJson(JsonObject json) {
-        FluidInput input = new FluidInput(new FluidStack(net.minecraftforge.fluids.FluidRegistry.WATER, 0));
+        FluidInput input = new FluidInput(null);
         input.read(json);
-        return input.validate() ? input : null;
+        return input;
     }
 
     @Override

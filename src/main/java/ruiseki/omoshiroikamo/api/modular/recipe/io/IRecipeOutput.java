@@ -54,6 +54,11 @@ public interface IRecipeOutput extends IJsonMaterial {
     void readFromNBT(NBTTagCompound nbt);
 
     /**
+     * Get the amount produced by this output.
+     */
+    long getRequiredAmount();
+
+    /**
      * Accept a visitor to perform operations on this output.
      */
     void accept(IRecipeVisitor visitor);

@@ -27,7 +27,7 @@ public class MachineryMaterial extends AbstractJsonMaterial {
     public String registryName;
     public String localizedName;
     public String machine;
-    public int time = 20;
+    public int time = -1;
     public final List<IRecipeInput> inputs = new ArrayList<>();
     public final List<IRecipeOutput> outputs = new ArrayList<>();
     public final List<ICondition> conditions = new ArrayList<>();

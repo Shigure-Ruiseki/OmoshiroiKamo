@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.modular.recipe.io;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,11 +51,21 @@ public class ItemInput extends AbstractRecipeInput {
         if (required != null) {
             return Collections.singletonList(required);
         } else if (oreDict != null) {
-            List<ItemStack> ores = OreDictionary.getOres(oreDict);
-            for (ItemStack ore : ores) {
-                ore.stackSize = count;
+            try {
+                List<ItemStack> ores = OreDictionary.getOres(oreDict);
+                if (ores == null) return Collections.emptyList();
+                List<ItemStack> result = new ArrayList<>();
+                for (ItemStack ore : ores) {
+                    if (ore == null) continue;
+                    ItemStack copy = ore.copy();
+                    copy.stackSize = count;
+                    result.add(copy);
+                }
+                return result;
+            } catch (Exception e) {
+                Logger.error("Error getting ores for: " + oreDict + " - " + e.getMessage());
+                return Collections.emptyList();
             }
-            return ores;
         }
         return Collections.emptyList();
     }
@@ -146,6 +157,7 @@ public class ItemInput extends AbstractRecipeInput {
 
         itemJson.amount = json.has("amount") ? json.get("amount")
             .getAsInt() : 1;
+        this.count = itemJson.amount;
         itemJson.meta = json.has("meta") ? json.get("meta")
             .getAsInt() : 0;
 
@@ -188,7 +200,7 @@ public class ItemInput extends AbstractRecipeInput {
     public static ItemInput fromJson(JsonObject json) {
         ItemInput input = new ItemInput((ItemStack) null);
         input.read(json);
-        return input.validate() ? input : null;
+        return input;
     }
 
     @Override

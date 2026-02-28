@@ -76,8 +76,15 @@ public interface IModularRecipe extends Comparable<IModularRecipe> {
         int inputTypeCompare = Integer.compare(otherInputTypes, thisInputTypes);
         if (inputTypeCompare != 0) return inputTypeCompare;
 
-        // 3. Larger item stack count comes first
-        return Integer.compare(other.getTotalItemInputCount(), this.getTotalItemInputCount());
+        int stackCompare = Integer.compare(other.getTotalItemInputCount(), this.getTotalItemInputCount());
+        if (stackCompare != 0) return stackCompare;
+
+        // 4. Registry name alphabetical order
+        if (this.getRegistryName() != null && other.getRegistryName() != null) {
+            return this.getRegistryName()
+                .compareTo(other.getRegistryName());
+        }
+        return 0;
     }
 
     default int getTotalItemInputCount() {
