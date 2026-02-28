@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 
-import com.ibm.icu.impl.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
