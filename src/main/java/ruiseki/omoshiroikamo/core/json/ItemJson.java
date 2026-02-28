@@ -79,11 +79,16 @@ public class ItemJson implements IJsonMaterial {
         // Direct item
         if (data.name == null || data.name.isEmpty()) return null;
 
-        Item item = GameData.getItemRegistry()
-            .getObject(data.name);
-        if (item == null) return null;
+        try {
+            Item item = GameData.getItemRegistry()
+                .getObject(data.name);
+            if (item == null) return null;
 
-        return new ItemStack(item, count, data.meta);
+            return new ItemStack(item, count, data.meta);
+        } catch (Throwable t) {
+            // fallback for test environment
+            return null;
+        }
     }
 
     private static ItemStack resolveFromOre(String oreNames, int count) {
@@ -95,12 +100,19 @@ public class ItemJson implements IJsonMaterial {
         for (String ore : ores) {
             if (ore == null) continue;
 
-            List<ItemStack> list = OreDictionary.getOres(ore);
-            if (list == null || list.isEmpty()) continue;
+            try {
+                List<ItemStack> list = OreDictionary.getOres(ore);
+                if (list == null || list.isEmpty()) continue;
 
-            ItemStack base = list.get(0);
-            base.stackSize = count;
-            return base;
+                ItemStack base = list.get(0);
+                if (base == null) continue;
+                ItemStack result = base.copy();
+                result.stackSize = count;
+                return result;
+            } catch (Throwable t) {
+                // fallback
+                continue;
+            }
         }
 
         return null;

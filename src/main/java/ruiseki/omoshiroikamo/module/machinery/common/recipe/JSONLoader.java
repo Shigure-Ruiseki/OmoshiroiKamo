@@ -93,7 +93,7 @@ public class JSONLoader {
                 .name(mat.localizedName != null ? mat.localizedName : "")
                 .recipeGroup(mat.machine) // Assuming machine name is used as group for now or similar
                 .duration(mat.time)
-                .priority(0); // Default priority
+                .priority(mat.priority);
 
             for (IRecipeInput input : mat.inputs) {
                 builder.addInput(input);

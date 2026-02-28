@@ -28,6 +28,7 @@ public class MachineryMaterial extends AbstractJsonMaterial {
     public String localizedName;
     public String machine;
     public int time = -1;
+    public int priority = 0;
     public final List<IRecipeInput> inputs = new ArrayList<>();
     public final List<IRecipeOutput> outputs = new ArrayList<>();
     public final List<ICondition> conditions = new ArrayList<>();
@@ -41,7 +42,18 @@ public class MachineryMaterial extends AbstractJsonMaterial {
         this.registryName = getString(json, "registryName", null);
         this.localizedName = getString(json, "localizedName", getString(json, "name", null));
         this.machine = getString(json, "machine", getString(json, "group", null));
-        this.time = getInt(json, "duration", getInt(json, "time", -1)); // Default to -1 to detect if provided
+
+        // Duration (duration > time > 20)
+        if (json.has("duration")) {
+            this.time = json.get("duration")
+                .getAsInt();
+        } else if (json.has("time")) {
+            this.time = json.get("time")
+                .getAsInt();
+        }
+
+        // Priority
+        this.priority = getInt(json, "priority", 0);
 
         // Auto-generate registryName if missing
         if ((this.registryName == null || this.registryName.isEmpty()) && this.localizedName != null) {
@@ -95,7 +107,8 @@ public class MachineryMaterial extends AbstractJsonMaterial {
             "outputs",
             "condition",
             "conditions",
-            "decorators");
+            "decorators",
+            "priority");
     }
 
     /**
@@ -106,6 +119,7 @@ public class MachineryMaterial extends AbstractJsonMaterial {
         if (this.localizedName == null) this.localizedName = parentMat.localizedName;
         if (this.machine == null) this.machine = parentMat.machine;
         if (this.time == -1) this.time = (parentMat.time != -1) ? parentMat.time : 20;
+        if (this.priority == 0) this.priority = parentMat.priority;
 
         // Merge lists (add parent's items if not already present or just append?)
         // Design decision: Prepend parent's inputs/outputs/conditions
