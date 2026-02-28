@@ -22,7 +22,7 @@ public class NbtExpression implements IExpression {
 
     @Override
     public double evaluate(ConditionContext context) {
-        if (context.getWorld() == null) return defaultValue;
+        if (context == null || context.getWorld() == null) return defaultValue;
         TileEntity te = context.getWorld()
             .getTileEntity(context.getX(), context.getY(), context.getZ());
         if (te != null) {
