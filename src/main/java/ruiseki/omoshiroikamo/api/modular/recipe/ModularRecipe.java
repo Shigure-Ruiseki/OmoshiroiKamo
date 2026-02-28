@@ -140,6 +140,16 @@ public class ModularRecipe implements IModularRecipe {
         return null;
     }
 
+    @Override
+    public void onTick(ConditionContext context) {
+        // Default implementation does nothing, decorators might override this
+    }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {
+        visitor.visit(this);
+    }
+
     private List<IModularPort> filterByType(List<IModularPort> ports, IPortType.Type type) {
         List<IModularPort> filtered = new ArrayList<>();
         for (IModularPort port : ports) {

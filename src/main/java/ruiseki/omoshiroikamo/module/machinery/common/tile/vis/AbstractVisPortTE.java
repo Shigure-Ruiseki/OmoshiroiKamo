@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
@@ -84,6 +85,9 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
         }
         return total;
     }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {}
 
     private boolean isPrimalAspect(Aspect aspect) {
         return aspect == Aspect.AIR || aspect == Aspect.WATER

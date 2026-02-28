@@ -155,4 +155,9 @@ public class ItemOutput extends AbstractRecipeOutput {
         out.read(json);
         return out.validate() ? out : null;
     }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

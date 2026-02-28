@@ -34,4 +34,9 @@ public interface IRecipeOutput extends IJsonMaterial {
         apply(ports);
         return true;
     }
+
+    /**
+     * Accept a visitor to perform operations on this output.
+     */
+    void accept(IRecipeVisitor visitor);
 }

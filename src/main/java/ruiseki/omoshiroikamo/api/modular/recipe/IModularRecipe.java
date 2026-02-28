@@ -88,7 +88,12 @@ public interface IModularRecipe extends Comparable<IModularRecipe> {
      * 
      * @param context The context of the machine processing this recipe.
      */
-    default void onTick(ConditionContext context) {
-        // Default implementation does nothing
-    }
+    void onTick(ruiseki.omoshiroikamo.api.condition.ConditionContext context);
+
+    /**
+     * Accept a visitor to perform operations on this recipe.
+     * 
+     * @param visitor The visitor to accept.
+     */
+    void accept(IRecipeVisitor visitor);
 }

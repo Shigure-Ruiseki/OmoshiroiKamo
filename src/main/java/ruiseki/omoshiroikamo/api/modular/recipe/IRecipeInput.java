@@ -26,4 +26,9 @@ public interface IRecipeInput extends IJsonMaterial {
      * @return true if the requirement is/was satisfied
      */
     boolean process(List<IModularPort> ports, boolean simulate);
+
+    /**
+     * Accept a visitor to perform operations on this input.
+     */
+    void accept(IRecipeVisitor visitor);
 }

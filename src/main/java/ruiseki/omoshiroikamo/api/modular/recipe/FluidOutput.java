@@ -128,4 +128,9 @@ public class FluidOutput extends AbstractRecipeOutput {
         output.read(json);
         return output.validate() ? output : null;
     }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

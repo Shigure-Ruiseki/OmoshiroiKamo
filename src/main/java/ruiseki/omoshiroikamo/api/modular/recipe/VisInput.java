@@ -81,4 +81,9 @@ public class VisInput extends AbstractRecipeInput {
         input.read(json);
         return input.validate() ? input : null;
     }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

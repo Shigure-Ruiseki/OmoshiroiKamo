@@ -93,4 +93,9 @@ public abstract class RecipeDecorator implements IModularRecipe {
     public void onTick(ConditionContext context) {
         internal.onTick(context);
     }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {
+        internal.accept(visitor);
+    }
 }

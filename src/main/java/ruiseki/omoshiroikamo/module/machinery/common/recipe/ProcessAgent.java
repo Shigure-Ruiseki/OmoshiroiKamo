@@ -20,11 +20,11 @@ import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.GasOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.RecipeExecutionVisitor;
 import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
 
 public class ProcessAgent {
@@ -47,6 +47,66 @@ public class ProcessAgent {
     private List<String[]> cachedVisOutputs = new ArrayList<>(); // [aspectTag, amountCentiVis]
     private List<Integer> cachedEnergyOutputs = new ArrayList<>(); // [amount]
 
+    public int getEnergyPerTick() {
+        return energyPerTick;
+    }
+
+    public void setEnergyPerTick(int amount) {
+        this.energyPerTick = amount;
+    }
+
+    public int getEnergyOutputPerTick() {
+        return energyOutputPerTick;
+    }
+
+    public void setEnergyOutputPerTick(int amount) {
+        this.energyOutputPerTick = amount;
+    }
+
+    public int getManaPerTick() {
+        return manaPerTick;
+    }
+
+    public void setManaPerTick(int amount) {
+        this.manaPerTick = amount;
+    }
+
+    public int getManaOutputPerTick() {
+        return manaOutputPerTick;
+    }
+
+    public void setManaOutputPerTick(int amount) {
+        this.manaOutputPerTick = amount;
+    }
+
+    public List<ItemStack> getCachedItemOutputs() {
+        return cachedItemOutputs;
+    }
+
+    public List<FluidStack> getCachedFluidOutputs() {
+        return cachedFluidOutputs;
+    }
+
+    public List<Integer> getCachedManaOutputs() {
+        return cachedManaOutputs;
+    }
+
+    public List<String[]> getCachedGasOutputs() {
+        return cachedGasOutputs;
+    }
+
+    public List<String[]> getCachedEssentiaOutputs() {
+        return cachedEssentiaOutputs;
+    }
+
+    public List<String[]> getCachedVisOutputs() {
+        return cachedVisOutputs;
+    }
+
+    public List<Integer> getCachedEnergyOutputs() {
+        return cachedEnergyOutputs;
+    }
+
     private String currentRecipeName;
     private transient IModularRecipe currentRecipe;
 
@@ -57,22 +117,22 @@ public class ProcessAgent {
     public boolean start(IModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
         if (running) return false;
 
-        for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) {
-                EnergyInput energyInput = (EnergyInput) input;
-                if (energyInput.isPerTick()) continue;
-                if (!energyInput.process(energyPorts, true)) {
-                    return false;
-                }
-            } else if (input instanceof ManaInput) {
-                ManaInput manaInput = (ManaInput) input;
-                if (manaInput.isPerTick()) continue;
-                if (!manaInput.process(inputPorts, true)) {
-                    return false;
-                }
-            } else if (!input.process(inputPorts, true)) {
-                return false;
-            }
+        // 1. Check inputs
+        RecipeExecutionVisitor checker = new RecipeExecutionVisitor(
+            RecipeExecutionVisitor.Mode.CHECK,
+            inputPorts,
+            this);
+        recipe.accept(checker);
+        if (!checker.isSatisfied()) return false;
+
+        // Extra check for energy if energyPorts are different from inputPorts
+        if (energyPorts != inputPorts) {
+            RecipeExecutionVisitor energyChecker = new RecipeExecutionVisitor(
+                RecipeExecutionVisitor.Mode.CHECK,
+                energyPorts,
+                this);
+            recipe.accept(energyChecker);
+            if (!energyChecker.isSatisfied()) return false;
         }
 
         energyPerTick = 0;
@@ -80,39 +140,10 @@ public class ProcessAgent {
         manaPerTick = 0;
         manaOutputPerTick = 0;
 
-        for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) {
-                EnergyInput energyInput = (EnergyInput) input;
-                if (energyInput.isPerTick()) {
-                    energyPerTick += energyInput.getAmount();
-                } else {
-                    energyInput.process(energyPorts, false);
-                }
-            } else if (input instanceof ManaInput) {
-                ManaInput manaInput = (ManaInput) input;
-                if (manaInput.isPerTick()) {
-                    manaPerTick += manaInput.getAmount();
-                } else {
-                    manaInput.process(inputPorts, false);
-                }
-            } else {
-                input.process(inputPorts, false);
-            }
-        }
-
-        // Calculate per-tick outputs
-        for (IRecipeOutput output : recipe.getOutputs()) {
-            if (output instanceof EnergyOutput) {
-                EnergyOutput eOut = (EnergyOutput) output;
-                if (eOut.isPerTick()) {
-                    energyOutputPerTick += eOut.getAmount();
-                }
-            } else if (output instanceof ManaOutput) {
-                ManaOutput mOut = (ManaOutput) output;
-                if (mOut.isPerTick()) {
-                    manaOutputPerTick += mOut.getAmount();
-                }
-            }
+        // 2. Consume and setup state
+        recipe.accept(new RecipeExecutionVisitor(RecipeExecutionVisitor.Mode.CONSUME, inputPorts, this));
+        if (energyPorts != inputPorts) {
+            recipe.accept(new RecipeExecutionVisitor(RecipeExecutionVisitor.Mode.CONSUME, energyPorts, this));
         }
 
         cachedItemOutputs.clear();
@@ -123,36 +154,8 @@ public class ProcessAgent {
         cachedVisOutputs.clear();
         cachedEnergyOutputs.clear();
 
-        for (IRecipeOutput output : recipe.getOutputs()) {
-            if (output instanceof ItemOutput) {
-                ItemStack stack = ((ItemOutput) output).getOutput();
-                cachedItemOutputs.add(stack.copy());
-            } else if (output instanceof FluidOutput) {
-                FluidStack stack = ((FluidOutput) output).getOutput();
-                cachedFluidOutputs.add(stack.copy());
-            } else if (output instanceof ManaOutput) {
-                ManaOutput mOut = (ManaOutput) output;
-                if (!mOut.isPerTick()) {
-                    cachedManaOutputs.add(mOut.getAmount());
-                }
-            } else if (output instanceof GasOutput) {
-                GasOutput gasOut = (GasOutput) output;
-                cachedGasOutputs.add(new String[] { gasOut.getGasName(), String.valueOf(gasOut.getAmount()) });
-            } else if (output instanceof EssentiaOutput) {
-                EssentiaOutput essentiaOut = (EssentiaOutput) output;
-                cachedEssentiaOutputs
-                    .add(new String[] { essentiaOut.getAspectTag(), String.valueOf(essentiaOut.getAmount()) });
-            } else if (output instanceof VisOutput) {
-                VisOutput visOut = (VisOutput) output;
-                cachedVisOutputs
-                    .add(new String[] { visOut.getAspectTag(), String.valueOf(visOut.getAmountCentiVis()) });
-            } else if (output instanceof EnergyOutput) {
-                EnergyOutput eOut = (EnergyOutput) output;
-                if (!eOut.isPerTick()) {
-                    cachedEnergyOutputs.add(eOut.getAmount());
-                }
-            }
-        }
+        // 3. Cache outputs
+        recipe.accept(new RecipeExecutionVisitor(RecipeExecutionVisitor.Mode.CACHE, null, this));
 
         currentRecipe = recipe;
         currentRecipeName = recipe.getName();
@@ -243,40 +246,44 @@ public class ProcessAgent {
     public boolean tryOutput(List<IModularPort> outputPorts) {
         if (!waitingForOutput) return false;
 
-        List<IRecipeOutput> outputs = new ArrayList<>();
+        List<IRecipeOutput> outputsToProcess = new ArrayList<>();
+
+        // 1. Reconstruct outputs from cache
         for (ItemStack stack : cachedItemOutputs) {
-            outputs.add(new ItemOutput(stack.copy()));
+            outputsToProcess.add(new ItemOutput(stack.copy()));
         }
         for (FluidStack stack : cachedFluidOutputs) {
-            outputs.add(
+            outputsToProcess.add(
                 new FluidOutput(
                     stack.getFluid()
                         .getName(),
                     stack.amount));
         }
         for (Integer manaAmount : cachedManaOutputs) {
-            outputs.add(new ManaOutput(manaAmount));
+            outputsToProcess.add(new ManaOutput(manaAmount));
         }
         for (String[] gasData : cachedGasOutputs) {
-            outputs.add(new GasOutput(gasData[0], Integer.parseInt(gasData[1])));
+            outputsToProcess.add(new GasOutput(gasData[0], Integer.parseInt(gasData[1])));
         }
         for (String[] essentiaData : cachedEssentiaOutputs) {
-            outputs.add(new EssentiaOutput(essentiaData[0], Integer.parseInt(essentiaData[1])));
+            outputsToProcess.add(new EssentiaOutput(essentiaData[0], Integer.parseInt(essentiaData[1])));
         }
         for (String[] visData : cachedVisOutputs) {
-            outputs.add(new VisOutput(visData[0], Integer.parseInt(visData[1])));
+            outputsToProcess.add(new VisOutput(visData[0], Integer.parseInt(visData[1])));
         }
         for (Integer energyAmount : cachedEnergyOutputs) {
-            outputs.add(new EnergyOutput(energyAmount, false));
+            outputsToProcess.add(new EnergyOutput(energyAmount, false));
         }
 
-        for (IRecipeOutput output : outputs) {
+        // 2. Check capacity for all
+        for (IRecipeOutput output : outputsToProcess) {
             if (!output.process(outputPorts, true)) {
                 return false;
             }
         }
 
-        for (IRecipeOutput output : outputs) {
+        // 3. Apply outputs
+        for (IRecipeOutput output : outputsToProcess) {
             output.process(outputPorts, false);
         }
 

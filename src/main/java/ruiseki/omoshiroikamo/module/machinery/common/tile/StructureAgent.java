@@ -19,7 +19,7 @@ import com.gtnewhorizon.structurelib.structure.StructureUtility;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.recipe.PortRegistrationVisitor;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
@@ -143,28 +143,9 @@ public class StructureAgent {
             return false;
         }
 
-        IPortType.Direction direction = port.getPortDirection();
-
-        return switch (direction) {
-            case INPUT -> {
-                controller.getPortManager()
-                    .addPort(port, true);
-                yield true;
-            }
-            case OUTPUT -> {
-                controller.getPortManager()
-                    .addPort(port, false);
-                yield true;
-            }
-            case BOTH -> {
-                controller.getPortManager()
-                    .addPort(port, true);
-                controller.getPortManager()
-                    .addPort(port, false);
-                yield true;
-            }
-            default -> false;
-        };
+        PortRegistrationVisitor visitor = new PortRegistrationVisitor(controller);
+        visitor.register(port);
+        return true;
     }
 
     /**
