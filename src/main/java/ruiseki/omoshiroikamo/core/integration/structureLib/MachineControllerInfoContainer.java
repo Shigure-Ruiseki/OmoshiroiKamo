@@ -9,8 +9,8 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
@@ -174,10 +174,10 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
      */
     private int[] getOffset(String structureName, TEMachineController ctx) {
         if (structureName != null && !structureName.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structureName);
-            if (entry != null && entry.controllerOffset != null) {
-                return entry.controllerOffset;
+            if (entry != null && entry.getControllerOffset() != null) {
+                return entry.getControllerOffset();
             }
             // Default offset for custom structures
             return new int[] { 0, 0, 1 };

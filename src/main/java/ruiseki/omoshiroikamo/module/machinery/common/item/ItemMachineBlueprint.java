@@ -18,8 +18,8 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ConstructableUtilit
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -91,10 +91,12 @@ public class ItemMachineBlueprint extends ItemOK {
     public String getItemStackDisplayName(ItemStack stack) {
         String structureName = getStructureName(stack);
         if (structureName != null && !structureName.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structureName);
-            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
-                return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", entry.displayName);
+            if (entry != null && entry.getDisplayName() != null
+                && !entry.getDisplayName()
+                    .isEmpty()) {
+                return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", entry.getDisplayName());
             }
             return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", structureName);
         }

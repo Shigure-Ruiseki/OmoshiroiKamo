@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemOutput;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
@@ -222,9 +222,11 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             }
         } else if (ingredient.getItem() instanceof ItemMachineBlueprint) {
             String structure = ItemMachineBlueprint.getStructureName(ingredient);
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structure);
-            if (entry != null && entry.recipeGroup != null && entry.recipeGroup.contains(recipeGroup)) {
+            if (entry != null && entry.getRecipeGroup() != null
+                && entry.getRecipeGroup()
+                    .contains(recipeGroup)) {
                 for (IModularRecipe recipe : RecipeLoader.getInstance()
                     .getAllRecipes()) {
                     if (recipe.getRecipeGroup()

@@ -17,8 +17,8 @@ import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import blockrenderer6343.api.utils.CreativeItemSource;
 import blockrenderer6343.client.utils.ConstructableData;
 import blockrenderer6343.integration.nei.GuiMultiblockHandler;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
@@ -90,17 +90,18 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
         // Get offset for the structure
         int[] offset = currentStructure.getOffset();
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
 
         ExtendedFacing facing = ExtendedFacing.SOUTH_NORMAL_NONE;
         if (entry != null) {
-            if (entry.controllerOffset != null) {
-                offset = entry.controllerOffset;
+            if (entry.getControllerOffset() != null) {
+                offset = entry.getControllerOffset();
             }
-            if (entry.defaultFacing != null) {
+            if (entry.getDefaultFacing() != null) {
                 try {
-                    String facingName = entry.defaultFacing.toUpperCase();
+                    String facingName = entry.getDefaultFacing()
+                        .toUpperCase();
                     // Simple mapping attempt
                     switch (facingName) {
                         case "DOWN" -> facing = ExtendedFacing.DOWN_NORMAL_NONE;
@@ -171,9 +172,10 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         }
 
         // Store tint color for use in beforeRender callback
-        if (entry != null && entry.properties != null && entry.properties.tintColor != null) {
+        if (entry != null && entry.getTintColor() != null) {
             try {
-                String hex = entry.properties.tintColor.replace("#", "");
+                String hex = entry.getTintColor()
+                    .replace("#", "");
                 currentTintColor = (int) Long.parseLong(hex, 16) | 0xFF000000;
             } catch (Exception e) {
                 currentTintColor = null;

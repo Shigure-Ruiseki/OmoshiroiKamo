@@ -15,9 +15,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
@@ -246,9 +246,11 @@ public class NEIConfig implements IConfigureNEI {
             ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
             API.addRecipeCatalyst(catalyst, handler.getRecipeID());
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                StructureEntry entry = StructureManager.getInstance()
+                IStructureEntry entry = StructureManager.getInstance()
                     .getCustomStructure(structureName);
-                if (entry != null && entry.recipeGroup != null && entry.recipeGroup.contains(group)) {
+                if (entry != null && entry.getRecipeGroup() != null
+                    && entry.getRecipeGroup()
+                        .contains(group)) {
                     ItemStack blueprint = ItemMachineBlueprint
                         .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
                     API.addRecipeCatalyst(blueprint, handler.getRecipeID());

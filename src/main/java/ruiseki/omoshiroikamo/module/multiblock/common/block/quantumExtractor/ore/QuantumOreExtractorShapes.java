@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.or
 
 import java.util.Map;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureJsonLoader;
+import ruiseki.omoshiroikamo.api.structure.core.StructureShapeWithMappings;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 
 public class QuantumOreExtractorShapes {
@@ -24,7 +24,7 @@ public class QuantumOreExtractorShapes {
     /**
      * Get the shape with dynamic mappings for the specified tier.
      */
-    public static StructureJsonLoader.ShapeWithMappings getShapeWithMappings(int tier) {
+    public static StructureShapeWithMappings getShapeWithMappings(int tier) {
         return StructureManager.getInstance()
             .getShapeWithMappings("ore_miner", "oreExtractorTier" + tier);
     }
@@ -33,7 +33,7 @@ public class QuantumOreExtractorShapes {
      * Get all dynamic mappings for use with registerTierWithDynamicMappings.
      */
     public static Map<Character, Object> getDynamicMappings(int tier) {
-        StructureJsonLoader.ShapeWithMappings swm = getShapeWithMappings(tier);
+        StructureShapeWithMappings swm = getShapeWithMappings(tier);
         if (swm != null) {
             return swm.dynamicMappings;
         }
