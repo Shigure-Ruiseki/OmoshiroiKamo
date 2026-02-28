@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.condition.ICondition;
-import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**

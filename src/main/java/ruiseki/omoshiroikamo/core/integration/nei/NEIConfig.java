@@ -14,7 +14,7 @@ import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;

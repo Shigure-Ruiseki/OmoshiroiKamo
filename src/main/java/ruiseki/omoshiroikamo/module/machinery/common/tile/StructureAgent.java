@@ -19,7 +19,7 @@ import com.gtnewhorizon.structurelib.structure.StructureUtility;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.recipe.PortRegistrationVisitor;
+import ruiseki.omoshiroikamo.api.modular.recipe.visitor.PortRegistrationVisitor;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
 import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;

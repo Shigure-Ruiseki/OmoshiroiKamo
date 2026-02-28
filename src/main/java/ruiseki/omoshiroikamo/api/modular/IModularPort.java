@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.modular;
 
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeVisitor;
+import ruiseki.omoshiroikamo.api.modular.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 
 /**

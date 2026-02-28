@@ -26,7 +26,7 @@ import mekanism.api.gas.ITubeConnection;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeVisitor;
+import ruiseki.omoshiroikamo.api.modular.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;

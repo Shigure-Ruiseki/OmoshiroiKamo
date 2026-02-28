@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.recipe.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;

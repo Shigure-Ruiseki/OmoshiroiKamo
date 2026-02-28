@@ -1,0 +1,40 @@
+package ruiseki.omoshiroikamo.api.modular.recipe.decorator;
+
+import java.util.Random;
+
+import com.google.gson.JsonObject;
+
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.expression.ExpressionsParser;
+import ruiseki.omoshiroikamo.api.modular.recipe.expression.IExpression;
+
+/**
+ * Decorator that adds a random chance for the recipe to meet its conditions.
+ */
+public class ChanceRecipeDecorator extends RecipeDecorator {
+
+    private final IExpression chanceExpr;
+    private final Random rand = new Random();
+
+    public ChanceRecipeDecorator(IModularRecipe internal, IExpression chanceExpr) {
+        super(internal);
+        this.chanceExpr = chanceExpr;
+    }
+
+    @Override
+    public boolean isConditionMet(ConditionContext context) {
+        // First check internal conditions, then roll for chance
+        double chance = chanceExpr.evaluate(context);
+        return internal.isConditionMet(context) && rand.nextFloat() < chance;
+    }
+
+    public IExpression getChanceExpression() {
+        return chanceExpr;
+    }
+
+    public static IModularRecipe fromJson(IModularRecipe recipe, JsonObject json) {
+        IExpression chance = ExpressionsParser.parse(json.get("chance"));
+        return new ChanceRecipeDecorator(recipe, chance);
+    }
+}
