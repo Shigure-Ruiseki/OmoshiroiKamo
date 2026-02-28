@@ -43,3 +43,7 @@ The `RecipeLoader` is the central point for interacting with recipes.
 - **Decorator Pattern**: Used for dynamic functional extensions.
 - **Strategy Pattern**: `IRecipeInput` implementations act as strategies for resource handling.
 - **Flyweight Pattern**: Common resource definitions are often shared to save memory.
+
+## 5. Testing
+
+The integrity of the recipe engine is verified through continuous integration tests. For details on test categories and building your own tests for new resources, see the [Test Plan](./TEST_PLAN.md).

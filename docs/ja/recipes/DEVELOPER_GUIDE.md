@@ -43,3 +43,7 @@ public class MyDecorator extends RecipeDecorator {
 - **Decorator パターン**: 動的な機能拡張に使用。
 - **Strategy パターン**: `IRecipeInput` の実装が、リソース処理の戦略（Strategy）として機能します。
 - **Flyweight パターン**: メモリを節約するため、共通のリソース定義が共有されることがあります。
+
+## 5. テスト
+
+レシピエンジンの整合性は、継続的な統合テストによって検証されます。テストカテゴリの詳細や、新しいリソースのテスト作成方法については、[テスト計画](./TEST_PLAN.md) を参照してください。

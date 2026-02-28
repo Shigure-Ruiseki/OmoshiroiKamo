@@ -59,6 +59,11 @@ Decoupled and extensible recipe engine supporting multiple resource types and dy
 - **English**: [Overview](./docs/en/recipes/OVERVIEW.md) | [JSON Format](./docs/en/recipes/JSON_FORMAT.md) | [Developer Guide](./docs/en/recipes/DEVELOPER_GUIDE.md)
 - **日本語 (Japanese)**: [概要](./docs/ja/recipes/OVERVIEW.md) | [JSONフォーマット](./docs/ja/recipes/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/recipes/DEVELOPER_GUIDE.md)
 
+### Developer Testing
+Comprehensive testing plans and strategies for maintainers and contributors.
+- **Structure System**: [English Test Plan](./docs/en/structures/TEST_PLAN.md) | [日本語テスト計画](./docs/ja/structures/TEST_PLAN.md)
+- **Recipe System**: [English Test Plan](./docs/en/recipes/TEST_PLAN.md) | [日本語テスト計画](./docs/ja/recipes/TEST_PLAN.md)
+
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
 
