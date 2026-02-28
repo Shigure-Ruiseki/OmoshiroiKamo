@@ -45,3 +45,40 @@
 
 ## 3. Implementation Guidelines
 Tests are located in `src/test/java/ruiseki/omoshiroikamo/api/structure/`. Follow the Recipe System testing patterns (JUnit 5).
+## 4. File-Based Integration Testing
+
+### Overview
+Integrated tests use real JSON files as test resources. These files are loaded from the classpath to simulate a production-like environment.
+
+### Test Resource Configuration
+- **Location**: `src/test/resources/structures/`
+- **Format**: Individual JSON files for each structure definition.
+- **Count**: 14 structure definition files.
+
+### Individual File List
+1. `minimal.json` - Minimal 1x1x1 structure.
+2. `simple_3x3x1.json` - Simple 3x3 layout.
+3. `complex_3x3x3.json` - Multi-layered complex structure.
+4. `with_item_requirement.json` - Item requirement verification.
+5. `with_fluid_requirement.json` - Fluid requirement verification.
+6. `with_energy_requirement.json` - Energy requirement verification.
+7. `with_all_requirements.json` - Full requirement set (4 types).
+8. `with_display_name.json` - Optional metadata (displayName).
+9. `with_recipe_group.json` - Optional metadata (recipeGroup).
+10. `with_controller_offset.json` - Optional metadata (controllerOffset).
+11. `with_tint_color.json` - Optional metadata (tintColor).
+12. `with_tier.json` - Optional tier setting.
+13. `with_multiple_blocks.json` - Multi-block mapping verification.
+14. `with_metadata.json` - Block mapping with metadata/damage values.
+
+### Test Class: StructureFileLoaderTest
+- **Source**: `src/test/java/.../structure/integration/StructureFileLoaderTest.java`
+- **Coverage**: 26 integration tests.
+- **Key Verification Points**:
+  - Successful loading of name, layers, and mappings.
+  - Correct parsing of all optional metadata fields.
+  - Validation of various Requirement types (Item, Fluid, Energy, Mana).
+  - Proper handling of multi-block mappings and metadata-aware blocks.
+  - Support for `default mappings` fallback.
+
+This integration testing suite ensures that the JSON parsing logic remains robust when dealing with real-world file inputs.

@@ -26,3 +26,26 @@ The Recipe System currently has a robust test suite. New integrations (like DML 
 ## 3. Best Practices
 - **Probability Tests**: For chance-based outputs, use 1000-iteration statistical checks.
 - **Context Mocking**: Use a mock `ConditionContext` for environment-dependent tests.
+## 4. File-Based Integration Testing
+
+The Recipe System provides comprehensive integration tests that load real JSON files to verify the entire parsing and logic pipeline.
+
+### 4.1 Test Resource Location
+- **Path**: `src/test/resources/recipes`
+- **Structure**: Recipes are organized into 5 functional groups:
+  - `basic_processing.json`: Basic items, fluids, and energy.
+  - `advanced_magic.json`: Mana, Essentia, and Vis.
+  - `complex_io.json`: Multiple inputs/outputs.
+  - `recipe_logic.json`: Priority, bulk consumption, and metadata.
+  - `inheritance_test.json`: Parent-child relationships and abstract templates.
+
+### 4.2 JSONLoaderIntegrationTest
+Validates 20+ distinct recipe scenarios, ensuring high reliability:
+- **I/O Verification**: Item (including OreDict and Metadata), Fluid, Energy, Mana, Gas, Essentia, and Vis.
+- **Detailed Assertions**: Verifies `perTick` flags, `damage` values, and stack sizes.
+- **Advanced Features**:
+  - **Inheritance**: Property merging from `parent` recipes.
+  - **Abstract Templates**: Ensuring `abstract: true` recipes are treated as templates and not loaded directly.
+  - **Priority System**: Resolving recipe conflicts using the `priority` field.
+- **Coverage**: All previous "ignored" placeholders have been implemented with full assertions.
+- **Source**: `src/test/java/.../recipe/integration/JSONLoaderIntegrationTest.java`
