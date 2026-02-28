@@ -43,9 +43,14 @@ The Recipe System provides comprehensive integration tests that load real JSON f
 Validates 20+ distinct recipe scenarios, ensuring high reliability:
 - **I/O Verification**: Item (including OreDict and Metadata), Fluid, Energy, Mana, Gas, Essentia, and Vis.
 - **Detailed Assertions**: Verifies `perTick` flags, `damage` values, and stack sizes.
-- **Advanced Features**:
+- **Advanced Features & Coverage**:
+  - **Decorators**: `chance` (fixed and statistical verification), `bonus` (additional outputs).
+  - **Expressions**: Dynamic calculations using `map_range` and `nbt` (e.g., machine states).
+  - **Conditions**: `biome` specific recipe checks.
   - **Inheritance**: Property merging from `parent` recipes.
-  - **Abstract Templates**: Ensuring `abstract: true` recipes are treated as templates and not loaded directly.
-  - **Priority System**: Resolving recipe conflicts using the `priority` field.
-- **Coverage**: All previous "ignored" placeholders have been implemented with full assertions.
+  - **Abstract Templates**: Ensuring `abstract: true` recipes are not loaded directly.
+  - **Priority & Sorting**:
+    - `priority` field conflict resolution.
+    - Automatic sorting by "input item count" for same-priority recipes.
+- **Coverage**: All 26 test scenarios are fully implemented with detailed assertions.
 - **Source**: `src/test/java/.../recipe/integration/JSONLoaderIntegrationTest.java`

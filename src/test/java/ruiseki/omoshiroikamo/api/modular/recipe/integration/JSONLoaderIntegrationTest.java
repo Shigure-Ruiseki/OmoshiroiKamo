@@ -13,6 +13,14 @@ import org.junit.jupiter.api.Test;
 
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.decorator.BonusOutputDecorator;
+import ruiseki.omoshiroikamo.api.modular.recipe.decorator.ChanceRecipeDecorator;
+import ruiseki.omoshiroikamo.api.modular.recipe.decorator.RequirementDecorator;
+import ruiseki.omoshiroikamo.api.condition.BiomeCondition;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
+import ruiseki.omoshiroikamo.api.condition.Conditions;
+import ruiseki.omoshiroikamo.api.modular.recipe.expression.IExpression;
+import ruiseki.omoshiroikamo.api.modular.recipe.expression.MapRangeExpression;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.JSONLoader;
@@ -63,6 +71,8 @@ public class JSONLoaderIntegrationTest {
 
     @BeforeAll
     public static void setUpAll() {
+        // 条件レジストリの初期化 (BiomeCondition 等のパースに必要)
+        Conditions.registerDefaults();
         try {
             // テスト用リソースディレクトリのパスを取得
             File recipesDir = new File("src/test/resources/recipes");
@@ -449,6 +459,94 @@ public class JSONLoaderIntegrationTest {
         // registryName: template_basic は抽象なので loadedRecipes には含まれないはず
         IModularRecipe abstractRecipe = findRecipe("template_basic");
         assertNull(abstractRecipe, "抽象レシピは読み込まれるべきではない");
+    }
+
+    @Test
+    @DisplayName("【Decorator】Chance(100%) が正しく適用される")
+    public void testDecoratorChance100() {
+        IModularRecipe recipe = findRecipe("Decorator Chance 100% Test");
+        assertNotNull(recipe, "レシピが見つからない");
+        assertTrue(recipe instanceof ChanceRecipeDecorator, "ChanceDecorator でラップされているべき");
+        
+        // 100% なので常に成功すべき (Context=null でも動作する実装)
+        assertTrue(recipe.isConditionMet(null), "100% 確率は常に成功すべき");
+    }
+
+    @Test
+    @DisplayName("【Decorator】Chance(50%) の統計的検証")
+    public void testDecoratorChance50Stats() {
+        IModularRecipe recipe = findRecipe("Decorator Chance 50% Stats Test");
+        assertNotNull(recipe, "レシピが見つからない");
+        assertTrue(recipe instanceof ChanceRecipeDecorator, "ChanceDecorator でラップされているべき");
+
+        int successCount = 0;
+        int trials = 1000;
+        for (int i = 0; i < trials; i++) {
+            if (recipe.isConditionMet(null)) successCount++;
+        }
+
+        // 50% ならば 1000回中 400〜600回程度に収まるはず
+        assertTrue(successCount > 350 && successCount < 650, 
+            "50% 確率が統計的範囲外: " + successCount + "/1000");
+    }
+
+    @Test
+    @DisplayName("【Decorator】Bonus 出力が正しくパースされる")
+    public void testDecoratorBonus() {
+        IModularRecipe recipe = findRecipe("Decorator Bonus Output Test");
+        assertNotNull(recipe, "レシピが見つからない");
+        assertTrue(recipe instanceof BonusOutputDecorator, "BonusOutputDecorator でラップされているべき");
+        
+        BonusOutputDecorator bonus = (BonusOutputDecorator) recipe;
+        assertEquals(1, bonus.getBonusOutputs().size(), "ボーナス出力が1つあるべき");
+        assertEquals(IPortType.Type.ITEM, bonus.getBonusOutputs().get(0).getPortType());
+    }
+
+    @Test
+    @DisplayName("【Expression】MapRange と NBT 連動の検証")
+    public void testExpressionMapRange() {
+        IModularRecipe recipe = findRecipe("Expression MapRange Test");
+        assertNotNull(recipe, "レシピが見つからない");
+        assertTrue(recipe instanceof ChanceRecipeDecorator, "ChanceDecorator でラップされているべき");
+        
+        ChanceRecipeDecorator chanceDec = (ChanceRecipeDecorator) recipe;
+        IExpression expr = chanceDec.getChanceExpression();
+        assertTrue(expr instanceof MapRangeExpression, "MapRangeExpression であるべき");
+        
+        // Context=null の場合、NBT デフォルト値 50.0 が使われるはず。
+        // MapRange(50.0, 0~100 -> 0~1) は 0.5 になる
+        double val = expr.evaluate(null);
+        assertEquals(0.5, val, 0.001, "デフォルト値での評価が 0.5 になるべき");
+    }
+
+    @Test
+    @DisplayName("【Requirement】Biome 条件が正しくパースされる")
+    public void testRequirementBiome() {
+        IModularRecipe recipe = findRecipe("Biome Specific Recipe");
+        assertNotNull(recipe, "レシピが見つからない");
+        assertTrue(recipe instanceof RequirementDecorator, "RequirementDecorator でラップされているべき");
+        
+        RequirementDecorator req = (RequirementDecorator) recipe;
+        ICondition condition = req.getExtraCondition();
+        assertTrue(condition instanceof BiomeCondition, "BiomeCondition であるべき");
+    }
+
+    @Test
+    @DisplayName("【Sorting】レシピの優先順位（並び替え）の検証")
+    public void testRecipeSorting() {
+        IModularRecipe high = findRecipe("Priority Test High"); // Priority 10
+        IModularRecipe low = findRecipe("Priority Test Low");   // Priority 1
+        
+        // Priority 10 は Priority 1 より前に来るべき (compareTo < 0)
+        assertTrue(high.compareTo(low) < 0, "高優先度レシピが先に来るべき");
+        assertTrue(low.compareTo(high) > 0, "低優先度レシピが後に来るべき");
+
+        // 同一優先度の場合、入力アイテム数が多い方が先
+        IModularRecipe complex = findRecipe("Sorting Test Complex Input"); // Amount 10
+        IModularRecipe simple = findRecipe("Sorting Test Simple Input");   // Amount 1
+        
+        assertTrue(complex.compareTo(simple) < 0, "入力が多い方が優先されるべき");
+        assertTrue(simple.compareTo(complex) > 0, "入力が少ない方が後に来るべき");
     }
 
     // ========================================

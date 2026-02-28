@@ -71,6 +71,171 @@
                     "amount": 1
                 }
             ]
+        },
+        {
+            "name": "Decorator Chance 100% Test",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:cobblestone",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:stone",
+                    "amount": 1
+                }
+            ],
+            "decorators": [
+                {
+                    "type": "chance",
+                    "chance": 1.0
+                }
+            ]
+        },
+        {
+            "name": "Decorator Chance 50% Stats Test",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:cobblestone",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:stone",
+                    "amount": 1
+                }
+            ],
+            "decorators": [
+                {
+                    "type": "chance",
+                    "chance": 0.5
+                }
+            ]
+        },
+        {
+            "name": "Decorator Bonus Output Test",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:iron_ingot",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:gold_ingot",
+                    "amount": 1
+                }
+            ],
+            "decorators": [
+                {
+                    "type": "bonus",
+                    "chance": 1.0,
+                    "outputs": [
+                        {
+                            "item": "minecraft:diamond",
+                            "amount": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Expression MapRange Test",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:sand",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:glass",
+                    "amount": 1
+                }
+            ],
+            "decorators": [
+                {
+                    "type": "chance",
+                    "chance": {
+                        "type": "map_range",
+                        "input": {
+                            "type": "nbt",
+                            "key": "Temperature",
+                            "default": 50.0
+                        },
+                        "minIn": 0.0,
+                        "maxIn": 100.0,
+                        "minOut": 0.0,
+                        "maxOut": 1.0,
+                        "clamp": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Biome Specific Recipe",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:sapling",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:log",
+                    "amount": 1
+                }
+            ],
+            "decorators": [
+                {
+                    "type": "requirement",
+                    "condition": {
+                        "type": "biome",
+                        "biomes": [
+                            "Plains"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Sorting Test Complex Input",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:iron_ingot",
+                    "amount": 10
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:iron_block",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Sorting Test Simple Input",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:iron_ingot",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:iron_block",
+                    "amount": 1
+                }
+            ]
         }
     ]
 }
