@@ -11,14 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import ruiseki.omoshiroikamo.api.condition.BiomeCondition;
+import ruiseki.omoshiroikamo.api.condition.Conditions;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.decorator.BonusOutputDecorator;
 import ruiseki.omoshiroikamo.api.modular.recipe.decorator.ChanceRecipeDecorator;
 import ruiseki.omoshiroikamo.api.modular.recipe.decorator.RequirementDecorator;
-import ruiseki.omoshiroikamo.api.condition.BiomeCondition;
-import ruiseki.omoshiroikamo.api.condition.ICondition;
-import ruiseki.omoshiroikamo.api.condition.Conditions;
 import ruiseki.omoshiroikamo.api.modular.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.modular.recipe.expression.MapRangeExpression;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
@@ -467,7 +467,7 @@ public class JSONLoaderIntegrationTest {
         IModularRecipe recipe = findRecipe("Decorator Chance 100% Test");
         assertNotNull(recipe, "レシピが見つからない");
         assertTrue(recipe instanceof ChanceRecipeDecorator, "ChanceDecorator でラップされているべき");
-        
+
         // 100% なので常に成功すべき (Context=null でも動作する実装)
         assertTrue(recipe.isConditionMet(null), "100% 確率は常に成功すべき");
     }
@@ -486,8 +486,7 @@ public class JSONLoaderIntegrationTest {
         }
 
         // 50% ならば 1000回中 400〜600回程度に収まるはず
-        assertTrue(successCount > 350 && successCount < 650, 
-            "50% 確率が統計的範囲外: " + successCount + "/1000");
+        assertTrue(successCount > 350 && successCount < 650, "50% 確率が統計的範囲外: " + successCount + "/1000");
     }
 
     @Test
@@ -496,10 +495,18 @@ public class JSONLoaderIntegrationTest {
         IModularRecipe recipe = findRecipe("Decorator Bonus Output Test");
         assertNotNull(recipe, "レシピが見つからない");
         assertTrue(recipe instanceof BonusOutputDecorator, "BonusOutputDecorator でラップされているべき");
-        
+
         BonusOutputDecorator bonus = (BonusOutputDecorator) recipe;
-        assertEquals(1, bonus.getBonusOutputs().size(), "ボーナス出力が1つあるべき");
-        assertEquals(IPortType.Type.ITEM, bonus.getBonusOutputs().get(0).getPortType());
+        assertEquals(
+            1,
+            bonus.getBonusOutputs()
+                .size(),
+            "ボーナス出力が1つあるべき");
+        assertEquals(
+            IPortType.Type.ITEM,
+            bonus.getBonusOutputs()
+                .get(0)
+                .getPortType());
     }
 
     @Test
@@ -508,11 +515,11 @@ public class JSONLoaderIntegrationTest {
         IModularRecipe recipe = findRecipe("Expression MapRange Test");
         assertNotNull(recipe, "レシピが見つからない");
         assertTrue(recipe instanceof ChanceRecipeDecorator, "ChanceDecorator でラップされているべき");
-        
+
         ChanceRecipeDecorator chanceDec = (ChanceRecipeDecorator) recipe;
         IExpression expr = chanceDec.getChanceExpression();
         assertTrue(expr instanceof MapRangeExpression, "MapRangeExpression であるべき");
-        
+
         // Context=null の場合、NBT デフォルト値 50.0 が使われるはず。
         // MapRange(50.0, 0~100 -> 0~1) は 0.5 になる
         double val = expr.evaluate(null);
@@ -525,7 +532,7 @@ public class JSONLoaderIntegrationTest {
         IModularRecipe recipe = findRecipe("Biome Specific Recipe");
         assertNotNull(recipe, "レシピが見つからない");
         assertTrue(recipe instanceof RequirementDecorator, "RequirementDecorator でラップされているべき");
-        
+
         RequirementDecorator req = (RequirementDecorator) recipe;
         ICondition condition = req.getExtraCondition();
         assertTrue(condition instanceof BiomeCondition, "BiomeCondition であるべき");
@@ -535,16 +542,16 @@ public class JSONLoaderIntegrationTest {
     @DisplayName("【Sorting】レシピの優先順位（並び替え）の検証")
     public void testRecipeSorting() {
         IModularRecipe high = findRecipe("Priority Test High"); // Priority 10
-        IModularRecipe low = findRecipe("Priority Test Low");   // Priority 1
-        
+        IModularRecipe low = findRecipe("Priority Test Low"); // Priority 1
+
         // Priority 10 は Priority 1 より前に来るべき (compareTo < 0)
         assertTrue(high.compareTo(low) < 0, "高優先度レシピが先に来るべき");
         assertTrue(low.compareTo(high) > 0, "低優先度レシピが後に来るべき");
 
         // 同一優先度の場合、入力アイテム数が多い方が先
         IModularRecipe complex = findRecipe("Sorting Test Complex Input"); // Amount 10
-        IModularRecipe simple = findRecipe("Sorting Test Simple Input");   // Amount 1
-        
+        IModularRecipe simple = findRecipe("Sorting Test Simple Input"); // Amount 1
+
         assertTrue(complex.compareTo(simple) < 0, "入力が多い方が優先されるべき");
         assertTrue(simple.compareTo(complex) > 0, "入力が少ない方が後に来るべき");
     }
