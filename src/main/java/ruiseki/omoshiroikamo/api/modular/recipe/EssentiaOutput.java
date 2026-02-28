@@ -2,6 +2,8 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -95,6 +97,24 @@ public class EssentiaOutput extends AbstractRecipeOutput {
         EssentiaOutput output = new EssentiaOutput("", 0);
         output.read(json);
         return output.validate() ? output : null;
+    }
+
+    @Override
+    public IRecipeOutput copy() {
+        return new EssentiaOutput(aspectTag, amount);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "essentia");
+        nbt.setString("aspect", aspectTag);
+        nbt.setInteger("amount", amount);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.aspectTag = nbt.getString("aspect");
+        this.amount = nbt.getInteger("amount");
     }
 
     @Override

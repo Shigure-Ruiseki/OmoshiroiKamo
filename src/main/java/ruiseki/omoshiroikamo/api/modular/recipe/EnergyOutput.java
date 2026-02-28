@@ -2,6 +2,8 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -99,6 +101,24 @@ public class EnergyOutput extends AbstractRecipeOutput {
         EnergyOutput output = new EnergyOutput(0, true);
         output.read(json);
         return output.validate() ? output : null;
+    }
+
+    @Override
+    public IRecipeOutput copy() {
+        return new EnergyOutput(amount, perTick);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "energy");
+        nbt.setInteger("amount", amount);
+        nbt.setBoolean("perTick", perTick);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.amount = nbt.getInteger("amount");
+        this.perTick = nbt.getBoolean("perTick");
     }
 
     @Override

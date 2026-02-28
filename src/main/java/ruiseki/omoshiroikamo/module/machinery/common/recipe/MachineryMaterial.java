@@ -22,6 +22,8 @@ import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
  */
 public class MachineryMaterial extends AbstractJsonMaterial {
 
+    public String parent;
+    public boolean isAbstract;
     public String registryName;
     public String localizedName;
     public String machine;
@@ -34,10 +36,12 @@ public class MachineryMaterial extends AbstractJsonMaterial {
     @Override
     public void read(JsonObject json) {
         this.rawJson = json;
+        this.parent = getString(json, "parent", null);
+        this.isAbstract = getBoolean(json, "abstract", false);
         this.registryName = getString(json, "registryName", null);
         this.localizedName = getString(json, "localizedName", getString(json, "name", null));
         this.machine = getString(json, "machine", getString(json, "group", null));
-        this.time = getInt(json, "duration", getInt(json, "time", 20));
+        this.time = getInt(json, "duration", getInt(json, "time", -1)); // Default to -1 to detect if provided
 
         // Auto-generate registryName if missing
         if ((this.registryName == null || this.registryName.isEmpty()) && this.localizedName != null) {
@@ -79,6 +83,8 @@ public class MachineryMaterial extends AbstractJsonMaterial {
 
         captureUnknownProperties(
             json,
+            "parent",
+            "abstract",
             "registryName",
             "localizedName",
             "machine",
@@ -90,6 +96,40 @@ public class MachineryMaterial extends AbstractJsonMaterial {
             "condition",
             "conditions",
             "decorators");
+    }
+
+    /**
+     * Merges properties from a parent material into this one.
+     * Only fills in fields that are currently missing or default.
+     */
+    public void mergeParent(MachineryMaterial parentMat) {
+        if (this.localizedName == null) this.localizedName = parentMat.localizedName;
+        if (this.machine == null) this.machine = parentMat.machine;
+        if (this.time == -1) this.time = (parentMat.time != -1) ? parentMat.time : 20;
+
+        // Merge lists (add parent's items if not already present or just append?)
+        // Design decision: Prepend parent's inputs/outputs/conditions
+        List<IRecipeInput> parentInputs = new ArrayList<>(parentMat.inputs);
+        parentInputs.addAll(this.inputs);
+        this.inputs.clear();
+        this.inputs.addAll(parentInputs);
+
+        List<IRecipeOutput> parentOutputs = new ArrayList<>(parentMat.outputs);
+        parentOutputs.addAll(this.outputs);
+        this.outputs.clear();
+        this.outputs.addAll(parentOutputs);
+
+        List<ICondition> parentConditions = new ArrayList<>(parentMat.conditions);
+        parentConditions.addAll(this.conditions);
+        this.conditions.clear();
+        this.conditions.addAll(parentConditions);
+
+        // Merge unknown properties
+        parentMat.unknownProperties.forEach((k, v) -> {
+            if (!this.rawJson.has(k) && !this.unknownProperties.containsKey(k)) {
+                this.unknownProperties.put(k, v);
+            }
+        });
     }
 
     public IModularRecipe applyDecorators(IModularRecipe recipe, JsonObject json) {
@@ -145,6 +185,8 @@ public class MachineryMaterial extends AbstractJsonMaterial {
 
     @Override
     public boolean validate() {
+        if (isAbstract) return true; // Abstract templates don't need full validation
+
         if (registryName == null || registryName.isEmpty()) {
             logValidationError("registryName is missing");
             return false;
@@ -153,6 +195,7 @@ public class MachineryMaterial extends AbstractJsonMaterial {
             logValidationError("machine is missing");
             return false;
         }
+        if (time == -1) time = 20; // Default if still -1
         return true;
     }
 

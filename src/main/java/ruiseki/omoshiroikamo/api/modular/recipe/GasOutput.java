@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.gson.JsonObject;
@@ -105,6 +106,24 @@ public class GasOutput extends AbstractRecipeOutput {
         GasOutput output = new GasOutput("", 0);
         output.read(json);
         return output.validate() ? output : null;
+    }
+
+    @Override
+    public IRecipeOutput copy() {
+        return new GasOutput(gasName, amount);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "gas");
+        nbt.setString("gas", gasName);
+        nbt.setInteger("amount", amount);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.gasName = nbt.getString("gas");
+        this.amount = nbt.getInteger("amount");
     }
 
     @Override

@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.modular.recipe;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -127,6 +128,24 @@ public class FluidOutput extends AbstractRecipeOutput {
         FluidOutput output = new FluidOutput("", 0);
         output.read(json);
         return output.validate() ? output : null;
+    }
+
+    @Override
+    public IRecipeOutput copy() {
+        return new FluidOutput(fluidName, amount);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "fluid");
+        nbt.setString("fluid", fluidName);
+        nbt.setInteger("amount", amount);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.fluidName = nbt.getString("fluid");
+        this.amount = nbt.getInteger("amount");
     }
 
     @Override

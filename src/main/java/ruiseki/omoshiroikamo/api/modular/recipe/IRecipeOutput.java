@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.modular.recipe;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.json.IJsonMaterial;
@@ -34,6 +36,21 @@ public interface IRecipeOutput extends IJsonMaterial {
         apply(ports);
         return true;
     }
+
+    /**
+     * Create a deep copy of this output.
+     */
+    IRecipeOutput copy();
+
+    /**
+     * Write this output state to NBT.
+     */
+    void writeToNBT(NBTTagCompound nbt);
+
+    /**
+     * Read this output state from NBT.
+     */
+    void readFromNBT(NBTTagCompound nbt);
 
     /**
      * Accept a visitor to perform operations on this output.

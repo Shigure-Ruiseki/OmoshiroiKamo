@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
@@ -154,6 +155,28 @@ public class ItemOutput extends AbstractRecipeOutput {
         ItemOutput out = new ItemOutput((ItemStack) null);
         out.read(json);
         return out.validate() ? out : null;
+    }
+
+    @Override
+    public IRecipeOutput copy() {
+        return new ItemOutput(output != null ? output.copy() : null);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "item");
+        if (output != null) {
+            NBTTagCompound stackTag = new NBTTagCompound();
+            output.writeToNBT(stackTag);
+            nbt.setTag("output", stackTag);
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey("output")) {
+            this.output = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("output"));
+        }
     }
 
     @Override

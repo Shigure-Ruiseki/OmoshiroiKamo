@@ -64,31 +64,13 @@ public class MachineryJsonReader extends AbstractJsonReader<List<MachineryMateri
                     MachineryMaterial m = parseEntry(element, file);
                     if (m != null) {
                         if (m.machine == null) m.machine = group;
-                        if (m.validate()) {
-                            list.add(m);
-                        } else {
-                            Logger.warn(
-                                "[MachineryJsonReader] Recipe validation failed in " + file.getName()
-                                    + " (group="
-                                    + group
-                                    + ", name="
-                                    + m.localizedName
-                                    + ", regName="
-                                    + m.registryName
-                                    + ")");
-                        }
+                        list.add(m);
                     }
                 }
             } else {
                 MachineryMaterial m = parseEntry(obj, file);
                 if (m != null) {
-                    if (m.validate()) {
-                        list.add(m);
-                    } else {
-                        Logger.warn(
-                            "[MachineryJsonReader] Single recipe validation failed in " + file
-                                .getName() + " (name=" + m.localizedName + ", regName=" + m.registryName + ")");
-                    }
+                    list.add(m);
                 }
             }
         } else if (root.isJsonArray()) {
@@ -100,13 +82,7 @@ public class MachineryJsonReader extends AbstractJsonReader<List<MachineryMateri
             for (JsonElement e : arr) {
                 MachineryMaterial m = parseEntry(e, file);
                 if (m != null) {
-                    if (m.validate()) {
-                        list.add(m);
-                    } else {
-                        Logger.warn(
-                            "[MachineryJsonReader] Array recipe validation failed in " + file
-                                .getName() + " (name=" + m.localizedName + ", regName=" + m.registryName + ")");
-                    }
+                    list.add(m);
                 }
             }
         }

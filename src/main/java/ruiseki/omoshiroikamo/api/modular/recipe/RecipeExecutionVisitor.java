@@ -103,20 +103,14 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
     @Override
     public void visit(ItemOutput output) {
         if (mode == Mode.CACHE) {
-            agent.getCachedItemOutputs()
-                .add(
-                    output.getOutput()
-                        .copy());
+            agent.addCachedOutput(output.copy());
         }
     }
 
     @Override
     public void visit(FluidOutput output) {
         if (mode == Mode.CACHE) {
-            agent.getCachedFluidOutputs()
-                .add(
-                    output.getOutput()
-                        .copy());
+            agent.addCachedOutput(output.copy());
         }
     }
 
@@ -125,8 +119,7 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
         if (mode == Mode.CONSUME && output.isPerTick()) {
             agent.setEnergyOutputPerTick(agent.getEnergyOutputPerTick() + output.getAmount());
         } else if (mode == Mode.CACHE && !output.isPerTick()) {
-            agent.getCachedEnergyOutputs()
-                .add(output.getAmount());
+            agent.addCachedOutput(output.copy());
         }
     }
 
@@ -135,32 +128,28 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
         if (mode == Mode.CONSUME && output.isPerTick()) {
             agent.setManaOutputPerTick(agent.getManaOutputPerTick() + output.getAmount());
         } else if (mode == Mode.CACHE && !output.isPerTick()) {
-            agent.getCachedManaOutputs()
-                .add(output.getAmount());
+            agent.addCachedOutput(output.copy());
         }
     }
 
     @Override
     public void visit(GasOutput output) {
         if (mode == Mode.CACHE) {
-            agent.getCachedGasOutputs()
-                .add(new String[] { output.getGasName(), String.valueOf(output.getAmount()) });
+            agent.addCachedOutput(output.copy());
         }
     }
 
     @Override
     public void visit(EssentiaOutput output) {
         if (mode == Mode.CACHE) {
-            agent.getCachedEssentiaOutputs()
-                .add(new String[] { output.getAspectTag(), String.valueOf(output.getAmount()) });
+            agent.addCachedOutput(output.copy());
         }
     }
 
     @Override
     public void visit(VisOutput output) {
         if (mode == Mode.CACHE) {
-            agent.getCachedVisOutputs()
-                .add(new String[] { output.getAspectTag(), String.valueOf(output.getAmountCentiVis()) });
+            agent.addCachedOutput(output.copy());
         }
     }
 }
