@@ -98,6 +98,9 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     public IIcon getIcon(int side, int meta) {
+        if (casingIcon != null) {
+            return casingIcon;
+        }
         return baseIcon;
     }
 

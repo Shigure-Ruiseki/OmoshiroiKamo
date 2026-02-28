@@ -130,7 +130,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         if (structureName != null && !structureName.isEmpty()) {
             return new String[] { "Structure: " + structureName };
         }
-        return new String[] { "Modular Machine Controller" };
+        return null; // Don't show anything if no structure is active
     }
 
     /**
