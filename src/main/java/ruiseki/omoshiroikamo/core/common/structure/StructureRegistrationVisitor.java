@@ -93,7 +93,6 @@ public class StructureRegistrationVisitor<T extends AbstractMBModifierTE> implem
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     private IStructureElement<T> createElement(ISymbolMapping mapping) {
         if (mapping instanceof BlockMapping) {
             BlockMapping bm = (BlockMapping) mapping;
