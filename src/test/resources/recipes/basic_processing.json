@@ -1,0 +1,65 @@
+{
+    "group": "Basic Processing",
+    "recipes": [
+        {
+            "name": "Simple Item Test (Stone to Cobblestone)",
+            "duration": 40,
+            "inputs": [
+                {
+                    "item": "minecraft:stone",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:cobblestone",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Water to Lava",
+            "duration": 200,
+            "inputs": [
+                {
+                    "fluid": "water",
+                    "amount": 1000
+                },
+                {
+                    "energy": 200,
+                    "perTick": true
+                }
+            ],
+            "outputs": [
+                {
+                    "fluid": "lava",
+                    "amount": 500
+                }
+            ]
+        },
+        {
+            "name": "Coal to Diamond",
+            "duration": 200,
+            "inputs": [
+                {
+                    "item": "minecraft:coal",
+                    "amount": 64
+                },
+                {
+                    "fluid": "water",
+                    "amount": 10000
+                },
+                {
+                    "energy": 100,
+                    "perTick": true
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:diamond",
+                    "amount": 1
+                }
+            ]
+        }
+    ]
+}

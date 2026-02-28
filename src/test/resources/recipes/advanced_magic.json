@@ -1,0 +1,76 @@
+{
+    "group": "Advanced Magic",
+    "recipes": [
+        {
+            "name": "Mana Processing",
+            "duration": 100,
+            "inputs": [
+                {
+                    "mana": 2000
+                },
+                {
+                    "item": "minecraft:redstone",
+                    "amount": 8
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:glowstone_dust",
+                    "amount": 4
+                },
+                {
+                    "mana": 100
+                }
+            ]
+        },
+        {
+            "name": "Essentia Extraction",
+            "duration": 200,
+            "inputs": [
+                {
+                    "essentia": "ignis",
+                    "amount": 10
+                },
+                {
+                    "ore": "ingotGold",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "essentia": "metallum",
+                    "amount": 4
+                },
+                {
+                    "item": "minecraft:gold_nugget",
+                    "amount": 2
+                }
+            ]
+        },
+        {
+            "name": "Vis Crystallization",
+            "duration": 300,
+            "inputs": [
+                {
+                    "vis": "aer",
+                    "amount": 50
+                },
+                {
+                    "vis": "aqua",
+                    "amount": 50
+                },
+                {
+                    "item": "IC2:itemIngot",
+                    "meta": 6,
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:quartz",
+                    "amount": 1
+                }
+            ]
+        }
+    ]
+}

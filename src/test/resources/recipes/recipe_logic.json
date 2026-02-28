@@ -1,0 +1,76 @@
+{
+    "group": "Recipe Logic",
+    "recipes": [
+        {
+            "name": "Gravel to Flint (Bulk Energy)",
+            "duration": 20,
+            "inputs": [
+                {
+                    "item": "minecraft:gravel",
+                    "amount": 4
+                },
+                {
+                    "energy": 10000,
+                    "perTick": false
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:flint",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Bone Meal Production (Metadata)",
+            "duration": 30,
+            "inputs": [
+                {
+                    "item": "minecraft:bone",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:dye",
+                    "meta": 15,
+                    "amount": 6
+                }
+            ]
+        },
+        {
+            "name": "Priority Test High",
+            "duration": 100,
+            "priority": 10,
+            "inputs": [
+                {
+                    "item": "minecraft:stone",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:gold_ingot",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Priority Test Low",
+            "duration": 100,
+            "priority": 1,
+            "inputs": [
+                {
+                    "item": "minecraft:stone",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:iron_ingot",
+                    "amount": 1
+                }
+            ]
+        }
+    ]
+}

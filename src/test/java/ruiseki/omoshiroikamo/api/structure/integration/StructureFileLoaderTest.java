@@ -50,22 +50,10 @@ public class StructureFileLoaderTest {
     private static Map<Character, ISymbolMapping> defaultMappings;
 
     // 読み込むファイルのリスト
-    private static final String[] STRUCTURE_FILES = {
-        "minimal.json",
-        "simple_3x3x1.json",
-        "complex_3x3x3.json",
-        "with_item_requirement.json",
-        "with_fluid_requirement.json",
-        "with_energy_requirement.json",
-        "with_all_requirements.json",
-        "with_display_name.json",
-        "with_recipe_group.json",
-        "with_controller_offset.json",
-        "with_tint_color.json",
-        "with_tier.json",
-        "with_multiple_blocks.json",
-        "with_metadata.json"
-    };
+    private static final String[] STRUCTURE_FILES = { "minimal.json", "simple_3x3x1.json", "complex_3x3x3.json",
+        "with_item_requirement.json", "with_fluid_requirement.json", "with_energy_requirement.json",
+        "with_all_requirements.json", "with_display_name.json", "with_recipe_group.json", "with_controller_offset.json",
+        "with_tint_color.json", "with_tier.json", "with_multiple_blocks.json", "with_metadata.json" };
 
     @BeforeAll
     public static void setUpAll() {
@@ -75,8 +63,7 @@ public class StructureFileLoaderTest {
 
             // 各ファイルを読み込み
             for (String filename : STRUCTURE_FILES) {
-                InputStream inputStream = StructureFileLoaderTest.class
-                    .getResourceAsStream("/structures/" + filename);
+                InputStream inputStream = StructureFileLoaderTest.class.getResourceAsStream("/structures/" + filename);
 
                 if (inputStream == null) {
                     System.err.println("Warning: Test resource not found: /structures/" + filename);
@@ -130,7 +117,10 @@ public class StructureFileLoaderTest {
     public void test全構造にnameがある() {
         for (IStructureEntry structure : structures.values()) {
             assertNotNull(structure.getName(), "name が null であってはならない");
-            assertFalse(structure.getName().isEmpty(), "name が空であってはならない");
+            assertFalse(
+                structure.getName()
+                    .isEmpty(),
+                "name が空であってはならない");
         }
     }
 
@@ -139,7 +129,10 @@ public class StructureFileLoaderTest {
     public void test全構造にlayersがある() {
         for (IStructureEntry structure : structures.values()) {
             assertNotNull(structure.getLayers(), "layers が null であってはならない");
-            assertFalse(structure.getLayers().isEmpty(), "layers が空であってはならない");
+            assertFalse(
+                structure.getLayers()
+                    .isEmpty(),
+                "layers が空であってはならない");
         }
     }
 
@@ -154,9 +147,22 @@ public class StructureFileLoaderTest {
         assertNotNull(structure, "minimal structure not found");
 
         assertEquals("minimal", structure.getName());
-        assertEquals(1, structure.getLayers().size());
-        assertEquals(1, structure.getLayers().get(0).getRows().size());
-        assertEquals("Q", structure.getLayers().get(0).getRows().get(0));
+        assertEquals(
+            1,
+            structure.getLayers()
+                .size());
+        assertEquals(
+            1,
+            structure.getLayers()
+                .get(0)
+                .getRows()
+                .size());
+        assertEquals(
+            "Q",
+            structure.getLayers()
+                .get(0)
+                .getRows()
+                .get(0));
     }
 
     @Test
@@ -166,11 +172,21 @@ public class StructureFileLoaderTest {
         assertNotNull(structure, "simple_3x3x1 structure not found");
 
         assertEquals("simple_3x3x1", structure.getName());
-        assertEquals(1, structure.getLayers().size());
-        assertEquals(3, structure.getLayers().get(0).getRows().size());
+        assertEquals(
+            1,
+            structure.getLayers()
+                .size());
+        assertEquals(
+            3,
+            structure.getLayers()
+                .get(0)
+                .getRows()
+                .size());
 
         // マッピング確認
-        assertTrue(structure.getMappings().containsKey('A'));
+        assertTrue(
+            structure.getMappings()
+                .containsKey('A'));
     }
 
     @Test
@@ -180,10 +196,15 @@ public class StructureFileLoaderTest {
         assertNotNull(structure, "complex_3x3x3 structure not found");
 
         assertEquals("complex_3x3x3", structure.getName());
-        assertEquals(3, structure.getLayers().size());
+        assertEquals(
+            3,
+            structure.getLayers()
+                .size());
 
         // 複数のマッピング
-        assertTrue(structure.getMappings().size() >= 2);
+        assertTrue(
+            structure.getMappings()
+                .size() >= 2);
     }
 
     @Test
@@ -192,8 +213,14 @@ public class StructureFileLoaderTest {
         IStructureEntry structure = structures.get("with_item_requirement");
         assertNotNull(structure, "with_item_requirement structure not found");
 
-        assertFalse(structure.getRequirements().isEmpty());
-        assertEquals("itemInput", structure.getRequirements().get(0).getType());
+        assertFalse(
+            structure.getRequirements()
+                .isEmpty());
+        assertEquals(
+            "itemInput",
+            structure.getRequirements()
+                .get(0)
+                .getType());
     }
 
     @Test
@@ -202,8 +229,14 @@ public class StructureFileLoaderTest {
         IStructureEntry structure = structures.get("with_fluid_requirement");
         assertNotNull(structure, "with_fluid_requirement structure not found");
 
-        assertFalse(structure.getRequirements().isEmpty());
-        assertEquals("fluidInput", structure.getRequirements().get(0).getType());
+        assertFalse(
+            structure.getRequirements()
+                .isEmpty());
+        assertEquals(
+            "fluidInput",
+            structure.getRequirements()
+                .get(0)
+                .getType());
     }
 
     @Test
@@ -212,8 +245,14 @@ public class StructureFileLoaderTest {
         IStructureEntry structure = structures.get("with_energy_requirement");
         assertNotNull(structure, "with_energy_requirement structure not found");
 
-        assertFalse(structure.getRequirements().isEmpty());
-        assertEquals("energyInput", structure.getRequirements().get(0).getType());
+        assertFalse(
+            structure.getRequirements()
+                .isEmpty());
+        assertEquals(
+            "energyInput",
+            structure.getRequirements()
+                .get(0)
+                .getType());
     }
 
     @Test
@@ -222,7 +261,10 @@ public class StructureFileLoaderTest {
         IStructureEntry structure = structures.get("with_all_requirements");
         assertNotNull(structure, "with_all_requirements structure not found");
 
-        assertTrue(structure.getRequirements().size() >= 4, "複数のrequirementがあるはず");
+        assertTrue(
+            structure.getRequirements()
+                .size() >= 4,
+            "複数のrequirementがあるはず");
     }
 
     @Test
@@ -232,7 +274,9 @@ public class StructureFileLoaderTest {
         assertNotNull(structure, "with_display_name structure not found");
 
         assertNotNull(structure.getDisplayName());
-        assertFalse(structure.getDisplayName().isEmpty());
+        assertFalse(
+            structure.getDisplayName()
+                .isEmpty());
     }
 
     @Test
@@ -241,7 +285,9 @@ public class StructureFileLoaderTest {
         IStructureEntry structure = structures.get("with_recipe_group");
         assertNotNull(structure, "with_recipe_group structure not found");
 
-        assertFalse(structure.getRecipeGroup().isEmpty());
+        assertFalse(
+            structure.getRecipeGroup()
+                .isEmpty());
     }
 
     @Test
@@ -261,7 +307,9 @@ public class StructureFileLoaderTest {
         assertNotNull(structure, "with_tint_color structure not found");
 
         assertNotNull(structure.getTintColor());
-        assertTrue(structure.getTintColor().startsWith("#"));
+        assertTrue(
+            structure.getTintColor()
+                .startsWith("#"));
     }
 
     @Test
@@ -280,7 +328,9 @@ public class StructureFileLoaderTest {
         assertNotNull(structure, "with_multiple_blocks structure not found");
 
         // マッピングは1つだが、そのマッピングが複数のブロックを持つ
-        assertTrue(structure.getMappings().size() >= 1);
+        assertTrue(
+            structure.getMappings()
+                .size() >= 1);
     }
 
     @Test
@@ -289,7 +339,9 @@ public class StructureFileLoaderTest {
         IStructureEntry structure = structures.get("with_metadata");
         assertNotNull(structure, "with_metadata structure not found");
 
-        assertFalse(structure.getMappings().isEmpty());
+        assertFalse(
+            structure.getMappings()
+                .isEmpty());
     }
 
     // ========================================
@@ -338,9 +390,16 @@ public class StructureFileLoaderTest {
     @DisplayName("全構造のlayersが正しい形式")
     public void test全構造のlayers形式() {
         for (IStructureEntry structure : structures.values()) {
-            for (int i = 0; i < structure.getLayers().size(); i++) {
-                assertNotNull(structure.getLayers().get(i));
-                assertFalse(structure.getLayers().get(i).getRows().isEmpty());
+            for (int i = 0; i < structure.getLayers()
+                .size(); i++) {
+                assertNotNull(
+                    structure.getLayers()
+                        .get(i));
+                assertFalse(
+                    structure.getLayers()
+                        .get(i)
+                        .getRows()
+                        .isEmpty());
             }
         }
     }
