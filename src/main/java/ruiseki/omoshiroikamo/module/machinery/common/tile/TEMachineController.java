@@ -37,9 +37,8 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
@@ -616,10 +615,12 @@ public class TEMachineController extends AbstractMBModifierTE
     public String getCustomStructureDisplayName() {
         String name = getCustomStructureName();
         if (name != null && !name.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(name);
-            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
-                return entry.displayName;
+            if (entry != null && entry.getDisplayName() != null
+                && !entry.getDisplayName()
+                    .isEmpty()) {
+                return entry.getDisplayName();
             }
         }
         return name;
@@ -661,17 +662,19 @@ public class TEMachineController extends AbstractMBModifierTE
             .isEmpty()) {
             return;
         }
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureAgent.getCustomStructureName());
-        if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
-            this.recipeGroups = new ArrayList<>(entry.recipeGroup);
+        if (entry != null && entry.getRecipeGroup() != null
+            && !entry.getRecipeGroup()
+                .isEmpty()) {
+            this.recipeGroups = new ArrayList<>(entry.getRecipeGroup());
         }
     }
 
     /**
      * Get the custom structure properties, or null if not using custom structure.
      */
-    public Properties getCustomProperties() {
+    public IStructureEntry getCustomProperties() {
         return structureAgent.getCustomProperties();
     }
 

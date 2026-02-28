@@ -16,8 +16,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockEntry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockMapping;
+import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.TieredMultiblockInfoContainer;
@@ -194,19 +193,15 @@ public class StructureRegistrationUtils {
             BlockMapping blockMapping = (BlockMapping) mapping;
 
             // Single block
-            if (blockMapping.block != null && !blockMapping.block.isEmpty()) {
-                return BlockResolver.createElement(blockMapping.block);
+            if (blockMapping.getBlockId() != null && !blockMapping.getBlockId()
+                .isEmpty()) {
+                return BlockResolver.createElement(blockMapping.getBlockId());
             }
 
             // Multiple blocks (chain)
-            if (blockMapping.blocks != null && !blockMapping.blocks.isEmpty()) {
-                List<String> blockStrings = new ArrayList<>();
-                for (BlockEntry entry : blockMapping.blocks) {
-                    if (entry != null && entry.id != null) {
-                        blockStrings.add(entry.id);
-                    }
-                }
-                return BlockResolver.createChainElement(blockStrings);
+            if (blockMapping.getBlockIds() != null && !blockMapping.getBlockIds()
+                .isEmpty()) {
+                return BlockResolver.createChainElement(blockMapping.getBlockIds());
             }
         }
 

@@ -20,9 +20,8 @@ import com.gtnewhorizon.structurelib.structure.StructureUtility;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.recipe.visitor.PortRegistrationVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -72,10 +71,10 @@ public class StructureAgent {
     public int[][] getOffSet() {
         // Get offset from custom structure definition if available
         if (customStructureName != null && !customStructureName.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(customStructureName);
-            if (entry != null && entry.controllerOffset != null && entry.controllerOffset.length >= 3) {
-                return new int[][] { entry.controllerOffset };
+            if (entry != null && entry.getControllerOffset() != null && entry.getControllerOffset().length >= 3) {
+                return new int[][] { entry.getControllerOffset() };
             }
         }
         // Default offset (no structure)
@@ -244,9 +243,9 @@ public class StructureAgent {
     private String checkStructureDetails(int ox, int oy, int oz) {
         if (customStructureName == null) return "";
 
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.layers == null) return LibMisc.LANG.localize("gui.status.invalid_definition");
+        if (entry == null || entry.getLayers() == null) return LibMisc.LANG.localize("gui.status.invalid_definition");
 
         // Retrieve definition to get mapped elements
         // This is a bit redundant but we need the exact elements used in validation
@@ -283,7 +282,7 @@ public class StructureAgent {
     private boolean checkRequirements() {
         if (customStructureName == null || customStructureName.isEmpty()) return true;
 
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
         return controller.getPortManager()
             .checkRequirements(entry);
@@ -367,11 +366,10 @@ public class StructureAgent {
         return customStructureName;
     }
 
-    public Properties getCustomProperties() {
+    public IStructureEntry getCustomProperties() {
         if (customStructureName == null || customStructureName.isEmpty()) return null;
-        StructureEntry entry = StructureManager.getInstance()
+        return StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        return entry != null ? entry.properties : null;
     }
 
     // ========== Structure Tinting ==========
@@ -385,11 +383,12 @@ public class StructureAgent {
             return null;
         }
 
-        Properties props = getCustomProperties();
+        IStructureEntry props = getCustomProperties();
 
-        if (props != null && props.tintColor != null) {
+        if (props != null && props.getTintColor() != null) {
             try {
-                String hex = props.tintColor.replace("#", "");
+                String hex = props.getTintColor()
+                    .replace("#", "");
                 return (int) Long.parseLong(hex, 16) | 0xFF000000;
             } catch (Exception e) {
                 Logger.error(e.getMessage());
