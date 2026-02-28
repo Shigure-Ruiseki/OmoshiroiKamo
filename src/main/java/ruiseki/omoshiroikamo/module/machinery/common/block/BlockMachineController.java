@@ -70,6 +70,27 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/base_modularports");
     }
 
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        if (side == ForgeDirection.EAST.ordinal()) { // Standard inventory facing
+            return sideOverlayIcon;
+        }
+        return super.getIcon(side, meta);
+    }
+
+    @Override
+    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
+        if (te != null) {
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
+            if (dir == te.getExtendedFacing()
+                .getDirection()) {
+                return sideOverlayIcon;
+            }
+        }
+        return super.getIcon(world, x, y, z, side);
+    }
+
     public IIcon getOverlayIcon() {
         return overlayIcon;
     }
