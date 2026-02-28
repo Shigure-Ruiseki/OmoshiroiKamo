@@ -51,6 +51,7 @@ public abstract class AbstractSideCapabilityTE extends TileEntityOK {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getCapability(@NotNull Capability<T> capability, ForgeDirection facing) {
         Object value = capabilities.get(Pair.<Capability<?>, ForgeDirection>of(capability, facing));
         if (value == null && facing != null) {
