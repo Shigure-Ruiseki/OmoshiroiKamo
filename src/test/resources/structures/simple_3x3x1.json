@@ -1,0 +1,13 @@
+{
+  "name": "simple_3x3x1",
+  "displayName": "Simple 3x3 Structure",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["AAA", "AQA", "AAA"]
+    }
+  ],
+  "mappings": {
+    "A": "minecraft:stone"
+  }
+}

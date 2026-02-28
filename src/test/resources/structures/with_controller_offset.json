@@ -1,0 +1,13 @@
+{
+  "name": "with_controller_offset",
+  "controllerOffset": [1, 0, 1],
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["AAA", "AAA", "AAA"]
+    }
+  ],
+  "mappings": {
+    "A": "minecraft:stone"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "with_energy_requirement",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {},
+  "requirements": [
+    {
+      "type": "energyInput",
+      "min": 1,
+      "max": 1
+    }
+  ]
+}

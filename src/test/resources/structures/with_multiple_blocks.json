@@ -1,0 +1,14 @@
+{
+  "name": "with_multiple_blocks",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["AAA", "AQA", "AAA"]
+    }
+  ],
+  "mappings": {
+    "A": {
+      "blocks": ["minecraft:stone", "minecraft:cobblestone", "minecraft:mossy_cobblestone"]
+    }
+  }
+}

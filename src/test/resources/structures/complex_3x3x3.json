@@ -1,0 +1,23 @@
+{
+  "name": "complex_3x3x3",
+  "displayName": "Complex 3x3x3 Structure",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["AAA", "AAA", "AAA"]
+    },
+    {
+      "name": "y1",
+      "rows": ["BBB", "BQB", "BBB"]
+    },
+    {
+      "name": "y2",
+      "rows": ["CCC", "CCC", "CCC"]
+    }
+  ],
+  "mappings": {
+    "A": "minecraft:stone",
+    "B": "minecraft:iron_block",
+    "C": "minecraft:diamond_block"
+  }
+}
