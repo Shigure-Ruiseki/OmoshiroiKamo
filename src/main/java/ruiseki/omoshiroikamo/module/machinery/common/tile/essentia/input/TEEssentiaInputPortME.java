@@ -129,7 +129,7 @@ public class TEEssentiaInputPortME extends TEEssentiaInputPort implements IGridP
 
     @Override
     public void writeCommon(NBTTagCompound root) {
-        super.writeToNBT(root);
+        super.writeCommon(root);
         if (gridProxy != null) {
             gridProxy.writeToNBT(root);
         }
