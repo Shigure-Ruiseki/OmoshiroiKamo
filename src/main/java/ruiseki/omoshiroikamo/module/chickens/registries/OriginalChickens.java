@@ -1,7 +1,9 @@
 package ruiseki.omoshiroikamo.module.chickens.registries;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class OriginalChickens extends BaseChickenHandler {
 
     @Override
     public void createDefaultConfig(File file, List<ChickensRegistryItem> chickens) {
-        try (java.io.Writer writer = new java.io.FileWriter(file)) {
+        try (Writer writer = new FileWriter(file)) {
             writer.write(defaultConfig);
             Logger.info("Created default {}", configFileName);
         } catch (IOException e) {

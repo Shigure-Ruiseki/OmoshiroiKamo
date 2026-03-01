@@ -248,10 +248,6 @@ public class StructureManager {
                 StructureJsonReader.FileData fileData = StructureJsonReader.readFile(root);
 
                 for (IStructureEntry entry : fileData.structures.values()) {
-                    // For custom structures, we treat them slightly differently?
-                    // The old code checked for 'recipeGroup'.
-                    // Since IStructureEntry doesn't have recipeGroup yet, I'll need to add it or
-                    // support it.
                     structureEntries.put(entry.getName(), entry);
                     customStructures.put(entry.getName(), entry);
                 }

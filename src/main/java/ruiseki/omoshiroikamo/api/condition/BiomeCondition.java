@@ -9,6 +9,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 /**
  * Condition that checks the current biome.
@@ -47,7 +48,7 @@ public class BiomeCondition implements ICondition {
         json.addProperty("type", "biome");
         JsonArray array = new JsonArray();
         for (String biome : allowedBiomes) {
-            array.add(new com.google.gson.JsonPrimitive(biome));
+            array.add(new JsonPrimitive(biome));
         }
         json.add("biomes", array);
     }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 /**
  * Standard implementation of IStructureLayer.
@@ -51,7 +52,7 @@ public class StructureLayer implements IStructureLayer {
         }
         JsonArray rowsArray = new JsonArray();
         for (String row : rows) {
-            rowsArray.add(new com.google.gson.JsonPrimitive(row));
+            rowsArray.add(new JsonPrimitive(row));
         }
         json.add("rows", rowsArray);
         return json;
