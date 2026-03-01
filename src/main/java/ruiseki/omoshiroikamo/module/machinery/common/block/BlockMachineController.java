@@ -45,6 +45,21 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         setResistance(10.0F);
     }
 
+    @Override
+    public boolean saveNBTToDroppedItem() {
+        return false;
+    }
+
+    @Override
+    public boolean isKeepNBTOnDrop() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDropInventory(World world, int x, int y, int z) {
+        return false;
+    }
+
     public static BlockMachineController create() {
         return new BlockMachineController();
     }
@@ -88,7 +103,8 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
                 return sideOverlayIcon;
             }
         }
-        return super.getIcon(world, x, y, z, side);
+        // Bypass the inventory icon override for EAST
+        return super.getIcon(side, world.getBlockMetadata(x, y, z));
     }
 
     public IIcon getOverlayIcon() {
@@ -172,7 +188,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TEMachineController controller = (TEMachineController) world.getTileEntity(x, y, z);
-        if (controller != null) {
+        if (controller != null && !world.isRemote) {
             ItemStack blueprint = controller.getBlueprintStack();
             if (blueprint != null && blueprint.stackSize > 0) {
                 InventoryHelpers.dropItems(world, blueprint.copy(), new BlockPos(x, y, z));
