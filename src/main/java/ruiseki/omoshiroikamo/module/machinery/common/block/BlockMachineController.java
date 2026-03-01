@@ -87,9 +87,6 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        if (side == ForgeDirection.EAST.ordinal()) { // Standard inventory facing
-            return sideOverlayIcon;
-        }
         return super.getIcon(side, meta);
     }
 

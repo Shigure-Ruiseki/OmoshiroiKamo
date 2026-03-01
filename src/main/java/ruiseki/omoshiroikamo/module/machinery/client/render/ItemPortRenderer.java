@@ -61,9 +61,13 @@ public class ItemPortRenderer implements IItemRenderer {
             }
         } else if (block instanceof BlockMachineController) {
             BlockMachineController controller = (BlockMachineController) block;
-            IIcon icon = controller.getOverlayIcon();
-            if (icon != null) {
-                renderOverlay(t, icon, false);
+            IIcon sideOverlay = controller.getSideOverlayIcon();
+            if (sideOverlay != null) {
+                renderOverlay(t, sideOverlay, false);
+            }
+            IIcon overlay = controller.getOverlayIcon();
+            if (overlay != null) {
+                renderOverlay(t, overlay, false);
             }
         }
 
@@ -71,6 +75,7 @@ public class ItemPortRenderer implements IItemRenderer {
     }
 
     private void renderOverlay(Tessellator t, IIcon icon, boolean allFaces) {
+        GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
@@ -88,5 +93,8 @@ public class ItemPortRenderer implements IItemRenderer {
             RenderUtils.renderFaceCorrected(t, ForgeDirection.EAST, 0, 0, 0, icon, 0.001f, Rotation.NORMAL, Flip.NONE);
         }
         t.draw();
+
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
     }
 }
