@@ -45,7 +45,6 @@ public class BonusOutputDecoratorTest {
 
     @BeforeEach
     public void setUp() {
-        // 基本レシピ: 何も出力しない
         baseRecipe = ModularRecipe.builder()
             .registryName("base")
             .recipeGroup("test")
@@ -60,15 +59,12 @@ public class BonusOutputDecoratorTest {
     @Test
     @DisplayName("100%確率でボーナス出力が追加される")
     public void test100パーセントボーナス() {
-        // ボーナス出力リスト
         List<IRecipeOutput> bonusOutputs = new ArrayList<>();
         bonusOutputs.add(new ItemOutput(new ItemStack(Items.diamond, 1)));
 
-        // 100%確率のデコレータ
         IExpression alwaysTrue = new ConstantExpression(1.0);
         BonusOutputDecorator decorator = new BonusOutputDecorator(baseRecipe, alwaysTrue, bonusOutputs, null);
 
-        // ボーナス出力が取得できる
         assertEquals(
             1,
             decorator.getBonusOutputs()
@@ -122,7 +118,6 @@ public class BonusOutputDecoratorTest {
         IExpression chance = new ConstantExpression(0.5);
         IModularRecipe decorator = new BonusOutputDecorator(baseRecipe, chance, bonusOutputs, null);
 
-        // デコレータを通しても元のプロパティが取得できる
         assertEquals("base", decorator.getRegistryName());
         assertEquals("test", decorator.getRecipeGroup());
         assertEquals(100, decorator.getDuration());
@@ -148,7 +143,6 @@ public class BonusOutputDecoratorTest {
         // その上にChanceDecoratorを適用
         IModularRecipe withChanceAndBonus = new ChanceRecipeDecorator(withBonus, new ConstantExpression(0.5));
 
-        // プロパティが正しく取得できる
         assertEquals("base", withChanceAndBonus.getRegistryName());
         assertEquals(100, withChanceAndBonus.getDuration());
     }
@@ -171,7 +165,7 @@ public class BonusOutputDecoratorTest {
             bonusOutputs1,
             null);
 
-        // 2つ目のBonusDecoratorを重ねる
+        // 2つ目のBonusDecorator
         IModularRecipe withBonus2 = new BonusOutputDecorator(
             withBonus1,
             new ConstantExpression(1.0),
@@ -248,7 +242,7 @@ public class BonusOutputDecoratorTest {
         List<IRecipeOutput> bonusOutputs = new ArrayList<>();
         bonusOutputs.add(new ItemOutput(new ItemStack(Items.diamond, 1)));
 
-        // 確率 1.5 (150%)
+        // 1.5 (150%)
         IExpression overChance = new ConstantExpression(1.5);
         BonusOutputDecorator decorator = new BonusOutputDecorator(baseRecipe, overChance, bonusOutputs, null);
 

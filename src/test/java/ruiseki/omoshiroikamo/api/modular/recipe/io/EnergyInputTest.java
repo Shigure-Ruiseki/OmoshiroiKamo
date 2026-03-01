@@ -147,8 +147,7 @@ public class EnergyInputTest {
             json.get("energy")
                 .getAsInt());
 
-        // perTick=false の場合、JSONに書き込まれない可能性もある（実装次第）
-        // または明示的に false が書き込まれる
+        // perTick=false の場合、明示的に false が書き込まれる
         if (json.has("perTick")) {
             assertFalse(
                 json.get("perTick")

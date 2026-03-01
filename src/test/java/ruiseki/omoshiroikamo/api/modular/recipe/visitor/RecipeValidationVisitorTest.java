@@ -79,7 +79,7 @@ public class RecipeValidationVisitorTest {
         IModularRecipe recipe = ModularRecipe.builder()
             .registryName("invalid_duration")
             .recipeGroup("test")
-            .duration(0) // ← 不正な値
+            .duration(0) // ← 不正
             .build();
 
         recipe.accept(validator);
@@ -103,7 +103,7 @@ public class RecipeValidationVisitorTest {
         IModularRecipe recipe = ModularRecipe.builder()
             .registryName("negative_duration")
             .recipeGroup("test")
-            .duration(-10) // ← 不正な値
+            .duration(-10) // ← 不正
             .build();
 
         recipe.accept(validator);
@@ -135,13 +135,28 @@ public class RecipeValidationVisitorTest {
     }
 
     @Test
-    @DisplayName("入力エネルギーが0以下の場合はエラー")
+    @DisplayName("入力エネルギーが0の場合にエラーを起こさない")
     public void test入力エネルギーが0以下() {
         IModularRecipe recipe = ModularRecipe.builder()
             .registryName("invalid_energy")
             .recipeGroup("test")
             .duration(100)
-            .addInput(new EnergyInput(0)) // ← 0 エネルギー
+            .addInput(new EnergyInput(0))
+            .build();
+
+        recipe.accept(validator);
+
+        assertTrue(validator.isValid());
+    }
+
+    @Test
+    @DisplayName("入力エネルギーが負の場合にエラー")
+    public void test入力エネルギーが負() {
+        IModularRecipe recipe = ModularRecipe.builder()
+            .registryName("invalid_energy")
+            .recipeGroup("test")
+            .duration(100)
+            .addInput(new EnergyInput(-100))
             .build();
 
         recipe.accept(validator);
@@ -154,13 +169,43 @@ public class RecipeValidationVisitorTest {
     // ========================================
 
     @Test
-    @DisplayName("出力アイテムの個数が0以下の場合はエラー")
-    public void test出力アイテム個数が0以下() {
+    @DisplayName("出力アイテムの個数が0の場合にエラー")
+    public void test出力アイテム個数が0() {
         IModularRecipe recipe = ModularRecipe.builder()
             .registryName("invalid_output")
             .recipeGroup("test")
             .duration(100)
             .addOutput(new ItemOutput(new ItemStack(Items.gold_ingot, 0))) // ← 0個
+            .build();
+
+        recipe.accept(validator);
+
+        assertFalse(validator.isValid());
+    }
+
+    @Test
+    @DisplayName("出力エネルギーが0の場合にエラー")
+    public void test出力エネルギーが0() {
+        IModularRecipe recipe = ModularRecipe.builder()
+            .registryName("invalid_output")
+            .recipeGroup("test")
+            .duration(100)
+            .addOutput(new EnergyOutput(0)) // ← 0
+            .build();
+
+        recipe.accept(validator);
+
+        assertFalse(validator.isValid());
+    }
+
+    @Test
+    @DisplayName("出力エネルギーが負の場合にエラー")
+    public void test出力エネルギーが負() {
+        IModularRecipe recipe = ModularRecipe.builder()
+            .registryName("invalid_output")
+            .recipeGroup("test")
+            .duration(100)
+            .addOutput(new EnergyOutput(-100)) // ← 負
             .build();
 
         recipe.accept(validator);
@@ -235,7 +280,6 @@ public class RecipeValidationVisitorTest {
         assertTrue(validator.isValid());
 
         // 同じVisitorでrecipe2を検証
-        // ※ 実装によっては、新しいVisitorを作る必要があるかも
         RecipeValidationVisitor validator2 = new RecipeValidationVisitor();
         recipe2.accept(validator2);
         assertFalse(validator2.isValid());

@@ -78,7 +78,6 @@ public class DecoratorCombinationTest {
         // 2層目: ChanceRecipeDecorator (50%確率)
         IModularRecipe decorated = new ChanceRecipeDecorator(withBonus, new ConstantExpression(0.5));
 
-        // プロパティが正しく委譲される
         assertEquals("base_recipe", decorated.getRegistryName());
         assertEquals("test_group", decorated.getRecipeGroup());
         assertEquals(300, decorated.getDuration());
@@ -249,7 +248,6 @@ public class DecoratorCombinationTest {
         // デコレータを適用
         IModularRecipe decorated = new ChanceRecipeDecorator(recipeWithIO, new ConstantExpression(1.0));
 
-        // 入力・出力が正しく取得できる
         assertEquals(
             1,
             decorated.getInputs()

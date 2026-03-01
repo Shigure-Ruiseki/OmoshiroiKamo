@@ -84,8 +84,8 @@ public class InheritanceSystemTest {
         MachineryMaterial child = new MachineryMaterial();
         child.registryName = "child";
         child.parent = "parent";
-        child.machine = "smelter"; // 上書き
-        child.time = 100; // 上書き
+        child.machine = "smelter";
+        child.time = 100;
 
         // 継承を実行
         child.mergeParent(parent);
@@ -114,7 +114,7 @@ public class InheritanceSystemTest {
         // 親の入力2つ + 子の入力1つ = 合計3つ
         assertEquals(3, child.inputs.size(), "入力が3つになるべき");
 
-        // 親の入力が最初に来る（プリペンド）
+        // 親の入力が最初に来る
         assertEquals(
             Items.iron_ingot,
             ((ItemInput) child.inputs.get(0)).getRequired()

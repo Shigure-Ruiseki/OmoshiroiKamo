@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
 /**
- * VisInput のユニットテスト（Thaumcraft統合用）
+ * VisInput のユニットテスト
  */
 @DisplayName("VisInput のテスト")
 public class VisInputTest {

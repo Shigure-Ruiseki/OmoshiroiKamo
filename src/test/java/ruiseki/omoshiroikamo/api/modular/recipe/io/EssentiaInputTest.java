@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
 /**
- * EssentiaInput のユニットテスト（Thaumcraft統合用）
+ * EssentiaInput のユニットテスト
  */
 @DisplayName("EssentiaInput のテスト")
 public class EssentiaInputTest {

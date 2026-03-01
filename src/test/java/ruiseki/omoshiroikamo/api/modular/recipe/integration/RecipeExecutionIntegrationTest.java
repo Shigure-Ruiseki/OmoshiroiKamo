@@ -329,11 +329,7 @@ public class RecipeExecutionIntegrationTest {
             .duration(200) // durationが違っても
             .build();
 
-        // equals() が実装されている場合
-        // （実装されていない場合はこのテストはスキップ）
-        // assertEquals(recipe1, recipe2);
-
-        // 少なくともregistryNameは同じ
+        // registryNameは同じ
         assertEquals(recipe1.getRegistryName(), recipe2.getRegistryName());
     }
 

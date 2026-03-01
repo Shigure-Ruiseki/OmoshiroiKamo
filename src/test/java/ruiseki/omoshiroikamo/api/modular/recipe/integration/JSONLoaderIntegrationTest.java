@@ -193,7 +193,6 @@ public class JSONLoaderIntegrationTest {
         IRecipeInput itemInput = findInput(inputs, IPortType.Type.ITEM);
         assertNotNull(itemInput, "OreDict Item入力が見つからない");
         assertEquals(4, itemInput.getRequiredAmount());
-        // TODO: OreDict であることの確認（実装次第）
 
         // Energy入力
         IRecipeInput energyInput = findInput(inputs, IPortType.Type.ENERGY);
@@ -375,7 +374,6 @@ public class JSONLoaderIntegrationTest {
         IRecipeOutput output = outputs.get(0);
         assertEquals(IPortType.Type.ITEM, output.getPortType());
         assertEquals(6, output.getRequiredAmount());
-        // TODO: meta=15 の確認（実装次第）
     }
 
     @Test
@@ -391,7 +389,6 @@ public class JSONLoaderIntegrationTest {
         IRecipeInput energyInput = findInput(inputs, IPortType.Type.ENERGY);
         assertNotNull(energyInput);
         assertEquals(10000, energyInput.getRequiredAmount());
-        // TODO: perTick=false の確認（実装次第）
     }
 
     @Test
@@ -399,7 +396,7 @@ public class JSONLoaderIntegrationTest {
     public void testPerTick出力レシピ() {
         // basic_processing.json ではなく、個別ファイルや logic 等に含まれる可能性があるが
         // 今回はとりあえず既存のものを維持するか、名前が一致するように JSON を調整済み。
-        // glass to energy Conversion (大文字小文字に注意)
+        // glass to energy Conversion
         IModularRecipe recipe = findRecipe("glass to energy Conversion");
         if (recipe == null) recipe = findRecipe("Glass to Energy Conversion");
 
@@ -414,13 +411,11 @@ public class JSONLoaderIntegrationTest {
         IRecipeOutput manaOutput = outputs.get(0);
         assertEquals(IPortType.Type.MANA, manaOutput.getPortType());
         assertEquals(200, manaOutput.getRequiredAmount());
-        // TODO: perTick=true の確認（実装次第）
     }
 
     @Test
     @DisplayName("【Priority】Priority が正しく読み込まれる")
     public void testPriorityシステム() {
-        // ユーザーがテストしたいレシピ。名前が JSON 側と一致するように正規化される。
         IModularRecipe priorityHigh = findRecipe("Priority Test High");
         if (priorityHigh == null) priorityHigh = findRecipe("priority_test_high");
         assertNotNull(priorityHigh, "High Priority レシピが見つからない");

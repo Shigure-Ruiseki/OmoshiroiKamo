@@ -41,18 +41,10 @@ import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemOutput;
 @DisplayName("ModularRecipe のテスト")
 public class ModularRecipeTest {
 
-    // テスト用の共通データ（各テストで使い回す）
     private ModularRecipe.Builder basicBuilder;
 
-    /**
-     * @BeforeEach = 各テストの「前」に毎回実行される
-     *
-     *             例：test1実行前に setUp() → test1実行
-     *             test2実行前に setUp() → test2実行
-     */
     @BeforeEach
     public void setUp() {
-        // 基本的なビルダーを準備
         basicBuilder = ModularRecipe.builder()
             .registryName("test_recipe")
             .recipeGroup("test_group")
@@ -68,23 +60,21 @@ public class ModularRecipeTest {
     @Test
     @DisplayName("レシピが正常に作成できる")
     public void testレシピの作成() {
-        // 【準備】レシピを作る
         ModularRecipe recipe = basicBuilder.addInput(new ItemInput(Items.iron_ingot, 1))
             .addOutput(new ItemOutput(new ItemStack(Items.gold_ingot, 1)))
             .build();
 
-        // 【検証】ちゃんと設定されているか確認
-        assertEquals("test_recipe", recipe.getRegistryName()); // registryNameが正しい？
-        assertEquals("test_group", recipe.getRecipeGroup()); // recipeGroupが正しい？
-        assertEquals(100, recipe.getDuration()); // durationが正しい？
+        assertEquals("test_recipe", recipe.getRegistryName());
+        assertEquals("test_group", recipe.getRecipeGroup());
+        assertEquals(100, recipe.getDuration());
         assertEquals(
             1,
             recipe.getInputs()
-                .size()); // 入力が1個？
+                .size());
         assertEquals(
             1,
             recipe.getOutputs()
-                .size()); // 出力が1個？
+                .size());
     }
 
     @Test

@@ -120,14 +120,13 @@ public class ExpressionTest {
         MapRangeExpression expr = new MapRangeExpression(new ConstantExpression(50), 0, 100, 0.0, 1.0, true);
 
         // コンテキストに test_value=50 を設定した場合を想定
-        // （実際のコンテキストの実装に依存）
         assertNotNull(expr);
     }
 
     @Test
     @DisplayName("MapRangeExpression: 逆マッピング")
     public void testMapRangeReverse() {
-        // 0-100 を 1.0-0.0 にマッピング（逆転）
+        // 0-100 を 1.0-0.0 にマッピング
         MapRangeExpression expr = new MapRangeExpression(new ConstantExpression(50), 0, 100, 1.0, 0.0, true);
 
         assertNotNull(expr);
@@ -168,10 +167,9 @@ public class ExpressionTest {
         IExpression expr = ExpressionsParser.parse(null);
 
         // nullの場合、デフォルト値（例: 0.0）を返すConstantExpressionが生成される
-        // または null が返される（実装次第）
         if (expr != null) {
             double result = expr.evaluate(null);
-            assertTrue(result >= 0.0); // 何らかの値を返す
+            assertTrue(result >= 0.0);
         }
     }
 

@@ -116,7 +116,7 @@ public class EdgeCaseTest {
         // 空のregistryNameでビルドを試みる
         assertThrows(Exception.class, () -> {
             ModularRecipe.builder()
-                .registryName("") // 空文字列
+                .registryName("")
                 .recipeGroup("test")
                 .duration(100)
                 .build();
@@ -212,7 +212,6 @@ public class EdgeCaseTest {
             .recipeGroup("test")
             .duration(100);
 
-        // 50個の入力
         for (int i = 0; i < 50; i++) {
             builder.addInput(new ItemInput(Items.iron_ingot, i + 1));
         }
@@ -233,7 +232,6 @@ public class EdgeCaseTest {
             .recipeGroup("test")
             .duration(100);
 
-        // 50個の出力
         for (int i = 0; i < 50; i++) {
             builder.addOutput(new ItemOutput(new ItemStack(Items.gold_ingot, i + 1)));
         }

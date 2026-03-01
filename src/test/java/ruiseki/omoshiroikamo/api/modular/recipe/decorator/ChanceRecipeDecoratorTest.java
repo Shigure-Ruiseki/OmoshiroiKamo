@@ -40,14 +40,12 @@ public class ChanceRecipeDecoratorTest {
 
     @BeforeEach
     public void setUp() {
-        // 基本レシピ（常に条件を満たす）
         baseRecipe = ModularRecipe.builder()
             .registryName("base_recipe")
             .recipeGroup("test")
             .duration(100)
             .build();
 
-        // テスト用のコンテキスト
         context = new ConditionContext(null, 0, 0, 0);
     }
 
@@ -98,8 +96,7 @@ public class ChanceRecipeDecoratorTest {
             }
         }
 
-        // 統計的に、1000回中400～600回くらいがtrueになるはず
-        // （完全に500回ではないのは乱数の性質上）
+        // 統計的に、1000回中400～600回くらいがtrueになる
         assertTrue(
             successCount >= 400 && successCount <= 600,
             "Expected around 500 successes, but got " + successCount);
@@ -146,7 +143,7 @@ public class ChanceRecipeDecoratorTest {
             }
         }
 
-        // 統計的に、1000回中150～350回くらいがtrueになるはず（25%）
+        // 統計的に、1000回中150～350回くらいがtrueになる
         assertTrue(
             successCount >= 150 && successCount <= 350,
             "Expected around 250 successes (25%), but got " + successCount);

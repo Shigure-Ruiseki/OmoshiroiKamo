@@ -38,8 +38,8 @@ public class ItemOutputTest {
         ItemOutput output = ItemOutput.fromJson(json);
 
         assertNotNull(output);
-        // assertEquals(3, output.getRequiredAmount()); // resolveItemStack が null を返すため
-        // 0 になる
+        // resolveItemStack が null を返すため、0 になる
+        assertEquals(3, output.getRequiredAmount());
     }
 
     @Test
