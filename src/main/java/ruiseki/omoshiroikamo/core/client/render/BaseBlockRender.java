@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import appeng.client.texture.ExtraBlockTextures;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
@@ -442,7 +441,8 @@ public class BaseBlockRender<B extends BlockOK, T extends TileEntityOK> {
             }
         }
 
-        return ExtraBlockTextures.getMissing();
+        return ((TextureMap) Minecraft.getMinecraft().getTextureManager()
+            .getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
     }
 
     public boolean renderInWorld(final B block, final IBlockAccess world, final int x, final int y, final int z,
