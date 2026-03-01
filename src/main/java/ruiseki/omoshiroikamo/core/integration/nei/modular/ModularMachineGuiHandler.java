@@ -5,6 +5,7 @@ import static blockrenderer6343.client.utils.BRUtil.FAKE_PLAYER;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,8 +19,10 @@ import blockrenderer6343.api.utils.CreativeItemSource;
 import blockrenderer6343.client.utils.ConstructableData;
 import blockrenderer6343.integration.nei.GuiMultiblockHandler;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -170,8 +173,28 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             iterations++;
         } while (renderer.world.hasChanged() && iterations < MAX_PLACE_ROUNDS && result != -2);
 
-        // If survivalBuild didn't work, try regular construct
+        // If survivalBuild didn't work or stopped with -2, it means it's incomplete
         if (result == -2 || iterations >= MAX_PLACE_ROUNDS) {
+            // Detailed scan for feedback
+            StructureValidationVisitor diagnostic = new StructureValidationVisitor();
+            if (entry != null) {
+                diagnostic
+                    .validateInWorld(renderer.world, MB_PLACE_POS.x, MB_PLACE_POS.y, MB_PLACE_POS.z, facing, entry);
+
+                if (diagnostic.hasErrors()) {
+                    for (String error : diagnostic.getErrors()) {
+                        FAKE_PLAYER.addChatMessage(new ChatComponentText("§c" + error));
+                    }
+                } else {
+                    FAKE_PLAYER
+                        .addChatMessage(new ChatComponentText("§c[Structure] Construction failed. Unknown reason."));
+                }
+
+                // Log for debug
+                Logger.error("Survival build failed for structure: " + structureName);
+            }
+
+            // Fallback to regular construct to show "hints" (shadow blocks)
             def.buildOrHints(
                 controller,
                 getBuildTriggerStack(),
