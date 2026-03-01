@@ -35,6 +35,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.client.texture.ExtraBlockTextures;
 import ruiseki.omoshiroikamo.core.helper.BlockHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.IOrientable;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
@@ -441,9 +442,7 @@ public class BaseBlockRender<B extends BlockOK, T extends TileEntityOK> {
             }
         }
 
-        return ((TextureMap) Minecraft.getMinecraft()
-            .getTextureManager()
-            .getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
+        return ExtraBlockTextures.getMissing();
     }
 
     public boolean renderInWorld(final B block, final IBlockAccess world, final int x, final int y, final int z,
