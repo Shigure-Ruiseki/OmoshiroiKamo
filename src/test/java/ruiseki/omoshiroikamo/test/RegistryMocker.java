@@ -171,11 +171,9 @@ public class RegistryMocker {
                 Object unsafe = unsafeField.get(null);
 
                 // Get the field offset
-                Method staticFieldOffsetMethod = unsafeClass
-                    .getMethod("staticFieldOffset", Field.class);
+                Method staticFieldOffsetMethod = unsafeClass.getMethod("staticFieldOffset", Field.class);
                 Method staticFieldBaseMethod = unsafeClass.getMethod("staticFieldBase", Field.class);
-                Method putObjectMethod = unsafeClass
-                    .getMethod("putObject", Object.class, long.class, Object.class);
+                Method putObjectMethod = unsafeClass.getMethod("putObject", Object.class, long.class, Object.class);
 
                 Object base = staticFieldBaseMethod.invoke(unsafe, field);
                 long offset = (Long) staticFieldOffsetMethod.invoke(unsafe, field);
