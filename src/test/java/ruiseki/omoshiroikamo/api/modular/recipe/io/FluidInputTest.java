@@ -13,11 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import ruiseki.omoshiroikamo.test.RegistryMocker;
-
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
  * FluidInput のユニットテスト

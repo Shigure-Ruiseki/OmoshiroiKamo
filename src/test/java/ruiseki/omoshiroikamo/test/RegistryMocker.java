@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,9 +171,11 @@ public class RegistryMocker {
                 Object unsafe = unsafeField.get(null);
 
                 // Get the field offset
-                java.lang.reflect.Method staticFieldOffsetMethod = unsafeClass.getMethod("staticFieldOffset", Field.class);
-                java.lang.reflect.Method staticFieldBaseMethod = unsafeClass.getMethod("staticFieldBase", Field.class);
-                java.lang.reflect.Method putObjectMethod = unsafeClass.getMethod("putObject", Object.class, long.class, Object.class);
+                Method staticFieldOffsetMethod = unsafeClass
+                    .getMethod("staticFieldOffset", Field.class);
+                Method staticFieldBaseMethod = unsafeClass.getMethod("staticFieldBase", Field.class);
+                Method putObjectMethod = unsafeClass
+                    .getMethod("putObject", Object.class, long.class, Object.class);
 
                 Object base = staticFieldBaseMethod.invoke(unsafe, field);
                 long offset = (Long) staticFieldOffsetMethod.invoke(unsafe, field);
@@ -180,7 +183,8 @@ public class RegistryMocker {
 
                 System.out.println("RegistryMocker: Successfully set " + fieldName + " using Unsafe");
             } catch (Exception unsafeEx) {
-                Logger.warn("RegistryMocker: Failed to set field using Unsafe: " + fieldName + " - " + unsafeEx.getMessage());
+                Logger.warn(
+                    "RegistryMocker: Failed to set field using Unsafe: " + fieldName + " - " + unsafeEx.getMessage());
                 throw unsafeEx;
             }
         } catch (NoSuchFieldException e) {
@@ -211,7 +215,8 @@ public class RegistryMocker {
             Class<?> sideClass = Class.forName("cpw.mods.fml.relauncher.Side");
             Object sideClient = null;
             for (Object obj : sideClass.getEnumConstants()) {
-                if (obj.toString().equals("CLIENT")) {
+                if (obj.toString()
+                    .equals("CLIENT")) {
                     sideClient = obj;
                     break;
                 }
@@ -220,7 +225,7 @@ public class RegistryMocker {
             Class<?> logClass = Class.forName("cpw.mods.fml.relauncher.FMLRelaunchLog");
             Field sideField = logClass.getDeclaredField("side");
             sideField.setAccessible(true);
-            
+
             // final を外す試み
             try {
                 Field modifiersField = Field.class.getDeclaredField("modifiers");

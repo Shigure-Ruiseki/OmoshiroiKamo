@@ -110,9 +110,9 @@ public class ComplexRecipePatternTest {
         assertEquals(1, itemCount);
 
         // long fluidCount = recipe.getInputs()
-        //     .stream()
-        //     .filter(i -> i.getPortType() == IPortType.Type.FLUID)
-        //     .count();
+        // .stream()
+        // .filter(i -> i.getPortType() == IPortType.Type.FLUID)
+        // .count();
         // assertEquals(1, fluidCount);
 
         long energyCount = recipe.getInputs()
@@ -177,11 +177,11 @@ public class ComplexRecipePatternTest {
                 .filter(o -> o.getPortType() == IPortType.Type.ITEM)
                 .count());
         // assertEquals(
-        //     1,
-        //     recipe.getOutputs()
-        //         .stream()
-        //         .filter(o -> o.getPortType() == IPortType.Type.FLUID)
-        //         .count());
+        // 1,
+        // recipe.getOutputs()
+        // .stream()
+        // .filter(o -> o.getPortType() == IPortType.Type.FLUID)
+        // .count());
         assertEquals(
             1,
             recipe.getOutputs()

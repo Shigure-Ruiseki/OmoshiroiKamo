@@ -114,13 +114,16 @@ public class EdgeCaseTest {
     @DisplayName("【Null安全】registryNameが空文字列（バリデーションでエラーになるべき）")
     public void test空のRegistryName() {
         // 空のregistryNameでビルドを試みる
-        assertThrows(Exception.class, () -> {
-            ModularRecipe.builder()
-                .registryName("")
-                .recipeGroup("test")
-                .duration(100)
-                .build();
-        }, "空のregistryNameはエラーになるべき");
+        assertThrows(
+            Exception.class,
+            () -> {
+                ModularRecipe.builder()
+                    .registryName("")
+                    .recipeGroup("test")
+                    .duration(100)
+                    .build();
+            },
+            "空のregistryNameはエラーになるべき");
     }
 
     // ========================================
