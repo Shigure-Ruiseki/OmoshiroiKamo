@@ -122,6 +122,7 @@ public class StructureManager {
 
                 for (IStructureEntry entry : fileData.structures.values()) {
                     StructureValidationVisitor validator = new StructureValidationVisitor();
+                    validator.setExternalMappings(fileData.defaultMappings);
                     entry.accept(validator);
 
                     if (validator.hasErrors()) {

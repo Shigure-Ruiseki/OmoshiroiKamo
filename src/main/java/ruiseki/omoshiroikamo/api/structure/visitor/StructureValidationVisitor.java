@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.structure.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
@@ -14,6 +15,11 @@ public class StructureValidationVisitor implements IStructureVisitor {
 
     private final List<String> errors = new ArrayList<>();
     private IStructureEntry currentEntry;
+    private Map<Character, ?> externalMappings;
+
+    public void setExternalMappings(Map<Character, ?> mappings) {
+        this.externalMappings = mappings;
+    }
 
     public List<String> getErrors() {
         return errors;
@@ -94,8 +100,13 @@ public class StructureValidationVisitor implements IStructureVisitor {
 
                     if (symbol == 'Q') qCount++;
 
-                    if (!entry.getMappings()
-                        .containsKey(symbol) && symbol != '_' && symbol != 'Q') {
+                    boolean hasMapping = entry.getMappings()
+                        .containsKey(symbol);
+                    if (!hasMapping && externalMappings != null) {
+                        hasMapping = externalMappings.containsKey(symbol);
+                    }
+
+                    if (!hasMapping && symbol != '_' && symbol != 'Q') {
                         addError("Unknown symbol '" + symbol + "' at Layer " + l + " row " + r + " col " + c);
                     }
                 }

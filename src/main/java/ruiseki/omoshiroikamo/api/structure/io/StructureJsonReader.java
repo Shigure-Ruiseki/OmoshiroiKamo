@@ -197,7 +197,16 @@ public class StructureJsonReader {
                 JsonArray blocksArray = obj.getAsJsonArray("blocks");
                 List<String> blocks = new ArrayList<>();
                 for (JsonElement blockEl : blocksArray) {
-                    blocks.add(blockEl.getAsString());
+                    if (blockEl.isJsonObject()) {
+                        JsonObject blockObj = blockEl.getAsJsonObject();
+                        if (blockObj.has("id")) {
+                            blocks.add(
+                                blockObj.get("id")
+                                    .getAsString());
+                        }
+                    } else {
+                        blocks.add(blockEl.getAsString());
+                    }
                 }
                 return new BlockMapping(symbol, blocks);
             }
