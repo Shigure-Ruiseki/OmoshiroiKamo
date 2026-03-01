@@ -1,20 +1,20 @@
 package ruiseki.omoshiroikamo.core.common.structure;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-
+import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
+import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
+import ruiseki.omoshiroikamo.api.structure.io.StructureJsonReader;
+import ruiseki.omoshiroikamo.api.structure.io.StructureJsonWriter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon.QuantumBeaconShapes;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.ore.QuantumOreExtractorShapes;
@@ -23,12 +23,10 @@ import ruiseki.omoshiroikamo.module.multiblock.common.block.solarArray.SolarArra
 
 /**
  * Generates and updates default structure JSON files.
+ * Refactored to use StructureJsonWriter instead of direct GSON usage.
  */
 public class DefaultStructureGenerator {
     // TODO: Change to modular format
-
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-        .create();
 
     /**
      * Generate or update all structure JSON files, filling in missing entries.
@@ -56,108 +54,83 @@ public class DefaultStructureGenerator {
      * Update the Ore Miner JSON, adding any missing entries.
      */
     private static void updateOreMinerJson(File file) {
-        Map<String, Map<String, Object>> required = new LinkedHashMap<>();
-        required.put("default", createDefaultMappings("oreMiner"));
-        required.put(
-            "oreExtractorTier1",
-            createStructureEntry("oreExtractorTier1", QuantumOreExtractorShapes.SHAPE_TIER_1, 1));
-        required.put(
-            "oreExtractorTier2",
-            createStructureEntry("oreExtractorTier2", QuantumOreExtractorShapes.SHAPE_TIER_2, 2));
-        required.put(
-            "oreExtractorTier3",
-            createStructureEntry("oreExtractorTier3", QuantumOreExtractorShapes.SHAPE_TIER_3, 3));
-        required.put(
-            "oreExtractorTier4",
-            createStructureEntry("oreExtractorTier4", QuantumOreExtractorShapes.SHAPE_TIER_4, 4));
-        required.put(
-            "oreExtractorTier5",
-            createStructureEntry("oreExtractorTier5", QuantumOreExtractorShapes.SHAPE_TIER_5, 5));
-        required.put(
-            "oreExtractorTier6",
-            createStructureEntry("oreExtractorTier6", QuantumOreExtractorShapes.SHAPE_TIER_6, 6));
+        Map<Character, ISymbolMapping> defaultMappings = createDefaultMappings("oreMiner");
+        List<IStructureEntry> requiredStructures = new ArrayList<>();
+        requiredStructures.add(createStructureEntry("oreExtractorTier1", QuantumOreExtractorShapes.SHAPE_TIER_1, 1));
+        requiredStructures.add(createStructureEntry("oreExtractorTier2", QuantumOreExtractorShapes.SHAPE_TIER_2, 2));
+        requiredStructures.add(createStructureEntry("oreExtractorTier3", QuantumOreExtractorShapes.SHAPE_TIER_3, 3));
+        requiredStructures.add(createStructureEntry("oreExtractorTier4", QuantumOreExtractorShapes.SHAPE_TIER_4, 4));
+        requiredStructures.add(createStructureEntry("oreExtractorTier5", QuantumOreExtractorShapes.SHAPE_TIER_5, 5));
+        requiredStructures.add(createStructureEntry("oreExtractorTier6", QuantumOreExtractorShapes.SHAPE_TIER_6, 6));
 
-        updateConfigWithMissing(file, required, "Ore Miner");
+        updateConfigWithMissing(file, defaultMappings, requiredStructures, "Ore Miner");
     }
 
     /**
      * Update the Resource Miner JSON.
      */
     private static void updateResMinerJson(File file) {
-        Map<String, Map<String, Object>> required = new LinkedHashMap<>();
-        required.put("default", createDefaultMappings("resMiner"));
-        required.put(
-            "resExtractorTier1",
-            createStructureEntry("resExtractorTier1", QuantumResExtractorShapes.SHAPE_TIER_1, 1));
-        required.put(
-            "resExtractorTier2",
-            createStructureEntry("resExtractorTier2", QuantumResExtractorShapes.SHAPE_TIER_2, 2));
-        required.put(
-            "resExtractorTier3",
-            createStructureEntry("resExtractorTier3", QuantumResExtractorShapes.SHAPE_TIER_3, 3));
-        required.put(
-            "resExtractorTier4",
-            createStructureEntry("resExtractorTier4", QuantumResExtractorShapes.SHAPE_TIER_4, 4));
-        required.put(
-            "resExtractorTier5",
-            createStructureEntry("resExtractorTier5", QuantumResExtractorShapes.SHAPE_TIER_5, 5));
-        required.put(
-            "resExtractorTier6",
-            createStructureEntry("resExtractorTier6", QuantumResExtractorShapes.SHAPE_TIER_6, 6));
+        Map<Character, ISymbolMapping> defaultMappings = createDefaultMappings("resMiner");
+        List<IStructureEntry> requiredStructures = new ArrayList<>();
+        requiredStructures.add(createStructureEntry("resExtractorTier1", QuantumResExtractorShapes.SHAPE_TIER_1, 1));
+        requiredStructures.add(createStructureEntry("resExtractorTier2", QuantumResExtractorShapes.SHAPE_TIER_2, 2));
+        requiredStructures.add(createStructureEntry("resExtractorTier3", QuantumResExtractorShapes.SHAPE_TIER_3, 3));
+        requiredStructures.add(createStructureEntry("resExtractorTier4", QuantumResExtractorShapes.SHAPE_TIER_4, 4));
+        requiredStructures.add(createStructureEntry("resExtractorTier5", QuantumResExtractorShapes.SHAPE_TIER_5, 5));
+        requiredStructures.add(createStructureEntry("resExtractorTier6", QuantumResExtractorShapes.SHAPE_TIER_6, 6));
 
-        updateConfigWithMissing(file, required, "Resource Miner");
+        updateConfigWithMissing(file, defaultMappings, requiredStructures, "Resource Miner");
     }
 
     /**
      * Update the Solar Array JSON.
      */
     private static void updateSolarArrayJson(File file) {
-        Map<String, Map<String, Object>> required = new LinkedHashMap<>();
-        required.put("default", createDefaultMappings("solarArray"));
-        required.put("solarArrayTier1", createStructureEntry("solarArrayTier1", SolarArrayShapes.SHAPE_TIER_1, 1));
-        required.put("solarArrayTier2", createStructureEntry("solarArrayTier2", SolarArrayShapes.SHAPE_TIER_2, 2));
-        required.put("solarArrayTier3", createStructureEntry("solarArrayTier3", SolarArrayShapes.SHAPE_TIER_3, 3));
-        required.put("solarArrayTier4", createStructureEntry("solarArrayTier4", SolarArrayShapes.SHAPE_TIER_4, 4));
-        required.put("solarArrayTier5", createStructureEntry("solarArrayTier5", SolarArrayShapes.SHAPE_TIER_5, 5));
-        required.put("solarArrayTier6", createStructureEntry("solarArrayTier6", SolarArrayShapes.SHAPE_TIER_6, 6));
+        Map<Character, ISymbolMapping> defaultMappings = createDefaultMappings("solarArray");
+        List<IStructureEntry> requiredStructures = new ArrayList<>();
+        requiredStructures.add(createStructureEntry("solarArrayTier1", SolarArrayShapes.SHAPE_TIER_1, 1));
+        requiredStructures.add(createStructureEntry("solarArrayTier2", SolarArrayShapes.SHAPE_TIER_2, 2));
+        requiredStructures.add(createStructureEntry("solarArrayTier3", SolarArrayShapes.SHAPE_TIER_3, 3));
+        requiredStructures.add(createStructureEntry("solarArrayTier4", SolarArrayShapes.SHAPE_TIER_4, 4));
+        requiredStructures.add(createStructureEntry("solarArrayTier5", SolarArrayShapes.SHAPE_TIER_5, 5));
+        requiredStructures.add(createStructureEntry("solarArrayTier6", SolarArrayShapes.SHAPE_TIER_6, 6));
 
-        updateConfigWithMissing(file, required, "Solar Array");
+        updateConfigWithMissing(file, defaultMappings, requiredStructures, "Solar Array");
     }
 
     /**
      * Update the Quantum Beacon JSON.
      */
     private static void updateBeaconJson(File file) {
-        Map<String, Map<String, Object>> required = new LinkedHashMap<>();
-        required.put("default", createDefaultMappings("beacon"));
-        required.put("beaconTier1", createStructureEntry("beaconTier1", QuantumBeaconShapes.SHAPE_TIER_1, 1));
-        required.put("beaconTier2", createStructureEntry("beaconTier2", QuantumBeaconShapes.SHAPE_TIER_2, 2));
-        required.put("beaconTier3", createStructureEntry("beaconTier3", QuantumBeaconShapes.SHAPE_TIER_3, 3));
-        required.put("beaconTier4", createStructureEntry("beaconTier4", QuantumBeaconShapes.SHAPE_TIER_4, 4));
-        required.put("beaconTier5", createStructureEntry("beaconTier5", QuantumBeaconShapes.SHAPE_TIER_5, 5));
-        required.put("beaconTier6", createStructureEntry("beaconTier6", QuantumBeaconShapes.SHAPE_TIER_6, 6));
+        Map<Character, ISymbolMapping> defaultMappings = createDefaultMappings("beacon");
+        List<IStructureEntry> requiredStructures = new ArrayList<>();
+        requiredStructures.add(createStructureEntry("beaconTier1", QuantumBeaconShapes.SHAPE_TIER_1, 1));
+        requiredStructures.add(createStructureEntry("beaconTier2", QuantumBeaconShapes.SHAPE_TIER_2, 2));
+        requiredStructures.add(createStructureEntry("beaconTier3", QuantumBeaconShapes.SHAPE_TIER_3, 3));
+        requiredStructures.add(createStructureEntry("beaconTier4", QuantumBeaconShapes.SHAPE_TIER_4, 4));
+        requiredStructures.add(createStructureEntry("beaconTier5", QuantumBeaconShapes.SHAPE_TIER_5, 5));
+        requiredStructures.add(createStructureEntry("beaconTier6", QuantumBeaconShapes.SHAPE_TIER_6, 6));
 
-        updateConfigWithMissing(file, required, "Quantum Beacon");
+        updateConfigWithMissing(file, defaultMappings, requiredStructures, "Quantum Beacon");
     }
 
     /**
      * Load an existing JSON file and append any missing entries.
      */
-    private static void updateConfigWithMissing(File file, Map<String, Map<String, Object>> required, String typeName) {
-        List<Map<String, Object>> existing = new ArrayList<>();
+    private static void updateConfigWithMissing(File file, Map<Character, ISymbolMapping> defaultMappings,
+        List<IStructureEntry> requiredStructures, String typeName) {
+        Map<String, IStructureEntry> existingStructures = new HashMap<>();
+        Map<Character, ISymbolMapping> existingMappings = new HashMap<>();
         boolean fileExisted = file.exists();
         boolean loadFailed = false;
 
         // Read the existing file if it is present
         if (fileExisted) {
-            try (FileReader reader = new FileReader(file)) {
-                JsonReader jsonReader = new JsonReader(reader);
-                jsonReader.setLenient(true);
-                Type listType = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
-                List<Map<String, Object>> loaded = GSON.fromJson(jsonReader, listType);
-                if (loaded != null) {
-                    existing.addAll(loaded);
-                }
+            try {
+                StructureJsonReader reader = new StructureJsonReader(file);
+                StructureJsonReader.FileData fileData = reader.read();
+                existingStructures.putAll(fileData.structures);
+                existingMappings.putAll(fileData.defaultMappings);
             } catch (Exception e) {
                 Logger.error("Failed to read existing structure config: " + file.getName(), e);
                 loadFailed = true;
@@ -176,33 +149,38 @@ public class DefaultStructureGenerator {
                 Logger.warn("Corrupted config backed up to: " + backup.getName());
             }
             fileExisted = false;
+            existingStructures.clear();
+            existingMappings.clear();
         }
 
-        // Collect existing entry names
-        List<String> existingNames = new ArrayList<>();
-        for (Map<String, Object> entry : existing) {
-            Object name = entry.get("name");
-            if (name != null) existingNames.add(name.toString());
-        }
+        // Merge default mappings (keep existing, add new)
+        Map<Character, ISymbolMapping> mergedMappings = new HashMap<>(defaultMappings);
+        mergedMappings.putAll(existingMappings);
 
-        // Add any missing entries
-        boolean updated = false;
+        // Add any missing structures
         List<String> addedEntries = new ArrayList<>();
-        for (Map.Entry<String, Map<String, Object>> req : required.entrySet()) {
-            if (!existingNames.contains(req.getKey())) {
-                existing.add(req.getValue());
-                addedEntries.add(req.getKey());
-                updated = true;
+        List<IStructureEntry> finalStructures = new ArrayList<>(existingStructures.values());
+
+        for (IStructureEntry required : requiredStructures) {
+            if (!existingStructures.containsKey(required.getName())) {
+                finalStructures.add(required);
+                addedEntries.add(required.getName());
             }
         }
 
         // Write back when there are changes
-        if (updated || !fileExisted) {
-            writeJson(file, existing.isEmpty() ? new ArrayList<>(required.values()) : existing);
-            if (!fileExisted) {
-                Logger.info("Generated " + typeName + " structure file: " + file.getName());
-            } else {
-                Logger.info("Updated " + typeName + " config with missing entries: " + String.join(", ", addedEntries));
+        if (!addedEntries.isEmpty() || !fileExisted) {
+            try {
+                StructureJsonWriter writer = new StructureJsonWriter(file);
+                writer.writeWithDefaults(finalStructures, mergedMappings);
+                if (!fileExisted) {
+                    Logger.info("Generated " + typeName + " structure file: " + file.getName());
+                } else {
+                    Logger.info(
+                        "Updated " + typeName + " config with missing entries: " + String.join(", ", addedEntries));
+                }
+            } catch (IOException e) {
+                Logger.error("Failed to write structure file: " + file.getAbsolutePath(), e);
             }
         } else {
             Logger.debug("No new entries to add to " + typeName + " config");
@@ -210,162 +188,100 @@ public class DefaultStructureGenerator {
     }
 
     /**
-     * Build the default mapping object for a given machine type.
+     * Build the default mappings for a given machine type.
      */
-    private static Map<String, Object> createDefaultMappings(String machineType) {
-        Map<String, Object> entry = new LinkedHashMap<>();
-        entry.put("name", "default");
-
-        Map<String, Object> mappings = new LinkedHashMap<>();
+    private static Map<Character, ISymbolMapping> createDefaultMappings(String machineType) {
+        Map<Character, ISymbolMapping> mappings = new LinkedHashMap<>();
 
         // Shared mappings (used by all structures)
-        mappings.put("_", "air");
-        mappings.put("F", "omoshiroikamo:basaltStructure:*");
+        mappings.put('_', new BlockMapping('_', "air"));
+        mappings.put('F', new BlockMapping('F', "omoshiroikamo:basaltStructure:*"));
 
         // Machine-specific mappings
         if ("oreMiner".equals(machineType) || "resMiner".equals(machineType)) {
             // Miner-specific: P (machine_base), C (laser_core)
-            mappings.put("P", "omoshiroikamo:machineBase:0");
-            mappings.put("C", "omoshiroikamo:laserCore:0");
+            mappings.put('P', new BlockMapping('P', "omoshiroikamo:machineBase:0"));
+            mappings.put('C', new BlockMapping('C', "omoshiroikamo:laserCore:0"));
 
             // Controller
-            Map<String, Object> controller = new LinkedHashMap<>();
             String controllerBlock = "oreMiner".equals(machineType) ? "omoshiroikamo:quantumOreExtractor:0"
                 : "omoshiroikamo:quantumResExtractor:0";
-            controller.put("block", controllerBlock);
-            controller.put("max", 1);
-            mappings.put("Q", controller);
+            mappings.put('Q', new BlockMapping('Q', controllerBlock));
 
-            // Lens
-            Map<String, Object> lens = new LinkedHashMap<>();
-            List<Map<String, Object>> lensBlocks = new ArrayList<>();
-            Map<String, Object> normalLens = new LinkedHashMap<>();
-            normalLens.put("id", "omoshiroikamo:lens:0");
-            normalLens.put("max", 1);
-            lensBlocks.add(normalLens);
-            Map<String, Object> crystalLens = new LinkedHashMap<>();
-            crystalLens.put("id", "omoshiroikamo:lens:1");
-            crystalLens.put("max", 1);
-            lensBlocks.add(crystalLens);
-            Map<String, Object> coloredLens = new LinkedHashMap<>();
-            coloredLens.put("id", "omoshiroikamo:coloredLens:*");
-            coloredLens.put("max", 1);
-            lensBlocks.add(coloredLens);
-            lens.put("blocks", lensBlocks);
-            mappings.put("L", lens);
+            // Lens (multiple options)
+            List<String> lensBlocks = new ArrayList<>();
+            lensBlocks.add("omoshiroikamo:lens:0");
+            lensBlocks.add("omoshiroikamo:lens:1");
+            lensBlocks.add("omoshiroikamo:coloredLens:*");
+            mappings.put('L', new BlockMapping('L', lensBlocks));
 
-            // Modifiers
-            Map<String, Object> modifier = new LinkedHashMap<>();
-            List<Map<String, Object>> modBlocks = new ArrayList<>();
-            Map<String, Object> nullMod = new LinkedHashMap<>();
-            nullMod.put("id", "omoshiroikamo:modifierNull:0");
-            modBlocks.add(nullMod);
-            Map<String, Object> accMod = new LinkedHashMap<>();
-            accMod.put("id", "omoshiroikamo:modifierAccuracy:0");
-            modBlocks.add(accMod);
-            Map<String, Object> speedMod = new LinkedHashMap<>();
-            speedMod.put("id", "omoshiroikamo:modifierSpeed:0");
-            modBlocks.add(speedMod);
-            modifier.put("blocks", modBlocks);
-            mappings.put("A", modifier);
+            // Modifiers (multiple options)
+            List<String> modBlocks = new ArrayList<>();
+            modBlocks.add("omoshiroikamo:modifierNull:0");
+            modBlocks.add("omoshiroikamo:modifierAccuracy:0");
+            modBlocks.add("omoshiroikamo:modifierSpeed:0");
+            mappings.put('A', new BlockMapping('A', modBlocks));
 
         } else if ("solarArray".equals(machineType)) {
-            Map<String, Object> controller = new LinkedHashMap<>();
-            controller.put("block", "omoshiroikamo:solarArray:0");
-            controller.put("max", 1);
-            mappings.put("Q", controller);
+            // Controller
+            mappings.put('Q', new BlockMapping('Q', "omoshiroikamo:solarArray:0"));
 
-            // Solar cells
-            Map<String, Object> cell = new LinkedHashMap<>();
-            List<Map<String, Object>> cellBlocks = new ArrayList<>();
+            // Solar cells (tiers 0-5)
+            List<String> cellBlocks = new ArrayList<>();
             for (int i = 0; i <= 5; i++) {
-                Map<String, Object> c = new LinkedHashMap<>();
-                c.put("id", "omoshiroikamo:solarCell:" + i);
-                cellBlocks.add(c);
+                cellBlocks.add("omoshiroikamo:solarCell:" + i);
             }
-            cell.put("blocks", cellBlocks);
-            mappings.put("G", cell);
+            mappings.put('G', new BlockMapping('G', cellBlocks));
 
             // Modifiers
-            Map<String, Object> modifier = new LinkedHashMap<>();
-            List<Map<String, Object>> modBlocks = new ArrayList<>();
-            Map<String, Object> nullMod = new LinkedHashMap<>();
-            nullMod.put("id", "omoshiroikamo:modifierNull:0");
-            modBlocks.add(nullMod);
-            Map<String, Object> piezoMod = new LinkedHashMap<>();
-            piezoMod.put("id", "omoshiroikamo:modifierPiezo:0");
-            modBlocks.add(piezoMod);
-            modifier.put("blocks", modBlocks);
-            mappings.put("A", modifier);
+            List<String> modBlocks = new ArrayList<>();
+            modBlocks.add("omoshiroikamo:modifierNull:0");
+            modBlocks.add("omoshiroikamo:modifierPiezo:0");
+            mappings.put('A', new BlockMapping('A', modBlocks));
 
         } else if ("beacon".equals(machineType)) {
             // Beacon does NOT use C
-            mappings.put("P", "omoshiroikamo:machineBase:0");
+            mappings.put('P', new BlockMapping('P', "omoshiroikamo:machineBase:0"));
 
-            Map<String, Object> controller = new LinkedHashMap<>();
-            controller.put("block", "omoshiroikamo:quantumBeacon:0");
-            controller.put("max", 1);
-            mappings.put("Q", controller);
+            // Controller
+            mappings.put('Q', new BlockMapping('Q', "omoshiroikamo:quantumBeacon:0"));
 
             // Beacon modifiers (all types)
-            Map<String, Object> modifier = new LinkedHashMap<>();
-            List<Map<String, Object>> modBlocks = new ArrayList<>();
+            List<String> modBlocks = new ArrayList<>();
             String[] beaconModifiers = { "modifierNull", "modifierFireResistance", "modifierFlight",
                 "modifierNightVision", "modifierWaterBreathing", "modifierStrength", "modifierHaste",
                 "modifierRegeneration", "modifierSaturation", "modifierResistance", "modifierJumpBoost",
                 "modifierSpeed" };
             for (String mod : beaconModifiers) {
-                Map<String, Object> m = new LinkedHashMap<>();
-                m.put("id", "omoshiroikamo:" + mod + ":0");
-                modBlocks.add(m);
+                modBlocks.add("omoshiroikamo:" + mod + ":0");
             }
-            modifier.put("blocks", modBlocks);
-            mappings.put("A", modifier);
+            mappings.put('A', new BlockMapping('A', modBlocks));
         }
 
-        entry.put("mappings", mappings);
-        return entry;
+        return mappings;
     }
 
     /**
      * Build a structure entry from a name and shape.
      */
-    private static Map<String, Object> createStructureEntry(String name, String[][] shape, int tier) {
-        Map<String, Object> entry = new LinkedHashMap<>();
-        entry.put("name", name);
+    private static IStructureEntry createStructureEntry(String name, String[][] shape, int tier) {
+        StructureEntryBuilder builder = new StructureEntryBuilder();
+        builder.setName(name);
+        builder.setTier(tier);
 
-        List<Map<String, Object>> layers = new ArrayList<>();
+        // Add layers from the shape array
         for (int i = 0; i < shape.length; i++) {
-            Map<String, Object> layer = new LinkedHashMap<>();
-            layer.put("name", "layer" + i);
-
             List<String> rows = new ArrayList<>();
             for (String row : shape[i]) {
                 rows.add(row);
             }
-            layer.put("rows", rows);
-
-            layers.add(layer);
+            builder.addLayer(new StructureLayer("layer" + i, rows));
         }
-        entry.put("layers", layers);
 
         // Add tier-specific frame mapping (basaltStructure:meta matches tier-1)
-        Map<String, Object> mappings = new LinkedHashMap<>();
-        mappings.put("F", "omoshiroikamo:basaltStructure:" + (tier - 1));
-        entry.put("mappings", mappings);
+        builder.addMapping('F', new BlockMapping('F', "omoshiroikamo:basaltStructure:" + (tier - 1)));
 
-        return entry;
+        return builder.build();
     }
 
-    /**
-     * Write JSON data to a file.
-     */
-    private static void writeJson(File file, Object data) {
-        try (FileWriter writer = new FileWriter(file)) {
-            GSON.toJson(data, writer);
-            Logger.info("Generated structure file: " + file.getName());
-        } catch (IOException e) {
-            Logger.error("Failed to generate structure file: " + file.getAbsolutePath(), e);
-        }
-    }
 }
