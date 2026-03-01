@@ -37,7 +37,7 @@ public class ProcessAgent extends AbstractRecipeProcess {
     }
 
     // Re-implement start to return boolean and handle validation
-    public boolean start(IModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
+    public boolean startRecipe(IModularRecipe recipe, List<IModularPort> inputPorts) {
         if (isRunning()) return false;
 
         // 1. Check inputs
@@ -48,23 +48,11 @@ public class ProcessAgent extends AbstractRecipeProcess {
         recipe.accept(checker);
         if (!checker.isSatisfied()) return false;
 
-        if (energyPorts != inputPorts) {
-            RecipeExecutionVisitor energyChecker = new RecipeExecutionVisitor(
-                RecipeExecutionVisitor.Mode.CHECK,
-                energyPorts,
-                this);
-            recipe.accept(energyChecker);
-            if (!energyChecker.isSatisfied()) return false;
-        }
-
         // Initialize state via base start logic (simplified here as we already validated)
         super.start(recipe, inputPorts);
 
         // 2. Consume and setup state (Specific to ProcessAgent)
         recipe.accept(new RecipeExecutionVisitor(RecipeExecutionVisitor.Mode.CONSUME, inputPorts, this));
-        if (energyPorts != inputPorts) {
-            recipe.accept(new RecipeExecutionVisitor(RecipeExecutionVisitor.Mode.CONSUME, energyPorts, this));
-        }
 
         clearCaches();
 

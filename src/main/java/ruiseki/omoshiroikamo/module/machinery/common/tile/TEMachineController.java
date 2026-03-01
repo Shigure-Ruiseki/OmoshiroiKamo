@@ -354,8 +354,10 @@ public class TEMachineController extends AbstractMBModifierTE
         // Use cached recipe if available, otherwise search
         IModularRecipe recipe = nextRecipe;
         if (recipe == null) {
+            String[] groups = recipeGroups.toArray(new String[0]);
+            List<IModularPort> inputs = getInputPorts();
             recipe = RecipeLoader.getInstance()
-                .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());
+                .findMatch(groups, inputs);
         }
         nextRecipe = null; // Clear cache
 
@@ -374,9 +376,8 @@ public class TEMachineController extends AbstractMBModifierTE
                 return;
             }
 
-            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            processAgent.start(recipe, getInputPorts(), energyPorts);
-            lastProcessErrorReason = ErrorReason.NONE;
+            if (processAgent.startRecipe(recipe, getInputPorts())) lastProcessErrorReason = ErrorReason.NONE;
+            else lastProcessErrorReason = ErrorReason.NO_INPUT;
         } else {
             lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
 
