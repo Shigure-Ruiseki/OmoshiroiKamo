@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.api.modular.recipe.io;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;

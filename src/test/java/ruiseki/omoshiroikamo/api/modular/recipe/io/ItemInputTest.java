@@ -1,18 +1,21 @@
 package ruiseki.omoshiroikamo.api.modular.recipe.io;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
  * ItemInput クラスのユニットテスト
@@ -30,14 +33,9 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 @DisplayName("ItemInput のテスト")
 public class ItemInputTest {
 
-    @BeforeEach
-    public void setup() {
-        try {
-            // Check if Items/Registry is initialized
-            Assumptions.assumeTrue(Items.iron_ingot != null, "Minecraft Items registry not initialized");
-        } catch (Throwable t) {
-            Assumptions.assumeTrue(false, "Minecraft registry failed to initialize: " + t.getMessage());
-        }
+    @BeforeAll
+    public static void setupAll() {
+        RegistryMocker.mockAll();
     }
 
     // ========================================

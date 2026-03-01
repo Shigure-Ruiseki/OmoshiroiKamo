@@ -7,6 +7,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.*;
+import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
  * 複雑なレシピパターンのテスト
@@ -40,6 +42,11 @@ import ruiseki.omoshiroikamo.api.modular.recipe.io.*;
  */
 @DisplayName("複雑なレシピパターンテスト")
 public class ComplexRecipePatternTest {
+
+    @BeforeAll
+    public static void setupAll() {
+        RegistryMocker.mockAll();
+    }
 
     @BeforeEach
     public void setup() {
