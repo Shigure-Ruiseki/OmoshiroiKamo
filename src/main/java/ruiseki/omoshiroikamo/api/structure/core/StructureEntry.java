@@ -26,12 +26,17 @@ public class StructureEntry implements IStructureEntry {
     private final List<String> recipeGroup;
     private final int[] controllerOffset;
     private final String tintColor;
+    private final float speedMultiplier;
+    private final float energyMultiplier;
+    private final int batchMin;
+    private final int batchMax;
     private final int tier;
     private final String defaultFacing;
 
     public StructureEntry(String name, String displayName, List<IStructureLayer> layers,
         Map<Character, ISymbolMapping> mappings, List<IStructureRequirement> requirements, List<String> recipeGroup,
-        int[] controllerOffset, String tintColor, int tier, String defaultFacing) {
+        int[] controllerOffset, String tintColor, float speedMultiplier, float energyMultiplier, int batchMin,
+        int batchMax, int tier, String defaultFacing) {
         this.name = name;
         this.displayName = displayName;
         this.layers = Collections.unmodifiableList(new ArrayList<>(layers));
@@ -41,6 +46,10 @@ public class StructureEntry implements IStructureEntry {
             : Collections.emptyList();
         this.controllerOffset = controllerOffset != null ? controllerOffset.clone() : null;
         this.tintColor = tintColor;
+        this.speedMultiplier = speedMultiplier;
+        this.energyMultiplier = energyMultiplier;
+        this.batchMin = batchMin;
+        this.batchMax = batchMax;
         this.tier = tier;
         this.defaultFacing = defaultFacing;
     }
@@ -86,6 +95,26 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
+    public float getSpeedMultiplier() {
+        return speedMultiplier;
+    }
+
+    @Override
+    public float getEnergyMultiplier() {
+        return energyMultiplier;
+    }
+
+    @Override
+    public int getBatchMin() {
+        return batchMin;
+    }
+
+    @Override
+    public int getBatchMax() {
+        return batchMax;
+    }
+
+    @Override
     public int getTier() {
         return tier;
     }
@@ -124,8 +153,25 @@ public class StructureEntry implements IStructureEntry {
             json.add("controllerOffset", offsetArray);
         }
 
+        JsonObject properties = new JsonObject();
         if (tintColor != null) {
-            json.addProperty("tintColor", tintColor);
+            properties.addProperty("tintColor", tintColor);
+        }
+        if (speedMultiplier != 1.0f) {
+            properties.addProperty("speedMultiplier", speedMultiplier);
+        }
+        if (energyMultiplier != 1.0f) {
+            properties.addProperty("energyMultiplier", energyMultiplier);
+        }
+        if (batchMin != 1) {
+            properties.addProperty("batchMin", batchMin);
+        }
+        if (batchMax != 1) {
+            properties.addProperty("batchMax", batchMax);
+        }
+        if (properties.entrySet()
+            .size() > 0) {
+            json.add("properties", properties);
         }
 
         if (tier != 1) {

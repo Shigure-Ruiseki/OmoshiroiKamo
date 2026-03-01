@@ -53,6 +53,26 @@ public interface IStructureEntry extends IStructureSerializable {
     String getTintColor();
 
     /**
+     * Get the machine speed multiplier.
+     */
+    float getSpeedMultiplier();
+
+    /**
+     * Get the machine energy multiplier.
+     */
+    float getEnergyMultiplier();
+
+    /**
+     * Get the minimum batch size.
+     */
+    int getBatchMin();
+
+    /**
+     * Get the maximum batch size.
+     */
+    int getBatchMax();
+
+    /**
      * Get the machine tier.
      */
     int getTier();

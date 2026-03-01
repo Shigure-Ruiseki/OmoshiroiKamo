@@ -76,19 +76,32 @@ public class StructureRegistrationVisitor<T extends AbstractMBModifierTE> implem
     }
 
     private String[][] combineLayers(List<IStructureLayer> layers) {
+        if (layers.isEmpty()) return new String[0][0];
 
-        List<String> allRows = new ArrayList<>();
-        for (IStructureLayer layer : layers) {
-            allRows.addAll(layer.getRows());
-        }
+        int layerCount = layers.size();
+        int rowCount = layers.get(0)
+            .getRows()
+            .size();
 
-        IStructureLayer first = layers.get(0);
-        String[][] result = new String[first.getRows()
-            .size()][];
-        for (int i = 0; i < first.getRows()
-            .size(); i++) {
-            result[i] = new String[] { first.getRows()
-                .get(i) };
+        String[][] result = new String[rowCount][layerCount];
+
+        for (int l = 0; l < layerCount; l++) {
+            List<String> rows = layers.get(l)
+                .getRows();
+            for (int r = 0; r < rowCount; r++) {
+                if (r < rows.size()) {
+                    result[r][l] = rows.get(r);
+                } else {
+                    // Fallback for safety using loop instead of String.repeat (Java 8)
+                    int length = layers.get(0)
+                        .getRows()
+                        .get(0)
+                        .length();
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < length; i++) sb.append(' ');
+                    result[r][l] = sb.toString();
+                }
+            }
         }
         return result;
     }

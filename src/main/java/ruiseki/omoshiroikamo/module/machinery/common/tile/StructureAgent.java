@@ -355,7 +355,7 @@ public class StructureAgent {
     public IStructureEntry getCustomProperties() {
         if (customStructureName == null || customStructureName.isEmpty()) return null;
         return StructureManager.getInstance()
-            .getCustomStructure(customStructureName);
+            .getStructureEntry(customStructureName);
     }
 
     // ========== Structure Tinting ==========

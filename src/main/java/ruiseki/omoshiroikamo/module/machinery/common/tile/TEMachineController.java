@@ -223,6 +223,7 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public void onFormed() {
         structureAgent.onFormed();
+        updateRecipeGroupFromStructure();
     }
 
     /**
@@ -550,6 +551,8 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // Update structure from loaded blueprint
         updateStructureFromBlueprint();
+        // Force update recipe groups to apply any JSON changes to existing multiblocks
+        updateRecipeGroupFromStructure();
         // Load process agent
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
@@ -660,6 +663,7 @@ public class TEMachineController extends AbstractMBModifierTE
     private void updateRecipeGroupFromStructure() {
         if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
             .isEmpty()) {
+            this.recipeGroups = new ArrayList<>(Collections.singletonList("default"));
             return;
         }
         IStructureEntry entry = StructureManager.getInstance()
@@ -668,6 +672,8 @@ public class TEMachineController extends AbstractMBModifierTE
             && !entry.getRecipeGroup()
                 .isEmpty()) {
             this.recipeGroups = new ArrayList<>(entry.getRecipeGroup());
+        } else {
+            this.recipeGroups = new ArrayList<>(Collections.singletonList("default"));
         }
     }
 

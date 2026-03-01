@@ -20,7 +20,11 @@ public class StructureEntryBuilder {
     private final List<String> recipeGroups = new ArrayList<>();
     private int[] controllerOffset;
     private String tintColor;
-    private int tier;
+    private float speedMultiplier = 1.0f;
+    private float energyMultiplier = 1.0f;
+    private int batchMin = 1;
+    private int batchMax = 1;
+    private int tier = 1;
     private String defaultFacing;
 
     public StructureEntryBuilder setName(String name) {
@@ -67,6 +71,26 @@ public class StructureEntryBuilder {
         return this;
     }
 
+    public StructureEntryBuilder setSpeedMultiplier(float speedMultiplier) {
+        this.speedMultiplier = speedMultiplier;
+        return this;
+    }
+
+    public StructureEntryBuilder setEnergyMultiplier(float energyMultiplier) {
+        this.energyMultiplier = energyMultiplier;
+        return this;
+    }
+
+    public StructureEntryBuilder setBatchMin(int batchMin) {
+        this.batchMin = batchMin;
+        return this;
+    }
+
+    public StructureEntryBuilder setBatchMax(int batchMax) {
+        this.batchMax = batchMax;
+        return this;
+    }
+
     public StructureEntryBuilder setTier(int tier) {
         this.tier = tier;
         return this;
@@ -90,6 +114,10 @@ public class StructureEntryBuilder {
             recipeGroups,
             controllerOffset,
             tintColor,
+            speedMultiplier,
+            energyMultiplier,
+            batchMin,
+            batchMax,
             tier,
             defaultFacing);
     }

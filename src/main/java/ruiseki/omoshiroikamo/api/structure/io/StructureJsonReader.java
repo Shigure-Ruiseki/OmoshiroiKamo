@@ -178,11 +178,34 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
             }
         }
 
-        // 5. tintColor
-        if (json.has("tintColor")) {
-            builder.setTintColor(
-                json.get("tintColor")
-                    .getAsString());
+        // 5. properties (tintColor, multipliers, batch limits)
+        if (json.has("properties")) {
+            JsonObject properties = json.getAsJsonObject("properties");
+            if (properties.has("tintColor")) {
+                builder.setTintColor(
+                    properties.get("tintColor")
+                        .getAsString());
+            }
+            if (properties.has("speedMultiplier")) {
+                builder.setSpeedMultiplier(
+                    properties.get("speedMultiplier")
+                        .getAsFloat());
+            }
+            if (properties.has("energyMultiplier")) {
+                builder.setEnergyMultiplier(
+                    properties.get("energyMultiplier")
+                        .getAsFloat());
+            }
+            if (properties.has("batchMin")) {
+                builder.setBatchMin(
+                    properties.get("batchMin")
+                        .getAsInt());
+            }
+            if (properties.has("batchMax")) {
+                builder.setBatchMax(
+                    properties.get("batchMax")
+                        .getAsInt());
+            }
         }
 
         // 6. tier
