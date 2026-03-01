@@ -24,6 +24,13 @@ import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
+// For debugging
+// import blockrenderer6343.client.renderer.WorldSceneRenderer;
+// import net.minecraft.client.renderer.RenderBlocks;
+// import net.minecraft.client.renderer.texture.IIconRegister;
+// import net.minecraft.util.IIcon;
+// import net.minecraft.init.Blocks;
+
 /**
  * GuiMultiblockHandler extension for ModularMachine structure previews.
  * Handles the actual rendering and placement of custom structures in the NEI
@@ -95,13 +102,20 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
         ExtendedFacing facing = ExtendedFacing.SOUTH_NORMAL_NONE;
         if (entry != null) {
-            if (entry.getControllerOffset() != null) {
+            // Note: CustomStructureRegistry stores the offset for the processed shape.
+            int[] registryOffset = CustomStructureRegistry.getControllerOffset(structureName);
+            if (registryOffset != null
+                && (registryOffset[0] != 0 || registryOffset[1] != 0 || registryOffset[2] != 0)) {
+                offset = registryOffset;
+            } else if (entry.getControllerOffset() != null) {
                 offset = entry.getControllerOffset();
             }
+
             if (entry.getDefaultFacing() != null) {
                 try {
                     String facingName = entry.getDefaultFacing()
-                        .toUpperCase();
+                        .toUpperCase()
+                        .trim();
                     // Simple mapping attempt
                     switch (facingName) {
                         case "DOWN" -> facing = ExtendedFacing.DOWN_NORMAL_NONE;
@@ -111,17 +125,19 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                         case "WEST" -> facing = ExtendedFacing.WEST_NORMAL_NONE;
                         case "EAST" -> facing = ExtendedFacing.EAST_NORMAL_NONE;
                         default -> {
-                            // Try to valueOf full name
                             try {
                                 facing = ExtendedFacing.valueOf(facingName);
-                            } catch (IllegalArgumentException e) {
-                                // Fallback to SOUTH if invalid
-                                facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+                            } catch (IllegalArgumentException e1) {
+                                try {
+                                    facing = ExtendedFacing.valueOf(facingName + "_NORMAL_NONE");
+                                } catch (IllegalArgumentException e2) {
+                                    facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+                                }
                             }
                         }
                     }
                 } catch (Exception e) {
-                    // Ignore invalid facing
+                    facing = ExtendedFacing.SOUTH_NORMAL_NONE;
                 }
             }
         }

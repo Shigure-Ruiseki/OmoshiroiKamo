@@ -69,26 +69,25 @@ public class CustomStructureRegistry {
                     .toArray(new String[0]);
             }
 
-            Logger.info("CustomStructureRegistry: Registering '" + entry.getName() + "'");
-
             // Apply rotation based on defaultFacing
             // SOUTH/NORTH etc: standard 180 rotation to align with StructureLib
             // UP/DOWN: transform layers (Y) to depth (Z) so it builds upright
+            String[][] processedShape;
             String defaultFacing = entry.getDefaultFacing();
-            String[][] rotatedShape;
             if (defaultFacing != null
                 && (defaultFacing.equalsIgnoreCase("UP") || defaultFacing.equalsIgnoreCase("DOWN"))) {
-                rotatedShape = transformForVertical(shape, defaultFacing);
+                processedShape = transformForVertical(shape, defaultFacing);
             } else {
-                rotatedShape = rotate180(shape);
+                processedShape = rotate180(shape);
             }
 
-            // Find controller 'Q' position
-            int[] offset = findControllerOffset(rotatedShape);
+            // Find controller 'Q' position in the PROCESSED shape
+            // returns {col, layer, row} -> maps to {A, B, C}
+            int[] offset = findControllerOffset(processedShape);
             controllerOffsets.put(entry.getName(), offset);
 
             StructureDefinition.Builder<TEMachineController> builder = StructureDefinition.builder();
-            builder.addShape(entry.getName(), transpose(rotatedShape));
+            builder.addShape(entry.getName(), transpose(processedShape));
             builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
             builder.addElement('_', isAir());
 

@@ -88,12 +88,12 @@ public class DefaultStructureGenerator {
     private static void updateSolarArrayJson(File file) {
         Map<Character, ISymbolMapping> defaultMappings = createDefaultMappings("solarArray");
         List<IStructureEntry> requiredStructures = new ArrayList<>();
-        requiredStructures.add(createStructureEntry("solarArrayTier1", SolarArrayShapes.SHAPE_TIER_1, 1));
-        requiredStructures.add(createStructureEntry("solarArrayTier2", SolarArrayShapes.SHAPE_TIER_2, 2));
-        requiredStructures.add(createStructureEntry("solarArrayTier3", SolarArrayShapes.SHAPE_TIER_3, 3));
-        requiredStructures.add(createStructureEntry("solarArrayTier4", SolarArrayShapes.SHAPE_TIER_4, 4));
-        requiredStructures.add(createStructureEntry("solarArrayTier5", SolarArrayShapes.SHAPE_TIER_5, 5));
-        requiredStructures.add(createStructureEntry("solarArrayTier6", SolarArrayShapes.SHAPE_TIER_6, 6));
+        requiredStructures.add(createStructureEntry("solarArrayTier1", SolarArrayShapes.SHAPE_TIER_1, 1, "UP"));
+        requiredStructures.add(createStructureEntry("solarArrayTier2", SolarArrayShapes.SHAPE_TIER_2, 2, "UP"));
+        requiredStructures.add(createStructureEntry("solarArrayTier3", SolarArrayShapes.SHAPE_TIER_3, 3, "UP"));
+        requiredStructures.add(createStructureEntry("solarArrayTier4", SolarArrayShapes.SHAPE_TIER_4, 4, "UP"));
+        requiredStructures.add(createStructureEntry("solarArrayTier5", SolarArrayShapes.SHAPE_TIER_5, 5, "UP"));
+        requiredStructures.add(createStructureEntry("solarArrayTier6", SolarArrayShapes.SHAPE_TIER_6, 6, "UP"));
 
         updateConfigWithMissing(file, defaultMappings, requiredStructures, "Solar Array");
     }
@@ -264,10 +264,11 @@ public class DefaultStructureGenerator {
     /**
      * Build a structure entry from a name and shape.
      */
-    private static IStructureEntry createStructureEntry(String name, String[][] shape, int tier) {
+    private static IStructureEntry createStructureEntry(String name, String[][] shape, int tier, String defaultFacing) {
         StructureEntryBuilder builder = new StructureEntryBuilder();
         builder.setName(name);
         builder.setTier(tier);
+        builder.setDefaultFacing(defaultFacing);
 
         // Add layers from the shape array
         for (int i = 0; i < shape.length; i++) {
@@ -282,6 +283,10 @@ public class DefaultStructureGenerator {
         builder.addMapping('F', new BlockMapping('F', "omoshiroikamo:basaltStructure:" + (tier - 1)));
 
         return builder.build();
+    }
+
+    private static IStructureEntry createStructureEntry(String name, String[][] shape, int tier) {
+        return createStructureEntry(name, shape, tier, "SOUTH");
     }
 
 }
