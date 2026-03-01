@@ -1,6 +1,6 @@
 # Recipe System: JSON Format Reference
 
-Recipes are defined in `config/omoshiroikamo/recipes/*.json`. 
+Recipes are defined in `config/omoshiroikamo/modular/recipes/*.json`. 
 
 ## 1. Recipe Properties
 

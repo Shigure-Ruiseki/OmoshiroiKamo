@@ -1,6 +1,6 @@
 # Structure System: JSON Format Reference
 
-This reference describes the JSON format used to define multiblock structures. Files should be placed in `config/omoshiroikamo/structures/`.
+This reference describes the JSON format used to define multiblock structures. Files should be placed in `config/omoshiroikamo/modular/structures/`.
 
 ## 1. File Structure
 A file can contain a single object or an array of objects. A special object named `default` (or `defaults`) can be used to define shared mappings.

@@ -1,6 +1,6 @@
 # レシピシステム: JSON フォーマットリファレンス
 
-レシピは `config/omoshiroikamo/recipes/*.json` で定義されます。
+レシピは `config/omoshiroikamo/modular/recipes/*.json` で定義されます。
 
 ## 1. レシピのプロパティ
 
