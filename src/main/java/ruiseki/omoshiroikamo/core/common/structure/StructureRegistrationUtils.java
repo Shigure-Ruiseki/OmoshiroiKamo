@@ -23,12 +23,11 @@ import ruiseki.omoshiroikamo.module.multiblock.common.block.TieredMultiblockInfo
 
 public class StructureRegistrationUtils {
 
-    // Reserved symbols that are handled specially and should not be overridden by
-    // JSON
+    // Reserved symbols that are handled specially and should not be overridden by JSON
     // Q = Controller (must be exactly 1), space = any, _ = mandatory air
     // A = Modifier slot, L = Lens slot (these need ofBlockAdderWithPos)
     // G = Solar Cells
-    private static final String RESERVED_SYMBOLS = "Q _ALG";
+    private static final String RESERVED_SYMBOLS = "Q _AGL";
 
     /**
      * Registers a single tier of a multiblock structure.

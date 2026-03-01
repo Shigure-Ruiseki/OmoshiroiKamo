@@ -70,7 +70,7 @@ public class StructureManager {
         if (initialized) return;
 
         try {
-            this.configDir = new File(minecraftDir, "config/" + LibMisc.MOD_ID);
+            this.configDir = new File(minecraftDir, LibMisc.MOD_ID);
             if (!configDir.exists()) {
                 configDir.mkdirs();
             }

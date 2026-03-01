@@ -52,9 +52,7 @@ public class CoreModule extends ModModuleBase {
 
         // Initialize the custom structure system
         StructureManager.getInstance()
-            .initialize(
-                event.getModConfigurationDirectory()
-                    .getParentFile());
+            .initialize(event.getModConfigurationDirectory());
 
         CapabilityItemHandler.register();
         CapabilityEnergy.register();
