@@ -230,29 +230,28 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
             }
         }
 
-        // 9. Auto-detect controller offset if not set
-        if (finalOffset == null) {
-            List<IStructureLayer> entryLayers = builder.getLayers();
-            outer: for (int l = 0; l < entryLayers.size(); l++) {
-                List<String> rows = entryLayers.get(l)
-                    .getRows();
-                for (int r = 0; r < rows.size(); r++) {
-                    String row = rows.get(r);
-                    int c = row.indexOf('Q');
-                    if (c != -1) {
-                        builder.setControllerOffset(new int[] { c, l, r });
-                        break outer;
-                    }
-                }
-            }
-        }
-
         return builder.build();
     }
 
     private static ISymbolMapping parseMapping(char symbol, JsonElement element) {
         if (element.isJsonPrimitive()) {
             return new BlockMapping(symbol, element.getAsString());
+        } else if (element.isJsonArray()) {
+            JsonArray blocksArray = element.getAsJsonArray();
+            List<String> blocks = new ArrayList<>();
+            for (JsonElement blockEl : blocksArray) {
+                if (blockEl.isJsonObject()) {
+                    JsonObject blockObj = blockEl.getAsJsonObject();
+                    if (blockObj.has("id")) {
+                        blocks.add(
+                            blockObj.get("id")
+                                .getAsString());
+                    }
+                } else {
+                    blocks.add(blockEl.getAsString());
+                }
+            }
+            return new BlockMapping(symbol, blocks);
         } else if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
             if (obj.has("block")) {

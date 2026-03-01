@@ -21,6 +21,7 @@ import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 /**
  * Registers CustomStructures with StructureLib using the new IStructureEntry
@@ -84,6 +85,11 @@ public class CustomStructureRegistry {
             builder.addShape(entry.getName(), transpose(rotatedShape));
             builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
             builder.addElement('_', isAir());
+
+            if (!entry.getMappings()
+                .containsKey('F')) {
+                builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
+            }
 
             // Add dynamic mappings
             for (Map.Entry<Character, ISymbolMapping> mapEntry : entry.getMappings()

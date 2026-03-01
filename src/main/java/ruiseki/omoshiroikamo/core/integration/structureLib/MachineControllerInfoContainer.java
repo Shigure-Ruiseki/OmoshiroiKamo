@@ -174,6 +174,14 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
      */
     private int[] getOffset(String structureName, TEMachineController ctx) {
         if (structureName != null && !structureName.isEmpty()) {
+            // Priority 1: Use offset from Registry (this is the rotated/correct offset)
+            int[] registryOffset = CustomStructureRegistry.getControllerOffset(structureName);
+            if (registryOffset != null
+                && (registryOffset[0] != 0 || registryOffset[1] != 0 || registryOffset[2] != 0)) {
+                return registryOffset;
+            }
+
+            // Priority 2: Use offset from Entry (raw JSON)
             IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structureName);
             if (entry != null && entry.getControllerOffset() != null) {

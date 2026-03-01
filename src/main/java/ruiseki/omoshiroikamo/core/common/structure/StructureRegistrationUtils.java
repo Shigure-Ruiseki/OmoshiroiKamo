@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.TieredMultiblockInfoContainer;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public class StructureRegistrationUtils {
 
@@ -72,6 +73,9 @@ public class StructureRegistrationUtils {
 
         // Add Air element ('_') - mandatory air block
         builder.addElement('_', isAir());
+
+        // Add Frame element ('F') - default frame block
+        builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
 
         // Add Custom Elements
         if (elementAdder != null) {
@@ -133,6 +137,11 @@ public class StructureRegistrationUtils {
 
         // Add Air element ('_') - mandatory air block
         builder.addElement('_', isAir());
+
+        // Add Frame element ('F') - default frame block if not specified
+        if (dynamicMappings == null || !dynamicMappings.containsKey('F')) {
+            builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
+        }
 
         // Add dynamic mappings from JSON (skip reserved symbols)
         if (dynamicMappings != null) {

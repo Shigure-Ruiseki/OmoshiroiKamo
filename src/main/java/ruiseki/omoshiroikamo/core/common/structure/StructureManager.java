@@ -116,24 +116,78 @@ public class StructureManager {
             StructureJsonReader.FileData fileData = reader.readFile(file);
 
             if (fileData != null) {
-                for (IStructureEntry entry : fileData.structures.values()) {
-                    StructureValidationVisitor validator = new StructureValidationVisitor();
-                    validator.setExternalMappings(fileData.defaultMappings);
-                    entry.accept(validator);
+                int successCount = 0;
+                int errorCount = 0;
 
-                    if (validator.hasErrors()) {
-                        for (String error : validator.getErrors()) {
-                            errorCollector
-                                .collect(StructureException.ErrorType.VALIDATION_ERROR, name + ".json", error);
-                        }
+                for (IStructureEntry entry : fileData.structures.values()) {
+                    if (validateAndRegister(entry, fileData.defaultMappings, name + ".json", false)) {
+                        successCount++;
+                    } else {
+                        errorCount++;
                     }
-                    structureEntries.put(entry.getName(), entry);
                 }
+
+                // Always register default mappings even if some structures failed
                 fileDefaultMappings.put(name, fileData.defaultMappings);
+
+                if (successCount > 0 || errorCount > 0) {
+                    Logger.info(
+                        name + ".json: "
+                            + successCount
+                            + " structure(s) loaded successfully, "
+                            + errorCount
+                            + " failed validation");
+                }
             }
         } catch (Exception e) {
             errorCollector.collect(StructureException.loadFailed(name + ".json", e));
         }
+    }
+
+    /**
+     * Validate and register a structure entry.
+     *
+     * @param entry           The structure entry to validate and register
+     * @param defaultMappings External default mappings for validation
+     * @param source          Source identifier for error reporting (e.g., "ore_miner.json",
+     *                        "custom:myStructure")
+     * @param isCustom        Whether this is a custom structure (will be added to customStructures map)
+     * @return true if validation succeeded and structure was registered, false otherwise
+     */
+    private boolean validateAndRegister(IStructureEntry entry, Map<Character, ISymbolMapping> defaultMappings,
+        String source, boolean isCustom) {
+        // Validate structure
+        StructureValidationVisitor validator = new StructureValidationVisitor();
+        validator.setExternalMappings(defaultMappings);
+        entry.accept(validator);
+
+        if (validator.hasErrors()) {
+            // Collect all validation errors
+            for (String error : validator.getErrors()) {
+                errorCollector.collect(StructureException.ErrorType.VALIDATION_ERROR, source, error);
+            }
+
+            // Log warning
+            String structureType = isCustom ? "Custom structure" : "Structure";
+            Logger.warn(
+                structureType + " '"
+                    + entry.getName()
+                    + "' from "
+                    + source
+                    + " has validation errors and will not be registered");
+
+            return false; // Validation failed
+        }
+
+        // Register structure (validation succeeded)
+        structureEntries.put(entry.getName(), entry);
+
+        // Also add to customStructures if this is a custom structure
+        if (isCustom) {
+            customStructures.put(entry.getName(), entry);
+        }
+
+        return true; // Successfully registered
     }
 
     public String[][] getShape(String fileKey, String structureName) {
@@ -239,9 +293,23 @@ public class StructureManager {
         StructureJsonReader reader = new StructureJsonReader(customDir);
         try {
             StructureJsonReader.FileData fileData = reader.read();
+            int successCount = 0;
+            int errorCount = 0;
+
             for (IStructureEntry entry : fileData.structures.values()) {
-                structureEntries.put(entry.getName(), entry);
-                customStructures.put(entry.getName(), entry);
+                if (validateAndRegister(entry, fileData.defaultMappings, "custom:" + entry.getName(), true)) {
+                    successCount++;
+                } else {
+                    errorCount++;
+                }
+            }
+
+            if (successCount > 0 || errorCount > 0) {
+                Logger.info(
+                    "Custom structures: " + successCount
+                        + " loaded successfully, "
+                        + errorCount
+                        + " failed validation");
             }
         } catch (Exception e) {
             errorCollector.collect(StructureException.loadFailed("custom_structures", e));

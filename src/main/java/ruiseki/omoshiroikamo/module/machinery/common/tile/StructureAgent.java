@@ -14,8 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
-import com.gtnewhorizon.structurelib.structure.StructureDefinition;
-import com.gtnewhorizon.structurelib.structure.StructureUtility;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -25,22 +23,12 @@ import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**
  * Handles structure-related logic for {@link TEMachineController}.
  */
 public class StructureAgent {
-
-    private static final IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
-
-    static {
-        STRUCTURE_DEFINITION = StructureDefinition.<TEMachineController>builder()
-            .addShape("main", new String[][] { { "Q" } })
-            .addElement('Q', StructureUtility.ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0))
-            .build();
-    }
 
     private final TEMachineController controller;
 
@@ -64,17 +52,15 @@ public class StructureAgent {
                 return customDef;
             }
         }
-        // Fallback to default structure
-        return STRUCTURE_DEFINITION;
+        return null;
     }
 
     public int[][] getOffSet() {
-        // Get offset from custom structure definition if available
+        // Get offset from custom structure registry
         if (customStructureName != null && !customStructureName.isEmpty()) {
-            IStructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(customStructureName);
-            if (entry != null && entry.getControllerOffset() != null && entry.getControllerOffset().length >= 3) {
-                return new int[][] { entry.getControllerOffset() };
+            int[] offset = CustomStructureRegistry.getControllerOffset(customStructureName);
+            if (offset != null) {
+                return new int[][] { offset };
             }
         }
         // Default offset (no structure)
