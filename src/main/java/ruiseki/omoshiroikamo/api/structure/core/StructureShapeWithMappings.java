@@ -11,9 +11,12 @@ public class StructureShapeWithMappings {
 
     public final String[][] shape;
     public final Map<Character, Object> dynamicMappings;
+    public final int[] controllerOffset;
 
-    public StructureShapeWithMappings(String[][] shape, Map<Character, Object> dynamicMappings) {
+    public StructureShapeWithMappings(String[][] shape, Map<Character, Object> dynamicMappings,
+        int[] controllerOffset) {
         this.shape = shape;
         this.dynamicMappings = dynamicMappings != null ? dynamicMappings : new HashMap<>();
+        this.controllerOffset = controllerOffset;
     }
 }

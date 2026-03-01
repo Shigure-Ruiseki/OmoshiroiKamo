@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.core.common.structure;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -10,9 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
@@ -116,10 +112,10 @@ public class StructureManager {
             File file = new File(configDir, "structures/" + name + ".json");
             if (!file.exists()) return;
 
-            try (FileReader fr = new FileReader(file)) {
-                JsonElement root = new JsonParser().parse(fr);
-                StructureJsonReader.FileData fileData = StructureJsonReader.readFile(root);
+            StructureJsonReader reader = new StructureJsonReader(file);
+            StructureJsonReader.FileData fileData = reader.readFile(file);
 
+            if (fileData != null) {
                 for (IStructureEntry entry : fileData.structures.values()) {
                     StructureValidationVisitor validator = new StructureValidationVisitor();
                     validator.setExternalMappings(fileData.defaultMappings);
@@ -203,7 +199,7 @@ public class StructureManager {
         // 2. Overrides
         mappings.putAll(entry.getMappings());
 
-        return new StructureShapeWithMappings(shape, mappings);
+        return new StructureShapeWithMappings(shape, mappings, entry.getControllerOffset());
     }
 
     private void warnOnce(String key, String message) {
@@ -240,21 +236,15 @@ public class StructureManager {
             return;
         }
 
-        File[] files = customDir.listFiles((dir, name) -> name.endsWith(".json"));
-        if (files == null) return;
-
-        for (File file : files) {
-            try (FileReader fr = new FileReader(file)) {
-                JsonElement root = new JsonParser().parse(fr);
-                StructureJsonReader.FileData fileData = StructureJsonReader.readFile(root);
-
-                for (IStructureEntry entry : fileData.structures.values()) {
-                    structureEntries.put(entry.getName(), entry);
-                    customStructures.put(entry.getName(), entry);
-                }
-            } catch (Exception e) {
-                errorCollector.collect(StructureException.loadFailed(file.getName(), e));
+        StructureJsonReader reader = new StructureJsonReader(customDir);
+        try {
+            StructureJsonReader.FileData fileData = reader.read();
+            for (IStructureEntry entry : fileData.structures.values()) {
+                structureEntries.put(entry.getName(), entry);
+                customStructures.put(entry.getName(), entry);
             }
+        } catch (Exception e) {
+            errorCollector.collect(StructureException.loadFailed("custom_structures", e));
         }
     }
 

@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.structure.io;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,19 +18,47 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
+import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 
 /**
  * Reader that parses JSON into IStructureEntry.
+ * Implements AbstractJsonReader for consistency with other JSON loaders.
  */
-public class StructureJsonReader {
+public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.FileData> {
 
     public static class FileData {
 
         public final Map<String, IStructureEntry> structures = new LinkedHashMap<>();
         public final Map<Character, ISymbolMapping> defaultMappings = new HashMap<>();
+
+        public void merge(FileData other) {
+            if (other == null) return;
+            this.structures.putAll(other.structures);
+            this.defaultMappings.putAll(other.defaultMappings);
+        }
     }
 
-    public static FileData readFile(JsonElement root) {
+    public StructureJsonReader(File path) {
+        super(path);
+    }
+
+    @Override
+    public FileData read() throws IOException {
+        FileData data = new FileData();
+        if (path.isDirectory()) {
+            List<File> files = listJsonFiles(path);
+            for (File file : files) {
+                data.merge(readFile(file));
+            }
+        } else if (path.exists()) {
+            data.merge(readFile(path));
+        }
+        this.cache = data;
+        return data;
+    }
+
+    @Override
+    protected FileData readFile(JsonElement root, File file) {
         FileData data = new FileData();
 
         if (root.isJsonObject()) {
@@ -59,10 +89,12 @@ public class StructureJsonReader {
         return data;
     }
 
-    private static void parseDefaultMappings(JsonObject obj, Map<Character, ISymbolMapping> target) {
+    private void parseDefaultMappings(JsonObject obj, Map<Character, ISymbolMapping> target) {
         if (obj.has("mappings")) {
             JsonObject mappingsObj = obj.getAsJsonObject("mappings");
             for (Map.Entry<String, JsonElement> entry : mappingsObj.entrySet()) {
+                if (entry.getKey()
+                    .isEmpty()) continue;
                 char symbol = entry.getKey()
                     .charAt(0);
                 ISymbolMapping mapping = parseMapping(symbol, entry.getValue());
@@ -75,8 +107,8 @@ public class StructureJsonReader {
         StructureEntryBuilder builder = new StructureEntryBuilder();
 
         // 1. Basic Info
-        String name = json.get("name")
-            .getAsString();
+        String name = json.has("name") ? json.get("name")
+            .getAsString() : "unnamed";
         builder.setName(name);
         if (json.has("displayName")) {
             builder.setDisplayName(
@@ -100,6 +132,8 @@ public class StructureJsonReader {
         if (json.has("mappings")) {
             JsonObject mappingsObj = json.getAsJsonObject("mappings");
             for (Map.Entry<String, JsonElement> entry : mappingsObj.entrySet()) {
+                if (entry.getKey()
+                    .isEmpty()) continue;
                 char symbol = entry.getKey()
                     .charAt(0);
                 ISymbolMapping mapping = parseMapping(symbol, entry.getValue());
@@ -118,7 +152,6 @@ public class StructureJsonReader {
                     IStructureLayer layer = parseLayer(layerEl.getAsJsonObject());
                     if (layer != null) builder.addLayer(layer);
                 } else if (layerEl.isJsonArray()) {
-                    // Traditional format: Array of strings
                     JsonArray rowsArray = layerEl.getAsJsonArray();
                     List<String> rows = new ArrayList<>();
                     for (JsonElement rowEl : rowsArray) {
@@ -130,17 +163,18 @@ public class StructureJsonReader {
         }
 
         // 4. controllerOffset
+        int[] finalOffset = null;
         if (json.has("controllerOffset")) {
             JsonArray offsetArray = json.getAsJsonArray("controllerOffset");
             if (offsetArray.size() >= 3) {
-                int[] offset = new int[3];
-                offset[0] = offsetArray.get(0)
+                finalOffset = new int[3];
+                finalOffset[0] = offsetArray.get(0)
                     .getAsInt();
-                offset[1] = offsetArray.get(1)
+                finalOffset[1] = offsetArray.get(1)
                     .getAsInt();
-                offset[2] = offsetArray.get(2)
+                finalOffset[2] = offsetArray.get(2)
                     .getAsInt();
-                builder.setControllerOffset(offset);
+                builder.setControllerOffset(finalOffset);
             }
         }
 
@@ -167,15 +201,48 @@ public class StructureJsonReader {
 
         // 8. Requirements
         if (json.has("requirements")) {
-            JsonArray reqsArray = json.getAsJsonArray("requirements");
-            for (int i = 0; i < reqsArray.size(); i++) {
-                JsonObject reqObj = reqsArray.get(i)
-                    .getAsJsonObject();
-                String type = reqObj.get("type")
-                    .getAsString();
-                IStructureRequirement req = RequirementRegistry.parse(type, reqObj);
-                if (req != null) {
-                    builder.addRequirement(req);
+            JsonElement reqsElement = json.get("requirements");
+            if (reqsElement.isJsonArray()) {
+                JsonArray reqsArray = reqsElement.getAsJsonArray();
+                for (int i = 0; i < reqsArray.size(); i++) {
+                    JsonObject reqObj = reqsArray.get(i)
+                        .getAsJsonObject();
+                    String type = reqObj.has("type") ? reqObj.get("type")
+                        .getAsString() : null;
+                    if (type != null) {
+                        IStructureRequirement req = RequirementRegistry.parse(type, reqObj);
+                        if (req != null) builder.addRequirement(req);
+                    }
+                }
+            } else if (reqsElement.isJsonObject()) {
+                JsonObject reqsObj = reqsElement.getAsJsonObject();
+                for (Map.Entry<String, JsonElement> entry : reqsObj.entrySet()) {
+                    String type = entry.getKey();
+                    if (entry.getValue()
+                        .isJsonObject()) {
+                        IStructureRequirement req = RequirementRegistry.parse(
+                            type,
+                            entry.getValue()
+                                .getAsJsonObject());
+                        if (req != null) builder.addRequirement(req);
+                    }
+                }
+            }
+        }
+
+        // 9. Auto-detect controller offset if not set
+        if (finalOffset == null) {
+            List<IStructureLayer> entryLayers = builder.getLayers();
+            outer: for (int l = 0; l < entryLayers.size(); l++) {
+                List<String> rows = entryLayers.get(l)
+                    .getRows();
+                for (int r = 0; r < rows.size(); r++) {
+                    String row = rows.get(r);
+                    int c = row.indexOf('Q');
+                    if (c != -1) {
+                        builder.setControllerOffset(new int[] { c, l, r });
+                        break outer;
+                    }
                 }
             }
         }

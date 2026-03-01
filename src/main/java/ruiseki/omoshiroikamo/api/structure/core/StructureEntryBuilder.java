@@ -38,6 +38,10 @@ public class StructureEntryBuilder {
         return this;
     }
 
+    public List<IStructureLayer> getLayers() {
+        return layers;
+    }
+
     public StructureEntryBuilder addMapping(char symbol, ISymbolMapping mapping) {
         this.mappings.put(symbol, mapping);
         return this;
