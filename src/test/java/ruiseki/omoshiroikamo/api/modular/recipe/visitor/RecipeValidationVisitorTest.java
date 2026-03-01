@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.EnergyInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.EnergyOutput;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemOutput;
 
