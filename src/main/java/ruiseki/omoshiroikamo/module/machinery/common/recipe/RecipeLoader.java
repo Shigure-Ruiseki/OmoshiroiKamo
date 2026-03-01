@@ -107,6 +107,18 @@ public class RecipeLoader {
         return null;
     }
 
+    public IModularRecipe getRecipeByRegistryName(String registryName) {
+        if (registryName == null || registryName.isEmpty()) return null;
+        for (List<IModularRecipe> list : recipesByGroup.values()) {
+            for (IModularRecipe recipe : list) {
+                if (registryName.equals(recipe.getRegistryName())) {
+                    return recipe;
+                }
+            }
+        }
+        return null;
+    }
+
     public void addRecipe(String group, IModularRecipe recipe) {
         List<IModularRecipe> list = recipesByGroup.computeIfAbsent(group, k -> new ArrayList<>());
         list.add(recipe);

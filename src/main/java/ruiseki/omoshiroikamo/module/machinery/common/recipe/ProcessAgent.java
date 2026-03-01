@@ -294,6 +294,18 @@ public class ProcessAgent extends AbstractRecipeProcess {
         waitingForOutput = nbt.getBoolean("waitingForOutput");
         currentRecipeName = nbt.hasKey("recipeName") ? nbt.getString("recipeName") : null;
 
+        if (running || waitingForOutput) {
+            if (currentRecipeName != null && !currentRecipeName.isEmpty()) {
+                this.currentRecipe = RecipeLoader.getInstance()
+                    .getRecipeByRegistryName(currentRecipeName);
+            }
+            if (this.currentRecipe == null) {
+                this.running = false;
+                this.waitingForOutput = false;
+                this.currentRecipeName = null;
+            }
+        }
+
         clearCaches();
 
         if (running || waitingForOutput) {

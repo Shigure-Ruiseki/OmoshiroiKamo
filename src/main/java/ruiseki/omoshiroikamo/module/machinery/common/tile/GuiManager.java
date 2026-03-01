@@ -291,6 +291,11 @@ public class GuiManager {
     private String getRecipeNameText() {
         ProcessAgent agent = controller.getProcessAgent();
         if (agent.isRunning() && !agent.isWaitingForOutput()) {
+            IModularRecipe recipe = agent.getCurrentRecipe();
+            if (recipe != null) {
+                String name = recipe.getName();
+                if (name != null && !name.isEmpty()) return name;
+            }
             String name = agent.getCurrentRecipeName();
             if (name != null && !name.isEmpty()) {
                 return name;
