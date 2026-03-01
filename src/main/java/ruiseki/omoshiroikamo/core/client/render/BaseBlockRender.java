@@ -441,7 +441,8 @@ public class BaseBlockRender<B extends BlockOK, T extends TileEntityOK> {
             }
         }
 
-        return ((TextureMap) Minecraft.getMinecraft().getTextureManager()
+        return ((TextureMap) Minecraft.getMinecraft()
+            .getTextureManager()
             .getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite("missingno");
     }
 
