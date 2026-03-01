@@ -155,6 +155,10 @@ public class StructureEntry implements IStructureEntry {
             json.add("requirements", reqsArray);
         }
 
+        if (defaultFacing != null) {
+            json.addProperty("defaultFacing", defaultFacing);
+        }
+
         return json;
     }
 }

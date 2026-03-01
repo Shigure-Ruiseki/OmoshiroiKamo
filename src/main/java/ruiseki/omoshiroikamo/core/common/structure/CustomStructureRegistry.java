@@ -71,11 +71,17 @@ public class CustomStructureRegistry {
 
             Logger.info("CustomStructureRegistry: Registering '" + entry.getName() + "'");
 
-            // For now, assume defaultFacing is Southern (or handle it if we add it to
-            // IStructureEntry)
-            // Existing custom structures might use rotate180 as default to match
-            // StructureLib's coordinate system
-            String[][] rotatedShape = rotate180(shape);
+            // Apply rotation based on defaultFacing
+            // SOUTH/NORTH etc: standard 180 rotation to align with StructureLib
+            // UP/DOWN: transform layers (Y) to depth (Z) so it builds upright
+            String defaultFacing = entry.getDefaultFacing();
+            String[][] rotatedShape;
+            if (defaultFacing != null
+                && (defaultFacing.equalsIgnoreCase("UP") || defaultFacing.equalsIgnoreCase("DOWN"))) {
+                rotatedShape = transformForVertical(shape, defaultFacing);
+            } else {
+                rotatedShape = rotate180(shape);
+            }
 
             // Find controller 'Q' position
             int[] offset = findControllerOffset(rotatedShape);
@@ -134,6 +140,31 @@ public class CustomStructureRegistry {
             }
         }
         return null;
+    }
+
+    private static String[][] transformForVertical(String[][] shape, String facing) {
+        int originalLayers = shape.length;
+        if (originalLayers == 0) return shape;
+
+        int originalRows = shape[0].length;
+        boolean isDown = "DOWN".equalsIgnoreCase(facing);
+
+        // Transform layers (Y) to rows (Z) to build the structure vertically
+        String[][] transformed = new String[originalRows][originalLayers];
+
+        for (int originalZ = 0; originalZ < originalRows; originalZ++) {
+            for (int originalY = 0; originalY < originalLayers; originalY++) {
+                int targetLayerIndex = originalZ;
+                int targetRowIndex = isDown ? (originalLayers - 1 - originalY) : originalY;
+
+                if (shape[originalY].length > originalZ) {
+                    transformed[targetLayerIndex][targetRowIndex] = shape[originalY][originalZ];
+                } else {
+                    transformed[targetLayerIndex][targetRowIndex] = "";
+                }
+            }
+        }
+        return transformed;
     }
 
     private static String[][] rotate180(String[][] shape) {
