@@ -24,7 +24,7 @@ public class StructureEntryBuilder {
     private float energyMultiplier = 1.0f;
     private int batchMin = 1;
     private int batchMax = 1;
-    private int tier = 1;
+    private int tier = 0;
     private String defaultFacing;
 
     public StructureEntryBuilder setName(String name) {

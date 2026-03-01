@@ -42,6 +42,14 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
         super(path);
     }
 
+    /**
+     * Static helper to read FileData from a JsonElement.
+     * Useful for testing and cases where the JSON is already parsed.
+     */
+    public static FileData readFile(JsonElement root) {
+        return new StructureJsonReader(null).readFile(root, null);
+    }
+
     @Override
     public FileData read() throws IOException {
         FileData data = new FileData();
@@ -108,7 +116,7 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
 
         // 1. Basic Info
         String name = json.has("name") ? json.get("name")
-            .getAsString() : "unnamed";
+            .getAsString() : null;
         builder.setName(name);
         if (json.has("displayName")) {
             builder.setDisplayName(
