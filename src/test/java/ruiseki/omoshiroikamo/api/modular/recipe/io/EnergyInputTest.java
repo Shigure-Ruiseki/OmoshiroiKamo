@@ -110,7 +110,21 @@ public class EnergyInputTest {
 
         assertNotNull(input);
         assertEquals(1000, input.getRequiredAmount());
-        assertTrue(input.isPerTick(), "perTickキーがない場合はtrue");
+        assertTrue(input.isPerTick(), "perTickキーがない点はデフォルトでtrue");
+    }
+
+    @Test
+    @DisplayName("JSONから読み込み時、pertick（小文字）でも正しく読み込める")
+    public void testJSON読み込み_pertick小文字() {
+        JsonObject json = new JsonObject();
+        json.addProperty("energy", 500);
+        json.addProperty("pertick", false);
+
+        EnergyInput input = EnergyInput.fromJson(json);
+
+        assertNotNull(input);
+        assertEquals(500, input.getRequiredAmount());
+        assertFalse(input.isPerTick(), "pertick（小文字）キーが認識されるべき");
     }
 
     @Test
@@ -170,12 +184,12 @@ public class EnergyInputTest {
     @DisplayName("エネルギー量が0以下の場合はvalidateがfalseを返す")
     public void test不正なInputのvalidate() {
         // 0 エネルギー
-        EnergyInput invalidInput1 = new EnergyInput(0, true);
-        assertFalse(invalidInput1.validate(), "0エネルギーは不正");
+        assertFalse(new EnergyInput(0, true).validate(), "perTick=trueで0エネルギーは不正");
+        assertFalse(new EnergyInput(0, false).validate(), "perTick=falseで0エネルギーは不正");
 
         // 負のエネルギー
-        EnergyInput invalidInput2 = new EnergyInput(-100, true);
-        assertFalse(invalidInput2.validate(), "負のエネルギーは不正");
+        assertFalse(new EnergyInput(-100, true).validate(), "perTick=trueで負のエネルギーは不正");
+        assertFalse(new EnergyInput(-100, false).validate(), "perTick=falseで負のエネルギーは不正");
     }
 
     // ========================================

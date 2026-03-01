@@ -136,18 +136,18 @@ public class RecipeValidationVisitorTest {
     }
 
     @Test
-    @DisplayName("入力エネルギーが0の場合にエラーを起こさない")
+    @DisplayName("入力エネルギーが0の場合はエラー")
     public void test入力エネルギーが0以下() {
         IModularRecipe recipe = ModularRecipe.builder()
             .registryName("invalid_energy")
             .recipeGroup("test")
             .duration(100)
-            .addInput(new EnergyInput(0))
+            .addInput(new EnergyInput(0)) // ← 0はエラー
             .build();
 
         recipe.accept(validator);
 
-        assertTrue(validator.isValid());
+        assertFalse(validator.isValid());
     }
 
     @Test
@@ -163,6 +163,22 @@ public class RecipeValidationVisitorTest {
         recipe.accept(validator);
 
         assertFalse(validator.isValid());
+    }
+
+    @Test
+    @DisplayName("エネルギー入出力の記述がない場合は常にOK")
+    public void testエネルギー記述なし() {
+        // エネルギーなしのレシピ
+        IModularRecipe recipe = ModularRecipe.builder()
+            .registryName("no_energy")
+            .recipeGroup("test")
+            .duration(100)
+            .addInput(new ItemInput(Items.iron_ingot, 1))
+            .build();
+
+        recipe.accept(validator);
+
+        assertTrue(validator.isValid());
     }
 
     // ========================================
