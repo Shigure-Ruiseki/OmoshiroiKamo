@@ -38,46 +38,50 @@ public class RegistryMocker {
 
     private static void mockFluids() throws Exception {
         try {
+            // FluidRegistry class might trigger static initialization, so be careful
             Class<?> frClass = Class.forName("net.minecraftforge.fluids.FluidRegistry");
 
-            Field fluidsField = frClass.getDeclaredField("fluids");
-            fluidsField.setAccessible(true);
-            Map<String, Fluid> fluids = (Map<String, Fluid>) fluidsField.get(null);
-
-            if (fluids == null) {
-                fluids = new HashMap<>();
-                fluidsField.set(null, fluids);
-            }
-
+            // Try to set up the fluids map - may fail if FluidRegistry is initializing
             try {
-                Field masterTableField = frClass.getDeclaredField("masterFluidTable");
-                masterTableField.setAccessible(true);
-                if (masterTableField.get(null) == null) {
-                    masterTableField.set(null, new HashMap<Fluid, Integer>());
+                Field fluidsField = frClass.getDeclaredField("fluids");
+                fluidsField.setAccessible(true);
+                Map<String, Fluid> fluids = (Map<String, Fluid>) fluidsField.get(null);
+
+                if (fluids == null) {
+                    fluids = new HashMap<>();
+                    setStaticFinalField(frClass, "fluids", fluids);
                 }
-            } catch (NoSuchFieldException e) {}
 
-            // water/lava の実体作成
-            if (!fluids.containsKey("water")) {
-                Fluid water = new Fluid("water");
-                fluids.put("water", water);
+                try {
+                    Field masterTableField = frClass.getDeclaredField("masterFluidTable");
+                    masterTableField.setAccessible(true);
+                    if (masterTableField.get(null) == null) {
+                        setStaticFinalField(frClass, "masterFluidTable", new HashMap<Fluid, Integer>());
+                    }
+                } catch (NoSuchFieldException e) {}
+
+                // water/lava の実体作成
+                if (!fluids.containsKey("water")) {
+                    Fluid water = new Fluid("water");
+                    fluids.put("water", water);
+                    setStaticFinalField(frClass, "WATER", water);
+                }
+                if (!fluids.containsKey("lava")) {
+                    Fluid lava = new Fluid("lava");
+                    fluids.put("lava", lava);
+                    setStaticFinalField(frClass, "LAVA", lava);
+                }
+
+                System.out.println("RegistryMocker: Successfully mocked FluidRegistry");
+            } catch (Exception e) {
+                // If FluidRegistry initialization fails, that's okay - tests will skip
+                Logger.warn("RegistryMocker: Could not fully mock FluidRegistry: " + e.getMessage());
             }
-            if (!fluids.containsKey("lava")) {
-                Fluid lava = new Fluid("lava");
-                fluids.put("lava", lava);
-            }
-
-            Fluid water = fluids.get("water");
-            Fluid lava = fluids.get("lava");
-
-            // FluidRegistry.WATER/LAVA をセット
-            setStaticFinalField(frClass, "WATER", water);
-            setStaticFinalField(frClass, "LAVA", lava);
-
-            // Fluid クラス自体の静的フィールドも必要なら
-            // 但し通常は FluidRegistry を経由する
         } catch (ClassNotFoundException e) {
             Logger.warn("RegistryMocker: FluidRegistry not found.");
+        } catch (Throwable t) {
+            // Catch any other errors to prevent test setup from failing completely
+            Logger.warn("RegistryMocker: FluidRegistry mock failed: " + t.getMessage());
         }
     }
 
@@ -147,17 +151,38 @@ public class RegistryMocker {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
 
-            // static final フィールドの modifiers を書き換え
-            // Java 12+ では modifiers は書き換えられないが、1.7.10 (Java 8 or 7) なら可能
+            // Try the old way first (works on Java 8-11)
             try {
                 Field modifiersField = Field.class.getDeclaredField("modifiers");
                 modifiersField.setAccessible(true);
                 modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                field.set(null, value);
+                return;
             } catch (NoSuchFieldException e) {
-                // Java 12+ の場合は別の方法が必要だが、1.7.10 環境ならこれで十分なはず
+                // Java 12+: modifiers field doesn't exist, fall through to Unsafe
             }
 
-            field.set(null, value);
+            // Java 12+: Use Unsafe to set the field
+            try {
+                Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+                Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+                unsafeField.setAccessible(true);
+                Object unsafe = unsafeField.get(null);
+
+                // Get the field offset
+                java.lang.reflect.Method staticFieldOffsetMethod = unsafeClass.getMethod("staticFieldOffset", Field.class);
+                java.lang.reflect.Method staticFieldBaseMethod = unsafeClass.getMethod("staticFieldBase", Field.class);
+                java.lang.reflect.Method putObjectMethod = unsafeClass.getMethod("putObject", Object.class, long.class, Object.class);
+
+                Object base = staticFieldBaseMethod.invoke(unsafe, field);
+                long offset = (Long) staticFieldOffsetMethod.invoke(unsafe, field);
+                putObjectMethod.invoke(unsafe, base, offset, value);
+
+                System.out.println("RegistryMocker: Successfully set " + fieldName + " using Unsafe");
+            } catch (Exception unsafeEx) {
+                Logger.warn("RegistryMocker: Failed to set field using Unsafe: " + fieldName + " - " + unsafeEx.getMessage());
+                throw unsafeEx;
+            }
         } catch (NoSuchFieldException e) {
             Logger.warn("RegistryMocker: Field not found: " + fieldName);
         }

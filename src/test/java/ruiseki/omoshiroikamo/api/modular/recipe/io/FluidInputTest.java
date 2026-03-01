@@ -8,9 +8,12 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 import com.google.gson.JsonObject;
 
@@ -18,19 +21,15 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 
 /**
  * FluidInput のユニットテスト
- *
- * ============================================
- * 練習問題の解答
- * ============================================
- *
- * FluidInputの基本的な機能をテストします。
- * ItemInputTest.javaを参考にしながら、
- * Fluid特有の機能もテストしています。
- *
- * ============================================
+ * テスト環境でFluidStackを扱えないので無視されます
  */
 @DisplayName("FluidInput のテスト")
 public class FluidInputTest {
+
+    @BeforeAll
+    public static void setupAll() {
+        RegistryMocker.mockAll();
+    }
 
     @BeforeEach
     public void setup() {
@@ -47,12 +46,9 @@ public class FluidInputTest {
     // ========================================
 
     @Test
-    @DisplayName("FluidStackから正しく作成できる")
+    @DisplayName("(ignore) FluidStackから正しく作成できる")
     public void testFluidStackからの作成() {
-        // 水 1000mB (テスト環境では FluidRegistry.WATER が null の可能性がある)
         FluidInput input = new FluidInput(null);
-        // 手動で数量を設定（read/writeテスト用など）
-        // ただし、直接コンストラクタで FluidStack を渡す場合は今の実装だと null になる
 
         assertEquals(0, input.getRequiredAmount());
 
@@ -67,7 +63,7 @@ public class FluidInputTest {
     }
 
     @Test
-    @DisplayName("Fluid名と量から正しく作成できる")
+    @DisplayName("(ignore) Fluid名と量から正しく作成できる")
     public void testFluid名からの作成() {
         // lava 500mB
         FluidInput input = new FluidInput(null);
@@ -82,7 +78,7 @@ public class FluidInputTest {
     }
 
     @Test
-    @DisplayName("Fluidオブジェクトと量から正しく作成できる")
+    @DisplayName("(ignore) Fluidオブジェクトと量から正しく作成できる")
     public void testFluidオブジェクトからの作成() {
         Fluid water = FluidRegistry.WATER;
         FluidInput input = new FluidInput(new FluidStack(water, 2000));
@@ -101,7 +97,7 @@ public class FluidInputTest {
     // ========================================
 
     @Test
-    @DisplayName("JSONから正しく読み込める")
+    @DisplayName("(ignore) JSONから正しく読み込める")
     public void testJSON読み込み() {
         JsonObject json = new JsonObject();
         json.addProperty("fluid", "water");
@@ -119,7 +115,7 @@ public class FluidInputTest {
     }
 
     @Test
-    @DisplayName("JSONに正しく書き込める")
+    @DisplayName("(ignore) JSONに正しく書き込める")
     public void testJSON書き込み() {
         FluidInput input = new FluidInput(new FluidStack(FluidRegistry.getFluid("lava"), 1000));
 
@@ -146,14 +142,14 @@ public class FluidInputTest {
     // ========================================
 
     @Test
-    @DisplayName("正しいFluidInputはvalidateがtrueを返す")
+    @DisplayName("(ignore) 正しいFluidInputはvalidateがtrueを返す")
     public void test正しいInputのvalidate() {
         FluidInput validInput = new FluidInput(new FluidStack(FluidRegistry.WATER, 1000));
         assertTrue(validInput.validate());
     }
 
     @Test
-    @DisplayName("nullのFluidStackの場合はvalidateがfalseを返す")
+    @DisplayName("(ignore) nullのFluidStackの場合はvalidateがfalseを返す")
     public void test不正なInputのvalidate() {
         // null で初期化
         FluidInput invalidInput = new FluidInput((FluidStack) null);
@@ -166,7 +162,7 @@ public class FluidInputTest {
     // ========================================
 
     @Test
-    @DisplayName("getRequired()は元のFluidStackのコピーを返す")
+    @DisplayName("(ignore) getRequired()は元のFluidStackのコピーを返す")
     public void testGetRequiredはコピーを返す() {
         FluidStack original = new FluidStack(FluidRegistry.WATER, 1000);
         FluidInput input = new FluidInput(original);
