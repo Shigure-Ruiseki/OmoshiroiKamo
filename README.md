@@ -49,12 +49,15 @@ All code has been rewritten, and all textures are original.
 - Dimension-specific ore mining
 - Customizable structures
 
-### Custom Structure
-- JSON Custom structures
-- Structure in-game reload
-- Structure in-game scan by command or Structure wand
-- Structure NEI integration
-- [See CUSTOM_STRUCTURES.md for details](./CUSTOM_STRUCTURES.md)
+### Custom Structure System
+Advanced JSON-based multiblock structure system with in-game reloading and scanning tools.
+- **English**: [Overview](./docs/en/structures/OVERVIEW.md) | [JSON Format](./docs/en/structures/JSON_FORMAT.md) | [Developer Guide](./docs/en/structures/DEVELOPER_GUIDE.md)
+- **日本語 (Japanese)**: [概要](./docs/ja/structures/OVERVIEW.md) | [JSONフォーマット](./docs/ja/structures/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/structures/DEVELOPER_GUIDE.md)
+
+### Modular Recipe System
+Decoupled and extensible recipe engine supporting multiple resource types and dynamic logic.
+- **English**: [Overview](./docs/en/recipes/OVERVIEW.md) | [JSON Format](./docs/en/recipes/JSON_FORMAT.md) | [Developer Guide](./docs/en/recipes/DEVELOPER_GUIDE.md)
+- **日本語 (Japanese)**: [概要](./docs/ja/recipes/OVERVIEW.md) | [JSONフォーマット](./docs/ja/recipes/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/recipes/DEVELOPER_GUIDE.md)
 
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)

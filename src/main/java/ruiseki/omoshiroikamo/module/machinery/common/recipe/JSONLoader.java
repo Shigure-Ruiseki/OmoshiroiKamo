@@ -1,21 +1,19 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.InputParserRegistry;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.OutputParserRegistry;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
@@ -26,104 +24,99 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public class JSONLoader {
 
-    /**
-     * Load all recipe files from a directory.
-     * Each file contains a recipe group with multiple recipes.
-     * 
-     * @param recipesDir the directory containing recipe JSON files
-     * @return list of loaded recipes
-     */
-    public static List<ModularRecipe> loadRecipes(File recipesDir) {
-        List<ModularRecipe> recipes = new ArrayList<>();
+    public static List<IModularRecipe> loadRecipes(File recipesDir) {
+        List<IModularRecipe> recipes = new ArrayList<>();
 
         if (!recipesDir.exists() || !recipesDir.isDirectory()) {
             Logger.warn("Recipe directory does not exist: {}", recipesDir.getAbsolutePath());
             return recipes;
         }
 
-        File[] files = recipesDir.listFiles((dir, name) -> name.endsWith(".json"));
-        if (files == null) {
-            return recipes;
-        }
+        try {
+            MachineryJsonReader reader = new MachineryJsonReader(recipesDir);
+            List<MachineryMaterial> materials = reader.read();
 
-        for (File file : files) {
-            try {
-                List<ModularRecipe> loaded = loadRecipeFile(file);
-                recipes.addAll(loaded);
-                Logger.info("Loaded {} recipes from {}", loaded.size(), file.getName());
-            } catch (Exception e) {
-                Logger.error("Failed to load recipe file: {}", file.getName());
-                Logger.error("Error: {}", e.getMessage());
+            // 1. Map all materials by registry name
+            Map<String, MachineryMaterial> materialMap = new HashMap<>();
+            for (MachineryMaterial mat : materials) {
+                if (mat.registryName != null) {
+                    materialMap.put(mat.registryName, mat);
+                }
             }
-        }
 
-        return recipes;
-    }
+            // 2. Resolve inheritance
+            for (MachineryMaterial mat : materials) {
+                resolveInheritance(mat, materialMap, new HashSet<>());
+            }
 
-    public static List<ModularRecipe> loadRecipeFile(File file) throws IOException {
-        List<ModularRecipe> recipes = new ArrayList<>();
+            // 3. Convert valid, non-abstract materials to recipes
+            for (MachineryMaterial mat : materials) {
+                if (mat.isAbstract) continue;
+                if (!mat.validate()) continue;
 
-        try (FileReader reader = new FileReader(file)) {
-            JsonParser parser = new JsonParser();
-            JsonObject root = parser.parse(reader)
-                .getAsJsonObject();
-
-            String group = root.get("group")
-                .getAsString();
-            JsonArray recipeArray = root.getAsJsonArray("recipes");
-
-            for (JsonElement elem : recipeArray) {
-                ModularRecipe recipe = parseRecipe(elem.getAsJsonObject(), group);
+                IModularRecipe recipe = toRecipe(mat);
                 if (recipe != null) {
                     recipes.add(recipe);
                 }
             }
+            Logger.info("Loaded {} recipes from {}", recipes.size(), recipesDir.getName());
+        } catch (IOException e) {
+            Logger.error("Failed to load recipes from {}: {}", recipesDir.getName(), e.getMessage());
         }
 
         return recipes;
     }
 
-    public static ModularRecipe parseRecipe(JsonObject json, String group) {
+    private static void resolveInheritance(MachineryMaterial mat, Map<String, MachineryMaterial> map,
+        Set<String> resolving) {
+        if (mat.parent == null) return;
+        if (resolving.contains(mat.registryName)) {
+            Logger.error("Circular inheritance detected for recipe: {}", mat.registryName);
+            return;
+        }
+
+        MachineryMaterial parent = map.get(mat.parent);
+        if (parent != null) {
+            resolving.add(mat.registryName);
+            resolveInheritance(parent, map, resolving);
+            mat.mergeParent(parent);
+            mat.parent = null; // Mark as merged
+        } else {
+            Logger.warn("Recipe {} has missing parent: {}", mat.registryName, mat.parent);
+        }
+    }
+
+    private static IModularRecipe toRecipe(MachineryMaterial mat) {
         try {
-            int duration = json.get("duration")
-                .getAsInt();
-            int priority = json.has("priority") ? json.get("priority")
-                .getAsInt() : 0;
-
-            String name = json.has("name") ? json.get("name")
-                .getAsString() : "";
-
             ModularRecipe.Builder builder = ModularRecipe.builder()
-                .recipeGroup(group)
-                .name(name)
-                .duration(duration)
-                .priority(priority);
+                .registryName(mat.registryName)
+                .name(mat.localizedName != null ? mat.localizedName : "")
+                .recipeGroup(mat.machine) // Assuming machine name is used as group for now or similar
+                .duration(mat.time)
+                .priority(mat.priority);
 
-            JsonArray inputs = json.getAsJsonArray("inputs");
-            for (JsonElement inputElem : inputs) {
-                IRecipeInput input = InputParserRegistry.parse(inputElem.getAsJsonObject());
-                if (input != null) {
-                    builder.addInput(input);
-                } else {
-                    Logger.warn("Failed to parse input or invalid item in recipe group: {}", group);
-                    return null;
-                }
+            for (IRecipeInput input : mat.inputs) {
+                builder.addInput(input);
             }
 
-            JsonArray outputs = json.getAsJsonArray("outputs");
-            for (JsonElement outputElem : outputs) {
-                IRecipeOutput output = OutputParserRegistry.parse(outputElem.getAsJsonObject());
-                if (output != null) {
-                    builder.addOutput(output);
-                } else {
-                    Logger.warn("Failed to parse output or invalid item in recipe group: {}", group);
-                    return null;
-                }
+            for (IRecipeOutput output : mat.outputs) {
+                builder.addOutput(output);
             }
 
-            return builder.build();
+            for (ICondition condition : mat.conditions) {
+                builder.addCondition(condition);
+            }
+
+            IModularRecipe recipe = builder.build();
+
+            // Apply decorators if present in the original JSON
+            if (mat.getRawJson() != null) {
+                recipe = mat.applyDecorators(recipe, mat.getRawJson());
+            }
+
+            return recipe;
         } catch (Exception e) {
-            Logger.warn("Failed to parse recipe: {}", e.getMessage());
+            Logger.warn("Failed to convert material to recipe: {}", e.getMessage());
             return null;
         }
     }

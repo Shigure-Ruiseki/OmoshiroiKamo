@@ -1,13 +1,7 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.registries;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,65 +13,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonObject;
-
 import cpw.mods.fml.common.registry.GameData;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedItemStack;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedOreStack;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 
 public class FocusableHandler {
-
-    private static final Gson GSON = buildGson();
-
-    private static Gson buildGson() {
-        GsonBuilder builder = new GsonBuilder().setPrettyPrinting()
-            .disableHtmlEscaping();
-
-        builder
-            .registerTypeAdapter(FocusableEntry.class, (JsonDeserializer<FocusableEntry>) (json, typeOfT, context) -> {
-                JsonObject obj = json.getAsJsonObject();
-                FocusableType type = null;
-                if (obj.has("type")) {
-                    try {
-                        type = FocusableType.valueOf(
-                            obj.get("type")
-                                .getAsString()
-                                .toUpperCase());
-                    } catch (Exception ignored) {}
-                }
-
-                if (type == null) {
-                    boolean isOre = obj.has("isOreDict") && obj.get("isOreDict")
-                        .getAsBoolean();
-                    if (isOre) {
-                        type = FocusableType.ORE;
-                    } else if (obj.has("id") && obj.get("id")
-                        .getAsString()
-                        .contains("block")) {
-                            type = FocusableType.BLOCK;
-                        } else {
-                            type = FocusableType.ITEM;
-                        }
-                }
-
-                switch (type) {
-                    case ORE:
-                        return context.deserialize(json, FocusableOre.class);
-                    case BLOCK:
-                        return context.deserialize(json, FocusableBlock.class);
-                    default:
-                        return context.deserialize(json, FocusableItem.class);
-                }
-            });
-
-        return builder.create();
-    }
 
     // ------------------------------
     // JSON I/O
@@ -88,27 +32,69 @@ public class FocusableHandler {
             return;
         }
         try {
-            file.getParentFile()
-                .mkdirs();
-            try (Writer writer = new BufferedWriter(new FileWriter(file))) {
-                GSON.toJson(defaults, writer);
+            List<FocusableMaterial> materials = new ArrayList<>();
+            for (FocusableEntry entry : defaults.getEntries()) {
+                FocusableMaterial mat = toMaterial(entry);
+                if (mat != null) materials.add(mat);
             }
+            new FocusableJsonWriter(file).write(materials);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static FocusableMaterial toMaterial(FocusableEntry entry) {
+        if (entry == null) return null;
+        FocusableMaterial mat = new FocusableMaterial();
+        mat.id = entry.id;
+        mat.meta = entry.meta;
+        mat.focusColor = entry.focusColor.getColor();
+        mat.weights = entry.weights;
+        mat.focusedWeights = entry.focusedWeights;
+        mat.isOreDict = entry.isOreDict;
+        mat.dimensions = entry.dimensions;
+
+        if (entry instanceof FocusableOre) mat.type = FocusableType.ORE;
+        else if (entry instanceof FocusableBlock) mat.type = FocusableType.BLOCK;
+        else mat.type = FocusableType.ITEM;
+
+        return mat;
+    }
+
+    private static FocusableEntry fromMaterial(FocusableMaterial mat) {
+        if (mat == null) return null;
+        FocusableEntry entry;
+        if (mat.type == FocusableType.ORE) {
+            entry = new FocusableOre(mat.id, mat.focusColor, mat.weights, mat.focusedWeights);
+        } else if (mat.type == FocusableType.BLOCK) {
+            entry = new FocusableBlock(mat.id, mat.meta, mat.focusColor, mat.weights, mat.focusedWeights);
+        } else {
+            entry = new FocusableItem(mat.id, mat.meta, mat.focusColor, mat.weights, mat.focusedWeights, mat.isOreDict);
+        }
+        if (entry != null) {
+            entry.dimensions = mat.dimensions;
+        }
+        return entry;
     }
 
     public static void loadRegistryFromJson(File file, IFocusableRegistry registry) {
         if (file == null || !file.exists()) {
             return;
         }
-        try (Reader reader = new BufferedReader(new FileReader(file))) {
-            FocusableList loaded = GSON.fromJson(reader, FocusableList.class);
-            if (loaded != null && registry != null) {
-                loadIntoRegistry(loaded, registry);
+        try {
+            FocusableJsonReader reader = new FocusableJsonReader(file);
+            List<FocusableMaterial> materials = reader.read();
+            if (materials != null && registry != null) {
+                FocusableList list = new FocusableList();
+                for (FocusableMaterial mat : materials) {
+                    FocusableEntry entry = fromMaterial(mat);
+                    if (entry != null) list.addEntry(entry);
+                }
+                loadIntoRegistry(list, registry);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            JsonErrorCollector.getInstance()
+                .collect("MultiblockFocusable", "Failed to load Focusable registry: " + e.getMessage());
         }
     }
 
@@ -116,10 +102,21 @@ public class FocusableHandler {
         if (file == null || !file.exists()) {
             return null;
         }
-        try (Reader reader = new BufferedReader(new FileReader(file))) {
-            return GSON.fromJson(reader, FocusableList.class);
+        try {
+            FocusableJsonReader reader = new FocusableJsonReader(file);
+            List<FocusableMaterial> materials = reader.read();
+            if (materials != null) {
+                FocusableList list = new FocusableList();
+                for (FocusableMaterial mat : materials) {
+                    FocusableEntry entry = fromMaterial(mat);
+                    if (entry != null) list.addEntry(entry);
+                }
+                return list;
+            }
+            return null;
         } catch (IOException e) {
-            e.printStackTrace();
+            JsonErrorCollector.getInstance()
+                .collect("MultiblockFocusable", "Failed to load Focusable list: " + e.getMessage());
             return null;
         }
     }

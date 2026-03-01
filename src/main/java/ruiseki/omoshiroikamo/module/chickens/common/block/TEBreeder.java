@@ -25,6 +25,7 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.entity.IMobStats;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
@@ -81,7 +82,14 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
 
             ChickensRegistryItem selectedSpecies = null;
 
+            ConditionContext context = new ConditionContext(worldObj, xCoord, yCoord, zCoord);
+
             for (ChickensRegistryItem candidate : possibleChildren) {
+                // Check environmental conditions
+                if (!candidate.isConditionMet(context)) {
+                    continue;
+                }
+
                 // Mutation is a species different from both parents
                 boolean isPotentialMutation = candidate != left.getItem() && candidate != right.getItem();
                 if (isPotentialMutation) {
@@ -98,7 +106,18 @@ public class TEBreeder extends TERoostBase implements IGuiHolder<PosGuiData> {
 
             // Fallback to parents if mutation failed or no mutation food matched
             if (selectedSpecies == null) {
-                selectedSpecies = random.nextBoolean() ? left.getItem() : right.getItem();
+                boolean leftMet = left.getItem()
+                    .isConditionMet(context);
+                boolean rightMet = right.getItem()
+                    .isConditionMet(context);
+
+                if (leftMet && rightMet) {
+                    selectedSpecies = random.nextBoolean() ? left.getItem() : right.getItem();
+                } else if (leftMet) {
+                    selectedSpecies = left.getItem();
+                } else if (rightMet) {
+                    selectedSpecies = right.getItem();
+                }
             }
 
             if (selectedSpecies != null) {

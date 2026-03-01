@@ -22,14 +22,14 @@ import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import ruiseki.omoshiroikamo.api.modular.recipe.FluidInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ItemInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.FluidInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.FluidOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemOutput;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
@@ -147,9 +147,9 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
         if (outputId.equals(getRecipeID())) {
-            List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
+            List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
                 .getAllRecipes();
-            for (ModularRecipe recipe : allRecipes) {
+            for (IModularRecipe recipe : allRecipes) {
                 if (recipe.getRecipeGroup()
                     .equals(recipeGroup)) {
                     arecipes.add(new CachedModularRecipe(recipe));
@@ -162,7 +162,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        for (ModularRecipe recipe : RecipeLoader.getInstance()
+        for (IModularRecipe recipe : RecipeLoader.getInstance()
             .getAllRecipes()) {
             if (!recipe.getRecipeGroup()
                 .equals(recipeGroup)) continue;
@@ -187,7 +187,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     @Override
     public void loadCraftingRecipes(FluidStack result) {
-        for (ModularRecipe recipe : RecipeLoader.getInstance()
+        for (IModularRecipe recipe : RecipeLoader.getInstance()
             .getAllRecipes()) {
             if (!recipe.getRecipeGroup()
                 .equals(recipeGroup)) continue;
@@ -213,7 +213,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     public void loadUsageRecipes(ItemStack ingredient) {
         if (NEIServerUtils
             .areStacksSameTypeCrafting(ingredient, new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock()))) {
-            for (ModularRecipe recipe : RecipeLoader.getInstance()
+            for (IModularRecipe recipe : RecipeLoader.getInstance()
                 .getAllRecipes()) {
                 if (recipe.getRecipeGroup()
                     .equals(recipeGroup)) {
@@ -222,10 +222,12 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             }
         } else if (ingredient.getItem() instanceof ItemMachineBlueprint) {
             String structure = ItemMachineBlueprint.getStructureName(ingredient);
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structure);
-            if (entry != null && entry.recipeGroup != null && entry.recipeGroup.contains(recipeGroup)) {
-                for (ModularRecipe recipe : RecipeLoader.getInstance()
+            if (entry != null && entry.getRecipeGroup() != null
+                && entry.getRecipeGroup()
+                    .contains(recipeGroup)) {
+                for (IModularRecipe recipe : RecipeLoader.getInstance()
                     .getAllRecipes()) {
                     if (recipe.getRecipeGroup()
                         .equals(recipeGroup)) {
@@ -235,7 +237,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
             }
         }
 
-        for (ModularRecipe recipe : RecipeLoader.getInstance()
+        for (IModularRecipe recipe : RecipeLoader.getInstance()
             .getAllRecipes()) {
             if (!recipe.getRecipeGroup()
                 .equals(recipeGroup)) continue;
@@ -260,7 +262,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     @Override
     public void loadUsageRecipes(FluidStack ingredient) {
-        for (ModularRecipe recipe : RecipeLoader.getInstance()
+        for (IModularRecipe recipe : RecipeLoader.getInstance()
             .getAllRecipes()) {
             if (!recipe.getRecipeGroup()
                 .equals(recipeGroup)) continue;
@@ -284,7 +286,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
     public class CachedModularRecipe extends CachedBaseRecipe {
 
-        private final ModularRecipe recipe;
+        private final IModularRecipe recipe;
         private final List<PositionedStack> inputStacks = new ArrayList<>();
         private final List<PositionedStack> outputStacks = new ArrayList<>();
         private final List<PositionedFluidTank> fluidTanks = new ArrayList<>();
@@ -295,7 +297,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
         public int calculatedHeight = 130;
         public Rectangle arrowRect;
 
-        public CachedModularRecipe(ModularRecipe recipe) {
+        public CachedModularRecipe(IModularRecipe recipe) {
             this.recipe = recipe;
             layout();
         }

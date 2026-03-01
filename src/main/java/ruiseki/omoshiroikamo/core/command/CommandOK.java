@@ -32,7 +32,9 @@ public class CommandOK extends CommandMod {
             new ChatComponentText(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.main_usage_title")));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.main_usage_structure")));
+                EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.main_usage_multiblock")));
+        sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok multiblock reload - Reload multiblock data"));
         sender.addChatMessage(
             new ChatComponentText(EnumChatFormatting.WHITE + "  /ok modular reload - Reload modular data"));
     }

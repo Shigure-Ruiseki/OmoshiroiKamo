@@ -1,8 +1,6 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -20,9 +18,10 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
+import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
@@ -57,9 +56,9 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
         this.structureName = structureName;
 
         IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(structureName);
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
-        int[] offset = (entry != null && entry.controllerOffset != null) ? entry.controllerOffset
+        int[] offset = (entry != null && entry.getControllerOffset() != null) ? entry.getControllerOffset()
             : new int[] { 0, 0, 0 };
 
         this.constructable = new CustomStructureConstructable(structureName, def, offset);
@@ -87,10 +86,11 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
      */
     private Set<Block> buildComponentBlockSet() {
         Set<Block> blocks = new HashSet<>();
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
-        if (entry != null && entry.mappings != null) {
-            for (Object value : entry.mappings.values()) {
+        if (entry != null && entry.getMappings() != null) {
+            for (ISymbolMapping value : entry.getMappings()
+                .values()) {
                 extractBlocksFromMapping(value, blocks);
             }
         }
@@ -110,51 +110,19 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
     }
 
     /**
-     * Extract block IDs from a mapping value (can be BlockMapping, String, List, or
-     * Map).
+     * Extract block IDs from a mapping value.
      */
-    @SuppressWarnings("unchecked")
-    private void extractBlocksFromMapping(Object value, Set<Block> blocks) {
-        // Handle BlockMapping class (parsed from JSON)
-        if (value instanceof StructureDefinitionData.BlockMapping mapping) {
+    private void extractBlocksFromMapping(ISymbolMapping value, Set<Block> blocks) {
+        if (value instanceof BlockMapping mapping) {
             // Single block
-            if (mapping.block != null) {
-                addBlockFromId(mapping.block, blocks);
+            if (mapping.getBlockId() != null) {
+                addBlockFromId(mapping.getBlockId(), blocks);
             }
             // Multiple blocks
-            if (mapping.blocks != null) {
-                for (StructureDefinitionData.BlockEntry entry : mapping.blocks) {
-                    if (entry.id != null) {
-                        addBlockFromId(entry.id, blocks);
-                    }
-                }
-            }
-            return;
-        }
-
-        if (value instanceof String) {
-            // Simple string: "mod:block:meta"
-            addBlockFromId((String) value, blocks);
-        } else if (value instanceof List) {
-            // Array of strings: ["mod:block1:*", "mod:block2:*"]
-            for (Object item : (List<?>) value) {
-                if (item instanceof String) {
-                    addBlockFromId((String) item, blocks);
-                }
-            }
-        } else if (value instanceof Map) {
-            // Object with "block" or "blocks" key (fallback for raw Map)
-            Map<String, Object> map = (Map<String, Object>) value;
-            if (map.containsKey("block")) {
-                addBlockFromId((String) map.get("block"), blocks);
-            }
-            if (map.containsKey("blocks")) {
-                Object blocksList = map.get("blocks");
-                if (blocksList instanceof List) {
-                    for (Object item : (List<?>) blocksList) {
-                        if (item instanceof String) {
-                            addBlockFromId((String) item, blocks);
-                        }
+            if (mapping.getBlockIds() != null) {
+                for (String entryId : mapping.getBlockIds()) {
+                    if (entryId != null) {
+                        addBlockFromId(entryId, blocks);
                     }
                 }
             }

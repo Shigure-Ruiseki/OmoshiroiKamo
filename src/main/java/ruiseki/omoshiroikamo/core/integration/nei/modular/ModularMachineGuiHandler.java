@@ -5,6 +5,7 @@ import static blockrenderer6343.client.utils.BRUtil.FAKE_PLAYER;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,12 +18,21 @@ import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import blockrenderer6343.api.utils.CreativeItemSource;
 import blockrenderer6343.client.utils.ConstructableData;
 import blockrenderer6343.integration.nei.GuiMultiblockHandler;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+
+// For debugging
+// import blockrenderer6343.client.renderer.WorldSceneRenderer;
+// import net.minecraft.client.renderer.RenderBlocks;
+// import net.minecraft.client.renderer.texture.IIconRegister;
+// import net.minecraft.util.IIcon;
+// import net.minecraft.init.Blocks;
 
 /**
  * GuiMultiblockHandler extension for ModularMachine structure previews.
@@ -90,17 +100,25 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
         // Get offset for the structure
         int[] offset = currentStructure.getOffset();
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureName);
 
         ExtendedFacing facing = ExtendedFacing.SOUTH_NORMAL_NONE;
         if (entry != null) {
-            if (entry.controllerOffset != null) {
-                offset = entry.controllerOffset;
+            // Note: CustomStructureRegistry stores the offset for the processed shape.
+            int[] registryOffset = CustomStructureRegistry.getControllerOffset(structureName);
+            if (registryOffset != null
+                && (registryOffset[0] != 0 || registryOffset[1] != 0 || registryOffset[2] != 0)) {
+                offset = registryOffset;
+            } else if (entry.getControllerOffset() != null) {
+                offset = entry.getControllerOffset();
             }
-            if (entry.defaultFacing != null) {
+
+            if (entry.getDefaultFacing() != null) {
                 try {
-                    String facingName = entry.defaultFacing.toUpperCase();
+                    String facingName = entry.getDefaultFacing()
+                        .toUpperCase()
+                        .trim();
                     // Simple mapping attempt
                     switch (facingName) {
                         case "DOWN" -> facing = ExtendedFacing.DOWN_NORMAL_NONE;
@@ -110,17 +128,19 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
                         case "WEST" -> facing = ExtendedFacing.WEST_NORMAL_NONE;
                         case "EAST" -> facing = ExtendedFacing.EAST_NORMAL_NONE;
                         default -> {
-                            // Try to valueOf full name
                             try {
                                 facing = ExtendedFacing.valueOf(facingName);
-                            } catch (IllegalArgumentException e) {
-                                // Fallback to SOUTH if invalid
-                                facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+                            } catch (IllegalArgumentException e1) {
+                                try {
+                                    facing = ExtendedFacing.valueOf(facingName + "_NORMAL_NONE");
+                                } catch (IllegalArgumentException e2) {
+                                    facing = ExtendedFacing.SOUTH_NORMAL_NONE;
+                                }
                             }
                         }
                     }
                 } catch (Exception e) {
-                    // Ignore invalid facing
+                    facing = ExtendedFacing.SOUTH_NORMAL_NONE;
                 }
             }
         }
@@ -153,8 +173,28 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
             iterations++;
         } while (renderer.world.hasChanged() && iterations < MAX_PLACE_ROUNDS && result != -2);
 
-        // If survivalBuild didn't work, try regular construct
+        // If survivalBuild didn't work or stopped with -2, it means it's incomplete
         if (result == -2 || iterations >= MAX_PLACE_ROUNDS) {
+            // Detailed scan for feedback
+            StructureValidationVisitor diagnostic = new StructureValidationVisitor();
+            if (entry != null) {
+                diagnostic
+                    .validateInWorld(renderer.world, MB_PLACE_POS.x, MB_PLACE_POS.y, MB_PLACE_POS.z, facing, entry);
+
+                if (diagnostic.hasErrors()) {
+                    for (String error : diagnostic.getErrors()) {
+                        FAKE_PLAYER.addChatMessage(new ChatComponentText("§c" + error));
+                    }
+                } else {
+                    FAKE_PLAYER
+                        .addChatMessage(new ChatComponentText("§c[Structure] Construction failed. Unknown reason."));
+                }
+
+                // Log for debug
+                Logger.error("Survival build failed for structure: " + structureName);
+            }
+
+            // Fallback to regular construct to show "hints" (shadow blocks)
             def.buildOrHints(
                 controller,
                 getBuildTriggerStack(),
@@ -171,9 +211,10 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
         }
 
         // Store tint color for use in beforeRender callback
-        if (entry != null && entry.properties != null && entry.properties.tintColor != null) {
+        if (entry != null && entry.getTintColor() != null) {
             try {
-                String hex = entry.properties.tintColor.replace("#", "");
+                String hex = entry.getTintColor()
+                    .replace("#", "");
                 currentTintColor = (int) Long.parseLong(hex, 16) | 0xFF000000;
             } catch (Exception e) {
                 currentTintColor = null;

@@ -12,15 +12,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class RecipeLoader {
 
     private static RecipeLoader instance;
 
-    private final Map<String, List<ModularRecipe>> recipesByGroup = new HashMap<>();
+    private final Map<String, List<IModularRecipe>> recipesByGroup = new HashMap<>();
 
     private int recipeVersion = 0;
 
@@ -47,15 +48,16 @@ public class RecipeLoader {
 
         recipesByGroup.clear();
 
-        List<ModularRecipe> recipes = JSONLoader.loadRecipes(recipesDir);
-        for (ModularRecipe recipe : recipes) {
-            String group = recipe.getRecipeGroup();
+        List<IModularRecipe> recipes = JSONLoader.loadRecipes(recipesDir);
+        for (IModularRecipe recipe : recipes) {
+            String group = recipe.getRecipeGroup()
+                .toLowerCase();
             recipesByGroup.computeIfAbsent(group, k -> new ArrayList<>())
                 .add(recipe);
         }
 
         // Sort each group
-        for (List<ModularRecipe> list : recipesByGroup.values()) {
+        for (List<IModularRecipe> list : recipesByGroup.values()) {
             Collections.sort(list);
         }
 
@@ -63,15 +65,21 @@ public class RecipeLoader {
     }
 
     public void reload(File configDir) {
+        // Clear errors before reloading
+        JsonErrorCollector.getInstance()
+            .clear();
+        JsonErrorCollector.getInstance()
+            .setConfigDir(new File(configDir, LibMisc.MOD_ID));
+
         Logger.info("Reloading recipes...");
         recipeVersion++;
         loadAll(configDir);
     }
 
-    public List<ModularRecipe> getRecipes(String... groups) {
-        List<ModularRecipe> result = new ArrayList<>();
+    public List<IModularRecipe> getRecipes(String... groups) {
+        List<IModularRecipe> result = new ArrayList<>();
         for (String group : groups) {
-            List<ModularRecipe> list = recipesByGroup.get(group);
+            List<IModularRecipe> list = recipesByGroup.get(group.toLowerCase());
             if (list != null) {
                 result.addAll(list);
             }
@@ -80,18 +88,18 @@ public class RecipeLoader {
         return result;
     }
 
-    public List<ModularRecipe> getAllRecipes() {
-        List<ModularRecipe> result = new ArrayList<>();
-        for (List<ModularRecipe> list : recipesByGroup.values()) {
+    public List<IModularRecipe> getAllRecipes() {
+        List<IModularRecipe> result = new ArrayList<>();
+        for (List<IModularRecipe> list : recipesByGroup.values()) {
             result.addAll(list);
         }
         Collections.sort(result);
         return result;
     }
 
-    public ModularRecipe findMatch(String[] groups, List<IModularPort> inputPorts) {
-        List<ModularRecipe> candidates = getRecipes(groups);
-        for (ModularRecipe recipe : candidates) {
+    public IModularRecipe findMatch(String[] groups, List<IModularPort> inputPorts) {
+        List<IModularRecipe> candidates = getRecipes(groups);
+        for (IModularRecipe recipe : candidates) {
             if (recipe.matchesInput(inputPorts)) {
                 return recipe;
             }
@@ -99,8 +107,20 @@ public class RecipeLoader {
         return null;
     }
 
-    public void addRecipe(String group, ModularRecipe recipe) {
-        List<ModularRecipe> list = recipesByGroup.computeIfAbsent(group, k -> new ArrayList<>());
+    public IModularRecipe getRecipeByRegistryName(String registryName) {
+        if (registryName == null || registryName.isEmpty()) return null;
+        for (List<IModularRecipe> list : recipesByGroup.values()) {
+            for (IModularRecipe recipe : list) {
+                if (registryName.equals(recipe.getRegistryName())) {
+                    return recipe;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void addRecipe(String group, IModularRecipe recipe) {
+        List<IModularRecipe> list = recipesByGroup.computeIfAbsent(group, k -> new ArrayList<>());
         list.add(recipe);
         Collections.sort(list);
     }

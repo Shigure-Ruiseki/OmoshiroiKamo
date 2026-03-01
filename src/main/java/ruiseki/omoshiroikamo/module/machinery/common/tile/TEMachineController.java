@@ -29,16 +29,16 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
-import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.modular.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
@@ -91,7 +91,7 @@ public class TEMachineController extends AbstractMBModifierTE
     // Recipe groups - obtained from custom structure or GUI
     private List<String> recipeGroups = new ArrayList<>(Collections.singletonList("default"));
     // Look-ahead: next recipe cached during current processing
-    private transient ModularRecipe nextRecipe = null;
+    private transient IModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
@@ -223,6 +223,7 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public void onFormed() {
         structureAgent.onFormed();
+        updateRecipeGroupFromStructure();
     }
 
     /**
@@ -300,7 +301,12 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // If running, tick and look-ahead search for next recipe
         if (processAgent.isRunning()) {
-            ProcessAgent.TickResult result = processAgent.tick(getInputPorts(), getOutputPorts());
+            ConditionContext context = new ruiseki.omoshiroikamo.api.condition.ConditionContext(
+                worldObj,
+                xCoord,
+                yCoord,
+                zCoord);
+            ProcessAgent.TickResult result = processAgent.tick(getInputPorts(), getOutputPorts(), context);
 
             if (result == ProcessAgent.TickResult.NO_ENERGY) {
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
@@ -346,10 +352,12 @@ public class TEMachineController extends AbstractMBModifierTE
         }
 
         // Use cached recipe if available, otherwise search
-        ModularRecipe recipe = nextRecipe;
+        IModularRecipe recipe = nextRecipe;
         if (recipe == null) {
+            String[] groups = recipeGroups.toArray(new String[0]);
+            List<IModularPort> inputs = getInputPorts();
             recipe = RecipeLoader.getInstance()
-                .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());
+                .findMatch(groups, inputs);
         }
         nextRecipe = null; // Clear cache
 
@@ -368,9 +376,8 @@ public class TEMachineController extends AbstractMBModifierTE
                 return;
             }
 
-            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            processAgent.start(recipe, getInputPorts(), energyPorts);
-            lastProcessErrorReason = ErrorReason.NONE;
+            if (processAgent.startRecipe(recipe, getInputPorts())) lastProcessErrorReason = ErrorReason.NONE;
+            else lastProcessErrorReason = ErrorReason.NO_INPUT;
         } else {
             lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
 
@@ -514,6 +521,9 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public void readCommon(NBTTagCompound nbt) {
+        if (nbt == null) {
+            return;
+        }
         super.readCommon(nbt);
 
         recipeGroups = new ArrayList<>();
@@ -542,6 +552,8 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // Update structure from loaded blueprint
         updateStructureFromBlueprint();
+        // Force update recipe groups to apply any JSON changes to existing multiblocks
+        updateRecipeGroupFromStructure();
         // Load process agent
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
@@ -607,10 +619,12 @@ public class TEMachineController extends AbstractMBModifierTE
     public String getCustomStructureDisplayName() {
         String name = getCustomStructureName();
         if (name != null && !name.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(name);
-            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
-                return entry.displayName;
+            if (entry != null && entry.getDisplayName() != null
+                && !entry.getDisplayName()
+                    .isEmpty()) {
+                return entry.getDisplayName();
             }
         }
         return name;
@@ -650,19 +664,24 @@ public class TEMachineController extends AbstractMBModifierTE
     private void updateRecipeGroupFromStructure() {
         if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
             .isEmpty()) {
+            this.recipeGroups = new ArrayList<>(Collections.singletonList("default"));
             return;
         }
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureAgent.getCustomStructureName());
-        if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
-            this.recipeGroups = new ArrayList<>(entry.recipeGroup);
+        if (entry != null && entry.getRecipeGroup() != null
+            && !entry.getRecipeGroup()
+                .isEmpty()) {
+            this.recipeGroups = new ArrayList<>(entry.getRecipeGroup());
+        } else {
+            this.recipeGroups = new ArrayList<>(Collections.singletonList("default"));
         }
     }
 
     /**
      * Get the custom structure properties, or null if not using custom structure.
      */
-    public Properties getCustomProperties() {
+    public IStructureEntry getCustomProperties() {
         return structureAgent.getCustomProperties();
     }
 

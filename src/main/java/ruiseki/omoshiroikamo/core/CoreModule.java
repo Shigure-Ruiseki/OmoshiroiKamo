@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.core.capabilities.fluid.CapabilityFluidHandler;
 import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
 import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
-import ruiseki.omoshiroikamo.core.command.structure.CommandStructure;
+import ruiseki.omoshiroikamo.core.command.multiblock.CommandMultiblock;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
 import ruiseki.omoshiroikamo.core.common.init.CoreRecipes;
@@ -52,9 +52,7 @@ public class CoreModule extends ModModuleBase {
 
         // Initialize the custom structure system
         StructureManager.getInstance()
-            .initialize(
-                event.getModConfigurationDirectory()
-                    .getParentFile());
+            .initialize(event.getModConfigurationDirectory());
 
         CapabilityItemHandler.register();
         CapabilityEnergy.register();
@@ -67,7 +65,7 @@ public class CoreModule extends ModModuleBase {
     @Override
     protected void registerSubCommand(Map<String, ICommand> subcommand) {
         super.registerSubCommand(subcommand);
-        subcommand.put(CommandStructure.NAME, new CommandStructure(this.getMod()));
+        subcommand.put(CommandMultiblock.NAME, new CommandMultiblock(this.getMod()));
     }
 
     @Override
