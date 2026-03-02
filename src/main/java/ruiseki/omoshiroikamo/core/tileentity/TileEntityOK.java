@@ -122,6 +122,13 @@ public abstract class TileEntityOK extends TileEntity
         sendUpdateBackoff = 0;
     }
 
+    @Override
+    public final void updateEntity() {
+        if (isTicking()) {
+            ((ITickingTile) this).update();
+        }
+    }
+
     /**
      * Do not override this method (you won't even be able to do so).
      * Use updateTileEntity() instead.
@@ -366,7 +373,7 @@ public abstract class TileEntityOK extends TileEntity
 
     public interface ITickingTile {
 
-        void updateEntity();
+        void update();
     }
 
     public static class TickingTileComponent implements ITickingTile {
@@ -378,7 +385,7 @@ public abstract class TileEntityOK extends TileEntity
         }
 
         @Override
-        public final void updateEntity() {
+        public final void update() {
             tile.updateTicking();
         }
     }
