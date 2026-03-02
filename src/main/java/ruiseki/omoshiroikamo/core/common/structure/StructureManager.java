@@ -3,26 +3,41 @@ package ruiseki.omoshiroikamo.core.common.structure;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockMapping;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
+import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.api.structure.core.StructureShapeWithMappings;
+import ruiseki.omoshiroikamo.api.structure.io.StructureJsonReader;
+import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Main manager for the custom structure system.
+ * Refactored to use IStructureEntry API.
  */
 public class StructureManager {
 
     private static StructureManager INSTANCE;
 
-    private final Map<String, StructureJsonLoader> loaders = new HashMap<>();
-    private final Map<String, StructureEntry> customStructures = new HashMap<>();
+    /** Cached structure definitions (name -> IStructureEntry). */
+    private final Map<String, IStructureEntry> structureEntries = new LinkedHashMap<>();
+
+    /** Default mappings for each file. */
+    private final Map<String, Map<Character, ISymbolMapping>> fileDefaultMappings = new HashMap<>();
+
+    /** Custom structures that have recipe groups. */
+    private final Map<String, IStructureEntry> customStructures = new LinkedHashMap<>();
+
     private final StructureErrorCollector errorCollector = StructureErrorCollector.getInstance();
     private File configDir;
     private boolean initialized = false;
@@ -39,71 +54,54 @@ public class StructureManager {
         return INSTANCE;
     }
 
-    /**
-     * Whether initialization is complete.
-     */
     public boolean isInitialized() {
         return initialized;
     }
 
-    /**
-     * Whether any errors were collected.
-     */
     public boolean hasErrors() {
         return errorCollector.hasErrors();
     }
 
-    /**
-     * Initialize during PreInit.
-     */
     public void initialize(File minecraftDir) {
         if (initialized) return;
 
         try {
-            this.configDir = new File(minecraftDir, "config/" + LibMisc.MOD_ID);
+            this.configDir = new File(minecraftDir, LibMisc.MOD_ID);
             if (!configDir.exists()) {
                 configDir.mkdirs();
             }
 
-            // Configure the error collector
             errorCollector.setConfigDir(configDir);
             errorCollector.clear();
 
-            // Generate default JSON files if needed
             DefaultStructureGenerator.generateAllIfMissing(configDir);
 
-            // Load JSON files
             loadStructureFile("ore_miner");
             loadStructureFile("res_miner");
             loadStructureFile("solar_array");
             loadStructureFile("quantum_beacon");
-
-            // Load custom structures from modular/structures/
             loadCustomStructures();
 
-            // Persist errors if any were found
             if (errorCollector.hasErrors()) {
                 errorCollector.writeToFile();
             }
 
             initialized = true;
             Logger.info(
-                "StructureManager initialized"
-                    + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : "")
-                    + ", "
+                "StructureManager initialized, " + structureEntries.size()
+                    + " structures, "
                     + customStructures.size()
-                    + " custom structure(s)");
+                    + " custom structures");
         } catch (Exception e) {
             errorCollector.collect(StructureException.loadFailed("initialization", e));
             errorCollector.writeToFile();
         }
     }
 
-    /**
-     * Notify a player about configuration errors (called on login).
-     */
     public void notifyPlayerIfNeeded(EntityPlayer player) {
         errorCollector.notifyPlayer(player);
+        JsonErrorCollector.getInstance()
+            .notifyPlayer(player);
     }
 
     /**
@@ -112,25 +110,34 @@ public class StructureManager {
     private void loadStructureFile(String name) {
         try {
             File file = new File(configDir, "structures/" + name + ".json");
-            StructureJsonLoader loader = new StructureJsonLoader();
+            if (!file.exists()) return;
 
-            if (loader.loadFromFile(file)) {
-                loaders.put(name, loader);
+            StructureJsonReader reader = new StructureJsonReader(file);
+            StructureJsonReader.FileData fileData = reader.readFile(file);
 
-                // Validate the structure definitions
-                StructureValidator validator = new StructureValidator(loader);
-                if (validator.validateAll()) {
-                    for (String error : validator.getErrors()) {
-                        errorCollector.collect(StructureException.ErrorType.VALIDATION_ERROR, name + ".json", error);
+            if (fileData != null) {
+                int successCount = 0;
+                int errorCount = 0;
+
+                for (IStructureEntry entry : fileData.structures.values()) {
+                    if (validateAndRegister(entry, fileData.defaultMappings, name + ".json", false)) {
+                        successCount++;
+                    } else {
+                        errorCount++;
                     }
                 }
 
-                // Collect loader errors (parse failures)
-                for (String error : loader.getErrors()) {
-                    errorCollector.collect(StructureException.ErrorType.PARSE_ERROR, name + ".json", error);
+                // Always register default mappings even if some structures failed
+                fileDefaultMappings.put(name, fileData.defaultMappings);
+
+                if (successCount > 0 || errorCount > 0) {
+                    Logger.info(
+                        name + ".json: "
+                            + successCount
+                            + " structure(s) loaded successfully, "
+                            + errorCount
+                            + " failed validation");
                 }
-            } else {
-                errorCollector.collect(StructureException.loadFailed(name + ".json", null));
             }
         } catch (Exception e) {
             errorCollector.collect(StructureException.loadFailed(name + ".json", e));
@@ -138,61 +145,117 @@ public class StructureManager {
     }
 
     /**
-     * Fetch a structure shape.
+     * Validate and register a structure entry.
      *
-     * @param fileKey       file key ("ore_miner", "res_miner", ...)
-     * @param structureName structure name ("oreExtractorTier1", ...)
-     * @return String[][] shape, or null if not found
+     * @param entry           The structure entry to validate and register
+     * @param defaultMappings External default mappings for validation
+     * @param source          Source identifier for error reporting (e.g., "ore_miner.json",
+     *                        "custom:myStructure")
+     * @param isCustom        Whether this is a custom structure (will be added to customStructures map)
+     * @return true if validation succeeded and structure was registered, false otherwise
      */
-    public String[][] getShape(String fileKey, String structureName) {
-        // Return null before initialization so default shapes are used
-        if (!initialized) {
-            return null;
+    private boolean validateAndRegister(IStructureEntry entry, Map<Character, ISymbolMapping> defaultMappings,
+        String source, boolean isCustom) {
+        // Validate structure
+        StructureValidationVisitor validator = new StructureValidationVisitor();
+        validator.setExternalMappings(defaultMappings);
+        entry.accept(validator);
+
+        if (validator.hasErrors()) {
+            // Collect all validation errors
+            for (String error : validator.getErrors()) {
+                errorCollector.collect(StructureException.ErrorType.VALIDATION_ERROR, source, error);
+            }
+
+            // Log warning
+            String structureType = isCustom ? "Custom structure" : "Structure";
+            Logger.warn(
+                structureType + " '"
+                    + entry.getName()
+                    + "' from "
+                    + source
+                    + " has validation errors and will not be registered");
+
+            return false; // Validation failed
         }
 
-        StructureJsonLoader loader = loaders.get(fileKey);
-        if (loader == null) {
-            warnOnce(fileKey, "Structure loader not found: " + fileKey);
-            return null;
+        // Register structure (validation succeeded)
+        structureEntries.put(entry.getName(), entry);
+
+        // Also add to customStructures if this is a custom structure
+        if (isCustom) {
+            customStructures.put(entry.getName(), entry);
         }
 
-        String[][] shape = loader.getShape(structureName);
-        if (shape == null) {
-            warnOnce(fileKey + ":" + structureName, "Structure not found: " + structureName + " in " + fileKey);
-        }
-
-        return shape;
+        return true; // Successfully registered
     }
 
-    /**
-     * Fetch a structure shape along with all applicable mappings.
-     *
-     * @param fileKey       file key ("ore_miner", "res_miner", ...)
-     * @param structureName structure name ("oreExtractorTier1", ...)
-     * @return ShapeWithMappings containing shape and mappings, or null if not found
-     */
-    public StructureJsonLoader.ShapeWithMappings getShapeWithMappings(String fileKey, String structureName) {
-        if (!initialized) {
+    public String[][] getShape(String fileKey, String structureName) {
+        return getInstance().getShapeInternal(fileKey, structureName);
+    }
+
+    public static String[][] getSolarArrayShape(int tier) {
+        return getInstance().getShape("solar_array", "solarArrayTier" + tier);
+    }
+
+    public static String[][] getOreMinerShape(int tier) {
+        return getInstance().getShape("ore_miner", "oreExtractorTier" + tier);
+    }
+
+    public static String[][] getResMinerShape(int tier) {
+        return getInstance().getShape("res_miner", "resExtractorTier" + tier);
+    }
+
+    public static String[][] getBeaconShape(int tier) {
+        return getInstance().getShape("quantum_beacon", "beaconTier" + tier);
+    }
+
+    private String[][] getShapeInternal(String fileKey, String structureName) {
+        if (!initialized) return null;
+
+        IStructureEntry entry = structureEntries.get(structureName);
+        if (entry == null) {
+            warnOnce(fileKey + ":" + structureName, "Structure not found: " + structureName);
             return null;
         }
 
-        StructureJsonLoader loader = loaders.get(fileKey);
-        if (loader == null) {
-            warnOnce(fileKey, "Structure loader not found: " + fileKey);
-            return null;
-        }
+        List<IStructureLayer> layers = entry.getLayers();
+        if (layers.isEmpty()) return null;
 
-        StructureJsonLoader.ShapeWithMappings result = loader.getShapeWithMappings(structureName);
-        if (result == null) {
-            warnOnce(fileKey + ":" + structureName, "Structure not found: " + structureName + " in " + fileKey);
+        // Convert List of layers to String[][]: [Layer][Row]
+        String[][] result = new String[layers.size()][];
+        for (int i = 0; i < layers.size(); i++) {
+            result[i] = layers.get(i)
+                .getRows()
+                .toArray(new String[0]);
         }
-
         return result;
     }
 
     /**
-     * Prevents repeating the same warning.
+     * Compatibility bridge for existing code using StructureShapeWithMappings.
      */
+    public StructureShapeWithMappings getShapeWithMappings(String fileKey, String structureName) {
+        if (!initialized) return null;
+
+        IStructureEntry entry = structureEntries.get(structureName);
+        if (entry == null) return null;
+
+        String[][] shape = getShape(fileKey, structureName);
+        Map<Character, Object> mappings = new HashMap<>();
+
+        // 1. Defaults
+        Map<Character, ISymbolMapping> defaults = fileDefaultMappings.get(fileKey);
+        if (defaults != null) {
+            mappings.putAll(defaults);
+        }
+
+        // 2. Overrides
+        mappings.putAll(entry.getMappings());
+
+        return new StructureShapeWithMappings(shape, mappings, entry.getControllerOffset());
+    }
+
     private void warnOnce(String key, String message) {
         if (!warnedStructures.contains(key)) {
             Logger.warn(message);
@@ -200,24 +263,9 @@ public class StructureManager {
         }
     }
 
-    /**
-     * Retrieve a block mapping for a symbol.
-     */
-    public BlockMapping getMapping(String fileKey, String structureName, char symbol) {
-        if (!initialized) return null;
-
-        StructureJsonLoader loader = loaders.get(fileKey);
-        if (loader == null) {
-            return null;
-        }
-        return loader.getMapping(structureName, symbol);
-    }
-
-    /**
-     * Reload all structure files.
-     */
     public void reload() {
-        loaders.clear();
+        structureEntries.clear();
+        fileDefaultMappings.clear();
         customStructures.clear();
         warnedStructures.clear();
         errorCollector.clear();
@@ -226,150 +274,69 @@ public class StructureManager {
         loadStructureFile("res_miner");
         loadStructureFile("solar_array");
         loadStructureFile("quantum_beacon");
-
-        // Reload custom structures
         loadCustomStructures();
 
-        if (errorCollector.hasErrors()) {
-            errorCollector.writeToFile();
-        }
-
-        // Re-register structures with StructureLib using updated shapes
         StructureCompat.reload();
 
-        // Write errors again after StructureCompat.reload() (Q validation errors are
-        // added there)
         if (errorCollector.hasErrors()) {
             errorCollector.writeToFile();
         }
-
-        Logger.info(
-            "StructureManager reloaded"
-                + (errorCollector.hasErrors() ? " with " + errorCollector.getErrorCount() + " error(s)" : "")
-                + ", "
-                + customStructures.size()
-                + " custom structure(s)");
     }
 
-    /**
-     * Access the shared error collector.
-     */
-    public StructureErrorCollector getErrorCollector() {
-        return errorCollector;
-    }
-
-    // ===== Convenience helpers =====
-
-    /**
-     * Get an Ore Miner shape for the given tier.
-     */
-    public static String[][] getOreMinerShape(int tier) {
-        return getInstance().getShape("ore_miner", "oreExtractorTier" + tier);
-    }
-
-    /**
-     * Get a Resource Miner shape for the given tier.
-     */
-    public static String[][] getResMinerShape(int tier) {
-        return getInstance().getShape("res_miner", "resExtractorTier" + tier);
-    }
-
-    /**
-     * Get a Solar Array shape for the given tier.
-     */
-    public static String[][] getSolarArrayShape(int tier) {
-        return getInstance().getShape("solar_array", "solarArrayTier" + tier);
-    }
-
-    /**
-     * Get a Quantum Beacon shape for the given tier.
-     */
-    public static String[][] getBeaconShape(int tier) {
-        return getInstance().getShape("quantum_beacon", "beaconTier" + tier);
-    }
-
-    // ===== CustomStructure methods =====
-
-    /**
-     * Load custom structures from modular/structures/ directory.
-     * Each JSON file represents one custom structure.
-     */
     private void loadCustomStructures() {
         File customDir = new File(configDir, "modular/structures");
-        Logger.info("StructureManager: Loading custom structures from " + customDir.getAbsolutePath());
-
         if (!customDir.exists()) {
             customDir.mkdirs();
-            Logger.info("StructureManager: Custom structures directory created (empty)");
             return;
         }
 
-        File[] files = customDir.listFiles((dir, name) -> name.endsWith(".json"));
-        if (files == null) {
-            Logger.warn("StructureManager: Could not list files in custom structures directory");
-            return;
-        }
+        StructureJsonReader reader = new StructureJsonReader(customDir);
+        try {
+            StructureJsonReader.FileData fileData = reader.read();
+            int successCount = 0;
+            int errorCount = 0;
 
-        Logger.info("StructureManager: Found " + files.length + " JSON file(s)");
-
-        for (File file : files) {
-            Logger.info("StructureManager: Processing " + file.getName());
-            try {
-                StructureJsonLoader loader = new StructureJsonLoader();
-                if (loader.loadFromFile(file)) {
-                    // Get the first (and only) structure from the file
-                    for (String structureName : loader.getStructureNames()) {
-                        StructureEntry entry = loader.getStructureEntry(structureName);
-                        if (entry != null) {
-                            // Check if it has required custom structure fields
-                            if (entry.recipeGroup != null) {
-                                customStructures.put(entry.name, entry);
-                                Logger.info("  Loaded: " + entry.name);
-                                Logger.info("    displayName: " + entry.displayName);
-                                Logger.info("    recipeGroup: " + entry.recipeGroup);
-                                Logger.info("    layers: " + (entry.layers != null ? entry.layers.size() : 0));
-                                Logger.info("    mappings: " + (entry.mappings != null ? entry.mappings.size() : 0));
-                            } else {
-                                Logger.warn("  Skipped '" + structureName + "' - no recipeGroup defined");
-                            }
-                        }
-                    }
+            for (IStructureEntry entry : fileData.structures.values()) {
+                if (validateAndRegister(entry, fileData.defaultMappings, "custom:" + entry.getName(), true)) {
+                    successCount++;
                 } else {
-                    Logger.warn("  Failed to parse " + file.getName());
+                    errorCount++;
                 }
-
-                // Collect loader errors
-                for (String error : loader.getErrors()) {
-                    Logger.warn("  Parse error: " + error);
-                    errorCollector.collect(StructureException.ErrorType.PARSE_ERROR, file.getName(), error);
-                }
-            } catch (Exception e) {
-                Logger.error("  Exception loading " + file.getName() + ": " + e.getMessage());
-                errorCollector.collect(StructureException.loadFailed(file.getName(), e));
             }
-        }
 
-        Logger.info("StructureManager: Custom structures loaded - " + customStructures.size() + " total");
+            if (successCount > 0 || errorCount > 0) {
+                Logger.info(
+                    "Custom structures: " + successCount
+                        + " loaded successfully, "
+                        + errorCount
+                        + " failed validation");
+            }
+        } catch (Exception e) {
+            errorCollector.collect(StructureException.loadFailed("custom_structures", e));
+        }
     }
 
-    /**
-     * Get a custom structure by name.
-     */
-    public StructureEntry getCustomStructure(String name) {
+    public IStructureEntry getStructureEntry(String name) {
+        return structureEntries.get(name);
+    }
+
+    public Set<String> getStructureNames() {
+        return structureEntries.keySet();
+    }
+
+    public IStructureEntry getCustomStructure(String name) {
         return customStructures.get(name);
     }
 
-    /**
-     * Get all custom structure names.
-     */
     public Set<String> getCustomStructureNames() {
-        return new HashSet<>(customStructures.keySet());
+        return customStructures.keySet();
     }
 
-    /**
-     * Check if a custom structure exists.
-     */
     public boolean hasCustomStructure(String name) {
         return customStructures.containsKey(name);
+    }
+
+    public StructureErrorCollector getErrorCollector() {
+        return errorCollector;
     }
 }

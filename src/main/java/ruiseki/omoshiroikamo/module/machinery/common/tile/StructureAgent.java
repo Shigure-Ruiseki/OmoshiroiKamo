@@ -17,10 +17,9 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.modular.recipe.visitor.PortRegistrationVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -30,8 +29,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint
  * Handles structure-related logic for {@link TEMachineController}.
  */
 public class StructureAgent {
-
-    private static IStructureDefinition<TEMachineController> STRUCTURE_DEFINITION;
 
     private final TEMachineController controller;
 
@@ -55,17 +52,15 @@ public class StructureAgent {
                 return customDef;
             }
         }
-        // Fallback to default structure
-        return STRUCTURE_DEFINITION;
+        return null;
     }
 
     public int[][] getOffSet() {
-        // Get offset from custom structure definition if available
+        // Get offset from custom structure registry
         if (customStructureName != null && !customStructureName.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
-                .getCustomStructure(customStructureName);
-            if (entry != null && entry.controllerOffset != null && entry.controllerOffset.length >= 3) {
-                return new int[][] { entry.controllerOffset };
+            int[] offset = CustomStructureRegistry.getControllerOffset(customStructureName);
+            if (offset != null) {
+                return new int[][] { offset };
             }
         }
         // Default offset (no structure)
@@ -133,28 +128,9 @@ public class StructureAgent {
             return false;
         }
 
-        IPortType.Direction direction = port.getPortDirection();
-
-        return switch (direction) {
-            case INPUT -> {
-                controller.getPortManager()
-                    .addPort(port, true);
-                yield true;
-            }
-            case OUTPUT -> {
-                controller.getPortManager()
-                    .addPort(port, false);
-                yield true;
-            }
-            case BOTH -> {
-                controller.getPortManager()
-                    .addPort(port, true);
-                controller.getPortManager()
-                    .addPort(port, false);
-                yield true;
-            }
-            default -> false;
-        };
+        PortRegistrationVisitor visitor = new PortRegistrationVisitor(controller);
+        visitor.register(port);
+        return true;
     }
 
     /**
@@ -179,7 +155,13 @@ public class StructureAgent {
 
         clearInternalData();
 
-        boolean valid = getStructureDefinition().check(
+        IStructureDefinition<TEMachineController> def = getStructureDefinition();
+        if (def == null) {
+            Logger.error("StructureAgent: Structure definition is null for piece '{}'!", piece);
+            return false;
+        }
+
+        boolean valid = def.check(
             controller,
             piece,
             controller.getWorldObj(),
@@ -247,9 +229,9 @@ public class StructureAgent {
     private String checkStructureDetails(int ox, int oy, int oz) {
         if (customStructureName == null) return "";
 
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.layers == null) return LibMisc.LANG.localize("gui.status.invalid_definition");
+        if (entry == null || entry.getLayers() == null) return LibMisc.LANG.localize("gui.status.invalid_definition");
 
         // Retrieve definition to get mapped elements
         // This is a bit redundant but we need the exact elements used in validation
@@ -286,7 +268,7 @@ public class StructureAgent {
     private boolean checkRequirements() {
         if (customStructureName == null || customStructureName.isEmpty()) return true;
 
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
         return controller.getPortManager()
             .checkRequirements(entry);
@@ -370,11 +352,10 @@ public class StructureAgent {
         return customStructureName;
     }
 
-    public Properties getCustomProperties() {
+    public IStructureEntry getCustomProperties() {
         if (customStructureName == null || customStructureName.isEmpty()) return null;
-        StructureEntry entry = StructureManager.getInstance()
-            .getCustomStructure(customStructureName);
-        return entry != null ? entry.properties : null;
+        return StructureManager.getInstance()
+            .getStructureEntry(customStructureName);
     }
 
     // ========== Structure Tinting ==========
@@ -388,11 +369,12 @@ public class StructureAgent {
             return null;
         }
 
-        Properties props = getCustomProperties();
+        IStructureEntry props = getCustomProperties();
 
-        if (props != null && props.tintColor != null) {
+        if (props != null && props.getTintColor() != null) {
             try {
-                String hex = props.tintColor.replace("#", "");
+                String hex = props.getTintColor()
+                    .replace("#", "");
                 return (int) Long.parseLong(hex, 16) | 0xFF000000;
             } catch (Exception e) {
                 Logger.error(e.getMessage());

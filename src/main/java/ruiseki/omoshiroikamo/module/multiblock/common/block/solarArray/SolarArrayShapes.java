@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.solarArray;
 
 import java.util.Map;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureJsonLoader;
+import ruiseki.omoshiroikamo.api.structure.core.StructureShapeWithMappings;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 
 public class SolarArrayShapes {
@@ -19,7 +19,7 @@ public class SolarArrayShapes {
      * Get the shape with dynamic mappings for the specified tier.
      * Returns null if no custom shape/mappings are defined (use default behavior).
      */
-    public static StructureJsonLoader.ShapeWithMappings getShapeWithMappings(int tier) {
+    public static StructureShapeWithMappings getShapeWithMappings(int tier) {
         return StructureManager.getInstance()
             .getShapeWithMappings("solar_array", "solarArrayTier" + tier);
     }
@@ -29,7 +29,7 @@ public class SolarArrayShapes {
      * registerTierWithDynamicMappings.
      */
     public static Map<Character, Object> getDynamicMappings(int tier) {
-        StructureJsonLoader.ShapeWithMappings swm = getShapeWithMappings(tier);
+        StructureShapeWithMappings swm = getShapeWithMappings(tier);
         if (swm != null) {
             return swm.dynamicMappings;
         }

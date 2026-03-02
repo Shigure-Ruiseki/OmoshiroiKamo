@@ -215,6 +215,7 @@ public abstract class TileEntityOK extends TileEntity
     }
 
     public void readCommon(NBTTagCompound tag) {
+        if (tag == null) return;
         readGeneratedFieldsFromNBT(tag);
 
         if (capabilities != null && tag.hasKey("OKCaps")) {

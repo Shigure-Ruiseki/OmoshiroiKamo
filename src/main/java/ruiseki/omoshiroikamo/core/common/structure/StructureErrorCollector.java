@@ -16,6 +16,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
@@ -51,6 +52,12 @@ public class StructureErrorCollector {
     public void collect(StructureException e) {
         errors.add(e);
         Logger.error("[Structure] " + e.getFormattedMessage());
+
+        // Also report to the unified JSON error collector
+        JsonErrorCollector.getInstance()
+            .collect(
+                "Structure-" + e.getType(),
+                e.getFormattedMessage() + (e.getFileName() != null ? " in " + e.getFileName() : ""));
 
         // Log the underlying cause when present
         if (e.getCause() != null) {

@@ -44,8 +44,8 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     // Render ID for ISBRH, set during client init
     public static int portRendererId = -1;
 
-    public static IIcon baseIcon;
-    public static IIcon casingIcon;
+    public IIcon baseIcon;
+    public IIcon casingIcon;
 
     protected final int tierCount;
 

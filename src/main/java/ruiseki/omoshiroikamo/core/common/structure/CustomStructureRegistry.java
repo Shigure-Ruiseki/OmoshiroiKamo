@@ -4,8 +4,6 @@ import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,25 +14,27 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
+import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 /**
- * Registers CustomStructures with StructureLib.
- * TODO: Fix background blocks flickering
+ * Registers CustomStructures with StructureLib using the new IStructureEntry
+ * API.
  */
 public class CustomStructureRegistry {
 
     private static final Map<String, IStructureDefinition<TEMachineController>> structureDefinitions = new HashMap<>();
+    private static final Map<String, int[]> controllerOffsets = new HashMap<>();
 
-    /**
-     * Register all custom structures with StructureLib.
-     * Called from StructureCompat.postInit() after StructureManager.initialize().
-     */
     public static void registerAll() {
         structureDefinitions.clear();
+        controllerOffsets.clear();
 
         StructureManager manager = StructureManager.getInstance();
         if (!manager.isInitialized()) {
@@ -43,7 +43,7 @@ public class CustomStructureRegistry {
         }
 
         for (String name : manager.getCustomStructureNames()) {
-            StructureEntry entry = manager.getCustomStructure(name);
+            IStructureEntry entry = manager.getCustomStructure(name);
             if (entry != null) {
                 registerStructure(entry);
             }
@@ -52,214 +52,93 @@ public class CustomStructureRegistry {
         Logger.info("CustomStructureRegistry: Registered " + structureDefinitions.size() + " custom structure(s)");
     }
 
-    /**
-     * Register a single custom structure.
-     */
-    private static void registerStructure(StructureEntry entry) {
-        if (entry.layers == null || entry.layers.isEmpty()) {
-            Logger.warn("CustomStructureRegistry: Structure '" + entry.name + "' has no layers!");
+    private static void registerStructure(IStructureEntry entry) {
+        if (entry.getLayers()
+            .isEmpty()) {
+            Logger.warn("CustomStructureRegistry: Structure '" + entry.getName() + "' has no layers!");
             return;
         }
 
         try {
-            // Convert layers to shape array
-            String[][] shape = new String[entry.layers.size()][];
-            for (int i = 0; i < entry.layers.size(); i++) {
-                shape[i] = entry.layers.get(i).rows.toArray(new String[0]);
+            // Convert layers to shape array [Layer][Row]
+            List<IStructureLayer> layers = entry.getLayers();
+            String[][] shape = new String[layers.size()][];
+            for (int i = 0; i < layers.size(); i++) {
+                shape[i] = layers.get(i)
+                    .getRows()
+                    .toArray(new String[0]);
             }
-
-            // Log shape details
-            Logger.info("CustomStructureRegistry: Registering '" + entry.name + "'");
-            Logger.info("  Layers: " + shape.length);
-            for (int i = 0; i < shape.length; i++) {
-                Logger.info("    Layer " + i + ": " + Arrays.toString(shape[i]));
-            }
-
-            // Validate Q symbol and find its position
-            int qCount = countSymbol(shape, 'Q');
-            if (qCount == 0) {
-                Logger.error("CustomStructureRegistry: Structure '" + entry.name + "' has no controller 'Q'!");
-                return;
-            } else if (qCount > 1) {
-                Logger.error("CustomStructureRegistry: Structure '" + entry.name + "' has " + qCount + " controllers!");
-                return;
-            }
-            Logger.info("  Controller 'Q' found: " + qCount);
 
             // Apply rotation based on defaultFacing
             // SOUTH/NORTH etc: standard 180 rotation to align with StructureLib
             // UP/DOWN: transform layers (Y) to depth (Z) so it builds upright
-            String[][] rotatedShape;
-            if (entry.defaultFacing != null
-                && (entry.defaultFacing.equalsIgnoreCase("UP") || entry.defaultFacing.equalsIgnoreCase("DOWN"))) {
-                rotatedShape = transformForVertical(shape, entry.defaultFacing);
+            String[][] processedShape;
+            String defaultFacing = entry.getDefaultFacing();
+            if (defaultFacing != null
+                && (defaultFacing.equalsIgnoreCase("UP") || defaultFacing.equalsIgnoreCase("DOWN"))) {
+                processedShape = transformForVertical(shape, defaultFacing);
             } else {
-                rotatedShape = rotate180(shape);
+                processedShape = rotate180(shape);
             }
 
-            // Calculate controller offset from rotated shape
-            entry.controllerOffset = findControllerOffset(rotatedShape);
+            // Find controller 'Q' position in the PROCESSED shape
+            // returns {col, layer, row} -> maps to {A, B, C}
+            int[] offset = findControllerOffset(processedShape);
+            controllerOffsets.put(entry.getName(), offset);
 
-            // Build structure definition
             StructureDefinition.Builder<TEMachineController> builder = StructureDefinition.builder();
-
-            // Add rotated shape
-            builder.addShape(entry.name, transpose(rotatedShape));
-
-            // Add Controller ('Q') - use ofBlockHint to check only, not autoplace
-            // The controller already exists when building, so we don't want to replace it
+            builder.addShape(entry.getName(), transpose(processedShape));
             builder.addElement('Q', ofBlock(MachineryBlocks.MACHINE_CONTROLLER.getBlock(), 0));
-
-            // Add Air element ('_')
             builder.addElement('_', isAir());
 
-            // Space means 'any' - skip validation (don't add element for space)
-            // StructureLib treats undefined symbols as 'skip' by default
+            if (!entry.getMappings()
+                .containsKey('F')) {
+                builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
+            }
 
-            // Add dynamic mappings from JSON
-            int mappingCount = 0;
-            if (entry.mappings != null) {
-                for (Map.Entry<String, Object> mapEntry : entry.mappings.entrySet()) {
-                    if (mapEntry.getKey()
-                        .isEmpty()) continue;
-                    char symbol = mapEntry.getKey()
-                        .charAt(0);
+            // Add dynamic mappings
+            for (Map.Entry<Character, ISymbolMapping> mapEntry : entry.getMappings()
+                .entrySet()) {
+                char symbol = mapEntry.getKey();
+                if (symbol == 'Q' || symbol == '_' || symbol == ' ') continue;
 
-                    // Skip reserved symbols
-                    if (symbol == 'Q' || symbol == '_' || symbol == ' ') continue;
-
-                    IStructureElement<TEMachineController> element = createElementFromMapping(
-                        mapEntry.getValue(),
-                        symbol);
-                    if (element != null) {
-                        builder.addElement(symbol, element);
-                        mappingCount++;
-                        Logger.info("  Mapping '" + symbol + "' registered");
-                    }
+                IStructureElement<TEMachineController> element = createElementFromMapping(mapEntry.getValue());
+                if (element != null) {
+                    builder.addElement(symbol, element);
                 }
             }
-            Logger.info("  Total mappings: " + mappingCount);
 
-            // Build and register
             IStructureDefinition<TEMachineController> definition = builder.build();
-            structureDefinitions.put(entry.name, definition);
+            structureDefinitions.put(entry.getName(), definition);
+            Logger.info("CustomStructureRegistry: SUCCESS - Structure '" + entry.getName() + "' registered!");
 
-            Logger.info("CustomStructureRegistry: SUCCESS - Structure '" + entry.name + "' registered!");
-            if (entry.recipeGroup != null) {
-                Logger.info("  Recipe group: " + entry.recipeGroup);
-            }
         } catch (Exception e) {
-            Logger.error("CustomStructureRegistry: Failed to register structure '" + entry.name + "'", e);
+            Logger.error("CustomStructureRegistry: Failed to register structure '" + entry.getName() + "'", e);
         }
     }
 
-    /**
-     * Get a registered structure definition by name.
-     */
     public static IStructureDefinition<TEMachineController> getDefinition(String name) {
         return structureDefinitions.get(name);
     }
 
-    /**
-     * Check if a structure is registered.
-     */
     public static boolean hasDefinition(String name) {
         return structureDefinitions.containsKey(name);
     }
 
-    /**
-     * Get all registered structure names.
-     */
-    public static Set<String> getRegisteredNames() {
-        return new HashSet<>(structureDefinitions.keySet());
+    public static int[] getControllerOffset(String name) {
+        return controllerOffsets.getOrDefault(name, new int[] { 0, 0, 0 });
     }
 
-    /**
-     * Create a StructureLib element from a mapping object.
-     */
-    @SuppressWarnings("unchecked")
-    private static IStructureElement<TEMachineController> createElementFromMapping(Object mapping, char symbol) {
-        // Use BlockResolver from StructureRegistrationUtils pattern
-        if (mapping instanceof String) {
-            return BlockResolver.createElement((String) mapping);
-        }
-
-        // Handle direct List (JSON array mapped directly, e.g., "P": ["block1",
-        // "block2"])
-        if (mapping instanceof List<?>listMapping) {
-            List<String> blockStrings = new ArrayList<>();
-            for (Object item : listMapping) {
-                if (item instanceof String) {
-                    blockStrings.add((String) item);
-                }
-            }
-            if (!blockStrings.isEmpty()) {
-                return BlockResolver.createChainElementWithTileAdder(blockStrings);
+    private static IStructureElement<TEMachineController> createElementFromMapping(ISymbolMapping mapping) {
+        if (mapping instanceof BlockMapping) {
+            BlockMapping bm = (BlockMapping) mapping;
+            if (bm.getBlockId() != null) {
+                return BlockResolver.createElement(bm.getBlockId());
+            } else if (bm.getBlockIds() != null) {
+                return BlockResolver.createChainElementWithTileAdder(bm.getBlockIds());
             }
         }
-
-        if (mapping instanceof StructureDefinitionData.BlockMapping blockMapping) {
-            if (blockMapping.block != null && !blockMapping.block.isEmpty()) {
-                return BlockResolver.createElement(blockMapping.block);
-            }
-            if (blockMapping.blocks != null && !blockMapping.blocks.isEmpty()) {
-                List<String> blockStrings = new ArrayList<>();
-                for (StructureDefinitionData.BlockEntry entry : blockMapping.blocks) {
-                    if (entry != null && entry.id != null) {
-                        blockStrings.add(entry.id);
-                    }
-                }
-                return BlockResolver.createChainElementWithTileAdder(blockStrings);
-            }
-        }
-
-        // Handle raw Map from Gson
-        if (mapping instanceof Map) {
-            Map<String, Object> mapData = (Map<String, Object>) mapping;
-            if (mapData.containsKey("block")) {
-                Object blockObj = mapData.get("block");
-                if (blockObj instanceof String) {
-                    return BlockResolver.createElement((String) blockObj);
-                }
-            }
-            if (mapData.containsKey("blocks")) {
-                Object blocksObj = mapData.get("blocks");
-                if (blocksObj instanceof List<?>blocksList) {
-                    List<String> blockStrings = new ArrayList<>();
-                    for (Object item : blocksList) {
-                        if (item instanceof Map) {
-                            Map<String, Object> blockItem = (Map<String, Object>) item;
-                            Object idObj = blockItem.get("id");
-                            if (idObj instanceof String) {
-                                blockStrings.add((String) idObj);
-                            }
-                        } else if (item instanceof String) {
-                            blockStrings.add((String) item);
-                        }
-                    }
-                    if (!blockStrings.isEmpty()) {
-                        return BlockResolver.createChainElementWithTileAdder(blockStrings);
-                    }
-                }
-            }
-        }
-
-        Logger.warn("CustomStructureRegistry: Unknown mapping type for symbol '" + symbol + "'");
         return null;
-    }
-
-    private static String[][] rotate180(String[][] shape) {
-        String[][] rotated = new String[shape.length][];
-        for (int layer = 0; layer < shape.length; layer++) {
-            int numRows = shape[layer].length;
-            rotated[layer] = new String[numRows];
-            for (int row = 0; row < numRows; row++) {
-                // Get row from opposite end (Z flip) but keep string order (No X flip)
-                int srcRow = numRows - 1 - row;
-                rotated[layer][row] = shape[layer][srcRow];
-            }
-        }
-        return rotated;
     }
 
     private static String[][] transformForVertical(String[][] shape, String facing) {
@@ -269,11 +148,11 @@ public class CustomStructureRegistry {
         int originalRows = shape[0].length;
         boolean isDown = "DOWN".equalsIgnoreCase(facing);
 
+        // Transform layers (Y) to rows (Z) to build the structure vertically
         String[][] transformed = new String[originalRows][originalLayers];
 
         for (int originalZ = 0; originalZ < originalRows; originalZ++) {
             for (int originalY = 0; originalY < originalLayers; originalY++) {
-
                 int targetLayerIndex = originalZ;
                 int targetRowIndex = isDown ? (originalLayers - 1 - originalY) : originalY;
 
@@ -287,48 +166,34 @@ public class CustomStructureRegistry {
         return transformed;
     }
 
-    /**
-     * Count occurrences of a symbol in a shape array.
-     */
-    private static int countSymbol(String[][] shape, char symbol) {
-        int count = 0;
-        for (String[] layer : shape) {
-            for (String row : layer) {
-                for (int i = 0; i < row.length(); i++) {
-                    if (row.charAt(i) == symbol) count++;
-                }
+    private static String[][] rotate180(String[][] shape) {
+        String[][] rotated = new String[shape.length][];
+        for (int layer = 0; layer < shape.length; layer++) {
+            int numRows = shape[layer].length;
+            rotated[layer] = new String[numRows];
+            for (int row = 0; row < numRows; row++) {
+                int srcRow = numRows - 1 - row;
+                rotated[layer][row] = shape[layer][srcRow];
             }
         }
-        return count;
+        return rotated;
     }
 
-    /**
-     * Find the controller (Q) position and return the offset for StructureLib.
-     * JSON format coordinate mapping:
-     * - layer index = Y axis (vertical, up is positive)
-     * - row index = Z axis (depth, controller facing direction)
-     * - col (char) index = X axis (horizontal)
-     * StructureLib buildOrHints expects (offsetA, offsetB, offsetC) which are:
-     * - offsetA: horizontal offset (X)
-     * - offsetB: vertical offset (Y)
-     * - offsetC: depth offset (Z)
-     * The offset represents where the controller is relative to the structure
-     * origin (0,0,0).
-     */
     private static int[] findControllerOffset(String[][] shape) {
         for (int layer = 0; layer < shape.length; layer++) {
             for (int row = 0; row < shape[layer].length; row++) {
                 String rowStr = shape[layer][row];
                 for (int col = 0; col < rowStr.length(); col++) {
                     if (rowStr.charAt(col) == 'Q') {
-                        // Controller found at (layer, row, col) in JSON coordinates
-                        // Map to StructureLib: X=col, Y=layer, Z=row
                         return new int[] { col, layer, row };
                     }
                 }
             }
         }
-        // Default if not found
         return new int[] { 0, 0, 0 };
+    }
+
+    public static Set<String> getRegisteredNames() {
+        return new HashSet<>(structureDefinitions.keySet());
     }
 }

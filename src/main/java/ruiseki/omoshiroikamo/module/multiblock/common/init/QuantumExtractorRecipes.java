@@ -45,6 +45,19 @@ public class QuantumExtractorRecipes {
         loadResConfig();
     }
 
+    /**
+     * Reload recipes from JSON files.
+     */
+    public static void reload() {
+        oreRegistryByDim.clear();
+        resRegistryByDim.clear();
+        neiCommonOreRegistry = null;
+        neiCommonResRegistry = null;
+
+        loadOreConfig();
+        loadResConfig();
+    }
+
     public static IFocusableRegistry getOreRegistry(int tier, int dimId) {
         IFocusableRegistry[] arr = oreRegistryByDim.get(dimId);
         if (arr == null) {
