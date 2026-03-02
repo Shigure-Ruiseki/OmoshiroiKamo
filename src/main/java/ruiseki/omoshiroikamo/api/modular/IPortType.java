@@ -10,6 +10,7 @@ public interface IPortType {
         GAS,
         ESSENTIA,
         VIS,
+        BLOCK,
         NONE
     }
 

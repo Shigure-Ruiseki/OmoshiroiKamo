@@ -5,14 +5,14 @@ import java.awt.Rectangle;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.api.modular.recipe.io.EssentiaInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.EssentiaOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.GasInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.GasOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.ManaInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.ManaOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.VisInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.VisOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.EssentiaInput;
+import ruiseki.omoshiroikamo.api.recipe.io.EssentiaOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.GasInput;
+import ruiseki.omoshiroikamo.api.recipe.io.GasOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
+import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.VisInput;
+import ruiseki.omoshiroikamo.api.recipe.io.VisOutput;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 
 public class NEIRendererFactory {

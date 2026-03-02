@@ -9,12 +9,12 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionParserRegistry;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
-import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.parser.DecoratorParser;
-import ruiseki.omoshiroikamo.api.modular.recipe.parser.InputParserRegistry;
-import ruiseki.omoshiroikamo.api.modular.recipe.parser.OutputParserRegistry;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.recipe.parser.DecoratorParser;
+import ruiseki.omoshiroikamo.api.recipe.parser.InputParserRegistry;
+import ruiseki.omoshiroikamo.api.recipe.parser.OutputParserRegistry;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 /**

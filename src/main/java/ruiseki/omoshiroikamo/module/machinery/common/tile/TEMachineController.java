@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -35,9 +36,11 @@ import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
-import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -54,7 +57,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * TODO: Improve holo indicator
  */
 public class TEMachineController extends AbstractMBModifierTE
-    implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {
+    implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture, IRecipeContext {
 
     // ========== Blueprint Inventory ==========
     public static final int BLUEPRINT_SLOT = 0;
@@ -778,6 +781,105 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public String getLastValidationError() {
         return structureAgent.getLastValidationError();
+    }
+
+    // ========== IRecipeContext Implementation ==========
+
+    @Override
+    public World getWorld() {
+        return worldObj;
+    }
+
+    @Override
+    public ChunkCoordinates getControllerPos() {
+        return new ChunkCoordinates(xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public IStructureEntry getCurrentStructure() {
+        String structureName = structureAgent.getCustomStructureName();
+        if (structureName == null || structureName.isEmpty()) {
+            return null;
+        }
+        return StructureManager.getInstance()
+            .getCustomStructure(structureName);
+    }
+
+    @Override
+    public ForgeDirection getFacing() {
+        return extendedFacing.getDirection();
+    }
+
+    @Override
+    public List<ChunkCoordinates> getSymbolPositions(char symbol) {
+        List<ChunkCoordinates> positions = new ArrayList<>();
+
+        IStructureEntry structure = getCurrentStructure();
+        if (structure == null || worldObj == null) {
+            return positions;
+        }
+
+        // Get controller offset
+        int[] offset = structure.getControllerOffset();
+        if (offset == null || offset.length < 3) {
+            offset = new int[] { 0, 0, 0 };
+        }
+
+        // Get facing direction for rotation
+        ForgeDirection facing = getFacing();
+
+        // Iterate through all layers
+        List<IStructureLayer> layers = structure.getLayers();
+        for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
+            IStructureLayer layer = layers.get(layerIndex);
+            List<String> rows = layer.getRows();
+
+            // Iterate through rows and columns
+            for (int row = 0; row < rows.size(); row++) {
+                String rowStr = rows.get(row);
+                for (int col = 0; col < rowStr.length(); col++) {
+                    char c = rowStr.charAt(col);
+                    if (c == symbol) {
+                        // Found the symbol - convert local to world coordinates
+                        // Local coordinates: layer (Y), row (Z), col (X)
+                        int localX = col - offset[0];
+                        int localY = layerIndex - offset[1];
+                        int localZ = row - offset[2];
+
+                        // Apply rotation based on facing
+                        ChunkCoordinates rotated = rotateCoordinates(localX, localY, localZ, facing);
+
+                        // Add controller position
+                        ChunkCoordinates worldPos = new ChunkCoordinates(
+                            xCoord + rotated.posX,
+                            yCoord + rotated.posY,
+                            zCoord + rotated.posZ);
+
+                        positions.add(worldPos);
+                    }
+                }
+            }
+        }
+
+        return positions;
+    }
+
+    /**
+     * Rotate local coordinates based on structure facing.
+     */
+    private ChunkCoordinates rotateCoordinates(int x, int y, int z, ForgeDirection facing) {
+        switch (facing) {
+            case NORTH: // -Z
+                return new ChunkCoordinates(-x, y, -z);
+            case SOUTH: // +Z (default, no rotation)
+                return new ChunkCoordinates(x, y, z);
+            case WEST: // -X
+                return new ChunkCoordinates(-z, y, x);
+            case EAST: // +X
+                return new ChunkCoordinates(z, y, -x);
+            default:
+                return new ChunkCoordinates(x, y, z);
+        }
     }
 
     // ========== ISidedTexture Implementation ==========
