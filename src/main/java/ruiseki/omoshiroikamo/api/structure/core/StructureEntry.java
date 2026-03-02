@@ -153,28 +153,23 @@ public class StructureEntry implements IStructureEntry {
             json.add("controllerOffset", offsetArray);
         }
 
-        JsonObject properties = new JsonObject();
         if (tintColor != null) {
-            properties.addProperty("tintColor", tintColor);
+            json.addProperty("tintColor", tintColor);
         }
         if (speedMultiplier != 1.0f) {
-            properties.addProperty("speedMultiplier", speedMultiplier);
+            json.addProperty("speedMultiplier", speedMultiplier);
         }
         if (energyMultiplier != 1.0f) {
-            properties.addProperty("energyMultiplier", energyMultiplier);
+            json.addProperty("energyMultiplier", energyMultiplier);
         }
         if (batchMin != 1) {
-            properties.addProperty("batchMin", batchMin);
+            json.addProperty("batchMin", batchMin);
         }
         if (batchMax != 1) {
-            properties.addProperty("batchMax", batchMax);
-        }
-        if (properties.entrySet()
-            .size() > 0) {
-            json.add("properties", properties);
+            json.addProperty("batchMax", batchMax);
         }
 
-        if (tier != 1) {
+        if (tier != 0) {
             json.addProperty("tier", tier);
         }
 

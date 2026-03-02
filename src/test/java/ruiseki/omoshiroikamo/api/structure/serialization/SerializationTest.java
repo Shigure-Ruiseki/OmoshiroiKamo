@@ -71,11 +71,9 @@ public class SerializationTest {
         assertTrue(json.has("layers"));
         assertTrue(json.has("mappings"));
         assertTrue(json.has("requirements"));
-        assertTrue(json.has("properties"));
-        JsonObject props = json.getAsJsonObject("properties");
         assertEquals(
             "#FF0000",
-            props.get("tintColor")
+            json.get("tintColor")
                 .getAsString());
         assertEquals(
             3,

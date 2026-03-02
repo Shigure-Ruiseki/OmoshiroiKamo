@@ -7,15 +7,23 @@ A file can contain a single object or an array of objects. A special object name
 
 ## 2. Main Entry Properties
 
+### ※Since 1.5.1.2, "properties" has been abolished! There is no backward compatibility! 
+### Instead, please write it as follows
+
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | `name` | String | Unique identifier (required). |
 | `displayName` | String | User-friendly name (optional). |
 | `recipeGroup` | String/Array | The recipe groups this structure is compatible with. |
 | `mappings` | Object | Character-to-block associations. |
-| `layers` | Array | Vertical slices of the structure (bottom to top). |
+| `layers` | Array | Vertical slices of the structure (top to bottom). |
 | `requirements` | Array | Minimum functional needs (e.g., ports). |
-| `controllerOffset` | Array `[x, y, z]` | Position of the controller relative to the start of the scan. |
+| `tintColor` | String | RGB hex color for structure rendering (e.g., `#FF0000`). |
+| `speedMultiplier` | Float | Multiplier for processing speed (default: 1.0). |
+| `energyMultiplier` | Float | Multiplier for energy consumption (default: 1.0). |
+| `batchMin` | Integer | Minimum batch size for recipes (default: 1). |
+| `batchMax` | Integer | Maximum batch size for recipes (default: 1). |
+| `tier` | Integer | Machine tier (default: 0). |
 
 ## 3. Mappings
 Mappings link characters in `layers` to block IDs.

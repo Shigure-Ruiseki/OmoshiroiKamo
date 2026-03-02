@@ -187,33 +187,30 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
         }
 
         // 5. properties (tintColor, multipliers, batch limits)
-        if (json.has("properties")) {
-            JsonObject properties = json.getAsJsonObject("properties");
-            if (properties.has("tintColor")) {
-                builder.setTintColor(
-                    properties.get("tintColor")
-                        .getAsString());
-            }
-            if (properties.has("speedMultiplier")) {
-                builder.setSpeedMultiplier(
-                    properties.get("speedMultiplier")
-                        .getAsFloat());
-            }
-            if (properties.has("energyMultiplier")) {
-                builder.setEnergyMultiplier(
-                    properties.get("energyMultiplier")
-                        .getAsFloat());
-            }
-            if (properties.has("batchMin")) {
-                builder.setBatchMin(
-                    properties.get("batchMin")
-                        .getAsInt());
-            }
-            if (properties.has("batchMax")) {
-                builder.setBatchMax(
-                    properties.get("batchMax")
-                        .getAsInt());
-            }
+        if (json.has("tintColor")) {
+            builder.setTintColor(
+                json.get("tintColor")
+                    .getAsString());
+        }
+        if (json.has("speedMultiplier")) {
+            builder.setSpeedMultiplier(
+                json.get("speedMultiplier")
+                    .getAsFloat());
+        }
+        if (json.has("energyMultiplier")) {
+            builder.setEnergyMultiplier(
+                json.get("energyMultiplier")
+                    .getAsFloat());
+        }
+        if (json.has("batchMin")) {
+            builder.setBatchMin(
+                json.get("batchMin")
+                    .getAsInt());
+        }
+        if (json.has("batchMax")) {
+            builder.setBatchMax(
+                json.get("batchMax")
+                    .getAsInt());
         }
 
         // 6. tier

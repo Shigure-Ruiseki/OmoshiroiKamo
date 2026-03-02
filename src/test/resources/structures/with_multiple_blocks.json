@@ -8,7 +8,11 @@
   ],
   "mappings": {
     "A": {
-      "blocks": ["minecraft:stone", "minecraft:cobblestone", "minecraft:mossy_cobblestone"]
+      "blocks": [
+        "minecraft:stone",
+        "minecraft:cobblestone",
+        "minecraft:mossy_cobblestone"
+      ]
     }
   }
 }
