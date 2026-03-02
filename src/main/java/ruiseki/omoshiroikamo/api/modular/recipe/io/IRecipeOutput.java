@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.modular.recipe.io;
 
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
@@ -21,18 +23,18 @@ public interface IRecipeOutput extends IJsonMaterial {
     /**
      * Check if the ports have enough capacity to store this output.
      */
-    boolean checkCapacity(java.util.List<IModularPort> ports);
+    boolean checkCapacity(List<IModularPort> ports);
 
     /**
      * Produce the output and store it in the provided ports.
      */
-    void apply(java.util.List<IModularPort> ports);
+    void apply(List<IModularPort> ports);
 
     /**
      * Check if this output is satisfied (legacy support for process if needed).
      * Now use checkCapacity and apply separately in ModularRecipe.
      */
-    default boolean process(java.util.List<IModularPort> ports, boolean simulate) {
+    default boolean process(List<IModularPort> ports, boolean simulate) {
         if (simulate) return checkCapacity(ports);
         apply(ports);
         return true;
