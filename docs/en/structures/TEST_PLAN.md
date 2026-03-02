@@ -56,29 +56,62 @@ Integrated tests use real JSON files as test resources. These files are loaded f
 - **Count**: 14 structure definition files.
 
 ### Individual File List
-1. `minimal.json` - Minimal 1x1x1 structure.
-2. `simple_3x3x1.json` - Simple 3x3 layout.
-3. `complex_3x3x3.json` - Multi-layered complex structure.
-4. `with_item_requirement.json` - Item requirement verification.
-5. `with_fluid_requirement.json` - Fluid requirement verification.
-6. `with_energy_requirement.json` - Energy requirement verification.
-7. `with_all_requirements.json` - Full requirement set (4 types).
-8. `with_display_name.json` - Optional metadata (displayName).
-9. `with_recipe_group.json` - Optional metadata (recipeGroup).
-10. `with_controller_offset.json` - Optional metadata (controllerOffset).
-11. `with_tint_color.json` - Optional metadata (tintColor).
-12. `with_tier.json` - Optional tier setting.
-13. `with_multiple_blocks.json` - Multi-block mapping verification.
-14. `with_metadata.json` - Block mapping with metadata/damage values.
+1. `minimal.json` - Minimal structure (1x1x1)
+2. `simple_3x3x1.json` - Simple 3x3 layout
+3. `complex_3x3x3.json` - Complex 3-layer structure
+4. `with_item_requirement.json` - Item requirement verification
+5. `with_fluid_requirement.json` - Fluid requirement verification
+6. `with_energy_requirement.json` - Energy requirement verification
+7. `with_all_requirements.json` - Comprehensive test with 4 types of requirements
+8. `with_display_name.json` - Optional metadata (displayName)
+9. `with_recipe_group.json` - Optional metadata (recipeGroup)
+10. `with_controller_offset.json` - Optional metadata (controllerOffset)
+11. `with_tint_color.json` - Optional metadata (tintColor)
+12. `with_tier.json` - Optional metadata (tier)
+13. `with_multiple_blocks.json` - Multiple block mapping test
+14. `with_metadata.json` - Block mapping with metadata/damage values
 
 ### Test Class: StructureFileLoaderTest
-- **Source**: `src/test/java/.../structure/integration/StructureFileLoaderTest.java`
-- **Coverage**: 26 integration tests.
-- **Key Verification Points**:
-  - Successful loading of name, layers, and mappings.
-  - Correct parsing of all optional metadata fields.
-  - Validation of various Requirement types (Item, Fluid, Energy, Mana).
-  - Proper handling of multi-block mappings and metadata-aware blocks.
-  - Support for `default mappings` fallback.
+**Location**: `src/test/java/ruiseki/omoshiroikamo/api/structure/integration/StructureFileLoaderTest.java`
+
+**Coverage**: 26 integration tests
+
+**Key Verification Points**:
+- Successful loading of name, layers, and mappings.
+- Correct parsing of all optional metadata fields (displayName, recipeGroup, controllerOffset, tintColor, tier).
+- Validation of various Requirement types (Item, Fluid, Energy, Mana).
+- Proper handling of multi-block mappings and metadata-aware blocks.
+- Support for `default mappings` fallback.
+
+**Implementation Pattern**:
+```java
+@BeforeAll
+public static void setUpAll() {
+    structures = new HashMap<>();
+    defaultMappings = new HashMap<>();
+
+    // Read each file individually
+    for (String filename : STRUCTURE_FILES) {
+        InputStream inputStream = StructureFileLoaderTest.class
+            .getResourceAsStream("/structures/" + filename);
+
+        try (InputStreamReader reader = new InputStreamReader(inputStream)) {
+            JsonElement element = new JsonParser().parse(new JsonReader(reader));
+            StructureJsonReader.FileData data = StructureJsonReader.readFile(element);
+
+            // Merge structures and mappings
+            structures.putAll(data.structures);
+            defaultMappings.putAll(data.defaultMappings);
+        }
+    }
+}
+```
+
+**Key Design Principles**:
+- **No Skip Policy**: Fail the test via `assertNotNull` if a resource file is missing.
+- **Classpath Resources**: Load from test resources using `getResourceAsStream()`.
+- **Individual File Format**: Manage each structure in its own file to improve maintainability.
+- **Merge Pattern**: Consolidate structures loaded from multiple files into a single Map.
+- **Compatibility**: Support Minecraft 1.7.10's legacy Gson API (`new JsonParser().parse(new JsonReader(reader))`).
 
 This integration testing suite ensures that the JSON parsing logic remains robust when dealing with real-world file inputs.

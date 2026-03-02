@@ -59,6 +59,21 @@ public class TierScannerVisitor implements IStructureVisitor {
 - **Encapsulation**: Use `StructureEntryBuilder` instead of creating `StructureEntry` instances directly.
 - **Fail Fast**: Use the validation visitor after loading a JSON to catch syntax and logic errors early.
 
+## 4. JSON Reader & Writer
+
+The system provides a unified mechanism for converting between JSON and `StructureEntry` objects.
+
+### StructureJsonReader
+Reads JSON elements (entire files or individual structure objects) and converts them into internal objects.
+- `readFile(JsonElement)`: Reads an entire file and returns `FileData` containing a list of structures and default mappings.
+- `readStructure(JsonObject, Map<String, String>)`: Parses an individual structure object.
+
+### StructureJsonWriter
+Serializes `StructureEntry` objects back into `JsonObject`.
+- `writeStructure(IStructureEntry)`: Converts a structure definition into JSON format.
+
+Using these classes ensures consistency and avoids manual JSON parsing bugs.
+
 ## 4. Testing
 
 To maintain long-term stability, we follow a rigorous testing strategy with over 220 test cases. See the [Test Plan](./TEST_PLAN.md) for detailed test phases and implementation guidelines.
