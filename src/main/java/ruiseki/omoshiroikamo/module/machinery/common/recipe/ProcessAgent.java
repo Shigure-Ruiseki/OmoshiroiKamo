@@ -11,15 +11,15 @@ import net.minecraftforge.common.util.Constants;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.modular.recipe.core.AbstractRecipeProcess;
-import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.EnergyInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.EnergyOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.ManaInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.ManaOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.parser.OutputNBTRegistry;
-import ruiseki.omoshiroikamo.api.modular.recipe.visitor.RecipeExecutionVisitor;
+import ruiseki.omoshiroikamo.api.recipe.core.AbstractRecipeProcess;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
+import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
+import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
+import ruiseki.omoshiroikamo.api.recipe.parser.OutputNBTRegistry;
+import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
 
 public class ProcessAgent extends AbstractRecipeProcess {
 
