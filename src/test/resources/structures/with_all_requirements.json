@@ -1,0 +1,33 @@
+{
+  "name": "with_all_requirements",
+  "displayName": "All Requirements Test",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {},
+  "requirements": [
+    {
+      "type": "itemInput",
+      "min": 2,
+      "max": 8
+    },
+    {
+      "type": "fluidOutput",
+      "min": 1,
+      "max": 2
+    },
+    {
+      "type": "energyInput",
+      "min": 1,
+      "max": 1
+    },
+    {
+      "type": "manaInput",
+      "min": 1,
+      "max": 3
+    }
+  ]
+}

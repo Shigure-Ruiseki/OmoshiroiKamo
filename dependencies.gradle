@@ -80,5 +80,10 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.36") { transitive = false }
     compileOnly("curse.maven:neverenoughanimation-1062347:7624764")
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     annotationProcessor('org.projectlombok:lombok:1.18.30')
 }

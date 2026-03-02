@@ -58,3 +58,22 @@ public class TierScannerVisitor implements IStructureVisitor {
 - **登録順序**: JSON の読み込みが発生する前に、すべての要件が登録されていることを確認してください（通常は `postInit` より前）。
 - **カプセル化**: `StructureEntry` インスタンスを直接作成するのではなく、`StructureEntryBuilder` を使用してください。
 - **早期失敗 (Fail Fast)**: JSON をロードした直後にバリデーション Visitor を使用して、構文や論理的なエラーを早期にキャッチしてください。
+
+## 4. JSON Reader & Writer
+
+システムには、JSON と `StructureEntry` オブジェクトを相互変換するための統一された仕組みが用意されています。
+
+### StructureJsonReader
+JSON 要素（ファイル全体または個別の構造体オブジェクト）を読み込み、内部オブジェクトに変換します。
+- `readFile(JsonElement)`: ファイル全体を読み込み、`FileData`（構造体リストとデフォルトマッピングを含む）を返します。
+- `readStructure(JsonObject, Map<String, String>)`: 個別の構造体オブジェクトをパースします。
+
+### StructureJsonWriter
+`StructureEntry` オブジェクトを `JsonObject` に書き戻します。
+- `writeStructure(IStructureEntry)`: 構造体定義を JSON 形式に変換します。
+
+これらのクラスを使用することで、手動での JSON パースを避け、システムの整合性を保つことができます。
+
+## 4. テスト
+
+長期的な安定性を維持するため、220項目以上のテストケースによる厳格なテスト戦略を採用しています。詳細なテストフェーズおよび実装ガイドラインについては、[テスト計画](./TEST_PLAN.md) を参照してください。

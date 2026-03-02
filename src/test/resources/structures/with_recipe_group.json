@@ -1,0 +1,11 @@
+{
+  "name": "with_recipe_group",
+  "recipeGroup": ["basic", "multiblock"],
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {}
+}

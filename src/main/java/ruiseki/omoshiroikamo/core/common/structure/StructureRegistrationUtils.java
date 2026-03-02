@@ -24,11 +24,10 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public class StructureRegistrationUtils {
 
-    // Reserved symbols that are handled specially and should not be overridden by JSON
-    // Q = Controller (must be exactly 1), space = any, _ = mandatory air
-    // A = Modifier slot, L = Lens slot (these need ofBlockAdderWithPos)
-    // G = Solar Cells
-    private static final String RESERVED_SYMBOLS = "Q _AGL";
+    // Conventional symbols that should usually be handled by code for internal
+    // modules
+    // Q = Controller, space = any, _ = air, A = Modifier, G = Solar, L = Lens
+    public static final String DEFAULT_RESERVED_SYMBOLS = "Q _AGL";
 
     /**
      * Registers a single tier of a multiblock structure.
@@ -110,6 +109,27 @@ public class StructureRegistrationUtils {
     public static <T extends AbstractMBModifierTE> IStructureDefinition<T> registerTierWithDynamicMappings(
         Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
         Block controllerBlock, int tier, Consumer<StructureDefinition.Builder<T>> elementAdder) {
+        return registerTierWithDynamicMappings(
+            tileClass,
+            shape,
+            dynamicMappings,
+            shapeName,
+            controllerBlock,
+            tier,
+            DEFAULT_RESERVED_SYMBOLS,
+            elementAdder);
+    }
+
+    /**
+     * Registers a tier with dynamic mappings and explicit reserved symbols.
+     *
+     * @param reservedSymbols Symbols that should NOT be added from JSON (handled by
+     *                        elementAdder)
+     */
+    public static <T extends AbstractMBModifierTE> IStructureDefinition<T> registerTierWithDynamicMappings(
+        Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
+        Block controllerBlock, int tier, String reservedSymbols,
+        Consumer<StructureDefinition.Builder<T>> elementAdder) {
 
         // Validate: Q must appear exactly once
         int qCount = countSymbolInShape(shape, 'Q');
@@ -143,13 +163,14 @@ public class StructureRegistrationUtils {
             builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
         }
 
-        // Add dynamic mappings from JSON (skip reserved symbols)
+        // Add dynamic mappings from JSON (priority: JSON > Internal Defaults, except
+        // Mandatory)
         if (dynamicMappings != null) {
             for (Map.Entry<Character, Object> entry : dynamicMappings.entrySet()) {
                 char symbol = entry.getKey();
 
                 // Skip reserved symbols
-                if (RESERVED_SYMBOLS.indexOf(symbol) >= 0) {
+                if (reservedSymbols != null && reservedSymbols.indexOf(symbol) >= 0) {
                     continue;
                 }
 
@@ -160,11 +181,9 @@ public class StructureRegistrationUtils {
                     Logger.warn("Failed to create element for symbol '" + symbol + "' in structure " + shapeName);
                 }
             }
-        } else {
-            Logger.warn("Structure " + shapeName + ": dynamicMappings is null!");
         }
 
-        // Add Custom Elements (can override dynamic mappings)
+        // Add Custom Elements (highest priority, can override JSON)
         if (elementAdder != null) {
             elementAdder.accept(builder);
         }

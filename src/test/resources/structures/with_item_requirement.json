@@ -1,0 +1,17 @@
+{
+  "name": "with_item_requirement",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {},
+  "requirements": [
+    {
+      "type": "itemInput",
+      "min": 1,
+      "max": 4
+    }
+  ]
+}

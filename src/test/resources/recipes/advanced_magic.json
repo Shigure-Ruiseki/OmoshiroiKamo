@@ -1,0 +1,117 @@
+{
+    "group": "Magic",
+    "recipes": [
+        {
+            "name": "Mana Processing",
+            "duration": 100,
+            "inputs": [
+                {
+                    "mana": 2000
+                },
+                {
+                    "item": "minecraft:redstone",
+                    "amount": 8
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:glowstone_dust",
+                    "amount": 4
+                },
+                {
+                    "mana": 100
+                }
+            ]
+        },
+        {
+            "name": "Essentia Extraction",
+            "duration": 200,
+            "priority": 1,
+            "inputs": [
+                {
+                    "essentia": "ignis",
+                    "amount": 10
+                },
+                {
+                    "ore": "ingotGold",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "essentia": "metallum",
+                    "amount": 4
+                },
+                {
+                    "item": "minecraft:gold_nugget",
+                    "amount": 2
+                }
+            ]
+        },
+        {
+            "name": "Vis Crystallization",
+            "duration": 300,
+            "inputs": [
+                {
+                    "vis": "aer",
+                    "amount": 50
+                },
+                {
+                    "vis": "aqua",
+                    "amount": 50
+                },
+                {
+                    "item": "minecraft:quartz",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:quartz",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Vis Generation from Ender Pearl",
+            "duration": 120,
+            "inputs": [
+                {
+                    "item": "minecraft:ender_pearl",
+                    "amount": 4
+                }
+            ],
+            "outputs": [
+                {
+                    "vis": "perditio",
+                    "amount": 20
+                },
+                {
+                    "vis": "aer",
+                    "amount": 20
+                }
+            ]
+        },
+        {
+            "name": "Lava test",
+            "duration": 100,
+            "priority": 2,
+            "inputs": [
+                {
+                    "item": "minecraft:cobblestone",
+                    "amount": 1
+                },
+                {
+                    "mana": 1000,
+                    "perTick": true
+                }
+            ],
+            "outputs": [
+                {
+                    "fluid": "lava",
+                    "amount": 100
+                }
+            ]
+        }
+    ]
+}
