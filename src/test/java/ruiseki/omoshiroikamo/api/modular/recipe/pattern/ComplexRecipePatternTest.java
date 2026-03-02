@@ -15,7 +15,20 @@ import org.junit.jupiter.api.Test;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.modular.recipe.core.ModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.io.*;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.EnergyInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.EnergyOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.EssentiaInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.EssentiaOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.GasInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.GasOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.ItemOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.ManaInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.ManaOutput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.VisInput;
+import ruiseki.omoshiroikamo.api.modular.recipe.io.VisOutput;
 import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
