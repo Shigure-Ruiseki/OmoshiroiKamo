@@ -9,6 +9,8 @@ import ruiseki.omoshiroikamo.api.recipe.io.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.FluidInput;
 import ruiseki.omoshiroikamo.api.recipe.io.FluidOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.GasOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
@@ -160,6 +162,27 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
     @Override
     public void visit(VisOutput output) {
         if (mode == Mode.CACHE) {
+            agent.addCachedOutput(output.copy());
+        }
+    }
+
+    @Override
+    public void visit(IRecipeInput input) {
+        switch (this.mode) {
+            case CHECK:
+                if (!input.process(ports, true)) satisfied = false;
+                break;
+            case CONSUME:
+                input.process(ports, false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void visit(IRecipeOutput output) {
+        if (this.mode == Mode.CACHE) {
             agent.addCachedOutput(output.copy());
         }
     }

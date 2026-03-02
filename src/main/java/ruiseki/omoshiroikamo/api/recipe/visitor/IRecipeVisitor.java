@@ -11,6 +11,8 @@ import ruiseki.omoshiroikamo.api.recipe.io.FluidInput;
 import ruiseki.omoshiroikamo.api.recipe.io.FluidOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.GasInput;
 import ruiseki.omoshiroikamo.api.recipe.io.GasOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
@@ -57,6 +59,11 @@ public interface IRecipeVisitor {
 
     default void visit(BlockInput input) {}
 
+    /**
+     * Fallback for unknown input types.
+     */
+    default void visit(IRecipeInput input) {}
+
     // --- Outputs ---
 
     default void visit(ItemOutput output) {}
@@ -74,4 +81,9 @@ public interface IRecipeVisitor {
     default void visit(VisOutput output) {}
 
     default void visit(BlockOutput output) {}
+
+    /**
+     * Fallback for unknown output types.
+     */
+    default void visit(IRecipeOutput output) {}
 }
