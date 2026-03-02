@@ -7,7 +7,7 @@ A file can contain a single object or an array of objects. A special object name
 
 ## 2. Main Entry Properties
 
-### ※Since 1.5.1.2, "properties" has been abolished! There is no backward compatibility! 
+### ※Since 1.5.1.4, "properties" has been abolished! There is no backward compatibility! 
 ### Instead, please write it as follows
 
 | Property | Type | Description |
