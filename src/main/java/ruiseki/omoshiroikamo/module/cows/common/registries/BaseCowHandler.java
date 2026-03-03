@@ -1,22 +1,12 @@
 package ruiseki.omoshiroikamo.module.cows.common.registries;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.Loader;
 import lombok.Getter;
@@ -61,19 +51,7 @@ public abstract class BaseCowHandler {
         this.needsMod = bool;
     }
 
-    public static class CowJson {
-
-        Integer id;
-        String name;
-        boolean enabled;
-        FluidJson fluid;
-        String fgColor; // Hex string
-        String bgColor; // Hex string
-        String spawnType;
-        Map<String, String> lang;
-    }
-
-    private List<CowJson> loadedCustomCows;
+    private List<CowMaterial> loadedCustomMaterials;
 
     public List<CowsRegistryItem> tryRegisterCows(List<CowsRegistryItem> allCows) {
         Logger.info("Looking for {} cows...", modName);
@@ -85,7 +63,8 @@ public abstract class BaseCowHandler {
 
         Logger.info("Loading {} cows...", modName);
 
-        File configFile = new File("config/" + LibMisc.MOD_ID + "/cow/" + configFileName);
+        File configDir = new File("config/" + LibMisc.MOD_ID + "/cow/");
+        File configFile = new File(configDir, configFileName);
         if (!configFile.exists()) {
             List<CowsRegistryItem> defaultCows = registerCows();
             createDefaultConfig(configFile, defaultCows);
@@ -96,31 +75,31 @@ public abstract class BaseCowHandler {
             ConfigUpdater.updateBoolean(CowConfig.class, "updateMissing", false);
         }
 
-        try (FileReader fileReader = new FileReader(configFile)) {
-            JsonReader reader = new JsonReader(fileReader);
-            reader.setLenient(true);
+        this.id = startID;
 
-            Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<CowJson>>() {}.getType();
-            List<CowJson> cows = gson.fromJson(reader, listType);
-            if (cows == null) {
+        try {
+            CowJsonReader reader = new CowJsonReader(configFile);
+            List<CowMaterial> materials = reader.read();
+            if (materials == null) {
                 Logger.info("{} is empty or invalid.", configFileName);
                 return allCows;
             }
 
-            this.id = startID;
+            this.loadedCustomMaterials = materials;
+            boolean migrated = false;
 
-            this.loadedCustomCows = cows;
-
-            for (CowJson data : cows) {
+            for (CowMaterial data : materials) {
                 try {
+                    if (!data.validate()) continue;
+
                     FluidStack milk = FluidJson.resolveFluidStack(data.fluid);
                     if (milk == null) {
                         Logger.error("Error registering ({}) Cow '{}' : fluid was null", this.modID, data.name);
                         continue;
                     }
-                    int bgColor = parseColor(data.bgColor, 0xFFFFFF);
-                    int fgColor = parseColor(data.fgColor, 0xAAAAAA);
+
+                    int bgColor = JsonUtils.resolveColor(data.bgColor, 0xFFFFFF);
+                    int fgColor = JsonUtils.resolveColor(data.fgColor, 0xAAAAAA);
 
                     SpawnType type = SpawnType.NORMAL;
                     try {
@@ -132,13 +111,12 @@ public abstract class BaseCowHandler {
                     }
 
                     // Migrate
-                    int cowID = (data.id != null && data.id >= 0) ? data.id : fixedID(data.name);
                     if (data.id == null || data.id < 0) {
-                        data.id = cowID;
-                        saveJsonMigration(configFile, loadedCustomCows);
+                        data.id = fixedID(data.name);
+                        migrated = true;
                     }
 
-                    CowsRegistryItem cow = addCow(data.name, cowID, bgColor, fgColor, type);
+                    CowsRegistryItem cow = addCow(data.name, data.id, bgColor, fgColor, type);
 
                     if (cow != null) {
                         Logger.debug("Registering ({}) Cow '{}'", this.modID, data.name);
@@ -161,12 +139,24 @@ public abstract class BaseCowHandler {
                     Logger.error("Error registering cow {}", data.name, e);
                 }
             }
-            this.loadedCustomCows = null;
+
+            if (migrated) performMigration(configFile, materials);
+
+            this.loadedCustomMaterials = null;
         } catch (IOException e) {
             Logger.error("Failed to read {}: {}", configFileName, e.getMessage());
         }
 
         return allCows;
+    }
+
+    protected void performMigration(File file, List<CowMaterial> materials) {
+        try {
+            new CowJsonWriter(file).write(materials);
+            Logger.info("Migrated config with new IDs: {}", file.getName());
+        } catch (IOException e) {
+            Logger.error("Failed to migrate config with IDs: {}", e.getMessage());
+        }
     }
 
     public abstract List<CowsRegistryItem> registerCows();
@@ -181,17 +171,6 @@ public abstract class BaseCowHandler {
         return startID + Math.abs(hash % (30000 - startID));
     }
 
-    public void saveJsonMigration(File file, List<CowJson> cows) {
-        try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-            writer.write(gson.toJson(cows));
-            Logger.info("Migrated config with new IDs: {}", file.getName());
-        } catch (IOException e) {
-            Logger.error("Failed to migrate config with IDs: {}", e.getMessage());
-        }
-    }
-
     protected CowsRegistryItem addCow(String cowName, int cowID, int bgColor, int fgColor, SpawnType spawntype) {
 
         return new CowsRegistryItem(
@@ -202,37 +181,26 @@ public abstract class BaseCowHandler {
             fgColor).setSpawnType(spawntype);
     }
 
-    private int parseColor(String hex, int def) {
-        if (hex == null || hex.isEmpty()) return def;
-        try {
-            return Integer.decode(hex);
-        } catch (NumberFormatException e) {
-            return def;
-        }
-    }
-
-    private CowJson toCowJson(CowsRegistryItem cow) {
+    private CowMaterial toCowMaterial(CowsRegistryItem cow) {
         if (cow == null) return null;
 
-        CowJson json = new CowJson();
-        json.id = cow.getId();
-        json.name = cow.getEntityName();
-        json.enabled = true;
-        json.bgColor = String.format("0x%06X", cow.getBgColor() & 0xFFFFFF);
-        json.fgColor = String.format("0x%06X", cow.getFgColor() & 0xFFFFFF);
-        json.spawnType = cow.getSpawnType() != null ? cow.getSpawnType()
+        CowMaterial mat = new CowMaterial();
+        mat.id = cow.getId();
+        mat.name = cow.getEntityName();
+        mat.enabled = true;
+        mat.bgColor = String.format("0x%06X", cow.getBgColor() & 0xFFFFFF);
+        mat.fgColor = String.format("0x%06X", cow.getFgColor() & 0xFFFFFF);
+        mat.spawnType = cow.getSpawnType() != null ? cow.getSpawnType()
             .name() : "NORMAL";
 
-        if (cow.getFluidString() != null) {
-            json.fluid = FluidJson.parseFluidString(cow.getFluidString());
-        }
-
         if (cow.getFluid() != null) {
-            json.fluid = FluidJson.parseFluidStack(cow.getFluid());
+            mat.fluid = FluidJson.parseFluidStack(cow.getFluid());
+        } else if (cow.getFluidString() != null) {
+            mat.fluid = FluidJson.parseFluidString(cow.getFluidString());
         }
 
-        json.lang = cow.getLang();
-        return json;
+        mat.lang = cow.getLang();
+        return mat;
     }
 
     public void createDefaultConfig(File file, List<CowsRegistryItem> allCows) {
@@ -240,34 +208,25 @@ public abstract class BaseCowHandler {
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) parent.mkdirs();
 
-            List<CowJson> jsonModels = new ArrayList<>();
+            List<CowMaterial> materials = new ArrayList<>();
             for (CowsRegistryItem cow : allCows) {
-                CowJson json = toCowJson(cow);
-                if (json != null) jsonModels.add(json);
+                CowMaterial mat = toCowMaterial(cow);
+                if (mat != null) materials.add(mat);
             }
 
-            try (Writer writer = new FileWriter(file)) {
-                new GsonBuilder().setPrettyPrinting()
-                    .create()
-                    .toJson(jsonModels, writer);
-            }
-
+            new CowJsonWriter(file).write(materials);
             Logger.info("Created default {}", file.getPath());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Logger.error("Failed to create default config: {} ({})", file.getPath(), e.getMessage());
         }
     }
 
     private void updateConfigWithMissing(File file, List<CowsRegistryItem> allCows) {
-        List<CowJson> existing = new ArrayList<>();
+        List<CowMaterial> existing = new ArrayList<>();
 
         if (file.exists()) {
-            try (FileReader reader = new FileReader(file)) {
-                JsonReader jsonReader = new JsonReader(reader);
-                jsonReader.setLenient(true);
-                Type listType = new TypeToken<ArrayList<CowJson>>() {}.getType();
-                List<CowJson> loaded = new Gson().fromJson(jsonReader, listType);
-                if (loaded != null) existing.addAll(loaded);
+            try {
+                existing.addAll(new CowJsonReader(file).read());
             } catch (Exception e) {
                 Logger.error("Failed to read existing cow config: {}", e.getMessage());
             }
@@ -284,9 +243,9 @@ public abstract class BaseCowHandler {
             boolean exists = existing.stream()
                 .anyMatch(c -> c != null && c.name != null && c.name.equalsIgnoreCase(cow.getEntityName()));
             if (!exists) {
-                CowJson json = toCowJson(cow);
-                if (json != null) {
-                    existing.add(json);
+                CowMaterial mat = toCowMaterial(cow);
+                if (mat != null) {
+                    existing.add(mat);
                     addedCows.add(cow.getEntityName());
                     updated = true;
                 }
@@ -294,10 +253,8 @@ public abstract class BaseCowHandler {
         }
 
         if (updated) {
-            try (Writer writer = new FileWriter(file)) {
-                new GsonBuilder().setPrettyPrinting()
-                    .create()
-                    .toJson(existing, writer);
+            try {
+                new CowJsonWriter(file).write(existing);
                 Logger.info("Updated cow config with missing cows: {}", file.getName());
                 Logger.info("Added {} cow(s): {}", addedCows.size(), String.join(", ", addedCows));
             } catch (IOException e) {
