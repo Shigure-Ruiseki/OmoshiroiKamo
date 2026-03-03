@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class DMLBaseModelReader extends AbstractJsonReader<List<ModelRegistryItem>> {
 
@@ -31,21 +32,24 @@ public class DMLBaseModelReader extends AbstractJsonReader<List<ModelRegistryIte
             }
         }
 
-        // Register to the DML Registry and Generate Recipes
+        // Register to the DML Registry and Normalize
         this.cache.forEach(model -> {
+            normalizeModel(model);
             ModelRegistry.INSTANCE.register(model);
-            if (model.isEnabled()) {
-                // Generate for Simulation Chamber
-                SimulationChamberRecipe simRecipe = new SimulationChamberRecipe(model);
-                DMLRecipeRegistry.INSTANCE.addSimulationRecipe(simRecipe);
-
-                // Generate for Loot Fabricator
-                LootFabricatorRecipe fabricRecipe = new LootFabricatorRecipe(model);
-                DMLRecipeRegistry.INSTANCE.addFabricationRecipe(fabricRecipe);
-            }
         });
 
         return cache;
+    }
+
+    private void normalizeModel(ModelRegistryItem model) {
+        // Texture normalization
+        if (model.getTexture() != null && !model.getTexture().contains(":")) {
+            model.setTexture(LibResources.PREFIX_MOD + model.getTexture());
+        }
+        if (model.getPristineTexture() != null && !model.getPristineTexture().contains(":")) {
+            model.setPristineTexture(
+                    LibResources.PREFIX_MOD + model.getPristineTexture());
+        }
     }
 
     @Override

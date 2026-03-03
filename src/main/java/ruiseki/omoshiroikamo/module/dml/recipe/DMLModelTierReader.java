@@ -18,6 +18,18 @@ public class DMLModelTierReader extends AbstractJsonReader<List<ModelTierRegistr
         super(path);
     }
 
+    public List<ModelTierRegistryItem> readDefault(List<ModelTierRegistryItem> defaults) {
+        this.cache = defaults;
+        register();
+        return this.cache;
+    }
+
+    private void register() {
+        if (this.cache != null) {
+            this.cache.forEach(ModelTierRegistry.INSTANCE::register);
+        }
+    }
+
     @Override
     public List<ModelTierRegistryItem> read() throws IOException {
         this.cache = new ArrayList<>();
@@ -32,7 +44,7 @@ public class DMLModelTierReader extends AbstractJsonReader<List<ModelTierRegistr
         }
 
         // Register to the DML Registry
-        this.cache.forEach(ModelTierRegistry.INSTANCE::register);
+        register();
 
         return cache;
     }

@@ -1,26 +1,14 @@
 package ruiseki.omoshiroikamo.module.dml.common.registries;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
 
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
-import ruiseki.omoshiroikamo.config.ConfigUpdater;
-import ruiseki.omoshiroikamo.config.backport.DMLConfig;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.json.JsonUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.dml.recipe.DMLModelTierReader;
 
 public class ModelTier {
 
@@ -30,85 +18,21 @@ public class ModelTier {
         this.configFileName = "model_tiers.json";
     }
 
-    private static class TierJson {
-
-        int tier;
-        int killMultiplier;
-        int dataToNext;
-        boolean canSimulate;
-        int pristineChance;
-        TrialJson trial;
-        Map<String, String> lang;
-    }
-
-    private static class TrialJson {
-
-        int pristine;
-        int maxWave;
-        int affixes;
-        int glitchChance;
-    }
-
     public List<ModelTierRegistryItem> tryRegisterTiers() {
-        List<ModelTierRegistryItem> allTiers = new ArrayList<>();
-
         File configFile = new File("config/" + LibMisc.MOD_ID + "/dml/" + configFileName);
+        DMLModelTierReader reader = new DMLModelTierReader(configFile);
+
         if (!configFile.exists()) {
             List<ModelTierRegistryItem> defaultModels = registerTiers();
-            createDefaultConfig(configFile, defaultModels);
+            return reader.readDefault(defaultModels);
         }
 
-        if (DMLConfig.updateMissing) {
-            updateConfigWithMissing(configFile, registerTiers());
-            ConfigUpdater.updateBoolean(DMLConfig.class, "updateMissing", false);
-        }
-
-        try (FileReader fileReader = new FileReader(configFile)) {
-            JsonReader reader = new JsonReader(fileReader);
-            reader.setLenient(true); // Allow comments
-
-            Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<TierJson>>() {}.getType();
-            List<TierJson> models = gson.fromJson(reader, listType);
-            if (models == null) {
-                Logger.info("{} is empty or invalid.", configFileName);
-            }
-
-            for (TierJson data : models) {
-                try {
-
-                    ModelTierRegistryItem model = addTier(
-                        data.tier,
-                        data.killMultiplier,
-                        data.dataToNext,
-                        data.canSimulate,
-                        data.pristineChance,
-                        data.trial.pristine,
-                        data.trial.maxWave,
-                        data.trial.affixes,
-                        data.trial.glitchChance);
-
-                    if (model != null) {
-                        Logger.debug("Registering Model Tier: {}", data.tier);
-
-                        if (data.lang != null) {
-                            String langKey = "model.tier_" + data.tier + ".name";
-                            JsonUtils.registerLang(langKey, data.lang);
-                        }
-
-                        allTiers.add(model);
-                    }
-
-                } catch (Exception e) {
-                    Logger.error("Error registering model tier {}: {}", data.tier, e.getMessage());
-                    e.printStackTrace();
-                }
-            }
+        try {
+            return reader.read();
         } catch (IOException e) {
-            Logger.error("Failed to read : ", configFileName, e.getMessage());
+            Logger.error("Failed to read {}: {}", configFileName, e.getMessage());
+            return new ArrayList<>();
         }
-
-        return allTiers;
     }
 
     public List<ModelTierRegistryItem> registerTiers() {
@@ -144,97 +68,5 @@ public class ModelTier {
             maxWave,
             affixes,
             glitchChance);
-    }
-
-    private TierJson toModelJson(ModelTierRegistryItem model) {
-        if (model == null) return null;
-
-        TierJson json = new TierJson();
-        json.tier = model.getTier();
-        json.killMultiplier = model.getKillMultiplier();
-        json.canSimulate = model.isCanSimulate();
-        json.dataToNext = model.getDataToNext();
-        json.pristineChance = model.getPristineChance();
-        json.lang = model.getLang();
-        json.trial = new TrialJson();
-        json.trial.pristine = model.getPristine();
-        json.trial.maxWave = model.getMaxWave();
-        json.trial.affixes = model.getAffixes();
-        json.trial.glitchChance = model.getGlitchChance();
-
-        return json;
-    }
-
-    public void createDefaultConfig(File file, List<ModelTierRegistryItem> allModels) {
-        try {
-            File parent = file.getParentFile();
-            if (parent != null && !parent.exists()) parent.mkdirs();
-
-            List<TierJson> jsonModels = new ArrayList<>();
-            for (ModelTierRegistryItem model : allModels) {
-                TierJson json = toModelJson(model);
-                if (json != null) jsonModels.add(json);
-            }
-
-            try (Writer writer = new FileWriter(file)) {
-                new GsonBuilder().setPrettyPrinting()
-                    .create()
-                    .toJson(jsonModels, writer);
-            }
-
-            Logger.info("Created default {}", file.getPath());
-        } catch (IOException e) {
-            Logger.error("Failed to create default config: {} ({})", file.getPath(), e.getMessage());
-        }
-    }
-
-    private void updateConfigWithMissing(File file, List<ModelTierRegistryItem> allModels) {
-        List<TierJson> existing = new ArrayList<>();
-
-        if (file.exists()) {
-            try (FileReader reader = new FileReader(file)) {
-                JsonReader jsonReader = new JsonReader(reader);
-                jsonReader.setLenient(true);
-                Type listType = new TypeToken<ArrayList<TierJson>>() {}.getType();
-                List<TierJson> loaded = new Gson().fromJson(jsonReader, listType);
-                if (loaded != null) existing.addAll(loaded);
-            } catch (Exception e) {
-                Logger.error("Failed to read existing tier config: {}", e.getMessage());
-            }
-        } else {
-            File parent = file.getParentFile();
-            if (parent != null && !parent.exists()) parent.mkdirs();
-        }
-
-        boolean updated = false;
-        List<Integer> addedTiers = new ArrayList<>();
-        for (ModelTierRegistryItem model : allModels) {
-            if (model == null) continue;
-
-            boolean exists = existing.stream()
-                .anyMatch(m -> m != null && m.tier != model.getTier());
-            if (!exists) {
-                TierJson json = toModelJson(model);
-                if (json != null) {
-                    existing.add(json);
-                    addedTiers.add(model.getTier());
-                    updated = true;
-                }
-            }
-        }
-
-        if (updated) {
-            try (Writer writer = new FileWriter(file)) {
-                new GsonBuilder().setPrettyPrinting()
-                    .create()
-                    .toJson(existing, writer);
-                Logger.info("Updated model tier config with missing model tiers: {}", file.getName());
-                Logger.info("Added {} model tier(s): {}", addedTiers.size(), String.join(", ", addedTiers.toString()));
-            } catch (IOException e) {
-                Logger.error("Failed to update model tier config: {}", e.getMessage());
-            }
-        } else {
-            Logger.info("No new model tiers to add to config: {}", file.getName());
-        }
     }
 }

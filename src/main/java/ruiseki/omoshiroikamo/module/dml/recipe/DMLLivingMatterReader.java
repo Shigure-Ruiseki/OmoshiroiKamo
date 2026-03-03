@@ -18,6 +18,19 @@ public class DMLLivingMatterReader extends AbstractJsonReader<List<LivingRegistr
         super(path);
     }
 
+    public List<LivingRegistryItem> readDefault(List<LivingRegistryItem> defaults) {
+        this.cache = defaults;
+        register();
+        // Return cache for writer if needed
+        return this.cache;
+    }
+
+    private void register() {
+        if (this.cache != null) {
+            this.cache.forEach(LivingRegistry.INSTANCE::register);
+        }
+    }
+
     @Override
     public List<LivingRegistryItem> read() throws IOException {
         this.cache = new ArrayList<>();
@@ -32,7 +45,7 @@ public class DMLLivingMatterReader extends AbstractJsonReader<List<LivingRegistr
         }
 
         // Register to the DML Registry
-        this.cache.forEach(LivingRegistry.INSTANCE::register);
+        register();
 
         return cache;
     }
