@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.proxy;
 
+import java.io.File;
+
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -114,5 +116,15 @@ public abstract class CommonProxyComponent implements ICommonProxy {
     @Override
     public void sendSound(double x, double y, double z, String sound, float volume, float frequency) {
         sendSound(x, y, z, sound, volume, frequency, getMod().getModId());
+    }
+
+    @Override
+    public String getEntityTexturePath(Class<? extends Entity> clazz, Entity entity) {
+        return null;
+    }
+
+    @Override
+    public void dumpTexture(File baseDir, String texturePath) {
+        // No-op server side
     }
 }

@@ -1,14 +1,21 @@
 package ruiseki.omoshiroikamo.core.proxy;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
 import com.google.common.collect.Maps;
@@ -130,6 +137,64 @@ public abstract class ClientProxyComponent extends CommonProxyComponent implemen
                     .getSoundHandler()
                     .playSound(record);
             }
+        }
+    }
+
+    @Override
+    public String getEntityTexturePath(Class<? extends Entity> clazz, Entity entity) {
+        try {
+            Render renderer = (Render) RenderManager.instance.getEntityClassRenderObject(clazz);
+            if (renderer != null) {
+                // Use reflection as a fallback, although AT should make func_110775_a public.
+                // In some IDE environments, it might still show as an error until re-import.
+                try {
+                    Method m = Render.class.getDeclaredMethod("func_110775_a", Entity.class);
+                    m.setAccessible(true);
+                    ResourceLocation res = (ResourceLocation) m.invoke(renderer, entity);
+                    return res != null ? res.toString() : null;
+                } catch (NoSuchMethodException e) {
+                    // Fallback to deobfuscated name if available
+                    try {
+                        Method m = Render.class.getDeclaredMethod("getEntityTexture", Entity.class);
+                        m.setAccessible(true);
+                        ResourceLocation res = (ResourceLocation) m.invoke(renderer, entity);
+                        return res != null ? res.toString() : null;
+                    } catch (NoSuchMethodException e2) {
+                        // Ignore
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return null;
+    }
+
+    @Override
+    public void dumpTexture(File baseDir, String pathStr) {
+        if (pathStr == null || pathStr.isEmpty()) return;
+        try {
+            ResourceLocation res = new ResourceLocation(pathStr);
+            InputStream in = Minecraft.getMinecraft()
+                .getResourceManager()
+                .getResource(res)
+                .getInputStream();
+
+            String resourcePath = res.getResourcePath();
+            File target = new File(baseDir, "textures/" + res.getResourceDomain() + "/" + resourcePath);
+
+            File parent = target.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
+
+            try (FileOutputStream out = new FileOutputStream(target)) {
+                IOUtils.copy(in, out);
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
+        } catch (Exception e) {
+            // Ignore
         }
     }
 
