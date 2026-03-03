@@ -8,15 +8,13 @@ import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
-import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.IRecipe;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 
-public class LootFabricatorRecipe implements IModularRecipe {
+public class LootFabricatorRecipe implements IRecipe {
 
     private final ModelRegistryItem model;
     private final List<IRecipeInput> inputs = new ArrayList<>();
@@ -84,45 +82,15 @@ public class LootFabricatorRecipe implements IModularRecipe {
     }
 
     @Override
-    public boolean processInputs(List<IModularPort> inputPorts, boolean simulate) {
-        for (IRecipeInput input : inputs) {
-            if (!input.process(inputPorts, simulate)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean processOutputs(List<IModularPort> outputPorts, boolean simulate) {
-        return true;
-    }
-
-    @Override
-    public boolean matchesInput(List<IModularPort> inputPorts) {
-        return processInputs(inputPorts, true);
-    }
-
-    @Override
-    public boolean canOutput(List<IModularPort> outputPorts) {
-        return true;
-    }
-
-    @Override
-    public IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts) {
-        return null;
-    }
-
-    @Override
     public void onTick(ConditionContext context) {}
 
     @Override
     public void accept(IRecipeVisitor visitor) {
-        visitor.visit((IModularRecipe) this);
+        visitor.visit((IRecipe) this);
     }
 
     @Override
-    public int compareTo(IModularRecipe o) {
+    public int compareTo(IRecipe o) {
         return 0;
     }
 }

@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.api.recipe.visitor;
 
-import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.IRecipe;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
@@ -30,7 +30,7 @@ public interface IRecipeVisitor {
      * Visit the entire recipe.
      * Default implementation visits all inputs and outputs.
      */
-    default void visit(IModularRecipe recipe) {
+    default void visit(IRecipe recipe) {
         if (recipe.getInputs() != null) {
             recipe.getInputs()
                 .forEach(input -> input.accept(this));

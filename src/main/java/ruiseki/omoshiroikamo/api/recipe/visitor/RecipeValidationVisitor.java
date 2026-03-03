@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.api.recipe.visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.IRecipe;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.EssentiaInput;
@@ -41,7 +41,7 @@ public class RecipeValidationVisitor implements IRecipeVisitor {
     }
 
     @Override
-    public void visit(IModularRecipe recipe) {
+    public void visit(IRecipe recipe) {
         this.currentRecipeName = recipe.getRegistryName() != null ? recipe.getRegistryName() : recipe.getName();
 
         if (recipe.getDuration() <= 0) {
