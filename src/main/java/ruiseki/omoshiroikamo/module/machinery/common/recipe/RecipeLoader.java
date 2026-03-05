@@ -1,15 +1,11 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
@@ -22,6 +18,8 @@ public class RecipeLoader {
     private static RecipeLoader instance;
 
     private final Map<String, List<IModularRecipe>> recipesByGroup = new HashMap<>();
+
+    private MachineryJsonReader reader;
 
     private int recipeVersion = 0;
 
@@ -48,7 +46,12 @@ public class RecipeLoader {
 
         recipesByGroup.clear();
 
-        List<IModularRecipe> recipes = JSONLoader.loadRecipes(recipesDir);
+        if (reader == null || !reader.getPath()
+            .equals(recipesDir)) {
+            reader = new MachineryJsonReader(recipesDir);
+        }
+
+        List<IModularRecipe> recipes = JSONLoader.loadRecipes(reader);
         for (IModularRecipe recipe : recipes) {
             String group = recipe.getRecipeGroup()
                 .toLowerCase();
@@ -130,43 +133,36 @@ public class RecipeLoader {
     }
 
     /**
-     * Scan recipe JSON files to collect group names without full recipe parsing.
-     * This is safe to call at any time (even before loadAll) since it only reads
-     * the "group" field from each JSON file.
+     * Scan recipe JSON files to collect group names.
+     * Uses the internal reader and its cache if available.
      */
     public static List<String> scanGroupNames(File configDir) {
-        List<String> groups = new ArrayList<>();
+        RecipeLoader instance = getInstance();
         File recipesDir = new File(configDir, LibMisc.MOD_ID + "/modular/recipes");
-        Logger.info("[scanGroupNames] Scanning dir: {} (exists={})", recipesDir.getAbsolutePath(), recipesDir.exists());
-        if (!recipesDir.exists() || !recipesDir.isDirectory()) {
-            Logger.warn("[scanGroupNames] Directory not found or not a directory!");
-            return groups;
+
+        if (instance.reader == null || !instance.reader.getPath()
+            .equals(recipesDir)) {
+            instance.reader = new MachineryJsonReader(recipesDir);
         }
 
-        File[] files = recipesDir.listFiles((dir, name) -> name.endsWith(".json"));
-        if (files == null) return groups;
-        Logger.info("[scanGroupNames] Found {} JSON files", files.length);
-
-        JsonParser parser = new JsonParser();
-        for (File file : files) {
-            try (FileReader reader = new FileReader(file)) {
-                JsonObject root = parser.parse(reader)
-                    .getAsJsonObject();
-                if (root.has("group")) {
-                    String group = root.get("group")
-                        .getAsString();
-                    Logger.info("[scanGroupNames] File '{}' -> group '{}'", file.getName(), group);
-                    if (!groups.contains(group)) {
-                        groups.add(group);
-                    }
-                } else {
-                    Logger.warn("[scanGroupNames] File '{}' has no 'group' field", file.getName());
-                }
-            } catch (Exception e) {
-                Logger.warn("[scanGroupNames] Failed to scan group from: {} - {}", file.getName(), e.getMessage());
+        List<String> groups = new ArrayList<>();
+        try {
+            // Use existing cache if available, otherwise read
+            List<MachineryMaterial> materials = instance.reader.getData();
+            if (materials == null) {
+                materials = instance.reader.read();
             }
+
+            for (MachineryMaterial mat : materials) {
+                String group = mat.machine != null ? mat.machine : (mat.parent != null ? null : "default");
+                if (group != null && !groups.contains(group)) {
+                    groups.add(group);
+                }
+            }
+        } catch (Exception e) {
+            Logger.warn("[scanGroupNames] Failed to scan group names via reader: {}", e.getMessage());
         }
-        Logger.info("[scanGroupNames] Total groups found: {}", groups);
+
         return groups;
     }
 }

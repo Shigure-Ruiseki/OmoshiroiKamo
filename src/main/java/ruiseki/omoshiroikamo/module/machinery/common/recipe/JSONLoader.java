@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,16 +23,10 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public class JSONLoader {
 
-    public static List<IModularRecipe> loadRecipes(File recipesDir) {
+    public static List<IModularRecipe> loadRecipes(MachineryJsonReader reader) {
         List<IModularRecipe> recipes = new ArrayList<>();
 
-        if (!recipesDir.exists() || !recipesDir.isDirectory()) {
-            Logger.warn("Recipe directory does not exist: {}", recipesDir.getAbsolutePath());
-            return recipes;
-        }
-
         try {
-            MachineryJsonReader reader = new MachineryJsonReader(recipesDir);
             List<MachineryMaterial> materials = reader.read();
 
             // 1. Map all materials by registry name
@@ -59,9 +52,17 @@ public class JSONLoader {
                     recipes.add(recipe);
                 }
             }
-            Logger.info("Loaded {} recipes from {}", recipes.size(), recipesDir.getName());
+            Logger.info(
+                "Loaded {} recipes from {}",
+                recipes.size(),
+                reader.getPath()
+                    .getName());
         } catch (IOException e) {
-            Logger.error("Failed to load recipes from {}: {}", recipesDir.getName(), e.getMessage());
+            Logger.error(
+                "Failed to load recipes from {}: {}",
+                reader.getPath()
+                    .getName(),
+                e.getMessage());
         }
 
         return recipes;

@@ -35,6 +35,10 @@ public abstract class AbstractJsonReader<T> {
         this.gson = createGson();
     }
 
+    public File getPath() {
+        return path;
+    }
+
     protected Gson createGson() {
         return new GsonBuilder().setPrettyPrinting()
             .create();
