@@ -11,9 +11,11 @@ import java.util.Set;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.expression.RecipeScriptException;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
 
 /**
  * JSONLoader class for loading recipes from JSON files.
@@ -116,8 +118,12 @@ public class JSONLoader {
             }
 
             return recipe;
+        } catch (RecipeScriptException e) {
+            JsonErrorCollector.getInstance()
+                .collectScriptError(mat.registryName, e);
+            return null;
         } catch (Exception e) {
-            Logger.warn("Failed to convert material to recipe: {}", e.getMessage());
+            Logger.warn("Failed to convert material to recipe {}: {}", mat.registryName, e.getMessage());
             return null;
         }
     }

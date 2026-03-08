@@ -52,9 +52,8 @@ public class CommandModularReload extends CommandMod {
             .hasErrors()) {
             JsonErrorCollector.getInstance()
                 .writeToFile();
-            sender.addChatMessage(
-                new ChatComponentText(
-                    EnumChatFormatting.RED + "[OmoshiroiKamo] Reload completed with errors. Check json_errors.txt"));
+            JsonErrorCollector.getInstance()
+                .reportToChat(sender);
         } else {
             sender
                 .addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Reload completed!"));

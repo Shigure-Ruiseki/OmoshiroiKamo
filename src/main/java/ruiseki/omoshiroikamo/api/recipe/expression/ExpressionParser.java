@@ -41,11 +41,15 @@ public class ExpressionParser {
         return false;
     }
 
+    private RecipeScriptException error(String message) {
+        return new RecipeScriptException(input, Math.max(0, pos), message);
+    }
+
     public Object parse() {
         nextChar();
         Object x = parseLogicalOr();
         while (isSpace(ch)) nextChar();
-        if (pos < input.length()) throw new RuntimeException("Unexpected index " + pos + ": " + (char) ch);
+        if (pos < input.length()) throw error("Unexpected token: '" + (char) ch + "'");
         return x;
     }
 
@@ -53,7 +57,7 @@ public class ExpressionParser {
     private Object parseLogicalOr() {
         Object x = parseLogicalAnd();
         while (eat('|')) {
-            if (!eat('|')) throw new RuntimeException("Expected '||'");
+            if (!eat('|')) throw error("Expected '||'");
             Object y = parseLogicalAnd();
             if (x instanceof ICondition && y instanceof ICondition) {
                 List<ICondition> children = new ArrayList<>();
@@ -61,7 +65,7 @@ public class ExpressionParser {
                 children.add((ICondition) y);
                 x = new OpOr(children);
             } else {
-                throw new RuntimeException("OR (||) requires condition operands");
+                throw error("OR (||) requires condition operands");
             }
         }
         return x;
@@ -71,7 +75,7 @@ public class ExpressionParser {
     private Object parseLogicalAnd() {
         Object x = parseComparison();
         while (eat('&')) {
-            if (!eat('&')) throw new RuntimeException("Expected '&&'");
+            if (!eat('&')) throw error("Expected '&&'");
             Object y = parseComparison();
             if (x instanceof ICondition && y instanceof ICondition) {
                 List<ICondition> children = new ArrayList<>();
@@ -79,7 +83,7 @@ public class ExpressionParser {
                 children.add((ICondition) y);
                 x = new OpAnd(children);
             } else {
-                throw new RuntimeException("AND (&&) requires condition operands");
+                throw error("AND (&&) requires condition operands");
             }
         }
         return x;
@@ -92,19 +96,11 @@ public class ExpressionParser {
             String op = "";
             if (eat('=')) {
                 if (eat('=')) op = "==";
-                else throw new RuntimeException("Expected '=='");
+                else throw error("Expected '=='");
             } else if (eat('!')) {
                 if (eat('=')) {
                     op = "!=";
                 } else {
-                    // Unary NOT (!) handled in parseFactor, but if we are here and see '!',
-                    // it might be a start of a new expression if we missed something.
-                    // For now, if it's just '!', we back off and let parseFactor handle it
-                    // AFTER verifying it's not a comparison.
-                    // BUT: '!' is higher priority than comparison.
-                    // This parser is top-down (Low -> High), so comparison calls expression,
-                    // expression calls term, term calls factor, factor handles '!'.
-                    // So we just return here if it's just '!'.
                     pos--; // Backtrack '!'
                     nextChar();
                     return x;
@@ -121,7 +117,7 @@ public class ExpressionParser {
 
             Object y = parseExpression();
             if (!(x instanceof IExpression) || !(y instanceof IExpression)) {
-                throw new RuntimeException("Comparison requires numeric expressions");
+                throw error("Comparison requires numeric expressions as operands");
             }
             x = new ComparisonCondition((IExpression) x, (IExpression) y, op);
         }
@@ -148,8 +144,6 @@ public class ExpressionParser {
         }
     }
 
-    // factor = ( "+" | "-" ) factor | "(" comparison ")" | number | function |
-    // variable
     private IExpression parseFactor() {
         if (eat('+')) return parseFactor(); // unary plus
         if (eat('-')) return new ArithmeticExpression(new ConstantExpression(0), parseFactor(), "-"); // unary minus
@@ -171,7 +165,7 @@ public class ExpressionParser {
                     }
                 };
             }
-            throw new RuntimeException("Unary '!' requires a condition");
+            throw error("Unary '!' requires a condition as operand");
         }
 
         IExpression x;
@@ -189,11 +183,16 @@ public class ExpressionParser {
                     public double evaluate(ConditionContext context) {
                         return cond.isMet(context) ? 1 : 0;
                     }
+
+                    @Override
+                    public String toString() {
+                        return "(" + cond.toString() + ")";
+                    }
                 };
             } else {
-                throw new RuntimeException("Empty grouping");
+                throw error("Empty grouping '()'");
             }
-            if (!eat(close)) throw new RuntimeException("Expected '" + close + "'");
+            if (!eat(close)) throw error("Expected closing '" + close + "'");
         } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
             while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
             x = new ConstantExpression(Double.parseDouble(input.substring(startPos, this.pos)));
@@ -203,20 +202,29 @@ public class ExpressionParser {
             if (eat('(')) { // function
                 List<String> args = new ArrayList<>();
                 while (ch != ')' && ch != -1) {
+                    while (isSpace(ch)) nextChar();
                     if (eat('\'')) {
                         int s = pos;
                         while (ch != '\'' && ch != -1) nextChar();
                         args.add(input.substring(s, pos));
                         eat('\'');
-                    } else {
+                    } else if (ch >= '0' && ch <= '9' || ch == '.') {
+                        int s = pos;
+                        while (ch >= '0' && ch <= '9' || ch == '.') nextChar();
+                        args.add(input.substring(s, pos));
+                    } else if (ch >= 'A' && ch <= 'Z') { // Symbol char
+                        args.add(String.valueOf((char) ch));
+                        nextChar();
+                    } else if (ch != ')' && ch != ',') {
                         nextChar();
                     }
+                    while (isSpace(ch)) nextChar();
                     eat(',');
                 }
                 eat(')');
                 if (name.equals("nbt") && !args.isEmpty()) {
                     if (args.size() >= 2) {
-                        // nbt('S', 'key')
+                        // nbt('S', 'key') or nbt(S, 'key')
                         x = new NbtExpression(
                             args.get(1),
                             0,
@@ -227,7 +235,7 @@ public class ExpressionParser {
                         x = new NbtExpression(args.get(0), 0);
                     }
                 } else {
-                    throw new RuntimeException("Unknown function: " + name);
+                    throw error("Unknown function: '" + name + "' or missing arguments");
                 }
             } else {
                 // variable
@@ -237,11 +245,11 @@ public class ExpressionParser {
                     || name.equals("moon")) {
                     x = new WorldPropertyExpression(name.equals("moon") ? "moon_phase" : name);
                 } else {
-                    throw new RuntimeException("Unknown variable: " + name);
+                    throw error("Unknown variable: '" + name + "'");
                 }
             }
         } else {
-            throw new RuntimeException("Unexpected: " + (char) ch);
+            throw error("Unexpected character: '" + (char) ch + "'");
         }
 
         return x;

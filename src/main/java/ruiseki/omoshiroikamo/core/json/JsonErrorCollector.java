@@ -11,10 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.api.recipe.expression.RecipeScriptException;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -53,6 +55,16 @@ public class JsonErrorCollector {
         errors.add(info);
 
         Logger.error("[JSON Error] [{}] in {}: {}", materialType, fileName, message);
+    }
+
+    public void collectScriptError(String materialType, RecipeScriptException e) {
+        File source = ParsingContext.getCurrentFile();
+        String fileName = source != null ? source.getName() : "Unknown";
+        // Use the visual message from exception
+        JsonErrorInfo info = new JsonErrorInfo(materialType, fileName, e.getMessage());
+        errors.add(info);
+
+        Logger.error("[Script Error] [{}] in {}:\n{}", materialType, fileName, e.getMessage());
     }
 
     public boolean hasErrors() {
@@ -115,14 +127,44 @@ public class JsonErrorCollector {
         if (notifiedPlayers.contains(playerName)) return;
         notifiedPlayers.add(playerName);
 
-        player.addChatMessage(
+        reportToChat(player);
+    }
+
+    /**
+     * Prints errors to Chat.
+     */
+    public void reportToChat(ICommandSender sender) {
+        if (!hasErrors()) return;
+
+        sender.addChatMessage(
             new ChatComponentText(
                 EnumChatFormatting.RED + "[OmoshiroiKamo] "
                     + EnumChatFormatting.YELLOW
-                    + "JSON Configuration has "
+                    + "Recipe system has "
                     + errors.size()
                     + " error(s)!"));
-        player.addChatMessage(
+
+        // Show first 3 errors in detail
+        int limit = Math.min(errors.size(), 3);
+        for (int i = 0; i < limit; i++) {
+            JsonErrorInfo info = errors.get(i);
+            sender.addChatMessage(
+                new ChatComponentText(
+                    EnumChatFormatting.RED + " Error in " + EnumChatFormatting.WHITE + info.fileName + ":"));
+
+            // Split message by lines to preserve snippet formatting
+            String[] lines = info.message.split("\n");
+            for (String line : lines) {
+                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GRAY + line));
+            }
+        }
+
+        if (errors.size() > 3) {
+            sender.addChatMessage(
+                new ChatComponentText(EnumChatFormatting.GRAY + "... and " + (errors.size() - 3) + " more."));
+        }
+
+        sender.addChatMessage(
             new ChatComponentText(
                 EnumChatFormatting.GRAY + "Check: config/" + LibMisc.MOD_ID + "/json_errors.txt for details."));
     }
