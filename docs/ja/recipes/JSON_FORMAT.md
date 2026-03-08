@@ -121,18 +121,15 @@
 - `biome`: 特定のバイオームにいるか。
 - `block_below`: マシンの下に特定のブロックがあるか。
 - `tile_nbt`: マシンのTileEntityのNBT値をチェック。
-- `weather`: ※実装予定。雨や雷などの天候をチェックします。
+- `weather`: 現在の天候を判定します。雨 (`rain`)、雷雨 (`thunder`)、晴天 (`clear`) を指定します。
+- `comparison`: 二つの式を比較します（`left`, `right`, `operator`）。
+- `expression`: 数学的な文字列式を直接記述します。最も推奨される方法です。
 
 ```json
 "conditions": [
   { "type": "dimension", "dim": -1 },
-  {
-    "type": "or",
-    "conditions": [
-       { "type": "weather", "weather": "rain" },
-       { "type": "weather", "weather": "thunder" }
-    ]
-  }
+  { "type": "weather", "weather": "rain" },
+  { "type": "expression", "expression": "day % 28 == 0" }
 ]
 ```
 
@@ -167,14 +164,20 @@
 - `constant`: 固定の数値を返します。
 - `nbt`: マシンの TileEntity から指定した NBT パス（`energyStored` 等）の数値を読み取ります。
 - `map_range`: ある範囲の数値を別の範囲に線形補完でマッピングします。
+- `arithmetic`: 二つの式の間で演算を行います（`left`, `right`, `operation`: `+`, `-`, `*`, `/`, `%`）。
+- `world_property`: ワールドの情報（`time`, `day`, `moon_phase`）を取得します。
+
+### 文字列による簡易記述 (Expression String / Recipe Script)
+JSON のオブジェクト階層を避け、文字列として直接式を記述できます。これは単一の数値だけでなく、複雑な条件判定（論理演算）もサポートしており、本システムでは **「レシピスクリプト」** と呼称されます。
+
+- **高度な文法**:
+  - **論理演算**: `&&` (AND), `||` (OR), `!` (NOT) を使用可能。
+  - **グループ化**: `()` または `{}` で演算の優先順位を制御。
+  - **改行・空白**: 式の途中で改行して読みやすく記述できます。
 
 ```json
-"chance": {
-  "type": "map_range",
-  "input": { "type": "nbt", "path": "energyStored" },
-  "inMin": 0, "inMax": 100000,
-  "outMin": 0.1, "outMax": 1.0
-}
+"condition": "day % 28 == 0 && (time > 12000 || weather == 'rain')",
+"chance": "{ nbt('energy') / 100000.0 } * 0.8"
 ```
 
 ## 6. 継承

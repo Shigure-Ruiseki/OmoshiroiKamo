@@ -121,18 +121,15 @@ Available types:
 - `biome`: Is in a specific biome.
 - `block_below`: Is there a specific block below the machine.
 - `tile_nbt`: Checks NBT values of the machine's TileEntity.
-- `weather`: * Planned implementation. Checks for weather like rain or thunder.
+- `weather`: Checks the current weather. Values: `rain`, `thunder`, `clear`.
+- `comparison`: Compares two expressions (`left`, `right`, `operator`).
+- `expression`: Direct mathematical string expression. Recommended method.
 
 ```json
 "conditions": [
   { "type": "dimension", "dim": -1 },
-  {
-    "type": "or",
-    "conditions": [
-       { "type": "weather", "weather": "rain" },
-       { "type": "weather", "weather": "thunder" }
-    ]
-  }
+  { "type": "weather", "weather": "rain" },
+  { "type": "expression", "expression": "day % 28 == 0" }
 ]
 ```
 
@@ -167,14 +164,20 @@ Some parameters (like decorator chances) can use `IExpression` to calculate valu
 - `constant`: Returns a fixed numeric value.
 - `nbt`: Reads a value from the machine's TileEntity NBT path (e.g., `energyStored`).
 - `map_range`: Maps a value from one range to another using linear interpolation.
+- `arithmetic`: Performs operations between two expressions (`left`, `right`, `operation`: `+`, `-`, `*`, `/`, `%`).
+- `world_property`: Retrieves world info (`time`, `day`, `moon_phase`).
+
+### Expression String (Recipe Script)
+Instead of deep JSON objects, you can write mathematical/logical expressions directly as strings. This supports complex logic and is referred to as **"Recipe Script"**.
+
+- **Advanced Features**:
+  - **Logical Operators**: Supports `&&` (AND), `||` (OR), `!` (NOT).
+  - **Grouping**: Use `()` or `{}` to control precedence.
+  - **Whitespace/Newlines**: You can use newlines and tabs to make scripts readable.
 
 ```json
-"chance": {
-  "type": "map_range",
-  "input": { "type": "nbt", "path": "energyStored" },
-  "inMin": 0, "inMax": 100000,
-  "outMin": 0.1, "outMax": 1.0
-}
+"condition": "day % 28 == 0 && (time > 12000 || weather == 'rain')",
+"chance": "{ nbt('energyStored') / 100000.0 } * 0.8"
 ```
 
 ## 6. Inheritance
