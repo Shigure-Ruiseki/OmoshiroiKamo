@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.decorator.BonusBlockOutputDecorator;
 import ruiseki.omoshiroikamo.api.recipe.decorator.BonusOutputDecorator;
 import ruiseki.omoshiroikamo.api.recipe.decorator.ChanceRecipeDecorator;
+import ruiseki.omoshiroikamo.api.recipe.decorator.HarvestBlockDecorator;
 import ruiseki.omoshiroikamo.api.recipe.decorator.PerPositionProbabilityDecorator;
 import ruiseki.omoshiroikamo.api.recipe.decorator.RandomBlockOutputDecorator;
 import ruiseki.omoshiroikamo.api.recipe.decorator.RequirementDecorator;
@@ -29,6 +30,7 @@ public class DecoratorParser {
         register("randomBlockOutput", (recipe, json) -> RandomBlockOutputDecorator.fromJson(recipe, json));
         register("perPositionProbability", (recipe, json) -> PerPositionProbabilityDecorator.fromJson(recipe, json));
         register("bonusBlockOutput", (recipe, json) -> BonusBlockOutputDecorator.fromJson(recipe, json));
+        register("harvest", (recipe, json) -> HarvestBlockDecorator.fromJson(recipe, json));
     }
 
     public static void register(String type, BiFunction<IModularRecipe, JsonObject, IModularRecipe> parser) {
