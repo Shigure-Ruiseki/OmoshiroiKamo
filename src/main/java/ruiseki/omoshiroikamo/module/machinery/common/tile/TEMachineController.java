@@ -100,6 +100,10 @@ public class TEMachineController extends AbstractMBModifierTE
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
 
+    // Cached port lists to avoid per-tick allocations
+    private transient List<IModularPort> cachedInputPorts = null;
+    private transient List<IModularPort> cachedOutputPorts = null;
+
     // GUI management
     private final GuiManager guiManager = new GuiManager(this);
 
@@ -142,6 +146,7 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     protected void clearStructureParts() {
         structureAgent.resetStructure();
+        invalidatePortCache();
     }
 
     private final Map<Character, List<ChunkCoordinates>> symbolPositions = new HashMap<>();
@@ -244,6 +249,7 @@ public class TEMachineController extends AbstractMBModifierTE
     public void onFormed() {
         structureAgent.onFormed();
         updateRecipeGroupFromStructure();
+        invalidatePortCache();
     }
 
     /**
@@ -430,15 +436,25 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     public List<IModularPort> getContextualInputPorts() {
-        List<IModularPort> ports = new ArrayList<>(getInputPorts());
-        ports.add(this);
-        return ports;
+        if (cachedInputPorts == null) {
+            cachedInputPorts = new ArrayList<>(getInputPorts());
+            cachedInputPorts.add(this);
+        }
+        return cachedInputPorts;
     }
 
     public List<IModularPort> getContextualOutputPorts() {
-        List<IModularPort> ports = new ArrayList<>(getOutputPorts());
-        ports.add(this);
-        return ports;
+        if (cachedOutputPorts == null) {
+            cachedOutputPorts = new ArrayList<>(getOutputPorts());
+            cachedOutputPorts.add(this);
+        }
+        return cachedOutputPorts;
+    }
+
+    private void invalidatePortCache() {
+        this.cachedInputPorts = null;
+        this.cachedOutputPorts = null;
+        this.nextRecipe = null;
     }
 
     // ========== IModularPort Implementation ==========

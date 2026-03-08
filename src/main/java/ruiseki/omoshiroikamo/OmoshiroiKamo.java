@@ -30,6 +30,7 @@ import ruiseki.omoshiroikamo.core.capabilities.CapabilityManager;
 import ruiseki.omoshiroikamo.core.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.command.CommandOK;
+import ruiseki.omoshiroikamo.core.event.MemoryEventHandler;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
@@ -98,6 +99,7 @@ public class OmoshiroiKamo extends ModBase {
     @EventHandler
     public final void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        MemoryEventHandler.INSTANCE.register();
         if (MinecraftHelpers.isClientSide()) {
             ModelRegistry.registerModid(LibMisc.MOD_ID);
             if (LibMods.NotEnoughItems.isLoaded()) {

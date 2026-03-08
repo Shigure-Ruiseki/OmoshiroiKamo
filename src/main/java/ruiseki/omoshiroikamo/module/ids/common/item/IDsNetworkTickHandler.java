@@ -63,4 +63,9 @@ public class IDsNetworkTickHandler {
             cn.doNetworkTick();
         }
     }
+
+    public void clear() {
+        networks.clear();
+        listeners.clear();
+    }
 }
