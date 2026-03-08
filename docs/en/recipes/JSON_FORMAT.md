@@ -79,6 +79,27 @@ The resource type is determined by the presence of a specific key within the obj
 }
 ```
 
+### 11. External Block NBT Check/Consume (Block Nbt Input)
+Assess and consume NBT data from blocks within the structure at recipe start.
+
+- `type`: `"block_nbt"`
+- `symbol`: The target symbol.
+- `key`: The NBT key to check.
+- `operation`: (`"sub"` | `"set"` | `"add"`). `"sub"` prevents start if value is insufficient.
+- `value`: Numeric constant or Expression.
+- `consume`: If true (default), actually modifies NBT when recipe starts.
+- `optional`: If true, allows recipe start even if the target block or NBT key is missing. If false (default), missing targets prevent the recipe from starting.
+
+```json
+"inputs": [{
+  "type": "block_nbt",
+  "symbol": "S",
+  "key": "stored_energy",
+  "operation": "sub",
+  "value": 100
+}]
+```
+
 ### Blocks
 Detect/manipulate blocks at specific symbol positions within the structure. This mod uses a unified naming convention: **`replace` (Before)** and **`block` (After)**.
 
@@ -110,6 +131,26 @@ Detect/manipulate blocks at specific symbol positions within the structure. This
   "nbt": {
     "energy": { "type": "nbt", "path": "machine_power" }
   }
+}]
+```
+
+#### 8. External Block NBT Manipulation (Block Nbt Output)
+Manipulate NBT data of any TileEntity within the structure. Unlike `block` replacement, this modifies internal data numerically without changing the block itself.
+
+- `type`: Specify `"block_nbt"`.
+- `symbol`: The symbol target.
+- `key`: The target NBT key.
+- `operation`: The operation type (`"set"`, `"add"`, `"sub"`)。
+- `value`: The numeric value or Expression for the operation.
+- `optional`: If true, failure to find the target block or NBT key will not block recipe completion. If false (default), missing targets will block the recipe (treated as insufficient capacity).
+
+```json
+"outputs": [{
+  "type": "block_nbt",
+  "symbol": "S",
+  "key": "stored_energy",
+  "operation": "add",
+  "value": 1000
 }]
 ```
 
@@ -175,8 +216,12 @@ Instead of deep JSON objects, you can write mathematical/logical expressions dir
   - **Grouping**: Use `()` or `{}` to control precedence.
   - **Whitespace/Newlines**: You can use newlines and tabs to make scripts readable.
 
+- **Advanced Functions**:
+  - `nbt('key')`: Retrieves machine's own NBT.
+  - `nbt('S', 'key')`: Retrieves NBT from the block at symbol `S`.
+
 ```json
-"condition": "day % 28 == 0 && (time > 12000 || weather == 'rain')",
+"condition": "nbt('S', 'energy') > 5000",
 "chance": "{ nbt('energyStored') / 100000.0 } * 0.8"
 ```
 

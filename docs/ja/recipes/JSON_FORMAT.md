@@ -79,6 +79,27 @@
 }
 ```
 
+### 11. 外部ブロック NBT チェック/消費 (Block Nbt Input)
+レシピ開始時に構造体内のブロックの NBT をチェック・消費します。
+
+- `type`: `"block_nbt"`
+- `symbol`: 対象の記号。
+- `key`: チェック対象の NBT キー名。
+- `operation`: (`"sub"` | `"set"` | `"add"`)。`"sub"` は不足時にレシピ開始を阻止します。
+- `value`: 数値または式。
+- `consume`: true（デフォルト）の場合、レシピ開始時に実際に値を書き換えます。
+- `optional`: true の場合、対象ブロックや NBT キーが見つからない場合でもレシピを開始できます。false（デフォルト）の場合、対象が見つからなければレシピ開始を阻止します。
+
+```json
+"inputs": [{
+  "type": "block_nbt",
+  "symbol": "S",
+  "key": "stored_energy",
+  "operation": "sub",
+  "value": 100
+}]
+```
+
 ### ブロック (Block)
 構造体内の特定のシンボル位置にあるブロックを検知・操作します。本 mod では、**`replace`（操作前）** と **`block`（操作後）** という統一された命名規則を採用しています。
 
@@ -110,6 +131,26 @@
   "nbt": {
     "energy": { "type": "nbt", "path": "machine_power" }
   }
+}]
+```
+
+#### 8. 外部ブロック NBT 操作 (Block Nbt Output)
+構造体内の任意のブロック（TileEntity）の NBT を直接操作します。これは `block` による置換とは異なり、ブロックそのものを変えずに内部データのみを数値的に変更します。
+
+- `type`: `"block_nbt"` を指定します。
+- `symbol`: 操作対象の記号。
+- `key`: 操作対象の NBT キー名。
+- `operation`: 演算方法 (`"set"`, `"add"`, `"sub"`)。
+- `optional`: true の場合、出力先のブロックや NBT キーがなくてもレシピの完了を許可します。false（デフォルト）の場合、出力先がなければレシピの実行が止まります（容量不足として扱われます）。
+- `value`: 数値または代入する Expression。
+
+```json
+"outputs": [{
+  "type": "block_nbt",
+  "symbol": "S",
+  "key": "stored_energy",
+  "operation": "add",
+  "value": 1000
 }]
 ```
 
@@ -175,8 +216,12 @@ JSON のオブジェクト階層を避け、文字列として直接式を記述
   - **グループ化**: `()` または `{}` で演算の優先順位を制御。
   - **改行・空白**: 式の途中で改行して読みやすく記述できます。
 
+- **高度な関数**:
+  - `nbt('key')`: マシン本体の NBT を取得。
+  - `nbt('S', 'key')`: 記号 `S` の位置にあるブロックの NBT を取得。
+
 ```json
-"condition": "day % 28 == 0 && (time > 12000 || weather == 'rain')",
+"condition": "nbt('S', 'energy') > 5000",
 "chance": "{ nbt('energy') / 100000.0 } * 0.8"
 ```
 

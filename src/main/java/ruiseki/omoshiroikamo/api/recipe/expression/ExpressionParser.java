@@ -215,7 +215,17 @@ public class ExpressionParser {
                 }
                 eat(')');
                 if (name.equals("nbt") && !args.isEmpty()) {
-                    x = new NbtExpression(args.get(0), 0);
+                    if (args.size() >= 2) {
+                        // nbt('S', 'key')
+                        x = new NbtExpression(
+                            args.get(1),
+                            0,
+                            args.get(0)
+                                .charAt(0));
+                    } else {
+                        // nbt('key')
+                        x = new NbtExpression(args.get(0), 0);
+                    }
                 } else {
                     throw new RuntimeException("Unknown function: " + name);
                 }

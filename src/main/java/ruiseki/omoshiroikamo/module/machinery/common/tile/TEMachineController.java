@@ -878,7 +878,7 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public ConditionContext getConditionContext() {
-        return new ConditionContext(worldObj, xCoord, yCoord, zCoord);
+        return new ConditionContext(worldObj, xCoord, yCoord, zCoord, this);
     }
 
     // ========== ISidedTexture Implementation ==========
