@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
@@ -40,16 +41,17 @@ public class BonusBlockOutputDecorator extends RecipeDecorator {
 
         // 2. Apply probability check and bonus BlockOutputs
         if (!simulate) {
-            double chance = chanceExpr.evaluate(null);
+            // Find IRecipeContext to get ConditionContext for evaluation
+            IRecipeContext context = findRecipeContext(outputPorts);
+            ConditionContext condContext = context != null ? context.getConditionContext() : null;
+
+            double chance = chanceExpr.evaluate(condContext);
 
             if (rand.nextDouble() < chance) {
-                // Find IRecipeContext
-                IRecipeContext context = findRecipeContext(outputPorts);
-
                 if (context != null) {
                     // Apply all bonus BlockOutputs
                     for (BlockOutput output : bonusOutputs) {
-                        output.apply(context);
+                        output.apply(context, 1);
                     }
                 }
             }
