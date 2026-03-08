@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.condition.ComparisonCondition;
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
+import ruiseki.omoshiroikamo.api.condition.OpAnd;
+import ruiseki.omoshiroikamo.api.condition.OpNot;
+import ruiseki.omoshiroikamo.api.condition.OpOr;
 
 /**
  * A simple recursive descent parser for expressions and conditions.
@@ -24,8 +28,12 @@ public class ExpressionParser {
         ch = (++pos < input.length()) ? input.charAt(pos) : -1;
     }
 
+    private boolean isSpace(int c) {
+        return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+    }
+
     private boolean eat(int charToEat) {
-        while (ch == ' ') nextChar();
+        while (isSpace(ch)) nextChar();
         if (ch == charToEat) {
             nextChar();
             return true;
@@ -35,13 +43,49 @@ public class ExpressionParser {
 
     public Object parse() {
         nextChar();
-        Object x = parseComparison();
-        if (pos < input.length()) throw new RuntimeException("Unexpected: " + (char) ch);
+        Object x = parseLogicalOr();
+        while (isSpace(ch)) nextChar();
+        if (pos < input.length()) throw new RuntimeException("Unexpected index " + pos + ": " + (char) ch);
         return x;
     }
 
-    // comparison = expression ( ( "==" | "!=" | ">" | ">=" | "<" | "<=" )
-    // expression )*
+    // 1. OR: x || y
+    private Object parseLogicalOr() {
+        Object x = parseLogicalAnd();
+        while (eat('|')) {
+            if (!eat('|')) throw new RuntimeException("Expected '||'");
+            Object y = parseLogicalAnd();
+            if (x instanceof ICondition && y instanceof ICondition) {
+                List<ICondition> children = new ArrayList<>();
+                children.add((ICondition) x);
+                children.add((ICondition) y);
+                x = new OpOr(children);
+            } else {
+                throw new RuntimeException("OR (||) requires condition operands");
+            }
+        }
+        return x;
+    }
+
+    // 2. AND: x && y
+    private Object parseLogicalAnd() {
+        Object x = parseComparison();
+        while (eat('&')) {
+            if (!eat('&')) throw new RuntimeException("Expected '&&'");
+            Object y = parseComparison();
+            if (x instanceof ICondition && y instanceof ICondition) {
+                List<ICondition> children = new ArrayList<>();
+                children.add((ICondition) x);
+                children.add((ICondition) y);
+                x = new OpAnd(children);
+            } else {
+                throw new RuntimeException("AND (&&) requires condition operands");
+            }
+        }
+        return x;
+    }
+
+    // 3. Comparison: x == y, x != y, ...
     private Object parseComparison() {
         Object x = parseExpression();
         while (true) {
@@ -50,8 +94,21 @@ public class ExpressionParser {
                 if (eat('=')) op = "==";
                 else throw new RuntimeException("Expected '=='");
             } else if (eat('!')) {
-                if (eat('=')) op = "!=";
-                else throw new RuntimeException("Expected '!='");
+                if (eat('=')) {
+                    op = "!=";
+                } else {
+                    // Unary NOT (!) handled in parseFactor, but if we are here and see '!',
+                    // it might be a start of a new expression if we missed something.
+                    // For now, if it's just '!', we back off and let parseFactor handle it
+                    // AFTER verifying it's not a comparison.
+                    // BUT: '!' is higher priority than comparison.
+                    // This parser is top-down (Low -> High), so comparison calls expression,
+                    // expression calls term, term calls factor, factor handles '!'.
+                    // So we just return here if it's just '!'.
+                    pos--; // Backtrack '!'
+                    nextChar();
+                    return x;
+                }
             } else if (eat('>')) {
                 if (eat('=')) op = ">=";
                 else op = ">";
@@ -96,19 +153,47 @@ public class ExpressionParser {
     private IExpression parseFactor() {
         if (eat('+')) return parseFactor(); // unary plus
         if (eat('-')) return new ArithmeticExpression(new ConstantExpression(0), parseFactor(), "-"); // unary minus
+        if (eat('!')) {
+            Object res = parseFactor();
+            if (res instanceof ICondition) {
+                final ICondition cond = (ICondition) res;
+                final ICondition notCond = new OpNot(cond);
+                return new IExpression() {
+
+                    @Override
+                    public double evaluate(ConditionContext context) {
+                        return notCond.isMet(context) ? 1 : 0;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "!" + cond.toString();
+                    }
+                };
+            }
+            throw new RuntimeException("Unary '!' requires a condition");
+        }
 
         IExpression x;
         int startPos = this.pos;
-        if (eat('(')) { // parentheses
-            Object res = parseComparison();
+        if (eat('(') || eat('{')) { // parentheses or braces
+            char close = (input.charAt(pos - 1) == '(') ? ')' : '}';
+            Object res = parseLogicalOr();
             if (res instanceof IExpression) {
                 x = (IExpression) res;
+            } else if (res instanceof ICondition) {
+                final ICondition cond = (ICondition) res;
+                x = new IExpression() {
+
+                    @Override
+                    public double evaluate(ConditionContext context) {
+                        return cond.isMet(context) ? 1 : 0;
+                    }
+                };
             } else {
-                // Wrapper might be needed if Condition is used inside Expression (not supported
-                // yet)
-                throw new RuntimeException("Conditions not supported inside expressions");
+                throw new RuntimeException("Empty grouping");
             }
-            eat(')');
+            if (!eat(close)) throw new RuntimeException("Expected '" + close + "'");
         } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
             while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
             x = new ConstantExpression(Double.parseDouble(input.substring(startPos, this.pos)));
