@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
@@ -42,6 +43,9 @@ public class CommandModularReload extends CommandMod {
             RecipeLoader.getInstance()
                 .reload(MachineryModule.getConfigDir());
             sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  Recipes reloaded"));
+
+            // Reload NEI (only triggers on Client Proxy)
+            OmoshiroiKamo.proxy.reloadNEI();
         } catch (Exception e) {
             sender
                 .addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "  Recipes failed: " + e.getMessage()));

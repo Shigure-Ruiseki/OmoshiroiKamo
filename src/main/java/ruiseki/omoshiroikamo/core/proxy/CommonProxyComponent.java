@@ -127,4 +127,9 @@ public abstract class CommonProxyComponent implements ICommonProxy {
     public void dumpTexture(File baseDir, String texturePath) {
         // No-op server side
     }
+
+    @Override
+    public void reloadNEI() {
+        // No-op server side
+    }
 }

@@ -184,4 +184,8 @@ public interface ICommonProxy {
      */
     public void dumpTexture(File baseDir, String texturePath);
 
+    /**
+     * Reload NEI handlers when recipes are updated.
+     */
+    public void reloadNEI();
 }

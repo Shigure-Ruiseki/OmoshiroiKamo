@@ -1,7 +1,9 @@
 package ruiseki.omoshiroikamo.core.integration.nei;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -243,6 +245,8 @@ public class NEIConfig implements IConfigureNEI {
         }
     }
 
+    private static Set<String> registeredModularGroups = new HashSet<>();
+
     private void registerModularMachineryRecipes() {
         List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
 
@@ -256,6 +260,46 @@ public class NEIConfig implements IConfigureNEI {
         }
 
         for (String group : groups) {
+            if (registeredModularGroups.contains(group)) continue;
+            registeredModularGroups.add(group);
+
+            ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
+            registerHandler(handler);
+
+            ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+            API.addRecipeCatalyst(catalyst, handler.getRecipeID());
+            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+                IStructureEntry entry = StructureManager.getInstance()
+                    .getCustomStructure(structureName);
+                if (entry != null && entry.getRecipeGroup() != null
+                    && entry.getRecipeGroup()
+                        .contains(group)) {
+                    ItemStack blueprint = ItemMachineBlueprint
+                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
+                    API.addRecipeCatalyst(blueprint, handler.getRecipeID());
+                }
+            }
+        }
+    }
+
+    public static void reloadModularMachineryRecipes() {
+        if (!BackportConfigs.enableMachinery || !LibMods.BlockRenderer6343.isLoaded()) return;
+
+        List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
+        List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
+            .getAllRecipes();
+
+        for (IModularRecipe recipe : allRecipes) {
+            String group = recipe.getRecipeGroup();
+            if (!groups.contains(group)) {
+                groups.add(group);
+            }
+        }
+
+        for (String group : groups) {
+            if (registeredModularGroups.contains(group)) continue;
+            registeredModularGroups.add(group);
+
             ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
             registerHandler(handler);
 
