@@ -154,12 +154,16 @@ public class ItemInput extends AbstractRecipeInput {
             this.oreDict = itemJson.ore;
             this.count = itemJson.amount;
         } else {
+            // First set the count so it's preserved even if resolution fails
+            this.count = itemJson.amount > 0 ? itemJson.amount : 1;
             ItemStack stack = ItemJson.resolveItemStack(itemJson);
             if (stack != null) {
                 this.required = stack;
                 this.oreDict = null;
                 this.count = stack.stackSize;
             } else {
+                this.required = null;
+                this.oreDict = null;
                 Logger.warn("ItemInput failed to resolve item: {}", json);
             }
         }

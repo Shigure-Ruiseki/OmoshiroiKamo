@@ -29,6 +29,8 @@ public class RecipeJsonMergeUtil {
             String key = entry.getKey();
             JsonElement parentVal = entry.getValue();
 
+            if (isNonInheritable(key)) continue;
+
             if (!child.has(key)) {
                 // If child doesn't have it, just copy from parent
                 child.add(key, copy(parentVal));
@@ -42,6 +44,10 @@ public class RecipeJsonMergeUtil {
             }
         }
         return child;
+    }
+
+    private static boolean isNonInheritable(String key) {
+        return key.equals("abstract") || key.equals("parent") || key.equals("registryName");
     }
 
     private static boolean isMergeableArray(String key) {

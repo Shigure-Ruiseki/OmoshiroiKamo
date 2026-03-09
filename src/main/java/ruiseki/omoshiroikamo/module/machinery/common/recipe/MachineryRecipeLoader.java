@@ -114,6 +114,9 @@ public class MachineryRecipeLoader {
         try {
             ModularRecipe.Builder builder = ModularRecipe.builder();
 
+            // Set default recipeGroup (required by builder)
+            builder.recipeGroup("default");
+
             // Use registry to parse all properties
             for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
                 RecipeParserRegistry.parse(builder, entry.getKey(), entry.getValue());

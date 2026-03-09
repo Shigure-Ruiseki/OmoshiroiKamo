@@ -2,18 +2,18 @@ package ruiseki.omoshiroikamo.api.recipe.inheritance;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
-import net.minecraft.init.Items;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
-import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
-import ruiseki.omoshiroikamo.module.machinery.common.recipe.MachineryMaterial;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.MachineryRecipeLoader;
+import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeJsonMergeUtil;
 
 /**
  * 継承システムのテスト
@@ -47,78 +47,88 @@ public class InheritanceSystemTest {
     @Test
     @DisplayName("【基本】親から子へプロパティが継承される")
     public void test基本的な継承() {
-        // 親レシピ
-        MachineryMaterial parent = new MachineryMaterial();
-        parent.registryName = "parent";
-        parent.localizedName = "Parent Recipe";
-        parent.machine = "crusher";
-        parent.time = 200;
-        parent.inputs.add(new ItemInput(Items.iron_ingot, 1));
+        JsonObject parent = new JsonObject();
+        parent.addProperty("registryName", "parent");
+        parent.addProperty("name", "Parent Recipe");
+        parent.addProperty("machine", "crusher");
+        parent.addProperty("duration", 200);
 
-        // 子レシピ（一部のプロパティのみ指定）
-        MachineryMaterial child = new MachineryMaterial();
-        child.registryName = "child";
-        child.parent = "parent";
-        // localizedName, machine, time は未指定
+        JsonObject child = new JsonObject();
+        child.addProperty("registryName", "child");
+        child.addProperty("parent", "parent");
 
-        // 継承を実行
-        child.mergeParent(parent);
+        RecipeJsonMergeUtil.merge(child, parent);
 
-        // 継承されたプロパティを確認
-        assertEquals("Parent Recipe", child.localizedName, "localizedNameが継承されるべき");
-        assertEquals("crusher", child.machine, "machineが継承されるべき");
-        assertEquals(200, child.time, "timeが継承されるべき");
-
-        // 入力も継承される
-        assertEquals(1, child.inputs.size(), "入力が継承されるべき");
-    }
-
-    @Test
-    @DisplayName("【基本】子のプロパティは親のプロパティを上書きする")
-    public void test子の上書き() {
-        MachineryMaterial parent = new MachineryMaterial();
-        parent.registryName = "parent";
-        parent.machine = "crusher";
-        parent.time = 200;
-
-        MachineryMaterial child = new MachineryMaterial();
-        child.registryName = "child";
-        child.parent = "parent";
-        child.machine = "smelter";
-        child.time = 100;
-
-        // 継承を実行
-        child.mergeParent(parent);
-
-        // 子のプロパティが優先される
-        assertEquals("smelter", child.machine, "子のmachineが優先されるべき");
-        assertEquals(100, child.time, "子のtimeが優先されるべき");
-    }
-
-    @Test
-    @DisplayName("【基本】親の入力と子の入力がマージされる")
-    public void test入力のマージ() {
-        MachineryMaterial parent = new MachineryMaterial();
-        parent.registryName = "parent";
-        parent.inputs.add(new ItemInput(Items.iron_ingot, 1));
-        parent.inputs.add(new EnergyInput(100, true));
-
-        MachineryMaterial child = new MachineryMaterial();
-        child.registryName = "child";
-        child.parent = "parent";
-        child.inputs.add(new ItemInput(Items.gold_ingot, 1)); // 追加入力
-
-        // 継承を実行
-        child.mergeParent(parent);
-
-        // 親の入力2つ + 子の入力1つ = 合計3つ
-        assertEquals(3, child.inputs.size(), "入力が3つになるべき");
-
-        // 親の入力が最初に来る
         assertEquals(
-            Items.iron_ingot,
-            ((ItemInput) child.inputs.get(0)).getRequired()
-                .getItem());
+            "Parent Recipe",
+            child.get("name")
+                .getAsString());
+        assertEquals(
+            "crusher",
+            child.get("machine")
+                .getAsString());
+        assertEquals(
+            200,
+            child.get("duration")
+                .getAsInt());
+    }
+
+    @Test
+    @DisplayName("【基本】子のプロパティは親を上書きする")
+    public void test子の上書き() {
+        JsonObject parent = new JsonObject();
+        parent.addProperty("machine", "crusher");
+        parent.addProperty("duration", 200);
+
+        JsonObject child = new JsonObject();
+        child.addProperty("machine", "smelter");
+        child.addProperty("duration", 100);
+
+        RecipeJsonMergeUtil.merge(child, parent);
+
+        assertEquals(
+            "smelter",
+            child.get("machine")
+                .getAsString());
+        assertEquals(
+            100,
+            child.get("duration")
+                .getAsInt());
+    }
+
+    @Test
+    @DisplayName("【基本】親子の入力がマージされる（親が先、子が後）")
+    public void test入力のマージ() {
+        JsonObject parent = new JsonObject();
+        JsonArray pIn = new JsonArray();
+        JsonObject iron = new JsonObject();
+        iron.addProperty("item", "minecraft:iron_ingot");
+        pIn.add(iron);
+        parent.add("inputs", pIn);
+
+        JsonObject child = new JsonObject();
+        JsonArray cIn = new JsonArray();
+        JsonObject gold = new JsonObject();
+        gold.addProperty("item", "minecraft:gold_ingot");
+        cIn.add(gold);
+        child.add("inputs", cIn);
+
+        RecipeJsonMergeUtil.merge(child, parent);
+
+        JsonArray result = child.getAsJsonArray("inputs");
+        assertEquals(2, result.size());
+        assertEquals(
+            "minecraft:iron_ingot",
+            result.get(0)
+                .getAsJsonObject()
+                .get("item")
+                .getAsString());
+        assertEquals(
+            "minecraft:gold_ingot",
+            result.get(1)
+                .getAsJsonObject()
+                .get("item")
+                .getAsString());
     }
 
     // ========================================
@@ -126,202 +136,125 @@ public class InheritanceSystemTest {
     // ========================================
 
     @Test
-    @DisplayName("【多段階】孫レシピまで継承が正しく動作する")
-    public void test多段階継承() {
-        // 祖父レシピ
-        MachineryMaterial grandparent = new MachineryMaterial();
-        grandparent.registryName = "grandparent";
-        grandparent.machine = "crusher";
-        grandparent.time = 300;
-
-        // 親レシピ
-        MachineryMaterial parent = new MachineryMaterial();
-        parent.registryName = "parent";
-        parent.parent = "grandparent";
-        parent.time = 200; // timeのみ上書き
-
-        // 子レシピ
-        MachineryMaterial child = new MachineryMaterial();
-        child.registryName = "child";
-        child.parent = "parent";
-        // 何も上書きしない
-
-        // マップを作成
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("grandparent", grandparent);
-        map.put("parent", parent);
-        map.put("child", child);
-
-        // 継承を解決（祖父→親→子の順）
-        resolveInheritance(child, map, new HashSet<>());
-
-        // 最終的に child は:
-        // - machine: crusher (祖父から)
-        // - time: 200 (親から、親が祖父を上書き)
-        assertEquals("crusher", child.machine);
-        assertEquals(200, child.time);
-    }
-
-    @Test
     @DisplayName("【多段階】ひ孫まで継承が正しく動作する")
     public void test4段階継承() {
-        // 曾祖父
-        MachineryMaterial greatGrandparent = new MachineryMaterial();
-        greatGrandparent.registryName = "great_grandparent";
-        greatGrandparent.machine = "crusher";
-        greatGrandparent.time = 400;
+        List<JsonObject> jsons = new ArrayList<>();
 
-        // 祖父
-        MachineryMaterial grandparent = new MachineryMaterial();
-        grandparent.registryName = "grandparent";
-        grandparent.parent = "great_grandparent";
-        grandparent.time = 300;
+        JsonObject ggp = new JsonObject();
+        ggp.addProperty("registryName", "great_grandparent");
+        ggp.addProperty("machine", "crusher");
+        ggp.addProperty("duration", 400);
+        jsons.add(ggp);
 
-        // 親
-        MachineryMaterial parent = new MachineryMaterial();
-        parent.registryName = "parent";
-        parent.parent = "grandparent";
-        parent.time = 200;
+        JsonObject gp = new JsonObject();
+        gp.addProperty("registryName", "grandparent");
+        gp.addProperty("parent", "great_grandparent");
+        gp.addProperty("duration", 300);
+        jsons.add(gp);
 
-        // 子
-        MachineryMaterial child = new MachineryMaterial();
-        child.registryName = "child";
-        child.parent = "parent";
+        JsonObject p = new JsonObject();
+        p.addProperty("registryName", "parent");
+        p.addProperty("parent", "grandparent");
+        p.addProperty("duration", 200);
+        jsons.add(p);
 
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("great_grandparent", greatGrandparent);
-        map.put("grandparent", grandparent);
-        map.put("parent", parent);
-        map.put("child", child);
+        JsonObject c = new JsonObject();
+        c.addProperty("registryName", "child");
+        c.addProperty("parent", "parent");
+        jsons.add(c);
 
-        resolveInheritance(child, map, new HashSet<>());
+        List<IModularRecipe> recipes = MachineryRecipeLoader.load(jsons);
+        IModularRecipe childRecipe = findRecipe(recipes, "child");
 
-        // machine は曾祖父から、time は親から
-        assertEquals("crusher", child.machine);
-        assertEquals(200, child.time);
+        assertNotNull(childRecipe);
+        assertEquals("crusher", childRecipe.getRecipeGroup()); // 曾祖父から
+        assertEquals(200, childRecipe.getDuration()); // 親から
     }
 
     // ========================================
-    // 循環継承の検出（★最重要）
+    // 循環継承の検出
     // ========================================
 
     @Test
-    @DisplayName("【★最重要】循環継承を検出する（A→B→A）")
+    @DisplayName("【循環】A→B→Aを検出してクラッシュしない")
     public void test循環継承検出_2レシピ() {
-        MachineryMaterial recipeA = new MachineryMaterial();
-        recipeA.registryName = "A";
-        recipeA.parent = "B";
+        List<JsonObject> jsons = new ArrayList<>();
+        JsonObject a = new JsonObject();
+        a.addProperty("registryName", "A");
+        a.addProperty("parent", "B");
+        jsons.add(a);
 
-        MachineryMaterial recipeB = new MachineryMaterial();
-        recipeB.registryName = "B";
-        recipeB.parent = "A"; // 循環！
+        JsonObject b = new JsonObject();
+        b.addProperty("registryName", "B");
+        b.addProperty("parent", "A");
+        jsons.add(b);
 
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("A", recipeA);
-        map.put("B", recipeB);
-
-        // 循環継承が検出されるはず
-        // （実装によっては例外を投げるか、ログを出力するか）
-        // ここでは無限ループにならないことを確認
-        resolveInheritance(recipeA, map, new HashSet<>());
-
-        // 循環が検出され、継承が行われない、または
-        // resolvingセットで検出されて処理が中断される
-        // 実装によって異なるが、少なくともクラッシュしないこと
-        assertTrue(true, "循環継承が検出され、クラッシュしなかった");
+        assertDoesNotThrow(() -> MachineryRecipeLoader.load(jsons));
     }
 
     @Test
-    @DisplayName("【★最重要】循環継承を検出する（A→B→C→A）")
+    @DisplayName("【循環】A→B→C→Aを検出してクラッシュしない")
     public void test循環継承検出_3レシピ() {
-        MachineryMaterial recipeA = new MachineryMaterial();
-        recipeA.registryName = "A";
-        recipeA.parent = "B";
+        List<JsonObject> jsons = new ArrayList<>();
+        JsonObject a = new JsonObject();
+        a.addProperty("registryName", "A");
+        a.addProperty("parent", "B");
+        jsons.add(a);
+        JsonObject b = new JsonObject();
+        b.addProperty("registryName", "B");
+        b.addProperty("parent", "C");
+        jsons.add(b);
+        JsonObject c = new JsonObject();
+        c.addProperty("registryName", "C");
+        c.addProperty("parent", "A");
+        jsons.add(c);
 
-        MachineryMaterial recipeB = new MachineryMaterial();
-        recipeB.registryName = "B";
-        recipeB.parent = "C";
-
-        MachineryMaterial recipeC = new MachineryMaterial();
-        recipeC.registryName = "C";
-        recipeC.parent = "A"; // 循環！
-
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("A", recipeA);
-        map.put("B", recipeB);
-        map.put("C", recipeC);
-
-        // 3つのレシピで循環
-        resolveInheritance(recipeA, map, new HashSet<>());
-
-        assertTrue(true, "3レシピの循環継承が検出され、クラッシュしなかった");
+        assertDoesNotThrow(() -> MachineryRecipeLoader.load(jsons));
     }
 
     @Test
-    @DisplayName("【★最重要】自己参照（A→A）を検出する")
+    @DisplayName("【循環】自己参照 A→A を検出してクラッシュしない")
     public void test自己参照検出() {
-        MachineryMaterial recipe = new MachineryMaterial();
-        recipe.registryName = "self";
-        recipe.parent = "self"; // 自分自身を親に！
+        List<JsonObject> jsons = new ArrayList<>();
+        JsonObject a = new JsonObject();
+        a.addProperty("registryName", "self");
+        a.addProperty("parent", "self");
+        jsons.add(a);
 
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("self", recipe);
-
-        // 自己参照が検出されるはず
-        resolveInheritance(recipe, map, new HashSet<>());
-
-        assertTrue(true, "自己参照が検出され、クラッシュしなかった");
+        assertDoesNotThrow(() -> MachineryRecipeLoader.load(jsons));
     }
 
     // ========================================
-    // 抽象レシピ（abstract=true）
+    // 抽象レシピ
     // ========================================
 
     @Test
-    @DisplayName("【抽象】抽象レシピは通常レシピに変換されない")
-    public void test抽象レシピのフラグ() {
-        MachineryMaterial abstractRecipe = new MachineryMaterial();
-        abstractRecipe.registryName = "abstract_template";
-        abstractRecipe.isAbstract = true;
-        abstractRecipe.machine = "crusher";
-        abstractRecipe.time = 200;
+    @DisplayName("【抽象】抽象レシピは出力に含まれず、継承元としてのみ機能する")
+    public void test抽象レシピ() {
+        List<JsonObject> jsons = new ArrayList<>();
 
-        // 抽象フラグが true
-        assertTrue(abstractRecipe.isAbstract);
+        JsonObject template = new JsonObject();
+        template.addProperty("registryName", "template");
+        template.addProperty("abstract", true);
+        template.addProperty("duration", 200);
+        jsons.add(template);
 
-        // バリデーションは通る（抽象レシピは検証がスキップされる）
-        assertTrue(abstractRecipe.validate());
-    }
+        JsonObject concrete = new JsonObject();
+        concrete.addProperty("registryName", "concrete_recipe");
+        concrete.addProperty("parent", "template");
+        jsons.add(concrete);
 
-    @Test
-    @DisplayName("【抽象】抽象レシピを親とする通常レシピ")
-    public void test抽象レシピからの継承() {
-        // 抽象レシピ（テンプレート）
-        MachineryMaterial template = new MachineryMaterial();
-        template.registryName = "template";
-        template.isAbstract = true;
-        template.machine = "crusher";
-        template.time = 200;
-        template.inputs.add(new EnergyInput(100, true));
+        List<IModularRecipe> recipes = MachineryRecipeLoader.load(jsons);
 
-        // 通常レシピ（テンプレートを継承）
-        MachineryMaterial concrete = new MachineryMaterial();
-        concrete.registryName = "concrete_recipe";
-        concrete.parent = "template";
-        concrete.inputs.add(new ItemInput(Items.iron_ingot, 1));
-
-        // 継承を実行
-        concrete.mergeParent(template);
-
-        // テンプレートから継承
-        assertEquals("crusher", concrete.machine);
-        assertEquals(200, concrete.time);
-
-        // 入力もマージされる: テンプレートのEnergy + 自分のItem
-        assertEquals(2, concrete.inputs.size());
-
-        // concrete は抽象ではない
-        assertFalse(concrete.isAbstract);
+        assertEquals(1, recipes.size());
+        assertEquals(
+            "concrete_recipe",
+            recipes.get(0)
+                .getRegistryName());
+        assertEquals(
+            200,
+            recipes.get(0)
+                .getDuration());
     }
 
     // ========================================
@@ -329,109 +262,58 @@ public class InheritanceSystemTest {
     // ========================================
 
     @Test
-    @DisplayName("【エッジ】存在しない親を指定した場合")
+    @DisplayName("【エッジ】存在しない親を指定しても正常にスキップされる")
     public void test存在しない親() {
-        MachineryMaterial child = new MachineryMaterial();
-        child.registryName = "orphan";
-        child.parent = "nonexistent_parent";
+        List<JsonObject> jsons = new ArrayList<>();
+        JsonObject c = new JsonObject();
+        c.addProperty("registryName", "child");
+        c.addProperty("parent", "nonexistent");
+        jsons.add(c);
 
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("orphan", child);
-
-        // 親が見つからない場合、継承は行われない
-        resolveInheritance(child, map, new HashSet<>());
-
-        // 親が見つからなくてもクラッシュしない
-        assertNotNull(child);
-        assertEquals("orphan", child.registryName);
+        List<IModularRecipe> recipes = MachineryRecipeLoader.load(jsons);
+        assertEquals(1, recipes.size());
+        assertEquals(
+            "child",
+            recipes.get(0)
+                .getRegistryName());
     }
 
     @Test
-    @DisplayName("【エッジ】parentがnullの場合")
-    public void testParentがNull() {
-        MachineryMaterial recipe = new MachineryMaterial();
-        recipe.registryName = "no_parent";
-        recipe.parent = null;
-
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("no_parent", recipe);
-
-        // parent が null なので継承処理はスキップされる
-        resolveInheritance(recipe, map, new HashSet<>());
-
-        assertNotNull(recipe);
-    }
-
-    @Test
-    @DisplayName("【エッジ】複数の子が同じ親を継承する")
+    @DisplayName("【エッジ】同じ親を持つ複数の子がそれぞれ正しく継承される")
     public void test同じ親を持つ複数の子() {
-        MachineryMaterial parent = new MachineryMaterial();
-        parent.registryName = "common_parent";
-        parent.machine = "crusher";
-        parent.time = 200;
+        List<JsonObject> jsons = new ArrayList<>();
 
-        MachineryMaterial child1 = new MachineryMaterial();
-        child1.registryName = "child1";
-        child1.parent = "common_parent";
+        JsonObject parent = new JsonObject();
+        parent.addProperty("registryName", "common_parent");
+        parent.addProperty("machine", "crusher");
+        jsons.add(parent);
 
-        MachineryMaterial child2 = new MachineryMaterial();
-        child2.registryName = "child2";
-        child2.parent = "common_parent";
+        for (int i = 1; i <= 3; i++) {
+            JsonObject child = new JsonObject();
+            child.addProperty("registryName", "child" + i);
+            child.addProperty("parent", "common_parent");
+            jsons.add(child);
+        }
 
-        MachineryMaterial child3 = new MachineryMaterial();
-        child3.registryName = "child3";
-        child3.parent = "common_parent";
+        List<IModularRecipe> recipes = MachineryRecipeLoader.load(jsons);
+        assertEquals(4, recipes.size()); // 親(非abstract) + 子3つ
 
-        Map<String, MachineryMaterial> map = new HashMap<>();
-        map.put("common_parent", parent);
-        map.put("child1", child1);
-        map.put("child2", child2);
-        map.put("child3", child3);
-
-        // 全ての子を継承
-        resolveInheritance(child1, map, new HashSet<>());
-        resolveInheritance(child2, map, new HashSet<>());
-        resolveInheritance(child3, map, new HashSet<>());
-
-        // 全て同じプロパティを継承
-        assertEquals("crusher", child1.machine);
-        assertEquals("crusher", child2.machine);
-        assertEquals("crusher", child3.machine);
-
-        assertEquals(200, child1.time);
-        assertEquals(200, child2.time);
-        assertEquals(200, child3.time);
+        for (int i = 1; i <= 3; i++) {
+            IModularRecipe childRecipe = findRecipe(recipes, "child" + i);
+            assertNotNull(childRecipe);
+            assertEquals("crusher", childRecipe.getRecipeGroup());
+        }
     }
 
     // ========================================
     // ヘルパーメソッド
     // ========================================
 
-    /**
-     * 継承を解決する（JSONLoaderの実装を模倣）
-     */
-    private void resolveInheritance(MachineryMaterial mat, Map<String, MachineryMaterial> map,
-        HashSet<String> resolving) {
-        if (mat.parent == null) return;
-
-        // 循環継承検出
-        if (resolving.contains(mat.registryName)) {
-            // 循環が検出された場合、ログを出力して終了
-            // （実際の実装ではLogger.errorが呼ばれる）
-            System.err.println("Circular inheritance detected for recipe: " + mat.registryName);
-            return;
-        }
-
-        MachineryMaterial parent = map.get(mat.parent);
-        if (parent != null) {
-            resolving.add(mat.registryName);
-            resolveInheritance(parent, map, resolving);
-            mat.mergeParent(parent);
-            mat.parent = null; // マージ完了をマーク
-        } else {
-            // 親が見つからない
-            System.err.println("Recipe " + mat.registryName + " has missing parent: " + mat.parent);
-        }
+    private IModularRecipe findRecipe(List<IModularRecipe> recipes, String name) {
+        return recipes.stream()
+            .filter(r -> name.equals(r.getRegistryName()))
+            .findFirst()
+            .orElse(null);
     }
 
     // ========================================
