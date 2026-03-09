@@ -147,6 +147,9 @@ public class ModularMachineGuiHandler extends GuiMultiblockHandler {
 
         // Set the structure name on the controller
         controller.setCustomStructureName(structureName);
+        // Apply tiered components from the recipe/constructable
+        controller.getStructureAgent()
+            .setComponentTiers(currentStructure.getComponentTiers());
         // Force controller facing to match defaultFacing
         controller.setExtendedFacing(facing);
 

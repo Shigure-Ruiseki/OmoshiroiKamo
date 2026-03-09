@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -40,6 +42,9 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
     // Each handler has its own GuiHandler instance to avoid state conflicts
     private final ModularMachineGuiHandler guiHandler;
 
+    // Static map to track instances for cross-handler communication
+    private static final Map<String, ModularMachineNEIHandler> INSTANCES = new HashMap<>();
+
     // The specific structure this handler displays
     private final String structureName;
     private final CustomStructureConstructable constructable;
@@ -66,6 +71,16 @@ public class ModularMachineNEIHandler extends MultiblockHandler {
 
         // Component blocks will be lazily initialized on first access
         this.componentBlocks = null;
+
+        INSTANCES.put(structureName, this);
+    }
+
+    public static ModularMachineNEIHandler getInstance(String structureName) {
+        return INSTANCES.get(structureName);
+    }
+
+    public CustomStructureConstructable getConstructable() {
+        return constructable;
     }
 
     /**

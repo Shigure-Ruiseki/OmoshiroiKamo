@@ -2,6 +2,8 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,8 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.visitor.PortRegistrationVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -35,6 +39,7 @@ public class StructureAgent {
 
     private String customStructureName = null;
     private Integer structureTintColor = null;
+    private final Map<String, Integer> componentTiers = new HashMap<>();
     private final Set<ChunkCoordinates> structureBlockPositions = new HashSet<>();
     private String lastValidationError = "";
 
@@ -279,10 +284,64 @@ public class StructureAgent {
     public void onFormed() {
         // Load structure tint color
         structureTintColor = getStructureTintColor();
+        updateComponentTiers();
+    }
 
-        // StructureBlockPositions may be empty here because callbacks run after check()
-        // The actual tint packet will be sent by sendTintPacket() called after all
-        // callbacks complete
+    private void updateComponentTiers() {
+        componentTiers.clear();
+        if (customStructureName == null || customStructureName.isEmpty()) return;
+
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(customStructureName);
+        if (entry == null) return;
+
+        Map<Character, ISymbolMapping> mappings = entry.getMappings();
+        for (Map.Entry<Character, List<ChunkCoordinates>> symbolEntry : controller.getSymbolPositionsMap()
+            .entrySet()) {
+            char symbol = symbolEntry.getKey();
+            ISymbolMapping mapping = mappings.get(symbol);
+
+            if (mapping instanceof TieredBlockMapping tiered) {
+                String componentName = tiered.getComponentName();
+                int minTierForSymbol = Integer.MAX_VALUE;
+
+                for (ChunkCoordinates pos : symbolEntry.getValue()) {
+                    Block block = controller.getWorldObj()
+                        .getBlock(pos.posX, pos.posY, pos.posZ);
+                    int meta = controller.getWorldObj()
+                        .getBlockMetadata(pos.posX, pos.posY, pos.posZ);
+                    String blockId = Block.blockRegistry.getNameForObject(block) + ":" + meta;
+
+                    int tier = tiered.getTier(blockId);
+                    if (tier == 0) {
+                        tier = tiered.getTier(Block.blockRegistry.getNameForObject(block) + ":*");
+                    }
+
+                    minTierForSymbol = Math.min(minTierForSymbol, tier);
+                }
+
+                if (minTierForSymbol != Integer.MAX_VALUE) {
+                    componentTiers.put(
+                        componentName,
+                        Math.min(componentTiers.getOrDefault(componentName, Integer.MAX_VALUE), minTierForSymbol));
+                }
+            }
+        }
+    }
+
+    public int getComponentTier(String componentName) {
+        return componentTiers.getOrDefault(componentName, 0);
+    }
+
+    public Map<String, Integer> getComponentTiers() {
+        return Collections.unmodifiableMap(componentTiers);
+    }
+
+    public void setComponentTiers(Map<String, Integer> tiers) {
+        this.componentTiers.clear();
+        if (tiers != null) {
+            this.componentTiers.putAll(tiers);
+        }
     }
 
     /**
@@ -408,6 +467,17 @@ public class StructureAgent {
         if (customStructureName != null) {
             nbt.setString("customStructureName", customStructureName);
         }
+        if (structureTintColor != null) {
+            nbt.setInteger("structureTintColor", structureTintColor);
+        }
+        if (!componentTiers.isEmpty()) {
+            NBTTagCompound tiersTag = new NBTTagCompound();
+            for (Map.Entry<String, Integer> entry : componentTiers.entrySet()) {
+                tiersTag.setInteger(entry.getKey(), entry.getValue());
+            }
+            nbt.setTag("componentTiers", tiersTag);
+        }
+
         NBTTagList list = new NBTTagList();
         for (ChunkCoordinates pos : structureBlockPositions) {
             NBTTagCompound tag = new NBTTagCompound();
@@ -441,6 +511,18 @@ public class StructureAgent {
         if (nbt.hasKey("customStructureName")) {
             customStructureName = nbt.getString("customStructureName");
         }
+        if (nbt.hasKey("structureTintColor")) {
+            structureTintColor = nbt.getInteger("structureTintColor");
+        }
+        if (nbt.hasKey("componentTiers")) {
+            componentTiers.clear();
+            NBTTagCompound tiersTag = nbt.getCompoundTag("componentTiers");
+            for (Object keyObj : tiersTag.func_150296_c()) {
+                String key = (String) keyObj;
+                componentTiers.put(key, tiersTag.getInteger(key));
+            }
+        }
+
         structureBlockPositions.clear();
 
         boolean loadedBlocks = false;

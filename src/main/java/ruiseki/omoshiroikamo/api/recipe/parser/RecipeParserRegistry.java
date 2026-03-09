@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.parser.impl.ConditionPropertyParser;
@@ -53,6 +54,30 @@ public class RecipeParserRegistry {
         ConditionPropertyParser conditionParser = new ConditionPropertyParser();
         register("conditions", conditionParser);
         register("condition", conditionParser);
+
+        // Tiers
+        register("tiers", (builder, element) -> {
+            if (element.isJsonObject()) {
+                JsonObject obj = element.getAsJsonObject();
+                for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+                    builder.addRequiredComponentTier(
+                        entry.getKey(),
+                        entry.getValue()
+                            .getAsInt());
+                }
+            }
+        });
+        register("tier", (builder, element) -> {
+            if (element.isJsonObject()) {
+                JsonObject obj = element.getAsJsonObject();
+                for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+                    builder.addRequiredComponentTier(
+                        entry.getKey(),
+                        entry.getValue()
+                            .getAsInt());
+                }
+            }
+        });
     }
 
     /**

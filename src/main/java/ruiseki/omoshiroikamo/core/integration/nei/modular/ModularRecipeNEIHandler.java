@@ -5,11 +5,13 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -30,6 +32,7 @@ import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedFluidTank;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
@@ -128,20 +131,47 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
     public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
         if (button == 0 || button == 1) {
             CachedModularRecipe crecipe = (CachedModularRecipe) arecipes.get(recipe);
-            if (crecipe.arrowRect != null) {
-                Point offset = gui.getRecipePosition(recipe);
-                Point pos = GuiDraw.getMousePosition();
-                Point relMouse = new Point(pos.x - gui.guiLeft - offset.x, pos.y - gui.guiTop - offset.y);
-                if (crecipe.arrowRect.contains(relMouse)) {
-                    if (button == 0) {
-                        return GuiCraftingRecipe.openRecipeGui(getRecipeID());
-                    } else {
-                        return GuiUsageRecipe.openRecipeGui(getRecipeID());
+            Point offset = gui.getRecipePosition(recipe);
+            Point pos = GuiDraw.getMousePosition();
+            Point relMouse = new Point(pos.x - gui.guiLeft - offset.x, pos.y - gui.guiTop - offset.y);
+
+            if (crecipe.arrowRect != null && crecipe.arrowRect.contains(relMouse)) {
+                if (button == 0) {
+                    return GuiCraftingRecipe.openRecipeGui(getRecipeID());
+                } else {
+                    return GuiUsageRecipe.openRecipeGui(getRecipeID());
+                }
+            }
+
+            if (crecipe.blueprintRect != null && crecipe.blueprintRect.contains(relMouse)) {
+                List<String> compatible = getCompatibleStructures();
+                if (!compatible.isEmpty()) {
+                    String structureName = compatible.get(0);
+                    ModularMachineNEIHandler handler = ModularMachineNEIHandler.getInstance(structureName);
+                    if (handler != null) {
+                        // Pass tiers to the constructable
+                        handler.getConstructable()
+                            .setComponentTiers(crecipe.recipe.getRequiredComponentTiers());
+                        return GuiUsageRecipe.openRecipeGui(handler.getOverlayIdentifier());
                     }
                 }
             }
         }
         return super.mouseClicked(gui, button, recipe);
+    }
+
+    public List<String> getCompatibleStructures() {
+        List<String> results = new ArrayList<>();
+        for (String structure : CustomStructureRegistry.getRegisteredNames()) {
+            IStructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(structure);
+            if (entry != null && entry.getRecipeGroup() != null
+                && entry.getRecipeGroup()
+                    .contains(recipeGroup)) {
+                results.add(structure);
+            }
+        }
+        return results;
     }
 
     @Override
@@ -296,6 +326,7 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
         public int calculatedHeight = 130;
         public Rectangle arrowRect;
+        public Rectangle blueprintRect;
 
         public CachedModularRecipe(IModularRecipe recipe) {
             this.recipe = recipe;
@@ -322,6 +353,36 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
                     new Rectangle(4, currentY - 12, 162, 10),
                     false);
                 allParts.add(new LayoutPartRenderer(text));
+
+                // Structure Preview Button
+                List<String> compatibleStructures = getCompatibleStructures();
+                if (!compatibleStructures.isEmpty()) {
+                    final String structureName = compatibleStructures.get(0);
+                    this.blueprintRect = new Rectangle(166 - 20, currentY - 12, 16, 16);
+                    allParts.add(new LayoutPartRenderer(new INEIPositionedRenderer() {
+
+                        @Override
+                        public void draw() {
+                            Minecraft.getMinecraft().renderEngine
+                                .bindTexture(new ResourceLocation(LibMisc.MOD_ID, "textures/gui/icons.png"));
+                            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                            // Assume blueprint icon at 0, 140 in icons.png
+                            Gui.func_146110_a(blueprintRect.x, blueprintRect.y, 0, 140, 16, 16, 256.0f, 256.0f);
+                        }
+
+                        @Override
+                        public Rectangle getPosition() {
+                            return blueprintRect;
+                        }
+
+                        @Override
+                        public void handleTooltip(List<String> currenttip) {
+                            currenttip.add("Show Structure Preview");
+                            currenttip.add("§7Structure: " + structureName);
+                        }
+                    }));
+                }
+
                 // Adjust for word-wrapped text height
                 int extraHeight = text.getRenderedHeight() - 10;
                 if (extraHeight > 0) {
@@ -331,14 +392,46 @@ public class ModularRecipeNEIHandler extends RecipeHandlerBase {
 
             // Layout Inputs
             if (!inputParts.isEmpty()) {
-                PositionedText inText = new PositionedText("Inputs", 0x444444, new Rectangle(0, currentY, 166, 10));
+                PositionedText inText = new PositionedText(
+                    StatCollector.translateToLocal("gui.modular.inputs"),
+                    0x444444,
+                    new Rectangle(0, currentY, 166, 10));
                 allParts.add(new LayoutPartRenderer(inText));
                 currentY += 12;
 
                 currentY = layoutSection(inputParts, currentX, currentY);
             } else {
-                PositionedText text = new PositionedText("No Input", 0x222222, new Rectangle(0, currentY, 166, 10));
+                PositionedText text = new PositionedText(
+                    StatCollector.translateToLocal("gui.modular.no_input"),
+                    0x222222,
+                    new Rectangle(0, currentY, 166, 10));
                 allParts.add(new LayoutPartRenderer(text));
+            }
+
+            // Layout Tiers
+            Map<String, Integer> requiredTiers = recipe.getRequiredComponentTiers();
+            if (!requiredTiers.isEmpty()) {
+                currentY += 4;
+                PositionedText tierHeaderText = new PositionedText(
+                    StatCollector.translateToLocal("omoshiroikamo.nei.required_tiers"),
+                    0x444444,
+                    new Rectangle(0, currentY, 166, 10));
+                allParts.add(new LayoutPartRenderer(tierHeaderText));
+                currentY += 12;
+
+                for (Map.Entry<String, Integer> entry : requiredTiers.entrySet()) {
+                    String componentName = StatCollector.translateToLocal("omoshiroikamo.component." + entry.getKey());
+                    String tierVal = StatCollector
+                        .translateToLocalFormatted("omoshiroikamo.nei.tier_format", entry.getValue());
+                    String text = " - " + componentName + ": " + tierVal;
+                    PositionedText tierText = new PositionedText(
+                        text,
+                        0x222222,
+                        new Rectangle(10, currentY, 156, 10),
+                        false);
+                    allParts.add(new LayoutPartRenderer(tierText));
+                    currentY += 10;
+                }
             }
 
             // Layout Outputs

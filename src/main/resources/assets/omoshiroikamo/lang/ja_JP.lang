@@ -1246,6 +1246,11 @@ gui.port_type.VIS=ビス
 gui.port_type.BLOCK=ブロック
 
 
+# NEI Dynamic Tier Display
+omoshiroikamo.nei.required_tiers=要求されるTier:
+omoshiroikamo.nei.tier_format=Tier %d
+
+
 # Tiles
 tile.modularMachineCasing.name=モジュラーマシンケーシング
 tile.modularMachineController.name=モジュラーマシンコントローラー

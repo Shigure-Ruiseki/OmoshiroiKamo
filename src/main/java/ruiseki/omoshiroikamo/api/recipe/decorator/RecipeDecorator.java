@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.api.recipe.decorator;
 
 import java.util.List;
+import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
@@ -96,6 +97,21 @@ public abstract class RecipeDecorator implements IModularRecipe {
     @Override
     public void onTick(ConditionContext context) {
         internal.onTick(context);
+    }
+
+    @Override
+    public int getMaxTierRequired() {
+        return internal.getMaxTierRequired();
+    }
+
+    @Override
+    public Map<String, Integer> getRequiredComponentTiers() {
+        return internal.getRequiredComponentTiers();
+    }
+
+    @Override
+    public int getTotalItemInputCount() {
+        return internal.getTotalItemInputCount();
     }
 
     @Override

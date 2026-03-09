@@ -26,6 +26,16 @@ public interface IRecipe extends Comparable<IRecipe> {
 
     int getPriority();
 
+    /**
+     * Get the maximum Tier required by this recipe across all component
+     * requirements.
+     * 
+     * @return the max tier required, defaults to 0.
+     */
+    default int getMaxTierRequired() {
+        return 0;
+    }
+
     List<IRecipeInput> getInputs();
 
     List<IRecipeOutput> getOutputs();
@@ -36,7 +46,11 @@ public interface IRecipe extends Comparable<IRecipe> {
 
     @Override
     default int compareTo(IRecipe other) {
-        // 1. Higher priority comes first
+        // 1. Higher Tier comes first
+        int tierCompare = Integer.compare(other.getMaxTierRequired(), this.getMaxTierRequired());
+        if (tierCompare != 0) return tierCompare;
+
+        // 2. Higher priority comes first
         int priorityCompare = Integer.compare(other.getPriority(), this.getPriority());
         if (priorityCompare != 0) return priorityCompare;
 

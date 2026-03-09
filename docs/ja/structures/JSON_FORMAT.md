@@ -24,7 +24,25 @@
 | `batchMin` | Integer | レシピの最小バッチサイズ（デフォルト: 1）。 |
 | `batchMax` | Integer | レシピの最大バッチサイズ（デフォルト: 1）。 |
 | `tier` | Integer | マシンのティア（デフォルト: 0）。 |
+| `tierMap` | オブジェクト | 構造体の各パーツが提供する Tier の定義。 |
 | `defaultFacing` | 文字列 | 構造体のデフォルトの向き（`UP`, `DOWN`）。指定がない場合は横向きになります。 |
+
+### 2.2 Tier Map の詳細
+`tierMap` を使用すると、使用する材料（ブロック）に応じてマシンの一部に特定の Tier を割り当てることができます。
+```json
+"tierMap": {
+  "glass": {
+    "omoshiroikamo:basaltStructure:1": 1,
+    "omoshiroikamo:basaltStructure:2": 2
+  },
+  "casing": {
+    "omoshiroikamo:modularMachineCasing:0": 1,
+    "omoshiroikamo:modularMachineCasing:1": 2,
+    "omoshiroikamo:modularMachineCasing:2": 3
+  }
+}
+```
+レシピ側で `"requiredTier": { "glass": 2 }` と指定されている場合、上記の設定では `basaltStructure:2` 以上のブロックを使用している構造体でのみそのレシピが有効になります。
 
 ## 3. マッピング (Mappings)
 マッピングは、`layers` 内の文字をブロック ID にリンクします。

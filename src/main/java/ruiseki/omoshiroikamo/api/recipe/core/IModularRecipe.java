@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.api.recipe.core;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -31,4 +33,12 @@ public interface IModularRecipe extends IRecipe {
     boolean canOutput(List<IModularPort> outputPorts);
 
     IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts);
+
+    /**
+     * Get the required Tier for specific components.
+     * key: component name, value: required Tier.
+     */
+    default Map<String, Integer> getRequiredComponentTiers() {
+        return Collections.emptyMap();
+    }
 }

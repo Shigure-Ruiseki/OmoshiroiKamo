@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.api.recipe.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
@@ -22,6 +24,7 @@ public class ModularRecipe implements IModularRecipe {
     private final List<IRecipeInput> inputs;
     private final List<IRecipeOutput> outputs;
     private final List<ICondition> conditions;
+    private final Map<String, Integer> requiredComponentTiers;
 
     private ModularRecipe(Builder builder) {
         this.registryName = builder.registryName;
@@ -32,6 +35,7 @@ public class ModularRecipe implements IModularRecipe {
         this.inputs = Collections.unmodifiableList(new ArrayList<>(builder.inputs));
         this.outputs = Collections.unmodifiableList(new ArrayList<>(builder.outputs));
         this.conditions = Collections.unmodifiableList(new ArrayList<>(builder.conditions));
+        this.requiredComponentTiers = Collections.unmodifiableMap(new HashMap<>(builder.requiredComponentTiers));
     }
 
     public String getRegistryName() {
@@ -126,7 +130,32 @@ public class ModularRecipe implements IModularRecipe {
     }
 
     public boolean matchesInput(List<IModularPort> inputPorts) {
-        return processInputs(inputPorts, true);
+        if (!processInputs(inputPorts, true)) {
+            return false;
+        }
+
+        if (!requiredComponentTiers.isEmpty()) {
+            ITieredMachine machine = null;
+            for (IModularPort port : inputPorts) {
+                if (port instanceof ITieredMachine) {
+                    machine = (ITieredMachine) port;
+                    break;
+                }
+            }
+
+            if (machine == null) {
+                return false;
+            }
+
+            for (Map.Entry<String, Integer> entry : requiredComponentTiers.entrySet()) {
+                int actual = machine.getComponentTier(entry.getKey());
+                if (actual < entry.getValue()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public boolean canOutput(List<IModularPort> outputPorts) {
@@ -141,6 +170,21 @@ public class ModularRecipe implements IModularRecipe {
             }
         }
         return null;
+    }
+
+    @Override
+    public int getMaxTierRequired() {
+        if (requiredComponentTiers.isEmpty()) return 0;
+        int max = 0;
+        for (int tier : requiredComponentTiers.values()) {
+            if (tier > max) max = tier;
+        }
+        return max;
+    }
+
+    @Override
+    public Map<String, Integer> getRequiredComponentTiers() {
+        return requiredComponentTiers;
     }
 
     @Override
@@ -176,6 +220,7 @@ public class ModularRecipe implements IModularRecipe {
         private int priority = 0;
         private List<IRecipeInput> inputs = new ArrayList<>();
         private List<IRecipeOutput> outputs = new ArrayList<>();
+        private Map<String, Integer> requiredComponentTiers = new HashMap<>();
 
         public Builder registryName(String registryName) {
             this.registryName = registryName;
@@ -209,6 +254,16 @@ public class ModularRecipe implements IModularRecipe {
 
         public Builder addOutput(IRecipeOutput output) {
             this.outputs.add(output);
+            return this;
+        }
+
+        public Builder addRequiredComponentTier(String component, int tier) {
+            this.requiredComponentTiers.put(component, tier);
+            return this;
+        }
+
+        public Builder setRequiredComponentTiers(Map<String, Integer> tiers) {
+            this.requiredComponentTiers = new HashMap<>(tiers);
             return this;
         }
 

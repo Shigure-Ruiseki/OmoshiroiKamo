@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
+import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 
 /**
@@ -303,6 +304,20 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
                     }
                 }
                 return new BlockMapping(symbol, blocks);
+            } else if (obj.has("component") || obj.has("tiers")) {
+                String componentName = obj.has("component") ? obj.get("component")
+                    .getAsString() : "default";
+                Map<String, Integer> tiers = new HashMap<>();
+                if (obj.has("tiers")) {
+                    JsonObject tiersObj = obj.getAsJsonObject("tiers");
+                    for (Map.Entry<String, JsonElement> tierEntry : tiersObj.entrySet()) {
+                        tiers.put(
+                            tierEntry.getKey(),
+                            tierEntry.getValue()
+                                .getAsInt());
+                    }
+                }
+                return new TieredBlockMapping(symbol, componentName, tiers);
             }
         }
         return null;

@@ -24,7 +24,25 @@ A file can contain a single object or an array of objects. A special object name
 | `batchMin` | Integer | Minimum batch size for recipes (default: 1). |
 | `batchMax` | Integer | Maximum batch size for recipes (default: 1). |
 | `tier` | Integer | Machine tier (default: 0). |
+| `tierMap` | Object | Definition of Tiers provided by each part of the structure. |
 | `defaultFacing` | String | Default facing is horizontal. You can modify it to vertical (`UP`, `DOWN`). |
+
+### 2.2 Tier Map Details
+The `tierMap` allows you to assign specific Tiers to parts of the machine based on the materials (blocks) used.
+```json
+"tierMap": {
+  "glass": {
+    "omoshiroikamo:basaltStructure:1": 1,
+    "omoshiroikamo:basaltStructure:2": 2
+  },
+  "casing": {
+    "omoshiroikamo:modularMachineCasing:0": 1,
+    "omoshiroikamo:modularMachineCasing:1": 2,
+    "omoshiroikamo:modularMachineCasing:2": 3
+  }
+}
+```
+If a recipe specifies `"requiredTier": { "glass": 2 }`, it will only be executable on structures using `basaltStructure:2` or better for the glass component.
 
 ## 3. Mappings
 Mappings link characters in `layers` to block IDs.

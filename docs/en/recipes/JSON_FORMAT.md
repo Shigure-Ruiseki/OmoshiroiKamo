@@ -18,15 +18,17 @@ You can define a single recipe object or a collection of recipes.
 
 ## 2. Recipe Properties
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `name` | String | Display name (optional). |
-| `duration` | Integer | Duration in ticks. `time` is also accepted. |
-| `priority` | Integer | Recipe priority. Higher values take precedence (default: 0). |
-| `inputs` | Array | List of required resources. |
-| `outputs` | Array | List of resources to produce. |
-| `conditions` | Array | Special constraints. |
 | `decorators` | Array | Decorators to extend recipe behavior. |
+| `requiredTier` | Object | Required component Tiers (e.g., `{"glass": 1, "casing": 3}`). |
+
+## 2.1 Recipe Priority and Sorting
+Recipes are evaluated and displayed in the following order (higher items take precedence):
+1. **Max Required Tier**: Recipes requiring higher Tiers take the highest precedence.
+2. **Priority (`priority`)**: If the max Tiers are equal, higher priority values take precedence.
+3. **Input Type Count**: Recipes requiring more diverse resource types take precedence.
+4. **Total Item Input Count**: Recipes requiring a larger total quantity of items take precedence.
+
+## 3. Inputs and Outputs
 
 ## 3. Inputs and Outputs
 

@@ -83,6 +83,11 @@ public interface IStructureEntry extends IStructureSerializable {
     String getDefaultFacing();
 
     /**
+     * Get names of all tiered components in this structure.
+     */
+    List<String> getComponentNames();
+
+    /**
      * Accepts a visitor to perform operations on this structure.
      */
     void accept(IStructureVisitor visitor);

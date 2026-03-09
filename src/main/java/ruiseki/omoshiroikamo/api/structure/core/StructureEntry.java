@@ -3,8 +3,10 @@ package ruiseki.omoshiroikamo.api.structure.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -122,6 +124,17 @@ public class StructureEntry implements IStructureEntry {
     @Override
     public String getDefaultFacing() {
         return defaultFacing;
+    }
+
+    @Override
+    public List<String> getComponentNames() {
+        Set<String> components = new LinkedHashSet<>();
+        for (ISymbolMapping mapping : mappings.values()) {
+            if (mapping instanceof TieredBlockMapping tiered) {
+                components.add(tiered.getComponentName());
+            }
+        }
+        return new ArrayList<>(components);
     }
 
     @Override

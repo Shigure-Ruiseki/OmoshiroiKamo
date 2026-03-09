@@ -40,6 +40,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -59,7 +60,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * TODO: Improve holo indicator
  */
 public class TEMachineController extends AbstractMBModifierTE
-    implements IAlignment, IGuiHolder<PosGuiData>, IRecipeContext, IModularPort {
+    implements IAlignment, IGuiHolder<PosGuiData>, IRecipeContext, IModularPort, ITieredMachine {
 
     // ========== Blueprint Inventory ==========
     public static final int BLUEPRINT_SLOT = 0;
@@ -137,8 +138,27 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public int getTier() {
-        // TODO: recognize tier by block type, structure change, or controller
-        return 1;
+        Map<String, Integer> tiers = structureAgent.getComponentTiers();
+        if (tiers.isEmpty()) {
+            return 1;
+        }
+        int min = Integer.MAX_VALUE;
+        for (int t : tiers.values()) {
+            min = Math.min(min, t);
+        }
+        return min == Integer.MAX_VALUE ? 1 : min;
+    }
+
+    public int getComponentTier(String componentName) {
+        return structureAgent.getComponentTier(componentName);
+    }
+
+    public StructureAgent getStructureAgent() {
+        return structureAgent;
+    }
+
+    public void setComponentTiers(Map<String, Integer> tiers) {
+        structureAgent.setComponentTiers(tiers);
     }
 
     // ========== Structure Parts Tracking ==========

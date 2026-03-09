@@ -1,5 +1,8 @@
 package ruiseki.omoshiroikamo.core.integration.nei.modular;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.item.ItemStack;
 
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
@@ -19,6 +22,7 @@ public class CustomStructureConstructable implements ISurvivalConstructable {
     private final String structureName;
     private final IStructureDefinition<TEMachineController> definition;
     private final int[] offset;
+    private final Map<String, Integer> componentTiers = new HashMap<>();
 
     public CustomStructureConstructable(String name, IStructureDefinition<TEMachineController> def, int[] offset) {
         this.structureName = name;
@@ -36,6 +40,17 @@ public class CustomStructureConstructable implements ISurvivalConstructable {
 
     public int[] getOffset() {
         return offset;
+    }
+
+    public Map<String, Integer> getComponentTiers() {
+        return componentTiers;
+    }
+
+    public void setComponentTiers(Map<String, Integer> tiers) {
+        this.componentTiers.clear();
+        if (tiers != null) {
+            this.componentTiers.putAll(tiers);
+        }
     }
 
     @Override
