@@ -1,12 +1,14 @@
 package ruiseki.omoshiroikamo.api.recipe.parser;
 
 import com.google.gson.JsonElement;
+
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 
 /**
  * Interface for parsing a specific JSON property into a ModularRecipe.Builder.
  */
 public interface IRecipePropertyParser {
+
     /**
      * Parses the given JSON element and applies it to the builder.
      * 

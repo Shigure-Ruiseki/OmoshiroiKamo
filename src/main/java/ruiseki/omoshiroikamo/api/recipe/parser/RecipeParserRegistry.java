@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.api.recipe.parser;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.google.gson.JsonElement;
+
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.parser.impl.ConditionPropertyParser;
 import ruiseki.omoshiroikamo.api.recipe.parser.impl.DurationParser;
@@ -13,34 +15,27 @@ import ruiseki.omoshiroikamo.api.recipe.parser.impl.OutputPropertyParser;
  * Registry for recipe property parsers.
  */
 public class RecipeParserRegistry {
+
     private static final Map<String, IRecipePropertyParser> parsers = new HashMap<>();
 
     static {
         // Basic Info
-        register("registryName", (builder, element) -> {
-            if (element.isJsonPrimitive())
-                builder.registryName(element.getAsString());
-        });
-        register("localizedName", (builder, element) -> {
-            if (element.isJsonPrimitive())
-                builder.name(element.getAsString());
-        });
-        register("name", (builder, element) -> {
-            if (element.isJsonPrimitive())
-                builder.name(element.getAsString());
-        });
-        register("machine", (builder, element) -> {
-            if (element.isJsonPrimitive())
-                builder.recipeGroup(element.getAsString());
-        });
-        register("group", (builder, element) -> {
-            if (element.isJsonPrimitive())
-                builder.recipeGroup(element.getAsString());
-        });
-        register("priority", (builder, element) -> {
-            if (element.isJsonPrimitive())
-                builder.priority(element.getAsInt());
-        });
+        register(
+            "registryName",
+            (builder, element) -> { if (element.isJsonPrimitive()) builder.registryName(element.getAsString()); });
+        register(
+            "localizedName",
+            (builder, element) -> { if (element.isJsonPrimitive()) builder.name(element.getAsString()); });
+        register("name", (builder, element) -> { if (element.isJsonPrimitive()) builder.name(element.getAsString()); });
+        register(
+            "machine",
+            (builder, element) -> { if (element.isJsonPrimitive()) builder.recipeGroup(element.getAsString()); });
+        register(
+            "group",
+            (builder, element) -> { if (element.isJsonPrimitive()) builder.recipeGroup(element.getAsString()); });
+        register(
+            "priority",
+            (builder, element) -> { if (element.isJsonPrimitive()) builder.priority(element.getAsInt()); });
 
         // Components
         DurationParser durationParser = new DurationParser();
