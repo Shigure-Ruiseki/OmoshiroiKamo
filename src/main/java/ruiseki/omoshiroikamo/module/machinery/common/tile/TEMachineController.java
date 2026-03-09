@@ -42,6 +42,7 @@ import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
@@ -361,12 +362,18 @@ public class TEMachineController extends AbstractMBModifierTE
                 lastProcessErrorReason = ErrorReason.NO_MANA;
             } else if (result == ProcessAgent.TickResult.NO_INPUT) {
                 lastProcessErrorReason = ErrorReason.INPUT_MISSING;
+                if (isOnlyNonConsumingRecipe(processAgent.getCurrentRecipe())) {
+                    processAgent.abort();
+                }
             } else if (result == ProcessAgent.TickResult.PAUSED) {
                 lastProcessErrorReason = ErrorReason.PAUSED;
             } else if (result == ProcessAgent.TickResult.OUTPUT_FULL) {
                 lastProcessErrorReason = ErrorReason.OUTPUT_FULL;
             } else if (result == ProcessAgent.TickResult.BLOCK_MISSING) {
                 lastProcessErrorReason = ErrorReason.BLOCK_MISSING;
+                if (isOnlyNonConsumingRecipe(processAgent.getCurrentRecipe())) {
+                    processAgent.abort();
+                }
             } else {
                 lastProcessErrorReason = ErrorReason.NONE;
             }
@@ -534,6 +541,16 @@ public class TEMachineController extends AbstractMBModifierTE
     /**
      * Get structure name from the blueprint in the slot.
      */
+    private boolean isOnlyNonConsumingRecipe(IModularRecipe recipe) {
+        if (recipe == null) return false;
+        List<IRecipeInput> inputs = recipe.getInputs();
+        if (inputs.isEmpty()) return false;
+        for (IRecipeInput input : inputs) {
+            if (input.isConsume()) return false;
+        }
+        return true;
+    }
+
     @Nullable
     private String getStructureNameFromBlueprint() {
         ItemStack blueprint = getBlueprintStack();
