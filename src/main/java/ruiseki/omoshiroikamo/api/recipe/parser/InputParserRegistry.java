@@ -50,6 +50,18 @@ public class InputParserRegistry {
      * Determines type by checking which key is present.
      */
     public static IRecipeInput parse(JsonObject json) {
+        if (json.has("type")) {
+            String type = json.get("type")
+                .getAsString();
+            if (parsers.containsKey(type)) {
+                return parsers.get(type)
+                    .apply(json);
+            } else if (type.equals("block") && parsers.containsKey("symbol")) {
+                return parsers.get("symbol")
+                    .apply(json);
+            }
+        }
+
         for (Map.Entry<String, Function<JsonObject, IRecipeInput>> entry : parsers.entrySet()) {
             if (json.has(entry.getKey())) {
                 return entry.getValue()

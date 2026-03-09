@@ -192,6 +192,7 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
      * Supports wildcards like "modid:blockname:*" for any meta.
      */
     private boolean matchesBlockId(String blockId, String pattern) {
+        if (pattern == null || blockId == null) return false;
         if (pattern.equals("*")) return true;
 
         String[] blockParts = blockId.split(":");
