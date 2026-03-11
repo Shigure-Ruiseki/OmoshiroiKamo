@@ -1,7 +1,6 @@
 {
   "modListVersion": 2,
-  "modList": [
-    {
+  "modList": [{
       "modid": "${modId}",
       "name": "${modName}",
       "description": "",
