@@ -16,7 +16,7 @@ public class MultiblockWorldGenConfig {
 
     @Config.Comment("Hardened Stone generation settings")
     @Config.LangKey(LibResources.CONFIG + "hardenedStoneGen")
-    public static final StoneGenSettings hardenedStone = new StoneGenSettings(true, 30, 12, 0, 12);
+    public static final StoneGenSettings hardenedStone = new StoneGenSettings(true, 15, 6, 0, 6);
 
     @Config.Comment("Alabaster generation settings")
     @Config.LangKey(LibResources.CONFIG + "alabasterGen")
