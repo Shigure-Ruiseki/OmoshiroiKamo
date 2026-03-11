@@ -4,10 +4,7 @@ import static com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.properties
 
 import java.util.Random;
 
-import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
-import com.gtnewhorizon.gtnhlib.client.model.ItemContext;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
@@ -15,6 +12,8 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
+import com.gtnewhorizon.gtnhlib.client.model.ItemContext;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import com.gtnewhorizon.gtnhlib.client.model.baked.BakedModel;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
@@ -22,6 +21,7 @@ import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.ModelQuadView;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.properties.ModelQuadFacing;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
+
 import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
 
 @ThreadSafeISBRH(perThread = true)
@@ -52,7 +52,6 @@ public class JsonModelISBRH extends ModelISBRH implements IItemRenderer {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_LIGHTING);
         tesselator.startDrawingQuads();
-
 
         int color = model.getColor(null, 0, 0, 0, block, meta, RAND);
 
