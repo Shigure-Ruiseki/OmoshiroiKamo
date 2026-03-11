@@ -3,16 +3,25 @@ package ruiseki.omoshiroikamo.core.common.structure;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+
+import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
+import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * Utility that scans a structure in the world and converts it to JSON.
@@ -50,13 +59,14 @@ public class StructureScanner {
         Map<Character, String> symbolToBlock = new LinkedHashMap<>();
         int symbolIndex = 0;
 
-        // Layers grouped by Y level
-        List<List<String>> layers = new ArrayList<>();
+        StructureEntryBuilder builder = new StructureEntryBuilder();
+        builder.setName(name);
+
         int overflowCount = 0;
 
         // Scan from top to bottom to match the existing JSON format
         for (int y = maxY; y >= minY; y--) {
-            List<String> layer = new ArrayList<>();
+            List<String> rows = new ArrayList<>();
 
             for (int z = minZ; z <= maxZ; z++) {
                 StringBuilder row = new StringBuilder();
@@ -64,11 +74,21 @@ public class StructureScanner {
                 for (int x = minX; x <= maxX; x++) {
                     Block block = world.getBlock(x, y, z);
                     int meta = world.getBlockMetadata(x, y, z);
+                    TileEntity tile = world.getTileEntity(x, y, z);
 
                     // Output air blocks as spaces and skip further checks
                     String blockName = Block.blockRegistry.getNameForObject(block);
                     if (blockName == null || "minecraft:air".equals(blockName)) {
                         row.append(' ');
+                        continue;
+                    }
+
+                    // Special Case: Controller
+                    if (tile instanceof TEMachineController) {
+                        row.append('Q');
+                        if (!symbolToBlock.containsKey('Q')) {
+                            symbolToBlock.put('Q', getBlockId(block, meta));
+                        }
                         continue;
                     }
 
@@ -78,6 +98,21 @@ public class StructureScanner {
                     // Assign a symbol
                     Character symbol = blockToSymbol.get(blockId);
                     if (symbol == null) {
+                        // Skip 'Q' which is reserved
+                        char assigned = SYMBOLS.charAt(symbolIndex);
+                        if (assigned == 'Q') {
+                            symbolIndex++;
+                            if (symbolIndex >= SYMBOLS.length()) {
+                                // Symbol overflow
+                                row.append("{")
+                                    .append(blockId)
+                                    .append("}");
+                                overflowCount++;
+                                continue;
+                            }
+                            assigned = SYMBOLS.charAt(symbolIndex);
+                        }
+
                         if (symbolIndex < SYMBOLS.length()) {
                             // Symbol can be assigned
                             symbol = SYMBOLS.charAt(symbolIndex++);
@@ -96,54 +131,20 @@ public class StructureScanner {
                     }
                 }
 
-                layer.add(row.toString());
+                rows.add(row.toString());
             }
 
-            layers.add(layer);
+            builder.addLayer(new StructureLayer("y" + y, rows));
         }
 
-        // Build JSON content
-        StringBuilder json = new StringBuilder();
-        json.append("[\n");
-        json.append("  {\n");
-        json.append("    \"name\": \"")
-            .append(name)
-            .append("\",\n");
-
-        // Layers
-        json.append("    \"layers\": [\n");
-        for (int i = 0; i < layers.size(); i++) {
-            List<String> layer = layers.get(i);
-            json.append("      [\n");
-            for (int j = 0; j < layer.size(); j++) {
-                json.append("        \"")
-                    .append(layer.get(j))
-                    .append("\"");
-                if (j < layer.size() - 1) json.append(",");
-                json.append("\n");
-            }
-            json.append("      ]");
-            if (i < layers.size() - 1) json.append(",");
-            json.append("\n");
-        }
-        json.append("    ],\n");
-
-        // Mappings
-        json.append("    \"mappings\": {\n");
-        int count = 0;
+        // Add mappings to builder
         for (Map.Entry<Character, String> entry : symbolToBlock.entrySet()) {
-            json.append("      \"")
-                .append(entry.getKey())
-                .append("\": \"")
-                .append(entry.getValue())
-                .append("\"");
-            if (++count < symbolToBlock.size()) json.append(",");
-            json.append("\n");
+            builder.addMapping(entry.getKey(), new BlockMapping(entry.getKey(), entry.getValue()));
         }
-        json.append("    }\n");
 
-        json.append("  }\n");
-        json.append("]\n");
+        IStructureEntry entry = builder.build();
+        JsonArray array = new JsonArray();
+        array.add(entry.serialize());
 
         // Save to disk - in a 'custom' subdirectory
         File customDir = new File(configDir, "structures/custom");
@@ -152,9 +153,11 @@ public class StructureScanner {
         }
 
         File outputFile = new File(customDir, name + ".json");
+        Gson gson = new GsonBuilder().setPrettyPrinting()
+            .create();
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(outputFile))) {
-            writer.print(json.toString());
+        try (FileWriter writer = new FileWriter(outputFile)) {
+            gson.toJson(array, writer);
             Logger.info("Scanned structure saved to: " + outputFile.getName());
 
             String message = "Saved to " + outputFile.getName();

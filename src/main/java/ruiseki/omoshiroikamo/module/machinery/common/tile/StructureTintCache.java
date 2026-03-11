@@ -19,13 +19,22 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Controllers register/unregister colors on formation/unformation.
  * Port/Casing blocks retrieve colors from this cache.
  * Thread-safe implementation.
+ * Optimized to use long keys instead of ChunkCoordinates to reduce GC pressure
+ * during rendering.
  */
 public class StructureTintCache {
 
     /**
-     * Two-level map: dimension ID -> (coordinates -> color)
+     * Two-level map: dimension ID -> (packed long coordinates -> color)
      */
-    private static final Map<Integer, Map<ChunkCoordinates, Integer>> cache = new ConcurrentHashMap<>();
+    private static final Map<Integer, Map<Long, Integer>> cache = new ConcurrentHashMap<>();
+
+    /**
+     * Packs x, y, z into a single long for efficient map key usage.
+     */
+    private static long pack(int x, int y, int z) {
+        return ((long) x & 0x3FFFFFFL) << 38 | ((long) y & 0xFFFL) << 26 | ((long) z & 0x3FFFFFFL);
+    }
 
     /**
      * Set color for the specified coordinates
@@ -40,9 +49,8 @@ public class StructureTintCache {
         if (world == null) return;
 
         int dimension = world.provider.dimensionId;
-        Map<ChunkCoordinates, Integer> dimensionCache = cache
-            .computeIfAbsent(dimension, k -> new ConcurrentHashMap<>());
-        dimensionCache.put(new ChunkCoordinates(x, y, z), color);
+        Map<Long, Integer> dimensionCache = cache.computeIfAbsent(dimension, k -> new ConcurrentHashMap<>());
+        dimensionCache.put(pack(x, y, z), color);
     }
 
     /**
@@ -57,9 +65,9 @@ public class StructureTintCache {
         if (world == null) return;
 
         int dimension = world.provider.dimensionId;
-        Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimension);
+        Map<Long, Integer> dimensionCache = cache.get(dimension);
         if (dimensionCache != null) {
-            dimensionCache.remove(new ChunkCoordinates(x, y, z));
+            dimensionCache.remove(pack(x, y, z));
         }
     }
 
@@ -70,7 +78,7 @@ public class StructureTintCache {
      * @param dimensionId Dimension ID to clear
      */
     public static void clearDimension(int dimensionId) {
-        Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimensionId);
+        Map<Long, Integer> dimensionCache = cache.get(dimensionId);
         if (dimensionCache != null) {
             dimensionCache.clear();
         }
@@ -105,8 +113,8 @@ public class StructureTintCache {
             }
         }
 
-        Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimension);
-        return dimensionCache != null ? dimensionCache.get(new ChunkCoordinates(x, y, z)) : null;
+        Map<Long, Integer> dimensionCache = cache.get(dimension);
+        return dimensionCache != null ? dimensionCache.get(pack(x, y, z)) : null;
     }
 
     /**
@@ -130,6 +138,7 @@ public class StructureTintCache {
      */
     @SideOnly(Side.CLIENT)
     private static int getClientDimensionImpl() {
+        if (Minecraft.getMinecraft().theWorld == null) return Integer.MIN_VALUE;
         return Minecraft.getMinecraft().theWorld.provider.dimensionId;
     }
 
@@ -143,16 +152,16 @@ public class StructureTintCache {
         if (world == null || positions == null) return;
 
         int dimension = world.provider.dimensionId;
-        Map<ChunkCoordinates, Integer> dimensionCache = cache.get(dimension);
+        Map<Long, Integer> dimensionCache = cache.get(dimension);
         if (dimensionCache != null) {
             for (ChunkCoordinates pos : positions) {
-                dimensionCache.remove(pos);
+                dimensionCache.remove(pack(pos.posX, pos.posY, pos.posZ));
             }
         }
     }
 
     /**
-     * Clear all cache for a specific dimension (for debugging)
+     * Clear all cache for a specific dimension.
      *
      * @param world World
      */
@@ -161,5 +170,12 @@ public class StructureTintCache {
 
         int dimension = world.provider.dimensionId;
         cache.remove(dimension);
+    }
+
+    /**
+     * Clear all cached colors for all dimensions.
+     */
+    public static void clearAll() {
+        cache.clear();
     }
 }

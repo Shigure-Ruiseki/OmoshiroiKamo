@@ -45,4 +45,49 @@ public class ModelTierRegistry {
     public boolean isMaxTier(int tier) {
         return !items.containsKey(tier) || tier >= getMaxTierValue();
     }
+
+    public String getTierName(int tier) {
+        ModelTierRegistryItem item = getByType(tier);
+        return item != null ? item.getTierName() : "Unknown";
+    }
+
+    public boolean shouldIncreaseTier(int tier, int killCount, int simulationCount) {
+        if (isMaxTier(tier)) return false;
+        int roof = getTierRoof(tier, false);
+        int killExperience = killCount * getKillMultiplier(tier);
+        return killExperience + simulationCount >= roof;
+    }
+
+    public int getCurrentTierSimulationCountWithKills(int tier, int killCount, int simulationCount) {
+        if (isMaxTier(tier)) return 0;
+        ModelTierRegistryItem item = getByType(tier);
+        return item != null ? simulationCount + (killCount * item.getKillMultiplier()) : simulationCount;
+    }
+
+    public int getSimulationsToNextTier(int tier, int killCount, int simulationCount) {
+        if (isMaxTier(tier)) return 0;
+        int roof = getTierRoof(tier, false);
+        return roof - getCurrentTierSimulationCountWithKills(tier, killCount, simulationCount);
+    }
+
+    public int getTierRoof(int tier, boolean asKills) {
+        if (isMaxTier(tier)) return 0;
+        ModelTierRegistryItem item = getByType(tier);
+        if (item == null) return 0;
+
+        return asKills ? item.getDataToNext() / Math.max(item.getKillMultiplier(), 1) : item.getDataToNext();
+    }
+
+    public int getKillsToNextTier(int tier, int killCount, int simulationCount) {
+        if (isMaxTier(tier)) return 0;
+        int roof = getTierRoof(tier, true);
+        double currentKills = killCount + ((double) simulationCount / Math.max(getKillMultiplier(tier), 1));
+        return (int) Math.ceil(roof - currentKills);
+    }
+
+    public int getKillMultiplier(int tier) {
+        if (isMaxTier(tier)) return 0;
+        ModelTierRegistryItem item = getByType(tier);
+        return item != null ? item.getKillMultiplier() : 0;
+    }
 }

@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.Nullable;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.entity.BaseRegistryItem;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 
@@ -214,5 +216,26 @@ public class ChickensRegistryItem extends BaseRegistryItem<ChickensRegistryItem>
     public ChickensRegistryItem setMutationChance(float mutationChance) {
         this.mutationChance = mutationChance;
         return this;
+    }
+
+    private final List<ICondition> conditions = new ArrayList<>();
+
+    public void addCondition(ICondition condition) {
+        if (condition != null) {
+            this.conditions.add(condition);
+        }
+    }
+
+    public List<ICondition> getConditions() {
+        return conditions;
+    }
+
+    public boolean isConditionMet(ConditionContext context) {
+        for (ICondition condition : conditions) {
+            if (!condition.isMet(context)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

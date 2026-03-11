@@ -1,0 +1,11 @@
+{
+  "name": "with_tier",
+  "tier": 3,
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {}
+}

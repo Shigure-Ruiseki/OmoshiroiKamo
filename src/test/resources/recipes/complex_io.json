@@ -1,0 +1,83 @@
+{
+    "group": "Complex IO",
+    "recipes": [
+        {
+            "name": "Full Combo Test (All Input Types)",
+            "duration": 300,
+            "inputs": [
+                {
+                    "item": "minecraft:diamond_block",
+                    "amount": 1
+                },
+                {
+                    "fluid": "lava",
+                    "amount": 2000
+                },
+                {
+                    "mana": 2000
+                },
+                {
+                    "gas": "oxygen",
+                    "amount": 500
+                },
+                {
+                    "essentia": "potentia",
+                    "amount": 20
+                },
+                {
+                    "vis": "ignis",
+                    "amount": 50
+                },
+                {
+                    "energy": 500,
+                    "perTick": true
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:nether_star",
+                    "amount": 1
+                },
+                {
+                    "fluid": "water",
+                    "amount": 1000
+                },
+                {
+                    "mana": 1000
+                },
+                {
+                    "gas": "hydrogen",
+                    "amount": 1000
+                },
+                {
+                    "essentia": "praecantatio",
+                    "amount": 10
+                },
+                {
+                    "vis": "ordo",
+                    "amount": 50
+                }
+            ]
+        },
+        {
+            "name": "Essentia Production from Nether Star",
+            "duration": 400,
+            "outputs": [
+                {
+                    "essentia": "auram",
+                    "amount": 64
+                },
+                {
+                    "essentia": "spiritus",
+                    "amount": 32
+                }
+            ],
+            "inputs": [
+                {
+                    "item": "minecraft:nether_star",
+                    "amount": 1
+                }
+            ]
+        }
+    ]
+}

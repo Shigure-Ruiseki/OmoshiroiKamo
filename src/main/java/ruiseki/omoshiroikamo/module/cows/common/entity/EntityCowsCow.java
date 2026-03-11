@@ -143,6 +143,14 @@ public class EntityCowsCow extends EntityCow implements IMobStats, IWailaEntityI
         return CowsRegistry.INSTANCE.getByType(getType());
     }
 
+    public int getTintColor() {
+        return getCowDescription().getTintColor();
+    }
+
+    public ResourceLocation getTextureOverlay() {
+        return getCowDescription().getTextureOverlay();
+    }
+
     public int getTier() {
         return getCowDescription().getTier();
     }

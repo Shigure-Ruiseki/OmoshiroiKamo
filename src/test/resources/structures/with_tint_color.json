@@ -1,0 +1,11 @@
+{
+  "name": "with_tint_color",
+  "tintColor": "#FF0000",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {}
+}

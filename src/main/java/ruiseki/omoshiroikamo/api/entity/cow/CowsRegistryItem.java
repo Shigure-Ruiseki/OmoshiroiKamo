@@ -33,6 +33,9 @@ public class CowsRegistryItem extends BaseRegistryItem<CowsRegistryItem> {
     private FluidStack fluid;
     private String fluidString;
 
+    private int tintColor = 0xFFFFFF;
+    private ResourceLocation textureOverlay;
+
     /**
      * Creates a new cow registry entry without parents (tier = 1).
      *
@@ -107,6 +110,24 @@ public class CowsRegistryItem extends BaseRegistryItem<CowsRegistryItem> {
 
     public CowsRegistryItem setFluidString(String fluidString) {
         this.fluidString = fluidString;
+        return this;
+    }
+
+    public CowsRegistryItem setTextureOverlay(ResourceLocation textureOverlay) {
+        this.textureOverlay = textureOverlay;
+        return this;
+    }
+
+    public ResourceLocation getTextureOverlay() {
+        return this.textureOverlay;
+    }
+
+    public int getTintColor() {
+        return tintColor;
+    }
+
+    public CowsRegistryItem setTintColor(int tintColor) {
+        this.tintColor = tintColor;
         return this;
     }
 }

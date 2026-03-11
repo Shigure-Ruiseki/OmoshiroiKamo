@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
-import ruiseki.omoshiroikamo.api.entity.dml.DataModelExperience;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
@@ -91,8 +91,10 @@ public class ItemDataModel extends ItemOK {
             builder.addLang("tooltip.holdshift");
         } else {
             int tier = DataModel.getTier(stack);
-            builder.addLang("tooltip.data_model.tier", LibMisc.LANG.localize(DataModelExperience.getTierName(tier)));
-            if (tier != DataModelExperience.getMaxTier()) {
+            builder.addLang(
+                "tooltip.data_model.tier",
+                LibMisc.LANG.localize(ModelTierRegistry.INSTANCE.getTierName(tier)));
+            if (tier != ModelTierRegistry.INSTANCE.getMaxTierValue()) {
                 builder.addLang(
                     "tooltip.data_model.data_collected",
                     DataModel.getCurrentTierSimulationCountWithKills(stack),

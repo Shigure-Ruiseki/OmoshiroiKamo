@@ -134,6 +134,13 @@ public abstract class TileEntityOK extends TileEntity
         sendUpdateBackoff = 0;
     }
 
+    @Override
+    public final void updateEntity() {
+        if (isTicking()) {
+            ((ITickingTile) this).update();
+        }
+    }
+
     /**
      * Do not override this method (you won't even be able to do so).
      * Use updateTileEntity() instead.
@@ -197,6 +204,35 @@ public abstract class TileEntityOK extends TileEntity
         NBTTagCompound tag = packet.func_148857_g();
         readFromNBT(tag);
         onUpdateReceived();
+    }
+
+    @Override
+    public final void writeToNBT(NBTTagCompound root) {
+        super.writeToNBT(root);
+        writeCommon(root);
+    }
+
+    @Override
+    public final void readFromNBT(NBTTagCompound root) {
+        super.readFromNBT(root);
+        readCommon(root);
+    }
+
+    public void writeCommon(NBTTagCompound tag) {
+        writeGeneratedFieldsToNBT(tag);
+
+        if (capabilities != null) {
+            tag.setTag("OKCaps", capabilities.serializeNBT());
+        }
+    }
+
+    public void readCommon(NBTTagCompound tag) {
+        if (tag == null) return;
+        readGeneratedFieldsFromNBT(tag);
+
+        if (capabilities != null && tag.hasKey("OKCaps")) {
+            capabilities.deserializeNBT(tag.getCompoundTag("OKCaps"));
+        }
     }
 
     /**
@@ -376,7 +412,7 @@ public abstract class TileEntityOK extends TileEntity
 
     public interface ITickingTile {
 
-        void updateEntity();
+        void update();
     }
 
     public static class TickingTileComponent implements ITickingTile {
@@ -388,7 +424,7 @@ public abstract class TileEntityOK extends TileEntity
         }
 
         @Override
-        public final void updateEntity() {
+        public final void update() {
             tile.updateTicking();
         }
     }

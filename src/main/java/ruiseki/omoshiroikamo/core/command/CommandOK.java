@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.core.command.utils.CommandUtils;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -19,6 +20,7 @@ public class CommandOK extends CommandMod {
 
     public CommandOK(ModBase mod, Map<String, ICommand> subCommands) {
         super(mod, subCommands);
+        addSubcommands(CommandUtils.NAME, new CommandUtils(mod));
     }
 
     @Override
@@ -32,7 +34,9 @@ public class CommandOK extends CommandMod {
             new ChatComponentText(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.main_usage_title")));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.main_usage_structure")));
+                EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.main_usage_multiblock")));
+        sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok multiblock reload - Reload multiblock data"));
         sender.addChatMessage(
             new ChatComponentText(EnumChatFormatting.WHITE + "  /ok modular reload - Reload modular data"));
     }

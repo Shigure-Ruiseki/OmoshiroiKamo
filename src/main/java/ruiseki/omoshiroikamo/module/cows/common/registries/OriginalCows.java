@@ -65,12 +65,12 @@ public class OriginalCows extends BaseCowHandler {
             writer.write(defaultConfig);
             Logger.info("Created default {}", configFileName);
         } catch (IOException e) {
-            Logger.error("Failed to create default config: {}" + e.getMessage());
+            Logger.error("Failed to create default config: {}", e.getMessage());
         }
     }
 
     @Override
-    public void saveJsonMigration(File file, List<CowJson> models) {
+    protected void performMigration(File file, List<CowMaterial> models) {
         try (Writer writer = new FileWriter(file)) {
             writer.write(defaultConfig);
             Gson gson = new GsonBuilder().setPrettyPrinting()

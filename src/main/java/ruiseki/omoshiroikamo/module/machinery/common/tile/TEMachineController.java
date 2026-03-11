@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import net.minecraft.block.Block;
@@ -12,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -29,16 +32,19 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentLimits;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
-import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
+import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.Properties;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
@@ -54,7 +60,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
  * TODO: Improve holo indicator
  */
 public class TEMachineController extends AbstractMBModifierTE
-    implements IAlignment, IGuiHolder<PosGuiData>, ISidedTexture {
+    implements IAlignment, IGuiHolder<PosGuiData>, IRecipeContext, IModularPort, ITieredMachine {
 
     // ========== Blueprint Inventory ==========
     public static final int BLUEPRINT_SLOT = 0;
@@ -87,13 +93,17 @@ public class TEMachineController extends AbstractMBModifierTE
     private final StructureAgent structureAgent = new StructureAgent(this);
 
     // Recipe processing
-    private final ProcessAgent processAgent = new ProcessAgent();
+    private final ProcessAgent processAgent = new ProcessAgent(this);
     // Recipe groups - obtained from custom structure or GUI
     private List<String> recipeGroups = new ArrayList<>(Collections.singletonList("default"));
     // Look-ahead: next recipe cached during current processing
-    private transient ModularRecipe nextRecipe = null;
+    private transient IModularRecipe nextRecipe = null;
     // Recipe version at the time nextRecipe was cached (for invalidation on reload)
     private transient int cachedRecipeVersion = -1;
+
+    // Cached port lists to avoid per-tick allocations
+    private transient List<IModularPort> cachedInputPorts = null;
+    private transient List<IModularPort> cachedOutputPorts = null;
 
     // GUI management
     private final GuiManager guiManager = new GuiManager(this);
@@ -128,8 +138,27 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public int getTier() {
-        // TODO: recognize tier by block type, structure change, or controller
-        return 1;
+        Map<String, Integer> tiers = structureAgent.getComponentTiers();
+        if (tiers.isEmpty()) {
+            return 1;
+        }
+        int min = Integer.MAX_VALUE;
+        for (int t : tiers.values()) {
+            min = Math.min(min, t);
+        }
+        return min == Integer.MAX_VALUE ? 1 : min;
+    }
+
+    public int getComponentTier(String componentName) {
+        return structureAgent.getComponentTier(componentName);
+    }
+
+    public StructureAgent getStructureAgent() {
+        return structureAgent;
+    }
+
+    public void setComponentTiers(Map<String, Integer> tiers) {
+        structureAgent.setComponentTiers(tiers);
     }
 
     // ========== Structure Parts Tracking ==========
@@ -137,6 +166,22 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     protected void clearStructureParts() {
         structureAgent.resetStructure();
+        invalidatePortCache();
+    }
+
+    private final Map<Character, List<ChunkCoordinates>> symbolPositions = new HashMap<>();
+
+    public Map<Character, List<ChunkCoordinates>> getSymbolPositionsMap() {
+        return symbolPositions;
+    }
+
+    public void clearSymbolPositions() {
+        symbolPositions.clear();
+    }
+
+    public void trackSymbolPosition(char symbol, int x, int y, int z) {
+        symbolPositions.computeIfAbsent(symbol, k -> new ArrayList<>())
+            .add(new ChunkCoordinates(x, y, z));
     }
 
     @Override
@@ -223,6 +268,8 @@ public class TEMachineController extends AbstractMBModifierTE
     @Override
     public void onFormed() {
         structureAgent.onFormed();
+        updateRecipeGroupFromStructure();
+        invalidatePortCache();
     }
 
     /**
@@ -289,7 +336,11 @@ public class TEMachineController extends AbstractMBModifierTE
     private void processRecipe() {
         // Try to output if waiting
         if (processAgent.isWaitingForOutput()) {
-            lastProcessErrorReason = ErrorReason.WAITING_OUTPUT;
+            if (processAgent.diagnoseBlockOutputFull(getOutputPorts())) {
+                lastProcessErrorReason = ErrorReason.BLOCK_OUTPUT_FULL;
+            } else {
+                lastProcessErrorReason = ErrorReason.WAITING_OUTPUT;
+            }
             if (processAgent.tryOutput(getOutputPorts())) {
                 lastProcessErrorReason = ErrorReason.NONE;
                 // Output succeeded, try to start next recipe immediately
@@ -300,7 +351,9 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // If running, tick and look-ahead search for next recipe
         if (processAgent.isRunning()) {
-            ProcessAgent.TickResult result = processAgent.tick(getInputPorts(), getOutputPorts());
+            ConditionContext context = new ConditionContext(worldObj, xCoord, yCoord, zCoord);
+            ProcessAgent.TickResult result = processAgent
+                .tick(getContextualInputPorts(), getContextualOutputPorts(), context);
 
             if (result == ProcessAgent.TickResult.NO_ENERGY) {
                 lastProcessErrorReason = ErrorReason.NO_ENERGY;
@@ -312,6 +365,8 @@ public class TEMachineController extends AbstractMBModifierTE
                 lastProcessErrorReason = ErrorReason.PAUSED;
             } else if (result == ProcessAgent.TickResult.OUTPUT_FULL) {
                 lastProcessErrorReason = ErrorReason.OUTPUT_FULL;
+            } else if (result == ProcessAgent.TickResult.BLOCK_MISSING) {
+                lastProcessErrorReason = ErrorReason.BLOCK_MISSING;
             } else {
                 lastProcessErrorReason = ErrorReason.NONE;
             }
@@ -319,14 +374,14 @@ public class TEMachineController extends AbstractMBModifierTE
             // Look-ahead: search for next recipe while processing (only once)
             if (nextRecipe == null) {
                 nextRecipe = RecipeLoader.getInstance()
-                    .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());
+                    .findMatch(recipeGroups.toArray(new String[0]), getContextualInputPorts());
                 cachedRecipeVersion = RecipeLoader.getInstance()
                     .getRecipeVersion();
             }
 
             // If complete, immediately try to output and start next
             if (result == ProcessAgent.TickResult.READY_OUTPUT) {
-                if (processAgent.tryOutput(getOutputPorts())) {
+                if (processAgent.tryOutput(getContextualOutputPorts())) {
                     lastProcessErrorReason = ErrorReason.NONE;
                     startNextRecipe();
                 }
@@ -346,16 +401,18 @@ public class TEMachineController extends AbstractMBModifierTE
         }
 
         // Use cached recipe if available, otherwise search
-        ModularRecipe recipe = nextRecipe;
+        IModularRecipe recipe = nextRecipe;
         if (recipe == null) {
+            String[] groups = recipeGroups.toArray(new String[0]);
+            List<IModularPort> inputs = getContextualInputPorts();
             recipe = RecipeLoader.getInstance()
-                .findMatch(recipeGroups.toArray(new String[0]), getInputPorts());
+                .findMatch(groups, inputs);
         }
         nextRecipe = null; // Clear cache
 
         if (recipe != null) {
             // Check if output fits before starting
-            IPortType.Type insufficientType = recipe.checkOutputCapacity(getOutputPorts());
+            IPortType.Type insufficientType = recipe.checkOutputCapacity(getContextualOutputPorts());
             if (insufficientType != null) {
                 setProcessError(
                     ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT,
@@ -363,19 +420,19 @@ public class TEMachineController extends AbstractMBModifierTE
                 return;
             }
 
-            if (!recipe.canOutput(getOutputPorts())) {
+            if (!recipe.canOutput(getContextualOutputPorts())) {
                 setProcessError(ErrorReason.OUTPUT_FULL);
                 return;
             }
 
-            List<IModularPort> energyPorts = getInputPorts(IPortType.Type.ENERGY);
-            processAgent.start(recipe, getInputPorts(), energyPorts);
-            lastProcessErrorReason = ErrorReason.NONE;
+            if (processAgent.startRecipe(recipe, getContextualInputPorts(), getContextualOutputPorts()))
+                lastProcessErrorReason = ErrorReason.NONE;
+            else lastProcessErrorReason = ErrorReason.NO_INPUT;
         } else {
             lastProcessErrorReason = ErrorReason.NO_MATCHING_RECIPE;
 
             // Check if it's actually NO_INPUT
-            if (processAgent.diagnoseIdle(getInputPorts()) == ProcessAgent.TickResult.NO_INPUT) {
+            if (processAgent.diagnoseIdle(getContextualInputPorts()) == ProcessAgent.TickResult.NO_INPUT) {
                 lastProcessErrorReason = ErrorReason.INPUT_MISSING;
             }
         }
@@ -396,6 +453,55 @@ public class TEMachineController extends AbstractMBModifierTE
         float hitZ) {
         openGui(player);
         return true;
+    }
+
+    public List<IModularPort> getContextualInputPorts() {
+        if (cachedInputPorts == null) {
+            cachedInputPorts = new ArrayList<>(getInputPorts());
+            cachedInputPorts.add(this);
+        }
+        return cachedInputPorts;
+    }
+
+    public List<IModularPort> getContextualOutputPorts() {
+        if (cachedOutputPorts == null) {
+            cachedOutputPorts = new ArrayList<>(getOutputPorts());
+            cachedOutputPorts.add(this);
+        }
+        return cachedOutputPorts;
+    }
+
+    private void invalidatePortCache() {
+        this.cachedInputPorts = null;
+        this.cachedOutputPorts = null;
+        this.nextRecipe = null;
+    }
+
+    // ========== IModularPort Implementation ==========
+
+    @Override
+    public IPortType.Type getPortType() {
+        return IPortType.Type.BLOCK;
+    }
+
+    @Override
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.NONE;
+    }
+
+    @Override
+    public void accept(IRecipeVisitor visitor) {
+        // No-op for the controller itself when acting as a port
+    }
+
+    @Override
+    public EnumIO getSideIO(ForgeDirection side) {
+        return side == extendedFacing.getDirection() ? EnumIO.BOTH : EnumIO.NONE;
+    }
+
+    @Override
+    public void setSideIO(ForgeDirection side, EnumIO state) {
+        // No-op
     }
 
     @Override
@@ -493,8 +599,8 @@ public class TEMachineController extends AbstractMBModifierTE
     // ========== NBT Persistence ==========
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public void writeCommon(NBTTagCompound nbt) {
+        super.writeCommon(nbt);
 
         NBTTagList groupList = new NBTTagList();
         for (String group : recipeGroups) {
@@ -513,8 +619,11 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void readCommon(NBTTagCompound nbt) {
+        if (nbt == null) {
+            return;
+        }
+        super.readCommon(nbt);
 
         recipeGroups = new ArrayList<>();
         if (nbt.hasKey("recipeGroups", 9)) {
@@ -542,6 +651,8 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // Update structure from loaded blueprint
         updateStructureFromBlueprint();
+        // Force update recipe groups to apply any JSON changes to existing multiblocks
+        updateRecipeGroupFromStructure();
         // Load process agent
         if (nbt.hasKey("processAgent")) {
             processAgent.readFromNBT(nbt.getCompoundTag("processAgent"));
@@ -607,10 +718,12 @@ public class TEMachineController extends AbstractMBModifierTE
     public String getCustomStructureDisplayName() {
         String name = getCustomStructureName();
         if (name != null && !name.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(name);
-            if (entry != null && entry.displayName != null && !entry.displayName.isEmpty()) {
-                return entry.displayName;
+            if (entry != null && entry.getDisplayName() != null
+                && !entry.getDisplayName()
+                    .isEmpty()) {
+                return entry.getDisplayName();
             }
         }
         return name;
@@ -650,19 +763,24 @@ public class TEMachineController extends AbstractMBModifierTE
     private void updateRecipeGroupFromStructure() {
         if (structureAgent.getCustomStructureName() == null || structureAgent.getCustomStructureName()
             .isEmpty()) {
+            this.recipeGroups = new ArrayList<>(Collections.singletonList("default"));
             return;
         }
-        StructureEntry entry = StructureManager.getInstance()
+        IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(structureAgent.getCustomStructureName());
-        if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
-            this.recipeGroups = new ArrayList<>(entry.recipeGroup);
+        if (entry != null && entry.getRecipeGroup() != null
+            && !entry.getRecipeGroup()
+                .isEmpty()) {
+            this.recipeGroups = new ArrayList<>(entry.getRecipeGroup());
+        } else {
+            this.recipeGroups = new ArrayList<>(Collections.singletonList("default"));
         }
     }
 
     /**
      * Get the custom structure properties, or null if not using custom structure.
      */
-    public Properties getCustomProperties() {
+    public IStructureEntry getCustomProperties() {
         return structureAgent.getCustomProperties();
     }
 
@@ -759,6 +877,44 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public String getLastValidationError() {
         return structureAgent.getLastValidationError();
+    }
+
+    // ========== IRecipeContext Implementation ==========
+
+    @Override
+    public World getWorld() {
+        return worldObj;
+    }
+
+    @Override
+    public ChunkCoordinates getControllerPos() {
+        return new ChunkCoordinates(xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public IStructureEntry getCurrentStructure() {
+        String structureName = structureAgent.getCustomStructureName();
+        if (structureName == null || structureName.isEmpty()) {
+            return null;
+        }
+        return StructureManager.getInstance()
+            .getCustomStructure(structureName);
+    }
+
+    @Override
+    public ForgeDirection getFacing() {
+        return extendedFacing.getDirection();
+    }
+
+    @Override
+    public List<ChunkCoordinates> getSymbolPositions(char symbol) {
+        List<ChunkCoordinates> pos = symbolPositions.getOrDefault(symbol, new ArrayList<>());
+        return pos;
+    }
+
+    @Override
+    public ConditionContext getConditionContext() {
+        return new ConditionContext(worldObj, xCoord, yCoord, zCoord, this);
     }
 
     // ========== ISidedTexture Implementation ==========

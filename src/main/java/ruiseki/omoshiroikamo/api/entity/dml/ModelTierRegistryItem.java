@@ -1,32 +1,37 @@
 package ruiseki.omoshiroikamo.api.entity.dml;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
+
 import lombok.Getter;
+import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
-public class ModelTierRegistryItem {
+public class ModelTierRegistryItem extends AbstractJsonMaterial {
 
     @Getter
-    protected final int tier;
+    protected int tier;
     @Getter
-    protected final int killMultiplier;
+    protected int killMultiplier;
     @Getter
-    protected final int dataToNext;
+    protected int dataToNext;
     @Getter
-    protected final boolean canSimulate;
+    protected boolean canSimulate;
     @Getter
-    protected final int pristineChance;
+    protected int pristineChance;
     @Getter
-    protected final int pristine;
+    protected int pristine;
     @Getter
-    protected final int maxWave;
+    protected int maxWave;
     @Getter
-    protected final int affixes;
+    protected int affixes;
     @Getter
-    protected final int glitchChance;
+    protected int glitchChance;
+
     @Getter
     protected Map<String, String> lang;
+
+    public ModelTierRegistryItem() {}
 
     public ModelTierRegistryItem(int tier, int killMultiplier, int dataToNext, boolean canSimulate, int pristineChance,
         int pristine, int maxWave, int affixes, int glitchChance) {
@@ -41,20 +46,45 @@ public class ModelTierRegistryItem {
         this.glitchChance = glitchChance;
     }
 
+    @Override
+    public void read(JsonObject json) {
+        this.tier = getInt(json, "tier", 0);
+        this.killMultiplier = getInt(json, "killMultiplier", 1);
+        this.dataToNext = getInt(json, "dataToNext", 10);
+        this.canSimulate = getBoolean(json, "canSimulate", true);
+        this.pristineChance = getInt(json, "pristineChance", 5);
+        this.pristine = getInt(json, "pristine", 0);
+        this.maxWave = getInt(json, "maxWave", 0);
+        this.affixes = getInt(json, "affixes", 0);
+        this.glitchChance = getInt(json, "glitchChance", 0);
+        this.lang = getMap(json, "lang");
+    }
+
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("tier", tier);
+        json.addProperty("killMultiplier", killMultiplier);
+        json.addProperty("dataToNext", dataToNext);
+        json.addProperty("canSimulate", canSimulate);
+        json.addProperty("pristineChance", pristineChance);
+        json.addProperty("pristine", pristine);
+        json.addProperty("maxWave", maxWave);
+        json.addProperty("affixes", affixes);
+        json.addProperty("glitchChance", glitchChance);
+        writeMap(json, "lang", lang);
+    }
+
+    @Override
+    public boolean validate() {
+        if (tier < 0) {
+            logValidationError("Tier must be non-negative");
+            return false;
+        }
+        return true;
+    }
+
     public String getTierName() {
         return "model.tier_" + tier + ".name";
     }
 
-    // Not used
-    public ModelTierRegistryItem setLang(String langCode, String value) {
-        if (this.lang == null) {
-            this.lang = new HashMap<>();
-        }
-
-        if (langCode != null && !langCode.isEmpty() && value != null && !value.isEmpty()) {
-            this.lang.put(langCode, value);
-        }
-
-        return this;
-    }
 }

@@ -6,12 +6,41 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
+import ruiseki.omoshiroikamo.api.recipe.parser.InputParserRegistry;
+import ruiseki.omoshiroikamo.module.dml.recipe.DMLRecipeRegistry;
+import ruiseki.omoshiroikamo.module.dml.recipe.DataModelInput;
+import ruiseki.omoshiroikamo.module.dml.recipe.LootFabricatorRecipe;
+import ruiseki.omoshiroikamo.module.dml.recipe.PristineMatterInput;
+import ruiseki.omoshiroikamo.module.dml.recipe.SimulationChamberRecipe;
 
 public class DMLRecipes {
 
     public static void init() {
+        // Register custom DML recipe input parsers to the common API
+        InputParserRegistry.register("data_model", DataModelInput::fromJson);
+        InputParserRegistry.register("pristine_matter", PristineMatterInput::fromJson);
+
+        // DML data loading is now handled by ModModels.init()
+
         blockRecipes();
         itemRecipes();
+
+        // Generate recipes for registered models
+        generateDynamicRecipes();
+    }
+
+    private static void generateDynamicRecipes() {
+        ModelRegistry.INSTANCE.getItems()
+            .forEach(model -> {
+                if (model.isEnabled()) {
+                    // Generate for Simulation Chamber
+                    DMLRecipeRegistry.INSTANCE.addSimulationRecipe(new SimulationChamberRecipe(model));
+
+                    // Generate for Loot Fabricator
+                    DMLRecipeRegistry.INSTANCE.addFabricationRecipe(new LootFabricatorRecipe(model));
+                }
+            });
     }
 
     public static void blockRecipes() {

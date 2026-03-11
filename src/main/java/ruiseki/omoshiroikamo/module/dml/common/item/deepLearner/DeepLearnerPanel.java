@@ -41,8 +41,8 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
-import ruiseki.omoshiroikamo.api.entity.dml.DataModelExperience;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
+import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
@@ -229,7 +229,7 @@ public class DeepLearnerPanel extends ModularPanel {
         int totalKillCount = DataModel.getTotalKillCount(stack);
         int killsThisTier = DataModel.getKillCount(stack);
         int simulationsThisTier = DataModel.getSimulationCount(stack);
-        boolean isMaxTier = tier >= DataModelExperience.getMaxTier();
+        boolean isMaxTier = ModelTierRegistry.INSTANCE.isMaxTier(tier);
 
         TextWidget<?> heartTile = IKey.lang("gui.deep_learner.health_points")
             .scale(1f)
@@ -303,7 +303,7 @@ public class DeepLearnerPanel extends ModularPanel {
         Column killInfo = (Column) new Column().coverChildren()
             .childPadding(2);
         TextWidget<?> tierText = IKey
-            .lang("gui.deep_learner.model_tier", IKey.lang(DataModelExperience.getTierName(tier)))
+            .lang("gui.deep_learner.model_tier", IKey.lang(ModelTierRegistry.INSTANCE.getTierName(tier)))
             .scale(1f)
             .color(0xFFFFFFFF)
             .alignment(Alignment.CenterLeft)
@@ -321,11 +321,14 @@ public class DeepLearnerPanel extends ModularPanel {
 
         TextWidget<?> defeatedMoreText = null;
         if (!isMaxTier) {
-            int killsRemaining = (int) Math
-                .ceil(DataModelExperience.getKillsToNextTier(tier, killsThisTier, simulationsThisTier));
+            int killsRemaining = ModelTierRegistry.INSTANCE
+                .getKillsToNextTier(tier, killsThisTier, simulationsThisTier);
 
             defeatedMoreText = IKey
-                .lang("gui.deep_learner.required", killsRemaining, IKey.lang(DataModelExperience.getTierName(tier + 1)))
+                .lang(
+                    "gui.deep_learner.required",
+                    killsRemaining,
+                    IKey.lang(ModelTierRegistry.INSTANCE.getTierName(tier + 1)))
                 .scale(1f)
                 .color(0xFFFFFFFF)
                 .alignment(Alignment.CenterLeft)

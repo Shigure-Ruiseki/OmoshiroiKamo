@@ -27,9 +27,10 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.modular.recipe.ErrorReason;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
@@ -291,6 +292,11 @@ public class GuiManager {
     private String getRecipeNameText() {
         ProcessAgent agent = controller.getProcessAgent();
         if (agent.isRunning() && !agent.isWaitingForOutput()) {
+            IModularRecipe recipe = agent.getCurrentRecipe();
+            if (recipe != null) {
+                String name = recipe.getName();
+                if (name != null && !name.isEmpty()) return name;
+            }
             String name = agent.getCurrentRecipeName();
             if (name != null && !name.isEmpty()) {
                 return name;
@@ -304,11 +310,17 @@ public class GuiManager {
      */
     private String diagnoseBlockedOutputs(List<IModularPort> outputPorts) {
         ProcessAgent agent = controller.getProcessAgent();
-        ModularRecipe currentRecipe = agent.getCurrentRecipe();
+        IModularRecipe currentRecipe = agent.getCurrentRecipe();
 
         if (currentRecipe != null) {
             StringBuilder blocked = new StringBuilder();
+            RecipeExecutionVisitor contextSetter = new RecipeExecutionVisitor(
+                RecipeExecutionVisitor.Mode.CHECK,
+                outputPorts,
+                agent);
+
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
+                output.accept(contextSetter); // Provides context implicitly
                 if (!output.process(outputPorts, true)) {
                     if (blocked.length() > 0) blocked.append(", ");
                     blocked.append(

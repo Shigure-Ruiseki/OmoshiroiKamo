@@ -1,0 +1,10 @@
+{
+  "name": "minimal",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {}
+}

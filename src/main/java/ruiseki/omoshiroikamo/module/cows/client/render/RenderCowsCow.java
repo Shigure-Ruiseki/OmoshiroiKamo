@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
@@ -49,9 +51,43 @@ public class RenderCowsCow extends RenderLiving {
     }
 
     @Override
+    protected int shouldRenderPass(EntityLivingBase entity, int pass, float partialTicks) {
+        if (pass == 0) {
+            EntityCowsCow cow = (EntityCowsCow) entity;
+            ResourceLocation overlay = cow.getTextureOverlay();
+            if (overlay != null) {
+                this.bindTexture(overlay);
+                int color = cow.getTintColor();
+                float r = (color >> 16 & 255) / 255.0F;
+                float g = (color >> 8 & 255) / 255.0F;
+                float b = (color & 255) / 255.0F;
+                GL11.glColor3f(r, g, b);
+
+                // Enable Blending for transparency
+                GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+                GL11.glPolygonOffset(-1.0F, -10.0F);
+
+                // Prevent Z-Fighting by slightly scaling up the overlay model
+                GL11.glScalef(1.005F, 1.005F, 1.005F);
+
+                this.setRenderPassModel(this.mainModel);
+                return 1;
+            }
+        } else if (pass == 1) {
+            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+        }
+        return -1;
+    }
+
+    @Override
     protected int getColorMultiplier(EntityLivingBase entity, float lightBrightness, float partialTickTime) {
         if (!(entity instanceof EntityCowsCow cow)) {
             return super.getColorMultiplier(entity, lightBrightness, partialTickTime);
+        }
+
+        // If we have an overlay, the base layer should be uncolored (White).
+        if (cow.getTextureOverlay() != null) {
+            return 0xFFFFFF;
         }
 
         CowsRegistryItem item = CowsRegistry.INSTANCE.getByType(cow.getType());

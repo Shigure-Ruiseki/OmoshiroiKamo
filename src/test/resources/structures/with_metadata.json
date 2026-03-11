@@ -1,0 +1,12 @@
+{
+  "name": "with_metadata",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["WQ"]
+    }
+  ],
+  "mappings": {
+    "W": "minecraft:wool:5"
+  }
+}

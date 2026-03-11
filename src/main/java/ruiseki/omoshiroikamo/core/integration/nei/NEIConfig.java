@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.core.integration.nei;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -14,10 +15,10 @@ import codechicken.nei.recipe.HandlerInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.nei.modular.ModularMachineNEIHandler;
@@ -120,6 +121,21 @@ public class NEIConfig implements IConfigureNEI {
             registerHandlerImage(event, ChickenBreedingRecipeHandler.UID, "nei/chicken/breeding_icon.png", 64, 6);
             registerHandlerImage(event, ChickenDropsRecipeHandler.UID, "nei/chicken/drops_icon.png", 64, 6);
             registerHandlerImage(event, ChickenThrowsRecipeHandler.UID, "nei/chicken/throws_icon.png", 64, 6);
+        }
+
+        if (BackportConfigs.enableCows) {
+            event.registerHandlerInfo(
+                new HandlerInfo.Builder(CowMilkingRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    .setDisplayStack(new ItemStack(Items.milk_bucket))
+                    .setHeight(64)
+                    .setWidth(166)
+                    .build());
+            event.registerHandlerInfo(
+                new HandlerInfo.Builder(CowBreedingRecipeHandler.UID, LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                    .setDisplayStack(new ItemStack(Items.wheat))
+                    .setHeight(64)
+                    .setWidth(166)
+                    .build());
         }
 
         if (BackportConfigs.enableDML) {
@@ -230,9 +246,9 @@ public class NEIConfig implements IConfigureNEI {
     private void registerModularMachineryRecipes() {
         List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
 
-        List<ModularRecipe> allRecipes = RecipeLoader.getInstance()
+        List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
             .getAllRecipes();
-        for (ModularRecipe recipe : allRecipes) {
+        for (IModularRecipe recipe : allRecipes) {
             String group = recipe.getRecipeGroup();
             if (!groups.contains(group)) {
                 groups.add(group);
@@ -246,9 +262,11 @@ public class NEIConfig implements IConfigureNEI {
             ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
             API.addRecipeCatalyst(catalyst, handler.getRecipeID());
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
-                StructureEntry entry = StructureManager.getInstance()
+                IStructureEntry entry = StructureManager.getInstance()
                     .getCustomStructure(structureName);
-                if (entry != null && entry.recipeGroup != null && entry.recipeGroup.contains(group)) {
+                if (entry != null && entry.getRecipeGroup() != null
+                    && entry.getRecipeGroup()
+                        .contains(group)) {
                     ItemStack blueprint = ItemMachineBlueprint
                         .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
                     API.addRecipeCatalyst(blueprint, handler.getRecipeID());

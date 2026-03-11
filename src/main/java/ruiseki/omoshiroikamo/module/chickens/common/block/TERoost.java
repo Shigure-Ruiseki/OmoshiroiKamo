@@ -18,6 +18,7 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -35,6 +36,13 @@ public class TERoost extends TERoostBase implements IGuiHolder<PosGuiData> {
         ItemStack foodStack = getStackInSlot(2);
 
         if (chicken == null || foodStack == null) {
+            return;
+        }
+
+        // Check environmental conditions
+        ConditionContext context = new ConditionContext(worldObj, xCoord, yCoord, zCoord);
+        if (!chicken.getItem()
+            .isConditionMet(context)) {
             return;
         }
 

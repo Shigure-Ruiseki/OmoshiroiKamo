@@ -44,8 +44,8 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     // Render ID for ISBRH, set during client init
     public static int portRendererId = -1;
 
-    public static IIcon baseIcon;
-    public static IIcon casingIcon;
+    public IIcon baseIcon;
+    public IIcon casingIcon;
 
     protected final int tierCount;
 
@@ -143,7 +143,7 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
         ForgeDirection facing = ForgeDirection.NORTH;
 
         if (Math.abs(player.rotationPitch) > 50) {
-            facing = player.rotationPitch > 0 ? ForgeDirection.UP : ForgeDirection.DOWN;
+            facing = player.rotationPitch > 0 ? ForgeDirection.DOWN : ForgeDirection.UP;
         } else {
             int rotation = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
             switch (rotation) {

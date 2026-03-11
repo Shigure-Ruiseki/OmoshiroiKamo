@@ -34,6 +34,7 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
             TESolarArrayT5.class,
             TESolarArrayT6.class);
         this.setLightLevel(0.5F);
+        this.hasSubtypes = true;
         isOpaque = false;
     }
 

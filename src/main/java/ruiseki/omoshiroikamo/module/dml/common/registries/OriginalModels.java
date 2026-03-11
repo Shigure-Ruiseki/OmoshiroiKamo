@@ -7,9 +7,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
@@ -73,27 +70,12 @@ public class OriginalModels extends BaseModelHandler {
         return new ArrayList<>();
     }
 
-    @Override
-    public void createDefaultConfig(File file, List<ModelRegistryItem> allModels) {
+    public void createDefaultConfig(File file) {
         try (Writer writer = new FileWriter(file)) {
             writer.write(defaultConfig);
             Logger.info("Created default {}", configFileName);
         } catch (IOException e) {
             Logger.error("Failed to create default config: {}", e.getMessage());
-        }
-    }
-
-    @Override
-    public void saveJsonMigration(File file, List<ModelJson> models) {
-        try (Writer writer = new FileWriter(file)) {
-            writer.write(defaultConfig);
-            Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-            writer.write("\n");
-            writer.write(gson.toJson(models));
-            Logger.info("Migrated config with new IDs: {}", file.getName());
-        } catch (IOException e) {
-            Logger.error("Failed to migrate config with IDs: {}", e.getMessage());
         }
     }
 }

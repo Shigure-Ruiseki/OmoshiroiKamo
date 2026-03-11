@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.core.proxy;
 
+import java.io.File;
+
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -164,5 +166,22 @@ public interface ICommonProxy {
      * @param frequency The pitch of the sound.
      */
     public void sendSound(double x, double y, double z, String sound, float volume, float frequency);
+
+    /**
+     * Get the texture path of an entity.
+     * 
+     * @param clazz  The entity class.
+     * @param entity The entity instance.
+     * @return The texture path, or null if not available.
+     */
+    public String getEntityTexturePath(Class<? extends Entity> clazz, Entity entity);
+
+    /**
+     * Dump a texture to a file.
+     * 
+     * @param baseDir     The base directory.
+     * @param texturePath The texture path.
+     */
+    public void dumpTexture(File baseDir, String texturePath);
 
 }

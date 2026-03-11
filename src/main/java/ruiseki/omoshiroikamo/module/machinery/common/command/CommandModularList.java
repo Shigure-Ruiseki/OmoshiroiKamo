@@ -7,9 +7,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 
@@ -36,12 +36,14 @@ public class CommandModularList extends CommandMod {
             new ChatComponentText(EnumChatFormatting.GREEN + "[Modular] Custom Structures (" + names.size() + "):"));
 
         for (String name : names) {
-            StructureDefinitionData.StructureEntry entry = StructureManager.getInstance()
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(name);
-            String displayName = entry != null && entry.displayName != null ? entry.displayName : name;
+            String displayName = (entry != null && entry.getDisplayName() != null) ? entry.getDisplayName() : name;
             String recipeGroupDisplay = "default";
-            if (entry != null && entry.recipeGroup != null && !entry.recipeGroup.isEmpty()) {
-                recipeGroupDisplay = String.join(", ", entry.recipeGroup);
+            if (entry != null && entry.getRecipeGroup() != null
+                && !entry.getRecipeGroup()
+                    .isEmpty()) {
+                recipeGroupDisplay = String.join(", ", entry.getRecipeGroup());
             }
             boolean hasStructureDef = CustomStructureRegistry.hasDefinition(name);
 

@@ -46,7 +46,7 @@ public abstract class TEFluidInputPort extends AbstractFluidPortTE {
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return AbstractPortBlock.baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
         }
         if (renderPass == 1) {
             if (getSideIO(side) != EnumIO.NONE) {
@@ -54,6 +54,6 @@ public abstract class TEFluidInputPort extends AbstractFluidPortTE {
             }
             return null;
         }
-        return AbstractPortBlock.baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
     }
 }

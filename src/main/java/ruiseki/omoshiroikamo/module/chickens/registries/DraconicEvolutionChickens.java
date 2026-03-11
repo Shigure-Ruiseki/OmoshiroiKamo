@@ -13,7 +13,7 @@ public class DraconicEvolutionChickens extends BaseChickenHandler {
     public static ChickensRegistryItem draconiumAwakenedChicken;
 
     public DraconicEvolutionChickens() {
-        super("DraconicEvolution", "Draconic Evolution", "textures/entity/draconic/");
+        super("DraconicEvolution", "Draconic Evolution", "textures/entity/chicken/draconic/");
         this.setStartID(900);
     }
 

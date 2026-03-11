@@ -7,9 +7,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
@@ -85,20 +82,6 @@ public class OriginalChickens extends BaseChickenHandler {
             Logger.info("Created default {}", configFileName);
         } catch (IOException e) {
             Logger.error("Failed to create default config: {}", e);
-        }
-    }
-
-    @Override
-    public void saveJsonMigration(File file, List<ChickenJson> models) {
-        try (Writer writer = new FileWriter(file)) {
-            writer.write(defaultConfig);
-            Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-            writer.write("\n");
-            writer.write(gson.toJson(models));
-            Logger.info("Migrated config with new IDs: {}", file.getName());
-        } catch (IOException e) {
-            Logger.error("Failed to migrate config with IDs: {}", e.getMessage());
         }
     }
 }

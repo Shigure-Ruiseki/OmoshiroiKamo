@@ -1,0 +1,11 @@
+{
+  "name": "with_display_name",
+  "displayName": "Fancy Display Name",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {}
+}

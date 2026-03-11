@@ -49,12 +49,20 @@ All code has been rewritten, and all textures are original.
 - Dimension-specific ore mining
 - Customizable structures
 
-### Custom Structure
-- JSON Custom structures
-- Structure in-game reload
-- Structure in-game scan by command or Structure wand
-- Structure NEI integration
-- [See CUSTOM_STRUCTURES.md for details](./CUSTOM_STRUCTURES.md)
+### Custom Structure System
+Advanced JSON-based multiblock structure system with in-game reloading and scanning tools.
+- **English**: [Overview](./docs/en/structures/OVERVIEW.md) | [JSON Format](./docs/en/structures/JSON_FORMAT.md) | [Developer Guide](./docs/en/structures/DEVELOPER_GUIDE.md)
+- **日本語 (Japanese)**: [概要](./docs/ja/structures/OVERVIEW.md) | [JSONフォーマット](./docs/ja/structures/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/structures/DEVELOPER_GUIDE.md)
+
+### Modular Recipe System
+Decoupled and extensible recipe engine supporting multiple resource types and dynamic logic.
+- **English**: [Overview](./docs/en/recipes/OVERVIEW.md) | [JSON Format](./docs/en/recipes/JSON_FORMAT.md) | [Developer Guide](./docs/en/recipes/DEVELOPER_GUIDE.md)
+- **日本語 (Japanese)**: [概要](./docs/ja/recipes/OVERVIEW.md) | [JSONフォーマット](./docs/ja/recipes/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/recipes/DEVELOPER_GUIDE.md)
+
+### Developer Testing
+Comprehensive testing plans and strategies for maintainers and contributors.
+- **Structure System**: [English Test Plan](./docs/en/structures/TEST_PLAN.md) | [日本語テスト計画](./docs/ja/structures/TEST_PLAN.md)
+- **Recipe System**: [English Test Plan](./docs/en/recipes/TEST_PLAN.md) | [日本語テスト計画](./docs/ja/recipes/TEST_PLAN.md)
 
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
@@ -150,6 +158,7 @@ their original licenses:
 - RetroSophisticated Backpacks (textures/models) — original license applies.
 - Any GPLv3/LGPL-3.0 components used in this project remain under GPLv3/LGPL-3.0 and must be
 respected accordingly, all assets are forked before Sophisticated Backpack changes license to All Right Reserve.
+- Portions of the textures are from DeepMobLearningReloaded by ArtanMod (https://github.com/ArtanMod/DeepMobLearningReloaded), licensed under MIT.
 
 You are free to use, modify, and distribute the MIT-licensed portions of this
 project, but must comply with the original licenses of the included third-party

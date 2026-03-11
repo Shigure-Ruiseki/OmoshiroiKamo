@@ -42,13 +42,13 @@ public class DMLModule extends ModModuleBase {
         DMLBlocks.preInit();
         DMLItems.preInit();
         DMLCreative.preInit();
-    }
 
-    @Override
-    public void init(FMLInitializationEvent event) {
         ModModels.init();
         DMLRecipes.init();
     }
+
+    @Override
+    public void init(FMLInitializationEvent event) {}
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {

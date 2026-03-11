@@ -4,8 +4,10 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
@@ -43,6 +45,21 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         setResistance(10.0F);
     }
 
+    @Override
+    public boolean saveNBTToDroppedItem() {
+        return false;
+    }
+
+    @Override
+    public boolean isKeepNBTOnDrop() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDropInventory(World world, int x, int y, int z) {
+        return false;
+    }
+
     public static BlockMachineController create() {
         return new BlockMachineController();
     }
@@ -66,6 +83,25 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         super.registerBlockIcons(reg);
         this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller");
         this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/base_modularports");
+    }
+
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        return super.getIcon(side, meta);
+    }
+
+    @Override
+    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
+        if (te != null) {
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
+            if (dir == te.getExtendedFacing()
+                .getDirection()) {
+                return sideOverlayIcon;
+            }
+        }
+        // Bypass the inventory icon override for EAST
+        return super.getIcon(side, world.getBlockMetadata(x, y, z));
     }
 
     public IIcon getOverlayIcon() {
@@ -149,7 +185,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TEMachineController controller = (TEMachineController) world.getTileEntity(x, y, z);
-        if (controller != null) {
+        if (controller != null && !world.isRemote) {
             ItemStack blueprint = controller.getBlueprintStack();
             if (blueprint != null && blueprint.stackSize > 0) {
                 InventoryHelpers.dropItems(world, blueprint.copy(), new BlockPos(x, y, z));
@@ -164,6 +200,11 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
         return new ItemStack(this, 1, 0);
+    }
+
+    @Override
+    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
+        list.add(new ItemStack(item, 1, 0));
     }
 
 }

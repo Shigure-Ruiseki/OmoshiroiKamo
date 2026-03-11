@@ -9,8 +9,8 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
@@ -130,7 +130,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
         if (structureName != null && !structureName.isEmpty()) {
             return new String[] { "Structure: " + structureName };
         }
-        return new String[] { "Modular Machine Controller" };
+        return null; // Don't show anything if no structure is active
     }
 
     /**
@@ -165,8 +165,7 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
                 return def;
             }
         }
-        // Fallback to controller's default structure
-        return ctx.getStructureDefinition();
+        return null;
     }
 
     /**
@@ -175,10 +174,18 @@ public class MachineControllerInfoContainer implements IMultiblockInfoContainer<
      */
     private int[] getOffset(String structureName, TEMachineController ctx) {
         if (structureName != null && !structureName.isEmpty()) {
-            StructureEntry entry = StructureManager.getInstance()
+            // Priority 1: Use offset from Registry (this is the rotated/correct offset)
+            int[] registryOffset = CustomStructureRegistry.getControllerOffset(structureName);
+            if (registryOffset != null
+                && (registryOffset[0] != 0 || registryOffset[1] != 0 || registryOffset[2] != 0)) {
+                return registryOffset;
+            }
+
+            // Priority 2: Use offset from Entry (raw JSON)
+            IStructureEntry entry = StructureManager.getInstance()
                 .getCustomStructure(structureName);
-            if (entry != null && entry.controllerOffset != null) {
-                return entry.controllerOffset;
+            if (entry != null && entry.getControllerOffset() != null) {
+                return entry.getControllerOffset();
             }
             // Default offset for custom structures
             return new int[] { 0, 0, 1 };

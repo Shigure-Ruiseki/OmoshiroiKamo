@@ -29,8 +29,8 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
     protected final String entityName;
     protected String dropString;
     protected ItemStack dropItem;
-    protected final int bgColor;
-    protected final int fgColor;
+    protected int bgColor;
+    protected int fgColor;
     protected ResourceLocation texture;
 
     protected T parent1;
@@ -324,6 +324,18 @@ public abstract class BaseRegistryItem<T extends BaseRegistryItem<T>> {
             this.lang.put(langCode, value);
         }
 
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setFgColor(int fgColor) {
+        this.fgColor = fgColor;
         return (T) this;
     }
 }

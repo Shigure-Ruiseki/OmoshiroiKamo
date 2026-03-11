@@ -1,0 +1,34 @@
+{
+    "group": "Inheritance Test",
+    "recipes": [
+        {
+            "name": "Abstract Template",
+            "abstract": true,
+            "registryName": "template_basic",
+            "duration": 100,
+            "inputs": [
+                {
+                    "energy": 50,
+                    "perTick": true
+                }
+            ]
+        },
+        {
+            "name": "Inherited Recipe",
+            "parent": "template_basic",
+            "registryName": "inherited_iron_to_gold",
+            "inputs": [
+                {
+                    "ore": "ingotIron",
+                    "amount": 4
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:gold_ingot",
+                    "amount": 1
+                }
+            ]
+        }
+    ]
+}

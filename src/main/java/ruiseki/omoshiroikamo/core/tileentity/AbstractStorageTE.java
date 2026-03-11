@@ -184,6 +184,10 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
 
     public void onContentsChange(int slot) {}
 
+    public SlotDefinition getSlotDefinition() {
+        return slotDefinition;
+    }
+
     @Override
     public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
         if (capability == ItemSink.class) {

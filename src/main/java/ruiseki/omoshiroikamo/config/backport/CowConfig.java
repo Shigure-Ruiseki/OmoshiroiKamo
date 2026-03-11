@@ -51,6 +51,10 @@ public class CowConfig {
     @Config.RequiresMcRestart
     public static boolean updateMissing;
 
+    @Config.Comment("Comma-separated list of fluids to exclude from automatic cow generation")
+    @Config.DefaultString("")
+    public static String autogenBlacklist = "";
+
     public static int getMaxGrowthStat() {
         return Math.max(1, maxGrowthStat);
     }

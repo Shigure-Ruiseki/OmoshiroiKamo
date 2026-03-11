@@ -65,6 +65,7 @@ public class ModCows {
         addModAddon(new BigReactorsCows());
         addModAddon(new MineFactoryReloadedCows());
         addModAddon(new OriginalCows());
+        addModAddon(new FluidCowsHandler());
     }
 
     private static List<BiomeGenBase> getAllSpawnBiomes() {
@@ -109,6 +110,17 @@ public class ModCows {
         Logger.info("Cows Loading Config...");
         for (CowsRegistryItem cow : allChickens) {
             CowsRegistry.INSTANCE.register(cow);
+        }
+    }
+
+    /**
+     * Saves all handled cows back to their respective JSON files.
+     */
+    public static void saveAllConfigs() {
+        for (BaseCowHandler handler : registeredModAddons) {
+            if (handler != null) {
+                handler.syncConfig();
+            }
         }
     }
 }

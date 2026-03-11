@@ -1,221 +1,203 @@
 package ruiseki.omoshiroikamo.module.machinery.common.recipe;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.FluidStack;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.modular.recipe.EnergyInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.EnergyOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.EssentiaOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.FluidOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.GasOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ItemOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ManaInput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ManaOutput;
-import ruiseki.omoshiroikamo.api.modular.recipe.ModularRecipe;
-import ruiseki.omoshiroikamo.api.modular.recipe.VisOutput;
+import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.AbstractRecipeProcess;
+import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
+import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
+import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
+import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
+import ruiseki.omoshiroikamo.api.recipe.parser.OutputNBTRegistry;
+import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 
-public class ProcessAgent {
+public class ProcessAgent extends AbstractRecipeProcess {
 
-    private int progress;
-    private int maxProgress;
-    private int energyPerTick;
-    private int energyOutputPerTick;
-    private int manaPerTick;
-    private int manaOutputPerTick;
-    private boolean running;
-    private boolean waitingForOutput;
+    private final IRecipeContext context;
+    private int currentBatchSize = 1;
 
-    private List<ItemStack> cachedItemOutputs = new ArrayList<>();
-    private List<FluidStack> cachedFluidOutputs = new ArrayList<>();
-
-    private List<Integer> cachedManaOutputs = new ArrayList<>();
-    private List<String[]> cachedGasOutputs = new ArrayList<>(); // [gasName, amount]
-    private List<String[]> cachedEssentiaOutputs = new ArrayList<>(); // [aspectTag, amount]
-    private List<String[]> cachedVisOutputs = new ArrayList<>(); // [aspectTag, amountCentiVis]
-    private List<Integer> cachedEnergyOutputs = new ArrayList<>(); // [amount]
-
-    private String currentRecipeName;
-    private transient ModularRecipe currentRecipe;
-
-    public ProcessAgent() {
+    public ProcessAgent(IRecipeContext context) {
+        this.context = context;
         reset();
     }
 
-    public boolean start(ModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> energyPorts) {
-        if (running) return false;
+    public IRecipeContext getContext() {
+        return context;
+    }
 
-        for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) {
-                EnergyInput energyInput = (EnergyInput) input;
-                if (energyInput.isPerTick()) continue;
-                if (!energyInput.process(energyPorts, true)) {
-                    return false;
-                }
-            } else if (input instanceof ManaInput) {
-                ManaInput manaInput = (ManaInput) input;
-                if (manaInput.isPerTick()) continue;
-                if (!manaInput.process(inputPorts, true)) {
-                    return false;
-                }
-            } else if (!input.process(inputPorts, true)) {
-                return false;
-            }
+    @Override
+    protected void onStart(IModularRecipe recipe, List<IModularPort> inputPorts) {
+        // 1. Check inputs (This is still needed here or in start override)
+    }
+
+    // Re-implement start to return boolean and handle validation
+    public boolean startRecipe(IModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> outputPorts) {
+        if (isRunning()) return false;
+
+        // Calculate maximum possible batch size
+        int batchMin = 1;
+        int batchMax = 1;
+
+        if (context instanceof IStructureEntry) {
+            IStructureEntry structure = (IStructureEntry) context;
+            batchMin = Math.max(1, structure.getBatchMin());
+            batchMax = Math.max(batchMin, structure.getBatchMax());
         }
 
-        energyPerTick = 0;
-        energyOutputPerTick = 0;
-        manaPerTick = 0;
-        manaOutputPerTick = 0;
+        int selectedBatch = -1;
+        for (int b = batchMax; b >= batchMin; b--) {
+            // Check inputs for this batch size
+            RecipeExecutionVisitor checker = new RecipeExecutionVisitor(
+                RecipeExecutionVisitor.Mode.CHECK,
+                inputPorts,
+                this);
+            checker.setBatchSize(b);
+            recipe.accept(checker);
 
-        for (IRecipeInput input : recipe.getInputs()) {
-            if (input instanceof EnergyInput) {
-                EnergyInput energyInput = (EnergyInput) input;
-                if (energyInput.isPerTick()) {
-                    energyPerTick += energyInput.getAmount();
-                } else {
-                    energyInput.process(energyPorts, false);
-                }
-            } else if (input instanceof ManaInput) {
-                ManaInput manaInput = (ManaInput) input;
-                if (manaInput.isPerTick()) {
-                    manaPerTick += manaInput.getAmount();
-                } else {
-                    manaInput.process(inputPorts, false);
-                }
-            } else {
-                input.process(inputPorts, false);
-            }
-        }
+            if (checker.isSatisfied()) {
+                // Check if output ports have capacity for this batch size
+                RecipeExecutionVisitor outChecker = new RecipeExecutionVisitor(
+                    RecipeExecutionVisitor.Mode.CACHE,
+                    outputPorts,
+                    this);
+                outChecker.setBatchSize(b);
+                recipe.accept(outChecker);
 
-        // Calculate per-tick outputs
-        for (IRecipeOutput output : recipe.getOutputs()) {
-            if (output instanceof EnergyOutput) {
-                EnergyOutput eOut = (EnergyOutput) output;
-                if (eOut.isPerTick()) {
-                    energyOutputPerTick += eOut.getAmount();
-                }
-            } else if (output instanceof ManaOutput) {
-                ManaOutput mOut = (ManaOutput) output;
-                if (mOut.isPerTick()) {
-                    manaOutputPerTick += mOut.getAmount();
+                if (outChecker.isSatisfied()) {
+                    selectedBatch = b;
+                    break;
                 }
             }
+            // Clear current process state if check failed (energyPerTick etc might have
+            // been modified by visitors)
+            this.reset();
         }
 
-        cachedItemOutputs.clear();
-        cachedFluidOutputs.clear();
-        cachedManaOutputs.clear();
-        cachedGasOutputs.clear();
-        cachedEssentiaOutputs.clear();
-        cachedVisOutputs.clear();
-        cachedEnergyOutputs.clear();
+        if (selectedBatch == -1) return false;
 
-        for (IRecipeOutput output : recipe.getOutputs()) {
-            if (output instanceof ItemOutput) {
-                ItemStack stack = ((ItemOutput) output).getOutput();
-                cachedItemOutputs.add(stack.copy());
-            } else if (output instanceof FluidOutput) {
-                FluidStack stack = ((FluidOutput) output).getOutput();
-                cachedFluidOutputs.add(stack.copy());
-            } else if (output instanceof ManaOutput) {
-                ManaOutput mOut = (ManaOutput) output;
-                if (!mOut.isPerTick()) {
-                    cachedManaOutputs.add(mOut.getAmount());
-                }
-            } else if (output instanceof GasOutput) {
-                GasOutput gasOut = (GasOutput) output;
-                cachedGasOutputs.add(new String[] { gasOut.getGasName(), String.valueOf(gasOut.getAmount()) });
-            } else if (output instanceof EssentiaOutput) {
-                EssentiaOutput essentiaOut = (EssentiaOutput) output;
-                cachedEssentiaOutputs
-                    .add(new String[] { essentiaOut.getAspectTag(), String.valueOf(essentiaOut.getAmount()) });
-            } else if (output instanceof VisOutput) {
-                VisOutput visOut = (VisOutput) output;
-                cachedVisOutputs
-                    .add(new String[] { visOut.getAspectTag(), String.valueOf(visOut.getAmountCentiVis()) });
-            } else if (output instanceof EnergyOutput) {
-                EnergyOutput eOut = (EnergyOutput) output;
-                if (!eOut.isPerTick()) {
-                    cachedEnergyOutputs.add(eOut.getAmount());
-                }
-            }
-        }
+        this.currentBatchSize = selectedBatch;
 
-        currentRecipe = recipe;
-        currentRecipeName = recipe.getName();
-        maxProgress = recipe.getDuration();
-        progress = 0;
-        running = true;
-        waitingForOutput = false;
+        // Initialize state via base start logic
+        super.start(recipe, inputPorts);
+
+        // Consume and setup state (Specific to ProcessAgent)
+        RecipeExecutionVisitor consumeVisitor = new RecipeExecutionVisitor(
+            RecipeExecutionVisitor.Mode.CONSUME,
+            inputPorts,
+            this);
+        consumeVisitor.setBatchSize(currentBatchSize);
+        recipe.accept(consumeVisitor);
+
+        clearCaches();
+
+        // Cache outputs
+        RecipeExecutionVisitor cacheVisitor = new RecipeExecutionVisitor(
+            RecipeExecutionVisitor.Mode.CACHE,
+            outputPorts,
+            this);
+        cacheVisitor.setBatchSize(currentBatchSize);
+        recipe.accept(cacheVisitor);
 
         return true;
     }
 
-    public TickResult tick(List<IModularPort> inputPorts, List<IModularPort> outputPorts) {
-        if (!running) return TickResult.IDLE;
+    private void clearCaches() {
+        cachedOutputs.clear();
+    }
 
-        if (waitingForOutput) {
-            return TickResult.WAITING_OUTPUT;
-        }
-
+    @Override
+    protected boolean consumePerTickResources(List<IModularPort> inputPorts) {
         if (energyPerTick > 0) {
             EnergyInput energyReq = new EnergyInput(energyPerTick, true);
             if (!energyReq.process(inputPorts, true)) {
-                return TickResult.NO_ENERGY;
+                return false;
             }
-        }
-
-        if (manaPerTick > 0) {
-            ManaInput manaReq = new ManaInput(manaPerTick, true);
-            if (!manaReq.process(inputPorts, true)) {
-                return TickResult.NO_MANA;
-            }
-        }
-
-        if (energyPerTick > 0) {
-            EnergyInput energyReq = new EnergyInput(energyPerTick, true);
             energyReq.process(inputPorts, false);
         }
 
         if (manaPerTick > 0) {
             ManaInput manaReq = new ManaInput(manaPerTick, true);
+            if (!manaReq.process(inputPorts, true)) {
+                return false;
+            }
             manaReq.process(inputPorts, false);
         }
+        return true;
+    }
 
-        if (energyOutputPerTick > 0) {
-            EnergyOutput energyOut = new EnergyOutput(energyOutputPerTick, true);
-            if (!energyOut.process(outputPorts, true)) {
-                return TickResult.OUTPUT_FULL;
+    @Override
+    protected void onResourceMissing() {
+        // Handled by TickResult in TEMachineController.
+        // We could set a status here if needed.
+    }
+
+    @Override
+    protected void onCompleted() {
+        // Transition to waitingForOutput is handled by base
+    }
+
+    // Adapt tick to return TickResult for TEMachineController compatibility
+    public TickResult tick(List<IModularPort> inputPorts, List<IModularPort> outputPorts, ConditionContext context) {
+        if (!isRunning()) return TickResult.IDLE;
+        if (isWaitingForOutput()) return TickResult.WAITING_OUTPUT;
+
+        // 1. Resource check (Dry run for energy/mana)
+        if (energyPerTick > 0) {
+            if (!new EnergyInput(energyPerTick, true).process(inputPorts, true)) return TickResult.NO_ENERGY;
+        }
+        if (manaPerTick > 0) {
+            if (!new ManaInput(manaPerTick, true).process(inputPorts, true)) return TickResult.NO_MANA;
+        }
+
+        // 2. Output capacity check for per-tick outputs
+        if (energyOutputPerTick > 0 && !new EnergyOutput(energyOutputPerTick, true).process(outputPorts, true))
+            return TickResult.OUTPUT_FULL;
+        if (manaOutputPerTick > 0 && !new ManaOutput(manaOutputPerTick, true).process(outputPorts, true))
+            return TickResult.OUTPUT_FULL;
+
+        // 2.5. Continuous condition check for non-consuming inputs
+        if (currentRecipe != null) {
+            RecipeExecutionVisitor checker = new RecipeExecutionVisitor(
+                RecipeExecutionVisitor.Mode.CHECK,
+                inputPorts,
+                this);
+            checker.setBatchSize(currentBatchSize);
+            for (IRecipeInput input : currentRecipe.getInputs()) {
+                // Skip check if the input is meant to be consumed (already consumed at start)
+                // Also skip BlockInput if it involves a replacement (handled at start)
+                if (input.isConsume()) continue;
+                if (input instanceof BlockInput && ((BlockInput) input).getReplace() != null) continue;
+
+                input.accept(checker);
+                if (!checker.isSatisfied()) {
+                    return input.getPortType() == IPortType.Type.BLOCK ? TickResult.BLOCK_MISSING : TickResult.NO_INPUT;
+                }
             }
-            energyOut.process(outputPorts, false);
         }
 
-        if (manaOutputPerTick > 0) {
-            ManaOutput manaOut = new ManaOutput(manaOutputPerTick, true);
-            if (!manaOut.process(outputPorts, true)) {
-                return TickResult.OUTPUT_FULL;
-            }
-            manaOut.process(outputPorts, false);
-        }
+        // 3. Execute base tick (handles conditions, progress, and actual consumption)
+        super.executeTick(inputPorts, outputPorts, context);
 
-        progress++;
+        // 4. Handle per-tick energy/mana outputs
+        if (energyOutputPerTick > 0) new EnergyOutput(energyOutputPerTick, true).process(outputPorts, false);
+        if (manaOutputPerTick > 0) new ManaOutput(manaOutputPerTick, true).process(outputPorts, false);
 
-        if (progress >= maxProgress) {
-            waitingForOutput = true;
-            return TickResult.READY_OUTPUT;
-        }
+        if (isWaitingForOutput()) return TickResult.READY_OUTPUT;
+        if (!isRunning()) return TickResult.IDLE;
 
         return TickResult.CONTINUE;
     }
@@ -226,124 +208,71 @@ public class ProcessAgent {
     public TickResult diagnoseIdle(List<IModularPort> inputPorts) {
         if (running || waitingForOutput) return TickResult.CONTINUE; // Not idle
 
-        // Check input ports to see if any input is missing
-        if (inputPorts == null || inputPorts.isEmpty()) {
-            return TickResult.NO_INPUT;
-        }
-
         return TickResult.IDLE;
     }
 
-    public boolean tryOutput(List<IModularPort> outputPorts) {
-        if (!waitingForOutput) return false;
-
-        List<IRecipeOutput> outputs = new ArrayList<>();
-        for (ItemStack stack : cachedItemOutputs) {
-            outputs.add(new ItemOutput(stack.copy()));
-        }
-        for (FluidStack stack : cachedFluidOutputs) {
-            outputs.add(
-                new FluidOutput(
-                    stack.getFluid()
-                        .getName(),
-                    stack.amount));
-        }
-        for (Integer manaAmount : cachedManaOutputs) {
-            outputs.add(new ManaOutput(manaAmount));
-        }
-        for (String[] gasData : cachedGasOutputs) {
-            outputs.add(new GasOutput(gasData[0], Integer.parseInt(gasData[1])));
-        }
-        for (String[] essentiaData : cachedEssentiaOutputs) {
-            outputs.add(new EssentiaOutput(essentiaData[0], Integer.parseInt(essentiaData[1])));
-        }
-        for (String[] visData : cachedVisOutputs) {
-            outputs.add(new VisOutput(visData[0], Integer.parseInt(visData[1])));
-        }
-        for (Integer energyAmount : cachedEnergyOutputs) {
-            outputs.add(new EnergyOutput(energyAmount, false));
-        }
-
-        for (IRecipeOutput output : outputs) {
-            if (!output.process(outputPorts, true)) {
+    @Override
+    protected boolean produceOutputs(List<IModularPort> outputPorts) {
+        // 1. Check capacity for all
+        for (IRecipeOutput output : cachedOutputs) {
+            if (!output.checkCapacity(outputPorts, 1)) {
                 return false;
             }
         }
 
-        for (IRecipeOutput output : outputs) {
-            output.process(outputPorts, false);
+        // 2. Apply outputs
+        for (IRecipeOutput output : cachedOutputs) {
+            output.apply(outputPorts, 1);
         }
 
-        reset();
         return true;
     }
 
-    public void abort() {
-        reset();
+    @Override
+    protected void reset() {
+        super.reset();
+        this.currentBatchSize = 1;
+        clearCaches();
     }
 
-    private void reset() {
-        currentRecipe = null;
-        currentRecipeName = null;
-        progress = 0;
-        maxProgress = 0;
-        running = false;
-        waitingForOutput = false;
-        energyPerTick = 0;
-        energyOutputPerTick = 0;
-        manaPerTick = 0;
-        manaOutputPerTick = 0;
-        cachedItemOutputs.clear();
-        cachedFluidOutputs.clear();
-        cachedManaOutputs.clear();
-        cachedGasOutputs.clear();
-        cachedEssentiaOutputs.clear();
-        cachedVisOutputs.clear();
-        cachedEnergyOutputs.clear();
+    public int getEnergyPerTick() {
+        return energyPerTick;
     }
 
-    public boolean isRunning() {
-        return running;
+    public void setEnergyPerTick(int amount) {
+        this.energyPerTick = amount;
     }
 
-    public void setRunning(boolean running) {
-        this.running = running;
+    public int getEnergyOutputPerTick() {
+        return energyOutputPerTick;
     }
 
-    public boolean isWaitingForOutput() {
-        return waitingForOutput;
+    public void setEnergyOutputPerTick(int amount) {
+        this.energyOutputPerTick = amount;
     }
 
-    public void setWaitingForOutput(boolean waitingForOutput) {
-        this.waitingForOutput = waitingForOutput;
+    public int getManaPerTick() {
+        return manaPerTick;
     }
 
-    public int getProgress() {
-        return progress;
+    public void setManaPerTick(int amount) {
+        this.manaPerTick = amount;
     }
 
-    public void setProgress(int progress) {
-        this.progress = Math.max(0, progress);
+    public int getManaOutputPerTick() {
+        return manaOutputPerTick;
     }
 
-    public int getMaxProgress() {
-        return maxProgress;
-    }
-
-    public void setMaxProgress(int maxProgress) {
-        this.maxProgress = Math.max(0, maxProgress);
-    }
-
-    public ModularRecipe getCurrentRecipe() {
-        return currentRecipe;
-    }
-
-    public String getCurrentRecipeName() {
-        return currentRecipeName;
+    public void setManaOutputPerTick(int amount) {
+        this.manaOutputPerTick = amount;
     }
 
     public void setCurrentRecipeName(String name) {
         this.currentRecipeName = name;
+    }
+
+    public String getCurrentRecipeName() {
+        return currentRecipeName;
     }
 
     /**
@@ -351,13 +280,11 @@ public class ProcessAgent {
      */
     public Set<IPortType.Type> getCachedOutputTypes() {
         Set<IPortType.Type> types = new HashSet<>();
-        if (!cachedItemOutputs.isEmpty()) types.add(IPortType.Type.ITEM);
-        if (!cachedFluidOutputs.isEmpty()) types.add(IPortType.Type.FLUID);
-        if (!cachedManaOutputs.isEmpty() || manaOutputPerTick > 0) types.add(IPortType.Type.MANA);
-        if (!cachedGasOutputs.isEmpty()) types.add(IPortType.Type.GAS);
-        if (!cachedEssentiaOutputs.isEmpty()) types.add(IPortType.Type.ESSENTIA);
-        if (!cachedVisOutputs.isEmpty()) types.add(IPortType.Type.VIS);
-        if (!cachedEnergyOutputs.isEmpty() || energyOutputPerTick > 0) types.add(IPortType.Type.ENERGY);
+        for (IRecipeOutput output : cachedOutputs) {
+            types.add(output.getPortType());
+        }
+        if (manaOutputPerTick > 0) types.add(IPortType.Type.MANA);
+        if (energyOutputPerTick > 0) types.add(IPortType.Type.ENERGY);
         return types;
     }
 
@@ -366,37 +293,23 @@ public class ProcessAgent {
         return (float) progress / maxProgress;
     }
 
-    /**
-     * Get a status message for GUI display.
-     * Returns a human-readable string describing the current processing state.
-     *
-     * @param outputPorts Output ports for checking blocked outputs
-     * @return Status message string
-     */
     public String getStatusMessage(List<IModularPort> outputPorts) {
-        if (running && !waitingForOutput) {
-            if (maxProgress <= 0) {
-                return "Processing 0 %";
-            }
-            return "Processing " + (int) ((float) progress / maxProgress * 100) + " %";
+        if (isRunning() && !isWaitingForOutput()) {
+            if (maxProgress <= 0) return "Processing " + currentBatchSize + "x 0 %";
+            return "Processing " + currentBatchSize + "x " + (int) ((float) progress / maxProgress * 100) + " %";
         }
-
-        if (waitingForOutput) {
+        if (isWaitingForOutput()) {
             String blocked = diagnoseBlockedOutputs(outputPorts);
             return blocked + " Output is full";
         }
-
         return "Idle";
     }
 
-    /**
-     * Diagnose which output types are blocked when waiting for output.
-     */
     private String diagnoseBlockedOutputs(List<IModularPort> outputPorts) {
         if (currentRecipe != null) {
             StringBuilder blocked = new StringBuilder();
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
-                if (!output.process(outputPorts, true)) {
+                if (!output.checkCapacity(outputPorts, currentBatchSize)) {
                     if (blocked.length() > 0) blocked.append(", ");
                     blocked.append(
                         output.getPortType()
@@ -405,8 +318,6 @@ public class ProcessAgent {
             }
             if (blocked.length() > 0) return blocked.toString();
         }
-
-        // Fallback: use cached output types
         Set<IPortType.Type> cachedTypes = getCachedOutputTypes();
         if (!cachedTypes.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -416,8 +327,18 @@ public class ProcessAgent {
             }
             return sb.toString();
         }
-
         return "Unknown";
+    }
+
+    public boolean diagnoseBlockOutputFull(List<IModularPort> outputPorts) {
+        if (currentRecipe != null) {
+            for (IRecipeOutput output : currentRecipe.getOutputs()) {
+                if (output.getPortType() == IPortType.Type.BLOCK && !output.process(outputPorts, true)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
@@ -427,70 +348,19 @@ public class ProcessAgent {
         nbt.setInteger("energyOutputPerTick", energyOutputPerTick);
         nbt.setInteger("manaPerTick", manaPerTick);
         nbt.setInteger("manaOutputPerTick", manaOutputPerTick);
+        nbt.setInteger("batchSize", currentBatchSize);
         nbt.setBoolean("running", running);
         nbt.setBoolean("waitingForOutput", waitingForOutput);
-        if (currentRecipeName != null) {
-            nbt.setString("recipeName", currentRecipeName);
-        }
+        if (currentRecipeName != null) nbt.setString("recipeName", currentRecipeName);
 
         if (running || waitingForOutput) {
-            // Item outputs
-            NBTTagList itemList = new NBTTagList();
-            for (ItemStack stack : cachedItemOutputs) {
-                itemList.appendTag(stack.writeToNBT(new NBTTagCompound()));
-            }
-            nbt.setTag("itemOutputs", itemList);
-
-            // Fluid outputs
-            NBTTagList fluidList = new NBTTagList();
-            for (FluidStack stack : cachedFluidOutputs) {
-                fluidList.appendTag(stack.writeToNBT(new NBTTagCompound()));
-            }
-            nbt.setTag("fluidOutputs", fluidList);
-
-            // Mana outputs (just integers)
-            int[] manaArray = new int[cachedManaOutputs.size()];
-            for (int i = 0; i < cachedManaOutputs.size(); i++) {
-                manaArray[i] = cachedManaOutputs.get(i);
-            }
-            nbt.setIntArray("manaOutputs", manaArray);
-
-            // Gas outputs [gasName, amount]
-            NBTTagList gasList = new NBTTagList();
-            for (String[] gas : cachedGasOutputs) {
+            NBTTagList outputList = new NBTTagList();
+            for (IRecipeOutput output : cachedOutputs) {
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("gas", gas[0]);
-                tag.setString("amount", gas[1]);
-                gasList.appendTag(tag);
+                output.writeToNBT(tag);
+                outputList.appendTag(tag);
             }
-            nbt.setTag("gasOutputs", gasList);
-
-            // Essentia outputs [aspectTag, amount]
-            NBTTagList essentiaList = new NBTTagList();
-            for (String[] essentia : cachedEssentiaOutputs) {
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("aspect", essentia[0]);
-                tag.setString("amount", essentia[1]);
-                essentiaList.appendTag(tag);
-            }
-            nbt.setTag("essentiaOutputs", essentiaList);
-
-            // Vis outputs [aspectTag, amountCentiVis]
-            NBTTagList visList = new NBTTagList();
-            for (String[] vis : cachedVisOutputs) {
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("aspect", vis[0]);
-                tag.setString("amount", vis[1]);
-                visList.appendTag(tag);
-            }
-            nbt.setTag("visOutputs", visList);
-
-            // Energy outputs
-            int[] energyArray = new int[cachedEnergyOutputs.size()];
-            for (int i = 0; i < cachedEnergyOutputs.size(); i++) {
-                energyArray[i] = cachedEnergyOutputs.get(i);
-            }
-            nbt.setIntArray("energyOutputs", energyArray);
+            nbt.setTag("cachedOutputs", outputList);
         }
     }
 
@@ -501,64 +371,32 @@ public class ProcessAgent {
         energyOutputPerTick = nbt.getInteger("energyOutputPerTick");
         manaPerTick = nbt.getInteger("manaPerTick");
         manaOutputPerTick = nbt.getInteger("manaOutputPerTick");
+        currentBatchSize = nbt.hasKey("batchSize") ? nbt.getInteger("batchSize") : 1;
         running = nbt.getBoolean("running");
         waitingForOutput = nbt.getBoolean("waitingForOutput");
         currentRecipeName = nbt.hasKey("recipeName") ? nbt.getString("recipeName") : null;
 
-        // Clear all caches
-        cachedItemOutputs.clear();
-        cachedFluidOutputs.clear();
-        cachedManaOutputs.clear();
-        cachedGasOutputs.clear();
-        cachedEssentiaOutputs.clear();
-        cachedVisOutputs.clear();
-        cachedEnergyOutputs.clear();
+        if (running || waitingForOutput) {
+            if (currentRecipeName != null && !currentRecipeName.isEmpty()) {
+                this.currentRecipe = RecipeLoader.getInstance()
+                    .getRecipeByRegistryName(currentRecipeName);
+            }
+            if (this.currentRecipe == null) {
+                this.running = false;
+                this.waitingForOutput = false;
+                this.currentRecipeName = null;
+            }
+        }
+
+        clearCaches();
 
         if (running || waitingForOutput) {
-            // Item outputs
-            NBTTagList itemList = nbt.getTagList("itemOutputs", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < itemList.tagCount(); i++) {
-                cachedItemOutputs.add(ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)));
-            }
-
-            // Fluid outputs
-            NBTTagList fluidList = nbt.getTagList("fluidOutputs", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < fluidList.tagCount(); i++) {
-                cachedFluidOutputs.add(FluidStack.loadFluidStackFromNBT(fluidList.getCompoundTagAt(i)));
-            }
-
-            // Mana outputs
-            int[] manaArray = nbt.getIntArray("manaOutputs");
-            for (int mana : manaArray) {
-                cachedManaOutputs.add(mana);
-            }
-
-            // Gas outputs
-            NBTTagList gasList = nbt.getTagList("gasOutputs", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < gasList.tagCount(); i++) {
-                NBTTagCompound tag = gasList.getCompoundTagAt(i);
-                cachedGasOutputs.add(new String[] { tag.getString("gas"), tag.getString("amount") });
-            }
-
-            // Essentia outputs
-            NBTTagList essentiaList = nbt.getTagList("essentiaOutputs", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < essentiaList.tagCount(); i++) {
-                NBTTagCompound tag = essentiaList.getCompoundTagAt(i);
-                cachedEssentiaOutputs.add(new String[] { tag.getString("aspect"), tag.getString("amount") });
-            }
-
-            // Vis outputs
-            NBTTagList visList = nbt.getTagList("visOutputs", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < visList.tagCount(); i++) {
-                NBTTagCompound tag = visList.getCompoundTagAt(i);
-                cachedVisOutputs.add(new String[] { tag.getString("aspect"), tag.getString("amount") });
-            }
-
-            // Energy outputs
-            if (nbt.hasKey("energyOutputs")) {
-                int[] energyArray = nbt.getIntArray("energyOutputs");
-                for (int e : energyArray) {
-                    cachedEnergyOutputs.add(e);
+            NBTTagList outputList = nbt.getTagList("cachedOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < outputList.tagCount(); i++) {
+                NBTTagCompound tag = outputList.getCompoundTagAt(i);
+                IRecipeOutput output = OutputNBTRegistry.read(tag);
+                if (output != null) {
+                    cachedOutputs.add(output);
                 }
             }
         }
@@ -574,6 +412,8 @@ public class ProcessAgent {
         NO_MATCHING_RECIPE,
         OUTPUT_FULL,
         PAUSED,
-        NO_MANA
+        NO_MANA,
+        BLOCK_MISSING,
+        BLOCK_OUTPUT_FULL
     }
 }

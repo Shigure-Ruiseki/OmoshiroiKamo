@@ -88,6 +88,15 @@ public abstract class BaseRegistry<T extends BaseRegistryItem<T>> {
     }
 
     /**
+     * Gets all registered items (including disabled ones).
+     *
+     * @return Collection of all items.
+     */
+    public Collection<T> getAll() {
+        return items.values();
+    }
+
+    /**
      * Returns all possible "children" of two parents,
      * including the parents themselves if enabled.
      *

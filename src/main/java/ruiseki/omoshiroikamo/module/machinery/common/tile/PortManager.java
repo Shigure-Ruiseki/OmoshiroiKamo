@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.StructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 
 /**
  * Manages port collections for TEMachineController.
@@ -122,54 +122,37 @@ public class PortManager {
      * @param entry Structure definition entry
      * @return true if all requirements are met
      */
-    public boolean checkRequirements(StructureEntry entry) {
-        if (entry == null || entry.requirements == null) return true;
+    public boolean checkRequirements(IStructureEntry entry) {
+        if (entry == null) return true;
+        List<IStructureRequirement> requirements = entry.getRequirements();
+        if (requirements.isEmpty()) return true;
 
-        StructureDefinitionData.Requirements req = entry.requirements;
+        for (IStructureRequirement req : requirements) {
+            String type = req.getType();
+            boolean isInput = type.toLowerCase()
+                .contains("input");
+            IPortType.Type portType = determinePortType(type);
 
-        // Item ports
-        if (!checkPortRequirement(req.itemInput, IPortType.Type.ITEM, true)) return false;
-        if (!checkPortRequirement(req.itemOutput, IPortType.Type.ITEM, false)) return false;
-
-        // Fluid ports
-        if (!checkPortRequirement(req.fluidInput, IPortType.Type.FLUID, true)) return false;
-        if (!checkPortRequirement(req.fluidOutput, IPortType.Type.FLUID, false)) return false;
-
-        // Energy ports
-        if (!checkPortRequirement(req.energyInput, IPortType.Type.ENERGY, true)) return false;
-        if (!checkPortRequirement(req.energyOutput, IPortType.Type.ENERGY, false)) return false;
-
-        // Mana ports
-        if (!checkPortRequirement(req.manaInput, IPortType.Type.MANA, true)) return false;
-        if (!checkPortRequirement(req.manaOutput, IPortType.Type.MANA, false)) return false;
-
-        // Gas ports
-        if (!checkPortRequirement(req.gasInput, IPortType.Type.GAS, true)) return false;
-        if (!checkPortRequirement(req.gasOutput, IPortType.Type.GAS, false)) return false;
-
-        // Essentia ports
-        if (!checkPortRequirement(req.essentiaInput, IPortType.Type.ESSENTIA, true)) return false;
-        if (!checkPortRequirement(req.essentiaOutput, IPortType.Type.ESSENTIA, false)) return false;
-
-        // Vis ports
-        if (!checkPortRequirement(req.visInput, IPortType.Type.VIS, true)) return false;
-        if (!checkPortRequirement(req.visOutput, IPortType.Type.VIS, false)) return false;
+            if (portType != null) {
+                long count = countPorts(portType, isInput);
+                if (count < req.getMinCount() || count > req.getMaxCount()) {
+                    return false;
+                }
+            }
+        }
 
         return true;
     }
 
-    private boolean checkPortRequirement(StructureDefinitionData.PortRequirement req, IPortType.Type type,
-        boolean isInput) {
-        if (req == null) return true;
-
-        long count = countPorts(type, isInput);
-
-        if (req.min != null && count < req.min) {
-            return false;
-        }
-        if (req.max != null && count > req.max) {
-            return false;
-        }
-        return true;
+    private IPortType.Type determinePortType(String type) {
+        String lower = type.toLowerCase();
+        if (lower.contains("item")) return IPortType.Type.ITEM;
+        if (lower.contains("fluid")) return IPortType.Type.FLUID;
+        if (lower.contains("energy")) return IPortType.Type.ENERGY;
+        if (lower.contains("mana")) return IPortType.Type.MANA;
+        if (lower.contains("gas")) return IPortType.Type.GAS;
+        if (lower.contains("essentia")) return IPortType.Type.ESSENTIA;
+        if (lower.contains("vis")) return IPortType.Type.VIS;
+        return null;
     }
 }

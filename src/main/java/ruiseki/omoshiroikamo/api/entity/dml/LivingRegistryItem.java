@@ -1,21 +1,24 @@
 package ruiseki.omoshiroikamo.api.entity.dml;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.JsonObject;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
-public class LivingRegistryItem {
+public class LivingRegistryItem extends AbstractJsonMaterial {
 
     @Getter
-    protected final int id;
+    protected int id;
     @Getter
-    protected final String displayName;
+    protected String displayName;
     @Getter
-    protected final String texture;
+    @Setter
+    protected String texture;
     @Getter
-    protected final int xpValue;
+    protected int xpValue;
 
     @Getter
     protected Map<String, String> lang;
@@ -24,27 +27,49 @@ public class LivingRegistryItem {
     @Setter
     protected boolean enabled;
 
+    public LivingRegistryItem() {
+        this.enabled = true;
+    }
+
     public LivingRegistryItem(int id, String displayName, String texture, int xpValue) {
+        this();
         this.id = id;
         this.displayName = displayName;
         this.texture = texture;
         this.xpValue = xpValue;
     }
 
-    // Not used
-    public LivingRegistryItem setLang(String langCode, String value) {
-        if (this.lang == null) {
-            this.lang = new HashMap<>();
-        }
+    @Override
+    public void read(JsonObject json) {
+        this.id = getInt(json, "id", 0);
+        this.displayName = getString(json, "displayName", "Unknown");
+        this.texture = getString(json, "texture", displayName.toLowerCase());
+        this.xpValue = getInt(json, "xpValue", 10);
+        this.enabled = getBoolean(json, "enabled", true);
+        this.lang = getMap(json, "lang");
+    }
 
-        if (langCode != null && !langCode.isEmpty() && value != null && !value.isEmpty()) {
-            this.lang.put(langCode, value);
-        }
+    @Override
+    public void write(JsonObject json) {
+        json.addProperty("id", id);
+        json.addProperty("displayName", displayName);
+        json.addProperty("texture", texture);
+        json.addProperty("xpValue", xpValue);
+        json.addProperty("enabled", enabled);
+        writeMap(json, "lang", lang);
+    }
 
-        return this;
+    @Override
+    public boolean validate() {
+        if (id < 0) {
+            logValidationError("ID must be non-negative");
+            return false;
+        }
+        return true;
     }
 
     public String getItemName() {
-        return "item.living_matter." + displayName + ".name";
+        String name = displayName != null ? displayName : "Unknown";
+        return "item.living_matter." + name + ".name";
     }
 }

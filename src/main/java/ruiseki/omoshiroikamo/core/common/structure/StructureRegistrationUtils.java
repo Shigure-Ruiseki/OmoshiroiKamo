@@ -16,20 +16,18 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockEntry;
-import ruiseki.omoshiroikamo.core.common.structure.StructureDefinitionData.BlockMapping;
+import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.TieredMultiblockInfoContainer;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 
 public class StructureRegistrationUtils {
 
-    // Reserved symbols that are handled specially and should not be overridden by
-    // JSON
-    // Q = Controller (must be exactly 1), space = any, _ = mandatory air
-    // A = Modifier slot, L = Lens slot (these need ofBlockAdderWithPos)
-    // G = Solar Cells
-    private static final String RESERVED_SYMBOLS = "Q _ALG";
+    // Conventional symbols that should usually be handled by code for internal
+    // modules
+    // Q = Controller, space = any, _ = air, A = Modifier, G = Solar, L = Lens
+    public static final String DEFAULT_RESERVED_SYMBOLS = "Q _AGL";
 
     /**
      * Registers a single tier of a multiblock structure.
@@ -75,6 +73,9 @@ public class StructureRegistrationUtils {
         // Add Air element ('_') - mandatory air block
         builder.addElement('_', isAir());
 
+        // Add Frame element ('F') - default frame block
+        builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
+
         // Add Custom Elements
         if (elementAdder != null) {
             elementAdder.accept(builder);
@@ -108,6 +109,27 @@ public class StructureRegistrationUtils {
     public static <T extends AbstractMBModifierTE> IStructureDefinition<T> registerTierWithDynamicMappings(
         Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
         Block controllerBlock, int tier, Consumer<StructureDefinition.Builder<T>> elementAdder) {
+        return registerTierWithDynamicMappings(
+            tileClass,
+            shape,
+            dynamicMappings,
+            shapeName,
+            controllerBlock,
+            tier,
+            DEFAULT_RESERVED_SYMBOLS,
+            elementAdder);
+    }
+
+    /**
+     * Registers a tier with dynamic mappings and explicit reserved symbols.
+     *
+     * @param reservedSymbols Symbols that should NOT be added from JSON (handled by
+     *                        elementAdder)
+     */
+    public static <T extends AbstractMBModifierTE> IStructureDefinition<T> registerTierWithDynamicMappings(
+        Class<T> tileClass, String[][] shape, Map<Character, Object> dynamicMappings, String shapeName,
+        Block controllerBlock, int tier, String reservedSymbols,
+        Consumer<StructureDefinition.Builder<T>> elementAdder) {
 
         // Validate: Q must appear exactly once
         int qCount = countSymbolInShape(shape, 'Q');
@@ -136,13 +158,19 @@ public class StructureRegistrationUtils {
         // Add Air element ('_') - mandatory air block
         builder.addElement('_', isAir());
 
-        // Add dynamic mappings from JSON (skip reserved symbols)
+        // Add Frame element ('F') - default frame block if not specified
+        if (dynamicMappings == null || !dynamicMappings.containsKey('F')) {
+            builder.addElement('F', ofBlock(MultiBlockBlocks.BASALT_STRUCTURE.getBlock(), 0));
+        }
+
+        // Add dynamic mappings from JSON (priority: JSON > Internal Defaults, except
+        // Mandatory)
         if (dynamicMappings != null) {
             for (Map.Entry<Character, Object> entry : dynamicMappings.entrySet()) {
                 char symbol = entry.getKey();
 
                 // Skip reserved symbols
-                if (RESERVED_SYMBOLS.indexOf(symbol) >= 0) {
+                if (reservedSymbols != null && reservedSymbols.indexOf(symbol) >= 0) {
                     continue;
                 }
 
@@ -153,11 +181,9 @@ public class StructureRegistrationUtils {
                     Logger.warn("Failed to create element for symbol '" + symbol + "' in structure " + shapeName);
                 }
             }
-        } else {
-            Logger.warn("Structure " + shapeName + ": dynamicMappings is null!");
         }
 
-        // Add Custom Elements (can override dynamic mappings)
+        // Add Custom Elements (highest priority, can override JSON)
         if (elementAdder != null) {
             elementAdder.accept(builder);
         }
@@ -194,19 +220,15 @@ public class StructureRegistrationUtils {
             BlockMapping blockMapping = (BlockMapping) mapping;
 
             // Single block
-            if (blockMapping.block != null && !blockMapping.block.isEmpty()) {
-                return BlockResolver.createElement(blockMapping.block);
+            if (blockMapping.getBlockId() != null && !blockMapping.getBlockId()
+                .isEmpty()) {
+                return BlockResolver.createElement(blockMapping.getBlockId());
             }
 
             // Multiple blocks (chain)
-            if (blockMapping.blocks != null && !blockMapping.blocks.isEmpty()) {
-                List<String> blockStrings = new ArrayList<>();
-                for (BlockEntry entry : blockMapping.blocks) {
-                    if (entry != null && entry.id != null) {
-                        blockStrings.add(entry.id);
-                    }
-                }
-                return BlockResolver.createChainElement(blockStrings);
+            if (blockMapping.getBlockIds() != null && !blockMapping.getBlockIds()
+                .isEmpty()) {
+                return BlockResolver.createChainElement(blockMapping.getBlockIds());
             }
         }
 

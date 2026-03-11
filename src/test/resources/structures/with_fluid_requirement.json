@@ -1,0 +1,17 @@
+{
+  "name": "with_fluid_requirement",
+  "layers": [
+    {
+      "name": "y0",
+      "rows": ["Q"]
+    }
+  ],
+  "mappings": {},
+  "requirements": [
+    {
+      "type": "fluidInput",
+      "min": 1,
+      "max": 2
+    }
+  ]
+}
