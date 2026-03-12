@@ -1,16 +1,21 @@
 package ruiseki.omoshiroikamo.core.common.structure;
 
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlockAnyMeta;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofChain;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofTileAdder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
 import com.gtnewhorizon.structurelib.structure.AutoPlaceEnvironment;
@@ -18,17 +23,42 @@ import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.structure.IStructureElementChain;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalItemProxy;
 
 /**
  * Utility for resolving Block objects from block ID strings
  * and creating StructureLib elements dynamically.
  */
 public class BlockResolver {
+
+    /**
+     * Functional interface for creating specialized proxy ports.
+     */
+    @FunctionalInterface
+    public interface IProxyFactory {
+
+        IModularPort create(TEMachineController controller, ChunkCoordinates coords, TileEntity tile, EnumIO io);
+    }
+
+    private static final Map<IPortType.Type, IProxyFactory> PROXY_FACTORIES = new HashMap<>();
+
+    static {
+        // Register ITEM port factory
+        PROXY_FACTORIES.put(IPortType.Type.ITEM, (controller, coords, tile, io) -> {
+            if (tile instanceof IInventory) {
+                return new ExternalItemProxy(controller, coords, io);
+            }
+            return null;
+        });
+
+        // Add other factories (FLUID, ENERGY, etc.) here in the future
+    }
 
     /**
      * Resolve a block and metadata from a "mod:block:meta" string.
@@ -90,8 +120,13 @@ public class BlockResolver {
      */
     public static <T> IStructureElement<T> createElement(String blockString) {
         ResolvedBlock result = resolve(blockString);
-        if (result == null || result.isAir) {
+        if (result == null) {
             return null;
+        }
+
+        if (result.isAir) {
+            IStructureElement<T> airElement = isAir();
+            return withTracking(new HybridStructureElement<>(airElement, airElement));
         }
 
         if (result.isAny) {
@@ -211,24 +246,57 @@ public class BlockResolver {
      *         handle it
      */
     public static boolean collectPort(TEMachineController controller, TileEntity tile) {
-        if (tile == null) return false;
-
-        if (tile instanceof IModularPort port) {
-            IPortType.Direction direction = port.getPortDirection();
-            switch (direction) {
-                case INPUT -> controller.addPortFromStructure(port, true);
-                case OUTPUT -> controller.addPortFromStructure(port, false);
-                case BOTH -> {
-                    controller.addPortFromStructure(port, true);
-                    controller.addPortFromStructure(port, false);
-                }
-                case NONE -> {
-                    /* Skip ports with no direction */ }
-            }
-            return true;
+        if (tile == null) {
+            return false;
         }
 
-        return false;
+        // 1. Direct Modular Ports
+        if (tile instanceof IModularPort port) {
+            return registerPort(controller, port);
+        }
+
+        // 2. Proxy Ports (External Blocks)
+        ChunkCoordinates coords = new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
+        Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalConfigs = controller.getExternalPortConfigs();
+        if (externalConfigs == null || !externalConfigs.containsKey(coords)) return false;
+
+        Map<IPortType.Type, EnumIO> types = externalConfigs.get(coords);
+        if (types == null || types.isEmpty()) return false;
+
+        boolean registeredAny = false;
+        for (Map.Entry<IPortType.Type, EnumIO> typeEntry : types.entrySet()) {
+            IPortType.Type type = typeEntry.getKey();
+            EnumIO io = typeEntry.getValue();
+            if (io == null || io == EnumIO.NONE) continue;
+
+            IProxyFactory factory = PROXY_FACTORIES.get(type);
+            if (factory == null) continue;
+
+            IModularPort proxy = factory.create(controller, coords, tile, io);
+            if (proxy != null) {
+                registeredAny |= registerPort(controller, proxy);
+            }
+        }
+        return registeredAny;
+    }
+
+    /**
+     * Helper to register a port in the controller based on its direction.
+     */
+    private static boolean registerPort(TEMachineController controller, IModularPort port) {
+        IPortType.Direction direction = port.getPortDirection();
+        switch (direction) {
+            case INPUT -> controller.addPortFromStructure(port, true);
+            case OUTPUT -> controller.addPortFromStructure(port, false);
+            case BOTH -> {
+                controller.addPortFromStructure(port, true);
+                controller.addPortFromStructure(port, false);
+            }
+            case NONE -> {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -291,7 +359,9 @@ public class BlockResolver {
 
         @Override
         public boolean check(T t, World world, int x, int y, int z) {
-            if (wrappedElement.check(t, world, x, y, z)) {
+            boolean result = wrappedElement.check(t, world, x, y, z);
+
+            if (result) {
                 if (t instanceof TEMachineController controller) {
                     controller.trackStructureBlock(x, y, z);
 
@@ -299,9 +369,8 @@ public class BlockResolver {
                     TileEntity tile = world.getTileEntity(x, y, z);
                     BlockResolver.collectPort(controller, tile);
                 }
-                return true;
             }
-            return false;
+            return result;
         }
 
         @Override

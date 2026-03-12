@@ -15,23 +15,40 @@ public interface ISidedIO extends ITile {
     void setSideIO(ForgeDirection side, EnumIO state);
 
     default void toggleSide(ForgeDirection side) {
+        toggleSide(side, false);
+    }
+
+    default void toggleSide(ForgeDirection side, boolean reverse) {
         EnumIO limit = getIOLimit();
         EnumIO current = getSideIO(side);
 
         EnumIO next;
-        switch (current) {
-            case NONE:
-                next = limit.canInput() ? EnumIO.INPUT : limit.canOutput() ? EnumIO.OUTPUT : EnumIO.NONE;
-                break;
-
-            case INPUT:
-                next = limit.canOutput() ? EnumIO.OUTPUT : EnumIO.NONE;
-                break;
-
-            case OUTPUT:
-            default:
-                next = EnumIO.NONE;
-                break;
+        if (!reverse) {
+            switch (current) {
+                case NONE:
+                    next = limit.canInput() ? EnumIO.INPUT : limit.canOutput() ? EnumIO.OUTPUT : EnumIO.NONE;
+                    break;
+                case INPUT:
+                    next = limit.canOutput() ? EnumIO.OUTPUT : EnumIO.NONE;
+                    break;
+                case OUTPUT:
+                default:
+                    next = EnumIO.NONE;
+                    break;
+            }
+        } else {
+            switch (current) {
+                case NONE:
+                    next = limit.canOutput() ? EnumIO.OUTPUT : limit.canInput() ? EnumIO.INPUT : EnumIO.NONE;
+                    break;
+                case OUTPUT:
+                    next = limit.canInput() ? EnumIO.INPUT : EnumIO.NONE;
+                    break;
+                case INPUT:
+                default:
+                    next = EnumIO.NONE;
+                    break;
+            }
         }
 
         setSideIO(side, next);

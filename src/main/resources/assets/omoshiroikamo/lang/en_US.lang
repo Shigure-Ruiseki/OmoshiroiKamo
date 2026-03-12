@@ -1192,6 +1192,15 @@ achievement.omoshiroikamo.craft_modifier_saturation.desc=Craft a Saturation Modi
 # Modular machines ==============================================
 
 
+# Wrench
+chat.omoshiroikamo.wrench_linked=Wrench linked to Controller at (%d, %d, %d)
+chat.omoshiroikamo.wrench_type_selected=Selected port type: %s
+chat.omoshiroikamo.port_io_set=External %s port IO set to: %s
+chat.omoshiroikamo.port_error=External port error at (%d, %d, %d)! Please check your configuration.
+chat.omoshiroikamo.wrench_linked=Coordinate (%s, %s, %s) linked.
+chat.omoshiroikamo.wrench_unlinked=Unlinked.
+
+
 # Gui
 gui.machinery.energy_used=Energy Used: %s
 gui.machinery.use_ic2=Use IC2
@@ -1243,6 +1252,8 @@ gui.port_type.GAS=Gas
 gui.port_type.ESSENTIA=Essentia
 gui.port_type.VIS=Vis
 gui.port_type.BLOCK=Block
+gui.port_type=Selected Port Type: %s
+gui.port_type.format=%s (%s)
 
 
 # NEI Dynamic Tier Display

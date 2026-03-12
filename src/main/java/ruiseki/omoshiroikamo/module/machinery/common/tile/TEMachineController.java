@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -112,6 +113,82 @@ public class TEMachineController extends AbstractMBModifierTE
     private ExtendedFacing extendedFacing = ExtendedFacing.DEFAULT;
 
     // Redstone Control - Inherited from AbstractTE
+
+    // External Port Configurations
+    private final Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalPortConfigs = new HashMap<>();
+
+    public Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> getExternalPortConfigs() {
+        return externalPortConfigs;
+    }
+
+    public boolean registerExternalPort(int px, int py, int pz, IPortType.Type portType, EntityPlayer player) {
+        if (worldObj == null || worldObj.isRemote) return false;
+
+        String structureName = getCustomStructureName();
+        if (structureName == null || structureName.isEmpty()) {
+            return false;
+        }
+
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(structureName);
+        if (entry == null) {
+            return false;
+        }
+
+        java.util.Set<Character> exPorts = entry.getExternalPorts();
+        if (exPorts == null || exPorts.isEmpty()) return false;
+
+        ChunkCoordinates target = new ChunkCoordinates(px, py, pz);
+        boolean isValid = false;
+        Character foundSymbol = null;
+        for (Character c : exPorts) {
+            List<ChunkCoordinates> positions = symbolPositions.get(c);
+            if (positions != null) {
+                if (positions.contains(target)) {
+                    isValid = true;
+                    foundSymbol = c;
+                    break;
+                }
+            }
+        }
+
+        if (!isValid) {
+            return false;
+        }
+
+        // Check for fixed IO locks
+        Map<Character, EnumIO> fixedPorts = entry.getFixedExternalPorts();
+        if (fixedPorts.containsKey(foundSymbol)) {
+            player.addChatMessage(new ChatComponentTranslation("chat.omoshiroikamo.port_io_fixed"));
+            return true; // Cancel action but return true to prevent other interactions
+        }
+
+        Map<IPortType.Type, EnumIO> typeMap = externalPortConfigs.computeIfAbsent(target, k -> new HashMap<>());
+        EnumIO current = typeMap.get(portType);
+
+        if (current == null || current == EnumIO.NONE) {
+            typeMap.put(portType, EnumIO.INPUT);
+        } else if (current == EnumIO.INPUT) {
+            typeMap.put(portType, EnumIO.OUTPUT);
+        } else if (current == EnumIO.OUTPUT) {
+            typeMap.put(portType, EnumIO.BOTH);
+        } else {
+            typeMap.remove(portType);
+            if (typeMap.isEmpty()) {
+                externalPortConfigs.remove(target);
+            }
+        }
+
+        EnumIO newIo = typeMap.getOrDefault(portType, EnumIO.NONE);
+        player.addChatMessage(
+            new ChatComponentTranslation("chat.omoshiroikamo.port_io_set", portType.name(), newIo.name()));
+
+        setFormed(false);
+        clearStructureParts();
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        return true;
+    }
 
     // Transient flag to trigger tint packet resend on load
     private boolean needsTintResend = false;
@@ -478,7 +555,7 @@ public class TEMachineController extends AbstractMBModifierTE
         return cachedOutputPorts;
     }
 
-    private void invalidatePortCache() {
+    public void invalidatePortCache() {
         this.cachedInputPorts = null;
         this.cachedOutputPorts = null;
         this.nextRecipe = null;
@@ -633,6 +710,34 @@ public class TEMachineController extends AbstractMBModifierTE
         nbt.setTag("processAgent", agentNbt);
         // Save ExtendedFacing
         nbt.setByte("extendedFacing", (byte) extendedFacing.ordinal());
+        // Save External Port Configs
+        if (!externalPortConfigs.isEmpty()) {
+            NBTTagList portList = new NBTTagList();
+            for (Map.Entry<ChunkCoordinates, Map<IPortType.Type, EnumIO>> entry : externalPortConfigs.entrySet()) {
+                NBTTagCompound portTag = new NBTTagCompound();
+                portTag.setInteger("x", entry.getKey().posX);
+                portTag.setInteger("y", entry.getKey().posY);
+                portTag.setInteger("z", entry.getKey().posZ);
+
+                NBTTagList typeList = new NBTTagList();
+                for (Map.Entry<IPortType.Type, EnumIO> typeEntry : entry.getValue()
+                    .entrySet()) {
+                    NBTTagCompound typeTag = new NBTTagCompound();
+                    typeTag.setByte(
+                        "type",
+                        (byte) typeEntry.getKey()
+                            .ordinal());
+                    typeTag.setByte(
+                        "io",
+                        (byte) typeEntry.getValue()
+                            .ordinal());
+                    typeList.appendTag(typeTag);
+                }
+                portTag.setTag("types", typeList);
+                portList.appendTag(portTag);
+            }
+            nbt.setTag("externalPortConfigs", portList);
+        }
     }
 
     @Override
@@ -680,6 +785,42 @@ public class TEMachineController extends AbstractMBModifierTE
             int ordinal = nbt.getByte("extendedFacing") & 0xFF;
             if (ordinal < ExtendedFacing.VALUES.length) {
                 extendedFacing = ExtendedFacing.VALUES[ordinal];
+            }
+        }
+
+        // Load External Port Configs
+        externalPortConfigs.clear();
+        if (nbt.hasKey("externalPortConfigs", 9)) {
+            NBTTagList portList = nbt.getTagList("externalPortConfigs", 10);
+            for (int i = 0; i < portList.tagCount(); i++) {
+                NBTTagCompound portTag = portList.getCompoundTagAt(i);
+                ChunkCoordinates coords = new ChunkCoordinates(
+                    portTag.getInteger("x"),
+                    portTag.getInteger("y"),
+                    portTag.getInteger("z"));
+
+                Map<IPortType.Type, EnumIO> typeMap = new HashMap<>();
+                if (portTag.hasKey("types", 9)) {
+                    NBTTagList typeList = portTag.getTagList("types", 10);
+                    for (int j = 0; j < typeList.tagCount(); j++) {
+                        NBTTagCompound typeTag = typeList.getCompoundTagAt(j);
+                        int typeOrdinal = typeTag.getByte("type") & 0xFF;
+                        int ioOrdinal = typeTag.getByte("io") & 0xFF;
+                        if (typeOrdinal < IPortType.Type.values().length && ioOrdinal < EnumIO.values().length) {
+                            typeMap.put(IPortType.Type.values()[typeOrdinal], EnumIO.values()[ioOrdinal]);
+                        }
+                    }
+                } else if (portTag.hasKey("io")) {
+                    // Legacy support
+                    int ordinal = portTag.getByte("io") & 0xFF;
+                    if (ordinal < EnumIO.values().length) {
+                        typeMap.put(IPortType.Type.ITEM, EnumIO.values()[ordinal]);
+                    }
+                }
+
+                if (!typeMap.isEmpty()) {
+                    externalPortConfigs.put(coords, typeMap);
+                }
             }
         }
 
@@ -896,6 +1037,18 @@ public class TEMachineController extends AbstractMBModifierTE
         return structureAgent.getLastValidationError();
     }
 
+    public void setLastValidationError(String error) {
+        structureAgent.setLastValidationError(error);
+    }
+
+    public boolean isPhysicallyValid() {
+        return structureAgent.isPhysicallyValid();
+    }
+
+    public void setPhysicallyValid(boolean valid) {
+        structureAgent.setPhysicallyValid(valid);
+    }
+
     // ========== IRecipeContext Implementation ==========
 
     @Override
@@ -972,6 +1125,11 @@ public class TEMachineController extends AbstractMBModifierTE
                 this.redstonePowered = powered;
                 this.redstoneStateDirty = true;
                 this.forceClientUpdate = true;
+            }
+
+            // Trigger immediate structure check on neighbor change
+            if (getCustomStructureName() != null && !getCustomStructureName().isEmpty()) {
+                structureAgent.forceStructureCheck();
             }
         }
     }

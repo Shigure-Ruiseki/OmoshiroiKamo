@@ -4,6 +4,7 @@ import static com.gtnewhorizon.structurelib.structure.StructureUtility.isAir;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,7 @@ import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -110,6 +112,12 @@ public class CustomStructureRegistry {
                 IStructureElement<TEMachineController> element = createElementFromMapping(mapEntry.getValue());
                 if (element != null) {
                     builder.addElement(symbol, wrapTracking(symbol, element));
+                } else {
+                    Logger.warn(
+                        "CustomStructureRegistry: Failed to create element for symbol '" + symbol
+                            + "' in structure '"
+                            + entry.getName()
+                            + "'");
                 }
             }
 
@@ -140,11 +148,11 @@ public class CustomStructureRegistry {
 
             @Override
             public boolean check(TEMachineController t, World world, int x, int y, int z) {
-                if (element.check(t, world, x, y, z)) {
+                boolean result = element.check(t, world, x, y, z);
+                if (result) {
                     t.trackSymbolPosition(symbol, x, y, z);
-                    return true;
                 }
-                return false;
+                return result;
             }
 
             @Override
@@ -178,6 +186,12 @@ public class CustomStructureRegistry {
             } else if (bm.getBlockIds() != null) {
                 return BlockResolver.createChainElementWithTileAdder(bm.getBlockIds());
             }
+        } else if (mapping instanceof TieredBlockMapping) {
+            TieredBlockMapping tm = (TieredBlockMapping) mapping;
+            return BlockResolver.createChainElementWithTileAdder(
+                new ArrayList<>(
+                    tm.getTiers()
+                        .keySet()));
         }
         return null;
     }

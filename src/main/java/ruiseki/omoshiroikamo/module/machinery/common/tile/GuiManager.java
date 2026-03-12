@@ -116,10 +116,20 @@ public class GuiManager {
             controller::setLastProcessErrorDetail);
         syncManager.syncValue("lastErrorDetail", errorDetailSyncer);
 
+        StringSyncValue validationErrorSyncer = new StringSyncValue(
+            controller::getLastValidationError,
+            controller::setLastValidationError);
+        syncManager.syncValue("lastValidationError", validationErrorSyncer);
+
         StringSyncValue recipeNameSyncer = new StringSyncValue(
             controller.getProcessAgent()::getCurrentRecipeName,
             controller.getProcessAgent()::setCurrentRecipeName);
         syncManager.syncValue("processRecipeName", recipeNameSyncer);
+
+        BooleanSyncValue physicallyValidSyncer = new BooleanSyncValue(
+            controller::isPhysicallyValid,
+            controller::setPhysicallyValid);
+        syncManager.syncValue("isPhysicallyValid", physicallyValidSyncer);
 
         syncManager.bindPlayerInventory(data.getPlayer());
         syncManager.registerSlotGroup("blueprint", 1, true);
@@ -185,6 +195,10 @@ public class GuiManager {
         if (!hasBlueprint()) return LibMisc.LANG.localize("gui.status.insert_blueprint");
 
         if (!controller.isFormed()) {
+            if (controller.isPhysicallyValid()) {
+                // Physically valid but requirements not met
+                return LibMisc.LANG.localize("gui.status.requirements_not_met");
+            }
             if (hasValidationError()) return LibMisc.LANG.localize("gui.status.structure_mismatch");
             return LibMisc.LANG.localize("gui.status.structure_not_formed");
         }
