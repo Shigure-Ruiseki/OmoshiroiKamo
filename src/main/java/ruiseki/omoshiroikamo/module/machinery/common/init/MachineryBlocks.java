@@ -5,27 +5,14 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEnergyOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPortME;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockFluidOutputPortME;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockGasOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockItemOutputPortME;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockManaOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisBridge;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort;
 
 /**
  * Block registration for the Machinery module.
@@ -69,27 +56,6 @@ public enum MachineryBlocks {
     public static final MachineryBlocks[] VALUES = values();
 
     public static void preInit() {
-        // Initialize optional mod blocks via helper classes
-        // Each helper class is only loaded when its mod is present
-        if (LibMods.AppliedEnergistics2.isLoaded()) {
-            AE2BlockHelper.init();
-        }
-        if (LibMods.AE2FluidCrafting.isLoaded()) {
-            AE2FluidBlockHelper.init();
-        }
-        if (LibMods.Botania.isLoaded()) {
-            BotaniaBlockHelper.init();
-        }
-        if (LibMods.Mekanism.isLoaded()) {
-            MekanismBlockHelper.init();
-        }
-        if (LibMods.Thaumcraft.isLoaded()) {
-            ThaumcraftBlockHelper.init();
-        }
-        if (LibMods.ThaumicEnergistics.isLoaded()) {
-            ThaumicEnergisticsBlockHelper.init();
-        }
-
         // Initialize all available blocks
         for (MachineryBlocks block : VALUES) {
             if (block.block == null) {
@@ -132,6 +98,10 @@ public enum MachineryBlocks {
         return block != null ? Item.getItemFromBlock(block) : null;
     }
 
+    public void setBlock(BlockOK block) {
+        this.block = block;
+    }
+
     public ItemStack newItemStack() {
         return newItemStack(1);
     }
@@ -148,55 +118,4 @@ public enum MachineryBlocks {
         return block != null;
     }
 
-    // ==================== Helper Classes for Mod Blocks ====================
-    // These classes are only loaded when their respective mod is present.
-    // This ensures the Block classes they reference are not loaded prematurely.
-
-    private static class AE2BlockHelper {
-
-        static void init() {
-            ITEM_OUTPUT_PORT_ME.block = BlockItemOutputPortME.create();
-        }
-    }
-
-    private static class AE2FluidBlockHelper {
-
-        static void init() {
-            FLUID_OUTPUT_PORT_ME.block = BlockFluidOutputPortME.create();
-        }
-    }
-
-    private static class BotaniaBlockHelper {
-
-        static void init() {
-            MANA_INPUT_PORT.block = BlockManaInputPort.create();
-            MANA_OUTPUT_PORT.block = BlockManaOutputPort.create();
-        }
-    }
-
-    private static class MekanismBlockHelper {
-
-        static void init() {
-            GAS_INPUT_PORT.block = BlockGasInputPort.create();
-            GAS_OUTPUT_PORT.block = BlockGasOutputPort.create();
-        }
-    }
-
-    private static class ThaumcraftBlockHelper {
-
-        static void init() {
-            VIS_INPUT_PORT.block = BlockVisInputPort.create();
-            VIS_OUTPUT_PORT.block = BlockVisOutputPort.create();
-            ESSENTIA_INPUT_PORT.block = BlockEssentiaInputPort.create();
-            ESSENTIA_OUTPUT_PORT.block = BlockEssentiaOutputPort.create();
-            BlockVisBridge.create();
-        }
-    }
-
-    private static class ThaumicEnergisticsBlockHelper {
-
-        static void init() {
-            ESSENTIA_INPUT_PORT_ME.block = BlockEssentiaInputPortME.create();
-        }
-    }
 }

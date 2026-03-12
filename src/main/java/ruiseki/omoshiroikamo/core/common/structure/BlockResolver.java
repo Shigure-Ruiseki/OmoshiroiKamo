@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -29,7 +28,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalItemProxy;
 
 /**
  * Utility for resolving Block objects from block ID strings
@@ -48,16 +46,8 @@ public class BlockResolver {
 
     private static final Map<IPortType.Type, IProxyFactory> PROXY_FACTORIES = new HashMap<>();
 
-    static {
-        // Register ITEM port factory
-        PROXY_FACTORIES.put(IPortType.Type.ITEM, (controller, coords, tile, io) -> {
-            if (tile instanceof IInventory) {
-                return new ExternalItemProxy(controller, coords, io);
-            }
-            return null;
-        });
-
-        // Add other factories (FLUID, ENERGY, etc.) here in the future
+    public static void registerProxyFactory(IPortType.Type type, IProxyFactory factory) {
+        PROXY_FACTORIES.put(type, factory);
     }
 
     /**
