@@ -71,7 +71,7 @@ Comprehensive testing plans and strategies for maintainers and contributors.
 
 A backport and enhancement of the original Modular Machinery mod.
 
-- **Multiblock System**: 
+- **Multiblock System**:
     - Create custom machines via JSON configuration.
     - Rotation and flip structures
 - **IO Ports**:
@@ -81,7 +81,12 @@ A backport and enhancement of the original Modular Machinery mod.
     - Gas (Mekanism)
     - Mana (Botania)
     - Vis & Essentia (Thaumcraft, WIP ME Essentia IO)
-- **NEI Integration**: 
+- **External Port Proxy System**:
+    - Use external blocks (chests, tanks, energy storage) as machine ports
+    - Supports 6 resource types with unified interface
+    - **English**: [External Port Proxy Design Document](./docs/en/machinery/EXTERNAL_PROXY.md)
+    - **日本語**: [External Port Proxy 設計ドキュメント](./docs/ja/machinery/EXTERNAL_PROXY.md)
+- **NEI Integration**:
     - Support for viewing recipes and structure previews. (WIP enhanced view)
     - Structure preview
 - **Dynamic Reload**: Reload recipes and structures via `/ok modular reload`.
