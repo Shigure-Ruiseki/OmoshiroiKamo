@@ -30,4 +30,16 @@ public interface IExternalPortProxy extends IModularPort {
      * Set the actual TileEntity this proxy wraps.
      */
     void setTargetTileEntity(TileEntity tileEntity);
+
+    /**
+     * Proxy validation: check if the target TileEntity is valid.
+     * Overrides the default IModularPort implementation to validate the proxy target.
+     *
+     * @return true if the target TileEntity exists and is valid
+     */
+    @Override
+    default boolean isPortValid() {
+        TileEntity target = getTargetTileEntity();
+        return target != null && !target.isInvalid();
+    }
 }
