@@ -18,13 +18,13 @@ import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisBridge;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisInputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockVisOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalEnergyProxy;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalEssentiaProxy;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalFluidProxy;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalGasProxy;
+// import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalEnergyProxy;
+// import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalEssentiaProxy;
+// import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalFluidProxy;
+// import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalGasProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalItemProxy;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalManaProxy;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalVisProxy;
+// import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalManaProxy;
+// import ruiseki.omoshiroikamo.module.machinery.common.tile.proxy.ExternalVisProxy;
 
 /**
  * Centrally manages external mod integrations for the Machinery module.
@@ -65,13 +65,13 @@ public class MachineryIntegration {
             return null;
         });
 
-        BlockResolver.registerProxyFactory(
-            IPortType.Type.FLUID,
-            (controller, coords, tile, io) -> new ExternalFluidProxy(controller, coords, io));
+        // BlockResolver.registerProxyFactory(
+        //     IPortType.Type.FLUID,
+        //     (controller, coords, tile, io) -> new ExternalFluidProxy(controller, coords, io));
 
-        BlockResolver.registerProxyFactory(
-            IPortType.Type.ENERGY,
-            (controller, coords, tile, io) -> new ExternalEnergyProxy(controller, coords, io));
+        // BlockResolver.registerProxyFactory(
+        //     IPortType.Type.ENERGY,
+        //     (controller, coords, tile, io) -> new ExternalEnergyProxy(controller, coords, io));
     }
 
     // ==================== Mod-Specific Integration Helpers ====================
@@ -97,9 +97,9 @@ public class MachineryIntegration {
             MachineryBlocks.GAS_INPUT_PORT.setBlock(BlockGasInputPort.create());
             MachineryBlocks.GAS_OUTPUT_PORT.setBlock(BlockGasOutputPort.create());
 
-            BlockResolver.registerProxyFactory(
-                IPortType.Type.GAS,
-                (controller, coords, tile, io) -> new ExternalGasProxy(controller, coords, io));
+            // BlockResolver.registerProxyFactory(
+            //     IPortType.Type.GAS,
+            //     (controller, coords, tile, io) -> new ExternalGasProxy(controller, coords, io));
         }
     }
 
@@ -109,9 +109,9 @@ public class MachineryIntegration {
             MachineryBlocks.MANA_INPUT_PORT.setBlock(BlockManaInputPort.create());
             MachineryBlocks.MANA_OUTPUT_PORT.setBlock(BlockManaOutputPort.create());
 
-            BlockResolver.registerProxyFactory(
-                IPortType.Type.MANA,
-                (controller, coords, tile, io) -> new ExternalManaProxy(controller, coords, io));
+        //     BlockResolver.registerProxyFactory(
+        //         IPortType.Type.MANA,
+        //         (controller, coords, tile, io) -> new ExternalManaProxy(controller, coords, io));
         }
     }
 
@@ -124,12 +124,12 @@ public class MachineryIntegration {
             MachineryBlocks.ESSENTIA_OUTPUT_PORT.setBlock(BlockEssentiaOutputPort.create());
             BlockVisBridge.create();
 
-            BlockResolver.registerProxyFactory(
-                IPortType.Type.ESSENTIA,
-                (controller, coords, tile, io) -> new ExternalEssentiaProxy(controller, coords, io));
-            BlockResolver.registerProxyFactory(
-                IPortType.Type.VIS,
-                (controller, coords, tile, io) -> new ExternalVisProxy(controller, coords, io));
+        //     BlockResolver.registerProxyFactory(
+        //         IPortType.Type.ESSENTIA,
+        //         (controller, coords, tile, io) -> new ExternalEssentiaProxy(controller, coords, io));
+        //     BlockResolver.registerProxyFactory(
+        //         IPortType.Type.VIS,
+        //         (controller, coords, tile, io) -> new ExternalVisProxy(controller, coords, io));
         }
     }
 
