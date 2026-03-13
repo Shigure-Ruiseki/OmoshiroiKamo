@@ -920,10 +920,18 @@ item.fluidReader.name=液体読み取り器
 item.redstoneWriter.name=レッドストーン書き込み器
 item.craftingInterface.name=クラフティングインターフェース
 
+item.menrilBerries.name=メンリルベリー
+item.itemMenrilDoor.name=メンリルのドア
+
 
 # Blocks
 tile.cable.name=ロジックケーブル
 tile.programmer.name=プログラマー
+tile.menrilSapling.name=メンリルの苗木
+tile.menrilLog.name=メンリルの原木
+tile.menrilLeaves.name=メンリルの葉
+tile.menrilDoor.name=メンリルのドア
+tile.menrilPlanks.name=メンリルの木材
 
 
 # Tooltips
