@@ -11,7 +11,7 @@ public final class LibMisc {
     public static final String VERSION = Tags.VERSION;
     public static final String DEPENDENCIES = "required-after:gtnhlib@[0.9.40,);"
         + "required-after:structurelib@[1.4.28,);"
-        + "required-after:modularui2@[2.3.41-1.7.10,);"
+        + "required-after:modularui2@[2.3.46-1.7.10,);"
         + "after:Baubles|Expanded;"
         + "after:Baubles;"
         + "after:NotEnoughItems;"

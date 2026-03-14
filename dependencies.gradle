@@ -35,9 +35,9 @@
  */
 dependencies {
 
-    implementation("com.github.GTNewHorizons:GTNHLib:0.9.39:dev")
+    implementation("com.github.GTNewHorizons:GTNHLib:0.9.40:dev")
     implementation("com.github.GTNewHorizons:StructureLib:1.4.28:dev")
-    implementation("com.github.GTNewHorizons:ModularUI2:2.3.41-1.7.10:dev")
+    implementation("com.github.GTNewHorizons:ModularUI2:2.3.46-1.7.10:dev")
 
     devOnlyNonPublishable('com.github.GTNewHorizons:Baubles-Expanded:2.2.2-GTNH:dev')
     devOnlyNonPublishable("com.github.GTNewHorizons:BlockRenderer6343:1.4.5:dev") { transitive = false }
@@ -49,7 +49,7 @@ dependencies {
     devOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.10.12:dev")
     devOnlyNonPublishable("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-772-GTNH:dev") { transitive = false }
     devOnlyNonPublishable("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.38-gtnh:dev") { transitive = false }
-    devOnlyNonPublishable("com.github.Thorfusion:Mekanism-Community-Edition:9.10.46:DEV")
+    devOnlyNonPublishable(rfg.deobf("com.github.Thorfusion:Mekanism-Community-Edition:9.10.46:DEV"))
     devOnlyNonPublishable("com.github.GTNewHorizons:ThaumicEnergistics:1.7.14-GTNH:dev") { transitive = false }
     devOnlyNonPublishable('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     devOnlyNonPublishable('net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
@@ -59,8 +59,8 @@ dependencies {
 
     runtimeOnlyNonPublishable(rfg.deobf("curse.maven:cofh-core-69162:2388750"))
     runtimeOnlyNonPublishable(rfg.deobf('curse.maven:tc4tweaks-431297:7441877'))
-    runtimeOnlyNonPublishable('curse.maven:thermal-foundation-222880:2388752')
-    runtimeOnlyNonPublishable('curse.maven:thermal-expansion-69163:2388758')
+    runtimeOnlyNonPublishable(rfg.deobf('curse.maven:thermal-foundation-222880:2388752'))
+    runtimeOnlyNonPublishable(rfg.deobf('curse.maven:thermal-expansion-69163:2388758'))
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:WAILAPlugins:0.7.2:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.7.27:dev") { transitive = false }
 

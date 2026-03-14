@@ -29,8 +29,8 @@ Each backport module can be individually enabled or disabled in the config.
 ## Required Dependencies:
 
 - [StructureLib ](https://github.com/GTNewHorizons/StructureLib)
-- [ModularUI2 ](https://github.com/GTNewHorizons/ModularUI2)
-- [GTNHLib ( >= 0.9.39)](https://github.com/GTNewHorizons/GTNHLib)
+- [ModularUI2 (>= 2.3.46)](https://github.com/GTNewHorizons/ModularUI2)
+- [GTNHLib (>= 0.9.40)](https://github.com/GTNewHorizons/GTNHLib)
 
 ## Features:
 
