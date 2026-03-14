@@ -44,7 +44,15 @@ public class DimensionCondition implements ICondition {
 
     public static ICondition fromJson(JsonObject json) {
         List<Integer> ids = new ArrayList<>();
-        if (json.has("ids")) {
+        // Shorthand for "dimension": [1, -1] or "dimension": 0
+        if (json.has("dimension")) {
+            JsonElement e = json.get("dimension");
+            if (e.isJsonArray()) {
+                for (JsonElement el : e.getAsJsonArray()) ids.add(el.getAsInt());
+            } else {
+                ids.add(e.getAsInt());
+            }
+        } else if (json.has("ids")) { // Original "ids" field
             JsonArray array = json.getAsJsonArray("ids");
             for (JsonElement e : array) {
                 ids.add(e.getAsInt());

@@ -58,8 +58,15 @@ public class OpOr implements ICondition {
 
     public static ICondition fromJson(JsonObject json) {
         List<ICondition> children = new ArrayList<>();
+        JsonElement element = null;
         if (json.has("conditions")) {
-            JsonArray array = json.getAsJsonArray("conditions");
+            element = json.get("conditions");
+        } else if (json.has("or")) {
+            element = json.get("or");
+        }
+
+        if (element != null && element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
             for (JsonElement e : array) {
                 ICondition parsed = ConditionParserRegistry.parse(e.getAsJsonObject());
                 if (parsed != null) {
