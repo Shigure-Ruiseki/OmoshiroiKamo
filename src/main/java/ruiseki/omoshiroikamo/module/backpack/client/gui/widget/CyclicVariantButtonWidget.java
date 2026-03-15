@@ -13,16 +13,28 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 
 public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonWidget> {
 
+    @Getter
+    protected int index = 0;
+
     protected final List<Variant> variants;
+
     private int iconOffset = 2;
     private int iconSize = 16;
+
+    private int buttonWidth = 20;
+    private int buttonHeight = 20;
+
+    private boolean hasCustomTexture = false;
+
+    private IDrawable notHoveredTexture = OKGuiTextures.STANDARD_BUTTON;
+    private IDrawable hoveredTexture = OKGuiTextures.STANDARD_BUTTON_HOVERED;
+
     private final List<IntConsumer> mousePressedUpdaters = new ArrayList<>();
 
-    @Getter
-    protected int index;
     @Getter
     @Setter
     private boolean inEffect = true;
@@ -33,30 +45,37 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
         this.index = index;
         this.iconOffset = iconOffset;
         this.iconSize = iconSize;
+
         if (mousePressedUpdater != null) {
             this.mousePressedUpdaters.add(mousePressedUpdater);
         }
 
-        this.size(20, 20)
+        this.size(buttonWidth, buttonHeight)
             .onMousePressed(mouseButton -> {
+
                 if (mouseButton == 1) {
                     this.index = (this.index - 1 + variants.size()) % variants.size();
                 } else {
                     this.index = (this.index + 1) % variants.size();
                 }
+
                 for (IntConsumer updater : mousePressedUpdaters) {
                     updater.accept(this.index);
                 }
-                this.markTooltipDirty();
+
+                markTooltipDirty();
                 return true;
             })
             .tooltipDynamic(tooltip -> {
+
                 tooltip.addLine(variants.get(this.index).name);
+
                 if (!inEffect) {
                     tooltip.addLine(
                         IKey.lang("gui.backpack.not_in_effect")
                             .style(IKey.RED));
                 }
+
                 tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
             });
     }
@@ -77,10 +96,29 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
     }
 
     @Override
+    public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+
+        if (hasCustomTexture) {
+
+            if (isHovering()) {
+                hoveredTexture.draw(context, 0, 0, buttonWidth, buttonHeight, widgetTheme.getTheme());
+            } else {
+                notHoveredTexture.draw(context, 0, 0, buttonWidth, buttonHeight, widgetTheme.getTheme());
+            }
+        }
+
+        super.draw(context, widgetTheme);
+    }
+
+    @Override
     public void drawOverlay(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         super.drawOverlay(context, widgetTheme);
+
         IDrawable drawable = variants.get(index).drawable;
-        drawable.draw(context, iconOffset, iconOffset, iconSize, iconSize, widgetTheme.getTheme());
+
+        if (context != null) {
+            drawable.draw(context, iconOffset, iconOffset, iconSize, iconSize, widgetTheme.getTheme());
+        }
     }
 
     public static class Variant {
@@ -93,5 +131,4 @@ public class CyclicVariantButtonWidget extends ButtonWidget<CyclicVariantButtonW
             this.drawable = drawable;
         }
     }
-
 }

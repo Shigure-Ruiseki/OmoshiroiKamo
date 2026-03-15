@@ -129,7 +129,7 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
         }
 
         public IToggleable getWrapper() {
-            ItemStack stack = panel.getHandler()
+            ItemStack stack = panel.getWrapper()
                 .getUpgradeHandler()
                 .getStackInSlot(slotIndex);
             UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);

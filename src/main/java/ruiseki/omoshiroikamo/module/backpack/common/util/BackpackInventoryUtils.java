@@ -20,13 +20,13 @@ import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 public class BackpackInventoryUtils {
 
-    public static void sortInventory(BackpackHandler handler, boolean reverse) {
+    public static void sortInventory(BackpackWrapper handler, boolean reverse) {
         for (int i = 0; i < handler.getBackpackSlots() - 1; i++) {
             if (handler.isSlotLocked(i)) continue;
             boolean isMem = handler.isSlotMemorized(i);
@@ -139,7 +139,7 @@ public class BackpackInventoryUtils {
         return Integer.compare(a.size(), b.size());
     }
 
-    private static boolean hasMatchingSlot(BackpackHandler handler, ItemStack stack) {
+    private static boolean hasMatchingSlot(BackpackWrapper handler, ItemStack stack) {
         for (int i = 0; i < handler.getBackpackSlots(); i++) {
             ItemStack inSlot = handler.getStackInSlot(i);
             if (ItemHandlerHelper.canItemStacksStack(inSlot, stack)) {
@@ -149,14 +149,14 @@ public class BackpackInventoryUtils {
         return false;
     }
 
-    public static void transferPlayerInventoryToBackpack(BackpackHandler handler, PlayerMainInvWrapper playerInv,
+    public static void transferPlayerInventoryToBackpack(BackpackWrapper handler, PlayerMainInvWrapper playerInv,
         boolean transferMatched) {
         for (int i = 9; i < playerInv.getSlots(); i++) {
             ItemStack stack = playerInv.getStackInSlot(i);
             if (stack == null) continue;
             if (stack.getItem() instanceof BlockBackpack.ItemBackpack backpack) {
 
-                BackpackHandler other = new BackpackHandler(stack, null, backpack);
+                BackpackWrapper other = new BackpackWrapper(stack, null, backpack);
                 if (other == handler) continue;
                 if (!handler.canNestBackpack()) continue;
             }
@@ -171,7 +171,7 @@ public class BackpackInventoryUtils {
         }
     }
 
-    public static void transferBackpackToPlayerInventory(BackpackHandler handler, PlayerMainInvWrapper playerInv,
+    public static void transferBackpackToPlayerInventory(BackpackWrapper handler, PlayerMainInvWrapper playerInv,
         boolean transferMatched) {
         for (int i = 0; i < handler.getBackpackSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
@@ -324,7 +324,7 @@ public class BackpackInventoryUtils {
         EntityPlayer player = panel.getPlayer();
         PlayerMainInvWrapper playerInv = new PlayerMainInvWrapper(player.inventory);
 
-        BackpackHandler backpack = panel.getHandler();
+        BackpackWrapper backpack = panel.getWrapper();
 
         switch (type) {
             case INVENTORY:
@@ -362,7 +362,7 @@ public class BackpackInventoryUtils {
             if (backpackStack == null || backpackStack.stackSize <= 0) continue;
             if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) continue;
 
-            BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
+            BackpackWrapper handler = new BackpackWrapper(backpackStack, null, backpack);
             ItemStack extracted = handler.extractItem(wanted, wanted.getMaxStackSize(), false);
 
             OmoshiroiKamo.instance.getPacketHandler()

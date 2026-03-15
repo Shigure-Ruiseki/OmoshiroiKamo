@@ -10,7 +10,7 @@ import com.cleanroommc.modularui.value.sync.ItemSlotSH;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IBasicFilterable;
@@ -38,10 +38,10 @@ public class UpgradeSlotSH extends ItemSlotSH {
     public static final int UPDATE_CRAFTING_G = 16;
     public static final int UPDATE_CRAFTING_C = 17;
 
-    public final BackpackHandler handler;
+    public final BackpackWrapper handler;
     public final BackpackPanel panel;
 
-    public UpgradeSlotSH(ModularSlot slot, BackpackHandler handler, BackpackPanel panel) {
+    public UpgradeSlotSH(ModularSlot slot, BackpackWrapper handler, BackpackPanel panel) {
         super(slot);
         this.handler = handler;
         this.panel = panel;

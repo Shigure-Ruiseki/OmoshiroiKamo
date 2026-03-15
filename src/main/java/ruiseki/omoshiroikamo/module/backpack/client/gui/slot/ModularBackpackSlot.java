@@ -4,36 +4,30 @@ import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class ModularBackpackSlot extends ModularSlot {
 
-    protected final BackpackHandler handler;
+    protected final BackpackWrapper wrapper;
 
-    public ModularBackpackSlot(BackpackHandler handler, int index) {
+    public ModularBackpackSlot(BackpackWrapper handler, int index) {
         super(handler.getBackpackHandler(), index);
-        this.handler = handler;
+        this.wrapper = handler;
     }
 
     public ItemStack getMemoryStack() {
-        return handler.getMemorizedStack(getSlotIndex());
+        return wrapper.getMemorizedStack(getSlotIndex());
     }
 
     @Override
     public int getItemStackLimit(ItemStack stack) {
-        int multiplier = handler.getTotalStackMultiplier();
+        int multiplier = wrapper.getTotalStackMultiplier();
         return stack.getMaxStackSize() * multiplier;
     }
 
     @Override
     public int getSlotStackLimit() {
-        int multiplier = handler.getTotalStackMultiplier();
+        int multiplier = wrapper.getTotalStackMultiplier();
         return 64 * multiplier;
-    }
-
-    @Override
-    public void onSlotChanged() {
-        super.onSlotChanged();
-        handler.writeToItem();
     }
 }

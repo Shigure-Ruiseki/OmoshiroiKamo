@@ -10,12 +10,12 @@ import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class BackpackSettingWidget extends ExpandedTabWidget {
 
     private final BackpackPanel panel;
-    private final BackpackHandler handler;
+    private final BackpackWrapper handler;
     private final BackpackSettingPanel settingPanel;
     private final TabWidget parentTabWidget;
 
@@ -41,7 +41,7 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
         super(2, OKGuiTextures.BACKPACK_ICON, "gui.backpack.backpack_settings", 80, TabWidget.ExpandDirection.RIGHT);
 
         this.panel = panel;
-        this.handler = panel.getHandler();
+        this.handler = panel.getWrapper();
         this.settingPanel = settingPanel;
         this.parentTabWidget = parentTabWidget;
 

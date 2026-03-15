@@ -9,7 +9,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
 public class BackpackSH extends SyncHandler {
@@ -21,10 +21,10 @@ public class BackpackSH extends SyncHandler {
     public static final int UPDATE_SETTING = 4;
 
     private final PlayerMainInvWrapper playerInv;
-    private final BackpackHandler handler;
+    private final BackpackWrapper handler;
     private final BackpackPanel panel;
 
-    public BackpackSH(PlayerMainInvWrapper playerInv, BackpackHandler handler, BackpackPanel panel) {
+    public BackpackSH(PlayerMainInvWrapper playerInv, BackpackWrapper handler, BackpackPanel panel) {
         this.playerInv = playerInv;
         this.handler = handler;
         this.panel = panel;

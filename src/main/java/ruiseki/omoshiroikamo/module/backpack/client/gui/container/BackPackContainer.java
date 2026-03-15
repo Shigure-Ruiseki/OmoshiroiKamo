@@ -1,16 +1,21 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.container;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -19,20 +24,25 @@ import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.NEAAnimationHandler;
 import com.cleanroommc.modularui.utils.Platform;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
+import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackCraftingSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 
 public class BackPackContainer extends ModularContainer {
 
-    private final BackpackHandler handler;
-    private final Integer backpackSlotIndex;
+    public final BackpackWrapper wrapper;
+    protected final Integer backpackSlotIndex;
 
     private static final int DROP_TO_WORLD = -999;
     private static final int LEFT_MOUSE = 0;
@@ -42,9 +52,41 @@ public class BackPackContainer extends ModularContainer {
     private final Set<Slot> dragSlots = new HashSet<>();
     private int dragButton = -1;
 
-    public BackPackContainer(BackpackHandler handler, Integer backpackSlotIndex) {
-        this.handler = handler;
+    protected final Map<Integer, IndexedInventoryCraftingWrapper> inventoryCraftingInstances = new HashMap<>();
+    protected final Map<Integer, IndexedModularCraftingSlot> craftingSlotInstances = new HashMap<>();
+
+    public BackPackContainer(BackpackWrapper wrapper, Integer backpackSlotIndex) {
+        this.wrapper = wrapper;
         this.backpackSlotIndex = backpackSlotIndex;
+    }
+
+    @Override
+    public void registerSlot(String panelName, ModularSlot slot) {
+        super.registerSlot(panelName, slot);
+
+        if (slot instanceof IndexedModularCraftingSlot s) {
+            registerCraftingSlot(s.getUpgradeSlotIndex(), s);
+        }
+    }
+
+    @Override
+    public void onCraftMatrixChanged(IInventory inventoryIn) {
+
+        if (!getGuiData().isClient() && inventoryIn instanceof IndexedInventoryCraftingWrapper inventoryCrafting) {
+
+            EntityPlayerMP playerMP = (EntityPlayerMP) getPlayer();
+
+            ItemStack result = CraftingManager.getInstance()
+                .findMatchingRecipe(inventoryCrafting, playerMP.worldObj);
+
+            IndexedModularCraftingSlot slot = craftingSlotInstances.get(inventoryCrafting.getUpgradeSlotIndex());
+
+            if (slot != null) {
+                slot.updateResult(result);
+            }
+
+            inventoryCrafting.setSlot(9, result, false);
+        }
     }
 
     @Override
@@ -60,15 +102,15 @@ public class BackPackContainer extends ModularContainer {
                 Slot clickedSlot = getSlot(slotId);
                 if (clickedSlot instanceof ModularBackpackSlot) {
                     // VOID ANY
-                    if (handler.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
+                    if (wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
                         inventoryplayer.setItemStack(null);
                         clickedSlot.onSlotChanged();
                         return Platform.EMPTY_STACK;
                     }
 
                     // VOID OVERFLOW
-                    if (handler.canVoid(heldStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-                        handler.insertItem(heldStack, false);
+                    if (wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
+                        wrapper.insertItem(heldStack, false);
                         inventoryplayer.setItemStack(null);
                         clickedSlot.onSlotChanged();
                         return Platform.EMPTY_STACK;
@@ -94,7 +136,15 @@ public class BackPackContainer extends ModularContainer {
 
                         if (slot == null || !slot.getHasStack()) continue;
                         if (slot instanceof ModularFilterSlot) continue;
-                        if (slot instanceof BackpackCraftingSlot) continue;
+                        if (slot instanceof ModularCraftingSlot) continue;
+
+                        if (slot instanceof IndexedModularCraftingMatrixSlot matrixSlot) {
+                            ItemStack stack = wrapper.getUpgradeHandler()
+                                .getStackInSlot(matrixSlot.getUpgradeSlotIndex());
+                            UpgradeWrapper upgradeWrapper = UpgradeWrapperFactory.createWrapper(stack);
+                            if (upgradeWrapper == null) continue;
+                            if (!upgradeWrapper.isTabOpened()) continue;
+                        }
 
                         ItemStack slotStack = slot.getStack();
 
@@ -131,9 +181,7 @@ public class BackPackContainer extends ModularContainer {
             if (clickTypeIn == ClickType.QUICK_MOVE) {
                 Slot fromSlot = getSlot(slotId);
 
-                if (fromSlot == null || !fromSlot.canTakeStack(player)) {
-                    return Platform.EMPTY_STACK;
-                }
+                if (fromSlot == null || !fromSlot.canTakeStack(player)) return Platform.EMPTY_STACK;
 
                 if (fromSlot instanceof ModularFilterSlot) {
                     fromSlot.putStack(null);
@@ -150,7 +198,7 @@ public class BackPackContainer extends ModularContainer {
                 Slot clickedSlot = getSlot(slotId);
                 boolean isBackpackSlot = clickedSlot instanceof ModularBackpackSlot;
                 boolean isFilterSlot = clickedSlot instanceof ModularFilterSlot;
-                boolean isCraftingSlot = clickedSlot instanceof BackpackCraftingSlot;
+                boolean isCraftingSlot = clickedSlot instanceof ModularCraftingSlot;
 
                 if (clickedSlot != null) {
                     ItemStack slotStack = clickedSlot.getStack();
@@ -176,8 +224,8 @@ public class BackPackContainer extends ModularContainer {
                                 return Platform.EMPTY_STACK;
                             }
 
-                            if (isBackpackSlot && handler != null
-                                && handler.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
+                            if (isBackpackSlot && wrapper != null
+                                && wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
 
                                 if (mouseButton == LEFT_MOUSE) {
                                     inventoryplayer.setItemStack(null);
@@ -195,12 +243,12 @@ public class BackPackContainer extends ModularContainer {
                                 return Platform.EMPTY_STACK;
                             }
 
-                            if (isBackpackSlot && handler != null
-                                && handler
+                            if (isBackpackSlot && wrapper != null
+                                && wrapper
                                     .canVoid(heldStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
 
                                 if (mouseButton == LEFT_MOUSE) {
-                                    ItemStack remainder = handler.insertItem(heldStack, false);
+                                    ItemStack remainder = wrapper.insertItem(heldStack, false);
                                     if (remainder == null || remainder.stackSize <= 0) {
                                         inventoryplayer.setItemStack(null);
                                         clickedSlot.onSlotChanged();
@@ -211,7 +259,7 @@ public class BackPackContainer extends ModularContainer {
 
                                 } else {
                                     ItemStack single = heldStack.splitStack(1);
-                                    ItemStack remainder = handler.insertItem(single, false);
+                                    ItemStack remainder = wrapper.insertItem(single, false);
                                     if (remainder == null || remainder.stackSize <= 0) {
                                         if (heldStack.stackSize <= 0) {
                                             inventoryplayer.setItemStack(null);
@@ -260,22 +308,20 @@ public class BackPackContainer extends ModularContainer {
                         }
                         // Player holding something
                         else {
-                            if (isCraftingSlot) {
-                                return Platform.EMPTY_STACK;
-                            }
 
                             // If same item type and tags -> try merge into slot
                             if (slotStack.getItem() == heldStack.getItem()
                                 && slotStack.getItemDamage() == heldStack.getItemDamage()
-                                && ItemStack.areItemStackTagsEqual(slotStack, heldStack)) {
+                                && ItemStack.areItemStackTagsEqual(slotStack, heldStack)
+                                && !isCraftingSlot) {
 
                                 int lim = stackLimit(clickedSlot, heldStack);
                                 int canAdd = Math.max(0, lim - slotStack.stackSize);
 
                                 if (canAdd > 0) {
                                     // Void Overflow
-                                    if (isBackpackSlot && handler != null
-                                        && handler.canVoid(
+                                    if (isBackpackSlot && wrapper != null
+                                        && wrapper.canVoid(
                                             heldStack,
                                             IVoidUpgrade.VoidType.OVERFLOW,
                                             IVoidUpgrade.VoidInput.ALL)) {
@@ -317,7 +363,7 @@ public class BackPackContainer extends ModularContainer {
                             else if (clickedSlot.isItemValid(heldStack)
                                 && heldStack.stackSize <= stackLimit(clickedSlot, heldStack)) {
                                     // swap: put held into slot, give slotStack to cursor
-                                    if (isBackpackSlot && handler
+                                    if (isBackpackSlot && wrapper
                                         .canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
                                         heldStack = null;
                                     }
@@ -383,42 +429,36 @@ public class BackPackContainer extends ModularContainer {
         @Nullable
         SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
 
-        // Crafting upgrade slots
-        int craftingSlotIndex = parseCraftingSlotIndex(fromSlot.getSlotGroupName());
-        if (craftingSlotIndex >= 0) {
-            Map<Integer, ICraftingUpgrade> map = handler.gatherCapabilityUpgrades(ICraftingUpgrade.class);
-            ICraftingUpgrade wrapper = map.get(craftingSlotIndex);
+        if (fromSlot instanceof IndexedModularCraftingSlot craftingSlot) {
 
-            if (wrapper != null) {
-                String targetGroup = switch (wrapper.getCraftingDes()) {
-                    case BACKPACK -> "backpack_inventory";
-                    case INVENTORY -> "player_inventory";
-                };
+            IndexedInventoryCraftingWrapper inv = inventoryCraftingInstances.get(craftingSlot.getUpgradeSlotIndex());
 
-                for (ModularSlot toSlot : getShiftClickSlots()) {
-                    if (!targetGroup.equals(toSlot.getSlotGroupName())) continue;
-                    if (!toSlot.isItemValid(fromStack)) continue;
-                    transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
-                    if (fromStack.stackSize < 1) {
-                        return fromStack;
-                    }
-                }
+            if (inv == null) {
+                return transferItemFiltered(
+                    fromSlot,
+                    fromStack,
+                    slot -> "player_inventory".equals(slot.getSlotGroupName()));
             }
-        }
 
-        // Memorized slots
-        if ("player_inventory".equals(fromSlot.getSlotGroupName())) {
-            List<ModularSlot> memorizedSlots = getShiftClickSlots().stream()
-                .filter(s -> s instanceof ModularBackpackSlot sb && handler.isSlotMemorized(sb.getSlotIndex()))
-                .collect(Collectors.toList());
+            if (inv.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.BACKPACK) {
 
-            for (ModularSlot toSlot : memorizedSlots) {
-                if (!toSlot.isItemValid(fromStack)) continue;
-                transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
-                if (fromStack.stackSize < 1) {
-                    return fromStack;
-                }
+                return transferItemFiltered(
+                    fromSlot,
+                    fromStack,
+                    slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
+                    slot -> slot instanceof ModularBackpackSlot);
             }
+
+            return transferItemFiltered(
+                fromSlot,
+                fromStack,
+                slot -> "player_inventory".equals(slot.getSlotGroupName()));
+        } else if ("player_inventory".equals(fromSlot.getSlotGroupName())) {
+            return transferItemFiltered(
+                fromSlot,
+                fromStack,
+                slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
+                slot -> slot instanceof ModularBackpackSlot);
         }
 
         for (ModularSlot toSlot : getShiftClickSlots()) {
@@ -434,51 +474,108 @@ public class BackPackContainer extends ModularContainer {
         return super.transferItem(fromSlot, fromStack);
     }
 
+    public ItemStack transferItemFiltered(ModularSlot fromSlot, ItemStack fromStack,
+        Predicate<ModularSlot>... slotFilters) {
+        SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
+
+        for (Predicate<ModularSlot> slotFilter : slotFilters) {
+
+            List<ModularSlot> memorizedSlots = getShiftClickSlots().stream()
+                .filter(slotFilter)
+                .collect(Collectors.toList());
+
+            for (ModularSlot toSlot : memorizedSlots) {
+
+                SlotGroup slotGroup = toSlot.getSlotGroup();
+
+                if (slotGroup != fromSlotGroup && toSlot.func_111238_b() && toSlot.isItemValid(fromStack)) {
+
+                    transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
+
+                    if (fromStack.stackSize <= 0) {
+                        return fromStack;
+                    }
+
+                }
+            }
+
+            for (ModularSlot emptySlot : memorizedSlots) {
+
+                ItemStack stack = emptySlot.getStack();
+                SlotGroup slotGroup = emptySlot.getSlotGroup();
+
+                if (slotGroup != fromSlotGroup && emptySlot.func_111238_b()
+                    && stack == null
+                    && emptySlot.isItemValid(fromStack)) {
+
+                    if (fromStack.stackSize > emptySlot.getItemStackLimit(fromStack)) {
+
+                        emptySlot.putStack(fromStack.splitStack(emptySlot.getItemStackLimit(fromStack)));
+
+                    } else {
+
+                        emptySlot.putStack(fromStack.splitStack(fromStack.stackSize));
+                    }
+
+                    if (fromStack.stackSize < 1) {
+                        return fromStack;
+                    }
+                }
+            }
+        }
+
+        return super.transferItem(fromSlot, fromStack);
+    }
+
     protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack, ItemStack toStack) {
+
         boolean isBackpackSlot = toSlot instanceof ModularBackpackSlot;
-        if (isBackpackSlot && handler.canVoid(fromStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
+
+        // VOID ANY
+        if (isBackpackSlot && wrapper.canVoid(fromStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
             fromStack.stackSize = 0;
             toSlot.onSlotChanged();
+            return;
         }
 
         int limit = stackLimit(toSlot, fromStack);
+
+        // merge stack
         if (fromStack.stackSize > 0 && !fromSlot.isPhantom()
+            && toStack != null
             && ItemHandlerHelper.canItemStacksStack(fromStack, toStack)) {
+
             int j = toStack.stackSize + fromStack.stackSize;
 
             if (j <= limit) {
                 fromStack.stackSize = 0;
                 toStack.stackSize = j;
             } else {
+
                 if (isBackpackSlot
-                    && handler.canVoid(fromStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
+                    && wrapper.canVoid(fromStack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
+
                     fromStack.stackSize = 0;
+
                 } else {
+
                     fromStack.stackSize -= limit - toStack.stackSize;
                 }
+
                 toStack.stackSize = limit;
             }
+
+            toSlot.putStack(toStack);
             toSlot.onSlotChanged();
         }
 
+        // empty slot
         if (fromStack.stackSize > 0 && toStack == null) {
+
             int move = Math.min(fromStack.stackSize, limit);
+
             toSlot.putStack(fromStack.splitStack(move));
             toSlot.onSlotChanged();
-        }
-
-    }
-
-    protected Integer parseCraftingSlotIndex(String groupName) {
-        if (groupName == null) return -1;
-
-        int slotIndexPos = groupName.lastIndexOf("_slot_");
-        if (slotIndexPos < 0) return -1;
-
-        try {
-            return Integer.parseInt(groupName.substring(slotIndexPos + "_slot_".length()));
-        } catch (NumberFormatException e) {
-            return -1;
         }
     }
 
@@ -572,5 +669,27 @@ public class BackPackContainer extends ModularContainer {
     protected void resetDrag() {
         this.dragState = 0;
         this.dragSlots.clear();
+    }
+
+    private void registerCraftingSlot(int slotIndex, IndexedModularCraftingSlot craftingSlot) {
+
+        craftingSlotInstances.put(slotIndex, craftingSlot);
+
+        IndexedInventoryCraftingWrapper wrapper = inventoryCraftingInstances.get(slotIndex);
+
+        if (wrapper != null) {
+            craftingSlot.setCraftMatrix(wrapper);
+        }
+    }
+
+    public void registerInventoryCrafting(int slotIndex, IndexedInventoryCraftingWrapper inventoryCrafting) {
+
+        inventoryCraftingInstances.put(slotIndex, inventoryCrafting);
+
+        IndexedModularCraftingSlot slot = craftingSlotInstances.get(slotIndex);
+
+        if (slot != null) {
+            slot.setCraftMatrix(inventoryCrafting);
+        }
     }
 }

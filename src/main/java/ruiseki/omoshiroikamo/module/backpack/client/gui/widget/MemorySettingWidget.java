@@ -42,7 +42,7 @@ public class MemorySettingWidget extends ExpandedTabWidget {
             .overlay(OKGuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
-                    var wrapper = panel.getHandler();
+                    var wrapper = panel.getWrapper();
 
                     for (int i = 0; i < wrapper.getBackpackSlots(); i++) {
                         wrapper.setMemoryStack(i, panel.shouldMemorizeRespectNBT);
@@ -66,7 +66,7 @@ public class MemorySettingWidget extends ExpandedTabWidget {
             .overlay(OKGuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
-                    var wrapper = panel.getHandler();
+                    var wrapper = panel.getWrapper();
 
                     for (int i = 0; i < wrapper.getBackpackSlots(); i++) {
                         wrapper.unsetMemoryStack(i);

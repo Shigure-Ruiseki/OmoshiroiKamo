@@ -105,7 +105,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(backpackStack, null, backpack);
+            BackpackWrapper handler = new BackpackWrapper(backpackStack, null, backpack);
 
             if (!handler.canPickupItem(stack)) {
                 continue;
@@ -178,7 +178,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(stack.copy(), null, backpack);
+            BackpackWrapper handler = new BackpackWrapper(stack.copy(), null, backpack);
 
             ItemStack feedingStack = handler.getFeedingStack(
                 player.getFoodStats()
@@ -243,7 +243,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackHandler handler = new BackpackHandler(stack.copy(), null, backpack);
+            BackpackWrapper handler = new BackpackWrapper(stack.copy(), null, backpack);
 
             AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
                 player.posX - BackpackConfig.magnetConfig.magnetRange,

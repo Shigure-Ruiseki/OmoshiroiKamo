@@ -41,7 +41,7 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
     @Override
     public void doInit() {
         cacheOriginalOrder();
-        if (panel.getHandler()
+        if (panel.getWrapper()
             .isSearchBackpack()) {
             prevText = "";
             value(new StringValue(prevText));

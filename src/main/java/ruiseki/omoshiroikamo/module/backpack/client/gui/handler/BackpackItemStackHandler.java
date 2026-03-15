@@ -9,17 +9,17 @@ import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class BackpackItemStackHandler extends UpgradeItemStackHandler {
 
-    private final BackpackHandler handler;
+    private final BackpackWrapper handler;
 
     public final List<ItemStack> memorizedSlotStack;
     public final List<Boolean> memorizedSlotRespectNbtList;
     public final List<Boolean> sortLockedSlots;
 
-    public BackpackItemStackHandler(int size, BackpackHandler handler) {
+    public BackpackItemStackHandler(int size, BackpackWrapper handler) {
         super(size);
         this.handler = handler;
 

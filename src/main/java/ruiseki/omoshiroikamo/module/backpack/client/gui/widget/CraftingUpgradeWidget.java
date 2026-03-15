@@ -12,6 +12,7 @@ import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BigItemSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
@@ -32,6 +33,8 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
             OKGuiTextures.UNUSED_BACKPACK));
 
     private final CraftingUpgradeWrapper wrapper;
+    private ItemSlot[] craftingMatrix;
+    private ItemSlot craftingResult;
 
     public CraftingUpgradeWidget(int slotIndex, CraftingUpgradeWrapper wrapper, BackpackPanel panel) {
         super(slotIndex, 5, BackpackItems.CRAFTING_UPGRADE.newItemStack(), "gui.backpack.crafting_settings", 90);
@@ -119,7 +122,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
         SlotGroupWidget craftingGroupsWidget = new SlotGroupWidget().name("crafting_matrix")
             .coverChildren();
 
-        ItemSlot[] craftingMatrix = new ItemSlot[9];
+        craftingMatrix = new ItemSlot[9];
         for (int i = 0; i < 9; i++) {
             ItemSlot itemSlot = new ItemSlot().syncHandler("crafting_slot_" + slotIndex, i)
                 .pos(i % 3 * 18, i / 3 * 18)
@@ -129,7 +132,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
             craftingMatrix[i] = itemSlot;
         }
 
-        ItemSlot craftingResult = new ItemSlot().syncHandler("crafting_result_" + slotIndex, 0)
+        craftingResult = new BigItemSlot().syncHandler("crafting_result_" + slotIndex, 0)
             .pos(18, 18 * 3 + 9)
             .name("crafting_result_" + slotIndex);
         craftingGroupsWidget.child(craftingResult);

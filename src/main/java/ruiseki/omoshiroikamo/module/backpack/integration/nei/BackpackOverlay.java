@@ -1,119 +1,99 @@
 package ruiseki.omoshiroikamo.module.backpack.integration.nei;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import codechicken.nei.FastTransferManager;
-import codechicken.nei.NEIClientUtils;
+import com.cleanroommc.modularui.screen.ModularScreen;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+
 import codechicken.nei.PositionedStack;
-import codechicken.nei.api.IOverlayHandler;
+import codechicken.nei.recipe.DefaultOverlayHandler;
 import codechicken.nei.recipe.GuiOverlayButton;
 import codechicken.nei.recipe.IRecipeHandler;
-import ruiseki.omoshiroikamo.core.client.gui.slot.ModularCraftingMatrixSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.CraftingSlotInfo;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
-public class BackpackOverlay implements IOverlayHandler {
+public class BackpackOverlay extends DefaultOverlayHandler {
 
-    @Override
-    public void overlayRecipe(GuiContainer gui, IRecipeHandler recipe, int recipeIndex, boolean maxTransfer) {
-        transferRecipe(gui, recipe, recipeIndex, maxTransfer ? Integer.MAX_VALUE : 1);
+    public BackpackOverlay() {
+        super(0, 0);
     }
 
     @Override
-    public int transferRecipe(GuiContainer gui, IRecipeHandler recipe, int recipeIndex, int multiplier) {
-        List<PositionedStack> ingredients = recipe.getIngredientStacks(recipeIndex);
-
-        if (!clearGrid(gui)) return 0;
-
-        Slot[][] slotMap = mapIngredSlots(gui, ingredients);
-
-        if (multiplier == 0) {
-            multiplier = calculateMultiplier(gui, ingredients);;
-        }
-
-        if (multiplier <= 0) {
-            return 0;
-        }
-
-        HashMap<Integer, Integer> usedItems = new HashMap<>();
-        for (int m = 0; m < multiplier; m++) {
-
-            for (int i = 0; i < ingredients.size(); i++) {
-
-                PositionedStack ps = ingredients.get(i);
-                if (ps == null || ps.item == null) continue;
-
-                Slot target = slotMap[i][0];
-
-                int slot = findInventoryStack(gui, ps.item, usedItems);
-                if (slot == -1) return m;
-
-                int used = usedItems.getOrDefault(slot, 0);
-                usedItems.put(slot, used + ps.item.stackSize);
-
-                FastTransferManager.clickSlot(gui, slot);
-                FastTransferManager.clickSlot(gui, target.slotNumber, 1);
-                FastTransferManager.clickSlot(gui, slot);
-            }
-        }
-
-        return multiplier;
+    public boolean canMoveFrom(Slot slot, GuiContainer gui) {
+        return !(slot instanceof IndexedModularCraftingSlot) && !(slot instanceof ModularFilterSlot);
     }
 
-    private boolean clearGrid(GuiContainer gui) {
+    @Override
+    protected Set<Slot> getCraftMatrixSlots(GuiContainer gui, IRecipeHandler handler) {
 
-        for (Slot slot : gui.inventorySlots.inventorySlots) {
+        final Set<Slot> slots = new HashSet<>();
 
-            if (!(slot instanceof ModularCraftingMatrixSlot matrix) || !matrix.isActive()) {
-                continue;
-            }
-
-            if (!slot.getHasStack()) continue;
-
-            FastTransferManager.clickSlot(gui, slot.slotNumber, 0, 1);
-
-            if (slot.getHasStack()) return false;
+        if (!(gui.inventorySlots instanceof BackPackContainer container)) {
+            return slots;
         }
 
-        return true;
-    }
-
-    private int findInventoryStack(GuiContainer gui, ItemStack stack, HashMap<Integer, Integer> usedItems) {
-
-        for (Slot slot : gui.inventorySlots.inventorySlots) {
-
-            if (slot instanceof ModularCraftingMatrixSlot) continue;
-            if (!slot.getHasStack()) continue;
-
-            ItemStack inv = slot.getStack();
-
-            if (!NEIClientUtils.areStacksSameTypeCrafting(inv, stack)) continue;
-
-            int used = usedItems.getOrDefault(slot.slotNumber, 0);
-
-            if (inv.stackSize - used >= stack.stackSize) {
-                return slot.slotNumber;
-            }
+        BackpackPanel panel = getPanel(container);
+        if (panel == null) {
+            return slots;
         }
 
-        return -1;
+        int craftingUpgradeSlot = panel.getOpenCraftingUpgradeSlot();
+        if (craftingUpgradeSlot < 0) {
+            return slots;
+        }
+
+        CraftingSlotInfo info = panel.getCraftingInfo(craftingUpgradeSlot);
+        if (info == null) {
+            return slots;
+        }
+
+        slots.addAll(Arrays.asList(info.getCraftingMatrixSlots()));
+
+        return slots;
     }
 
-    private Slot[][] mapIngredSlots(GuiContainer gui, List<PositionedStack> ingredients) {
+    @Override
+    public Slot[][] mapIngredSlots(GuiContainer gui, List<PositionedStack> ingredients) {
 
         Slot[][] recipeSlotList = new Slot[ingredients.size()][];
 
-        List<Slot> craftingSlots = new ArrayList<>();
-
-        for (Slot slot : gui.inventorySlots.inventorySlots) {
-            if (slot instanceof ModularCraftingMatrixSlot matrix && matrix.isActive()) {
-                craftingSlots.add(slot);
-            }
+        for (int i = 0; i < ingredients.size(); i++) {
+            recipeSlotList[i] = new Slot[0];
         }
+
+        if (!(gui.inventorySlots instanceof BackPackContainer container)) {
+            return recipeSlotList;
+        }
+
+        BackpackPanel panel = getPanel(container);
+        if (panel == null) {
+            return recipeSlotList;
+        }
+
+        int craftingUpgradeSlot = panel.getOpenCraftingUpgradeSlot();
+        if (craftingUpgradeSlot < 0) {
+            return recipeSlotList;
+        }
+
+        CraftingSlotInfo info = panel.getCraftingInfo(craftingUpgradeSlot);
+        if (info == null) {
+            return recipeSlotList;
+        }
+
+        ModularSlot[] matrix = info.getCraftingMatrixSlots();
 
         int startX = 25;
         int startY = 6;
@@ -122,71 +102,80 @@ public class BackpackOverlay implements IOverlayHandler {
         for (int i = 0; i < ingredients.size(); i++) {
 
             PositionedStack ps = ingredients.get(i);
+            if (ps == null) continue;
 
             int col = (ps.relx - startX) / slotSize;
             int row = (ps.rely - startY) / slotSize;
 
             int index = row * 3 + col;
 
-            if (index >= 0 && index < craftingSlots.size()) {
-                recipeSlotList[i] = new Slot[] { craftingSlots.get(index) };
+            if (index >= 0 && index < matrix.length) {
+                recipeSlotList[i] = new Slot[] { matrix[index] };
             }
         }
 
         return recipeSlotList;
     }
 
-    private int calculateMultiplier(GuiContainer gui, List<PositionedStack> ingredients) {
-
-        int max = Integer.MAX_VALUE;
-
-        for (PositionedStack ps : ingredients) {
-
-            if (ps == null || ps.item == null) continue;
-
-            int need = ps.item.stackSize;
-            int available = countInventory(gui, ps.item);
-
-            if (available <= 0) {
-                return 0;
-            }
-
-            max = Math.min(max, available / need);
-        }
-
-        return max == Integer.MAX_VALUE ? 1 : max;
-    }
-
-    private int countInventory(GuiContainer gui, ItemStack stack) {
-
-        int count = 0;
-
-        for (Slot slot : gui.inventorySlots.inventorySlots) {
-
-            if (slot instanceof ModularCraftingMatrixSlot) continue;
-
-            if (!slot.getHasStack()) continue;
-
-            ItemStack s = slot.getStack();
-
-            if (NEIClientUtils.areStacksSameTypeCrafting(s, stack)) {
-                count += s.stackSize;
-            }
-        }
-
-        return count;
-    }
-
     @Override
-    public List<GuiOverlayButton.ItemOverlayState> presenceOverlay(GuiContainer gui, IRecipeHandler recipe,
+    public List<GuiOverlayButton.ItemOverlayState> presenceOverlay(GuiContainer firstGui, IRecipeHandler recipe,
         int recipeIndex) {
 
-        List<GuiOverlayButton.ItemOverlayState> result = new ArrayList<>();
+        final List<GuiOverlayButton.ItemOverlayState> itemPresenceSlots = new ArrayList<>();
+        final List<PositionedStack> ingredients = recipe.getIngredientStacks(recipeIndex);
 
-        for (PositionedStack ps : recipe.getIngredientStacks(recipeIndex)) {
-            result.add(new GuiOverlayButton.ItemOverlayState(ps, true));
+        if (!(firstGui.inventorySlots instanceof BackPackContainer container)) {
+            return itemPresenceSlots;
         }
 
-        return result;
+        BackpackWrapper wrapper = container.wrapper;
+        EntityPlayer player = container.getPlayer();
+
+        final List<ItemStack> invStacks = new ArrayList<>();
+
+        // backpack inventory
+        for (int i = 0; i < wrapper.getSlots(); i++) {
+            ItemStack stack = wrapper.getStackInSlot(i);
+            if (stack != null && stack.stackSize > 0) {
+                invStacks.add(stack.copy());
+            }
+        }
+
+        // player inventory
+        if (player != null) {
+            for (ItemStack stack : player.inventory.mainInventory) {
+                if (stack != null && stack.stackSize > 0) {
+                    invStacks.add(stack.copy());
+                }
+            }
+        }
+
+        for (PositionedStack stack : ingredients) {
+
+            ItemStack used = null;
+
+            for (ItemStack is : invStacks) {
+                if (is.stackSize > 0 && stack.contains(is)) {
+                    used = is;
+                    break;
+                }
+            }
+
+            itemPresenceSlots.add(new GuiOverlayButton.ItemOverlayState(stack, used != null));
+
+            if (used != null) {
+                used.stackSize -= 1;
+            }
+        }
+
+        return itemPresenceSlots;
+    }
+
+    private BackpackPanel getPanel(BackPackContainer container) {
+        ModularScreen screen = container.getScreen();
+        if (!container.isInitialized() || !(screen.getPanelManager()
+            .getMainPanel() instanceof BackpackPanel)) return null;
+        return (BackpackPanel) screen.getPanelManager()
+            .getMainPanel();
     }
 }

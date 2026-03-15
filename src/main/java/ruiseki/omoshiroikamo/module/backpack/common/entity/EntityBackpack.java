@@ -5,11 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.core.entity.EntityImmortalItem;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class EntityBackpack extends EntityImmortalItem {
 
-    public EntityBackpack(World world, Entity original, ItemStack stack, BackpackHandler handler) {
+    public EntityBackpack(World world, Entity original, ItemStack stack, BackpackWrapper handler) {
         super(world, original, stack);
         setImmortal(handler.canImportant());
     }

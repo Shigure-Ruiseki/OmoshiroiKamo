@@ -16,7 +16,7 @@ public abstract class ExpandedUpgradeTabWidget<U extends UpgradeWrapper> extends
     protected abstract U getWrapper();
 
     @Getter
-    private UpgradeSlotSH slotSyncHandler = null;
+    protected UpgradeSlotSH slotSyncHandler = null;
 
     public ExpandedUpgradeTabWidget(int slotIndex, int coveredTabSize, ItemStack delegatedIconStack, String titleKey,
         int width) {

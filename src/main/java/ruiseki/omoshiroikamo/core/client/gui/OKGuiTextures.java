@@ -167,6 +167,29 @@ public final class OKGuiTextures {
     public static final UITexture SMALL_1_ICON = icon("small_1", 36, 144, 12, 12);
     public static final UITexture SMALL_O_ICON = icon("small_ore_dict", 64, 144, 12, 12);
 
+    public static final UITexture STANDARD_BUTTON = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/gui_controls.png")
+        .imageSize(256, 256)
+        .xy(29, 0, 18, 18)
+        .build();
+    public static final UITexture STANDARD_BUTTON_HOVERED = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/gui_controls.png")
+        .imageSize(256, 256)
+        .xy(47, 0, 18, 18)
+        .build();
+
+    public static final UITexture BIG_SLOT_TEXTURE = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/gui_controls.png")
+        .imageSize(256, 256)
+        .xy(71, 216, 26, 26)
+        .build();
+
+    public static final UITexture CRAFTING_ARROW = UITexture.builder()
+        .location(LibMisc.MOD_ID, "gui/gui_controls.png")
+        .imageSize(256, 256)
+        .xy(97, 209, 16, 16)
+        .build();
+
     public static UITexture icon(String name, int x, int y) {
         return icon(name, x, y, 16, 16);
     }

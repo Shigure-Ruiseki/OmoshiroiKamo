@@ -1,8 +1,8 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
 import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.ACCENT_COLOR;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.MAIN_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.ACCENT_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.MAIN_COLOR;
 
 import java.util.List;
 
@@ -34,7 +34,6 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.client.IBaubleRender;
 import ruiseki.omoshiroikamo.core.client.IItemJSONRender;
@@ -44,7 +43,7 @@ import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockColor {
 
@@ -91,10 +90,10 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
                 TileEntity te = world.getTileEntity(x, y, z);
                 if (te instanceof TEBackpack backpack) {
                     if (tintIndex == 0) {
-                        return EnumDye.rgbToAbgr(backpack.getMainColor());
+                        return backpack.getMainColor();
                     }
                     if (tintIndex == 1) {
-                        return EnumDye.rgbToAbgr(backpack.getAccentColor());
+                        return backpack.getAccentColor();
                     }
                 }
                 return -1;
@@ -107,10 +106,10 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
                 int accent = tag.hasKey(ACCENT_COLOR) ? tag.getInteger(ACCENT_COLOR) : 0xFF622E1A;
 
                 if (tintIndex == 0) {
-                    return EnumDye.rgbToAbgr(main);
+                    return main;
                 }
                 if (tintIndex == 1) {
-                    return EnumDye.rgbToAbgr(accent);
+                    return accent;
                 }
                 return -1;
             }
@@ -171,7 +170,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            BackpackHandler handler = new BackpackHandler(stack, null, this);
+            BackpackWrapper handler = new BackpackWrapper(stack, null, this);
             return new EntityBackpack(world, location, stack, handler);
         }
 
@@ -180,7 +179,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackHandler cap = new BackpackHandler(stack, null, this);
+                    BackpackWrapper cap = new BackpackWrapper(stack, null, this);
                     cap.writeToItem();
                     stack.setTagCompound(cap.getTagCompound());
                 }
@@ -192,7 +191,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onCreated(stack, world, player);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackHandler cap = new BackpackHandler(stack, null, this);
+                    BackpackWrapper cap = new BackpackWrapper(stack, null, this);
                     cap.writeToItem();
                     stack.setTagCompound(cap.getTagCompound());
                 }
@@ -213,7 +212,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
             if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackWrapper cap = new BackpackWrapper(stack, null, this);
                 if (cap.canPlayerAccess(player.getUniqueID())) {
                     GuiFactories.playerInventory()
                         .openFromMainHand(player);
@@ -225,7 +224,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
             ItemStack stack = data.getUsedItemStack();
-            BackpackHandler cap = new BackpackHandler(stack, null, this);
+            BackpackWrapper cap = new BackpackWrapper(stack, null, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
         }
 
@@ -240,7 +239,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             list.add(LibMisc.LANG.localize("tooltip.backpack.inventory_size", backpackSlots));
             list.add(LibMisc.LANG.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
             if (GuiScreen.isShiftKeyDown()) {
-                BackpackHandler cap = new BackpackHandler(stack, null, this);
+                BackpackWrapper cap = new BackpackWrapper(stack, null, this);
                 list.add(
                     LibMisc.LANG.localize("tooltip.backpack.stack_multiplier", cap.getTotalStackMultiplier(), "x"));
             }

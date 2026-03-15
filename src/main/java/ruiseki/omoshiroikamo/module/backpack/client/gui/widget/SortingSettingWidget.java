@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSlot
 import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackSettingPanel;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class SortingSettingWidget extends ExpandedTabWidget {
 
@@ -34,7 +34,7 @@ public class SortingSettingWidget extends ExpandedTabWidget {
             .overlay(OKGuiTextures.ALL_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
-                    BackpackHandler handler = panel.getHandler();
+                    BackpackWrapper handler = panel.getWrapper();
 
                     for (int i = 0; i < handler.getBackpackSlots(); i++) {
                         handler.setSlotLocked(i, true);
@@ -56,7 +56,7 @@ public class SortingSettingWidget extends ExpandedTabWidget {
             .overlay(OKGuiTextures.NONE_FOUR_SLOT_ICON)
             .onMousePressed(button -> {
                 if (button == 0) {
-                    BackpackHandler handler = panel.getHandler();
+                    BackpackWrapper handler = panel.getWrapper();
 
                     for (int i = 0; i < handler.getBackpackSlots(); i++) {
                         handler.setSlotLocked(i, false);

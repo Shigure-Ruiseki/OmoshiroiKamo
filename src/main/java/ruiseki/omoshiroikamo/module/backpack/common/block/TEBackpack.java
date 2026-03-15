@@ -19,21 +19,21 @@ import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
 
-    private final BackpackHandler handler;
+    private final BackpackWrapper handler;
 
     public TEBackpack() {
         this(BackpackConfig.obsidianBackpackSlots, BackpackConfig.obsidianUpgradeSlots);
     }
 
     public TEBackpack(int slots, int upgradeSlots) {
-        handler = new BackpackHandler(null, this, slots, upgradeSlots);
+        handler = new BackpackWrapper(null, this, slots, upgradeSlots);
         allSlots = new int[handler.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;

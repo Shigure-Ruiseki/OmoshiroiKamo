@@ -16,15 +16,15 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public abstract class BackpackGuiHolder {
 
-    protected final BackpackHandler handler;
+    protected final BackpackWrapper handler;
     protected final int rowSize;
     protected final int colSize;
 
-    public BackpackGuiHolder(BackpackHandler handler) {
+    public BackpackGuiHolder(BackpackWrapper handler) {
         this.handler = handler;
 
         int size = handler.getSlots();
@@ -58,7 +58,7 @@ public abstract class BackpackGuiHolder {
 
     public static final class TileEntityGuiHolder extends BackpackGuiHolder implements IGuiHolder<SidedPosGuiData> {
 
-        public TileEntityGuiHolder(BackpackHandler handler) {
+        public TileEntityGuiHolder(BackpackWrapper handler) {
             super(handler);
         }
 
@@ -79,7 +79,7 @@ public abstract class BackpackGuiHolder {
     public static final class ItemStackGuiHolder extends BackpackGuiHolder
         implements IGuiHolder<PlayerInventoryGuiData> {
 
-        public ItemStackGuiHolder(BackpackHandler handler) {
+        public ItemStackGuiHolder(BackpackWrapper handler) {
             super(handler);
         }
 

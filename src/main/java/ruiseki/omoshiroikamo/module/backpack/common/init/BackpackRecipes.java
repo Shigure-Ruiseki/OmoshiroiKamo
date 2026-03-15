@@ -1,9 +1,9 @@
 package ruiseki.omoshiroikamo.module.backpack.common.init;
 
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.ACCENT_COLOR;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.BACKPACK_SLOTS;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.MAIN_COLOR;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler.UPGRADE_SLOTS;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.ACCENT_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.BACKPACK_SLOTS;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.MAIN_COLOR;
+import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.UPGRADE_SLOTS;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

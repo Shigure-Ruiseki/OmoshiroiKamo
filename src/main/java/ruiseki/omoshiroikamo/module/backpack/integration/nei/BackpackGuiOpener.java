@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.client.handler.KeyHandler;
 import ruiseki.omoshiroikamo.core.network.packet.PacketSyncCarriedItem;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackHandler;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 /*
@@ -81,7 +81,7 @@ public class BackpackGuiOpener implements IContainerInputHandler {
         ItemStack stack = slot.getStack();
         if (!(stack.getItem() instanceof BlockBackpack.ItemBackpack)) return false;
 
-        BackpackHandler handler = new BackpackHandler(stack, null);
+        BackpackWrapper handler = new BackpackWrapper(stack, null);
         ItemStack remain = handler.insertItem(carried, false);
         if (remain == null || remain.stackSize <= 0) {
             player.inventory.setItemStack(null);

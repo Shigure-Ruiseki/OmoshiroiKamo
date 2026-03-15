@@ -34,7 +34,6 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStac
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemCraftingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemStackUpgrade;
@@ -48,7 +47,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperF
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
 
-public class BackpackHandler implements IItemHandlerModifiable {
+public class BackpackWrapper implements IItemHandlerModifiable {
 
     @Getter
     private final ItemStack backpack;
@@ -122,23 +121,23 @@ public class BackpackHandler implements IItemHandlerModifiable {
     @Setter
     public InventoryType type;
 
-    public BackpackHandler() {
+    public BackpackWrapper() {
         this(null, null, 120, 7);
     }
 
-    public BackpackHandler(ItemStack backpack, TileEntity tile) {
+    public BackpackWrapper(ItemStack backpack, TileEntity tile) {
         this(backpack, tile, 120, 7);
     }
 
-    public BackpackHandler(ItemStack backpack, TileEntity tile, BlockBackpack.ItemBackpack itemBackpack) {
+    public BackpackWrapper(ItemStack backpack, TileEntity tile, BlockBackpack.ItemBackpack itemBackpack) {
         this(backpack, tile, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
     }
 
-    public BackpackHandler(ItemStack backpack, TileEntity tile, BlockBackpack blockBackpack) {
+    public BackpackWrapper(ItemStack backpack, TileEntity tile, BlockBackpack blockBackpack) {
         this(backpack, tile, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
     }
 
-    public BackpackHandler(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
+    public BackpackWrapper(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
         this.backpack = backpack;
         this.tile = tile;
         this.backpackSlots = backpackSlots;
@@ -151,23 +150,9 @@ public class BackpackHandler implements IItemHandlerModifiable {
         this.searchBackpack = true;
         this.keepTab = true;
 
-        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
+        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this);
 
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                writeToItem();
-            }
-        };
-
-        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                writeToItem();
-            }
-        };
+        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots);
 
         readFromItem();
     }
@@ -420,17 +405,6 @@ public class BackpackHandler implements IItemHandlerModifiable {
             }
         }
         return false;
-    }
-
-    public boolean canAddCrafting() {
-        for (ItemStack stack : upgradeHandler.getStacks()) {
-            if (stack == null) continue;
-            if (stack.getItem() instanceof ItemCraftingUpgrade) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public boolean canRemoveInceptionUpgrade() {
