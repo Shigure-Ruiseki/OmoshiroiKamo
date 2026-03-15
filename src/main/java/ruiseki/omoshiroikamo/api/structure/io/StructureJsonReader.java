@@ -19,6 +19,7 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
+import ruiseki.omoshiroikamo.api.structure.core.TierStructureRef;
 import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
 
@@ -297,6 +298,79 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
                                 .getAsJsonObject());
                         if (req != null) builder.addRequirement(req);
                     }
+                }
+            }
+        }
+
+        // 9. tierStructures
+        if (json.has("tierStructures")) {
+            JsonArray tierArray = json.getAsJsonArray("tierStructures");
+            for (JsonElement el : tierArray) {
+                if (el.isJsonObject()) {
+                    JsonObject tierObj = el.getAsJsonObject();
+                    String tName = tierObj.has("name") ? tierObj.get("name")
+                        .getAsString() : null;
+                    if (tName == null) continue;
+
+                    int tTier = tierObj.has("tier") ? tierObj.get("tier")
+                        .getAsInt() : 1;
+                    String tComponent = tierObj.has("component") ? tierObj.get("component")
+                        .getAsString() : "structure";
+                    String tMode = tierObj.has("mode") ? tierObj.get("mode")
+                        .getAsString() : "tier";
+                    boolean isCount = "count".equalsIgnoreCase(tMode);
+
+                    List<TierStructureRef.OffsetPair> offsetPairs = new ArrayList<>();
+                    if (tierObj.has("offsets")) {
+                        JsonArray offsetsArray = tierObj.getAsJsonArray("offsets");
+                        for (JsonElement offEl : offsetsArray) {
+                            if (offEl.isJsonArray()) {
+                                JsonArray ja = offEl.getAsJsonArray();
+                                if (ja.size() >= 3) {
+                                    int[] target = { ja.get(0)
+                                        .getAsInt(),
+                                        ja.get(1)
+                                            .getAsInt(),
+                                        ja.get(2)
+                                            .getAsInt() };
+                                    offsetPairs.add(new TierStructureRef.OffsetPair(target, null));
+                                }
+                            } else if (offEl.isJsonObject()) {
+                                JsonObject offObj = offEl.getAsJsonObject();
+                                int[] target = null;
+                                int[] anchor = null;
+                                if (offObj.has("target")) {
+                                    JsonArray ja = offObj.getAsJsonArray("target");
+                                    if (ja.size() >= 3) {
+                                        target = new int[] { ja.get(0)
+                                            .getAsInt(),
+                                            ja.get(1)
+                                                .getAsInt(),
+                                            ja.get(2)
+                                                .getAsInt() };
+                                    }
+                                }
+                                if (offObj.has("anchor")) {
+                                    JsonArray ja = offObj.getAsJsonArray("anchor");
+                                    if (ja.size() >= 3) {
+                                        anchor = new int[] { ja.get(0)
+                                            .getAsInt(),
+                                            ja.get(1)
+                                                .getAsInt(),
+                                            ja.get(2)
+                                                .getAsInt() };
+                                    }
+                                }
+                                if (target != null) {
+                                    offsetPairs.add(new TierStructureRef.OffsetPair(target, anchor));
+                                }
+                            }
+                        }
+                    } else {
+                        offsetPairs.add(new TierStructureRef.OffsetPair(null, null));
+                    }
+
+                    builder.addTierStructure(new TierStructureRef(tName, tTier, tComponent, offsetPairs, isCount));
                 }
             }
         }

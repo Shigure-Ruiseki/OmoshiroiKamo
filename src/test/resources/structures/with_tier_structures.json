@@ -1,0 +1,276 @@
+[
+    {
+        "name": "default",
+        "mappings": {
+            "C": {
+                "block": "minecraft:iron_block:0"
+            },
+            "Q": {
+                "block": "omoshiroikamo:machineController:0"
+            }
+        }
+    },
+    {
+        "name": "tier_machine",
+        "recipeGroup": [
+            "tier_machine"
+        ],
+        "controllerOffset": [
+            1,
+            0,
+            1
+        ],
+        "defaultFacing": "SOUTH",
+        "tierStructures": [
+            {
+                "name": "tier_machine_tier2",
+                "tier": 2
+            },
+            {
+                "name": "tier_machine_base",
+                "tier": 1
+            }
+        ],
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCC",
+                    "CQC",
+                    "CCC"
+                ]
+            },
+            {
+                "name": "y1",
+                "rows": [
+                    "CCC",
+                    "C_C",
+                    "CCC"
+                ]
+            },
+            {
+                "name": "y2",
+                "rows": [
+                    "CCC",
+                    "CCC",
+                    "CCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "tier_machine_base",
+        "controllerOffset": [
+            1,
+            0,
+            1
+        ],
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCC",
+                    "CQC",
+                    "CCC"
+                ]
+            },
+            {
+                "name": "y1",
+                "rows": [
+                    "CCC",
+                    "C_C",
+                    "CCC"
+                ]
+            },
+            {
+                "name": "y2",
+                "rows": [
+                    "CCC",
+                    "CCC",
+                    "CCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "tier_machine_tier2",
+        "controllerOffset": [
+            1,
+            0,
+            1
+        ],
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCCCC",
+                    "C___C",
+                    "CQC_C",
+                    "C___C",
+                    "CCCCC"
+                ]
+            },
+            {
+                "name": "y1",
+                "rows": [
+                    "CCCCC",
+                    "C___C",
+                    "C_C_C",
+                    "C___C",
+                    "CCCCC"
+                ]
+            },
+            {
+                "name": "y2",
+                "rows": [
+                    "CCCCC",
+                    "CCCCC",
+                    "CCCCC",
+                    "CCCCC",
+                    "CCCCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "module_machine",
+        "recipeGroup": [
+            "module_machine"
+        ],
+        "controllerOffset": [
+            1,
+            0,
+            1
+        ],
+        "tierStructures": [
+            {
+                "name": "module_machine_tier2",
+                "tier": 2
+            },
+            {
+                "name": "module_machine_base",
+                "tier": 1
+            },
+            {
+                "name": "module_machine_option_a",
+                "tier": 1,
+                "component": "option_a"
+            }
+        ],
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCC",
+                    "CQC",
+                    "CCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "module_machine_base",
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCC",
+                    "CQC",
+                    "CCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "module_machine_tier2",
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCCCC",
+                    "CQC_C",
+                    "CCCCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "module_machine_option_a",
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCC",
+                    "CQC",
+                    "CCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "godforge_like_machine",
+        "recipeGroup": [
+            "godforge_like_machine"
+        ],
+        "controllerOffset": [
+            1,
+            0,
+            1
+        ],
+        "tierStructures": [
+            {
+                "name": "module_headless",
+                "component": "module_count",
+                "mode": "count",
+                "offsets": [
+                    {
+                        "target": [
+                            3,
+                            0,
+                            0
+                        ],
+                        "anchor": [
+                            1,
+                            1,
+                            0
+                        ]
+                    },
+                    {
+                        "target": [
+                            -3,
+                            0,
+                            0
+                        ],
+                        "anchor": [
+                            1,
+                            1,
+                            0
+                        ]
+                    }
+                ]
+            }
+        ],
+        "layers": [
+            {
+                "name": "y0",
+                "rows": [
+                    "CCC",
+                    "CQC",
+                    "CCC"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "module_headless",
+        "layers": [
+            {
+                "rows": [
+                    "CCC",
+                    "C_C",
+                    "CCC"
+                ]
+            }
+        ]
+    }
+]
