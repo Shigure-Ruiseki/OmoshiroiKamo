@@ -131,24 +131,39 @@ public class NBTPattern {
      */
     public static NBTPattern fromJson(JsonObject json) {
         Map<String, ValuePattern> patterns = new HashMap<>();
-        OperationType primaryOp = OperationType.SET; // Default
+        boolean hasRequire = false;
+        boolean hasModify = false;
+        boolean hasRemove = false;
 
+        // First pass: parse all and detect operation types
         for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-            String key = entry.getKey();
-            JsonElement value = entry.getValue();
+            ValuePattern pattern = ValuePattern.parse(entry.getValue());
+            patterns.put(entry.getKey(), pattern);
 
-            ValuePattern pattern = ValuePattern.parse(value);
-            patterns.put(key, pattern);
+            if (pattern.operation == OperationType.REQUIRE) hasRequire = true;
+            else if (pattern.operation == OperationType.MODIFY) hasModify = true;
+            else if (pattern.operation == OperationType.REMOVE) hasRemove = true;
+        }
 
-            // Determine primary operation from patterns
-            if (pattern.operation == OperationType.REQUIRE) {
-                primaryOp = OperationType.REQUIRE;
-            } else if (pattern.operation == OperationType.REMOVE && primaryOp != OperationType.REQUIRE) {
-                primaryOp = OperationType.REMOVE;
-            } else if (pattern.operation == OperationType.MODIFY && primaryOp == OperationType.SET) {
-                primaryOp = OperationType.MODIFY;
+        // Heuristic adjustment: If we have MODIFY, then any REMOVE (val 0) should be
+        // treated as SET (val 0)
+        // for filtering purposes. Example: {"Slot": 0, "Count": "+1"}
+        if (hasModify) {
+            for (Map.Entry<String, ValuePattern> entry : patterns.entrySet()) {
+                ValuePattern p = entry.getValue();
+                if (p.operation == OperationType.REMOVE) {
+                    patterns.put(entry.getKey(), new ValuePattern(OperationType.SET, null, p.value));
+                    hasRemove = false; // May no longer have remove fields
+                }
             }
         }
+
+        // Determine primary operation
+        OperationType primaryOp;
+        if (hasRequire) primaryOp = OperationType.REQUIRE;
+        else if (hasModify) primaryOp = OperationType.MODIFY;
+        else if (hasRemove) primaryOp = OperationType.REMOVE;
+        else primaryOp = OperationType.SET;
 
         return new NBTPattern(patterns, primaryOp);
     }

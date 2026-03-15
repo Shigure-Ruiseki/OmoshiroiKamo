@@ -48,62 +48,40 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
 
         Object value = getValueToWrite(context);
 
-        // Check if this is a nested path
+        // Find the target compound and key
+        NBTTagCompound targetNbt = nbt;
+        String targetKey = nbtKey;
+
         if (pathSegments != null && pathSegments.size() > 1) {
-            // Nested path: navigate and create hierarchy
-            applyNestedNBT(nbt, pathSegments, value, context);
-        } else {
-            // Simple key: direct assignment
-            applySimpleNBT(nbt, nbtKey, value, context);
-        }
-    }
-
-    /**
-     * Apply value to nested NBT path (e.g., display.Name).
-     * Creates intermediate NBTTagCompound nodes as needed.
-     */
-    private void applyNestedNBT(NBTTagCompound root, List<String> segments, Object value, ConditionContext context) {
-        NBTTagCompound current = root;
-
-        // Navigate to parent compound, creating nodes as needed
-        for (int i = 0; i < segments.size() - 1; i++) {
-            String segment = segments.get(i);
-            if (!current.hasKey(segment)) {
-                // Create new compound
-                current.setTag(segment, new NBTTagCompound());
+            for (int i = 0; i < pathSegments.size() - 1; i++) {
+                String segment = pathSegments.get(i);
+                if (!targetNbt.hasKey(segment)) {
+                    targetNbt.setTag(segment, new NBTTagCompound());
+                }
+                NBTBase next = targetNbt.getTag(segment);
+                if (!(next instanceof NBTTagCompound)) {
+                    next = new NBTTagCompound();
+                    targetNbt.setTag(segment, next);
+                }
+                targetNbt = (NBTTagCompound) next;
             }
-            NBTBase next = current.getTag(segment);
-            if (!(next instanceof NBTTagCompound)) {
-                // Override with compound if type mismatch
-                next = new NBTTagCompound();
-                current.setTag(segment, next);
-            }
-            current = (NBTTagCompound) next;
+            targetKey = pathSegments.get(pathSegments.size() - 1);
         }
 
-        // Set final value
-        String finalKey = segments.get(segments.size() - 1);
-        applySimpleNBT(current, finalKey, value, context);
-    }
-
-    /**
-     * Apply value to simple NBT key (existing logic).
-     */
-    private void applySimpleNBT(NBTTagCompound nbt, String key, Object value, ConditionContext context) {
         // Determine NBT type and write
         if (value instanceof String) {
             String stringValue = (String) value;
             NBTBase nbtValue = NBTTypeInference.parseValue(stringValue);
-            nbt.setTag(key, nbtValue);
+            targetNbt.setTag(targetKey, nbtValue);
         } else if (value instanceof NBTTagList) {
             // Array literal
-            nbt.setTag(key, (NBTTagList) value);
+            targetNbt.setTag(targetKey, (NBTTagList) value);
         } else if (value instanceof Double || value instanceof Float) {
             double numValue = ((Number) value).doubleValue();
 
             // For compound operations (+=, -=, *=, /=), get current value
             if (!operation.equals("=")) {
-                double current = nbt.hasKey(key) ? nbt.getDouble(key) : 0.0;
+                double current = targetNbt.hasKey(targetKey) ? targetNbt.getDouble(targetKey) : 0.0;
                 switch (operation) {
                     case "+=":
                         numValue = current + numValue;
@@ -122,8 +100,13 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
 
             // Write as appropriate type
             NBTBase nbtValue = NBTTypeInference.parseNumeric(numValue);
-            nbt.setTag(key, nbtValue);
+            targetNbt.setTag(targetKey, nbtValue);
         }
+    }
+
+    private void applySimpleNBT(NBTTagCompound nbt, String key, Object value, ConditionContext context) {
+        // Obsolete but keeping temporarily if needed by other logic
+        applyToNBT(nbt, context);
     }
 
     /**
@@ -151,7 +134,7 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
 
     @Override
     public String toString() {
-        return "nbt('" + nbtKey + "') " + operation + " " + valueExpression;
+        return nbtKey + " " + operation + " " + valueExpression;
     }
 
     public static NBTAssignmentExpression fromJson(JsonObject json) {
@@ -160,6 +143,6 @@ public class NBTAssignmentExpression implements INBTWriteExpression {
         String op = json.get("operation")
             .getAsString();
         IExpression value = ExpressionsParser.parse(json.get("value"));
-        return new NBTAssignmentExpression(key, value, op);
+        return new NBTAssignmentExpression(key, java.util.Arrays.asList(key.split("\\.")), value, op);
     }
 }

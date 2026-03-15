@@ -19,6 +19,7 @@ import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
+import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
  * Integration tests for NBT functionality using actual JSON test files.
@@ -33,6 +34,9 @@ public class NBTIntegrationTest {
 
     @BeforeAll
     public static void loadTestRecipes() throws IOException {
+        // Setup registry mocks
+        RegistryMocker.mockAll();
+
         // Load nbt_test.json from test resources
         InputStream stream1 = NBTIntegrationTest.class.getResourceAsStream("/recipes/nbt_test.json");
         assertNotNull(stream1, "nbt_test.json should exist in test resources");

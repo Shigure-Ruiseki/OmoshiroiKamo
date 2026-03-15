@@ -213,35 +213,38 @@ public class ExpressionParser {
      * Left-hand side must be an NbtExpression or DotNotationNBTExpression.
      */
     private Object parseAssignment(Object left, String operation) {
-        // Extract NBT key and path segments from left-hand side
-        String nbtKey = null;
-        List<String> pathSegments = null;
-
-        if (left instanceof NbtExpression) {
-            // Legacy nbt('key') syntax (if still supported)
-            nbtKey = extractNbtKey((NbtExpression) left);
-        } else if (left instanceof DotNotationNBTExpression) {
-            // New dot notation: display.Name
-            DotNotationNBTExpression dotExpr = (DotNotationNBTExpression) left;
-            nbtKey = dotExpr.getFullPath();
-            pathSegments = new ArrayList<>(dotExpr.getPathSegments());
-        }
-
-        if (nbtKey == null) {
-            throw error("Assignment left-hand side must be an NBT path (e.g., display.Name)");
-        }
-
         // Parse right-hand side
         Object right = parseExpression();
 
-        return new NBTAssignmentExpression(nbtKey, pathSegments, asExpression(right), operation);
+        if (left instanceof NbtExpression) {
+            NbtExpression nbtExpr = (NbtExpression) left;
+            String nbtKey = nbtExpr.getNbtKey();
+            return new NBTAssignmentExpression(
+                nbtKey,
+                java.util.Arrays.asList(nbtKey.split("\\.")),
+                asExpression(right),
+                operation);
+        } else if (left instanceof DotNotationNBTExpression) {
+            DotNotationNBTExpression dotExpr = (DotNotationNBTExpression) left;
+            String nbtKey = dotExpr.getFullPath();
+            List<String> pathSegments = new ArrayList<>(dotExpr.getPathSegments());
+            return new NBTAssignmentExpression(nbtKey, pathSegments, asExpression(right), operation);
+        }
+
+        throw error("Assignment left-hand side must be an NBT path (e.g., display.Name)");
     }
 
-    /**
-     * Extract NBT key from NbtExpression.
-     */
-    private String extractNbtKey(NbtExpression expr) {
-        return expr.getNbtKey();
+    private String parseStringArgument() {
+        while (isSpace(ch)) nextChar();
+        if (ch != '\'' && ch != '"') throw error("Expected string argument in nbt()");
+        char quote = (char) ch;
+        nextChar();
+        int startPos = this.pos;
+        while (ch != quote && ch != -1) nextChar();
+        if (ch != quote) throw error("Expected closing quote '" + quote + "'");
+        String value = input.substring(startPos, this.pos);
+        nextChar();
+        return value;
     }
 
     // expression = term ( ( "+" | "-" ) term )*
@@ -355,7 +358,12 @@ public class ExpressionParser {
 
             // Check if this is a function call
             if (eat('(')) {
-                // Function call - no longer support nbt() function
+                // Support nbt('key') for backward compatibility and tests
+                if (name.equals("nbt")) {
+                    String nbtKey = parseStringArgument();
+                    if (!eat(')')) throw error("Expected ')' after nbt() argument");
+                    return new NbtExpression(nbtKey, 0.0);
+                }
                 throw error("Unknown function: '" + name + "'");
             }
 
