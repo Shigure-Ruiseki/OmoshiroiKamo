@@ -26,12 +26,11 @@ public class WorldPropertyExpression implements IExpression {
                     .getWorldTime() % 24000;
             case "total_days":
                 // Days since world creation
-                return context.getWorld()
-                    .getTotalWorldTime() / 24000;
             case "day": // Alias for total_days
                 return context.getWorld()
                     .getTotalWorldTime() / 24000;
             case "moon_phase":
+            case "moon": // Alias for moon_phase
                 // 0 to 7 (0 is full moon)
                 return context.getWorld().provider.getMoonPhase(
                     context.getWorld()

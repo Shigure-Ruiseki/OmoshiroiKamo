@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.minecraft.tileentity.TileEntity;
-
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -93,10 +91,11 @@ public class PortManager {
 
     /**
      * Filter out invalid (null or removed) ports from a list.
+     * Uses the Template Method Pattern: each port implementation defines its own validation logic.
      */
     public <T extends IModularPort> List<T> validPorts(List<T> ports) {
         return ports.stream()
-            .filter(p -> p != null && !((TileEntity) p).isInvalid())
+            .filter(p -> p != null && p.isPortValid())
             .collect(Collectors.toList());
     }
 

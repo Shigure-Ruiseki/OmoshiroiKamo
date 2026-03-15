@@ -1,7 +1,10 @@
 package ruiseki.omoshiroikamo.core.integration.nei;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -12,6 +15,7 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import codechicken.nei.recipe.HandlerInfo;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -243,7 +247,12 @@ public class NEIConfig implements IConfigureNEI {
         }
     }
 
+    private static Set<String> registeredModularGroups = new HashSet<>();
+
     private void registerModularMachineryRecipes() {
+        if (FMLCommonHandler.instance()
+            .getEffectiveSide()
+            .isServer()) return;
         List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
 
         List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
@@ -256,11 +265,70 @@ public class NEIConfig implements IConfigureNEI {
         }
 
         for (String group : groups) {
+            if (registeredModularGroups.contains(group)) continue;
+            registeredModularGroups.add(group);
+
             ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
             registerHandler(handler);
 
             ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
             API.addRecipeCatalyst(catalyst, handler.getRecipeID());
+            for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
+                IStructureEntry entry = StructureManager.getInstance()
+                    .getCustomStructure(structureName);
+                if (entry != null && entry.getRecipeGroup() != null
+                    && entry.getRecipeGroup()
+                        .contains(group)) {
+                    ItemStack blueprint = ItemMachineBlueprint
+                        .createBlueprint(MachineryItems.MACHINE_BLUEPRINT.getItem(), structureName);
+                    API.addRecipeCatalyst(blueprint, handler.getRecipeID());
+                }
+            }
+        }
+    }
+
+    public static void reloadModularMachineryRecipes() {
+        if (FMLCommonHandler.instance()
+            .getEffectiveSide()
+            .isServer()) return;
+        if (!BackportConfigs.enableMachinery || !LibMods.BlockRenderer6343.isLoaded()) return;
+
+        List<String> groups = new ArrayList<>(MachineryModule.getCachedGroupNames());
+        List<IModularRecipe> allRecipes = RecipeLoader.getInstance()
+            .getAllRecipes();
+
+        for (IModularRecipe recipe : allRecipes) {
+            String group = recipe.getRecipeGroup();
+            if (!groups.contains(group)) {
+                groups.add(group);
+            }
+        }
+
+        for (String group : groups) {
+            if (registeredModularGroups.contains(group)) continue;
+            registeredModularGroups.add(group);
+
+            ModularRecipeNEIHandler handler = new ModularRecipeNEIHandler(group);
+            registerHandler(handler);
+
+            ItemStack catalyst = new ItemStack(MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+            API.addRecipeCatalyst(catalyst, handler.getRecipeID());
+
+            try {
+                Class<?> guiRecipeClass = Class.forName("codechicken.nei.recipe.GuiRecipe");
+                Method method = guiRecipeClass.getMethod("registerHandlerInfo", HandlerInfo.class);
+                method.invoke(
+                    null,
+                    new HandlerInfo.Builder(handler.getRecipeID(), LibMisc.MOD_NAME, LibMisc.MOD_ID)
+                        .setDisplayStack(catalyst)
+                        .setHeight(100)
+                        .setWidth(166)
+                        .build());
+            } catch (Throwable t) {
+                Logger.error("Failed to register handler info for group " + group);
+                Logger.info("Maybe incompatible NEI version is used");
+            }
+
             for (String structureName : CustomStructureRegistry.getRegisteredNames()) {
                 IStructureEntry entry = StructureManager.getInstance()
                     .getCustomStructure(structureName);

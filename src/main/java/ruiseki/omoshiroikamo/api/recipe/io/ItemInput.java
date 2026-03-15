@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -15,7 +16,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 public class ItemInput extends AbstractRecipeInput {
 
@@ -82,12 +82,12 @@ public class ItemInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractItemIOPortTE;
+        return port.getPortType() == IPortType.Type.ITEM && port instanceof IInventory;
     }
 
     @Override
     protected long consume(IModularPort port, long remaining, boolean simulate) {
-        AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+        IInventory itemPort = (IInventory) port;
         long consumed = 0;
 
         for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {

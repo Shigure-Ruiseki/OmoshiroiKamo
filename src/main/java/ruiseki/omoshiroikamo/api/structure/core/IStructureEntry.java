@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.api.structure.core;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureSerializable;
 import ruiseki.omoshiroikamo.api.structure.visitor.IStructureVisitor;
@@ -81,6 +83,16 @@ public interface IStructureEntry extends IStructureSerializable {
      * Get the default structure facing (e.g. SOUTH).
      */
     String getDefaultFacing();
+
+    /**
+     * Get the set of external port symbols.
+     */
+    Set<Character> getExternalPorts();
+
+    /**
+     * Get the map of fixed external port symbols and their IO direction.
+     */
+    Map<Character, EnumIO> getFixedExternalPorts();
 
     /**
      * Get names of all tiered components in this structure.

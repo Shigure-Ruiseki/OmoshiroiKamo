@@ -37,7 +37,7 @@ public class BackpackEventHandler {
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
-        return BackportConfigs.enableMultiBlock;
+        return BackportConfigs.enableBackpack;
     }
 
     @SubscribeEvent

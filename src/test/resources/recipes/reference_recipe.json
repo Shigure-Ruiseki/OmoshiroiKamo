@@ -1,0 +1,24 @@
+{
+    "registryName": "reference_tiered_recipe",
+    "recipeGroup": "reference",
+    "duration": 100,
+    "tiers": {
+        "casing": 2
+    },
+    "inputs": [
+        {
+            "item": "minecraft:iron_ingot",
+            "amount": 1
+        }
+    ],
+    "outputs": [
+        {
+            "item": "minecraft:gold_ingot",
+            "amount": 1
+        }
+    ],
+    "condition": {
+        "type": "weather",
+        "weather": "clear"
+    }
+}

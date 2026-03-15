@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.command.CommandModular;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
+import ruiseki.omoshiroikamo.module.machinery.common.integration.MachineryIntegration;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
 public class MachineryModule extends ModModuleBase {
@@ -68,6 +69,7 @@ public class MachineryModule extends ModModuleBase {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         configDir = event.getModConfigurationDirectory();
+        MachineryIntegration.preInit();
         MachineryBlocks.preInit();
         MachineryItems.preInit();
 

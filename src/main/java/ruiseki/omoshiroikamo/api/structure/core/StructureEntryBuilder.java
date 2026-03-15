@@ -2,9 +2,12 @@ package ruiseki.omoshiroikamo.api.structure.core;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 
 /**
@@ -18,6 +21,8 @@ public class StructureEntryBuilder {
     private final Map<Character, ISymbolMapping> mappings = new LinkedHashMap<>();
     private final List<IStructureRequirement> requirements = new ArrayList<>();
     private final List<String> recipeGroups = new ArrayList<>();
+    private final Set<Character> externalPorts = new LinkedHashSet<>();
+    private final Map<Character, EnumIO> fixedExternalPorts = new LinkedHashMap<>();
     private int[] controllerOffset;
     private String tintColor;
     private float speedMultiplier = 1.0f;
@@ -58,6 +63,16 @@ public class StructureEntryBuilder {
 
     public StructureEntryBuilder addRecipeGroup(String group) {
         this.recipeGroups.add(group);
+        return this;
+    }
+
+    public StructureEntryBuilder addExternalPort(char symbol) {
+        this.externalPorts.add(symbol);
+        return this;
+    }
+
+    public StructureEntryBuilder addFixedExternalPort(char symbol, EnumIO io) {
+        this.fixedExternalPorts.put(symbol, io);
         return this;
     }
 
@@ -119,6 +134,8 @@ public class StructureEntryBuilder {
             batchMin,
             batchMax,
             tier,
-            defaultFacing);
+            defaultFacing,
+            externalPorts,
+            fixedExternalPorts);
     }
 }

@@ -12,6 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
@@ -123,6 +124,47 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
             builder.setDisplayName(
                 json.get("displayName")
                     .getAsString());
+        }
+
+        // 1.5. externalPorts
+        if (json.has("externalPorts")) {
+            JsonArray portsArray = json.getAsJsonArray("externalPorts");
+            for (JsonElement el : portsArray) {
+                String str = el.getAsString();
+                if (!str.isEmpty()) {
+                    builder.addExternalPort(str.charAt(0));
+                }
+            }
+        }
+
+        if (json.has("inputOnly")) {
+            JsonArray portsArray = json.getAsJsonArray("inputOnly");
+            for (JsonElement el : portsArray) {
+                String str = el.getAsString();
+                if (!str.isEmpty()) {
+                    builder.addFixedExternalPort(str.charAt(0), EnumIO.INPUT);
+                }
+            }
+        }
+
+        if (json.has("outputOnly")) {
+            JsonArray portsArray = json.getAsJsonArray("outputOnly");
+            for (JsonElement el : portsArray) {
+                String str = el.getAsString();
+                if (!str.isEmpty()) {
+                    builder.addFixedExternalPort(str.charAt(0), EnumIO.OUTPUT);
+                }
+            }
+        }
+
+        if (json.has("bothOnly")) {
+            JsonArray portsArray = json.getAsJsonArray("bothOnly");
+            for (JsonElement el : portsArray) {
+                String str = el.getAsString();
+                if (!str.isEmpty()) {
+                    builder.addFixedExternalPort(str.charAt(0), EnumIO.BOTH);
+                }
+            }
         }
 
         // 2. recipeGroup

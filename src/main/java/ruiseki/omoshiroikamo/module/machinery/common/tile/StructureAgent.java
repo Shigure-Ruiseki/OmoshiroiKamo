@@ -15,11 +15,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.PortRegistrationVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
@@ -42,6 +45,7 @@ public class StructureAgent {
     private final Map<String, Integer> componentTiers = new HashMap<>();
     private final Set<ChunkCoordinates> structureBlockPositions = new HashSet<>();
     private String lastValidationError = "";
+    private boolean isPhysicallyValid = false;
 
     public StructureAgent(TEMachineController controller) {
         this.controller = Objects.requireNonNull(controller, "controller");
@@ -181,45 +185,48 @@ public class StructureAgent {
             oz,
             false);
 
-        if (valid && !controller.isFormed()) {
-            controller.setFormed(true);
-            onFormed();
-        } else if (!valid && controller.isFormed()) {
-            controller.setFormed(false);
-            structureTintColor = null;
-            // Full reset if became invalid
-            if (!controller.getWorldObj().isRemote) {
-                sendClearPacket(oldPositions);
-                controller.getWorldObj()
-                    .markBlockForUpdate(controller.xCoord, controller.yCoord, controller.zCoord);
-            }
-        }
+        if (valid) {
+            // Physical structure matches!
+            isPhysicallyValid = true;
 
-        if (valid && controller.isFormed()) {
-            // Perform additional requirements check for CustomStructure
+            // Invalidate port caches to ensure we pick up any changes
+            controller.invalidatePortCache();
+
+            // Update visual and internal tracking data even if requirements are not met
+            onFormed(); // Load tint, component tiers, etc.
+
+            // Perform additional requirements check (IO ports count, etc.)
             if (!checkRequirements()) {
                 lastValidationError = LibMisc.LANG.localize("gui.status.requirements_not_met");
                 controller.setFormed(false);
-                if (!controller.getWorldObj().isRemote) {
-                    // Clear both old and current
-                    Set<ChunkCoordinates> allToClear = new HashSet<>(oldPositions);
-                    allToClear.addAll(structureBlockPositions);
-                    sendClearPacket(allToClear);
-                }
-                clearInternalData();
-                return false;
+            } else {
+                controller.setFormed(true);
             }
 
-            // Send tint packet AFTER all callbacks have completed.
-            // Pass oldPositions to calculate diff.
+            // Send tint packet to update client rendering
             sendTintPacket(oldPositions);
-        } else if (!valid) {
-            // If check failed, we don't know exactly why
-            // but usually it means blocks don't match.
-            // Ensure old parts are cleared.
-            if (!controller.getWorldObj().isRemote && !oldPositions.isEmpty()) {
-                sendClearPacket(oldPositions);
+
+        } else {
+            // Physical structure does NOT match.
+            isPhysicallyValid = false;
+            if (controller.isFormed()) {
+                controller.setFormed(false);
+                structureTintColor = null;
+                // Full reset if it was formed but now invalid
+                if (!controller.getWorldObj().isRemote) {
+                    sendClearPacket(oldPositions);
+                    controller.getWorldObj()
+                        .markBlockForUpdate(controller.xCoord, controller.yCoord, controller.zCoord);
+                }
+            } else {
+                // Not formed and still invalid - ensure bits are cleared if it was partially
+                // matched before
+                if (!controller.getWorldObj().isRemote && !oldPositions.isEmpty()) {
+                    sendClearPacket(oldPositions);
+                }
             }
+
+            clearInternalData();
 
             if (customStructureName != null) {
                 // Perform detailed scan to find the first error
@@ -285,19 +292,55 @@ public class StructureAgent {
         // Load structure tint color
         structureTintColor = getStructureTintColor();
         updateComponentTiers();
+        applyFixedPortConfigs();
+    }
+
+    private void applyFixedPortConfigs() {
+        IStructureEntry entry = getCustomProperties();
+        if (entry == null) return;
+
+        Map<Character, EnumIO> fixedPorts = entry.getFixedExternalPorts();
+        if (fixedPorts.isEmpty()) return;
+
+        for (Map.Entry<Character, EnumIO> fixedEntry : fixedPorts.entrySet()) {
+            char symbol = fixedEntry.getKey();
+            EnumIO fixedIo = fixedEntry.getValue();
+
+            List<ChunkCoordinates> positions = controller.getSymbolPositionsMap()
+                .get(symbol);
+            if (positions != null) {
+                for (ChunkCoordinates pos : positions) {
+                    Map<IPortType.Type, EnumIO> typeMap = controller.getExternalPortConfigs()
+                        .computeIfAbsent(pos, k -> new HashMap<>());
+                    for (IPortType.Type type : IPortType.Type.values()) {
+                        typeMap.put(type, fixedIo);
+                    }
+                }
+            }
+        }
     }
 
     private void updateComponentTiers() {
-        componentTiers.clear();
-        if (customStructureName == null || customStructureName.isEmpty()) return;
+        if (customStructureName == null || customStructureName.isEmpty()) {
+            componentTiers.clear();
+            return;
+        }
 
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
+        updateComponentTiers(entry);
+    }
+
+    /**
+     * Updates component tiers based on the provided structure entry.
+     * Package-private for testing purposes.
+     */
+    void updateComponentTiers(IStructureEntry entry) {
+        componentTiers.clear();
         if (entry == null) return;
 
         Map<Character, ISymbolMapping> mappings = entry.getMappings();
-        for (Map.Entry<Character, List<ChunkCoordinates>> symbolEntry : controller.getSymbolPositionsMap()
-            .entrySet()) {
+        for (Map.Entry<Character, List<ChunkCoordinates>> symbolEntry : getSymbolPositionsMap().entrySet()) {
             char symbol = symbolEntry.getKey();
             ISymbolMapping mapping = mappings.get(symbol);
 
@@ -306,10 +349,8 @@ public class StructureAgent {
                 int minTierForSymbol = Integer.MAX_VALUE;
 
                 for (ChunkCoordinates pos : symbolEntry.getValue()) {
-                    Block block = controller.getWorldObj()
-                        .getBlock(pos.posX, pos.posY, pos.posZ);
-                    int meta = controller.getWorldObj()
-                        .getBlockMetadata(pos.posX, pos.posY, pos.posZ);
+                    Block block = getWorldObj().getBlock(pos.posX, pos.posY, pos.posZ);
+                    int meta = getWorldObj().getBlockMetadata(pos.posX, pos.posY, pos.posZ);
                     String blockId = Block.blockRegistry.getNameForObject(block) + ":" + meta;
 
                     int tier = tiered.getTier(blockId);
@@ -463,6 +504,18 @@ public class StructureAgent {
         return lastValidationError;
     }
 
+    public void setLastValidationError(String error) {
+        this.lastValidationError = error;
+    }
+
+    public boolean isPhysicallyValid() {
+        return isPhysicallyValid;
+    }
+
+    public void setPhysicallyValid(boolean valid) {
+        this.isPhysicallyValid = valid;
+    }
+
     public void writeToNBT(NBTTagCompound nbt) {
         if (customStructureName != null) {
             nbt.setString("customStructureName", customStructureName);
@@ -558,6 +611,16 @@ public class StructureAgent {
         }
 
         return loadedBlocks;
+    }
+
+    // ========== Internal Hooks for Testing ==========
+
+    public Map<Character, List<ChunkCoordinates>> getSymbolPositionsMap() {
+        return controller.getSymbolPositionsMap();
+    }
+
+    public World getWorldObj() {
+        return controller.getWorldObj();
     }
 
 }

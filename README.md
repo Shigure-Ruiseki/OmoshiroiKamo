@@ -19,7 +19,7 @@ Each backport module can be individually enabled or disabled in the config.
 - Environmental Tech (Clean-Room Rewrite)
 - Chickens, More Chickens and Roost (Backport)
 - Fluid Cows (Backport WIP)
-- RetroSophisticated Backpacks (Backport)
+- RetroSophisticated Backpacks (Backport) [Extracted Mod](https://github.com/Shigure-Ruiseki/OKBackpack)
 - Modular Machinery (Basic function only for now)
 - Deep Mob Learning
 - Cable system from Integrated Dynamics
@@ -29,8 +29,8 @@ Each backport module can be individually enabled or disabled in the config.
 ## Required Dependencies:
 
 - [StructureLib ](https://github.com/GTNewHorizons/StructureLib)
-- [ModularUI2 (>= 2.3.46)](https://github.com/GTNewHorizons/ModularUI2)
-- [GTNHLib (>= 0.9.43)](https://github.com/GTNewHorizons/GTNHLib)
+- [ModularUI2 (>= 2.3.46)](https://github.com/GTNewHorizons/ModularUI2)
+- [GTNHLib (>= 0.9.40)](https://github.com/GTNewHorizons/GTNHLib)
 
 ## Features:
 
@@ -81,6 +81,12 @@ A backport and enhancement of the original Modular Machinery mod.
     - Gas (Mekanism)
     - Mana (Botania)
     - Vis & Essentia (Thaumcraft, WIP ME Essentia IO)
+
+- **External Port Proxy System**:
+    - Use external blocks (chests, tanks, energy storage) as machine ports
+    - Supports 6 resource types with unified interface
+    - **English**: [External Port Proxy Design Document](./docs/en/machinery/EXTERNAL_PROXY.md)
+    - **日本語**: [External Port Proxy 設計ドキュメント](./docs/ja/machinery/EXTERNAL_PROXY.md)
 - **NEI Integration**:
     - Support for viewing recipes and structure previews. (WIP enhanced view)
     - Structure preview

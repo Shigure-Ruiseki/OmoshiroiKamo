@@ -1,0 +1,25 @@
+{
+    "name": "reference_machine",
+    "displayName": "Reference Tiered Machine",
+    "layers": [
+        {
+            "name": "y0",
+            "pattern": [
+                "CCC",
+                "CQC",
+                "CCC"
+            ]
+        }
+    ],
+    "mappings": {
+        "C": {
+            "component": "casing",
+            "tiers": {
+                "minecraft:stone": 1,
+                "minecraft:iron_block": 2,
+                "minecraft:gold_block": 3
+            }
+        },
+        "Q": "omoshiroikamo:controller"
+    }
+}

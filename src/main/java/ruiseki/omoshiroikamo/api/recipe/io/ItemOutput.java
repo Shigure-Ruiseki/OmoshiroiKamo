@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.api.recipe.io;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -56,15 +57,24 @@ public class ItemOutput extends AbstractRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            if (!(port instanceof AbstractItemIOPortTE)) {
+            if (!(port instanceof IInventory)) {
                 throw new IllegalStateException(
-                    "ITEM OUTPUT port must be AbstractItemIOPortTE, got: " + port.getClass()
+                    "ITEM OUTPUT port must implement IInventory, got: " + port.getClass()
                         .getName());
             }
 
-            AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+            IInventory itemPort = (IInventory) port;
 
-            for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
+            int startSlot = 0;
+            int endSlot = itemPort.getSizeInventory();
+            if (itemPort instanceof AbstractItemIOPortTE) {
+                startSlot = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
+                    .getMinItemOutput();
+                endSlot = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
+                    .getMaxItemOutput();
+            }
+
+            for (int i = startSlot; i < endSlot && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack == null) {
                     int insert = Math.min(remaining, output.getMaxStackSize());
@@ -93,7 +103,7 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.ITEM && port instanceof AbstractItemIOPortTE
+        return port.getPortType() == IPortType.Type.ITEM && port instanceof IInventory
             && (port.getPortDirection() == IPortType.Direction.OUTPUT
                 || port.getPortDirection() == IPortType.Direction.BOTH);
     }
@@ -101,14 +111,18 @@ public class ItemOutput extends AbstractRecipeOutput {
     @Override
     protected long getPortCapacity(IModularPort port) {
         if (output == null) return 0;
-        AbstractItemIOPortTE itemPort = (AbstractItemIOPortTE) port;
+        IInventory itemPort = (IInventory) port;
         int maxStackSize = output.getMaxStackSize();
         int invLimit = itemPort.getInventoryStackLimit();
         int limit = Math.min(invLimit, maxStackSize);
-        int min = itemPort.getSlotDefinition()
-            .getMinItemOutput();
-        int max = itemPort.getSlotDefinition()
-            .getMaxItemOutput();
+        int min = 0;
+        int max = itemPort.getSizeInventory();
+        if (itemPort instanceof AbstractItemIOPortTE) {
+            min = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
+                .getMinItemOutput();
+            max = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
+                .getMaxItemOutput();
+        }
 
         long available = 0;
         for (int i = min; i < max; i++) {

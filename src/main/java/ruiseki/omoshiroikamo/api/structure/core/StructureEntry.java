@@ -12,6 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 import ruiseki.omoshiroikamo.api.structure.visitor.IStructureVisitor;
 
@@ -34,11 +35,14 @@ public class StructureEntry implements IStructureEntry {
     private final int batchMax;
     private final int tier;
     private final String defaultFacing;
+    private final Set<Character> externalPorts;
+    private final Map<Character, EnumIO> fixedExternalPorts;
 
     public StructureEntry(String name, String displayName, List<IStructureLayer> layers,
         Map<Character, ISymbolMapping> mappings, List<IStructureRequirement> requirements, List<String> recipeGroup,
         int[] controllerOffset, String tintColor, float speedMultiplier, float energyMultiplier, int batchMin,
-        int batchMax, int tier, String defaultFacing) {
+        int batchMax, int tier, String defaultFacing, Set<Character> externalPorts,
+        Map<Character, EnumIO> fixedExternalPorts) {
         this.name = name;
         this.displayName = displayName;
         this.layers = Collections.unmodifiableList(new ArrayList<>(layers));
@@ -54,6 +58,24 @@ public class StructureEntry implements IStructureEntry {
         this.batchMax = batchMax;
         this.tier = tier;
         this.defaultFacing = defaultFacing;
+        this.externalPorts = externalPorts != null ? Collections.unmodifiableSet(new LinkedHashSet<>(externalPorts))
+            : Collections.emptySet();
+        this.fixedExternalPorts = fixedExternalPorts != null
+            ? Collections.unmodifiableMap(new LinkedHashMap<>(fixedExternalPorts))
+            : Collections.emptyMap();
+    }
+
+    @Override
+    public Set<Character> getExternalPorts() {
+        if (fixedExternalPorts.isEmpty()) return externalPorts;
+        Set<Character> combined = new LinkedHashSet<>(externalPorts);
+        combined.addAll(fixedExternalPorts.keySet());
+        return combined;
+    }
+
+    @Override
+    public Map<Character, EnumIO> getFixedExternalPorts() {
+        return fixedExternalPorts;
     }
 
     @Override
@@ -211,6 +233,36 @@ public class StructureEntry implements IStructureEntry {
 
         if (defaultFacing != null) {
             json.addProperty("defaultFacing", defaultFacing);
+        }
+
+        if (!externalPorts.isEmpty()) {
+            JsonArray portsArray = new JsonArray();
+            for (Character c : externalPorts) {
+                if (!fixedExternalPorts.containsKey(c)) {
+                    portsArray.add(new JsonPrimitive(String.valueOf(c)));
+                }
+            }
+            if (portsArray.size() > 0) json.add("externalPorts", portsArray);
+        }
+
+        if (!fixedExternalPorts.isEmpty()) {
+            JsonArray inputOnly = new JsonArray();
+            JsonArray outputOnly = new JsonArray();
+            JsonArray bothOnly = new JsonArray();
+
+            for (Map.Entry<Character, EnumIO> entry : fixedExternalPorts.entrySet()) {
+                JsonArray target = switch (entry.getValue()) {
+                    case INPUT -> inputOnly;
+                    case OUTPUT -> outputOnly;
+                    case BOTH -> bothOnly;
+                    default -> null;
+                };
+                if (target != null) target.add(new JsonPrimitive(String.valueOf(entry.getKey())));
+            }
+
+            if (inputOnly.size() > 0) json.add("inputOnly", inputOnly);
+            if (outputOnly.size() > 0) json.add("outputOnly", outputOnly);
+            if (bothOnly.size() > 0) json.add("bothOnly", bothOnly);
         }
 
         return json;

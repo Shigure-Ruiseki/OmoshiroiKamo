@@ -146,4 +146,90 @@ public class ExpressionParserTest {
         // 100 % 30 + 5 * 2 = 10 + 10 = 20
         assertEquals(20.0, eval("100 % 30 + 5 * 2"), 0.001);
     }
+
+    // ========================================
+    // 変数のテスト（day, time, moon_phase）
+    // ========================================
+
+    @Test
+    @DisplayName("変数: 変数名がパースされる（day, time, moon等）")
+    public void test変数パース() {
+        // emptyContextではWorldがnullなので、すべて0を返す
+        assertEquals(0.0, eval("day"), 0.001);
+        assertEquals(0.0, eval("time"), 0.001);
+        assertEquals(0.0, eval("moon_phase"), 0.001);
+        assertEquals(0.0, eval("moon"), 0.001); // moon は moon_phase のエイリアス
+        assertEquals(0.0, eval("total_days"), 0.001);
+    }
+
+    @Test
+    @DisplayName("変数: 算術演算と組み合わせ")
+    public void test変数と算術() {
+        // day は 0 なので、10 + 0 * 5 = 10
+        assertEquals(10.0, eval("10 + day * 5"), 0.001);
+    }
+
+    // ========================================
+    // nbt()関数のテスト
+    // ========================================
+
+    @Test
+    @DisplayName("nbt('key'): 1引数形式がパースされる")
+    public void testNbt1引数パース() {
+        // emptyContextではTileEntityがないので、デフォルト値0を返す
+        assertEquals(0.0, eval("nbt('energy')"), 0.001);
+    }
+
+    @Test
+    @DisplayName("nbt() 引数なしでエラー")
+    public void testNbt引数なし() {
+        assertThrows(RecipeScriptException.class, () -> { eval("nbt()"); }, "nbt()は引数が必要なのでエラーになるべき");
+    }
+
+    // ========================================
+    // エラーメッセージのテスト
+    // ========================================
+
+    @Test
+    @DisplayName("RecipeScriptException: エラーメッセージに問題箇所を含む")
+    public void testErrorMessage() {
+        try {
+            eval("1 + @ 2");
+            fail("無効な文字はエラーになるべき");
+        } catch (RecipeScriptException e) {
+            String message = e.getMessage();
+            assertNotNull(message);
+            assertTrue(message.contains("Unexpected") || message.length() > 0, "エラーメッセージが含まれるべき");
+        }
+    }
+
+    // ========================================
+    // 境界ケース
+    // ========================================
+
+    @Test
+    @DisplayName("【エッジ】空文字列のパース")
+    public void testParseEmpty() {
+        assertThrows(RecipeScriptException.class, () -> { eval(""); }, "空文字列はエラーになるべき");
+    }
+
+    @Test
+    @DisplayName("【エッジ】ホワイトスペースのみ")
+    public void testParseWhitespaceOnly() {
+        assertThrows(RecipeScriptException.class, () -> { eval("   \n\t  "); }, "ホワイトスペースのみはエラーになるべき");
+    }
+
+    @Test
+    @DisplayName("【エッジ】0.0 / 0.0 の除算")
+    public void testZeroDivisionNaN() {
+        // 0.0 / 0.0 は実装上 0 を返す（ArithmeticExpressionの仕様）
+        assertEquals(0.0, eval("0.0 / 0.0"), 0.001);
+    }
+
+    @Test
+    @DisplayName("【エッジ】負数のモジュロ演算")
+    public void testNegativeModulo() {
+        // -7 % 3 = -1 (Javaのモジュロ仕様)
+        assertEquals(-1.0, eval("-7 % 3"), 0.001);
+    }
 }

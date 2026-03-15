@@ -1,9 +1,15 @@
 package ruiseki.omoshiroikamo.module.machinery.client.render;
 
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,9 +20,13 @@ import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
+import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.item.ItemWrench;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 @EventBusSubscriber(side = Side.CLIENT)
 public class WrenchOverlayRenderer {
@@ -35,6 +45,34 @@ public class WrenchOverlayRenderer {
         if (!(player.getHeldItem() != null && player.getHeldItem()
             .getItem() instanceof ItemWrench)) return;
 
+        // Link external ports rendering
+        if (player.getHeldItem()
+            .hasTagCompound()
+            && player.getHeldItem()
+                .getTagCompound()
+                .hasKey("LinkedX")) {
+            int cx = player.getHeldItem()
+                .getTagCompound()
+                .getInteger("LinkedX");
+            int cy = player.getHeldItem()
+                .getTagCompound()
+                .getInteger("LinkedY");
+            int cz = player.getHeldItem()
+                .getTagCompound()
+                .getInteger("LinkedZ");
+            int cDim = player.getHeldItem()
+                .getTagCompound()
+                .getInteger("LinkedDim");
+
+            if (player.worldObj.provider.dimensionId == cDim) {
+                TileEntity cte = player.worldObj.getTileEntity(cx, cy, cz);
+                if (cte instanceof TEMachineController) {
+                    TEMachineController controller = (TEMachineController) cte;
+                    drawLinkedPorts(controller, event.partialTicks, player);
+                }
+            }
+        }
+
         if (mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return;
 
         int x = mc.objectMouseOver.blockX;
@@ -42,7 +80,7 @@ public class WrenchOverlayRenderer {
         int z = mc.objectMouseOver.blockZ;
 
         TileEntity te = player.worldObj.getTileEntity(x, y, z);
-        if (!(te instanceof ISidedIO)) return;
+        if (!(te instanceof ISidedIO) || te instanceof TEMachineController) return;
 
         ForgeDirection side = ForgeDirection.getOrientation(mc.objectMouseOver.sideHit);
 
@@ -203,6 +241,161 @@ public class WrenchOverlayRenderer {
             case EAST -> t.addVertex(x + 1 + o, y + v, z + u);
             default -> {
                 // Do nothing
+            }
+        }
+    }
+
+    private static void drawLinkedPorts(TEMachineController controller, float partialTicks, EntityPlayer player) {
+        double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+        double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+        double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+
+        Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> configs = controller.getExternalPortConfigs();
+        if (configs == null || configs.isEmpty()) return;
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(-px, -py, -pz);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        double cX = controller.xCoord + 0.5;
+        double cY = controller.yCoord + 0.5;
+        double cZ = controller.zCoord + 0.5;
+
+        Tessellator t = Tessellator.instance;
+        GL11.glLineWidth(3.0f);
+
+        for (Map.Entry<ChunkCoordinates, Map<IPortType.Type, EnumIO>> entry : configs.entrySet()) {
+            ChunkCoordinates port = entry.getKey();
+            double pX = port.posX + 0.5;
+            double pY = port.posY + 0.5;
+            double pZ = port.posZ + 0.5;
+
+            EnumIO firstIo = EnumIO.NONE;
+            for (EnumIO io : entry.getValue()
+                .values()) {
+                if (io != EnumIO.NONE) {
+                    firstIo = io;
+                    break;
+                }
+            }
+
+            switch (firstIo) {
+                case INPUT:
+                    GL11.glColor4f(0.2f, 0.6f, 1.0f, 0.8f);
+                    break;
+                case OUTPUT:
+                    GL11.glColor4f(1.0f, 0.6f, 0.2f, 0.8f);
+                    break;
+                case BOTH:
+                    GL11.glColor4f(0.8f, 0.2f, 0.8f, 0.8f);
+                    break;
+                default:
+                    GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+                    break;
+            }
+
+            t.startDrawing(GL11.GL_LINES);
+            t.addVertex(cX, cY, cZ);
+            t.addVertex(pX, pY, pZ);
+            t.draw();
+        }
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
+
+        RenderManager rm = RenderManager.instance;
+        for (Map.Entry<ChunkCoordinates, Map<IPortType.Type, EnumIO>> entry : configs.entrySet()) {
+            ChunkCoordinates port = entry.getKey();
+
+            int lineOffset = 0;
+            IStructureEntry entryProps = controller.getStructureAgent()
+                .getCustomProperties();
+            Map<Character, EnumIO> fixedPorts = entryProps != null ? entryProps.getFixedExternalPorts() : null;
+
+            for (Map.Entry<IPortType.Type, EnumIO> typeEntry : entry.getValue()
+                .entrySet()) {
+
+                String fixedSuffix = "";
+                if (fixedPorts != null) {
+                    // Find which symbol corresponds to this ChunkCoordinates
+                    for (Map.Entry<Character, List<ChunkCoordinates>> symEntry : controller.getSymbolPositionsMap()
+                        .entrySet()) {
+                        if (symEntry.getValue()
+                            .contains(port)) {
+                            if (fixedPorts.containsKey(symEntry.getKey())) {
+                                fixedSuffix = " (Fixed)";
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                String text = "[ " + typeEntry.getKey()
+                    .name()
+                    + " : "
+                    + typeEntry.getValue()
+                        .name()
+                    + fixedSuffix
+                    + " ]";
+
+                double d0 = port.posX + 0.5 - px;
+                // Move downward natively (y moves pos when scaled, note normal rendering)
+                double d1 = port.posY + 0.75 - Math.min(0.7, (lineOffset * 0.3)) - py;
+                double d2 = port.posZ + 0.5 - pz;
+
+                GL11.glPushMatrix();
+                GL11.glTranslated(d0, d1, d2);
+                GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(-rm.playerViewY, 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(rm.playerViewX, 1.0F, 0.0F, 0.0F);
+                GL11.glScalef(-0.02666667F, -0.02666667F, 0.02666667F);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GL11.glDepthMask(false);
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_BLEND);
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+                int width = font.getStringWidth(text) / 2;
+
+                GL11.glDisable(GL11.GL_TEXTURE_2D);
+                t.startDrawingQuads();
+                t.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.4F);
+                t.addVertex(-width - 1, -1, 0.0D);
+                t.addVertex(-width - 1, 8, 0.0D);
+                t.addVertex(width + 1, 8, 0.0D);
+                t.addVertex(width + 1, -1, 0.0D);
+                t.draw();
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+                int color = 0xFFFFFF;
+                switch (typeEntry.getValue()) {
+                    case INPUT:
+                        color = 0x3399FF;
+                        break;
+                    case OUTPUT:
+                        color = 0xFF9933;
+                        break;
+                    case BOTH:
+                        color = 0xCC33CC;
+                        break;
+                    default:
+                        break;
+                }
+                font.drawString(text, -width, 0, color);
+
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glDepthMask(true);
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glPopMatrix();
+
+                lineOffset++;
             }
         }
     }
