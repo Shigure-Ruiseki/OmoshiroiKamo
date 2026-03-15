@@ -34,7 +34,6 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 import ruiseki.omoshiroikamo.core.client.IBaubleRender;
 import ruiseki.omoshiroikamo.core.client.IItemJSONRender;
