@@ -232,4 +232,54 @@ public class ExpressionParserTest {
         // -7 % 3 = -1 (Javaのモジュロ仕様)
         assertEquals(-1.0, eval("-7 % 3"), 0.001);
     }
+
+    // ========================================
+    // ドット記法 (Dot Notation)
+    // ========================================
+
+    @Test
+    @DisplayName("【ドット記法】基本的なパース")
+    public void testDotNotationParsing() {
+        // ドット記法がパースできることを確認
+        IExpression expr = ExpressionParser.parseExpression("display.Name");
+        assertNotNull(expr);
+        assertTrue(expr instanceof DotNotationNBTExpression);
+
+        DotNotationNBTExpression dotExpr = (DotNotationNBTExpression) expr;
+        assertEquals("display.Name", dotExpr.getFullPath());
+        assertEquals(
+            2,
+            dotExpr.getPathSegments()
+                .size());
+        assertEquals(
+            "display",
+            dotExpr.getPathSegments()
+                .get(0));
+        assertEquals(
+            "Name",
+            dotExpr.getPathSegments()
+                .get(1));
+    }
+
+    @Test
+    @DisplayName("【ドット記法】複数セグメント")
+    public void testDotNotationMultipleSegments() {
+        IExpression expr = ExpressionParser.parseExpression("a.b.c.d");
+        assertTrue(expr instanceof DotNotationNBTExpression);
+
+        DotNotationNBTExpression dotExpr = (DotNotationNBTExpression) expr;
+        assertEquals("a.b.c.d", dotExpr.getFullPath());
+        assertEquals(
+            4,
+            dotExpr.getPathSegments()
+                .size());
+    }
+
+    @Test
+    @DisplayName("【ドット記法】文字列比較")
+    public void testDotNotationStringComparison() {
+        // パースできることを確認（評価はContext依存なので割愛）
+        IExpression expr = ExpressionParser.parseExpression("display.Name == 'Sword'");
+        assertNotNull(expr);
+    }
 }

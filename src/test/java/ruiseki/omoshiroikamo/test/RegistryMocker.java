@@ -158,15 +158,31 @@ public class RegistryMocker {
             registerMethod.setAccessible(true);
 
             // Register common items
-            if (Items.diamond_sword != null) registerMethod.invoke(registryNamespaced, "minecraft:diamond_sword", Items.diamond_sword);
-            if (Items.iron_sword != null) registerMethod.invoke(registryNamespaced, "minecraft:iron_sword", Items.iron_sword);
+            if (Items.diamond_sword != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:diamond_sword", Items.diamond_sword);
+            if (Items.iron_sword != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:iron_sword", Items.iron_sword);
             if (Items.diamond != null) registerMethod.invoke(registryNamespaced, "minecraft:diamond", Items.diamond);
-            if (Items.iron_ingot != null) registerMethod.invoke(registryNamespaced, "minecraft:iron_ingot", Items.iron_ingot);
-            if (Items.gold_ingot != null) registerMethod.invoke(registryNamespaced, "minecraft:gold_ingot", Items.gold_ingot);
+            if (Items.iron_ingot != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:iron_ingot", Items.iron_ingot);
+            if (Items.gold_ingot != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:gold_ingot", Items.gold_ingot);
             if (Items.name_tag != null) registerMethod.invoke(registryNamespaced, "minecraft:name_tag", Items.name_tag);
-            if (Items.enchanted_book != null) registerMethod.invoke(registryNamespaced, "minecraft:enchanted_book", Items.enchanted_book);
-            if (Items.glowstone_dust != null) registerMethod.invoke(registryNamespaced, "minecraft:glowstone_dust", Items.glowstone_dust);
-            if (Items.water_bucket != null) registerMethod.invoke(registryNamespaced, "minecraft:water_bucket", Items.water_bucket);
+            if (Items.enchanted_book != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:enchanted_book", Items.enchanted_book);
+            if (Items.glowstone_dust != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:glowstone_dust", Items.glowstone_dust);
+            if (Items.water_bucket != null)
+                registerMethod.invoke(registryNamespaced, "minecraft:water_bucket", Items.water_bucket);
+
+            // Also mock GameData.getItemRegistry() for ItemJson.resolveItemStack()
+            try {
+                Class<?> gameDataClass = Class.forName("cpw.mods.fml.common.registry.GameData");
+                setStaticFinalField(gameDataClass, "itemRegistry", registryNamespaced);
+                System.out.println("RegistryMocker: Successfully mocked GameData.itemRegistry");
+            } catch (Exception e2) {
+                Logger.warn("RegistryMocker: Failed to mock GameData.itemRegistry: " + e2.getMessage());
+            }
 
             System.out.println("RegistryMocker: Successfully mocked Item.itemRegistry");
         } catch (Exception e) {

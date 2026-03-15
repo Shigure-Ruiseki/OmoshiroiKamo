@@ -9,14 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.test.RegistryMocker;
-
-import org.junit.jupiter.api.BeforeAll;
 
 /**
  * Unit tests for ItemInput NBT functionality.

@@ -29,20 +29,33 @@ import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
 public class NBTIntegrationTest {
 
     private static JsonObject nbtTestRecipes;
+    private static JsonObject nbtExpressionTestRecipes;
 
     @BeforeAll
     public static void loadTestRecipes() throws IOException {
         // Load nbt_test.json from test resources
-        InputStream stream = NBTIntegrationTest.class.getResourceAsStream("/recipes/nbt_test.json");
-        assertNotNull(stream, "nbt_test.json should exist in test resources");
+        InputStream stream1 = NBTIntegrationTest.class.getResourceAsStream("/recipes/nbt_test.json");
+        assertNotNull(stream1, "nbt_test.json should exist in test resources");
 
-        InputStreamReader reader = new InputStreamReader(stream);
-        nbtTestRecipes = new JsonParser().parse(reader)
+        InputStreamReader reader1 = new InputStreamReader(stream1);
+        nbtTestRecipes = new JsonParser().parse(reader1)
             .getAsJsonObject();
-        reader.close();
+        reader1.close();
 
         assertNotNull(nbtTestRecipes, "Should successfully parse nbt_test.json");
         assertTrue(nbtTestRecipes.has("recipes"), "Should have recipes array");
+
+        // Load nbt_expression_test.json from test resources
+        InputStream stream2 = NBTIntegrationTest.class.getResourceAsStream("/recipes/nbt_expression_test.json");
+        assertNotNull(stream2, "nbt_expression_test.json should exist in test resources");
+
+        InputStreamReader reader2 = new InputStreamReader(stream2);
+        nbtExpressionTestRecipes = new JsonParser().parse(reader2)
+            .getAsJsonObject();
+        reader2.close();
+
+        assertNotNull(nbtExpressionTestRecipes, "Should successfully parse nbt_expression_test.json");
+        assertTrue(nbtExpressionTestRecipes.has("recipes"), "Should have recipes array");
     }
 
     @Test
@@ -407,6 +420,299 @@ public class NBTIntegrationTest {
         for (int i = 0; i < nbtTestRecipes.getAsJsonArray("recipes")
             .size(); i++) {
             JsonObject recipe = nbtTestRecipes.getAsJsonArray("recipes")
+                .get(i)
+                .getAsJsonObject();
+
+            String recipeName = recipe.get("name")
+                .getAsString();
+
+            // Parse all inputs
+            if (recipe.has("inputs")) {
+                for (int j = 0; j < recipe.getAsJsonArray("inputs")
+                    .size(); j++) {
+                    JsonObject inputJson = recipe.getAsJsonArray("inputs")
+                        .get(j)
+                        .getAsJsonObject();
+                    try {
+                        ItemInput input = ItemInput.fromJson(inputJson);
+                        assertNotNull(input, "Input should be created for recipe: " + recipeName);
+                    } catch (Exception e) {
+                        fail("Failed to parse input " + j + " for recipe " + recipeName + ": " + e.getMessage());
+                    }
+                }
+            }
+
+            // Parse all outputs
+            if (recipe.has("outputs")) {
+                for (int j = 0; j < recipe.getAsJsonArray("outputs")
+                    .size(); j++) {
+                    JsonObject outputJson = recipe.getAsJsonArray("outputs")
+                        .get(j)
+                        .getAsJsonObject();
+                    try {
+                        ItemOutput output = ItemOutput.fromJson(outputJson);
+                        assertNotNull(output, "Output should be created for recipe: " + recipeName);
+                    } catch (Exception e) {
+                        fail("Failed to parse output " + j + " for recipe " + recipeName + ": " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    // ========== NBT Expression Tests ==========
+
+    @Test
+    public void testNBTExpressionRecipesLoad() {
+        assertNotNull(nbtExpressionTestRecipes);
+        assertTrue(nbtExpressionTestRecipes.has("recipes"));
+        assertEquals(
+            7,
+            nbtExpressionTestRecipes.getAsJsonArray("recipes")
+                .size(),
+            "nbt_expression_test.json should have 7 recipes");
+    }
+
+    @Test
+    public void testBasicNameChange() {
+        // Get first recipe: "Basic Name Change"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(0)
+            .getAsJsonObject();
+
+        assertEquals(
+            "Basic Name Change",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse input with NBT condition
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(inputJson.has("nbt"), "Should have nbt expression");
+        assertEquals(
+            "display.Name == 'Old Sword'",
+            inputJson.get("nbt")
+                .getAsString());
+
+        // Parse output with NBT assignment
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(outputJson.has("nbt"), "Should have nbt expression");
+        assertEquals(
+            "display.Name = 'New Sword'",
+            outputJson.get("nbt")
+                .getAsString());
+    }
+
+    @Test
+    public void testAddLoreArray() {
+        // Get second recipe: "Add Lore Array"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(1)
+            .getAsJsonObject();
+
+        assertEquals(
+            "Add Lore Array",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse output with array literal
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(outputJson.has("nbt"), "Should have nbt array");
+        assertTrue(
+            outputJson.get("nbt")
+                .isJsonArray(),
+            "nbt should be an array");
+        assertEquals(
+            2,
+            outputJson.getAsJsonArray("nbt")
+                .size());
+
+        // Check that array literal is present
+        String loreExpr = outputJson.getAsJsonArray("nbt")
+            .get(1)
+            .getAsString();
+        assertTrue(loreExpr.contains("display.Lore = ["), "Should have array literal for Lore");
+    }
+
+    @Test
+    public void testEnchantmentEnhancement() {
+        // Get third recipe: "Enchantment Enhancement"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(2)
+            .getAsJsonObject();
+
+        assertEquals(
+            "Enchantment Enhancement",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse input with nbtlist requirement
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(inputJson.has("nbtlist"), "Should have nbtlist");
+
+        // Parse output with both nbt and nbtlist
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(outputJson.has("nbt"), "Should have nbt expression");
+        assertTrue(outputJson.has("nbtlist"), "Should have nbtlist");
+    }
+
+    @Test
+    public void testMultiConditionInput() {
+        // Get fourth recipe: "Multi-Condition Input"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(3)
+            .getAsJsonObject();
+
+        assertEquals(
+            "Multi-Condition Input",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse input with multiple NBT conditions
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(
+            inputJson.get("nbt")
+                .isJsonArray(),
+            "nbt should be an array");
+        assertEquals(
+            2,
+            inputJson.getAsJsonArray("nbt")
+                .size(),
+            "Should have 2 NBT conditions");
+        assertTrue(inputJson.has("nbtlist"), "Should also have nbtlist");
+
+        // Parse complex output
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertEquals(
+            3,
+            outputJson.getAsJsonArray("nbt")
+                .size(),
+            "Output should have 3 NBT expressions");
+    }
+
+    @Test
+    public void testStringInequalityTest() {
+        // Get fifth recipe: "String Inequality Test"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(4)
+            .getAsJsonObject();
+
+        assertEquals(
+            "String Inequality Test",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse input with != operator
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        String nbtExpr = inputJson.get("nbt")
+            .getAsString();
+        assertTrue(nbtExpr.contains("!="), "Should use != operator");
+    }
+
+    @Test
+    public void testNumericArrayTest() {
+        // Get sixth recipe: "Numeric Array Test"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(5)
+            .getAsJsonObject();
+
+        assertEquals(
+            "Numeric Array Test",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse output with numeric array literal
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        String statsExpr = outputJson.getAsJsonArray("nbt")
+            .get(1)
+            .getAsString();
+        assertTrue(statsExpr.contains("[100, 200, 300, 400]"), "Should have numeric array literal");
+    }
+
+    @Test
+    public void testCompoundOperationsTest() {
+        // Get seventh recipe: "Compound Operations Test"
+        JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .get(6)
+            .getAsJsonObject();
+
+        assertEquals(
+            "Compound Operations Test",
+            recipe.get("name")
+                .getAsString());
+
+        // Parse output with compound operators (+=, *=)
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(
+            outputJson.get("nbt")
+                .isJsonArray());
+
+        // Check for compound operators
+        String levelExpr = outputJson.getAsJsonArray("nbt")
+            .get(0)
+            .getAsString();
+        String powerExpr = outputJson.getAsJsonArray("nbt")
+            .get(1)
+            .getAsString();
+        assertTrue(levelExpr.contains("+="), "Should use += operator");
+        assertTrue(powerExpr.contains("*="), "Should use *= operator");
+    }
+
+    @Test
+    public void testAllNBTExpressionRecipesParseable() {
+        // Verify all recipes in nbt_expression_test.json can be parsed without errors
+        for (int i = 0; i < nbtExpressionTestRecipes.getAsJsonArray("recipes")
+            .size(); i++) {
+            JsonObject recipe = nbtExpressionTestRecipes.getAsJsonArray("recipes")
                 .get(i)
                 .getAsJsonObject();
 
