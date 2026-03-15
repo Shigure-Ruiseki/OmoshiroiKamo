@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,12 +9,20 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameData;
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
@@ -21,6 +30,8 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     private ItemStack output;
     private int count = 0;
+    private List<IExpression> nbtExpressions;
+    private NBTListOperation nbtListOp;
 
     public ItemOutput(ItemStack output) {
         this.output = output != null ? output.copy() : null;
@@ -78,8 +89,7 @@ public class ItemOutput extends AbstractRecipeOutput {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack == null) {
                     int insert = Math.min(remaining, output.getMaxStackSize());
-                    ItemStack newStack = output.copy();
-                    newStack.stackSize = insert;
+                    ItemStack newStack = createOutputStack(insert);
                     itemPort.setInventorySlotContents(i, newStack);
                     remaining -= insert;
                 } else if (stacksMatch(stack, output)) {
@@ -92,6 +102,43 @@ public class ItemOutput extends AbstractRecipeOutput {
 
             if (remaining <= 0) break;
         }
+    }
+
+    /**
+     * Create an output ItemStack with NBT data applied.
+     */
+    private ItemStack createOutputStack(int stackSize) {
+        if (output == null) return null;
+
+        ItemStack newStack = output.copy();
+        newStack.stackSize = stackSize;
+
+        // Apply NBT modifications
+        if (nbtExpressions != null || nbtListOp != null) {
+            // Ensure NBT exists
+            if (newStack.getTagCompound() == null) {
+                newStack.setTagCompound(new NBTTagCompound());
+            }
+
+            NBTTagCompound nbt = newStack.getTagCompound();
+            ConditionContext context = new ConditionContext(null, 0, 0, 0);
+
+            // Apply expression-based NBT writes
+            if (nbtExpressions != null) {
+                for (IExpression expr : nbtExpressions) {
+                    if (expr instanceof INBTWriteExpression) {
+                        ((INBTWriteExpression) expr).applyToNBT(nbt, context);
+                    }
+                }
+            }
+
+            // Apply NBT list operations
+            if (nbtListOp != null) {
+                nbtListOp.apply(nbt);
+            }
+        }
+
+        return newStack;
     }
 
     private boolean stacksMatch(ItemStack a, ItemStack b) {
@@ -148,6 +195,46 @@ public class ItemOutput extends AbstractRecipeOutput {
         itemJson.read(json);
         this.count = itemJson.amount;
         this.output = ItemJson.resolveItemStack(itemJson);
+
+        // Read NBT expressions
+        if (json.has("nbt")) {
+            JsonElement nbtElement = json.get("nbt");
+            this.nbtExpressions = new ArrayList<>();
+
+            if (nbtElement.isJsonArray()) {
+                JsonArray nbtArray = nbtElement.getAsJsonArray();
+                for (JsonElement element : nbtArray) {
+                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive()
+                        .isString()) {
+                        String exprStr = element.getAsString();
+                        try {
+                            IExpression expr = ExpressionParser.parseExpression(exprStr);
+                            this.nbtExpressions.add(expr);
+                        } catch (Exception e) {
+                            Logger.error("Failed to parse NBT expression: " + exprStr + " - " + e.getMessage());
+                        }
+                    }
+                }
+            } else if (nbtElement.isJsonPrimitive() && nbtElement.getAsJsonPrimitive()
+                .isString()) {
+                    String exprStr = nbtElement.getAsString();
+                    try {
+                        IExpression expr = ExpressionParser.parseExpression(exprStr);
+                        this.nbtExpressions.add(expr);
+                    } catch (Exception e) {
+                        Logger.error("Failed to parse NBT expression: " + exprStr + " - " + e.getMessage());
+                    }
+                }
+        }
+
+        // Read NBT list operation
+        if (json.has("nbtlist")) {
+            try {
+                this.nbtListOp = NBTListOperation.fromJson(json);
+            } catch (Exception e) {
+                Logger.error("Failed to parse NBT list operation: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -159,6 +246,20 @@ public class ItemOutput extends AbstractRecipeOutput {
                     .getNameForObject(output.getItem()));
             if (output.stackSize != 1) json.addProperty("amount", output.stackSize);
             if (output.getItemDamage() != 0) json.addProperty("meta", output.getItemDamage());
+        }
+
+        // Write NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            JsonArray nbtArray = new JsonArray();
+            for (IExpression expr : nbtExpressions) {
+                nbtArray.add(new com.google.gson.JsonPrimitive(expr.toString()));
+            }
+            json.add("nbt", nbtArray);
+        }
+
+        // Write NBT list operation
+        if (nbtListOp != null) {
+            json.addProperty("_has_nbtlist", true);
         }
     }
 
@@ -191,7 +292,13 @@ public class ItemOutput extends AbstractRecipeOutput {
         if (output == null) return new ItemOutput((ItemStack) null);
         ItemStack copy = output.copy();
         copy.stackSize *= multiplier;
-        return new ItemOutput(copy);
+        ItemOutput result = new ItemOutput(copy);
+
+        // Copy NBT configurations
+        result.nbtExpressions = this.nbtExpressions;
+        result.nbtListOp = this.nbtListOp;
+
+        return result;
     }
 
     @Override

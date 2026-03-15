@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +27,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.PortRegistrationVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.api.structure.core.TierStructureRef;
 import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
@@ -103,6 +105,7 @@ public class StructureAgent {
 
     private void clearInternalData() {
         structureBlockPositions.clear();
+        componentTiers.clear();
         controller.getPortManager()
             .clear();
         controller.clearSymbolPositions();
@@ -328,15 +331,17 @@ public class StructureAgent {
 
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        updateComponentTiers(entry);
+        if (entry == null) return;
+
+        updateComponentTiersFromBlocks(entry);
+        checkTierStructures(entry);
     }
 
     /**
      * Updates component tiers based on the provided structure entry.
      * Package-private for testing purposes.
      */
-    void updateComponentTiers(IStructureEntry entry) {
-        componentTiers.clear();
+    void updateComponentTiersFromBlocks(IStructureEntry entry) {
         if (entry == null) return;
 
         Map<Character, ISymbolMapping> mappings = entry.getMappings();
@@ -368,6 +373,84 @@ public class StructureAgent {
                 }
             }
         }
+    }
+
+    private void checkTierStructures(IStructureEntry baseEntry) {
+        List<TierStructureRef> tierRefs = baseEntry.getTierStructures();
+        if (tierRefs == null || tierRefs.isEmpty()) return;
+
+        // Group by component name to calculate sum (count) or max
+        Map<String, List<TierStructureRef>> byComponent = tierRefs.stream()
+            .collect(Collectors.groupingBy(TierStructureRef::getComponentName));
+
+        for (Map.Entry<String, List<TierStructureRef>> e : byComponent.entrySet()) {
+            String compName = e.getKey();
+            int totalValue = 0;
+
+            for (TierStructureRef ref : e.getValue()) {
+                IStructureEntry subDef = StructureManager.getInstance()
+                    .getStructureEntry(ref.getStructureName());
+                if (subDef == null) {
+                    Logger.warn("Tier structure not found: " + ref.getStructureName());
+                    continue;
+                }
+
+                int currentRefSuccessCount = 0;
+                for (TierStructureRef.OffsetPair offsetPair : ref.getOffsetPairs()) {
+                    if (checkSubStructure(subDef, offsetPair)) {
+                        currentRefSuccessCount++;
+                    }
+                }
+
+                if (ref.isCountMode()) {
+                    // Count mode: Accumulate all successes for this component
+                    totalValue += currentRefSuccessCount;
+                } else {
+                    // Tier mode: Take the max tier among successes
+                    if (currentRefSuccessCount > 0) {
+                        totalValue = Math.max(totalValue, ref.getTier());
+                    }
+                }
+            }
+
+            if (totalValue > 0) {
+                componentTiers.put(compName, totalValue);
+            }
+        }
+    }
+
+    /**
+     * Checks if a sub-structure matches at the given relative position.
+     */
+    private boolean checkSubStructure(IStructureEntry subDef, TierStructureRef.OffsetPair offsetPair) {
+        IStructureDefinition<TEMachineController> def = CustomStructureRegistry.getDefinition(subDef.getName());
+        if (def == null) return false;
+
+        // target is relative to base machine controller in world coordinates
+        // anchor is sub-structure's origin point to match at target
+        int[] target = offsetPair.getTarget();
+        int[] anchor = offsetPair.getAnchor();
+
+        // Calculate final offset: we want sub-structure to match such that its 'anchor'
+        // is at 'target'
+        int ox = target[0] - anchor[0];
+        int oy = target[1] - anchor[1];
+        int oz = target[2] - anchor[2];
+
+        // We check the sub-structure definition using the same world pos and facing as
+        // the base machine
+        return def.check(
+            controller,
+            subDef.getName(),
+            controller.getWorldObj(),
+            controller.getExtendedFacing(),
+            controller.xCoord,
+            controller.yCoord,
+            controller.zCoord,
+            ox,
+            oy,
+            oz,
+            false);
     }
 
     public int getComponentTier(String componentName) {

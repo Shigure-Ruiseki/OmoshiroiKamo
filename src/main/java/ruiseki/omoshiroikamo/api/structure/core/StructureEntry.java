@@ -37,12 +37,13 @@ public class StructureEntry implements IStructureEntry {
     private final String defaultFacing;
     private final Set<Character> externalPorts;
     private final Map<Character, EnumIO> fixedExternalPorts;
+    private final List<TierStructureRef> tierStructures;
 
     public StructureEntry(String name, String displayName, List<IStructureLayer> layers,
         Map<Character, ISymbolMapping> mappings, List<IStructureRequirement> requirements, List<String> recipeGroup,
         int[] controllerOffset, String tintColor, float speedMultiplier, float energyMultiplier, int batchMin,
         int batchMax, int tier, String defaultFacing, Set<Character> externalPorts,
-        Map<Character, EnumIO> fixedExternalPorts) {
+        Map<Character, EnumIO> fixedExternalPorts, List<TierStructureRef> tierStructures) {
         this.name = name;
         this.displayName = displayName;
         this.layers = Collections.unmodifiableList(new ArrayList<>(layers));
@@ -63,6 +64,8 @@ public class StructureEntry implements IStructureEntry {
         this.fixedExternalPorts = fixedExternalPorts != null
             ? Collections.unmodifiableMap(new LinkedHashMap<>(fixedExternalPorts))
             : Collections.emptyMap();
+        this.tierStructures = tierStructures != null ? Collections.unmodifiableList(new ArrayList<>(tierStructures))
+            : Collections.emptyList();
     }
 
     @Override
@@ -160,6 +163,11 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
+    public List<TierStructureRef> getTierStructures() {
+        return tierStructures;
+    }
+
+    @Override
     public void accept(IStructureVisitor visitor) {
         visitor.visit(this);
         for (IStructureRequirement req : requirements) {
@@ -170,6 +178,8 @@ public class StructureEntry implements IStructureEntry {
     @Override
     public JsonObject serialize() {
         JsonObject json = new JsonObject();
+        // Skip serializing tierStructures for now as it's complex and mostly used for
+        // loading
         json.addProperty("name", name);
         if (displayName != null) json.addProperty("displayName", displayName);
         if (!recipeGroup.isEmpty()) {

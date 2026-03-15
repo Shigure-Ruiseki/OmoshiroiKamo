@@ -1,0 +1,388 @@
+{
+  "group": "Expression Comprehensive Test - Real Implementation Coverage",
+  "recipes": [
+    {
+      "name": "Basic Arithmetic - Addition",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = 10 + 5"
+        }
+      ]
+    },
+    {
+      "name": "Basic Arithmetic - Subtraction",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = 100 - 25"
+        }
+      ]
+    },
+    {
+      "name": "Basic Arithmetic - Multiplication",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = 12 * 8"
+        }
+      ]
+    },
+    {
+      "name": "Basic Arithmetic - Division",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = 100 / 4"
+        }
+      ]
+    },
+    {
+      "name": "Basic Arithmetic - Modulo",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = 17 % 5"
+        }
+      ]
+    },
+    {
+      "name": "Complex Expression - Parentheses",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = (10 + 5) * 2"
+        }
+      ]
+    },
+    {
+      "name": "Complex Expression - Nested Parentheses",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = ((10 + 5) * 2 - 3) / 4"
+        }
+      ]
+    },
+    {
+      "name": "Comparison - Greater Than",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1,
+          "nbt": "customData.value > 10"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Comparison - Less Than or Equal",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1,
+          "nbt": "customData.value <= 100"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Comparison - Equality",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1,
+          "nbt": "customData.level == 5"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Comparison - Inequality",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name != 'Broken Sword'"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "customData.repaired = 1"
+        }
+      ]
+    },
+    {
+      "name": "World Property - Day",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1,
+          "nbt": "customData.createdOnDay = day"
+        }
+      ]
+    },
+    {
+      "name": "World Property - Time",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1,
+          "nbt": "customData.createdAtTime = time"
+        }
+      ]
+    },
+    {
+      "name": "World Property - Moon Phase",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1,
+          "nbt": "customData.moonPhase = moon_phase"
+        }
+      ]
+    },
+    {
+      "name": "World Property in Calculation",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1,
+          "nbt": "customData.bonus = day * 10 + time / 1000"
+        }
+      ]
+    },
+    {
+      "name": "Logical AND Expression",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1,
+          "nbt": "customData.level >= 5 && customData.power > 100"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Logical OR Expression",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1,
+          "nbt": "customData.type == 1 || customData.type == 2"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Complex Logical Expression",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "(customData.level >= 10 && customData.durability > 50) || customData.blessed == 1"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "customData.powered = 1"
+        }
+      ]
+    },
+    {
+      "name": "Multiple Expressions - All Operators",
+      "duration": 400,
+      "inputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "math.addition = 100 + 50",
+            "math.subtraction = 100 - 50",
+            "math.multiplication = 10 * 5",
+            "math.division = 100 / 4",
+            "math.modulo = 17 % 5",
+            "math.complex = (10 + 5) * 2 - 3"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Unary Minus",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.negative = -50"
+        }
+      ]
+    },
+    {
+      "name": "Unary Minus in Expression",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.result = 100 + -25"
+        }
+      ]
+    },
+    {
+      "name": "Comparison with Arithmetic",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.level * 10 >= 100"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

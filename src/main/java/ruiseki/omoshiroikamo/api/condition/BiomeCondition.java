@@ -137,11 +137,25 @@ public class BiomeCondition implements ICondition {
         if (json.has("biomes")) {
             JsonArray array = json.getAsJsonArray("biomes");
             for (JsonElement e : array) biomes.add(e.getAsString());
+        } else if (json.has("biome")) {
+            JsonElement e = json.get("biome");
+            if (e.isJsonArray()) {
+                for (JsonElement el : e.getAsJsonArray()) biomes.add(el.getAsString());
+            } else {
+                biomes.add(e.getAsString());
+            }
         }
         List<String> tags = new ArrayList<>();
         if (json.has("tags")) {
             JsonArray array = json.getAsJsonArray("tags");
             for (JsonElement e : array) tags.add(e.getAsString());
+        } else if (json.has("tag")) {
+            JsonElement e = json.get("tag");
+            if (e.isJsonArray()) {
+                for (JsonElement el : e.getAsJsonArray()) tags.add(el.getAsString());
+            } else {
+                tags.add(e.getAsString());
+            }
         }
         BiomeCondition cond = new BiomeCondition(biomes, tags);
         if (json.has("minTemp")) cond.minTemp = json.get("minTemp")

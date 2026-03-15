@@ -162,44 +162,54 @@ Manipulate NBT data of any TileEntity within the structure. Unlike `block` repla
 Conditions are checked every tick or at the start of the process. Logical operators (CoR Pattern) can be used to construct complex conditions.
 
 Available types:
-- `dimension`: Is in a specific dimension (`dim`: number).
-- `biome`: Biome names, tags, or environmental values.
+(Note: If the `type` property is omitted, the type is automatically inferred from the keys used.)
+
+- **`block` (Recommended)**: Checks for a block at the machine's current position. (`block`: string ID or object)
+- `dimension`: Checks if the machine is in a specific dimension.
+    - **Shorthand**: `{ "dimension": 0 }`
+    - `ids`: Array of numeric IDs (Legacy format).
+- `biome`: Assesses biome names, tags, or environmental values.
+    - **Shorthand**: `{ "biome": "Plains" }` / `{ "tag": "FOREST" }`
     - `biomes`: Array of biome names.
-    - `tags`: Array of Forge BiomeDictionary tags (`HOT`, `COLD`, `WET`, `DRY`, `FOREST`, etc.).
+    - `tags`: Array of Forge BiomeDictionary tags.
     - `minTemp` / `maxTemp`: Temperature range check (optional).
     - `minHumid` / `maxHumid`: Humidity range check (optional).
 - `offset`: Wraps another condition to be checked at a relative offset `(dx, dy, dz)`.
     - `dx`, `dy`, `dz`: Relative coordinates.
     - `condition`: The condition object to execute.
-- `pattern`: Checks biome layout using a grid pattern (similar to crafting recipes).
-    - `pattern`: Array of strings (e.g., `["AAA", "A#A", "AAA"]`).
+- `pattern`: Checks biome layout using a grid pattern.
+    - `pattern`: Array of strings.
     - `keys`: Mapping of pattern characters to condition objects.
-- `block_below`: Is there a specific block below the machine.
+- `block_below`: Checks for a specific block below the machine (Y-1). Using `offset` + `block` is now recommended instead.
 - `tile_nbt`: Checks NBT values of the machine's TileEntity.
-- `weather`: Checks the current weather. Values: `rain`, `thunder`, `clear`.
+- `weather`: Checks current weather. (`rain`, `thunder`, `clear`)
 - `comparison`: Compares two expressions (`left`, `right`, `operator`).
-- `expression`: Direct mathematical string expression. Recommended method.
+- `expression`: Direct mathematical string expression.
 
 ```json
 "conditions": [
   { 
-    "type": "pattern",
     "pattern": [ "FFF", "F#F", "FFF" ],
     "keys": {
-      "#": { "type": "biome", "biomes": ["Plains"] },
-      "F": { "type": "biome", "tags": ["FOREST"] }
+      "#": { "biome": "Plains" },
+      "F": { "tag": "FOREST" }
     }
   },
-  { "type": "weather", "weather": "rain" },
-  { "type": "expression", "expression": "day % 28 == 0" }
+  { "weather": "rain" },
+  { "expression": "day % 28 == 0" }
 ]
 ```
 
-### Supported Logical Operators
-- `and`, `or`, `not`, `xor`, `nand`, `nor`
+### Supported Logical Operators (Shortcuts)
+You can use the operator name directly as the key.
+- **`and`**: `{ "and": [ { condition1 }, { condition2 } ] }`
+- **`or`**: `{ "or": [ ... ] }`
+- **`not`**: `{ "not": { condition } }`
+- `xor`, `nand`, `nor` are also supported.
 
 ## 4. Decorators
 Decorators provide additional behavior during or after recipe execution.
+(Note: If the `type` property is omitted, the type is inferred from the keys used.)
 
 - `chance`: Controls the success probability of the recipe.
 - `bonus`: Gives a chance to produce extra outputs.
@@ -209,13 +219,13 @@ Decorators provide additional behavior during or after recipe execution.
 ```json
 "decorators": [
   {
-    "type": "chance",
     "chance": 0.5
   },
   {
-    "type": "bonus",
-    "chance": 0.1,
-    "outputs": [{ "type": "item", "id": "minecraft:diamond", "amount": 1 }]
+    "bonus": {
+      "chance": 0.1,
+      "outputs": [{ "item": "minecraft:diamond", "amount": 1 }]
+    }
   }
 ]
 ```

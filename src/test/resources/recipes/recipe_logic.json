@@ -133,7 +133,6 @@
             ],
             "decorators": [
                 {
-                    "type": "bonus",
                     "chance": 1.0,
                     "outputs": [
                         {
@@ -195,12 +194,8 @@
             ],
             "decorators": [
                 {
-                    "type": "requirement",
                     "condition": {
-                        "type": "biome",
-                        "biomes": [
-                            "Plains"
-                        ]
+                        "biome": "Plains"
                     }
                 }
             ]

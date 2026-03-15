@@ -76,13 +76,13 @@ public class MachineTierRecognitionTest {
 
         // 5. テスト対象の実行
         agent.setCustomStructureName("test_machine");
-        agent.updateComponentTiers(stubEntry);
+        agent.updateComponentTiersFromBlocks(stubEntry);
 
         assertEquals(1, agent.getComponentTier("casing"), "最小 Tier が採用されるべき");
 
         // 両方 Gold に変更
         world.setBlock(pos1, gold, 0);
-        agent.updateComponentTiers(stubEntry);
+        agent.updateComponentTiersFromBlocks(stubEntry);
         assertEquals(2, agent.getComponentTier("casing"), "全てのブロックが Tier 2 なら Tier 2 になるべき");
     }
 

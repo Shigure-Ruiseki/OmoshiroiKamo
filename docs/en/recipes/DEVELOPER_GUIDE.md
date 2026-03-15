@@ -41,7 +41,11 @@ The following operators are provided out-of-the-box and can be nested in JSON to
 - `OpAnd` (AND) / `OpOr` (OR) / `OpNot` (NOT)
 - `OpXor` / `OpNand` / `OpNor`
 
-These are registered in `ConditionParserRegistry` and initialized via `Conditions.registerDefaults()`.
+These are registered in `ConditionParserRegistry` and initialized via `Conditions.registerDefaults()`. When registering, you can optionally provide a `Predicate<JsonObject>` (Detector) to support type inference (omitting the `type` field).
+```java
+ConditionParserRegistry.register("biome", BiomeCondition::fromJson, 
+    json -> json.has("biome") || json.has("biomes"));
+```
 
 ## 3. Using Recipe Decorators
 
@@ -56,6 +60,13 @@ public class MyDecorator extends RecipeDecorator {
     public MyDecorator(IModularRecipe internal) { super(internal); }
     // Override processOutputs, etc., to customize behavior.
 }
+```
+
+### Registering Decorators
+Use `DecoratorParser.register`. Like conditions, you can optionally provide a detector for type inference.
+```java
+DecoratorParser.register("chance", ChanceRecipeDecorator::fromJson, 
+    json -> json.has("chance"));
 ```
 
 ## 4. Error Handling & Validation

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.condition;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -33,8 +34,15 @@ public class OpNot implements ICondition {
     }
 
     public static ICondition fromJson(JsonObject json) {
+        JsonElement element = null;
         if (json.has("condition")) {
-            ICondition parsed = ConditionParserRegistry.parse(json.getAsJsonObject("condition"));
+            element = json.get("condition");
+        } else if (json.has("not")) {
+            element = json.get("not");
+        }
+
+        if (element != null && element.isJsonObject()) {
+            ICondition parsed = ConditionParserRegistry.parse(element.getAsJsonObject());
             if (parsed != null) {
                 return new OpNot(parsed);
             }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
-import ruiseki.omoshiroikamo.api.recipe.io.BlockNbtInput;
-import ruiseki.omoshiroikamo.api.recipe.io.BlockNbtOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
@@ -139,20 +137,6 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
         }
     }
 
-    @Override
-    public void visit(BlockNbtInput input) {
-        switch (mode) {
-            case CHECK:
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
-                input.process(ports, batchSize, false);
-                break;
-            default:
-                break;
-        }
-    }
-
     // --- Outputs ---
 
     @Override
@@ -204,16 +188,6 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
     @Override
     public void visit(VisOutput output) {
         if (mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(BlockNbtOutput output) {
-        if (mode == Mode.CACHE) {
-            if (!output.checkCapacity(ports, batchSize)) {
-                satisfied = false;
-            }
             agent.addCachedOutput(output.copy(batchSize));
         }
     }

@@ -1,0 +1,619 @@
+{
+  "group": "Condition Comprehensive Test - Full Condition Coverage",
+  "recipes": [
+    {
+      "name": "Dimension Condition - Overworld",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:dirt",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "dimension": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dimension Condition - Nether",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:netherrack",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glowstone_dust",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "dimension": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Biome Condition - Single Biome",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:sapling",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:log",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "biome": "Plains"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Biome Condition - Multiple Biomes",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:ice",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:packed_ice",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "biomes": ["Ice Plains", "Ice Mountains", "Cold Taiga"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weather Condition - Rain",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:bucket",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:water_bucket",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "weather": "rain"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weather Condition - Thunder",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "weather": "thunder"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Weather Condition - Clear",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:sand",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glass",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "weather": "clear"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Block Below Condition",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:sapling",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:log",
+          "amount": 4
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "offset": {
+              "dx": 0,
+              "dy": -1,
+              "dz": 0,
+              "condition": {
+                "block": "minecraft:grass"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tile NBT Condition",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:redstone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "tile_nbt": "energy >= 1000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparison Condition - Greater Than",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "comparison": {
+              "left": 10,
+              "operator": ">",
+              "right": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comparison Condition - Less Than or Equal",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:coal",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "comparison": {
+              "left": 5,
+              "operator": "<=",
+              "right": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expression Condition - Simple",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:redstone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glowstone_dust",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "expression": "10 + 5 > 10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logical AND - Two Conditions",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "and": [
+              {"dimension": 0},
+              {"weather": "clear"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logical OR - Two Conditions",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "or": [
+              {"weather": "rain"},
+              {"weather": "thunder"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logical NOT - Negation",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:cobblestone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:stone",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "not": {
+              "weather": "rain"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complex Nested Conditions - AND + OR",
+      "duration": 400,
+      "inputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 64
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "and": [
+              {"dimension": 0},
+              {
+                "or": [
+                  {"biome": "Plains"},
+                  {"biome": "Forest"}
+                ]
+              },
+              {
+                "not": {
+                  "weather": "thunder"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pattern Condition - 3x3 Biome Pattern",
+      "duration": 500,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "pattern": ["FFF", "F#F", "FFF"],
+            "keys": {
+              "F": {"biome": "Forest"},
+              "#": {"biome": "Plains"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Multiple Independent Conditions",
+      "duration": 350,
+      "inputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "and": [
+              {"dimension": 0},
+              {"weather": "clear"},
+              {"biome": "Plains"},
+              {"tile_nbt": "energy >= 500"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logical NAND - Returns False When All True",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:redstone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glowstone_dust",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "nand": [
+              {"dimension": 0},
+              {"weather": "rain"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logical NOR - Returns True When None True",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:coal",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "nor": [
+              {"weather": "rain"},
+              {"weather": "thunder"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logical XOR - Exactly One Must Be True",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "xor": [
+              {"weather": "rain"},
+              {"weather": "thunder"},
+              {"weather": "clear"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Block Condition - Simple Block Check",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:sapling",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:log",
+          "amount": 4
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "block": "minecraft:grass"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Block Condition - With Metadata",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:stick",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:planks",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "block": {
+              "name": "minecraft:log",
+              "data": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complex NAND with Multiple Conditions",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 32
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "nand": [
+              {"dimension": -1},
+              {"weather": "thunder"},
+              {"biome": "Hell"}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

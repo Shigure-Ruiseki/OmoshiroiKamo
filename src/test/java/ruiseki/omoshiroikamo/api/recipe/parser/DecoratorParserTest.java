@@ -188,13 +188,16 @@ public class DecoratorParserTest {
     }
 
     @Test
-    @DisplayName("【エラー】typeキーがない場合")
+    @DisplayName("typeキーがない場合にプロパティから推論する")
     public void testParseMissingType() {
         JsonObject json = new JsonObject();
-        // typeキーなし
+        // typeキーなし、chanceのみ
         json.addProperty("chance", 0.5);
 
-        assertThrows(Exception.class, () -> { DecoratorParser.parse(baseRecipe, json); }, "typeキーがない場合エラーになるべき");
+        IModularRecipe decorated = DecoratorParser.parse(baseRecipe, json);
+
+        assertNotNull(decorated);
+        assertTrue(decorated instanceof ChanceRecipeDecorator, "chanceプロパティからChanceRecipeDecoratorが推論されるべき");
     }
 
     // ========================================

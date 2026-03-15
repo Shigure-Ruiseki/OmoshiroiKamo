@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -20,14 +21,18 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 /**
  * Recipe output that changes blocks at structure positions.
- * Does not add items to inventory, only modifies world blocks.
+ * Can optionally set TileEntity NBT data.
  */
 public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
 
@@ -36,7 +41,9 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
     private final String replace; // The block to find (Old / Filter)
     private final int amount;
     private final boolean optional;
-    private final Map<String, IExpression> dynamicNbt;
+    private final Map<String, IExpression> dynamicNbt; // Legacy NBT system
+    private List<IExpression> nbtExpressions; // New NBT system
+    private NBTListOperation nbtListOp; // New NBT list system
 
     public BlockOutput(char symbol, String block, String replace, int amount, boolean optional,
         Map<String, IExpression> dynamicNbt) {
@@ -172,7 +179,10 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new BlockOutput(symbol, block, replace, amount * multiplier, optional, dynamicNbt);
+        BlockOutput result = new BlockOutput(symbol, block, replace, amount * multiplier, optional, dynamicNbt);
+        result.nbtExpressions = this.nbtExpressions;
+        result.nbtListOp = this.nbtListOp;
+        return result;
     }
 
     @Override
@@ -206,10 +216,23 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
         json.addProperty("amount", amount);
         if (optional) json.addProperty("optional", true);
 
-        if (!dynamicNbt.isEmpty()) {
+        // Write new NBT system (preferred)
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            JsonArray nbtArray = new JsonArray();
+            for (IExpression expr : nbtExpressions) {
+                nbtArray.add(new com.google.gson.JsonPrimitive(expr.toString()));
+            }
+            json.add("nbt", nbtArray);
+        } else if (!dynamicNbt.isEmpty()) {
+            // Write legacy NBT system
             JsonObject nbtJson = new JsonObject();
             // Note: Expression serialization not implemented here for brevity
             json.add("nbt", nbtJson);
+        }
+
+        // Write NBT list operation
+        if (nbtListOp != null) {
+            json.addProperty("_has_nbtlist", true);
         }
     }
 
@@ -236,14 +259,62 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
             .getAsBoolean();
 
         Map<String, IExpression> dynamicNbt = new HashMap<>();
+        List<IExpression> nbtExpressions = null;
+        NBTListOperation nbtListOp = null;
+
+        // Check NBT format: array (new) vs object (legacy)
         if (json.has("nbt")) {
-            JsonObject nbtObj = json.getAsJsonObject("nbt");
-            for (Map.Entry<String, JsonElement> entry : nbtObj.entrySet()) {
-                dynamicNbt.put(entry.getKey(), ExpressionsParser.parse(entry.getValue()));
+            JsonElement nbtElement = json.get("nbt");
+
+            if (nbtElement.isJsonArray()) {
+                // New system: Expression array
+                nbtExpressions = new ArrayList<>();
+                JsonArray nbtArray = nbtElement.getAsJsonArray();
+                for (JsonElement element : nbtArray) {
+                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive()
+                        .isString()) {
+                        String exprStr = element.getAsString();
+                        try {
+                            IExpression expr = ExpressionParser.parseExpression(exprStr);
+                            nbtExpressions.add(expr);
+                        } catch (Exception e) {
+                            Logger.error("Failed to parse NBT expression: " + exprStr + " - " + e.getMessage());
+                        }
+                    }
+                }
+            } else if (nbtElement.isJsonPrimitive() && nbtElement.getAsJsonPrimitive()
+                .isString()) {
+                    // New system: Single expression string
+                    nbtExpressions = new ArrayList<>();
+                    String exprStr = nbtElement.getAsString();
+                    try {
+                        IExpression expr = ExpressionParser.parseExpression(exprStr);
+                        nbtExpressions.add(expr);
+                    } catch (Exception e) {
+                        Logger.error("Failed to parse NBT expression: " + exprStr + " - " + e.getMessage());
+                    }
+                } else if (nbtElement.isJsonObject()) {
+                    // Legacy system: Map<String, IExpression>
+                    JsonObject nbtObj = nbtElement.getAsJsonObject();
+                    for (Map.Entry<String, JsonElement> entry : nbtObj.entrySet()) {
+                        dynamicNbt.put(entry.getKey(), ExpressionsParser.parse(entry.getValue()));
+                    }
+                }
+        }
+
+        // Read NBT list operation
+        if (json.has("nbtlist")) {
+            try {
+                nbtListOp = NBTListOperation.fromJson(json);
+            } catch (Exception e) {
+                Logger.error("Failed to parse NBT list operation: " + e.getMessage());
             }
         }
 
-        return new BlockOutput(symbol, block, replace, amount, optional, dynamicNbt);
+        BlockOutput output = new BlockOutput(symbol, block, replace, amount, optional, dynamicNbt);
+        output.nbtExpressions = nbtExpressions;
+        output.nbtListOp = nbtListOp;
+        return output;
     }
 
     /**
@@ -260,19 +331,43 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
 
     /**
      * Evaluate dynamic NBT once per apply.
+     * Supports both legacy dynamicNbt and new nbtExpressions/nbtListOp systems.
      */
     private NBTTagCompound getNbt(IRecipeContext context) {
-        if (dynamicNbt.isEmpty()) {
+        boolean hasLegacy = !dynamicNbt.isEmpty();
+        boolean hasNew = (nbtExpressions != null && !nbtExpressions.isEmpty()) || nbtListOp != null;
+
+        if (!hasLegacy && !hasNew) {
             return null;
         }
+
         NBTTagCompound nbtResult = new NBTTagCompound();
         ConditionContext condContext = context.getConditionContext();
-        for (Map.Entry<String, IExpression> entry : dynamicNbt.entrySet()) {
-            double val = entry.getValue()
-                .evaluate(condContext);
-            nbtResult.setDouble(entry.getKey(), val);
+
+        // Legacy system: Map<String, IExpression>
+        if (hasLegacy) {
+            for (Map.Entry<String, IExpression> entry : dynamicNbt.entrySet()) {
+                double val = entry.getValue()
+                    .evaluate(condContext);
+                nbtResult.setDouble(entry.getKey(), val);
+            }
         }
-        return nbtResult;
+
+        // New system: nbtExpressions
+        if (nbtExpressions != null) {
+            for (IExpression expr : nbtExpressions) {
+                if (expr instanceof INBTWriteExpression) {
+                    ((INBTWriteExpression) expr).applyToNBT(nbtResult, condContext);
+                }
+            }
+        }
+
+        // New system: nbtListOp
+        if (nbtListOp != null) {
+            nbtListOp.apply(nbtResult);
+        }
+
+        return nbtResult.hasNoTags() ? null : nbtResult;
     }
 
     @Override

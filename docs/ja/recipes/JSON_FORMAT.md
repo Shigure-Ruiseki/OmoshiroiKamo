@@ -169,44 +169,54 @@
 条件は毎 tick、または処理の開始時にチェックされます。論理演算（CoRパターン）を使用して複雑な条件を構成可能です。
 
 利用可能なタイプ:
-- `dimension`: 特定の次元にいるか（`dim`: 数値）。
-- `biome`: バイオーム名、タグ、環境数値を判定します。
+(※ `type` プロパティを省略した場合、使用されているキーの内容から自動的に型が推論されます)
+
+- **`block` (推奨)**: マシンの設置座標にあるブロックを判定します。(`block`: 文字列ID または オブジェクト)
+- `dimension`: 特定の次元にいるか。
+    - **ショートハンド**: `{ "dimension": 0 }`
+    - `ids`: 数値の配列（従来形式）。
+- `biome`: バイオーム名、タグ、条件を判定します。
+    - **ショートハンド**: `{ "biome": "Plains" }` / `{ "tag": "FOREST" }`
     - `biomes`: バイオーム名の配列。
-    - `tags`: Forge BiomeDictionary タグの配列（`HOT`, `COLD`, `WET`, `DRY`, `FOREST` など）。
+    - `tags`: Forge BiomeDictionary タグの配列。
     - `minTemp` / `maxTemp`: 気温の範囲判定（任意）。
     - `minHumid` / `maxHumid`: 湿度の範囲判定（任意）。
 - `offset`: 任意の条件を指定した相対座標 `(dx, dy, dz)` で判定します。
     - `dx`, `dy`, `dz`: 相対座標。
     - `condition`: 実行する条件オブジェクト。
 - `pattern`: クラフトレシピのような形式で、周囲のバイオーム配置を判定します。
-    - `pattern`: 文字列の配列（例: `["AAA", "A#A", "AAA"]`）。
+    - `pattern`: 文字列の配列。
     - `keys`: パターン文字と条件オブジェクトのマッピング。
-- `block_below`: マシンの下に特定のブロックがあるか。
+- `block_below`: マシンの「下（Y-1）」にあるブロックを判定します。現在は `offset` + `block` の組み合わせが推奨されます。
 - `tile_nbt`: マシンのTileEntityのNBT値をチェック。
-- `weather`: 現在の天候を判定します。雨 (`rain`)、雷雨 (`thunder`)、晴天 (`clear`) を指定します。
+- `weather`: 現在の天候を判定。(`rain`, `thunder`, `clear`)
 - `comparison`: 二つの式を比較します（`left`, `right`, `operator`）。
-- `expression`: 数学的な文字列式を直接記述します。最も推奨される方法です。
+- `expression`: 数学的な文字列式を直接記述します。
 
 ```json
 "conditions": [
   { 
-    "type": "pattern",
     "pattern": [ "FFF", "F#F", "FFF" ],
     "keys": {
-      "#": { "type": "biome", "biomes": ["Plains"] },
-      "F": { "type": "biome", "tags": ["FOREST"] }
+      "#": { "biome": "Plains" },
+      "F": { "tag": "FOREST" }
     }
   },
-  { "type": "weather", "weather": "rain" },
-  { "type": "expression", "expression": "day % 28 == 0" }
+  { "weather": "rain" },
+  { "expression": "day % 28 == 0" }
 ]
 ```
 
-### サポートされている論理演算
-- `and`, `or`, `not`, `xor`, `nand`, `nor`
+### サポートされている論理演算 (Shortcuts)
+演算子名をそのままキーとして使用できます。
+- **`and`**: `{ "and": [ { condition1 }, { condition2 } ] }`
+- **`or`**: `{ "or": [ ... ] }`
+- **`not`**: `{ "not": { condition } }`
+- `xor`, `nand`, `nor` も同様に対応しています。
 
 ## 4. デコレータ (Decorators)
 デコレータはレシピの実行中や終了時に追加の挙動を与えます。
+(※ `type` プロパティを省略した場合、使用されているキーから型が推論されます)
 
 - `chance`: レシピの成功確率を制御。
 - `bonus`: 確率で追加の出力を生成。
@@ -216,13 +226,13 @@
 ```json
 "decorators": [
   {
-    "type": "chance",
     "chance": 0.5
   },
   {
-    "type": "bonus",
-    "chance": 0.1,
-    "outputs": [{ "type": "item", "id": "minecraft:diamond", "amount": 1 }]
+    "bonus": {
+      "chance": 0.1,
+      "outputs": [{ "item": "minecraft:diamond", "amount": 1 }]
+    }
   }
 ]
 ```

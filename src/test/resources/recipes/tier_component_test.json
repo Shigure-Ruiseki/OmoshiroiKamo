@@ -1,0 +1,169 @@
+{
+  "group": "Component Tier Expression Tests",
+  "recipes": [
+    {
+      "name": "Glass Tier 1 Required",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:glass",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "tier.glass >= 1"
+        }
+      ]
+    },
+    {
+      "name": "Casing Tier Exactly 3",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "tier.casing == 3"
+        }
+      ]
+    },
+    {
+      "name": "Multiple Tier Conditions (AND)",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:beacon",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "tier.glass >= 2 && tier.casing >= 2"
+        }
+      ]
+    },
+    {
+      "name": "Tier in Arithmetic Expression",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:redstone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.bonus = tier.glass * 10 + tier.casing * 5"
+        }
+      ]
+    },
+    {
+      "name": "Complex Tier Logic",
+      "duration": 400,
+      "inputs": [
+        {
+          "item": "minecraft:emerald",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "(tier.glass >= 3 || tier.casing >= 3) && tier.glass + tier.casing >= 5"
+        }
+      ]
+    },
+    {
+      "name": "Tier Less Than",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:coal",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "tier.glass < 3"
+        }
+      ]
+    },
+    {
+      "name": "Tier Not Equal",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "tier.casing != 0"
+        }
+      ]
+    },
+    {
+      "name": "Unknown Component (Defaults to 0)",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:stone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:cobblestone",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": "tier.unknown == 0"
+        }
+      ]
+    }
+  ]
+}
