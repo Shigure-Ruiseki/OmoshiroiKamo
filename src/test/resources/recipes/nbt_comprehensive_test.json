@@ -1,0 +1,347 @@
+{
+  "group": "NBT Comprehensive Test - Full Feature Coverage",
+  "recipes": [
+    {
+      "name": "Subtraction Assignment (-=)",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "customData.durability >= 100"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "customData.durability -= 50",
+            "display.Name = 'Worn Sword'"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Division Assignment (/=)",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.value >= 1000"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "customData.value /= 2",
+            "display.Name = 'Halved Diamond'"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Less Than Comparison (<)",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_sword",
+          "amount": 1,
+          "nbt": "customData.temperature < 100"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:iron_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'Cool Sword'"
+        }
+      ]
+    },
+    {
+      "name": "Less Than or Equal Comparison (<=)",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "customData.quality <= 50"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "display.Name = 'Standard Diamond'"
+        }
+      ]
+    },
+    {
+      "name": "NBTList Less Than (<)",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": "<3"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'Low Sharpness Sword'",
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": 5}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NBTList Less Than or Equal (<=)",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 34, "lvl": "<=2"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'Upgraded Unbreaking'",
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 34, "lvl": "+1"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "NBTList Equality (==)",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": "==5"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'Exactly Sharpness V'"
+        }
+      ]
+    },
+    {
+      "name": "NBTList Inequality (!=)",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 20, "lvl": "!=0"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'Has Fire Aspect'",
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 20, "lvl": 0}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deep Nesting (3 Levels)",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "customData.player.stats.level = 10",
+            "customData.player.stats.exp = 5000",
+            "customData.player.inventory.gold = 999"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Type Suffixes - All Types",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "data.byteValue = 127b",
+            "data.shortValue = 32767s",
+            "data.intValue = 2147483647i",
+            "data.longValue = 9223372036854775807L",
+            "data.floatValue = 3.14159f",
+            "data.doubleValue = 2.718281828d"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Complex Multi-Operation Recipe",
+      "duration": 400,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "customData.tier >= 3",
+            "customData.power < 1000",
+            "display.Name != 'Broken Sword'"
+          ],
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": ">=3"},
+              {"id": 34, "lvl": "!=0"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "display.Name = 'Ultimate Legendary Sword'",
+            "display.Lore = ['Tier upgraded', 'Power maximized', 'Enchantments enhanced']",
+            "customData.tier += 1",
+            "customData.power *= 3",
+            "customData.bonus = 1000i",
+            "customData.rarity = 'Legendary'"
+          ],
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": "+2"},
+              {"id": 34, "lvl": "+1"},
+              {"id": 20, "lvl": 2}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "All Compound Operators Combined",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": "stats.level >= 1"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "stats.level += 5",
+            "stats.exp -= 100",
+            "stats.multiplier *= 2",
+            "stats.ratio /= 4",
+            "stats.final = 999"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Empty to Non-Empty Array",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "display.Lore = ['First line', 'Second line', 'Third line']",
+            "customData.tags = ['legendary', 'powerful', 'rare']"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mixed String and Numeric Arrays",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "display.Lore = ['Quality: S-Rank', 'Value: Priceless']",
+            "stats.attributes = [100, 200, 300, 400, 500]",
+            "data.flags = [1b, 0b, 1b, 1b, 0b]"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -31,6 +31,7 @@ public class NBTIntegrationTest {
 
     private static JsonObject nbtTestRecipes;
     private static JsonObject nbtExpressionTestRecipes;
+    private static JsonObject nbtComprehensiveTestRecipes;
 
     @BeforeAll
     public static void loadTestRecipes() throws IOException {
@@ -60,6 +61,18 @@ public class NBTIntegrationTest {
 
         assertNotNull(nbtExpressionTestRecipes, "Should successfully parse nbt_expression_test.json");
         assertTrue(nbtExpressionTestRecipes.has("recipes"), "Should have recipes array");
+
+        // Load nbt_comprehensive_test.json from test resources
+        InputStream stream3 = NBTIntegrationTest.class.getResourceAsStream("/recipes/nbt_comprehensive_test.json");
+        assertNotNull(stream3, "nbt_comprehensive_test.json should exist in test resources");
+
+        InputStreamReader reader3 = new InputStreamReader(stream3);
+        nbtComprehensiveTestRecipes = new JsonParser().parse(reader3)
+            .getAsJsonObject();
+        reader3.close();
+
+        assertNotNull(nbtComprehensiveTestRecipes, "Should successfully parse nbt_comprehensive_test.json");
+        assertTrue(nbtComprehensiveTestRecipes.has("recipes"), "Should have recipes array");
     }
 
     @Test
@@ -749,6 +762,298 @@ public class NBTIntegrationTest {
                     try {
                         ItemOutput output = ItemOutput.fromJson(outputJson);
                         assertNotNull(output, "Output should be created for recipe: " + recipeName);
+                    } catch (Exception e) {
+                        fail("Failed to parse output " + j + " for recipe " + recipeName + ": " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    // ========== NBT Comprehensive Tests ==========
+
+    @Test
+    public void testComprehensiveRecipesLoad() {
+        assertNotNull(nbtComprehensiveTestRecipes);
+        assertTrue(nbtComprehensiveTestRecipes.has("recipes"));
+        assertEquals(
+            14,
+            nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+                .size(),
+            "nbt_comprehensive_test.json should have 14 recipes");
+    }
+
+    @Test
+    public void testSubtractionAssignment() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(0)
+            .getAsJsonObject();
+        assertEquals(
+            "Subtraction Assignment (-=)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(output.validate());
+    }
+
+    @Test
+    public void testDivisionAssignment() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(1)
+            .getAsJsonObject();
+        assertEquals(
+            "Division Assignment (/=)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(output.validate());
+    }
+
+    @Test
+    public void testLessThanComparison() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(2)
+            .getAsJsonObject();
+        assertEquals(
+            "Less Than Comparison (<)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(input.validate());
+    }
+
+    @Test
+    public void testLessThanOrEqualComparison() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(3)
+            .getAsJsonObject();
+        assertEquals(
+            "Less Than or Equal Comparison (<=)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(input.validate());
+    }
+
+    @Test
+    public void testNBTListLessThan() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(4)
+            .getAsJsonObject();
+        assertEquals(
+            "NBTList Less Than (<)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(input.validate());
+        assertTrue(inputJson.has("nbtlist"));
+    }
+
+    @Test
+    public void testNBTListEquality() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(6)
+            .getAsJsonObject();
+        assertEquals(
+            "NBTList Equality (==)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(input.validate());
+        assertTrue(inputJson.has("nbtlist"));
+    }
+
+    @Test
+    public void testDeepNesting() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(8)
+            .getAsJsonObject();
+        assertEquals(
+            "Deep Nesting (3 Levels)",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(output.validate());
+
+        // Check that all three deep nested paths are present
+        assertTrue(outputJson.has("nbt"));
+        assertEquals(
+            3,
+            outputJson.getAsJsonArray("nbt")
+                .size());
+    }
+
+    @Test
+    public void testTypeSuffixes() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(9)
+            .getAsJsonObject();
+        assertEquals(
+            "Type Suffixes - All Types",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(output.validate());
+
+        // Check that all 6 type suffixes are present
+        assertEquals(
+            6,
+            outputJson.getAsJsonArray("nbt")
+                .size());
+    }
+
+    @Test
+    public void testComplexMultiOperation() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(10)
+            .getAsJsonObject();
+        assertEquals(
+            "Complex Multi-Operation Recipe",
+            recipe.get("name")
+                .getAsString());
+
+        // Test input with multiple NBT conditions and nbtlist
+        JsonObject inputJson = recipe.getAsJsonArray("inputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemInput input = ItemInput.fromJson(inputJson);
+
+        assertNotNull(input);
+        assertTrue(input.validate());
+        assertTrue(inputJson.has("nbt"));
+        assertTrue(inputJson.has("nbtlist"));
+        assertEquals(
+            3,
+            inputJson.getAsJsonArray("nbt")
+                .size());
+
+        // Test output with multiple operations
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(output.validate());
+        assertEquals(
+            6,
+            outputJson.getAsJsonArray("nbt")
+                .size());
+    }
+
+    @Test
+    public void testAllCompoundOperators() {
+        JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .get(11)
+            .getAsJsonObject();
+        assertEquals(
+            "All Compound Operators Combined",
+            recipe.get("name")
+                .getAsString());
+
+        JsonObject outputJson = recipe.getAsJsonArray("outputs")
+            .get(0)
+            .getAsJsonObject();
+        ItemOutput output = ItemOutput.fromJson(outputJson);
+
+        assertNotNull(output);
+        assertTrue(output.validate());
+
+        // Check that all 5 compound operators are present (+=, -=, *=, /=, =)
+        assertEquals(
+            5,
+            outputJson.getAsJsonArray("nbt")
+                .size());
+    }
+
+    @Test
+    public void testAllComprehensiveRecipesParseable() {
+        // Verify all recipes in nbt_comprehensive_test.json can be parsed without errors
+        for (int i = 0; i < nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+            .size(); i++) {
+            JsonObject recipe = nbtComprehensiveTestRecipes.getAsJsonArray("recipes")
+                .get(i)
+                .getAsJsonObject();
+
+            String recipeName = recipe.get("name")
+                .getAsString();
+
+            // Parse all inputs
+            if (recipe.has("inputs")) {
+                for (int j = 0; j < recipe.getAsJsonArray("inputs")
+                    .size(); j++) {
+                    JsonObject inputJson = recipe.getAsJsonArray("inputs")
+                        .get(j)
+                        .getAsJsonObject();
+                    try {
+                        ItemInput input = ItemInput.fromJson(inputJson);
+                        assertNotNull(input, "Input should be created for recipe: " + recipeName);
+                        assertTrue(input.validate(), "Input should validate for recipe: " + recipeName);
+                    } catch (Exception e) {
+                        fail("Failed to parse input " + j + " for recipe " + recipeName + ": " + e.getMessage());
+                    }
+                }
+            }
+
+            // Parse all outputs
+            if (recipe.has("outputs")) {
+                for (int j = 0; j < recipe.getAsJsonArray("outputs")
+                    .size(); j++) {
+                    JsonObject outputJson = recipe.getAsJsonArray("outputs")
+                        .get(j)
+                        .getAsJsonObject();
+                    try {
+                        ItemOutput output = ItemOutput.fromJson(outputJson);
+                        assertNotNull(output, "Output should be created for recipe: " + recipeName);
+                        assertTrue(output.validate(), "Output should validate for recipe: " + recipeName);
                     } catch (Exception e) {
                         fail("Failed to parse output " + j + " for recipe " + recipeName + ": " + e.getMessage());
                     }

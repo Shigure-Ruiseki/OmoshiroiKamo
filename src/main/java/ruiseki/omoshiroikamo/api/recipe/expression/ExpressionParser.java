@@ -369,7 +369,20 @@ public class ExpressionParser {
 
             // Check if this is a dot notation NBT path (multiple segments)
             if (pathSegments.size() > 1) {
-                // Dot notation NBT path: display.Name, ench.lvl, etc.
+                // Check for tier.component syntax FIRST
+                if (pathSegments.get(0)
+                    .equalsIgnoreCase("tier")) {
+                    // tier.component must have exactly 2 segments
+                    if (pathSegments.size() != 2) {
+                        throw error(
+                            "Invalid tier expression: expected 'tier.componentName', got "
+                                + String.join(".", pathSegments));
+                    }
+                    String componentName = pathSegments.get(1);
+                    return new ComponentTierExpression(componentName);
+                }
+
+                // Otherwise treat as NBT path: display.Name, ench.lvl, etc.
                 String fullPath = String.join(".", pathSegments);
                 return new DotNotationNBTExpression(fullPath, pathSegments);
             }
