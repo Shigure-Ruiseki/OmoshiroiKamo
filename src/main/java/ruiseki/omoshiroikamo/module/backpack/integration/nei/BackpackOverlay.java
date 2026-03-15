@@ -1,7 +1,9 @@
 package ruiseki.omoshiroikamo.module.backpack.integration.nei;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,47 @@ public class BackpackOverlay extends DefaultOverlayHandler {
     @Override
     public boolean canMoveFrom(Slot slot, GuiContainer gui) {
         return !(slot instanceof IndexedModularCraftingSlot) && !(slot instanceof ModularFilterSlot);
+    }
+
+    @Override
+    protected Set<Slot> getCraftMatrixSlots(GuiContainer gui, IRecipeHandler handler) {
+
+        final Set<Slot> ingredSlots = new HashSet<>();
+
+        if (!(gui.inventorySlots instanceof BackPackContainer container)) {
+            return ingredSlots;
+        }
+
+        BackpackWrapper wrapper = container.wrapper;
+
+        int activeUpgrade = -1;
+
+        for (int i = 0; i < wrapper.getUpgradeHandler()
+            .getSlots(); i++) {
+
+            UpgradeWrapper upgrade = UpgradeWrapperFactory.createWrapper(
+                wrapper.getUpgradeHandler()
+                    .getStackInSlot(i));
+
+            if (upgrade != null && upgrade.isTabOpened()) {
+                activeUpgrade = i;
+                break;
+            }
+        }
+
+        if (activeUpgrade == -1) {
+            return ingredSlots;
+        }
+
+        for (Slot slot : gui.inventorySlots.inventorySlots) {
+            if (slot instanceof IndexedModularCraftingMatrixSlot matrix
+                && matrix.getUpgradeSlotIndex() == activeUpgrade) {
+
+                ingredSlots.add(slot);
+            }
+        }
+
+        return ingredSlots;
     }
 
     @Override
