@@ -2,23 +2,77 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
 
 /**
- * Energy Output Port TileEntity.
+ * Unified Energy Output Port TileEntity for all tiers (0-15).
+ * Uses tier field instead of separate classes for each tier.
+ *
  * RF energy output for machine processing.
+ *
+ * This replaces the legacy per-tier TE classes (TEEnergyOutputPortT1-T6).
+ * Old TE classes are automatically remapped to this class on world load.
  */
-public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEnergySource {
+public class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEnergySource {
 
-    public TEEnergyOutputPort(int energyCapacity, int energyMaxReceive) {
-        super(energyCapacity, energyMaxReceive);
+    @NBTPersist
+    private int tier = 0;
+
+    /**
+     * No-arg constructor required for TE instantiation.
+     * Tier will be set after construction via setTier().
+     */
+    public TEEnergyOutputPort() {
+        super(2048, 128); // Default capacity and transfer rate, will be updated when tier is set
+    }
+
+    /**
+     * Constructor with tier parameter.
+     *
+     * @param tier Tier level (0-15)
+     */
+    public TEEnergyOutputPort(int tier) {
+        super(MachineryConfig.getEnergyPortCapacity(tier + 1), MachineryConfig.getEnergyPortTransfer(tier + 1));
+        this.tier = tier;
+    }
+
+    /**
+     * Sets the tier and updates energy storage accordingly.
+     * Called after TE creation when placed from ItemStack.
+     */
+    public void setTier(int tier) {
+        if (this.tier != tier) {
+            this.tier = tier;
+            int requiredCapacity = MachineryConfig.getEnergyPortCapacity(tier + 1);
+            int requiredTransfer = MachineryConfig.getEnergyPortTransfer(tier + 1);
+            if (energyStorage.getMaxEnergyStored() != requiredCapacity) {
+                energyStorage.setCapacity(requiredCapacity);
+                energyStorage.setMaxReceive(requiredTransfer);
+            }
+        }
+    }
+
+    @Override
+    public int getTier() {
+        return tier;
+    }
+
+    @Override
+    public String getLocalizedName() {
+        // Use format string from lang file: tile.modularEnergyOutput.name=Energy Output Port Tier %d
+        String unlocalizedName = getUnlocalizedName() + ".name";
+        String format = StatCollector.translateToLocal(unlocalizedName);
+        return String.format(format, getTier() + 1);
     }
 
     @Override
@@ -64,7 +118,7 @@ public abstract class TEEnergyOutputPort extends AbstractEnergyIOPortTE implemen
         }
         if (renderPass == 1) {
             if (getSideIO(side) != EnumIO.NONE) {
-                return IconRegistry.getIcon("overlay_energyoutput_" + getTier());
+                return IconRegistry.getIcon("overlay_energyoutput_" + (getTier() + 1));
             }
             return null;
         }

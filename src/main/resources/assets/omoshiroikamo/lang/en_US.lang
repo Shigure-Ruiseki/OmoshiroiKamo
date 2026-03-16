@@ -1327,21 +1327,11 @@ tile.modularFluidOutput.name=Fluid Output Port Tier %d
 
 
 # Energy Input Port
-tile.modularEnergyInput.tier_1.name=Energy Input Port Tier 1
-tile.modularEnergyInput.tier_2.name=Energy Input Port Tier 2
-tile.modularEnergyInput.tier_3.name=Energy Input Port Tier 3
-tile.modularEnergyInput.tier_4.name=Energy Input Port Tier 4
-tile.modularEnergyInput.tier_5.name=Energy Input Port Tier 5
-tile.modularEnergyInput.tier_6.name=Energy Input Port Tier 6
+tile.modularEnergyInput.name=Energy Input Port Tier %d
 
 
 # Energy Output Port
-tile.modularEnergyOutput.tier_1.name=Energy Output Port Tier 1
-tile.modularEnergyOutput.tier_2.name=Energy Output Port Tier 2
-tile.modularEnergyOutput.tier_3.name=Energy Output Port Tier 3
-tile.modularEnergyOutput.tier_4.name=Energy Output Port Tier 4
-tile.modularEnergyOutput.tier_5.name=Energy Output Port Tier 5
-tile.modularEnergyOutput.tier_6.name=Energy Output Port Tier 6
+tile.modularEnergyOutput.name=Energy Output Port Tier %d
 
 
 # Gas Input Port

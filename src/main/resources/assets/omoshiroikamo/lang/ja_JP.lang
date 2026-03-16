@@ -1330,21 +1330,11 @@ tile.modularFluidOutput.name=液体搬出口 ティア%d
 
 
 # Energy Input Port
-tile.modularEnergyInput.tier_1.name=エネルギー搬入口 ティア1
-tile.modularEnergyInput.tier_2.name=エネルギー搬入口 ティア2
-tile.modularEnergyInput.tier_3.name=エネルギー搬入口 ティア3
-tile.modularEnergyInput.tier_4.name=エネルギー搬入口 ティア4
-tile.modularEnergyInput.tier_5.name=エネルギー搬入口 ティア5
-tile.modularEnergyInput.tier_6.name=エネルギー搬入口 ティア6
+tile.modularEnergyInput.name=エネルギー搬入口 ティア%d
 
 
 # Energy Output Port
-tile.modularEnergyOutput.tier_1.name=エネルギー搬出口 ティア1
-tile.modularEnergyOutput.tier_2.name=エネルギー搬出口 ティア2
-tile.modularEnergyOutput.tier_3.name=エネルギー搬出口 ティア3
-tile.modularEnergyOutput.tier_4.name=エネルギー搬出口 ティア4
-tile.modularEnergyOutput.tier_5.name=エネルギー搬出口 ティア5
-tile.modularEnergyOutput.tier_6.name=エネルギー搬出口 ティア6
+tile.modularEnergyOutput.name=エネルギー搬出口 ティア%d
 
 
 # Gas Input Port

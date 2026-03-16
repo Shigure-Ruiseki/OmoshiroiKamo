@@ -35,13 +35,13 @@ public class MachineryConfig {
     @Config.DefaultString("1000,4000,16000,64000,256000,1024000")
     public static String gasPortCapacity = "1000,4000,16000,64000,256000,1024000";
 
-    @Config.Comment("Energy Input/Output Port Capacity in RF (Tier 1-6)")
-    @Config.DefaultString("2048,8192,32768,131072,524288,2097152")
-    public static String energyPortCapacity = "2048,8192,32768,131072,524288,2097152";
+    @Config.Comment("Energy Input/Output Port Capacity in RF (Tier 1-16)")
+    @Config.DefaultString("2048,8192,32768,131072,524288,2097152,8388608,33554432,134217728,536870912,2147483647,2147483647,2147483647,2147483647,2147483647,2147483647")
+    public static String energyPortCapacity = "2048,8192,32768,131072,524288,2097152,8388608,33554432,134217728,536870912,2147483647,2147483647,2147483647,2147483647,2147483647,2147483647";
 
-    @Config.Comment("Energy Input/Output Port Transfer Rate in RF/t (Tier 1-6)")
-    @Config.DefaultString("128,512,2048,8192,32768,131072")
-    public static String energyPortTransfer = "128,512,2048,8192,32768,131072";
+    @Config.Comment("Energy Input/Output Port Transfer Rate in RF/t (Tier 1-16)")
+    @Config.DefaultString("128,512,2048,8192,32768,131072,524288,2097152,8388608,33554432,134217728,134217728,134217728,134217728,134217728,134217728")
+    public static String energyPortTransfer = "128,512,2048,8192,32768,131072,524288,2097152,8388608,33554432,134217728,134217728,134217728,134217728,134217728,134217728";
 
     @Config.Comment("Mana Input/Output Port Capacity")
     @Config.DefaultInt(1000000)
