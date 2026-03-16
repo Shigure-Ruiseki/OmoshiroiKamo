@@ -1335,21 +1335,11 @@ tile.modularEnergyOutput.name=Energy Output Port Tier %d
 
 
 # Gas Input Port
-tile.modularGasInput.tier_1.name=Gas Input Port Tier 1
-tile.modularGasInput.tier_2.name=Gas Input Port Tier 2
-tile.modularGasInput.tier_3.name=Gas Input Port Tier 3
-tile.modularGasInput.tier_4.name=Gas Input Port Tier 4
-tile.modularGasInput.tier_5.name=Gas Input Port Tier 5
-tile.modularGasInput.tier_6.name=Gas Input Port Tier 6
+tile.modularGasInput.name=Gas Input Port Tier %d
 
 
 # Gas Output Port
-tile.modularGasOutput.tier_1.name=Gas Output Port Tier 1
-tile.modularGasOutput.tier_2.name=Gas Output Port Tier 2
-tile.modularGasOutput.tier_3.name=Gas Output Port Tier 3
-tile.modularGasOutput.tier_4.name=Gas Output Port Tier 4
-tile.modularGasOutput.tier_5.name=Gas Output Port Tier 5
-tile.modularGasOutput.tier_6.name=Gas Output Port Tier 6
+tile.modularGasOutput.name=Gas Output Port Tier %d
 
 
 # Mana Ports

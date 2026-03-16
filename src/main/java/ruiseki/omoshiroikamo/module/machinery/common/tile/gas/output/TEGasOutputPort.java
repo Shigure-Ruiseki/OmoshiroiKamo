@@ -8,10 +8,31 @@ import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
 
-public abstract class TEGasOutputPort extends AbstractGasPortTE {
+/**
+ * Unified Gas Output Port TileEntity for all tiers (0-15).
+ * Uses tier field instead of separate classes for each tier.
+ *
+ * This replaces the legacy per-tier TE classes (TEGasOutputPortT1-T6).
+ * Old TE classes are automatically remapped to this class on world load.
+ */
+public class TEGasOutputPort extends AbstractGasPortTE {
 
-    public TEGasOutputPort(int gasCapacity) {
-        super(gasCapacity);
+    /**
+     * No-arg constructor required for TE instantiation.
+     * Tier will be set after construction via setTier().
+     */
+    public TEGasOutputPort() {
+        super();
+    }
+
+    /**
+     * Constructor with tier parameter.
+     *
+     * @param tier Tier level (0-15)
+     */
+    public TEGasOutputPort(int tier) {
+        super();
+        setTier(tier);
     }
 
     @Override
@@ -31,7 +52,7 @@ public abstract class TEGasOutputPort extends AbstractGasPortTE {
         }
         if (renderPass == 1) {
             if (getSideIO(side) != EnumIO.NONE) {
-                return IconRegistry.getIcon("overlay_gasoutput_" + getTier());
+                return IconRegistry.getIcon("overlay_gasoutput_" + (getTier() + 1));
             }
             return null;
         }

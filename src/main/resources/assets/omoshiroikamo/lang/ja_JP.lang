@@ -1338,21 +1338,11 @@ tile.modularEnergyOutput.name=エネルギー搬出口 ティア%d
 
 
 # Gas Input Port
-tile.modularGasInput.tier_1.name=ガス搬入口 ティア1
-tile.modularGasInput.tier_2.name=ガス搬入口 ティア2
-tile.modularGasInput.tier_3.name=ガス搬入口 ティア3
-tile.modularGasInput.tier_4.name=ガス搬入口 ティア4
-tile.modularGasInput.tier_5.name=ガス搬入口 ティア5
-tile.modularGasInput.tier_6.name=ガス搬入口 ティア6
+tile.modularGasInput.name=ガス搬入口 ティア%d
 
 
 # Gas Output Port
-tile.modularGasOutput.tier_1.name=ガス搬出口 ティア1
-tile.modularGasOutput.tier_2.name=ガス搬出口 ティア2
-tile.modularGasOutput.tier_3.name=ガス搬出口 ティア3
-tile.modularGasOutput.tier_4.name=ガス搬出口 ティア4
-tile.modularGasOutput.tier_5.name=ガス搬出口 ティア5
-tile.modularGasOutput.tier_6.name=ガス搬出口 ティア6
+tile.modularGasOutput.name=ガス搬出口 ティア%d
 
 
 # Mana Ports

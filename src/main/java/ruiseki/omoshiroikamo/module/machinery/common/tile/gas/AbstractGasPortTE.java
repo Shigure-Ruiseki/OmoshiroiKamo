@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -27,6 +28,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
@@ -44,14 +46,18 @@ public abstract class AbstractGasPortTE extends AbstractTE
     implements IModularPort, IGasHandler, ITubeConnection, IGuiHolder<PosGuiData> {
 
     @NBTPersist
+    protected int tier = 0; // 0-15 (display: 1-16)
+
+    @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
 
     @NBTPersist
     protected final SmartGasTank tank;
     protected boolean tankDirty = false;
 
-    public AbstractGasPortTE(int gasCapacity) {
-        tank = new SmartGasTank(gasCapacity) {
+    public AbstractGasPortTE() {
+        // Capacity will be set by setTier() in onBlockPlacedBy or readCommon
+        tank = new SmartGasTank(1000) {
 
             @Override
             protected void onContentsChanged() {
@@ -63,11 +69,27 @@ public abstract class AbstractGasPortTE extends AbstractTE
         // Default IO is NONE, handled by Block.onBlockPlacedBy
     }
 
-    public abstract int getTier();
+    @Override
+    public int getTier() {
+        return tier;
+    }
 
     @Override
     public void setTier(int tier) {
-        // No-op: Tier is hardcoded in subclasses (T1-T6) and not mutable
+        if (this.tier != tier) {
+            this.tier = tier;
+            updateTankCapacity();
+            markDirty();
+        }
+    }
+
+    /**
+     * Update tank capacity based on current tier.
+     * Called when tier changes or after NBT load.
+     */
+    protected void updateTankCapacity() {
+        int newCapacity = MachineryConfig.getGasPortCapacity(tier + 1);
+        tank.setCapacity(newCapacity);
     }
 
     public abstract EnumIO getIOLimit();
@@ -82,7 +104,10 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        // Use format string from lang file: tile.modularGasInput.name=Gas Input Port Tier %d
+        String unlocalizedName = getUnlocalizedName() + ".name";
+        String format = StatCollector.translateToLocal(unlocalizedName);
+        return String.format(format, getTier() + 1);
     }
 
     @Override
@@ -110,6 +135,8 @@ public abstract class AbstractGasPortTE extends AbstractTE
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
+        // tier field is loaded by @NBTPersist before this method
+        updateTankCapacity();
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
