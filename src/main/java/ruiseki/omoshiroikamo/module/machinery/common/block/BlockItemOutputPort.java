@@ -18,7 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
@@ -132,12 +131,12 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.ITEM;
+    public Type getPortType() {
+        return Type.ITEM;
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.OUTPUT;
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
     }
 }
