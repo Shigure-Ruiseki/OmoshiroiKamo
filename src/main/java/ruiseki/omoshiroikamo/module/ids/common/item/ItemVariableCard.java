@@ -28,7 +28,7 @@ public class ItemVariableCard extends ItemOK {
 
     public ItemVariableCard() {
         super(ModObject.itemVariableCard.unlocalisedName);
-        setMaxStackSize(1);
+        setMaxStackSize(64);
     }
 
     @Override
