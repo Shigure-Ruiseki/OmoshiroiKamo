@@ -51,23 +51,12 @@ All code has been rewritten, and all textures are original.
 
 ### Custom Structure System
 Advanced JSON-based multiblock structure system with in-game reloading and scanning tools.
-- **English**: [Overview](./docs/en/structures/OVERVIEW.md) | [JSON Format](./docs/en/structures/JSON_FORMAT.md) | [Developer Guide](./docs/en/structures/DEVELOPER_GUIDE.md)
-- **日本語 (Japanese)**: [概要](./docs/ja/structures/OVERVIEW.md) | [JSONフォーマット](./docs/ja/structures/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/structures/DEVELOPER_GUIDE.md)
-
-### Modular Recipe System
-Decoupled and extensible recipe engine supporting multiple resource types and dynamic logic.
-- **English**: [Overview](./docs/en/recipes/OVERVIEW.md) | [JSON Format](./docs/en/recipes/JSON_FORMAT.md) | [Developer Guide](./docs/en/recipes/DEVELOPER_GUIDE.md)
-- **日本語 (Japanese)**: [概要](./docs/ja/recipes/OVERVIEW.md) | [JSONフォーマット](./docs/ja/recipes/JSON_FORMAT.md) | [開発者ガイド](./docs/ja/recipes/DEVELOPER_GUIDE.md)
-
-### Developer Testing
-Comprehensive testing plans and strategies for maintainers and contributors.
-- **Structure System**: [English Test Plan](./docs/en/structures/TEST_PLAN.md) | [日本語テスト計画](./docs/ja/structures/TEST_PLAN.md)
-- **Recipe System**: [English Test Plan](./docs/en/recipes/TEST_PLAN.md) | [日本語テスト計画](./docs/ja/recipes/TEST_PLAN.md)
-
+- **English**: [Overview](./docs/en/structures/OVERVIEW.md)
+- **日本語 (Japanese)**: [概要](./docs/ja/structures/OVERVIEW.md)
 
 ![Multiblock](https://media.forgecdn.net/attachments/1410/44/2025-12-01_12-32-24-png.png)
 
-### Modular Machinery Backport (Actively Developing)
+### Modular Machinery Backport (WIP, Actively Developing)
 
 A backport and enhancement of the original Modular Machinery mod.
 
@@ -82,11 +71,15 @@ A backport and enhancement of the original Modular Machinery mod.
     - Mana (Botania)
     - Vis & Essentia (Thaumcraft, WIP ME Essentia IO)
 
+
+### Modular Recipe System
+Decoupled and extensible recipe engine supporting multiple resource types and dynamic logic.
+- **English**: [Overview](./docs/en/recipes/OVERVIEW.md)
+- **日本語 (Japanese)**: [概要](./docs/ja/recipes/OVERVIEW.md)
+
 - **External Port Proxy System**:
     - Use external blocks (chests, tanks, energy storage) as machine ports
     - Supports 6 resource types with unified interface
-    - **English**: [External Port Proxy Design Document](./docs/en/machinery/EXTERNAL_PROXY.md)
-    - **日本語**: [External Port Proxy 設計ドキュメント](./docs/ja/machinery/EXTERNAL_PROXY.md)
 - **NEI Integration**:
     - Support for viewing recipes and structure previews. (WIP enhanced view)
     - Structure preview
