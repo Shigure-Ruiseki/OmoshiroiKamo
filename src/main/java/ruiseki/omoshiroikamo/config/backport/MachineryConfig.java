@@ -18,9 +18,14 @@ public class MachineryConfig {
     @Config.DefaultString("#FFFFFF")
     public static String defaultTintColor;
 
-    @Config.Comment("Item Input/Output Port Slots (Tier 1-6)")
-    @Config.DefaultString("1,4,6,9,12,16")
-    public static String itemPortSlots = "1,4,6,9,12,16";
+    @Config.Comment("Number of enabled tiers for ports and machinery (1-16)")
+    @Config.DefaultInt(6)
+    @Config.RangeInt(min = 1, max = 16)
+    public static int enabledTierCount = 6;
+
+    @Config.Comment("Item Input/Output Port Slots (Tier 1-16)")
+    @Config.DefaultString("1,4,9,12,16,27,36,45,54,63,72,81,81,81,81,81")
+    public static String itemPortSlots = "1,4,9,12,16,27,36,45,54,63,72,81,81,81,81,81";
 
     @Config.Comment("Fluid Input/Output Port Capacity in mB (Tier 1-6)")
     @Config.DefaultString("1000,4000,16000,64000,256000,1024000")

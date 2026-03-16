@@ -1311,12 +1311,7 @@ item.gear_vitarium.name=Vitarium Gear
 
 
 # Item Input Port
-tile.modularItemInput.tier_1.name=Item Input Port Tier 1
-tile.modularItemInput.tier_2.name=Item Input Port Tier 2
-tile.modularItemInput.tier_3.name=Item Input Port Tier 3
-tile.modularItemInput.tier_4.name=Item Input Port Tier 4
-tile.modularItemInput.tier_5.name=Item Input Port Tier 5
-tile.modularItemInput.tier_6.name=Item Input Port Tier 6
+tile.modularItemInput.name=Item Input Port Tier %d
 
 
 # Item Output Port
@@ -1414,4 +1409,6 @@ tooltip.me_output.lag_warning=Warning: May cause lag when connected to ME Networ
 tooltip.machinery.capacity=Capacity: %s
 tooltip.machinery.slots=Slots: %s
 tooltip.machinery.mana_transfer=Transfer: %s /t
+tooltip.machinery.deprecated=§e[DEPRECATED]
+tooltip.machinery.deprecated.hint=§7This block uses the legacy system. Consider upgrading to V2.
 

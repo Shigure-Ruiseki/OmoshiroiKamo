@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
@@ -27,8 +28,22 @@ public abstract class AbstractPortItemBlock extends ItemBlockOK {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
+        return super.getUnlocalizedName();
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
         int tier = stack.getItemDamage() + 1;
-        return super.getUnlocalizedName() + ".tier_" + tier;
+        String unlocalizedName = getUnlocalizedName(stack) + ".name";
+        String localizedFormat = StatCollector.translateToLocal(unlocalizedName);
+
+        // Always try to format with tier number
+        try {
+            return String.format(localizedFormat, tier);
+        } catch (Exception e) {
+            // Fallback: return the localized string as-is if formatting fails
+            return localizedFormat;
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tier;
 
 import ruiseki.omoshiroikamo.api.modular.ModularTier;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 
 /**
  * Manages the number of enabled tiers for the modular machinery system.
@@ -8,18 +9,14 @@ import ruiseki.omoshiroikamo.api.modular.ModularTier;
  */
 public class TierManager {
 
-    // TODO: Add this to MachineryConfig
-    private static final int DEFAULT_ENABLED_TIERS = 6;
-
     /**
      * Gets the number of tiers enabled in the configuration.
-     * Defaults to 6 if not configured.
-     * 
+     * Reads from MachineryConfig.enabledTierCount.
+     *
      * @return Number of enabled tiers (1-16)
      */
     public static int getEnabledTierCount() {
-        // TODO: Read from MachineryConfig.enabledTierCount when available
-        return DEFAULT_ENABLED_TIERS;
+        return MachineryConfig.enabledTierCount;
     }
 
     /**
