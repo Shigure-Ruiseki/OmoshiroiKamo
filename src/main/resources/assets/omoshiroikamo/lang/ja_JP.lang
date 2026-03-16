@@ -1301,6 +1301,18 @@ machinery.design.vented=放熱マシンケーシング
 machinery.design.circuitry=回路マシンケーシング
 
 
+# Materials
+item.ingot_hikarium.name=光イウムインゴット
+item.plate_hikarium.name=光イウムプレート
+item.gear_hikarium.name=光イウム歯車
+item.ingot_tairithium.name=対立イウムインゴット
+item.plate_tairithium.name=対立イウムプレート
+item.gear_tairithium.name=対立イウム歯車
+item.ingot_vitarium.name=ヴィータリウムインゴット
+item.plate_vitarium.name=ヴィータリウムプレート
+item.gear_vitarium.name=ヴィータリウム歯車
+
+
 # Item Input Port
 tile.modularItemInput.tier_1.name=アイテム搬入口 ティア1
 tile.modularItemInput.tier_2.name=アイテム搬入口 ティア2

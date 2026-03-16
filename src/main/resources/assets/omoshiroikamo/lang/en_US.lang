@@ -1298,6 +1298,18 @@ machinery.design.vented=Vented Machine Casing
 machinery.design.circuitry=Circuitry Machine Casing
 
 
+# Materials
+item.ingot_hikarium.name=Hikarium Ingot
+item.plate_hikarium.name=Hikarium Plate
+item.gear_hikarium.name=Hikarium Gear
+item.ingot_tairithium.name=Tairithium Ingot
+item.plate_tairithium.name=Tairithium Plate
+item.gear_tairithium.name=Tairithium Gear
+item.ingot_vitarium.name=Vitarium Ingot
+item.plate_vitarium.name=Vitarium Plate
+item.gear_vitarium.name=Vitarium Gear
+
+
 # Item Input Port
 tile.modularItemInput.tier_1.name=Item Input Port Tier 1
 tile.modularItemInput.tier_2.name=Item Input Port Tier 2

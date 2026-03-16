@@ -18,6 +18,7 @@ import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.machinery.common.command.CommandModular;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryItems;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryOreDict;
 import ruiseki.omoshiroikamo.module.machinery.common.integration.MachineryIntegration;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.RecipeLoader;
 
@@ -72,6 +73,7 @@ public class MachineryModule extends ModModuleBase {
         MachineryIntegration.preInit();
         MachineryBlocks.preInit();
         MachineryItems.preInit();
+        MachineryOreDict.init();
 
         // Pre-scan recipe group names so NEI can register handlers
         // before RecipeLoader.loadAll() runs in postInit

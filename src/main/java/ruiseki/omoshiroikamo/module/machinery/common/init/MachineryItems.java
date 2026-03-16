@@ -7,11 +7,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
+import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMaterialPart;
 
 public enum MachineryItems {
 
     // spotless: off
-    MACHINE_BLUEPRINT(new ItemMachineBlueprint()),;
+    MACHINE_BLUEPRINT(new ItemMachineBlueprint()),
+    INGOT(new ItemMaterialPart("ingot")),
+    PLATE(new ItemMaterialPart("plate")),
+    GEAR(new ItemMaterialPart("gear")),;
     // spotless: on
 
     public static final MachineryItems[] VALUES = values();

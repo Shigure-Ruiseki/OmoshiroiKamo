@@ -20,8 +20,8 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 
 /**
  * Machine Casing block.
@@ -33,7 +33,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
 
     private static final int TIERS = 16;
 
-    private String designName="";
+    private String designName = "";
     private final IIcon[] tierIcons = new IIcon[TIERS];
 
     protected BlockMachineCasing() {

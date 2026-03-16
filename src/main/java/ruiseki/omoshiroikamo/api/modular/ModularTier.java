@@ -8,6 +8,7 @@ package ruiseki.omoshiroikamo.api.modular;
  * Color information is managed separately by StructureTintCache and MachineryConfig.
  */
 public enum ModularTier {
+
     // spotless: off
     TIER_0(0, "0"),
     TIER_1(1, "1"),
@@ -54,6 +55,7 @@ public enum ModularTier {
 
     /**
      * Gets the tier from metadata value.
+     * 
      * @param meta Metadata value (0-15)
      * @return Corresponding ModularTier, or TIER_0 if out of range
      */
