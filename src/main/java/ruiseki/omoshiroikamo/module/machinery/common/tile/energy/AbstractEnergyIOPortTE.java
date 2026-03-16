@@ -108,7 +108,15 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     /**
      * Internal method to receive energy for machine processing.
      */
-    public int internalReceiveEnergy(int amount, boolean simulate) {
+    @Override
+    public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
+        if (side == ForgeDirection.UNKNOWN) {
+            return internalReceiveEnergy(amount, simulate);
+        }
+        return super.receiveEnergy(side, amount, simulate);
+    }
+
+    private int internalReceiveEnergy(int amount, boolean simulate) {
         int capacity = energyStorage.getMaxEnergyStored();
         int stored = energyStorage.getEnergyStored();
         int receivable = Math.min(amount, capacity - stored);
@@ -121,6 +129,14 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
             energyStorage.modifyEnergyStored(receivable);
         }
         return receivable;
+    }
+
+    @Override
+    public int extractEnergy(ForgeDirection side, int amount, boolean simulate) {
+        if (side == ForgeDirection.UNKNOWN) {
+            return extractEnergy(amount);
+        }
+        return super.extractEnergy(side, amount, simulate);
     }
 
     @Override

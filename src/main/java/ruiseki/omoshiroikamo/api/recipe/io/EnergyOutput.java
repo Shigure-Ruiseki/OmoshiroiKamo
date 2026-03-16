@@ -3,13 +3,14 @@ package ruiseki.omoshiroikamo.api.recipe.io;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 
 public class EnergyOutput extends AbstractRecipeOutput {
 
@@ -40,17 +41,18 @@ public class EnergyOutput extends AbstractRecipeOutput {
 
     @Override
     public void apply(List<IModularPort> ports, int multiplier) {
-        long remaining = amount * multiplier;
+        long remaining = (long) amount * multiplier;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.ENERGY) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            if (!(port instanceof AbstractEnergyIOPortTE)) continue;
+            if (!(port instanceof IOKEnergySink)) continue;
 
-            AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
-            int accepted = energyPort.internalReceiveEnergy((int) Math.min(remaining, (long) Integer.MAX_VALUE), false);
+            IOKEnergySink energyPort = (IOKEnergySink) port;
+            int accepted = energyPort
+                .receiveEnergy(ForgeDirection.UNKNOWN, (int) Math.min(remaining, (long) Integer.MAX_VALUE), false);
             remaining -= accepted;
 
             if (remaining <= 0) break;
@@ -59,12 +61,12 @@ public class EnergyOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractEnergyIOPortTE;
+        return port instanceof IOKEnergySink;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
+        IOKEnergySink energyPort = (IOKEnergySink) port;
         return (long) (energyPort.getMaxEnergyStored() - energyPort.getEnergyStored());
     }
 

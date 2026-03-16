@@ -36,6 +36,7 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
     protected TileEntity targetTileEntity;
     protected EnumIO ioMode;
     protected boolean errorNotified = false;
+    protected ForgeDirection cachedSide = ForgeDirection.UNKNOWN;
 
     public AbstractExternalProxy(TEMachineController controller, ChunkCoordinates targetPosition, EnumIO ioMode) {
         this.controller = controller;
@@ -243,41 +244,56 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
         }
     }
 
-    // ========== Delegation Helpers ==========
+    protected <T> T getTargetAs(Class<T> type) {
+        return getTargetAs(type, false);
+    }
 
     /**
      * Get the target TileEntity as a specific type.
-     * If the target is not of the expected type, notifies error and returns null.
      *
-     * @param type The expected type of the target TileEntity
-     * @return The target TileEntity cast to the expected type, or null if not applicable
+     * @param type   The expected type of the target TileEntity
+     * @param silent If true, do not notify error on failure
+     * @return The target TileEntity cast to the expected type, or null if not
+     *         applicable
      */
-    protected <T> T getTargetAs(Class<T> type) {
+    protected <T> T getTargetAs(Class<T> type, boolean silent) {
         TileEntity te = getTargetTileEntity();
         if (type.isInstance(te)) {
             return type.cast(te);
         }
-        notifyError();
+        if (!silent) {
+            notifyError();
+        }
         return null;
+    }
+
+    protected <T, R> R delegate(Class<T> targetType, Function<T, R> operation, R defaultValue) {
+        return delegate(targetType, operation, defaultValue, false);
     }
 
     /**
      * Safely delegate an operation to the target TileEntity with error handling.
-     * Template Method Pattern: provides a consistent way to handle errors across all delegated calls.
      *
      * @param targetType   The expected interface type of the target
      * @param operation    The operation to perform on the target
      * @param defaultValue The value to return if the operation fails
+     * @param silent       If true, do not notify error on failure
      * @return The result of the operation, or the default value on failure
      */
-    protected <T, R> R delegate(Class<T> targetType, Function<T, R> operation, R defaultValue) {
+    protected <T, R> R delegate(Class<T> targetType, Function<T, R> operation, R defaultValue, boolean silent) {
         try {
-            T target = getTargetAs(targetType);
+            T target = getTargetAs(targetType, silent);
             return target != null ? operation.apply(target) : defaultValue;
         } catch (Exception e) {
-            notifyError();
+            if (!silent) {
+                notifyError();
+            }
             return defaultValue;
         }
+    }
+
+    protected <T> void delegateVoid(Class<T> targetType, Consumer<T> operation) {
+        delegateVoid(targetType, operation, false);
     }
 
     /**
@@ -285,15 +301,18 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
      *
      * @param targetType The expected interface type of the target
      * @param operation  The operation to perform on the target
+     * @param silent     If true, do not notify error on failure
      */
-    protected <T> void delegateVoid(Class<T> targetType, Consumer<T> operation) {
+    protected <T> void delegateVoid(Class<T> targetType, Consumer<T> operation, boolean silent) {
         try {
-            T target = getTargetAs(targetType);
+            T target = getTargetAs(targetType, silent);
             if (target != null) {
                 operation.accept(target);
             }
         } catch (Exception e) {
-            notifyError();
+            if (!silent) {
+                notifyError();
+            }
         }
     }
 }

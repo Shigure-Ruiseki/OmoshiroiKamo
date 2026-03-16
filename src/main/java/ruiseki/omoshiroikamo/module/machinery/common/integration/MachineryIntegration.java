@@ -79,7 +79,8 @@ public class MachineryIntegration {
 
         // Energy Proxy (unified OKEnergy system)
         BlockResolver.registerProxyFactory(IPortType.Type.ENERGY, (controller, coords, tile, io) -> {
-            if (tile instanceof IOKEnergyTile) {
+            if (tile instanceof IOKEnergyTile || tile instanceof cofh.api.energy.IEnergyReceiver
+                || tile instanceof cofh.api.energy.IEnergyProvider) {
                 return new ExternalEnergyProxy(controller, coords, io);
             }
             return null;

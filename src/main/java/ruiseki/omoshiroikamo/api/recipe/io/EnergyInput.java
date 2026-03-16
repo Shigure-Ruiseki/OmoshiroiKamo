@@ -1,11 +1,13 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
 
 /**
  * perTick=true: Energy consumed every tick during processing.
@@ -45,17 +47,17 @@ public class EnergyInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractEnergyIOPortTE;
+        return port instanceof IOKEnergySource;
     }
 
     @Override
     protected long consume(IModularPort port, long remaining, boolean simulate) {
-        AbstractEnergyIOPortTE energyPort = (AbstractEnergyIOPortTE) port;
+        IOKEnergySource energyPort = (IOKEnergySource) port;
         int stored = energyPort.getEnergyStored();
         if (stored > 0) {
             int extract = (int) Math.min((long) stored, remaining);
             if (!simulate) {
-                energyPort.extractEnergy(extract);
+                energyPort.extractEnergy(ForgeDirection.UNKNOWN, extract, false);
             }
             return (long) extract;
         }
