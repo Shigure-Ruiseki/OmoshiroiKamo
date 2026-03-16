@@ -40,6 +40,11 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     public abstract int getTier();
 
+    @Override
+    public void setTier(int tier) {
+        // No-op: Tier is hardcoded in subclasses and not mutable
+    }
+
     public abstract EnumIO getIOLimit();
 
     @Override

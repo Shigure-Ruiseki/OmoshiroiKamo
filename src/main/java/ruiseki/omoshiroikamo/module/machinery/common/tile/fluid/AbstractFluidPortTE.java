@@ -59,6 +59,8 @@ public abstract class AbstractFluidPortTE extends AbstractTE
 
     public abstract int getTier();
 
+    public abstract void setTier(int tier);
+
     public abstract EnumIO getIOLimit();
 
     @Override

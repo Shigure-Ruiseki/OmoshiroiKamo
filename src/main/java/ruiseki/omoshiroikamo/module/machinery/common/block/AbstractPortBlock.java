@@ -154,17 +154,20 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
             }
         }
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof IModularPort) {
-            EnumIO ioLimit = EnumIO.NONE;
-            // Determine limit based on type
 
+        if (te instanceof IModularPort port) {
+            // Set tier from ItemStack metadata
+            int tier = stack.getItemDamage();
+            port.setTier(tier);
+
+            // Determine IO limit based on type
+            EnumIO ioLimit = EnumIO.NONE;
             if (te instanceof AbstractFluidPortTE portTE) ioLimit = portTE.getIOLimit();
             else if (te instanceof AbstractEnergyIOPortTE portTE) ioLimit = portTE.getIOLimit();
             else if (te instanceof AbstractItemIOPortTE portTE) ioLimit = portTE.getIOLimit();
             else if (te instanceof AbstractGasPortTE portTE) ioLimit = portTE.getIOLimit();
 
             if (ioLimit != EnumIO.NONE) {
-                IModularPort port = (IModularPort) te;
                 // Reset all to NONE first
                 for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                     port.setSideIO(dir, EnumIO.NONE);

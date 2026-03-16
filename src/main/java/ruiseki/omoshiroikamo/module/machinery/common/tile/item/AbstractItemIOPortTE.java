@@ -63,6 +63,8 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
 
     public abstract int getTier();
 
+    public abstract void setTier(int tier);
+
     public abstract EnumIO getIOLimit();
 
     @Override
@@ -95,25 +97,40 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        // ItemStackHandlerBase resizes to NBT size on load.
-        int configSlots = slotDefinition.getItemSlots();
-        int currentSlots = inv.getSlots();
-
-        if (currentSlots != configSlots) {
-            // If shrinking, buffer items from removed slots
-            if (currentSlots > configSlots) {
-                for (int i = configSlots; i < currentSlots; i++) {
-                    ItemStack stack = inv.getStackInSlot(i);
-                    if (stack != null && stack.stackSize > 0) {
-                        pendingDrops.add(stack);
-                    }
-                }
-            }
-            inv.resize(configSlots);
-        }
+        // Note: Inventory resizing is handled by subclass readCommon() after tier field is loaded from NBT.
+        // Do not resize here - slotDefinition still has constructor values, not tier-specific values.
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
+    }
+
+    /**
+     * Adds an item stack to pending drops buffer.
+     * Items in this buffer will be dropped in the world on next update.
+     */
+    protected void addPendingDrop(ItemStack stack) {
+        if (stack != null && stack.stackSize > 0) {
+            pendingDrops.add(stack);
+        }
+    }
+
+    /**
+     * Gets the current inventory size.
+     * Helper method for subclasses.
+     */
+    protected int getInventorySize() {
+        return getSizeInventory();
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side) {
+        // Dynamically generate slot array to handle tier changes
+        int size = getSizeInventory();
+        int[] slots = new int[size];
+        for (int i = 0; i < size; i++) {
+            slots[i] = i;
+        }
+        return slots;
     }
 
     @Override

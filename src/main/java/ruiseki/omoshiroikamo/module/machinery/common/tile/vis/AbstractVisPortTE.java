@@ -37,6 +37,11 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     public abstract int getTier();
 
+    @Override
+    public void setTier(int tier) {
+        // No-op: Tier is hardcoded in subclasses and not mutable
+    }
+
     public abstract EnumIO getIOLimit();
 
     public int addVis(Aspect aspect, int amount) {

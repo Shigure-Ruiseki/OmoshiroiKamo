@@ -130,6 +130,16 @@ public class WeightedRandomDecoratorTest {
         public void accept(IRecipeVisitor visitor) {}
 
         @Override
+        public int getTier() {
+            return 1;
+        }
+
+        @Override
+        public void setTier(int tier) {
+            // No-op for test stub
+        }
+
+        @Override
         public IPortType.Direction getPortDirection() {
             return IPortType.Direction.BOTH;
         }

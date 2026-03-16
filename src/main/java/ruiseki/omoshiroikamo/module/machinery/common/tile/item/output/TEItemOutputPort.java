@@ -160,7 +160,18 @@ public class TEItemOutputPort extends AbstractItemIOPortTE {
         super.readCommon(root);
         // Ensure inventory matches tier after loading from NBT
         int requiredSlots = MachineryConfig.getItemPortSlots(tier + 1);
-        if (inv.getSlots() != requiredSlots) {
+        int currentSlots = getInventorySize();
+
+        if (currentSlots != requiredSlots) {
+            // If shrinking, buffer items from removed slots for dropping
+            if (currentSlots > requiredSlots) {
+                for (int i = requiredSlots; i < currentSlots; i++) {
+                    ItemStack stack = inv.getStackInSlot(i);
+                    if (stack != null && stack.stackSize > 0) {
+                        addPendingDrop(stack);
+                    }
+                }
+            }
             inv.resize(requiredSlots);
             slotDefinition.setItemSlots(0, requiredSlots);
         }

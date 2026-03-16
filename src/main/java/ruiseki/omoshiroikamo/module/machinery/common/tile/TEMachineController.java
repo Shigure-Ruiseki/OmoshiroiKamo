@@ -227,6 +227,11 @@ public class TEMachineController extends AbstractMBModifierTE
         return min == Integer.MAX_VALUE ? 1 : min;
     }
 
+    @Override
+    public void setTier(int tier) {
+        // No-op: Controller tier is calculated from structure components, not set directly
+    }
+
     public int getComponentTier(String componentName) {
         return structureAgent.getComponentTier(componentName);
     }

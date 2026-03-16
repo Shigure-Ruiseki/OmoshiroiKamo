@@ -65,6 +65,11 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     public abstract int getTier();
 
+    @Override
+    public void setTier(int tier) {
+        // No-op: Tier is hardcoded in subclasses (T1-T6) and not mutable
+    }
+
     public abstract EnumIO getIOLimit();
 
     @Override

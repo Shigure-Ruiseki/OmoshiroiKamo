@@ -170,6 +170,11 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
     public abstract int getTier();
 
     @Override
+    public void setTier(int tier) {
+        // No-op: Tier is hardcoded in subclasses and not mutable
+    }
+
+    @Override
     public IPortType.Type getPortType() {
         return IPortType.Type.MANA;
     }

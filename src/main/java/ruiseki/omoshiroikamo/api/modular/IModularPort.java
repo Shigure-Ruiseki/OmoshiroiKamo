@@ -17,6 +17,20 @@ public interface IModularPort extends IPortType, ISidedIO, ISidedTexture {
     void accept(IRecipeVisitor visitor);
 
     /**
+     * Get the tier level of this port (0-15).
+     *
+     * @return The tier level
+     */
+    int getTier();
+
+    /**
+     * Set the tier level of this port (0-15).
+     *
+     * @param tier The tier level to set
+     */
+    void setTier(int tier);
+
+    /**
      * Check if this port is currently valid and usable.
      * Template Method Pattern: each implementation defines its own validation logic.
      *

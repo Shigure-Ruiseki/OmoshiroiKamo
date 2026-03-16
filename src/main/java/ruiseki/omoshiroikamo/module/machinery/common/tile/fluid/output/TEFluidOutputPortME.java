@@ -70,6 +70,11 @@ public class TEFluidOutputPortME extends AbstractFluidPortTE implements IGridPro
     }
 
     @Override
+    public void setTier(int tier) {
+        // ME version does not use tier system - ignore
+    }
+
+    @Override
     public EnumIO getIOLimit() {
         return EnumIO.OUTPUT;
     }

@@ -110,6 +110,18 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
     }
 
     @Override
+    public int getTier() {
+        // External proxies wrap external TileEntities, not tiered ports
+        // Return default tier 1 (0-indexed = 0)
+        return 0;
+    }
+
+    @Override
+    public void setTier(int tier) {
+        // No-op: External proxies don't have mutable tiers
+    }
+
+    @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         // Proxies don't have their own texture
         return null;
