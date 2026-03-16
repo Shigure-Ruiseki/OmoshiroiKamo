@@ -1318,12 +1318,7 @@ tile.modularItemInput.name=アイテム搬入口 ティア%d
 
 
 # Item Output Port
-tile.modularItemOutput.tier_1.name=アイテム搬出口 ティア1
-tile.modularItemOutput.tier_2.name=アイテム搬出口 ティア2
-tile.modularItemOutput.tier_3.name=アイテム搬出口 ティア3
-tile.modularItemOutput.tier_4.name=アイテム搬出口 ティア4
-tile.modularItemOutput.tier_5.name=アイテム搬出口 ティア5
-tile.modularItemOutput.tier_6.name=アイテム搬出口 ティア6
+tile.modularItemOutput.name=アイテム搬出口 ティア%d
 
 
 # Fluid Input Port

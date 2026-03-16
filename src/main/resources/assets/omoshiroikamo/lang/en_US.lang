@@ -1315,12 +1315,7 @@ tile.modularItemInput.name=Item Input Port Tier %d
 
 
 # Item Output Port
-tile.modularItemOutput.tier_1.name=Item Output Port Tier 1
-tile.modularItemOutput.tier_2.name=Item Output Port Tier 2
-tile.modularItemOutput.tier_3.name=Item Output Port Tier 3
-tile.modularItemOutput.tier_4.name=Item Output Port Tier 4
-tile.modularItemOutput.tier_5.name=Item Output Port Tier 5
-tile.modularItemOutput.tier_6.name=Item Output Port Tier 6
+tile.modularItemOutput.name=Item Output Port Tier %d
 
 
 # Fluid Input Port
@@ -1410,5 +1405,5 @@ tooltip.machinery.capacity=Capacity: %s
 tooltip.machinery.slots=Slots: %s
 tooltip.machinery.mana_transfer=Transfer: %s /t
 tooltip.machinery.deprecated=§e[DEPRECATED]
-tooltip.machinery.deprecated.hint=§7This block uses the legacy system. Consider upgrading to V2.
+tooltip.machinery.deprecated.hint=§7This block uses the legacy system.
 

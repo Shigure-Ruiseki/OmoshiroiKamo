@@ -3,37 +3,44 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT6;
 
+/**
+ * Item Output Port block with unified 16-tier system.
+ * Uses a single TE class (TEItemOutputPort) with tier field instead of per-tier TE classes.
+ *
+ * Legacy TE classes (TEItemOutputPortT1-T6) are automatically remapped to TEItemOutputPort.
+ */
 public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
+    private static final int TIER_COUNT = 16;
+
     protected BlockItemOutputPort() {
-        super(
-            ModObject.blockModularItemOutput.unlocalisedName,
-            TEItemOutputPortT1.class,
-            TEItemOutputPortT2.class,
-            TEItemOutputPortT3.class,
-            TEItemOutputPortT4.class,
-            TEItemOutputPortT5.class,
-            TEItemOutputPortT6.class);
+        // Pass single TE class - we override createTileEntity and registerTileEntity
+        super(ModObject.blockModularItemOutput.unlocalisedName, TEItemOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -41,6 +48,50 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     public static BlockItemOutputPort create() {
         return new BlockItemOutputPort();
+    }
+
+    @Override
+    protected void registerTileEntity() {
+        // Register with remapping for legacy TE classes
+        GameRegistry.registerTileEntityWithAlternatives(
+            TEItemOutputPort.class,
+            TEItemOutputPort.class.getSimpleName() + "TileEntity",
+            // Legacy TE class names - automatically remap to new class
+            "TEItemOutputPortT1TileEntity",
+            "TEItemOutputPortT2TileEntity",
+            "TEItemOutputPortT3TileEntity",
+            "TEItemOutputPortT4TileEntity",
+            "TEItemOutputPortT5TileEntity",
+            "TEItemOutputPortT6TileEntity");
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEItemOutputPort(meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
+    }
+
+    @Override
+    public void registerPortOverlays(IIconRegister reg) {
+        // Register overlays for all 16 tiers (1-based indexing to match texture files)
+        String prefix = getOverlayPrefix();
+        for (int i = 1; i <= TIER_COUNT; i++) {
+            IconRegistry.addIcon(
+                prefix + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
+        }
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override
@@ -81,12 +132,12 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
     }
 
     @Override
-    public Type getPortType() {
-        return Type.ITEM;
+    public IPortType.Type getPortType() {
+        return IPortType.Type.ITEM;
     }
 
     @Override
-    public Direction getPortDirection() {
-        return Direction.OUTPUT;
+    public IPortType.Direction getPortDirection() {
+        return IPortType.Direction.OUTPUT;
     }
 }
