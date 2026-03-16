@@ -1276,6 +1276,31 @@ tile.modularMachineController.name=モジュラーマシンコントローラー
 tile.visBridge.name=ビスブリッジ
 
 
+# Machinery Casing Dynamic Localization
+machinery.casing.format=%s%s
+machinery.casing.modular=モジュラーマシンケーシング
+machinery.tier.0=標準的な
+machinery.tier.1=改良型の
+machinery.tier.2=革命的な
+machinery.tier.3=異形の
+machinery.tier.4=究極の
+machinery.tier.5=矛盾を孕んだ
+machinery.tier.6=虚空を操る
+machinery.tier.7=想像を超えた
+machinery.tier.8=星間を飛び回れる
+machinery.tier.9=深宇宙技術の
+machinery.tier.10=光学的に完璧な
+machinery.tier.11=反重力の
+machinery.tier.12=宇宙で最も優れた
+machinery.tier.13=永遠のギルティ
+machinery.tier.14=次元を超越した
+machinery.tier.15=磁気流体力学的に制御された
+machinery.design.plain=マシンケーシング
+machinery.design.reinforced=補強マシンケーシング
+machinery.design.vented=放熱マシンケーシング
+machinery.design.circuitry=回路マシンケーシング
+
+
 # Item Input Port
 tile.modularItemInput.tier_1.name=アイテム搬入口 ティア1
 tile.modularItemInput.tier_2.name=アイテム搬入口 ティア2

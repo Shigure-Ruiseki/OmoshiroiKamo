@@ -1273,6 +1273,31 @@ tile.modularMachineController.name=Machine Controller
 tile.visBridge.name=Vis Bridge
 
 
+# Machinery Casing Dynamic Localization
+machinery.casing.format=%s %s
+machinery.casing.modular=Modular Machine Casing
+machinery.tier.0=Standard
+machinery.tier.1=Improved
+machinery.tier.2=Revolutionary
+machinery.tier.3=Exotic
+machinery.tier.4=Ultimate
+machinery.tier.5=Paradox-Contained
+machinery.tier.6=Void Manipulating
+machinery.tier.7=Beyond Imaginally
+machinery.tier.8=Interstellar
+machinery.tier.9=Deep-Space Technical
+machinery.tier.10=Optically Perfect
+machinery.tier.11=Antigravity
+machinery.tier.12=Cosmically Best
+machinery.tier.13=Everlasting Guilty
+machinery.tier.14=Dimensionally Transcendent
+machinery.tier.15=Magnetohydrodynamically Constrained
+machinery.design.plain=Machine Casing
+machinery.design.reinforced=Reinforced Machine Casing
+machinery.design.vented=Vented Machine Casing
+machinery.design.circuitry=Circuitry Machine Casing
+
+
 # Item Input Port
 tile.modularItemInput.tier_1.name=Item Input Port Tier 1
 tile.modularItemInput.tier_2.name=Item Input Port Tier 2

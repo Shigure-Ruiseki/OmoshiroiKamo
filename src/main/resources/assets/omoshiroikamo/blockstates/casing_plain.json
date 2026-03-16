@@ -1,0 +1,40 @@
+{
+    "variants": {
+        "meta=0": {
+            "model": "omoshiroikamo:block/modular/casing_plain",
+            "textures": {
+                "base": "omoshiroikamo:block/modular/tier_0_base"
+            }
+        },
+        "meta=1": {
+            "model": "omoshiroikamo:block/modular/casing_plain",
+            "textures": {
+                "base": "omoshiroikamo:block/modular/tier_1_base"
+            }
+        },
+        "meta=2": {
+            "model": "omoshiroikamo:block/modular/casing_plain",
+            "textures": {
+                "base": "omoshiroikamo:block/modular/tier_2_base"
+            }
+        },
+        "meta=3": {
+            "model": "omoshiroikamo:block/modular/casing_plain",
+            "textures": {
+                "base": "omoshiroikamo:block/modular/tier_3_base"
+            }
+        },
+        "meta=4": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_4_base" } },
+        "meta=5": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_5_base" } },
+        "meta=6": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_6_base" } },
+        "meta=7": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_7_base" } },
+        "meta=8": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_8_base" } },
+        "meta=9": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_9_base" } },
+        "meta=10": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_10_base" } },
+        "meta=11": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_11_base" } },
+        "meta=12": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_12_base" } },
+        "meta=13": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_13_base" } },
+        "meta=14": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_14_base" } },
+        "meta=15": { "model": "omoshiroikamo:block/modular/casing_plain", "textures": { "base": "omoshiroikamo:block/modular/tier_15_base" } }
+    }
+}
