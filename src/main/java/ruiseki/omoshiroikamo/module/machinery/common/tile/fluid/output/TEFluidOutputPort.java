@@ -2,18 +2,72 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.fluid.FluidTransfer;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
-public abstract class TEFluidOutputPort extends AbstractFluidPortTE {
+/**
+ * Unified Fluid Output Port TileEntity for all tiers (0-15).
+ * Uses tier field instead of separate classes for each tier.
+ *
+ * This replaces the legacy per-tier TE classes (TEFluidOutputPortT1-T6).
+ * Old TE classes are automatically remapped to this class on world load.
+ */
+public class TEFluidOutputPort extends AbstractFluidPortTE {
 
-    public TEFluidOutputPort(int fluidCapacity) {
-        super(fluidCapacity);
+    @NBTPersist
+    private int tier = 0;
+
+    /**
+     * No-arg constructor required for TE instantiation.
+     * Tier will be set after construction via setTier().
+     */
+    public TEFluidOutputPort() {
+        super(1000); // Default 1000mB capacity, will be updated when tier is set
+    }
+
+    /**
+     * Constructor with tier parameter.
+     *
+     * @param tier Tier level (0-15)
+     */
+    public TEFluidOutputPort(int tier) {
+        super(MachineryConfig.getFluidPortCapacity(tier + 1));
+        this.tier = tier;
+    }
+
+    /**
+     * Sets the tier and updates tank capacity accordingly.
+     * Called after TE creation when placed from ItemStack.
+     */
+    public void setTier(int tier) {
+        if (this.tier != tier) {
+            this.tier = tier;
+            int requiredCapacity = MachineryConfig.getFluidPortCapacity(tier + 1);
+            if (tank.getCapacity() != requiredCapacity) {
+                tank.setCapacity(requiredCapacity);
+            }
+        }
+    }
+
+    @Override
+    public int getTier() {
+        return tier;
+    }
+
+    @Override
+    public String getLocalizedName() {
+        // Use format string from lang file: tile.modularFluidOutput.name=Fluid Output Port Tier %d
+        String unlocalizedName = getUnlocalizedName() + ".name";
+        String format = StatCollector.translateToLocal(unlocalizedName);
+        return String.format(format, getTier() + 1);
     }
 
     @Override
@@ -50,7 +104,7 @@ public abstract class TEFluidOutputPort extends AbstractFluidPortTE {
         }
         if (renderPass == 1) {
             if (getSideIO(side) != EnumIO.NONE) {
-                return IconRegistry.getIcon("overlay_fluidoutput_" + getTier());
+                return IconRegistry.getIcon("overlay_fluidoutput_" + (getTier() + 1));
             }
             return null;
         }

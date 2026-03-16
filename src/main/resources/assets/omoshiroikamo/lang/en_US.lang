@@ -1319,21 +1319,11 @@ tile.modularItemOutput.name=Item Output Port Tier %d
 
 
 # Fluid Input Port
-tile.modularFluidInput.tier_1.name=Fluid Input Port Tier 1
-tile.modularFluidInput.tier_2.name=Fluid Input Port Tier 2
-tile.modularFluidInput.tier_3.name=Fluid Input Port Tier 3
-tile.modularFluidInput.tier_4.name=Fluid Input Port Tier 4
-tile.modularFluidInput.tier_5.name=Fluid Input Port Tier 5
-tile.modularFluidInput.tier_6.name=Fluid Input Port Tier 6
+tile.modularFluidInput.name=Fluid Input Port Tier %d
 
 
 # Fluid Output Port
-tile.modularFluidOutput.tier_1.name=Fluid Output Port Tier 1
-tile.modularFluidOutput.tier_2.name=Fluid Output Port Tier 2
-tile.modularFluidOutput.tier_3.name=Fluid Output Port Tier 3
-tile.modularFluidOutput.tier_4.name=Fluid Output Port Tier 4
-tile.modularFluidOutput.tier_5.name=Fluid Output Port Tier 5
-tile.modularFluidOutput.tier_6.name=Fluid Output Port Tier 6
+tile.modularFluidOutput.name=Fluid Output Port Tier %d
 
 
 # Energy Input Port

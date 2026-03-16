@@ -27,9 +27,9 @@ public class MachineryConfig {
     @Config.DefaultString("1,4,9,12,16,27,36,45,54,63,72,81,81,81,81,81")
     public static String itemPortSlots = "1,4,9,12,16,27,36,45,54,63,72,81,81,81,81,81";
 
-    @Config.Comment("Fluid Input/Output Port Capacity in mB (Tier 1-6)")
-    @Config.DefaultString("1000,4000,16000,64000,256000,1024000")
-    public static String fluidPortCapacity = "1000,4000,16000,64000,256000,1024000";
+    @Config.Comment("Fluid Input/Output Port Capacity in mB (Tier 1-16)")
+    @Config.DefaultString("1000,4000,16000,64000,256000,1024000,4096000,16384000,65536000,262144000,1048576000,1048576000,1048576000,1048576000,1048576000,1048576000")
+    public static String fluidPortCapacity = "1000,4000,16000,64000,256000,1024000,4096000,16384000,65536000,262144000,1048576000,1048576000,1048576000,1048576000,1048576000,1048576000";
 
     @Config.Comment("Gas Input/Output Port Capacity in mB (Tier 1-6)")
     @Config.DefaultString("1000,4000,16000,64000,256000,1024000")

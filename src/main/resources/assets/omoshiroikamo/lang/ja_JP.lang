@@ -1322,21 +1322,11 @@ tile.modularItemOutput.name=アイテム搬出口 ティア%d
 
 
 # Fluid Input Port
-tile.modularFluidInput.tier_1.name=液体搬入口 ティア1
-tile.modularFluidInput.tier_2.name=液体搬入口 ティア2
-tile.modularFluidInput.tier_3.name=液体搬入口 ティア3
-tile.modularFluidInput.tier_4.name=液体搬入口 ティア4
-tile.modularFluidInput.tier_5.name=液体搬入口 ティア5
-tile.modularFluidInput.tier_6.name=液体搬入口 ティア6
+tile.modularFluidInput.name=液体搬入口 ティア%d
 
 
 # Fluid Output Port
-tile.modularFluidOutput.tier_1.name=液体搬出口 ティア1
-tile.modularFluidOutput.tier_2.name=液体搬出口 ティア2
-tile.modularFluidOutput.tier_3.name=液体搬出口 ティア3
-tile.modularFluidOutput.tier_4.name=液体搬出口 ティア4
-tile.modularFluidOutput.tier_5.name=液体搬出口 ティア5
-tile.modularFluidOutput.tier_6.name=液体搬出口 ティア6
+tile.modularFluidOutput.name=液体搬出口 ティア%d
 
 
 # Energy Input Port
