@@ -42,7 +42,7 @@ public abstract class BackpackGuiHolder {
         if (backpackSlotIndex != null) wrapper.setSlotIndex(backpackSlotIndex);
         if (type != null) wrapper.setType(type);
 
-        return new BackpackPanel(player, tileEntity, syncManager, settings, wrapper, width, height);
+        return new BackpackPanel(player, tileEntity, syncManager, settings, wrapper, width, height, backpackSlotIndex);
     }
 
     protected void addCommonWidgets(BackpackPanel panel) {

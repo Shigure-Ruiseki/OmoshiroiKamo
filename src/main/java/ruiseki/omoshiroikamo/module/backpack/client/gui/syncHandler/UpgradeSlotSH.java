@@ -90,7 +90,26 @@ public class UpgradeSlotSH extends ItemSlotSH {
                 super.readOnServer(id, buf);
                 break;
         }
-        wrapper.syncToServer();
+    }
+
+    @Override
+    public void readOnClient(int id, PacketBuffer buf) {
+        super.readOnClient(id, buf);
+        if (id == UPDATE_UPGRADE_TAB_STATE || id == UPDATE_UPGRADE_TOGGLE
+            || id == UPDATE_BASIC_FILTERABLE
+            || id == UPDATE_ADVANCED_FILTERABLE
+            || id == UPDATE_ADVANCED_FEEDING
+            || id == UPDATE_FILTER
+            || id == UPDATE_MAGNET
+            || id == UPDATE_CRAFTING
+            || id == UPDATE_VOID
+            || id == UPDATE_CRAFTING_R
+            || id == UPDATE_CRAFTING_G
+            || id == UPDATE_CRAFTING_C
+
+        ) {
+            wrapper.syncToServer();
+        }
     }
 
     private void updateTabState(PacketBuffer buf) {

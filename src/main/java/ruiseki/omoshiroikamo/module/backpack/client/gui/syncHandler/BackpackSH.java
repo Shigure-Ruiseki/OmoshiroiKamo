@@ -31,11 +31,6 @@ public class BackpackSH extends SyncHandler {
     }
 
     @Override
-    public void readOnClient(int id, PacketBuffer buf) throws IOException {
-
-    }
-
-    @Override
     public void readOnServer(int id, PacketBuffer buf) throws IOException {
         switch (id) {
             case UPDATE_SET_SORT_TYPE:
@@ -61,7 +56,16 @@ public class BackpackSH extends SyncHandler {
             default:
                 break;
         }
-        wrapper.syncToServer();
+    }
+
+    @Override
+    public void readOnClient(int id, PacketBuffer buf) throws IOException {
+        if (id == UPDATE_SET_SORT_TYPE || id == UPDATE_SORT_INV
+            || id == UPDATE_TRANSFER_TO_BACKPACK_INV
+            || id == UPDATE_TRANSFER_TO_PLAYER_INV
+            || id == UPDATE_SETTING) {
+            wrapper.syncToServer();
+        }
     }
 
     public void setSortType(PacketBuffer buf) {

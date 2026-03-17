@@ -1,6 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.client.gui.container;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -431,112 +430,68 @@ public class BackPackContainer extends ModularContainer {
 
     @Override
     public ItemStack transferItem(ModularSlot fromSlot, ItemStack fromStack) {
-        if (fromStack == null || fromStack.stackSize <= 0) return fromStack;
+        if (fromStack == null || fromStack.stackSize <= 0) return null;
 
-        SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
-        String fromGroup = fromSlot.getSlotGroupName();
+        int originalSize = fromStack.stackSize;
 
         if (fromSlot instanceof IndexedModularCraftingSlot craftingSlot) {
+            IndexedInventoryCraftingWrapper inventoryCrafting = inventoryCraftingInstances
+                .get(craftingSlot.getUpgradeSlotIndex());
 
-            IndexedInventoryCraftingWrapper inv = inventoryCraftingInstances.get(craftingSlot.getUpgradeSlotIndex());
+            if (inventoryCrafting == null) {
+                transferItemFiltered(fromSlot, fromStack, slot -> PLAYER_INV.equals(slot.getSlotGroupName()));
+            } else
+                if (inventoryCrafting.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.BACKPACK) {
 
-            if (inv == null) {
-                return transferToPlayer(fromSlot, fromStack);
-            }
-
-            if (inv.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.BACKPACK) {
-                return transferToBackpack(fromSlot, fromStack);
-            }
-
-            return transferToPlayer(fromSlot, fromStack);
-        }
-
-        // Player → Backpack
-        if (PLAYER_INV.equals(fromGroup)) {
-            return transferToBackpack(fromSlot, fromStack);
-        }
-
-        // Fallback
-        for (ModularSlot toSlot : getShiftClickSlots()) {
-            SlotGroup slotGroup = toSlot.getSlotGroup();
-            if (slotGroup == null) continue;
-            if (slotGroup != fromSlotGroup && toSlot.func_111238_b() && toSlot.isItemValid(fromStack)) {
-                transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
-                if (fromStack.stackSize <= 0) {
-                    return fromStack;
+                    transferItemFiltered(
+                        fromSlot,
+                        fromStack,
+                        slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
+                        slot -> slot instanceof ModularBackpackSlot);
+                } else {
+                    transferItemFiltered(fromSlot, fromStack, slot -> PLAYER_INV.equals(slot.getSlotGroupName()));
                 }
-            }
+        } else if (PLAYER_INV.equals(fromSlot.getSlotGroupName())) {
+            transferItemFiltered(
+                fromSlot,
+                fromStack,
+                slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()));
+        } else {
+            return super.transferItem(fromSlot, fromStack);
+        }
+
+        if (fromStack.stackSize != originalSize) {
+            return fromStack;
         }
 
         return super.transferItem(fromSlot, fromStack);
     }
 
-    private ItemStack transferToPlayer(ModularSlot fromSlot, ItemStack fromStack) {
-        return transferItemFiltered(
-            fromSlot,
-            fromStack,
-            Arrays.asList(slot -> PLAYER_INV.equals(slot.getSlotGroupName())));
-    }
-
-    private ItemStack transferToBackpack(ModularSlot fromSlot, ItemStack fromStack) {
-        return transferItemFiltered(
-            fromSlot,
-            fromStack,
-            Arrays.asList(
-                slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
-                slot -> slot instanceof ModularBackpackSlot));
-    }
-
-    public ItemStack transferItemFiltered(ModularSlot fromSlot, ItemStack fromStack,
-        List<Predicate<ModularSlot>> slotFilters) {
+    @SafeVarargs
+    public final void transferItemFiltered(ModularSlot fromSlot, ItemStack fromStack,
+        Predicate<ModularSlot>... slotFilters) {
         SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
 
         for (Predicate<ModularSlot> slotFilter : slotFilters) {
 
-            List<ModularSlot> memorizedSlots = getShiftClickSlots().stream()
+            List<ModularSlot> targets = getShiftClickSlots().stream()
                 .filter(slotFilter)
                 .collect(Collectors.toList());
 
-            for (ModularSlot toSlot : memorizedSlots) {
-
-                SlotGroup slotGroup = toSlot.getSlotGroup();
-
-                if (slotGroup != fromSlotGroup && toSlot.func_111238_b() && toSlot.isItemValid(fromStack)) {
-
-                    transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
-
-                    if (fromStack.stackSize <= 0) {
-                        return fromStack;
-                    }
-
-                }
-            }
-
-            for (ModularSlot emptySlot : memorizedSlots) {
-
-                ItemStack stack = emptySlot.getStack();
-                SlotGroup slotGroup = emptySlot.getSlotGroup();
-
-                if (slotGroup != fromSlotGroup && emptySlot.func_111238_b()
-                    && stack == null
-                    && emptySlot.isItemValid(fromStack)) {
-
-                    int limit = emptySlot.getItemStackLimit(fromStack);
-                    emptySlot.putStack(fromStack.splitStack(Math.min(fromStack.stackSize, limit)));
-
-                    if (fromStack.stackSize < 1) {
-                        return fromStack;
-                    }
+            for (ModularSlot toSlot : targets) {
+                if (fromStack.stackSize <= 0) break;
+                if (toSlot.getSlotGroup() != fromSlotGroup) {
+                    transferToSlot(fromSlot, toSlot, fromStack);
                 }
             }
         }
 
-        return super.transferItem(fromSlot, fromStack);
     }
 
-    protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack, ItemStack toStack) {
+    protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack) {
 
         boolean isBackpackSlot = toSlot instanceof ModularBackpackSlot;
+        ItemStack toStack = toSlot.getStack();
 
         // VOID ANY
         if (isBackpackSlot && wrapper.canVoid(fromStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
@@ -549,6 +504,7 @@ public class BackPackContainer extends ModularContainer {
 
         // merge stack
         if (fromStack.stackSize > 0 && !fromSlot.isPhantom()
+            && toStack != null
             && ItemHandlerHelper.canItemStacksStack(fromStack, toStack)) {
 
             int j = toStack.stackSize + fromStack.stackSize;
