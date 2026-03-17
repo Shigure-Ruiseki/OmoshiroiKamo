@@ -17,6 +17,9 @@ public class ExpressionsParser {
         register("map_range", json -> MapRangeExpression.fromJson(json));
         register("arithmetic", json -> ArithmeticExpression.fromJson(json));
         register("world_property", json -> WorldPropertyExpression.fromJson(json));
+        register("string_literal", json -> StringLiteralExpression.fromJson(json));
+        register("nbt_assignment", json -> NBTAssignmentExpression.fromJson(json));
+        register("component_tier", json -> ComponentTierExpression.fromJson(json));
     }
 
     public static void register(String type, Function<JsonObject, IExpression> parser) {

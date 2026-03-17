@@ -1,0 +1,153 @@
+{
+    "group": "NBT Test Recipes",
+    "recipes": [
+        {
+            "name": "Enchanted Sword Creation",
+            "duration": 200,
+            "inputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1
+                },
+                {
+                    "item": "minecraft:enchanted_book",
+                    "amount": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 16, "lvl": 5},
+                            {"id": 34, "lvl": 3}
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Enchantment Upgrade",
+            "duration": 100,
+            "inputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 16, "lvl": ">=3"}
+                        ]
+                    }
+                },
+                {
+                    "item": "minecraft:glowstone_dust",
+                    "amount": 4
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 16, "lvl": "+2"},
+                            {"id": 34, "lvl": 3}
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Remove Fire Aspect",
+            "duration": 50,
+            "inputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 20, "lvl": ">0"}
+                        ]
+                    }
+                },
+                {
+                    "item": "minecraft:water_bucket",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 20, "lvl": 0}
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Named Item Creation",
+            "duration": 10,
+            "inputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1
+                },
+                {
+                    "item": "minecraft:name_tag",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbt": "display.Name = 'Excalibur'"
+                }
+            ]
+        },
+        {
+            "name": "Complex NBT Transformation",
+            "duration": 300,
+            "inputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 16, "lvl": ">=5"},
+                            {"id": 34, "lvl": ">=3"}
+                        ]
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "item": "minecraft:diamond_sword",
+                    "amount": 1,
+                    "nbt": [
+                        "display.Name = 'Legendary Blade'",
+                        "display.Lore = ['Line 1', 'Line 2']"
+                    ],
+                    "nbtlist": {
+                        "path": "ench",
+                        "ops": [
+                            {"id": 16, "lvl": "+1"},
+                            {"id": 20, "lvl": 0},
+                            {"id": 34, "lvl": "+1"}
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

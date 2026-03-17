@@ -100,6 +100,11 @@ public interface IStructureEntry extends IStructureSerializable {
     List<String> getComponentNames();
 
     /**
+     * Get the structures that contribute to this machine's tier.
+     */
+    List<TierStructureRef> getTierStructures();
+
+    /**
      * Accepts a visitor to perform operations on this structure.
      */
     void accept(IStructureVisitor visitor);

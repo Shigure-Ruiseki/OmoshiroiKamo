@@ -1,0 +1,254 @@
+{
+  "group": "Block NBT Comprehensive Test - Full Dynamic NBT Coverage",
+  "recipes": [
+    {
+      "name": "Block NBT Input - Basic Check",
+      "duration": 100,
+      "inputs": [
+        {
+          "symbol": "S",
+          "replace": "minecraft:chest",
+          "nbt": "energy >= 1000"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Block NBT Output - Simple Assignment",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:redstone",
+          "amount": 10
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": "energy = 5000"
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Addition Operation",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:coal",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": "energy += 100"
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Subtraction Operation",
+      "duration": 150,
+      "inputs": [
+        {
+          "symbol": "S",
+          "replace": "minecraft:chest",
+          "nbt": "energy >= 500"
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": "energy -= 500"
+        },
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Multiplication",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:glowstone_dust",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": "multiplier *= 2"
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Division",
+      "duration": 200,
+      "inputs": [
+        {
+          "symbol": "S",
+          "replace": "minecraft:chest",
+          "nbt": "temperature > 100"
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": "temperature /= 2"
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Multiple Properties",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": [
+            "energy = 10000",
+            "temperature = 300",
+            "efficiency = 0.95"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Complex Conditions",
+      "duration": 300,
+      "inputs": [
+        {
+          "symbol": "S",
+          "replace": "minecraft:chest",
+          "nbt": [
+            "energy >= 1000",
+            "temperature < 500",
+            "efficiency > 0.5"
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Deep Nesting",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:redstone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": [
+            "data.machine.energy = 5000",
+            "data.machine.temperature = 100",
+            "data.player.level = 10"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - String Values",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:name_tag",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": [
+            "CustomName = 'Power Storage'",
+            "owner = 'Player1'",
+            "status = 'active'"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Block NBT - Type Suffixes",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": [
+            "byteValue = 127b",
+            "shortValue = 32767s",
+            "intValue = 2147483647i",
+            "longValue = 9223372036854775807L",
+            "floatValue = 3.14159f",
+            "doubleValue = 2.718281828d"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Block NBT Input + Output Combined",
+      "duration": 400,
+      "inputs": [
+        {
+          "symbol": "S",
+          "replace": "minecraft:chest",
+          "nbt": [
+            "energy >= 5000",
+            "status == 'ready'"
+          ]
+        },
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:chest",
+          "nbt": [
+            "energy -= 5000",
+            "status = 'processing'",
+            "processCount += 1"
+          ]
+        },
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

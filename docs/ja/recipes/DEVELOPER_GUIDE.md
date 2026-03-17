@@ -41,7 +41,11 @@ public class MyCondition implements ICondition {
 - `OpAnd` (AND) / `OpOr` (OR) / `OpNot` (NOT)
 - `OpXor` / `OpNand` / `OpNor`
 
-これらは `ConditionParserRegistry` に登録されており、`Conditions.registerDefaults()` で初期化されます。
+これらは `ConditionParserRegistry` に登録されており、`Conditions.registerDefaults()` で初期化されます。登録時には、省略記法（型推論）のための `Predicate<JsonObject>` (Detector) をオプションとして指定可能です。
+```java
+ConditionParserRegistry.register("biome", BiomeCondition::fromJson, 
+    json -> json.has("biome") || json.has("biomes"));
+```
 
 ## 3. Recipe Decorator の使用
 
@@ -56,6 +60,13 @@ public class MyDecorator extends RecipeDecorator {
     public MyDecorator(IModularRecipe internal) { super(internal); }
     // processOutputs 等をオーバーライドして挙動をカスタマイズ
 }
+```
+
+### デコレータの登録
+`DecoratorParser.register` を使用して登録します。Condition と同様に型推論用の Detector を指定可能です。
+```java
+DecoratorParser.register("chance", ChanceRecipeDecorator::fromJson, 
+    json -> json.has("chance"));
 ```
 
 ## 4. エラーハンドリングとバリデーション

@@ -7,7 +7,6 @@ import java.util.function.Function;
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
-import ruiseki.omoshiroikamo.api.recipe.io.BlockNbtInput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
 import ruiseki.omoshiroikamo.api.recipe.io.EssentiaInput;
 import ruiseki.omoshiroikamo.api.recipe.io.FluidInput;
@@ -31,7 +30,6 @@ public class InputParserRegistry {
         register("essentia", EssentiaInput::fromJson);
         register("vis", VisInput::fromJson);
         register("symbol", BlockInput::fromJson);
-        register("block_nbt", BlockNbtInput::fromJson);
     }
 
     /**

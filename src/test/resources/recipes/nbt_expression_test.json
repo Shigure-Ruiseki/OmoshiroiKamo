@@ -1,0 +1,175 @@
+{
+  "recipes": [
+    {
+      "name": "Basic Name Change",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name == 'Old Sword'"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'New Sword'"
+        }
+      ]
+    },
+    {
+      "name": "Add Lore Array",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "display.Name = 'Enchanted Blade'",
+            "display.Lore = ['Magical weapon', 'Deals extra damage', 'Glows in the dark']"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Enchantment Enhancement",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": ">=4"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "display.Name = 'Enhanced Sharpness Sword'",
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": "+1"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Multi-Condition Input",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "display.Name == 'Rare Sword'",
+            "customData.rarity >= 3"
+          ],
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": ">=3"},
+              {"id": 34, "lvl": ">=2"}
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "display.Name = 'Legendary Artifact'",
+            "display.Lore = ['Ancient power awakened', 'Rarity: Legendary', 'Enchantments maximized']",
+            "customData.rarity = 5"
+          ],
+          "nbtlist": {
+            "path": "ench",
+            "ops": [
+              {"id": 16, "lvl": "+2"},
+              {"id": 34, "lvl": "+1"},
+              {"id": 20, "lvl": 2}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "String Inequality Test",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:enchanted_book",
+          "amount": 1,
+          "nbt": "display.Name != 'Common Book'"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:enchanted_book",
+          "amount": 1,
+          "nbt": [
+            "display.Name = 'Upgraded Book'",
+            "display.Lore = ['Knowledge enhanced']"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Numeric Array Test",
+      "duration": 120,
+      "inputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1,
+          "nbt": [
+            "display.Name = 'Magical Diamond'",
+            "customData.stats = [100, 200, 300, 400]"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Compound Operations Test",
+      "duration": 180,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": "customData.level >= 5"
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond_sword",
+          "amount": 1,
+          "nbt": [
+            "customData.level += 1",
+            "customData.power *= 2",
+            "display.Name = 'Leveled Up Sword'",
+            "display.Lore = ['Level increased!', 'Power doubled!']"
+          ]
+        }
+      ]
+    }
+  ]
+}

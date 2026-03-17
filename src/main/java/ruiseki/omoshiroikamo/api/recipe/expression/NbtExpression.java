@@ -29,6 +29,24 @@ public class NbtExpression implements IExpression {
         this(nbtKey, defaultValue, '\0');
     }
 
+    /**
+     * Get the NBT key this expression reads from.
+     *
+     * @return The NBT key name
+     */
+    public String getNbtKey() {
+        return nbtKey;
+    }
+
+    /**
+     * Get the symbol character associated with this expression.
+     *
+     * @return The symbol character, or '\0' if none
+     */
+    public char getSymbol() {
+        return symbol;
+    }
+
     @Override
     public double evaluate(ConditionContext context) {
         if (context == null || context.getWorld() == null) return defaultValue;

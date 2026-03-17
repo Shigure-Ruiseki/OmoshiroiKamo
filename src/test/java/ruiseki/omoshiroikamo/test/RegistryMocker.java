@@ -22,6 +22,8 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  */
 public class RegistryMocker {
 
+    private static final Map<String, Item> mockedItems = new HashMap<>();
+
     public static void mockAll() {
         System.out.println("RegistryMocker: Starting mockAll...");
         try {
@@ -119,17 +121,174 @@ public class RegistryMocker {
 
     private static void mockItems() throws Exception {
         // Items クラスの主要なアイテムをダミーで埋める
-        setStaticFinalField(Items.class, "iron_ingot", createMockItem("iron_ingot"));
-        setStaticFinalField(Items.class, "gold_ingot", createMockItem("gold_ingot"));
-        setStaticFinalField(Items.class, "diamond", createMockItem("diamond"));
-        setStaticFinalField(Items.class, "coal", createMockItem("coal"));
-        setStaticFinalField(Items.class, "redstone", createMockItem("redstone"));
-        setStaticFinalField(Items.class, "dye", createMockItem("dye"));
-        setStaticFinalField(Items.class, "quartz", createMockItem("quartz"));
-        setStaticFinalField(Items.class, "ender_pearl", createMockItem("ender_pearl"));
-        setStaticFinalField(Items.class, "sapling", createMockItem("sapling"));
-        setStaticFinalField(Items.class, "log", createMockItem("log"));
-        setStaticFinalField(Items.class, "gold_nugget", createMockItem("gold_nugget"));
+        createAndSetMockItem("iron_ingot");
+        createAndSetMockItem("gold_ingot");
+        createAndSetMockItem("diamond");
+        createAndSetMockItem("coal");
+        createAndSetMockItem("redstone");
+        createAndSetMockItem("dye");
+        createAndSetMockItem("quartz");
+        createAndSetMockItem("ender_pearl");
+        createAndSetMockItem("sapling");
+        createAndSetMockItem("log");
+        createAndSetMockItem("gold_nugget");
+
+        // Add weapons and tools for testing
+        createAndSetMockItem("diamond_sword");
+        createAndSetMockItem("iron_sword");
+        createAndSetMockItem("name_tag");
+        // Skipping enchanted_book - requires ItemEnchantedBook subclass
+        // createAndSetMockItem("enchanted_book");
+        createAndSetMockItem("glowstone_dust");
+        createAndSetMockItem("water_bucket");
+
+        // Mock Item.itemRegistry for string-to-item resolution
+        mockItemRegistry();
+    }
+
+    private static void createAndSetMockItem(String name) throws Exception {
+        Item item = createMockItem(name);
+        mockedItems.put(name, item);
+        setStaticFinalField(Items.class, name, item);
+    }
+
+    private static void mockItemRegistry() throws Exception {
+        try {
+            // Create FMLControlledNamespacedRegistry<Item> instead of RegistryNamespaced
+            Class<?> fmlRegistryClass = Class.forName("cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry");
+            Constructor<?> constructor = fmlRegistryClass
+                .getDeclaredConstructor(String.class, int.class, int.class, Class.class, char.class);
+            constructor.setAccessible(true);
+
+            // Create registry with parameters: optionalDefault, maxId, minId, type, discriminator
+            // For items: maxId=31999, minId=256, type=Item.class, discriminator='\u0002' (items)
+            Object itemRegistry = constructor.newInstance(null, 31999, 256, Item.class, '\u0002');
+
+            // Set Item.itemRegistry (deprecated field, but still used by some code)
+            setStaticFinalField(Item.class, "itemRegistry", itemRegistry);
+
+            // Register items using reflection (try-catch individually to not break GameData mocking)
+            try {
+                // Use private addObjectRaw method - putObject is deprecated and doesn't actually add items
+                Method addObjectRawMethod = fmlRegistryClass
+                    .getDeclaredMethod("addObjectRaw", int.class, String.class, Object.class);
+                addObjectRawMethod.setAccessible(true);
+
+                int itemId = 256; // Items start at ID 256
+
+                // Use the mockedItems map instead of trying to read fields
+                for (Map.Entry<String, Item> entry : mockedItems.entrySet()) {
+                    String itemName = entry.getKey();
+                    Item item = entry.getValue();
+                    if (item != null) {
+                        // Register with ID, "minecraft:itemName", and item object
+                        addObjectRawMethod.invoke(itemRegistry, itemId++, "minecraft:" + itemName, item);
+                    }
+                }
+
+                System.out.println(
+                    "RegistryMocker: Successfully registered " + (itemId - 256)
+                        + " items in registry using addObjectRaw");
+            } catch (java.lang.reflect.InvocationTargetException ite) {
+                Logger.warn("RegistryMocker: Failed to register items using addObject (InvocationTargetException)");
+                if (ite.getCause() != null) {
+                    Logger.warn(
+                        "  Cause: " + ite.getCause()
+                            .getMessage());
+                    ite.getCause()
+                        .printStackTrace();
+                } else {
+                    ite.printStackTrace();
+                }
+                // Continue anyway - GameData mocking is more important
+            } catch (Exception regEx) {
+                Logger.warn("RegistryMocker: Failed to register items using addObject: " + regEx.getMessage());
+                regEx.printStackTrace();
+                // Continue anyway - GameData mocking is more important
+            }
+
+            // Also mock GameData.getItemRegistry() for ItemJson.resolveItemStack()
+            // GameData.getItemRegistry() returns getMain().iItemRegistry where getMain() returns mainData
+            try {
+                Class<?> gameDataClass = Class.forName("cpw.mods.fml.common.registry.GameData");
+
+                // Get the mainData field
+                Field mainDataField = gameDataClass.getDeclaredField("mainData");
+                mainDataField.setAccessible(true);
+                Object mainData = mainDataField.get(null);
+
+                if (mainData == null) {
+                    // Create a GameData instance if it doesn't exist
+                    Constructor<?> gameDataConstructor = gameDataClass.getDeclaredConstructor();
+                    gameDataConstructor.setAccessible(true);
+                    mainData = gameDataConstructor.newInstance();
+                    setStaticFinalField(gameDataClass, "mainData", mainData);
+                    System.err.println("Created new GameData instance for mainData");
+                }
+
+                // Set iItemRegistry field in the GameData instance using reflection hack for final fields
+                // We need to use the same technique as setStaticFinalField but for instance fields
+                Field iItemRegistryField = gameDataClass.getDeclaredField("iItemRegistry");
+                iItemRegistryField.setAccessible(true);
+
+                try {
+                    // Try Java 8-11 approach first
+                    Field modifiersField = Field.class.getDeclaredField("modifiers");
+                    modifiersField.setAccessible(true);
+                    modifiersField.setInt(iItemRegistryField, iItemRegistryField.getModifiers() & ~Modifier.FINAL);
+                    iItemRegistryField.set(mainData, itemRegistry);
+                } catch (NoSuchFieldException e) {
+                    // Java 12+: Use Unsafe
+                    Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+                    Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+                    unsafeField.setAccessible(true);
+                    Object unsafe = unsafeField.get(null);
+
+                    Method objectFieldOffsetMethod = unsafeClass.getMethod("objectFieldOffset", Field.class);
+                    Method putObjectMethod = unsafeClass.getMethod("putObject", Object.class, long.class, Object.class);
+
+                    long offset = (Long) objectFieldOffsetMethod.invoke(unsafe, iItemRegistryField);
+                    putObjectMethod.invoke(unsafe, mainData, offset, itemRegistry);
+                }
+
+                System.err.println("========== SUCCESS: Mocked mainData.iItemRegistry ==========");
+
+                // Also set the deprecated static itemRegistry field in GameData
+                // Some code might still use GameData.itemRegistry directly
+                try {
+                    setStaticFinalField(gameDataClass, "itemRegistry", itemRegistry);
+                    System.err.println("Also set GameData.itemRegistry (deprecated field)");
+                } catch (Exception e3) {
+                    System.err.println("Failed to set GameData.itemRegistry: " + e3.getMessage());
+                }
+
+                // Verify that getItemRegistry() works and can find items
+                try {
+                    Method getItemRegistryMethod = gameDataClass.getMethod("getItemRegistry");
+                    Object registry = getItemRegistryMethod.invoke(null);
+                    if (registry != null) {
+                        Method getObjectMethod = registry.getClass()
+                            .getMethod("getObject", String.class);
+                        Object diamondSword = getObjectMethod.invoke(registry, "minecraft:diamond_sword");
+                        System.err.println(
+                            "Verification: GameData.getItemRegistry().getObject(\"minecraft:diamond_sword\") = "
+                                + diamondSword);
+                    } else {
+                        System.err.println("WARNING: GameData.getItemRegistry() returned null!");
+                    }
+                } catch (Exception e4) {
+                    System.err.println("Failed to verify item registry: " + e4.getMessage());
+                    e4.printStackTrace();
+                }
+            } catch (Exception e2) {
+                System.err.println("========== ERROR: Failed to mock GameData.mainData.iItemRegistry ==========");
+                e2.printStackTrace();
+            }
+
+            System.out.println("RegistryMocker: Successfully mocked Item.itemRegistry");
+        } catch (Exception e) {
+            Logger.warn("RegistryMocker: Failed to mock Item.itemRegistry: " + e.getMessage());
+        }
     }
 
     private static void mockBlocks() throws Exception {

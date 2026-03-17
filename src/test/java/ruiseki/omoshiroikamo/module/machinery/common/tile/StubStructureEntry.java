@@ -11,6 +11,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.api.structure.core.TierStructureRef;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 import ruiseki.omoshiroikamo.api.structure.visitor.IStructureVisitor;
 
@@ -106,6 +107,11 @@ public class StubStructureEntry implements IStructureEntry {
 
     @Override
     public List<String> getComponentNames() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<TierStructureRef> getTierStructures() {
         return Collections.emptyList();
     }
 

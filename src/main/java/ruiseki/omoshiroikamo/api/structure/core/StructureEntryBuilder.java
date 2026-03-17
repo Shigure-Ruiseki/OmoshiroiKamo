@@ -31,6 +31,7 @@ public class StructureEntryBuilder {
     private int batchMax = 1;
     private int tier = 0;
     private String defaultFacing;
+    private final List<TierStructureRef> tierStructures = new ArrayList<>();
 
     public StructureEntryBuilder setName(String name) {
         this.name = name;
@@ -116,6 +117,11 @@ public class StructureEntryBuilder {
         return this;
     }
 
+    public StructureEntryBuilder addTierStructure(TierStructureRef ref) {
+        this.tierStructures.add(ref);
+        return this;
+    }
+
     public IStructureEntry build() {
         if (name == null) {
             throw new IllegalStateException("Structure name must be set");
@@ -136,6 +142,7 @@ public class StructureEntryBuilder {
             tier,
             defaultFacing,
             externalPorts,
-            fixedExternalPorts);
+            fixedExternalPorts,
+            tierStructures);
     }
 }

@@ -2,8 +2,6 @@ package ruiseki.omoshiroikamo.api.recipe.visitor;
 
 import ruiseki.omoshiroikamo.api.recipe.core.IRecipe;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
-import ruiseki.omoshiroikamo.api.recipe.io.BlockNbtInput;
-import ruiseki.omoshiroikamo.api.recipe.io.BlockNbtOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
@@ -61,8 +59,6 @@ public interface IRecipeVisitor {
 
     default void visit(BlockInput input) {}
 
-    default void visit(BlockNbtInput input) {}
-
     /**
      * Fallback for unknown input types.
      */
@@ -85,8 +81,6 @@ public interface IRecipeVisitor {
     default void visit(VisOutput output) {}
 
     default void visit(BlockOutput output) {}
-
-    default void visit(BlockNbtOutput output) {}
 
     /**
      * Fallback for unknown output types.

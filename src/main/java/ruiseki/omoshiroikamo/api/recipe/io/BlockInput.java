@@ -1,24 +1,36 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 /**
  * Recipe input that checks for specific blocks at structure positions.
- * Does not consume blocks, only validates their presence.
+ * Can optionally validate and modify TileEntity NBT data.
  */
 public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
 
@@ -28,6 +40,8 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
     private final int amount;
     private final boolean consume;
     private final boolean optional;
+    private List<IExpression> nbtExpressions;
+    private NBTListOperation nbtListOp;
 
     public BlockInput(char symbol, String block, String replace, int amount, boolean consume, boolean optional) {
         this.symbol = symbol;
@@ -84,9 +98,17 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
             String blockId = getBlockId(currentBlock, meta);
 
             if (matchesBlockId(blockId, condition)) {
+                // Check NBT conditions if present
+                if (!checkNBTConditions(world, pos, context)) {
+                    continue; // NBT conditions not met, skip this position
+                }
+
                 found++;
                 if (!simulate) {
-                    // Actual manipulation
+                    // Apply NBT modifications before block manipulation
+                    applyNBTModifications(world, pos, context);
+
+                    // Actual block manipulation
                     if (consume) {
                         world.setBlockToAir(pos.posX, pos.posY, pos.posZ);
                     } else if (replace != null && block != null) {
@@ -99,6 +121,85 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
         }
 
         return optional || (found >= totalRequired);
+    }
+
+    /**
+     * Check if the TileEntity's NBT matches all NBT conditions.
+     */
+    private boolean checkNBTConditions(World world, ChunkCoordinates pos, IRecipeContext context) {
+        if (nbtExpressions == null && nbtListOp == null) {
+            return true; // No NBT conditions
+        }
+
+        TileEntity te = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+        if (te == null) {
+            // No TileEntity - only matches if no NBT requirements
+            return (nbtExpressions == null || nbtExpressions.isEmpty()) && (nbtListOp == null);
+        }
+
+        NBTTagCompound nbt = new NBTTagCompound();
+        te.writeToNBT(nbt);
+
+        // Check expression-based NBT conditions
+        if (nbtExpressions != null) {
+            ConditionContext condContext = new ConditionContext(world, pos.posX, pos.posY, pos.posZ, context);
+            for (IExpression expr : nbtExpressions) {
+                // For condition checking, evaluate as boolean (non-zero = true)
+                if (expr.evaluate(condContext) == 0) {
+                    return false;
+                }
+            }
+        }
+
+        // Check NBT list conditions
+        if (nbtListOp != null) {
+            if (!nbtListOp.matches(nbt)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Apply NBT write operations to the TileEntity.
+     */
+    private void applyNBTModifications(World world, ChunkCoordinates pos, IRecipeContext context) {
+        if (nbtExpressions == null && nbtListOp == null) {
+            return; // No modifications
+        }
+
+        TileEntity te = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+        if (te == null) {
+            return; // No TileEntity to modify
+        }
+
+        NBTTagCompound nbt = new NBTTagCompound();
+        te.writeToNBT(nbt);
+
+        ConditionContext condContext = new ConditionContext(world, pos.posX, pos.posY, pos.posZ, context);
+
+        // Apply expression-based NBT writes
+        if (nbtExpressions != null) {
+            for (IExpression expr : nbtExpressions) {
+                if (expr instanceof INBTWriteExpression) {
+                    ((INBTWriteExpression) expr).applyToNBT(nbt, condContext);
+                }
+            }
+        }
+
+        // Apply NBT list operations
+        if (nbtListOp != null) {
+            nbtListOp.apply(nbt);
+        }
+
+        // Write back to TileEntity
+        nbt.setInteger("x", pos.posX);
+        nbt.setInteger("y", pos.posY);
+        nbt.setInteger("z", pos.posZ);
+        te.readFromNBT(nbt);
+        te.markDirty();
+        world.markBlockForUpdate(pos.posX, pos.posY, pos.posZ);
     }
 
     private void setBlockById(World world, ChunkCoordinates pos, String blockId) {
@@ -132,6 +233,20 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
         json.addProperty("amount", amount);
         if (consume) json.addProperty("consume", true);
         if (optional) json.addProperty("optional", true);
+
+        // Write NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            JsonArray nbtArray = new JsonArray();
+            for (IExpression expr : nbtExpressions) {
+                nbtArray.add(new JsonPrimitive(expr.toString()));
+            }
+            json.add("nbt", nbtArray);
+        }
+
+        // Write NBT list operation
+        if (nbtListOp != null) {
+            json.addProperty("_has_nbtlist", true);
+        }
     }
 
     public JsonObject toJson() {
@@ -155,7 +270,49 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
         boolean optional = json.has("optional") && json.get("optional")
             .getAsBoolean();
 
-        return new BlockInput(symbol, block, replace, amount, consume, optional);
+        BlockInput input = new BlockInput(symbol, block, replace, amount, consume, optional);
+
+        // Read NBT expressions
+        if (json.has("nbt")) {
+            JsonElement nbtElement = json.get("nbt");
+            input.nbtExpressions = new ArrayList<>();
+
+            if (nbtElement.isJsonArray()) {
+                JsonArray nbtArray = nbtElement.getAsJsonArray();
+                for (JsonElement element : nbtArray) {
+                    if (element.isJsonPrimitive() && element.getAsJsonPrimitive()
+                        .isString()) {
+                        String exprStr = element.getAsString();
+                        try {
+                            IExpression expr = ExpressionParser.parseExpression(exprStr);
+                            input.nbtExpressions.add(expr);
+                        } catch (Exception e) {
+                            Logger.error("Failed to parse NBT expression: " + exprStr + " - " + e.getMessage());
+                        }
+                    }
+                }
+            } else if (nbtElement.isJsonPrimitive() && nbtElement.getAsJsonPrimitive()
+                .isString()) {
+                    String exprStr = nbtElement.getAsString();
+                    try {
+                        IExpression expr = ExpressionParser.parseExpression(exprStr);
+                        input.nbtExpressions.add(expr);
+                    } catch (Exception e) {
+                        Logger.error("Failed to parse NBT expression: " + exprStr + " - " + e.getMessage());
+                    }
+                }
+        }
+
+        // Read NBT list operation
+        if (json.has("nbtlist")) {
+            try {
+                input.nbtListOp = NBTListOperation.fromJson(json);
+            } catch (Exception e) {
+                Logger.error("Failed to parse NBT list operation: " + e.getMessage());
+            }
+        }
+
+        return input;
     }
 
     /**

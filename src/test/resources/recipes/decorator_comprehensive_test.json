@@ -1,0 +1,804 @@
+{
+  "group": "Decorator Comprehensive Test - Full Decorator Coverage",
+  "recipes": [
+    {
+      "name": "Chance Decorator - 100% Success",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:cobblestone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:stone",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "chance",
+          "chance": 1.0
+        }
+      ]
+    },
+    {
+      "name": "Chance Decorator - 0% Failure",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:dirt",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "chance",
+          "chance": 0.0
+        }
+      ]
+    },
+    {
+      "name": "Chance Decorator - 50% Probability",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "chance",
+          "chance": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Bonus Output Decorator - Simple",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ore",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "chance": 0.5,
+          "outputs": [
+            {
+              "item": "minecraft:iron_ingot",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bonus Output Decorator - Multiple Items",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:diamond_ore",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "chance": 0.25,
+          "outputs": [
+            {
+              "item": "minecraft:diamond",
+              "amount": 1
+            },
+            {
+              "item": "minecraft:coal",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weighted Random Decorator - Two Options",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:gravel",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:flint",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "weighted_random",
+          "outputs": [
+            {
+              "weight": 70,
+              "item": "minecraft:flint",
+              "amount": 1
+            },
+            {
+              "weight": 30,
+              "item": "minecraft:gravel",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weighted Random Decorator - Multiple Options",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:dirt",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "weighted_random",
+          "outputs": [
+            {
+              "weight": 50,
+              "item": "minecraft:coal",
+              "amount": 1
+            },
+            {
+              "weight": 30,
+              "item": "minecraft:iron_ingot",
+              "amount": 1
+            },
+            {
+              "weight": 15,
+              "item": "minecraft:gold_ingot",
+              "amount": 1
+            },
+            {
+              "weight": 5,
+              "item": "minecraft:diamond",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Requirement Decorator - Item Requirement",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:iron_ingot",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "requirement",
+          "requirements": [
+            {
+              "item": "minecraft:redstone",
+              "amount": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Requirement Decorator - Multiple Requirements",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 64
+        }
+      ],
+      "decorators": [
+        {
+          "type": "requirement",
+          "requirements": [
+            {
+              "item": "minecraft:diamond",
+              "amount": 10
+            },
+            {
+              "item": "minecraft:gold_ingot",
+              "amount": 20
+            },
+            {
+              "energy": 10000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Condition Decorator - Weather",
+      "duration": 100,
+      "inputs": [
+        {
+          "item": "minecraft:bucket",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:water_bucket",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "weather": "rain"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Condition Decorator - Dimension",
+      "duration": 150,
+      "inputs": [
+        {
+          "item": "minecraft:netherrack",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glowstone_dust",
+          "amount": 4
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "dimension": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Multiple Decorators - Chance + Bonus",
+      "duration": 200,
+      "inputs": [
+        {
+          "item": "minecraft:coal_ore",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:coal",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "chance",
+          "chance": 0.8
+        },
+        {
+          "chance": 0.3,
+          "outputs": [
+            {
+              "item": "minecraft:coal",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Multiple Decorators - Condition + Weighted",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:dirt",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "biome": "Plains"
+          }
+        },
+        {
+          "type": "weighted_random",
+          "outputs": [
+            {
+              "weight": 60,
+              "item": "minecraft:coal",
+              "amount": 1
+            },
+            {
+              "weight": 40,
+              "item": "minecraft:iron_ingot",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nested Decorators - Chance in Bonus",
+      "duration": 250,
+      "inputs": [
+        {
+          "item": "minecraft:gold_ore",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:gold_ingot",
+          "amount": 2
+        }
+      ],
+      "decorators": [
+        {
+          "type": "chance",
+          "chance": 0.5
+        },
+        {
+          "chance": 0.25,
+          "outputs": [
+            {
+              "item": "minecraft:gold_ingot",
+              "amount": 1
+            }
+          ],
+          "decorators": [
+            {
+              "type": "chance",
+              "chance": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Complex Decorator Stack - All Types",
+      "duration": 500,
+      "inputs": [
+        {
+          "item": "minecraft:nether_star",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 10
+        }
+      ],
+      "decorators": [
+        {
+          "condition": {
+            "and": [
+              {"dimension": 0},
+              {"weather": "clear"},
+              {"biome": "Plains"}
+            ]
+          }
+        },
+        {
+          "type": "chance",
+          "chance": 0.75
+        },
+        {
+          "chance": 0.5,
+          "outputs": [
+            {
+              "item": "minecraft:diamond",
+              "amount": 5
+            }
+          ]
+        },
+        {
+          "type": "weighted_random",
+          "outputs": [
+            {
+              "weight": 50,
+              "item": "minecraft:gold_ingot",
+              "amount": 10
+            },
+            {
+              "weight": 50,
+              "item": "minecraft:iron_ingot",
+              "amount": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dynamic Chance - Map Range Expression",
+      "duration": 300,
+      "inputs": [
+        {
+          "item": "minecraft:sand",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glass",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "chance",
+          "chance": {
+            "type": "map_range",
+            "input": {
+              "type": "nbt",
+              "key": "temperature",
+              "default": 50
+            },
+            "minIn": 0,
+            "maxIn": 100,
+            "minOut": 0,
+            "maxOut": 1,
+            "clamp": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Priority System Test - High Priority",
+      "duration": 100,
+      "priority": 100,
+      "inputs": [
+        {
+          "item": "minecraft:stone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Priority System Test - Low Priority",
+      "duration": 100,
+      "priority": 1,
+      "inputs": [
+        {
+          "item": "minecraft:stone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:coal",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "name": "Harvest Block Decorator - Fortune",
+      "duration": 200,
+      "inputs": [
+        {
+          "symbol": "O",
+          "block": "minecraft:diamond_ore",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:diamond",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "harvest_block",
+          "fortune": 3,
+          "harvestLevel": 2
+        }
+      ]
+    },
+    {
+      "name": "Harvest Block Decorator - Silk Touch",
+      "duration": 200,
+      "inputs": [
+        {
+          "symbol": "G",
+          "block": "minecraft:glass",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:glass",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "harvest_block",
+          "silkTouch": true
+        }
+      ]
+    },
+    {
+      "name": "Harvest Block Decorator - Shears",
+      "duration": 150,
+      "inputs": [
+        {
+          "symbol": "L",
+          "block": "minecraft:leaves",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "item": "minecraft:leaves",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "harvest_block",
+          "shear": true
+        }
+      ]
+    },
+    {
+      "name": "Per Position Probability - 50% Each Block",
+      "duration": 300,
+      "inputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:stone",
+          "amount": 5
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "C",
+          "block": "minecraft:cobblestone",
+          "amount": 5
+        }
+      ],
+      "decorators": [
+        {
+          "type": "per_position_probability",
+          "chance": 0.5,
+          "symbol": "C",
+          "output": {
+            "symbol": "D",
+            "block": "minecraft:diamond_block"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bonus Block Output - With Chance",
+      "duration": 250,
+      "inputs": [
+        {
+          "symbol": "O",
+          "block": "minecraft:iron_ore",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "I",
+          "block": "minecraft:iron_block",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "bonus_block_output",
+          "chance": 0.3,
+          "outputs": [
+            {
+              "type": "block",
+              "symbol": "G",
+              "block": "minecraft:gold_block",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bonus Block Output - Multiple Blocks",
+      "duration": 300,
+      "inputs": [
+        {
+          "symbol": "N",
+          "block": "minecraft:netherrack",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "Q",
+          "block": "minecraft:quartz_ore",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "bonus_block_output",
+          "chance": 0.25,
+          "outputs": [
+            {
+              "type": "block",
+              "symbol": "G",
+              "block": "minecraft:glowstone",
+              "count": 2
+            },
+            {
+              "type": "block",
+              "symbol": "S",
+              "block": "minecraft:soul_sand",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Random Block Output - Two Options",
+      "duration": 200,
+      "inputs": [
+        {
+          "symbol": "D",
+          "block": "minecraft:dirt",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "G",
+          "block": "minecraft:grass",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "random_block_output",
+          "count": 1,
+          "selections": [
+            {
+              "symbol": "G",
+              "output": {
+                "symbol": "G",
+                "block": "minecraft:grass"
+              }
+            },
+            {
+              "symbol": "M",
+              "output": {
+                "symbol": "M",
+                "block": "minecraft:mycelium"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Random Block Output - Multiple Selections",
+      "duration": 250,
+      "inputs": [
+        {
+          "symbol": "S",
+          "block": "minecraft:stone",
+          "amount": 1
+        }
+      ],
+      "outputs": [
+        {
+          "symbol": "O",
+          "block": "minecraft:obsidian",
+          "amount": 1
+        }
+      ],
+      "decorators": [
+        {
+          "type": "random_block_output",
+          "count": 2,
+          "selections": [
+            {
+              "symbol": "C",
+              "output": {
+                "symbol": "C",
+                "block": "minecraft:coal_ore"
+              }
+            },
+            {
+              "symbol": "I",
+              "output": {
+                "symbol": "I",
+                "block": "minecraft:iron_ore"
+              }
+            },
+            {
+              "symbol": "G",
+              "output": {
+                "symbol": "G",
+                "block": "minecraft:gold_ore"
+              }
+            },
+            {
+              "symbol": "D",
+              "output": {
+                "symbol": "D",
+                "block": "minecraft:diamond_ore"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

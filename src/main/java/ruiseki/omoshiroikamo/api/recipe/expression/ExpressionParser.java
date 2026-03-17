@@ -145,13 +145,49 @@ public class ExpressionParser {
         while (true) {
             String op = "";
             if (eat('=')) {
-                if (eat('=')) op = "==";
-                else throw error("Expected '=='");
+                if (eat('=')) {
+                    op = "==";
+                } else {
+                    // Check for assignment (single '=')
+                    return parseAssignment(x, "=");
+                }
             } else if (eat('!')) {
                 if (eat('=')) {
                     op = "!=";
                 } else {
                     pos--; // Backtrack '!'
+                    nextChar();
+                    return x;
+                }
+            } else if (eat('+')) {
+                if (eat('=')) {
+                    return parseAssignment(x, "+=");
+                } else {
+                    pos--; // Backtrack '+'
+                    nextChar();
+                    return x;
+                }
+            } else if (eat('-')) {
+                if (eat('=')) {
+                    return parseAssignment(x, "-=");
+                } else {
+                    pos--; // Backtrack '-'
+                    nextChar();
+                    return x;
+                }
+            } else if (eat('*')) {
+                if (eat('=')) {
+                    return parseAssignment(x, "*=");
+                } else {
+                    pos--; // Backtrack '*'
+                    nextChar();
+                    return x;
+                }
+            } else if (eat('/')) {
+                if (eat('=')) {
+                    return parseAssignment(x, "/=");
+                } else {
+                    pos--; // Backtrack '/'
                     nextChar();
                     return x;
                 }
@@ -165,9 +201,50 @@ public class ExpressionParser {
                 return x;
             }
 
-            Object y = parseExpression();
-            x = new ComparisonCondition(asExpression(x), asExpression(y), op);
+            if (!op.isEmpty()) {
+                Object y = parseExpression();
+                x = new ComparisonCondition(asExpression(x), asExpression(y), op);
+            }
         }
+    }
+
+    /**
+     * Parse assignment operator (=, +=, -=, *=, /=).
+     * Left-hand side must be an NbtExpression or DotNotationNBTExpression.
+     */
+    private Object parseAssignment(Object left, String operation) {
+        // Parse right-hand side
+        Object right = parseExpression();
+
+        if (left instanceof NbtExpression) {
+            NbtExpression nbtExpr = (NbtExpression) left;
+            String nbtKey = nbtExpr.getNbtKey();
+            return new NBTAssignmentExpression(
+                nbtKey,
+                java.util.Arrays.asList(nbtKey.split("\\.")),
+                asExpression(right),
+                operation);
+        } else if (left instanceof DotNotationNBTExpression) {
+            DotNotationNBTExpression dotExpr = (DotNotationNBTExpression) left;
+            String nbtKey = dotExpr.getFullPath();
+            List<String> pathSegments = new ArrayList<>(dotExpr.getPathSegments());
+            return new NBTAssignmentExpression(nbtKey, pathSegments, asExpression(right), operation);
+        }
+
+        throw error("Assignment left-hand side must be an NBT path (e.g., display.Name)");
+    }
+
+    private String parseStringArgument() {
+        while (isSpace(ch)) nextChar();
+        if (ch != '\'' && ch != '"') throw error("Expected string argument in nbt()");
+        char quote = (char) ch;
+        nextChar();
+        int startPos = this.pos;
+        while (ch != quote && ch != -1) nextChar();
+        if (ch != quote) throw error("Expected closing quote '" + quote + "'");
+        String value = input.substring(startPos, this.pos);
+        nextChar();
+        return value;
     }
 
     // expression = term ( ( "+" | "-" ) term )*
@@ -200,7 +277,51 @@ public class ExpressionParser {
         }
 
         int startPos = this.pos;
-        if (eat('(') || eat('{')) { // parentheses or braces
+        // Array literals: ['item1', 'item2', ...]
+        if (ch == '[') {
+            nextChar(); // skip '['
+            List<IExpression> elements = new ArrayList<>();
+
+            while (isSpace(ch)) nextChar();
+
+            // Parse array elements
+            while (ch != ']' && ch != -1) {
+                // Parse element (can be string or expression)
+                Object element = parseLogicalOr();
+                elements.add(asExpression(element));
+
+                while (isSpace(ch)) nextChar();
+
+                // Check for comma or end of array
+                if (ch == ',') {
+                    nextChar(); // skip comma
+                    while (isSpace(ch)) nextChar();
+                } else if (ch != ']') {
+                    throw error("Expected ',' or ']' in array literal");
+                }
+            }
+
+            if (!eat(']')) {
+                throw error("Expected closing ']' for array literal");
+            }
+
+            return new ArrayLiteralExpression(elements);
+        }
+        // String literals: 'text' or "text"
+        else if (ch == '\'' || ch == '"') {
+            char quote = (char) ch;
+            nextChar(); // skip opening quote
+            int strStart = this.pos;
+            while (ch != quote && ch != -1) {
+                nextChar();
+            }
+            if (ch != quote) {
+                throw error("Expected closing quote '" + quote + "'");
+            }
+            String stringValue = input.substring(strStart, this.pos);
+            nextChar(); // skip closing quote
+            return new StringLiteralExpression(stringValue);
+        } else if (eat('(') || eat('{')) { // parentheses or braces
             char close = (input.charAt(pos - 1) == '(') ? ')' : '}';
             Object res = parseLogicalOr();
             if (!eat(close)) throw error("Expected closing '" + close + "'");
@@ -208,57 +329,72 @@ public class ExpressionParser {
         } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
             while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
             return new ConstantExpression(Double.parseDouble(input.substring(startPos, this.pos)));
-        } else if (ch >= 'a' && ch <= 'z') { // variables or functions
-            while (ch >= 'a' && ch <= 'z' || ch == '_') nextChar();
-            String name = input.substring(startPos, this.pos);
-            if (eat('(')) { // function
-                List<String> args = new ArrayList<>();
-                while (ch != ')' && ch != -1) {
-                    while (isSpace(ch)) nextChar();
-                    if (eat('\'')) {
-                        int s = pos;
-                        while (ch != '\'' && ch != -1) nextChar();
-                        args.add(input.substring(s, pos));
-                        eat('\'');
-                    } else if (ch >= '0' && ch <= '9' || ch == '.') {
-                        int s = pos;
-                        while (ch >= '0' && ch <= '9' || ch == '.') nextChar();
-                        args.add(input.substring(s, pos));
-                    } else if (ch >= 'A' && ch <= 'Z') { // Symbol char
-                        args.add(String.valueOf((char) ch));
-                        nextChar();
-                    } else if (ch != ')' && ch != ',') {
-                        nextChar();
-                    }
-                    while (isSpace(ch)) nextChar();
-                    eat(',');
+        } else if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) { // variables, functions, or NBT paths
+            // Parse first segment
+            List<String> pathSegments = new ArrayList<>();
+            StringBuilder segment = new StringBuilder();
+
+            while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_') {
+                segment.append((char) ch);
+                nextChar();
+            }
+            pathSegments.add(segment.toString());
+
+            // Check for dot notation (NBT path)
+            while (ch == '.') {
+                nextChar(); // skip '.'
+                segment = new StringBuilder();
+                while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_' || (ch >= '0' && ch <= '9')) {
+                    segment.append((char) ch);
+                    nextChar();
                 }
-                eat(')');
-                if (name.equals("nbt") && !args.isEmpty()) {
-                    if (args.size() >= 2) {
-                        // nbt('S', 'key') or nbt(S, 'key')
-                        return new NbtExpression(
-                            args.get(1),
-                            0,
-                            args.get(0)
-                                .charAt(0));
-                    } else {
-                        // nbt('key')
-                        return new NbtExpression(args.get(0), 0);
-                    }
-                } else {
-                    throw error("Unknown function: '" + name + "' or missing arguments");
+                if (segment.length() == 0) {
+                    throw error("Expected identifier after '.'");
                 }
+                pathSegments.add(segment.toString());
+            }
+
+            String name = pathSegments.get(0);
+
+            // Check if this is a function call
+            if (eat('(')) {
+                // Support nbt('key') for backward compatibility and tests
+                if (name.equals("nbt")) {
+                    String nbtKey = parseStringArgument();
+                    if (!eat(')')) throw error("Expected ')' after nbt() argument");
+                    return new NbtExpression(nbtKey, 0.0);
+                }
+                throw error("Unknown function: '" + name + "'");
+            }
+
+            // Check if this is a dot notation NBT path (multiple segments)
+            if (pathSegments.size() > 1) {
+                // Check for tier.component syntax FIRST
+                if (pathSegments.get(0)
+                    .equalsIgnoreCase("tier")) {
+                    // tier.component must have exactly 2 segments
+                    if (pathSegments.size() != 2) {
+                        throw error(
+                            "Invalid tier expression: expected 'tier.componentName', got "
+                                + String.join(".", pathSegments));
+                    }
+                    String componentName = pathSegments.get(1);
+                    return new ComponentTierExpression(componentName);
+                }
+
+                // Otherwise treat as NBT path: display.Name, ench.lvl, etc.
+                String fullPath = String.join(".", pathSegments);
+                return new DotNotationNBTExpression(fullPath, pathSegments);
+            }
+
+            // Single segment - check for known variables
+            if (name.equals("day") || name.equals("total_days")
+                || name.equals("time")
+                || name.equals("moon_phase")
+                || name.equals("moon")) {
+                return new WorldPropertyExpression(name.equals("moon") ? "moon_phase" : name);
             } else {
-                // variable
-                if (name.equals("day") || name.equals("total_days")
-                    || name.equals("time")
-                    || name.equals("moon_phase")
-                    || name.equals("moon")) {
-                    return new WorldPropertyExpression(name.equals("moon") ? "moon_phase" : name);
-                } else {
-                    throw error("Unknown variable: '" + name + "'");
-                }
+                throw error("Unknown variable: '" + name + "'");
             }
         } else {
             throw error("Unexpected character: '" + (char) ch + "'");
