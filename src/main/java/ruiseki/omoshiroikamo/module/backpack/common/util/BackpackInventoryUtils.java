@@ -156,8 +156,8 @@ public class BackpackInventoryUtils {
             if (stack == null) continue;
             if (stack.getItem() instanceof BlockBackpack.ItemBackpack backpack) {
 
-                BackpackWrapper other = new BackpackWrapper(stack, null, backpack);
-                if (other == wrapper) continue;
+                BackpackWrapper other = new BackpackWrapper(stack, backpack);
+                if (other.equals(wrapper)) continue;
                 if (!wrapper.canNestBackpack()) continue;
             }
 
@@ -358,11 +358,11 @@ public class BackpackInventoryUtils {
 
     public static ItemStack getQuickDrawStack(IInventory inventory, ItemStack wanted, InventoryType type) {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack backpackStack = inventory.getStackInSlot(i);
-            if (backpackStack == null || backpackStack.stackSize <= 0) continue;
-            if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) continue;
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (stack == null || stack.stackSize <= 0) continue;
+            if (!(stack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) continue;
 
-            BackpackWrapper wrapper = new BackpackWrapper(backpackStack, null, backpack);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, backpack);
             ItemStack extracted = wrapper.extractItem(wanted, wanted.getMaxStackSize(), false);
 
             OmoshiroiKamo.instance.getPacketHandler()

@@ -176,7 +176,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackWrapper wrapper = new BackpackWrapper(stack, null, backpack);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, backpack);
 
             boolean result = wrapper.feed(player, wrapper);
             if (result) {
@@ -223,7 +223,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackWrapper wrapper = new BackpackWrapper(stack, null, backpack);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, backpack);
 
             AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
                 player.posX - BackpackConfig.magnetConfig.magnetRange,

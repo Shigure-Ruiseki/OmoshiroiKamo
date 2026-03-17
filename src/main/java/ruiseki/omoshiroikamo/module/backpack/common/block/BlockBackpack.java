@@ -170,7 +170,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, this);
             return new EntityBackpack(world, location, stack, wrapper);
         }
 
@@ -179,7 +179,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+                    BackpackWrapper wrapper = new BackpackWrapper(stack, this);
                     wrapper.writeToItem();
                     stack.setTagCompound(wrapper.getTagCompound());
                 }
@@ -191,7 +191,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onCreated(stack, world, player);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+                    BackpackWrapper wrapper = new BackpackWrapper(stack, this);
                     wrapper.writeToItem();
                     stack.setTagCompound(wrapper.getTagCompound());
                 }
@@ -212,7 +212,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
             if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
-                BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+                BackpackWrapper wrapper = new BackpackWrapper(stack, this);
                 if (wrapper.canPlayerAccess(player.getUniqueID())) {
                     GuiFactories.playerInventory()
                         .openFromMainHand(player);
@@ -224,7 +224,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
             ItemStack stack = data.getUsedItemStack();
-            BackpackWrapper cap = new BackpackWrapper(stack, null, this);
+            BackpackWrapper cap = new BackpackWrapper(stack, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
         }
 
@@ -239,7 +239,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             list.add(LibMisc.LANG.localize("tooltip.backpack.inventory_size", backpackSlots));
             list.add(LibMisc.LANG.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
             if (GuiScreen.isShiftKeyDown()) {
-                BackpackWrapper cap = new BackpackWrapper(stack, null, this);
+                BackpackWrapper cap = new BackpackWrapper(stack, this);
                 list.add(
                     LibMisc.LANG.localize("tooltip.backpack.stack_multiplier", cap.getTotalStackMultiplier(), "x"));
             }

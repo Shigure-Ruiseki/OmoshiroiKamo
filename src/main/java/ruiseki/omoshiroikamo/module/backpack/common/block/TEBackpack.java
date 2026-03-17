@@ -33,7 +33,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     public TEBackpack(int slots, int upgradeSlots) {
-        wrapper = new BackpackWrapper(null, this, slots, upgradeSlots);
+        wrapper = new BackpackWrapper(null, slots, upgradeSlots);
         allSlots = new int[wrapper.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;

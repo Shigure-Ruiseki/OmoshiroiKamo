@@ -54,8 +54,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     @Getter
     private final ItemStack backpack;
     @Getter
-    private final TileEntity tile;
-    @Getter
     private final BackpackItemStackHandler backpackHandler;
     @Getter
     private final UpgradeItemStackHandler upgradeHandler;
@@ -75,10 +73,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
     @Getter
     @Setter
-    private boolean searchBackpack;
-
-    @Getter
-    @Setter
     private boolean keepTab;
 
     @Getter
@@ -95,7 +89,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     public static final String LOCKED_SLOTS_TAG = "LockedSlots";
     public static final String LOCKED_BACKPACK_TAG = "LockedBackpack";
     public static final String UUID_TAG = "UUID";
-    public static final String SEARCH_BACKPACK_TAG = "SearchBackpack";
     public static final String KEEP_TAB_TAG = "KeepTab";
     public static final String CUSTOM_NAME_TAG = "CustomName";
 
@@ -124,28 +117,23 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     public InventoryType type;
 
     public BackpackWrapper() {
-        this(null, null, 120, 7);
+        this(null, 120, 7);
     }
 
     public BackpackWrapper(ItemStack backpack, TileEntity tile) {
-        this(backpack, tile, 120, 7);
+        this(backpack, 120, 7);
     }
 
     public BackpackWrapper(ItemStack backpack, BlockBackpack.ItemBackpack itemBackpack) {
-        this(backpack, null, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
+        this(backpack, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
     }
 
-    public BackpackWrapper(ItemStack backpack, TileEntity tile, BlockBackpack.ItemBackpack itemBackpack) {
-        this(backpack, tile, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
+    public BackpackWrapper(ItemStack backpack, BlockBackpack blockBackpack) {
+        this(backpack, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
     }
 
-    public BackpackWrapper(ItemStack backpack, TileEntity tile, BlockBackpack blockBackpack) {
-        this(backpack, tile, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
-    }
-
-    public BackpackWrapper(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
+    public BackpackWrapper(ItemStack backpack, int backpackSlots, int upgradeSlots) {
         this.backpack = backpack;
-        this.tile = tile;
         this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
         this.mainColor = 0xFFCC613A;
@@ -153,7 +141,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         this.sortType = SortType.BY_NAME;
         this.lockBackpack = false;
         this.uuid = "";
-        this.searchBackpack = true;
         this.keepTab = true;
 
         this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
@@ -186,12 +173,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
                 backpack.getItem()
                     .getUnlocalizedName(backpack) + ".name");
         }
-        if (tile != null) {
-            return LibMisc.LANG.localize(
-                tile.getBlockType()
-                    .getUnlocalizedName() + ".name");
-        }
-
         return LibMisc.LANG.localize("container.inventory");
     }
 
@@ -604,8 +585,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
         tag.setBoolean(LOCKED_BACKPACK_TAG, lockBackpack);
 
-        tag.setBoolean(SEARCH_BACKPACK_TAG, searchBackpack);
-
         tag.setBoolean(KEEP_TAB_TAG, keepTab);
 
         tag.setString(UUID_TAG, uuid);
@@ -669,10 +648,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
         if (tag.hasKey(LOCKED_BACKPACK_TAG)) {
             lockBackpack = tag.getBoolean(LOCKED_BACKPACK_TAG);
-        }
-
-        if (tag.hasKey(SEARCH_BACKPACK_TAG)) {
-            searchBackpack = tag.getBoolean(SEARCH_BACKPACK_TAG);
         }
 
         if (tag.hasKey(KEEP_TAB_TAG)) {
