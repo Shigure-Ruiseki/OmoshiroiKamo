@@ -50,6 +50,5 @@ public class DelegatedStackHandlerSH extends SyncHandler {
                 setDelegatedStackHandler(upgrade::getFilterItems);
             }
         }
-        wrapper.writeToItem();
     }
 }

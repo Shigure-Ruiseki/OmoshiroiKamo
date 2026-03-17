@@ -18,12 +18,12 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.ItemUpgrade;
 public class ModularUpgradeSlot extends ModularSlot {
 
     private final BackpackPanel panel;
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
 
-    public ModularUpgradeSlot(BackpackWrapper handler, int index, BackpackPanel panel) {
-        super(handler.getUpgradeHandler(), index);
+    public ModularUpgradeSlot(BackpackWrapper wrapper, int index, BackpackPanel panel) {
+        super(wrapper.getUpgradeHandler(), index);
         this.panel = panel;
-        this.handler = handler;
+        this.wrapper = wrapper;
     }
 
     @Override
@@ -42,24 +42,24 @@ public class ModularUpgradeSlot extends ModularSlot {
             int slotIndex = getSlotIndex();
 
             if (cursorEmpty) {
-                return handler.canReplaceStackUpgrade(slotIndex, null);
+                return wrapper.canReplaceStackUpgrade(slotIndex, null);
             }
 
             if (cursor.getItem() instanceof ItemStackUpgrade) {
-                return handler.canReplaceStackUpgrade(slotIndex, cursor);
+                return wrapper.canReplaceStackUpgrade(slotIndex, cursor);
             }
 
-            return handler.canReplaceStackUpgrade(slotIndex, null);
+            return wrapper.canReplaceStackUpgrade(slotIndex, null);
         }
 
         if (originalItem instanceof ItemInceptionUpgrade) {
 
             if (cursorEmpty) {
-                return handler.canRemoveInceptionUpgrade();
+                return wrapper.canRemoveInceptionUpgrade();
             }
 
             if (!(cursor.getItem() instanceof ItemInceptionUpgrade)) {
-                return handler.canRemoveInceptionUpgrade();
+                return wrapper.canRemoveInceptionUpgrade();
             }
 
             return true;
@@ -82,7 +82,7 @@ public class ModularUpgradeSlot extends ModularSlot {
         Item item = stack.getItem();
 
         if (item instanceof ItemStackUpgrade upgrade) {
-            return handler.canAddStackUpgrade(upgrade.multiplier(stack));
+            return wrapper.canAddStackUpgrade(upgrade.multiplier(stack));
         }
 
         return item instanceof ItemUpgrade;

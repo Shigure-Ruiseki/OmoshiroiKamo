@@ -17,13 +17,13 @@ import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.cleanroommc.modularui.utils.Platform;
 
+import baubles.api.BaublesApi;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.item.BaublesUtils;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
@@ -130,8 +130,7 @@ public class KeyHandler {
 
         ItemStack result = null;
         if (LibMods.Baubles.isLoaded()) {
-            IInventory baublesInventory = BaublesUtils.instance()
-                .getBaubles(player);
+            IInventory baublesInventory = BaublesApi.getBaubles(player);
             result = BackpackInventoryUtils.getQuickDrawStack(baublesInventory, wanted, InventoryTypes.BAUBLES);
         }
 

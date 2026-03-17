@@ -20,14 +20,14 @@ import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public abstract class BackpackGuiHolder {
 
-    protected final BackpackWrapper handler;
+    protected final BackpackWrapper wrapper;
     protected final int rowSize;
     protected final int colSize;
 
-    public BackpackGuiHolder(BackpackWrapper handler) {
-        this.handler = handler;
+    public BackpackGuiHolder(BackpackWrapper wrapper) {
+        this.wrapper = wrapper;
 
-        int size = handler.getSlots();
+        int size = wrapper.getSlots();
         this.rowSize = size > 81 ? 12 : 9;
         this.colSize = ceilDiv(size, rowSize);
 
@@ -39,10 +39,10 @@ public abstract class BackpackGuiHolder {
         int width = 20 + rowSize * ItemSlot.SIZE;
         int height = 115 + colSize * ItemSlot.SIZE;
 
-        if (backpackSlotIndex != null) handler.setSlotIndex(backpackSlotIndex);
-        if (type != null) handler.setType(type);
+        if (backpackSlotIndex != null) wrapper.setSlotIndex(backpackSlotIndex);
+        if (type != null) wrapper.setType(type);
 
-        return new BackpackPanel(player, tileEntity, syncManager, settings, handler, width, height);
+        return new BackpackPanel(player, tileEntity, syncManager, settings, wrapper, width, height);
     }
 
     protected void addCommonWidgets(BackpackPanel panel) {
@@ -58,8 +58,8 @@ public abstract class BackpackGuiHolder {
 
     public static final class TileEntityGuiHolder extends BackpackGuiHolder implements IGuiHolder<SidedPosGuiData> {
 
-        public TileEntityGuiHolder(BackpackWrapper handler) {
-            super(handler);
+        public TileEntityGuiHolder(BackpackWrapper wrapper) {
+            super(wrapper);
         }
 
         @Override
@@ -79,8 +79,8 @@ public abstract class BackpackGuiHolder {
     public static final class ItemStackGuiHolder extends BackpackGuiHolder
         implements IGuiHolder<PlayerInventoryGuiData> {
 
-        public ItemStackGuiHolder(BackpackWrapper handler) {
-            super(handler);
+        public ItemStackGuiHolder(BackpackWrapper wrapper) {
+            super(wrapper);
         }
 
         @Override

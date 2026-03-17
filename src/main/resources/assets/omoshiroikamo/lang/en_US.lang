@@ -228,7 +228,7 @@ gui.backpack.add_ore_dict_entry=Add Ore Dict.
 gui.backpack.remove_ore_dict_entry=Remove Ore Dict.
 gui.backpack.ore_dict_input_help=You can input ore dictionary here, regex is supported
 
-gui.complete_hunger=Only feed when player is hungry enough\nto not waste any hunger points of the food at all
+gui.backpack.complete_hunger=Only feed when player is hungry enough\nto not waste any hunger points of the food at all
 gui.backpack.half_hunger=Only feed when player is hungry enough\nto only waste half hunger points of the food at most
 gui.backpack.immediate_hunger=Feed as soon as player is tiny bit hungry\nwastes quite a few hunger points of the food
 gui.backpack.ignore_health=Do not consider health\nIgnores player's health and only feeds based on hunger setting

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 
-import ruiseki.omoshiroikamo.core.item.BaublesUtils;
+import baubles.api.BaublesApi;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.network.CodecField;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
@@ -53,8 +53,7 @@ public class PacketBackpackNBT extends PacketCodec {
         }
 
         if (type == InventoryTypes.BAUBLES && LibMods.Baubles.isLoaded()) {
-            IInventory baublesInventory = BaublesUtils.instance()
-                .getBaubles(player);
+            IInventory baublesInventory = BaublesApi.getBaubles(player);
             stack = baublesInventory.getStackInSlot(slot);
         }
         if (stack != null) {

@@ -79,17 +79,17 @@ public class BackpackGuiOpener implements IContainerInputHandler {
         if (carried == null) return false;
 
         ItemStack stack = slot.getStack();
-        if (!(stack.getItem() instanceof BlockBackpack.ItemBackpack)) return false;
+        if (!(stack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) return false;
 
-        BackpackWrapper handler = new BackpackWrapper(stack, null);
-        ItemStack remain = handler.insertItem(carried, false);
+        BackpackWrapper wrapper = new BackpackWrapper(stack, backpack);
+        ItemStack remain = wrapper.insertItem(carried, false);
         if (remain == null || remain.stackSize <= 0) {
             player.inventory.setItemStack(null);
         } else {
             player.inventory.setItemStack(remain);
         }
         OmoshiroiKamo.instance.getPacketHandler()
-            .sendToServer(new PacketBackpackNBT(slot.getSlotIndex(), handler.getTagCompound(), InventoryTypes.PLAYER));
+            .sendToServer(new PacketBackpackNBT(slot.getSlotIndex(), wrapper.getTagCompound(), InventoryTypes.PLAYER));
         OmoshiroiKamo.instance.getPacketHandler()
             .sendToServer(new PacketSyncCarriedItem(player.inventory.getItemStack()));
         return true;

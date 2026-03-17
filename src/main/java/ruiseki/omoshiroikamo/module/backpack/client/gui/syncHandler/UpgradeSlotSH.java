@@ -38,12 +38,12 @@ public class UpgradeSlotSH extends ItemSlotSH {
     public static final int UPDATE_CRAFTING_G = 16;
     public static final int UPDATE_CRAFTING_C = 17;
 
-    public final BackpackWrapper handler;
+    public final BackpackWrapper wrapper;
     public final BackpackPanel panel;
 
-    public UpgradeSlotSH(ModularSlot slot, BackpackWrapper handler, BackpackPanel panel) {
+    public UpgradeSlotSH(ModularSlot slot, BackpackWrapper wrapper, BackpackPanel panel) {
         super(slot);
-        this.handler = handler;
+        this.wrapper = wrapper;
         this.panel = panel;
     }
 
@@ -90,7 +90,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
                 super.readOnServer(id, buf);
                 break;
         }
-        handler.syncToServer();
+        wrapper.syncToServer();
     }
 
     private void updateTabState(PacketBuffer buf) {
