@@ -21,12 +21,12 @@ public class BackpackSH extends SyncHandler {
     public static final int UPDATE_SETTING = 4;
 
     private final PlayerMainInvWrapper playerInv;
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
     private final BackpackPanel panel;
 
-    public BackpackSH(PlayerMainInvWrapper playerInv, BackpackWrapper handler, BackpackPanel panel) {
+    public BackpackSH(PlayerMainInvWrapper playerInv, BackpackWrapper wrapper, BackpackPanel panel) {
         this.playerInv = playerInv;
-        this.handler = handler;
+        this.wrapper = wrapper;
         this.panel = panel;
     }
 
@@ -61,7 +61,7 @@ public class BackpackSH extends SyncHandler {
             default:
                 break;
         }
-        handler.syncToServer();
+        wrapper.syncToServer();
     }
 
     public void setSortType(PacketBuffer buf) {
@@ -70,34 +70,34 @@ public class BackpackSH extends SyncHandler {
     }
 
     public void setSortType(SortType sortType) {
-        handler.setSortType(sortType);
+        wrapper.setSortType(sortType);
     }
 
     public void sortInventory(PacketBuffer buf) throws IOException {
-        int size = handler.getBackpackSlots();
+        int size = wrapper.getBackpackSlots();
 
         for (int i = 0; i < size; i++) {
-            handler.getBackpackHandler()
+            wrapper.getBackpackHandler()
                 .setStackInSlot(i, buf.readItemStackFromBuffer());
         }
     }
 
     public void transferToBackpack(boolean transferMatched) {
-        BackpackInventoryUtils.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
     }
 
     public void transferToBackpack(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        BackpackInventoryUtils.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(boolean transferMatched) {
-        BackpackInventoryUtils.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        BackpackInventoryUtils.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
     }
 
     public void updateBackpack(PacketBuffer buf) throws IOException {
@@ -105,9 +105,9 @@ public class BackpackSH extends SyncHandler {
         String uuid = buf.readStringFromBuffer(36);
         boolean search = buf.readBoolean();
         boolean tab = buf.readBoolean();
-        handler.setLockBackpack(lock);
-        handler.setUuid(uuid);
-        handler.setSearchBackpack(search);
-        handler.setKeepTab(tab);
+        wrapper.setLockBackpack(lock);
+        wrapper.setUuid(uuid);
+        wrapper.setSearchBackpack(search);
+        wrapper.setKeepTab(tab);
     }
 }

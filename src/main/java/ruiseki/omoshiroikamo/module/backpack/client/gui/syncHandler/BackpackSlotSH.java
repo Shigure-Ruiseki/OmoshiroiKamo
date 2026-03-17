@@ -17,12 +17,12 @@ public class BackpackSlotSH extends ItemSlotSH {
     public static final int UPDATE_SET_SLOT_LOCK = 8;
     public static final int UPDATE_UNSET_SLOT_LOCK = 9;
 
-    public final BackpackWrapper handler;
+    public final BackpackWrapper wrapper;
     public final BackpackPanel panel;
 
-    public BackpackSlotSH(ModularSlot slot, BackpackWrapper handler, BackpackPanel panel) {
+    public BackpackSlotSH(ModularSlot slot, BackpackWrapper wrapper, BackpackPanel panel) {
         super(slot);
-        this.handler = handler;
+        this.wrapper = wrapper;
         this.panel = panel;
     }
 
@@ -31,26 +31,26 @@ public class BackpackSlotSH extends ItemSlotSH {
 
         switch (id) {
             case UPDATE_SET_MEMORY_STACK: {
-                handler.setMemoryStack(getSlot().getSlotIndex(), buf.readBoolean());
+                wrapper.setMemoryStack(getSlot().getSlotIndex(), buf.readBoolean());
                 break;
             }
 
             case UPDATE_UNSET_MEMORY_STACK:
-                handler.unsetMemoryStack(getSlot().getSlotIndex());
+                wrapper.unsetMemoryStack(getSlot().getSlotIndex());
                 break;
 
             case UPDATE_SET_SLOT_LOCK:
-                handler.setSlotLocked(getSlot().getSlotIndex(), true);
+                wrapper.setSlotLocked(getSlot().getSlotIndex(), true);
                 break;
 
             case UPDATE_UNSET_SLOT_LOCK:
-                handler.setSlotLocked(getSlot().getSlotIndex(), false);
+                wrapper.setSlotLocked(getSlot().getSlotIndex(), false);
                 break;
 
             default:
                 super.readOnServer(id, buf);
                 break;
         }
-        handler.syncToServer();
+        wrapper.syncToServer();
     }
 }

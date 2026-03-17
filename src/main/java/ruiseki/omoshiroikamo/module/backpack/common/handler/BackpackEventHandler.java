@@ -18,12 +18,12 @@ import com.cleanroommc.modularui.factory.inventory.InventoryType;
 import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
+import baubles.api.BaublesApi;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.item.BaublesUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
@@ -31,9 +31,6 @@ import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 @EventBusSubscriber
 public class BackpackEventHandler {
-
-    private static int feedTickCounter = 0;
-    private static int magnetTickCounter = 0;
 
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
@@ -43,21 +40,26 @@ public class BackpackEventHandler {
     @SubscribeEvent
     public static void onPlayerPickup(EntityItemPickupEvent event) {
         EntityPlayer player = event.entityPlayer;
-        IInventory inventory = player.inventory;
+        if (player.openContainer instanceof BackPackContainer) return;
         ItemStack stack = event.item.getEntityItem()
             .copy();
+
+        ItemStack held = player.getHeldItem();
+        if (held != null && held.getItem() instanceof BlockBackpack.ItemBackpack) {
+            return;
+        }
 
         if (player.openContainer instanceof BackPackContainer) {
             return;
         }
 
         if (LibMods.Baubles.isLoaded()) {
-            IInventory baublesInventory = BaublesUtils.instance()
-                .getBaubles(player);
-            stack = attemptPickup(baublesInventory, stack, InventoryTypes.BAUBLES);
+            IInventory inventory = BaublesApi.getBaubles(player);
+            stack = attemptPickup(inventory, stack, InventoryTypes.BAUBLES);
         }
 
-        if (stack == null) {
+        if (stack != null) {
+            IInventory inventory = player.inventory;
             stack = attemptPickup(inventory, stack, InventoryTypes.PLAYER);
         }
 
@@ -94,29 +96,31 @@ public class BackpackEventHandler {
     }
 
     private static ItemStack attemptPickup(IInventory targetInventory, ItemStack stack, InventoryType type) {
-
         for (int i = 0; i < targetInventory.getSizeInventory(); i++) {
             ItemStack backpackStack = targetInventory.getStackInSlot(i);
-            if (backpackStack == null || backpackStack.stackSize <= 0) {
-                continue;
+            if (backpackStack == null || backpackStack.stackSize <= 0) continue;
+
+            if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) continue;
+
+            BackpackWrapper wrapper = new BackpackWrapper(backpackStack, backpack);
+
+            if (!wrapper.canPickupItem(stack)) continue;
+
+            ItemStack before = stack.copy();
+
+            ItemStack result = wrapper.insertItem(stack, false);
+
+            boolean changed = result == null || result.stackSize != before.stackSize;
+
+            if (changed) {
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToServer(new PacketBackpackNBT(i, wrapper.getTagCompound(), type));
             }
 
-            if (!(backpackStack.getItem() instanceof BlockBackpack.ItemBackpack backpack)) {
-                continue;
-            }
+            stack = result;
 
-            BackpackWrapper handler = new BackpackWrapper(backpackStack, null, backpack);
-
-            if (!handler.canPickupItem(stack)) {
-                continue;
-            }
-
-            stack = handler.insertItem(stack, false);
-
-            OmoshiroiKamo.instance.getPacketHandler()
-                .sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
-            if (stack == null) {
-                break;
+            if (stack == null || stack.stackSize <= 0) {
+                return null;
             }
         }
 
@@ -138,16 +142,11 @@ public class BackpackEventHandler {
 
         ItemStack held = player.getHeldItem();
         if (held != null && held.getItem() instanceof BlockBackpack.ItemBackpack) {
-            feedTickCounter = -100;
             return;
         }
 
-        feedTickCounter++;
-        if (feedTickCounter % 20 == 0) {
-            feedTickCounter = 0;
-            if (!player.capabilities.isCreativeMode) {
-                attemptFeed(player);
-            }
+        if (!player.capabilities.isCreativeMode && player.ticksExisted % 20 == 0) {
+            attemptFeed(player);
         }
     }
 
@@ -155,8 +154,7 @@ public class BackpackEventHandler {
         boolean result = false;
 
         if (LibMods.Baubles.isLoaded()) {
-            IInventory baublesInventory = BaublesUtils.instance()
-                .getBaubles(player);
+            IInventory baublesInventory = BaublesApi.getBaubles(player);
             result = attemptFeed(player, baublesInventory, InventoryTypes.BAUBLES);
         }
 
@@ -178,23 +176,15 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackWrapper handler = new BackpackWrapper(stack.copy(), null, backpack);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, null, backpack);
 
-            ItemStack feedingStack = handler.getFeedingStack(
-                player.getFoodStats()
-                    .getFoodLevel(),
-                player.getHealth(),
-                player.getMaxHealth());
-
-            if (feedingStack == null || feedingStack.stackSize <= 0) {
-                continue;
+            boolean result = wrapper.feed(player, wrapper);
+            if (result) {
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToServer(new PacketBackpackNBT(i, stack.getTagCompound(), type));
             }
 
-            feedingStack.onFoodEaten(player.worldObj, player);
-
-            OmoshiroiKamo.instance.getPacketHandler()
-                .sendToServer(new PacketBackpackNBT(i, handler.getTagCompound(), type));
-            return true;
+            return result;
         }
 
         return false;
@@ -202,26 +192,16 @@ public class BackpackEventHandler {
 
     @SubscribeEvent
     public static void onPlayerTickMagnet(TickEvent.PlayerTickEvent event) {
-        if (!(event.player instanceof EntityPlayerMP player)) {
-            return;
-        }
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
-
-        magnetTickCounter++;
-        if (magnetTickCounter % 2 == 0) {
-            magnetTickCounter = 0;
-            attemptMagnet(player);
-        }
+        if (!(event.player instanceof EntityPlayerMP player)) return;
+        if (event.phase != TickEvent.Phase.END) return;
+        if (player.ticksExisted % 2 == 0) attemptMagnet(player);
     }
 
     public static void attemptMagnet(EntityPlayer player) {
         boolean result = false;
 
         if (LibMods.Baubles.isLoaded()) {
-            IInventory baublesInventory = BaublesUtils.instance()
-                .getBaubles(player);
+            IInventory baublesInventory = BaublesApi.getBaubles(player);
             result = attemptMagnet(player, baublesInventory);
         }
 
@@ -243,7 +223,7 @@ public class BackpackEventHandler {
                 continue;
             }
 
-            BackpackWrapper handler = new BackpackWrapper(stack.copy(), null, backpack);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, null, backpack);
 
             AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
                 player.posX - BackpackConfig.magnetConfig.magnetRange,
@@ -253,7 +233,7 @@ public class BackpackEventHandler {
                 player.posY + BackpackConfig.magnetConfig.magnetRange,
                 player.posZ + BackpackConfig.magnetConfig.magnetRange);
 
-            List<Entity> entities = handler.getMagnetEntities(player.worldObj, aabb);
+            List<Entity> entities = wrapper.getMagnetEntities(player.worldObj, aabb);
             if (entities.isEmpty()) {
                 return false;
             }

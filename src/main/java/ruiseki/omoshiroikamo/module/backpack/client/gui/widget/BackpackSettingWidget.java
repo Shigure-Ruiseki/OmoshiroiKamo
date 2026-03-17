@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 public class BackpackSettingWidget extends ExpandedTabWidget {
 
     private final BackpackPanel panel;
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
     private final BackpackSettingPanel settingPanel;
     private final TabWidget parentTabWidget;
 
@@ -41,7 +41,7 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
         super(2, OKGuiTextures.BACKPACK_ICON, "gui.backpack.backpack_settings", 80, TabWidget.ExpandDirection.RIGHT);
 
         this.panel = panel;
-        this.handler = panel.getWrapper();
+        this.wrapper = panel.getWrapper();
         this.settingPanel = settingPanel;
         this.parentTabWidget = parentTabWidget;
 
@@ -52,25 +52,25 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
 
         CyclicVariantButtonWidget tabButton = new CyclicVariantButtonWidget(
             KEEP_TAB_VARIANTS,
-            handler.isKeepTab() ? 0 : 1,
+            wrapper.isKeepTab() ? 0 : 1,
             (index) -> {
-                handler.setKeepTab(index == 0);
+                wrapper.setKeepTab(index == 0);
                 updateWrapper();
             });
 
         CyclicVariantButtonWidget searchButton = new CyclicVariantButtonWidget(
             SEARCH_VARIANTS,
-            handler.isSearchBackpack() ? 0 : 1,
+            wrapper.isSearchBackpack() ? 0 : 1,
             (index) -> {
-                handler.setSearchBackpack(index == 0);
+                wrapper.setSearchBackpack(index == 0);
                 updateWrapper();
             });
 
         CyclicVariantButtonWidget lockButton = new CyclicVariantButtonWidget(
             LOCK_VARIANTS,
-            handler.isLockBackpack() ? 0 : 1,
+            wrapper.isLockBackpack() ? 0 : 1,
             (index) -> {
-                handler.setLockBackpack(index == 0);
+                wrapper.setLockBackpack(index == 0);
                 updateWrapper();
             });
 
@@ -98,13 +98,13 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
     private void updateWrapper() {
         BackpackSH backpackSyncHandler = this.panel.getBackpackSyncHandler();
         backpackSyncHandler.syncToServer(BackpackSH.UPDATE_SETTING, buffer -> {
-            buffer.writeBoolean(handler.isLockBackpack());
+            buffer.writeBoolean(wrapper.isLockBackpack());
             buffer.writeStringToBuffer(
                 panel.getPlayer()
                     .getUniqueID()
                     .toString());
-            buffer.writeBoolean(handler.isSearchBackpack());
-            buffer.writeBoolean(handler.isKeepTab());
+            buffer.writeBoolean(wrapper.isSearchBackpack());
+            buffer.writeBoolean(wrapper.isKeepTab());
         });
     }
 }

@@ -29,22 +29,20 @@ public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedi
     }
 
     @Override
-    public ItemStack getFeedingStack(IItemHandler handler, int foodLevel, float health, float maxHealth) {
-        int size = handler.getSlots();
-        for (int i = 0; i < size; i++) {
-            ItemStack stack = handler.getStackInSlot(i);
-            if (stack == null) {
-                continue;
-            }
-            if (!(stack.getItem() instanceof ItemFood food)) {
-                continue;
-            }
-            int healingAmount = food.func_150905_g(stack);
-            if (healingAmount <= 20 - foodLevel && checkFilter(stack)) {
-                return handler.extractItem(i, 1, false);
-            }
+    public int getFoodSlot(IItemHandler handler, int foodLevel, float health, float maxHealth) {
+        for (int slot = 0; slot < handler.getSlots(); slot++) {
+            ItemStack stack = handler.getStackInSlot(slot);
+            if (stack == null || stack.stackSize <= 0) continue;
+            if (!checkFilter(stack)) continue;
+
+            ItemFood item = stack.getItem() instanceof ItemFood ? (ItemFood) stack.getItem() : null;
+            if (item == null) continue;
+
+            int healingAmount = item.func_150905_g(stack);
+
+            if (healingAmount <= 20 - foodLevel) return slot;
         }
-        return null;
+        return -1;
     }
 
     @Override

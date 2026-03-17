@@ -170,8 +170,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            BackpackWrapper handler = new BackpackWrapper(stack, null, this);
-            return new EntityBackpack(world, location, stack, handler);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+            return new EntityBackpack(world, location, stack, wrapper);
         }
 
         @Override
@@ -179,9 +179,9 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                    cap.writeToItem();
-                    stack.setTagCompound(cap.getTagCompound());
+                    BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+                    wrapper.writeToItem();
+                    stack.setTagCompound(wrapper.getTagCompound());
                 }
             }
         }
@@ -191,9 +191,9 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onCreated(stack, world, player);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                    cap.writeToItem();
-                    stack.setTagCompound(cap.getTagCompound());
+                    BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+                    wrapper.writeToItem();
+                    stack.setTagCompound(wrapper.getTagCompound());
                 }
             }
         }
@@ -212,8 +212,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
             if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
-                BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                if (cap.canPlayerAccess(player.getUniqueID())) {
+                BackpackWrapper wrapper = new BackpackWrapper(stack, null, this);
+                if (wrapper.canPlayerAccess(player.getUniqueID())) {
                     GuiFactories.playerInventory()
                         .openFromMainHand(player);
                 }
