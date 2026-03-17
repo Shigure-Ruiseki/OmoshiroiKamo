@@ -97,6 +97,10 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
                     .setStackInSlot(9, buf.readItemStackFromBuffer());
             } catch (IOException ignored) {}
         }
+
+        if (id == UPDATE_FILTERABLE || id == UPDATE_CRAFTING) {
+            wrapper.syncToServer();
+        }
     }
 
     @Override

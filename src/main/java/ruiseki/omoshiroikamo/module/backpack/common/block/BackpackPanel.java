@@ -40,6 +40,7 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContai
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackpackGuiContainer;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.CraftingSlotInfo;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.LockedPlayerSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularUpgradeSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
@@ -147,7 +148,7 @@ public class BackpackPanel extends ModularPanel {
     public boolean isResetOpenedTabs = false;
 
     public BackpackPanel(EntityPlayer player, TileEntity tileEntity, PanelSyncManager syncManager, UISettings settings,
-        BackpackWrapper wrapper, int width, int height) {
+        BackpackWrapper wrapper, int width, int height, Integer slotIndex) {
         super("backpack_gui");
         this.player = player;
         this.tileEntity = tileEntity;
@@ -203,7 +204,7 @@ public class BackpackPanel extends ModularPanel {
         settingPanel = this.syncManager
             .syncedPanel("setting_panel", true, (syncManager1, syncHandler) -> new BackpackSettingPanel(this));
 
-        this.settings.customContainer(() -> new BackPackContainer(wrapper, wrapper.slotIndex));
+        this.settings.customContainer(() -> new BackPackContainer(wrapper, slotIndex));
         this.settings.customGui(() -> BackpackGuiContainer::new);
 
         syncManager.bindPlayerInventory(player);
@@ -212,18 +213,10 @@ public class BackpackPanel extends ModularPanel {
 
     public void modifyPlayerSlot(PanelSyncManager syncManager, InventoryType inventoryType, int slotIndex,
         EntityPlayer player) {
-        if (inventoryType == InventoryTypes.BAUBLES) {
-            return;
-        }
+        if (inventoryType == InventoryTypes.BAUBLES) return;
 
-        ModularSlot slot = new ModularSlot(new PlayerInvWrapper(player.inventory), slotIndex) {
-
-            @Override
-            public boolean canTakeStack(EntityPlayer playerIn) {
-                return false;
-            }
-        }.slotGroup("player_inventory");
-
+        ModularSlot slot = new LockedPlayerSlot(new PlayerInvWrapper(player.inventory), slotIndex)
+            .slotGroup("player_inventory");
         syncManager.itemSlot("player", slotIndex, slot);
     }
 
