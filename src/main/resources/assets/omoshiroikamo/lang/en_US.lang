@@ -1348,13 +1348,13 @@ tile.modularManaOutput.name=Mana Output Port Tier %d
 
 
 # Vis Ports
-tile.modularVisInput.tier_1.name=Vis Input Relay
-tile.modularVisOutput.tier_1.name=Vis Output Relay
+tile.modularVisInput.name=Vis Input Relay Tier %d
+tile.modularVisOutput.name=Vis Output Relay Tier %d
 
 
 # Essentia Ports
-tile.modularEssentiaInput.tier_1.name=Essentia Input Port
-tile.modularEssentiaOutput.tier_1.name=Essentia Output Port
+tile.modularEssentiaInput.name=Essentia Input Port Tier %d
+tile.modularEssentiaOutput.name=Essentia Output Port Tier %d
 
 
 # ME Ports

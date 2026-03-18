@@ -51,13 +51,13 @@ public class MachineryConfig {
     @Config.DefaultString("1000,4000,16000,64000,256000,1024000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000")
     public static String manaPortTransfer = "1000,4000,16000,64000,256000,1024000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000";
 
-    @Config.Comment("Essentia Input/Output Port Capacity per Aspect")
-    @Config.DefaultInt(64)
-    public static int essentiaPortCapacity = 64;
+    @Config.Comment("Essentia Input/Output Port Capacity per Aspect (Tier 1-16)")
+    @Config.DefaultString("64,128,256,512,1024,2048,4096,8192,16384,32768,65536,65536,65536,65536,65536,65536")
+    public static String essentiaPortCapacity = "64,128,256,512,1024,2048,4096,8192,16384,32768,65536,65536,65536,65536,65536,65536";
 
-    @Config.Comment("Vis Input/Output Port Capacity per Aspect (centi-vis)")
-    @Config.DefaultInt(100)
-    public static int visPortCapacity = 100;
+    @Config.Comment("Vis Input/Output Port Capacity per Aspect in centi-vis (Tier 1-16)")
+    @Config.DefaultString("100,200,400,800,1600,3200,6400,12800,25600,51200,102400,102400,102400,102400,102400,102400")
+    public static String visPortCapacity = "100,200,400,800,1600,3200,6400,12800,25600,51200,102400,102400,102400,102400,102400,102400";
 
     @Config.Ignore
     private static int[] _itemPortSlots;
@@ -73,6 +73,10 @@ public class MachineryConfig {
     private static int[] _manaPortCapacity;
     @Config.Ignore
     private static int[] _manaPortTransfer;
+    @Config.Ignore
+    private static int[] _essentiaPortCapacity;
+    @Config.Ignore
+    private static int[] _visPortCapacity;
 
     public static int[] getItemPortSlots() {
         if (_itemPortSlots == null) {
@@ -176,6 +180,32 @@ public class MachineryConfig {
         int[] transfers = getManaPortTransfer();
         if (tier < 1 || tier > transfers.length) return 1000;
         return transfers[tier - 1];
+    }
+
+    public static int[] getEssentiaPortCapacity() {
+        if (_essentiaPortCapacity == null) {
+            _essentiaPortCapacity = parseIntArray(essentiaPortCapacity);
+        }
+        return _essentiaPortCapacity;
+    }
+
+    public static int getEssentiaPortCapacity(int tier) {
+        int[] caps = getEssentiaPortCapacity();
+        if (tier < 1 || tier > caps.length) return 64;
+        return caps[tier - 1];
+    }
+
+    public static int[] getVisPortCapacity() {
+        if (_visPortCapacity == null) {
+            _visPortCapacity = parseIntArray(visPortCapacity);
+        }
+        return _visPortCapacity;
+    }
+
+    public static int getVisPortCapacity(int tier) {
+        int[] caps = getVisPortCapacity();
+        if (tier < 1 || tier > caps.length) return 100;
+        return caps[tier - 1];
     }
 
     /**

@@ -1351,13 +1351,13 @@ tile.modularManaOutput.name=マナ搬出口 ティア%d
 
 
 # Vis Ports
-tile.modularVisInput.tier_1.name=ビス搬入口
-tile.modularVisOutput.tier_1.name=ビス搬出口
+tile.modularVisInput.name=ビス搬入口 ティア%d
+tile.modularVisOutput.name=ビス搬出口 ティア%d
 
 
 # Essentia Ports
-tile.modularEssentiaInput.tier_1.name=エッセンシア搬入口
-tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出口
+tile.modularEssentiaInput.name=エッセンシア搬入口 ティア%d
+tile.modularEssentiaOutput.name=エッセンシア搬出口 ティア%d
 
 
 # ME Ports
