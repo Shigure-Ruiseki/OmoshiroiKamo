@@ -1343,8 +1343,8 @@ tile.modularGasOutput.name=Gas Output Port Tier %d
 
 
 # Mana Ports
-tile.modularManaInput.tier_1.name=Mana Input Port
-tile.modularManaOutput.tier_1.name=Mana Output Port
+tile.modularManaInput.name=Mana Input Port Tier %d
+tile.modularManaOutput.name=Mana Output Port Tier %d
 
 
 # Vis Ports

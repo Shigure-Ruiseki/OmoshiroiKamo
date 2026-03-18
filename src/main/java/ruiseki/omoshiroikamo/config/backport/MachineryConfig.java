@@ -43,13 +43,13 @@ public class MachineryConfig {
     @Config.DefaultString("128,512,2048,8192,32768,131072,524288,2097152,8388608,33554432,134217728,134217728,134217728,134217728,134217728,134217728")
     public static String energyPortTransfer = "128,512,2048,8192,32768,131072,524288,2097152,8388608,33554432,134217728,134217728,134217728,134217728,134217728,134217728";
 
-    @Config.Comment("Mana Input/Output Port Capacity")
-    @Config.DefaultInt(1000000)
-    public static int manaPortCapacity = 100000;
+    @Config.Comment("Mana Input/Output Port Capacity (Tier 1-16)")
+    @Config.DefaultString("10000,40000,160000,640000,2560000,10240000,40960000,40960000,40960000,40960000,40960000,40960000,40960000,40960000,40960000,40960000")
+    public static String manaPortCapacity = "10000,40000,160000,640000,2560000,10240000,40960000,40960000,40960000,40960000,40960000,40960000,40960000,40960000,40960000,40960000";
 
-    @Config.Comment("Mana Input/Output Port Transfer Rate")
-    @Config.DefaultInt(10000)
-    public static int manaPortTransfer = 10000;
+    @Config.Comment("Mana Input/Output Port Transfer Rate (Tier 1-16)")
+    @Config.DefaultString("1000,4000,16000,64000,256000,1024000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000")
+    public static String manaPortTransfer = "1000,4000,16000,64000,256000,1024000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000,4096000";
 
     @Config.Comment("Essentia Input/Output Port Capacity per Aspect")
     @Config.DefaultInt(64)
@@ -69,6 +69,10 @@ public class MachineryConfig {
     private static int[] _energyPortCapacity;
     @Config.Ignore
     private static int[] _energyPortTransfer;
+    @Config.Ignore
+    private static int[] _manaPortCapacity;
+    @Config.Ignore
+    private static int[] _manaPortTransfer;
 
     public static int[] getItemPortSlots() {
         if (_itemPortSlots == null) {
@@ -148,9 +152,35 @@ public class MachineryConfig {
         return transfers[tier - 1];
     }
 
+    public static int[] getManaPortCapacity() {
+        if (_manaPortCapacity == null) {
+            _manaPortCapacity = parseIntArray(manaPortCapacity);
+        }
+        return _manaPortCapacity;
+    }
+
+    public static int getManaPortCapacity(int tier) {
+        int[] caps = getManaPortCapacity();
+        if (tier < 1 || tier > caps.length) return 10000;
+        return caps[tier - 1];
+    }
+
+    public static int[] getManaPortTransfer() {
+        if (_manaPortTransfer == null) {
+            _manaPortTransfer = parseIntArray(manaPortTransfer);
+        }
+        return _manaPortTransfer;
+    }
+
+    public static int getManaPortTransfer(int tier) {
+        int[] transfers = getManaPortTransfer();
+        if (tier < 1 || tier > transfers.length) return 1000;
+        return transfers[tier - 1];
+    }
+
     /**
      * Parse the configured tint color string to an ARGB integer.
-     * 
+     *
      * @return ARGB color value with full alpha, or white (0xFFFFFFFF) on parse
      *         error
      */

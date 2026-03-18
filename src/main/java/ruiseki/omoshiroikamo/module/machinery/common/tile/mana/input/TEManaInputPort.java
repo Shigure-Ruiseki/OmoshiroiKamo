@@ -7,10 +7,31 @@ import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 
-public abstract class TEManaInputPort extends AbstractManaPortTE {
+/**
+ * Unified Mana Input Port TileEntity for all tiers (0-15).
+ * Uses tier field instead of separate classes for each tier.
+ *
+ * This replaces the legacy per-tier TE classes (TEManaInputPortT1).
+ * Old TE classes are automatically remapped to this class on world load.
+ */
+public class TEManaInputPort extends AbstractManaPortTE {
 
-    protected TEManaInputPort(int manaCapacity, int manaMaxReceive) {
-        super(manaCapacity, manaMaxReceive);
+    /**
+     * No-arg constructor required for TE instantiation.
+     * Tier will be set after construction via setTier().
+     */
+    public TEManaInputPort() {
+        super();
+    }
+
+    /**
+     * Constructor with tier parameter.
+     *
+     * @param tier Tier level (0-15)
+     */
+    public TEManaInputPort(int tier) {
+        super();
+        setTier(tier);
     }
 
     @Override
@@ -29,7 +50,7 @@ public abstract class TEManaInputPort extends AbstractManaPortTE {
             return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
         }
         if (renderPass == 1) {
-            return IconRegistry.getIcon("overlay_manainput_" + getTier());
+            return IconRegistry.getIcon("overlay_manainput_" + (getTier() + 1));
         }
         return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
     }

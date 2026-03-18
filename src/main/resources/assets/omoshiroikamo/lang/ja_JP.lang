@@ -1346,8 +1346,8 @@ tile.modularGasOutput.name=ガス搬出口 ティア%d
 
 
 # Mana Ports
-tile.modularManaInput.tier_1.name=マナ搬入口
-tile.modularManaOutput.tier_1.name=マナ搬出口
+tile.modularManaInput.name=マナ搬入口 ティア%d
+tile.modularManaOutput.name=マナ搬出口 ティア%d
 
 
 # Vis Ports
