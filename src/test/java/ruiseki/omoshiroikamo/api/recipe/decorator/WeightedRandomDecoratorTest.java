@@ -24,6 +24,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
@@ -59,7 +60,7 @@ public class WeightedRandomDecoratorTest {
         assertTrue(outputB.applyCount >= 850 && outputB.applyCount <= 950, "B picked " + outputB.applyCount);
     }
 
-    private static class StubOutput implements IRecipeOutput {
+    private static class StubOutput implements IModularRecipeOutput {
 
         public int applyCount = 0;
 
@@ -91,6 +92,11 @@ public class WeightedRandomDecoratorTest {
         @Override
         public void apply(List<IModularPort> ports) {
             apply(ports, 1);
+        }
+
+        @Override
+        public int getInterval() {
+            return 0;
         }
 
         @Override

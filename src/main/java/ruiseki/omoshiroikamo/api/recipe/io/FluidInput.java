@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -9,10 +10,11 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.json.FluidJson;
 
-public class FluidInput extends AbstractRecipeInput {
+public class FluidInput extends AbstractModularRecipeInput {
 
     private FluidStack required;
     private int count = 0;
@@ -66,6 +68,8 @@ public class FluidInput extends AbstractRecipeInput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
@@ -83,6 +87,7 @@ public class FluidInput extends AbstractRecipeInput {
     @Override
     public void write(JsonObject json) {
         if (!consume) json.addProperty("consume", false);
+        if (interval > 0) json.addProperty("pertick", interval);
 
         if (required != null && required.getFluid() != null) {
             json.addProperty(
@@ -105,7 +110,51 @@ public class FluidInput extends AbstractRecipeInput {
     }
 
     @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        FluidStack copyStack = required != null ? required.copy() : null;
+        if (copyStack != null) copyStack.amount *= multiplier;
+        FluidInput result = new FluidInput(copyStack);
+        result.count = this.count * multiplier;
+        result.consume = this.consume;
+        result.interval = this.interval;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "fluid");
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+        nbt.setInteger("count", count);
+        if (required != null) {
+            NBTTagCompound stackTag = new NBTTagCompound();
+            required.writeToNBT(stackTag);
+            nbt.setTag("required", stackTag);
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+        this.count = nbt.getInteger("count");
+        if (nbt.hasKey("required")) {
+            this.required = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("required"));
+        }
+    }
+
+    @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.NO_INPUT;
     }
 }

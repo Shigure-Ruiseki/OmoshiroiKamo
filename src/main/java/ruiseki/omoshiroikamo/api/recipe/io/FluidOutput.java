@@ -13,9 +13,10 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 
-public class FluidOutput extends AbstractRecipeOutput {
+public class FluidOutput extends AbstractModularRecipeOutput {
 
     private String fluidName;
     private int amount;
@@ -116,6 +117,7 @@ public class FluidOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
         this.fluidName = json.get("fluid")
             .getAsString();
         this.amount = json.has("amount") ? json.get("amount")
@@ -126,6 +128,7 @@ public class FluidOutput extends AbstractRecipeOutput {
     public void write(JsonObject json) {
         json.addProperty("fluid", fluidName);
         json.addProperty("amount", amount);
+        if (interval > 0) json.addProperty("pertick", interval);
     }
 
     @Override
@@ -146,18 +149,22 @@ public class FluidOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new FluidOutput(fluidName, amount * multiplier);
+        FluidOutput result = new FluidOutput(fluidName, amount * multiplier);
+        result.interval = this.interval;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "fluid");
+        nbt.setInteger("interval", interval);
         nbt.setString("fluid", fluidName);
         nbt.setInteger("amount", amount);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
         this.fluidName = nbt.getString("fluid");
         this.amount = nbt.getInteger("amount");
     }
@@ -165,5 +172,10 @@ public class FluidOutput extends AbstractRecipeOutput {
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.OUTPUT_FULL;
     }
 }

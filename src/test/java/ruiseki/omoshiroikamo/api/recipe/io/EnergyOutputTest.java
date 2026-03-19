@@ -43,7 +43,7 @@ public class EnergyOutputTest {
     public void testJSON読み込み_perTickTrue() {
         JsonObject json = new JsonObject();
         json.addProperty("energy", 200);
-        json.addProperty("perTick", true);
+        json.addProperty("pertick", true);
 
         EnergyOutput output = EnergyOutput.fromJson(json);
 

@@ -9,17 +9,17 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 
-public class EnergyOutput extends AbstractRecipeOutput {
+public class EnergyOutput extends AbstractModularRecipeOutput {
 
     private int amount;
-    private boolean perTick;
 
     public EnergyOutput(int amount, boolean perTick) {
         this.amount = amount;
-        this.perTick = perTick;
+        this.interval = perTick ? 1 : 0;
     }
 
     public EnergyOutput(int amount) {
@@ -30,8 +30,9 @@ public class EnergyOutput extends AbstractRecipeOutput {
         return amount;
     }
 
+    @Override
     public boolean isPerTick() {
-        return perTick;
+        return interval > 0;
     }
 
     @Override
@@ -77,22 +78,21 @@ public class EnergyOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 1);
         this.amount = json.get("energy")
             .getAsInt();
-        this.perTick = true;
-        if (json.has("perTick")) {
-            this.perTick = json.get("perTick")
-                .getAsBoolean();
-        } else if (json.has("pertick")) {
-            this.perTick = json.get("pertick")
-                .getAsBoolean();
-        }
     }
 
     @Override
     public void write(JsonObject json) {
         json.addProperty("energy", amount);
-        if (!perTick) json.addProperty("perTick", false);
+        if (interval != 1) {
+            if (isPerTick()) {
+                json.addProperty("pertick", interval);
+            } else {
+                json.addProperty("pertick", false);
+            }
+        }
     }
 
     @Override
@@ -113,24 +113,31 @@ public class EnergyOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new EnergyOutput(amount * multiplier, perTick);
+        EnergyOutput result = new EnergyOutput(amount * multiplier, isPerTick());
+        result.interval = this.interval;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "energy");
         nbt.setInteger("amount", amount);
-        nbt.setBoolean("perTick", perTick);
+        nbt.setInteger("interval", interval);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
-        this.perTick = nbt.getBoolean("perTick");
+        this.interval = nbt.getInteger("interval");
     }
 
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.OUTPUT_FULL;
     }
 }

@@ -8,30 +8,31 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 
-public class ManaOutput extends AbstractRecipeOutput {
+public class ManaOutput extends AbstractModularRecipeOutput {
 
     private int amount;
-    private boolean perTick;
 
     public ManaOutput(int amount, boolean perTick) {
         this.amount = amount;
-        this.perTick = perTick;
+        this.interval = perTick ? 1 : 0;
     }
 
     public ManaOutput(int amount) {
-        this(amount, true);
+        this(amount, false);
     }
 
     public int getAmount() {
         return amount;
     }
 
+    @Override
     public boolean isPerTick() {
-        return perTick;
+        return interval > 0;
     }
 
     @Override
@@ -71,9 +72,9 @@ public class ManaOutput extends AbstractRecipeOutput {
     @Override
     protected long getPortCapacity(IModularPort port) {
         if (port instanceof IManaPool && port instanceof ISparkAttachable) {
-            IManaPool manaPort = (IManaPool) port;
             ISparkAttachable sparkPort = (ISparkAttachable) port;
-            return (long) manaPort.getCurrentMana() + (long) sparkPort.getAvailableSpaceForMana();
+            // For output capacity check, return only available space, not total capacity
+            return (long) sparkPort.getAvailableSpaceForMana();
         }
         return 0;
     }
@@ -85,22 +86,17 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
         this.amount = json.get("mana")
             .getAsInt();
-        this.perTick = true;
-        if (json.has("perTick")) {
-            this.perTick = json.get("perTick")
-                .getAsBoolean();
-        } else if (json.has("pertick")) {
-            this.perTick = json.get("pertick")
-                .getAsBoolean();
-        }
     }
 
     @Override
     public void write(JsonObject json) {
         json.addProperty("mana", amount);
-        if (!perTick) json.addProperty("perTick", false);
+        if (interval != 0) {
+            json.addProperty("pertick", interval);
+        }
     }
 
     @Override
@@ -121,24 +117,31 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new ManaOutput(amount * multiplier, perTick);
+        ManaOutput result = new ManaOutput(amount * multiplier, isPerTick());
+        result.interval = this.interval;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "mana");
         nbt.setInteger("amount", amount);
-        nbt.setBoolean("perTick", perTick);
+        nbt.setInteger("interval", interval);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
-        this.perTick = nbt.getBoolean("perTick");
+        this.interval = nbt.getInteger("interval");
     }
 
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.OUTPUT_FULL;
     }
 }

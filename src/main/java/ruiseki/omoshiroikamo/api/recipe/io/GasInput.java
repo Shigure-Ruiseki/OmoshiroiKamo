@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.gson.JsonObject;
@@ -10,7 +11,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 
-public class GasInput extends AbstractRecipeInput {
+public class GasInput extends AbstractModularRecipeInput {
 
     private String gasName;
     private int amount;
@@ -63,6 +64,8 @@ public class GasInput extends AbstractRecipeInput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
@@ -77,7 +80,11 @@ public class GasInput extends AbstractRecipeInput {
     @Override
     public void write(JsonObject json) {
         if (!consume) json.addProperty("consume", false);
-        if (gasName != null) json.addProperty("gas", gasName);
+        if (interval > 0) json.addProperty("pertick", interval);
+
+        if (gasName != null) {
+            json.addProperty("gas", gasName);
+        }
         json.addProperty("amount", amount);
     }
 
@@ -90,6 +97,36 @@ public class GasInput extends AbstractRecipeInput {
         GasInput input = new GasInput(null, 0);
         input.read(json);
         return input.validate() ? input : null;
+    }
+
+    @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        GasInput result = new GasInput(gasName, (int) (amount * multiplier));
+        result.consume = this.consume;
+        result.interval = this.interval;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "gas");
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+        nbt.setString("gas", gasName);
+        nbt.setInteger("amount", amount);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+        this.gasName = nbt.getString("gas");
+        this.amount = nbt.getInteger("amount");
     }
 
     @Override

@@ -8,6 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,6 +19,7 @@ import cpw.mods.fml.common.registry.GameData;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
@@ -26,7 +29,7 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-public class ItemOutput extends AbstractRecipeOutput {
+public class ItemOutput extends AbstractModularRecipeOutput {
 
     private ItemStack output;
     private int count = 0;
@@ -196,6 +199,7 @@ public class ItemOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
         ItemJson itemJson = new ItemJson();
         itemJson.read(json);
         this.count = itemJson.amount;
@@ -252,6 +256,7 @@ public class ItemOutput extends AbstractRecipeOutput {
             if (output.stackSize != 1) json.addProperty("amount", output.stackSize);
             if (output.getItemDamage() != 0) json.addProperty("meta", output.getItemDamage());
         }
+        if (interval > 0) json.addProperty("pertick", interval);
 
         // Write NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
@@ -299,7 +304,7 @@ public class ItemOutput extends AbstractRecipeOutput {
         copy.stackSize *= multiplier;
         ItemOutput result = new ItemOutput(copy);
 
-        // Copy NBT configurations
+        result.interval = this.interval;
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
 
@@ -309,22 +314,64 @@ public class ItemOutput extends AbstractRecipeOutput {
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "item");
+        nbt.setInteger("interval", interval);
         if (output != null) {
             NBTTagCompound stackTag = new NBTTagCompound();
             output.writeToNBT(stackTag);
             nbt.setTag("output", stackTag);
         }
+
+        // Save NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            NBTTagList exprList = new NBTTagList();
+            for (IExpression expr : nbtExpressions) {
+                exprList.appendTag(new NBTTagString(expr.toString()));
+            }
+            nbt.setTag("nbtExpressions", exprList);
+        }
+
+        // Save NBT list operation
+        if (nbtListOp != null) {
+            NBTTagCompound opTag = new NBTTagCompound();
+            nbtListOp.writeToNBT(opTag);
+            nbt.setTag("nbtListOp", opTag);
+        }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
         if (nbt.hasKey("output")) {
             this.output = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("output"));
+        }
+
+        // Restore NBT expressions
+        if (nbt.hasKey("nbtExpressions")) {
+            NBTTagList exprList = nbt.getTagList("nbtExpressions", 8); // 8 is TAG_STRING
+            this.nbtExpressions = new ArrayList<>();
+            for (int i = 0; i < exprList.tagCount(); i++) {
+                String exprStr = exprList.getStringTagAt(i);
+                try {
+                    this.nbtExpressions.add(ExpressionParser.parseExpression(exprStr));
+                } catch (Exception e) {
+                    Logger.error("Failed to restore NBT expression from NBT: " + exprStr);
+                }
+            }
+        }
+
+        // Restore NBT list operation
+        if (nbt.hasKey("nbtListOp")) {
+            this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
         }
     }
 
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.OUTPUT_FULL;
     }
 }

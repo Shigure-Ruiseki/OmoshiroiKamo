@@ -4,13 +4,14 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 
 /**
- * Base interface for all recipes.
+ * Base interface for all modular recipes.
  * Extends Generic Comparable to handle sorting of various recipe
  * implementations and decorators.
  */
@@ -57,12 +58,14 @@ public interface IRecipe extends Comparable<IRecipe> {
         // 2. More input types comes first
         int thisInputTypes = (int) this.getInputs()
             .stream()
-            .map(IRecipeInput::getPortType)
+            .filter(i -> i instanceof IModularRecipeInput)
+            .map(i -> ((IModularRecipeInput) i).getPortType())
             .distinct()
             .count();
         int otherInputTypes = (int) other.getInputs()
             .stream()
-            .map(IRecipeInput::getPortType)
+            .filter(i -> i instanceof IModularRecipeInput)
+            .map(i -> ((IModularRecipeInput) i).getPortType())
             .distinct()
             .count();
         int inputTypeCompare = Integer.compare(otherInputTypes, thisInputTypes);

@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssen
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
 
-public class EssentiaOutput extends AbstractRecipeOutput {
+public class EssentiaOutput extends AbstractModularRecipeOutput {
 
     private String aspectTag;
     private int amount;
@@ -62,10 +62,25 @@ public class EssentiaOutput extends AbstractRecipeOutput {
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        if (port instanceof AbstractEssentiaPortTE) {
-            return ((AbstractEssentiaPortTE) port).getMaxCapacityPerAspect();
+        if (port instanceof IAspectContainer) {
+            IAspectContainer container = (IAspectContainer) port;
+            Aspect aspect = Aspect.getAspect(aspectTag);
+            if (aspect == null) return 0;
+
+            // Get current amount and max capacity
+            int currentAmount = container.containerContains(aspect);
+            int maxCapacity = 0;
+
+            if (port instanceof AbstractEssentiaPortTE) {
+                maxCapacity = ((AbstractEssentiaPortTE) port).getMaxCapacityPerAspect();
+            } else {
+                maxCapacity = 64; // Fallback for external containers (Standard Jar size)
+            }
+
+            // Return available space only
+            return Math.max(0, maxCapacity - currentAmount);
         }
-        return 64; // Fallback for external containers (Standard Jar size)
+        return 0;
     }
 
     @Override
@@ -75,6 +90,7 @@ public class EssentiaOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
         this.aspectTag = json.get("essentia")
             .getAsString();
         this.amount = json.has("amount") ? json.get("amount")
@@ -85,6 +101,7 @@ public class EssentiaOutput extends AbstractRecipeOutput {
     public void write(JsonObject json) {
         json.addProperty("essentia", aspectTag);
         json.addProperty("amount", amount);
+        if (interval > 0) json.addProperty("pertick", interval);
     }
 
     @Override
@@ -105,18 +122,22 @@ public class EssentiaOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new EssentiaOutput(aspectTag, amount * multiplier);
+        EssentiaOutput result = new EssentiaOutput(aspectTag, amount * multiplier);
+        result.interval = this.interval;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "essentia");
+        nbt.setInteger("interval", interval);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amount);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
         this.aspectTag = nbt.getString("aspect");
         this.amount = nbt.getInteger("amount");
     }

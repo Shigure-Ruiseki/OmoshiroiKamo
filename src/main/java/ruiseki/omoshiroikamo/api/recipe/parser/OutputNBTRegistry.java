@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.EssentiaOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.FluidOutput;
@@ -32,6 +33,7 @@ public class OutputNBTRegistry {
         register("gas", () -> new GasOutput("", 0));
         register("essentia", () -> new EssentiaOutput("", 0));
         register("vis", () -> new VisOutput("", 0));
+        register("block", () -> new BlockOutput());
         // Add more integrations here as needed
     }
 

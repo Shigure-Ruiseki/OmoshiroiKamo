@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.module.dml.recipe;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
@@ -9,11 +10,11 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.api.recipe.io.AbstractRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.AbstractModularRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 
-public class PristineMatterInput extends AbstractRecipeInput {
+public class PristineMatterInput extends AbstractModularRecipeInput {
 
     private int modelId = -1;
 
@@ -107,5 +108,33 @@ public class PristineMatterInput extends AbstractRecipeInput {
             }
         }
         return 0;
+    }
+
+    @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        PristineMatterInput result = new PristineMatterInput(modelId);
+        result.consume = this.consume;
+        result.interval = this.interval;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "pristinematter");
+        nbt.setInteger("modelId", modelId);
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.modelId = nbt.getInteger("modelId");
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
     }
 }

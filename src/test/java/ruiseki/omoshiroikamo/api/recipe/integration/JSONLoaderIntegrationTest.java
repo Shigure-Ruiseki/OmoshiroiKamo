@@ -173,7 +173,10 @@ public class JSONLoaderIntegrationTest {
 
         // Item出力: minecraft:diamond x1
         IRecipeOutput itemOutput = outputs.get(0);
-        assertEquals(IPortType.Type.ITEM, itemOutput.getPortType());
+        assertEquals(
+            IPortType.Type.ITEM,
+            itemOutput.asModular()
+                .getPortType());
         assertEquals(1, itemOutput.getRequiredAmount());
     }
 
@@ -222,7 +225,10 @@ public class JSONLoaderIntegrationTest {
         assertEquals(1, outputs.size());
 
         IRecipeOutput fluidOutput = outputs.get(0);
-        assertEquals(IPortType.Type.FLUID, fluidOutput.getPortType());
+        assertEquals(
+            IPortType.Type.FLUID,
+            fluidOutput.asModular()
+                .getPortType());
         assertEquals(500, fluidOutput.getRequiredAmount());
     }
 
@@ -291,7 +297,9 @@ public class JSONLoaderIntegrationTest {
 
         // Vis入力が2つあるはず
         long visCount = inputs.stream()
-            .filter(i -> i.getPortType() == IPortType.Type.VIS)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.VIS)
             .count();
         assertEquals(2, visCount, "Vis入力が2つ必要");
 
@@ -315,7 +323,10 @@ public class JSONLoaderIntegrationTest {
         assertEquals(1, inputs.size());
 
         IRecipeInput gasInput = inputs.get(0);
-        assertEquals(IPortType.Type.GAS, gasInput.getPortType());
+        assertEquals(
+            IPortType.Type.GAS,
+            gasInput.asModular()
+                .getPortType());
         assertEquals(500, gasInput.getRequiredAmount());
 
         // 出力: Gas "oxygen" 250
@@ -323,7 +334,10 @@ public class JSONLoaderIntegrationTest {
         assertEquals(1, outputs.size());
 
         IRecipeOutput gasOutput = outputs.get(0);
-        assertEquals(IPortType.Type.GAS, gasOutput.getPortType());
+        assertEquals(
+            IPortType.Type.GAS,
+            gasOutput.asModular()
+                .getPortType());
         assertEquals(250, gasOutput.getRequiredAmount());
     }
 
@@ -373,7 +387,10 @@ public class JSONLoaderIntegrationTest {
         assertEquals(1, outputs.size());
 
         IRecipeOutput output = outputs.get(0);
-        assertEquals(IPortType.Type.ITEM, output.getPortType());
+        assertEquals(
+            IPortType.Type.ITEM,
+            output.asModular()
+                .getPortType());
         assertEquals(6, output.getRequiredAmount());
     }
 
@@ -410,7 +427,10 @@ public class JSONLoaderIntegrationTest {
         assertEquals(1, outputs.size());
 
         IRecipeOutput manaOutput = outputs.get(0);
-        assertEquals(IPortType.Type.MANA, manaOutput.getPortType());
+        assertEquals(
+            IPortType.Type.MANA,
+            manaOutput.asModular()
+                .getPortType());
         assertEquals(200, manaOutput.getRequiredAmount());
     }
 
@@ -502,6 +522,7 @@ public class JSONLoaderIntegrationTest {
             IPortType.Type.ITEM,
             bonus.getBonusOutputs()
                 .get(0)
+                .asModular()
                 .getPortType());
     }
 
@@ -587,7 +608,10 @@ public class JSONLoaderIntegrationTest {
 
         // 両方とも Essentia タイプ
         for (IRecipeOutput output : outputs) {
-            assertEquals(IPortType.Type.ESSENTIA, output.getPortType());
+            assertEquals(
+                IPortType.Type.ESSENTIA,
+                output.asModular()
+                    .getPortType());
         }
 
         // auram: 64, spiritus: 32
@@ -609,7 +633,10 @@ public class JSONLoaderIntegrationTest {
 
         // 両方とも Vis タイプ
         for (IRecipeOutput output : outputs) {
-            assertEquals(IPortType.Type.VIS, output.getPortType());
+            assertEquals(
+                IPortType.Type.VIS,
+                output.asModular()
+                    .getPortType());
         }
 
         // perditio: 20, aer: 20
@@ -653,7 +680,8 @@ public class JSONLoaderIntegrationTest {
      */
     private IRecipeInput findInput(List<IRecipeInput> inputs, IPortType.Type type) {
         for (IRecipeInput input : inputs) {
-            if (input.getPortType() == type) {
+            if (input.asModular() != null && input.asModular()
+                .getPortType() == type) {
                 return input;
             }
         }
@@ -665,7 +693,8 @@ public class JSONLoaderIntegrationTest {
      */
     private IRecipeOutput findOutput(List<IRecipeOutput> outputs, IPortType.Type type) {
         for (IRecipeOutput output : outputs) {
-            if (output.getPortType() == type) {
+            if (output.asModular() != null && output.asModular()
+                .getPortType() == type) {
                 return output;
             }
         }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -20,28 +22,29 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 /**
  * Recipe input that checks for specific blocks at structure positions.
  * Can optionally validate and modify TileEntity NBT data.
  */
-public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
+public class BlockInput extends AbstractRecipeInput implements IModularRecipeInput {
 
-    private final char symbol;
-    private final String replace; // The block to find (Old / Condition)
-    private final String block; // The block to set (New / Result) or requirement
-    private final int amount;
-    private final boolean consume;
-    private final boolean optional;
+    private char symbol;
+    private String replace; // The block to find (Old / Condition)
+    private String block; // The block to set (New / Result) or requirement
+    private int amount;
+    private boolean consume;
+    private boolean optional;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
+    private int interval = 0;
 
     public BlockInput(char symbol, String block, String replace, int amount, boolean consume, boolean optional) {
         this.symbol = symbol;
@@ -50,6 +53,13 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
         this.amount = amount;
         this.consume = consume;
         this.optional = optional;
+    }
+
+    /**
+     * NBT reconstruction constructor
+     */
+    public BlockInput() {
+        this('\0', null, null, 0, false, false);
     }
 
     /**
@@ -222,7 +232,99 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
     }
 
     @Override
-    public void read(JsonObject json) {}
+    public boolean isPerTick() {
+        return interval > 0;
+    }
+
+    @Override
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        BlockInput result = new BlockInput(symbol, block, replace, amount * multiplier, consume, optional);
+        result.nbtExpressions = this.nbtExpressions;
+        result.nbtListOp = this.nbtListOp;
+        result.interval = this.interval;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "block");
+        nbt.setString("symbol", String.valueOf(symbol));
+        if (block != null) nbt.setString("block", block);
+        if (replace != null) nbt.setString("replace", replace);
+        nbt.setInteger("amount", amount);
+        nbt.setBoolean("consume", consume);
+        nbt.setBoolean("optional", optional);
+        nbt.setInteger("interval", interval);
+
+        // Save NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            NBTTagList exprList = new NBTTagList();
+            for (IExpression expr : nbtExpressions) {
+                exprList.appendTag(new NBTTagString(expr.toString()));
+            }
+            nbt.setTag("nbtExpressions", exprList);
+        }
+
+        // Save NBT list operation
+        if (nbtListOp != null) {
+            NBTTagCompound opTag = new NBTTagCompound();
+            nbtListOp.writeToNBT(opTag);
+            nbt.setTag("nbtListOp", opTag);
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
+        // Restore NBT expressions
+        if (nbt.hasKey("nbtExpressions")) {
+            NBTTagList exprList = nbt.getTagList("nbtExpressions", 8);
+            this.nbtExpressions = new ArrayList<>();
+            for (int i = 0; i < exprList.tagCount(); i++) {
+                String exprStr = exprList.getStringTagAt(i);
+                try {
+                    this.nbtExpressions.add(ExpressionParser.parseExpression(exprStr));
+                } catch (Exception e) {
+                    Logger.error("Failed to restore NBT expression: " + exprStr);
+                }
+            }
+        }
+
+        // Restore NBT list operation
+        if (nbt.hasKey("nbtListOp")) {
+            this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
+        }
+    }
+
+    @Override
+    public void read(JsonObject json) {
+        // Common JSON parsing for interval
+        if (json.has("pertick")) {
+            JsonElement pt = json.get("pertick");
+            if (pt.isJsonPrimitive()) {
+                if (pt.getAsJsonPrimitive()
+                    .isBoolean()) {
+                    this.interval = pt.getAsBoolean() ? 1 : 0;
+                } else {
+                    this.interval = pt.getAsInt();
+                }
+            }
+        }
+    }
 
     @Override
     public void write(JsonObject json) {
@@ -271,6 +373,7 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
             .getAsBoolean();
 
         BlockInput input = new BlockInput(symbol, block, replace, amount, consume, optional);
+        input.readPerTick(json, 0);
 
         // Read NBT expressions
         if (json.has("nbt")) {
@@ -331,6 +434,11 @@ public class BlockInput extends AbstractJsonMaterial implements IRecipeInput {
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.BLOCK_MISSING;
     }
 
     /**

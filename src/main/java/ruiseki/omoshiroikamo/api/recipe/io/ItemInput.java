@@ -8,6 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.JsonArray;
@@ -17,6 +18,7 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
@@ -25,7 +27,7 @@ import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
 
-public class ItemInput extends AbstractRecipeInput {
+public class ItemInput extends AbstractModularRecipeInput {
 
     private String oreDict;
     private ItemStack required;
@@ -217,6 +219,8 @@ public class ItemInput extends AbstractRecipeInput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
@@ -301,6 +305,7 @@ public class ItemInput extends AbstractRecipeInput {
     @Override
     public void write(JsonObject json) {
         if (!consume) json.addProperty("consume", false);
+        if (interval > 0) json.addProperty("pertick", interval);
 
         if (oreDict != null) {
             json.addProperty("ore", oreDict);
@@ -351,7 +356,93 @@ public class ItemInput extends AbstractRecipeInput {
     }
 
     @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        ItemInput result = required != null ? new ItemInput(required) : new ItemInput(oreDict, count);
+        result.count *= multiplier;
+        if (result.required != null) result.required.stackSize *= multiplier;
+        result.consume = this.consume;
+        result.interval = this.interval;
+        result.nbtExpressions = this.nbtExpressions;
+        result.nbtListOp = this.nbtListOp;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "item");
+        nbt.setInteger("count", count);
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+        if (oreDict != null) {
+            nbt.setString("ore", oreDict);
+        }
+        if (required != null) {
+            NBTTagCompound stackTag = new NBTTagCompound();
+            required.writeToNBT(stackTag);
+            nbt.setTag("required", stackTag);
+        }
+
+        // Save NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            net.minecraft.nbt.NBTTagList exprList = new net.minecraft.nbt.NBTTagList();
+            for (IExpression expr : nbtExpressions) {
+                exprList.appendTag(new net.minecraft.nbt.NBTTagString(expr.toString()));
+            }
+            nbt.setTag("nbtExpressions", exprList);
+        }
+
+        // Save NBT list operation
+        if (nbtListOp != null) {
+            NBTTagCompound opTag = new NBTTagCompound();
+            nbtListOp.writeToNBT(opTag);
+            nbt.setTag("nbtListOp", opTag);
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.count = nbt.getInteger("count");
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+        if (nbt.hasKey("ore")) {
+            this.oreDict = nbt.getString("ore");
+        }
+        if (nbt.hasKey("required")) {
+            this.required = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("required"));
+        }
+
+        // Restore NBT expressions
+        if (nbt.hasKey("nbtExpressions")) {
+            NBTTagList exprList = nbt.getTagList("nbtExpressions", 8); // 8 is TAG_STRING
+            this.nbtExpressions = new ArrayList<>();
+            for (int i = 0; i < exprList.tagCount(); i++) {
+                String exprStr = exprList.getStringTagAt(i);
+                try {
+                    this.nbtExpressions.add(ExpressionParser.parseExpression(exprStr));
+                } catch (Exception e) {
+                    Logger.error("Failed to restore NBT expression from NBT: " + exprStr);
+                }
+            }
+        }
+
+        // Restore NBT list operation
+        if (nbt.hasKey("nbtListOp")) {
+            this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
+        }
+    }
+
+    @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.NO_INPUT;
     }
 }

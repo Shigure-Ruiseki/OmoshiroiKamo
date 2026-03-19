@@ -1,20 +1,22 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import vazkii.botania.api.mana.IManaPool;
 
-public class ManaInput extends AbstractRecipeInput {
+public class ManaInput extends AbstractModularRecipeInput {
 
     private int amount;
-    private boolean perTick;
 
     public ManaInput(int amount, boolean perTick) {
         this.amount = amount;
-        this.perTick = perTick;
+        this.interval = perTick ? 1 : 0;
     }
 
     public ManaInput(int amount) {
@@ -25,8 +27,9 @@ public class ManaInput extends AbstractRecipeInput {
         return amount;
     }
 
+    @Override
     public boolean isPerTick() {
-        return perTick;
+        return interval > 0; // Check interval to determine if it's per-tick
     }
 
     @Override
@@ -60,6 +63,8 @@ public class ManaInput extends AbstractRecipeInput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
@@ -67,21 +72,15 @@ public class ManaInput extends AbstractRecipeInput {
 
         this.amount = json.get("mana")
             .getAsInt();
-        this.perTick = false;
-        if (json.has("perTick")) {
-            this.perTick = json.get("perTick")
-                .getAsBoolean();
-        } else if (json.has("pertick")) {
-            this.perTick = json.get("pertick")
-                .getAsBoolean();
-        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (!consume) json.addProperty("consume", false);
         json.addProperty("mana", amount);
-        json.addProperty("perTick", perTick);
+        if (interval != 0) {
+            json.addProperty("pertick", interval);
+        }
     }
 
     @Override
@@ -96,7 +95,40 @@ public class ManaInput extends AbstractRecipeInput {
     }
 
     @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        ManaInput result = new ManaInput(amount * multiplier, isPerTick());
+        result.interval = this.interval;
+        result.consume = this.consume;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "mana");
+        nbt.setInteger("amount", amount);
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.amount = nbt.getInteger("amount");
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+    }
+
+    @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.NO_MANA;
     }
 }

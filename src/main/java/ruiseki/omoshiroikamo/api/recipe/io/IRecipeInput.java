@@ -1,40 +1,48 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
-import java.util.List;
+import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.json.IJsonMaterial;
 
 /**
- * Interface for recipe input requirements.
- * Implementations define how to check and consume inputs from ports.
+ * Base interface for recipe input requirements.
+ * This interface is independent of the Modular Port system.
+ * For Modular Port-specific functionality, see IModularRecipeInput.
  */
 public interface IRecipeInput extends IJsonMaterial {
 
     /**
-     * Get the port type this input requires.
+     * Whether this input should be processed per tick.
      */
-    IPortType.Type getPortType();
+    boolean isPerTick();
 
     /**
-     * Check if this input can be satisfied and optionally consume it.
-     *
-     * @param ports      List of input ports to check/consume from
-     * @param multiplier The batch size multiplier
-     * @param simulate   If true, only check without consuming. If false, actually
-     *                   consume.
-     * @return true if the requirement is/was satisfied
+     * Get the interval (in ticks) for per-tick processing.
+     * 0 means not per-tick.
      */
-    boolean process(List<IModularPort> ports, int multiplier, boolean simulate);
+    int getInterval();
 
     /**
-     * Legacy support for single batch processing.
+     * Create a copy of this input.
      */
-    default boolean process(List<IModularPort> ports, boolean simulate) {
-        return process(ports, 1, simulate);
-    }
+    IRecipeInput copy();
+
+    /**
+     * Create a copy of this input with a multi-batch quantity.
+     */
+    IRecipeInput copy(int multiplier);
+
+    /**
+     * Write this input state to NBT.
+     */
+    void writeToNBT(NBTTagCompound nbt);
+
+    /**
+     * Read this input state from NBT.
+     */
+    void readFromNBT(NBTTagCompound nbt);
 
     /**
      * Get the amount required for this input.
@@ -51,4 +59,20 @@ public interface IRecipeInput extends IJsonMaterial {
      * Accept a visitor to perform operations on this input.
      */
     void accept(IRecipeVisitor visitor);
+
+    /**
+     * Get the TickResult to return if this input fails during processing.
+     * 
+     * @param perTick Whether this is a per-tick check
+     */
+    default RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.NO_INPUT;
+    }
+
+    /**
+     * Cast this input to IModularRecipeInput if possible.
+     */
+    default IModularRecipeInput asModular() {
+        return this instanceof IModularRecipeInput ? (IModularRecipeInput) this : null;
+    }
 }

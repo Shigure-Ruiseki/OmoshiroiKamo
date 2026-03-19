@@ -206,6 +206,27 @@ public class NBTListOperation {
         return new NBTListOperation(path, patterns);
     }
 
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("path", path);
+        NBTTagList patternList = new NBTTagList();
+        for (NBTPattern pattern : patterns) {
+            NBTTagCompound pTag = new NBTTagCompound();
+            pattern.writeToNBT(pTag);
+            patternList.appendTag(pTag);
+        }
+        nbt.setTag("patterns", patternList);
+    }
+
+    public static NBTListOperation readFromNBT(NBTTagCompound nbt) {
+        String path = nbt.getString("path");
+        NBTTagList patternList = nbt.getTagList("patterns", 10); // 10 is TAG_COMPOUND
+        List<NBTPattern> patterns = new ArrayList<>();
+        for (int i = 0; i < patternList.tagCount(); i++) {
+            patterns.add(NBTPattern.readFromNBT(patternList.getCompoundTagAt(i)));
+        }
+        return new NBTListOperation(path, patterns);
+    }
+
     @Override
     public String toString() {
         return "NBTListOperation{path='" + path + "', patterns=" + patterns.size() + "}";
