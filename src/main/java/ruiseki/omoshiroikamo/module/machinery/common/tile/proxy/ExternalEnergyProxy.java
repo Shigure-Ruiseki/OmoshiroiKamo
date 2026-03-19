@@ -41,9 +41,12 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
         Integer okStored = delegate(IOKEnergyTile.class, IOKEnergyTile::getEnergyStored, null, true);
         if (okStored != null) return okStored;
 
-        IEnergyHandler handler = getTargetAs(IEnergyHandler.class, true);
-        if (handler != null) {
-            return handler.getEnergyStored(findFunctionalSide(handler));
+        IEnergyConnection connection = getTargetAs(IEnergyConnection.class, true);
+        if (connection != null) {
+            ForgeDirection side = findFunctionalSide(connection);
+            if (connection instanceof IEnergyHandler IEH) return IEH.getEnergyStored(side);
+            if (connection instanceof IEnergyReceiver IER) return IER.getEnergyStored(side);
+            if (connection instanceof IEnergyProvider IEP) return IEP.getEnergyStored(side);
         }
 
         notifyError();
@@ -55,9 +58,12 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
         Integer okMax = delegate(IOKEnergyTile.class, IOKEnergyTile::getMaxEnergyStored, null, true);
         if (okMax != null) return okMax;
 
-        IEnergyHandler handler = getTargetAs(IEnergyHandler.class, true);
-        if (handler != null) {
-            return handler.getMaxEnergyStored(findFunctionalSide(handler));
+        IEnergyConnection connection = getTargetAs(IEnergyConnection.class, true);
+        if (connection != null) {
+            ForgeDirection side = findFunctionalSide(connection);
+            if (connection instanceof IEnergyHandler IEH) return IEH.getMaxEnergyStored(side);
+            if (connection instanceof IEnergyReceiver IER) return IER.getMaxEnergyStored(side);
+            if (connection instanceof IEnergyProvider IEP) return IEP.getMaxEnergyStored(side);
         }
 
         notifyError();
@@ -79,7 +85,7 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
         Boolean okConnect = delegate(IOKEnergyTile.class, tile -> tile.canConnectEnergy(side), null, true);
         if (okConnect != null) return okConnect;
 
-        return delegate(IEnergyHandler.class, h -> h.canConnectEnergy(side), false, true);
+        return delegate(IEnergyConnection.class, h -> h.canConnectEnergy(side), false, true);
     }
 
     // ========== IOKEnergySink Implementation (Receive) ==========

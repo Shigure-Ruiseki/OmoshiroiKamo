@@ -35,7 +35,6 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
     protected final ChunkCoordinates targetPosition;
     protected TileEntity targetTileEntity;
     protected EnumIO ioMode;
-    protected boolean errorNotified = false;
     protected ForgeDirection cachedSide = ForgeDirection.UNKNOWN;
 
     public AbstractExternalProxy(TEMachineController controller, ChunkCoordinates targetPosition, EnumIO ioMode) {
@@ -68,9 +67,6 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
 
     @Override
     public void setTargetTileEntity(TileEntity tileEntity) {
-        if (this.targetTileEntity != tileEntity) {
-            this.errorNotified = false; // Reset error notification flag
-        }
         this.targetTileEntity = tileEntity;
     }
 
@@ -208,8 +204,7 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
      * Uses a flag to prevent spam.
      */
     protected void notifyError() {
-        if (!errorNotified && getWorld() != null && !getWorld().isRemote) {
-            errorNotified = true;
+        if (getWorld() != null && !getWorld().isRemote && controller.shouldNotifyError(targetPosition)) {
             String msg = buildErrorMessage();
             notifyNearbyPlayers(msg);
         }

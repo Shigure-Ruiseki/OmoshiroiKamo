@@ -3,9 +3,11 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -114,6 +116,9 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // Redstone Control - Inherited from AbstractTE
 
+    // External Port Error Cache (Persistent state for transient proxies)
+    private final Set<ChunkCoordinates> reportedErrorPorts = new HashSet<>();
+
     // External Port Configurations
     private final Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalPortConfigs = new HashMap<>();
 
@@ -190,6 +195,26 @@ public class TEMachineController extends AbstractMBModifierTE
         return true;
     }
 
+    /**
+     * Checks if an error should be notified for the given port position.
+     * Prevents spam by only allowing one notification per coordinate until reset.
+     *
+     * @param pos The position of the port
+     * @return true if this is the first time an error is reported for this position
+     */
+    public boolean shouldNotifyError(ChunkCoordinates pos) {
+        if (reportedErrorPorts.contains(pos)) return false;
+        reportedErrorPorts.add(pos);
+        return true;
+    }
+
+    /**
+     * Reset the error cache for all ports.
+     */
+    public void resetErrorCache() {
+        reportedErrorPorts.clear();
+    }
+
     // Transient flag to trigger tint packet resend on load
     private boolean needsTintResend = false;
 
@@ -229,7 +254,8 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public void setTier(int tier) {
-        // No-op: Controller tier is calculated from structure components, not set directly
+        // No-op: Controller tier is calculated from structure components, not set
+        // directly
     }
 
     public int getComponentTier(String componentName) {
@@ -647,6 +673,7 @@ public class TEMachineController extends AbstractMBModifierTE
      * Only processes on server side to ensure proper sync.
      */
     private void updateStructureFromBlueprint() {
+        resetErrorCache();
         // Skip if on client side
         if (worldObj != null && worldObj.isRemote) return;
 
