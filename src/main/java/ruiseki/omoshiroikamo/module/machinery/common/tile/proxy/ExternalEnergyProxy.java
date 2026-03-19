@@ -13,8 +13,8 @@ import ruiseki.omoshiroikamo.core.energy.IOKEnergyIO;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
-import ruiseki.omoshiroikamo.core.energy.capability.enderio.EnderIOIntegration;
-import ruiseki.omoshiroikamo.core.lib.LibMods;
+import ruiseki.omoshiroikamo.core.energy.capability.EnergyIntegrationRegistry;
+import ruiseki.omoshiroikamo.core.energy.capability.IEnergyIntegrationDelegate;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -45,10 +45,11 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
         Integer okStored = delegate(IOKEnergyTile.class, IOKEnergyTile::getEnergyStored, null, true);
         if (okStored != null) return okStored;
 
-        // Try EnderIO (lazy-loaded)
-        if (LibMods.EnderIO.isLoaded()) {
-            Integer enderIOStored = EnderIOIntegration.getEnergyStored(getTargetTileEntity());
-            if (enderIOStored != null) return enderIOStored;
+        // Try registered energy integration delegates (EnderIO, etc.)
+        Object te = getTargetTileEntity();
+        for (IEnergyIntegrationDelegate integration : EnergyIntegrationRegistry.getDelegates()) {
+            Integer result = integration.getEnergyStored(te);
+            if (result != null) return result;
         }
 
         // Try CoFH RF API
@@ -70,10 +71,11 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
         Integer okMax = delegate(IOKEnergyTile.class, IOKEnergyTile::getMaxEnergyStored, null, true);
         if (okMax != null) return okMax;
 
-        // Try EnderIO (lazy-loaded)
-        if (LibMods.EnderIO.isLoaded()) {
-            Integer enderIOMax = EnderIOIntegration.getMaxEnergyStored(getTargetTileEntity());
-            if (enderIOMax != null) return enderIOMax;
+        // Try registered energy integration delegates (EnderIO, etc.)
+        Object te = getTargetTileEntity();
+        for (IEnergyIntegrationDelegate integration : EnergyIntegrationRegistry.getDelegates()) {
+            Integer result = integration.getMaxEnergyStored(te);
+            if (result != null) return result;
         }
 
         // Try CoFH RF API
@@ -119,10 +121,11 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
             true);
         if (okReceived != null) return okReceived;
 
-        // Try EnderIO (lazy-loaded)
-        if (LibMods.EnderIO.isLoaded()) {
-            Integer enderIOResult = EnderIOIntegration.tryReceive(getTargetTileEntity(), side, amount, simulate);
-            if (enderIOResult != null) return enderIOResult;
+        // Try registered energy integration delegates (EnderIO, etc.)
+        Object te = getTargetTileEntity();
+        for (IEnergyIntegrationDelegate integration : EnergyIntegrationRegistry.getDelegates()) {
+            Integer result = integration.tryReceive(te, side, amount, simulate);
+            if (result != null) return result;
         }
 
         // Try CoFH RF API
@@ -148,10 +151,11 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
             true);
         if (okExtracted != null) return okExtracted;
 
-        // Try EnderIO (lazy-loaded)
-        if (LibMods.EnderIO.isLoaded()) {
-            Integer enderIOResult = EnderIOIntegration.tryExtract(getTargetTileEntity(), side, amount, simulate);
-            if (enderIOResult != null) return enderIOResult;
+        // Try registered energy integration delegates (EnderIO, etc.)
+        Object te = getTargetTileEntity();
+        for (IEnergyIntegrationDelegate integration : EnergyIntegrationRegistry.getDelegates()) {
+            Integer result = integration.tryExtract(te, side, amount, simulate);
+            if (result != null) return result;
         }
 
         // Try CoFH RF API
