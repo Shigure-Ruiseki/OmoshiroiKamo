@@ -115,12 +115,13 @@ public class ItemOutput extends AbstractRecipeOutput {
 
         // Apply NBT modifications
         if (nbtExpressions != null || nbtListOp != null) {
-            // Ensure NBT exists
-            if (newStack.getTagCompound() == null) {
-                newStack.setTagCompound(new NBTTagCompound());
+            NBTTagCompound nbt = newStack.getTagCompound();
+            boolean hadNBT = (nbt != null);
+
+            if (nbt == null) {
+                nbt = new NBTTagCompound();
             }
 
-            NBTTagCompound nbt = newStack.getTagCompound();
             ConditionContext context = new ConditionContext(null, 0, 0, 0);
 
             // Apply expression-based NBT writes
@@ -135,6 +136,10 @@ public class ItemOutput extends AbstractRecipeOutput {
             // Apply NBT list operations
             if (nbtListOp != null) {
                 nbtListOp.apply(nbt);
+            }
+
+            if (!nbt.hasNoTags() || hadNBT) {
+                newStack.setTagCompound(nbt);
             }
         }
 
