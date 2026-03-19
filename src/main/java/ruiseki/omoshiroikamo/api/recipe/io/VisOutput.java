@@ -11,6 +11,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 
 public class VisOutput extends AbstractRecipeOutput {
 
@@ -47,31 +48,26 @@ public class VisOutput extends AbstractRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            if (!(port instanceof AbstractVisPortTE)) continue;
+            if (!(port instanceof IAspectContainer)) continue;
 
-            AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-            int currentVis = visPort.getVisAmount(aspect);
-            int maxVis = visPort.getMaxVisPerAspect();
-            int space = maxVis - currentVis;
-
-            if (space > 0) {
-                int toAdd = Math.min(remaining, space);
-                visPort.addVis(aspect, toAdd);
-                remaining -= toAdd;
-            }
+            IAspectContainer visPort = (IAspectContainer) port;
+            int accepted = (int) remaining - visPort.addToContainer(aspect, (int) remaining);
+            remaining -= accepted;
             if (remaining <= 0) break;
         }
     }
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.VIS && port instanceof AbstractVisPortTE;
+        return port.getPortType() == IPortType.Type.VIS && port instanceof IAspectContainer;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-        return visPort.getMaxVisPerAspect();
+        if (port instanceof AbstractVisPortTE) {
+            return ((AbstractVisPortTE) port).getMaxVisPerAspect();
+        }
+        return 100; // Default capacity for Vis if not specific TE
     }
 
     @Override

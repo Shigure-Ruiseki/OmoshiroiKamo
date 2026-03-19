@@ -7,13 +7,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
 public class FluidOutput extends AbstractRecipeOutput {
 
@@ -58,24 +58,24 @@ public class FluidOutput extends AbstractRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            if (!(port instanceof AbstractFluidPortTE)) continue;
+            if (!(port instanceof IFluidHandler)) continue;
 
-            AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
+            IFluidHandler fluidPort = (IFluidHandler) port;
             FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
             if (tankInfo == null || tankInfo.length == 0) continue;
 
             int tankCapacity = tankInfo[0].capacity;
-            FluidStack stored = fluidPort.getStoredFluid();
+            FluidStack stored = tankInfo[0].fluid;
             int currentAmount = stored != null ? stored.amount : 0;
             int space = tankCapacity - currentAmount;
 
             if (stored == null || stored.isFluidEqual(output)) {
-                int fill = Math.min(remaining, space);
-                if (fill > 0) {
+                int fillAmount = Math.min(remaining, space);
+                if (fillAmount > 0) {
                     FluidStack toFill = output.copy();
-                    toFill.amount = fill;
-                    fluidPort.internalFill(toFill, true);
-                    remaining -= fill;
+                    toFill.amount = fillAmount;
+                    fluidPort.fill(ForgeDirection.UNKNOWN, toFill, true);
+                    remaining -= fillAmount;
                 }
             }
             if (remaining <= 0) break;
@@ -84,20 +84,20 @@ public class FluidOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.FLUID && port instanceof AbstractFluidPortTE;
+        return port.getPortType() == IPortType.Type.FLUID && port instanceof IFluidHandler;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
+        if (!(port instanceof IFluidHandler)) return 0;
+        IFluidHandler fluidPort = (IFluidHandler) port;
         FluidTankInfo[] tankInfo = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
-        FluidStack stored = fluidPort.getStoredFluid();
         FluidStack output = getOutput();
 
         if (tankInfo != null && tankInfo.length > 0) {
             long totalAvailable = 0;
-            // For simplicity, we assume one tank per port as per current implementation
             for (FluidTankInfo info : tankInfo) {
+                FluidStack stored = info.fluid;
                 if (stored == null || output == null || stored.isFluidEqual(output)) {
                     int currentAmount = stored != null ? stored.amount : 0;
                     int space = info.capacity - currentAmount;

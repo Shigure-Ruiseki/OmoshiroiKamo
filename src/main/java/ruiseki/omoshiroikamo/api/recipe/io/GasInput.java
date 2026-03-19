@@ -1,12 +1,14 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.google.gson.JsonObject;
 
 import mekanism.api.gas.GasStack;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 
 public class GasInput extends AbstractRecipeInput {
 
@@ -38,20 +40,20 @@ public class GasInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractGasPortTE;
+        return port.getPortType() == IPortType.Type.GAS && port instanceof IGasHandler;
     }
 
     @Override
     protected long consume(IModularPort port, long remaining, boolean simulate) {
-        AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
-        GasStack drawn = gasPort.internalDrawGas((int) remaining, false);
+        IGasHandler gasPort = (IGasHandler) port;
+        GasStack drawn = gasPort.drawGas(ForgeDirection.UNKNOWN, (int) remaining, false);
         if (drawn != null && drawn.amount > 0) {
             if (gasName == null || gasName.isEmpty()
                 || drawn.getGas()
                     .getName()
                     .equals(gasName)) {
                 if (!simulate) {
-                    gasPort.internalDrawGas(drawn.amount, true);
+                    gasPort.drawGas(ForgeDirection.UNKNOWN, drawn.amount, true);
                 }
                 return drawn.amount;
             }

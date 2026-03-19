@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 
 public class VisInput extends AbstractRecipeInput {
 
@@ -38,7 +38,7 @@ public class VisInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractVisPortTE;
+        return port.getPortType() == IPortType.Type.VIS && port instanceof IAspectContainer;
     }
 
     @Override
@@ -46,14 +46,14 @@ public class VisInput extends AbstractRecipeInput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return 0;
 
-        AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-        int stored = visPort.getVisAmount(aspect);
+        IAspectContainer visPort = (IAspectContainer) port;
+        int stored = visPort.containerContains(aspect);
         if (stored > 0) {
-            int extract = (int) Math.min(stored, remaining);
+            int extract = (int) Math.min((long) stored, remaining);
             if (!simulate) {
-                visPort.drainVis(aspect, extract);
+                visPort.takeFromContainer(aspect, extract);
             }
-            return extract;
+            return (long) extract;
         }
         return 0;
     }

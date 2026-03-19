@@ -9,7 +9,8 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
+import vazkii.botania.api.mana.IManaPool;
+import vazkii.botania.api.mana.spark.ISparkAttachable;
 
 public class ManaOutput extends AbstractRecipeOutput {
 
@@ -45,10 +46,13 @@ public class ManaOutput extends AbstractRecipeOutput {
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.MANA) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) continue;
+            if (!(port instanceof IManaPool)) continue;
 
-            AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-            int space = manaPort.getAvailableSpaceForMana();
+            IManaPool manaPort = (IManaPool) port;
+            int space = 0;
+            if (port instanceof ISparkAttachable) {
+                space = ((ISparkAttachable) port).getAvailableSpaceForMana();
+            }
 
             if (space > 0) {
                 int toAdd = (int) Math.min(remaining, (long) space);
@@ -61,13 +65,17 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.MANA && port instanceof AbstractManaPortTE;
+        return port.getPortType() == IPortType.Type.MANA && port instanceof IManaPool;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-        return (long) manaPort.getCurrentMana() + (long) manaPort.getAvailableSpaceForMana();
+        if (port instanceof IManaPool && port instanceof ISparkAttachable) {
+            IManaPool manaPort = (IManaPool) port;
+            ISparkAttachable sparkPort = (ISparkAttachable) port;
+            return (long) manaPort.getCurrentMana() + (long) sparkPort.getAvailableSpaceForMana();
+        }
+        return 0;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import com.google.gson.JsonObject;
 
@@ -8,7 +11,6 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.json.FluidJson;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
 public class FluidInput extends AbstractRecipeInput {
 
@@ -40,19 +42,24 @@ public class FluidInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractFluidPortTE;
+        return port.getPortType() == IPortType.Type.FLUID && port instanceof IFluidHandler;
     }
 
     @Override
     protected long consume(IModularPort port, long remaining, boolean simulate) {
-        AbstractFluidPortTE fluidPort = (AbstractFluidPortTE) port;
-        FluidStack stored = fluidPort.getStoredFluid();
+        IFluidHandler fluidPort = (IFluidHandler) port;
+        FluidStack stored = null;
+
+        FluidTankInfo[] infos = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
+        if (infos != null && infos.length > 0) {
+            stored = infos[0].fluid;
+        }
+
         if (stored != null && stored.isFluidEqual(required)) {
-            int drain = (int) Math.min(stored.amount, remaining);
-            if (!simulate) {
-                fluidPort.internalDrain(drain, true);
-            }
-            return drain;
+            int drainAmount = (int) Math.min(stored.amount, remaining);
+            FluidStack drained = fluidPort
+                .drain(ForgeDirection.UNKNOWN, new FluidStack(required, drainAmount), !simulate);
+            return drained != null ? drained.amount : 0;
         }
         return 0;
     }

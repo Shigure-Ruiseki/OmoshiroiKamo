@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
+import vazkii.botania.api.mana.IManaPool;
 
 public class ManaInput extends AbstractRecipeInput {
 
@@ -41,17 +41,17 @@ public class ManaInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractManaPortTE;
+        return port.getPortType() == IPortType.Type.MANA && port instanceof IManaPool;
     }
 
     @Override
     protected long consume(IModularPort port, long remaining, boolean simulate) {
-        AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
+        IManaPool manaPort = (IManaPool) port;
         int stored = manaPort.getCurrentMana();
         if (stored > 0) {
             int extract = (int) Math.min((long) stored, remaining);
             if (!simulate) {
-                manaPort.extractMana(extract);
+                manaPort.recieveMana(-extract);
             }
             return (long) extract;
         }

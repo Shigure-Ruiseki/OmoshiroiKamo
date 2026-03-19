@@ -7,20 +7,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType.Direction;
-import ruiseki.omoshiroikamo.api.modular.IPortType.Type;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.aspects.IAspectContainer;
 
 /**
  * Abstract base class for Vis ports.
  * Stores Vis as AspectList with unified 16-tier system.
  */
-public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
+public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort, IAspectContainer {
 
     @NBTPersist
     protected int tier = 0; // 0-15 (display: 1-16)
@@ -111,6 +110,68 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
             }
         }
         return total;
+    }
+
+    @Override
+    public AspectList getAspects() {
+        return visStored;
+    }
+
+    @Override
+    public void setAspects(AspectList aspects) {
+        this.visStored = aspects;
+        markDirty();
+    }
+
+    @Override
+    public boolean doesContainerAccept(Aspect tag) {
+        return isPrimalAspect(tag);
+    }
+
+    @Override
+    public int addToContainer(Aspect tag, int amount) {
+        return addVis(tag, amount);
+    }
+
+    @Override
+    public boolean takeFromContainer(Aspect tag, int amount) {
+        int drained = drainVis(tag, amount);
+        return drained >= amount;
+    }
+
+    @Override
+    public boolean takeFromContainer(AspectList ot) {
+        for (Aspect aspect : ot.getAspects()) {
+            if (aspect != null && visStored.getAmount(aspect) < ot.getAmount(aspect)) {
+                return false;
+            }
+        }
+        for (Aspect aspect : ot.getAspects()) {
+            if (aspect != null) {
+                drainVis(aspect, ot.getAmount(aspect));
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean doesContainerContainAmount(Aspect tag, int amount) {
+        return visStored.getAmount(tag) >= amount;
+    }
+
+    @Override
+    public boolean doesContainerContain(AspectList ot) {
+        for (Aspect aspect : ot.getAspects()) {
+            if (aspect != null && visStored.getAmount(aspect) < ot.getAmount(aspect)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int containerContains(Aspect tag) {
+        return visStored.getAmount(tag);
     }
 
     @Override

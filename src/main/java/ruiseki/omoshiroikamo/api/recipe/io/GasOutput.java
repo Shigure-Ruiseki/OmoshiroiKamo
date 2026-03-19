@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 
 public class GasOutput extends AbstractRecipeOutput {
 
@@ -50,11 +50,11 @@ public class GasOutput extends AbstractRecipeOutput {
             if (port.getPortType() != IPortType.Type.GAS) continue;
             if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
 
-            if (!(port instanceof AbstractGasPortTE)) continue;
+            if (!(port instanceof IGasHandler)) continue;
 
-            AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+            IGasHandler gasPort = (IGasHandler) port;
             GasStack insertStack = new GasStack(gas, remaining);
-            int accepted = gasPort.internalReceiveGas(insertStack, true);
+            int accepted = gasPort.receiveGas(ForgeDirection.UNKNOWN, insertStack, true);
             remaining -= accepted;
             if (remaining <= 0) break;
         }
@@ -62,12 +62,12 @@ public class GasOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.GAS && port instanceof AbstractGasPortTE;
+        return port.getPortType() == IPortType.Type.GAS && port instanceof IGasHandler;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+        IGasHandler gasPort = (IGasHandler) port;
         GasTankInfo[] tankInfo = gasPort.getTankInfo(ForgeDirection.UNKNOWN);
         if (tankInfo != null && tankInfo.length > 0) {
             long total = 0;

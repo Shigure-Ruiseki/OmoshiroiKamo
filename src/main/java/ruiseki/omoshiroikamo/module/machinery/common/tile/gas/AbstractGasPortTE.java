@@ -152,7 +152,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
     }
 
     public boolean canReceiveGas(ForgeDirection from) {
-        return canInput(from) && isRedstoneActive();
+        return from == ForgeDirection.UNKNOWN || (canInput(from) && isRedstoneActive());
     }
 
     @Override
@@ -173,7 +173,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
     }
 
     public boolean canDrawGas(ForgeDirection from) {
-        return canOutput(from) && isRedstoneActive();
+        return from == ForgeDirection.UNKNOWN || (canOutput(from) && isRedstoneActive());
     }
 
     @Override

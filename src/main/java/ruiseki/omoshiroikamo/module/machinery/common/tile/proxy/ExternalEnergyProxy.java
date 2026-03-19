@@ -13,16 +13,19 @@ import ruiseki.omoshiroikamo.core.energy.IOKEnergyIO;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.core.energy.capability.enderio.EnderIOIntegration;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * External Energy Port Proxy.
  * Adapts an external energy tile to be used as a modular port.
- * Supports IOKEnergy and CoFH RF API.
+ * Supports IOKEnergy, CoFH RF API, and EnderIO (lazy-loaded).
  *
  * Design Pattern: Adapter Pattern
  * - Implements IOKEnergyIO (which combines IOKEnergySink and IOKEnergySource)
  * - Uses AbstractExternalProxy for common proxy functionality
+ * - Lazy-loads EnderIO integration only when the mod is present
  */
 public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEnergyIO {
 
@@ -38,12 +41,20 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
     // ========== IOKEnergyTile Implementation (Base) ==========
     @Override
     public int getEnergyStored() {
+        // Try IOKEnergy first
         Integer okStored = delegate(IOKEnergyTile.class, IOKEnergyTile::getEnergyStored, null, true);
         if (okStored != null) return okStored;
 
+        // Try EnderIO (lazy-loaded)
+        if (LibMods.EnderIO.isLoaded()) {
+            Integer enderIOStored = EnderIOIntegration.getEnergyStored(getTargetTileEntity());
+            if (enderIOStored != null) return enderIOStored;
+        }
+
+        // Try CoFH RF API
         IEnergyConnection connection = getTargetAs(IEnergyConnection.class, true);
         if (connection != null) {
-            ForgeDirection side = findFunctionalSide(connection);
+            ForgeDirection side = findConnectableSide(connection);
             if (connection instanceof IEnergyHandler IEH) return IEH.getEnergyStored(side);
             if (connection instanceof IEnergyReceiver IER) return IER.getEnergyStored(side);
             if (connection instanceof IEnergyProvider IEP) return IEP.getEnergyStored(side);
@@ -55,12 +66,20 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
 
     @Override
     public int getMaxEnergyStored() {
+        // Try IOKEnergy first
         Integer okMax = delegate(IOKEnergyTile.class, IOKEnergyTile::getMaxEnergyStored, null, true);
         if (okMax != null) return okMax;
 
+        // Try EnderIO (lazy-loaded)
+        if (LibMods.EnderIO.isLoaded()) {
+            Integer enderIOMax = EnderIOIntegration.getMaxEnergyStored(getTargetTileEntity());
+            if (enderIOMax != null) return enderIOMax;
+        }
+
+        // Try CoFH RF API
         IEnergyConnection connection = getTargetAs(IEnergyConnection.class, true);
         if (connection != null) {
-            ForgeDirection side = findFunctionalSide(connection);
+            ForgeDirection side = findConnectableSide(connection);
             if (connection instanceof IEnergyHandler IEH) return IEH.getMaxEnergyStored(side);
             if (connection instanceof IEnergyReceiver IER) return IER.getMaxEnergyStored(side);
             if (connection instanceof IEnergyProvider IEP) return IEP.getMaxEnergyStored(side);
@@ -92,6 +111,7 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
 
     @Override
     public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
+        // Try IOKEnergySink first
         Integer okReceived = delegate(
             IOKEnergySink.class,
             sink -> sink.receiveEnergy(side, amount, simulate),
@@ -99,9 +119,16 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
             true);
         if (okReceived != null) return okReceived;
 
+        // Try EnderIO (lazy-loaded)
+        if (LibMods.EnderIO.isLoaded()) {
+            Integer enderIOResult = EnderIOIntegration.tryReceive(getTargetTileEntity(), side, amount, simulate);
+            if (enderIOResult != null) return enderIOResult;
+        }
+
+        // Try CoFH RF API
         IEnergyReceiver receiver = getTargetAs(IEnergyReceiver.class, true);
         if (receiver != null) {
-            ForgeDirection targetSide = (side == ForgeDirection.UNKNOWN) ? findFunctionalSide(receiver) : side;
+            ForgeDirection targetSide = (side == ForgeDirection.UNKNOWN) ? findReceiveSide(receiver) : side;
             return receiver.receiveEnergy(targetSide, amount, simulate);
         }
 
@@ -113,6 +140,7 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
 
     @Override
     public int extractEnergy(ForgeDirection side, int amount, boolean simulate) {
+        // Try IOKEnergySource first
         Integer okExtracted = delegate(
             IOKEnergySource.class,
             source -> source.extractEnergy(side, amount, simulate),
@@ -120,9 +148,16 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
             true);
         if (okExtracted != null) return okExtracted;
 
+        // Try EnderIO (lazy-loaded)
+        if (LibMods.EnderIO.isLoaded()) {
+            Integer enderIOResult = EnderIOIntegration.tryExtract(getTargetTileEntity(), side, amount, simulate);
+            if (enderIOResult != null) return enderIOResult;
+        }
+
+        // Try CoFH RF API
         IEnergyProvider provider = getTargetAs(IEnergyProvider.class, true);
         if (provider != null) {
-            ForgeDirection targetSide = (side == ForgeDirection.UNKNOWN) ? findFunctionalSide(provider) : side;
+            ForgeDirection targetSide = (side == ForgeDirection.UNKNOWN) ? findExtractSide(provider) : side;
             return provider.extractEnergy(targetSide, amount, simulate);
         }
 
@@ -131,10 +166,10 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
     }
 
     /**
-     * Finds a functional side for the given energy handler.
+     * Finds a side that can connect for status queries.
      * Uses cached side if available, otherwise probes all 6 sides.
      */
-    private ForgeDirection findFunctionalSide(IEnergyConnection handler) {
+    private ForgeDirection findConnectableSide(IEnergyConnection handler) {
         if (cachedSide != ForgeDirection.UNKNOWN && handler.canConnectEnergy(cachedSide)) {
             return cachedSide;
         }
@@ -146,6 +181,68 @@ public class ExternalEnergyProxy extends AbstractExternalProxy implements IOKEne
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             if (handler.canConnectEnergy(dir)) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+
+        return ForgeDirection.UNKNOWN;
+    }
+
+    /**
+     * Find a side that can receive energy.
+     * Tests actual receiveEnergy capability with simulation.
+     * This is critical for EnderIO CapBank which has directional input/output faces.
+     */
+    private ForgeDirection findReceiveSide(IEnergyReceiver receiver) {
+        // Check cached side first (with actual transfer test)
+        if (cachedSide != ForgeDirection.UNKNOWN) {
+            if (receiver.canConnectEnergy(cachedSide) && receiver.receiveEnergy(cachedSide, 1, true) > 0) {
+                return cachedSide;
+            }
+        }
+
+        // Try UNKNOWN (omni-directional)
+        if (receiver.canConnectEnergy(ForgeDirection.UNKNOWN)
+            && receiver.receiveEnergy(ForgeDirection.UNKNOWN, 1, true) > 0) {
+            cachedSide = ForgeDirection.UNKNOWN;
+            return cachedSide;
+        }
+
+        // Probe all 6 sides
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (receiver.canConnectEnergy(dir) && receiver.receiveEnergy(dir, 1, true) > 0) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+
+        return ForgeDirection.UNKNOWN;
+    }
+
+    /**
+     * Find a side that can extract energy.
+     * Tests actual extractEnergy capability with simulation.
+     * This is critical for EnderIO CapBank which has directional input/output faces.
+     */
+    private ForgeDirection findExtractSide(IEnergyProvider provider) {
+        // Check cached side first (with actual transfer test)
+        if (cachedSide != ForgeDirection.UNKNOWN) {
+            if (provider.canConnectEnergy(cachedSide) && provider.extractEnergy(cachedSide, 1, true) > 0) {
+                return cachedSide;
+            }
+        }
+
+        // Try UNKNOWN (omni-directional)
+        if (provider.canConnectEnergy(ForgeDirection.UNKNOWN)
+            && provider.extractEnergy(ForgeDirection.UNKNOWN, 1, true) > 0) {
+            cachedSide = ForgeDirection.UNKNOWN;
+            return cachedSide;
+        }
+
+        // Probe all 6 sides
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (provider.canConnectEnergy(dir) && provider.extractEnergy(dir, 1, true) > 0) {
                 cachedSide = dir;
                 return cachedSide;
             }

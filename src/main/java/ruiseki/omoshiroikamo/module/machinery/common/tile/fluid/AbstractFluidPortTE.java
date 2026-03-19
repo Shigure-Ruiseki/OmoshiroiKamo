@@ -149,7 +149,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     }
 
     public boolean canFill(ForgeDirection from) {
-        return canInput(from) && isRedstoneActive();
+        return from == ForgeDirection.UNKNOWN || (canInput(from) && isRedstoneActive());
     }
 
     @Override
@@ -160,7 +160,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     }
 
     public boolean canDrain(ForgeDirection from) {
-        return canOutput(from) && isRedstoneActive();
+        return from == ForgeDirection.UNKNOWN || (canOutput(from) && isRedstoneActive());
     }
 
     @Override

@@ -35,27 +35,90 @@ public class ExternalGasProxy extends AbstractExternalProxy implements IGasHandl
 
     @Override
     public int receiveGas(ForgeDirection from, GasStack stack, boolean doTransfer) {
-        return delegate(IGasHandler.class, h -> h.receiveGas(from, stack, doTransfer), 0);
+        IGasHandler handler = getTargetAs(IGasHandler.class);
+        if (handler == null) return 0;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findReceiveSide(handler) : from;
+        return handler.receiveGas(targetSide, stack, doTransfer);
     }
 
     @Override
     public GasStack drawGas(ForgeDirection from, int amount, boolean doDraw) {
-        return delegate(IGasHandler.class, h -> h.drawGas(from, amount, doDraw), null);
+        IGasHandler handler = getTargetAs(IGasHandler.class);
+        if (handler == null) return null;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findDrawSide(handler) : from;
+        return handler.drawGas(targetSide, amount, doDraw);
     }
 
     @Override
     public boolean canReceiveGas(ForgeDirection from, Gas gas) {
-        return delegate(IGasHandler.class, h -> h.canReceiveGas(from, gas), false);
+        IGasHandler handler = getTargetAs(IGasHandler.class, true);
+        if (handler == null) return false;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findReceiveSide(handler) : from;
+        return handler.canReceiveGas(targetSide, gas);
     }
 
     @Override
     public boolean canDrawGas(ForgeDirection from, Gas gas) {
-        return delegate(IGasHandler.class, h -> h.canDrawGas(from, gas), false);
+        IGasHandler handler = getTargetAs(IGasHandler.class, true);
+        if (handler == null) return false;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findDrawSide(handler) : from;
+        return handler.canDrawGas(targetSide, gas);
     }
 
     @Override
     public GasTankInfo[] getTankInfo(ForgeDirection from) {
-        return delegate(IGasHandler.class, h -> h.getTankInfo(from), new GasTankInfo[0]);
+        IGasHandler handler = getTargetAs(IGasHandler.class, true);
+        if (handler == null) return new GasTankInfo[0];
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findFunctionalSide(handler) : from;
+        return handler.getTankInfo(targetSide);
+    }
+
+    /**
+     * Finds a side that can receive gas.
+     */
+    private ForgeDirection findReceiveSide(IGasHandler handler) {
+        if (cachedSide != ForgeDirection.UNKNOWN && handler.canReceiveGas(cachedSide, null)) return cachedSide;
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (handler.canReceiveGas(dir, null)) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+        return ForgeDirection.UNKNOWN;
+    }
+
+    /**
+     * Finds a side that can draw gas.
+     */
+    private ForgeDirection findDrawSide(IGasHandler handler) {
+        if (cachedSide != ForgeDirection.UNKNOWN && handler.canDrawGas(cachedSide, null)) return cachedSide;
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (handler.canDrawGas(dir, null)) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+        return ForgeDirection.UNKNOWN;
+    }
+
+    /**
+     * Finds any functional side for status queries.
+     */
+    private ForgeDirection findFunctionalSide(IGasHandler handler) {
+        if (cachedSide != ForgeDirection.UNKNOWN) return cachedSide;
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            GasTankInfo[] info = handler.getTankInfo(dir);
+            if (info != null && info.length > 0) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+        return ForgeDirection.UNKNOWN;
     }
 
     // ========== ITubeConnection Implementation (Delegated) ==========

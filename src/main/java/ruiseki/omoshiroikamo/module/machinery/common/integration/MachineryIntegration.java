@@ -46,6 +46,9 @@ public class MachineryIntegration {
         if (LibMods.AE2FluidCrafting.isLoaded()) {
             AE2FluidIntegration.init();
         }
+        if (LibMods.EnderIO.isLoaded()) {
+            EnderIOIntegration.init();
+        }
         if (LibMods.Mekanism.isLoaded()) {
             MekanismIntegration.init();
         }
@@ -157,6 +160,16 @@ public class MachineryIntegration {
             // BlockResolver.registerProxyFactory(
             // IPortType.Type.VIS,
             // (controller, coords, tile, io) -> new ExternalVisProxy(controller, coords, io));
+        }
+    }
+
+    private static class EnderIOIntegration {
+
+        static void init() {
+            // EnderIO integration is handled directly in ExternalEnergyProxy
+            // via core.energy.capability.enderio.EnderIOIntegration
+            // No special blocks or additional proxy factories needed
+            // This class serves as a marker for consistent integration pattern
         }
     }
 

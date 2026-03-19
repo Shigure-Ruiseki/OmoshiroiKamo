@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 
 public class EssentiaInput extends AbstractRecipeInput {
 
@@ -38,7 +38,7 @@ public class EssentiaInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractEssentiaPortTE;
+        return port.getPortType() == IPortType.Type.ESSENTIA && port instanceof IAspectContainer;
     }
 
     @Override
@@ -46,14 +46,14 @@ public class EssentiaInput extends AbstractRecipeInput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return 0;
 
-        AbstractEssentiaPortTE essentiaPort = (AbstractEssentiaPortTE) port;
+        IAspectContainer essentiaPort = (IAspectContainer) port;
         int stored = essentiaPort.containerContains(aspect);
         if (stored > 0) {
-            int extract = (int) Math.min(stored, remaining);
+            int extract = (int) Math.min((long) stored, remaining);
             if (!simulate) {
                 essentiaPort.takeFromContainer(aspect, extract);
             }
-            return extract;
+            return (long) extract;
         }
         return 0;
     }
