@@ -169,7 +169,6 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularEssentiaInput.name=Essentia Input Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -215,9 +214,11 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     @Override
     public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateEssentiaCapacity();
+        }
         super.readCommon(root);
-        // tier field is loaded by @NBTPersist before this method
-        updateEssentiaCapacity();
 
         aspects = new AspectList();
         NBTTagList aspectList = root.getTagList("aspects", 10);

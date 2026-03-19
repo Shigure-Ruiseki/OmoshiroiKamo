@@ -104,7 +104,6 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularGasInput.name=Gas Input Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -134,9 +133,11 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     @Override
     public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateTankCapacity();
+        }
         super.readCommon(root);
-        // tier field is loaded by @NBTPersist before this method
-        updateTankCapacity();
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }

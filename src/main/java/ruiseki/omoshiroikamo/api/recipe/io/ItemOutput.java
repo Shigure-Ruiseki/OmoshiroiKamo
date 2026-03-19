@@ -80,7 +80,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
             IInventory itemPort = (IInventory) port;
 
             int startSlot = 0;
-            int endSlot = itemPort.getSizeInventory();
+            int endSlot = itemPort.getSizeInventory() - 1;
             if (itemPort instanceof AbstractItemIOPortTE) {
                 startSlot = ((AbstractItemIOPortTE) itemPort).getSlotDefinition()
                     .getMinItemOutput();
@@ -88,7 +88,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
                     .getMaxItemOutput();
             }
 
-            for (int i = startSlot; i < endSlot && remaining > 0; i++) {
+            for (int i = startSlot; i <= endSlot && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);
                 if (stack == null) {
                     int insert = Math.min(remaining, output.getMaxStackSize());
@@ -180,7 +180,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         }
 
         long available = 0;
-        for (int i = min; i < max; i++) {
+        for (int i = min; i <= max; i++) {
             ItemStack stack = itemPort.getStackInSlot(i);
             if (stack == null) {
                 available += limit;

@@ -26,6 +26,7 @@ import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
 public class ItemInput extends AbstractModularRecipeInput {
 
@@ -102,7 +103,19 @@ public class ItemInput extends AbstractModularRecipeInput {
         IInventory itemPort = (IInventory) port;
         long consumed = 0;
 
-        for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
+        int min = 0;
+        int max = itemPort.getSizeInventory() - 1;
+
+        if (itemPort instanceof AbstractItemIOPortTE iiPort) {
+            min = iiPort.getSlotDefinition()
+                .getMinItemInput();
+            max = iiPort.getSlotDefinition()
+                .getMaxItemInput();
+        }
+
+        if (min < 0) return 0;
+
+        for (int i = min; i <= max && remaining > 0; i++) {
             ItemStack stack = itemPort.getStackInSlot(i);
             if (stack != null && stacksMatch(stack)) {
                 int consume = (int) Math.min(stack.stackSize, remaining);

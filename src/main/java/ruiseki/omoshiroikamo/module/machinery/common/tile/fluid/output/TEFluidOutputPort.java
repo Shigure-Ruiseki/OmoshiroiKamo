@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
@@ -54,6 +55,7 @@ public class TEFluidOutputPort extends AbstractFluidPortTE {
             if (tank.getCapacity() != requiredCapacity) {
                 tank.setCapacity(requiredCapacity);
             }
+            markDirty();
         }
     }
 
@@ -64,7 +66,6 @@ public class TEFluidOutputPort extends AbstractFluidPortTE {
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularFluidOutput.name=Fluid Output Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -109,5 +110,17 @@ public class TEFluidOutputPort extends AbstractFluidPortTE {
             return null;
         }
         return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            int requiredCapacity = MachineryConfig.getFluidPortCapacity(tier + 1);
+            if (tank.getCapacity() != requiredCapacity) {
+                tank.setCapacity(requiredCapacity);
+            }
+        }
+        super.readCommon(root);
     }
 }

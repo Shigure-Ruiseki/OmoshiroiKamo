@@ -246,9 +246,11 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateVisCapacity();
+        }
         super.readCommon(root);
-        // tier field is loaded by @NBTPersist before this method
-        updateVisCapacity();
 
         visStored = new AspectList();
         NBTTagList visList = root.getTagList("visStored", 10);

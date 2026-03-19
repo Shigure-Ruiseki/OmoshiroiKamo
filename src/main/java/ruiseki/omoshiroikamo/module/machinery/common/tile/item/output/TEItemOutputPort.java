@@ -58,6 +58,7 @@ public class TEItemOutputPort extends AbstractItemIOPortTE {
                 inv.resize(requiredSlots);
                 slotDefinition.setItemSlots(0, requiredSlots);
             }
+            markDirty();
         }
     }
 
@@ -157,6 +158,15 @@ public class TEItemOutputPort extends AbstractItemIOPortTE {
 
     @Override
     public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            int requiredSlots = MachineryConfig.getItemPortSlots(tier + 1);
+            if (inv.getSlots() != requiredSlots) {
+                inv.resize(requiredSlots);
+                slotDefinition.setItemSlots(0, requiredSlots);
+            }
+        }
+
         super.readCommon(root);
         // Ensure inventory matches tier after loading from NBT
         int requiredSlots = MachineryConfig.getItemPortSlots(tier + 1);

@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
@@ -59,6 +60,7 @@ public class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEne
                 energyStorage.setCapacity(requiredCapacity);
                 energyStorage.setMaxReceive(requiredTransfer);
             }
+            markDirty();
         }
     }
 
@@ -69,7 +71,6 @@ public class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEne
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularEnergyOutput.name=Energy Output Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -128,5 +129,19 @@ public class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEne
     @Override
     public boolean canOutput(ForgeDirection side) {
         return getSideIO(side).canOutput();
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            int requiredCapacity = MachineryConfig.getEnergyPortCapacity(tier + 1);
+            int requiredTransfer = MachineryConfig.getEnergyPortTransfer(tier + 1);
+            if (energyStorage.getMaxEnergyStored() != requiredCapacity) {
+                energyStorage.setCapacity(requiredCapacity);
+                energyStorage.setMaxReceive(requiredTransfer);
+            }
+        }
+        super.readCommon(root);
     }
 }

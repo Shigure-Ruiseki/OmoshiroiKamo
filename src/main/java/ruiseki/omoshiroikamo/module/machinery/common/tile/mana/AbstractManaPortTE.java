@@ -159,9 +159,11 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateManaCapacity();
+        }
         super.readCommon(root);
-        // tier field is loaded by @NBTPersist before this method
-        updateManaCapacity();
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
