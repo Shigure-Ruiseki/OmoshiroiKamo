@@ -14,8 +14,6 @@ import org.lwjgl.opengl.GL11;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType.Direction;
-import ruiseki.omoshiroikamo.api.modular.IPortType.Type;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;

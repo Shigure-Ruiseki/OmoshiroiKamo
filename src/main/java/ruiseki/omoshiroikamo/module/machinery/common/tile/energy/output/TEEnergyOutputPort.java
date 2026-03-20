@@ -10,7 +10,6 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -24,7 +23,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
  * This replaces the legacy per-tier TE classes (TEEnergyOutputPortT1-T6).
  * Old TE classes are automatically remapped to this class on world load.
  */
-public class TEEnergyOutputPort extends AbstractEnergyIOPortTE implements IOKEnergySource {
+public class TEEnergyOutputPort extends AbstractEnergyIOPortTE {
 
     @NBTPersist
     private int tier = 0;

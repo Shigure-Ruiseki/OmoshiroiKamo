@@ -12,7 +12,6 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyIOPortTE;
@@ -28,7 +27,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.AbstractEnergyI
  * Old TE classes are automatically remapped to this class on world load.
  */
 @Optional.Interface(iface = "mekanism.api.lasers.ILaserReceptor", modid = "Mekanism")
-public class TEEnergyInputPort extends AbstractEnergyIOPortTE implements IOKEnergySink, ILaserReceptor {
+public class TEEnergyInputPort extends AbstractEnergyIOPortTE implements ILaserReceptor {
 
     @NBTPersist
     private int tier = 0;

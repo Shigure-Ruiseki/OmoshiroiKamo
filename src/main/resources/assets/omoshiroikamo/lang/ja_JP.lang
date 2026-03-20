@@ -46,6 +46,7 @@ gui.io.none=なし
 gui.io.isActivated=有効
 gui.io.enabled=有効
 gui.io.disabled=無効
+gui.sort_inventory=インベントリをソート
 gui.search_bar.tool_tip=右クリックで検索バーをクリア
 gui.syncNEI=NEIと同期
 gui.craftingState.idle=休止中
