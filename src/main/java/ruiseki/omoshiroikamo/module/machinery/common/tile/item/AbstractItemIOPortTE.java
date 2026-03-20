@@ -2,9 +2,12 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.item;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -12,12 +15,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.EnumSyncValue;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
@@ -28,6 +34,7 @@ import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -177,6 +184,24 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
                 .size(18)
                 .excludeAreaInRecipeViewer());
 
+        IntSyncValue sortTrigger = new IntSyncValue(() -> 0, val -> { if (val > 0) sortInventory(); });
+        syncManager.syncValue("sortTrigger", sortTrigger);
+
+        // Sort Button
+        panel.child(
+            new ButtonWidget<>().size(18)
+                .pos(-20, 24)
+                .overlay(OKGuiTextures.SOLID_DOWN_ARROW_ICON)
+                .onMousePressed(button -> {
+                    if (button == 0) {
+                        Interactable.playButtonClickSound();
+                        sortTrigger.setValue(sortTrigger.getValue() + 1);
+                        return true;
+                    }
+                    return false;
+                })
+                .tooltipStatic(t -> t.addLine(IKey.lang("gui.sort_inventory"))));
+
         syncManager.bindPlayerInventory(data.getPlayer());
         panel.bindPlayerInventory();
         int slots = slotDefinition.getItemSlots();
@@ -220,6 +245,97 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
         return panel;
     }
 
+    public void sortInventory() {
+        int min = slotDefinition.getMinItemOutput();
+        int max = slotDefinition.getMaxItemOutput();
+        if (min < 0) {
+            // If it's pure input port (input ports usually have different min/max though)
+            min = slotDefinition.getMinItemInput();
+            max = slotDefinition.getMaxItemInput();
+        }
+        if (min < 0) return;
+
+        List<ItemStack> allItems = new ArrayList<>();
+        for (int i = min; i <= max; i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack != null) {
+                allItems.add(stack.copy());
+                setInventorySlotContents(i, null);
+            }
+        }
+
+        if (allItems.isEmpty()) return;
+
+        // Group items by their identity while preserving discovery order
+        Map<ItemKey, Long> counts = new LinkedHashMap<>();
+        for (ItemStack stack : allItems) {
+            ItemKey key = new ItemKey(stack);
+            counts.put(key, counts.getOrDefault(key, 0L) + stack.stackSize);
+        }
+
+        List<ItemStack> merged = new ArrayList<>();
+        for (Map.Entry<ItemKey, Long> entry : counts.entrySet()) {
+            ItemKey key = entry.getKey();
+            long total = entry.getValue();
+            int maxStack = key.toStack(1)
+                .getMaxStackSize();
+
+            while (total > 0) {
+                int size = (int) Math.min(total, maxStack);
+                merged.add(key.toStack(size));
+                total -= size;
+            }
+        }
+
+        // Write back
+        for (int i = 0; i < merged.size() && (min + i) <= max; i++) {
+            setInventorySlotContents(min + i, merged.get(i));
+        }
+
+        markDirty();
+        if (worldObj != null && !worldObj.isRemote) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
     @Override
     public void accept(IRecipeVisitor visitor) {}
+
+    private static class ItemKey {
+
+        final Item item;
+        final int meta;
+        final NBTTagCompound tag;
+
+        ItemKey(ItemStack stack) {
+            this.item = stack.getItem();
+            this.meta = stack.getItemDamage();
+            this.tag = stack.hasTagCompound() ? (NBTTagCompound) stack.getTagCompound()
+                .copy() : null;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ItemKey other)) return false;
+            return item == other.item && meta == other.meta
+                && (tag == null ? other.tag == null : tag.equals(other.tag));
+        }
+
+        @Override
+        public int hashCode() {
+            int result = item.hashCode();
+            result = 31 * result + meta;
+            result = 31 * result + (tag != null ? tag.hashCode() : 0);
+            return result;
+        }
+
+        ItemStack toStack(int size) {
+            ItemStack stack = new ItemStack(item, size, meta);
+            if (tag != null) {
+                stack.setTagCompound((NBTTagCompound) tag.copy());
+            }
+            return stack;
+        }
+    }
 }
