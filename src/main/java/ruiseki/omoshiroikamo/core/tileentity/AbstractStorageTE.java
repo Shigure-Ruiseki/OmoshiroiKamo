@@ -45,6 +45,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
+                markDirty();
                 onContentsChange(slot);
             }
         };

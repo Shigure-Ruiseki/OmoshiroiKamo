@@ -21,6 +21,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
@@ -97,8 +98,6 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
     @Override
     public void readCommon(NBTTagCompound root) {
         super.readCommon(root);
-        // Note: Inventory resizing is handled by subclass readCommon() after tier field is loaded from NBT.
-        // Do not resize here - slotDefinition still has constructor values, not tier-specific values.
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -131,6 +130,13 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
             slots[i] = i;
         }
         return slots;
+    }
+
+    @Override
+    public void onContentsChange(int slot) {
+        if (worldObj != null && !worldObj.isRemote) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override
@@ -207,7 +213,7 @@ public abstract class AbstractItemIOPortTE extends AbstractStorageTE implements 
                 new ItemSlot().slot(new ModularSlot(inv, i).slotGroup("inv"))
                     .pos(x, y));
         }
-        syncManager.registerSlotGroup("inv", slots, true);
+        syncManager.registerSlotGroup(new SlotGroup("inv", slots, 100, true));
 
         panel.child(widget);
 

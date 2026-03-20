@@ -90,15 +90,21 @@ public class ItemOutput extends AbstractModularRecipeOutput {
 
             for (int i = startSlot; i <= endSlot && remaining > 0; i++) {
                 ItemStack stack = itemPort.getStackInSlot(i);
-                if (stack == null) {
+                if (stack != null && stacksMatch(stack, output)) {
+                    int space = stack.getMaxStackSize() - stack.stackSize;
+                    if (space > 0) {
+                        int insert = Math.min(remaining, space);
+                        stack.stackSize += insert;
+                        itemPort.setInventorySlotContents(i, stack); // Trigger updates
+                        remaining -= insert;
+                    }
+                }
+            }
+            for (int i = startSlot; i <= endSlot && remaining > 0; i++) {
+                if (itemPort.getStackInSlot(i) == null) {
                     int insert = Math.min(remaining, output.getMaxStackSize());
                     ItemStack newStack = createOutputStack(insert);
                     itemPort.setInventorySlotContents(i, newStack);
-                    remaining -= insert;
-                } else if (stacksMatch(stack, output)) {
-                    int space = stack.getMaxStackSize() - stack.stackSize;
-                    int insert = Math.min(remaining, space);
-                    stack.stackSize += insert;
                     remaining -= insert;
                 }
             }

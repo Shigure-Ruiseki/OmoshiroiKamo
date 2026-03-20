@@ -69,7 +69,6 @@ public class TEItemOutputPort extends AbstractItemIOPortTE {
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularItemOutput.name=Item Output Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -119,19 +118,31 @@ public class TEItemOutputPort extends AbstractItemIOPortTE {
      * @return true if successful, false if slot is full
      */
     public boolean insertItem(ItemStack stack) {
-        int outputSlot = slotDefinition.getMinItemOutput();
-        if (outputSlot < 0) return false;
+        int min = slotDefinition.getMinItemOutput();
+        int max = slotDefinition.getMaxItemOutput();
+        if (min < 0) return false;
 
-        ItemStack existing = inv.getStackInSlot(outputSlot);
-        if (existing == null) {
-            inv.setStackInSlot(outputSlot, stack.copy());
-            return true;
+        // Try to merge with existing stacks
+        for (int i = min; i <= max; i++) {
+            ItemStack existing = inv.getStackInSlot(i);
+            if (existing != null && existing.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(existing, stack)) {
+                int space = getInventoryStackLimit() - existing.stackSize;
+                if (space > 0) {
+                    int toAdd = Math.min(space, stack.stackSize);
+                    existing.stackSize += toAdd;
+                    inv.setStackInSlot(i, existing);
+                    stack.stackSize -= toAdd;
+                    if (stack.stackSize <= 0) return true;
+                }
+            }
         }
 
-        if (existing.isItemEqual(stack) && existing.stackSize + stack.stackSize <= getInventoryStackLimit()) {
-            existing.stackSize += stack.stackSize;
-            inv.setStackInSlot(outputSlot, existing);
-            return true;
+        // Try to fill empty slots
+        for (int i = min; i <= max; i++) {
+            if (inv.getStackInSlot(i) == null) {
+                inv.setStackInSlot(i, stack.copy());
+                return true;
+            }
         }
 
         return false;
