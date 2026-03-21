@@ -218,6 +218,9 @@ public class TEMachineController extends AbstractMBModifierTE
     // Transient flag to trigger tint packet resend on load
     private boolean needsTintResend = false;
 
+    // Track previous working state for render update
+    private transient boolean wasWorking = false;
+
     public TEMachineController() {
         super();
     }
@@ -279,6 +282,7 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     private final Map<Character, List<ChunkCoordinates>> symbolPositions = new HashMap<>();
+    private final Map<ChunkCoordinates, Character> posToSymbol = new HashMap<>();
 
     public Map<Character, List<ChunkCoordinates>> getSymbolPositionsMap() {
         return symbolPositions;
@@ -286,11 +290,18 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public void clearSymbolPositions() {
         symbolPositions.clear();
+        posToSymbol.clear();
     }
 
     public void trackSymbolPosition(char symbol, int x, int y, int z) {
+        ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
         symbolPositions.computeIfAbsent(symbol, k -> new ArrayList<>())
-            .add(new ChunkCoordinates(x, y, z));
+            .add(coord);
+        posToSymbol.put(coord, symbol);
+    }
+
+    public Character getSymbolAt(int x, int y, int z) {
+        return posToSymbol.get(new ChunkCoordinates(x, y, z));
     }
 
     @Override
@@ -506,6 +517,15 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // IDLE: Try to start new recipe
         startNextRecipe();
+
+        // Update render if working state changed
+        boolean currentlyWorking = processAgent.isRunning();
+        if (currentlyWorking != wasWorking) {
+            wasWorking = currentlyWorking;
+            if (worldObj != null && !worldObj.isRemote) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
     }
 
     private void startNextRecipe() {
@@ -1130,7 +1150,9 @@ public class TEMachineController extends AbstractMBModifierTE
             Block block = getBlockType();
             if (block instanceof BlockMachineController) {
                 BlockMachineController controllerBlock = (BlockMachineController) block;
-                return controllerBlock.getOverlayIcon();
+                // Change overlay based on working state
+                boolean isWorking = processAgent != null && processAgent.isRunning();
+                return isWorking ? controllerBlock.getOverlayIconActive() : controllerBlock.getOverlayIcon();
             }
         }
         return null; // Base pass handled by ISBRH using standard block render

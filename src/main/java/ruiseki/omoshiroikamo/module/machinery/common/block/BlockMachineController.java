@@ -35,7 +35,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * This block is mapped to the 'Q' symbol in structure definitions.
  * TODO: Working particles and sound effects
  * TODO: Completion effects (particles, sounds)
- * TODO: Block state visual changes based on status
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
@@ -65,6 +64,7 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     }
 
     private IIcon overlayIcon;
+    private IIcon overlayIconActive;
     private IIcon sideOverlayIcon;
 
     @Override
@@ -82,6 +82,8 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     public void registerBlockIcons(IIconRegister reg) {
         super.registerBlockIcons(reg);
         this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller");
+        this.overlayIconActive = reg
+            .registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller_active");
         this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/base_modularports");
     }
 
@@ -92,20 +94,15 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
 
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
-        if (te != null) {
-            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
-            if (dir == te.getExtendedFacing()
-                .getDirection()) {
-                return sideOverlayIcon;
-            }
-        }
-        // Bypass the inventory icon override for EAST
         return super.getIcon(side, world.getBlockMetadata(x, y, z));
     }
 
     public IIcon getOverlayIcon() {
         return overlayIcon;
+    }
+
+    public IIcon getOverlayIconActive() {
+        return overlayIconActive;
     }
 
     public IIcon getSideOverlayIcon() {
