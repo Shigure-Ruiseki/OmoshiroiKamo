@@ -55,6 +55,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
     private boolean optional;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
+    private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
     private int interval = 0;
 
     public BlockInput(char symbol, String block, String replace, int amount, boolean consume, boolean optional) {
@@ -155,13 +156,62 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
      * Check if the TileEntity's NBT matches all NBT conditions.
      */
     private boolean checkNBTConditions(World world, ChunkCoordinates pos, IRecipeContext context) {
+        // Determine effective match mode
+        NBTMatchMode effectiveMode = determineEffectiveMatchMode();
+
+        switch (effectiveMode) {
+            case IGNORE:
+                return true;
+
+            case NONE:
+                TileEntity teNone = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+                if (teNone == null) return true; // No TileEntity = no NBT
+                NBTTagCompound nbtNone = new NBTTagCompound();
+                teNone.writeToNBT(nbtNone);
+                // Check if NBT has no meaningful data (only x,y,z,id)
+                return isEmptyNBT(nbtNone);
+
+            case EXACT:
+                // EXACT mode for blocks requires expression/listOp to define what to match
+                // If no expressions, treat as NONE
+                if (nbtExpressions != null || nbtListOp != null) {
+                    return checkNBTConditionsPartial(world, pos, context);
+                } else {
+                    TileEntity teExact = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+                    if (teExact == null) return true;
+                    NBTTagCompound nbtExact = new NBTTagCompound();
+                    teExact.writeToNBT(nbtExact);
+                    return isEmptyNBT(nbtExact);
+                }
+
+            case PARTIAL:
+                return checkNBTConditionsPartial(world, pos, context);
+
+            default:
+                return true;
+        }
+    }
+
+    /**
+     * Determine the effective NBT match mode.
+     */
+    private NBTMatchMode determineEffectiveMatchMode() {
+        if ((nbtExpressions != null && !nbtExpressions.isEmpty()) || nbtListOp != null) {
+            return NBTMatchMode.PARTIAL;
+        }
+        return nbtMatchMode;
+    }
+
+    /**
+     * Check NBT conditions using the existing expression system (PARTIAL mode).
+     */
+    private boolean checkNBTConditionsPartial(World world, ChunkCoordinates pos, IRecipeContext context) {
         if (nbtExpressions == null && nbtListOp == null) {
-            return true; // No NBT conditions
+            return true;
         }
 
         TileEntity te = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
         if (te == null) {
-            // No TileEntity - only matches if no NBT requirements
             return (nbtExpressions == null || nbtExpressions.isEmpty()) && (nbtListOp == null);
         }
 
@@ -172,7 +222,6 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         if (nbtExpressions != null) {
             ConditionContext condContext = new ConditionContext(world, pos.posX, pos.posY, pos.posZ, context);
             for (IExpression expr : nbtExpressions) {
-                // For condition checking, evaluate as boolean (non-zero = true)
                 if (expr.evaluate(condContext) == 0) {
                     return false;
                 }
@@ -182,6 +231,32 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         // Check NBT list conditions
         if (nbtListOp != null) {
             if (!nbtListOp.matches(nbt)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if NBT is essentially empty (only contains position and id).
+     * TileEntity NBT always contains x, y, z, and id by default.
+     */
+    private boolean isEmptyNBT(NBTTagCompound nbt) {
+        if (nbt == null) return true;
+
+        // Count keys - if more than 4, there's additional data
+        int keyCount = 0;
+        for (Object key : nbt.func_150296_c()) {
+            keyCount++;
+        }
+
+        if (keyCount > 4) return false;
+
+        // Check if all keys are standard TileEntity keys
+        for (Object keyObj : nbt.func_150296_c()) {
+            String key = (String) keyObj;
+            if (!key.equals("x") && !key.equals("y") && !key.equals("z") && !key.equals("id")) {
                 return false;
             }
         }
@@ -273,6 +348,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         BlockInput result = new BlockInput(symbol, block, replace, amount * multiplier, consume, optional);
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.nbtMatchMode = this.nbtMatchMode;
         result.interval = this.interval;
         return result;
     }
@@ -287,6 +363,9 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         nbt.setBoolean("consume", consume);
         nbt.setBoolean("optional", optional);
         nbt.setInteger("interval", interval);
+
+        // Save NBTMatchMode
+        nbt.setString("nbtMatchMode", nbtMatchMode.name());
 
         // Save NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
@@ -308,6 +387,17 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.interval = nbt.getInteger("interval");
+
+        // Restore NBTMatchMode
+        if (nbt.hasKey("nbtMatchMode")) {
+            try {
+                this.nbtMatchMode = NBTMatchMode.valueOf(nbt.getString("nbtMatchMode"));
+            } catch (IllegalArgumentException e) {
+                this.nbtMatchMode = NBTMatchMode.IGNORE;
+                Logger.warn("Invalid NBTMatchMode in NBT, defaulting to IGNORE");
+            }
+        }
+
         // Restore NBT expressions
         if (nbt.hasKey("nbtExpressions")) {
             NBTTagList exprList = nbt.getTagList("nbtExpressions", 8);
@@ -346,6 +436,13 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
             this.index = json.get("index")
                 .getAsInt();
         }
+
+        // Read NBTMatchMode
+        if (json.has("nbtmatch")) {
+            String modeStr = json.get("nbtmatch")
+                .getAsString();
+            this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
+        }
     }
 
     @Override
@@ -358,6 +455,11 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         if (consume) json.addProperty("consume", true);
         if (optional) json.addProperty("optional", true);
         if (index != -1) json.addProperty("index", index);
+
+        // Write NBTMatchMode (only if not default IGNORE)
+        if (nbtMatchMode != NBTMatchMode.IGNORE) {
+            json.addProperty("nbtmatch", nbtMatchMode.toJsonString());
+        }
 
         // Write NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {

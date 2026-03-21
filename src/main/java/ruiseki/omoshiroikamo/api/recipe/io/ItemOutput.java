@@ -35,6 +35,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
     private int count = 0;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
+    private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
 
     public ItemOutput(ItemStack output) {
         this.output = output != null ? output.copy() : null;
@@ -161,7 +162,24 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         if (a == null || b == null) return false;
         if (a.getItem() != b.getItem()) return false;
         if (a.getItemDamage() != b.getItemDamage()) return false;
-        return ItemStack.areItemStackTagsEqual(a, b);
+
+        // Apply NBTMatchMode for output merging
+        switch (nbtMatchMode) {
+            case IGNORE:
+                return true;
+
+            case EXACT:
+                return ItemStack.areItemStackTagsEqual(a, b);
+
+            case NONE:
+                return a.getTagCompound() == null && b.getTagCompound() == null;
+
+            case PARTIAL:
+                return ItemStack.areItemStackTagsEqual(a, b);
+
+            default:
+                return ItemStack.areItemStackTagsEqual(a, b);
+        }
     }
 
     @Override
@@ -210,6 +228,14 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         readPerTick(json, 0);
         if (json.has("index")) this.index = json.get("index")
             .getAsInt();
+
+        // Read NBTMatchMode
+        if (json.has("nbtmatch")) {
+            String modeStr = json.get("nbtmatch")
+                .getAsString();
+            this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
+        }
+
         ItemJson itemJson = new ItemJson();
         itemJson.read(json);
         this.count = itemJson.amount;
@@ -259,6 +285,12 @@ public class ItemOutput extends AbstractModularRecipeOutput {
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
+
+        // Write NBTMatchMode (only if not default IGNORE)
+        if (nbtMatchMode != NBTMatchMode.IGNORE) {
+            json.addProperty("nbtmatch", nbtMatchMode.toJsonString());
+        }
+
         if (output != null) {
             json.addProperty(
                 "item",
@@ -267,7 +299,6 @@ public class ItemOutput extends AbstractModularRecipeOutput {
             if (output.stackSize != 1) json.addProperty("amount", output.stackSize);
             if (output.getItemDamage() != 0) json.addProperty("meta", output.getItemDamage());
         }
-        if (index != -1) json.addProperty("index", index);
         if (interval > 0) json.addProperty("pertick", interval);
 
         // Write NBT expressions
@@ -319,6 +350,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         result.interval = this.interval;
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.nbtMatchMode = this.nbtMatchMode;
         result.index = this.index;
 
         return result;
@@ -328,6 +360,10 @@ public class ItemOutput extends AbstractModularRecipeOutput {
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "item");
         nbt.setInteger("interval", interval);
+
+        // Save NBTMatchMode
+        nbt.setString("nbtMatchMode", nbtMatchMode.name());
+
         if (output != null) {
             NBTTagCompound stackTag = new NBTTagCompound();
             output.writeToNBT(stackTag);
@@ -355,6 +391,17 @@ public class ItemOutput extends AbstractModularRecipeOutput {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.interval = nbt.getInteger("interval");
+
+        // Restore NBTMatchMode
+        if (nbt.hasKey("nbtMatchMode")) {
+            try {
+                this.nbtMatchMode = NBTMatchMode.valueOf(nbt.getString("nbtMatchMode"));
+            } catch (IllegalArgumentException e) {
+                this.nbtMatchMode = NBTMatchMode.IGNORE;
+                Logger.warn("Invalid NBTMatchMode in NBT, defaulting to IGNORE");
+            }
+        }
+
         if (nbt.hasKey("output")) {
             this.output = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("output"));
         }

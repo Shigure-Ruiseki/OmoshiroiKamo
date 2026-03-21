@@ -35,6 +35,7 @@ public class ItemInput extends AbstractModularRecipeInput {
     private int count = 1;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
+    private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
 
     public ItemInput(ItemStack required) {
         this.required = required != null ? required.copy() : null;
@@ -169,6 +170,7 @@ public class ItemInput extends AbstractModularRecipeInput {
     private boolean stacksMatch(ItemStack input) {
         if (input == null) return false;
 
+        // Check item/metadata/oredict matching
         if (oreDict != null) {
             int[] ids = OreDictionary.getOreIDs(input);
             int targetId = OreDictionary.getOreID(oreDict);
@@ -187,16 +189,13 @@ public class ItemInput extends AbstractModularRecipeInput {
             if (required.getItemDamage() != 32767 && required.getItemDamage() != input.getItemDamage()) return false;
         }
 
-        // Check NBT conditions
-        if (!checkNBTConditions(input)) {
-            return false;
-        }
-
-        return true;
+        // Check NBT matching using the new NBTMatchMode system
+        return matchesNBT(input);
     }
 
     /**
-     * Check if the ItemStack's NBT matches all NBT conditions.
+     * Check if the ItemStack's NBT matches all NBT conditions (PARTIAL mode).
+     * This is the original checkNBTConditions logic for expression-based matching.
      */
     private boolean checkNBTConditions(ItemStack stack) {
         if (nbtExpressions == null && nbtListOp == null) {
@@ -230,6 +229,71 @@ public class ItemInput extends AbstractModularRecipeInput {
         return true;
     }
 
+    /**
+     * Determine the effective NBT match mode based on configuration.
+     * If nbtExpressions or nbtListOp are present, PARTIAL mode takes precedence.
+     *
+     * @return The effective NBT match mode to use
+     */
+    private NBTMatchMode determineEffectiveMatchMode() {
+        // If expression-based NBT conditions exist, use PARTIAL mode
+        if ((nbtExpressions != null && !nbtExpressions.isEmpty()) || nbtListOp != null) {
+            return NBTMatchMode.PARTIAL;
+        }
+        // Otherwise use the explicitly set mode
+        return nbtMatchMode;
+    }
+
+    /**
+     * Check exact NBT match.
+     * For EXACT mode, we need to compare against a reference NBT.
+     * If 'required' ItemStack exists, use its NBT as reference.
+     * If oreDict is used, EXACT mode requires no NBT on both sides.
+     *
+     * @param input The ItemStack to check
+     * @return true if NBT matches exactly, false otherwise
+     */
+    private boolean matchesExactNBT(ItemStack input) {
+        if (required != null) {
+            // Compare against required stack's NBT
+            return ItemStack.areItemStackTagsEqual(required, input);
+        } else if (oreDict != null) {
+            // For OreDictionary items, EXACT mode only matches items without NBT
+            // (since we have no reference NBT to compare against)
+            return input.getTagCompound() == null;
+        }
+        return true;
+    }
+
+    /**
+     * Check if the ItemStack's NBT matches the configured NBT match mode.
+     * This integrates the new NBTMatchMode with existing expression-based NBT conditions.
+     *
+     * @param stack The ItemStack to check
+     * @return true if NBT matches according to the effective mode, false otherwise
+     */
+    private boolean matchesNBT(ItemStack stack) {
+        // Determine effective match mode
+        NBTMatchMode effectiveMode = determineEffectiveMatchMode();
+
+        switch (effectiveMode) {
+            case IGNORE:
+                return true;
+
+            case NONE:
+                return stack.getTagCompound() == null;
+
+            case EXACT:
+                return matchesExactNBT(stack);
+
+            case PARTIAL:
+                return checkNBTConditions(stack);
+
+            default:
+                return true;
+        }
+    }
+
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
@@ -239,6 +303,13 @@ public class ItemInput extends AbstractModularRecipeInput {
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
+        }
+
+        // Read NBTMatchMode
+        if (json.has("nbtmatch")) {
+            String modeStr = json.get("nbtmatch")
+                .getAsString();
+            this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
         }
 
         // Read NBT expressions
@@ -323,6 +394,11 @@ public class ItemInput extends AbstractModularRecipeInput {
         if (!consume) json.addProperty("consume", false);
         if (interval > 0) json.addProperty("pertick", interval);
 
+        // Write NBTMatchMode (only if not default IGNORE)
+        if (nbtMatchMode != NBTMatchMode.IGNORE) {
+            json.addProperty("nbtmatch", nbtMatchMode.toJsonString());
+        }
+
         if (oreDict != null) {
             json.addProperty("ore", oreDict);
             if (count != 1) json.addProperty("amount", count);
@@ -385,6 +461,7 @@ public class ItemInput extends AbstractModularRecipeInput {
         result.interval = this.interval;
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.nbtMatchMode = this.nbtMatchMode;
         result.index = this.index;
         return result;
     }
@@ -396,6 +473,10 @@ public class ItemInput extends AbstractModularRecipeInput {
         nbt.setInteger("interval", interval);
         nbt.setBoolean("consume", consume);
         nbt.setInteger("index", index);
+
+        // Save NBTMatchMode
+        nbt.setString("nbtMatchMode", nbtMatchMode.name());
+
         if (oreDict != null) {
             nbt.setString("ore", oreDict);
         }
@@ -428,6 +509,17 @@ public class ItemInput extends AbstractModularRecipeInput {
         this.interval = nbt.getInteger("interval");
         this.consume = nbt.getBoolean("consume");
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
+
+        // Restore NBTMatchMode
+        if (nbt.hasKey("nbtMatchMode")) {
+            try {
+                this.nbtMatchMode = NBTMatchMode.valueOf(nbt.getString("nbtMatchMode"));
+            } catch (IllegalArgumentException e) {
+                this.nbtMatchMode = NBTMatchMode.IGNORE;
+                Logger.warn("Invalid NBTMatchMode in NBT, defaulting to IGNORE");
+            }
+        }
+
         if (nbt.hasKey("ore")) {
             this.oreDict = nbt.getString("ore");
         }

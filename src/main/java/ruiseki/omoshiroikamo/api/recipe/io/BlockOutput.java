@@ -46,6 +46,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     private final Map<String, IExpression> dynamicNbt; // Legacy NBT system
     private List<IExpression> nbtExpressions; // New NBT system
     private NBTListOperation nbtListOp; // New NBT list system
+    private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
     private int interval = 0;
     private int index = -1;
 
@@ -223,6 +224,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         BlockOutput result = new BlockOutput(symbol, block, replace, amount * multiplier, optional, dynamicNbt);
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.nbtMatchMode = this.nbtMatchMode;
         return result;
     }
 
@@ -235,6 +237,9 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         nbt.setInteger("amount", amount);
         nbt.setBoolean("optional", optional);
         nbt.setInteger("interval", interval);
+
+        // Save NBTMatchMode
+        nbt.setString("nbtMatchMode", nbtMatchMode.name());
 
         // Save NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
@@ -262,6 +267,16 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         this.replace = nbt.hasKey("replace") ? nbt.getString("replace") : null;
         this.amount = nbt.getInteger("amount");
         this.optional = nbt.getBoolean("optional");
+
+        // Restore NBTMatchMode
+        if (nbt.hasKey("nbtMatchMode")) {
+            try {
+                this.nbtMatchMode = NBTMatchMode.valueOf(nbt.getString("nbtMatchMode"));
+            } catch (IllegalArgumentException e) {
+                this.nbtMatchMode = NBTMatchMode.IGNORE;
+                Logger.warn("Invalid NBTMatchMode in NBT, defaulting to IGNORE");
+            }
+        }
 
         // Restore NBT expressions
         if (nbt.hasKey("nbtExpressions")) {
@@ -295,6 +310,13 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
             this.index = json.get("index")
                 .getAsInt();
         }
+
+        // Read NBTMatchMode
+        if (json.has("nbtmatch")) {
+            String modeStr = json.get("nbtmatch")
+                .getAsString();
+            this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
+        }
     }
 
     @Override
@@ -306,6 +328,11 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         json.addProperty("amount", amount);
         if (optional) json.addProperty("optional", true);
         if (index != -1) json.addProperty("index", index);
+
+        // Write NBTMatchMode (only if not default IGNORE)
+        if (nbtMatchMode != NBTMatchMode.IGNORE) {
+            json.addProperty("nbtmatch", nbtMatchMode.toJsonString());
+        }
 
         // Write new NBT system (preferred)
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
