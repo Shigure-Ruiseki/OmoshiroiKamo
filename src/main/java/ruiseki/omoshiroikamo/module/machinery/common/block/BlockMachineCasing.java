@@ -40,6 +40,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
         super("modularMachineCasing");
         setHardness(5.0F);
         setResistance(10.0F);
+        this.hasSubtypes = false;
     }
 
     public static BlockMachineCasing create() {
