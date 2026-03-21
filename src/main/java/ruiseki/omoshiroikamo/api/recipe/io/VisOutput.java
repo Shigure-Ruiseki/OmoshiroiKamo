@@ -48,6 +48,8 @@ public class VisOutput extends AbstractModularRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
+
             if (!(port instanceof IAspectContainer)) continue;
 
             IAspectContainer visPort = (IAspectContainer) port;
@@ -93,6 +95,8 @@ public class VisOutput extends AbstractModularRecipeOutput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.aspectTag = json.get("vis")
             .getAsString();
         this.amountCentiVis = json.has("amount") ? json.get("amount")
@@ -101,6 +105,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("vis", aspectTag);
         json.addProperty("amount", amountCentiVis);
         if (interval > 0) json.addProperty("pertick", interval);
@@ -126,6 +131,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
     public IRecipeOutput copy(int multiplier) {
         VisOutput result = new VisOutput(aspectTag, (int) (amountCentiVis * multiplier));
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -135,6 +141,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         nbt.setInteger("interval", interval);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amountCentiVis);
+        nbt.setInteger("index", index);
     }
 
     @Override
@@ -142,6 +149,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         this.interval = nbt.getInteger("interval");
         this.aspectTag = nbt.getString("aspect");
         this.amountCentiVis = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

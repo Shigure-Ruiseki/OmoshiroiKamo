@@ -36,6 +36,17 @@ import ruiseki.omoshiroikamo.core.common.util.Logger;
  */
 public class BlockInput extends AbstractRecipeInput implements IModularRecipeInput {
 
+    private int index = -1;
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     private char symbol;
     private String replace; // The block to find (Old / Condition)
     private String block; // The block to set (New / Result) or requirement
@@ -102,6 +113,13 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
 
         for (ChunkCoordinates pos : positions) {
             if (processed >= totalRequired) break;
+
+            if (index != -1) {
+                TileEntity te = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+                if (te instanceof IModularPort mp && mp.getAssignedIndex() != index) {
+                    continue;
+                }
+            }
 
             Block currentBlock = world.getBlock(pos.posX, pos.posY, pos.posZ);
             int meta = world.getBlockMetadata(pos.posX, pos.posY, pos.posZ);
@@ -324,6 +342,10 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
                 }
             }
         }
+        if (json.has("index")) {
+            this.index = json.get("index")
+                .getAsInt();
+        }
     }
 
     @Override
@@ -335,6 +357,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         json.addProperty("amount", amount);
         if (consume) json.addProperty("consume", true);
         if (optional) json.addProperty("optional", true);
+        if (index != -1) json.addProperty("index", index);
 
         // Write NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {

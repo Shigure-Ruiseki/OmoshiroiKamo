@@ -64,6 +64,8 @@ public class ManaInput extends AbstractModularRecipeInput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
 
         if (json.has("consume")) {
             this.consume = json.get("consume")
@@ -76,6 +78,7 @@ public class ManaInput extends AbstractModularRecipeInput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
         json.addProperty("mana", amount);
         if (interval != 0) {
@@ -104,6 +107,7 @@ public class ManaInput extends AbstractModularRecipeInput {
         ManaInput result = new ManaInput(amount * multiplier, isPerTick());
         result.interval = this.interval;
         result.consume = this.consume;
+        result.index = this.index;
         return result;
     }
 
@@ -113,6 +117,7 @@ public class ManaInput extends AbstractModularRecipeInput {
         nbt.setInteger("amount", amount);
         nbt.setInteger("interval", interval);
         nbt.setBoolean("consume", consume);
+        nbt.setInteger("index", index);
     }
 
     @Override
@@ -120,6 +125,7 @@ public class ManaInput extends AbstractModularRecipeInput {
         this.amount = nbt.getInteger("amount");
         this.interval = nbt.getInteger("interval");
         this.consume = nbt.getBoolean("consume");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

@@ -25,6 +25,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -242,7 +244,7 @@ public class BlockResolver {
 
         // 1. Direct Modular Ports
         if (tile instanceof IModularPort port) {
-            return registerPort(controller, port);
+            return registerPort(controller, port, tile.xCoord, tile.yCoord, tile.zCoord);
         }
 
         // 2. Proxy Ports (External Blocks)
@@ -264,7 +266,7 @@ public class BlockResolver {
 
             IModularPort proxy = factory.create(controller, coords, tile, io);
             if (proxy != null) {
-                registeredAny |= registerPort(controller, proxy);
+                registeredAny |= registerPort(controller, proxy, tile.xCoord, tile.yCoord, tile.zCoord);
             }
         }
         return registeredAny;
@@ -273,7 +275,23 @@ public class BlockResolver {
     /**
      * Helper to register a port in the controller based on its direction.
      */
-    private static boolean registerPort(TEMachineController controller, IModularPort port) {
+    private static boolean registerPort(TEMachineController controller, IModularPort port, int x, int y, int z) {
+        // Resolve index from symbol at position
+        Character symbol = controller.getSymbolAt(x, y, z);
+        if (symbol != null) {
+            String structureName = controller.getStructureAgent()
+                .getStructurePieceName();
+            IStructureEntry entry = StructureManager.getInstance()
+                .getCustomStructure(structureName);
+            if (entry != null) {
+                ISymbolMapping mapping = entry.getMappings()
+                    .get(symbol);
+                if (mapping != null) {
+                    port.setAssignedIndex(mapping.getPortIndex());
+                }
+            }
+        }
+
         IPortType.Direction direction = port.getPortDirection();
         switch (direction) {
             case INPUT -> controller.addPortFromStructure(port, true);

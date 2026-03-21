@@ -300,4 +300,14 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     @Override
     public void accept(IRecipeVisitor visitor) {}
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
 }

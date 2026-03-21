@@ -48,7 +48,10 @@ public class GasOutput extends AbstractModularRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.GAS) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
+
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
 
             if (!(port instanceof IGasHandler)) continue;
 
@@ -90,6 +93,8 @@ public class GasOutput extends AbstractModularRecipeOutput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.gasName = json.get("gas")
             .getAsString();
         this.amount = json.has("amount") ? json.get("amount")
@@ -98,6 +103,7 @@ public class GasOutput extends AbstractModularRecipeOutput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("gas", gasName);
         json.addProperty("amount", amount);
         if (interval > 0) json.addProperty("pertick", interval);
@@ -123,6 +129,7 @@ public class GasOutput extends AbstractModularRecipeOutput {
     public IRecipeOutput copy(int multiplier) {
         GasOutput result = new GasOutput(gasName, amount * multiplier);
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -132,6 +139,7 @@ public class GasOutput extends AbstractModularRecipeOutput {
         nbt.setInteger("interval", interval);
         nbt.setString("gas", gasName);
         nbt.setInteger("amount", amount);
+        nbt.setInteger("index", index);
     }
 
     @Override
@@ -139,6 +147,7 @@ public class GasOutput extends AbstractModularRecipeOutput {
         this.interval = nbt.getInteger("interval");
         this.gasName = nbt.getString("gas");
         this.amount = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

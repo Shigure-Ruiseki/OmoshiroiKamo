@@ -16,6 +16,7 @@ public class BlockMapping implements ISymbolMapping {
     private final char symbol;
     private final String blockId;
     private final List<String> blockIds;
+    private int portIndex = -1;
 
     public BlockMapping(char symbol, String blockId) {
         this.symbol = symbol;
@@ -32,6 +33,15 @@ public class BlockMapping implements ISymbolMapping {
     @Override
     public char getSymbol() {
         return symbol;
+    }
+
+    @Override
+    public int getPortIndex() {
+        return portIndex;
+    }
+
+    public void setPortIndex(int index) {
+        this.portIndex = index;
     }
 
     public String getBlockId() {
@@ -53,6 +63,9 @@ public class BlockMapping implements ISymbolMapping {
                 array.add(new com.google.gson.JsonPrimitive(id));
             }
             json.add("blocks", array);
+        }
+        if (portIndex >= 0) {
+            json.addProperty("index", portIndex);
         }
         return json;
     }

@@ -46,7 +46,10 @@ public class ManaOutput extends AbstractModularRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.MANA) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
+
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
             if (!(port instanceof IManaPool)) continue;
 
             IManaPool manaPort = (IManaPool) port;
@@ -87,12 +90,15 @@ public class ManaOutput extends AbstractModularRecipeOutput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.amount = json.get("mana")
             .getAsInt();
     }
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("mana", amount);
         if (interval != 0) {
             json.addProperty("pertick", interval);
@@ -119,6 +125,7 @@ public class ManaOutput extends AbstractModularRecipeOutput {
     public IRecipeOutput copy(int multiplier) {
         ManaOutput result = new ManaOutput(amount * multiplier, isPerTick());
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -127,12 +134,14 @@ public class ManaOutput extends AbstractModularRecipeOutput {
         nbt.setString("id", "mana");
         nbt.setInteger("amount", amount);
         nbt.setInteger("interval", interval);
+        nbt.setInteger("index", index);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
         this.interval = nbt.getInteger("interval");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

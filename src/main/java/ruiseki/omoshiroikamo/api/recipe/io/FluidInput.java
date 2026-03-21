@@ -69,6 +69,8 @@ public class FluidInput extends AbstractModularRecipeInput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
 
         if (json.has("consume")) {
             this.consume = json.get("consume")
@@ -86,6 +88,7 @@ public class FluidInput extends AbstractModularRecipeInput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
         if (interval > 0) json.addProperty("pertick", interval);
 
@@ -122,6 +125,7 @@ public class FluidInput extends AbstractModularRecipeInput {
         result.count = this.count * multiplier;
         result.consume = this.consume;
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -131,6 +135,7 @@ public class FluidInput extends AbstractModularRecipeInput {
         nbt.setInteger("interval", interval);
         nbt.setBoolean("consume", consume);
         nbt.setInteger("count", count);
+        nbt.setInteger("index", index);
         if (required != null) {
             NBTTagCompound stackTag = new NBTTagCompound();
             required.writeToNBT(stackTag);
@@ -143,6 +148,7 @@ public class FluidInput extends AbstractModularRecipeInput {
         this.interval = nbt.getInteger("interval");
         this.consume = nbt.getBoolean("consume");
         this.count = nbt.getInteger("count");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
         if (nbt.hasKey("required")) {
             this.required = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("required"));
         }

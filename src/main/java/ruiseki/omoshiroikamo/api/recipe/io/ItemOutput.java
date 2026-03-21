@@ -71,6 +71,8 @@ public class ItemOutput extends AbstractModularRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
+
             if (!(port instanceof IInventory)) {
                 throw new IllegalStateException(
                     "ITEM OUTPUT port must implement IInventory, got: " + port.getClass()
@@ -206,6 +208,8 @@ public class ItemOutput extends AbstractModularRecipeOutput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         ItemJson itemJson = new ItemJson();
         itemJson.read(json);
         this.count = itemJson.amount;
@@ -254,6 +258,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (output != null) {
             json.addProperty(
                 "item",
@@ -262,6 +267,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
             if (output.stackSize != 1) json.addProperty("amount", output.stackSize);
             if (output.getItemDamage() != 0) json.addProperty("meta", output.getItemDamage());
         }
+        if (index != -1) json.addProperty("index", index);
         if (interval > 0) json.addProperty("pertick", interval);
 
         // Write NBT expressions
@@ -313,6 +319,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         result.interval = this.interval;
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.index = this.index;
 
         return result;
     }
@@ -326,6 +333,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
             output.writeToNBT(stackTag);
             nbt.setTag("output", stackTag);
         }
+        nbt.setInteger("index", index);
 
         // Save NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
@@ -350,6 +358,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
         if (nbt.hasKey("output")) {
             this.output = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("output"));
         }
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
 
         // Restore NBT expressions
         if (nbt.hasKey("nbtExpressions")) {

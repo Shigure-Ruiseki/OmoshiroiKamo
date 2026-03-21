@@ -11,6 +11,8 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
  */
 public abstract class AbstractModularRecipeInput extends AbstractRecipeInput implements IModularRecipeInput {
 
+    protected int index = -1;
+
     @Override
     public boolean process(List<IModularPort> ports, int multiplier, boolean simulate) {
         long remaining = getRequiredAmount() * multiplier;
@@ -20,6 +22,8 @@ public abstract class AbstractModularRecipeInput extends AbstractRecipeInput imp
             if (port.getPortType() != getPortType()) continue;
             if (port.getPortDirection() != IPortType.Direction.INPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
+
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
 
             if (!isCorrectPort(port)) {
                 throw new IllegalStateException(
@@ -45,4 +49,13 @@ public abstract class AbstractModularRecipeInput extends AbstractRecipeInput imp
      * Consume from a single port and return the amount consumed.
      */
     protected abstract long consume(IModularPort port, long remaining, boolean simulate);
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }

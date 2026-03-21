@@ -63,6 +63,8 @@ public class EssentiaInput extends AbstractModularRecipeInput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
 
         if (json.has("consume")) {
             this.consume = json.get("consume")
@@ -77,6 +79,7 @@ public class EssentiaInput extends AbstractModularRecipeInput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
         if (interval > 0) json.addProperty("pertick", interval);
 
@@ -107,6 +110,7 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         EssentiaInput result = new EssentiaInput(aspectTag, amount * multiplier);
         result.consume = this.consume;
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -117,6 +121,7 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         nbt.setBoolean("consume", consume);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amount);
+        nbt.setInteger("index", index);
     }
 
     @Override
@@ -125,6 +130,7 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         this.consume = nbt.getBoolean("consume");
         this.aspectTag = nbt.getString("aspect");
         this.amount = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

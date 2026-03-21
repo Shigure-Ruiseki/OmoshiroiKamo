@@ -59,6 +59,8 @@ public class FluidOutput extends AbstractModularRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
+
             if (!(port instanceof IFluidHandler)) continue;
 
             IFluidHandler fluidPort = (IFluidHandler) port;
@@ -118,6 +120,8 @@ public class FluidOutput extends AbstractModularRecipeOutput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.fluidName = json.get("fluid")
             .getAsString();
         this.amount = json.has("amount") ? json.get("amount")
@@ -126,6 +130,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("fluid", fluidName);
         json.addProperty("amount", amount);
         if (interval > 0) json.addProperty("pertick", interval);
@@ -151,6 +156,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
     public IRecipeOutput copy(int multiplier) {
         FluidOutput result = new FluidOutput(fluidName, amount * multiplier);
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -160,6 +166,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
         nbt.setInteger("interval", interval);
         nbt.setString("fluid", fluidName);
         nbt.setInteger("amount", amount);
+        nbt.setInteger("index", index);
     }
 
     @Override
@@ -167,6 +174,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
         this.interval = nbt.getInteger("interval");
         this.fluidName = nbt.getString("fluid");
         this.amount = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

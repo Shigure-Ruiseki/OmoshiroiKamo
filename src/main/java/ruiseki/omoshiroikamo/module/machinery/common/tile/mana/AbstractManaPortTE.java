@@ -181,7 +181,6 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularManaInput.name=Mana Input Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -220,4 +219,13 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
     @Override
     public abstract Direction getPortDirection();
 
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
 }

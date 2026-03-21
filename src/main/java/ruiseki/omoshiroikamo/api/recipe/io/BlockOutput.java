@@ -47,6 +47,16 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     private List<IExpression> nbtExpressions; // New NBT system
     private NBTListOperation nbtListOp; // New NBT list system
     private int interval = 0;
+    private int index = -1;
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 
     public BlockOutput(char symbol, String block, String replace, int amount, boolean optional,
         Map<String, IExpression> dynamicNbt) {
@@ -144,6 +154,13 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         int remaining = totalRequired;
         for (ChunkCoordinates pos : positions) {
             if (remaining <= 0) break;
+
+            if (index != -1) {
+                TileEntity te = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+                if (te instanceof IModularPort mp && mp.getAssignedIndex() != index) {
+                    continue;
+                }
+            }
 
             Block currentBlock = world.getBlock(pos.posX, pos.posY, pos.posZ);
             int meta = world.getBlockMetadata(pos.posX, pos.posY, pos.posZ);
@@ -274,6 +291,10 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) {
+            this.index = json.get("index")
+                .getAsInt();
+        }
     }
 
     @Override
@@ -284,6 +305,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         if (replace != null) json.addProperty("replace", replace);
         json.addProperty("amount", amount);
         if (optional) json.addProperty("optional", true);
+        if (index != -1) json.addProperty("index", index);
 
         // Write new NBT system (preferred)
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {

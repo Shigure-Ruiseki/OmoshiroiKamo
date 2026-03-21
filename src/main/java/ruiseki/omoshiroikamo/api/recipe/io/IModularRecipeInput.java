@@ -35,4 +35,13 @@ public interface IModularRecipeInput extends IRecipeInput {
     default IModularRecipeInput asModular() {
         return this;
     }
+
+    /**
+     * Get the target port index, if specified.
+     * 
+     * @return Target index, or -1 for any port.
+     */
+    default int getIndex() {
+        return -1;
+    }
 }

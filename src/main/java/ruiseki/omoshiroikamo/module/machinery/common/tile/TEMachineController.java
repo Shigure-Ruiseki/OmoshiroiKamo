@@ -295,9 +295,13 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public void trackSymbolPosition(char symbol, int x, int y, int z) {
         ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
+        posToSymbol.put(coord, symbol);
+    }
+
+    public void finalizeSymbolPosition(char symbol, int x, int y, int z) {
+        ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
         symbolPositions.computeIfAbsent(symbol, k -> new ArrayList<>())
             .add(coord);
-        posToSymbol.put(coord, symbol);
     }
 
     public Character getSymbolAt(int x, int y, int z) {

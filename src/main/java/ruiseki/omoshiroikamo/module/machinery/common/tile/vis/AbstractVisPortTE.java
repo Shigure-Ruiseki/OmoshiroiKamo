@@ -221,7 +221,6 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public String getLocalizedName() {
-        // Use format string from lang file: tile.modularVisInput.name=Vis Input Port Tier %d
         String unlocalizedName = getUnlocalizedName() + ".name";
         String format = StatCollector.translateToLocal(unlocalizedName);
         return String.format(format, getTier() + 1);
@@ -266,5 +265,15 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
+    }
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
     }
 }

@@ -11,6 +11,8 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
  */
 public abstract class AbstractModularRecipeOutput extends AbstractRecipeOutput implements IModularRecipeOutput {
 
+    protected int index = -1;
+
     @Override
     public boolean checkCapacity(List<IModularPort> ports, int multiplier) {
         long totalCapacity = 0;
@@ -19,6 +21,8 @@ public abstract class AbstractModularRecipeOutput extends AbstractRecipeOutput i
             // Common check for all outputs
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
+
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
 
             if (isCorrectPort(port)) {
                 totalCapacity += getPortCapacity(port);
@@ -38,4 +42,13 @@ public abstract class AbstractModularRecipeOutput extends AbstractRecipeOutput i
      * Calculate the capacity of a single valid port for this output type.
      */
     protected abstract long getPortCapacity(IModularPort port);
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }

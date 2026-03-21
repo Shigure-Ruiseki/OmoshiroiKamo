@@ -46,4 +46,20 @@ public interface IModularPort extends IPortType, ISidedIO, ISidedTexture {
         }
         return true;
     }
+
+    /**
+     * Get the index assigned to this port during structure formation.
+     * 
+     * @return The assigned index, or -1 if none.
+     */
+    default int getAssignedIndex() {
+        return -1;
+    }
+
+    /**
+     * Set the index assigned to this port during structure formation.
+     * 
+     * @param index The index to assign.
+     */
+    default void setAssignedIndex(int index) {}
 }

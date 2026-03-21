@@ -49,6 +49,8 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
+
             if (!(port instanceof IOKEnergySink)) continue;
 
             IOKEnergySink energyPort = (IOKEnergySink) port;
@@ -79,12 +81,15 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 1);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.amount = json.get("energy")
             .getAsInt();
     }
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("energy", amount);
         if (interval != 1) {
             if (isPerTick()) {
@@ -115,6 +120,7 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
     public IRecipeOutput copy(int multiplier) {
         EnergyOutput result = new EnergyOutput(amount * multiplier, isPerTick());
         result.interval = this.interval;
+        result.index = this.index;
         return result;
     }
 
@@ -123,12 +129,14 @@ public class EnergyOutput extends AbstractModularRecipeOutput {
         nbt.setString("id", "energy");
         nbt.setInteger("amount", amount);
         nbt.setInteger("interval", interval);
+        nbt.setInteger("index", index);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
         this.interval = nbt.getInteger("interval");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

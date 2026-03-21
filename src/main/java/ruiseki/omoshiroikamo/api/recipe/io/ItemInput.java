@@ -233,6 +233,8 @@ public class ItemInput extends AbstractModularRecipeInput {
     @Override
     public void read(JsonObject json) {
         readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
 
         if (json.has("consume")) {
             this.consume = json.get("consume")
@@ -317,6 +319,7 @@ public class ItemInput extends AbstractModularRecipeInput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
         if (interval > 0) json.addProperty("pertick", interval);
 
@@ -382,6 +385,7 @@ public class ItemInput extends AbstractModularRecipeInput {
         result.interval = this.interval;
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.index = this.index;
         return result;
     }
 
@@ -391,6 +395,7 @@ public class ItemInput extends AbstractModularRecipeInput {
         nbt.setInteger("count", count);
         nbt.setInteger("interval", interval);
         nbt.setBoolean("consume", consume);
+        nbt.setInteger("index", index);
         if (oreDict != null) {
             nbt.setString("ore", oreDict);
         }
@@ -422,6 +427,7 @@ public class ItemInput extends AbstractModularRecipeInput {
         this.count = nbt.getInteger("count");
         this.interval = nbt.getInteger("interval");
         this.consume = nbt.getBoolean("consume");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
         if (nbt.hasKey("ore")) {
             this.oreDict = nbt.getString("ore");
         }

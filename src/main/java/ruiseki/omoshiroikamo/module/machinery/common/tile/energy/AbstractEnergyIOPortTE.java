@@ -350,6 +350,16 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     @Override
     public void accept(IRecipeVisitor visitor) {}
 
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
+
     public enum EnergyMode {
 
         RF,
