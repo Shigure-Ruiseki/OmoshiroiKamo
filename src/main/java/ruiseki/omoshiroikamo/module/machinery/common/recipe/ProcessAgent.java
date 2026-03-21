@@ -116,6 +116,7 @@ public class ProcessAgent extends AbstractRecipeProcess {
 
     private void clearCaches() {
         cachedOutputs.clear();
+        perTickOutputs.clear();
     }
 
     @Override
