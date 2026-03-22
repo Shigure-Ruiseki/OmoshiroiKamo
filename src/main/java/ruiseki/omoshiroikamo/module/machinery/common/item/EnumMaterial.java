@@ -8,9 +8,11 @@ import lombok.Getter;
  */
 public enum EnumMaterial {
 
-    HIKARIUM(0, "hikarium", "Hikarium"),
-    TAIRITHIUM(1, "tairithium", "Tairithium"),
-    VITALIUM(2, "vitarium", "Vitarium");
+    OSMIRIDIUM(10, "osmiridium", "Osmiridium")
+    // HIKARIUM(200, "hikarium", "Hikarium"),
+    // TAIRITHIUM(201, "tairithium", "Tairithium"),
+    // VITALIUM(202, "vitarium", "Vitarium")
+    ;
 
     @Getter
     private final int meta;

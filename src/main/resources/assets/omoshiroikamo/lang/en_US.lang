@@ -1281,11 +1281,11 @@ machinery.tier.0=Standard
 machinery.tier.1=Improved
 machinery.tier.2=Revolutionary
 machinery.tier.3=Exotic
-machinery.tier.4=Ultimate
-machinery.tier.5=Paradox-Contained
-machinery.tier.6=Void Manipulating
-machinery.tier.7=Beyond Imaginally
-machinery.tier.8=Interstellar
+machinery.tier.4=Excellent
+machinery.tier.5=Ultimate
+machinery.tier.6=Paradox-Contained
+machinery.tier.7=Void Manipulating
+machinery.tier.8=Beyond Imaginally
 machinery.tier.9=Deep-Space Technical
 machinery.tier.10=Optically Perfect
 machinery.tier.11=Antigravity
@@ -1300,6 +1300,9 @@ machinery.design.circuitry=Circuitry Machine Casing
 
 
 # Materials
+item.ingot_osmiridium.name=Osmiridium Ingot
+item.plate_osmiridium.name=Osmiridium Plate
+item.gear_osmiridium.name=Osmiridium Gear
 item.ingot_hikarium.name=Hikarium Ingot
 item.plate_hikarium.name=Hikarium Plate
 item.gear_hikarium.name=Hikarium Gear

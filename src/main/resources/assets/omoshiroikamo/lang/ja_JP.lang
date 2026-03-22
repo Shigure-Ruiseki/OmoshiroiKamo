@@ -1284,11 +1284,11 @@ machinery.tier.0=標準的な
 machinery.tier.1=改良型の
 machinery.tier.2=革命的な
 machinery.tier.3=異形の
-machinery.tier.4=究極の
-machinery.tier.5=矛盾を孕んだ
-machinery.tier.6=虚空を操る
-machinery.tier.7=想像を超えた
-machinery.tier.8=星間を飛び回れる
+machinery.tier.4=優れた
+machinery.tier.5=究極の
+machinery.tier.6=矛盾を孕んだ
+machinery.tier.7=虚空を操る
+machinery.tier.8=想像を超えた
 machinery.tier.9=深宇宙技術の
 machinery.tier.10=光学的に完璧な
 machinery.tier.11=反重力の
@@ -1303,6 +1303,9 @@ machinery.design.circuitry=回路マシンケーシング
 
 
 # Materials
+item.ingot_osmiridium.name=オスミリジウムインゴット
+item.plate_osmiridium.name=オスミリジウムプレート
+item.gear_osmiridium.name=オスミリジウム歯車
 item.ingot_hikarium.name=光イウムインゴット
 item.plate_hikarium.name=光イウムプレート
 item.gear_hikarium.name=光イウム歯車
