@@ -1,6 +1,8 @@
 package ruiseki.omoshiroikamo.module.machinery.common.item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,7 +24,7 @@ public class ItemMaterialPart extends ItemOK {
     private final String partType; // "ingot", "plate", "gear"
 
     @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
+    private Map<Integer, IIcon> icons;
 
     public ItemMaterialPart(String partType) {
         super(partType);
@@ -39,20 +41,21 @@ public class ItemMaterialPart extends ItemOK {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        EnumMaterial[] materials = EnumMaterial.values();
-        icons = new IIcon[materials.length];
-        for (int i = 0; i < materials.length; i++) {
-            icons[i] = register.registerIcon(LibResources.PREFIX_MOD + partType + "_" + materials[i].getName());
+        icons = new HashMap<>();
+        for (EnumMaterial material : EnumMaterial.values()) {
+            icons.put(
+                material.getMeta(),
+                register.registerIcon(LibResources.PREFIX_MOD + "modular/" + partType + material.getOreName()));
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta) {
-        if (icons == null || meta < 0 || meta >= icons.length) {
+        if (icons == null || !icons.containsKey(meta)) {
             return super.getIconFromDamage(meta);
         }
-        return icons[meta];
+        return icons.get(meta);
     }
 
     @Override
