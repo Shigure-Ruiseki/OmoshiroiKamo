@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,11 +24,6 @@ public class BlockLaserCore extends BlockOK implements IMBBlock {
     @Override
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(this, 1, 0));
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
 }

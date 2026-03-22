@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.chickens.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -17,11 +15,6 @@ public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 
     public static BlockRoostCollector create() {
         return new BlockRoostCollector();
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override
