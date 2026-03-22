@@ -83,6 +83,8 @@ public enum ModObject {
     blockMenrilDoor,
     blockMenrilPlanks,
 
+    blockBarrel,
+
     itemBackPack,
     itemUpgrade,
     itemStackUpgrade,

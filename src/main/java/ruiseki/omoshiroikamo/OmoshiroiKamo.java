@@ -46,6 +46,7 @@ import ruiseki.omoshiroikamo.module.dml.DMLModule;
 import ruiseki.omoshiroikamo.module.ids.IDsModule;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockModule;
+import ruiseki.omoshiroikamo.module.storage.StorageModule;
 
 @Mod(
     modid = LibMisc.MOD_ID,
@@ -82,6 +83,7 @@ public class OmoshiroiKamo extends ModBase {
         registerModule(new CowsModule());
         registerModule(new DMLModule());
         registerModule(new BackpackModule());
+        registerModule(new StorageModule());
         registerModule(new IDsModule());
         registerModule(new MachineryModule());
         registerModule(new MultiBlockModule());
