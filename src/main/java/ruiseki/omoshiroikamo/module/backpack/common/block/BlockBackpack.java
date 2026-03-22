@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -63,11 +61,6 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
     public static BlockBackpack create(String name, int slots, int upgradeSlots) {
         return new BlockBackpack(name, slots, upgradeSlots);
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override

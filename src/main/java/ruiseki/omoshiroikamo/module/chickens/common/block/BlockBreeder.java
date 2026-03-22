@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.chickens.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 import java.util.Random;
 
@@ -28,11 +26,6 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
 
     public static BlockBreeder create() {
         return new BlockBreeder();
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override

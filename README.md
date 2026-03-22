@@ -30,7 +30,7 @@ Each backport module can be individually enabled or disabled in the config.
 
 - [StructureLib ](https://github.com/GTNewHorizons/StructureLib)
 - [ModularUI2 (>= 2.3.46)](https://github.com/GTNewHorizons/ModularUI2)
-- [GTNHLib (>= 0.9.40)](https://github.com/GTNewHorizons/GTNHLib)
+- [GTNHLib (>= 0.9.45)](https://github.com/GTNewHorizons/GTNHLib)
 
 ## Features:
 

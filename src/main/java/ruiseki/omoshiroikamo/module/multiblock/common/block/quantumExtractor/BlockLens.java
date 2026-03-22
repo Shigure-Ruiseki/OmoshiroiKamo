@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -33,11 +31,6 @@ public class BlockLens extends BlockOK implements IMBBlock {
     @Override
     protected Class<? extends ItemBlock> getItemBlockClass() {
         return ItemBlockLens.class;
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override
