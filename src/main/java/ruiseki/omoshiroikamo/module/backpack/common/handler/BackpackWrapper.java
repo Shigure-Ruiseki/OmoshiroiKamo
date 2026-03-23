@@ -36,6 +36,8 @@ import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
@@ -84,6 +86,19 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
     @Setter
     private String customName;
 
+    @Getter
+    @Setter
+    private boolean sleepingBagDeployed;
+    @Getter
+    @Setter
+    private int sleepingBagX;
+    @Getter
+    @Setter
+    private int sleepingBagY;
+    @Getter
+    @Setter
+    private int sleepingBagZ;
+
     public static final String MEMORY_STACK_ITEMS_TAG = "MemoryItems";
     public static final String MEMORY_STACK_RESPECT_NBT_TAG = "MemoryRespectNBT";
     public static final String SORT_TYPE_TAG = "SortType";
@@ -92,6 +107,10 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
     public static final String UUID_TAG = "UUID";
     public static final String KEEP_TAB_TAG = "KeepTab";
     public static final String CUSTOM_NAME_TAG = "CustomName";
+    public static final String SLEEPING_BAG_DEPLOYED_TAG = "SleepingBagDeloyed";
+    public static final String SLEEPING_BAG_X = "SleepingBagX";
+    public static final String SLEEPING_BAG_Y = "SleepingBagY";
+    public static final String SLEEPING_BAG_Z = "SleepingBagZ";
 
     @Getter
     @Setter
@@ -140,6 +159,7 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
         this.lockBackpack = false;
         this.uuid = "";
         this.keepTab = true;
+        this.sleepingBagDeployed = false;
 
         this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
@@ -606,6 +626,11 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
         if (hasCustomInventoryName()) {
             tag.setString(CUSTOM_NAME_TAG, this.customName);
         }
+
+        tag.setBoolean(SLEEPING_BAG_DEPLOYED_TAG, sleepingBagDeployed);
+        tag.setInteger(SLEEPING_BAG_X, sleepingBagX);
+        tag.setInteger(SLEEPING_BAG_Y, sleepingBagY);
+        tag.setInteger(SLEEPING_BAG_Z, sleepingBagZ);
     }
 
     public void readFromNBT(NBTTagCompound tag) {
@@ -680,6 +705,22 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
         } else {
             customName = tag.getString(CUSTOM_NAME_TAG);
         }
+
+        if (tag.hasKey(SLEEPING_BAG_DEPLOYED_TAG)) {
+            sleepingBagDeployed = tag.getBoolean(SLEEPING_BAG_DEPLOYED_TAG);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_X)) {
+            sleepingBagX = tag.getInteger(SLEEPING_BAG_X);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_Y)) {
+            sleepingBagY = tag.getInteger(SLEEPING_BAG_Y);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_Z)) {
+            sleepingBagZ = tag.getInteger(SLEEPING_BAG_Z);
+        }
     }
 
     public <T> Map<Integer, T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
@@ -706,5 +747,29 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
             OmoshiroiKamo.instance.getPacketHandler()
                 .sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
         }
+    }
+
+    public boolean deploySleepingBag(EntityPlayer player, World world, int meta, int cX, int cY, int cZ) {
+        if (world.isRemote) return false;
+
+        if (sleepingBagDeployed) removeSleepingBag(world);
+
+        sleepingBagDeployed = BlockSleepingBag.spawnSleepingBag(player, world, meta, cX, cY, cZ);
+        if (sleepingBagDeployed) {
+            sleepingBagX = cX;
+            sleepingBagY = cY;
+            sleepingBagZ = cZ;
+            writeToItem();
+        }
+        return sleepingBagDeployed;
+    }
+
+    public void removeSleepingBag(World world) {
+        if (this.sleepingBagDeployed) {
+            if (world.getBlock(sleepingBagX, sleepingBagY, sleepingBagZ) == BackpackBlocks.SLEEPING_BAG.getBlock())
+                world.func_147480_a(sleepingBagX, sleepingBagY, sleepingBagZ, false);
+        }
+        this.sleepingBagDeployed = false;
+        writeToItem();
     }
 }

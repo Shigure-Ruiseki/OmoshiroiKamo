@@ -9,8 +9,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 
 import org.joml.Vector3d;
 
@@ -27,6 +30,9 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContainer;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
+import ruiseki.omoshiroikamo.module.backpack.common.entity.properties.BackpackProperty;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 
 @EventBusSubscriber
@@ -35,6 +41,57 @@ public class BackpackEventHandler {
     @EventBusSubscriber.Condition
     public static boolean shouldSubscribe() {
         return BackportConfigs.enableBackpack;
+    }
+
+    @SubscribeEvent
+    public static void registerBackpackProperty(EntityEvent.EntityConstructing event) {
+        if (event.entity instanceof EntityPlayer && BackpackProperty.get((EntityPlayer) event.entity) == null) {
+            BackpackProperty.register((EntityPlayer) event.entity);
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerWokeUp(PlayerWakeUpEvent event) {
+        if (event.entity.worldObj.isRemote) return;
+
+        EntityPlayer player = event.entityPlayer;
+        ChunkCoordinates bedLocation = player.getBedLocation(player.dimension);
+        if (bedLocation != null && player.worldObj.getBlock(bedLocation.posX, bedLocation.posY, bedLocation.posZ)
+            == BackpackBlocks.SLEEPING_BAG.getBlock()) {
+            if (BlockSleepingBag.isSleepingInPortableBag(player)) {
+                BlockSleepingBag.packPortableSleepingBag(player);
+                BackpackProperty.get(player)
+                    .setWakingUpInPortableBag(true);
+            } else {
+                BackpackProperty props = BackpackProperty.get(player);
+                if (props != null) {
+                    BackpackProperty.get(player)
+                        .setWakingUpInDeployedBag(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void tickPlayer(TickEvent.PlayerTickEvent event) {
+        EntityPlayer player = event.player;
+        if (player != null && !player.isDead) return;
+        if (event.phase == TickEvent.Phase.END && player != null) {
+            if (!player.worldObj.isRemote) {
+                if (BackpackProperty.get(player)
+                    .isWakingUpInPortableBag()) {
+                    BlockSleepingBag.restoreOriginalSpawn(player);
+                    BackpackProperty.get(player)
+                        .setWakingUpInPortableBag(false);
+                }
+                if (BackpackProperty.get(player)
+                    .isWakingUpInDeployedBag()) {
+                    BlockSleepingBag.restoreOriginalSpawn(player);
+                    BackpackProperty.get(player)
+                        .setWakingUpInDeployedBag(false);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
