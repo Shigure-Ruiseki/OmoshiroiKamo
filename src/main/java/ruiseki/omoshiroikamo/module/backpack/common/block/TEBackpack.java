@@ -18,8 +18,10 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
@@ -27,6 +29,15 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     private final int[] allSlots;
 
     private final BackpackWrapper wrapper;
+
+    @NBTPersist
+    private boolean sleepingBagDeployed;
+    @NBTPersist
+    private int sbx;
+    @NBTPersist
+    private int sby;
+    @NBTPersist
+    private int sbz;
 
     public TEBackpack() {
         this(BackpackConfig.obsidianBackpackSlots, BackpackConfig.obsidianUpgradeSlots);
@@ -223,5 +234,37 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     public void readCommon(NBTTagCompound tag) {
         super.readCommon(tag);
         wrapper.readFromNBT(tag);
+    }
+
+    public boolean isSleepingBagDeployed() {
+        return this.sleepingBagDeployed;
+    }
+
+    public void setSleepingBagDeployed(boolean state) {
+        this.sleepingBagDeployed = state;
+        markDirty();
+        onSendUpdate();
+    }
+
+    public boolean deploySleepingBag(EntityPlayer player, World world, int meta, int cX, int cY, int cZ) {
+        if (world.isRemote) return false;
+
+        sleepingBagDeployed = BlockSleepingBag.spawnSleepingBag(player, world, meta, cX, cY, cZ);
+        if (sleepingBagDeployed) {
+            sbx = cX;
+            sby = cY;
+            sbz = cZ;
+            markDirty();
+            onSendUpdate();
+        }
+        return sleepingBagDeployed;
+    }
+
+    public void removeSleepingBag(World world) {
+        if (sleepingBagDeployed && world.getBlock(sbx, sby, sbz) == BackpackBlocks.SLEEPING_BAG.getBlock())
+            world.func_147480_a(sbx, sby, sbz, false);
+
+        sleepingBagDeployed = false;
+        markDirty();
     }
 }

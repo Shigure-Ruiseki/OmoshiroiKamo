@@ -45,6 +45,7 @@ public enum ModObject {
     blockBackpackGold,
     blockBackpackDiamond,
     blockBackpackObsidian,
+    blockSleepingBag,
 
     blockStall,
     blockRoost,
