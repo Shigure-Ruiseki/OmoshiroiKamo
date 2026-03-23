@@ -12,8 +12,6 @@ public class BarrelPanel extends StoragePanel {
         StorageWrapper wrapper, int width) {
         super(data, syncManager, settings, tile, wrapper, width);
 
-        syncManager.addCloseListener(player -> {
-            tile.setOpen(false);
-        });
+        syncManager.addCloseListener(player -> { tile.setOpen(false); });
     }
 }

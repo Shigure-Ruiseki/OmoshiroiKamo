@@ -8,11 +8,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
-import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
-
 import net.minecraftforge.common.util.ForgeDirection;
+
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.core.block.property.BlockStateProperties;
@@ -48,7 +45,10 @@ public class BlockBarrel extends BlockOK {
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TEBarrel barrel) {
-            barrel.setOrientation(DirectionHelpers.yawToDirection6(entity).getOpposite(), ForgeDirection.UP);
+            barrel.setOrientation(
+                DirectionHelpers.yawToDirection6(entity)
+                    .getOpposite(),
+                ForgeDirection.UP);
         }
     }
 
