@@ -337,8 +337,9 @@ public class BlockSleepingBag extends BlockOK {
         int switchBy = -1;
         if (isTile) {
             TEBackpack te = (TEBackpack) world.getTileEntity(cX, cY, cZ);
-            if (!te.isSleepingBagDeployed()) switchBy = te.getFacing()
-                .ordinal() & 3;
+            if (!te.isSleepingBagDeployed()) switchBy = ForgeDirection.getOrientation(te.getBlockMetadata() & 3)
+                .getOpposite()
+                .ordinal();
         } else {
             int playerDirection = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
             int[] tileSequence = { 2, 0, 3, 1 };

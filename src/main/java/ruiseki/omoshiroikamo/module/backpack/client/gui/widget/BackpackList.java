@@ -21,7 +21,6 @@ public class BackpackList extends ListWidget<Column, BackpackList> {
     public BackpackList(BackpackPanel panel) {
         this.panel = panel;
         width(panel.getRowSize() * ItemSlot.SIZE + thickness * 2);
-        maxSize(panel.getBackpackSlotsHeight());
     }
 
     @Override
