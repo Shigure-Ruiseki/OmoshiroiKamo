@@ -8,8 +8,6 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 
 public class StorageItemStackHandler extends UpgradeItemStackHandler {
@@ -37,9 +35,6 @@ public class StorageItemStackHandler extends UpgradeItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        if (memorizedSlotStack.get(slot) == null) {
-            return !(stack.getItem() instanceof BlockBackpack.ItemBackpack) || wrapper.canNestBackpack();
-        }
         if (memorizedSlotRespectNbtList.get(slot)) {
             return ItemStack.areItemStacksEqual(stack, memorizedSlotStack.get(slot));
         }
@@ -57,10 +52,6 @@ public class StorageItemStackHandler extends UpgradeItemStackHandler {
     }
 
     public ItemStack prioritizedInsertion(int slotIndex, ItemStack stack, boolean simulate) {
-        if (stack != null && !wrapper.canNestBackpack() && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
-            return stack;
-        }
-
         stack = insertItemToMemorySlots(stack, simulate);
         return insertItem(slotIndex, stack, simulate);
     }

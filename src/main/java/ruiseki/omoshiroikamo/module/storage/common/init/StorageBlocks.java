@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import ruiseki.omoshiroikamo.config.backport.StorageConfig;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
@@ -13,8 +14,12 @@ public enum StorageBlocks {
 
     // spotless: off
 
-    BARREL(new BlockBarrel("barrel")),
-    COPPER_BARREL(new BlockBarrel("copper_barrel")),
+    BARREL(new BlockBarrel("barrel", StorageConfig.baseSlots, StorageConfig.baseUpgradeSlots)),
+    IRON_BARREL(new BlockBarrel("iron_barrel", StorageConfig.ironSlots, StorageConfig.ironUpgradeSlots)),
+    GOLD_BARREL(new BlockBarrel("gold_barrel", StorageConfig.goldSlots, StorageConfig.goldUpgradeSlots)),
+    DIAMOND_BARREL(new BlockBarrel("diamond_barrel", StorageConfig.diamondSlots, StorageConfig.diamondUpgradeSlots)),
+    OBSIDIAN_BARREL(
+        new BlockBarrel("obsidian_barrel", StorageConfig.obsidianSlots, StorageConfig.obsidianUpgradeSlots)),
 
     ;
     // spotless: on

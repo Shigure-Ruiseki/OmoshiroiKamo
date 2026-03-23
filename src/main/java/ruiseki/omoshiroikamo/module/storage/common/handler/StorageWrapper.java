@@ -22,13 +22,11 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
-import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
+import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFeedingUpgrade;
@@ -40,8 +38,9 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackHandler;
+import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 
-public class StorageWrapper implements IStorageWrapper {
+public class StorageWrapper implements IStorageWrapper, INBTSerializable {
 
     public final StorageItemStackHandler storageItemStackHandler;
     public final UpgradeItemStackHandler upgradeItemStackHandler;
@@ -69,6 +68,10 @@ public class StorageWrapper implements IStorageWrapper {
 
     public StorageWrapper() {
         this(120, 7);
+    }
+
+    public StorageWrapper(BlockBarrel.ItemBarrel barrel) {
+        this(barrel.slots, barrel.upgradeSlots);
     }
 
     public StorageWrapper(int storageSlots, int upgradeSlots) {
@@ -252,7 +255,6 @@ public class StorageWrapper implements IStorageWrapper {
     public int getTotalStackMultiplier() {
         List<ItemStack> stacks = upgradeItemStackHandler.getStacks();
         int result = 0;
-        boolean hasstackUpdateOmega = false;
 
         if (stacks.isEmpty()) {
             return 1;
@@ -265,12 +267,8 @@ public class StorageWrapper implements IStorageWrapper {
             if (stack.getItem() instanceof ItemStackUpgrade upgrade) {
                 result += upgrade.multiplier(stack);
             }
-            if (stack.equals(BackpackItems.STACK_UPGRADE.newItemStack(1, 4))) {
-                hasstackUpdateOmega = true;
-            }
         }
-        if (hasstackUpdateOmega) return BackpackConfig.stackUpgradeTierOmegaMul;
-        else return result == 0 ? 1 : result;
+        return result == 0 ? 1 : result;
     }
 
     public int getStackMultiplierExcluding(int excludeSlot, ItemStack replacement) {
@@ -441,21 +439,13 @@ public class StorageWrapper implements IStorageWrapper {
         return false;
     }
 
-    public boolean canImportant() {
-
-        for (ItemStack stack : upgradeItemStackHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof ItemEverlastingUpgrade) {
-                return true;
-            }
-        }
-        return false;
-    }
     public boolean hasCustomInventoryName() {
         return this.customName != null && !this.customName.isEmpty();
     }
 
-    // ---------- TILE ENTITY ----------
-    public void writeToNBT(NBTTagCompound tag) {
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger(STORAGE_SLOTS, storageSlots);
         tag.setInteger(UPGRADE_SLOTS, upgradeSlots);
         tag.setInteger(MAIN_COLOR, getMainColor());
@@ -489,10 +479,11 @@ public class StorageWrapper implements IStorageWrapper {
         if (hasCustomInventoryName()) {
             tag.setString(CUSTOM_NAME_TAG, this.customName);
         }
+        return tag;
     }
 
-    public void readFromNBT(NBTTagCompound tag) {
-
+    @Override
+    public void deserializeNBT(NBTTagCompound tag) {
         if (tag.hasKey(STORAGE_SLOTS)) {
             storageSlots = tag.getInteger(STORAGE_SLOTS);
         }
@@ -510,7 +501,8 @@ public class StorageWrapper implements IStorageWrapper {
         if (tag.hasKey(BACKPACK_INV)) {
             storageItemStackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
 
-            BackpackItemStackUtils.loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), storageItemStackHandler.getStacks());
+            BackpackItemStackUtils
+                .loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), storageItemStackHandler.getStacks());
             if (storageItemStackHandler.getSlots() != storageSlots) {
                 storageItemStackHandler.resize(storageSlots);
             }
@@ -523,8 +515,9 @@ public class StorageWrapper implements IStorageWrapper {
         }
 
         if (tag.hasKey(MEMORY_STACK_ITEMS_TAG)) {
-            BackpackItemStackUtils
-                .loadAllItemsExtended(tag.getCompoundTag(MEMORY_STACK_ITEMS_TAG), storageItemStackHandler.memorizedSlotStack);
+            BackpackItemStackUtils.loadAllItemsExtended(
+                tag.getCompoundTag(MEMORY_STACK_ITEMS_TAG),
+                storageItemStackHandler.memorizedSlotStack);
         }
 
         byte[] respectArr = tag.getByteArray(MEMORY_STACK_RESPECT_NBT_TAG);

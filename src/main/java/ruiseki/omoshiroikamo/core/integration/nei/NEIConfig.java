@@ -56,6 +56,9 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.NEIDimensionConfig;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumOreExtractorRecipeHandler;
 import ruiseki.omoshiroikamo.module.multiblock.integration.nei.QuantumResExtractorRecipeHandler;
+import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageGuiContainer;
+import ruiseki.omoshiroikamo.module.storage.integration.nei.StorageOverlay;
+import ruiseki.omoshiroikamo.module.storage.integration.nei.StoragePositioner;
 
 public class NEIConfig implements IConfigureNEI {
 
@@ -210,6 +213,12 @@ public class NEIConfig implements IConfigureNEI {
         if (BackportConfigs.enableBackpack) {
             API.registerGuiOverlay(BackpackGuiContainer.class, "crafting", new BackpackPositioner());
             API.registerGuiOverlayHandler(BackpackGuiContainer.class, new BackpackOverlay(), "crafting");
+            API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
+        }
+
+        if (BackportConfigs.enableStorage) {
+            API.registerGuiOverlay(StorageGuiContainer.class, "crafting", new StoragePositioner());
+            API.registerGuiOverlayHandler(StorageGuiContainer.class, new StorageOverlay(), "crafting");
             API.addRecipeCatalyst(BackpackItems.CRAFTING_UPGRADE.newItemStack(), "crafting");
         }
 

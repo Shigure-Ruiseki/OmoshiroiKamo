@@ -25,6 +25,10 @@ public class StorageCreative extends BaseCreativeTab {
     @Override
     public void fillTab(CreativeTabs tab, List<ItemStack> list) {
         addBlock(tab, list, StorageBlocks.BARREL.getBlock());
+        addBlock(tab, list, StorageBlocks.IRON_BARREL.getBlock());
+        addBlock(tab, list, StorageBlocks.GOLD_BARREL.getBlock());
+        addBlock(tab, list, StorageBlocks.DIAMOND_BARREL.getBlock());
+        addBlock(tab, list, StorageBlocks.OBSIDIAN_BARREL.getBlock());
     }
 
 }

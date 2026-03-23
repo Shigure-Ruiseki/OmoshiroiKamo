@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=up,open=false": { "model": "omoshiroikamo:block/storage/gold_barrel" },
+    "facing=down,open=false": { "model": "omoshiroikamo:block/storage/gold_barrel", "x": 180 },
+
+    "facing=north,open=false": { "model": "omoshiroikamo:block/storage/gold_barrel", "x": 90, "y": 0 },
+    "facing=south,open=false": { "model": "omoshiroikamo:block/storage/gold_barrel", "x": 90, "y": 180 },
+    "facing=west,open=false": { "model": "omoshiroikamo:block/storage/gold_barrel", "x": 90, "y": 90 },
+    "facing=east,open=false": { "model": "omoshiroikamo:block/storage/gold_barrel", "x": 90, "y": 270 },
+
+    "facing=up,open=true": { "model": "omoshiroikamo:block/storage/gold_barrel_open" },
+    "facing=down,open=true": { "model": "omoshiroikamo:block/storage/gold_barrel_open", "x": 180 },
+
+    "facing=north,open=true": { "model": "omoshiroikamo:block/storage/gold_barrel_open", "x": 90, "y": 0 },
+    "facing=south,open=true": { "model": "omoshiroikamo:block/storage/gold_barrel_open", "x": 90, "y": 180 },
+    "facing=west,open=true": { "model": "omoshiroikamo:block/storage/gold_barrel_open", "x": 90, "y": 90 },
+    "facing=east,open=true": { "model": "omoshiroikamo:block/storage/gold_barrel_open", "x": 90, "y": 270 }
+  }
+}

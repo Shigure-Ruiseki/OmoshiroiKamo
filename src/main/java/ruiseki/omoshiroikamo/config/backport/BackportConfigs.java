@@ -50,6 +50,7 @@ public class BackportConfigs {
         ConfigurationManager.registerConfig(ChickenConfig.class);
         ConfigurationManager.registerConfig(CowConfig.class);
         ConfigurationManager.registerConfig(BackpackConfig.class);
+        ConfigurationManager.registerConfig(StorageConfig.class);
         ConfigurationManager.registerConfig(IDsConfig.class);
         ConfigurationManager.registerConfig(DMLConfig.class);
         ConfigurationManager.registerConfig(MachineryConfig.class);

@@ -76,12 +76,9 @@ public interface DirectionProperty extends BlockProperty<ForgeDirection> {
             @Override
             public void setValue(World world, int x, int y, int z, ForgeDirection value) {
                 IOrientable orientable = TileHelpers.getSafeTile(world, x, y, z, IOrientable.class);
-
                 if (orientable == null) return;
-                if (!orientable.canBeRotated()) return;
 
                 ForgeDirection up;
-
                 if (value == ForgeDirection.UP || value == ForgeDirection.DOWN) {
                     up = ForgeDirection.NORTH;
                 } else {
