@@ -14,8 +14,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.input.TEManaInputPort;
@@ -63,7 +63,7 @@ public class BlockManaInputPort extends AbstractPortBlock<TEManaInputPort> imple
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.manaPortCapacity) + " Mana"));
     }
@@ -71,7 +71,7 @@ public class BlockManaInputPort extends AbstractPortBlock<TEManaInputPort> imple
     @Override
     protected void addTransferTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG
+            LangHelpers
                 .localize("tooltip.machinery.mana_transfer", String.format("%,d", MachineryConfig.manaPortTransfer)));
     }
 

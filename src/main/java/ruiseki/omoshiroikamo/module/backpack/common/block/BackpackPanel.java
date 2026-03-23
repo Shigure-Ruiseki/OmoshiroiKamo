@@ -94,9 +94,7 @@ public class BackpackPanel extends ModularPanel {
         .build();
 
     private static final List<CyclicVariantButtonWidget.Variant> SORT_TYPE_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(
-            IKey.lang(LibMisc.LANG.localize("gui.backpack.sort_by_name")),
-            OKGuiTextures.SMALL_A_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_name"), OKGuiTextures.SMALL_A_ICON),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_mod_id"), OKGuiTextures.SMALL_M_ICON),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_count"), OKGuiTextures.SMALL_1_ICON),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.sort_by_ore_dict"), OKGuiTextures.SMALL_O_ICON));

@@ -48,6 +48,7 @@ import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
@@ -500,7 +501,7 @@ public class TEMachineController extends AbstractMBModifierTE
             if (insufficientType != null) {
                 setProcessError(
                     ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT,
-                    LibMisc.LANG.localize("gui.port_type." + insufficientType.name()));
+                    LangHelpers.localize("gui.port_type." + insufficientType.name()));
                 return;
             }
 

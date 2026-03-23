@@ -30,8 +30,9 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
+import ruiseki.omoshiroikamo.core.color.ITintable;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
@@ -49,7 +50,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperF
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
 
-public class BackpackWrapper implements IItemHandlerModifiable {
+public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
 
     @Getter
     private final ItemStack backpack;
@@ -99,12 +100,9 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     @Setter
     private int upgradeSlots;
 
-    @Getter
-    @Setter
     private int mainColor;
-    @Getter
-    @Setter
     private int accentColor;
+
     @Getter
     public static final String MAIN_COLOR = "MainColor";
     @Getter
@@ -169,11 +167,11 @@ public class BackpackWrapper implements IItemHandlerModifiable {
             return this.customName;
         }
         if (backpack != null && backpack.getItem() != null) {
-            return LibMisc.LANG.localize(
+            return LangHelpers.localize(
                 backpack.getItem()
                     .getUnlocalizedName(backpack) + ".name");
         }
-        return LibMisc.LANG.localize("container.inventory");
+        return LangHelpers.localize("container.inventory");
     }
 
     @Override
@@ -318,6 +316,22 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
     public void setSlotLocked(int slotIndex, boolean locked) {
         backpackHandler.sortLockedSlots.set(slotIndex, locked);
+    }
+
+    @Override
+    public int getMainColor() {
+        return mainColor;
+    }
+
+    @Override
+    public int getAccentColor() {
+        return accentColor;
+    }
+
+    @Override
+    public void setColors(int mainColor, int accentColor) {
+        this.mainColor = mainColor;
+        this.accentColor = accentColor;
     }
 
     // ---------- UPGRADE ----------

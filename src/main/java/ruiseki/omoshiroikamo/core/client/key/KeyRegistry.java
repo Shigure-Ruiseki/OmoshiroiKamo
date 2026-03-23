@@ -12,8 +12,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Enum that contains all custom hotkeys that
@@ -37,8 +37,8 @@ public class KeyRegistry implements IKeyRegistry {
      * @return A new keybinding.
      */
     public static KeyBinding newKeyBinding(ModBase mod, String name, int defaultKey) {
-        String id = LibMisc.LANG.localize("key." + mod.getModId() + "." + name);
-        String category = LibMisc.LANG.localize("key.categories." + mod.getModId());
+        String id = LangHelpers.localize("key." + mod.getModId() + "." + name);
+        String category = LangHelpers.localize("key.categories." + mod.getModId());
         return new KeyBinding(id, defaultKey, category);
     }
 

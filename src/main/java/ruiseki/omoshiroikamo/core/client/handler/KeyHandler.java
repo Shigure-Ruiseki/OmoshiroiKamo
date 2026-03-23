@@ -24,8 +24,8 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.network.packet.PacketQuickDraw;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
@@ -40,15 +40,15 @@ public class KeyHandler {
 
     private KeyHandler() {
         keyOpenBackpack = new KeyBinding(
-            LibMisc.LANG.localize("keybind.backpackOpenToggle"),
+            LangHelpers.localize("keybind.backpackOpenToggle"),
             Keyboard.KEY_B,
-            LibMisc.LANG.localize("category.omoshiroikamo"));
+            LangHelpers.localize("category.omoshiroikamo"));
         ClientRegistry.registerKeyBinding(keyOpenBackpack);
 
         keyBackpackPickBlock = new KeyBinding(
-            LibMisc.LANG.localize("keybind.keyBackpackPickBlock"),
+            LangHelpers.localize("keybind.keyBackpackPickBlock"),
             Keyboard.KEY_NONE,
-            LibMisc.LANG.localize("category.omoshiroikamo"));
+            LangHelpers.localize("category.omoshiroikamo"));
         ClientRegistry.registerKeyBinding(keyBackpackPickBlock);
     }
 

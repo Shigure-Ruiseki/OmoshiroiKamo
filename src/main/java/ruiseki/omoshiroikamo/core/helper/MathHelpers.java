@@ -1,6 +1,6 @@
-package ruiseki.omoshiroikamo.core.common.util;
+package ruiseki.omoshiroikamo.core.helper;
 
-public class MathUtils {
+public class MathHelpers {
 
     public static int divideAndRoundUp(int a, int b) {
         return a / b + ((a % b == 0) ? 0 : 1);

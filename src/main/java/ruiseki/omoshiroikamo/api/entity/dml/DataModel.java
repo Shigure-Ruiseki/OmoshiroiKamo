@@ -11,9 +11,9 @@ import net.minecraft.util.ChatComponentText;
 
 import org.jetbrains.annotations.Nullable;
 
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 public class DataModel {
@@ -92,9 +92,9 @@ public class DataModel {
             ModelRegistryItem model = ModelRegistry.INSTANCE.getByType(getId(stack));
             if (model == null) return;
 
-            String nextTierName = LibMisc.LANG.localize(ModelTierRegistry.INSTANCE.getTierName(tier + 1));
-            String entityName = LibMisc.LANG.localize(model.getDisplayName());
-            String message = LibMisc.LANG.localize("tooltip.data_model.reached_tier", entityName, nextTierName);
+            String nextTierName = LangHelpers.localize(ModelTierRegistry.INSTANCE.getTierName(tier + 1));
+            String entityName = LangHelpers.localize(model.getDisplayName());
+            String message = LangHelpers.localize("tooltip.data_model.reached_tier", entityName, nextTierName);
             player.addChatMessage(new ChatComponentText(message));
             setKillCount(0, stack);
             setSimulationCount(0, stack);
@@ -224,7 +224,7 @@ public class DataModel {
     }
 
     public static String getTierName(ItemStack stack) {
-        return LibMisc.LANG.localize(ModelTierRegistry.INSTANCE.getTierName(getTier(stack)));
+        return LangHelpers.localize(ModelTierRegistry.INSTANCE.getTierName(getTier(stack)));
     }
 
     public static String getMatterTypeName(ItemStack stack) {
@@ -235,7 +235,7 @@ public class DataModel {
         LivingRegistryItem item = LivingRegistry.INSTANCE.getByType(
             model.getLivingMatter()
                 .getItemDamage());
-        return item == null ? "Unknown" : LibMisc.LANG.localize(item.getItemName());
+        return item == null ? "Unknown" : LangHelpers.localize(item.getItemName());
     }
 
     public static boolean isMaxTier(ItemStack stack) {

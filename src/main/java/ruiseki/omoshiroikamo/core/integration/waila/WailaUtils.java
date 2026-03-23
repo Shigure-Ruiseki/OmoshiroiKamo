@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ICraftingTile;
 import ruiseki.omoshiroikamo.core.tileentity.IProgressTile;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
@@ -28,17 +28,17 @@ public class WailaUtils {
 
     public static String getProgress(IProgressTile handler) {
         float progress = handler.getProgress();
-        return LibMisc.LANG.localize("gui.progress", Math.max(0, progress * 100));
+        return LangHelpers.localize("gui.progress", Math.max(0, progress * 100));
     }
 
     public static String getCraftingState(ICraftingTile handler) {
-        return LibMisc.LANG.localize(
+        return LangHelpers.localize(
             "gui.craftingState." + handler.getCraftingState()
                 .getName());
     }
 
     public static String getEnergyTransfer(IOKEnergyTile handler) {
-        return LibMisc.LANG.localize("gui.energy_transfer", handler.getEnergyTransfer());
+        return LangHelpers.localize("gui.energy_transfer", handler.getEnergyTransfer());
     }
 
     public static List<String> getFluidTooltip(IFluidHandler handler) {
@@ -96,7 +96,7 @@ public class WailaUtils {
     }
 
     public static String getManaToolTip(IManaBlock handler) {
-        return LibMisc.LANG.localize("gui.mana_info", handler.getCurrentMana());
+        return LangHelpers.localize("gui.mana_info", handler.getCurrentMana());
     }
 
     public static String getInventoryTooltip(IInventory inv) {
@@ -127,7 +127,7 @@ public class WailaUtils {
     public static String getSideIOTooltip(ISidedIO handler, ForgeDirection direction) {
         if (handler == null) return null;
         EnumIO io = handler.getSideIO(direction);
-        return LibMisc.LANG.localize(io.getName());
+        return LangHelpers.localize(io.getName());
     }
 
     public static Vec3 getLocalHit(IWailaDataAccessor accessor) {

@@ -18,8 +18,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemPristineMatter extends ItemOK {
 
@@ -49,7 +49,7 @@ public class ItemPristineMatter extends ItemOK {
         if (model == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(model.getPristineName());
+        return LangHelpers.localize(model.getPristineName());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ItemPristineMatter extends ItemOK {
         ModelRegistryItem model = ModelRegistry.INSTANCE.getByType(stack.getItemDamage());
         if (model != null) {
             list.add(
-                ChatFormatting.AQUA + LibMisc.LANG.localize("tooltip.pristine_matter.loot_items")
+                ChatFormatting.AQUA + LangHelpers.localize("tooltip.pristine_matter.loot_items")
                     + ChatFormatting.RESET);
             for (ItemStack lootStack : model.getLootItems()) {
                 list.add(lootStack.getDisplayName());

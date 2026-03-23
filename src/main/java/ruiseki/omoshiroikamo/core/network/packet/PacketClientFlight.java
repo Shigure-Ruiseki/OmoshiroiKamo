@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.core.network.CodecField;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
 
@@ -33,7 +33,7 @@ public class PacketClientFlight extends PacketCodec {
     @Override
     public void actionClient(World world, EntityPlayer clientPlayer) {
 
-        EntityPlayer target = PlayerUtils.getPlayerFromWorldClient(world, player);
+        EntityPlayer target = PlayerHelpers.getPlayerFromWorldClient(world, player);
 
         if (target == null) return;
 

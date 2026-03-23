@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.output.TEEssentiaOutputPort;
 
@@ -58,7 +58,7 @@ public class BlockEssentiaOutputPort extends AbstractPortBlock<TEEssentiaOutputP
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.essentiaPortCapacity) + " Essentia / type"));
     }

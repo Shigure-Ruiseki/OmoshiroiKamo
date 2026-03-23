@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.util;
+package ruiseki.omoshiroikamo.core.helper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class KeyboardUtils {
+public class KeyboardHelpers {
 
     @SideOnly(Side.CLIENT)
     public static boolean isHoldingShift() {

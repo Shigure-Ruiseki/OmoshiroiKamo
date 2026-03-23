@@ -12,8 +12,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT1;
@@ -66,7 +66,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.getFluidPortCapacity(tier)) + " mB"));
     }

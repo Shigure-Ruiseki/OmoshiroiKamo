@@ -20,8 +20,8 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaTileInfoProvider;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.network.packet.PacketProgress;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 
@@ -135,7 +135,7 @@ public abstract class AbstractTE extends AbstractTickingTE
      * @return machine name
      */
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".name");
     }
 
     public String getUnlocalizedName() {

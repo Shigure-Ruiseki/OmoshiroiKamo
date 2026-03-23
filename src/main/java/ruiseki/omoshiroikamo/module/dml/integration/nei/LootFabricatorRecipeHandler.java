@@ -12,9 +12,9 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.lootFabricator.BlockLootFabricator;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
@@ -36,7 +36,7 @@ public class LootFabricatorRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return LibMisc.LANG.localize("nei.dml.loot_fabricator");
+        return LangHelpers.localize("nei.dml.loot_fabricator");
     }
 
     @Override

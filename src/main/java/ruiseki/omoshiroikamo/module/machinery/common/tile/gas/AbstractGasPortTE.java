@@ -32,6 +32,7 @@ import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.gas.SmartGasTank;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
@@ -77,7 +78,7 @@ public abstract class AbstractGasPortTE extends AbstractTE
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override

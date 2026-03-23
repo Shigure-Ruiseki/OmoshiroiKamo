@@ -29,6 +29,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.ids.client.gui.syncHandler.ProgrammerSH;
 import ruiseki.omoshiroikamo.module.ids.client.gui.widget.variable.BaseVariableWidget;
@@ -111,21 +112,21 @@ public class ProgrammerPanel extends ModularPanel {
     private void registerDefaultItems() {
 
         // Type
-        addItem(LibMisc.LANG.localize("gui.ids.type.boolean"), () -> new BooleanVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.type.int"), () -> new IntegerVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.type.long"), () -> new LongVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.type.float"), () -> new FloatVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.type.double"), () -> new DoubleVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.type.string"), () -> new StringVariable(this));
+        addItem(LangHelpers.localize("gui.ids.type.boolean"), () -> new BooleanVariable(this));
+        addItem(LangHelpers.localize("gui.ids.type.int"), () -> new IntegerVariable(this));
+        addItem(LangHelpers.localize("gui.ids.type.long"), () -> new LongVariable(this));
+        addItem(LangHelpers.localize("gui.ids.type.float"), () -> new FloatVariable(this));
+        addItem(LangHelpers.localize("gui.ids.type.double"), () -> new DoubleVariable(this));
+        addItem(LangHelpers.localize("gui.ids.type.string"), () -> new StringVariable(this));
 
         // Controller
-        addItem(LibMisc.LANG.localize("gui.ids.op.if"), () -> new IfVariable(this));
+        addItem(LangHelpers.localize("gui.ids.op.if"), () -> new IfVariable(this));
 
         // Operator
-        addItem(LibMisc.LANG.localize("gui.ids.op.and"), () -> new AndVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.op.nand"), () -> new NandVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.op.or"), () -> new OrVariable(this));
-        addItem(LibMisc.LANG.localize("gui.ids.op.nor"), () -> new NorVariable(this));
+        addItem(LangHelpers.localize("gui.ids.op.and"), () -> new AndVariable(this));
+        addItem(LangHelpers.localize("gui.ids.op.nand"), () -> new NandVariable(this));
+        addItem(LangHelpers.localize("gui.ids.op.or"), () -> new OrVariable(this));
+        addItem(LangHelpers.localize("gui.ids.op.nor"), () -> new NorVariable(this));
     }
 
     private static final UITexture LIST_ITEM_BG = UITexture.builder()

@@ -38,9 +38,9 @@ import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.helper.TileHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -152,9 +152,9 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
         // Rows
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.redstoneReader.redstoneValue"),
+            LangHelpers.localize("gui.ids.redstoneReader.redstoneValue"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.redstoneReader.redstoneValue"),
+                LangHelpers.localize("gui.ids.redstoneReader.redstoneValue"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("value"))),
                 3,
                 LogicKeys.REDSTONE_VALUE),
@@ -162,9 +162,9 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.redstoneReader.hasRedstone"),
+            LangHelpers.localize("gui.ids.redstoneReader.hasRedstone"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.redstoneReader.hasRedstone"),
+                LangHelpers.localize("gui.ids.redstoneReader.hasRedstone"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("has"))),
                 1,
                 LogicKeys.HAS_REDSTONE),
@@ -172,9 +172,9 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.redstoneReader.highRedstone"),
+            LangHelpers.localize("gui.ids.redstoneReader.highRedstone"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.redstoneReader.highRedstone"),
+                LangHelpers.localize("gui.ids.redstoneReader.highRedstone"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("high"))),
                 2,
                 LogicKeys.HIGH_REDSTONE),
@@ -182,9 +182,9 @@ public class RedstoneReader extends AbstractReaderPart implements ILogicReaderPa
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.redstoneReader.lowRedstone"),
+            LangHelpers.localize("gui.ids.redstoneReader.lowRedstone"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.redstoneReader.lowRedstone"),
+                LangHelpers.localize("gui.ids.redstoneReader.lowRedstone"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("low"))),
                 0,
                 LogicKeys.LOW_REDSTONE),

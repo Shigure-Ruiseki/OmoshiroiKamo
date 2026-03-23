@@ -17,9 +17,9 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.item.ItemWrench;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
@@ -117,7 +117,7 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.getEnergyPortCapacity(tier)) + " RF"));
     }
@@ -125,7 +125,7 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
     @Override
     protected void addTransferTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG
+            LangHelpers
                 .localize("gui.energy_transfer", String.format("%,d", MachineryConfig.getEnergyPortTransfer(tier))));
     }
 

@@ -17,10 +17,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.LivingRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.helper.KeyboardHelpers;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemLivingMatter extends ItemOK {
 
@@ -45,7 +45,7 @@ public class ItemLivingMatter extends ItemOK {
         if (model == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(model.getItemName());
+        return LangHelpers.localize(model.getItemName());
     }
 
     @Override
@@ -70,8 +70,8 @@ public class ItemLivingMatter extends ItemOK {
         TooltipUtils builder = TooltipUtils.builder();
         LivingRegistryItem item = LivingRegistry.INSTANCE.getByType(stack.getItemDamage());
         if (item != null) {
-            builder.addLang("tooltip.living_matter.consume_for_xp", KeyboardUtils.getUseKeyName());
-            builder.addLang("tooltip.living_matter.consume_stack", KeyboardUtils.getSneakKeyName());
+            builder.addLang("tooltip.living_matter.consume_for_xp", KeyboardHelpers.getUseKeyName());
+            builder.addLang("tooltip.living_matter.consume_stack", KeyboardHelpers.getSneakKeyName());
             builder.addLang("tooltip.living_matter.xp", item.getXpValue());
         }
 

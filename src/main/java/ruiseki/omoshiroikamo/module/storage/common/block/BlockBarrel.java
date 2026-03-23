@@ -4,6 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.gtnewhorizon.gtnhlib.blockstate.core.BlockState;
@@ -46,10 +47,14 @@ public class BlockBarrel extends BlockOK {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX,
         float subY, float subZ) {
         BlockState state = BlockPropertyRegistry.getBlockState(world, x, y, z);
-        state.setPropertyValue(OPEN, !state.getPropertyValue(OPEN));
+        state.setPropertyValue(OPEN, true);
         state.place(world, x, y, z);
         state.close();
 
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEBarrel barrel) {
+            return barrel.onBlockActivated(world, x, y, z, player, side, subX, subY, subZ);
+        }
         return true;
     }
 }

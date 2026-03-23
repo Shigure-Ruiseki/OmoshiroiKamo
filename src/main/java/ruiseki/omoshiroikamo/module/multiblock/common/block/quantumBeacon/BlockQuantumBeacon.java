@@ -21,9 +21,9 @@ import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig.BeaconTierConfig;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig.BeaconTierRangeConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
 
@@ -89,7 +89,7 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
 
             if (GuiScreen.isShiftKeyDown()) {
                 BeaconTierConfig config = getTierConfig(stack.getItemDamage());
-                list.add(EnumChatFormatting.GOLD + LibMisc.LANG.localize("tooltip.beacon.effect_list"));
+                list.add(EnumChatFormatting.GOLD + LangHelpers.localize("tooltip.beacon.effect_list"));
 
                 addEffectLine(list, "speed", config.getSpeedLevel());
                 addEffectLine(list, "haste", config.getHasteLevel());
@@ -107,33 +107,33 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
                 // Range information
                 int tier = stack.getItemDamage() + 1;
                 BeaconTierRangeConfig rangeConfig = QuantumBeaconConfig.getRangeConfig(tier);
-                list.add(EnumChatFormatting.GOLD + LibMisc.LANG.localize("tooltip.beacon.range"));
+                list.add(EnumChatFormatting.GOLD + LangHelpers.localize("tooltip.beacon.range"));
                 list.add(
                     "  " + EnumChatFormatting.AQUA
-                        + LibMisc.LANG.localize("tooltip.beacon.range.horizontal")
+                        + LangHelpers.localize("tooltip.beacon.range.horizontal")
                         + ": "
                         + EnumChatFormatting.WHITE
                         + rangeConfig.horizontalRange);
                 list.add(
                     "  " + EnumChatFormatting.AQUA
-                        + LibMisc.LANG.localize("tooltip.beacon.range.upward")
+                        + LangHelpers.localize("tooltip.beacon.range.upward")
                         + ": "
                         + EnumChatFormatting.WHITE
                         + rangeConfig.upwardRange);
                 list.add(
                     "  " + EnumChatFormatting.AQUA
-                        + LibMisc.LANG.localize("tooltip.beacon.range.downward")
+                        + LangHelpers.localize("tooltip.beacon.range.downward")
                         + ": "
                         + EnumChatFormatting.WHITE
                         + rangeConfig.downwardRange);
-                list.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.beacon.shift_for_effects"));
+                list.add(EnumChatFormatting.GRAY + LangHelpers.localize("tooltip.beacon.shift_for_effects"));
             }
         }
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         private void addEffectLine(List list, String effectKey, int level) {
             if (level > 0) {
-                String effectName = LibMisc.LANG.localize("tooltip.beacon.effect." + effectKey);
+                String effectName = LangHelpers.localize("tooltip.beacon.effect." + effectKey);
                 list.add("  " + EnumChatFormatting.AQUA + effectName + ": " + EnumChatFormatting.WHITE + level);
             }
         }

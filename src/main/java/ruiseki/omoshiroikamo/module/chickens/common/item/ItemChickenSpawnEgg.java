@@ -23,10 +23,10 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 
@@ -85,7 +85,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
         if (chickenDescription == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(chickenDescription.getDisplayName());
+        return LangHelpers.localize(chickenDescription.getDisplayName());
     }
 
     @SideOnly(Side.CLIENT)

@@ -12,8 +12,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPort;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutputPortT1;
@@ -65,7 +65,7 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
-        list.add(LibMisc.LANG.localize("tooltip.machinery.slots", MachineryConfig.getItemPortSlots(tier)));
+        list.add(LangHelpers.localize("tooltip.machinery.slots", MachineryConfig.getItemPortSlots(tier)));
     }
 
     public static class ItemBlockItemOutputPort extends AbstractPortItemBlock {

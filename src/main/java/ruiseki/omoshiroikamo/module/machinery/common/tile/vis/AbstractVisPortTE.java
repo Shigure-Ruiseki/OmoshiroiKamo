@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import thaumcraft.api.aspects.Aspect;
@@ -133,7 +133,7 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override

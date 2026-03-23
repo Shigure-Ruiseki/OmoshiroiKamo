@@ -16,9 +16,9 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
 
@@ -63,9 +63,9 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
             tooltip.add(WailaUtils.getCraftingState(solar));
             float efficiency = solar.calculateLightRatio();
             if (!solar.canSeeSun()) {
-                tooltip.add(EnumChatFormatting.RED + LibMisc.LANG.localize("gui.sunlightBlocked"));
+                tooltip.add(EnumChatFormatting.RED + LangHelpers.localize("gui.sunlightBlocked"));
             } else {
-                tooltip.add(LibMisc.LANG.localize("gui.efficiency", efficiency * 100));
+                tooltip.add(LangHelpers.localize("gui.efficiency", efficiency * 100));
             }
         }
     }
@@ -87,7 +87,7 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
             super.addInformation(stack, player, tooltip, advanced);
             int tier = stack.getItemDamage() + 1;
             int peakEnergy = getPeakEnergy(tier);
-            tooltip.add(LibMisc.LANG.localize("tooltip.solar.array.peak", peakEnergy));
+            tooltip.add(LangHelpers.localize("tooltip.solar.array.peak", peakEnergy));
         }
 
         private int getPeakEnergy(int tier) {

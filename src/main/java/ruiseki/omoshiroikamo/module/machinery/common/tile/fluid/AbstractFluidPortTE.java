@@ -29,6 +29,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.fluid.SmartTank;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
@@ -71,7 +72,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override

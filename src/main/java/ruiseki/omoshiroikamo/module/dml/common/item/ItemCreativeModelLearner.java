@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
+import ruiseki.omoshiroikamo.core.helper.KeyboardHelpers;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemCreativeModelLearner extends ItemOK {
 
@@ -23,9 +23,9 @@ public class ItemCreativeModelLearner extends ItemOK {
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 
         if (world.isRemote) {
-            if (KeyboardUtils.isHoldingShift()) {
+            if (KeyboardHelpers.isHoldingShift()) {
                 // DeepMobLearning.network.sendToServer(new LevelUpModelMessage(0));
-            } else if (KeyboardUtils.isHoldingCTRL()) {
+            } else if (KeyboardHelpers.isHoldingCTRL()) {
                 // DeepMobLearning.network.sendToServer(new LevelUpModelMessage(1));
             }
         }
@@ -35,12 +35,12 @@ public class ItemCreativeModelLearner extends ItemOK {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if (!KeyboardUtils.isHoldingShift()) {
-            list.add(LibMisc.LANG.localize("tooltip.holdShift"));
+        if (!KeyboardHelpers.isHoldingShift()) {
+            list.add(LangHelpers.localize("tooltip.holdShift"));
         } else {
-            list.add(LibMisc.LANG.localize("tooltip.creative_model_learner.desc"));
-            list.add(LibMisc.LANG.localize("tooltip.creative_model_learner.shift"));
-            list.add(LibMisc.LANG.localize("tooltip.creative_model_learner.ctrl"));
+            list.add(LangHelpers.localize("tooltip.creative_model_learner.desc"));
+            list.add(LangHelpers.localize("tooltip.creative_model_learner.shift"));
+            list.add(LangHelpers.localize("tooltip.creative_model_learner.ctrl"));
         }
     }
 }

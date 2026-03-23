@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierAccuracy extends BlockModifier {
@@ -38,8 +38,8 @@ public class BlockModifierAccuracy extends BlockModifier {
         float speedPenalty = QuantumExtractorConfig.modifiers.accuracySpeedPenalty;
 
         List<String> list = new ArrayList<>();
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.accuracy.effect"), accuracyMultiplier));
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.accuracy.penalty"), speedPenalty, energyCost));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.accuracy.effect"), accuracyMultiplier));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.accuracy.penalty"), speedPenalty, energyCost));
         return list;
     }
 }

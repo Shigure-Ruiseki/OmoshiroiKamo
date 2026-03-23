@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.util;
+package ruiseki.omoshiroikamo.core.helper;
 
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ import com.mojang.authlib.GameProfile;
 
 import ruiseki.omoshiroikamo.core.util.LookDirection;
 
-public class PlayerUtils {
+public class PlayerHelpers {
 
     public static boolean doesPlayerExist(World world, UUID player) {
         if (world != null && player != null) {

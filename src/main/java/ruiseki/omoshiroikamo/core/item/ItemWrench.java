@@ -14,7 +14,7 @@ import cofh.api.item.IToolHammer;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketToggleSide;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
@@ -163,8 +163,8 @@ public class ItemWrench extends ItemOK implements IToolHammer {
     public String getItemStackDisplayName(ItemStack stack) {
         String baseName = super.getItemStackDisplayName(stack);
         IPortType.Type type = getSelectedPortType(stack);
-        String typeName = LibMisc.LANG.localize("gui.port_type." + type.name());
-        return LibMisc.LANG.localize("gui.port_type.format", baseName, typeName);
+        String typeName = LangHelpers.localize("gui.port_type." + type.name());
+        return LangHelpers.localize("gui.port_type.format", baseName, typeName);
     }
 
     public static ForgeDirection getClickedSide(ForgeDirection hitSide, float hitX, float hitY, float hitZ) {
@@ -245,7 +245,7 @@ public class ItemWrench extends ItemOK implements IToolHammer {
         nbt.setInteger("SelectedPortTypeIndex", currentIndex);
 
         IPortType.Type nextType = IPortType.SUPPORTED_TYPES[currentIndex];
-        String typeName = LibMisc.LANG.localize("gui.port_type." + nextType.name());
+        String typeName = LangHelpers.localize("gui.port_type." + nextType.name());
         player.addChatMessage(new ChatComponentTranslation("gui.port_type", typeName));
     }
 

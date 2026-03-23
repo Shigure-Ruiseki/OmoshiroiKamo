@@ -24,9 +24,9 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
 public class ItemChicken extends ItemOK {
@@ -59,7 +59,7 @@ public class ItemChicken extends ItemOK {
         if (chicken == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(
+        return LangHelpers.localize(
             chicken.getItem()
                 .getDisplayName());
     }

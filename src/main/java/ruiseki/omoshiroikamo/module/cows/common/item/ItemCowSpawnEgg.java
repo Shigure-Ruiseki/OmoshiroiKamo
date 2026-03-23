@@ -24,10 +24,10 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.CowConfig;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
 import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
 import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
@@ -70,7 +70,7 @@ public class ItemCowSpawnEgg extends ItemOK {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         CowsRegistryItem cowsRegistryItem = CowsRegistry.INSTANCE.getByType(stack.getItemDamage());
-        return LibMisc.LANG.localize("entity." + cowsRegistryItem.getEntityName() + ".name");
+        return LangHelpers.localize("entity." + cowsRegistryItem.getEntityName() + ".name");
     }
 
     @Override
