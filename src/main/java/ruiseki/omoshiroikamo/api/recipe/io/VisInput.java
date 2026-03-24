@@ -1,14 +1,16 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 
-public class VisInput extends AbstractRecipeInput {
+public class VisInput extends AbstractModularRecipeInput {
 
     private String aspectTag;
     private int amountCentiVis;
@@ -38,7 +40,7 @@ public class VisInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractVisPortTE;
+        return port.getPortType() == IPortType.Type.VIS && port instanceof IAspectContainer;
     }
 
     @Override
@@ -46,20 +48,22 @@ public class VisInput extends AbstractRecipeInput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return 0;
 
-        AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-        int stored = visPort.getVisAmount(aspect);
+        IAspectContainer visPort = (IAspectContainer) port;
+        int stored = visPort.containerContains(aspect);
         if (stored > 0) {
-            int extract = (int) Math.min(stored, remaining);
+            int extract = (int) Math.min((long) stored, remaining);
             if (!simulate) {
-                visPort.drainVis(aspect, extract);
+                visPort.takeFromContainer(aspect, extract);
             }
-            return extract;
+            return (long) extract;
         }
         return 0;
     }
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
@@ -74,7 +78,11 @@ public class VisInput extends AbstractRecipeInput {
     @Override
     public void write(JsonObject json) {
         if (!consume) json.addProperty("consume", false);
-        json.addProperty("vis", aspectTag);
+        if (interval > 0) json.addProperty("pertick", interval);
+
+        if (aspectTag != null) {
+            json.addProperty("vis", aspectTag);
+        }
         json.addProperty("amount", amountCentiVis);
     }
 
@@ -87,6 +95,36 @@ public class VisInput extends AbstractRecipeInput {
         VisInput input = new VisInput("", 0);
         input.read(json);
         return input.validate() ? input : null;
+    }
+
+    @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        VisInput result = new VisInput(aspectTag, (int) (amountCentiVis * multiplier));
+        result.consume = this.consume;
+        result.interval = this.interval;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "vis");
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+        nbt.setString("aspect", aspectTag);
+        nbt.setInteger("amount", amountCentiVis);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+        this.aspectTag = nbt.getString("aspect");
+        this.amountCentiVis = nbt.getInteger("amount");
     }
 
     @Override

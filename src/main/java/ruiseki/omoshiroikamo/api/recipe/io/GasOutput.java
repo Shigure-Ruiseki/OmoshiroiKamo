@@ -14,9 +14,9 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.AbstractGasPortTE;
+import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 
-public class GasOutput extends AbstractRecipeOutput {
+public class GasOutput extends AbstractModularRecipeOutput {
 
     private String gasName;
     private int amount;
@@ -48,13 +48,16 @@ public class GasOutput extends AbstractRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.GAS) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            if (!(port instanceof AbstractGasPortTE)) continue;
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
 
-            AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+            if (!(port instanceof IGasHandler)) continue;
+
+            IGasHandler gasPort = (IGasHandler) port;
             GasStack insertStack = new GasStack(gas, remaining);
-            int accepted = gasPort.internalReceiveGas(insertStack, true);
+            int accepted = gasPort.receiveGas(ForgeDirection.UNKNOWN, insertStack, true);
             remaining -= accepted;
             if (remaining <= 0) break;
         }
@@ -62,19 +65,22 @@ public class GasOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.GAS && port instanceof AbstractGasPortTE;
+        return port.getPortType() == IPortType.Type.GAS && port instanceof IGasHandler;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractGasPortTE gasPort = (AbstractGasPortTE) port;
+        IGasHandler gasPort = (IGasHandler) port;
         GasTankInfo[] tankInfo = gasPort.getTankInfo(ForgeDirection.UNKNOWN);
         if (tankInfo != null && tankInfo.length > 0) {
-            long total = 0;
+            long totalAvailable = 0;
             for (GasTankInfo info : tankInfo) {
-                total += info.capacity;
+                // Calculate available space (capacity - stored amount)
+                int stored = info.gas != null ? info.gas.amount : 0;
+                int space = info.capacity - stored;
+                if (space > 0) totalAvailable += space;
             }
-            return total;
+            return totalAvailable;
         }
         return 0;
     }
@@ -86,6 +92,9 @@ public class GasOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.gasName = json.get("gas")
             .getAsString();
         this.amount = json.has("amount") ? json.get("amount")
@@ -94,8 +103,10 @@ public class GasOutput extends AbstractRecipeOutput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("gas", gasName);
         json.addProperty("amount", amount);
+        if (interval > 0) json.addProperty("pertick", interval);
     }
 
     @Override
@@ -116,20 +127,27 @@ public class GasOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new GasOutput(gasName, amount * multiplier);
+        GasOutput result = new GasOutput(gasName, amount * multiplier);
+        result.interval = this.interval;
+        result.index = this.index;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "gas");
+        nbt.setInteger("interval", interval);
         nbt.setString("gas", gasName);
         nbt.setInteger("amount", amount);
+        nbt.setInteger("index", index);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
         this.gasName = nbt.getString("gas");
         this.amount = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

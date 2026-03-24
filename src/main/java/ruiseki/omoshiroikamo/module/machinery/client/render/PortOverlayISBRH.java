@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.machinery.client.render;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -10,7 +11,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
@@ -24,13 +24,13 @@ import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
-import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
  * ISBRH for rendering port overlays.
  * Optimized for performance - only renders when chunk is rebuilt.
+ * Note: BlockMachineController uses ItemPortRenderer for inventory rendering.
  */
 @SideOnly(Side.CLIENT)
 @ThreadSafeISBRH(perThread = false)
@@ -44,54 +44,33 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
-        Tessellator tess = TessellatorManager.get();
+        // Note: BlockMachineController is handled by ItemPortRenderer.renderMachineController()
+        // This method is called by ItemPortRenderer via renderer.renderBlockAsItem() for Ports
+
+        Tessellator tess = Tessellator.instance;
         IIcon baseIcon = block.getIcon(0, metadata);
+
+        // Get tint color from config
+        int tintColor = MachineryConfig.getDefaultTintColorInt();
+        float r = ((tintColor >> 16) & 0xFF) / 255.0f;
+        float g = ((tintColor >> 8) & 0xFF) / 255.0f;
+        float b = (tintColor & 0xFF) / 255.0f;
+
+        // Bind texture atlas
+        RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 
-        // Enable proper lighting for inventory
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_LIGHT0);
-        GL11.glEnable(GL11.GL_LIGHT1);
-        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-
-        // Apply config color for inventory rendering
-        int invColor = MachineryConfig.getDefaultTintColorInt();
-        float r = ((invColor >> 16) & 0xFF) / 255.0f;
-        float g = ((invColor >> 8) & 0xFF) / 255.0f;
-        float b = (invColor & 0xFF) / 255.0f;
-
+        // Render tinted base cube
         tess.startDrawingQuads();
         tess.setColorOpaque_F(r, g, b);
-        RenderHelpers.renderCubeRotatedTopBottom(tess, 0, 0, 0, 1, 1, 1, baseIcon);
-        tess.draw();
 
-        // Render Controller Overlay if applicable
-        if (block instanceof BlockMachineController) {
-            BlockMachineController controllerBlock = (BlockMachineController) block;
-            IIcon overlayIcon = controllerBlock.getOverlayIcon();
-
-            if (overlayIcon != null) {
-                tess.startDrawingQuads();
-                tess.setColorOpaque_F(0.75f, 0.75f, 0.75f); // Slightly dimmed from pure white
-
-                double eps = 0.001; // Slightly larger than base
-                tess.setNormal(1.0F, 0.0F, 0.0F);
-                RenderHelpers.renderFaceCorrected(
-                    tess,
-                    ForgeDirection.EAST,
-                    0,
-                    0,
-                    0,
-                    overlayIcon,
-                    (float) eps,
-                    Rotation.NORMAL,
-                    Flip.NONE);
-
-                tess.draw();
-            }
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            tess.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
+            RenderHelpers.renderFaceCorrected(tess, dir, 0, 0, 0, baseIcon, 0.0f, Rotation.NORMAL, Flip.NONE);
         }
+        tess.draw();
 
         GL11.glPopMatrix();
     }
@@ -124,6 +103,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         boolean prevRenderAllFaces = renderer.renderAllFaces;
         renderer.renderAllFaces = true;
         renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+
         Tessellator t = Tessellator.instance;
         for (int i = 0; i < 6; i++) {
             ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
@@ -154,7 +134,8 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                         case NORTH, SOUTH -> 0.8f;
                         default -> 0.6f;
                     };
-                    t.setColorOpaque_F(shade, shade, shade);
+                    // Use RGBA to preserve alpha channel for translucent overlays
+                    t.setColorRGBA_F(shade, shade, shade, 1.0f);
                     t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
 
                     // Determine rotation and flip for overlay texture

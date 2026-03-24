@@ -16,6 +16,7 @@ public class TieredBlockMapping implements ISymbolMapping {
     private final String componentName;
     private final Map<String, Integer> blockIdToTier;
     private final Map<Integer, String> tierToBlockId;
+    private int portIndex = -1;
 
     public TieredBlockMapping(char symbol, String componentName, Map<String, Integer> tiers) {
         this.symbol = symbol;
@@ -32,6 +33,15 @@ public class TieredBlockMapping implements ISymbolMapping {
     @Override
     public char getSymbol() {
         return symbol;
+    }
+
+    @Override
+    public int getPortIndex() {
+        return portIndex;
+    }
+
+    public void setPortIndex(int index) {
+        this.portIndex = index;
     }
 
     public String getComponentName() {
@@ -67,6 +77,9 @@ public class TieredBlockMapping implements ISymbolMapping {
             tiersObj.addProperty(entry.getValue(), entry.getKey());
         }
         json.add("tiers", tiersObj);
+        if (portIndex >= 0) {
+            json.addProperty("index", portIndex);
+        }
         return json;
     }
 }

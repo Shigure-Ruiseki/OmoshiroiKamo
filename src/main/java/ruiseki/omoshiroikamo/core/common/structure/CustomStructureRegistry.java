@@ -148,9 +148,10 @@ public class CustomStructureRegistry {
 
             @Override
             public boolean check(TEMachineController t, World world, int x, int y, int z) {
+                t.trackSymbolPosition(symbol, x, y, z);
                 boolean result = element.check(t, world, x, y, z);
                 if (result) {
-                    t.trackSymbolPosition(symbol, x, y, z);
+                    t.finalizeSymbolPosition(symbol, x, y, z);
                 }
                 return result;
             }

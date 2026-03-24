@@ -1,64 +1,29 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
-import java.util.List;
-
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.json.IJsonMaterial;
 
 /**
- * Interface for recipe output requirements.
- * Implementations define how to check and produce outputs in ports.
+ * Base interface for recipe output requirements.
+ * This interface is independent of the Modular Port system.
+ * For Modular Port-specific functionality, see IModularRecipeOutput.
  */
 public interface IRecipeOutput extends IJsonMaterial {
 
     /**
-     * Get the port type this output requires.
+     * Get the interval (in ticks) for per-tick processing.
+     * 0 means not per-tick.
      */
-    IPortType.Type getPortType();
+    int getInterval();
 
     /**
-     * Check if the ports have enough capacity to store this output.
+     * Whether this output should be processed per tick.
      */
-    boolean checkCapacity(List<IModularPort> ports, int multiplier);
-
-    /**
-     * Legacy support for single batch capacity check.
-     */
-    default boolean checkCapacity(List<IModularPort> ports) {
-        return checkCapacity(ports, 1);
-    }
-
-    /**
-     * Produce the output and store it in the provided ports.
-     */
-    void apply(List<IModularPort> ports, int multiplier);
-
-    /**
-     * Legacy support for single batch apply.
-     */
-    default void apply(List<IModularPort> ports) {
-        apply(ports, 1);
-    }
-
-    /**
-     * Check if this output is satisfied (legacy support for process if needed).
-     * Now use checkCapacity and apply separately in ModularRecipe.
-     */
-    default boolean process(List<IModularPort> ports, boolean simulate) {
-        return process(ports, 1, simulate);
-    }
-
-    /**
-     * Multi-batch support for process.
-     */
-    default boolean process(List<IModularPort> ports, int multiplier, boolean simulate) {
-        if (simulate) return checkCapacity(ports, multiplier);
-        apply(ports, multiplier);
-        return true;
+    default boolean isPerTick() {
+        return getInterval() > 0;
     }
 
     /**
@@ -68,7 +33,7 @@ public interface IRecipeOutput extends IJsonMaterial {
 
     /**
      * Create a deep copy of this output with a multi-batch quantity.
-     * 
+     *
      * @param multiplier The batch size multiplier
      */
     IRecipeOutput copy(int multiplier);
@@ -92,4 +57,20 @@ public interface IRecipeOutput extends IJsonMaterial {
      * Accept a visitor to perform operations on this output.
      */
     void accept(IRecipeVisitor visitor);
+
+    /**
+     * Get the TickResult to return if this output fails during processing.
+     * 
+     * @param perTick Whether this is a per-tick check
+     */
+    default RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.OUTPUT_FULL;
+    }
+
+    /**
+     * Cast this output to IModularRecipeOutput if possible.
+     */
+    default IModularRecipeOutput asModular() {
+        return this instanceof IModularRecipeOutput ? (IModularRecipeOutput) this : null;
+    }
 }

@@ -68,7 +68,7 @@ public class ManaInputTest {
     public void testJSON読み込み_perTickTrue() {
         JsonObject json = new JsonObject();
         json.addProperty("mana", 100);
-        json.addProperty("perTick", true);
+        json.addProperty("pertick", true);
 
         ManaInput input = ManaInput.fromJson(json);
 
@@ -83,7 +83,7 @@ public class ManaInputTest {
     public void testJSON読み込み_perTickFalse() {
         JsonObject json = new JsonObject();
         json.addProperty("mana", 8000);
-        json.addProperty("perTick", false);
+        json.addProperty("pertick", false);
 
         ManaInput input = ManaInput.fromJson(json);
 
@@ -106,10 +106,18 @@ public class ManaInputTest {
             json.get("mana")
                 .getAsInt());
 
-        assertTrue(json.has("perTick"));
+        // perTick=true (interval=1) は ManaInput では非デフォルトなので書き込まれるはず
+        assertTrue(json.has("pertick"), "ManaInput(perTick=true) は非デフォルトなので pertick が書き込まれるべき");
         assertTrue(
-            json.get("perTick")
-                .getAsBoolean());
+            json.get("pertick")
+                .isJsonPrimitive()
+                && (json.get("pertick")
+                    .getAsJsonPrimitive()
+                    .isBoolean()
+                        ? json.get("pertick")
+                            .getAsBoolean()
+                        : json.get("pertick")
+                            .getAsInt() >= 1));
     }
 
     // ========================================

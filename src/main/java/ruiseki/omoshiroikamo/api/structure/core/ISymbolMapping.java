@@ -12,4 +12,13 @@ public interface ISymbolMapping extends IStructureSerializable {
      * Get the symbol character.
      */
     char getSymbol();
+
+    /**
+     * Get the assigned port index for this mapping.
+     * 
+     * @return Specified index, or -1 if not specified.
+     */
+    default int getPortIndex() {
+        return -1;
+    }
 }

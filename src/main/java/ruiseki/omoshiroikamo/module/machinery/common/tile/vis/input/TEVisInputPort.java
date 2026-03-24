@@ -4,8 +4,6 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
-import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
@@ -13,17 +11,28 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.visnet.VisNetHandler;
 
 /**
- * Vis Input Port - receives Vis from Vis Relay network.
+ * Unified Vis Input Port TileEntity for all tiers (0-15).
+ * Receives Vis from Vis Relay network.
+ * Uses tier field instead of separate classes for each tier.
  */
 public class TEVisInputPort extends AbstractVisPortTE {
 
+    /**
+     * No-arg constructor required for TE instantiation.
+     * Tier will be set after construction via setTier().
+     */
     public TEVisInputPort() {
-        super(MachineryConfig.visPortCapacity);
+        super();
     }
 
-    @Override
-    public int getTier() {
-        return 1;
+    /**
+     * Constructor with tier parameter.
+     *
+     * @param tier Tier level (0-15)
+     */
+    public TEVisInputPort(int tier) {
+        super();
+        setTier(tier);
     }
 
     @Override
@@ -62,21 +71,21 @@ public class TEVisInputPort extends AbstractVisPortTE {
     }
 
     @Override
-    public IPortType.Direction getPortDirection() {
-        return IPortType.Direction.INPUT;
+    public Direction getPortDirection() {
+        return Direction.INPUT;
     }
 
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             if (getSideIO(side) == EnumIO.NONE) {
                 return null;
             }
-            return IconRegistry.getIcon("overlay_visinput_" + getTier());
+            return IconRegistry.getIcon("overlay_visinput_" + (getTier() + 1));
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 }

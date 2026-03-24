@@ -35,7 +35,6 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
  * This block is mapped to the 'Q' symbol in structure definitions.
  * TODO: Working particles and sound effects
  * TODO: Completion effects (particles, sounds)
- * TODO: Block state visual changes based on status
  */
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
@@ -43,6 +42,8 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         super("modularMachineController", TEMachineController.class);
         setHardness(5.0F);
         setResistance(10.0F);
+        // Enable translucent overlay rendering
+        isFullSize = isOpaque = false;
     }
 
     @Override
@@ -64,7 +65,10 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
         return new BlockMachineController();
     }
 
+    private IIcon baseIcon; // Base texture for controller
+    private IIcon baseOverlayIcon; // Base overlay with tint
     private IIcon overlayIcon;
+    private IIcon overlayIconActive;
     private IIcon sideOverlayIcon;
 
     @Override
@@ -80,46 +84,64 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        super.registerBlockIcons(reg);
-        this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller");
-        this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/base_modularports");
+        // Register all textures explicitly without calling super
+        this.baseIcon = reg.registerIcon("omoshiroikamo:modular/controller_base");
+        this.blockIcon = this.baseIcon; // Use baseIcon as blockIcon too
+        this.baseOverlayIcon = reg
+            .registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller_base");
+        this.overlayIcon = reg.registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller_idle");
+        this.overlayIconActive = reg
+            .registerIcon("omoshiroikamo:modularmachineryOverlay/overlay_machine_controller_active");
+        this.sideOverlayIcon = reg.registerIcon("omoshiroikamo:modular/controller_base");
     }
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        return super.getIcon(side, meta);
+        // Always return base texture for inventory rendering
+        return baseIcon;
     }
 
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-        TEMachineController te = (TEMachineController) world.getTileEntity(x, y, z);
-        if (te != null) {
-            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
-            if (dir == te.getExtendedFacing()
-                .getDirection()) {
-                return sideOverlayIcon;
-            }
-        }
-        // Bypass the inventory icon override for EAST
-        return super.getIcon(side, world.getBlockMetadata(x, y, z));
+        // Always return base texture for world rendering
+        return baseIcon;
+    }
+
+    public IIcon getBaseOverlayIcon() {
+        return baseOverlayIcon;
     }
 
     public IIcon getOverlayIcon() {
         return overlayIcon;
     }
 
+    public IIcon getOverlayIconActive() {
+        return overlayIconActive;
+    }
+
     public IIcon getSideOverlayIcon() {
         return sideOverlayIcon;
     }
 
+    public IIcon getBaseIcon() {
+        return baseIcon;
+    }
+
     @Override
     public String getTextureName() {
-        return "modular_machine_casing";
+        return "modular/controller_base";
     }
 
     @Override
     public int getRenderType() {
         return AbstractPortBlock.portRendererId;
+    }
+
+    @Override
+    public boolean canRenderInPass(int pass) {
+        // Pass 0: opaque (base texture)
+        // Pass 1: translucent (overlay with alpha)
+        return pass == 0 || pass == 1;
     }
 
     @Override

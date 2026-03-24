@@ -5,16 +5,17 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.core.util.ManaStorage;
@@ -28,10 +29,14 @@ import vazkii.botania.common.core.handler.ManaNetworkHandler;
 public abstract class AbstractManaPortTE extends AbstractTE implements IModularPort, ISparkAttachable, IManaPool {
 
     @NBTPersist
+    protected int tier = 0; // 0-15 (display: 1-16)
+
+    @NBTPersist
     protected ManaStorage manaStorage;
 
-    public AbstractManaPortTE(int manaCapacity, int manaMaxReceive) {
-        manaStorage = new ManaStorage(manaCapacity, manaMaxReceive) {
+    public AbstractManaPortTE() {
+        // Capacity and transfer will be set by setTier() in onBlockPlacedBy or readCommon
+        manaStorage = new ManaStorage(10000, 1000) {
 
             @Override
             protected void onManaChanged() {
@@ -151,6 +156,18 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
     }
 
     @Override
+    public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateManaCapacity();
+        }
+        super.readCommon(root);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
     public void invalidate() {
         super.invalidate();
         ManaNetworkEvent.removePool(this);
@@ -164,17 +181,51 @@ public abstract class AbstractManaPortTE extends AbstractTE implements IModularP
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
-    }
-
-    public abstract int getTier();
-
-    @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.MANA;
+        String unlocalizedName = getUnlocalizedName() + ".name";
+        String format = StatCollector.translateToLocal(unlocalizedName);
+        return String.format(format, getTier() + 1);
     }
 
     @Override
-    public abstract IPortType.Direction getPortDirection();
+    public int getTier() {
+        return tier;
+    }
 
+    @Override
+    public void setTier(int tier) {
+        if (this.tier != tier) {
+            this.tier = tier;
+            updateManaCapacity();
+            markDirty();
+        }
+    }
+
+    /**
+     * Update mana storage capacity and transfer rate based on current tier.
+     * Called when tier changes or after NBT load.
+     */
+    protected void updateManaCapacity() {
+        int newCapacity = MachineryConfig.getManaPortCapacity(tier + 1);
+        int newTransfer = MachineryConfig.getManaPortTransfer(tier + 1);
+        manaStorage.setCapacity(newCapacity);
+        manaStorage.setMaxTransfer(newTransfer);
+    }
+
+    @Override
+    public Type getPortType() {
+        return Type.MANA;
+    }
+
+    @Override
+    public abstract Direction getPortDirection();
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
 }

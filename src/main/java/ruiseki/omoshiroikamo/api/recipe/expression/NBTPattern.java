@@ -168,6 +168,29 @@ public class NBTPattern {
         return new NBTPattern(patterns, primaryOp);
     }
 
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("primaryOp", primaryOperation.ordinal());
+        NBTTagCompound patternsTag = new NBTTagCompound();
+        for (Map.Entry<String, ValuePattern> entry : patterns.entrySet()) {
+            NBTTagCompound pTag = new NBTTagCompound();
+            entry.getValue()
+                .writeToNBT(pTag);
+            patternsTag.setTag(entry.getKey(), pTag);
+        }
+        nbt.setTag("patterns", patternsTag);
+    }
+
+    public static NBTPattern readFromNBT(NBTTagCompound nbt) {
+        OperationType primaryOp = OperationType.values()[nbt.getInteger("primaryOp")];
+        NBTTagCompound patternsTag = nbt.getCompoundTag("patterns");
+        Map<String, ValuePattern> patterns = new HashMap<>();
+        for (Object keyObj : patternsTag.func_150296_c()) {
+            String key = (String) keyObj;
+            patterns.put(key, ValuePattern.readFromNBT(patternsTag.getCompoundTag(key)));
+        }
+        return new NBTPattern(patterns, primaryOp);
+    }
+
     public Map<String, ValuePattern> getPatterns() {
         return patterns;
     }
@@ -359,6 +382,30 @@ public class NBTPattern {
 
             // Default to SET with the value
             return new ValuePattern(OperationType.SET, null, element.toString());
+        }
+
+        public void writeToNBT(NBTTagCompound nbt) {
+            nbt.setInteger("op", operation.ordinal());
+            if (operator != null) nbt.setString("operator", operator);
+            if (value instanceof Number) {
+                nbt.setDouble("val", ((Number) value).doubleValue());
+                nbt.setBoolean("isNum", true);
+            } else if (value instanceof String) {
+                nbt.setString("val", (String) value);
+                nbt.setBoolean("isNum", false);
+            }
+        }
+
+        public static ValuePattern readFromNBT(NBTTagCompound nbt) {
+            OperationType op = OperationType.values()[nbt.getInteger("op")];
+            String operator = nbt.hasKey("operator") ? nbt.getString("operator") : null;
+            Object value;
+            if (nbt.getBoolean("isNum")) {
+                value = nbt.getDouble("val");
+            } else {
+                value = nbt.getString("val");
+            }
+            return new ValuePattern(op, operator, value);
         }
 
         private static ValuePattern parseString(String str) {

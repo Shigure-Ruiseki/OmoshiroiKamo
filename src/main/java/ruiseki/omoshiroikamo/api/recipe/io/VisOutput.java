@@ -11,8 +11,9 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 
-public class VisOutput extends AbstractRecipeOutput {
+public class VisOutput extends AbstractModularRecipeOutput {
 
     private String aspectTag;
     private int amountCentiVis;
@@ -47,31 +48,43 @@ public class VisOutput extends AbstractRecipeOutput {
             if (port.getPortDirection() != IPortType.Direction.OUTPUT
                 && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            if (!(port instanceof AbstractVisPortTE)) continue;
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
 
-            AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-            int currentVis = visPort.getVisAmount(aspect);
-            int maxVis = visPort.getMaxVisPerAspect();
-            int space = maxVis - currentVis;
+            if (!(port instanceof IAspectContainer)) continue;
 
-            if (space > 0) {
-                int toAdd = Math.min(remaining, space);
-                visPort.addVis(aspect, toAdd);
-                remaining -= toAdd;
-            }
+            IAspectContainer visPort = (IAspectContainer) port;
+            int accepted = (int) remaining - visPort.addToContainer(aspect, (int) remaining);
+            remaining -= accepted;
             if (remaining <= 0) break;
         }
     }
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.VIS && port instanceof AbstractVisPortTE;
+        return port.getPortType() == IPortType.Type.VIS && port instanceof IAspectContainer;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractVisPortTE visPort = (AbstractVisPortTE) port;
-        return visPort.getMaxVisPerAspect();
+        if (port instanceof IAspectContainer) {
+            IAspectContainer container = (IAspectContainer) port;
+            Aspect aspect = Aspect.getAspect(aspectTag);
+            if (aspect == null) return 0;
+
+            // Get current amount and max capacity
+            int currentAmount = container.containerContains(aspect);
+            int maxCapacity = 0;
+
+            if (port instanceof AbstractVisPortTE) {
+                maxCapacity = ((AbstractVisPortTE) port).getMaxVisPerAspect();
+            } else {
+                maxCapacity = 100; // Default capacity for Vis if not specific TE
+            }
+
+            // Return available space only
+            return Math.max(0, maxCapacity - currentAmount);
+        }
+        return 0;
     }
 
     @Override
@@ -81,6 +94,9 @@ public class VisOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.aspectTag = json.get("vis")
             .getAsString();
         this.amountCentiVis = json.has("amount") ? json.get("amount")
@@ -89,8 +105,10 @@ public class VisOutput extends AbstractRecipeOutput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("vis", aspectTag);
         json.addProperty("amount", amountCentiVis);
+        if (interval > 0) json.addProperty("pertick", interval);
     }
 
     @Override
@@ -111,20 +129,27 @@ public class VisOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new VisOutput(aspectTag, amountCentiVis * multiplier);
+        VisOutput result = new VisOutput(aspectTag, (int) (amountCentiVis * multiplier));
+        result.interval = this.interval;
+        result.index = this.index;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "vis");
+        nbt.setInteger("interval", interval);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amountCentiVis);
+        nbt.setInteger("index", index);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
         this.aspectTag = nbt.getString("aspect");
         this.amountCentiVis = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

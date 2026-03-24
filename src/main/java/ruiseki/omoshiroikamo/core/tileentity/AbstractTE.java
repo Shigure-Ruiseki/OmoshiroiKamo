@@ -66,6 +66,10 @@ public abstract class AbstractTE extends AbstractTickingTE
     @NBTPersist
     protected int redstoneLevel = 0;
 
+    /** Assigned index during structure formation (for ports). */
+    @NBTPersist
+    protected int assignedIndex = -1;
+
     /** Cached redstone result */
     protected boolean redstoneCheckPassed = true;
 

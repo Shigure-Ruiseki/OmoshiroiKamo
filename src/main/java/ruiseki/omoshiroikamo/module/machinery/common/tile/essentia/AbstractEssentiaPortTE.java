@@ -3,13 +3,13 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.essentia;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import thaumcraft.api.aspects.Aspect;
@@ -17,12 +17,12 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.aspects.IAspectContainer;
 
 /**
- * Stores multiple Aspects using AspectList.
- * TODO: Add tiered blocks/TEs
- * TODO: Implement TEEssentiaOutputPortME
- * TODO: Add essence filter
+ * Stores multiple Aspects using AspectList with unified 16-tier system.
  */
 public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModularPort, IAspectContainer {
+
+    @NBTPersist
+    protected int tier = 0; // 0-15 (display: 1-16)
 
     @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
@@ -31,14 +31,36 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     @NBTPersist
     protected int maxCapacityPerAspect;
 
-    public AbstractEssentiaPortTE(int maxCapacityPerAspect) {
-        this.maxCapacityPerAspect = maxCapacityPerAspect;
+    public AbstractEssentiaPortTE() {
+        // Capacity will be set by setTier() in onBlockPlacedBy or readCommon
+        this.maxCapacityPerAspect = 64;
         for (int i = 0; i < 6; i++) {
             sides[i] = getIOLimit();
         }
     }
 
-    public abstract int getTier();
+    @Override
+    public int getTier() {
+        return tier;
+    }
+
+    @Override
+    public void setTier(int tier) {
+        if (this.tier != tier) {
+            this.tier = tier;
+            updateEssentiaCapacity();
+            markDirty();
+        }
+    }
+
+    /**
+     * Update Essentia capacity based on current tier.
+     * Called when tier changes or after NBT load.
+     */
+    protected void updateEssentiaCapacity() {
+        int newCapacity = MachineryConfig.getEssentiaPortCapacity(tier + 1);
+        this.maxCapacityPerAspect = newCapacity;
+    }
 
     public abstract EnumIO getIOLimit();
 
@@ -136,16 +158,18 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.ESSENTIA;
+    public Type getPortType() {
+        return Type.ESSENTIA;
     }
 
     @Override
-    public abstract IPortType.Direction getPortDirection();
+    public abstract Direction getPortDirection();
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        String unlocalizedName = getUnlocalizedName() + ".name";
+        String format = StatCollector.translateToLocal(unlocalizedName);
+        return String.format(format, getTier() + 1);
     }
 
     public int getTotalEssentiaAmount() {
@@ -188,6 +212,10 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
 
     @Override
     public void readCommon(NBTTagCompound root) {
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateEssentiaCapacity();
+        }
         super.readCommon(root);
 
         aspects = new AspectList();
@@ -200,8 +228,22 @@ public abstract class AbstractEssentiaPortTE extends AbstractTE implements IModu
                 aspects.add(aspect, amount);
             }
         }
+
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override
     public void accept(IRecipeVisitor visitor) {}
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
 }

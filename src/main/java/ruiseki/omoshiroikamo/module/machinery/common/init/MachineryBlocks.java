@@ -31,6 +31,10 @@ public enum MachineryBlocks {
 
     // Core blocks (always available)
     MACHINE_CASING(BlockMachineCasing.create()),
+    CASING_PLAIN(BlockMachineCasing.create("plain")),
+    CASING_REINFORCED(BlockMachineCasing.create("reinforced")),
+    CASING_VENTED(BlockMachineCasing.create("vented")),
+    CASING_CIRCUITRY(BlockMachineCasing.create("circuitry")),
     MACHINE_CONTROLLER(BlockMachineController.create()),
     ITEM_INPUT_PORT(BlockItemInputPort.create()),
     ITEM_OUTPUT_PORT(BlockItemOutputPort.create()),

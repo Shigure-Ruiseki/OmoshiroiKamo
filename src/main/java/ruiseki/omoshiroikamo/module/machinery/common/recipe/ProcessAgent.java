@@ -14,13 +14,13 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.AbstractRecipeProcess;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
-import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
-import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
-import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
+import ruiseki.omoshiroikamo.api.recipe.parser.InputNBTRegistry;
 import ruiseki.omoshiroikamo.api.recipe.parser.OutputNBTRegistry;
 import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -52,10 +52,9 @@ public class ProcessAgent extends AbstractRecipeProcess {
         int batchMin = 1;
         int batchMax = 1;
 
-        if (context instanceof IStructureEntry) {
-            IStructureEntry structure = (IStructureEntry) context;
-            batchMin = Math.max(1, structure.getBatchMin());
-            batchMax = Math.max(batchMin, structure.getBatchMax());
+        if (context instanceof IStructureEntry s) {
+            batchMin = Math.max(1, s.getBatchMin());
+            batchMax = Math.max(batchMin, s.getBatchMax());
         }
 
         int selectedBatch = -1;
@@ -117,25 +116,11 @@ public class ProcessAgent extends AbstractRecipeProcess {
 
     private void clearCaches() {
         cachedOutputs.clear();
+        perTickOutputs.clear();
     }
 
     @Override
     protected boolean consumePerTickResources(List<IModularPort> inputPorts) {
-        if (energyPerTick > 0) {
-            EnergyInput energyReq = new EnergyInput(energyPerTick, true);
-            if (!energyReq.process(inputPorts, true)) {
-                return false;
-            }
-            energyReq.process(inputPorts, false);
-        }
-
-        if (manaPerTick > 0) {
-            ManaInput manaReq = new ManaInput(manaPerTick, true);
-            if (!manaReq.process(inputPorts, true)) {
-                return false;
-            }
-            manaReq.process(inputPorts, false);
-        }
         return true;
     }
 
@@ -155,21 +140,23 @@ public class ProcessAgent extends AbstractRecipeProcess {
         if (!isRunning()) return TickResult.IDLE;
         if (isWaitingForOutput()) return TickResult.WAITING_OUTPUT;
 
-        // 1. Resource check (Dry run for energy/mana)
-        if (energyPerTick > 0) {
-            if (!new EnergyInput(energyPerTick, true).process(inputPorts, true)) return TickResult.NO_ENERGY;
+        // Generalized resource check for per-tick inputs/outputs
+        for (IModularRecipeInput input : perTickInputs) {
+            if (input.getInterval() > 0 && progress % input.getInterval() == 0) {
+                if (!input.process(inputPorts, 1, true)) {
+                    return mapResult(input.getFailureResult(true));
+                }
+            }
         }
-        if (manaPerTick > 0) {
-            if (!new ManaInput(manaPerTick, true).process(inputPorts, true)) return TickResult.NO_MANA;
+        for (IModularRecipeOutput output : perTickOutputs) {
+            if (output.getInterval() > 0 && progress % output.getInterval() == 0) {
+                if (!output.checkCapacity(outputPorts, 1)) {
+                    return mapResult(output.getFailureResult(true));
+                }
+            }
         }
 
-        // 2. Output capacity check for per-tick outputs
-        if (energyOutputPerTick > 0 && !new EnergyOutput(energyOutputPerTick, true).process(outputPorts, true))
-            return TickResult.OUTPUT_FULL;
-        if (manaOutputPerTick > 0 && !new ManaOutput(manaOutputPerTick, true).process(outputPorts, true))
-            return TickResult.OUTPUT_FULL;
-
-        // 2.5. Continuous condition check for non-consuming inputs
+        // Continuous condition check for non-consuming inputs
         if (currentRecipe != null) {
             RecipeExecutionVisitor checker = new RecipeExecutionVisitor(
                 RecipeExecutionVisitor.Mode.CHECK,
@@ -180,21 +167,19 @@ public class ProcessAgent extends AbstractRecipeProcess {
                 // Skip check if the input is meant to be consumed (already consumed at start)
                 // Also skip BlockInput if it involves a replacement (handled at start)
                 if (input.isConsume()) continue;
-                if (input instanceof BlockInput && ((BlockInput) input).getReplace() != null) continue;
+                if (input instanceof BlockInput i && i.getReplace() != null) continue;
 
                 input.accept(checker);
                 if (!checker.isSatisfied()) {
-                    return input.getPortType() == IPortType.Type.BLOCK ? TickResult.BLOCK_MISSING : TickResult.NO_INPUT;
+                    return mapResult(input.getFailureResult(false));
                 }
             }
         }
 
-        // 3. Execute base tick (handles conditions, progress, and actual consumption)
+        // Execute base tick (handles conditions, progress, and actual consumption)
         super.executeTick(inputPorts, outputPorts, context);
 
-        // 4. Handle per-tick energy/mana outputs
-        if (energyOutputPerTick > 0) new EnergyOutput(energyOutputPerTick, true).process(outputPorts, false);
-        if (manaOutputPerTick > 0) new ManaOutput(manaOutputPerTick, true).process(outputPorts, false);
+        // Per-tick energy/mana outputs are already handled via perTickOutputs
 
         if (isWaitingForOutput()) return TickResult.READY_OUTPUT;
         if (!isRunning()) return TickResult.IDLE;
@@ -215,14 +200,18 @@ public class ProcessAgent extends AbstractRecipeProcess {
     protected boolean produceOutputs(List<IModularPort> outputPorts) {
         // 1. Check capacity for all
         for (IRecipeOutput output : cachedOutputs) {
-            if (!output.checkCapacity(outputPorts, 1)) {
-                return false;
+            if (output instanceof IModularRecipeOutput o) {
+                if (!o.checkCapacity(outputPorts, 1)) {
+                    return false;
+                }
             }
         }
 
         // 2. Apply outputs
         for (IRecipeOutput output : cachedOutputs) {
-            output.apply(outputPorts, 1);
+            if (output instanceof IModularRecipeOutput o) {
+                o.apply(outputPorts, 1);
+            }
         }
 
         return true;
@@ -232,7 +221,15 @@ public class ProcessAgent extends AbstractRecipeProcess {
     protected void reset() {
         super.reset();
         this.currentBatchSize = 1;
+        this.energyPerTick = 0;
+        this.energyOutputPerTick = 0;
+        this.manaPerTick = 0;
+        this.manaOutputPerTick = 0;
         clearCaches();
+    }
+
+    public void addCachedOutput(IRecipeOutput output) {
+        this.cachedOutputs.add(output);
     }
 
     public int getEnergyPerTick() {
@@ -281,10 +278,13 @@ public class ProcessAgent extends AbstractRecipeProcess {
     public Set<IPortType.Type> getCachedOutputTypes() {
         Set<IPortType.Type> types = new HashSet<>();
         for (IRecipeOutput output : cachedOutputs) {
+            if (output instanceof IModularRecipeOutput o) {
+                types.add(o.getPortType());
+            }
+        }
+        for (IModularRecipeOutput output : perTickOutputs) {
             types.add(output.getPortType());
         }
-        if (manaOutputPerTick > 0) types.add(IPortType.Type.MANA);
-        if (energyOutputPerTick > 0) types.add(IPortType.Type.ENERGY);
         return types;
     }
 
@@ -300,7 +300,7 @@ public class ProcessAgent extends AbstractRecipeProcess {
         }
         if (isWaitingForOutput()) {
             String blocked = diagnoseBlockedOutputs(outputPorts);
-            return blocked + " Output is full";
+            return (blocked != null && !blocked.isEmpty() ? blocked + " " : "") + "Output is full";
         }
         return "Idle";
     }
@@ -309,11 +309,13 @@ public class ProcessAgent extends AbstractRecipeProcess {
         if (currentRecipe != null) {
             StringBuilder blocked = new StringBuilder();
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
-                if (!output.checkCapacity(outputPorts, currentBatchSize)) {
-                    if (blocked.length() > 0) blocked.append(", ");
-                    blocked.append(
-                        output.getPortType()
-                            .name());
+                if (output instanceof IModularRecipeOutput o) {
+                    if (!o.checkCapacity(outputPorts, currentBatchSize)) {
+                        if (blocked.length() > 0) blocked.append(", ");
+                        blocked.append(
+                            o.getPortType()
+                                .name());
+                    }
                 }
             }
             if (blocked.length() > 0) return blocked.toString();
@@ -333,8 +335,10 @@ public class ProcessAgent extends AbstractRecipeProcess {
     public boolean diagnoseBlockOutputFull(List<IModularPort> outputPorts) {
         if (currentRecipe != null) {
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
-                if (output.getPortType() == IPortType.Type.BLOCK && !output.process(outputPorts, true)) {
-                    return true;
+                if (output instanceof IModularRecipeOutput o) {
+                    if (o.getPortType() == IPortType.Type.BLOCK && !o.process(outputPorts, true)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -342,7 +346,7 @@ public class ProcessAgent extends AbstractRecipeProcess {
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("progress", progress);
+        nbt.setLong("progress", progress);
         nbt.setInteger("maxProgress", maxProgress);
         nbt.setInteger("energyPerTick", energyPerTick);
         nbt.setInteger("energyOutputPerTick", energyOutputPerTick);
@@ -361,11 +365,27 @@ public class ProcessAgent extends AbstractRecipeProcess {
                 outputList.appendTag(tag);
             }
             nbt.setTag("cachedOutputs", outputList);
+
+            NBTTagList ptInputList = new NBTTagList();
+            for (IModularRecipeInput input : perTickInputs) {
+                NBTTagCompound tag = new NBTTagCompound();
+                input.writeToNBT(tag);
+                ptInputList.appendTag(tag);
+            }
+            nbt.setTag("perTickInputs", ptInputList);
+
+            NBTTagList ptOutputList = new NBTTagList();
+            for (IModularRecipeOutput output : perTickOutputs) {
+                NBTTagCompound tag = new NBTTagCompound();
+                output.writeToNBT(tag);
+                ptOutputList.appendTag(tag);
+            }
+            nbt.setTag("perTickOutputs", ptOutputList);
         }
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
-        progress = nbt.getInteger("progress");
+        progress = nbt.getLong("progress");
         maxProgress = nbt.getInteger("maxProgress");
         energyPerTick = nbt.getInteger("energyPerTick");
         energyOutputPerTick = nbt.getInteger("energyOutputPerTick");
@@ -399,6 +419,32 @@ public class ProcessAgent extends AbstractRecipeProcess {
                     cachedOutputs.add(output);
                 }
             }
+
+            NBTTagList ptInputList = nbt.getTagList("perTickInputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < ptInputList.tagCount(); i++) {
+                NBTTagCompound tag = ptInputList.getCompoundTagAt(i);
+                IRecipeInput input = InputNBTRegistry.read(tag);
+                if (input != null && input instanceof IModularRecipeInput ii) {
+                    perTickInputs.add(ii);
+                }
+            }
+
+            NBTTagList ptOutputList = nbt.getTagList("perTickOutputs", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < ptOutputList.tagCount(); i++) {
+                NBTTagCompound tag = ptOutputList.getCompoundTagAt(i);
+                IRecipeOutput output = OutputNBTRegistry.read(tag);
+                if (output != null && output instanceof IModularRecipeOutput o) {
+                    perTickOutputs.add(o);
+                }
+            }
+        }
+    }
+
+    private TickResult mapResult(RecipeTickResult result) {
+        try {
+            return TickResult.valueOf(result.name());
+        } catch (IllegalArgumentException e) {
+            return TickResult.NO_INPUT; // Fallback
         }
     }
 

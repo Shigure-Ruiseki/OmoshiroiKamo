@@ -3,21 +3,9 @@ package ruiseki.omoshiroikamo.api.recipe.visitor;
 import java.util.List;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.EnergyInput;
-import ruiseki.omoshiroikamo.api.recipe.io.EnergyOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.EssentiaOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.FluidInput;
-import ruiseki.omoshiroikamo.api.recipe.io.FluidOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.GasOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
-import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.ItemInput;
-import ruiseki.omoshiroikamo.api.recipe.io.ItemOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.ManaInput;
-import ruiseki.omoshiroikamo.api.recipe.io.ManaOutput;
-import ruiseki.omoshiroikamo.api.recipe.io.VisOutput;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
 
 /**
@@ -57,141 +45,38 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
         return satisfied;
     }
 
+    // --- Modular Inputs ---
+
     @Override
-    public void visit(ItemInput input) {
-        switch (mode) {
-            case CHECK:
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
+    public void visit(IModularRecipeInput input) {
+        if (mode == Mode.CHECK) {
+            // Check even if per-tick, to ensure initial availability
+            if (!input.process(ports, batchSize, true)) satisfied = false;
+        } else if (mode == Mode.CONSUME) {
+            if (input.isPerTick()) {
+                agent.addPerTickInput((IModularRecipeInput) input.copy(batchSize));
+            } else {
                 input.process(ports, batchSize, false);
-                break;
-            default:
-                break;
+            }
         }
     }
 
-    @Override
-    public void visit(FluidInput input) {
-        switch (mode) {
-            case CHECK:
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
-                input.process(ports, batchSize, false);
-                break;
-            default:
-                break;
-        }
-    }
+    // --- Modular Outputs ---
 
     @Override
-    public void visit(EnergyInput input) {
-        switch (mode) {
-            case CHECK:
-                if (input.isPerTick()) return; // Skip per-tick for start check
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
-                if (input.isPerTick()) {
-                    agent.setEnergyPerTick(agent.getEnergyPerTick() + input.getAmount() * batchSize);
-                } else {
-                    input.process(ports, batchSize, false);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void visit(ManaInput input) {
-        switch (mode) {
-            case CHECK:
-                if (input.isPerTick()) return;
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
-                if (input.isPerTick()) {
-                    agent.setManaPerTick(agent.getManaPerTick() + input.getAmount() * batchSize);
-                } else {
-                    input.process(ports, batchSize, false);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void visit(BlockInput input) {
-        switch (mode) {
-            case CHECK:
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
-                input.process(ports, batchSize, false);
-                break;
-            default:
-                break;
-        }
-    }
-
-    // --- Outputs ---
-
-    @Override
-    public void visit(ItemOutput output) {
+    public void visit(IModularRecipeOutput output) {
         if (mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
+            if (output.isPerTick()) {
+                agent.addPerTickOutput((IModularRecipeOutput) output.copy(batchSize));
+            } else {
+                agent.addCachedOutput(output.copy(batchSize));
+            }
         }
     }
 
-    @Override
-    public void visit(FluidOutput output) {
-        if (mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(EnergyOutput output) {
-        if (mode == Mode.CONSUME && output.isPerTick()) {
-            agent.setEnergyOutputPerTick(agent.getEnergyOutputPerTick() + output.getAmount() * batchSize);
-        } else if (mode == Mode.CACHE && !output.isPerTick()) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(ManaOutput output) {
-        if (mode == Mode.CONSUME && output.isPerTick()) {
-            agent.setManaOutputPerTick(agent.getManaOutputPerTick() + output.getAmount() * batchSize);
-        } else if (mode == Mode.CACHE && !output.isPerTick()) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(GasOutput output) {
-        if (mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(EssentiaOutput output) {
-        if (mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(VisOutput output) {
-        if (mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
+    /**
+     * BlockOutput has special capacity checking during CACHE mode.
+     */
     @Override
     public void visit(BlockOutput output) {
         if (mode == Mode.CACHE) {
@@ -199,28 +84,11 @@ public class RecipeExecutionVisitor implements IRecipeVisitor {
             if (!output.checkCapacity(ports, batchSize)) {
                 satisfied = false;
             }
-            agent.addCachedOutput(output.copy(batchSize));
-        }
-    }
-
-    @Override
-    public void visit(IRecipeInput input) {
-        switch (this.mode) {
-            case CHECK:
-                if (!input.process(ports, batchSize, true)) satisfied = false;
-                break;
-            case CONSUME:
-                input.process(ports, batchSize, false);
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void visit(IRecipeOutput output) {
-        if (this.mode == Mode.CACHE) {
-            agent.addCachedOutput(output.copy(batchSize));
+            if (output.isPerTick()) {
+                agent.addPerTickOutput((IModularRecipeOutput) output.copy(batchSize));
+            } else {
+                agent.addCachedOutput(output.copy(batchSize));
+            }
         }
     }
 }

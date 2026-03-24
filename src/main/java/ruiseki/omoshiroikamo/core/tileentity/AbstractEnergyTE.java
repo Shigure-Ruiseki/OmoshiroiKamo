@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.capabilities.Capability;
 import ruiseki.omoshiroikamo.core.capabilities.energy.CapabilityEnergy;
 import ruiseki.omoshiroikamo.core.energy.EnergyStorage;
-import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.core.energy.IOKEnergyIO;
 import ruiseki.omoshiroikamo.core.network.packet.PacketEnergy;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 
@@ -31,7 +31,7 @@ import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
  */
 @Optional.InterfaceList({ @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
     @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2") })
-public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTile, IEnergySink, IEnergySource {
+public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyIO, IEnergySink, IEnergySource {
 
     /** Last known energy stored, used for periodic client synchronization. */
     private int lastSyncPowerStored;
@@ -125,6 +125,16 @@ public abstract class AbstractEnergyTE extends AbstractTE implements IOKEnergyTi
     @Override
     public int getEnergyTransfer() {
         return energyStorage == null ? 0 : energyStorage.getMaxReceive();
+    }
+
+    @Override
+    public int receiveEnergy(ForgeDirection side, int amount, boolean simulate) {
+        return energyStorage == null ? 0 : energyStorage.receiveEnergy(amount, simulate);
+    }
+
+    @Override
+    public int extractEnergy(ForgeDirection side, int amount, boolean simulate) {
+        return energyStorage == null ? 0 : energyStorage.extractEnergy(amount, simulate);
     }
 
     @Override

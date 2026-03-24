@@ -30,16 +30,18 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.AbstractFluidPortTE;
 
 /**
  * ME Fluid Output Port - outputs fluids directly to AE2 ME Network.
- * Extends TEFluidOutputPort and implements IGridProxyable for AE2 integration.
+ * Extends AbstractFluidPortTE directly (not part of tier system).
+ * Implements IGridProxyable for AE2 integration.
  * Flow:
  * 1. Receives fluids via IFluidHandler (from adjacent machines)
  * 2. Periodically flushes internal tank to ME cache
  * 3. Then flushes ME cache to ME Network
  */
-public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxyable, IActionHost {
+public class TEFluidOutputPortME extends AbstractFluidPortTE implements IGridProxyable, IActionHost {
 
     private static final int TANK_CAPACITY = 16000; // 16 buckets
 
@@ -65,6 +67,21 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     @Override
     public int getTier() {
         return 0; // No tier for ME version
+    }
+
+    @Override
+    public void setTier(int tier) {
+        // ME version does not use tier system - ignore
+    }
+
+    @Override
+    public EnumIO getIOLimit() {
+        return EnumIO.OUTPUT;
+    }
+
+    @Override
+    public Direction getPortDirection() {
+        return Direction.OUTPUT;
     }
 
     // ========== IGridProxyable Implementation ==========
@@ -334,11 +351,11 @@ public class TEFluidOutputPortME extends TEFluidOutputPort implements IGridProxy
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             return IconRegistry.getIcon("overlay_fluidoutput_me");
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 }

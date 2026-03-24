@@ -11,7 +11,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
 import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
 import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
 import com.gtnewhorizon.gtnhlib.item.InventoryItemSink;
@@ -25,7 +24,7 @@ import ruiseki.omoshiroikamo.core.network.packet.PacketFluidTanks;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.util.SlotDefinition;
 
-public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory, CapabilityProvider {
+public abstract class AbstractStorageTE extends AbstractTE implements ISidedInventory {
 
     protected final SlotDefinition slotDefinition;
 
@@ -45,6 +44,7 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
+                markDirty();
                 onContentsChange(slot);
             }
         };

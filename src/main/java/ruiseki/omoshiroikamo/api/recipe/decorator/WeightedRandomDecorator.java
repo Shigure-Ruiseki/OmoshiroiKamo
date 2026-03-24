@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.parser.OutputParserRegistry;
 
@@ -41,10 +42,10 @@ public class WeightedRandomDecorator extends RecipeDecorator {
         if (!simulate) {
             for (int i = 0; i < rolls; i++) {
                 WeightedOutputEntry picked = (WeightedOutputEntry) WeightedRandom.getRandomItem(rand, pool);
-                if (picked != null) {
-                    List<IModularPort> filtered = filterByType(outputPorts, picked.output.getPortType());
-                    if (picked.output.checkCapacity(filtered)) {
-                        picked.output.apply(filtered);
+                if (picked != null && picked.output instanceof IModularRecipeOutput modularOutput) {
+                    List<IModularPort> filtered = filterByType(outputPorts, modularOutput.getPortType());
+                    if (modularOutput.checkCapacity(filtered)) {
+                        modularOutput.apply(filtered);
                     }
                 }
             }

@@ -29,6 +29,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.error.ErrorReason;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
@@ -96,8 +97,10 @@ public class GuiManager {
 
         // Sync progress values
         IntSyncValue progressSyncer = new IntSyncValue(
-            controller.getProcessAgent()::getProgress,
-            controller.getProcessAgent()::setProgress);
+            () -> (int) controller.getProcessAgent()
+                .getProgress(),
+            value -> controller.getProcessAgent()
+                .setProgress(value));
         IntSyncValue maxProgressSyncer = new IntSyncValue(
             controller.getProcessAgent()::getMaxProgress,
             controller.getProcessAgent()::setMaxProgress);
@@ -335,12 +338,14 @@ public class GuiManager {
 
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
                 output.accept(contextSetter); // Provides context implicitly
-                if (!output.process(outputPorts, true)) {
-                    if (blocked.length() > 0) blocked.append(", ");
-                    blocked.append(
-                        LibMisc.LANG.localize(
-                            "gui.port_type." + output.getPortType()
-                                .name()));
+                if (output instanceof IModularRecipeOutput modularOutput) {
+                    if (!modularOutput.process(outputPorts, true)) {
+                        if (blocked.length() > 0) blocked.append(", ");
+                        blocked.append(
+                            LibMisc.LANG.localize(
+                                "gui.port_type." + modularOutput.getPortType()
+                                    .name()));
+                    }
                 }
             }
             if (blocked.length() > 0) return blocked.toString();

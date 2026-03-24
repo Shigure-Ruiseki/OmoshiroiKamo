@@ -10,6 +10,8 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.condition.ICondition;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
@@ -89,16 +91,20 @@ public class ModularRecipe implements IModularRecipe {
     public boolean processInputs(List<IModularPort> inputPorts, boolean simulate) {
 
         for (IRecipeInput input : inputs) {
-            List<IModularPort> filtered = filterByType(inputPorts, input.getPortType());
-            if (!input.process(filtered, true)) {
-                return false;
+            if (input instanceof IModularRecipeInput modularInput) {
+                List<IModularPort> filtered = filterByType(inputPorts, modularInput.getPortType());
+                if (!modularInput.process(filtered, true)) {
+                    return false;
+                }
             }
         }
 
         if (!simulate) {
             for (IRecipeInput input : inputs) {
-                List<IModularPort> filtered = filterByType(inputPorts, input.getPortType());
-                input.process(filtered, false);
+                if (input instanceof IModularRecipeInput modularInput) {
+                    List<IModularPort> filtered = filterByType(inputPorts, modularInput.getPortType());
+                    modularInput.process(filtered, false);
+                }
             }
         }
         return true;
@@ -114,16 +120,20 @@ public class ModularRecipe implements IModularRecipe {
     public boolean processOutputs(List<IModularPort> outputPorts, boolean simulate) {
 
         for (IRecipeOutput output : outputs) {
-            List<IModularPort> filtered = filterByType(outputPorts, output.getPortType());
-            if (!output.checkCapacity(filtered)) {
-                return false;
+            if (output instanceof IModularRecipeOutput modularOutput) {
+                List<IModularPort> filtered = filterByType(outputPorts, modularOutput.getPortType());
+                if (!modularOutput.checkCapacity(filtered)) {
+                    return false;
+                }
             }
         }
 
         if (!simulate) {
             for (IRecipeOutput output : outputs) {
-                List<IModularPort> filtered = filterByType(outputPorts, output.getPortType());
-                output.apply(filtered);
+                if (output instanceof IModularRecipeOutput modularOutput) {
+                    List<IModularPort> filtered = filterByType(outputPorts, modularOutput.getPortType());
+                    modularOutput.apply(filtered);
+                }
             }
         }
         return true;
@@ -165,8 +175,10 @@ public class ModularRecipe implements IModularRecipe {
     @Override
     public IPortType.Type checkOutputCapacity(List<IModularPort> outputPorts) {
         for (IRecipeOutput output : outputs) {
-            if (!output.checkCapacity(outputPorts)) {
-                return output.getPortType();
+            if (output instanceof IModularRecipeOutput modularOutput) {
+                if (!modularOutput.checkCapacity(outputPorts)) {
+                    return modularOutput.getPortType();
+                }
             }
         }
         return null;

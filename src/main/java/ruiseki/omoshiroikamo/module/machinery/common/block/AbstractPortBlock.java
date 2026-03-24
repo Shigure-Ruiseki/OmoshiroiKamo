@@ -23,6 +23,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularBlock;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractTieredBlock;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
@@ -44,15 +45,18 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     // Render ID for ISBRH, set during client init
     public static int portRendererId = -1;
 
-    public IIcon baseIcon;
-    public IIcon casingIcon;
+    public IIcon[] baseIcons; // Tier-based base textures
+    public IIcon[] casingIcons; // Tier-based casing textures for disabled sides
 
     protected final int tierCount;
 
     @SafeVarargs
     protected AbstractPortBlock(String name, Class<? extends TileEntity>... teClasses) {
         super(name, teClasses);
-        this.tierCount = teClasses.length;
+        // Use actual tier count from ModularTier (16 tiers: 0-15)
+        this.tierCount = ModularTier.getTierCount();
+        this.baseIcons = new IIcon[tierCount];
+        this.casingIcons = new IIcon[tierCount];
         this.useNeighborBrightness = true;
         isFullSize = isOpaque = false;
     }
@@ -98,27 +102,62 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        return baseIcon;
+        // Return tier-based base texture
+        if (baseIcons != null && meta >= 0 && meta < baseIcons.length && baseIcons[meta] != null) {
+            return baseIcons[meta];
+        }
+        // Fallback to tier 0
+        if (baseIcons != null && baseIcons.length > 0 && baseIcons[0] != null) {
+            return baseIcons[0];
+        }
+        return null;
     }
 
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
         TileEntity te = world.getTileEntity(x, y, z);
+        int tier = 0;
+
+        // Get tier from TileEntity
+        if (te instanceof IModularPort port) {
+            tier = port.getTier();
+        }
+
+        // Check if side should show casing (IO disabled)
         if (te instanceof ISidedIO io) {
             ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
             if (io.getSideIO(dir) == EnumIO.NONE) {
-                if (casingIcon != null) {
-                    return casingIcon;
+                // Use tier-based casing texture
+                if (tier >= 0 && tier < casingIcons.length && casingIcons[tier] != null) {
+                    return casingIcons[tier];
+                }
+                // Fallback to tier 0 casing
+                if (casingIcons.length > 0 && casingIcons[0] != null) {
+                    return casingIcons[0];
                 }
             }
         }
-        return baseIcon;
+
+        // Return tier-based base texture
+        if (baseIcons != null && tier >= 0 && tier < baseIcons.length && baseIcons[tier] != null) {
+            return baseIcons[tier];
+        }
+        // Fallback to tier 0
+        if (baseIcons != null && baseIcons.length > 0 && baseIcons[0] != null) {
+            return baseIcons[0];
+        }
+        return null;
     }
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        baseIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
-        casingIcon = reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing");
+        // Use the same tier textures as Casing blocks
+        for (int i = 0; i < tierCount; i++) {
+            // Format: tier_0_base, tier_1_base, etc. (same as BlockMachineCasing)
+            baseIcons[i] = reg.registerIcon(LibResources.PREFIX_MOD + "modular/tier_" + i + "_base");
+            // Casing icons also tier-based
+            casingIcons[i] = reg.registerIcon(LibResources.PREFIX_MOD + "modular/tier_" + i + "_base");
+        }
         registerPortOverlays(reg);
     }
 
@@ -153,18 +192,25 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
                 case 3 -> facing = ForgeDirection.EAST;
             }
         }
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof IModularPort) {
-            EnumIO ioLimit = EnumIO.NONE;
-            // Determine limit based on type
 
+        // Set block metadata to match tier from ItemStack
+        int tier = stack.getItemDamage();
+        world.setBlockMetadataWithNotify(x, y, z, tier, 2);
+
+        TileEntity te = world.getTileEntity(x, y, z);
+
+        if (te instanceof IModularPort port) {
+            // Set tier on TileEntity
+            port.setTier(tier);
+
+            // Determine IO limit based on type
+            EnumIO ioLimit = EnumIO.NONE;
             if (te instanceof AbstractFluidPortTE portTE) ioLimit = portTE.getIOLimit();
             else if (te instanceof AbstractEnergyIOPortTE portTE) ioLimit = portTE.getIOLimit();
             else if (te instanceof AbstractItemIOPortTE portTE) ioLimit = portTE.getIOLimit();
             else if (te instanceof AbstractGasPortTE portTE) ioLimit = portTE.getIOLimit();
 
             if (ioLimit != EnumIO.NONE) {
-                IModularPort port = (IModularPort) te;
                 // Reset all to NONE first
                 for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                     port.setSideIO(dir, EnumIO.NONE);
@@ -203,4 +249,19 @@ public abstract class AbstractPortBlock<T extends AbstractTE> extends AbstractTi
     protected void addCapacityTooltip(List<String> list, int tier) {}
 
     protected void addTransferTooltip(List<String> list, int tier) {}
+
+    /**
+     * Get base icon for the specified tier.
+     * Provides safe access to baseIcons array with fallback.
+     */
+    public IIcon getBaseIcon(int tier) {
+        if (baseIcons != null && tier >= 0 && tier < baseIcons.length && baseIcons[tier] != null) {
+            return baseIcons[tier];
+        }
+        // Fallback to tier 0 if available
+        if (baseIcons != null && baseIcons.length > 0 && baseIcons[0] != null) {
+            return baseIcons[0];
+        }
+        return null;
+    }
 }

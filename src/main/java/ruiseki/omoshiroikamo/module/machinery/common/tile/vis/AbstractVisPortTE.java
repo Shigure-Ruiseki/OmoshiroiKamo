@@ -2,40 +2,66 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.vis;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.aspects.IAspectContainer;
 
 /**
  * Abstract base class for Vis ports.
- * Stores Vis as AspectList.
- * TODO: Add tiered blocks/TEs
- * TODO: Add vis filter
+ * Stores Vis as AspectList with unified 16-tier system.
  */
-public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort {
+public abstract class AbstractVisPortTE extends AbstractTE implements IModularPort, IAspectContainer {
+
+    @NBTPersist
+    protected int tier = 0; // 0-15 (display: 1-16)
 
     @NBTPersist
     protected final EnumIO[] sides = new EnumIO[6];
     protected AspectList visStored = new AspectList();
+
+    @NBTPersist
     protected int maxVisPerAspect;
     protected boolean registeredAsSource = false;
 
-    public AbstractVisPortTE(int maxVisPerAspect) {
-        this.maxVisPerAspect = maxVisPerAspect;
+    public AbstractVisPortTE() {
+        // Capacity will be set by setTier() in onBlockPlacedBy or readCommon
+        this.maxVisPerAspect = 100;
         for (int i = 0; i < 6; i++) {
             sides[i] = getIOLimit();
         }
     }
 
-    public abstract int getTier();
+    @Override
+    public int getTier() {
+        return tier;
+    }
+
+    @Override
+    public void setTier(int tier) {
+        if (this.tier != tier) {
+            this.tier = tier;
+            updateVisCapacity();
+            markDirty();
+        }
+    }
+
+    /**
+     * Update Vis capacity based on current tier.
+     * Called when tier changes or after NBT load.
+     */
+    protected void updateVisCapacity() {
+        int newCapacity = MachineryConfig.getVisPortCapacity(tier + 1);
+        this.maxVisPerAspect = newCapacity;
+    }
 
     public abstract EnumIO getIOLimit();
 
@@ -87,6 +113,68 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
+    public AspectList getAspects() {
+        return visStored;
+    }
+
+    @Override
+    public void setAspects(AspectList aspects) {
+        this.visStored = aspects;
+        markDirty();
+    }
+
+    @Override
+    public boolean doesContainerAccept(Aspect tag) {
+        return isPrimalAspect(tag);
+    }
+
+    @Override
+    public int addToContainer(Aspect tag, int amount) {
+        return addVis(tag, amount);
+    }
+
+    @Override
+    public boolean takeFromContainer(Aspect tag, int amount) {
+        int drained = drainVis(tag, amount);
+        return drained >= amount;
+    }
+
+    @Override
+    public boolean takeFromContainer(AspectList ot) {
+        for (Aspect aspect : ot.getAspects()) {
+            if (aspect != null && visStored.getAmount(aspect) < ot.getAmount(aspect)) {
+                return false;
+            }
+        }
+        for (Aspect aspect : ot.getAspects()) {
+            if (aspect != null) {
+                drainVis(aspect, ot.getAmount(aspect));
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean doesContainerContainAmount(Aspect tag, int amount) {
+        return visStored.getAmount(tag) >= amount;
+    }
+
+    @Override
+    public boolean doesContainerContain(AspectList ot) {
+        for (Aspect aspect : ot.getAspects()) {
+            if (aspect != null && visStored.getAmount(aspect) < ot.getAmount(aspect)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int containerContains(Aspect tag) {
+        return visStored.getAmount(tag);
+    }
+
+    @Override
     public void accept(IRecipeVisitor visitor) {}
 
     private boolean isPrimalAspect(Aspect aspect) {
@@ -124,16 +212,18 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
     }
 
     @Override
-    public IPortType.Type getPortType() {
-        return IPortType.Type.VIS;
+    public Type getPortType() {
+        return Type.VIS;
     }
 
     @Override
-    public abstract IPortType.Direction getPortDirection();
+    public abstract Direction getPortDirection();
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        String unlocalizedName = getUnlocalizedName() + ".name";
+        String format = StatCollector.translateToLocal(unlocalizedName);
+        return String.format(format, getTier() + 1);
     }
 
     @Override
@@ -155,14 +245,11 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
 
     @Override
     public void readCommon(NBTTagCompound root) {
-        super.readCommon(root);
-        // Only load if saved, otherwise keep constructor default
-        if (root.hasKey("maxVis")) {
-            int savedMax = root.getInteger("maxVis");
-            if (savedMax > 0) {
-                maxVisPerAspect = savedMax;
-            }
+        if (root.hasKey("tier")) {
+            this.tier = root.getInteger("tier");
+            updateVisCapacity();
         }
+        super.readCommon(root);
 
         visStored = new AspectList();
         NBTTagList visList = root.getTagList("visStored", 10);
@@ -174,5 +261,19 @@ public abstract class AbstractVisPortTE extends AbstractTE implements IModularPo
                 visStored.add(aspect, amount);
             }
         }
+
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
     }
 }

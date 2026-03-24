@@ -234,19 +234,6 @@ public class ExpressionParser {
         throw error("Assignment left-hand side must be an NBT path (e.g., display.Name)");
     }
 
-    private String parseStringArgument() {
-        while (isSpace(ch)) nextChar();
-        if (ch != '\'' && ch != '"') throw error("Expected string argument in nbt()");
-        char quote = (char) ch;
-        nextChar();
-        int startPos = this.pos;
-        while (ch != quote && ch != -1) nextChar();
-        if (ch != quote) throw error("Expected closing quote '" + quote + "'");
-        String value = input.substring(startPos, this.pos);
-        nextChar();
-        return value;
-    }
-
     // expression = term ( ( "+" | "-" ) term )*
     private Object parseExpression() {
         Object x = parseTerm();
@@ -334,7 +321,7 @@ public class ExpressionParser {
             List<String> pathSegments = new ArrayList<>();
             StringBuilder segment = new StringBuilder();
 
-            while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_') {
+            while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_' || (ch >= '0' && ch <= '9')) {
                 segment.append((char) ch);
                 nextChar();
             }
@@ -358,12 +345,69 @@ public class ExpressionParser {
 
             // Check if this is a function call
             if (eat('(')) {
-                // Support nbt('key') for backward compatibility and tests
-                if (name.equals("nbt")) {
-                    String nbtKey = parseStringArgument();
-                    if (!eat(')')) throw error("Expected ')' after nbt() argument");
-                    return new NbtExpression(nbtKey, 0.0);
+                List<IExpression> args = new ArrayList<>();
+                if (!eat(')')) {
+                    while (true) {
+                        Object arg = parseLogicalOr();
+                        args.add(asExpression(arg));
+                        if (eat(',')) {
+                            continue;
+                        }
+                        if (eat(')')) {
+                            break;
+                        }
+                        throw error("Expected ',' or ')' after function argument");
+                    }
                 }
+
+                if (name.equals("nbt")) {
+                    if (args.isEmpty()) {
+                        throw error("nbt() requires at least one argument");
+                    }
+                    IExpression firstArg = args.get(0);
+                    if (firstArg instanceof StringLiteralExpression) {
+                        String nbtKey = ((StringLiteralExpression) firstArg).getStringValue();
+                        return new NbtExpression(nbtKey, 0.0);
+                    } else {
+                        throw error("nbt() first argument must be a string literal");
+                    }
+                }
+
+                if (isMathFunction(name)) {
+                    int argCount = args.size();
+                    if (name.equals("pow") || name.equals("min")
+                        || name.equals("max")
+                        || name.equals("atan2")
+                        || name.equals("npr")
+                        || name.equals("ncr")
+                        || name.equals("perm")
+                        || name.equals("permu")
+                        || name.equals("permutation")
+                        || name.equals("combi")
+                        || name.equals("combination")) {
+                        if (argCount < 2) {
+                            throw error(name + "() requires at least 2 arguments");
+                        }
+                    } else if (name.equals("log")) {
+                        if (argCount < 1 || argCount > 2) {
+                            throw error("log() requires 1 or 2 arguments");
+                        }
+                    } else if (name.equals("clamp")) {
+                        if (argCount < 3) {
+                            throw error(name + "() requires at least 3 arguments");
+                        }
+                    } else if (name.equals("random")) {
+                        if (argCount != 0) {
+                            throw error(name + "() takes no arguments");
+                        }
+                    } else {
+                        if (argCount != 1) {
+                            throw error(name + "() requires exactly 1 argument");
+                        }
+                    }
+                    return new MathFunctionExpression(name, args);
+                }
+
                 throw error("Unknown function: '" + name + "'");
             }
 
@@ -393,12 +437,20 @@ public class ExpressionParser {
                 || name.equals("moon_phase")
                 || name.equals("moon")) {
                 return new WorldPropertyExpression(name.equals("moon") ? "moon_phase" : name);
+            } else if (name.equalsIgnoreCase("pi")) {
+                return new ConstantExpression(Math.PI);
+            } else if (name.equalsIgnoreCase("e")) {
+                return new ConstantExpression(Math.E);
             } else {
                 throw error("Unknown variable: '" + name + "'");
             }
         } else {
             throw error("Unexpected character: '" + (char) ch + "'");
         }
+    }
+
+    private boolean isMathFunction(String name) {
+        return MathFunctionExpression.SUPPORTED_FUNCTIONS.contains(name.toLowerCase());
     }
 
     public static IExpression parseExpression(String input) {

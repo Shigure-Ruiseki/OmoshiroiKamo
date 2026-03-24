@@ -118,7 +118,9 @@ public class ComplexRecipePatternTest {
         // 各タイプが1つずつ存在
         long itemCount = recipe.getInputs()
             .stream()
-            .filter(i -> i.getPortType() == IPortType.Type.ITEM)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.ITEM)
             .count();
         assertEquals(1, itemCount);
 
@@ -130,31 +132,41 @@ public class ComplexRecipePatternTest {
 
         long energyCount = recipe.getInputs()
             .stream()
-            .filter(i -> i.getPortType() == IPortType.Type.ENERGY)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.ENERGY)
             .count();
         assertEquals(1, energyCount);
 
         long manaCount = recipe.getInputs()
             .stream()
-            .filter(i -> i.getPortType() == IPortType.Type.MANA)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.MANA)
             .count();
         assertEquals(1, manaCount);
 
         long gasCount = recipe.getInputs()
             .stream()
-            .filter(i -> i.getPortType() == IPortType.Type.GAS)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.GAS)
             .count();
         assertEquals(1, gasCount);
 
         long essentiaCount = recipe.getInputs()
             .stream()
-            .filter(i -> i.getPortType() == IPortType.Type.ESSENTIA)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.ESSENTIA)
             .count();
         assertEquals(1, essentiaCount);
 
         long visCount = recipe.getInputs()
             .stream()
-            .filter(i -> i.getPortType() == IPortType.Type.VIS)
+            .filter(
+                i -> i.asModular() != null && i.asModular()
+                    .getPortType() == IPortType.Type.VIS)
             .count();
         assertEquals(1, visCount);
     }
@@ -187,7 +199,9 @@ public class ComplexRecipePatternTest {
             1,
             recipe.getOutputs()
                 .stream()
-                .filter(o -> o.getPortType() == IPortType.Type.ITEM)
+                .filter(
+                    o -> o.asModular() != null && o.asModular()
+                        .getPortType() == IPortType.Type.ITEM)
                 .count());
         // assertEquals(
         // 1,
@@ -199,31 +213,41 @@ public class ComplexRecipePatternTest {
             1,
             recipe.getOutputs()
                 .stream()
-                .filter(o -> o.getPortType() == IPortType.Type.ENERGY)
+                .filter(
+                    o -> o.asModular() != null && o.asModular()
+                        .getPortType() == IPortType.Type.ENERGY)
                 .count());
         assertEquals(
             1,
             recipe.getOutputs()
                 .stream()
-                .filter(o -> o.getPortType() == IPortType.Type.MANA)
+                .filter(
+                    o -> o.asModular() != null && o.asModular()
+                        .getPortType() == IPortType.Type.MANA)
                 .count());
         assertEquals(
             1,
             recipe.getOutputs()
                 .stream()
-                .filter(o -> o.getPortType() == IPortType.Type.GAS)
+                .filter(
+                    o -> o.asModular() != null && o.asModular()
+                        .getPortType() == IPortType.Type.GAS)
                 .count());
         assertEquals(
             1,
             recipe.getOutputs()
                 .stream()
-                .filter(o -> o.getPortType() == IPortType.Type.ESSENTIA)
+                .filter(
+                    o -> o.asModular() != null && o.asModular()
+                        .getPortType() == IPortType.Type.ESSENTIA)
                 .count());
         assertEquals(
             1,
             recipe.getOutputs()
                 .stream()
-                .filter(o -> o.getPortType() == IPortType.Type.VIS)
+                .filter(
+                    o -> o.asModular() != null && o.asModular()
+                        .getPortType() == IPortType.Type.VIS)
                 .count());
     }
 
@@ -251,7 +275,10 @@ public class ComplexRecipePatternTest {
 
         // 全てItemタイプ
         for (IRecipeInput input : recipe.getInputs()) {
-            assertEquals(IPortType.Type.ITEM, input.getPortType());
+            assertEquals(
+                IPortType.Type.ITEM,
+                input.asModular()
+                    .getPortType());
         }
     }
 
@@ -274,7 +301,10 @@ public class ComplexRecipePatternTest {
 
         // 全てEssentiaタイプ
         for (IRecipeInput input : recipe.getInputs()) {
-            assertEquals(IPortType.Type.ESSENTIA, input.getPortType());
+            assertEquals(
+                IPortType.Type.ESSENTIA,
+                input.asModular()
+                    .getPortType());
         }
     }
 
@@ -301,7 +331,10 @@ public class ComplexRecipePatternTest {
 
         // 全てVisタイプ
         for (IRecipeOutput output : recipe.getOutputs()) {
-            assertEquals(IPortType.Type.VIS, output.getPortType());
+            assertEquals(
+                IPortType.Type.VIS,
+                output.asModular()
+                    .getPortType());
         }
     }
 
@@ -328,7 +361,10 @@ public class ComplexRecipePatternTest {
 
         // 全てItemタイプ（OreDictもItemInputとして扱われる）
         for (IRecipeInput input : recipe.getInputs()) {
-            assertEquals(IPortType.Type.ITEM, input.getPortType());
+            assertEquals(
+                IPortType.Type.ITEM,
+                input.asModular()
+                    .getPortType());
         }
     }
 
@@ -421,7 +457,10 @@ public class ComplexRecipePatternTest {
 
         // 両方ともEnergyタイプ
         for (IRecipeInput input : recipe.getInputs()) {
-            assertEquals(IPortType.Type.ENERGY, input.getPortType());
+            assertEquals(
+                IPortType.Type.ENERGY,
+                input.asModular()
+                    .getPortType());
         }
     }
 
@@ -443,7 +482,10 @@ public class ComplexRecipePatternTest {
 
         // 両方ともManaタイプ
         for (IRecipeInput input : recipe.getInputs()) {
-            assertEquals(IPortType.Type.MANA, input.getPortType());
+            assertEquals(
+                IPortType.Type.MANA,
+                input.asModular()
+                    .getPortType());
         }
     }
 
@@ -464,7 +506,10 @@ public class ComplexRecipePatternTest {
 
         IRecipeOutput output = recipe.getOutputs()
             .get(0);
-        assertEquals(IPortType.Type.MANA, output.getPortType());
+        assertEquals(
+            IPortType.Type.MANA,
+            output.asModular()
+                .getPortType());
         assertEquals(200, output.getRequiredAmount());
     }
 

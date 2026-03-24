@@ -1,38 +1,42 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
-import java.util.List;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
-import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 public abstract class AbstractRecipeInput extends AbstractJsonMaterial implements IRecipeInput {
 
     protected boolean consume = true;
+    protected int interval = 0;
 
     @Override
-    public boolean process(List<IModularPort> ports, int multiplier, boolean simulate) {
-        long remaining = getRequiredAmount() * multiplier;
-        boolean actualSimulate = simulate || !consume;
+    public boolean isPerTick() {
+        return interval > 0;
+    }
 
-        for (IModularPort port : ports) {
-            if (port.getPortType() != getPortType()) continue;
-            if (port.getPortDirection() != IPortType.Direction.INPUT
-                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
+    @Override
+    public int getInterval() {
+        return interval;
+    }
 
-            if (!isCorrectPort(port)) {
-                throw new IllegalStateException(
-                    getPortType() + " INPUT port must be compatible implementation, got: "
-                        + port.getClass()
-                            .getName());
+    public void setInterval(int interval) {
+        this.interval = Math.max(0, interval);
+    }
+
+    protected void readPerTick(JsonObject json, int defaultInterval) {
+        this.interval = defaultInterval;
+        JsonElement element = json.has("pertick") ? json.get("pertick")
+            : (json.has("perTick") ? json.get("perTick") : null);
+        if (element != null && element.isJsonPrimitive()) {
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isBoolean()) {
+                this.interval = primitive.getAsBoolean() ? 1 : 0;
+            } else if (primitive.isNumber()) {
+                this.interval = primitive.getAsInt();
             }
-
-            remaining -= consume(port, remaining, actualSimulate);
-
-            if (remaining <= 0) break;
         }
-
-        return remaining <= 0;
     }
 
     @Override
@@ -40,9 +44,7 @@ public abstract class AbstractRecipeInput extends AbstractJsonMaterial implement
         return consume;
     }
 
-    public abstract long getRequiredAmount();
-
-    protected abstract boolean isCorrectPort(IModularPort port);
-
-    protected abstract long consume(IModularPort port, long remaining, boolean simulate);
+    public void setConsume(boolean consume) {
+        this.consume = consume;
+    }
 }
