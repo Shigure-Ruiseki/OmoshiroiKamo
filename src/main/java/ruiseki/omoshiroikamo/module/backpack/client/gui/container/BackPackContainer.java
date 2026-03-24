@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -17,8 +16,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.cleanroommc.modularui.api.inventory.ClickType;
 import com.cleanroommc.modularui.screen.ModularContainer;
 import com.cleanroommc.modularui.screen.NEAAnimationHandler;
@@ -28,6 +25,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
@@ -38,6 +36,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgrade
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.backpack.integration.tic.TinkersHelpers;
 
 public class BackPackContainer extends ModularContainer {
 
@@ -51,6 +50,8 @@ public class BackPackContainer extends ModularContainer {
     private int dragState = 0;
     private final Set<Slot> dragSlots = new HashSet<>();
     private int dragButton = -1;
+
+    private static final String PLAYER_INV = "player_inventory";
 
     protected final Map<Integer, IndexedInventoryCraftingWrapper> inventoryCraftingInstances = new HashMap<>();
     protected final Map<Integer, IndexedModularCraftingSlot> craftingSlotInstances = new HashMap<>();
@@ -76,8 +77,13 @@ public class BackPackContainer extends ModularContainer {
 
             EntityPlayerMP playerMP = (EntityPlayerMP) getPlayer();
 
-            ItemStack result = CraftingManager.getInstance()
-                .findMatchingRecipe(inventoryCrafting, playerMP.worldObj);
+            ItemStack result;
+            if (LibMods.TConstruct.isLoaded()) {
+                result = TinkersHelpers.getTinkersRecipe(inventoryCrafting);
+            } else {
+                result = CraftingManager.getInstance()
+                    .findMatchingRecipe(inventoryCrafting, playerMP.worldObj);
+            }
 
             IndexedModularCraftingSlot slot = craftingSlotInstances.get(inventoryCrafting.getUpgradeSlotIndex());
 
@@ -424,112 +430,68 @@ public class BackPackContainer extends ModularContainer {
 
     @Override
     public ItemStack transferItem(ModularSlot fromSlot, ItemStack fromStack) {
-        if (fromStack == null || fromStack.stackSize <= 0) return fromStack;
+        if (fromStack == null || fromStack.stackSize <= 0) return null;
 
-        @Nullable
-        SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
+        int originalSize = fromStack.stackSize;
 
         if (fromSlot instanceof IndexedModularCraftingSlot craftingSlot) {
+            IndexedInventoryCraftingWrapper inventoryCrafting = inventoryCraftingInstances
+                .get(craftingSlot.getUpgradeSlotIndex());
 
-            IndexedInventoryCraftingWrapper inv = inventoryCraftingInstances.get(craftingSlot.getUpgradeSlotIndex());
+            if (inventoryCrafting == null) {
+                transferItemFiltered(fromSlot, fromStack, slot -> PLAYER_INV.equals(slot.getSlotGroupName()));
+            } else
+                if (inventoryCrafting.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.BACKPACK) {
 
-            if (inv == null) {
-                return transferItemFiltered(
-                    fromSlot,
-                    fromStack,
-                    slot -> "player_inventory".equals(slot.getSlotGroupName()));
-            }
-
-            if (inv.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.BACKPACK) {
-
-                return transferItemFiltered(
-                    fromSlot,
-                    fromStack,
-                    slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
-                    slot -> slot instanceof ModularBackpackSlot);
-            }
-
-            return transferItemFiltered(
+                    transferItemFiltered(
+                        fromSlot,
+                        fromStack,
+                        slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
+                        slot -> slot instanceof ModularBackpackSlot);
+                } else {
+                    transferItemFiltered(fromSlot, fromStack, slot -> PLAYER_INV.equals(slot.getSlotGroupName()));
+                }
+        } else if (PLAYER_INV.equals(fromSlot.getSlotGroupName())) {
+            transferItemFiltered(
                 fromSlot,
                 fromStack,
-                slot -> "player_inventory".equals(slot.getSlotGroupName()));
-        } else if ("player_inventory".equals(fromSlot.getSlotGroupName())) {
-            return transferItemFiltered(
-                fromSlot,
-                fromStack,
-                slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
-                slot -> slot instanceof ModularBackpackSlot);
+                slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()));
+        } else {
+            return super.transferItem(fromSlot, fromStack);
         }
 
-        for (ModularSlot toSlot : getShiftClickSlots()) {
-            SlotGroup slotGroup = Objects.requireNonNull(toSlot.getSlotGroup());
-            if (slotGroup != fromSlotGroup && toSlot.func_111238_b() && toSlot.isItemValid(fromStack)) {
-                transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
-                if (fromStack.stackSize < 1) {
-                    return fromStack;
-                }
-            }
+        if (fromStack.stackSize != originalSize) {
+            return fromStack;
         }
 
         return super.transferItem(fromSlot, fromStack);
     }
 
-    public ItemStack transferItemFiltered(ModularSlot fromSlot, ItemStack fromStack,
+    @SafeVarargs
+    public final void transferItemFiltered(ModularSlot fromSlot, ItemStack fromStack,
         Predicate<ModularSlot>... slotFilters) {
         SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
 
         for (Predicate<ModularSlot> slotFilter : slotFilters) {
 
-            List<ModularSlot> memorizedSlots = getShiftClickSlots().stream()
+            List<ModularSlot> targets = getShiftClickSlots().stream()
                 .filter(slotFilter)
                 .collect(Collectors.toList());
 
-            for (ModularSlot toSlot : memorizedSlots) {
-
-                SlotGroup slotGroup = toSlot.getSlotGroup();
-
-                if (slotGroup != fromSlotGroup && toSlot.func_111238_b() && toSlot.isItemValid(fromStack)) {
-
-                    transferToSlot(fromSlot, toSlot, fromStack, toSlot.getStack());
-
-                    if (fromStack.stackSize <= 0) {
-                        return fromStack;
-                    }
-
-                }
-            }
-
-            for (ModularSlot emptySlot : memorizedSlots) {
-
-                ItemStack stack = emptySlot.getStack();
-                SlotGroup slotGroup = emptySlot.getSlotGroup();
-
-                if (slotGroup != fromSlotGroup && emptySlot.func_111238_b()
-                    && stack == null
-                    && emptySlot.isItemValid(fromStack)) {
-
-                    if (fromStack.stackSize > emptySlot.getItemStackLimit(fromStack)) {
-
-                        emptySlot.putStack(fromStack.splitStack(emptySlot.getItemStackLimit(fromStack)));
-
-                    } else {
-
-                        emptySlot.putStack(fromStack.splitStack(fromStack.stackSize));
-                    }
-
-                    if (fromStack.stackSize < 1) {
-                        return fromStack;
-                    }
+            for (ModularSlot toSlot : targets) {
+                if (fromStack.stackSize <= 0) break;
+                if (toSlot.getSlotGroup() != fromSlotGroup) {
+                    transferToSlot(fromSlot, toSlot, fromStack);
                 }
             }
         }
 
-        return super.transferItem(fromSlot, fromStack);
     }
 
-    protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack, ItemStack toStack) {
+    protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack) {
 
         boolean isBackpackSlot = toSlot instanceof ModularBackpackSlot;
+        ItemStack toStack = toSlot.getStack();
 
         // VOID ANY
         if (isBackpackSlot && wrapper.canVoid(fromStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {

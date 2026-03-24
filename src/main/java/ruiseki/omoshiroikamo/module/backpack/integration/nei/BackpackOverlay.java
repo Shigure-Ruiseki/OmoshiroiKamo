@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.container.BackPackContai
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.CraftingSlotInfo;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
+import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularUpgradeSlot;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
@@ -33,7 +34,8 @@ public class BackpackOverlay extends DefaultOverlayHandler {
 
     @Override
     public boolean canMoveFrom(Slot slot, GuiContainer gui) {
-        return !(slot instanceof IndexedModularCraftingSlot) && !(slot instanceof ModularFilterSlot);
+        return !(slot instanceof IndexedModularCraftingSlot) && !(slot instanceof ModularFilterSlot)
+            && !(slot instanceof ModularUpgradeSlot);
     }
 
     @Override

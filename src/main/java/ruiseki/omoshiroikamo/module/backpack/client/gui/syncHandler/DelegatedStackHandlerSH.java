@@ -38,7 +38,11 @@ public class DelegatedStackHandlerSH extends SyncHandler {
     }
 
     @Override
-    public void readOnClient(int id, PacketBuffer buf) {}
+    public void readOnClient(int id, PacketBuffer buf) {
+        if (id == UPDATE_FILTERABLE) {
+            wrapper.syncToServer();
+        }
+    }
 
     @Override
     public void readOnServer(int id, PacketBuffer buf) {
@@ -50,6 +54,5 @@ public class DelegatedStackHandlerSH extends SyncHandler {
                 setDelegatedStackHandler(upgrade::getFilterItems);
             }
         }
-        wrapper.writeToItem();
     }
 }

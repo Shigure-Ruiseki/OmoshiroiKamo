@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.multiblock.common.block.quantumBeacon;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -55,11 +53,6 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
         list.add(new ItemStack(this, 1, 3));
         list.add(new ItemStack(this, 1, 4));
         list.add(new ItemStack(this, 1, 5));
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override

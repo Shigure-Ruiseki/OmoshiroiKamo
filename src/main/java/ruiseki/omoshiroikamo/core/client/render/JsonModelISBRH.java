@@ -16,12 +16,13 @@ import com.gtnewhorizon.gtnhlib.client.model.ItemContext;
 import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 import com.gtnewhorizon.gtnhlib.client.model.baked.BakedModel;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
+import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.ModelQuadView;
 import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.properties.ModelQuadFacing;
 import com.gtnewhorizons.angelica.api.ThreadSafeISBRH;
 
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 
 @ThreadSafeISBRH(perThread = true)
 public class JsonModelISBRH extends ModelISBRH {
@@ -43,8 +44,8 @@ public class JsonModelISBRH extends ModelISBRH {
         itemContext.blockState = BlockPropertyRegistry.getBlockState(stack);
         itemContext.random = RAND;
 
-        BakedModel model = getModel(itemContext);
-        RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
+        BakedModel model = ModelRegistry.getBakedModel(itemContext);
+        RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glPushMatrix();
 
@@ -71,9 +72,9 @@ public class JsonModelISBRH extends ModelISBRH {
                     quadColor = BlockColor.getColor(block, stack, quad.getColorIndex());
                 }
 
-                float r = (quadColor & 0xFF) / 255f;
-                float g = (quadColor >> 8 & 0xFF) / 255f;
-                float b = (quadColor >> 16 & 0xFF) / 255f;
+                final float r = (quadColor >> 16 & 255) / 255f;
+                final float g = (quadColor >> 8 & 255) / 255f;
+                final float b = (quadColor & 255) / 255f;
 
                 final float shade = diffuseLight(quad.getComputedFaceNormal());
                 tesselator.setColorOpaque_F(r * shade, g * shade, b * shade);

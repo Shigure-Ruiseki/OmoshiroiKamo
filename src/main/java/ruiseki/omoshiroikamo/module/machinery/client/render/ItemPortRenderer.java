@@ -16,7 +16,7 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 
@@ -87,7 +87,7 @@ public class ItemPortRenderer implements IItemRenderer {
         IIcon baseIcon = controller.getIcon(0, meta);
 
         // Bind texture atlas
-        RenderUtils.bindTexture(net.minecraft.client.renderer.texture.TextureMap.locationBlocksTexture);
+        RenderHelpers.bindTexture(net.minecraft.client.renderer.texture.TextureMap.locationBlocksTexture);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -103,7 +103,7 @@ public class ItemPortRenderer implements IItemRenderer {
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             tess.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
-            RenderUtils.renderFaceCorrected(tess, dir, 0, 0, 0, baseIcon, 0.0f, Rotation.NORMAL, Flip.NONE);
+            RenderHelpers.renderFaceCorrected(tess, dir, 0, 0, 0, baseIcon, 0.0f, Rotation.NORMAL, Flip.NONE);
         }
         tess.draw();
 
@@ -113,7 +113,7 @@ public class ItemPortRenderer implements IItemRenderer {
             tess.startDrawingQuads();
             tess.setColorOpaque_F(r, g, b);
             tess.setNormal(1.0F, 0.0F, 0.0F);
-            RenderUtils.renderFaceCorrected(
+            RenderHelpers.renderFaceCorrected(
                 tess,
                 ForgeDirection.EAST,
                 0,
@@ -132,7 +132,7 @@ public class ItemPortRenderer implements IItemRenderer {
             tess.startDrawingQuads();
             tess.setColorOpaque_F(1.0f, 1.0f, 1.0f); // White (no tint)
             tess.setNormal(1.0F, 0.0F, 0.0F);
-            RenderUtils.renderFaceCorrected(
+            RenderHelpers.renderFaceCorrected(
                 tess,
                 ForgeDirection.EAST,
                 0,
@@ -164,11 +164,12 @@ public class ItemPortRenderer implements IItemRenderer {
         if (allFaces) {
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                 t.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
-                RenderUtils.renderFaceCorrected(t, dir, 0, 0, 0, icon, 0.001f, Rotation.NORMAL, Flip.NONE);
+                RenderHelpers.renderFaceCorrected(t, dir, 0, 0, 0, icon, 0.001f, Rotation.NORMAL, Flip.NONE);
             }
         } else {
             t.setNormal(1.0F, 0.0F, 0.0F);
-            RenderUtils.renderFaceCorrected(t, ForgeDirection.EAST, 0, 0, 0, icon, 0.001f, Rotation.NORMAL, Flip.NONE);
+            RenderHelpers
+                .renderFaceCorrected(t, ForgeDirection.EAST, 0, 0, 0, icon, 0.001f, Rotation.NORMAL, Flip.NONE);
         }
         t.draw();
 

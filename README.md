@@ -30,7 +30,7 @@ Each backport module can be individually enabled or disabled in the config.
 
 - [StructureLib ](https://github.com/GTNewHorizons/StructureLib)
 - [ModularUI2 (>= 2.3.46)](https://github.com/GTNewHorizons/ModularUI2)
-- [GTNHLib (>= 0.9.40)](https://github.com/GTNewHorizons/GTNHLib)
+- [GTNHLib (>= 0.9.45)](https://github.com/GTNewHorizons/GTNHLib)
 
 ## Features:
 
@@ -125,6 +125,7 @@ Decoupled and extensible recipe engine supporting multiple resource types and dy
 - [X] Backpack model render on player's back when equipped
 - [X] Custom Backpack main color and accent color
 - [X] Modifier each backpack and upgrade slot size
+- [X] Sleeping Bag
 
 #### Upgrades
 

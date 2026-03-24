@@ -317,8 +317,6 @@ public class BackpackRecipes {
                 "pearlEnder",
                 'O',
                 "blockObsidian",
-                'A',
-                new ItemStack(Items.golden_apple, 1, 0),
                 'R',
                 "dustRedstone",
                 'U',

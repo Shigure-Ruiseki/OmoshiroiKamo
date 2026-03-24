@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.cows.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -31,11 +29,6 @@ public class BlockStall extends AbstractBlock<TEStall> {
 
     public static BlockStall create() {
         return new BlockStall();
-    }
-
-    @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
     }
 
     @Override

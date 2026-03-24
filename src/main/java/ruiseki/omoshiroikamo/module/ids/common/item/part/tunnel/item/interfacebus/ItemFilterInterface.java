@@ -49,7 +49,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
@@ -544,7 +544,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderUtils.bindTexture(activeSlot != -1 ? active : inactive);
+        RenderHelpers.bindTexture(activeSlot != -1 ? active : inactive);
 
         rotateForSide(getSide());
 
@@ -575,7 +575,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(inactive);
+        RenderHelpers.bindTexture(inactive);
         model.renderAll();
 
         GL11.glPopMatrix();

@@ -42,7 +42,7 @@ import ruiseki.omoshiroikamo.core.block.IDynamicRedstone;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.helper.TileHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -305,10 +305,10 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderUtils.bindTexture(back_texture);
+        RenderHelpers.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();
@@ -336,10 +336,10 @@ public class RedstoneWriter extends AbstractWriterPart implements ILogicWriterPa
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderUtils.bindTexture(back_texture);
+        RenderHelpers.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();

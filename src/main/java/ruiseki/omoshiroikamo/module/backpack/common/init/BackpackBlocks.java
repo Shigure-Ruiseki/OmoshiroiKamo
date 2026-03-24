@@ -10,6 +10,7 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.IBlock;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
 
 public enum BackpackBlocks {
 
@@ -35,6 +36,7 @@ public enum BackpackBlocks {
         ModObject.blockBackpackObsidian.unlocalisedName,
         BackpackConfig.obsidianBackpackSlots,
         BackpackConfig.obsidianUpgradeSlots)),
+    SLEEPING_BAG(new BlockSleepingBag()),
 
     ;
     // spotless: on

@@ -13,15 +13,15 @@ import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class BackpackItemStackHandler extends UpgradeItemStackHandler {
 
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
 
     public final List<ItemStack> memorizedSlotStack;
     public final List<Boolean> memorizedSlotRespectNbtList;
     public final List<Boolean> sortLockedSlots;
 
-    public BackpackItemStackHandler(int size, BackpackWrapper handler) {
+    public BackpackItemStackHandler(int size, BackpackWrapper wrapper) {
         super(size);
-        this.handler = handler;
+        this.wrapper = wrapper;
 
         this.memorizedSlotStack = new ArrayList<>(size);
         this.memorizedSlotRespectNbtList = new ArrayList<>(size);
@@ -37,7 +37,7 @@ public class BackpackItemStackHandler extends UpgradeItemStackHandler {
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         if (memorizedSlotStack.get(slot) == null) {
-            return !(stack.getItem() instanceof BlockBackpack.ItemBackpack) || handler.canNestBackpack();
+            return !(stack.getItem() instanceof BlockBackpack.ItemBackpack) || wrapper.canNestBackpack();
         }
         if (memorizedSlotRespectNbtList.get(slot)) {
             return ItemStack.areItemStacksEqual(stack, memorizedSlotStack.get(slot));
@@ -47,16 +47,16 @@ public class BackpackItemStackHandler extends UpgradeItemStackHandler {
 
     @Override
     public int getStackLimit(int slot, ItemStack stack) {
-        return stack.getMaxStackSize() * handler.getTotalStackMultiplier();
+        return stack.getMaxStackSize() * wrapper.getTotalStackMultiplier();
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return 64 * handler.getTotalStackMultiplier();
+        return 64 * wrapper.getTotalStackMultiplier();
     }
 
     public ItemStack prioritizedInsertion(int slotIndex, ItemStack stack, boolean simulate) {
-        if (stack != null && !handler.canNestBackpack() && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
+        if (stack != null && !wrapper.canNestBackpack() && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
             return stack;
         }
 
@@ -126,7 +126,7 @@ public class BackpackItemStackHandler extends UpgradeItemStackHandler {
             return null;
         }
 
-        int slotMaxStackSize = existing.getMaxStackSize() * handler.getTotalStackMultiplier();
+        int slotMaxStackSize = existing.getMaxStackSize() * wrapper.getTotalStackMultiplier();
         int toExtract = Math.min(amount, slotMaxStackSize);
 
         if (existing.stackSize <= toExtract) {

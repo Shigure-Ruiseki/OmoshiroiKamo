@@ -2,13 +2,21 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler;
 
 import java.io.IOException;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
+import ruiseki.omoshiroikamo.module.backpack.common.block.TEBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.entity.properties.BackpackProperty;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
 
@@ -19,20 +27,16 @@ public class BackpackSH extends SyncHandler {
     public static final int UPDATE_TRANSFER_TO_BACKPACK_INV = 2;
     public static final int UPDATE_TRANSFER_TO_PLAYER_INV = 3;
     public static final int UPDATE_SETTING = 4;
+    public static final int DEPLOY_SLEEPING_BAG = 5;
 
     private final PlayerMainInvWrapper playerInv;
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
     private final BackpackPanel panel;
 
-    public BackpackSH(PlayerMainInvWrapper playerInv, BackpackWrapper handler, BackpackPanel panel) {
+    public BackpackSH(PlayerMainInvWrapper playerInv, BackpackWrapper wrapper, BackpackPanel panel) {
         this.playerInv = playerInv;
-        this.handler = handler;
+        this.wrapper = wrapper;
         this.panel = panel;
-    }
-
-    @Override
-    public void readOnClient(int id, PacketBuffer buf) throws IOException {
-
     }
 
     @Override
@@ -58,10 +62,23 @@ public class BackpackSH extends SyncHandler {
                 updateBackpack(buf);
                 break;
 
+            case DEPLOY_SLEEPING_BAG:
+                deploySleepingBag();
+
             default:
                 break;
         }
-        handler.syncToServer();
+    }
+
+    @Override
+    public void readOnClient(int id, PacketBuffer buf) throws IOException {
+        if (id == UPDATE_SET_SORT_TYPE || id == UPDATE_SORT_INV
+            || id == UPDATE_TRANSFER_TO_BACKPACK_INV
+            || id == UPDATE_TRANSFER_TO_PLAYER_INV
+            || id == UPDATE_SETTING
+            || id == DEPLOY_SLEEPING_BAG) {
+            wrapper.syncToServer();
+        }
     }
 
     public void setSortType(PacketBuffer buf) {
@@ -70,44 +87,85 @@ public class BackpackSH extends SyncHandler {
     }
 
     public void setSortType(SortType sortType) {
-        handler.setSortType(sortType);
+        wrapper.setSortType(sortType);
     }
 
     public void sortInventory(PacketBuffer buf) throws IOException {
-        int size = handler.getBackpackSlots();
+        int size = wrapper.getBackpackSlots();
 
         for (int i = 0; i < size; i++) {
-            handler.getBackpackHandler()
+            wrapper.getBackpackHandler()
                 .setStackInSlot(i, buf.readItemStackFromBuffer());
         }
     }
 
     public void transferToBackpack(boolean transferMatched) {
-        BackpackInventoryUtils.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
     }
 
     public void transferToBackpack(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        BackpackInventoryUtils.transferPlayerInventoryToBackpack(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(boolean transferMatched) {
-        BackpackInventoryUtils.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        BackpackInventoryUtils.transferBackpackToPlayerInventory(handler, playerInv, transferMatched);
+        BackpackInventoryUtils.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
     }
 
     public void updateBackpack(PacketBuffer buf) throws IOException {
         boolean lock = buf.readBoolean();
         String uuid = buf.readStringFromBuffer(36);
-        boolean search = buf.readBoolean();
         boolean tab = buf.readBoolean();
-        handler.setLockBackpack(lock);
-        handler.setUuid(uuid);
-        handler.setSearchBackpack(search);
-        handler.setKeepTab(tab);
+        wrapper.setLockBackpack(lock);
+        wrapper.setUuid(uuid);
+        wrapper.setKeepTab(tab);
+    }
+
+    public void deploySleepingBag() {
+        EntityPlayer player = getSyncManager().getPlayer();
+
+        World world = player.worldObj;
+        TileEntity tile = panel.getTileEntity();
+        if (tile != null && world.getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord) instanceof TEBackpack te) {
+            if (!te.isSleepingBagDeployed()) {
+                int[] can = BlockSleepingBag
+                    .canDeploySleepingBag(world, player, tile.xCoord, tile.yCoord, tile.zCoord, true);
+                if (can[0] > -1) {
+                    if (te.deploySleepingBag(player, world, can[0], can[1], can[2], can[3])) {
+                        player.closeScreen();
+                    }
+                } else if (!world.isRemote) {
+                    player.addChatComponentMessage(new ChatComponentTranslation("messages.backpack.cant.bag"));
+                }
+            } else {
+                te.removeSleepingBag(world);
+            }
+            player.closeScreen();
+        } else if (tile == null) {
+            int[] can = BlockSleepingBag
+                .canDeploySleepingBag(world, player, (int) player.posX, (int) player.posY, (int) player.posZ, false);
+            int direction = can[0];
+            int x = can[1];
+            int y = can[2];
+            int z = can[3];
+            if (direction > -1) {
+                if (BlockSleepingBag.spawnSleepingBag(player, world, direction, x, y, z)) {
+                    Block placed = world.getBlock(x, y, z);
+                    if (placed instanceof BlockSleepingBag) {
+                        BackpackProperty.get(player)
+                            .setSleepingInPortableBag(true);
+                        ((BlockSleepingBag) placed).onPortableBlockActivated(world, player, x, y, z);
+                    }
+                }
+            } else if (!world.isRemote) {
+                player.addChatComponentMessage(new ChatComponentTranslation("messages.backpack.cant.bag"));
+            }
+            player.closeScreen();
+        }
     }
 }

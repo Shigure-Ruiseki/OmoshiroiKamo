@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cleanroommc.modularui.api.widget.IWidget;
-import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.layout.Column;
 
 import ruiseki.omoshiroikamo.core.client.gui.widget.SearchBarWidget;
@@ -41,13 +40,7 @@ public class BackpackSearchBarWidget extends SearchBarWidget {
     @Override
     public void doInit() {
         cacheOriginalOrder();
-        if (panel.getWrapper()
-            .isSearchBackpack()) {
-            prevText = "";
-            value(new StringValue(prevText));
-        } else {
-            doSearch(prevText);
-        }
+        doSearch(prevText);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
                 .registerInventoryCrafting(slotIndex, inventoryCrafting);
         }
 
-        var stack = wrapper.getUpgradeHandler()
+        ItemStack stack = wrapper.getUpgradeHandler()
             .getStackInSlot(slotIndex);
 
         UpgradeWrapper upgradeWrapper = UpgradeWrapperFactory.createWrapper(stack);
@@ -85,7 +85,7 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
     @Override
     public void readOnClient(int id, PacketBuffer buf) {
 
-        var stack = wrapper.getUpgradeHandler()
+        ItemStack stack = wrapper.getUpgradeHandler()
             .getStackInSlot(slotIndex);
 
         if (id == UPDATE_CRAFTING) {
@@ -96,6 +96,10 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
                 craftingWrapper.getStorage()
                     .setStackInSlot(9, buf.readItemStackFromBuffer());
             } catch (IOException ignored) {}
+        }
+
+        if (id == UPDATE_FILTERABLE || id == UPDATE_CRAFTING) {
+            wrapper.syncToServer();
         }
     }
 
@@ -122,6 +126,5 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
                 break;
             }
         }
-        wrapper.writeToItem();
     }
 }

@@ -231,7 +231,7 @@ gui.backpack.add_ore_dict_entry=鉱石辞書を追加
 gui.backpack.remove_ore_dict_entry=鉱石辞書を削除
 gui.backpack.ore_dict_input_help=鉱石辞書名を入力（正規表現OK）
 
-gui.complete_hunger=お腹が空いていて、食料の満腹度を\n全く無駄にしない時のみ食べる
+gui.backpack.complete_hunger=お腹が空いていて、食料の満腹度を\n全く無駄にしない時のみ食べる
 gui.backpack.half_hunger=お腹が空いていて、食料の満腹度を\n最大半分まで無駄にする場合でも食べる
 gui.backpack.immediate_hunger=少しでもお腹が空いたらすぐに食べる\n食料の満腹度をかなり無駄にする可能性アリ
 gui.backpack.ignore_health=体力を考慮しない\nプレイヤーの体力を無視し、満腹度設定に基づいてのみ食べる

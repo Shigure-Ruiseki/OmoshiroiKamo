@@ -18,23 +18,34 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
     private final int[] allSlots;
 
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
+
+    @NBTPersist
+    private boolean sleepingBagDeployed;
+    @NBTPersist
+    private int sbx;
+    @NBTPersist
+    private int sby;
+    @NBTPersist
+    private int sbz;
 
     public TEBackpack() {
         this(BackpackConfig.obsidianBackpackSlots, BackpackConfig.obsidianUpgradeSlots);
     }
 
     public TEBackpack(int slots, int upgradeSlots) {
-        handler = new BackpackWrapper(null, this, slots, upgradeSlots);
-        allSlots = new int[handler.getSlots()];
+        wrapper = new BackpackWrapper(null, slots, upgradeSlots);
+        allSlots = new int[wrapper.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
         }
@@ -60,10 +71,10 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         if (slot < 0 || slot >= getSizeInventory()) {
             return false;
         }
-        if (!handler.canInsert(stack)) {
+        if (!wrapper.canInsert(stack)) {
             return false;
         }
-        ItemStack existing = handler.getStackInSlot(slot);
+        ItemStack existing = wrapper.getStackInSlot(slot);
         if (existing != null) {
             return ItemUtils.areStackMergable(existing, stack);
         }
@@ -75,11 +86,11 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         if (slot < 0 || slot >= getSizeInventory()) {
             return false;
         }
-        ItemStack existing = handler.getStackInSlot(slot);
+        ItemStack existing = wrapper.getStackInSlot(slot);
         if (existing == null || existing.stackSize < stack.stackSize) {
             return false;
         }
-        if (!handler.canExtract(stack)) {
+        if (!wrapper.canExtract(stack)) {
             return false;
         }
         return stack.getItem() == existing.getItem();
@@ -87,7 +98,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public int getSizeInventory() {
-        return handler.getSlots();
+        return wrapper.getSlots();
     }
 
     @Override
@@ -95,7 +106,7 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         if (slot < 0 || slot >= getSizeInventory()) {
             return null;
         }
-        return handler.getStackInSlot(slot);
+        return wrapper.getStackInSlot(slot);
     }
 
     @Override
@@ -103,16 +114,16 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         if (slot < 0 || slot >= getSizeInventory()) {
             return null;
         }
-        ItemStack fromStack = handler.getStackInSlot(slot);
+        ItemStack fromStack = wrapper.getStackInSlot(slot);
         if (fromStack == null) {
             return null;
         }
         if (fromStack.stackSize <= amount) {
-            handler.setStackInSlot(slot, null);
+            wrapper.setStackInSlot(slot, null);
             return fromStack;
         }
         ItemStack result = fromStack.splitStack(amount);
-        handler.setStackInSlot(slot, fromStack.stackSize > 0 ? fromStack : null);
+        wrapper.setStackInSlot(slot, fromStack.stackSize > 0 ? fromStack : null);
         return result;
     }
 
@@ -128,14 +139,14 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
         }
 
         if (stack == null) {
-            handler.setStackInSlot(slot, null);
+            wrapper.setStackInSlot(slot, null);
             return;
         }
 
-        if (handler.canVoid(stack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.AUTOMATION)
-            || handler.canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.AUTOMATION)) {
+        if (wrapper.canVoid(stack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.AUTOMATION)
+            || wrapper.canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.AUTOMATION)) {
 
-            handler.setStackInSlot(slot, null);
+            wrapper.setStackInSlot(slot, null);
             return;
         }
 
@@ -144,22 +155,22 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
             copy.stackSize = getInventoryStackLimit();
         }
 
-        handler.setStackInSlot(slot, copy);
+        wrapper.setStackInSlot(slot, copy);
     }
 
     @Override
     public String getInventoryName() {
-        return handler.getDisplayName();
+        return wrapper.getDisplayName();
     }
 
     @Override
     public boolean hasCustomInventoryName() {
-        return handler.hasCustomInventoryName();
+        return wrapper.hasCustomInventoryName();
     }
 
     @Override
     public int getInventoryStackLimit() {
-        return 64 * handler.getTotalStackMultiplier();
+        return 64 * wrapper.getTotalStackMultiplier();
     }
 
     @Override
@@ -179,17 +190,17 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     }
 
     public int getMainColor() {
-        return handler.getMainColor();
+        return wrapper.getMainColor();
     }
 
     public int getAccentColor() {
-        return handler.getAccentColor();
+        return wrapper.getAccentColor();
     }
 
     @Override
     public boolean onBlockActivated(World world, EntityPlayer player, ForgeDirection side, float hitX, float hitY,
         float hitZ) {
-        if (handler.canPlayerAccess(player.getUniqueID())) {
+        if (wrapper.canPlayerAccess(player.getUniqueID())) {
             openGui(player);
         }
         return true;
@@ -210,18 +221,50 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     @Override
     public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new BackpackGuiHolder.TileEntityGuiHolder(handler).buildUI(data, syncManager, settings);
+        return new BackpackGuiHolder.TileEntityGuiHolder(wrapper).buildUI(data, syncManager, settings);
     }
 
     @Override
     public void writeCommon(NBTTagCompound tag) {
         super.writeCommon(tag);
-        handler.writeToNBT(tag);
+        wrapper.writeToNBT(tag);
     }
 
     @Override
     public void readCommon(NBTTagCompound tag) {
         super.readCommon(tag);
-        handler.readFromNBT(tag);
+        wrapper.readFromNBT(tag);
+    }
+
+    public boolean isSleepingBagDeployed() {
+        return this.sleepingBagDeployed;
+    }
+
+    public void setSleepingBagDeployed(boolean state) {
+        this.sleepingBagDeployed = state;
+        markDirty();
+        onSendUpdate();
+    }
+
+    public boolean deploySleepingBag(EntityPlayer player, World world, int meta, int cX, int cY, int cZ) {
+        if (world.isRemote) return false;
+
+        sleepingBagDeployed = BlockSleepingBag.spawnSleepingBag(player, world, meta, cX, cY, cZ);
+        if (sleepingBagDeployed) {
+            sbx = cX;
+            sby = cY;
+            sbz = cZ;
+            markDirty();
+            onSendUpdate();
+        }
+        return sleepingBagDeployed;
+    }
+
+    public void removeSleepingBag(World world) {
+        if (sleepingBagDeployed && world.getBlock(sbx, sby, sbz) == BackpackBlocks.SLEEPING_BAG.getBlock())
+            world.func_147480_a(sbx, sby, sbz, false);
+
+        sleepingBagDeployed = false;
+        markDirty();
     }
 }

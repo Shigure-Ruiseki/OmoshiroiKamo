@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPart;
@@ -109,7 +109,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnerg
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
 
         rotateForSide(getSide());
 
@@ -140,7 +140,7 @@ public class EnergyInterface extends AbstractPart implements IEnergyPart, IEnerg
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderAll();
 
         GL11.glPopMatrix();

@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -245,7 +245,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
     public void renderPart(Tessellator tess, float partialTicks) {
         GL11.glPushMatrix();
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
 
         rotateForSide(getSide());
 
@@ -276,7 +276,7 @@ public class ItemInterface extends AbstractPart implements IItemPart, IItemQuery
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderAll();
 
         GL11.glPopMatrix();

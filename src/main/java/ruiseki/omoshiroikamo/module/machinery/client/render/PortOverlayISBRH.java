@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.modular.ISidedTexture;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
@@ -57,7 +57,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
         float b = (tintColor & 0xFF) / 255.0f;
 
         // Bind texture atlas
-        RenderUtils.bindTexture(TextureMap.locationBlocksTexture);
+        RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -68,7 +68,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             tess.setNormal(dir.offsetX, dir.offsetY, dir.offsetZ);
-            RenderUtils.renderFaceCorrected(tess, dir, 0, 0, 0, baseIcon, 0.0f, Rotation.NORMAL, Flip.NONE);
+            RenderHelpers.renderFaceCorrected(tess, dir, 0, 0, 0, baseIcon, 0.0f, Rotation.NORMAL, Flip.NONE);
         }
         tess.draw();
 
@@ -147,7 +147,7 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
                         flip = extFacing.getFlip();
                     }
 
-                    RenderUtils.renderFaceCorrected(t, dir, x, y, z, overlayIcon, EPS, rotation, flip);
+                    RenderHelpers.renderFaceCorrected(t, dir, x, y, z, overlayIcon, EPS, rotation, flip);
                 }
             }
         }

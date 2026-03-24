@@ -1,4 +1,4 @@
-package ruiseki.omoshiroikamo.core.common.util;
+package ruiseki.omoshiroikamo.core.helper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 
-public class RenderUtils {
+public class RenderHelpers {
 
     public static void renderCube(Tessellator t, double minX, double minY, double minZ, double maxX, double maxY,
         double maxZ, IIcon icon) {
@@ -150,10 +150,6 @@ public class RenderUtils {
 
     public static void applySneakingRotation() {
         GL11.glRotatef(28.65F, 1F, 0F, 0F);
-    }
-
-    public static void translateToChest() {
-        GL11.glTranslatef(0F, 0.9F, 0F);
     }
 
     public static void translateToHead(EntityPlayer player) {

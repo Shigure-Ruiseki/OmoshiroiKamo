@@ -43,7 +43,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
@@ -468,10 +468,10 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderUtils.bindTexture(back_texture);
+        RenderHelpers.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();
@@ -499,10 +499,10 @@ public class FluidReader extends AbstractReaderPart implements IFluidPart {
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderAllExcept("back");
 
-        RenderUtils.bindTexture(back_texture);
+        RenderHelpers.bindTexture(back_texture);
         model.renderOnly("back");
 
         GL11.glPopMatrix();

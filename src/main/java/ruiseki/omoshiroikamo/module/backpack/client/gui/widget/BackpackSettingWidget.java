@@ -15,19 +15,13 @@ import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 public class BackpackSettingWidget extends ExpandedTabWidget {
 
     private final BackpackPanel panel;
-    private final BackpackWrapper handler;
+    private final BackpackWrapper wrapper;
     private final BackpackSettingPanel settingPanel;
     private final TabWidget parentTabWidget;
 
     private static final List<CyclicVariantButtonWidget.Variant> KEEP_TAB_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.keep_tab"), OKGuiTextures.KEEP_TAB_ICON),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.not_keep_tab"), OKGuiTextures.NOT_KEEP_TAB_ICON));
-
-    private static final List<CyclicVariantButtonWidget.Variant> SEARCH_VARIANTS = Arrays.asList(
-        new CyclicVariantButtonWidget.Variant(
-            IKey.lang("gui.backpack.unlock_search"),
-            OKGuiTextures.UNLOCK_SEARCH_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.lock_search"), OKGuiTextures.LOCK_SEARCH_ICON));
 
     private static final List<CyclicVariantButtonWidget.Variant> LOCK_VARIANTS = Arrays.asList(
         new CyclicVariantButtonWidget.Variant(
@@ -41,7 +35,7 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
         super(2, OKGuiTextures.BACKPACK_ICON, "gui.backpack.backpack_settings", 80, TabWidget.ExpandDirection.RIGHT);
 
         this.panel = panel;
-        this.handler = panel.getWrapper();
+        this.wrapper = panel.getWrapper();
         this.settingPanel = settingPanel;
         this.parentTabWidget = parentTabWidget;
 
@@ -52,31 +46,22 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
 
         CyclicVariantButtonWidget tabButton = new CyclicVariantButtonWidget(
             KEEP_TAB_VARIANTS,
-            handler.isKeepTab() ? 0 : 1,
+            wrapper.isKeepTab() ? 0 : 1,
             (index) -> {
-                handler.setKeepTab(index == 0);
-                updateWrapper();
-            });
-
-        CyclicVariantButtonWidget searchButton = new CyclicVariantButtonWidget(
-            SEARCH_VARIANTS,
-            handler.isSearchBackpack() ? 0 : 1,
-            (index) -> {
-                handler.setSearchBackpack(index == 0);
+                wrapper.setKeepTab(index == 0);
                 updateWrapper();
             });
 
         CyclicVariantButtonWidget lockButton = new CyclicVariantButtonWidget(
             LOCK_VARIANTS,
-            handler.isLockBackpack() ? 0 : 1,
+            wrapper.isLockBackpack() ? 0 : 1,
             (index) -> {
-                handler.setLockBackpack(index == 0);
+                wrapper.setLockBackpack(index == 0);
                 updateWrapper();
             });
 
         buttonRow.top(28)
             .child(tabButton)
-            .child(searchButton)
             .child(lockButton);
 
         child(buttonRow);
@@ -98,13 +83,12 @@ public class BackpackSettingWidget extends ExpandedTabWidget {
     private void updateWrapper() {
         BackpackSH backpackSyncHandler = this.panel.getBackpackSyncHandler();
         backpackSyncHandler.syncToServer(BackpackSH.UPDATE_SETTING, buffer -> {
-            buffer.writeBoolean(handler.isLockBackpack());
+            buffer.writeBoolean(wrapper.isLockBackpack());
             buffer.writeStringToBuffer(
                 panel.getPlayer()
                     .getUniqueID()
                     .toString());
-            buffer.writeBoolean(handler.isSearchBackpack());
-            buffer.writeBoolean(handler.isKeepTab());
+            buffer.writeBoolean(wrapper.isKeepTab());
         });
     }
 }

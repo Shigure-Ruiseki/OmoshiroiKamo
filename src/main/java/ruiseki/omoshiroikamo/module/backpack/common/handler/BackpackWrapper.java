@@ -11,6 +11,7 @@ import java.util.UUID;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
+import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
@@ -33,6 +35,8 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockSleepingBag;
+import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemEverlastingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
@@ -51,8 +55,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
     @Getter
     private final ItemStack backpack;
-    @Getter
-    private final TileEntity tile;
     @Getter
     private final BackpackItemStackHandler backpackHandler;
     @Getter
@@ -73,10 +75,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
     @Getter
     @Setter
-    private boolean searchBackpack;
-
-    @Getter
-    @Setter
     private boolean keepTab;
 
     @Getter
@@ -87,15 +85,31 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     @Setter
     private String customName;
 
+    @Getter
+    @Setter
+    private boolean sleepingBagDeployed;
+    @Getter
+    @Setter
+    private int sleepingBagX;
+    @Getter
+    @Setter
+    private int sleepingBagY;
+    @Getter
+    @Setter
+    private int sleepingBagZ;
+
     public static final String MEMORY_STACK_ITEMS_TAG = "MemoryItems";
     public static final String MEMORY_STACK_RESPECT_NBT_TAG = "MemoryRespectNBT";
     public static final String SORT_TYPE_TAG = "SortType";
     public static final String LOCKED_SLOTS_TAG = "LockedSlots";
     public static final String LOCKED_BACKPACK_TAG = "LockedBackpack";
     public static final String UUID_TAG = "UUID";
-    public static final String SEARCH_BACKPACK_TAG = "SearchBackpack";
     public static final String KEEP_TAB_TAG = "KeepTab";
     public static final String CUSTOM_NAME_TAG = "CustomName";
+    public static final String SLEEPING_BAG_DEPLOYED_TAG = "SleepingBagDeloyed";
+    public static final String SLEEPING_BAG_X = "SleepingBagX";
+    public static final String SLEEPING_BAG_Y = "SleepingBagY";
+    public static final String SLEEPING_BAG_Z = "SleepingBagZ";
 
     @Getter
     @Setter
@@ -122,24 +136,23 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     public InventoryType type;
 
     public BackpackWrapper() {
-        this(null, null, 120, 7);
+        this(null, 120, 7);
     }
 
     public BackpackWrapper(ItemStack backpack, TileEntity tile) {
-        this(backpack, tile, 120, 7);
+        this(backpack, 120, 7);
     }
 
-    public BackpackWrapper(ItemStack backpack, TileEntity tile, BlockBackpack.ItemBackpack itemBackpack) {
-        this(backpack, tile, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
+    public BackpackWrapper(ItemStack backpack, BlockBackpack.ItemBackpack itemBackpack) {
+        this(backpack, itemBackpack.getBackpackSlots(), itemBackpack.getUpgradeSlots());
     }
 
-    public BackpackWrapper(ItemStack backpack, TileEntity tile, BlockBackpack blockBackpack) {
-        this(backpack, tile, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
+    public BackpackWrapper(ItemStack backpack, BlockBackpack blockBackpack) {
+        this(backpack, blockBackpack.getBackpackSlots(), blockBackpack.getUpgradeSlots());
     }
 
-    public BackpackWrapper(ItemStack backpack, TileEntity tile, int backpackSlots, int upgradeSlots) {
+    public BackpackWrapper(ItemStack backpack, int backpackSlots, int upgradeSlots) {
         this.backpack = backpack;
-        this.tile = tile;
         this.backpackSlots = backpackSlots;
         this.upgradeSlots = upgradeSlots;
         this.mainColor = 0xFFCC613A;
@@ -147,12 +160,26 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         this.sortType = SortType.BY_NAME;
         this.lockBackpack = false;
         this.uuid = "";
-        this.searchBackpack = true;
         this.keepTab = true;
+        this.sleepingBagDeployed = false;
 
-        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this);
+        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
 
-        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots);
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                writeToItem();
+            }
+        };
+
+        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                writeToItem();
+            }
+        };
 
         readFromItem();
     }
@@ -166,12 +193,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
                 backpack.getItem()
                     .getUnlocalizedName(backpack) + ".name");
         }
-        if (tile != null) {
-            return LibMisc.LANG.localize(
-                tile.getBlockType()
-                    .getUnlocalizedName() + ".name");
-        }
-
         return LibMisc.LANG.localize("container.inventory");
     }
 
@@ -430,16 +451,13 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         return inceptionCount > 1;
     }
 
-    public ItemStack getFeedingStack(int foodLevel, float health, float maxHealth) {
+    public boolean feed(EntityPlayer player, IItemHandler handler) {
         for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(IFeedingUpgrade.class).values()) {
-            ItemStack feedingStack = upgrade.getFeedingStack(backpackHandler, foodLevel, health, maxHealth);
-
-            if (feedingStack != null && feedingStack.stackSize > 0) {
-                return feedingStack;
+            if (upgrade.feed(player, handler)) {
+                return true;
             }
         }
-
-        return null;
+        return false;
     }
 
     public List<Entity> getMagnetEntities(World world, AxisAlignedBB aabb) {
@@ -587,8 +605,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
 
         tag.setBoolean(LOCKED_BACKPACK_TAG, lockBackpack);
 
-        tag.setBoolean(SEARCH_BACKPACK_TAG, searchBackpack);
-
         tag.setBoolean(KEEP_TAB_TAG, keepTab);
 
         tag.setString(UUID_TAG, uuid);
@@ -596,6 +612,11 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         if (hasCustomInventoryName()) {
             tag.setString(CUSTOM_NAME_TAG, this.customName);
         }
+
+        tag.setBoolean(SLEEPING_BAG_DEPLOYED_TAG, sleepingBagDeployed);
+        tag.setInteger(SLEEPING_BAG_X, sleepingBagX);
+        tag.setInteger(SLEEPING_BAG_Y, sleepingBagY);
+        tag.setInteger(SLEEPING_BAG_Z, sleepingBagZ);
     }
 
     public void readFromNBT(NBTTagCompound tag) {
@@ -654,10 +675,6 @@ public class BackpackWrapper implements IItemHandlerModifiable {
             lockBackpack = tag.getBoolean(LOCKED_BACKPACK_TAG);
         }
 
-        if (tag.hasKey(SEARCH_BACKPACK_TAG)) {
-            searchBackpack = tag.getBoolean(SEARCH_BACKPACK_TAG);
-        }
-
         if (tag.hasKey(KEEP_TAB_TAG)) {
             keepTab = tag.getBoolean(KEEP_TAB_TAG);
         }
@@ -673,6 +690,22 @@ public class BackpackWrapper implements IItemHandlerModifiable {
             }
         } else {
             customName = tag.getString(CUSTOM_NAME_TAG);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_DEPLOYED_TAG)) {
+            sleepingBagDeployed = tag.getBoolean(SLEEPING_BAG_DEPLOYED_TAG);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_X)) {
+            sleepingBagX = tag.getInteger(SLEEPING_BAG_X);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_Y)) {
+            sleepingBagY = tag.getInteger(SLEEPING_BAG_Y);
+        }
+
+        if (tag.hasKey(SLEEPING_BAG_Z)) {
+            sleepingBagZ = tag.getInteger(SLEEPING_BAG_Z);
         }
     }
 
@@ -700,5 +733,29 @@ public class BackpackWrapper implements IItemHandlerModifiable {
             OmoshiroiKamo.instance.getPacketHandler()
                 .sendToServer(new PacketBackpackNBT(slotIndex, getTagCompound(), type));
         }
+    }
+
+    public boolean deploySleepingBag(EntityPlayer player, World world, int meta, int cX, int cY, int cZ) {
+        if (world.isRemote) return false;
+
+        if (sleepingBagDeployed) removeSleepingBag(world);
+
+        sleepingBagDeployed = BlockSleepingBag.spawnSleepingBag(player, world, meta, cX, cY, cZ);
+        if (sleepingBagDeployed) {
+            sleepingBagX = cX;
+            sleepingBagY = cY;
+            sleepingBagZ = cZ;
+            writeToItem();
+        }
+        return sleepingBagDeployed;
+    }
+
+    public void removeSleepingBag(World world) {
+        if (this.sleepingBagDeployed) {
+            if (world.getBlock(sleepingBagX, sleepingBagY, sleepingBagZ) == BackpackBlocks.SLEEPING_BAG.getBlock())
+                world.func_147480_a(sleepingBagX, sleepingBagY, sleepingBagZ, false);
+        }
+        this.sleepingBagDeployed = false;
+        writeToItem();
     }
 }

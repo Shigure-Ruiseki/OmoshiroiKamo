@@ -27,7 +27,7 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.CraftingFilter;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.client.gui.container.TerminalGuiContainer;
@@ -225,10 +225,10 @@ public class StorageTerminal extends AbstractPart {
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderPart("front");
 
-        RenderUtils.bindTexture(back_texture);
+        RenderHelpers.bindTexture(back_texture);
         model.renderPart("back");
 
         GL11.glPopMatrix();
@@ -255,10 +255,10 @@ public class StorageTerminal extends AbstractPart {
 
         rotateForSide(getSide());
 
-        RenderUtils.bindTexture(texture);
+        RenderHelpers.bindTexture(texture);
         model.renderPart("front");
 
-        RenderUtils.bindTexture(back_texture);
+        RenderHelpers.bindTexture(back_texture);
         model.renderPart("back");
 
         GL11.glPopMatrix();

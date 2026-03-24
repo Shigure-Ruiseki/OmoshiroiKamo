@@ -9,8 +9,8 @@ import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class EntityBackpack extends EntityImmortalItem {
 
-    public EntityBackpack(World world, Entity original, ItemStack stack, BackpackWrapper handler) {
+    public EntityBackpack(World world, Entity original, ItemStack stack, BackpackWrapper wrapper) {
         super(world, original, stack);
-        setImmortal(handler.canImportant());
+        setImmortal(wrapper.canImportant());
     }
 }

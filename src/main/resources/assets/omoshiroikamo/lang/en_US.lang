@@ -229,7 +229,7 @@ gui.backpack.add_ore_dict_entry=Add Ore Dict.
 gui.backpack.remove_ore_dict_entry=Remove Ore Dict.
 gui.backpack.ore_dict_input_help=You can input ore dictionary here, regex is supported
 
-gui.complete_hunger=Only feed when player is hungry enough\nto not waste any hunger points of the food at all
+gui.backpack.complete_hunger=Only feed when player is hungry enough\nto not waste any hunger points of the food at all
 gui.backpack.half_hunger=Only feed when player is hungry enough\nto only waste half hunger points of the food at most
 gui.backpack.immediate_hunger=Feed as soon as player is tiny bit hungry\nwastes quite a few hunger points of the food
 gui.backpack.ignore_health=Do not consider health\nIgnores player's health and only feeds based on hunger setting
@@ -281,6 +281,7 @@ gui.backpack.void_overflow=Void Overflow
 gui.backpack.void_all=Works in Gui as well
 gui.backpack.void_automation=Only works with other upgrade/automation
 
+gui.backpack.sleeping_bag=Use Sleeping Bag
 
 # Items
 tile.backpackLeather.name=Leather Backpack
@@ -288,6 +289,7 @@ tile.backpackIron.name=Iron Backpack
 tile.backpackGold.name=Gold Backpack
 tile.backpackDiamond.name=Diamond Backpack
 tile.backpackObsidian.name=Obsidian Backpack
+tile.sleepingBag.name=Sleeping Bag
 
 item.backPack.Starter.name=Starter Backpack (Will Remove Next Update)
 item.backPack.Copper.name=Copper Backpack (Will Remove Next Update)
@@ -341,6 +343,9 @@ tooltip.backpack.advanced_filter_upgrade=Filters inserted items when placing in 
 tooltip.backpack.void_upgrade=Voids items selected in filter
 tooltip.backpack.advanced_void_upgrade=Voids items selected in filter. Has more filtering options
 
+#Messages
+messages.backpack.cant.bag=Can't deploy the sleeping bag! Check the surrounding area.
+messages.cant.sleep.here=Ancient forces do not welcome sleep here.
 
 # Chicken ==============================================
 jaopca.chicken=%s Chicken

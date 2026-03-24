@@ -12,7 +12,7 @@ import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 
 public class SearchBarWidget extends TextFieldWidget {
 
-    protected String prevText = "";
+    protected String prevText = " ";
 
     public SearchBarWidget() {
         super();
@@ -38,7 +38,7 @@ public class SearchBarWidget extends TextFieldWidget {
 
     public void doUpdate() {
         String txt = getText();
-
+        if (txt.isEmpty()) prevText = " ";
         if (!txt.equals(prevText)) {
             doSearch(txt);
             prevText = txt;

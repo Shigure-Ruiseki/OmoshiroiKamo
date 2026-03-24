@@ -1,9 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
-import static com.gtnewhorizon.gtnhlib.client.model.ModelISBRH.JSON_ISBRH_ID;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.ACCENT_COLOR;
-import static ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper.MAIN_COLOR;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -13,12 +9,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.modularui.api.IGuiHolder;
@@ -35,12 +31,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
-import ruiseki.omoshiroikamo.core.client.IBaubleRender;
-import ruiseki.omoshiroikamo.core.client.IItemJSONRender;
 import ruiseki.omoshiroikamo.core.client.render.JsonModelISBRH;
-import ruiseki.omoshiroikamo.core.common.util.RenderUtils;
+import ruiseki.omoshiroikamo.core.client.render.player.IArmorRender;
+import ruiseki.omoshiroikamo.core.client.render.player.IBaubleRender;
+import ruiseki.omoshiroikamo.core.client.render.player.PlayerRenderContext;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
@@ -67,11 +64,6 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     }
 
     @Override
-    public int getRenderType() {
-        return JSON_ISBRH_ID;
-    }
-
-    @Override
     public int damageDropped(int meta) {
         return 0;
     }
@@ -86,33 +78,31 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         BlockColor.registerBlockColors(new IBlockColor() {
 
             @Override
-            public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
-                TileEntity te = world.getTileEntity(x, y, z);
-                if (te instanceof TEBackpack backpack) {
-                    if (tintIndex == 0) {
-                        return backpack.getMainColor();
-                    }
-                    if (tintIndex == 1) {
-                        return backpack.getAccentColor();
-                    }
-                }
-                return -1;
+            public int colorMultiplier(@Nullable ItemStack stack, int tintIndex) {
+                if (stack == null) return -1;
+
+                BackpackWrapper wrapper = new BackpackWrapper(stack, backpackSlots, upgradeSlots);
+                return switch (tintIndex) {
+                    case 0 -> wrapper.getMainColor();
+                    case 1 -> wrapper.getAccentColor();
+                    default -> -1;
+                };
             }
 
             @Override
-            public int colorMultiplier(ItemStack stack, int tintIndex) {
-                NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
-                int main = tag.hasKey(MAIN_COLOR) ? tag.getInteger(MAIN_COLOR) : 0xFFCC613A;
-                int accent = tag.hasKey(ACCENT_COLOR) ? tag.getInteger(ACCENT_COLOR) : 0xFF622E1A;
+            public int colorMultiplier(@Nullable IBlockAccess world, int x, int y, int z, int tintIndex) {
+                if (world == null) return -1;
 
-                if (tintIndex == 0) {
-                    return main;
-                }
-                if (tintIndex == 1) {
-                    return accent;
-                }
-                return -1;
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (!(te instanceof TEBackpack backpack)) return -1;
+
+                return switch (tintIndex) {
+                    case 0 -> backpack.getMainColor();
+                    case 1 -> backpack.getAccentColor();
+                    default -> -1;
+                };
             }
+
         }, this);
     }
 
@@ -127,7 +117,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
     }
 
     public static class ItemBackpack extends ItemBlockBauble
-        implements IGuiHolder<PlayerInventoryGuiData>, IBaubleRender, IItemJSONRender {
+        implements IGuiHolder<PlayerInventoryGuiData>, IBaubleRender, IArmorRender {
 
         @Getter
         private int backpackSlots = 27;
@@ -170,8 +160,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
         @Override
         public Entity createEntity(World world, Entity location, ItemStack stack) {
-            BackpackWrapper handler = new BackpackWrapper(stack, null, this);
-            return new EntityBackpack(world, location, stack, handler);
+            BackpackWrapper wrapper = new BackpackWrapper(stack, this);
+            return new EntityBackpack(world, location, stack, wrapper);
         }
 
         @Override
@@ -179,9 +169,9 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onUpdate(stack, world, entity, slot, isHeld);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                    cap.writeToItem();
-                    stack.setTagCompound(cap.getTagCompound());
+                    BackpackWrapper wrapper = new BackpackWrapper(stack, this);
+                    wrapper.writeToItem();
+                    stack.setTagCompound(wrapper.getTagCompound());
                 }
             }
         }
@@ -191,9 +181,9 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
             super.onCreated(stack, world, player);
             if (!world.isRemote && stack != null) {
                 if (!stack.hasTagCompound()) {
-                    BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                    cap.writeToItem();
-                    stack.setTagCompound(cap.getTagCompound());
+                    BackpackWrapper wrapper = new BackpackWrapper(stack, this);
+                    wrapper.writeToItem();
+                    stack.setTagCompound(wrapper.getTagCompound());
                 }
             }
         }
@@ -212,8 +202,8 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
             if (!world.isRemote && stack != null && stack.getTagCompound() != null) {
-                BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                if (cap.canPlayerAccess(player.getUniqueID())) {
+                BackpackWrapper wrapper = new BackpackWrapper(stack, this);
+                if (wrapper.canPlayerAccess(player.getUniqueID())) {
                     GuiFactories.playerInventory()
                         .openFromMainHand(player);
                 }
@@ -224,7 +214,7 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         public ModularPanel buildUI(PlayerInventoryGuiData data, PanelSyncManager syncManager, UISettings settings) {
             ItemStack stack = data.getUsedItemStack();
-            BackpackWrapper cap = new BackpackWrapper(stack, null, this);
+            BackpackWrapper cap = new BackpackWrapper(stack, this);
             return new BackpackGuiHolder.ItemStackGuiHolder(cap).buildUI(data, syncManager, settings);
         }
 
@@ -236,42 +226,28 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         @Override
         @SideOnly(Side.CLIENT)
         public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-            list.add(LibMisc.LANG.localize("tooltip.backpack.inventory_size", backpackSlots));
-            list.add(LibMisc.LANG.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
+            list.add(LangHelpers.localize("tooltip.backpack.inventory_size", backpackSlots));
+            list.add(LangHelpers.localize("tooltip.backpack.upgrade_slots_size", upgradeSlots));
             if (GuiScreen.isShiftKeyDown()) {
-                BackpackWrapper cap = new BackpackWrapper(stack, null, this);
-                list.add(
-                    LibMisc.LANG.localize("tooltip.backpack.stack_multiplier", cap.getTotalStackMultiplier(), "x"));
+                BackpackWrapper cap = new BackpackWrapper(stack, this);
+                list.add(LangHelpers.localize("tooltip.backpack.stack_multiplier", cap.getTotalStackMultiplier(), "x"));
             }
             super.addInformation(stack, player, list, flag);
         }
 
         @Override
-        public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderUtils.RenderType type) {
-            if (stack == null || type != RenderUtils.RenderType.BODY) {
-                return;
-            }
-
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0f, 0.3f, 0.3f);
-            RenderUtils.rotateIfSneaking(event.entityPlayer);
-            JsonModelISBRH.INSTANCE.renderToEntity(stack);
-            GL11.glPopMatrix();
-
+        public void collectContext(ItemStack stack, EntityPlayer player, PlayerRenderContext context) {
+            context.setRenderCape(false);
         }
 
         @Override
-        public void onArmorRender(ItemStack stack, RenderPlayerEvent event, RenderUtils.RenderType type) {
-            if (stack == null || type != RenderUtils.RenderType.BODY) {
-                return;
-            }
-
+        public void render(ItemStack stack, EntityPlayer player, RenderPlayerEvent event,
+            RenderHelpers.RenderType type) {
+            if (stack == null || type != RenderHelpers.RenderType.BODY) return;
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 0.3f, 0.3f);
-            RenderUtils.rotateIfSneaking(event.entityPlayer);
             JsonModelISBRH.INSTANCE.renderToEntity(stack);
             GL11.glPopMatrix();
-
         }
     }
 }

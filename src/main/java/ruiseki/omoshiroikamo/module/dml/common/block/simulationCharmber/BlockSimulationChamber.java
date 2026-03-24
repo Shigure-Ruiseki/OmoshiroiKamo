@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
-import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -27,11 +26,6 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
 
     public static BlockSimulationChamber create() {
         return new BlockSimulationChamber();
-    }
-
-    @Override
-    public int getRenderType() {
-        return ModelISBRH.JSON_ISBRH_ID;
     }
 
     @Override

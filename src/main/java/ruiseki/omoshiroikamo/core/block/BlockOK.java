@@ -19,8 +19,6 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.gtnewhorizon.gtnhlib.client.model.ModelISBRH;
-
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -183,9 +181,7 @@ public class BlockOK extends Block implements IBlockPropertyProvider, IBlock {
 
     @Override
     public void registerBlockIcons(IIconRegister reg) {
-        if (getRenderType() != ModelISBRH.JSON_ISBRH_ID) {
-            blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
-        }
+        blockIcon = reg.registerIcon(LibResources.PREFIX_MOD + getTextureName());
     }
 
     /* Subclass Helpers */
