@@ -161,11 +161,11 @@ public class TEEssentiaInputPort extends AbstractEssentiaPortTE implements IEsse
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             return getOverlayIcon(side);
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 }

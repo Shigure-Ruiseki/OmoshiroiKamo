@@ -93,7 +93,7 @@ public class TEVisOutputPort extends AbstractVisPortTE {
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             if (getSideIO(side) == EnumIO.NONE) {
@@ -101,6 +101,6 @@ public class TEVisOutputPort extends AbstractVisPortTE {
             }
             return IconRegistry.getIcon("overlay_visoutput_" + (getTier() + 1));
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 }

@@ -134,7 +134,7 @@ public class TEEnergyInputPort extends AbstractEnergyIOPortTE implements ILaserR
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             if (getSideIO(side) != EnumIO.NONE) {
@@ -142,7 +142,7 @@ public class TEEnergyInputPort extends AbstractEnergyIOPortTE implements ILaserR
             }
             return null;
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 
     @Override

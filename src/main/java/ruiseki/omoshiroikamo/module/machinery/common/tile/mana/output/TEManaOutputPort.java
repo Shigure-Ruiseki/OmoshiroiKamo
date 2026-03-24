@@ -47,11 +47,11 @@ public class TEManaOutputPort extends AbstractManaPortTE {
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             return IconRegistry.getIcon("overlay_manaoutput_" + (getTier() + 1));
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 }

@@ -120,7 +120,7 @@ public class TEItemInputPort extends AbstractItemIOPortTE {
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             if (getSideIO(side) != EnumIO.NONE) {
@@ -128,7 +128,7 @@ public class TEItemInputPort extends AbstractItemIOPortTE {
             }
             return null;
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 
     @Override
