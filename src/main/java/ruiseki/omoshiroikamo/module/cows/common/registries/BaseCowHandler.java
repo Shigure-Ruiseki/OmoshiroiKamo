@@ -68,6 +68,7 @@ public abstract class BaseCowHandler {
         File configFile = new File(configDir, configFileName);
         if (!configFile.exists()) {
             List<CowsRegistryItem> defaultCows = registerCows();
+            Logger.info("Generated {} default cows for {}", defaultCows.size(), configFileName);
             createDefaultConfig(configFile, defaultCows);
         }
 
@@ -81,7 +82,9 @@ public abstract class BaseCowHandler {
         try {
             CowJsonReader reader = new CowJsonReader(configFile);
             List<CowMaterial> materials = reader.read();
-            if (materials == null) {
+            Logger.info("Read {} materials from {}", materials != null ? materials.size() : 0, configFileName);
+
+            if (materials == null || materials.isEmpty()) {
                 Logger.info("{} is empty or invalid.", configFileName);
                 return allCows;
             }
