@@ -62,10 +62,17 @@ public class FluidCowsHandler extends BaseCowHandler {
             // Generate localization
             try {
                 String localizedFluid = fluid.getLocalizedName(new FluidStack(fluid, 1000));
-                cow.setLang("en_US", localizedFluid + " Cow");
-                cow.setLang("ja_JP", localizedFluid + "ウシ");
+
+                // Use fluid name as fallback if localized name is empty or just the unlocalized key
+                String displayName = localizedFluid;
+                if (displayName == null || displayName.isEmpty() || displayName.startsWith("fluid.") || displayName.startsWith("tile.")) {
+                    displayName = fluidName;
+                }
+
+                cow.setLang("en_US", displayName + " Cow");
+                cow.setLang("ja_JP", displayName + " ウシ");
             } catch (Exception e) {
-                Logger.error("Failed to get localized name from fluid " + fluidName);
+                Logger.error("Failed to get localized name from fluid " + fluidName, e);
             }
 
             generated.add(cow);

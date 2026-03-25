@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -139,6 +140,11 @@ public abstract class BaseCowHandler {
                         if (data.lang != null) {
                             String langKey = "entity." + data.name + ".name";
                             JsonUtils.registerLang(langKey, data.lang);
+
+                            // Also set lang on the cow object so getLang() returns the correct data
+                            for (Map.Entry<String, String> entry : data.lang.entrySet()) {
+                                cow.setLang(entry.getKey(), entry.getValue());
+                            }
                         }
 
                         ModCompatInformation.addInformation(
