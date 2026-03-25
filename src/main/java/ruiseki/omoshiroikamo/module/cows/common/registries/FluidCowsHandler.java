@@ -65,7 +65,9 @@ public class FluidCowsHandler extends BaseCowHandler {
 
                 // Use fluid name as fallback if localized name is empty or just the unlocalized key
                 String displayName = localizedFluid;
-                if (displayName == null || displayName.isEmpty() || displayName.startsWith("fluid.") || displayName.startsWith("tile.")) {
+                if (displayName == null || displayName.isEmpty()
+                    || displayName.startsWith("fluid.")
+                    || displayName.startsWith("tile.")) {
                     displayName = fluidName;
                 }
 
