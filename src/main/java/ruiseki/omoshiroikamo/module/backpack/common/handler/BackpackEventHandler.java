@@ -112,12 +112,12 @@ public class BackpackEventHandler {
 
         if (LibMods.Baubles.isLoaded()) {
             IInventory inventory = BaublesApi.getBaubles(player);
-            stack = attemptPickup(inventory, stack, InventoryTypes.BAUBLES);
+            stack = attemptPickup(player, inventory, stack, InventoryTypes.BAUBLES);
         }
 
         if (stack != null) {
             IInventory inventory = player.inventory;
-            stack = attemptPickup(inventory, stack, InventoryTypes.PLAYER);
+            stack = attemptPickup(player, inventory, stack, InventoryTypes.PLAYER);
         }
 
         if (stack == null || stack.stackSize <= 0) {
@@ -152,7 +152,8 @@ public class BackpackEventHandler {
 
     }
 
-    private static ItemStack attemptPickup(IInventory targetInventory, ItemStack stack, InventoryType type) {
+    private static ItemStack attemptPickup(EntityPlayer player, IInventory targetInventory, ItemStack stack,
+        InventoryType type) {
         for (int i = 0; i < targetInventory.getSizeInventory(); i++) {
             ItemStack backpackStack = targetInventory.getStackInSlot(i);
             if (backpackStack == null || backpackStack.stackSize <= 0) continue;
@@ -170,8 +171,11 @@ public class BackpackEventHandler {
             boolean changed = result == null || result.stackSize != before.stackSize;
 
             if (changed) {
-                OmoshiroiKamo.instance.getPacketHandler()
-                    .sendToServer(new PacketBackpackNBT(i, wrapper.getTagCompound(), type));
+                wrapper.writeToItem();
+                if (player.worldObj.isRemote) {
+                    OmoshiroiKamo.instance.getPacketHandler()
+                        .sendToServer(new PacketBackpackNBT(i, wrapper.getTagCompound(), type));
+                }
             }
 
             stack = result;
@@ -237,8 +241,11 @@ public class BackpackEventHandler {
 
             boolean result = wrapper.feed(player, wrapper);
             if (result) {
-                OmoshiroiKamo.instance.getPacketHandler()
-                    .sendToServer(new PacketBackpackNBT(i, stack.getTagCompound(), type));
+                wrapper.writeToItem(); // Explicitly write back after feeding
+                if (player.worldObj.isRemote) {
+                    OmoshiroiKamo.instance.getPacketHandler()
+                        .sendToServer(new PacketBackpackNBT(i, stack.getTagCompound(), type));
+                }
             }
 
             return result;

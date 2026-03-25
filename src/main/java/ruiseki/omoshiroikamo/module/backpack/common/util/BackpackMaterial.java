@@ -151,15 +151,14 @@ public class BackpackMaterial extends AbstractJsonMaterial {
         }
 
         public ItemStack toItemStack() {
-            ItemJson itemJson = ItemJson.parseItemString(id);
-            if (itemJson == null) return null;
+            ItemJson itemJson = new ItemJson();
+            itemJson.name = id;
+            itemJson.amount = count;
 
             ItemStack stack = ItemJson.resolveItemStack(itemJson);
-            if (stack != null) {
-                stack.stackSize = count;
-                if (nbt != null) {
-                    stack.setTagCompound((NBTTagCompound) nbt.copy());
-                }
+            if (stack == null) return null;
+            if (nbt != null) {
+                stack.setTagCompound((NBTTagCompound) nbt.copy());
             }
             return stack;
         }

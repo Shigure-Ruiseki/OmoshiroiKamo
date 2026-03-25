@@ -54,18 +54,22 @@ public class JsonNBTUtils {
                 return new NBTTagString(p.getAsString());
             } else if (p.isNumber()) {
                 Number n = p.getAsNumber();
-                if (n instanceof Double) {
+                if (n instanceof Integer) return new NBTTagInt(n.intValue());
+                if (n instanceof Long) return new NBTTagLong(n.longValue());
+                if (n instanceof Double) return new NBTTagDouble(n.doubleValue());
+                if (n instanceof Float) return new NBTTagFloat(n.floatValue());
+                if (n instanceof Short) return new NBTTagShort(n.shortValue());
+                if (n instanceof Byte) return new NBTTagByte(n.byteValue());
+
+                // Fallback for GSON's LazilyParsedNumber
+                String s = n.toString();
+                try {
+                    if (s.contains(".")) return new NBTTagDouble(n.doubleValue());
+                    long l = n.longValue();
+                    if (l <= Integer.MAX_VALUE && l >= Integer.MIN_VALUE) return new NBTTagInt((int) l);
+                    return new NBTTagLong(l);
+                } catch (NumberFormatException e) {
                     return new NBTTagDouble(n.doubleValue());
-                } else if (n instanceof Float) {
-                    return new NBTTagFloat(n.floatValue());
-                } else if (n instanceof Long) {
-                    return new NBTTagLong(n.longValue());
-                } else if (n instanceof Short) {
-                    return new NBTTagShort(n.shortValue());
-                } else if (n instanceof Byte) {
-                    return new NBTTagByte(n.byteValue());
-                } else {
-                    return new NBTTagInt(n.intValue());
                 }
             }
         }
@@ -90,12 +94,19 @@ public class JsonNBTUtils {
         } else if (nbt instanceof NBTTagList list) {
             JsonArray arr = new JsonArray();
             for (int i = 0; i < list.tagCount(); i++) {
-                // Default to string representation if element type is unknown/hard to access in
-                // 1.7.10
-                arr.add(
-                    new JsonPrimitive(
-                        list.getCompoundTagAt(i)
-                            .toString()));
+                NBTTagCompound cmp = list.getCompoundTagAt(i);
+                if (cmp.hasNoTags() && list.func_150303_d() != 10) {
+                    if (list.func_150303_d() == 8) {
+                        arr.add(new JsonPrimitive(list.getStringTagAt(i)));
+                    } else {
+                        arr.add(
+                            new JsonPrimitive(
+                                list.getCompoundTagAt(i)
+                                    .toString()));
+                    }
+                } else {
+                    arr.add(nbtToJSON(cmp));
+                }
             }
             return arr;
         } else if (nbt instanceof NBTTagString s) {

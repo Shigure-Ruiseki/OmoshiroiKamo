@@ -8,12 +8,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import com.cleanroommc.modularui.factory.inventory.InventoryType;
-import com.cleanroommc.modularui.factory.inventory.InventoryTypes;
 
 import baubles.api.BaublesApi;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.network.CodecField;
 import ruiseki.omoshiroikamo.core.network.PacketCodec;
+import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
+import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
 public class PacketBackpackNBT extends PacketCodec {
 
@@ -39,7 +40,47 @@ public class PacketBackpackNBT extends PacketCodec {
 
     @Override
     public void actionClient(World world, EntityPlayer player) {
+        InventoryType type = InventoryType.getFromId(typeId);
+        if (type == null || nbt == null) return;
 
+        // Try to find the backpack by UUID in client inventory
+        String uuid = nbt.getString("UUID");
+        if (uuid == null || uuid.isEmpty()) return;
+
+        ItemStack stack = findStackByUUID(player, uuid);
+        if (stack != null) {
+            stack.setTagCompound(nbt);
+        }
+    }
+
+    private ItemStack findStackByUUID(EntityPlayer player, String uuid) {
+        // Check held item
+        ItemStack held = player.getHeldItem();
+        if (isMatch(held, uuid)) return held;
+
+        // Check inventory
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            ItemStack s = player.inventory.getStackInSlot(i);
+            if (isMatch(s, uuid)) return s;
+        }
+
+        // Check Baubles
+        if (LibMods.Baubles.isLoaded()) {
+            IInventory baubles = BaublesApi.getBaubles(player);
+            if (baubles != null) {
+                for (int i = 0; i < baubles.getSizeInventory(); i++) {
+                    ItemStack s = baubles.getStackInSlot(i);
+                    if (isMatch(s, uuid)) return s;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isMatch(ItemStack stack, String uuid) {
+        if (stack == null || !(stack.getItem() instanceof BlockBackpack.ItemBackpack)) return false;
+        NBTTagCompound tag = stack.getTagCompound();
+        return tag != null && uuid.equals(tag.getString(BackpackWrapper.UUID_TAG));
     }
 
     @Override
@@ -47,15 +88,11 @@ public class PacketBackpackNBT extends PacketCodec {
         InventoryType type = InventoryType.getFromId(typeId);
         if (type == null || nbt == null) return;
 
-        ItemStack stack = null;
-        if (type == InventoryTypes.PLAYER) {
-            stack = player.inventory.getStackInSlot(slot);
-        }
+        // Use UUID tracking to find the correct backpack (not slot index!)
+        String uuid = nbt.getString("UUID");
+        if (uuid == null || uuid.isEmpty()) return;
 
-        if (type == InventoryTypes.BAUBLES && LibMods.Baubles.isLoaded()) {
-            IInventory baublesInventory = BaublesApi.getBaubles(player);
-            stack = baublesInventory.getStackInSlot(slot);
-        }
+        ItemStack stack = findStackByUUID(player, uuid);
         if (stack != null) {
             stack.setTagCompound(nbt);
         }

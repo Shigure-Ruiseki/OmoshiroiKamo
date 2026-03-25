@@ -30,7 +30,10 @@ public interface IFeedingUpgrade {
             return false;
         }
 
-        foodItem.onEaten(food, entity.worldObj, entity);
+        ItemStack eatenResult = foodItem.onEaten(food, entity.worldObj, entity);
+        if (eatenResult != null && eatenResult.stackSize > 0) {
+            handler.insertItem(slot, eatenResult, false);
+        }
 
         return true;
     }
