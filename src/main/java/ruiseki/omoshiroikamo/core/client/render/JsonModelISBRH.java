@@ -44,7 +44,7 @@ public class JsonModelISBRH extends ModelISBRH {
         itemContext.blockState = BlockPropertyRegistry.getBlockState(stack);
         itemContext.random = RAND;
 
-        BakedModel model = ModelRegistry.getBakedModel(itemContext.blockState);
+        BakedModel model = ModelRegistry.getBakedModel(itemContext);
         RenderHelpers.bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glPushMatrix();

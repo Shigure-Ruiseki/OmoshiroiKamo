@@ -39,6 +39,19 @@ public class CommandBackpack extends CommandMod {
         addSubcommands("import", new CommandImport());
     }
 
+    @Override
+    public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
+        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW + "Backpack Command Usage:"));
+        sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.WHITE + "  /ok backpack give <name> - Give backpack template"));
+        sender.addChatMessage(
+            new ChatComponentText(
+                EnumChatFormatting.WHITE + "  /ok backpack export <name> - Export held backpack to JSON"));
+        sender.addChatMessage(
+            new ChatComponentText(
+                EnumChatFormatting.WHITE + "  /ok backpack import <name> - Import JSON template to held backpack"));
+    }
+
     private List<String> getJsonFiles() {
         List<String> files = new ArrayList<>();
         if (backpackDir.exists() && backpackDir.isDirectory()) {
