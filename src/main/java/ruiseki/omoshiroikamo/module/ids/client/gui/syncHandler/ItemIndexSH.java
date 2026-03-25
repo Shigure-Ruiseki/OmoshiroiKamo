@@ -10,6 +10,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminal;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.terminal.storage.StorageTerminalPanel;
 import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndexClient;
@@ -46,13 +47,7 @@ public class ItemIndexSH extends SyncHandler {
         int serverVer = itemNetwork.getIndexVersion();
 
         if (clientVersion < 0) {
-            syncToClient(SYNC_FULL, b -> {
-                b.writeInt(itemNetwork.getIndexVersion());
-                ItemStackKeyUtils.writeMap(
-                    b,
-                    itemNetwork.getIndex()
-                        .view());
-            });
+            syncToClient(SYNC_FULL, b -> { ItemStackKeyUtils.writeFull(b, itemNetwork.getIndex(), serverVer); });
             return;
         }
 
@@ -71,7 +66,7 @@ public class ItemIndexSH extends SyncHandler {
 
         if (id == SYNC_FULL) {
             int version = buf.readInt();
-            clientIndex.replace(ItemStackKeyUtils.readMap(buf), ItemStackKeyUtils.readKeys(buf), version);
+            clientIndex.replace(ItemStackKeyUtils.readMap(buf), new ObjectOpenHashSet<>(), version);
             return;
         }
 
@@ -80,9 +75,8 @@ public class ItemIndexSH extends SyncHandler {
 
             var added = ItemStackKeyUtils.readMap(buf);
             var removed = ItemStackKeyUtils.readKeys(buf);
-            var craftables = ItemStackKeyUtils.readKeys(buf);
 
-            clientIndex.applyDelta(added, removed, craftables, version);
+            clientIndex.applyDelta(added, removed, new ObjectOpenHashSet<>(), version);
         }
     }
 
