@@ -9,6 +9,7 @@ import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStack
 public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFilterable, IToggleable {
 
     protected UpgradeItemStackHandler handler;
+    private boolean filterItemsCached = false;
 
     public BasicUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
@@ -42,9 +43,12 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
 
     @Override
     public UpgradeItemStackHandler getFilterItems() {
-        NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, FILTER_ITEMS_TAG, false);
-        if (handlerTag != null) {
-            handler.deserializeNBT(handlerTag);
+        if (!filterItemsCached) {
+            NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+            if (handlerTag != null) {
+                handler.deserializeNBT(handlerTag);
+            }
+            filterItemsCached = true;
         }
         return handler;
     }
@@ -53,6 +57,7 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
     public void setFilterItems(UpgradeItemStackHandler handler) {
         if (handler != null) {
             ItemNBTUtils.setCompound(upgrade, FILTER_ITEMS_TAG, handler.serializeNBT());
+            filterItemsCached = false; // Invalidate cache when filter items are changed
         }
     }
 
