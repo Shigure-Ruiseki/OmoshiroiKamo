@@ -1,100 +1,20 @@
 {
     "variants": {
-        "meta=0": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_0_base"
-            }
-        },
-        "meta=1": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_1_base"
-            }
-        },
-        "meta=2": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_2_base"
-            }
-        },
-        "meta=3": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_3_base"
-            }
-        },
-        "meta=4": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_4_base"
-            }
-        },
-        "meta=5": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_5_base"
-            }
-        },
-        "meta=6": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_6_base"
-            }
-        },
-        "meta=7": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_7_base"
-            }
-        },
-        "meta=8": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_8_base"
-            }
-        },
-        "meta=9": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_9_base"
-            }
-        },
-        "meta=10": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_10_base"
-            }
-        },
-        "meta=11": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_11_base"
-            }
-        },
-        "meta=12": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_12_base"
-            }
-        },
-        "meta=13": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_13_base"
-            }
-        },
-        "meta=14": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_14_base"
-            }
-        },
-        "meta=15": {
-            "model": "omoshiroikamo:block/modular/casing_circuitry",
-            "textures": {
-                "base": "omoshiroikamo:block/modular/tier_15_base"
-            }
-        }
+        "meta=0": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier0" },
+        "meta=1": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier1" },
+        "meta=2": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier2" },
+        "meta=3": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier3" },
+        "meta=4": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier4" },
+        "meta=5": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier5" },
+        "meta=6": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier6" },
+        "meta=7": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier7" },
+        "meta=8": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier8" },
+        "meta=9": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier9" },
+        "meta=10": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier10" },
+        "meta=11": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier11" },
+        "meta=12": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier12" },
+        "meta=13": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier13" },
+        "meta=14": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier14" },
+        "meta=15": { "model": "omoshiroikamo:block/modular/ModularCasing/circuitry_tier15" }
     }
 }

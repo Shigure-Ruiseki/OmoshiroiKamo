@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
@@ -60,14 +62,37 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
     }
 
     @Override
+    protected void registerBlockColor() {
+        BlockColor.registerBlockColors(this, this);
+    }
+
+    @Override
     public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-        // Get color from cache
         Integer structureColor = StructureTintCache.get(world, x, y, z);
         if (structureColor != null) {
             return structureColor;
         }
-        // Fall back to config color
         return MachineryConfig.getDefaultTintColorInt();
+    }
+
+    @Override
+    public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
+        if (tintIndex == 0) {
+            Integer structureColor = StructureTintCache.get(world, x, y, z);
+            if (structureColor != null) {
+                return structureColor & 0xFFFFFF;
+            }
+            return MachineryConfig.getDefaultTintColorInt() & 0xFFFFFF;
+        }
+        return 0xFFFFFF;
+    }
+
+    @Override
+    public int colorMultiplier(ItemStack stack, int tintIndex) {
+        if (tintIndex == 0) {
+            return MachineryConfig.getDefaultTintColorInt() & 0xFFFFFF;
+        }
+        return 0xFFFFFF;
     }
 
     @Override
@@ -78,7 +103,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister reg) {
-        // Casing blocks always use ModelISBRH.JSON_ISBRH_ID via getRenderType,
+        // JSON model rendering handles textures via blockstates JSON,
         // so we don't register standard icons via super.
         // Instead, we register tier-based base textures for use in JSON models
         for (int i = 0; i < TIERS; i++) {

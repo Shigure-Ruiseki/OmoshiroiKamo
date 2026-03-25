@@ -16,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.structurelib.alignment.enumerable.ExtendedFacing;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Flip;
 import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
@@ -72,14 +73,37 @@ public class BlockMachineController extends AbstractBlock<TEMachineController> i
     private IIcon sideOverlayIcon;
 
     @Override
+    protected void registerBlockColor() {
+        BlockColor.registerBlockColors(this, this);
+    }
+
+    @Override
     public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-        // Get color from cache
         Integer structureColor = StructureTintCache.get(world, x, y, z);
         if (structureColor != null) {
             return structureColor;
         }
-        // Fall back to config color
         return MachineryConfig.getDefaultTintColorInt();
+    }
+
+    @Override
+    public int colorMultiplier(IBlockAccess world, int x, int y, int z, int tintIndex) {
+        if (tintIndex == 0) {
+            Integer structureColor = StructureTintCache.get(world, x, y, z);
+            if (structureColor != null) {
+                return structureColor & 0xFFFFFF;
+            }
+            return MachineryConfig.getDefaultTintColorInt() & 0xFFFFFF;
+        }
+        return 0xFFFFFF;
+    }
+
+    @Override
+    public int colorMultiplier(ItemStack stack, int tintIndex) {
+        if (tintIndex == 0) {
+            return MachineryConfig.getDefaultTintColorInt() & 0xFFFFFF;
+        }
+        return 0xFFFFFF;
     }
 
     @Override
