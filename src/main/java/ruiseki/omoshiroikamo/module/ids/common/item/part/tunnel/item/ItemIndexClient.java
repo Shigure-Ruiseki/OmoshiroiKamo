@@ -55,9 +55,6 @@ public class ItemIndexClient {
         storage.clear();
         storage.putAll(newStorage);
 
-        craftables.clear();
-        craftables.addAll(newCraftables);
-
         rebuildAllKeys();
 
         indexVersion = version;
@@ -68,10 +65,6 @@ public class ItemIndexClient {
         ObjectOpenHashSet<ItemStackKey> newCraftables, int version) {
         storage.putAll(added);
         removed.forEach(storage::removeInt);
-
-        craftables.clear();
-        craftables.addAll(newCraftables);
-
         rebuildAllKeys();
 
         indexVersion = version;
