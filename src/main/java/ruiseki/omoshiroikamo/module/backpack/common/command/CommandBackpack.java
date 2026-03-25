@@ -10,7 +10,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -25,10 +27,12 @@ import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackMaterial;
 
 public class CommandBackpack extends CommandMod {
 
+    public static final String NAME = "backpack";
+
     private final File backpackDir;
 
     public CommandBackpack(ModBase mod) {
-        super(mod, "backpack");
+        super(mod, NAME);
         this.backpackDir = new File("config/omoshiroikamo/backpack/dump");
         if (!backpackDir.exists()) {
             backpackDir.mkdirs();
@@ -76,40 +80,75 @@ public class CommandBackpack extends CommandMod {
 
         @Override
         public String getCommandUsage(ICommandSender sender) {
-            return "/ok backpack give <name>";
+            return "/ok backpack give <player> <name> [count]";
         }
 
         @Override
-        public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-            if (args.length < 1) throw new WrongUsageException(getCommandUsage(sender));
-            EntityPlayer player = CommandBase.getCommandSenderAsPlayer(sender);
+        public void processCommand(ICommandSender sender, String[] args) {
 
-            File file = new File(backpackDir, args[0] + ".json");
-            if (!file.exists()) {
-                throw new CommandException("Template not found: " + args[0]);
+            if (args.length < 2) {
+                throw new WrongUsageException(getCommandUsage(sender));
             }
 
-            try {
-                BackpackMaterial mat = new BackpackJsonReader(file).read();
-                if (mat == null) throw new CommandException("Failed to read template");
+            EntityPlayerMP player = getPlayer(sender, args[0]);
+            String template = args[1];
 
-                ItemStack backpack = createBackpackFromMaterial(mat);
-                if (!player.inventory.addItemStackToInventory(backpack)) {
-                    player.dropPlayerItemWithRandomChoice(backpack, false);
-                }
-                sender.addChatMessage(
-                    new ChatComponentText(EnumChatFormatting.GREEN + "Gave backpack template: " + args[0]));
+            int count = 1;
+
+            if (args.length >= 3) {
+                count = parseIntBounded(sender, args[2], 1, 64);
+            }
+
+            File file = new File(backpackDir, template + ".json");
+
+            if (!file.exists()) {
+                throw new CommandException("Template not found: " + template);
+            }
+
+            BackpackMaterial mat;
+
+            try {
+                mat = new BackpackJsonReader(file).read();
             } catch (IOException e) {
                 throw new CommandException("Error reading file: " + e.getMessage());
             }
+
+            if (mat == null) {
+                throw new CommandException("Failed to read template");
+            }
+
+            for (int k = 0; k < count; ++k) {
+
+                ItemStack stack = createBackpackFromMaterial(mat);
+
+                if (!player.inventory.addItemStackToInventory(stack)) {
+                    player.dropPlayerItemWithRandomChoice(stack, false);
+                }
+            }
+
+            func_152373_a(
+                sender,
+                this,
+                "Gave backpack template %s x%s to %s",
+                template,
+                count,
+                player.getCommandSenderName());
         }
 
         @Override
         public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-            if (args.length == 1) {
-                return getListOfStringsMatchingLastWord(args, getJsonFiles().toArray(new String[0]));
-            }
-            return null;
+
+            return args.length == 1 ? getListOfStringsMatchingLastWord(
+                args,
+                MinecraftServer.getServer()
+                    .getAllUsernames())
+                : (args.length == 2 ? getListOfStringsMatchingLastWord(args, getJsonFiles().toArray(new String[0]))
+                    : null);
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int index) {
+            return index == 0;
         }
     }
 

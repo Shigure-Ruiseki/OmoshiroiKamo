@@ -62,6 +62,6 @@ public class BackpackModule extends ModModuleBase {
 
     @Override
     protected void registerSubCommand(Map<String, ICommand> subcommand) {
-        subcommand.put("backpack", new CommandBackpack(OmoshiroiKamo.instance));
+        subcommand.put(CommandBackpack.NAME, new CommandBackpack(OmoshiroiKamo.instance));
     }
 }
