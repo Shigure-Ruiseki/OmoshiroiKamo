@@ -55,9 +55,6 @@ public class ItemIndexClient {
         storage.clear();
         storage.putAll(newStorage);
 
-        craftables.clear();
-        craftables.addAll(newCraftables);
-
         rebuildAllKeys();
 
         indexVersion = version;
