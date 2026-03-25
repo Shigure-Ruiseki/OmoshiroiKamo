@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -133,7 +134,14 @@ public abstract class BaseChickenHandler {
                         chicken.addRecipe(defaultFood, layItem);
                     }
                     if (data.mutationChance != null) chicken.setMutationChance(data.mutationChance);
-                    if (data.lang != null) JsonUtils.registerLang("entity." + data.name + ".name", data.lang);
+                    if (data.lang != null) {
+                        JsonUtils.registerLang("entity." + data.name + ".name", data.lang);
+
+                        // Also set lang on the chicken object so getLang() returns the correct data
+                        for (Map.Entry<String, String> entry : data.lang.entrySet()) {
+                            chicken.setLang(entry.getKey(), entry.getValue());
+                        }
+                    }
                     if (data.textureOverlay != null && !data.textureOverlay.isEmpty()) {
                         chicken.setTintColor(tint);
                         chicken.setTextureOverlay(

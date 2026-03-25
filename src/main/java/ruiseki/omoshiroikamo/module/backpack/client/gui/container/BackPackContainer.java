@@ -25,6 +25,7 @@ import com.cleanroommc.modularui.widgets.slot.ModularCraftingSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
@@ -36,6 +37,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgrade
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 import ruiseki.omoshiroikamo.module.backpack.integration.tic.TinkersHelpers;
 
 public class BackPackContainer extends ModularContainer {
@@ -92,6 +94,46 @@ public class BackPackContainer extends ModularContainer {
             }
 
             inventoryCrafting.setSlot(9, result, false);
+        }
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        // Server-side only: sync dirty changes to client
+        if (!getGuiData().isClient() && wrapper.isDirty) {
+            EntityPlayer player = getPlayer();
+
+            // Write changes to the actual ItemStack (using UUID tracking)
+            wrapper.writeToItem(player);
+
+            // Send NBT update packet to client (only if backpack is valid)
+            if (wrapper.getBackpack() != null && wrapper.getType() != null
+                && backpackSlotIndex != null
+                && player instanceof EntityPlayerMP playerMP) {
+                OmoshiroiKamo.instance.getPacketHandler()
+                    .sendToPlayer(
+                        new PacketBackpackNBT(backpackSlotIndex, wrapper.getTagCompound(), wrapper.getType()),
+                        playerMP);
+            }
+
+            // Clear dirty flag
+            wrapper.clearDirty();
+        }
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+
+        // Final sync before closing - ensure all changes are saved
+        if (!getGuiData().isClient() && wrapper.isDirty) {
+            wrapper.writeToItem(player);
+            // Only clear dirty if write succeeded (backpack still valid)
+            if (wrapper.getBackpack() != null) {
+                wrapper.clearDirty();
+            }
         }
     }
 

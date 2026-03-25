@@ -88,8 +88,9 @@ public class UpgradeSlotSH extends ItemSlotSH {
                 break;
             default:
                 super.readOnServer(id, buf);
-                break;
+                return;
         }
+        wrapper.markDirty();
     }
 
     @Override

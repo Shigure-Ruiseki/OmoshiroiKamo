@@ -24,6 +24,7 @@ import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
@@ -78,6 +79,11 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
+
+        // Handle BlockMachineCasing separately
+        if (block instanceof BlockMachineCasing casing) {
+            return renderMachineCasing(world, x, y, z, casing, renderer);
+        }
 
         // Get tint color from cache or config
         Integer structureColor = StructureTintCache.get(world, x, y, z);
@@ -154,6 +160,46 @@ public class PortOverlayISBRH implements ISimpleBlockRenderingHandler {
 
         // Restore flags
         renderer.renderAllFaces = prevRenderAllFaces;
+
+        return true;
+    }
+
+    private boolean renderMachineCasing(IBlockAccess world, int x, int y, int z, BlockMachineCasing block,
+        RenderBlocks renderer) {
+
+        int meta = world.getBlockMetadata(x, y, z);
+
+        // Get tint color from cache or config
+        Integer structureColor = StructureTintCache.get(world, x, y, z);
+        int tintColor = structureColor != null ? structureColor : MachineryConfig.getDefaultTintColorInt();
+
+        // Calculate tint components
+        float r = ((tintColor >> 16) & 0xFF) / 255.0f;
+        float g = ((tintColor >> 8) & 0xFF) / 255.0f;
+        float b = (tintColor & 0xFF) / 255.0f;
+
+        // Ensure not black (fallback if calculation failed)
+        if (r == 0 && g == 0 && b == 0) {
+            r = g = b = 1.0f;
+        }
+
+        renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
+
+        // Layer 1: Render base texture with tint
+        boolean prevRenderAllFaces = renderer.renderAllFaces;
+        renderer.renderAllFaces = true;
+        renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+        renderer.renderAllFaces = prevRenderAllFaces;
+
+        // Layer 2: Render overlay if design is not plain
+        String designName = block.getDesignName();
+        if (designName != null && !designName.isEmpty() && !designName.equals("plain")) {
+            // TODO: Implement overlay rendering when overlay textures are available
+            // IIcon overlayIcon = block.getOverlayIcon(designName);
+            // if (overlayIcon != null) {
+            // renderOverlay(world, x, y, z, overlayIcon, renderer);
+            // }
+        }
 
         return true;
     }

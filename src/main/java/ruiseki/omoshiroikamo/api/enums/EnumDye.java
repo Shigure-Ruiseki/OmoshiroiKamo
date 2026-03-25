@@ -97,8 +97,40 @@ public enum EnumDye {
             (b & 0xFF); // blue
     }
 
+    /**
+     * Converts RGB components to RGB hex format (0xRRGGBB) for GTNHLib 0.9.45+ IBlockColor.
+     * This is the correct format for colorMultiplier methods.
+     *
+     * @param r Red component (0-255)
+     * @param g Green component (0-255)
+     * @param b Blue component (0-255)
+     * @return RGB color as 0xRRGGBB
+     */
+    public static int toRgb(int r, int g, int b) {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+    /**
+     * Converts RGB hex to RGB hex format (strips alpha if present).
+     *
+     * @param rgb RGB or ARGB color value
+     * @return RGB color as 0xRRGGBB
+     */
+    public static int toRgb(int rgb) {
+        return rgb & 0xFFFFFF;
+    }
+
     public int dyeToAbgr() {
         int rgb = this.getColor();
         return rgbToAbgr(rgb);
+    }
+
+    /**
+     * Converts this dye's color to RGB hex format (0xRRGGBB) for GTNHLib 0.9.45+ IBlockColor.
+     *
+     * @return RGB color as 0xRRGGBB
+     */
+    public int dyeToRgb() {
+        return toRgb(this.getColor());
     }
 }

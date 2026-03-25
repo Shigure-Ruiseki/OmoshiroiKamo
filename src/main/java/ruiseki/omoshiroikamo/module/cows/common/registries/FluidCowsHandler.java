@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -53,18 +52,29 @@ public class FluidCowsHandler extends BaseCowHandler {
                 Logger.error("Failed to get color from fluid " + fluidName);
             }
 
-            CowsRegistryItem cow = addCow(cowName, this.nextID(), 0xFFFFFF, 0xFFFFFF, SpawnType.NORMAL);
+            // Use fluid color for bgColor, white for fgColor for better contrast
+            CowsRegistryItem cow = addCow(cowName, this.nextID(), color, 0xFFFFFF, SpawnType.NORMAL);
             cow.setFluid(new FluidStack(fluid, 1000));
             cow.setTintColor(color);
-            cow.setTextureOverlay(new ResourceLocation("omoshiroikamo", "textures/entity/cows/base/overlay.png"));
+            // Note: overlay.png does not exist, so we don't set a texture overlay
+            // cow.setTextureOverlay(new ResourceLocation("omoshiroikamo", "textures/entity/cows/base/overlay.png"));
 
             // Generate localization
             try {
                 String localizedFluid = fluid.getLocalizedName(new FluidStack(fluid, 1000));
-                cow.setLang("en_US", localizedFluid + " Cow");
-                cow.setLang("ja_JP", localizedFluid + "ウシ");
+
+                // Use fluid name as fallback if localized name is empty or just the unlocalized key
+                String displayName = localizedFluid;
+                if (displayName == null || displayName.isEmpty()
+                    || displayName.startsWith("fluid.")
+                    || displayName.startsWith("tile.")) {
+                    displayName = fluidName;
+                }
+
+                cow.setLang("en_US", displayName + " Cow");
+                cow.setLang("ja_JP", displayName + " ウシ");
             } catch (Exception e) {
-                Logger.error("Failed to get localized name from fluid " + fluidName);
+                Logger.error("Failed to get localized name from fluid " + fluidName, e);
             }
 
             generated.add(cow);
