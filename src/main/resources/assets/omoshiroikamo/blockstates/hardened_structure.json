@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "omoshiroikamo:block/multiblock/hardened_structure"
+    }
+  }
+}

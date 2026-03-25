@@ -19,7 +19,7 @@ public class BlockCrystal extends BlockOK {
     public static final int VARIATIONS = 8;
 
     protected BlockCrystal() {
-        super(ModObject.blockBlockCrystal.unlocalisedName);
+        super(ModObject.BLOCK_CRYSTAL.name);
         setTextureName("multiblock/crystal_block");
         hasSubtypes = true;
     }

@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemEnergyInterface extends AbstractPartItem {
 
     public ItemEnergyInterface() {
-        super(ModObject.itemEnergyInterface.unlocalisedName);
+        super(ModObject.ENERGY_INTERFACE.name);
         setMaxStackSize(64);
     }
 

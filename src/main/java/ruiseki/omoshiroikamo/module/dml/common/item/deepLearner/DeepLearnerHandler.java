@@ -9,7 +9,7 @@ import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 
 public class DeepLearnerHandler implements IItemHandlerModifiable {
 
@@ -68,7 +68,7 @@ public class DeepLearnerHandler implements IItemHandlerModifiable {
         if (deepLearner == null) {
             return;
         }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(deepLearner);
+        NBTTagCompound tag = ItemNBTHelpers.getNBT(deepLearner);
         writeToNBT(tag);
         deepLearner.setTagCompound(tag);
     }
@@ -77,7 +77,7 @@ public class DeepLearnerHandler implements IItemHandlerModifiable {
         if (deepLearner == null) {
             return;
         }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(deepLearner);
+        NBTTagCompound tag = ItemNBTHelpers.getNBT(deepLearner);
         readFromNBT(tag);
     }
 

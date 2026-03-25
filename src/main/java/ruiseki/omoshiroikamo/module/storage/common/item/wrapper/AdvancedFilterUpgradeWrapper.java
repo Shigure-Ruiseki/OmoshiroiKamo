@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 
 public class AdvancedFilterUpgradeWrapper extends AdvancedUpgradeWrapper implements IFilterUpgrade {
 
@@ -12,7 +12,7 @@ public class AdvancedFilterUpgradeWrapper extends AdvancedUpgradeWrapper impleme
 
     @Override
     public FilterWayType getfilterWay() {
-        int ordinal = ItemNBTUtils.getInt(upgrade, FILTER_WAY_TAG, FilterWayType.IN_OUT.ordinal());
+        int ordinal = ItemNBTHelpers.getInt(upgrade, FILTER_WAY_TAG, FilterWayType.IN_OUT.ordinal());
         FilterWayType[] types = FilterWayType.values();
         if (ordinal < 0 || ordinal >= types.length) {
             return FilterWayType.IN_OUT;
@@ -25,7 +25,7 @@ public class AdvancedFilterUpgradeWrapper extends AdvancedUpgradeWrapper impleme
         if (filterWay == null) {
             filterWay = FilterWayType.IN_OUT;
         }
-        ItemNBTUtils.setInt(upgrade, FILTER_WAY_TAG, filterWay.ordinal());
+        ItemNBTHelpers.setInt(upgrade, FILTER_WAY_TAG, filterWay.ordinal());
     }
 
     @Override

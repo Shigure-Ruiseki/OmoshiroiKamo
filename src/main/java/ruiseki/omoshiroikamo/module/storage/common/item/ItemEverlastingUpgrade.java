@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
 public class ItemEverlastingUpgrade extends ItemUpgrade<UpgradeWrapper> {
 
     public ItemEverlastingUpgrade() {
-        super(ModObject.itemEverlastingUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_EVERLASTING_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("storage/everlasting_upgrade");
     }

@@ -105,7 +105,7 @@ public class NEIConfig implements IConfigureNEI {
 
         if (BackportConfigs.enableMultiBlock) {
             for (int i = 0; i < 6; i++) {
-                String oreId = ModObject.blockQuantumOreExtractor.getRegistryName() + ".tier" + i;
+                String oreId = ModObject.QUANTUM_ORE_EXTRACTOR.getRegistryName() + ".tier" + i;
                 event.registerHandlerInfo(
                     new HandlerInfo.Builder(oreId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
                         .setDisplayStack(MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.newItemStack(1, i))
@@ -113,7 +113,7 @@ public class NEIConfig implements IConfigureNEI {
                         .setWidth(166)
                         .build());
 
-                String resId = ModObject.blockQuantumResExtractor.getRegistryName() + ".tier" + i;
+                String resId = ModObject.QUANTUM_RES_EXTRACTOR.getRegistryName() + ".tier" + i;
                 event.registerHandlerInfo(
                     new HandlerInfo.Builder(resId, LibMisc.MOD_NAME, LibMisc.MOD_ID)
                         .setDisplayStack(MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.newItemStack(1, i))

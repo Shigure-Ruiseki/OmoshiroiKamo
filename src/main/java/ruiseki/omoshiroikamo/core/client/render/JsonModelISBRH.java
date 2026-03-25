@@ -39,7 +39,7 @@ public class JsonModelISBRH extends ModelISBRH {
         if (block == null) return;
         int meta = stack.getItemDamage();
 
-        Tessellator tesselator = TessellatorManager.get();
+        Tessellator tessellator = TessellatorManager.get();
         itemContext.stack = stack;
         itemContext.blockState = BlockPropertyRegistry.getBlockState(stack);
         itemContext.random = RAND;
@@ -49,14 +49,13 @@ public class JsonModelISBRH extends ModelISBRH {
 
         GL11.glPushMatrix();
 
-        GL11.glRotated(90f, 0f, 1f, 0f);
         GL11.glRotatef(180f, 0f, 0f, 1f);
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_LIGHTING);
 
-        tesselator.startDrawingQuads();
+        tessellator.startDrawingQuads();
 
         int color = model.getColor(null, 0, 0, 0, block, meta, RAND);
 
@@ -77,12 +76,12 @@ public class JsonModelISBRH extends ModelISBRH {
                 final float b = (quadColor & 255) / 255f;
 
                 final float shade = diffuseLight(quad.getComputedFaceNormal());
-                tesselator.setColorOpaque_F(r * shade, g * shade, b * shade);
-                renderQuad(quad, -0.5f, -0.5f, -0.5f, tesselator, null);
+                tessellator.setColorOpaque_F(r * shade, g * shade, b * shade);
+                renderQuad(quad, -0.5f, -0.5f, -0.5f, tessellator, null);
             }
         }
 
-        tesselator.draw();
+        tessellator.draw();
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();

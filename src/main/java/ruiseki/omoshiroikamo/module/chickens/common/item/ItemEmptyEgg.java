@@ -15,7 +15,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemEmptyEgg extends ItemOK {
 
     public ItemEmptyEgg() {
-        super(ModObject.itemEmptyEgg);
+        super(ModObject.EMPTY_EGG);
         setMaxStackSize(64);
         setTextureName("chicken/liquid_egg"); // Placeholder if no dedicated icon
     }

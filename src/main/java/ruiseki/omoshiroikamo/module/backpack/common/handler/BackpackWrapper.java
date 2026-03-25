@@ -32,7 +32,7 @@ import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.color.ITintable;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
@@ -574,7 +574,7 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
         if (backpack == null) {
             return;
         }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(backpack);
+        NBTTagCompound tag = ItemNBTHelpers.getNBT(backpack);
         writeToNBT(tag);
         backpack.setTagCompound(tag);
     }
@@ -583,7 +583,7 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
         if (backpack == null) {
             return;
         }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(backpack);
+        NBTTagCompound tag = ItemNBTHelpers.getNBT(backpack);
         readFromNBT(tag);
     }
 

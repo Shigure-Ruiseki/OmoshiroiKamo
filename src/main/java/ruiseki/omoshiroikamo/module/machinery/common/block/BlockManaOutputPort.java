@@ -26,7 +26,7 @@ import vazkii.botania.api.wand.IWandHUD;
 public class BlockManaOutputPort extends AbstractPortBlock<TEManaOutputPort> implements IWandHUD {
 
     protected BlockManaOutputPort() {
-        super(ModObject.blockModularManaOutput.unlocalisedName, TEManaOutputPortT1.class);
+        super(ModObject.blockModularManaOutput.name, TEManaOutputPortT1.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");

@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemCreativeModelLearner extends ItemOK {
 
     public ItemCreativeModelLearner() {
-        super(ModObject.itemCreativeModelLearner.unlocalisedName);
+        super(ModObject.CREATIVE_MODEL_LEARNER.name);
         setMaxStackSize(1);
         setTextureName("dml/creative_model_learner");
     }

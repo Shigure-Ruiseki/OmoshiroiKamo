@@ -35,7 +35,7 @@ public class ItemChicken extends ItemOK {
     private final Map<Integer, IIcon> overlayIcons = new HashMap<>();
 
     public ItemChicken() {
-        super(ModObject.itemChicken);
+        super(ModObject.CHICKEN);
         setHasSubtypes(true);
         setMaxStackSize(64);
     }

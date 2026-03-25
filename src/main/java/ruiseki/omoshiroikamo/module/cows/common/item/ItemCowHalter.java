@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistry;
 import ruiseki.omoshiroikamo.api.entity.cow.CowsRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.cows.common.block.TEStall;
@@ -27,7 +27,7 @@ import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 public class ItemCowHalter extends ItemOK {
 
     public ItemCowHalter() {
-        super(ModObject.itemCowHalter);
+        super(ModObject.COW_HALTER);
         setMaxStackSize(1);
         setTextureName("cow/cow_halter");
     }
@@ -124,7 +124,7 @@ public class ItemCowHalter extends ItemOK {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        NBTTagCompound tag = ItemNBTUtils.getNBT(stack);
+        NBTTagCompound tag = ItemNBTHelpers.getNBT(stack);
         int strength = tag.getInteger(STRENGTH_NBT);
         int growth = tag.getInteger(GROWTH_NBT);
         int gain = tag.getInteger(GAIN_NBT);

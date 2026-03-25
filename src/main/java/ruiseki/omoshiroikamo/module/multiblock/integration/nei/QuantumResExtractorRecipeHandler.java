@@ -53,7 +53,7 @@ public class QuantumResExtractorRecipeHandler extends VoidMinerRecipeHandler {
 
     @Override
     protected String getRecipeIdBase() {
-        return String.valueOf(ModObject.blockQuantumResExtractor.getRegistryName());
+        return String.valueOf(ModObject.QUANTUM_RES_EXTRACTOR.getRegistryName());
     }
 
     @Override

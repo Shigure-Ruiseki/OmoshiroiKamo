@@ -15,7 +15,7 @@ public class BlockProgrammer extends AbstractBlock<TEProgrammer> {
     private IIcon top, bottom, side;
 
     public BlockProgrammer() {
-        super(ModObject.blockProgrammer.unlocalisedName, TEProgrammer.class);
+        super(ModObject.PROGRAMMER.name, TEProgrammer.class);
     }
 
     @Override

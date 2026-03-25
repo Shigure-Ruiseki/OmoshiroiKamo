@@ -1,0 +1,8 @@
+{
+  "multipart": [
+    { "when": { "facing": "north" }, "apply": { "model": "omoshiroikamo:block/backpack/diamond_backpack", "y": 0 } },
+    { "when": { "facing": "south" }, "apply": { "model": "omoshiroikamo:block/backpack/diamond_backpack", "y": 180 } },
+    { "when": { "facing": "west" }, "apply": { "model": "omoshiroikamo:block/backpack/diamond_backpack", "y": 90 } },
+    { "when": { "facing": "east" }, "apply": { "model": "omoshiroikamo:block/backpack/diamond_backpack", "y": 270 } }
+  ]
+}

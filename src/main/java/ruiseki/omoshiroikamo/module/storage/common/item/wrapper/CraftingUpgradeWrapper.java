@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingUpgrade {
@@ -16,7 +16,7 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
 
             @Override
             protected void onContentsChanged(int slot) {
-                NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(ICraftingUpgrade.STORAGE_TAG, this.serializeNBT());
             }
         };
@@ -24,7 +24,7 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
 
     @Override
     public UpgradeItemStackHandler getStorage() {
-        NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, STORAGE_TAG, false);
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
         if (handlerTag != null) {
             handler.deserializeNBT(handlerTag);
         }
@@ -34,13 +34,14 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
     @Override
     public void setStorage(UpgradeItemStackHandler handler) {
         if (handler != null) {
-            ItemNBTUtils.setCompound(upgrade, STORAGE_TAG, handler.serializeNBT());
+            ItemNBTHelpers.setCompound(upgrade, STORAGE_TAG, handler.serializeNBT());
         }
     }
 
     @Override
     public CraftingDestination getCraftingDes() {
-        int ordinal = ItemNBTUtils.getInt(upgrade, CRAFTING_DEST_TAG, IBasicFilterable.FilterType.WHITELIST.ordinal());
+        int ordinal = ItemNBTHelpers
+            .getInt(upgrade, CRAFTING_DEST_TAG, IBasicFilterable.FilterType.WHITELIST.ordinal());
         CraftingDestination[] types = CraftingDestination.values();
         if (ordinal < 0 || ordinal >= types.length) {
             return CraftingDestination.BACKPACK;
@@ -53,18 +54,18 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
         if (type == null) {
             type = CraftingDestination.BACKPACK;
         }
-        ItemNBTUtils.setInt(upgrade, CRAFTING_DEST_TAG, type.ordinal());
+        ItemNBTHelpers.setInt(upgrade, CRAFTING_DEST_TAG, type.ordinal());
 
     }
 
     @Override
     public boolean isUseBackpack() {
-        return ItemNBTUtils.getBoolean(upgrade, USE_BACKPACK_TAG, false);
+        return ItemNBTHelpers.getBoolean(upgrade, USE_BACKPACK_TAG, false);
     }
 
     @Override
     public void setUseBackpack(boolean used) {
-        ItemNBTUtils.setBoolean(upgrade, USE_BACKPACK_TAG, used);
+        ItemNBTHelpers.setBoolean(upgrade, USE_BACKPACK_TAG, used);
     }
 
 }

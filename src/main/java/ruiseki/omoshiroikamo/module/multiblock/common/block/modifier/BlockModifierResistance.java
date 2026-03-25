@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierResistance extends BlockModifier {
 
     protected BlockModifierResistance() {
-        super(ModObject.blockModifierResistance.unlocalisedName, "resistance");
+        super(ModObject.blockModifierResistance.name, "resistance");
         setTextureName("multiblock/modifier_resistance");
     }
 

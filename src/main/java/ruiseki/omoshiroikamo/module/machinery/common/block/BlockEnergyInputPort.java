@@ -38,7 +38,7 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
     protected BlockEnergyInputPort() {
         super(
-            ModObject.blockModularEnergyInput.unlocalisedName,
+            ModObject.blockModularEnergyInput.name,
             TEEnergyInputPortT1.class,
             TEEnergyInputPortT2.class,
             TEEnergyInputPortT3.class,

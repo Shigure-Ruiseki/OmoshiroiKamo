@@ -31,7 +31,7 @@ public class ItemDataModel extends ItemOK {
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemDataModel() {
-        super(ModObject.itemDataModel.unlocalisedName);
+        super(ModObject.DATA_MODEL.name);
         setMaxStackSize(1);
     }
 

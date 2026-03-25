@@ -27,7 +27,7 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     protected BlockItemOutputPort() {
         super(
-            ModObject.blockModularItemOutput.unlocalisedName,
+            ModObject.blockModularItemOutput.name,
             TEItemOutputPortT1.class,
             TEItemOutputPortT2.class,
             TEItemOutputPortT3.class,

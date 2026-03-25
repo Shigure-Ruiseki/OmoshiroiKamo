@@ -20,7 +20,7 @@ public class BlockSimulationChamber extends AbstractBlock<TESimulationChamber> {
     public static final IntegerBlockProperty CRAFTING_STATE = IntegerBlockProperty.meta("craftingState", 0b1100, 2);
 
     protected BlockSimulationChamber() {
-        super(ModObject.blockSimulationChamber.unlocalisedName, TESimulationChamber.class);
+        super(ModObject.SIMULATION_CHAMBER.name, TESimulationChamber.class);
         isOpaque = false;
     }
 

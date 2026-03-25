@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedVoidUpg
 public class ItemAdvancedVoidUpgrade extends ItemUpgrade<AdvancedVoidUpgradeWrapper> {
 
     public ItemAdvancedVoidUpgrade() {
-        super(ModObject.itemAdvancedVoidUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_ADVANCED_VOID_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("backpack/advanced_void_upgrade");
     }

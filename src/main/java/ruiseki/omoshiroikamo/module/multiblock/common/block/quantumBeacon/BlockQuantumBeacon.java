@@ -29,7 +29,7 @@ public class BlockQuantumBeacon extends AbstractTieredMBBlock<TEQuantumBeacon> {
 
     protected BlockQuantumBeacon() {
         super(
-            ModObject.blockQuantumBeacon.unlocalisedName,
+            ModObject.QUANTUM_BEACON.name,
             TEQuantumBeaconT1.class,
             TEQuantumBeaconT2.class,
             TEQuantumBeaconT3.class,

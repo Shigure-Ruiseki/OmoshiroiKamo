@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFilterable, IToggleable {
@@ -16,7 +16,7 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
 
             @Override
             protected void onContentsChanged(int slot) {
-                NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
             }
         };
@@ -24,7 +24,7 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
 
     @Override
     public FilterType getFilterType() {
-        int ordinal = ItemNBTUtils.getInt(upgrade, FILTER_TYPE_TAG, FilterType.BLACKLIST.ordinal());
+        int ordinal = ItemNBTHelpers.getInt(upgrade, FILTER_TYPE_TAG, FilterType.BLACKLIST.ordinal());
         FilterType[] types = FilterType.values();
         if (ordinal < 0 || ordinal >= types.length) {
             return FilterType.BLACKLIST;
@@ -37,12 +37,12 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
         if (type == null) {
             type = FilterType.BLACKLIST;
         }
-        ItemNBTUtils.setInt(upgrade, FILTER_TYPE_TAG, type.ordinal());
+        ItemNBTHelpers.setInt(upgrade, FILTER_TYPE_TAG, type.ordinal());
     }
 
     @Override
     public UpgradeItemStackHandler getFilterItems() {
-        NBTTagCompound handlerTag = ItemNBTUtils.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
         if (handlerTag != null) {
             handler.deserializeNBT(handlerTag);
         }
@@ -52,7 +52,7 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
     @Override
     public void setFilterItems(UpgradeItemStackHandler handler) {
         if (handler != null) {
-            ItemNBTUtils.setCompound(upgrade, FILTER_ITEMS_TAG, handler.serializeNBT());
+            ItemNBTHelpers.setCompound(upgrade, FILTER_ITEMS_TAG, handler.serializeNBT());
         }
     }
 
@@ -63,12 +63,12 @@ public class BasicUpgradeWrapper extends UpgradeWrapper implements IBasicFiltera
 
     @Override
     public boolean isEnabled() {
-        return ItemNBTUtils.getBoolean(upgrade, ENABLED_TAG, true);
+        return ItemNBTHelpers.getBoolean(upgrade, ENABLED_TAG, true);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        ItemNBTUtils.setBoolean(upgrade, ENABLED_TAG, enabled);
+        ItemNBTHelpers.setBoolean(upgrade, ENABLED_TAG, enabled);
     }
 
     @Override

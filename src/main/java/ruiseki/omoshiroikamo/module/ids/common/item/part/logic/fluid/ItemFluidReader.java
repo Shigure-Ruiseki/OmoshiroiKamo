@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemFluidReader extends AbstractPartItem {
 
     public ItemFluidReader() {
-        super(ModObject.itemFluidReader.unlocalisedName);
+        super(ModObject.FLUID_READER.name);
     }
 
     @Override

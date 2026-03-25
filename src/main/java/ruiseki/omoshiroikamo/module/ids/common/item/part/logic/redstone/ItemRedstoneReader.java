@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemRedstoneReader extends AbstractPartItem {
 
     public ItemRedstoneReader() {
-        super(ModObject.itemRedstoneReader.unlocalisedName);
+        super(ModObject.REDSTONE_READER.name);
     }
 
     @Override

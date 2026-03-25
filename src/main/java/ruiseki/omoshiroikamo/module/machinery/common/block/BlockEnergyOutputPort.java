@@ -37,7 +37,7 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
 
     protected BlockEnergyOutputPort() {
         super(
-            ModObject.blockModularEnergyOutput.unlocalisedName,
+            ModObject.blockModularEnergyOutput.name,
             TEEnergyOutputPortT1.class,
             TEEnergyOutputPortT2.class,
             TEEnergyOutputPortT3.class,

@@ -28,7 +28,7 @@ public class BlockItemInputPort extends AbstractPortBlock<TEItemInputPort> {
 
     protected BlockItemInputPort() {
         super(
-            ModObject.blockModularItemInput.unlocalisedName,
+            ModObject.blockModularItemInput.name,
             TEItemInputPortT1.class,
             TEItemInputPortT2.class,
             TEItemInputPortT3.class,

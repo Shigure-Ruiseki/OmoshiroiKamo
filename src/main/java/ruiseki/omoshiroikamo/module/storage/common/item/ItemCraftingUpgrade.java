@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeW
 public class ItemCraftingUpgrade extends ItemUpgrade<CraftingUpgradeWrapper> {
 
     public ItemCraftingUpgrade() {
-        super(ModObject.itemCraftingUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_CRAFTING_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("storage/crafting_upgrade");
     }

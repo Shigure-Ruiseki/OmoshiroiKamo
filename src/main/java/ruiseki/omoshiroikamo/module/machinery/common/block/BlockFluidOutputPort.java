@@ -27,7 +27,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
 
     protected BlockFluidOutputPort() {
         super(
-            ModObject.blockModularFluidOutput.unlocalisedName,
+            ModObject.blockModularFluidOutput.name,
             TEFluidOutputPortT1.class,
             TEFluidOutputPortT2.class,
             TEFluidOutputPortT3.class,

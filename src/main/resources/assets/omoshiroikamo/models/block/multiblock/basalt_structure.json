@@ -1,5 +1,5 @@
 {
-  "parent": "omoshiroikamo:block/multiblock/hardenedStructure",
+  "parent": "omoshiroikamo:block/multiblock/hardened_structure",
   "textures": {
     "base": "omoshiroikamo:block/multiblock/basalt_structure",
     "particle": "omoshiroikamo:block/multiblock/basalt_structure"

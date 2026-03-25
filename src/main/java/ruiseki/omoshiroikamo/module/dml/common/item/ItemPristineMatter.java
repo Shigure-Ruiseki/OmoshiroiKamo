@@ -26,7 +26,7 @@ public class ItemPristineMatter extends ItemOK {
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemPristineMatter() {
-        super(ModObject.itemPristineMatter.unlocalisedName);
+        super(ModObject.PRISTINE_MATTER.name);
         setMaxStackSize(64);
     }
 

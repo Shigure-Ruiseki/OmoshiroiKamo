@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 public class BlockHardenedStructure extends BlockOK implements IMBBlock {
 
     protected BlockHardenedStructure() {
-        super(ModObject.blockHardenedStructure.unlocalisedName);
+        super(ModObject.HARDENED_STRUCTURE.name);
         hasSubtypes = true;
     }
 

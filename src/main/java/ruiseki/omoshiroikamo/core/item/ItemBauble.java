@@ -38,24 +38,24 @@ public class ItemBauble extends ItemOK implements IBaubleExpanded {
     }
 
     public static UUID getBaubleUUID(ItemStack stack) {
-        long most = ItemNBTUtils.getLong(stack, TAG_BAUBLE_UUID_MOST, 0);
+        long most = ItemNBTHelpers.getLong(stack, TAG_BAUBLE_UUID_MOST, 0);
         if (most == 0) {
             UUID uuid = UUID.randomUUID();
-            ItemNBTUtils.setLong(stack, TAG_BAUBLE_UUID_MOST, uuid.getMostSignificantBits());
-            ItemNBTUtils.setLong(stack, TAG_BAUBLE_UUID_LEAST, uuid.getLeastSignificantBits());
+            ItemNBTHelpers.setLong(stack, TAG_BAUBLE_UUID_MOST, uuid.getMostSignificantBits());
+            ItemNBTHelpers.setLong(stack, TAG_BAUBLE_UUID_LEAST, uuid.getLeastSignificantBits());
             return getBaubleUUID(stack);
         }
 
-        long least = ItemNBTUtils.getLong(stack, TAG_BAUBLE_UUID_LEAST, 0);
+        long least = ItemNBTHelpers.getLong(stack, TAG_BAUBLE_UUID_LEAST, 0);
         return new UUID(most, least);
     }
 
     public static void setLastPlayerHashcode(ItemStack stack, int hash) {
-        ItemNBTUtils.setInt(stack, TAG_HASHCODE, hash);
+        ItemNBTHelpers.setInt(stack, TAG_HASHCODE, hash);
     }
 
     public static int getLastPlayerHashcode(ItemStack stack) {
-        return ItemNBTUtils.getInt(stack, TAG_HASHCODE, 0);
+        return ItemNBTHelpers.getInt(stack, TAG_HASHCODE, 0);
     }
 
     public void disableRightClickEquip() {

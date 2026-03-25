@@ -283,42 +283,33 @@ gui.backpack.void_automation=Only works with other upgrade/automation
 gui.backpack.sleeping_bag=Use Sleeping Bag
 
 # Items
-tile.backpackLeather.name=Leather Backpack
-tile.backpackIron.name=Iron Backpack
-tile.backpackGold.name=Gold Backpack
-tile.backpackDiamond.name=Diamond Backpack
-tile.backpackObsidian.name=Obsidian Backpack
-tile.sleepingBag.name=Sleeping Bag
+tile.leather_backpack.name=Leather Backpack
+tile.iron_backpack.name=Iron Backpack
+tile.gold_backpack.name=Gold Backpack
+tile.diamond_backpack.name=Diamond Backpack
+tile.obsidian_backpack.name=Obsidian Backpack
+tile.sleeping_bag.name=Sleeping Bag
 
-item.backPack.Starter.name=Starter Backpack (Will Remove Next Update)
-item.backPack.Copper.name=Copper Backpack (Will Remove Next Update)
-item.backPack.Iron.name=Iron Backpack (Will Remove Next Update)
-item.backPack.Gold.name=Gold Backpack (Will Remove Next Update)
-item.backPack.Diamond.name=Diamond Backpack (Will Remove Next Update)
-item.backPack.Obsidian.name=Obsidian Backpack (Will Remove Next Update)
-item.backPack.Netherite.name=Netherite Backpack (Will Remove Next Update)
-
-item.upgrade.name=Upgrade Base
-item.stackUpgrade.Starter.name=Stack Upgrade Starter Tier
-item.stackUpgrade.Iron.name=Stack Upgrade Tier 1
-item.stackUpgrade.Gold.name=Stack Upgrade Tier 2
-item.stackUpgrade.Diamond.name=Stack Upgrade Tier 3
-item.stackUpgrade.Netherite.name=Stack Upgrade Tier 4
-item.stackUpgrade.Omega.name=Stack Upgrade Omega Tier
-item.craftingUpgrade.name=Crafting Upgrade
-item.batteryUpgrade.name=Battery Upgrade
-item.everlastingUpgrade.name=Everlasting Upgrade
-item.magnetUpgrade.name=Magnet Upgrade
-item.advancedMagnetUpgrade.name=Adv. Magnet Upgrade
-item.pickupUpgrade.name=Pickup Upgrade
-item.advancedPickupUpgrade.name=Adv. Pickup Upgrade
-item.feedingUpgrade.name=Feeding Upgrade
-item.advancedFeedingUpgrade.name=Adv. Feeding Upgrade
-item.filterUpgrade.name=Filter Upgrade
-item.advancedFilterUpgrade.name=Adv. Filter Upgrade
-item.inceptionUpgrade.name=Inception Upgrade
-item.voidUpgrade.name=Void Upgrade
-item.advancedVoidUpgrade.name=Adv. Void Upgrade
+item.backpack_base_upgrade.name=Upgrade Base
+item.backpack_stack_upgrade.Starter.name=Stack Upgrade Starter Tier
+item.backpack_stack_upgrade.Iron.name=Stack Upgrade Tier 1
+item.backpack_stack_upgrade.Gold.name=Stack Upgrade Tier 2
+item.backpack_stack_upgrade.Diamond.name=Stack Upgrade Tier 3
+item.backpack_stack_upgrade.Netherite.name=Stack Upgrade Tier 4
+item.backpack_stack_upgrade.Omega.name=Stack Upgrade Omega Tier
+item.backpack_crafting_upgrade.name=Crafting Upgrade
+item.backpack_everlasting_upgrade.name=Everlasting Upgrade
+item.backpack_inception_upgrade.name=Inception Upgrade
+item.backpack_magnet_upgrade.name=Magnet Upgrade
+item.backpack_advanced_magnet_upgrade.name=Adv. Magnet Upgrade
+item.backpack_pickup_upgrade.name=Pickup Upgrade
+item.backpack_advanced_pickup_upgrade.name=Adv. Pickup Upgrade
+item.backpack_feeding_upgrade.name=Feeding Upgrade
+item.backpack_advanced_feeding_upgrade.name=Adv. Feeding Upgrade
+item.backpack_filter_upgrade.name=Filter Upgrade
+item.backpack_advanced_filter_upgrade.name=Adv. Filter Upgrade
+item.backpack_void_upgrade.name=Void Upgrade
+item.backpack_advanced_void_upgrade.name=Adv. Void Upgrade
 
 
 # Tooltips
@@ -326,10 +317,10 @@ tooltip.backpack.inventory_size=Inventory size: %d
 tooltip.backpack.upgrade_slots_size=Upgrade slots: %d
 tooltip.backpack.stack_multiplier=-> Stack multiplier: %d%s
 
+tooltip.backpack.base_upgrade=It does nothing! Feel free to put it in your upgrade slots!
 tooltip.backpack.magnet_upgrade=Automatically picks up nearby entities
 tooltip.backpack.advanced_magnet_upgrade=Automatically picks up nearby entities with more configurations
 tooltip.backpack.everlasting_upgrade=Makes the backpack invincible, preventing despawning or falling into the void. Ensures retrieval even when thrown into the void.
-tooltip.backpack.upgrade_base=It does nothing! Feel free to put it in your upgrade slots!
 tooltip.backpack.stack_upgrade=Multiplies stack size by %d
 tooltip.backpack.crafting_upgrade=Adds additional crafting grid to side of backpack
 tooltip.backpack.inception_upgrade=Allows backpacks to be stored inside backpack
@@ -356,38 +347,37 @@ config.chickenConfig=Chicken Settings
 
 
 # Items
-item.chickenCatcher.name=Chicken Catcher
-item.liquidEgg.water.name=Water Egg
-item.liquidEgg.lava.name=Lava Egg
-item.emptyEgg.name=Empty Egg
-item.coloredEgg.white.name=Bone White Chicken Egg
-item.coloredEgg.orange.name=Orange Chicken Egg
-item.coloredEgg.magenta.name=Magenta Chicken Egg
-item.coloredEgg.light_blue.name=Light Blue Chicken Egg
-item.coloredEgg.yellow.name=Yellow Chicken Egg
-item.coloredEgg.lime.name=Lime Chicken Egg
-item.coloredEgg.pink.name=Pink Chicken Egg
-item.coloredEgg.gray.name=Gray Chicken Egg
-item.coloredEgg.light_gray.name=Light Gray Chicken Egg
-item.coloredEgg.cyan.name=Cyan Chicken Egg
-item.coloredEgg.purple.name=Purple Chicken Egg
-item.coloredEgg.blue.name=Lapis Blue Chicken Egg
-item.coloredEgg.brown.name=Cocoa Brown Chicken Egg
-item.coloredEgg.green.name=Cactus Green Chicken Egg
-item.coloredEgg.red.name=Red Chicken Egg
-item.coloredEgg.black.name=Ink Black Chicken Egg
-item.chickenFood.name=%s's Food
+item.chicken_catcher.name=Chicken Catcher
+item.liquid_egg.water.name=Water Egg
+item.liquid_egg.lava.name=Lava Egg
+item.empty_egg.name=Empty Egg
+item.colored_egg.white.name=Bone White Chicken Egg
+item.colored_egg.orange.name=Orange Chicken Egg
+item.colored_egg.magenta.name=Magenta Chicken Egg
+item.colored_egg.light_blue.name=Light Blue Chicken Egg
+item.colored_egg.yellow.name=Yellow Chicken Egg
+item.colored_egg.lime.name=Lime Chicken Egg
+item.colored_egg.pink.name=Pink Chicken Egg
+item.colored_egg.gray.name=Gray Chicken Egg
+item.colored_egg.light_gray.name=Light Gray Chicken Egg
+item.colored_egg.cyan.name=Cyan Chicken Egg
+item.colored_egg.purple.name=Purple Chicken Egg
+item.colored_egg.blue.name=Lapis Blue Chicken Egg
+item.colored_egg.brown.name=Cocoa Brown Chicken Egg
+item.colored_egg.green.name=Cactus Green Chicken Egg
+item.colored_egg.red.name=Red Chicken Egg
+item.colored_egg.black.name=Ink Black Chicken Egg
+item.chicken_food.name=%s's Food
 
-item.solidXp.name=Solid Experience
+item.solid_xp.name=Solid Experience
 
 item.analyzer.name=Analyzer
 
 
 # Blocks
 tile.roost.name=Roost
-tile.roostCollector.name=Roost Collector
+tile.roost_collector.name=Roost Collector
 tile.breeder.name=Chicken Breeder
-
 
 # Tooltips
 tooltip.liquid_egg.l1=It's like one-off bucket.
@@ -395,7 +385,6 @@ tooltip.colored_egg.l1=Throw it to have a chance to spawn the chicken.
 tooltip.analyzer.l1=Use it on chickens to determine their stats.
 tooltip.analyzer.l2= - "Which day of the week do chickens hate most? Fry-day!"
 tooltip.catcher.name=Chicken Catcher
-
 
 # Mobs
 entity.RestoniaCrystalChicken.name=Restonia Crystal Chicken
@@ -544,7 +533,7 @@ config.cowConfig=Cow Settings
 
 
 # Items
-item.cowHalter.name=Cow Halter
+item.cow_halter.name=Cow Halter
 
 
 # Blocks
@@ -714,18 +703,18 @@ item.pristine.Wither Skeleton.name=Pristine Wither Skeleton Matter
 item.model.Zombie.name=§bZombie Data Model§r
 item.pristine.Zombie.name=Pristine Zombie Matter
 
-item.creativeModelLearner.name=Creative Model Learner (WIP)
-item.dataModelBlank.name=Blank Data Model
-item.deepLearner.name=§bDeep Learner§r
-item.polymerClay.name=Polymer Clay
-item.sootCoveredRedstone.name=Soot-covered Redstone
-item.sootCoveredPlate.name=Soot-covered Plate
+item.creative_model_learner.name=Creative Model Learner (WIP)
+item.data_model_blank.name=Blank Data Model
+item.deep_learner.name=§bDeep Learner§r
+item.polymer_clay.name=Polymer Clay
+item.soot_covered_redstone.name=Soot-covered Redstone
+item.soot_covered_plate.name=Soot-covered Plate
 
 
 # Blocks
-tile.machineCasing.name=Machine Casing
-tile.lootFabricator.name=Loot Fabricator
-tile.simulationChamber.name=Simulation Chamber
+tile.machine_casing.name=Machine Casing
+tile.loot_fabricator.name=Loot Fabricator
+tile.simulation_chamber.name=Simulation Chamber
 
 
 # Tooltips
@@ -904,35 +893,32 @@ gui.ids.op.leq=LEQ <=
 
 
 # Items
-item.variableCard.name=Variable Card
-item.itemImporter.name=Item Importer
-item.itemExporter.name=Item Exporter
-item.itemInterface.name=Item Interface
-item.itemFilterInterface.name=Item Filter Interface
-item.energyImporter.name=Energy Importer
-item.energyExporter.name=Energy Exporter
-item.energyInterface.name=Energy Interface
-item.energyFilterInterface.name=Energy Filter Interface
-item.storageTerminal.name=Storage Terminal
-item.redstoneReader.name=Redstone Reader
-item.blockReader.name=Block Reader
-item.inventoryReader.name=Inventory Reader
-item.fluidReader.name=Fluid Reader
-item.redstoneWriter.name=Redstone Writer
-item.craftingInterface.name=Crafting Interface
+item.variable_card.name=Variable Card
+item.energy_interface.name=Energy Interface
+item.energy_filter_interface.name=Energy Filter Interface
+item.energy_importer.name=Energy Importer
+item.energy_exporter.name=Energy Exporter
+item.item_interface.name=Item Interface
+item.item_filter_interface.name=Item Filter Interface
+item.item_importer.name=Item Importer
+item.item_exporter.name=Item Exporter
+item.redstone_reader.name=Redstone Reader
+item.redstone_writer.name=Redstone Writer
+item.block_reader.name=Block Reader
+item.fluid_reader.name=Fluid Reader
+item.inventory_reader.name=Inventory Reader
+item.storage_terminal.name=Storage Terminal
 
-item.menrilBerries.name=Menril Berries
-item.itemMenrilDoor.name=Menril Door
-
+item.menril_berries.name=Menril Berries
 
 # Blocks
 tile.cable.name=Logic Cable
 tile.programmer.name=Programmer
-tile.menrilSapling.name=Menril Sapling
-tile.menrilLog.name=Menril Log
-tile.menrilLeaves.name=Menril Leaves
-tile.menrilDoor.name=Menril Door
-tile.menrilPlanks.name=Menril Planks
+tile.menril_sapling.name=Menril Sapling
+tile.menril_log.name=Menril Log
+tile.menril_leaves.name=Menril Leaves
+tile.menril_door.name=Menril Door
+tile.menril_planks.name=Menril Planks
 
 
 # Tooltips
@@ -966,8 +952,8 @@ nei.multiblock.lens_bonus=%s Bonus
 
 
 # Items
-item.stabilizedEnderPear.name=Stabilized Ender Pearl
-item.photovoltaicCell.name=Photovoltaic Cell
+item.stabilized_ender_pear.name=Stabilized Ender Pearl
+item.photovoltaic_cell.name=Photovoltaic Cell
 item.assembler.name=Assembler
 item.crystal.tier_1.name=Luminite Crystal
 item.crystal.tier_2.name=Solaris Crystal
@@ -980,44 +966,44 @@ item.crystal.tier_8.name=Celestial Crystal
 
 
 # Blocks
+
+tile.block_crystal.tier_1.name=Block of Luminite 
+tile.block_crystal.tier_2.name=Block of Solaris
+tile.block_crystal.tier_3.name=Block of Abyssal
+tile.block_crystal.tier_4.name=Block of Aurora
+tile.block_crystal.tier_5.name=Block of Eclipse
+tile.block_crystal.tier_6.name=Block of Nebula
+tile.block_crystal.tier_7.name=Block of Prismatic
+tile.block_crystal.tier_8.name=Block of Celestial
+
 tile.mica.name=Mica
 tile.basalt.name=Basalt
 tile.alabaster.name=Alabaster
-tile.hardenedStone.name=Hardened Stone
+tile.hardened_stone.name=Hardened Stone
+tile.machine_base.basalt_machine_base.name=Machine Base
+tile.machine_base.hardened_stone_machine_base.name=Machine Base
+tile.machine_base.alabaster_machine_base.name=Machine Base
 
-tile.machineBase.basalt_machine_base.name=Machine Base
-tile.machineBase.hardened_stone_machine_base.name=Machine Base
-tile.machineBase.alabaster_machine_base.name=Machine Base
+tile.basalt_structure.tier_1.name=Basalt Structure Frame Tier 1
+tile.basalt_structure.tier_2.name=Basalt Structure Frame Tier 2
+tile.basalt_structure.tier_3.name=Basalt Structure Frame Tier 3
+tile.basalt_structure.tier_4.name=Basalt Structure Frame Tier 4
+tile.basalt_structure.tier_5.name=Basalt Structure Frame Tier 5
+tile.basalt_structure.tier_6.name=Basalt Structure Frame Tier 6
 
-tile.basaltStructure.tier_1.name=Basalt Structure Frame Tier 1
-tile.basaltStructure.tier_2.name=Basalt Structure Frame Tier 2
-tile.basaltStructure.tier_3.name=Basalt Structure Frame Tier 3
-tile.basaltStructure.tier_4.name=Basalt Structure Frame Tier 4
-tile.basaltStructure.tier_5.name=Basalt Structure Frame Tier 5
-tile.basaltStructure.tier_6.name=Basalt Structure Frame Tier 6
+tile.hardened_structure.tier_1.name=Hardened Structure Frame Tier 1
+tile.hardened_structure.tier_2.name=Hardened Structure Frame Tier 2
+tile.hardened_structure.tier_3.name=Hardened Structure Frame Tier 3
+tile.hardened_structure.tier_4.name=Hardened Structure Frame Tier 4
+tile.hardened_structure.tier_5.name=Hardened Structure Frame Tier 5
+tile.hardened_structure.tier_6.name=Hardened Structure Frame Tier 6
 
-tile.hardenedStructure.tier_1.name=Hardened Structure Frame Tier 1
-tile.hardenedStructure.tier_2.name=Hardened Structure Frame Tier 2
-tile.hardenedStructure.tier_3.name=Hardened Structure Frame Tier 3
-tile.hardenedStructure.tier_4.name=Hardened Structure Frame Tier 4
-tile.hardenedStructure.tier_5.name=Hardened Structure Frame Tier 5
-tile.hardenedStructure.tier_6.name=Hardened Structure Frame Tier 6
-
-tile.alabasterStructure.tier_1.name=Alabaster Structure Frame Tier 1
-tile.alabasterStructure.tier_2.name=Alabaster Structure Frame Tier 2
-tile.alabasterStructure.tier_3.name=Alabaster Structure Frame Tier 3
-tile.alabasterStructure.tier_4.name=Alabaster Structure Frame Tier 4
-tile.alabasterStructure.tier_5.name=Alabaster Structure Frame Tier 5
-tile.alabasterStructure.tier_6.name=Alabaster Structure Frame Tier 6
-
-tile.blockCrystal.tier_1.name=Block of Luminite 
-tile.blockCrystal.tier_2.name=Block of Solaris
-tile.blockCrystal.tier_3.name=Block of Abyssal
-tile.blockCrystal.tier_4.name=Block of Aurora
-tile.blockCrystal.tier_5.name=Block of Eclipse
-tile.blockCrystal.tier_6.name=Block of Nebula
-tile.blockCrystal.tier_7.name=Block of Prismatic
-tile.blockCrystal.tier_8.name=Block of Celestial
+tile.alabaster_structure.tier_1.name=Alabaster Structure Frame Tier 1
+tile.alabaster_structure.tier_2.name=Alabaster Structure Frame Tier 2
+tile.alabaster_structure.tier_3.name=Alabaster Structure Frame Tier 3
+tile.alabaster_structure.tier_4.name=Alabaster Structure Frame Tier 4
+tile.alabaster_structure.tier_5.name=Alabaster Structure Frame Tier 5
+tile.alabaster_structure.tier_6.name=Alabaster Structure Frame Tier 6
 
 tile.modifierNull.name=Null Modifier
 tile.modifierAccuracy.name=Accuracy Modifier
@@ -1035,60 +1021,60 @@ tile.modifierResistance.name=Resistance Modifier
 tile.modifierJumpBoost.name=Jump Boost Modifier
 tile.modifierFireResistance.name=Fire Resistance Modifier
 
-tile.laserCore.name=Laser Core
+tile.laser_core.name=Laser Core
 tile.lens.tier_1.name=Clear Lens
 tile.lens.tier_2.name=Crystal Lens
-tile.coloredLens.black.name=Black Lens
-tile.coloredLens.red.name=Red Lens
-tile.coloredLens.green.name=Green Lens
-tile.coloredLens.brown.name=Brown Lens
-tile.coloredLens.blue.name=Blue Lens
-tile.coloredLens.purple.name=Purple Lens
-tile.coloredLens.cyan.name=Cyan Lens
-tile.coloredLens.light_gray.name=Light Gray Lens
-tile.coloredLens.gray.name=Gray Lens
-tile.coloredLens.pink.name=Pink Lens
-tile.coloredLens.lime.name=Lime Lens
-tile.coloredLens.yellow.name=Yellow Lens
-tile.coloredLens.light_blue.name=Light Blue Lens
-tile.coloredLens.magenta.name=Magenta Lens
-tile.coloredLens.orange.name=Orange Lens
-tile.coloredLens.white.name=White Lens
+tile.colored_lens.black.name=Black Lens
+tile.colored_lens.red.name=Red Lens
+tile.colored_lens.green.name=Green Lens
+tile.colored_lens.brown.name=Brown Lens
+tile.colored_lens.blue.name=Blue Lens
+tile.colored_lens.purple.name=Purple Lens
+tile.colored_lens.cyan.name=Cyan Lens
+tile.colored_lens.light_gray.name=Light Gray Lens
+tile.colored_lens.gray.name=Gray Lens
+tile.colored_lens.pink.name=Pink Lens
+tile.colored_lens.lime.name=Lime Lens
+tile.colored_lens.yellow.name=Yellow Lens
+tile.colored_lens.light_blue.name=Light Blue Lens
+tile.colored_lens.magenta.name=Magenta Lens
+tile.colored_lens.orange.name=Orange Lens
+tile.colored_lens.white.name=White Lens
 
-tile.solarCell.tier_1.name=Luminite Solar Cell
-tile.solarCell.tier_2.name=Solaris Solar Cell
-tile.solarCell.tier_3.name=Abyssal Solar Cell
-tile.solarCell.tier_4.name=Aurora Solar Cell
-tile.solarCell.tier_5.name=Eclipse Solar Cell
-tile.solarCell.tier_6.name=Nebula Solar Cell
+tile.solar_cell.tier_1.name=Luminite Solar Cell
+tile.solar_cell.tier_2.name=Solaris Solar Cell
+tile.solar_cell.tier_3.name=Abyssal Solar Cell
+tile.solar_cell.tier_4.name=Aurora Solar Cell
+tile.solar_cell.tier_5.name=Eclipse Solar Cell
+tile.solar_cell.tier_6.name=Nebula Solar Cell
 
-tile.quantumBeacon.tier_1.name=Quantum Beacon Tier 1
-tile.quantumBeacon.tier_2.name=Quantum Beacon Tier 2
-tile.quantumBeacon.tier_3.name=Quantum Beacon Tier 3
-tile.quantumBeacon.tier_4.name=Quantum Beacon Tier 4
-tile.quantumBeacon.tier_5.name=Quantum Beacon Tier 5
-tile.quantumBeacon.tier_6.name=Quantum Beacon Tier 6
+tile.quantum_beacon.tier_1.name=Quantum Beacon Tier 1
+tile.quantum_beacon.tier_2.name=Quantum Beacon Tier 2
+tile.quantum_beacon.tier_3.name=Quantum Beacon Tier 3
+tile.quantum_beacon.tier_4.name=Quantum Beacon Tier 4
+tile.quantum_beacon.tier_5.name=Quantum Beacon Tier 5
+tile.quantum_beacon.tier_6.name=Quantum Beacon Tier 6
 
-tile.solarArray.tier_1.name=Solar Array Tier 1
-tile.solarArray.tier_2.name=Solar Array Tier 2
-tile.solarArray.tier_3.name=Solar Array Tier 3
-tile.solarArray.tier_4.name=Solar Array Tier 4
-tile.solarArray.tier_5.name=Solar Array Tier 5
-tile.solarArray.tier_6.name=Solar Array Tier 6
+tile.solar_array.tier_1.name=Solar Array Tier 1
+tile.solar_array.tier_2.name=Solar Array Tier 2
+tile.solar_array.tier_3.name=Solar Array Tier 3
+tile.solar_array.tier_4.name=Solar Array Tier 4
+tile.solar_array.tier_5.name=Solar Array Tier 5
+tile.solar_array.tier_6.name=Solar Array Tier 6
 
-tile.quantumOreExtractor.tier_1.name=Quantum Ore Extractor Tier 1
-tile.quantumOreExtractor.tier_2.name=Quantum Ore Extractor Tier 2
-tile.quantumOreExtractor.tier_3.name=Quantum Ore Extractor Tier 3
-tile.quantumOreExtractor.tier_4.name=Quantum Ore Extractor Tier 4
-tile.quantumOreExtractor.tier_5.name=Quantum Ore Extractor Tier 5
-tile.quantumOreExtractor.tier_6.name=Quantum Ore Extractor Tier 6
+tile.quantum_ore_extractor.tier_1.name=Quantum Ore Extractor Tier 1
+tile.quantum_ore_extractor.tier_2.name=Quantum Ore Extractor Tier 2
+tile.quantum_ore_extractor.tier_3.name=Quantum Ore Extractor Tier 3
+tile.quantum_ore_extractor.tier_4.name=Quantum Ore Extractor Tier 4
+tile.quantum_ore_extractor.tier_5.name=Quantum Ore Extractor Tier 5
+tile.quantum_ore_extractor.tier_6.name=Quantum Ore Extractor Tier 6
 
-tile.quantumResExtractor.tier_1.name=Quantum Resource Extractor Tier 1
-tile.quantumResExtractor.tier_2.name=Quantum Resource Extractor Tier 2
-tile.quantumResExtractor.tier_3.name=Quantum Resource Extractor Tier 3
-tile.quantumResExtractor.tier_4.name=Quantum Resource Extractor Tier 4
-tile.quantumResExtractor.tier_5.name=Quantum Resource Extractor Tier 5
-tile.quantumResExtractor.tier_6.name=Quantum Resource Extractor Tier 6
+tile.quantum_res_extractor.tier_1.name=Quantum Resource Extractor Tier 1
+tile.quantum_res_extractor.tier_2.name=Quantum Resource Extractor Tier 2
+tile.quantum_res_extractor.tier_3.name=Quantum Resource Extractor Tier 3
+tile.quantum_res_extractor.tier_4.name=Quantum Resource Extractor Tier 4
+tile.quantum_res_extractor.tier_5.name=Quantum Resource Extractor Tier 5
+tile.quantum_res_extractor.tier_6.name=Quantum Resource Extractor Tier 6
 
 
 # Tooltips

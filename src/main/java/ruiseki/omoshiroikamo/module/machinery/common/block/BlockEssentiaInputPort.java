@@ -17,7 +17,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssen
 public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPort> {
 
     protected BlockEssentiaInputPort() {
-        super(ModObject.blockModularEssentiaInput.unlocalisedName, TEEssentiaInputPort.class);
+        super(ModObject.blockModularEssentiaInput.name, TEEssentiaInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");

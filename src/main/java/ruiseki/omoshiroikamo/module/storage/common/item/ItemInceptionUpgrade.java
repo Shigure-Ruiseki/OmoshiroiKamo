@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
 public class ItemInceptionUpgrade extends ItemUpgrade<UpgradeWrapper> {
 
     public ItemInceptionUpgrade() {
-        super(ModObject.itemInceptionUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_INCEPTION_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("storage/inception_upgrade");
     }

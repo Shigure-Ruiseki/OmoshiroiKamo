@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.world.gen.WorldGeneratorMenrilTre
 public class BlockMenrilSapling extends BlockSaplingOK {
 
     public BlockMenrilSapling() {
-        super(ModObject.blockMenrilSapling.unlocalisedName, new WorldGeneratorMenrilTree(false));
+        super(ModObject.MENRIL_SAPLING.name, new WorldGeneratorMenrilTree(false));
         setTextureName("ids/menril_sapling");
     }
 }

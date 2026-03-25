@@ -6,7 +6,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemSootCoveredPlate extends ItemOK {
 
     public ItemSootCoveredPlate() {
-        super(ModObject.itemSootCoveredPlate.unlocalisedName);
+        super(ModObject.SOOT_COVERED_PLATE.name);
         setMaxStackSize(64);
         setTextureName("dml/soot_covered_plate");
     }

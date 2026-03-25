@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FilterUpgradeWra
 public class ItemFilterUpgrade extends ItemUpgrade<FilterUpgradeWrapper> {
 
     public ItemFilterUpgrade() {
-        super(ModObject.itemFilterUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_FILTER_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("storage/filter_upgrade");
     }

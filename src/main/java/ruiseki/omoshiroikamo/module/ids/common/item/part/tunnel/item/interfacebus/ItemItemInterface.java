@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemItemInterface extends AbstractPartItem {
 
     public ItemItemInterface() {
-        super(ModObject.itemItemInterface.unlocalisedName);
+        super(ModObject.ITEM_INTERFACE.name);
         setMaxStackSize(64);
     }
 

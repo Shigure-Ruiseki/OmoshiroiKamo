@@ -27,7 +27,7 @@ public class ItemLivingMatter extends ItemOK {
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemLivingMatter() {
-        super(ModObject.itemLivingMatter.unlocalisedName);
+        super(ModObject.LIVING_MATTER.name);
         setMaxStackSize(64);
     }
 

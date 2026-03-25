@@ -19,7 +19,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 public class ItemAnalyzer extends ItemOK {
 
     public ItemAnalyzer() {
-        super(ModObject.itemAnalyzer);
+        super(ModObject.ANALYZER);
         setMaxStackSize(1);
         setMaxDamage(238);
         setTextureName("chicken/analyzer");

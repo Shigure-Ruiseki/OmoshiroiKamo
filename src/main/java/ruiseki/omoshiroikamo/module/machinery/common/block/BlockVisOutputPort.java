@@ -16,7 +16,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output.TEVisOutput
 public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
 
     protected BlockVisOutputPort() {
-        super(ModObject.blockModularVisOutput.unlocalisedName, TEVisOutputPort.class);
+        super(ModObject.blockModularVisOutput.name, TEVisOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");

@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagList;
 
 import org.jetbrains.annotations.Nullable;
 
-public final class ItemNBTUtils {
+public final class ItemNBTHelpers {
 
     /**
      * Checks if an ItemStack has a Tag Compound

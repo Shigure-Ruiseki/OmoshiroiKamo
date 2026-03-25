@@ -19,7 +19,7 @@ public class BlockBreeder extends AbstractBlock<TEBreeder> {
     // TODO: Add specific conditions for breeding
 
     protected BlockBreeder() {
-        super(ModObject.blockBreeder.unlocalisedName, TEBreeder.class, Material.wood);
+        super(ModObject.BREEDER.name, TEBreeder.class, Material.wood);
         this.setTickRandomly(true);
         isOpaque = false;
     }

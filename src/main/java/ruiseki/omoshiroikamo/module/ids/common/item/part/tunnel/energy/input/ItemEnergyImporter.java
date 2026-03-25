@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemEnergyImporter extends AbstractPartItem {
 
     public ItemEnergyImporter() {
-        super(ModObject.itemEnergyImporter.unlocalisedName);
+        super(ModObject.ENERGY_IMPORTER.name);
         setMaxStackSize(64);
     }
 

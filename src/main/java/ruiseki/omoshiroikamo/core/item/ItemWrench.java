@@ -28,7 +28,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 public class ItemWrench extends ItemOK implements IToolHammer {
 
     public ItemWrench() {
-        super(ModObject.itemWrench.unlocalisedName);
+        super(ModObject.itemWrench.name);
         setMaxStackSize(1);
         setTextureName("modular/wrench");
     }

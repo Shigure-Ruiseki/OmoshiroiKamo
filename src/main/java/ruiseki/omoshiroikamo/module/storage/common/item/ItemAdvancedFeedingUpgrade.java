@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedFeedingU
 public class ItemAdvancedFeedingUpgrade extends ItemUpgrade<AdvancedFeedingUpgradeWrapper> {
 
     public ItemAdvancedFeedingUpgrade() {
-        super(ModObject.itemAdvancedFeedingUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_ADVANCED_FEEDING_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("storage/advanced_feeding_upgrade");
     }

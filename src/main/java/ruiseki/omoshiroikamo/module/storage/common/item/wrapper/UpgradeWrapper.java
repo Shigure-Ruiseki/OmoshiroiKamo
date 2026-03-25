@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 
 public class UpgradeWrapper implements IUpgrade {
 
@@ -16,12 +16,12 @@ public class UpgradeWrapper implements IUpgrade {
 
     @Override
     public void setTabOpened(boolean opened) {
-        ItemNBTUtils.setBoolean(upgrade, TAB_STATE_TAG, opened);
+        ItemNBTHelpers.setBoolean(upgrade, TAB_STATE_TAG, opened);
     }
 
     @Override
     public boolean isTabOpened() {
-        return ItemNBTUtils.getBoolean(upgrade, TAB_STATE_TAG, false);
+        return ItemNBTHelpers.getBoolean(upgrade, TAB_STATE_TAG, false);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
     protected IIcon tier1, tier2, tier3, tier4, tierOmega;
 
     public ItemStackUpgrade() {
-        super(ModObject.itemStackUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_STACK_UPGRADE.name);
         setMaxStackSize(1);
     }
 

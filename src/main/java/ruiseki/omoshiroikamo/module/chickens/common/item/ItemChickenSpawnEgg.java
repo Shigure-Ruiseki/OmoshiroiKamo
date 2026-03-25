@@ -25,7 +25,7 @@ import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.ModCompatInformation;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
@@ -36,7 +36,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
     protected IIcon baseIcon, overlayIcon;
 
     public ItemChickenSpawnEgg() {
-        super(ModObject.itemChickenSpawnEgg);
+        super(ModObject.CHICKEN_SPAWN_EGG);
         setHasSubtypes(true);
     }
 
@@ -139,7 +139,7 @@ public class ItemChickenSpawnEgg extends ItemOK {
             NBTTagCompound entityNBT = new NBTTagCompound();
             entity.writeEntityToNBT(entityNBT);
 
-            NBTTagCompound stackNBT = ItemNBTUtils.getNBT(stack);
+            NBTTagCompound stackNBT = ItemNBTHelpers.getNBT(stack);
             for (String key : stackNBT.func_150296_c()) {
                 NBTBase value = stackNBT.getTag(key);
                 entityNBT.setTag(key, value.copy());

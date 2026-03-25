@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityColoredEgg;
 public class ItemColoredEgg extends ItemOK {
 
     public ItemColoredEgg() {
-        super(ModObject.itemColoredEgg.unlocalisedName);
+        super(ModObject.COLORED_EGG.name);
         setMaxStackSize(16);
         setMaxDamage(0);
         setTextureName("chicken/colored_egg");

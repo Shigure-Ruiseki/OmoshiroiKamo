@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgrade
 public class ItemCraftingUpgrade extends ItemUpgrade<CraftingUpgradeWrapper> {
 
     public ItemCraftingUpgrade() {
-        super(ModObject.itemCraftingUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_CRAFTING_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("backpack/crafting_upgrade");
     }

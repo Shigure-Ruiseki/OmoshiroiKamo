@@ -17,11 +17,11 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
     public ItemUpgrade(String name) {
         super(name);
         setNoRepair();
-        setTextureName("backpack/upgrade_base");
+        setTextureName("backpack/base_upgrade");
     }
 
     public ItemUpgrade() {
-        this(ModObject.itemUpgrade.unlocalisedName);
+        this(ModObject.BACKPACK_BASE_UPGRADE.name);
     }
 
     public boolean hasTab() {
@@ -30,7 +30,7 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LangHelpers.localize(LibResources.TOOLTIP + "backpack.upgrade_base"));
+        list.add(LangHelpers.localize(LibResources.TOOLTIP + "backpack.base_upgrade"));
     }
 
     @SuppressWarnings("unchecked")

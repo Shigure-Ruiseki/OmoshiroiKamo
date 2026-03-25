@@ -27,7 +27,7 @@ public class BlockFluidInputPort extends AbstractPortBlock<TEFluidInputPort> {
 
     protected BlockFluidInputPort() {
         super(
-            ModObject.blockModularFluidInput.unlocalisedName,
+            ModObject.blockModularFluidInput.name,
             TEFluidInputPortT1.class,
             TEFluidInputPortT2.class,
             TEFluidInputPortT3.class,

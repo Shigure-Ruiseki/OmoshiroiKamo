@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
@@ -27,7 +27,7 @@ import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
 public class ItemVariableCard extends ItemOK {
 
     public ItemVariableCard() {
-        super(ModObject.itemVariableCard.unlocalisedName);
+        super(ModObject.VARIABLE_CARD.name);
         setMaxStackSize(1);
     }
 
@@ -64,11 +64,11 @@ public class ItemVariableCard extends ItemOK {
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(ItemStack stack, int pass) {
-        if (!ItemNBTUtils.verifyExistance(stack, "Logic")) {
+        if (!ItemNBTHelpers.verifyExistance(stack, "Logic")) {
             return this.itemIcon;
         }
 
-        NBTTagCompound logic = ItemNBTUtils.getCompound(stack, "Logic", false);
+        NBTTagCompound logic = ItemNBTHelpers.getCompound(stack, "Logic", false);
 
         if (pass == 1) {
             return getValueTypeIcon(logic);
@@ -130,7 +130,7 @@ public class ItemVariableCard extends ItemOK {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if (ItemNBTUtils.getCompound(stack, "Logic", false) == null) {
+        if (ItemNBTHelpers.getCompound(stack, "Logic", false) == null) {
             list.add(LangHelpers.localize("tooltip.ids.variable_card.empty"));
             return;
         }
@@ -141,16 +141,16 @@ public class ItemVariableCard extends ItemOK {
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
-        if (!ItemNBTUtils.verifyExistance(stack, "Logic")) {
-            ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(true));
+        if (!ItemNBTHelpers.verifyExistance(stack, "Logic")) {
+            ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(true));
         }
     }
 
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int slot, boolean isHeld) {
         super.onUpdate(stack, worldIn, entityIn, slot, isHeld);
-        if (!ItemNBTUtils.verifyExistance(stack, "Logic")) {
-            ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(true));
+        if (!ItemNBTHelpers.verifyExistance(stack, "Logic")) {
+            ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(true));
         }
     }
 }

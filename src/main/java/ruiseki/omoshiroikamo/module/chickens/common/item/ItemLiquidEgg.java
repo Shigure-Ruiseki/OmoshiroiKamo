@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
 
     public ItemLiquidEgg() {
-        super(ModObject.itemLiquidEgg);
+        super(ModObject.LIQUID_EGG);
         setMaxStackSize(16);
         setMaxDamage(0);
         setTextureName("chicken/liquid_egg");

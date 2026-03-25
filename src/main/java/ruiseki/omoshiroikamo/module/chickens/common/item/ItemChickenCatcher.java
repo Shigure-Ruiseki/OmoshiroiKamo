@@ -17,7 +17,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemChickenCatcher extends ItemOK {
 
     public ItemChickenCatcher() {
-        super(ModObject.itemChickenCatcher);
+        super(ModObject.CHICKEN_CATCHER);
         setMaxDamage(64);
         setMaxStackSize(1);
         setTextureName("chicken/chicken_catcher");

@@ -65,7 +65,7 @@ public class BlockCable extends BlockOK
         COLLIDABLE_COMPONENTS);
 
     public BlockCable() {
-        super(ModObject.blockCable.unlocalisedName, TECable.class, BLOCK_MATERIAL);
+        super(ModObject.CABLE.name, TECable.class, BLOCK_MATERIAL);
         setHardness(BLOCK_HARDNESS);
         setStepSound(soundTypeStone);
         setBlockTextureName("ids/cable");

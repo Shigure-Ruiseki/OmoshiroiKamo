@@ -26,7 +26,7 @@ import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 public class BlockSolarCell extends BlockOK implements IMBBlock {
 
     protected BlockSolarCell() {
-        super(ModObject.blockSolarCell.unlocalisedName);
+        super(ModObject.SOLAR_CELL.name);
         hasSubtypes = true;
         isFullSize = false;
     }

@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFilterU
 public class ItemAdvancedFilterUpgrade extends ItemUpgrade<AdvancedFilterUpgradeWrapper> {
 
     public ItemAdvancedFilterUpgrade() {
-        super(ModObject.itemAdvancedFilterUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_ADVANCED_FILTER_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("backpack/advanced_filter_upgrade");
     }

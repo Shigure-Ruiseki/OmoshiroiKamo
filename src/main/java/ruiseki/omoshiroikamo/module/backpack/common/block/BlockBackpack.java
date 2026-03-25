@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -24,17 +26,21 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.gtnewhorizon.gtnhlib.blockstate.core.BlockPropertyTrait;
+import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
 import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lombok.Getter;
-import ruiseki.omoshiroikamo.core.block.AbstractBlock;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.core.client.render.JsonModelISBRH;
 import ruiseki.omoshiroikamo.core.client.render.player.IArmorRender;
 import ruiseki.omoshiroikamo.core.client.render.player.IBaubleRender;
 import ruiseki.omoshiroikamo.core.client.render.player.PlayerRenderContext;
+import ruiseki.omoshiroikamo.core.helper.DirectionHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockBauble;
@@ -42,14 +48,54 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.EntityBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.handler.BackpackWrapper;
 
-public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockColor {
+public class BlockBackpack extends BlockOK implements IBlockColor {
 
     @Getter
     private final int backpackSlots;
     @Getter
     private final int upgradeSlots;
 
-    protected BlockBackpack(String name, int backpackSlots, int upgradeSlots) {
+    @BlockPropertyReg
+    private final static DirectionBlockProperty property = new DirectionBlockProperty() {
+
+        @Override
+        public String getName() {
+            return "facing";
+        }
+
+        @Override
+        public boolean hasTrait(BlockPropertyTrait trait) {
+            return switch (trait) {
+                case SupportsWorld, WorldMutable, StackMutable, SupportsStacks -> true;
+                default -> false;
+            };
+        }
+
+        @Override
+        public ForgeDirection getValue(IBlockAccess world, int x, int y, int z) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof TEBackpack tile) {
+                return tile.getForward()
+                    .getOpposite();
+            }
+            return ForgeDirection.SOUTH;
+        }
+
+        @Override
+        public void setValue(World world, int x, int y, int z, ForgeDirection value) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof TEBackpack tile) {
+                tile.setOrientation(value, ForgeDirection.UP);
+            }
+        }
+
+        @Override
+        public ForgeDirection getValue(ItemStack stack) {
+            return ForgeDirection.SOUTH;
+        }
+    };
+
+    public BlockBackpack(String name, int backpackSlots, int upgradeSlots) {
         super(name, TEBackpack.class, Material.cloth);
         setStepSound(soundTypeCloth);
         setHardness(1f);
@@ -59,13 +105,26 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
         rotatable = true;
     }
 
-    public static BlockBackpack create(String name, int slots, int upgradeSlots) {
-        return new BlockBackpack(name, slots, upgradeSlots);
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+        super.onBlockPlacedBy(world, x, y, z, entity, stack);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEBackpack barrel) {
+            barrel.setOrientation(
+                DirectionHelpers.yawToDirection4(entity)
+                    .getOpposite(),
+                ForgeDirection.UP);
+        }
     }
 
     @Override
-    public int damageDropped(int meta) {
-        return 0;
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX,
+        float subY, float subZ) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TEBackpack barrel) {
+            return barrel.onBlockActivated(world, player, ForgeDirection.getOrientation(side), subX, subY, subZ);
+        }
+        return true;
     }
 
     @Override
@@ -108,7 +167,10 @@ public class BlockBackpack extends AbstractBlock<TEBackpack> implements IBlockCo
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        return new TEBackpack(backpackSlots, upgradeSlots);
+        TEBackpack tile = (TEBackpack) super.createTileEntity(world, metadata);
+        BackpackWrapper wrapper = new BackpackWrapper(null, backpackSlots, upgradeSlots);
+        tile.setWrapper(wrapper);
+        return tile;
     }
 
     @Override

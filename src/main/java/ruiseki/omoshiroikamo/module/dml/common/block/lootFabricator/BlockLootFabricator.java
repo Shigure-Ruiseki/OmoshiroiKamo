@@ -20,7 +20,7 @@ public class BlockLootFabricator extends AbstractBlock<TELootFabricator> {
     public static final IntegerBlockProperty CRAFTING_STATE = IntegerBlockProperty.meta("craftingState", 0b1100, 2);
 
     protected BlockLootFabricator() {
-        super(ModObject.blockLootFabricator.unlocalisedName, TELootFabricator.class);
+        super(ModObject.LOOT_FABRICATOR.name, TELootFabricator.class);
         isOpaque = false;
     }
 

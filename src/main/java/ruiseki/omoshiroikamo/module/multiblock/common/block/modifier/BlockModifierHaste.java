@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierHaste extends BlockModifier {
 
     protected BlockModifierHaste() {
-        super(ModObject.blockModifierHaste.unlocalisedName, "haste");
+        super(ModObject.blockModifierHaste.name, "haste");
         setTextureName("multiblock/modifier_haste");
     }
 

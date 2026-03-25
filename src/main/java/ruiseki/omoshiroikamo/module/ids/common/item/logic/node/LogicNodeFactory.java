@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKeyRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.node.operator.ILogicOperator;
@@ -20,7 +20,7 @@ public class LogicNodeFactory {
     public static ILogicNode readNodeFromItem(ItemStack stack) {
         if (stack == null) return null;
 
-        NBTTagCompound logic = ItemNBTUtils.getCompound(stack, "Logic", false);
+        NBTTagCompound logic = ItemNBTHelpers.getCompound(stack, "Logic", false);
         if (logic == null) return null;
 
         return LogicNodeFactory.fromNBT(logic);

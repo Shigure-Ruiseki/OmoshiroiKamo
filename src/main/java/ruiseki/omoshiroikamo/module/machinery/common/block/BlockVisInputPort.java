@@ -16,7 +16,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.input.TEVisInputPo
 public class BlockVisInputPort extends AbstractPortBlock<TEVisInputPort> {
 
     protected BlockVisInputPort() {
-        super(ModObject.blockModularVisInput.unlocalisedName, TEVisInputPort.class);
+        super(ModObject.blockModularVisInput.name, TEVisInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");

@@ -24,7 +24,7 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
 
     protected BlockQuantumResExtractor() {
         super(
-            ModObject.blockQuantumResExtractor.unlocalisedName,
+            ModObject.QUANTUM_RES_EXTRACTOR.name,
             TEQuantumResExtractorT1.class,
             TEQuantumResExtractorT2.class,
             TEQuantumResExtractorT3.class,

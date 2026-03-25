@@ -14,7 +14,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierAccuracy extends BlockModifier {
 
     protected BlockModifierAccuracy() {
-        super(ModObject.blockModifierAccuracy.unlocalisedName, "accuracy");
+        super(ModObject.blockModifierAccuracy.name, "accuracy");
         setTextureName("multiblock/modifier_accuracy");
     }
 

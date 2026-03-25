@@ -26,7 +26,7 @@ public class ItemChickenFood extends ItemOK {
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemChickenFood() {
-        super(ModObject.itemChickenFood);
+        super(ModObject.CHICKEN_FOOD);
         setHasSubtypes(true);
         setMaxStackSize(64);
     }
@@ -45,7 +45,7 @@ public class ItemChickenFood extends ItemOK {
         if (chicken == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LangHelpers.localize("item.chickenFood.name", LangHelpers.localize(chicken.getDisplayName()));
+        return LangHelpers.localize("item.chicken_food.name", LangHelpers.localize(chicken.getDisplayName()));
     }
 
     @Override

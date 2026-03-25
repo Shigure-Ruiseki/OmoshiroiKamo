@@ -22,7 +22,7 @@ import ruiseki.omoshiroikamo.module.cows.common.entity.EntityCowsCow;
 public class BlockStall extends AbstractBlock<TEStall> {
 
     protected BlockStall() {
-        super(ModObject.blockStall.unlocalisedName, TEStall.class, Material.rock);
+        super(ModObject.STALL.name, TEStall.class, Material.rock);
         isOpaque = false;
         rotatable = true;
     }

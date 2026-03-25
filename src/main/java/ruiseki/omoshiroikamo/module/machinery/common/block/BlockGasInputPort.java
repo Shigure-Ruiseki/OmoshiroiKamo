@@ -27,7 +27,7 @@ public class BlockGasInputPort extends AbstractPortBlock<TEGasInputPort> {
 
     protected BlockGasInputPort() {
         super(
-            ModObject.blockModularGasInput.unlocalisedName,
+            ModObject.blockModularGasInput.name,
             TEGasInputPortT1.class,
             TEGasInputPortT2.class,
             TEGasInputPortT3.class,

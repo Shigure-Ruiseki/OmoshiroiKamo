@@ -26,7 +26,7 @@ public class BlockVisBridge extends Block {
 
     public BlockVisBridge() {
         super(Material.iron);
-        setBlockName(ModObject.blockVisBridge.unlocalisedName);
+        setBlockName(ModObject.blockVisBridge.name);
         setHardness(5.0F);
         setResistance(10.0F);
         setStepSound(soundTypeMetal);
@@ -38,8 +38,8 @@ public class BlockVisBridge extends Block {
 
     public static BlockVisBridge create() {
         BlockVisBridge block = new BlockVisBridge();
-        GameRegistry.registerBlock(block, ModObject.blockVisBridge.unlocalisedName);
-        GameRegistry.registerTileEntity(TileVisBridge.class, ModObject.blockVisBridge.unlocalisedName + "_TE");
+        GameRegistry.registerBlock(block, ModObject.blockVisBridge.name);
+        GameRegistry.registerTileEntity(TileVisBridge.class, ModObject.blockVisBridge.name + "_TE");
         return block;
     }
 

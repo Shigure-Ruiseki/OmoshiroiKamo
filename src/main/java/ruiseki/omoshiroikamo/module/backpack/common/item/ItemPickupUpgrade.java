@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.PickupUpgradeWr
 public class ItemPickupUpgrade extends ItemUpgrade<PickupUpgradeWrapper> {
 
     public ItemPickupUpgrade() {
-        super(ModObject.itemPickupUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_PICKUP_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("backpack/pickup_upgrade");
     }

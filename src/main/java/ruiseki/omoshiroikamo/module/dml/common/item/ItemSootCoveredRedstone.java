@@ -27,7 +27,7 @@ import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 public class ItemSootCoveredRedstone extends ItemOK {
 
     public ItemSootCoveredRedstone() {
-        super(ModObject.itemSootCoveredRedstone.unlocalisedName);
+        super(ModObject.SOOT_COVERED_REDSTONE.name);
         setMaxStackSize(64);
         setTextureName("dml/soot_covered_redstone");
     }

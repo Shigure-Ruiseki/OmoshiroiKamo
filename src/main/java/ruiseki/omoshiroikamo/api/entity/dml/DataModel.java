@@ -12,7 +12,7 @@ import net.minecraft.util.ChatComponentText;
 import org.jetbrains.annotations.Nullable;
 
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
@@ -132,43 +132,43 @@ public class DataModel {
     }
 
     public static int getTier(ItemStack stack) {
-        return ItemNBTUtils.getInt(stack, TIER_TAG, 0);
+        return ItemNBTHelpers.getInt(stack, TIER_TAG, 0);
     }
 
     public static int getKillCount(ItemStack stack) {
-        return ItemNBTUtils.getInt(stack, KILL_COUNT_TAG, 0);
+        return ItemNBTHelpers.getInt(stack, KILL_COUNT_TAG, 0);
     }
 
     public static int getSimulationCount(ItemStack stack) {
-        return ItemNBTUtils.getInt(stack, SIMULATION_COUNT_TAG, 0);
+        return ItemNBTHelpers.getInt(stack, SIMULATION_COUNT_TAG, 0);
     }
 
     public static int getTotalKillCount(ItemStack stack) {
-        return ItemNBTUtils.getInt(stack, TOTAL_KILL_COUNT_TAG, 0);
+        return ItemNBTHelpers.getInt(stack, TOTAL_KILL_COUNT_TAG, 0);
     }
 
     public static int getTotalSimulationCount(ItemStack stack) {
-        return ItemNBTUtils.getInt(stack, TOTAL_SIMULATION_COUNT_TAG, 0);
+        return ItemNBTHelpers.getInt(stack, TOTAL_SIMULATION_COUNT_TAG, 0);
     }
 
     public static void setTier(int tier, ItemStack stack) {
-        ItemNBTUtils.setInt(stack, TIER_TAG, tier);
+        ItemNBTHelpers.setInt(stack, TIER_TAG, tier);
     }
 
     public static void setKillCount(int count, ItemStack stack) {
-        ItemNBTUtils.setInt(stack, KILL_COUNT_TAG, count);
+        ItemNBTHelpers.setInt(stack, KILL_COUNT_TAG, count);
     }
 
     public static void setSimulationCount(int count, ItemStack stack) {
-        ItemNBTUtils.setInt(stack, SIMULATION_COUNT_TAG, count);
+        ItemNBTHelpers.setInt(stack, SIMULATION_COUNT_TAG, count);
     }
 
     public static void setTotalKillCount(int count, ItemStack stack) {
-        ItemNBTUtils.setInt(stack, TOTAL_KILL_COUNT_TAG, count);
+        ItemNBTHelpers.setInt(stack, TOTAL_KILL_COUNT_TAG, count);
     }
 
     public static void setTotalSimulationCount(int count, ItemStack stack) {
-        ItemNBTUtils.setInt(stack, TOTAL_SIMULATION_COUNT_TAG, count);
+        ItemNBTHelpers.setInt(stack, TOTAL_SIMULATION_COUNT_TAG, count);
     }
 
     public static boolean hasExtraTooltip(ItemStack stack) {

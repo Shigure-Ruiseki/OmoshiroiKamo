@@ -24,7 +24,7 @@ public class BlockSolarArray extends AbstractTieredMBBlock<TESolarArray> {
 
     protected BlockSolarArray() {
         super(
-            ModObject.blockSolarArray.unlocalisedName,
+            ModObject.SOLAR_ARRAY.name,
             TESolarArrayT1.class,
             TESolarArrayT2.class,
             TESolarArrayT3.class,
