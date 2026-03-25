@@ -12,6 +12,11 @@ import ruiseki.omoshiroikamo.module.ids.common.item.part.tunnel.item.ItemIndex;
 
 public final class ItemStackKeyUtils {
 
+    public static void writeFull(PacketBuffer buf, ItemIndex idx, int version) throws IOException {
+        buf.writeInt(version);
+        writeMap(buf, idx.view());
+    }
+
     public static void writeDelta(PacketBuffer buf, ItemIndex oldIdx, ItemIndex newIdx, int version)
         throws IOException {
 
