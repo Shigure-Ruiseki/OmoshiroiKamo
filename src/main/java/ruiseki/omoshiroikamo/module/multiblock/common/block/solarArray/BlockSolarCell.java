@@ -51,23 +51,23 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
                     if (tintIndex == 0) {
                         switch (meta) {
                             case 0:
-                                return EnumDye.rgbToAbgr(138, 255, 250);
+                                return EnumDye.toRgb(138, 255, 250);
                             case 1:
-                                return EnumDye.rgbToAbgr(255, 179, 71);
+                                return EnumDye.toRgb(255, 179, 71);
                             case 2:
-                                return EnumDye.rgbToAbgr(11, 0, 51);
+                                return EnumDye.toRgb(11, 0, 51);
                             case 3:
-                                return EnumDye.rgbToAbgr(27, 255, 212);
+                                return EnumDye.toRgb(27, 255, 212);
                             case 4:
-                                return EnumDye.rgbToAbgr(28, 28, 28);
+                                return EnumDye.toRgb(28, 28, 28);
                             case 5:
-                                return EnumDye.rgbToAbgr(177, 156, 217);
+                                return EnumDye.toRgb(177, 156, 217);
                             default:
-                                return EnumDye.WHITE.dyeToAbgr();
+                                return EnumDye.WHITE.dyeToRgb();
                         }
                     }
                 }
-                return EnumDye.WHITE.dyeToAbgr();
+                return EnumDye.WHITE.dyeToRgb();
             }
 
             @Override
@@ -75,22 +75,22 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
                 if (tintIndex == 0 && stack != null) {
                     switch (stack.getItemDamage()) {
                         case 0:
-                            return EnumDye.rgbToAbgr(138, 255, 250);
+                            return EnumDye.toRgb(138, 255, 250);
                         case 1:
-                            return EnumDye.rgbToAbgr(255, 179, 71);
+                            return EnumDye.toRgb(255, 179, 71);
                         case 2:
-                            return EnumDye.rgbToAbgr(11, 0, 51);
+                            return EnumDye.toRgb(11, 0, 51);
                         case 3:
-                            return EnumDye.rgbToAbgr(27, 255, 212);
+                            return EnumDye.toRgb(27, 255, 212);
                         case 4:
-                            return EnumDye.rgbToAbgr(28, 28, 28);
+                            return EnumDye.toRgb(28, 28, 28);
                         case 5:
-                            return EnumDye.rgbToAbgr(177, 156, 217);
+                            return EnumDye.toRgb(177, 156, 217);
                         default:
-                            return EnumDye.WHITE.dyeToAbgr();
+                            return EnumDye.WHITE.dyeToRgb();
                     }
                 }
-                return EnumDye.WHITE.dyeToAbgr();
+                return EnumDye.WHITE.dyeToRgb();
             }
         }, this);
     }
