@@ -11,6 +11,7 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.core.command.utils.CommandUtils;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.module.backpack.common.command.CommandBackpack;
 
 /**
  * Main command handler for /ok
@@ -21,7 +22,7 @@ public class CommandOK extends CommandMod {
     public CommandOK(ModBase mod, Map<String, ICommand> subCommands) {
         super(mod, subCommands);
         addSubcommands(CommandUtils.NAME, new CommandUtils(mod));
-        addSubcommands("backpack", new ruiseki.omoshiroikamo.module.backpack.common.command.CommandBackpack(mod));
+        addSubcommands("backpack", new CommandBackpack(mod));
     }
 
     @Override
