@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import com.gtnewhorizon.gtnhlib.client.model.color.BlockColor;
+import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +32,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
  * Metadata corresponds to Tier (0: Basic, 1: Advanced, 2: Elite, 3: Ultimate)
  * TODO: Add crafting recipe
  */
-public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
+public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IBlockColor {
 
     private static final int TIERS = 16;
 
@@ -61,9 +62,18 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint {
         return new BlockMachineCasing(designName);
     }
 
+    public String getDesignName() {
+        return designName;
+    }
+
     @Override
     protected void registerBlockColor() {
         BlockColor.registerBlockColors(this, this);
+    }
+
+    @Override
+    public int getRenderType() {
+        return AbstractPortBlock.portRendererId;
     }
 
     @Override
