@@ -11,7 +11,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierPiezo extends BlockModifier {
 
     protected BlockModifierPiezo() {
-        super(ModObject.blockModifierPiezo.name, "piezo");
+        super(ModObject.MODIFIER_PIEZO.name, "piezo");
         setTextureName("multiblock/modifier_piezo");
     }
 

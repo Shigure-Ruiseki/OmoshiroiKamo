@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierNightVision extends BlockModifier {
 
     protected BlockModifierNightVision() {
-        super(ModObject.blockModifierNightVision.name, "night_vision");
+        super(ModObject.MODIFIER_NIGHT_VISION.name, "night_vision");
         setTextureName("multiblock/modifier_night_vision");
     }
 

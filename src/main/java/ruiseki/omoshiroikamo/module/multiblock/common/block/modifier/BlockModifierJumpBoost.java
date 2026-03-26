@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierJumpBoost extends BlockModifier {
 
     protected BlockModifierJumpBoost() {
-        super(ModObject.blockModifierJumpBoost.name, "jump_boost");
+        super(ModObject.MODIFIER_JUMP_BOOST.name, "jump_boost");
         setTextureName("multiblock/modifier_jump_boost");
     }
 

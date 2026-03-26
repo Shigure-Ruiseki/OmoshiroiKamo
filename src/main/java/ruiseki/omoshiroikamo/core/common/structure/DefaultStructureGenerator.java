@@ -217,9 +217,10 @@ public class DefaultStructureGenerator {
 
             // Modifiers (multiple options)
             List<String> modBlocks = new ArrayList<>();
-            modBlocks.add("omoshiroikamo:modifierNull:0");
-            modBlocks.add("omoshiroikamo:modifierAccuracy:0");
-            modBlocks.add("omoshiroikamo:modifierSpeed:0");
+            modBlocks.add("omoshiroikamo:modifier_null:0");
+            modBlocks.add("omoshiroikamo:modifier_accuracy:0");
+            modBlocks.add("omoshiroikamo:modifier_speed:0");
+            modBlocks.add("omoshiroikamo:modifier_luck:0");
             mappings.put('A', new BlockMapping('A', modBlocks));
 
         } else if ("solarArray".equals(machineType)) {
@@ -235,8 +236,8 @@ public class DefaultStructureGenerator {
 
             // Modifiers
             List<String> modBlocks = new ArrayList<>();
-            modBlocks.add("omoshiroikamo:modifierNull:0");
-            modBlocks.add("omoshiroikamo:modifierPiezo:0");
+            modBlocks.add("omoshiroikamo:modifier_null:0");
+            modBlocks.add("omoshiroikamo:modifier_piezo:0");
             mappings.put('A', new BlockMapping('A', modBlocks));
 
         } else if ("beacon".equals(machineType)) {
@@ -248,10 +249,10 @@ public class DefaultStructureGenerator {
 
             // Beacon modifiers (all types)
             List<String> modBlocks = new ArrayList<>();
-            String[] beaconModifiers = { "modifierNull", "modifierFireResistance", "modifierFlight",
-                "modifierNightVision", "modifierWaterBreathing", "modifierStrength", "modifierHaste",
-                "modifierRegeneration", "modifierSaturation", "modifierResistance", "modifierJumpBoost",
-                "modifierSpeed" };
+            String[] beaconModifiers = { "modifier_null", "modifier_fire_resistance", "modifier_flight",
+                "modifier_night_vision", "modifier_water_breathing", "modifier_strength", "modifier_haste",
+                "modifier_regeneration", "modifier_saturation", "modifier_resistance", "modifier_jump_boost",
+                "modifier_speed" };
             for (String mod : beaconModifiers) {
                 modBlocks.add("omoshiroikamo:" + mod + ":0");
             }

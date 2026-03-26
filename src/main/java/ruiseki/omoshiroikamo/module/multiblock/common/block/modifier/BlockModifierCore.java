@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 public class BlockModifierCore extends BlockModifier {
 
     protected BlockModifierCore() {
-        super(ModObject.blockModifierNull.name, "");
+        super(ModObject.MODIFIER_NULL.name, "");
         setTextureName("multiblock/modifier_core");
     }
 

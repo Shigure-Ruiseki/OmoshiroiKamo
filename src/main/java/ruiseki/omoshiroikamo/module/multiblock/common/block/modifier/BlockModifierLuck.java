@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.multiblock.common.block.modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
@@ -11,7 +12,7 @@ import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 public class BlockModifierLuck extends BlockModifier {
 
     protected BlockModifierLuck() {
-        super("modifierLuck", "luck");
+        super(ModObject.MODIFIER_LUCK.name, "luck");
         setTextureName("multiblock/modifier_luck");
     }
 

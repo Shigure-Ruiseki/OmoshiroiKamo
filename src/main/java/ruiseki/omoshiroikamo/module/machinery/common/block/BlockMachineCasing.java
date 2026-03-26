@@ -16,6 +16,7 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
@@ -40,7 +41,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
     private final IIcon[] tierIcons = new IIcon[TIERS];
 
     protected BlockMachineCasing() {
-        super("modularMachineCasing");
+        super(ModObject.MODULAR_MACHINE_CONTROLLER.name);
         setHardness(5.0F);
         setResistance(10.0F);
         this.hasSubtypes = false;

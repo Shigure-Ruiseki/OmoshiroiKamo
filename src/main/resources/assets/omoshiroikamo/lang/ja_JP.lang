@@ -72,7 +72,7 @@ gui.sort_order.desc=降順
 
 # Items
 item.wrench.name=レンチ
-item.structureWand.name=ストラクチャーワンド
+item.structure_wand.name=ストラクチャーワンド
 
 
 # Tooltips
@@ -1006,21 +1006,21 @@ tile.block_crystal.tier_6.name=ネビュラブロック
 tile.block_crystal.tier_7.name=プリズマティックブロック
 tile.block_crystal.tier_8.name=セレスティアルブロック
 
-tile.modifierNull.name=空のモディファイア
-tile.modifierAccuracy.name=精度モディファイア
-tile.modifierSpeed.name=スピードモディファイア
-tile.modifierLuck.name=ラックモディファイア
-tile.modifierPiezo.name=ピエゾモディファイア
-tile.modifierFlight.name=飛行モディファイア
-tile.modifierNightVision.name=暗視モディファイア
-tile.modifierHaste.name=採掘速度上昇モディファイア
-tile.modifierStrength.name=攻撃力上昇モディファイア
-tile.modifierWaterBreathing.name=水中呼吸モディファイア
-tile.modifierRegeneration.name=再生モディファイア
-tile.modifierSaturation.name=満腹モディファイア
-tile.modifierResistance.name=耐性モディファイア
-tile.modifierJumpBoost.name=跳躍力上昇モディファイア
-tile.modifierFireResistance.name=火炎耐性モディファイア
+tile.modifier_null.name=空のモディファイア
+tile.modifier_accuracy.name=精度モディファイア
+tile.modifier_speed.name=スピードモディファイア
+tile.modifier_luck.name=ラックモディファイア
+tile.modifier_piezo.name=ピエゾモディファイア
+tile.modifier_flight.name=飛行モディファイア
+tile.modifier_night_vision.name=暗視モディファイア
+tile.modifier_haste.name=採掘速度上昇モディファイア
+tile.modifier_strength.name=攻撃力上昇モディファイア
+tile.modifier_water_breathing.name=水中呼吸モディファイア
+tile.modifier_regeneration.name=再生モディファイア
+tile.modifier_saturation.name=満腹モディファイア
+tile.modifier_resistance.name=耐性モディファイア
+tile.modifier_jump_boost.name=跳躍力上昇モディファイア
+tile.modifier_fire_resistance.name=火炎耐性モディファイア
 
 tile.laser_core.name=レーザーコア
 tile.lens.tier_1.name=クリアレンズ
@@ -1259,9 +1259,9 @@ omoshiroikamo.nei.tier_format=Tier %d
 
 
 # Tiles
-tile.modularMachineCasing.name=モジュラーマシンケーシング
-tile.modularMachineController.name=モジュラーマシンコントローラー
-tile.visBridge.name=ビスブリッジ
+tile.modular_machine_casing.name=モジュラーマシンケーシング
+tile.modular_machine_controller.name=モジュラーマシンコントローラー
+tile.vis_bridge.name=ビスブリッジ
 
 
 # Machinery Casing Dynamic Localization
@@ -1305,56 +1305,56 @@ item.gear_vitarium.name=ヴィータリウム歯車
 
 
 # Item Input Port
-tile.modularItemInput.name=アイテム搬入口 ティア%d
+tile.modular_item_input.name=アイテム搬入口 ティア%d
 
 
 # Item Output Port
-tile.modularItemOutput.name=アイテム搬出口 ティア%d
+tile.modular_item_output.name=アイテム搬出口 ティア%d
 
 
 # Fluid Input Port
-tile.modularFluidInput.name=液体搬入口 ティア%d
+tile.modular_fluid_input.name=液体搬入口 ティア%d
 
 
 # Fluid Output Port
-tile.modularFluidOutput.name=液体搬出口 ティア%d
+tile.modular_fluid_output.name=液体搬出口 ティア%d
 
 
 # Energy Input Port
-tile.modularEnergyInput.name=エネルギー搬入口 ティア%d
+tile.modular_energy_input.name=エネルギー搬入口 ティア%d
 
 
 # Energy Output Port
-tile.modularEnergyOutput.name=エネルギー搬出口 ティア%d
+tile.modular_energy_output.name=エネルギー搬出口 ティア%d
 
 
 # Gas Input Port
-tile.modularGasInput.name=ガス搬入口 ティア%d
+tile.modular_gas_input.name=ガス搬入口 ティア%d
 
 
 # Gas Output Port
-tile.modularGasOutput.name=ガス搬出口 ティア%d
+tile.modular_gas_output.name=ガス搬出口 ティア%d
 
 
 # Mana Ports
-tile.modularManaInput.name=マナ搬入口 ティア%d
-tile.modularManaOutput.name=マナ搬出口 ティア%d
+tile.modular_mana_input.name=マナ搬入口 ティア%d
+tile.modular_mana_output.name=マナ搬出口 ティア%d
 
 
 # Vis Ports
-tile.modularVisInput.name=ビス搬入口 ティア%d
-tile.modularVisOutput.name=ビス搬出口 ティア%d
+tile.modular_vis_input.name=ビス搬入口 ティア%d
+tile.modular_vis_output.name=ビス搬出口 ティア%d
 
 
 # Essentia Ports
-tile.modularEssentiaInput.name=エッセンシア搬入口 ティア%d
-tile.modularEssentiaOutput.name=エッセンシア搬出口 ティア%d
+tile.modular_essentia_input.name=エッセンシア搬入口 ティア%d
+tile.modular_essentia_output.name=エッセンシア搬出口 ティア%d
 
 
 # ME Ports
-tile.modularItemOutputME.me.name=MEアイテム搬出口
-tile.modularFluidOutputME.me.name=ME液体搬出口
-tile.modularEssentiaInputME.me.name=MEエッセンシア搬入口
+tile.modular_item_output_me.me.name=MEアイテム搬出口
+tile.modular_fluid_output_me.me.name=ME液体搬出口
+tile.modular_essentia_input_me.me.name=MEエッセンシア搬入口
 waila.me.online=装置はオンラインです
 waila.me.no_channel=装置でチャンネルが見つかりません
 waila.me.offline=装置はオフラインです

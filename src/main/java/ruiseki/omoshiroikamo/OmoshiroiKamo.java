@@ -59,6 +59,7 @@ import ruiseki.omoshiroikamo.module.ids.IDsModule;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsBlocks;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.machinery.MachineryModule;
+import ruiseki.omoshiroikamo.module.machinery.common.init.MachineryBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.MultiBlockModule;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
@@ -289,9 +290,46 @@ public class OmoshiroiKamo extends ModBase {
         REMAPS.put("omoshiroikamo:quantumOreExtractor", MultiBlockBlocks.QUANTUM_ORE_EXTRACTOR.getBlock());
         REMAPS.put("omoshiroikamo:quantumResExtractor", MultiBlockBlocks.QUANTUM_RES_EXTRACTOR.getBlock());
         REMAPS.put("omoshiroikamo:quantumBeacon", MultiBlockBlocks.QUANTUM_BEACON.getBlock());
+        REMAPS.put("omoshiroikamo:modifierNull", MultiBlockBlocks.MODIFIER_NULL.getBlock());
+        REMAPS.put("omoshiroikamo:modifierAccuracy", MultiBlockBlocks.MODIFIER_ACCURACY.getBlock());
+        REMAPS.put("omoshiroikamo:modifierPiezo", MultiBlockBlocks.MODIFIER_PIEZO.getBlock());
+        REMAPS.put("omoshiroikamo:modifierSpeed", MultiBlockBlocks.MODIFIER_SPEED.getBlock());
+        REMAPS.put("omoshiroikamo:modifierFlight", MultiBlockBlocks.MODIFIER_FLIGHT.getBlock());
+        REMAPS.put("omoshiroikamo:modifierNightVision", MultiBlockBlocks.MODIFIER_NIGHT_VISION.getBlock());
+        REMAPS.put("omoshiroikamo:modifierWaterBreathing", MultiBlockBlocks.MODIFIER_WATER_BREATHING.getBlock());
+        REMAPS.put("omoshiroikamo:modifierStrength", MultiBlockBlocks.MODIFIER_STRENGTH.getBlock());
+        REMAPS.put("omoshiroikamo:modifierHaste", MultiBlockBlocks.MODIFIER_HASTE.getBlock());
+        REMAPS.put("omoshiroikamo:modifierRegeneration", MultiBlockBlocks.MODIFIER_REGENERATION.getBlock());
+        REMAPS.put("omoshiroikamo:modifierSaturation", MultiBlockBlocks.MODIFIER_SATURATION.getBlock());
+        REMAPS.put("omoshiroikamo:modifierResistance", MultiBlockBlocks.MODIFIER_RESISTANCE.getBlock());
+        REMAPS.put("omoshiroikamo:modifierJumpBoost", MultiBlockBlocks.MODIFIER_JUMP_BOOST.getBlock());
+        REMAPS.put("omoshiroikamo:modifierFireResistance", MultiBlockBlocks.MODIFIER_FIRE_RESISTANCE.getBlock());
+        REMAPS.put("omoshiroikamo:modifierLuck", MultiBlockBlocks.MODIFIER_LUCK.getBlock());
 
         REMAPS.put("omoshiroikamo:stabilizedEnderPear", MultiBlockItems.STABILIZED_ENDER_PEAR.getItem());
         REMAPS.put("omoshiroikamo:photovoltaicCell", MultiBlockItems.PHOTOVOLTAIC_CELL.getItem());
+
+        REMAPS.put("omoshiroikamo:visBridge", MachineryBlocks.VIS_BRIDGE.getBlock());
+        REMAPS.put("omoshiroikamo:modularMachineCasing", MachineryBlocks.MACHINE_CASING.getBlock());
+        REMAPS.put("omoshiroikamo:modularMachineController", MachineryBlocks.MACHINE_CONTROLLER.getBlock());
+        REMAPS.put("omoshiroikamo:modularItemInput", MachineryBlocks.ITEM_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularItemOutput", MachineryBlocks.ITEM_OUTPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularItemOutputME", MachineryBlocks.ITEM_OUTPUT_PORT_ME.getBlock());
+        REMAPS.put("omoshiroikamo:modularEnergyInput", MachineryBlocks.ENERGY_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularEnergyOutput", MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularFluidInput", MachineryBlocks.FLUID_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularFluidOutput", MachineryBlocks.FLUID_OUTPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularFluidOutputME", MachineryBlocks.FLUID_OUTPUT_PORT_ME.getBlock());
+        REMAPS.put("omoshiroikamo:modularManaInput", MachineryBlocks.MANA_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularManaOutput", MachineryBlocks.MANA_OUTPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularGasInput", MachineryBlocks.GAS_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularGasOutput", MachineryBlocks.GAS_OUTPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularEssentiaInput", MachineryBlocks.ESSENTIA_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularEssentiaOutput", MachineryBlocks.ESSENTIA_OUTPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularEssentiaInputME", MachineryBlocks.ESSENTIA_INPUT_PORT_ME.getBlock());
+        REMAPS.put("omoshiroikamo:modularVisInput", MachineryBlocks.VIS_INPUT_PORT.getBlock());
+        REMAPS.put("omoshiroikamo:modularVisOutput", MachineryBlocks.VIS_OUTPUT_PORT.getBlock());
+
     }
 
     @Mod.EventHandler

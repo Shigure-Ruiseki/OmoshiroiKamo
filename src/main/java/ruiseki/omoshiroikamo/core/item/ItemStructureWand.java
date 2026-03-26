@@ -39,7 +39,7 @@ public class ItemStructureWand extends ItemOK {
     private static final String NBT_DIMENSION = "dimension";
 
     public ItemStructureWand() {
-        super(ModObject.itemStructureWand);
+        super(ModObject.STRUCTURE_WAND);
         setMaxStackSize(1);
     }
 

@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierSaturation extends BlockModifier {
 
     protected BlockModifierSaturation() {
-        super(ModObject.blockModifierSaturation.name, "saturation");
+        super(ModObject.MODIFIER_SATURATION.name, "saturation");
         setTextureName("multiblock/modifier_saturation");
     }
 

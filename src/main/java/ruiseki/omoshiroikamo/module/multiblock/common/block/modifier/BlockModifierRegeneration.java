@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierRegeneration extends BlockModifier {
 
     protected BlockModifierRegeneration() {
-        super(ModObject.blockModifierRegeneration.name, "regen");
+        super(ModObject.MODIFIER_REGENERATION.name, "regen");
         setTextureName("multiblock/modifier_regen");
     }
 

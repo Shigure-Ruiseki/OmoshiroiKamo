@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierFlight extends BlockModifier {
 
     protected BlockModifierFlight() {
-        super(ModObject.blockModifierFlight.name, "flight");
+        super(ModObject.MODIFIER_FLIGHT.name, "flight");
         setTextureName("multiblock/modifier_flight");
     }
 

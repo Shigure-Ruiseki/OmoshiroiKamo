@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierWaterBreathing extends BlockModifier {
 
     protected BlockModifierWaterBreathing() {
-        super(ModObject.blockModifierWaterBreathing.name, "water_breathing");
+        super(ModObject.MODIFIER_WATER_BREATHING.name, "water_breathing");
         setTextureName("multiblock/modifier_water_breathing");
     }
 

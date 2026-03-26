@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 public class BlockModifierStrength extends BlockModifier {
 
     protected BlockModifierStrength() {
-        super(ModObject.blockModifierStrength.name, "strength");
+        super(ModObject.MODIFIER_STRENGTH.name, "strength");
         setTextureName("multiblock/modifier_strength");
     }
 
