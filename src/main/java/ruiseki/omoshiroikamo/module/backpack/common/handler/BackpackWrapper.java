@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,14 +26,15 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.IItemHandlerModifiable;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
+import baubles.api.BaublesApi;
 import lombok.Getter;
 import lombok.Setter;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
-import ruiseki.omoshiroikamo.core.color.ITintable;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
+import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
@@ -52,10 +54,10 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperF
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
 
-public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
+public class BackpackWrapper implements IItemHandlerModifiable {
 
     @Getter
-    private final ItemStack backpack;
+    private ItemStack backpack;
     @Getter
     private final BackpackItemStackHandler backpackHandler;
     @Getter
@@ -119,19 +121,31 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
     @Setter
     private int upgradeSlots;
 
+    @Getter
+    @Setter
     private int mainColor;
+    @Getter
+    @Setter
     private int accentColor;
-
     @Getter
     public static final String MAIN_COLOR = "MainColor";
     @Getter
     public static final String ACCENT_COLOR = "AccentColor";
+    public boolean isDirty;
     @Getter
     @Setter
-    public Integer slotIndex;
+    protected int slotIndex = -1;
     @Getter
     @Setter
-    public InventoryType type;
+    protected InventoryType type = null;
+
+    public void markDirty() {
+        this.isDirty = true;
+    }
+
+    public void clearDirty() {
+        this.isDirty = false;
+    }
 
     public BackpackWrapper() {
         this(null, 120, 7);
@@ -166,7 +180,7 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
-                writeToItem();
+                markDirty();
             }
         };
 
@@ -175,7 +189,7 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
-                writeToItem();
+                markDirty();
             }
         };
 
@@ -336,22 +350,6 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
 
     public void setSlotLocked(int slotIndex, boolean locked) {
         backpackHandler.sortLockedSlots.set(slotIndex, locked);
-    }
-
-    @Override
-    public int getMainColor() {
-        return mainColor;
-    }
-
-    @Override
-    public int getAccentColor() {
-        return accentColor;
-    }
-
-    @Override
-    public void setColors(int mainColor, int accentColor) {
-        this.mainColor = mainColor;
-        this.accentColor = accentColor;
     }
 
     // ---------- UPGRADE ----------
@@ -567,16 +565,57 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
 
     // ---------- ITEM STACK ----------
     public NBTTagCompound getTagCompound() {
+        if (backpack == null) {
+            return null;
+        }
         return backpack.getTagCompound();
     }
 
-    public void writeToItem() {
-        if (backpack == null) {
-            return;
+    public ItemStack findActualStack(EntityPlayer player) {
+        if (player == null || uuid == null) return backpack;
+
+        // Check held item first (fastest)
+        ItemStack held = player.getHeldItem();
+        if (isSameBackpack(held)) return held;
+
+        // Check player inventory
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            ItemStack stack = player.inventory.getStackInSlot(i);
+            if (isSameBackpack(stack)) return stack;
         }
-        NBTTagCompound tag = ItemNBTHelpers.getNBT(backpack);
+
+        // Check Baubles if loaded
+        if (LibMods.Baubles.isLoaded()) {
+            IInventory baubles = BaublesApi.getBaubles(player);
+            if (baubles != null) {
+                for (int i = 0; i < baubles.getSizeInventory(); i++) {
+                    ItemStack stack = baubles.getStackInSlot(i);
+                    if (isSameBackpack(stack)) return stack;
+                }
+            }
+        }
+        return backpack; // Fallback
+    }
+
+    private boolean isSameBackpack(ItemStack stack) {
+        if (stack == null || !(stack.getItem() instanceof BlockBackpack.ItemBackpack)) return false;
+        NBTTagCompound tag = stack.getTagCompound();
+        return tag != null && uuid.equals(tag.getString(UUID_TAG));
+    }
+
+    public void writeToItem() {
+        if (backpack == null) return;
+        NBTTagCompound tag = backpack.getTagCompound();
+        if (tag == null) {
+            tag = new NBTTagCompound();
+            backpack.setTagCompound(tag);
+        }
         writeToNBT(tag);
-        backpack.setTagCompound(tag);
+    }
+
+    public void writeToItem(EntityPlayer player) {
+        this.backpack = findActualStack(player);
+        writeToItem();
     }
 
     public void readFromItem() {
@@ -695,6 +734,10 @@ public class BackpackWrapper implements IItemHandlerModifiable, ITintable {
 
         if (tag.hasKey(UUID_TAG)) {
             uuid = tag.getString(UUID_TAG);
+        } else {
+            uuid = UUID.randomUUID()
+                .toString();
+            markDirty();
         }
 
         if (tag.hasKey("display", 10)) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -68,6 +69,7 @@ public abstract class BaseCowHandler {
         File configFile = new File(configDir, configFileName);
         if (!configFile.exists()) {
             List<CowsRegistryItem> defaultCows = registerCows();
+            Logger.info("Generated {} default cows for {}", defaultCows.size(), configFileName);
             createDefaultConfig(configFile, defaultCows);
         }
 
@@ -81,7 +83,9 @@ public abstract class BaseCowHandler {
         try {
             CowJsonReader reader = new CowJsonReader(configFile);
             List<CowMaterial> materials = reader.read();
-            if (materials == null) {
+            Logger.info("Read {} materials from {}", materials != null ? materials.size() : 0, configFileName);
+
+            if (materials == null || materials.isEmpty()) {
                 Logger.info("{} is empty or invalid.", configFileName);
                 return allCows;
             }
@@ -136,6 +140,11 @@ public abstract class BaseCowHandler {
                         if (data.lang != null) {
                             String langKey = "entity." + data.name + ".name";
                             JsonUtils.registerLang(langKey, data.lang);
+
+                            // Also set lang on the cow object so getLang() returns the correct data
+                            for (Map.Entry<String, String> entry : data.lang.entrySet()) {
+                                cow.setLang(entry.getKey(), entry.getValue());
+                            }
                         }
 
                         ModCompatInformation.addInformation(

@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.parser.OutputParserRegistry;
 
@@ -52,12 +53,14 @@ public class BonusOutputDecorator extends RecipeDecorator {
 
             if (rand.nextFloat() < finalChance) {
                 for (IRecipeOutput bonus : bonusOutputs) {
-                    List<IModularPort> filtered = filterByType(outputPorts, bonus.getPortType());
-                    // We don't block recipe if bonus fails (e.g. port full), we just attempt to
-                    // apply it.
-                    // This matches "bonus" behavior.
-                    if (bonus.checkCapacity(filtered)) {
-                        bonus.apply(filtered);
+                    if (bonus instanceof IModularRecipeOutput modularBonus) {
+                        List<IModularPort> filtered = filterByType(outputPorts, modularBonus.getPortType());
+                        // We don't block recipe if bonus fails (e.g. port full), we just attempt to
+                        // apply it.
+                        // This matches "bonus" behavior.
+                        if (modularBonus.checkCapacity(filtered)) {
+                            modularBonus.apply(filtered);
+                        }
                     }
                 }
             }

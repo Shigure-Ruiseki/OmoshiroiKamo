@@ -7,6 +7,8 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -21,6 +23,7 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
@@ -28,22 +31,33 @@ import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 /**
  * Recipe output that changes blocks at structure positions.
  * Can optionally set TileEntity NBT data.
  */
-public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
+public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeOutput {
 
-    private final char symbol;
-    private final String block; // The block to set (New / Result)
-    private final String replace; // The block to find (Old / Filter)
-    private final int amount;
-    private final boolean optional;
+    private char symbol;
+    private String block; // The block to set (New / Result)
+    private String replace; // The block to find (Old / Filter)
+    private int amount;
+    private boolean optional;
     private final Map<String, IExpression> dynamicNbt; // Legacy NBT system
     private List<IExpression> nbtExpressions; // New NBT system
     private NBTListOperation nbtListOp; // New NBT list system
+    private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
+    private int interval = 0;
+    private int index = -1;
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 
     public BlockOutput(char symbol, String block, String replace, int amount, boolean optional,
         Map<String, IExpression> dynamicNbt) {
@@ -53,6 +67,13 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
         this.amount = amount;
         this.optional = optional;
         this.dynamicNbt = dynamicNbt != null ? dynamicNbt : new HashMap<>();
+    }
+
+    /**
+     * NBT reconstruction constructor
+     */
+    public BlockOutput() {
+        this('\0', null, null, 0, false, null);
     }
 
     public BlockOutput(char symbol, String block, String replace, int amount) {
@@ -135,6 +156,13 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
         for (ChunkCoordinates pos : positions) {
             if (remaining <= 0) break;
 
+            if (index != -1) {
+                TileEntity te = world.getTileEntity(pos.posX, pos.posY, pos.posZ);
+                if (te instanceof IModularPort mp && mp.getAssignedIndex() != index) {
+                    continue;
+                }
+            }
+
             Block currentBlock = world.getBlock(pos.posX, pos.posY, pos.posZ);
             int meta = world.getBlockMetadata(pos.posX, pos.posY, pos.posZ);
             String blockId = getBlockId(currentBlock, meta);
@@ -173,6 +201,20 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
     }
 
     @Override
+    public boolean isPerTick() {
+        return interval > 0;
+    }
+
+    @Override
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    @Override
     public IRecipeOutput copy() {
         return copy(1);
     }
@@ -182,20 +224,79 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
         BlockOutput result = new BlockOutput(symbol, block, replace, amount * multiplier, optional, dynamicNbt);
         result.nbtExpressions = this.nbtExpressions;
         result.nbtListOp = this.nbtListOp;
+        result.nbtMatchMode = this.nbtMatchMode;
         return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "block");
         nbt.setString("symbol", String.valueOf(symbol));
         if (block != null) nbt.setString("block", block);
         if (replace != null) nbt.setString("replace", replace);
         nbt.setInteger("amount", amount);
         nbt.setBoolean("optional", optional);
+        nbt.setInteger("interval", interval);
+
+        // Save NBTMatchMode
+        nbt.setString("nbtMatchMode", nbtMatchMode.name());
+
+        // Save NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            NBTTagList exprList = new NBTTagList();
+            for (IExpression expr : nbtExpressions) {
+                exprList.appendTag(new NBTTagString(expr.toString()));
+            }
+            nbt.setTag("nbtExpressions", exprList);
+        }
+
+        // Save NBT list operation
+        if (nbtListOp != null) {
+            NBTTagCompound opTag = new NBTTagCompound();
+            nbtListOp.writeToNBT(opTag);
+            nbt.setTag("nbtListOp", opTag);
+        }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {}
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
+        String s = nbt.getString("symbol");
+        this.symbol = (s != null && !s.isEmpty()) ? s.charAt(0) : 0;
+        this.block = nbt.hasKey("block") ? nbt.getString("block") : null;
+        this.replace = nbt.hasKey("replace") ? nbt.getString("replace") : null;
+        this.amount = nbt.getInteger("amount");
+        this.optional = nbt.getBoolean("optional");
+
+        // Restore NBTMatchMode
+        if (nbt.hasKey("nbtMatchMode")) {
+            try {
+                this.nbtMatchMode = NBTMatchMode.valueOf(nbt.getString("nbtMatchMode"));
+            } catch (IllegalArgumentException e) {
+                this.nbtMatchMode = NBTMatchMode.IGNORE;
+                Logger.warn("Invalid NBTMatchMode in NBT, defaulting to IGNORE");
+            }
+        }
+
+        // Restore NBT expressions
+        if (nbt.hasKey("nbtExpressions")) {
+            NBTTagList exprList = nbt.getTagList("nbtExpressions", 8);
+            this.nbtExpressions = new ArrayList<>();
+            for (int i = 0; i < exprList.tagCount(); i++) {
+                String exprStr = exprList.getStringTagAt(i);
+                try {
+                    this.nbtExpressions.add(ExpressionParser.parseExpression(exprStr));
+                } catch (Exception e) {
+                    Logger.error("Failed to restore NBT expression: " + exprStr);
+                }
+            }
+        }
+
+        // Restore NBT list operation
+        if (nbt.hasKey("nbtListOp")) {
+            this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
+        }
+    }
 
     @Override
     public long getRequiredAmount() {
@@ -204,7 +305,18 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
-        // BlockOutput is immutable, read is handled by fromJson()
+        readPerTick(json, 0);
+        if (json.has("index")) {
+            this.index = json.get("index")
+                .getAsInt();
+        }
+
+        // Read NBTMatchMode
+        if (json.has("nbtmatch")) {
+            String modeStr = json.get("nbtmatch")
+                .getAsString();
+            this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
+        }
     }
 
     @Override
@@ -215,6 +327,12 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
         if (replace != null) json.addProperty("replace", replace);
         json.addProperty("amount", amount);
         if (optional) json.addProperty("optional", true);
+        if (index != -1) json.addProperty("index", index);
+
+        // Write NBTMatchMode (only if not default IGNORE)
+        if (nbtMatchMode != NBTMatchMode.IGNORE) {
+            json.addProperty("nbtmatch", nbtMatchMode.toJsonString());
+        }
 
         // Write new NBT system (preferred)
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
@@ -373,6 +491,11 @@ public class BlockOutput extends AbstractJsonMaterial implements IRecipeOutput {
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.BLOCK_OUTPUT_FULL;
     }
 
     /**

@@ -5,6 +5,8 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
+import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 
 /**
@@ -15,7 +17,7 @@ public abstract class AbstractRecipeProcess {
 
     protected IModularRecipe currentRecipe;
     protected String currentRecipeName;
-    protected int progress;
+    protected long progress;
     protected int maxProgress;
     protected boolean running;
     protected boolean waitingForOutput;
@@ -28,6 +30,11 @@ public abstract class AbstractRecipeProcess {
 
     // Cached outputs to be produced upon completion
     protected final List<IRecipeOutput> cachedOutputs = new ArrayList<>();
+
+    protected List<IModularRecipeInput> perTickInputs = new ArrayList<>();
+    protected List<IModularRecipeOutput> perTickOutputs = new ArrayList<>();
+
+    public AbstractRecipeProcess() {}
 
     public void start(IModularRecipe recipe, List<IModularPort> inputPorts) {
         this.currentRecipe = recipe;
@@ -59,6 +66,20 @@ public abstract class AbstractRecipeProcess {
             return;
         }
 
+        // Process generalized per-tick inputs
+        for (IModularRecipeInput input : perTickInputs) {
+            if (input.getInterval() > 0 && progress % input.getInterval() == 0) {
+                input.process(inputPorts, 1, false);
+            }
+        }
+
+        // Process generalized per-tick outputs
+        for (IModularRecipeOutput output : perTickOutputs) {
+            if (output.getInterval() > 0 && progress % output.getInterval() == 0) {
+                output.apply(outputPorts, 1);
+            }
+        }
+
         // 2. Continuous condition check
         if (!checkContinuousConditions(context)) {
             abort();
@@ -86,7 +107,7 @@ public abstract class AbstractRecipeProcess {
         return currentRecipe.isConditionMet(context);
     }
 
-    protected void onProgressUpdate(int current, int max) {
+    protected void onProgressUpdate(long current, int max) {
         // Can be overridden for syncing or particles
     }
 
@@ -127,6 +148,8 @@ public abstract class AbstractRecipeProcess {
         manaPerTick = 0;
         manaOutputPerTick = 0;
         cachedOutputs.clear();
+        perTickInputs.clear();
+        perTickOutputs.clear();
     }
 
     public boolean isRunning() {
@@ -137,7 +160,7 @@ public abstract class AbstractRecipeProcess {
         return waitingForOutput;
     }
 
-    public int getProgress() {
+    public long getProgress() {
         return progress;
     }
 
@@ -145,7 +168,7 @@ public abstract class AbstractRecipeProcess {
         return maxProgress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(long progress) {
         this.progress = Math.max(0, progress);
     }
 
@@ -165,5 +188,25 @@ public abstract class AbstractRecipeProcess {
 
     public List<IRecipeOutput> getCachedOutputs() {
         return cachedOutputs;
+    }
+
+    public void addPerTickInput(IModularRecipeInput input) {
+        if (input != null) {
+            this.perTickInputs.add(input);
+        }
+    }
+
+    public void addPerTickOutput(IModularRecipeOutput output) {
+        if (output != null) {
+            this.perTickOutputs.add(output);
+        }
+    }
+
+    public List<IModularRecipeInput> getPerTickInputs() {
+        return perTickInputs;
+    }
+
+    public List<IModularRecipeOutput> getPerTickOutputs() {
+        return perTickOutputs;
     }
 }

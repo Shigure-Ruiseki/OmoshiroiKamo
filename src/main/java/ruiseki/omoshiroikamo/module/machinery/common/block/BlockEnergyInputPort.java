@@ -11,8 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -25,26 +29,23 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.input.TEEnergyInputPortT6;
 
+/**
+ * Energy Input Port block with unified 16-tier system.
+ * Uses a single TE class (TEEnergyInputPort) with tier field instead of per-tier TE classes.
+ *
+ * Legacy TE classes (TEEnergyInputPortT1-T6) are automatically remapped to TEEnergyInputPort.
+ */
 // TODO: Add wireless energy input
 public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
+    private static final int TIER_COUNT = 16;
+
     protected BlockEnergyInputPort() {
-        super(
-            ModObject.blockModularEnergyInput.name,
-            TEEnergyInputPortT1.class,
-            TEEnergyInputPortT2.class,
-            TEEnergyInputPortT3.class,
-            TEEnergyInputPortT4.class,
-            TEEnergyInputPortT5.class,
-            TEEnergyInputPortT6.class);
+        // Pass single TE class - we override createTileEntity and registerTileEntity
+        super(ModObject.blockModularEnergyInput.name, TEEnergyInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -55,20 +56,42 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
     }
 
     @Override
+    protected void registerTileEntity() {
+        // Register with remapping for legacy TE classes
+        GameRegistry.registerTileEntityWithAlternatives(
+            TEEnergyInputPort.class,
+            TEEnergyInputPort.class.getSimpleName() + "TileEntity",
+            // Legacy TE class names - automatically remap to new class
+            "TEEnergyInputPortT1TileEntity",
+            "TEEnergyInputPortT2TileEntity",
+            "TEEnergyInputPortT3TileEntity",
+            "TEEnergyInputPortT4TileEntity",
+            "TEEnergyInputPortT5TileEntity",
+            "TEEnergyInputPortT6TileEntity");
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEEnergyInputPort(meta);
+    }
+
+    @Override
     public String getOverlayPrefix() {
         return "overlay_energyinput_";
     }
 
     @Override
     public void registerPortOverlays(IIconRegister reg) {
-        for (int i = 1; i <= 6; i++) {
+        // Register overlays for all 16 tiers (1-based indexing to match texture files)
+        String prefix = getOverlayPrefix();
+        for (int i = 1; i <= TIER_COUNT; i++) {
             IconRegistry.addIcon(
-                getOverlayPrefix() + i,
-                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + getOverlayPrefix() + i));
+                prefix + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
         }
-        IconRegistry.addIcon(
-            getOverlayPrefix() + "disabled",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override
@@ -77,13 +100,13 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, 0));
-        list.add(new ItemStack(itemIn, 1, 1));
-        list.add(new ItemStack(itemIn, 1, 2));
-        list.add(new ItemStack(itemIn, 1, 3));
-        list.add(new ItemStack(itemIn, 1, 4));
-        list.add(new ItemStack(itemIn, 1, 5));
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
     }
 
     @Override
@@ -110,13 +133,8 @@ public class BlockEnergyInputPort extends AbstractPortBlock<TEEnergyInputPort> {
 
         @Override
         public IIcon getOverlayIcon(int tier) {
+            // tier is 1-based for display
             return IconRegistry.getIcon("overlay_energyinput_" + tier);
-        }
-
-        @Override
-        public String getUnlocalizedName(ItemStack stack) {
-            int tier = stack.getItemDamage() + 1;
-            return super.getUnlocalizedName() + ".tier_" + tier;
         }
 
         @Override

@@ -1,14 +1,16 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.IAspectContainer;
 
-public class EssentiaInput extends AbstractRecipeInput {
+public class EssentiaInput extends AbstractModularRecipeInput {
 
     private String aspectTag;
     private int amount;
@@ -38,7 +40,7 @@ public class EssentiaInput extends AbstractRecipeInput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port instanceof AbstractEssentiaPortTE;
+        return port.getPortType() == IPortType.Type.ESSENTIA && port instanceof IAspectContainer;
     }
 
     @Override
@@ -46,20 +48,24 @@ public class EssentiaInput extends AbstractRecipeInput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return 0;
 
-        AbstractEssentiaPortTE essentiaPort = (AbstractEssentiaPortTE) port;
+        IAspectContainer essentiaPort = (IAspectContainer) port;
         int stored = essentiaPort.containerContains(aspect);
         if (stored > 0) {
-            int extract = (int) Math.min(stored, remaining);
+            int extract = (int) Math.min((long) stored, remaining);
             if (!simulate) {
                 essentiaPort.takeFromContainer(aspect, extract);
             }
-            return extract;
+            return (long) extract;
         }
         return 0;
     }
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
@@ -73,8 +79,13 @@ public class EssentiaInput extends AbstractRecipeInput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
-        json.addProperty("essentia", aspectTag);
+        if (interval > 0) json.addProperty("pertick", interval);
+
+        if (aspectTag != null) {
+            json.addProperty("essentia", aspectTag);
+        }
         json.addProperty("amount", amount);
     }
 
@@ -87,6 +98,39 @@ public class EssentiaInput extends AbstractRecipeInput {
         EssentiaInput input = new EssentiaInput("", 0);
         input.read(json);
         return input.validate() ? input : null;
+    }
+
+    @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        EssentiaInput result = new EssentiaInput(aspectTag, amount * multiplier);
+        result.consume = this.consume;
+        result.interval = this.interval;
+        result.index = this.index;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "essentia");
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+        nbt.setString("aspect", aspectTag);
+        nbt.setInteger("amount", amount);
+        nbt.setInteger("index", index);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+        this.aspectTag = nbt.getString("aspect");
+        this.amount = nbt.getInteger("amount");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override

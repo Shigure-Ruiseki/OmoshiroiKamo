@@ -3,18 +3,29 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPort;
 
-// TODO: Add texture
-
+/**
+ * Essentia Input Port block with unified 16-tier system.
+ * Uses a single TE class (TEEssentiaInputPort) with tier field instead of per-tier TE classes.
+ */
 public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPort> {
+
+    private static final int TIER_COUNT = 16;
 
     protected BlockEssentiaInputPort() {
         super(ModObject.blockModularEssentiaInput.name, TEEssentiaInputPort.class);
@@ -31,6 +42,22 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
 
     public static BlockEssentiaInputPort create() {
         return new BlockEssentiaInputPort();
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEEssentiaInputPort(meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
     }
 
     @Override
@@ -58,7 +85,7 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
         list.add(
             LangHelpers.localize(
                 "tooltip.machinery.capacity",
-                String.format("%,d", MachineryConfig.essentiaPortCapacity) + " Essentia / type"));
+                String.format("%,d", MachineryConfig.getEssentiaPortCapacity(tier)) + " Essentia / type"));
     }
 
     public static class ItemBlockEssentiaInputPort extends AbstractPortItemBlock {

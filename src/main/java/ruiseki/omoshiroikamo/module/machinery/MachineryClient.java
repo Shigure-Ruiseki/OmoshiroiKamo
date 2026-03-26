@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.core.proxy.ClientProxyComponent;
 import ruiseki.omoshiroikamo.module.machinery.client.render.ItemPortRenderer;
 import ruiseki.omoshiroikamo.module.machinery.client.render.PortOverlayISBRH;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineCasing;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockMachineController;
 
 /**
@@ -42,7 +43,8 @@ public class MachineryClient extends ClientProxyComponent {
 
         for (Object obj : Block.blockRegistry) {
             Block block = (Block) obj;
-            if (block instanceof AbstractPortBlock<?> || block instanceof BlockMachineController) {
+            if (block instanceof AbstractPortBlock<?> || block instanceof BlockMachineController
+                || block instanceof BlockMachineCasing) {
                 Item item = Item.getItemFromBlock(block);
                 if (item != null) {
                     MinecraftForgeClient.registerItemRenderer(item, new ItemPortRenderer());

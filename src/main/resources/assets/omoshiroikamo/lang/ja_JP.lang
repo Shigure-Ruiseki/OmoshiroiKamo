@@ -46,6 +46,7 @@ gui.io.none=なし
 gui.io.isActivated=有効
 gui.io.enabled=有効
 gui.io.disabled=無効
+gui.sort_inventory=インベントリをソート
 gui.search_bar.tool_tip=右クリックで検索バーをクリア
 gui.syncNEI=NEIと同期
 gui.craftingState.idle=休止中
@@ -1263,91 +1264,91 @@ tile.modularMachineController.name=モジュラーマシンコントローラー
 tile.visBridge.name=ビスブリッジ
 
 
+# Machinery Casing Dynamic Localization
+machinery.casing.format=%s%s
+machinery.casing.modular=モジュラーマシンケーシング
+machinery.tier.0=標準的な
+machinery.tier.1=改良型の
+machinery.tier.2=革命的な
+machinery.tier.3=異形の
+machinery.tier.4=優れた
+machinery.tier.5=究極の
+machinery.tier.6=矛盾を孕んだ
+machinery.tier.7=虚空を操る
+machinery.tier.8=想像を超えた
+machinery.tier.9=深宇宙技術の
+machinery.tier.10=光学的に完璧な
+machinery.tier.11=反重力の
+machinery.tier.12=宇宙で最も優れた
+machinery.tier.13=永遠のギルティ
+machinery.tier.14=次元を超越した
+machinery.tier.15=磁気流体力学的に制御された
+machinery.design.plain=マシンケーシング
+machinery.design.reinforced=補強マシンケーシング
+machinery.design.vented=放熱マシンケーシング
+machinery.design.circuitry=回路マシンケーシング
+
+
+# Materials
+item.ingot_osmiridium.name=オスミリジウムインゴット
+item.plate_osmiridium.name=オスミリジウムプレート
+item.gear_osmiridium.name=オスミリジウム歯車
+item.ingot_hikarium.name=光イウムインゴット
+item.plate_hikarium.name=光イウムプレート
+item.gear_hikarium.name=光イウム歯車
+item.ingot_tairithium.name=対立イウムインゴット
+item.plate_tairithium.name=対立イウムプレート
+item.gear_tairithium.name=対立イウム歯車
+item.ingot_vitarium.name=ヴィータリウムインゴット
+item.plate_vitarium.name=ヴィータリウムプレート
+item.gear_vitarium.name=ヴィータリウム歯車
+
+
 # Item Input Port
-tile.modularItemInput.tier_1.name=アイテム搬入口 ティア1
-tile.modularItemInput.tier_2.name=アイテム搬入口 ティア2
-tile.modularItemInput.tier_3.name=アイテム搬入口 ティア3
-tile.modularItemInput.tier_4.name=アイテム搬入口 ティア4
-tile.modularItemInput.tier_5.name=アイテム搬入口 ティア5
-tile.modularItemInput.tier_6.name=アイテム搬入口 ティア6
+tile.modularItemInput.name=アイテム搬入口 ティア%d
 
 
 # Item Output Port
-tile.modularItemOutput.tier_1.name=アイテム搬出口 ティア1
-tile.modularItemOutput.tier_2.name=アイテム搬出口 ティア2
-tile.modularItemOutput.tier_3.name=アイテム搬出口 ティア3
-tile.modularItemOutput.tier_4.name=アイテム搬出口 ティア4
-tile.modularItemOutput.tier_5.name=アイテム搬出口 ティア5
-tile.modularItemOutput.tier_6.name=アイテム搬出口 ティア6
+tile.modularItemOutput.name=アイテム搬出口 ティア%d
 
 
 # Fluid Input Port
-tile.modularFluidInput.tier_1.name=液体搬入口 ティア1
-tile.modularFluidInput.tier_2.name=液体搬入口 ティア2
-tile.modularFluidInput.tier_3.name=液体搬入口 ティア3
-tile.modularFluidInput.tier_4.name=液体搬入口 ティア4
-tile.modularFluidInput.tier_5.name=液体搬入口 ティア5
-tile.modularFluidInput.tier_6.name=液体搬入口 ティア6
+tile.modularFluidInput.name=液体搬入口 ティア%d
 
 
 # Fluid Output Port
-tile.modularFluidOutput.tier_1.name=液体搬出口 ティア1
-tile.modularFluidOutput.tier_2.name=液体搬出口 ティア2
-tile.modularFluidOutput.tier_3.name=液体搬出口 ティア3
-tile.modularFluidOutput.tier_4.name=液体搬出口 ティア4
-tile.modularFluidOutput.tier_5.name=液体搬出口 ティア5
-tile.modularFluidOutput.tier_6.name=液体搬出口 ティア6
+tile.modularFluidOutput.name=液体搬出口 ティア%d
 
 
 # Energy Input Port
-tile.modularEnergyInput.tier_1.name=エネルギー搬入口 ティア1
-tile.modularEnergyInput.tier_2.name=エネルギー搬入口 ティア2
-tile.modularEnergyInput.tier_3.name=エネルギー搬入口 ティア3
-tile.modularEnergyInput.tier_4.name=エネルギー搬入口 ティア4
-tile.modularEnergyInput.tier_5.name=エネルギー搬入口 ティア5
-tile.modularEnergyInput.tier_6.name=エネルギー搬入口 ティア6
+tile.modularEnergyInput.name=エネルギー搬入口 ティア%d
 
 
 # Energy Output Port
-tile.modularEnergyOutput.tier_1.name=エネルギー搬出口 ティア1
-tile.modularEnergyOutput.tier_2.name=エネルギー搬出口 ティア2
-tile.modularEnergyOutput.tier_3.name=エネルギー搬出口 ティア3
-tile.modularEnergyOutput.tier_4.name=エネルギー搬出口 ティア4
-tile.modularEnergyOutput.tier_5.name=エネルギー搬出口 ティア5
-tile.modularEnergyOutput.tier_6.name=エネルギー搬出口 ティア6
+tile.modularEnergyOutput.name=エネルギー搬出口 ティア%d
 
 
 # Gas Input Port
-tile.modularGasInput.tier_1.name=ガス搬入口 ティア1
-tile.modularGasInput.tier_2.name=ガス搬入口 ティア2
-tile.modularGasInput.tier_3.name=ガス搬入口 ティア3
-tile.modularGasInput.tier_4.name=ガス搬入口 ティア4
-tile.modularGasInput.tier_5.name=ガス搬入口 ティア5
-tile.modularGasInput.tier_6.name=ガス搬入口 ティア6
+tile.modularGasInput.name=ガス搬入口 ティア%d
 
 
 # Gas Output Port
-tile.modularGasOutput.tier_1.name=ガス搬出口 ティア1
-tile.modularGasOutput.tier_2.name=ガス搬出口 ティア2
-tile.modularGasOutput.tier_3.name=ガス搬出口 ティア3
-tile.modularGasOutput.tier_4.name=ガス搬出口 ティア4
-tile.modularGasOutput.tier_5.name=ガス搬出口 ティア5
-tile.modularGasOutput.tier_6.name=ガス搬出口 ティア6
+tile.modularGasOutput.name=ガス搬出口 ティア%d
 
 
 # Mana Ports
-tile.modularManaInput.tier_1.name=マナ搬入口
-tile.modularManaOutput.tier_1.name=マナ搬出口
+tile.modularManaInput.name=マナ搬入口 ティア%d
+tile.modularManaOutput.name=マナ搬出口 ティア%d
 
 
 # Vis Ports
-tile.modularVisInput.tier_1.name=ビス搬入口
-tile.modularVisOutput.tier_1.name=ビス搬出口
+tile.modularVisInput.name=ビス搬入口 ティア%d
+tile.modularVisOutput.name=ビス搬出口 ティア%d
 
 
 # Essentia Ports
-tile.modularEssentiaInput.tier_1.name=エッセンシア搬入口
-tile.modularEssentiaOutput.tier_1.name=エッセンシア搬出口
+tile.modularEssentiaInput.name=エッセンシア搬入口 ティア%d
+tile.modularEssentiaOutput.name=エッセンシア搬出口 ティア%d
 
 
 # ME Ports

@@ -5,7 +5,6 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
-import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.module.machinery.common.block.AbstractPortBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
@@ -15,23 +14,30 @@ import thaumcraft.api.aspects.IAspectSource;
 import thaumcraft.api.aspects.IEssentiaTransport;
 
 /**
+ * Unified Essentia Output Port TileEntity for all tiers (0-15).
  * Provides Essentia to Infusion Altar and Essentia Tubes.
- * Implements IAspectSource for Infusion compatibility and IEssentiaTransport
- * for Tubes.
- * TODO: Create TEEssentiaOutputPortME
+ * Uses tier field instead of separate classes for each tier.
  */
-
 public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEssentiaTransport, IAspectSource {
 
     private static final int MINIMUM_SUCTION = 32;
 
+    /**
+     * No-arg constructor required for TE instantiation.
+     * Tier will be set after construction via setTier().
+     */
     public TEEssentiaOutputPort() {
-        super(MachineryConfig.essentiaPortCapacity);
+        super();
     }
 
-    @Override
-    public int getTier() {
-        return 1;
+    /**
+     * Constructor with tier parameter.
+     *
+     * @param tier Tier level (0-15)
+     */
+    public TEEssentiaOutputPort(int tier) {
+        super();
+        setTier(tier);
     }
 
     @Override
@@ -175,17 +181,17 @@ public class TEEssentiaOutputPort extends AbstractEssentiaPortTE implements IEss
         if (getSideIO(side) == EnumIO.NONE) {
             return null;
         }
-        return IconRegistry.getIcon("overlay_essentiaoutput_" + getTier());
+        return IconRegistry.getIcon("overlay_essentiaoutput_" + (getTier() + 1));
     }
 
     @Override
     public IIcon getTexture(ForgeDirection side, int renderPass) {
         if (renderPass == 0) {
-            return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+            return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
         }
         if (renderPass == 1) {
             return getOverlayIcon(side);
         }
-        return ((AbstractPortBlock<?>) getBlockType()).baseIcon;
+        return ((AbstractPortBlock<?>) getBlockType()).getBaseIcon(getTier());
     }
 }

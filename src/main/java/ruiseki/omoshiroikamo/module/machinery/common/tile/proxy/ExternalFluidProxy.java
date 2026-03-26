@@ -34,31 +34,106 @@ public class ExternalFluidProxy extends AbstractExternalProxy implements IFluidH
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-        return delegate(IFluidHandler.class, h -> h.fill(from, resource, doFill), 0);
+        IFluidHandler handler = getTargetAs(IFluidHandler.class);
+        if (handler == null) return 0;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findFillSide(handler) : from;
+        return handler.fill(targetSide, resource, doFill);
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-        return delegate(IFluidHandler.class, h -> h.drain(from, resource, doDrain), null);
+        IFluidHandler handler = getTargetAs(IFluidHandler.class);
+        if (handler == null) return null;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findDrainSide(handler) : from;
+        return handler.drain(targetSide, resource, doDrain);
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-        return delegate(IFluidHandler.class, h -> h.drain(from, maxDrain, doDrain), null);
+        IFluidHandler handler = getTargetAs(IFluidHandler.class);
+        if (handler == null) return null;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findDrainSide(handler) : from;
+        return handler.drain(targetSide, maxDrain, doDrain);
     }
 
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid) {
-        return delegate(IFluidHandler.class, h -> h.canFill(from, fluid), false);
+        IFluidHandler handler = getTargetAs(IFluidHandler.class, true);
+        if (handler == null) return false;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findFillSide(handler) : from;
+        return handler.canFill(targetSide, fluid);
     }
 
     @Override
     public boolean canDrain(ForgeDirection from, Fluid fluid) {
-        return delegate(IFluidHandler.class, h -> h.canDrain(from, fluid), false);
+        IFluidHandler handler = getTargetAs(IFluidHandler.class, true);
+        if (handler == null) return false;
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findDrainSide(handler) : from;
+        return handler.canDrain(targetSide, fluid);
     }
 
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-        return delegate(IFluidHandler.class, h -> h.getTankInfo(from), new FluidTankInfo[0]);
+        IFluidHandler handler = getTargetAs(IFluidHandler.class, true);
+        if (handler == null) return new FluidTankInfo[0];
+
+        ForgeDirection targetSide = (from == ForgeDirection.UNKNOWN) ? findFunctionalSide(handler) : from;
+        return handler.getTankInfo(targetSide);
+    }
+
+    /**
+     * Finds a side that can fill fluid.
+     */
+    private ForgeDirection findFillSide(IFluidHandler handler) {
+        if (cachedSide != ForgeDirection.UNKNOWN && handler.canFill(cachedSide, null)) return cachedSide;
+        if (handler.canFill(ForgeDirection.UNKNOWN, null)) {
+            cachedSide = ForgeDirection.UNKNOWN;
+            return cachedSide;
+        }
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (handler.canFill(dir, null)) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+        return ForgeDirection.UNKNOWN;
+    }
+
+    /**
+     * Finds a side that can drain fluid.
+     */
+    private ForgeDirection findDrainSide(IFluidHandler handler) {
+        if (cachedSide != ForgeDirection.UNKNOWN && handler.canDrain(cachedSide, null)) return cachedSide;
+        if (handler.canDrain(ForgeDirection.UNKNOWN, null)) {
+            cachedSide = ForgeDirection.UNKNOWN;
+            return cachedSide;
+        }
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if (handler.canDrain(dir, null)) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+        return ForgeDirection.UNKNOWN;
+    }
+
+    /**
+     * Finds any functional side for status queries.
+     */
+    private ForgeDirection findFunctionalSide(IFluidHandler handler) {
+        if (cachedSide != ForgeDirection.UNKNOWN) return cachedSide;
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            FluidTankInfo[] info = handler.getTankInfo(dir);
+            if (info != null && info.length > 0) {
+                cachedSide = dir;
+                return cachedSide;
+            }
+        }
+        return ForgeDirection.UNKNOWN;
     }
 }

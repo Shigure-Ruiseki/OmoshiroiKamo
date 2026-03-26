@@ -3,17 +3,29 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output.TEVisOutputPort;
 
-// TODO: Add texture
+/**
+ * Vis Output Port block with unified 16-tier system.
+ * Uses a single TE class (TEVisOutputPort) with tier field instead of per-tier TE classes.
+ */
 public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
+
+    private static final int TIER_COUNT = 16;
 
     protected BlockVisOutputPort() {
         super(ModObject.blockModularVisOutput.name, TEVisOutputPort.class);
@@ -24,6 +36,22 @@ public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
 
     public static BlockVisOutputPort create() {
         return new BlockVisOutputPort();
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEVisOutputPort(meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
     }
 
     @Override
@@ -48,12 +76,11 @@ public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
 
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
+        int capacity = MachineryConfig.getVisPortCapacity(tier);
         list.add(
             LangHelpers.localize(
                 "tooltip.machinery.capacity",
-                String.format("%,d", MachineryConfig.visPortCapacity) + " Vis / "
-                    + String.format("%,d", MachineryConfig.visPortCapacity * 10)
-                    + " cV"));
+                String.format("%,d", capacity) + " Vis / " + String.format("%,d", capacity * 10) + " cV"));
     }
 
     public static class ItemBlockVisOutputPort extends AbstractPortItemBlock {

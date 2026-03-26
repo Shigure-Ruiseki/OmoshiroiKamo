@@ -3,9 +3,11 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -115,6 +117,9 @@ public class TEMachineController extends AbstractMBModifierTE
 
     // Redstone Control - Inherited from AbstractTE
 
+    // External Port Error Cache (Persistent state for transient proxies)
+    private final Set<ChunkCoordinates> reportedErrorPorts = new HashSet<>();
+
     // External Port Configurations
     private final Map<ChunkCoordinates, Map<IPortType.Type, EnumIO>> externalPortConfigs = new HashMap<>();
 
@@ -191,8 +196,31 @@ public class TEMachineController extends AbstractMBModifierTE
         return true;
     }
 
+    /**
+     * Checks if an error should be notified for the given port position.
+     * Prevents spam by only allowing one notification per coordinate until reset.
+     *
+     * @param pos The position of the port
+     * @return true if this is the first time an error is reported for this position
+     */
+    public boolean shouldNotifyError(ChunkCoordinates pos) {
+        if (reportedErrorPorts.contains(pos)) return false;
+        reportedErrorPorts.add(pos);
+        return true;
+    }
+
+    /**
+     * Reset the error cache for all ports.
+     */
+    public void resetErrorCache() {
+        reportedErrorPorts.clear();
+    }
+
     // Transient flag to trigger tint packet resend on load
     private boolean needsTintResend = false;
+
+    // Track previous working state for render update
+    private transient boolean wasWorking = false;
 
     public TEMachineController() {
         super();
@@ -228,6 +256,12 @@ public class TEMachineController extends AbstractMBModifierTE
         return min == Integer.MAX_VALUE ? 1 : min;
     }
 
+    @Override
+    public void setTier(int tier) {
+        // No-op: Controller tier is calculated from structure components, not set
+        // directly
+    }
+
     public int getComponentTier(String componentName) {
         return structureAgent.getComponentTier(componentName);
     }
@@ -249,6 +283,7 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     private final Map<Character, List<ChunkCoordinates>> symbolPositions = new HashMap<>();
+    private final Map<ChunkCoordinates, Character> posToSymbol = new HashMap<>();
 
     public Map<Character, List<ChunkCoordinates>> getSymbolPositionsMap() {
         return symbolPositions;
@@ -256,11 +291,22 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public void clearSymbolPositions() {
         symbolPositions.clear();
+        posToSymbol.clear();
     }
 
     public void trackSymbolPosition(char symbol, int x, int y, int z) {
+        ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
+        posToSymbol.put(coord, symbol);
+    }
+
+    public void finalizeSymbolPosition(char symbol, int x, int y, int z) {
+        ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
         symbolPositions.computeIfAbsent(symbol, k -> new ArrayList<>())
-            .add(new ChunkCoordinates(x, y, z));
+            .add(coord);
+    }
+
+    public Character getSymbolAt(int x, int y, int z) {
+        return posToSymbol.get(new ChunkCoordinates(x, y, z));
     }
 
     @Override
@@ -476,6 +522,15 @@ public class TEMachineController extends AbstractMBModifierTE
 
         // IDLE: Try to start new recipe
         startNextRecipe();
+
+        // Update render if working state changed
+        boolean currentlyWorking = processAgent.isRunning();
+        if (currentlyWorking != wasWorking) {
+            wasWorking = currentlyWorking;
+            if (worldObj != null && !worldObj.isRemote) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
     }
 
     private void startNextRecipe() {
@@ -643,6 +698,7 @@ public class TEMachineController extends AbstractMBModifierTE
      * Only processes on server side to ensure proper sync.
      */
     private void updateStructureFromBlueprint() {
+        resetErrorCache();
         // Skip if on client side
         if (worldObj != null && worldObj.isRemote) return;
 
@@ -1099,7 +1155,9 @@ public class TEMachineController extends AbstractMBModifierTE
             Block block = getBlockType();
             if (block instanceof BlockMachineController) {
                 BlockMachineController controllerBlock = (BlockMachineController) block;
-                return controllerBlock.getOverlayIcon();
+                // Change overlay based on working state
+                boolean isWorking = processAgent != null && processAgent.isRunning();
+                return isWorking ? controllerBlock.getOverlayIconActive() : controllerBlock.getOverlayIcon();
             }
         }
         return null; // Base pass handled by ISBRH using standard block render

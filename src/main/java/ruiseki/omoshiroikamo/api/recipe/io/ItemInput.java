@@ -8,6 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.JsonArray;
@@ -17,6 +18,7 @@ import com.google.gson.JsonObject;
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
@@ -24,14 +26,16 @@ import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.ItemJson;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.item.AbstractItemIOPortTE;
 
-public class ItemInput extends AbstractRecipeInput {
+public class ItemInput extends AbstractModularRecipeInput {
 
     private String oreDict;
     private ItemStack required;
     private int count = 1;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
+    private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
 
     public ItemInput(ItemStack required) {
         this.required = required != null ? required.copy() : null;
@@ -100,7 +104,19 @@ public class ItemInput extends AbstractRecipeInput {
         IInventory itemPort = (IInventory) port;
         long consumed = 0;
 
-        for (int i = 0; i < itemPort.getSizeInventory() && remaining > 0; i++) {
+        int min = 0;
+        int max = itemPort.getSizeInventory() - 1;
+
+        if (itemPort instanceof AbstractItemIOPortTE iiPort) {
+            min = iiPort.getSlotDefinition()
+                .getMinItemInput();
+            max = iiPort.getSlotDefinition()
+                .getMaxItemInput();
+        }
+
+        if (min < 0) return 0;
+
+        for (int i = min; i <= max && remaining > 0; i++) {
             ItemStack stack = itemPort.getStackInSlot(i);
             if (stack != null && stacksMatch(stack)) {
                 int consume = (int) Math.min(stack.stackSize, remaining);
@@ -154,6 +170,7 @@ public class ItemInput extends AbstractRecipeInput {
     private boolean stacksMatch(ItemStack input) {
         if (input == null) return false;
 
+        // Check item/metadata/oredict matching
         if (oreDict != null) {
             int[] ids = OreDictionary.getOreIDs(input);
             int targetId = OreDictionary.getOreID(oreDict);
@@ -172,16 +189,13 @@ public class ItemInput extends AbstractRecipeInput {
             if (required.getItemDamage() != 32767 && required.getItemDamage() != input.getItemDamage()) return false;
         }
 
-        // Check NBT conditions
-        if (!checkNBTConditions(input)) {
-            return false;
-        }
-
-        return true;
+        // Check NBT matching using the new NBTMatchMode system
+        return matchesNBT(input);
     }
 
     /**
-     * Check if the ItemStack's NBT matches all NBT conditions.
+     * Check if the ItemStack's NBT matches all NBT conditions (PARTIAL mode).
+     * This is the original checkNBTConditions logic for expression-based matching.
      */
     private boolean checkNBTConditions(ItemStack stack) {
         if (nbtExpressions == null && nbtListOp == null) {
@@ -215,11 +229,87 @@ public class ItemInput extends AbstractRecipeInput {
         return true;
     }
 
+    /**
+     * Determine the effective NBT match mode based on configuration.
+     * If nbtExpressions or nbtListOp are present, PARTIAL mode takes precedence.
+     *
+     * @return The effective NBT match mode to use
+     */
+    private NBTMatchMode determineEffectiveMatchMode() {
+        // If expression-based NBT conditions exist, use PARTIAL mode
+        if ((nbtExpressions != null && !nbtExpressions.isEmpty()) || nbtListOp != null) {
+            return NBTMatchMode.PARTIAL;
+        }
+        // Otherwise use the explicitly set mode
+        return nbtMatchMode;
+    }
+
+    /**
+     * Check exact NBT match.
+     * For EXACT mode, we need to compare against a reference NBT.
+     * If 'required' ItemStack exists, use its NBT as reference.
+     * If oreDict is used, EXACT mode requires no NBT on both sides.
+     *
+     * @param input The ItemStack to check
+     * @return true if NBT matches exactly, false otherwise
+     */
+    private boolean matchesExactNBT(ItemStack input) {
+        if (required != null) {
+            // Compare against required stack's NBT
+            return ItemStack.areItemStackTagsEqual(required, input);
+        } else if (oreDict != null) {
+            // For OreDictionary items, EXACT mode only matches items without NBT
+            // (since we have no reference NBT to compare against)
+            return input.getTagCompound() == null;
+        }
+        return true;
+    }
+
+    /**
+     * Check if the ItemStack's NBT matches the configured NBT match mode.
+     * This integrates the new NBTMatchMode with existing expression-based NBT conditions.
+     *
+     * @param stack The ItemStack to check
+     * @return true if NBT matches according to the effective mode, false otherwise
+     */
+    private boolean matchesNBT(ItemStack stack) {
+        // Determine effective match mode
+        NBTMatchMode effectiveMode = determineEffectiveMatchMode();
+
+        switch (effectiveMode) {
+            case IGNORE:
+                return true;
+
+            case NONE:
+                return stack.getTagCompound() == null;
+
+            case EXACT:
+                return matchesExactNBT(stack);
+
+            case PARTIAL:
+                return checkNBTConditions(stack);
+
+            default:
+                return true;
+        }
+    }
+
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
+
         if (json.has("consume")) {
             this.consume = json.get("consume")
                 .getAsBoolean();
+        }
+
+        // Read NBTMatchMode
+        if (json.has("nbtmatch")) {
+            String modeStr = json.get("nbtmatch")
+                .getAsString();
+            this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
         }
 
         // Read NBT expressions
@@ -300,7 +390,14 @@ public class ItemInput extends AbstractRecipeInput {
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
+        if (interval > 0) json.addProperty("pertick", interval);
+
+        // Write NBTMatchMode (only if not default IGNORE)
+        if (nbtMatchMode != NBTMatchMode.IGNORE) {
+            json.addProperty("nbtmatch", nbtMatchMode.toJsonString());
+        }
 
         if (oreDict != null) {
             json.addProperty("ore", oreDict);
@@ -351,7 +448,112 @@ public class ItemInput extends AbstractRecipeInput {
     }
 
     @Override
+    public IRecipeInput copy() {
+        return copy(1);
+    }
+
+    @Override
+    public IRecipeInput copy(int multiplier) {
+        ItemInput result = required != null ? new ItemInput(required) : new ItemInput(oreDict, count);
+        result.count *= multiplier;
+        if (result.required != null) result.required.stackSize *= multiplier;
+        result.consume = this.consume;
+        result.interval = this.interval;
+        result.nbtExpressions = this.nbtExpressions;
+        result.nbtListOp = this.nbtListOp;
+        result.nbtMatchMode = this.nbtMatchMode;
+        result.index = this.index;
+        return result;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setString("id", "item");
+        nbt.setInteger("count", count);
+        nbt.setInteger("interval", interval);
+        nbt.setBoolean("consume", consume);
+        nbt.setInteger("index", index);
+
+        // Save NBTMatchMode
+        nbt.setString("nbtMatchMode", nbtMatchMode.name());
+
+        if (oreDict != null) {
+            nbt.setString("ore", oreDict);
+        }
+        if (required != null) {
+            NBTTagCompound stackTag = new NBTTagCompound();
+            required.writeToNBT(stackTag);
+            nbt.setTag("required", stackTag);
+        }
+
+        // Save NBT expressions
+        if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
+            net.minecraft.nbt.NBTTagList exprList = new net.minecraft.nbt.NBTTagList();
+            for (IExpression expr : nbtExpressions) {
+                exprList.appendTag(new net.minecraft.nbt.NBTTagString(expr.toString()));
+            }
+            nbt.setTag("nbtExpressions", exprList);
+        }
+
+        // Save NBT list operation
+        if (nbtListOp != null) {
+            NBTTagCompound opTag = new NBTTagCompound();
+            nbtListOp.writeToNBT(opTag);
+            nbt.setTag("nbtListOp", opTag);
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        this.count = nbt.getInteger("count");
+        this.interval = nbt.getInteger("interval");
+        this.consume = nbt.getBoolean("consume");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
+
+        // Restore NBTMatchMode
+        if (nbt.hasKey("nbtMatchMode")) {
+            try {
+                this.nbtMatchMode = NBTMatchMode.valueOf(nbt.getString("nbtMatchMode"));
+            } catch (IllegalArgumentException e) {
+                this.nbtMatchMode = NBTMatchMode.IGNORE;
+                Logger.warn("Invalid NBTMatchMode in NBT, defaulting to IGNORE");
+            }
+        }
+
+        if (nbt.hasKey("ore")) {
+            this.oreDict = nbt.getString("ore");
+        }
+        if (nbt.hasKey("required")) {
+            this.required = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("required"));
+        }
+
+        // Restore NBT expressions
+        if (nbt.hasKey("nbtExpressions")) {
+            NBTTagList exprList = nbt.getTagList("nbtExpressions", 8); // 8 is TAG_STRING
+            this.nbtExpressions = new ArrayList<>();
+            for (int i = 0; i < exprList.tagCount(); i++) {
+                String exprStr = exprList.getStringTagAt(i);
+                try {
+                    this.nbtExpressions.add(ExpressionParser.parseExpression(exprStr));
+                } catch (Exception e) {
+                    Logger.error("Failed to restore NBT expression from NBT: " + exprStr);
+                }
+            }
+        }
+
+        // Restore NBT list operation
+        if (nbt.hasKey("nbtListOp")) {
+            this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
+        }
+    }
+
+    @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.NO_INPUT;
     }
 }

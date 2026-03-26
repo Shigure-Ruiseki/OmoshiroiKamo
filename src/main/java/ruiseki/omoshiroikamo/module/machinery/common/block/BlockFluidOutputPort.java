@@ -3,37 +3,43 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOutputPortT6;
 
+/**
+ * Fluid Output Port block with unified 16-tier system.
+ * Uses a single TE class (TEFluidOutputPort) with tier field instead of per-tier TE classes.
+ *
+ * Legacy TE classes (TEFluidOutputPortT1-T6) are automatically remapped to TEFluidOutputPort.
+ */
 public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
 
+    private static final int TIER_COUNT = 16;
+
     protected BlockFluidOutputPort() {
-        super(
-            ModObject.blockModularFluidOutput.name,
-            TEFluidOutputPortT1.class,
-            TEFluidOutputPortT2.class,
-            TEFluidOutputPortT3.class,
-            TEFluidOutputPortT4.class,
-            TEFluidOutputPortT5.class,
-            TEFluidOutputPortT6.class);
+        // Pass single TE class - we override createTileEntity and registerTileEntity
+        super(ModObject.blockModularFluidOutput.name, TEFluidOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -41,6 +47,50 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
 
     public static BlockFluidOutputPort create() {
         return new BlockFluidOutputPort();
+    }
+
+    @Override
+    protected void registerTileEntity() {
+        // Register with remapping for legacy TE classes
+        GameRegistry.registerTileEntityWithAlternatives(
+            TEFluidOutputPort.class,
+            TEFluidOutputPort.class.getSimpleName() + "TileEntity",
+            // Legacy TE class names - automatically remap to new class
+            "TEFluidOutputPortT1TileEntity",
+            "TEFluidOutputPortT2TileEntity",
+            "TEFluidOutputPortT3TileEntity",
+            "TEFluidOutputPortT4TileEntity",
+            "TEFluidOutputPortT5TileEntity",
+            "TEFluidOutputPortT6TileEntity");
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEFluidOutputPort(meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
+    }
+
+    @Override
+    public void registerPortOverlays(IIconRegister reg) {
+        // Register overlays for all 16 tiers (1-based indexing to match texture files)
+        String prefix = getOverlayPrefix();
+        for (int i = 1; i <= TIER_COUNT; i++) {
+            IconRegistry.addIcon(
+                prefix + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
+        }
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override

@@ -10,8 +10,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
@@ -24,26 +28,23 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
 import ruiseki.omoshiroikamo.core.tileentity.ISidedIO;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.energy.output.TEEnergyOutputPortT6;
 
+/**
+ * Energy Output Port block with unified 16-tier system.
+ * Uses a single TE class (TEEnergyOutputPort) with tier field instead of per-tier TE classes.
+ *
+ * Legacy TE classes (TEEnergyOutputPortT1-T6) are automatically remapped to TEEnergyOutputPort.
+ */
 // TODO: Add wireless energy output
 public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort> {
 
+    private static final int TIER_COUNT = 16;
+
     protected BlockEnergyOutputPort() {
-        super(
-            ModObject.blockModularEnergyOutput.name,
-            TEEnergyOutputPortT1.class,
-            TEEnergyOutputPortT2.class,
-            TEEnergyOutputPortT3.class,
-            TEEnergyOutputPortT4.class,
-            TEEnergyOutputPortT5.class,
-            TEEnergyOutputPortT6.class);
+        // Pass single TE class - we override createTileEntity and registerTileEntity
+        super(ModObject.blockModularEnergyOutput.name, TEEnergyOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -54,28 +55,37 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
     }
 
     @Override
+    protected void registerTileEntity() {
+        // Register with remapping for legacy TE classes
+        GameRegistry.registerTileEntityWithAlternatives(
+            TEEnergyOutputPort.class,
+            TEEnergyOutputPort.class.getSimpleName() + "TileEntity",
+            // Legacy TE class names - automatically remap to new class
+            "TEEnergyOutputPortT1TileEntity",
+            "TEEnergyOutputPortT2TileEntity",
+            "TEEnergyOutputPortT3TileEntity",
+            "TEEnergyOutputPortT4TileEntity",
+            "TEEnergyOutputPortT5TileEntity",
+            "TEEnergyOutputPortT6TileEntity");
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEEnergyOutputPort(meta);
+    }
+
+    @Override
     public void registerPortOverlays(IIconRegister reg) {
-        IconRegistry.addIcon(
-            "overlay_energyoutput_1",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_1"));
-        IconRegistry.addIcon(
-            "overlay_energyoutput_2",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_2"));
-        IconRegistry.addIcon(
-            "overlay_energyoutput_3",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_3"));
-        IconRegistry.addIcon(
-            "overlay_energyoutput_4",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_4"));
-        IconRegistry.addIcon(
-            "overlay_energyoutput_5",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_5"));
-        IconRegistry.addIcon(
-            "overlay_energyoutput_6",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/overlay_energyoutput_6"));
-        IconRegistry.addIcon(
-            "overlay_energyoutput_disabled",
-            reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+        // Register overlays for all 16 tiers (1-based indexing to match texture files)
+        String prefix = getOverlayPrefix();
+        for (int i = 1; i <= TIER_COUNT; i++) {
+            IconRegistry.addIcon(
+                prefix + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
+        }
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
     }
 
     @Override
@@ -84,13 +94,13 @@ public class BlockEnergyOutputPort extends AbstractPortBlock<TEEnergyOutputPort>
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, 0));
-        list.add(new ItemStack(itemIn, 1, 1));
-        list.add(new ItemStack(itemIn, 1, 2));
-        list.add(new ItemStack(itemIn, 1, 3));
-        list.add(new ItemStack(itemIn, 1, 4));
-        list.add(new ItemStack(itemIn, 1, 5));
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
     }
 
     @Override

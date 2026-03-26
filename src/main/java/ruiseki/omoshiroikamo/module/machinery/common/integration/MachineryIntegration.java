@@ -1,11 +1,14 @@
 package ruiseki.omoshiroikamo.module.machinery.common.integration;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.common.structure.BlockResolver;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergyTile;
+import ruiseki.omoshiroikamo.core.energy.capability.EnergyIntegrationRegistry;
+import ruiseki.omoshiroikamo.core.energy.capability.IEnergyIntegrationDelegate;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.machinery.common.block.BlockEssentiaInputPort;
@@ -46,6 +49,9 @@ public class MachineryIntegration {
         if (LibMods.AE2FluidCrafting.isLoaded()) {
             AE2FluidIntegration.init();
         }
+        if (LibMods.EnderIO.isLoaded()) {
+            EnderIOIntegration.init();
+        }
         if (LibMods.Mekanism.isLoaded()) {
             MekanismIntegration.init();
         }
@@ -79,7 +85,8 @@ public class MachineryIntegration {
 
         // Energy Proxy (unified OKEnergy system)
         BlockResolver.registerProxyFactory(IPortType.Type.ENERGY, (controller, coords, tile, io) -> {
-            if (tile instanceof IOKEnergyTile) {
+            if (tile instanceof IOKEnergyTile || tile instanceof cofh.api.energy.IEnergyReceiver
+                || tile instanceof cofh.api.energy.IEnergyProvider) {
                 return new ExternalEnergyProxy(controller, coords, io);
             }
             return null;
@@ -156,6 +163,48 @@ public class MachineryIntegration {
             // BlockResolver.registerProxyFactory(
             // IPortType.Type.VIS,
             // (controller, coords, tile, io) -> new ExternalVisProxy(controller, coords, io));
+        }
+    }
+
+    private static class EnderIOIntegration {
+
+        static void init() {
+            // Register EnderIO energy integration delegate
+            EnergyIntegrationRegistry.registerDelegate(new EnderIOEnergyDelegate());
+        }
+
+        /**
+         * Energy integration delegate for EnderIO.
+         * Bridges ExternalEnergyProxy to EnderIO's native energy API.
+         */
+        private static class EnderIOEnergyDelegate implements IEnergyIntegrationDelegate {
+
+            @Override
+            public Integer tryExtract(Object te, ForgeDirection side, int amount, boolean simulate) {
+                return ruiseki.omoshiroikamo.core.energy.capability.enderio.EnderIOIntegration
+                    .tryExtract(te, side, amount, simulate);
+            }
+
+            @Override
+            public Integer tryReceive(Object te, ForgeDirection side, int amount, boolean simulate) {
+                return ruiseki.omoshiroikamo.core.energy.capability.enderio.EnderIOIntegration
+                    .tryReceive(te, side, amount, simulate);
+            }
+
+            @Override
+            public Integer getEnergyStored(Object te) {
+                return ruiseki.omoshiroikamo.core.energy.capability.enderio.EnderIOIntegration.getEnergyStored(te);
+            }
+
+            @Override
+            public Integer getMaxEnergyStored(Object te) {
+                return ruiseki.omoshiroikamo.core.energy.capability.enderio.EnderIOIntegration.getMaxEnergyStored(te);
+            }
+
+            @Override
+            public int getPriority() {
+                return 10; // Higher than CoFH RF (0), lower than IOKEnergy (implicit 100)
+            }
         }
     }
 

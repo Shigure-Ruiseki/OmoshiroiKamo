@@ -1,5 +1,9 @@
 package ruiseki.omoshiroikamo.module.backpack;
 
+import java.util.Map;
+
+import net.minecraft.command.ICommand;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -8,6 +12,7 @@ import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
+import ruiseki.omoshiroikamo.module.backpack.common.command.CommandBackpack;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackRecipes;
@@ -53,5 +58,10 @@ public class BackpackModule extends ModModuleBase {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         BackpackBaubleCompat.postInit();
+    }
+
+    @Override
+    protected void registerSubCommand(Map<String, ICommand> subcommand) {
+        subcommand.put(CommandBackpack.NAME, new CommandBackpack(OmoshiroiKamo.instance));
     }
 }

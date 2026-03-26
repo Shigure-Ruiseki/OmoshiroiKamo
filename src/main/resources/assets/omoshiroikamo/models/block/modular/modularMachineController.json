@@ -2,8 +2,8 @@
     "credit": "Made with Blockbench",
     "parent": "block/cube",
     "textures": {
-        "particle": "omoshiroikamo:block/modularmachineryOverlay/base_modularports",
-        "base": "omoshiroikamo:block/modularmachineryOverlay/base_modularports",
+        "particle": "omoshiroikamo:block/modular/controller_base",
+        "base": "omoshiroikamo:block/modular/controller_base",
         "overlay": "omoshiroikamo:block/modularmachineryOverlay/overlay_machine_controller"
     },
     "elements": [

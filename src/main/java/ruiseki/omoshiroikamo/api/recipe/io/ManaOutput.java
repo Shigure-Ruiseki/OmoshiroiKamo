@@ -8,29 +8,31 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.mana.AbstractManaPortTE;
+import vazkii.botania.api.mana.IManaPool;
+import vazkii.botania.api.mana.spark.ISparkAttachable;
 
-public class ManaOutput extends AbstractRecipeOutput {
+public class ManaOutput extends AbstractModularRecipeOutput {
 
     private int amount;
-    private boolean perTick;
 
     public ManaOutput(int amount, boolean perTick) {
         this.amount = amount;
-        this.perTick = perTick;
+        this.interval = perTick ? 1 : 0;
     }
 
     public ManaOutput(int amount) {
-        this(amount, true);
+        this(amount, false);
     }
 
     public int getAmount() {
         return amount;
     }
 
+    @Override
     public boolean isPerTick() {
-        return perTick;
+        return interval > 0;
     }
 
     @Override
@@ -44,11 +46,17 @@ public class ManaOutput extends AbstractRecipeOutput {
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.MANA) continue;
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT) continue;
-            if (!(port instanceof AbstractManaPortTE)) continue;
+            if (port.getPortDirection() != IPortType.Direction.OUTPUT
+                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
 
-            AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-            int space = manaPort.getAvailableSpaceForMana();
+            if (getIndex() != -1 && port.getAssignedIndex() != getIndex()) continue;
+            if (!(port instanceof IManaPool)) continue;
+
+            IManaPool manaPort = (IManaPool) port;
+            int space = 0;
+            if (port instanceof ISparkAttachable) {
+                space = ((ISparkAttachable) port).getAvailableSpaceForMana();
+            }
 
             if (space > 0) {
                 int toAdd = (int) Math.min(remaining, (long) space);
@@ -61,13 +69,17 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     protected boolean isCorrectPort(IModularPort port) {
-        return port.getPortType() == IPortType.Type.MANA && port instanceof AbstractManaPortTE;
+        return port.getPortType() == IPortType.Type.MANA && port instanceof IManaPool;
     }
 
     @Override
     protected long getPortCapacity(IModularPort port) {
-        AbstractManaPortTE manaPort = (AbstractManaPortTE) port;
-        return (long) manaPort.getCurrentMana() + (long) manaPort.getAvailableSpaceForMana();
+        if (port instanceof IManaPool && port instanceof ISparkAttachable) {
+            ISparkAttachable sparkPort = (ISparkAttachable) port;
+            // For output capacity check, return only available space, not total capacity
+            return (long) sparkPort.getAvailableSpaceForMana();
+        }
+        return 0;
     }
 
     @Override
@@ -77,22 +89,20 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     public void read(JsonObject json) {
+        readPerTick(json, 0);
+        if (json.has("index")) this.index = json.get("index")
+            .getAsInt();
         this.amount = json.get("mana")
             .getAsInt();
-        this.perTick = true;
-        if (json.has("perTick")) {
-            this.perTick = json.get("perTick")
-                .getAsBoolean();
-        } else if (json.has("pertick")) {
-            this.perTick = json.get("pertick")
-                .getAsBoolean();
-        }
     }
 
     @Override
     public void write(JsonObject json) {
+        if (index != -1) json.addProperty("index", index);
         json.addProperty("mana", amount);
-        if (!perTick) json.addProperty("perTick", false);
+        if (interval != 0) {
+            json.addProperty("pertick", interval);
+        }
     }
 
     @Override
@@ -113,24 +123,34 @@ public class ManaOutput extends AbstractRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        return new ManaOutput(amount * multiplier, perTick);
+        ManaOutput result = new ManaOutput(amount * multiplier, isPerTick());
+        result.interval = this.interval;
+        result.index = this.index;
+        return result;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "mana");
         nbt.setInteger("amount", amount);
-        nbt.setBoolean("perTick", perTick);
+        nbt.setInteger("interval", interval);
+        nbt.setInteger("index", index);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
-        this.perTick = nbt.getBoolean("perTick");
+        this.interval = nbt.getInteger("interval");
+        this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
     @Override
     public void accept(IRecipeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public RecipeTickResult getFailureResult(boolean perTick) {
+        return RecipeTickResult.OUTPUT_FULL;
     }
 }

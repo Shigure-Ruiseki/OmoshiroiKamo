@@ -3,37 +3,43 @@ package ruiseki.omoshiroikamo.module.machinery.common.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
+import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
+import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
+import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPort;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT1;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT2;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT3;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT4;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT5;
-import ruiseki.omoshiroikamo.module.machinery.common.tile.gas.output.TEGasOutputPortT6;
 
+/**
+ * Gas Output Port block with unified 16-tier system.
+ * Uses a single TE class (TEGasOutputPort) with tier field instead of per-tier TE classes.
+ *
+ * Legacy TE classes (TEGasOutputPortT1-T6) are automatically remapped to TEGasOutputPort.
+ */
 public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> {
 
+    private static final int TIER_COUNT = 16;
+
     protected BlockGasOutputPort() {
-        super(
-            ModObject.blockModularGasOutput.name,
-            TEGasOutputPortT1.class,
-            TEGasOutputPortT2.class,
-            TEGasOutputPortT3.class,
-            TEGasOutputPortT4.class,
-            TEGasOutputPortT5.class,
-            TEGasOutputPortT6.class);
+        // Pass single TE class - we override createTileEntity and registerTileEntity
+        super(ModObject.blockModularGasOutput.name, TEGasOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -44,6 +50,35 @@ public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> {
     }
 
     @Override
+    public TileEntity createTileEntity(World world, int meta) {
+        // Create unified TE with tier set from metadata
+        return new TEGasOutputPort(meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        // Show all 16 tiers in creative tab (limited by TierManager)
+        int enabledTiers = TierManager.getEnabledTierCount();
+        for (int i = 0; i < enabledTiers && i < TIER_COUNT; i++) {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
+    }
+
+    @Override
+    public void registerPortOverlays(IIconRegister reg) {
+        // Register overlays for all 16 tiers (1-based indexing to match texture files)
+        String prefix = getOverlayPrefix();
+        for (int i = 1; i <= TIER_COUNT; i++) {
+            IconRegistry.addIcon(
+                prefix + i,
+                reg.registerIcon(LibResources.PREFIX_MOD + "modularmachineryOverlay/" + prefix + i));
+        }
+        IconRegistry
+            .addIcon("overlay_port_disabled", reg.registerIcon(LibResources.PREFIX_MOD + "modular_machine_casing"));
+    }
+
+    @Override
     public String getOverlayPrefix() {
         return "overlay_gasoutput_";
     }
@@ -51,6 +86,21 @@ public class BlockGasOutputPort extends AbstractPortBlock<TEGasOutputPort> {
     @Override
     protected Class<? extends AbstractPortItemBlock> getItemBlockClass() {
         return ItemBlockGasOutputPort.class;
+    }
+
+    @Override
+    protected void registerTileEntity() {
+        // Register with remapping for legacy TE classes
+        GameRegistry.registerTileEntityWithAlternatives(
+            TEGasOutputPort.class,
+            TEGasOutputPort.class.getSimpleName() + "TileEntity",
+            // Legacy TE class names - automatically remap to new class
+            "TEGasOutputPortT1TileEntity",
+            "TEGasOutputPortT2TileEntity",
+            "TEGasOutputPortT3TileEntity",
+            "TEGasOutputPortT4TileEntity",
+            "TEGasOutputPortT5TileEntity",
+            "TEGasOutputPortT6TileEntity");
     }
 
     @Override

@@ -399,11 +399,9 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
             return new BlockMapping(symbol, blocks);
         } else if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
-            if (obj.has("block")) {
-                return new BlockMapping(
-                    symbol,
-                    obj.get("block")
-                        .getAsString());
+            ISymbolMapping mapping = null;
+            if (obj.has("block") || obj.has("id")) {
+                mapping = new BlockMapping(symbol, (obj.has("block") ? obj.get("block") : obj.get("id")).getAsString());
             } else if (obj.has("blocks")) {
                 JsonArray blocksArray = obj.getAsJsonArray("blocks");
                 List<String> blocks = new ArrayList<>();
@@ -419,7 +417,7 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
                         blocks.add(blockEl.getAsString());
                     }
                 }
-                return new BlockMapping(symbol, blocks);
+                mapping = new BlockMapping(symbol, blocks);
             } else if (obj.has("component") || obj.has("tiers")) {
                 String componentName = obj.has("component") ? obj.get("component")
                     .getAsString() : "default";
@@ -433,8 +431,19 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
                                 .getAsInt());
                     }
                 }
-                return new TieredBlockMapping(symbol, componentName, tiers);
+                mapping = new TieredBlockMapping(symbol, componentName, tiers);
             }
+
+            if (mapping != null && obj.has("index")) {
+                int index = obj.get("index")
+                    .getAsInt();
+                if (mapping instanceof BlockMapping bm) {
+                    bm.setPortIndex(index);
+                } else if (mapping instanceof TieredBlockMapping tbm) {
+                    tbm.setPortIndex(index);
+                }
+            }
+            return mapping;
         }
         return null;
     }

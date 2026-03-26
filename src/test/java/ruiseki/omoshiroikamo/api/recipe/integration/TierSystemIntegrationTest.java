@@ -63,6 +63,16 @@ public class TierSystemIntegrationTest {
         }
 
         @Override
+        public int getTier() {
+            return Math.min(casingTier, coreTier);
+        }
+
+        @Override
+        public void setTier(int tier) {
+            // No-op for test stub
+        }
+
+        @Override
         public void accept(IRecipeVisitor visitor) {}
 
         @Override
@@ -136,11 +146,6 @@ public class TierSystemIntegrationTest {
         @Override
         public Block getBlock() {
             return null;
-        }
-
-        // --- 未使用メソッドのダミー ---
-        public int getTier() {
-            return Math.min(casingTier, coreTier);
         }
 
         public boolean isEnabled() {

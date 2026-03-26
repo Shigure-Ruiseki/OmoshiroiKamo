@@ -60,8 +60,8 @@ public class AdvancedFilterWidget extends ParentWidget<AdvancedFilterWidget> {
             OKGuiTextures.IGNORE_DURABILITY_ICON) };
 
     private static final CyclicVariantButtonWidget.Variant[] IGNORE_NBT_VARIANTS = new CyclicVariantButtonWidget.Variant[] {
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.match_nbt"), OKGuiTextures.MATCH_NBT_ICON),
-        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.ignore_nbt"), OKGuiTextures.IGNORE_NBT_ICON) };
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.match_nbt"), OKGuiTextures.MATCH_NBT_ICON),
+        new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.ignore_nbt"), OKGuiTextures.IGNORE_NBT_ICON) };
 
     @Getter
     private final CyclicVariantButtonWidget filterTypeButton;

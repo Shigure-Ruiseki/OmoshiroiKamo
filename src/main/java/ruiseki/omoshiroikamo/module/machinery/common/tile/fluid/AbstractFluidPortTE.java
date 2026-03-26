@@ -60,6 +60,8 @@ public abstract class AbstractFluidPortTE extends AbstractTE
 
     public abstract int getTier();
 
+    public abstract void setTier(int tier);
+
     public abstract EnumIO getIOLimit();
 
     @Override
@@ -148,7 +150,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     }
 
     public boolean canFill(ForgeDirection from) {
-        return canInput(from) && isRedstoneActive();
+        return from == ForgeDirection.UNKNOWN || (canInput(from) && isRedstoneActive());
     }
 
     @Override
@@ -159,7 +161,7 @@ public abstract class AbstractFluidPortTE extends AbstractTE
     }
 
     public boolean canDrain(ForgeDirection from) {
-        return canOutput(from) && isRedstoneActive();
+        return from == ForgeDirection.UNKNOWN || (canOutput(from) && isRedstoneActive());
     }
 
     @Override
@@ -249,4 +251,14 @@ public abstract class AbstractFluidPortTE extends AbstractTE
 
     @Override
     public void accept(IRecipeVisitor visitor) {}
+
+    @Override
+    public int getAssignedIndex() {
+        return assignedIndex;
+    }
+
+    @Override
+    public void setAssignedIndex(int index) {
+        this.assignedIndex = index;
+    }
 }

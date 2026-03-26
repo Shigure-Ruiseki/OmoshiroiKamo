@@ -1,43 +1,35 @@
 package ruiseki.omoshiroikamo.api.recipe.io;
 
-import java.util.List;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
-import ruiseki.omoshiroikamo.api.modular.IModularPort;
-import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonMaterial;
 
 public abstract class AbstractRecipeOutput extends AbstractJsonMaterial implements IRecipeOutput {
 
+    protected int interval = 0;
+
     @Override
-    public boolean checkCapacity(List<IModularPort> ports, int multiplier) {
-        long totalCapacity = 0;
-
-        for (IModularPort port : ports) {
-            // Common check for all outputs
-            if (port.getPortDirection() != IPortType.Direction.OUTPUT
-                && port.getPortDirection() != IPortType.Direction.BOTH) continue;
-
-            if (isCorrectPort(port)) {
-                totalCapacity += getPortCapacity(port);
-            }
-        }
-
-        return totalCapacity >= getRequiredAmount() * multiplier;
+    public int getInterval() {
+        return interval;
     }
 
-    /**
-     * Check if the port is of the correct type and instance for this output.
-     * Also checks IPortType.Type.
-     */
-    protected abstract boolean isCorrectPort(IModularPort port);
+    public void setInterval(int interval) {
+        this.interval = Math.max(0, interval);
+    }
 
-    /**
-     * Calculate the capacity of a single valid port for this output type.
-     */
-    protected abstract long getPortCapacity(IModularPort port);
-
-    /**
-     * Get the required amount for this output (stack size, fluid amount, etc.)
-     */
-    public abstract long getRequiredAmount();
+    protected void readPerTick(JsonObject json, int defaultInterval) {
+        this.interval = defaultInterval;
+        JsonElement element = json.has("pertick") ? json.get("pertick")
+            : (json.has("perTick") ? json.get("perTick") : null);
+        if (element != null && element.isJsonPrimitive()) {
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isBoolean()) {
+                this.interval = primitive.getAsBoolean() ? 1 : 0;
+            } else if (primitive.isNumber()) {
+                this.interval = primitive.getAsInt();
+            }
+        }
+    }
 }
