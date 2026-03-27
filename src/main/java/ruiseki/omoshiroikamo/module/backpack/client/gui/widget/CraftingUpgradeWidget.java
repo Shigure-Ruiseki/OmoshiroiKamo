@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -15,7 +17,6 @@ import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.BigItemSlot;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackInventoryUtils;
@@ -36,8 +37,8 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
     private ItemSlot[] craftingMatrix;
     private ItemSlot craftingResult;
 
-    public CraftingUpgradeWidget(int slotIndex, CraftingUpgradeWrapper wrapper, BackpackPanel panel) {
-        super(slotIndex, 5, BackpackItems.CRAFTING_UPGRADE.newItemStack(), "gui.backpack.crafting_settings", 90);
+    public CraftingUpgradeWidget(int slotIndex, ItemStack stack, CraftingUpgradeWrapper wrapper, BackpackPanel panel) {
+        super(slotIndex, 5, stack, "gui.backpack.crafting_settings", 90);
         this.wrapper = wrapper;
 
         this.syncHandler("upgrades", slotIndex);

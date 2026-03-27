@@ -3,11 +3,12 @@ package ruiseki.omoshiroikamo.module.backpack.client.gui.widget;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.VoidUpgradeWrapper;
 
@@ -23,15 +24,8 @@ public class VoidUpgradeWidget extends BasicExpandedTabWidget<VoidUpgradeWrapper
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_overflow"), OKGuiTextures.VOID_OVERFLOW),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_any"), OKGuiTextures.VOID_ANY));
 
-    public VoidUpgradeWidget(int slotIndex, VoidUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            wrapper,
-            BackpackItems.VOID_UPGRADE.newItemStack(),
-            "gui.backpack.void_settings",
-            "common_filter",
-            5,
-            80);
+    public VoidUpgradeWidget(int slotIndex, ItemStack stack, VoidUpgradeWrapper wrapper) {
+        super(slotIndex, stack, wrapper, "gui.backpack.void_settings", "common_filter", 5, 80);
 
         CyclicVariantButtonWidget inputButton = new CyclicVariantButtonWidget(
             VOID_INPUT_VARIANTS,

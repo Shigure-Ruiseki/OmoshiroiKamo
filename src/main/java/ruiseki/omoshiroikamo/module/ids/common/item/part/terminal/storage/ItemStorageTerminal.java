@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemStorageTerminal extends AbstractPartItem {
 
     public ItemStorageTerminal() {
-        super(ModObject.itemStorageTerminal.unlocalisedName);
+        super(ModObject.STORAGE_TERMINAL.name);
     }
 
     @Override

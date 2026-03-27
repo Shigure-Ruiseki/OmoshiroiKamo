@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * The mod base command.
@@ -138,7 +138,7 @@ public class CommandMod implements ICommand {
                 String[] asubstring = shortenArgumentList(args);
                 subcommand.processCommand(sender, asubstring);
             } else {
-                throw new WrongUsageException(LibMisc.LANG.localize("command.ok.invalidSubcommand"));
+                throw new WrongUsageException(LangHelpers.localize("command.ok.invalidSubcommand"));
             }
         }
     }

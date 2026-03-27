@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 
 public class OKCreativeTab extends CreativeTabs {
 
@@ -49,6 +49,6 @@ public class OKCreativeTab extends CreativeTabs {
     @Override
     @SideOnly(Side.CLIENT)
     public String getTranslatedTabLabel() {
-        return LibMisc.LANG.localize("creativetab." + getTabLabel());
+        return LangHelpers.localize("creativetab." + getTabLabel());
     }
 }

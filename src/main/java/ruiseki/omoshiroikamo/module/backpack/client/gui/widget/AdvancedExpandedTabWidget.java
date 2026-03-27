@@ -15,9 +15,9 @@ public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilte
     protected final Row startingRow;
     protected final AdvancedFilterWidget filterWidget;
 
-    public AdvancedExpandedTabWidget(int slotIndex, T wrapper, ItemStack delegatedIconStack, String titleKey,
-        String filterSyncKey, int coveredTabSize, int width) {
-        super(slotIndex, coveredTabSize, delegatedIconStack, titleKey, width);
+    public AdvancedExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey, String filterSyncKey,
+        int coveredTabSize, int width) {
+        super(slotIndex, coveredTabSize, stack, titleKey, width);
 
         this.wrapper = wrapper;
 
@@ -37,8 +37,8 @@ public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilte
         child(column);
     }
 
-    public AdvancedExpandedTabWidget(int slotIndex, T wrapper, ItemStack delegatedIconStack, String titleKey) {
-        this(slotIndex, wrapper, delegatedIconStack, titleKey, "adv_common_filter", 6, 100);
+    public AdvancedExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey) {
+        this(slotIndex, stack, wrapper, titleKey, "adv_common_filter", 6, 100);
     }
 
     @Override

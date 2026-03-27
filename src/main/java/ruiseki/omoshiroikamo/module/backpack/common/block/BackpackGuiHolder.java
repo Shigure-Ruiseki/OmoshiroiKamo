@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
-import static ruiseki.omoshiroikamo.core.common.util.MathUtils.ceilDiv;
+import static ruiseki.omoshiroikamo.core.helper.MathHelpers.ceilDiv;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

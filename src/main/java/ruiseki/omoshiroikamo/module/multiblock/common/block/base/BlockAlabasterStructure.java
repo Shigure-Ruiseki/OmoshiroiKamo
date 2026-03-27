@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 public class BlockAlabasterStructure extends BlockOK implements IMBBlock {
 
     protected BlockAlabasterStructure() {
-        super(ModObject.blockAlabasterStructure.unlocalisedName);
+        super(ModObject.ALABASTER_STRUCTURE.name);
         hasSubtypes = true;
     }
 

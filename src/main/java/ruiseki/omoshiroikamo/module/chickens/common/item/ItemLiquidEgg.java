@@ -21,15 +21,15 @@ import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.LiquidEggRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
 
 public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
 
     public ItemLiquidEgg() {
-        super(ModObject.itemLiquidEgg);
+        super(ModObject.LIQUID_EGG);
         setMaxStackSize(16);
         setMaxDamage(0);
         setTextureName("chicken/liquid_egg");
@@ -54,7 +54,7 @@ public class ItemLiquidEgg extends ItemOK implements IFluidContainerItem {
     public String getItemStackDisplayName(ItemStack stack) {
         Block liquid = LiquidEggRegistry.findById(stack.getItemDamage())
             .getLiquid();
-        return LibMisc.LANG.localize(
+        return LangHelpers.localize(
             getUnlocalizedName() + "."
                 + liquid.getUnlocalizedName()
                     .substring(5)

@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemItemExporter extends AbstractPartItem {
 
     public ItemItemExporter() {
-        super(ModObject.itemItemExporter.unlocalisedName);
+        super(ModObject.ITEM_EXPORTER.name);
         setMaxStackSize(64);
     }
 

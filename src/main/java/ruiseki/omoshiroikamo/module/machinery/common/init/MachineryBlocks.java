@@ -55,6 +55,7 @@ public enum MachineryBlocks {
     ESSENTIA_INPUT_PORT,
     ESSENTIA_OUTPUT_PORT,
     ESSENTIA_INPUT_PORT_ME,
+    VIS_BRIDGE,
 
     ;
     // spotless: on

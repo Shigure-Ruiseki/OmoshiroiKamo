@@ -7,13 +7,13 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierJumpBoost extends BlockModifier {
 
     protected BlockModifierJumpBoost() {
-        super(ModObject.blockModifierJumpBoost.unlocalisedName, "jump_boost");
+        super(ModObject.MODIFIER_JUMP_BOOST.name, "jump_boost");
         setTextureName("multiblock/modifier_jump_boost");
     }
 
@@ -32,8 +32,8 @@ public class BlockModifierJumpBoost extends BlockModifier {
     public List<String> getTooltipLines() {
         int energyCost = QuantumBeaconConfig.modifierEnergyCost.jumpBoost;
         List<String> list = new ArrayList<>();
-        list.add(LibMisc.LANG.localize("tooltip.modifier.jump_boost.effect"));
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.beacon.energy"), energyCost));
+        list.add(LangHelpers.localize("tooltip.modifier.jump_boost.effect"));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.beacon.energy"), energyCost));
         return list;
     }
 }

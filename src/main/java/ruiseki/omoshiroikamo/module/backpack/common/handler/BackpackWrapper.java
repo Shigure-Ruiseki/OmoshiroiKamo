@@ -32,8 +32,9 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.BackpackItemStackHandler;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
@@ -52,7 +53,6 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.network.PacketBackpackNBT;
-import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
 
 public class BackpackWrapper implements IItemHandlerModifiable {
 
@@ -201,11 +201,11 @@ public class BackpackWrapper implements IItemHandlerModifiable {
             return this.customName;
         }
         if (backpack != null && backpack.getItem() != null) {
-            return LibMisc.LANG.localize(
+            return LangHelpers.localize(
                 backpack.getItem()
                     .getUnlocalizedName(backpack) + ".name");
         }
-        return LibMisc.LANG.localize("container.inventory");
+        return LangHelpers.localize("container.inventory");
     }
 
     @Override
@@ -622,7 +622,7 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         if (backpack == null) {
             return;
         }
-        NBTTagCompound tag = ItemNBTUtils.getNBT(backpack);
+        NBTTagCompound tag = ItemNBTHelpers.getNBT(backpack);
         readFromNBT(tag);
     }
 
@@ -637,7 +637,7 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         tag.setTag(UPGRADE_INV, upgradeHandler.serializeNBT());
 
         NBTTagCompound memoryTag = new NBTTagCompound();
-        BackpackItemStackUtils.saveAllSlotsExtended(memoryTag, backpackHandler.memorizedSlotStack);
+        ItemStackHelpers.saveAllSlotsExtended(memoryTag, backpackHandler.memorizedSlotStack);
         tag.setTag(MEMORY_STACK_ITEMS_TAG, memoryTag);
 
         List<Boolean> respectList = backpackHandler.memorizedSlotRespectNbtList;
@@ -691,7 +691,7 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         if (tag.hasKey(BACKPACK_INV)) {
             backpackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
 
-            BackpackItemStackUtils.loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), backpackHandler.getStacks());
+            ItemStackHelpers.loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), backpackHandler.getStacks());
             if (backpackHandler.getSlots() != backpackSlots) {
                 backpackHandler.resize(backpackSlots);
             }
@@ -704,7 +704,7 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         }
 
         if (tag.hasKey(MEMORY_STACK_ITEMS_TAG)) {
-            BackpackItemStackUtils
+            ItemStackHelpers
                 .loadAllItemsExtended(tag.getCompoundTag(MEMORY_STACK_ITEMS_TAG), backpackHandler.memorizedSlotStack);
         }
 

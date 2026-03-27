@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemItemImporter extends AbstractPartItem {
 
     public ItemItemImporter() {
-        super(ModObject.itemItemImporter.unlocalisedName);
+        super(ModObject.ITEM_IMPORTER.name);
     }
 
     @Override

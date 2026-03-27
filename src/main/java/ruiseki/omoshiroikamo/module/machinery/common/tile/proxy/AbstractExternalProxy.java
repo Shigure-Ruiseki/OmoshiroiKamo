@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -215,7 +215,7 @@ public abstract class AbstractExternalProxy implements IExternalPortProxy {
      * Can be overridden by subclasses for custom messages.
      */
     protected String buildErrorMessage() {
-        return LibMisc.LANG.localize(
+        return LangHelpers.localize(
             "chat.omoshiroikamo.port_error",
             controller.xCoord,
             controller.yCoord,

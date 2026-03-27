@@ -8,8 +8,8 @@ import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class CommandMultiblockWandClear extends CommandMod {
 
@@ -27,10 +27,10 @@ public class CommandMultiblockWandClear extends CommandMod {
             WandSelectionManager.getInstance()
                 .clearPendingScan(player.getUniqueID());
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GREEN + LibMisc.LANG.localize("command.ok.wand_cleared")));
+                new ChatComponentText(EnumChatFormatting.GREEN + LangHelpers.localize("command.ok.wand_cleared")));
         } else {
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.GRAY + LibMisc.LANG.localize("command.ok.wand_no_selection")));
+                new ChatComponentText(EnumChatFormatting.GRAY + LangHelpers.localize("command.ok.wand_no_selection")));
         }
     }
 }

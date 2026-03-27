@@ -13,6 +13,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 
@@ -56,7 +57,7 @@ public class EntityAnimalProvider implements IWailaEntityProvider {
 
                 String timeFormatted = String.format("%d:%02d", minutes, seconds);
 
-                currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.breedCountdown", timeFormatted));
+                currenttip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.breedCountdown", timeFormatted));
             }
         } else if (config.getConfig(LibMisc.MOD_ID + ".grownTime")) {
             int growUp = -animal.getGrowingAge();
@@ -66,7 +67,7 @@ public class EntityAnimalProvider implements IWailaEntityProvider {
 
             String timeFormatted = String.format("%d:%02d", minutes, seconds);
 
-            currenttip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.childGrowUp", timeFormatted));
+            currenttip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.childGrowUp", timeFormatted));
         }
 
         return currenttip;

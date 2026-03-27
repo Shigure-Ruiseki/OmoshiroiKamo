@@ -18,26 +18,26 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.BackportConfigs;
-import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
+import ruiseki.omoshiroikamo.core.helper.KeyboardHelpers;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
 
 @EventBusSubscriber
 public class ItemSootCoveredRedstone extends ItemOK {
 
     public ItemSootCoveredRedstone() {
-        super(ModObject.itemSootCoveredRedstone.unlocalisedName);
+        super(ModObject.SOOT_COVERED_REDSTONE.name);
         setMaxStackSize(64);
         setTextureName("dml/soot_covered_redstone");
     }
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        String redstone = ChatFormatting.RED + LibMisc.LANG.localize("item.redstone.name") + ChatFormatting.GRAY;
-        String coal = ChatFormatting.RESET + LibMisc.LANG.localize("tile.blockCoal.name") + ChatFormatting.GRAY;
-        String leftClick = KeyboardUtils.getAttackKeyName();
-        list.add(LibMisc.LANG.localize("tooltip.soot_covered_redstone", redstone, coal, leftClick));
+        String redstone = ChatFormatting.RED + LangHelpers.localize("item.redstone.name") + ChatFormatting.GRAY;
+        String coal = ChatFormatting.RESET + LangHelpers.localize("tile.blockCoal.name") + ChatFormatting.GRAY;
+        String leftClick = KeyboardHelpers.getAttackKeyName();
+        list.add(LangHelpers.localize("tooltip.soot_covered_redstone", redstone, coal, leftClick));
     }
 
     @EventBusSubscriber.Condition

@@ -8,7 +8,7 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 public class BlockMenrilPlanks extends BlockOK {
 
     public BlockMenrilPlanks() {
-        super(ModObject.blockMenrilPlanks.unlocalisedName, Material.wood);
+        super(ModObject.MENRIL_PLANKS.name, Material.wood);
         setTextureName("ids/menril_planks");
     }
 }

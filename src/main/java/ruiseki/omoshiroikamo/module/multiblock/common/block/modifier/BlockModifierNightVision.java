@@ -7,13 +7,13 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierNightVision extends BlockModifier {
 
     protected BlockModifierNightVision() {
-        super(ModObject.blockModifierNightVision.unlocalisedName, "night_vision");
+        super(ModObject.MODIFIER_NIGHT_VISION.name, "night_vision");
         setTextureName("multiblock/modifier_night_vision");
     }
 
@@ -32,8 +32,8 @@ public class BlockModifierNightVision extends BlockModifier {
     public List<String> getTooltipLines() {
         int energyCost = QuantumBeaconConfig.modifierEnergyCost.nightVision;
         List<String> list = new ArrayList<>();
-        list.add(LibMisc.LANG.localize("tooltip.modifier.night_vision.effect"));
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.beacon.energy"), energyCost));
+        list.add(LangHelpers.localize("tooltip.modifier.night_vision.effect"));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.beacon.energy"), energyCost));
         return list;
     }
 }

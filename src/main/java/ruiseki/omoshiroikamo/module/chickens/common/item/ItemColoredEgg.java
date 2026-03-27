@@ -13,15 +13,15 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityColoredEgg;
 
 public class ItemColoredEgg extends ItemOK {
 
     public ItemColoredEgg() {
-        super(ModObject.itemColoredEgg.unlocalisedName);
+        super(ModObject.COLORED_EGG.name);
         setMaxStackSize(16);
         setMaxDamage(0);
         setTextureName("chicken/colored_egg");
@@ -31,7 +31,7 @@ public class ItemColoredEgg extends ItemOK {
     public String getItemStackDisplayName(ItemStack stack) {
         EnumDye color = EnumDye.fromIndex(stack.getItemDamage());
         String unlocalizedName = color.getName();
-        return LibMisc.LANG.localize(getUnlocalizedName() + "." + unlocalizedName + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + "." + unlocalizedName + ".name");
     }
 
     @Override

@@ -20,13 +20,13 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IMBBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class BlockSolarCell extends BlockOK implements IMBBlock {
 
     protected BlockSolarCell() {
-        super(ModObject.blockSolarCell.unlocalisedName);
+        super(ModObject.SOLAR_CELL.name);
         hasSubtypes = true;
         isFullSize = false;
     }
@@ -144,7 +144,7 @@ public class BlockSolarCell extends BlockOK implements IMBBlock {
             super.addInformation(stack, player, tooltip, advanced);
             int tier = stack.getItemDamage();
             int cellEnergy = getCellEnergy(tier);
-            tooltip.add(LibMisc.LANG.localize("tooltip.solar.cell.power", cellEnergy));
+            tooltip.add(LangHelpers.localize("tooltip.solar.cell.power", cellEnergy));
         }
 
         private int getCellEnergy(int cellTier) {

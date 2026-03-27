@@ -20,10 +20,10 @@ import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.core.network.packet.PacketClientFlight;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.client.render.BeamSegment;
@@ -57,7 +57,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
@@ -91,7 +91,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         // Remove from global tracking (prevents re-granting on dimension change)
         QuantumBeaconEventHandler.unregisterFlightGranted(player.getId());
 
-        EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
+        EntityPlayer plr = PlayerHelpers.getPlayerFromWorld(worldObj, player.getId());
         if (plr != null && !plr.capabilities.isCreativeMode) {
             plr.capabilities.allowFlying = false;
             if (plr.capabilities.isFlying) {
@@ -181,12 +181,12 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
 
         // If player doesn't exist in this world (left chunk, etc.)
         // Reset the flight flag (will be re-granted when player returns)
-        if (!PlayerUtils.doesPlayerExist(worldObj, player.getId())) {
+        if (!PlayerHelpers.doesPlayerExist(worldObj, player.getId())) {
             wasFlightGrantedByBeacon = false;
             return;
         }
 
-        EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
+        EntityPlayer plr = PlayerHelpers.getPlayerFromWorld(worldObj, player.getId());
         if (plr == null) {
             wasFlightGrantedByBeacon = false;
             return;
@@ -247,7 +247,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     private void updatePlayerFlight() {
         if (player == null || worldObj.isRemote) return;
 
-        EntityPlayer plr = PlayerUtils.getPlayerFromWorld(worldObj, player.getId());
+        EntityPlayer plr = PlayerHelpers.getPlayerFromWorld(worldObj, player.getId());
         if (plr == null || plr.capabilities.isCreativeMode) return;
 
         boolean hasFlightModifier = modifierHandler
@@ -345,7 +345,7 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
         if (this.player == null) {
             return;
         }
-        EntityPlayer player = PlayerUtils.getPlayerFromWorld(this.worldObj, this.player.getId());
+        EntityPlayer player = PlayerHelpers.getPlayerFromWorld(this.worldObj, this.player.getId());
         if (player == null) {
             return;
         }

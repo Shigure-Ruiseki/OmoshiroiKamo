@@ -6,7 +6,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemDataModelBlank extends ItemOK {
 
     public ItemDataModelBlank() {
-        super(ModObject.itemDataModelBlank.unlocalisedName);
+        super(ModObject.DATA_MODEL_BLANK.name);
         setMaxStackSize(64);
         setTextureName("dml/data_model_blank");
     }

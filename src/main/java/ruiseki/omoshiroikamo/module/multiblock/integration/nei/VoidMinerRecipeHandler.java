@@ -20,12 +20,12 @@ import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
 import ruiseki.omoshiroikamo.api.enums.EnumDye;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.nei.PositionedStackAdv;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.BlockColoredLens;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockBlocks;
@@ -148,7 +148,7 @@ public abstract class VoidMinerRecipeHandler extends RecipeHandlerBase {
                 case LENS_BONUS:
                     // Show lens name in header
                     if (detailItem != null) {
-                        String lensName = LibMisc.LANG
+                        String lensName = LangHelpers
                             .localize("nei.multiblock.lens_bonus", detailItem.getDisplayName());
                         fr.drawString(lensName, HEADER_RECT.x, HEADER_RECT.y + 2, HEADER_TEXT_COLOR);
                     }

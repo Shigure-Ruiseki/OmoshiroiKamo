@@ -20,8 +20,8 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
@@ -39,7 +39,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
 
     protected BlockFluidOutputPort() {
         // Pass single TE class - we override createTileEntity and registerTileEntity
-        super(ModObject.blockModularFluidOutput.unlocalisedName, TEFluidOutputPort.class);
+        super(ModObject.blockModularFluidOutput.name, TEFluidOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -116,7 +116,7 @@ public class BlockFluidOutputPort extends AbstractPortBlock<TEFluidOutputPort> {
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.getFluidPortCapacity(tier)) + " mB"));
     }

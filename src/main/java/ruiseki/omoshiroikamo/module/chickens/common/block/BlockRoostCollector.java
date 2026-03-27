@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.core.block.AbstractBlock;
 public class BlockRoostCollector extends AbstractBlock<TERoostCollector> {
 
     protected BlockRoostCollector() {
-        super(ModObject.blockRoostCollector.unlocalisedName, TERoostCollector.class, Material.wood);
+        super(ModObject.ROOST_COLLECTOR.name, TERoostCollector.class, Material.wood);
     }
 
     public static BlockRoostCollector create() {

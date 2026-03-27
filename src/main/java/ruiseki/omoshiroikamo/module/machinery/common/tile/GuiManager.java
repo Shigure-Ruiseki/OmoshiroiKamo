@@ -33,7 +33,7 @@ import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
@@ -73,7 +73,7 @@ public class GuiManager {
             .padding(4)
             .child(IKey.dynamic(() -> {
                 String name = this.getRecipeNameText();
-                if (name.isEmpty()) return EnumChatFormatting.WHITE + LibMisc.LANG.localize("gui.status.idle");
+                if (name.isEmpty()) return EnumChatFormatting.WHITE + LangHelpers.localize("gui.status.idle");
                 return EnumChatFormatting.GOLD + name;
             })
                 .asWidget()
@@ -178,7 +178,7 @@ public class GuiManager {
         if (controller.isFormed()) {
             String name = controller.getCustomStructureDisplayName();
             if (name != null && !name.isEmpty()) {
-                // TODO: return LibMisc.LANG.localize("structure." + name + ".name");
+                // TODO: return LangHelpers.localize("structure." + name + ".name");
                 return name;
             }
         }
@@ -195,19 +195,19 @@ public class GuiManager {
      * 5. Processing status
      */
     private String getStatusText() {
-        if (!hasBlueprint()) return LibMisc.LANG.localize("gui.status.insert_blueprint");
+        if (!hasBlueprint()) return LangHelpers.localize("gui.status.insert_blueprint");
 
         if (!controller.isFormed()) {
             if (controller.isPhysicallyValid()) {
                 // Physically valid but requirements not met
-                return LibMisc.LANG.localize("gui.status.requirements_not_met");
+                return LangHelpers.localize("gui.status.requirements_not_met");
             }
-            if (hasValidationError()) return LibMisc.LANG.localize("gui.status.structure_mismatch");
-            return LibMisc.LANG.localize("gui.status.structure_not_formed");
+            if (hasValidationError()) return LangHelpers.localize("gui.status.structure_mismatch");
+            return LangHelpers.localize("gui.status.structure_not_formed");
         }
 
         if (!controller.isRedstoneActive()) {
-            return LibMisc.LANG.localize(ErrorReason.PAUSED.getUnlocalizedName());
+            return LangHelpers.localize(ErrorReason.PAUSED.getUnlocalizedName());
         }
 
         ProcessAgent agent = controller.getProcessAgent();
@@ -225,33 +225,33 @@ public class GuiManager {
         ErrorReason lastError = controller.getLastProcessErrorReason();
 
         // Show energy error even during processing
-        if (lastError == ErrorReason.NO_ENERGY) return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+        if (lastError == ErrorReason.NO_ENERGY) return LangHelpers.localize(lastError.getUnlocalizedName());
         if (lastError == ErrorReason.OUTPUT_FULL) {
-            return LibMisc.LANG
+            return LangHelpers
                 .localize(lastError.getUnlocalizedName(), diagnoseBlockedOutputs(controller.getOutputPorts()));
         }
 
         if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
             String detail = controller.getLastProcessErrorDetail();
             if (detail != null && !detail.isEmpty()) {
-                return LibMisc.LANG.localize(lastError.getUnlocalizedName(), detail);
+                return LangHelpers.localize(lastError.getUnlocalizedName(), detail);
             }
-            return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+            return LangHelpers.localize(lastError.getUnlocalizedName());
         }
 
         if (agent.isRunning() && !agent.isWaitingForOutput()) {
             int percent = (int) (agent.getProgressPercent() * 100);
             if (agent.getMaxProgress() <= 0) percent = 0;
 
-            String status = LibMisc.LANG.localize("gui.status.processing", percent);
+            String status = LangHelpers.localize("gui.status.processing", percent);
             return status;
         }
 
         if (agent.isWaitingForOutput()) {
-            return LibMisc.LANG.localize("gui.status.output_full", diagnoseBlockedOutputs(controller.getOutputPorts()));
+            return LangHelpers.localize("gui.status.output_full", diagnoseBlockedOutputs(controller.getOutputPorts()));
         }
 
-        return LibMisc.LANG.localize("gui.status.idle");
+        return LangHelpers.localize("gui.status.idle");
     }
 
     /**
@@ -261,7 +261,7 @@ public class GuiManager {
         if (RecipeLoader.getInstance()
             .getRecipes(controller.getRecipeGroup())
             .isEmpty()) {
-            return LibMisc.LANG.localize(ErrorReason.NO_RECIPES.getUnlocalizedName());
+            return LangHelpers.localize(ErrorReason.NO_RECIPES.getUnlocalizedName());
         }
 
         ErrorReason lastError = controller.getLastProcessErrorReason();
@@ -275,14 +275,14 @@ public class GuiManager {
             if (lastError == ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT) {
                 String detail = controller.getLastProcessErrorDetail();
                 if (detail != null && !detail.isEmpty()) {
-                    return LibMisc.LANG.localize(lastError.getUnlocalizedName(), detail);
+                    return LangHelpers.localize(lastError.getUnlocalizedName(), detail);
                 }
             }
-            return LibMisc.LANG.localize(lastError.getUnlocalizedName());
+            return LangHelpers.localize(lastError.getUnlocalizedName());
         }
 
         // Default idle state
-        return LibMisc.LANG.localize("gui.status.idle");
+        return LangHelpers.localize("gui.status.idle");
     }
 
     /**
@@ -342,7 +342,7 @@ public class GuiManager {
                     if (!modularOutput.process(outputPorts, true)) {
                         if (blocked.length() > 0) blocked.append(", ");
                         blocked.append(
-                            LibMisc.LANG.localize(
+                            LangHelpers.localize(
                                 "gui.port_type." + modularOutput.getPortType()
                                     .name()));
                     }
@@ -357,12 +357,12 @@ public class GuiManager {
             StringBuilder sb = new StringBuilder();
             for (IPortType.Type type : cachedTypes) {
                 if (sb.length() > 0) sb.append(", ");
-                sb.append(LibMisc.LANG.localize("gui.port_type." + type.name()));
+                sb.append(LangHelpers.localize("gui.port_type." + type.name()));
             }
             return sb.toString();
         }
 
-        return LibMisc.LANG.localize("gui.status.unknown");
+        return LangHelpers.localize("gui.status.unknown");
     }
 
 }

@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IUpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
@@ -17,11 +17,11 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
     public ItemUpgrade(String name) {
         super(name);
         setNoRepair();
-        setTextureName("backpack/upgrade_base");
+        setTextureName("backpack/base_upgrade");
     }
 
     public ItemUpgrade() {
-        this(ModObject.itemUpgrade.unlocalisedName);
+        this(ModObject.BACKPACK_BASE_UPGRADE.name);
     }
 
     public boolean hasTab() {
@@ -30,7 +30,7 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "backpack.upgrade_base"));
+        list.add(LangHelpers.localize(LibResources.TOOLTIP + "backpack.base_upgrade"));
     }
 
     @SuppressWarnings("unchecked")

@@ -6,7 +6,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemPolymerClay extends ItemOK {
 
     public ItemPolymerClay() {
-        super(ModObject.itemPolymerClay.unlocalisedName);
+        super(ModObject.POLYMER_CLAY.name);
         setMaxStackSize(64);
         setTextureName("dml/polymer_clay");
     }

@@ -9,7 +9,6 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedVoidUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
@@ -25,15 +24,8 @@ public class AdvancedVoidUpgradeWidget extends AdvancedExpandedTabWidget<Advance
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_overflow"), OKGuiTextures.VOID_OVERFLOW),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_any"), OKGuiTextures.VOID_ANY));
 
-    public AdvancedVoidUpgradeWidget(int slotIndex, AdvancedVoidUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            wrapper,
-            new ItemStack(BackpackItems.ADVANCED_VOID_UPGRADE.getItem()),
-            "gui.backpack.advanced_void_settings",
-            "adv_common_filter",
-            6,
-            100);
+    public AdvancedVoidUpgradeWidget(int slotIndex, ItemStack stack, AdvancedVoidUpgradeWrapper wrapper) {
+        super(slotIndex, stack, wrapper, "gui.backpack.advanced_void_settings", "adv_common_filter", 6, 100);
 
         CyclicVariantButtonWidget inputButton = new CyclicVariantButtonWidget(
             VOID_INPUT_VARIANTS,

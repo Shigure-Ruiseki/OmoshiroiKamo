@@ -6,9 +6,9 @@ import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.json.JsonErrorCollector;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecipes;
 
 public class CommandMultiblockReload extends CommandMod {
@@ -22,7 +22,7 @@ public class CommandMultiblockReload extends CommandMod {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.reloading")));
+            new ChatComponentText(EnumChatFormatting.YELLOW + LangHelpers.localize("command.ok.reloading")));
 
         try {
             // Core structure data
@@ -45,19 +45,19 @@ public class CommandMultiblockReload extends CommandMod {
                         .getErrorCount();
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.reload_errors", errorCount)));
+                        EnumChatFormatting.RED + LangHelpers.localize("command.ok.reload_errors", errorCount)));
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.GRAY + LibMisc.LANG.localize("command.ok.reload_check_file")));
+                        EnumChatFormatting.GRAY + LangHelpers.localize("command.ok.reload_check_file")));
             } else {
                 sender.addChatMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.GREEN + LibMisc.LANG.localize("command.ok.reload_success")));
+                        EnumChatFormatting.GREEN + LangHelpers.localize("command.ok.reload_success")));
             }
         } catch (Exception e) {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.reload_failed", e.getMessage())));
+                    EnumChatFormatting.RED + LangHelpers.localize("command.ok.reload_failed", e.getMessage())));
         }
     }
 }

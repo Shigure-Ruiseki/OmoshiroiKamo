@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.input.TEEssentiaInputPort;
@@ -28,7 +28,7 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
     private static final int TIER_COUNT = 16;
 
     protected BlockEssentiaInputPort() {
-        super(ModObject.blockModularEssentiaInput.unlocalisedName, TEEssentiaInputPort.class);
+        super(ModObject.blockModularEssentiaInput.name, TEEssentiaInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -83,7 +83,7 @@ public class BlockEssentiaInputPort extends AbstractPortBlock<TEEssentiaInputPor
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.getEssentiaPortCapacity(tier)) + " Essentia / type"));
     }

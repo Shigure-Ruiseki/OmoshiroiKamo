@@ -32,11 +32,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 import ruiseki.omoshiroikamo.core.datastructure.EnumFacingMap;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
+import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 
 /**
  * @author rubensworks
@@ -606,14 +606,14 @@ public abstract class NBTClassType<T> {
             @Override
             public void writePersistedField(String name, GameProfile object, NBTTagCompound tag) {
                 if (object != null) {
-                    tag.setTag(name, PlayerUtils.proifleToNBT(object));
+                    tag.setTag(name, PlayerHelpers.proifleToNBT(object));
                 }
             }
 
             @Override
             public GameProfile readPersistedField(String name, NBTTagCompound tag) {
                 if (!tag.hasKey(name)) return null;
-                return PlayerUtils.profileFromNBT(tag.getCompoundTag(name));
+                return PlayerHelpers.profileFromNBT(tag.getCompoundTag(name));
             }
 
             @Override

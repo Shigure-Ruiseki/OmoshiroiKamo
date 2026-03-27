@@ -26,7 +26,7 @@ import ruiseki.omoshiroikamo.core.lib.LibMisc;
 public class ItemDeepLearner extends ItemOK implements IGuiHolder<PlayerInventoryGuiData> {
 
     public ItemDeepLearner() {
-        super(ModObject.itemDeepLearner.unlocalisedName);
+        super(ModObject.DEEP_LEARNER.name);
         setMaxStackSize(1);
         setTextureName("dml/deep_learner");
     }

@@ -6,14 +6,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedVoidUpgradeWrapper;
 
 public class ItemAdvancedVoidUpgrade extends ItemUpgrade<AdvancedVoidUpgradeWrapper> {
 
     public ItemAdvancedVoidUpgrade() {
-        super(ModObject.itemAdvancedVoidUpgrade.unlocalisedName);
+        super(ModObject.BACKPACK_ADVANCED_VOID_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("backpack/advanced_void_upgrade");
     }
@@ -25,7 +25,7 @@ public class ItemAdvancedVoidUpgrade extends ItemUpgrade<AdvancedVoidUpgradeWrap
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "backpack.advanced_void_upgrade"));
+        list.add(LangHelpers.localize(LibResources.TOOLTIP + "backpack.advanced_void_upgrade"));
     }
 
     @Override

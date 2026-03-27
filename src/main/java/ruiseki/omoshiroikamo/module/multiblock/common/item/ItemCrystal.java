@@ -15,7 +15,7 @@ public class ItemCrystal extends ItemOK {
     public static final int VARIATIONS = 8;
 
     public ItemCrystal() {
-        super(ModObject.itemCrystal.unlocalisedName);
+        super(ModObject.CRYSTAL.name);
         setTextureName("multiblock/crystal");
     }
 

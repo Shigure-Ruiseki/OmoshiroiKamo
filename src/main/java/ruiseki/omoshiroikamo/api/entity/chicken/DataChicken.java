@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.EntityChickensChicken;
 import ruiseki.omoshiroikamo.module.chickens.common.init.ChickensItems;
@@ -135,7 +135,7 @@ public class DataChicken {
      * @return A compact summary: "DisplayName: growth/gain/strength"
      */
     public String getDisplaySummary() {
-        return LibMisc.LANG.localize(getDisplayName()) + ": " + growth + "/" + gain + "/" + strength;
+        return LangHelpers.localize(getDisplayName()) + ": " + growth + "/" + gain + "/" + strength;
     }
 
     /**

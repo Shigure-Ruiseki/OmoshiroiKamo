@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 
 /**
@@ -49,7 +48,7 @@ public final class L10NHelpers {
                     realParameters[i] = param;
                 }
             }
-            return LibMisc.LANG.localize(parameterizedString, realParameters);
+            return LangHelpers.localize(parameterizedString, realParameters);
         }
 
         @Override

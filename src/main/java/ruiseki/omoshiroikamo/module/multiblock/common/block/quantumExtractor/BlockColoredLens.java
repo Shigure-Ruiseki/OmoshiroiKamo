@@ -29,7 +29,7 @@ public class BlockColoredLens extends BlockOK implements IMBBlock {
         "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white" };
 
     protected BlockColoredLens() {
-        super(ModObject.blockColoredLens.unlocalisedName, Material.glass);
+        super(ModObject.COLORED_LENS.name, Material.glass);
         hasSubtypes = true;
         isFullSize = isOpaque = false;
     }

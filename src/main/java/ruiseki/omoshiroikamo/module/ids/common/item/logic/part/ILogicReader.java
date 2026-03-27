@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.key.LogicKey;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.value.ILogicValue;
 
@@ -33,7 +33,7 @@ public interface ILogicReader {
             key.getDefaultType()
                 .getId());
 
-        ItemNBTUtils.setCompound(card, "Logic", logic);
+        ItemNBTHelpers.setCompound(card, "Logic", logic);
     }
 
 }

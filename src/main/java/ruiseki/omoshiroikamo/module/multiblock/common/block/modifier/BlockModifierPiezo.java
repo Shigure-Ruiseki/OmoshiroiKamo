@@ -5,13 +5,13 @@ import java.util.List;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierPiezo extends BlockModifier {
 
     protected BlockModifierPiezo() {
-        super(ModObject.blockModifierPiezo.unlocalisedName, "piezo");
+        super(ModObject.MODIFIER_PIEZO.name, "piezo");
         setTextureName("multiblock/modifier_piezo");
     }
 
@@ -27,7 +27,7 @@ public class BlockModifierPiezo extends BlockModifier {
     @Override
     public List<String> getTooltipLines() {
         List<String> list = new ArrayList<>();
-        list.add(LibMisc.LANG.localize("tooltip.modifier.piezo.effect"));
+        list.add(LangHelpers.localize("tooltip.modifier.piezo.effect"));
         return list;
     }
 }

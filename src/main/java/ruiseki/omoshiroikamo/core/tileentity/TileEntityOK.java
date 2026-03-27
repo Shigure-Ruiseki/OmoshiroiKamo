@@ -34,10 +34,12 @@ public abstract class TileEntityOK extends TileEntity
 
     @NBTPersist
     private Boolean rotatable = false;
+
     @NBTPersist
-    private ForgeDirection forward = ForgeDirection.UNKNOWN;
+    private ForgeDirection forward = ForgeDirection.NORTH;
+
     @NBTPersist
-    private ForgeDirection up = ForgeDirection.UNKNOWN;
+    private ForgeDirection up = ForgeDirection.UP;
 
     private static final int UPDATE_BACKOFF_TICKS = 1;
 
@@ -176,7 +178,9 @@ public abstract class TileEntityOK extends TileEntity
      * This contains the logic to send the update, so make sure to call the super!
      */
     protected void onSendUpdate() {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     /**

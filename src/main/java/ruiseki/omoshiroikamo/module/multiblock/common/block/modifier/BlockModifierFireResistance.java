@@ -7,13 +7,13 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumBeaconConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierFireResistance extends BlockModifier {
 
     protected BlockModifierFireResistance() {
-        super(ModObject.blockModifierFireResistance.unlocalisedName, "fire_resistance");
+        super(ModObject.MODIFIER_FIRE_RESISTANCE.name, "fire_resistance");
         setTextureName("multiblock/modifier_fire_resistance");
     }
 
@@ -32,8 +32,8 @@ public class BlockModifierFireResistance extends BlockModifier {
     public List<String> getTooltipLines() {
         int energyCost = QuantumBeaconConfig.modifierEnergyCost.fireResistance;
         List<String> list = new ArrayList<>();
-        list.add(LibMisc.LANG.localize("tooltip.modifier.fire_resistance.effect"));
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.beacon.energy"), energyCost));
+        list.add(LangHelpers.localize("tooltip.modifier.fire_resistance.effect"));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.beacon.energy"), energyCost));
         return list;
     }
 }

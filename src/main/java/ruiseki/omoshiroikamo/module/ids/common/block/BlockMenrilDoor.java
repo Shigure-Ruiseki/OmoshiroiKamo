@@ -6,7 +6,7 @@ import ruiseki.omoshiroikamo.core.block.BlockDoorOK;
 public class BlockMenrilDoor extends BlockDoorOK {
 
     public BlockMenrilDoor() {
-        super(ModObject.blockMenrilDoor.unlocalisedName);
+        super(ModObject.MENRIL_DOOR.name);
         setBlockTextureName("ids/door_menril");
     }
 }

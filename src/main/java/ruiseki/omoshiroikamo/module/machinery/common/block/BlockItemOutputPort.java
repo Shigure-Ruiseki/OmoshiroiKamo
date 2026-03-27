@@ -20,8 +20,8 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
@@ -39,7 +39,7 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     protected BlockItemOutputPort() {
         // Pass single TE class - we override createTileEntity and registerTileEntity
-        super(ModObject.blockModularItemOutput.unlocalisedName, TEItemOutputPort.class);
+        super(ModObject.blockModularItemOutput.name, TEItemOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -115,7 +115,7 @@ public class BlockItemOutputPort extends AbstractPortBlock<TEItemOutputPort> {
 
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
-        list.add(LibMisc.LANG.localize("tooltip.machinery.slots", MachineryConfig.getItemPortSlots(tier)));
+        list.add(LangHelpers.localize("tooltip.machinery.slots", MachineryConfig.getItemPortSlots(tier)));
     }
 
     public static class ItemBlockItemOutputPort extends AbstractPortItemBlock {

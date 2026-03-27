@@ -15,16 +15,16 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractTieredMBBlock;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.quantumExtractor.TEQuantumExtractor;
 
 public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExtractor> {
 
     protected BlockQuantumResExtractor() {
         super(
-            ModObject.blockQuantumResExtractor.unlocalisedName,
+            ModObject.QUANTUM_RES_EXTRACTOR.name,
             TEQuantumResExtractorT1.class,
             TEQuantumResExtractorT2.class,
             TEQuantumResExtractorT3.class,
@@ -84,8 +84,8 @@ public class BlockQuantumResExtractor extends AbstractTieredMBBlock<TEQuantumExt
             int tickDuration = getTickDuration(tier);
             int energyCost = getEnergyCost(tier);
             float seconds = tickDuration / 20.0f;
-            tooltip.add(LibMisc.LANG.localize("tooltip.miner.speed", seconds));
-            tooltip.add(LibMisc.LANG.localize("tooltip.miner.energy", energyCost));
+            tooltip.add(LangHelpers.localize("tooltip.miner.speed", seconds));
+            tooltip.add(LangHelpers.localize("tooltip.miner.energy", energyCost));
         }
 
         private int getTickDuration(int tier) {

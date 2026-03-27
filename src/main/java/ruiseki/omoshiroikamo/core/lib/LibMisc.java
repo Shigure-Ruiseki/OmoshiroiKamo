@@ -1,7 +1,6 @@
 package ruiseki.omoshiroikamo.core.lib;
 
 import ruiseki.omoshiroikamo.Tags;
-import ruiseki.omoshiroikamo.core.common.util.LangUtils;
 
 public final class LibMisc {
 
@@ -30,10 +29,4 @@ public final class LibMisc {
     public static final String PROXY_COMMON = Tags.MOD_GROUP + ".CommonProxy";
     public static final String PROXY_CLIENT = Tags.MOD_GROUP + ".ClientProxy";
     public static final String GUI_FACTORY = Tags.MOD_GROUP + ".config.OKGuiConfigFactory";
-
-    /**
-     * use {@link ruiseki.omoshiroikamo.core.helper.LangHelpers}
-     */
-    @Deprecated
-    public static final LangUtils LANG = new LangUtils();
 }

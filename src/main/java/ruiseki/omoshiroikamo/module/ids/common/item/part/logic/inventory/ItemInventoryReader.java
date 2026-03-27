@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemInventoryReader extends AbstractPartItem {
 
     public ItemInventoryReader() {
-        super(ModObject.itemInventoryReader.unlocalisedName);
+        super(ModObject.INVENTORY_READER.name);
     }
 
     @Override

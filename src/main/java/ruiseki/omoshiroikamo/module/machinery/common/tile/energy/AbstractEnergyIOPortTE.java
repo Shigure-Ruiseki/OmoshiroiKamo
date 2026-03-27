@@ -36,6 +36,7 @@ import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.config.general.energy.EnergyConfig;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractEnergyTE;
@@ -85,7 +86,7 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
@@ -234,9 +235,9 @@ public abstract class AbstractEnergyIOPortTE extends AbstractEnergyTE implements
     public String getEnergyUsedText() {
         if (energyMode == EnergyMode.EU) {
             double eu = (double) energyStorage.getEnergyStored() / EnergyConfig.rftToEU;
-            return LibMisc.LANG.localize("gui.machinery.energy_used", String.format("%.1f EU/t", eu));
+            return LangHelpers.localize("gui.machinery.energy_used", String.format("%.1f EU/t", eu));
         } else {
-            return LibMisc.LANG.localize("gui.machinery.energy_used", energyStorage.getEnergyStored() + " RF/t");
+            return LangHelpers.localize("gui.machinery.energy_used", energyStorage.getEnergyStored() + " RF/t");
         }
     }
 
