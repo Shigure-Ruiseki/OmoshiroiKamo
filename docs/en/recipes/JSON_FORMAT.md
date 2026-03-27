@@ -81,6 +81,133 @@ The resource type is determined by the presence of a specific key within the obj
 }
 ```
 
+## 3.1 Dynamic Amount
+
+The `amount` field in inputs and outputs can accept **expressions** instead of fixed values.
+Using expressions allows you to dynamically adjust quantities based on machine state or world environment.
+
+### Basic Usage
+
+```json
+{
+  "inputs": [
+    {
+      "item": "minecraft:iron_ingot",
+      "amount": "tier * 10 + 5"
+    }
+  ],
+  "outputs": [
+    {
+      "fluid": "water",
+      "amount": "energy_p * 1000"
+    }
+  ]
+}
+```
+
+In the above example:
+- **Input**: Requires 15 items at Tier 1, 55 items at Tier 5
+- **Output**: Output amount varies with energy fill percentage (1000mB at full, 500mB at 50%)
+
+### Available Variables and Functions
+
+For a complete list of available variables and functions, refer to [ArithmeticParserFields.md](../../../run/ArithmeticParserFields.md).
+
+**Main Machine Properties**:
+- `tier` - Current machine Tier (1-16)
+- `energy` / `energy_p` - Energy amount / fill percentage (0.0-1.0)
+- `fluid` / `fluid_p` - Fluid amount / fill percentage
+- `mana` / `mana_p` - Mana amount / fill percentage
+- `gas` / `gas_p` - Gas amount / fill percentage
+- `progress` - Recipe progress (0.0-1.0)
+- `recipeprocessed` - Number of processed recipes (statistics)
+- `is_running` - Whether machine is running (1 or 0)
+- `batch` - Current batch size (number of times processed at once)
+- `speed_multi` - Speed multiplier (inverse of processing time)
+- `energy_multi` - Energy multiplier (consumption multiplier)
+
+**Main World Properties**:
+- `day` / `total_days` - Elapsed days
+- `time` - Current time (0-23999)
+- `moon_phase` - Moon phase (0-7)
+
+**Math Functions**:
+- `min(a, b)` / `max(a, b)` - Minimum/Maximum value
+- `floor(x)` / `ceil(x)` / `round(x)` - Floor/Ceiling/Rounding
+- `sqrt(x)` / `pow(base, exp)` - Square root/Power
+- `sin(x)` / `cos(x)` - Trigonometric functions (radians)
+
+### Practical Examples
+
+#### Example 1: Tier-Dependent Input Amount
+```json
+{
+  "inputs": [
+    { "item": "minecraft:diamond", "amount": "tier * 2" }
+  ]
+}
+```
+Requires 2 diamonds at Tier 1, 16 diamonds at Tier 8.
+
+#### Example 2: Energy-Based Output
+```json
+{
+  "outputs": [
+    { "fluid": "steam", "amount": "energy_p * 10000" }
+  ]
+}
+```
+Produces 10,000mB at full energy, 5,000mB at 50% energy.
+
+#### Example 3: Time-of-Day Production Variance
+```json
+{
+  "outputs": [
+    {
+      "item": "minecraft:glowstone_dust",
+      "amount": "time > 13000 && time < 23000 ? 10 : 5"
+    }
+  ]
+}
+```
+Produces 10 items at night (13000-23000 ticks), 5 items during daytime.
+
+#### Example 4: Progress-Based Bonus
+```json
+{
+  "outputs": [
+    {
+      "item": "output_item",
+      "amount": "10 + floor(recipeprocessed / 100)"
+    }
+  ]
+}
+```
+Output increases by 1 every 100 recipe completions.
+
+#### Example 5: Multi-Condition Combination
+```json
+{
+  "inputs": [
+    {
+      "item": "fuel",
+      "amount": "max(1, tier * 5 - floor(energy_p * 20))"
+    }
+  ]
+}
+```
+Higher tiers require more fuel, but less fuel is needed when energy is high. Minimum 1 required.
+
+### Notes
+
+- Expression results are rounded to integers (fractional parts are truncated)
+- Negative values are treated as 0
+- If an expression is invalid, the fixed `amount` value is used as a fallback
+- Ternary operator `? :` can be used for conditional branching
+- Logical operators `&&` (AND), `||` (OR) are available
+
+---
+
 ### 11. External Block NBT Check/Consume (Block Nbt Input)
 Assess and consume NBT data from blocks within the structure at recipe start.
 

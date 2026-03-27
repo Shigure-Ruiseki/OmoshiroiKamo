@@ -88,6 +88,133 @@
 }
 ```
 
+## 3.1 動的数量 (Dynamic Amount)
+
+入出力の `amount` フィールドには、固定値の代わりに**式（Expression）**を指定できます。
+式を使用することで、マシンの状態やワールド環境に応じて数量を動的に変化させることができます。
+
+### 基本的な使い方
+
+```json
+{
+  "inputs": [
+    {
+      "item": "minecraft:iron_ingot",
+      "amount": "tier * 10 + 5"
+    }
+  ],
+  "outputs": [
+    {
+      "fluid": "water",
+      "amount": "energy_p * 1000"
+    }
+  ]
+}
+```
+
+上記の例では：
+- **入力**: マシンの Tier が 1 なら 15 個、Tier 5 なら 55 個のアイテムが必要
+- **出力**: エネルギー充填率に応じて出力量が変化（満タンなら 1000mB、50% なら 500mB）
+
+### 使用可能な変数と関数
+
+利用可能な変数・関数の完全なリストは、[ArithmeticParserFields.md](../../../run/ArithmeticParserFields.md) を参照してください。
+
+**主なマシンプロパティ**:
+- `tier` - マシンの現在の Tier (1-16)
+- `energy` / `energy_p` - エネルギー量 / 充填率 (0.0-1.0)
+- `fluid` / `fluid_p` - 流体量 / 充填率
+- `mana` / `mana_p` - マナ量 / 充填率
+- `gas` / `gas_p` - ガス量 / 充填率
+- `progress` - レシピ進行度 (0.0-1.0)
+- `recipeprocessed` - 処理済みレシピ数（統計）
+- `is_running` - 動作中かどうか (1 or 0)
+- `batch` - 現在のバッチサイズ（一度に処理できる回数）
+- `speed_multi` - 速度倍率（処理時間の逆数）
+- `energy_multi` - エネルギー倍率（消費量の乗数）
+
+**主なワールドプロパティ**:
+- `day` / `total_days` - 経過日数
+- `time` - 現在の時刻 (0-23999)
+- `moon_phase` - 月齢 (0-7)
+
+**数学関数**:
+- `min(a, b)` / `max(a, b)` - 最小値/最大値
+- `floor(x)` / `ceil(x)` / `round(x)` - 切り捨て/切り上げ/四捨五入
+- `sqrt(x)` / `pow(base, exp)` - 平方根/べき乗
+- `sin(x)` / `cos(x)` - 三角関数（ラジアン）
+
+### 実用例
+
+#### 例1: Tier依存の入力量
+```json
+{
+  "inputs": [
+    { "item": "minecraft:diamond", "amount": "tier * 2" }
+  ]
+}
+```
+Tier 1 なら 2 個、Tier 8 なら 16 個のダイヤモンドが必要。
+
+#### 例2: エネルギー残量に応じた出力
+```json
+{
+  "outputs": [
+    { "fluid": "steam", "amount": "energy_p * 10000" }
+  ]
+}
+```
+エネルギーが満タンなら 10,000mB、50% なら 5,000mB 出力。
+
+#### 例3: 時間帯による生産量変化
+```json
+{
+  "outputs": [
+    {
+      "item": "minecraft:glowstone_dust",
+      "amount": "time > 13000 && time < 23000 ? 10 : 5"
+    }
+  ]
+}
+```
+夜間（13000-23000 tick）は 10 個、昼間は 5 個生産。
+
+#### 例4: 進捗に応じたボーナス
+```json
+{
+  "outputs": [
+    {
+      "item": "output_item",
+      "amount": "10 + floor(recipeprocessed / 100)"
+    }
+  ]
+}
+```
+100 回処理するごとに出力量が 1 個ずつ増加。
+
+#### 例5: 複数条件の組み合わせ
+```json
+{
+  "inputs": [
+    {
+      "item": "fuel",
+      "amount": "max(1, tier * 5 - floor(energy_p * 20))"
+    }
+  ]
+}
+```
+Tier が高いほど多く必要だが、エネルギーが充填されていると必要量が減少。最低 1 個は必要。
+
+### 注意事項
+
+- 式の結果は整数に丸められます（小数点以下は切り捨て）
+- 負の値は 0 として扱われます
+- 式が無効な場合、デフォルトで `amount` の固定値が使用されます
+- 三項演算子 `? :` を使用した条件分岐が可能です
+- 論理演算子 `&&`（AND）、`||`（OR）が使用できます
+
+---
+
 ### 11. 外部ブロック NBT チェック/消費 (Block Nbt Input)
 レシピ開始時に構造体内のブロックの NBT をチェック・消費します。
 
