@@ -30,13 +30,13 @@ import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.IndexedInventoryCraftingWrapper;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingMatrixSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingSlot;
-import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularStorageSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularFilterSlot;
+import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularStorageSlot;
+import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 
 public class StorageContainer extends ModularContainer {
 

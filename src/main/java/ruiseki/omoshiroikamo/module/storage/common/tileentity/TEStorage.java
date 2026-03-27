@@ -19,8 +19,8 @@ import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
 
 public class TEStorage extends TileEntityOK
     implements TileEntityOK.ITickingTile, IGuiHolder<PosGuiData>, ISidedInventory {

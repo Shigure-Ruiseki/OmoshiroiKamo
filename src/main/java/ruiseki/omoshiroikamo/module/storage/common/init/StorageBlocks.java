@@ -18,8 +18,12 @@ public enum StorageBlocks {
     BARREL(new BlockBarrel(ModObject.BARREL.name, StorageConfig.baseSlots, StorageConfig.baseUpgradeSlots)),
     IRON_BARREL(new BlockBarrel(ModObject.IRON_BARREL.name, StorageConfig.ironSlots, StorageConfig.ironUpgradeSlots)),
     GOLD_BARREL(new BlockBarrel(ModObject.GOLD_BARREL.name, StorageConfig.goldSlots, StorageConfig.goldUpgradeSlots)),
-    DIAMOND_BARREL(new BlockBarrel(ModObject.DIAMOND_BARREL.name, StorageConfig.diamondSlots, StorageConfig.diamondUpgradeSlots)),
-    OBSIDIAN_BARREL(new BlockBarrel(ModObject.OBSIDIAN_BARREL.name, StorageConfig.obsidianSlots, StorageConfig.obsidianUpgradeSlots)),
+    DIAMOND_BARREL(
+        new BlockBarrel(ModObject.DIAMOND_BARREL.name, StorageConfig.diamondSlots, StorageConfig.diamondUpgradeSlots)),
+    OBSIDIAN_BARREL(new BlockBarrel(
+        ModObject.OBSIDIAN_BARREL.name,
+        StorageConfig.obsidianSlots,
+        StorageConfig.obsidianUpgradeSlots)),
 
     ;
     // spotless: on

@@ -10,10 +10,10 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetTheme;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.MemorySettingWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.SortingSettingWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.StorageSettingWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
 
 public class StorageSettingPanel extends ModularPanel {
 

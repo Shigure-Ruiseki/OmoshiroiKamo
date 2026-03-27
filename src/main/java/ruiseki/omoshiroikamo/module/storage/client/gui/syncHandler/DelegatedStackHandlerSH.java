@@ -10,10 +10,10 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.DelegatedItemHandler;
+import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 
 public class DelegatedStackHandlerSH extends SyncHandler {
 

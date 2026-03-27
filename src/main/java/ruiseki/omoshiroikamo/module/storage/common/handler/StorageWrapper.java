@@ -26,7 +26,9 @@ import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
+import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackHandler;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFeedingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFilterUpgrade;
@@ -35,8 +37,6 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IPickupUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackHandler;
-import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 
 public class StorageWrapper implements IStorageWrapper, INBTSerializable {
 

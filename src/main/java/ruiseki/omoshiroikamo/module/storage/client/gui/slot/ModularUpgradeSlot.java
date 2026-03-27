@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
+import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 
 public class ModularUpgradeSlot extends ModularSlot {

@@ -31,8 +31,6 @@ import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.storage.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.module.storage.client.gui.widget.ShiftButtonWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageContainer;
 import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageGuiContainer;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.CraftingSlotInfo;
@@ -49,10 +47,12 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.widget.AdvancedMagnetUpgr
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.AdvancedVoidUpgradeWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.BasicExpandedTabWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.CraftingUpgradeWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.CyclicVariantButtonWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.FeedingUpgradeWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.FilterUpgradeWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.MagnetUpgradeWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.SettingTabWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.ShiftButtonWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.StorageList;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.StorageSearchBarWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
@@ -145,7 +145,7 @@ public class StoragePanel extends ModularPanel {
             slot.slotGroup("storage_inventory");
             slot.changeListener((lastStack, currentStack, isClient, init) -> {
                 if (isClient) {
-                     searchBarWidget.research();
+                    searchBarWidget.research();
                 }
             });
             StorageSlotSH syncHandler = new StorageSlotSH(slot, this.wrapper, this);
