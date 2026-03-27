@@ -32,7 +32,7 @@ import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.network.PacketStructureTint;
 
 /**
@@ -200,7 +200,7 @@ public class StructureAgent {
 
             // Perform additional requirements check (IO ports count, etc.)
             if (!checkRequirements()) {
-                lastValidationError = LibMisc.LANG.localize("gui.status.requirements_not_met");
+                lastValidationError = LangHelpers.localize("gui.status.requirements_not_met");
                 controller.setFormed(false);
             } else {
                 controller.setFormed(true);
@@ -235,7 +235,7 @@ public class StructureAgent {
                 // Perform detailed scan to find the first error
                 lastValidationError = checkStructureDetails(ox, oy, oz);
                 if (lastValidationError.isEmpty()) {
-                    lastValidationError = LibMisc.LANG.localize("gui.status.block_mismatch");
+                    lastValidationError = LangHelpers.localize("gui.status.block_mismatch");
                 }
             }
         }
@@ -248,14 +248,14 @@ public class StructureAgent {
 
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(customStructureName);
-        if (entry == null || entry.getLayers() == null) return LibMisc.LANG.localize("gui.status.invalid_definition");
+        if (entry == null || entry.getLayers() == null) return LangHelpers.localize("gui.status.invalid_definition");
 
         // Retrieve definition to get mapped elements
         // This is a bit redundant but we need the exact elements used in validation
         IStructureDefinition<TEMachineController> def = getStructureDefinition();
-        if (def == null) return LibMisc.LANG.localize("gui.status.missing_definition");
+        if (def == null) return LangHelpers.localize("gui.status.missing_definition");
 
-        return LibMisc.LANG.localize("gui.status.block_mismatch");
+        return LangHelpers.localize("gui.status.block_mismatch");
     }
 
     /**
