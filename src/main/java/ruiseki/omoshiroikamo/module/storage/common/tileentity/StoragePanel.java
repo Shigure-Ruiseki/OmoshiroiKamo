@@ -31,8 +31,8 @@ import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ShiftButtonWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.CyclicVariantButtonWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.ShiftButtonWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageContainer;
 import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageGuiContainer;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.CraftingSlotInfo;
@@ -145,7 +145,7 @@ public class StoragePanel extends ModularPanel {
             slot.slotGroup("storage_inventory");
             slot.changeListener((lastStack, currentStack, isClient, init) -> {
                 if (isClient) {
-                    // searchBarWidget.research();
+                     searchBarWidget.research();
                 }
             });
             StorageSlotSH syncHandler = new StorageSlotSH(slot, this.wrapper, this);

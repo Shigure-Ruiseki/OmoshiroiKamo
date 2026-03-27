@@ -9,10 +9,10 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget.ExpandDirection;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.CyclicVariantButtonWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget.ExpandDirection;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.StorageSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StorageSettingPanel;

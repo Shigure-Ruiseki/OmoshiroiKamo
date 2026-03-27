@@ -309,27 +309,6 @@ public class OmoshiroiKamo extends ModBase {
         REMAPS.put("omoshiroikamo:stabilizedEnderPear", MultiBlockItems.STABILIZED_ENDER_PEAR.getItem());
         REMAPS.put("omoshiroikamo:photovoltaicCell", MultiBlockItems.PHOTOVOLTAIC_CELL.getItem());
 
-        REMAPS.put("omoshiroikamo:visBridge", MachineryBlocks.VIS_BRIDGE.getBlock());
-        REMAPS.put("omoshiroikamo:modularMachineCasing", MachineryBlocks.MACHINE_CASING.getBlock());
-        REMAPS.put("omoshiroikamo:modularMachineController", MachineryBlocks.MACHINE_CONTROLLER.getBlock());
-        REMAPS.put("omoshiroikamo:modularItemInput", MachineryBlocks.ITEM_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularItemOutput", MachineryBlocks.ITEM_OUTPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularItemOutputME", MachineryBlocks.ITEM_OUTPUT_PORT_ME.getBlock());
-        REMAPS.put("omoshiroikamo:modularEnergyInput", MachineryBlocks.ENERGY_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularEnergyOutput", MachineryBlocks.ENERGY_OUTPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularFluidInput", MachineryBlocks.FLUID_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularFluidOutput", MachineryBlocks.FLUID_OUTPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularFluidOutputME", MachineryBlocks.FLUID_OUTPUT_PORT_ME.getBlock());
-        REMAPS.put("omoshiroikamo:modularManaInput", MachineryBlocks.MANA_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularManaOutput", MachineryBlocks.MANA_OUTPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularGasInput", MachineryBlocks.GAS_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularGasOutput", MachineryBlocks.GAS_OUTPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularEssentiaInput", MachineryBlocks.ESSENTIA_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularEssentiaOutput", MachineryBlocks.ESSENTIA_OUTPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularEssentiaInputME", MachineryBlocks.ESSENTIA_INPUT_PORT_ME.getBlock());
-        REMAPS.put("omoshiroikamo:modularVisInput", MachineryBlocks.VIS_INPUT_PORT.getBlock());
-        REMAPS.put("omoshiroikamo:modularVisOutput", MachineryBlocks.VIS_OUTPUT_PORT.getBlock());
-
     }
 
     @Mod.EventHandler

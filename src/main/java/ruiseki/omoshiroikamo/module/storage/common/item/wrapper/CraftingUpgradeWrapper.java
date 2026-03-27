@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
 public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingUpgrade {
 

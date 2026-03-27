@@ -119,6 +119,29 @@ public enum ModObject {
     BACKPACK_VOID_UPGRADE("backpack_void_upgrade"),
     BACKPACK_ADVANCED_VOID_UPGRADE("backpack_advanced_void_upgrade"),
 
+    // Storage
+    BARREL("barrel"),
+    IRON_BARREL("iron_barrel"),
+    GOLD_BARREL("gold_barrel"),
+    DIAMOND_BARREL("diamond_barrel"),
+    OBSIDIAN_BARREL("obsidian_barrel"),
+
+    STORAGE_BASE_UPGRADE("storage_base_upgrade"),
+    STORAGE_STACK_UPGRADE("storage_stack_upgrade"),
+    STORAGE_CRAFTING_UPGRADE("storage_crafting_upgrade"),
+    STORAGE_MAGNET_UPGRADE("storage_magnet_upgrade"),
+    STORAGE_ADVANCED_MAGNET_UPGRADE("storage_advanced_magnet_upgrade"),
+    STORAGE_FEEDING_UPGRADE("storage_feeding_upgrade"),
+    STORAGE_ADVANCED_FEEDING_UPGRADE("storage_advanced_feeding_upgrade"),
+    STORAGE_PICKUP_UPGRADE("storage_pickup_upgrade"),
+    STORAGE_ADVANCED_PICKUP_UPGRADE("storage_advanced_pickup_upgrade"),
+    STORAGE_EVERLASTING_UPGRADE("storage_everlasting_upgrade"),
+    STORAGE_INCEPTION_UPGRADE("storage_inception_upgrade"),
+    STORAGE_FILTER_UPGRADE("storage_filter_upgrade"),
+    STORAGE_ADVANCED_FILTER_UPGRADE("storage_advanced_filter_upgrade"),
+    STORAGE_VOID_UPGRADE("storage_void_upgrade"),
+    STORAGE_ADVANCED_VOID_UPGRADE("storage_advanced_void_upgrade"),
+
     // Chickens
     ROOST("roost"),
     BREEDER("breeder"),

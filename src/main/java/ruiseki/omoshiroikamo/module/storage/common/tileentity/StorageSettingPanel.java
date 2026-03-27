@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.storage.common.tileentity;
 
-import static ruiseki.omoshiroikamo.module.backpack.common.block.BackpackPanel.LAYERED_TAB_TEXTURE;
+import static ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel.LAYERED_TAB_TEXTURE;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -10,7 +10,7 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetTheme;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.MemorySettingWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.SortingSettingWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.StorageSettingWidget;

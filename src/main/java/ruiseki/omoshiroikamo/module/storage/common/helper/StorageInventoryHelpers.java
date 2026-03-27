@@ -14,7 +14,7 @@ import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.ItemStackHandler;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
@@ -203,7 +203,6 @@ public class StorageInventoryHelpers {
 
                 StorageWrapper other = new StorageWrapper(barrel);
                 if (other.equals(wrapper)) continue;
-                if (!wrapper.canNestBackpack()) continue;
             }
 
             if (transferMatched && !hasMatchingSlot(wrapper, stack)) {

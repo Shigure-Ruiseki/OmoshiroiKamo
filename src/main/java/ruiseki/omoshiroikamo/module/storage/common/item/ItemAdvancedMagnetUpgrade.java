@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedMagnetUp
 public class ItemAdvancedMagnetUpgrade extends ItemUpgrade<AdvancedMagnetUpgradeWrapper> {
 
     public ItemAdvancedMagnetUpgrade() {
-        super(ModObject.BACKPACK_ADVANCED_MAGNET_UPGRADE.name);
+        super(ModObject.STORAGE_ADVANCED_MAGNET_UPGRADE.name);
         setMaxStackSize(1);
         setTextureName("storage/advanced_magnet_upgrade");
     }

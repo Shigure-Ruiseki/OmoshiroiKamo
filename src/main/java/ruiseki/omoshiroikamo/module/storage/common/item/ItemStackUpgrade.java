@@ -11,6 +11,7 @@ import net.minecraft.util.IIcon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.StorageConfig;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
@@ -22,7 +23,7 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
     protected IIcon tier1, tier2, tier3, tier4;
 
     public ItemStackUpgrade() {
-        super("storage_stack_upgrade");
+        super(ModObject.STORAGE_STACK_UPGRADE.name);
         setMaxStackSize(1);
     }
 

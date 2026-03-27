@@ -41,7 +41,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
     private final IIcon[] tierIcons = new IIcon[TIERS];
 
     protected BlockMachineCasing() {
-        super(ModObject.MODULAR_MACHINE_CONTROLLER.name);
+        super(ModObject.MODULAR_MACHINE_CASING.name);
         setHardness(5.0F);
         setResistance(10.0F);
         this.hasSubtypes = false;

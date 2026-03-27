@@ -9,6 +9,7 @@ import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModModuleBase;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
 import ruiseki.omoshiroikamo.module.storage.common.init.StorageBlocks;
+import ruiseki.omoshiroikamo.module.storage.common.init.StorageItems;
 
 public class StorageModule extends ModModuleBase {
 
@@ -37,6 +38,7 @@ public class StorageModule extends ModModuleBase {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         StorageBlocks.preInit();
+        StorageItems.preInit();
         StorageCreative.preInit();
     }
 

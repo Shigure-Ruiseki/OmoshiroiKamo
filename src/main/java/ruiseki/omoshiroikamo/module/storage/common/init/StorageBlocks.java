@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.StorageConfig;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.block.IBlock;
@@ -14,12 +15,11 @@ public enum StorageBlocks {
 
     // spotless: off
 
-    BARREL(new BlockBarrel("barrel", StorageConfig.baseSlots, StorageConfig.baseUpgradeSlots)),
-    IRON_BARREL(new BlockBarrel("iron_barrel", StorageConfig.ironSlots, StorageConfig.ironUpgradeSlots)),
-    GOLD_BARREL(new BlockBarrel("gold_barrel", StorageConfig.goldSlots, StorageConfig.goldUpgradeSlots)),
-    DIAMOND_BARREL(new BlockBarrel("diamond_barrel", StorageConfig.diamondSlots, StorageConfig.diamondUpgradeSlots)),
-    OBSIDIAN_BARREL(
-        new BlockBarrel("obsidian_barrel", StorageConfig.obsidianSlots, StorageConfig.obsidianUpgradeSlots)),
+    BARREL(new BlockBarrel(ModObject.BARREL.name, StorageConfig.baseSlots, StorageConfig.baseUpgradeSlots)),
+    IRON_BARREL(new BlockBarrel(ModObject.IRON_BARREL.name, StorageConfig.ironSlots, StorageConfig.ironUpgradeSlots)),
+    GOLD_BARREL(new BlockBarrel(ModObject.GOLD_BARREL.name, StorageConfig.goldSlots, StorageConfig.goldUpgradeSlots)),
+    DIAMOND_BARREL(new BlockBarrel(ModObject.DIAMOND_BARREL.name, StorageConfig.diamondSlots, StorageConfig.diamondUpgradeSlots)),
+    OBSIDIAN_BARREL(new BlockBarrel(ModObject.OBSIDIAN_BARREL.name, StorageConfig.obsidianSlots, StorageConfig.obsidianUpgradeSlots)),
 
     ;
     // spotless: on

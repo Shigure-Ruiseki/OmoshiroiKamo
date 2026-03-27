@@ -21,7 +21,7 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
     }
 
     public ItemUpgrade() {
-        this(ModObject.BACKPACK_BASE_UPGRADE.name);
+        this(ModObject.STORAGE_BASE_UPGRADE.name);
     }
 
     public boolean hasTab() {

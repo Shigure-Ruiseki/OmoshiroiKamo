@@ -149,7 +149,7 @@ public class MachineryIntegration {
             MachineryBlocks.VIS_OUTPUT_PORT.setBlock(BlockVisOutputPort.create());
             MachineryBlocks.ESSENTIA_INPUT_PORT.setBlock(BlockEssentiaInputPort.create());
             MachineryBlocks.ESSENTIA_OUTPUT_PORT.setBlock(BlockEssentiaOutputPort.create());
-            MachineryBlocks.VIS_BRIDGE.setBlock(BlockVisBridge.create());
+            BlockVisBridge.create();
 
             // Essentia Proxy (Thaumcraft integration)
             BlockResolver.registerProxyFactory(IPortType.Type.ESSENTIA, (controller, coords, tile, io) -> {

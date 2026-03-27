@@ -9,9 +9,8 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 
@@ -50,19 +49,6 @@ public class ModularUpgradeSlot extends ModularSlot {
             }
 
             return wrapper.canReplaceStackUpgrade(slotIndex, null);
-        }
-
-        if (originalItem instanceof ItemInceptionUpgrade) {
-
-            if (cursorEmpty) {
-                return wrapper.canRemoveInceptionUpgrade();
-            }
-
-            if (!(cursor.getItem() instanceof ItemInceptionUpgrade)) {
-                return wrapper.canRemoveInceptionUpgrade();
-            }
-
-            return true;
         }
 
         return true;

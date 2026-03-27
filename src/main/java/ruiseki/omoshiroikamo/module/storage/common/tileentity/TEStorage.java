@@ -19,7 +19,7 @@ import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.TileEntityOK;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 
 public class TEStorage extends TileEntityOK

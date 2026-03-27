@@ -10,6 +10,7 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.helper.StorageInventoryHelpers;
 
 public class StorageSH extends SyncHandler {
 
@@ -71,21 +72,21 @@ public class StorageSH extends SyncHandler {
     }
 
     public void transferToBackpack(boolean transferMatched) {
-        // BackpackInventoryUtils.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
+        StorageInventoryHelpers.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
     }
 
     public void transferToBackpack(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        // BackpackInventoryUtils.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
+        StorageInventoryHelpers.transferPlayerInventoryToBackpack(wrapper, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(boolean transferMatched) {
-        // BackpackInventoryUtils.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
+        StorageInventoryHelpers.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
     }
 
     public void transferToPlayerInventory(PacketBuffer buf) {
         boolean transferMatched = buf.readBoolean();
-        // BackpackInventoryUtils.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
+        StorageInventoryHelpers.transferBackpackToPlayerInventory(wrapper, playerInv, transferMatched);
     }
 
     public void updateBackpack(PacketBuffer buf) throws IOException {

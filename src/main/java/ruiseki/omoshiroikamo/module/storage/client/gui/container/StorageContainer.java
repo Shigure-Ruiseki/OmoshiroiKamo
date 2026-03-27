@@ -27,15 +27,15 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 
 import ruiseki.omoshiroikamo.core.helper.TinkersHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.IndexedInventoryCraftingWrapper;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingMatrixSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.IndexedModularCraftingSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularBackpackSlot;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.slot.ModularFilterSlot;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.CraftingUpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.storage.client.gui.handler.IndexedInventoryCraftingWrapper;
+import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingMatrixSlot;
+import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingSlot;
+import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularStorageSlot;
+import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularFilterSlot;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 
 public class StorageContainer extends ModularContainer {
@@ -104,7 +104,7 @@ public class StorageContainer extends ModularContainer {
         if (clickTypeIn == ClickType.QUICK_CRAFT) {
             if (heldStack != null && slotId >= 0) {
                 Slot clickedSlot = getSlot(slotId);
-                if (clickedSlot instanceof ModularBackpackSlot) {
+                if (clickedSlot instanceof ModularStorageSlot) {
                     // VOID ANY
                     if (wrapper.canVoid(heldStack, IVoidUpgrade.VoidType.ANY, IVoidUpgrade.VoidInput.ALL)) {
                         inventoryplayer.setItemStack(null);
@@ -200,7 +200,7 @@ public class StorageContainer extends ModularContainer {
             } else {
                 // PICKUP (normal left/right click)
                 Slot clickedSlot = getSlot(slotId);
-                boolean isBackpackSlot = clickedSlot instanceof ModularBackpackSlot;
+                boolean isBackpackSlot = clickedSlot instanceof ModularStorageSlot;
                 boolean isFilterSlot = clickedSlot instanceof ModularFilterSlot;
                 boolean isCraftingSlot = clickedSlot instanceof ModularCraftingSlot;
 
@@ -437,8 +437,8 @@ public class StorageContainer extends ModularContainer {
                     transferItemFiltered(
                         fromSlot,
                         fromStack,
-                        slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
-                        slot -> slot instanceof ModularBackpackSlot);
+                        slot -> slot instanceof ModularStorageSlot && wrapper.isSlotMemorized(slot.getSlotIndex()),
+                        slot -> slot instanceof ModularStorageSlot);
                 } else {
                     transferItemFiltered(fromSlot, fromStack, slot -> PLAYER_INV.equals(slot.getSlotGroupName()));
                 }
@@ -446,7 +446,7 @@ public class StorageContainer extends ModularContainer {
             transferItemFiltered(
                 fromSlot,
                 fromStack,
-                slot -> slot instanceof ModularBackpackSlot && wrapper.isSlotMemorized(slot.getSlotIndex()));
+                slot -> slot instanceof ModularStorageSlot && wrapper.isSlotMemorized(slot.getSlotIndex()));
         } else {
             return super.transferItem(fromSlot, fromStack);
         }
@@ -481,7 +481,7 @@ public class StorageContainer extends ModularContainer {
 
     protected void transferToSlot(ModularSlot fromSlot, ModularSlot toSlot, ItemStack fromStack) {
 
-        boolean isBackpackSlot = toSlot instanceof ModularBackpackSlot;
+        boolean isBackpackSlot = toSlot instanceof ModularStorageSlot;
         ItemStack toStack = toSlot.getStack();
 
         // VOID ANY

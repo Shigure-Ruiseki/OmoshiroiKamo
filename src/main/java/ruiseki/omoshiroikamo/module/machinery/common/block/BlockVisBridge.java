@@ -39,7 +39,7 @@ public class BlockVisBridge extends BlockOK {
 
     @Override
     protected void registerTileEntity() {
-        GameRegistry.registerTileEntity(TileVisBridge.class, ModObject.blockVisBridge.name + "_TE");
+        GameRegistry.registerTileEntity(TileVisBridge.class, name + "_TE");
     }
 
     @Override

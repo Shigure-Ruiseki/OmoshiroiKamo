@@ -3,7 +3,7 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
 public interface IBasicFilterable {
 

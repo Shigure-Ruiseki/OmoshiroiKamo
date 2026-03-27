@@ -7,10 +7,9 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.BackpackSH;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.CyclicVariantButtonWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.ExpandedTabWidget;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.widget.TabWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.CyclicVariantButtonWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.ExpandedTabWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.StorageSH;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
@@ -70,6 +69,6 @@ public class StorageSettingWidget extends ExpandedTabWidget {
     private void updateWrapper() {
         StorageSH backpackSyncHandler = this.panel.storageSH;
         backpackSyncHandler
-            .syncToServer(BackpackSH.UPDATE_SETTING, buffer -> { buffer.writeBoolean(wrapper.keepTab); });
+            .syncToServer(StorageSH.UPDATE_SETTING, buffer -> { buffer.writeBoolean(wrapper.keepTab); });
     }
 }

@@ -22,21 +22,19 @@ import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import ruiseki.omoshiroikamo.api.enums.SortType;
+import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
-import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
-import ruiseki.omoshiroikamo.module.backpack.common.block.BlockBackpack;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemInceptionUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFeedingUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFilterUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IMagnetUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IPickupUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapper;
-import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.UpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.backpack.common.util.BackpackItemStackUtils;
+import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFeedingUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFilterUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IMagnetUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IPickupUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackHandler;
 import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 
@@ -325,38 +323,6 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         return true;
     }
 
-    public boolean canNestBackpack() {
-        for (ItemStack stack : upgradeItemStackHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof ItemInceptionUpgrade) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean canRemoveInceptionUpgrade() {
-        boolean containsBackpack = false;
-        for (ItemStack stack : storageItemStackHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof BlockBackpack.ItemBackpack) {
-                containsBackpack = true;
-                break;
-            }
-        }
-
-        if (!containsBackpack) {
-            return true;
-        }
-
-        int inceptionCount = 0;
-        for (ItemStack stack : upgradeItemStackHandler.getStacks()) {
-            if (stack != null && stack.getItem() instanceof ItemInceptionUpgrade) {
-                inceptionCount++;
-            }
-        }
-
-        return inceptionCount > 1;
-    }
-
     public boolean feed(EntityPlayer player, IItemHandler handler) {
         for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(IFeedingUpgrade.class).values()) {
             if (upgrade.feed(player, handler)) {
@@ -455,7 +421,7 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         tag.setTag(UPGRADE_INV, upgradeItemStackHandler.serializeNBT());
 
         NBTTagCompound memoryTag = new NBTTagCompound();
-        BackpackItemStackUtils.saveAllSlotsExtended(memoryTag, storageItemStackHandler.memorizedSlotStack);
+        ItemStackHelpers.saveAllSlotsExtended(memoryTag, storageItemStackHandler.memorizedSlotStack);
         tag.setTag(MEMORY_STACK_ITEMS_TAG, memoryTag);
 
         List<Boolean> respectList = storageItemStackHandler.memorizedSlotRespectNbtList;
@@ -501,7 +467,7 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         if (tag.hasKey(BACKPACK_INV)) {
             storageItemStackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
 
-            BackpackItemStackUtils
+            ItemStackHelpers
                 .loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), storageItemStackHandler.getStacks());
             if (storageItemStackHandler.getSlots() != storageSlots) {
                 storageItemStackHandler.resize(storageSlots);
@@ -515,7 +481,7 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         }
 
         if (tag.hasKey(MEMORY_STACK_ITEMS_TAG)) {
-            BackpackItemStackUtils.loadAllItemsExtended(
+            ItemStackHelpers.loadAllItemsExtended(
                 tag.getCompoundTag(MEMORY_STACK_ITEMS_TAG),
                 storageItemStackHandler.memorizedSlotStack);
         }
