@@ -20,6 +20,11 @@ public class ConstantExpression implements IExpression {
         return value;
     }
 
+    @Override
+    public double evaluateSafe() {
+        return value;
+    }
+
     public static IExpression fromJson(JsonObject json) {
         return new ConstantExpression(
             json.get("value")

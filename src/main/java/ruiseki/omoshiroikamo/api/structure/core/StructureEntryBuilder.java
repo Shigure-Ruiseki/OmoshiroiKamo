@@ -27,10 +27,10 @@ public class StructureEntryBuilder {
     private final Map<Character, EnumIO> fixedExternalPorts = new LinkedHashMap<>();
     private int[] controllerOffset;
     private String tintColor;
-    private IExpression speedMultiplier = new ConstantExpression(1.0);
-    private IExpression energyMultiplier = new ConstantExpression(1.0);
-    private IExpression batchMin = new ConstantExpression(1.0);
-    private IExpression batchMax = new ConstantExpression(1.0);
+    private IExpression speedMultiplierExpr = new ConstantExpression(1.0);
+    private IExpression energyMultiplierExpr = new ConstantExpression(1.0);
+    private IExpression batchMinExpr = new ConstantExpression(1.0);
+    private IExpression batchMaxExpr = new ConstantExpression(1.0);
     private int tier = 0;
     private String defaultFacing;
     private final List<TierStructureRef> tierStructures = new ArrayList<>();
@@ -89,43 +89,43 @@ public class StructureEntryBuilder {
         return this;
     }
 
-    public StructureEntryBuilder setSpeedMultiplier(double speedMultiplier) {
-        this.speedMultiplier = new ConstantExpression(speedMultiplier);
+    public StructureEntryBuilder setSpeedMultiplier(double value) {
+        this.speedMultiplierExpr = new ConstantExpression(value);
         return this;
     }
 
-    public StructureEntryBuilder setSpeedMultiplier(IExpression speedMultiplier) {
-        this.speedMultiplier = speedMultiplier;
+    public StructureEntryBuilder setSpeedMultiplier(IExpression expr) {
+        this.speedMultiplierExpr = expr;
         return this;
     }
 
-    public StructureEntryBuilder setEnergyMultiplier(double energyMultiplier) {
-        this.energyMultiplier = new ConstantExpression(energyMultiplier);
+    public StructureEntryBuilder setEnergyMultiplier(double value) {
+        this.energyMultiplierExpr = new ConstantExpression(value);
         return this;
     }
 
-    public StructureEntryBuilder setEnergyMultiplier(IExpression energyMultiplier) {
-        this.energyMultiplier = energyMultiplier;
+    public StructureEntryBuilder setEnergyMultiplier(IExpression expr) {
+        this.energyMultiplierExpr = expr;
         return this;
     }
 
-    public StructureEntryBuilder setBatchMin(int batchMin) {
-        this.batchMin = new ConstantExpression(batchMin);
+    public StructureEntryBuilder setBatchMin(int value) {
+        this.batchMinExpr = new ConstantExpression(value);
         return this;
     }
 
-    public StructureEntryBuilder setBatchMin(IExpression batchMin) {
-        this.batchMin = batchMin;
+    public StructureEntryBuilder setBatchMin(IExpression expr) {
+        this.batchMinExpr = expr;
         return this;
     }
 
-    public StructureEntryBuilder setBatchMax(int batchMax) {
-        this.batchMax = new ConstantExpression(batchMax);
+    public StructureEntryBuilder setBatchMax(int value) {
+        this.batchMaxExpr = new ConstantExpression(value);
         return this;
     }
 
-    public StructureEntryBuilder setBatchMax(IExpression batchMax) {
-        this.batchMax = batchMax;
+    public StructureEntryBuilder setBatchMax(IExpression expr) {
+        this.batchMaxExpr = expr;
         return this;
     }
 
@@ -157,10 +157,10 @@ public class StructureEntryBuilder {
             recipeGroups,
             controllerOffset,
             tintColor,
-            speedMultiplier,
-            energyMultiplier,
-            batchMin,
-            batchMax,
+            speedMultiplierExpr,
+            energyMultiplierExpr,
+            batchMinExpr,
+            batchMaxExpr,
             tier,
             defaultFacing,
             externalPorts,

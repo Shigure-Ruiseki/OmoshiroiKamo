@@ -126,8 +126,18 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
+    public double getSpeedMultiplier() {
+        return speedMultiplierExpr.evaluateSafe();
+    }
+
+    @Override
     public double getSpeedMultiplier(ConditionContext context) {
         return speedMultiplierExpr.evaluate(context);
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
+        return energyMultiplierExpr.evaluateSafe();
     }
 
     @Override
@@ -136,8 +146,18 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
+    public int getBatchMin() {
+        return (int) Math.round(batchMinExpr.evaluateSafe());
+    }
+
+    @Override
     public int getBatchMin(ConditionContext context) {
         return (int) Math.round(batchMinExpr.evaluate(context));
+    }
+
+    @Override
+    public int getBatchMax() {
+        return (int) Math.round(batchMaxExpr.evaluateSafe());
     }
 
     @Override
@@ -205,33 +225,10 @@ public class StructureEntry implements IStructureEntry {
         if (tintColor != null) {
             json.addProperty("tintColor", tintColor);
         }
-        if (speedMultiplierExpr instanceof ConstantExpression) {
-            double val = speedMultiplierExpr.evaluate(null);
-            if (val != 1.0) json.addProperty("speedMultiplier", val);
-        } else {
-            json.addProperty("speedMultiplier", speedMultiplierExpr.toString());
-        }
-
-        if (energyMultiplierExpr instanceof ConstantExpression) {
-            double val = energyMultiplierExpr.evaluate(null);
-            if (val != 1.0) json.addProperty("energyMultiplier", val);
-        } else {
-            json.addProperty("energyMultiplier", energyMultiplierExpr.toString());
-        }
-
-        if (batchMinExpr instanceof ConstantExpression) {
-            int val = (int) Math.round(batchMinExpr.evaluate(null));
-            if (val != 1) json.addProperty("batchMin", val);
-        } else {
-            json.addProperty("batchMin", batchMinExpr.toString());
-        }
-
-        if (batchMaxExpr instanceof ConstantExpression) {
-            int val = (int) Math.round(batchMaxExpr.evaluate(null));
-            if (val != 1) json.addProperty("batchMax", val);
-        } else {
-            json.addProperty("batchMax", batchMaxExpr.toString());
-        }
+        serializeExpr(json, "speedMultiplier", speedMultiplierExpr, 1.0);
+        serializeExpr(json, "energyMultiplier", energyMultiplierExpr, 1.0);
+        serializeExpr(json, "batchMin", batchMinExpr, 1.0);
+        serializeExpr(json, "batchMax", batchMaxExpr, 1.0);
 
         if (tier != 0) {
             json.addProperty("tier", tier);
@@ -295,5 +292,14 @@ public class StructureEntry implements IStructureEntry {
         }
 
         return json;
+    }
+
+    private static void serializeExpr(JsonObject json, String key, IExpression expr, double defaultValue) {
+        if (expr instanceof ConstantExpression) {
+            double val = expr.evaluateSafe();
+            if (val != defaultValue) json.addProperty(key, val);
+        } else {
+            json.addProperty(key, expr.toString());
+        }
     }
 }

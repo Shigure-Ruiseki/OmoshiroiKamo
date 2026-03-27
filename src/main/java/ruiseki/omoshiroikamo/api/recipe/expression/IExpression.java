@@ -9,9 +9,17 @@ public interface IExpression {
 
     /**
      * Evaluate the expression and return a double value.
-     * 
+     *
      * @param context The context (machine station, world, etc.)
      * @return The calculated value.
      */
     double evaluate(ConditionContext context);
+
+    /**
+     * Evaluate without a context. For constant expressions, returns the value.
+     * For dynamic expressions that require context, returns 1.0 as a neutral default.
+     */
+    default double evaluateSafe() {
+        return 1.0;
+    }
 }
