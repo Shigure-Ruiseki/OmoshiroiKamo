@@ -246,6 +246,10 @@ public class ProcessAgent extends AbstractRecipeProcess {
         this.energyPerTick = amount;
     }
 
+    public int getBatchSize() {
+        return currentBatchSize;
+    }
+
     public int getEnergyOutputPerTick() {
         return energyOutputPerTick;
     }

@@ -57,12 +57,12 @@ public interface IStructureEntry extends IStructureSerializable {
     /**
      * Get the machine speed multiplier.
      */
-    float getSpeedMultiplier();
+    double getSpeedMultiplier();
 
     /**
      * Get the machine energy multiplier.
      */
-    float getEnergyMultiplier();
+    double getEnergyMultiplier();
 
     /**
      * Get the minimum batch size.

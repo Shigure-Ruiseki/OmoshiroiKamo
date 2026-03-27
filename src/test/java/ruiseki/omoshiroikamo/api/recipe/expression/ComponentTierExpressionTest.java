@@ -51,6 +51,16 @@ public class ComponentTierExpressionTest {
             return 0;
         }
 
+        @Override
+        public double getSpeedMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 1.0;
+        }
+
         // IRecipeContext methods - not needed for this test, returning defaults
         @Override
         public World getWorld() {

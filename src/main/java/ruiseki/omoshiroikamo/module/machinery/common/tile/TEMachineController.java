@@ -395,8 +395,8 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
-    public float getSpeedMultiplier() {
-        return 1.0f;
+    public double getSpeedMultiplier() {
+        return 1.0;
     }
 
     @Override
@@ -799,6 +799,15 @@ public class TEMachineController extends AbstractMBModifierTE
 
     public int getEnergyPerTick() {
         return processAgent.getEnergyPerTick();
+    }
+
+    public int getBatchSize() {
+        return processAgent.getBatchSize();
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
+        return 1.0;
     }
 
     @Override

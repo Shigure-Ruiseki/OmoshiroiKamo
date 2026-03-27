@@ -271,5 +271,20 @@ public class ExpressionRegistryTest {
         public long getVisCapacity() {
             return (long) maxVis;
         }
+
+        @Override
+        public int getBatchSize() {
+            return 1;
+        }
+
+        @Override
+        public double getSpeedMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 1.0;
+        }
     }
 }

@@ -239,12 +239,12 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
         if (json.has("speedMultiplier")) {
             builder.setSpeedMultiplier(
                 json.get("speedMultiplier")
-                    .getAsFloat());
+                    .getAsDouble());
         }
         if (json.has("energyMultiplier")) {
             builder.setEnergyMultiplier(
                 json.get("energyMultiplier")
-                    .getAsFloat());
+                    .getAsDouble());
         }
         if (json.has("batchMin")) {
             builder.setBatchMin(

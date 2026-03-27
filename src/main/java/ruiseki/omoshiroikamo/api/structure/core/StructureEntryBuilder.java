@@ -25,8 +25,8 @@ public class StructureEntryBuilder {
     private final Map<Character, EnumIO> fixedExternalPorts = new LinkedHashMap<>();
     private int[] controllerOffset;
     private String tintColor;
-    private float speedMultiplier = 1.0f;
-    private float energyMultiplier = 1.0f;
+    private double speedMultiplier = 1.0;
+    private double energyMultiplier = 1.0;
     private int batchMin = 1;
     private int batchMax = 1;
     private int tier = 0;
@@ -87,12 +87,12 @@ public class StructureEntryBuilder {
         return this;
     }
 
-    public StructureEntryBuilder setSpeedMultiplier(float speedMultiplier) {
+    public StructureEntryBuilder setSpeedMultiplier(double speedMultiplier) {
         this.speedMultiplier = speedMultiplier;
         return this;
     }
 
-    public StructureEntryBuilder setEnergyMultiplier(float energyMultiplier) {
+    public StructureEntryBuilder setEnergyMultiplier(double energyMultiplier) {
         this.energyMultiplier = energyMultiplier;
         return this;
     }

@@ -81,6 +81,17 @@ public class ExpressionRegistry {
         registerMachineProperty("gas_f");
         registerMachineProperty("total_gas");
 
+        // --- Structural Properties ---
+        registerMachineProperty("batch");
+        registerMachineProperty("batch_size");
+        registerMachineProperty("current_batch");
+        registerMachineProperty("speed_multi");
+        registerMachineProperty("speed_multiplier");
+        registerMachineProperty("multiplier_speed");
+        registerMachineProperty("energy_multi");
+        registerMachineProperty("energy_multiplier");
+        registerMachineProperty("multiplier_energy");
+
         // --- Constants ---
         registerVariable("pi", name -> new ConstantExpression(Math.PI));
         registerVariable("e", name -> new ConstantExpression(Math.E));

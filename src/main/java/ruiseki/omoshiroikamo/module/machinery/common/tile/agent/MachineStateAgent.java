@@ -314,4 +314,19 @@ public class MachineStateAgent implements IMachineState {
     public long getVisCapacity() {
         return sumPortProperty(IPortType.Type.VIS, AbstractVisPortTE.class, p -> (long) p.getMaxVisPerAspect());
     }
+
+    @Override
+    public int getBatchSize() {
+        return controller.getBatchSize();
+    }
+
+    @Override
+    public double getSpeedMultiplier() {
+        return controller.getSpeedMultiplier();
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
+        return controller.getEnergyMultiplier();
+    }
 }

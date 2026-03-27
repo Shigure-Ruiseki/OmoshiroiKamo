@@ -200,6 +200,21 @@ public class ItemInputDynamicTest {
         public long getVisCapacity() {
             return 0;
         }
+
+        @Override
+        public int getBatchSize() {
+            return 1;
+        }
+
+        @Override
+        public double getSpeedMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 1.0;
+        }
     }
 
     private static class MockRecipeContext implements IRecipeContext {

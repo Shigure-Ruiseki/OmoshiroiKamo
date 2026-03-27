@@ -29,8 +29,8 @@ public class StructureEntry implements IStructureEntry {
     private final List<String> recipeGroup;
     private final int[] controllerOffset;
     private final String tintColor;
-    private final float speedMultiplier;
-    private final float energyMultiplier;
+    private final double speedMultiplier;
+    private final double energyMultiplier;
     private final int batchMin;
     private final int batchMax;
     private final int tier;
@@ -41,7 +41,7 @@ public class StructureEntry implements IStructureEntry {
 
     public StructureEntry(String name, String displayName, List<IStructureLayer> layers,
         Map<Character, ISymbolMapping> mappings, List<IStructureRequirement> requirements, List<String> recipeGroup,
-        int[] controllerOffset, String tintColor, float speedMultiplier, float energyMultiplier, int batchMin,
+        int[] controllerOffset, String tintColor, double speedMultiplier, double energyMultiplier, int batchMin,
         int batchMax, int tier, String defaultFacing, Set<Character> externalPorts,
         Map<Character, EnumIO> fixedExternalPorts, List<TierStructureRef> tierStructures) {
         this.name = name;
@@ -122,12 +122,12 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
-    public float getSpeedMultiplier() {
+    public double getSpeedMultiplier() {
         return speedMultiplier;
     }
 
     @Override
-    public float getEnergyMultiplier() {
+    public double getEnergyMultiplier() {
         return energyMultiplier;
     }
 
@@ -201,10 +201,10 @@ public class StructureEntry implements IStructureEntry {
         if (tintColor != null) {
             json.addProperty("tintColor", tintColor);
         }
-        if (speedMultiplier != 1.0f) {
+        if (speedMultiplier != 1.0) {
             json.addProperty("speedMultiplier", speedMultiplier);
         }
-        if (energyMultiplier != 1.0f) {
+        if (energyMultiplier != 1.0) {
             json.addProperty("energyMultiplier", energyMultiplier);
         }
         if (batchMin != 1) {

@@ -42,10 +42,7 @@ public class FluidInput extends AbstractModularRecipeInput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        if (amountExpr != null && context != null) {
-            return (long) amountExpr.evaluate(context);
-        }
-        return required != null ? required.amount : amount;
+        return evaluateAmount(context);
     }
 
     @Override

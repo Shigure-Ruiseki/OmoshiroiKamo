@@ -76,13 +76,13 @@ public class StubStructureEntry implements IStructureEntry {
     }
 
     @Override
-    public float getSpeedMultiplier() {
-        return 1.0f;
+    public double getSpeedMultiplier() {
+        return 1.0;
     }
 
     @Override
-    public float getEnergyMultiplier() {
-        return 1.0f;
+    public double getEnergyMultiplier() {
+        return 1.0;
     }
 
     @Override

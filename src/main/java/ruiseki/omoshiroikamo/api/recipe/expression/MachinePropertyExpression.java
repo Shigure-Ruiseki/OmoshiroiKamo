@@ -71,7 +71,12 @@ public class MachinePropertyExpression implements IExpression {
         GAS_PERCENT("gas_p", state -> {
             long maxG = state.getGasCapacity();
             return maxG > 0 ? (double) state.getTotalStoredGas() / maxG : 0;
-        });
+        }),
+
+        // Structural properties
+        BATCH("batch", state -> (double) state.getBatchSize()),
+        SPEED_MULTI("speed_multi", IMachineState::getSpeedMultiplier),
+        ENERGY_MULTI("energy_multi", IMachineState::getEnergyMultiplier);
 
         private final String name;
         private final Function<IMachineState, Double> extractor;
@@ -138,6 +143,14 @@ public class MachinePropertyExpression implements IExpression {
         PROPERTY_MAP.put("gas_capacity", PropertyDefinition.GAS_MAX);
         PROPERTY_MAP.put("gas_free", PropertyDefinition.GAS_FREE);
         PROPERTY_MAP.put("gas_percent", PropertyDefinition.GAS_PERCENT);
+
+        // Structural aliases
+        PROPERTY_MAP.put("batch_size", PropertyDefinition.BATCH);
+        PROPERTY_MAP.put("current_batch", PropertyDefinition.BATCH);
+        PROPERTY_MAP.put("speed_multiplier", PropertyDefinition.SPEED_MULTI);
+        PROPERTY_MAP.put("multiplier_speed", PropertyDefinition.SPEED_MULTI);
+        PROPERTY_MAP.put("energy_multiplier", PropertyDefinition.ENERGY_MULTI);
+        PROPERTY_MAP.put("multiplier_energy", PropertyDefinition.ENERGY_MULTI);
     }
 
     @Override

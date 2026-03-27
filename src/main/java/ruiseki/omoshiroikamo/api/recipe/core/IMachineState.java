@@ -130,4 +130,19 @@ public interface IMachineState {
      * Get the total vis capacity of the machine.
      */
     long getVisCapacity();
+
+    /**
+     * Get the current batch size.
+     */
+    int getBatchSize();
+
+    /**
+     * Get the current speed multiplier.
+     */
+    double getSpeedMultiplier();
+
+    /**
+     * Get the current energy multiplier.
+     */
+    double getEnergyMultiplier();
 }

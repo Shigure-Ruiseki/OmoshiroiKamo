@@ -242,7 +242,7 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      *
      * @return speed multiplier
      */
-    public abstract float getSpeedMultiplier();
+    public abstract double getSpeedMultiplier();
 
     /**
      * Called when the multiblock structure is successfully formed.
@@ -251,10 +251,14 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
 
     @Override
     protected int getCraftingDuration() {
-        float speedMultiplier = getSpeedMultiplier();
+        double speedMultiplier = getSpeedMultiplier();
         int baseDuration = getBaseDuration();
 
-        int duration = (int) (baseDuration * speedMultiplier);
+        if (speedMultiplier <= 0) {
+            return baseDuration;
+        }
+
+        int duration = (int) Math.round(baseDuration / speedMultiplier);
 
         return Math.max(getMinDuration(), Math.min(duration, getMaxDuration()));
     }

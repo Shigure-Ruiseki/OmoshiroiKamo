@@ -63,6 +63,16 @@ public class TierSystemIntegrationTest {
         }
 
         @Override
+        public double getSpeedMultiplier() {
+            return 1.0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 1.0;
+        }
+
+        @Override
         public int getTier() {
             return Math.min(casingTier, coreTier);
         }

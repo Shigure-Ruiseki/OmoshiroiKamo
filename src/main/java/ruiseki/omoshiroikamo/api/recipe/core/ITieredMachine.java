@@ -12,4 +12,14 @@ public interface ITieredMachine {
      * @return The current tier (minimum 0)
      */
     int getComponentTier(String componentName);
+
+    /**
+     * Get the speed multiplier of the machine.
+     */
+    double getSpeedMultiplier();
+
+    /**
+     * Get the energy multiplier of the machine.
+     */
+    double getEnergyMultiplier();
 }
