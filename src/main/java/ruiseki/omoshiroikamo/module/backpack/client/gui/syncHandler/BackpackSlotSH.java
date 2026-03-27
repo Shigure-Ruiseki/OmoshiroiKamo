@@ -49,8 +49,9 @@ public class BackpackSlotSH extends ItemSlotSH {
 
             default:
                 super.readOnServer(id, buf);
-                break;
+                return;
         }
+        wrapper.markDirty();
     }
 
     @Override

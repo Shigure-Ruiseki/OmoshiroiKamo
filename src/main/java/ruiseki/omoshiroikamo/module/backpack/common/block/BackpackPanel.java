@@ -165,7 +165,6 @@ public class BackpackPanel extends ModularPanel {
             slot.changeListener((lastStack, currentStack, isClient, init) -> {
                 if (isClient) {
                     searchBarWidget.research();
-                    wrapper.syncToServer();
                 }
             });
             BackpackSlotSH syncHandler = new BackpackSlotSH(slot, this.wrapper, this);
@@ -186,7 +185,6 @@ public class BackpackPanel extends ModularPanel {
             slot.changeListener((lastStack, currentStack, isClient, init) -> {
                 if (isClient) {
                     updateUpgradeWidgets();
-                    wrapper.syncToServer();
                 }
             });
             this.syncManager.syncValue("upgrades", i, syncHandler);
