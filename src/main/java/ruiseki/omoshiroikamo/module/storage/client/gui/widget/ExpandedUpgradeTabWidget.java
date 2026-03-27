@@ -18,14 +18,14 @@ public abstract class ExpandedUpgradeTabWidget<U extends UpgradeWrapper> extends
     @Getter
     protected UpgradeSlotSH slotSyncHandler = null;
 
-    public ExpandedUpgradeTabWidget(int slotIndex, int coveredTabSize, ItemStack delegatedIconStack, String titleKey,
+    public ExpandedUpgradeTabWidget(int slotIndex, int coveredTabSize, ItemStack stack, String titleKey,
         int width) {
-        super(coveredTabSize, new ItemDrawable(delegatedIconStack), titleKey, width);
+        super(coveredTabSize, new ItemDrawable(stack), titleKey, width);
         this.syncHandler("upgrades", slotIndex);
     }
 
-    public ExpandedUpgradeTabWidget(int slotIndex, int coveredTabSize, ItemStack delegatedIconStack, String titleKey) {
-        this(slotIndex, coveredTabSize, delegatedIconStack, titleKey, 80);
+    public ExpandedUpgradeTabWidget(int slotIndex, int coveredTabSize, ItemStack stack, String titleKey) {
+        this(slotIndex, coveredTabSize, stack, titleKey, 80);
     }
 
     public void updateTabState() {

@@ -36,7 +36,7 @@ public class TEBarrel extends TEStorage implements IOpenState {
     public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         int baseRowSize = wrapper.getSlots() > 81 ? 12 : 9;
         int width = 20 + baseRowSize * ItemSlot.SIZE;
-        StoragePanel panel = new BarrelPanel(data, syncManager, settings, this, wrapper, width);
+        BarrelPanel panel = new BarrelPanel(data, syncManager, settings, this, wrapper, width);
         panel.addSortingButtons();
         panel.addTransferButtons();
         panel.addStorageInventorySlots();

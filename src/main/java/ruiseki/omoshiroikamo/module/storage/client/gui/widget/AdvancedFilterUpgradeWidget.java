@@ -24,11 +24,11 @@ public class AdvancedFilterUpgradeWidget extends AdvancedExpandedTabWidget<Advan
     @Getter
     private final CyclicVariantButtonWidget filterButton;
 
-    public AdvancedFilterUpgradeWidget(int slotIndex, AdvancedFilterUpgradeWrapper wrapper) {
+    public AdvancedFilterUpgradeWidget(int slotIndex, ItemStack stack, AdvancedFilterUpgradeWrapper wrapper) {
         super(
             slotIndex,
+            stack,
             wrapper,
-            new ItemStack(BackpackItems.ADVANCED_FILTER_UPGRADE.getItem()),
             "gui.backpack.advanced_filter_settings",
             "adv_common_filter",
             6,

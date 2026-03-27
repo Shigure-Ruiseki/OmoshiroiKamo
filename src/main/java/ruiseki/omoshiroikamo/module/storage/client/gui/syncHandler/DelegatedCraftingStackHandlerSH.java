@@ -30,7 +30,6 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
 
     public DelegatedCraftingStackHandlerSH(Supplier<StorageContainer> containerProvider, StorageWrapper wrapper,
         int slotIndex, int wrappedSlotAmount) {
-
         super(wrapper, slotIndex, wrappedSlotAmount);
 
         this.containerProvider = containerProvider;
@@ -83,7 +82,6 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
 
     @Override
     public void readOnClient(int id, PacketBuffer buf) {
-
         ItemStack stack = wrapper.upgradeItemStackHandler.getStackInSlot(slotIndex);
 
         if (id == UPDATE_CRAFTING) {

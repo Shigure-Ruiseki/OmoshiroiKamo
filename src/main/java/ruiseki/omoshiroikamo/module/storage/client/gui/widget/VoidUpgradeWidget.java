@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 
+import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
@@ -23,11 +24,11 @@ public class VoidUpgradeWidget extends BasicExpandedTabWidget<VoidUpgradeWrapper
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_overflow"), OKGuiTextures.VOID_OVERFLOW),
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_any"), OKGuiTextures.VOID_ANY));
 
-    public VoidUpgradeWidget(int slotIndex, VoidUpgradeWrapper wrapper) {
+    public VoidUpgradeWidget(int slotIndex, ItemStack stack, VoidUpgradeWrapper wrapper) {
         super(
             slotIndex,
+            stack,
             wrapper,
-            BackpackItems.VOID_UPGRADE.newItemStack(),
             "gui.backpack.void_settings",
             "common_filter",
             5,

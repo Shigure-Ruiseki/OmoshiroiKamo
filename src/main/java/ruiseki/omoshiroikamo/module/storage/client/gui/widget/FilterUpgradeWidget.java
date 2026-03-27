@@ -6,6 +6,7 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
+import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
@@ -22,11 +23,11 @@ public class FilterUpgradeWidget extends BasicExpandedTabWidget<FilterUpgradeWra
     @Getter
     private final CyclicVariantButtonWidget filterButton;
 
-    public FilterUpgradeWidget(int slotIndex, FilterUpgradeWrapper wrapper) {
+    public FilterUpgradeWidget(int slotIndex, ItemStack stack, FilterUpgradeWrapper wrapper) {
         super(
             slotIndex,
+            stack,
             wrapper,
-            BackpackItems.FILTER_UPGRADE.newItemStack(),
             "gui.backpack.filter_settings",
             "common_filter",
             5,

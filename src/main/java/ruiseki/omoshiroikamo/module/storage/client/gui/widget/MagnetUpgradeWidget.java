@@ -6,6 +6,7 @@ import java.util.List;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
+import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
@@ -30,11 +31,11 @@ public class MagnetUpgradeWidget extends BasicExpandedTabWidget<MagnetUpgradeWra
     @Getter
     private final CyclicVariantButtonWidget expButton;
 
-    public MagnetUpgradeWidget(int slotIndex, MagnetUpgradeWrapper wrapper) {
+    public MagnetUpgradeWidget(int slotIndex, ItemStack stack, MagnetUpgradeWrapper wrapper) {
         super(
             slotIndex,
+            stack,
             wrapper,
-            BackpackItems.MAGNET_UPGRADE.newItemStack(),
             "gui.backpack.magnet_settings",
             "common_filter",
             5,

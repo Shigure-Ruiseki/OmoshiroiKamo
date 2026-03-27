@@ -3,12 +3,14 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import ruiseki.omoshiroikamo.OmoshiroiKamo;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
 public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingUpgrade {
 
     protected UpgradeItemStackHandler handler;
+    private boolean initialized = false;
 
     public CraftingUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
@@ -18,15 +20,17 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
             protected void onContentsChanged(int slot) {
                 NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(ICraftingUpgrade.STORAGE_TAG, this.serializeNBT());
+                OmoshiroiKamo.okLog(tag.getTag(ICraftingUpgrade.STORAGE_TAG).toString());
             }
         };
     }
 
     @Override
     public UpgradeItemStackHandler getStorage() {
-        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
-        if (handlerTag != null) {
-            handler.deserializeNBT(handlerTag);
+        if (!initialized) {
+            NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
+            if (handlerTag != null) handler.deserializeNBT(handlerTag);
+            initialized = true;
         }
         return handler;
     }
@@ -40,12 +44,19 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
 
     @Override
     public CraftingDestination getCraftingDes() {
-        int ordinal = ItemNBTHelpers
-            .getInt(upgrade, CRAFTING_DEST_TAG, IBasicFilterable.FilterType.WHITELIST.ordinal());
+
+        int ordinal = ItemNBTHelpers.getInt(
+            upgrade,
+            CRAFTING_DEST_TAG,
+            IBasicFilterable.FilterType.WHITELIST.ordinal()
+        );
+
         CraftingDestination[] types = CraftingDestination.values();
+
         if (ordinal < 0 || ordinal >= types.length) {
             return CraftingDestination.BACKPACK;
         }
+
         return types[ordinal];
     }
 

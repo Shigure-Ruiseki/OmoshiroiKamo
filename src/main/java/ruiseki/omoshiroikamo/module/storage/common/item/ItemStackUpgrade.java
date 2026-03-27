@@ -70,10 +70,10 @@ public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IIconRegister reg) {
-        tier1 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/storage_stack_upgrade_tier_1");
-        tier2 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/storage_stack_upgrade_tier_2");
-        tier3 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/storage_stack_upgrade_tier_3");
-        tier4 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/storage_stack_upgrade_tier_4");
+        tier1 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/stack_upgrade_tier_1");
+        tier2 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/stack_upgrade_tier_2");
+        tier3 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/stack_upgrade_tier_3");
+        tier4 = reg.registerIcon(LibResources.PREFIX_MOD + "storage/stack_upgrade_tier_4");
     }
 
     @Override

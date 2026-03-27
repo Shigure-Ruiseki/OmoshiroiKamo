@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
+import com.cleanroommc.modularui.theme.WidgetTheme;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -109,7 +111,7 @@ public class StoragePanel extends ModularPanel {
     public final StorageSlotSH[] storageSlotSHs;
 
     public final List<TabWidget> tabWidgets;
-    public final List<ItemSlot> upgradeSlotWidgets;
+    public final List<ItemSlot> upgradeSlotWidgets = new ArrayList<>();
     final UpgradeSlotGroupWidget upgradeSlotGroupWidget;
     private final UpgradeSlotSH[] upgradeSlotSyncHandlers;
     private final UpgradeSlotUpdateGroup[] upgradeSlotGroups;
@@ -155,7 +157,6 @@ public class StoragePanel extends ModularPanel {
         this.syncManager.registerSlotGroup(new SlotGroup("storage_inventory", this.wrapper.storageSlots, 100, true));
 
         this.tabWidgets = new ArrayList<>();
-        this.upgradeSlotWidgets = new ArrayList<>();
         this.upgradeSlotGroupWidget = new UpgradeSlotGroupWidget(this, this.wrapper.upgradeSlots);
         this.upgradeSlotSyncHandlers = new UpgradeSlotSH[this.wrapper.upgradeSlots];
         this.upgradeSlotGroups = new UpgradeSlotUpdateGroup[this.wrapper.upgradeSlots];
@@ -484,58 +485,57 @@ public class StoragePanel extends ModularPanel {
             // Crafting
             if (wrapper instanceof CraftingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateCraftingDelegate(upgrade);
-                tabWidget.setExpandedWidget(new CraftingUpgradeWidget(slotIndex, upgrade, this));
+                tabWidget.setExpandedWidget(new CraftingUpgradeWidget(slotIndex, stack, upgrade, this));
             }
 
             // Feeding
             else if (wrapper instanceof AdvancedFeedingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof FeedingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Magnet
             else if (wrapper instanceof AdvancedMagnetUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedMagnetUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedMagnetUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof MagnetUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new MagnetUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new MagnetUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Filter
             else if (wrapper instanceof AdvancedFilterUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedFilterUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedFilterUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof FilterUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new FilterUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new FilterUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Void
             else if (wrapper instanceof AdvancedVoidUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedVoidUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedVoidUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof VoidUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new VoidUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new VoidUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Base
             else if (wrapper instanceof AdvancedUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
                 tabWidget.setExpandedWidget(
-                    new AdvancedExpandedTabWidget<>(slotIndex, upgrade, stack, upgrade.getSettingLangKey()));
+                    new AdvancedExpandedTabWidget<>(slotIndex, stack, upgrade, upgrade.getSettingLangKey()));
             } else if (wrapper instanceof BasicUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
                 tabWidget.setExpandedWidget(
-                    new BasicExpandedTabWidget<>(slotIndex, upgrade, stack, upgrade.getSettingLangKey()));
+                    new BasicExpandedTabWidget<>(slotIndex, stack, upgrade, upgrade.getSettingLangKey()));
             }
 
             // spotless: on
-
             if (tabWidget.getExpandedWidget() != null) {
                 getContext().getUISettings()
                     .getRecipeViewerSettings()
@@ -655,5 +655,18 @@ public class StoragePanel extends ModularPanel {
 
     public CraftingSlotInfo getCraftingInfo(int slotIndex) {
         return upgradeSlotGroups[slotIndex].craftingInfo;
+    }
+
+    @Override
+    public void postDraw(ModularGuiContext context, boolean transformed) {
+        super.postDraw(context, transformed);
+        LAYERED_TAB_TEXTURE.draw(
+            context,
+            resizer().getArea().width - 6,
+            0,
+            6,
+            resizer().getArea().height,
+            WidgetTheme.getDefault()
+                .getTheme());
     }
 }

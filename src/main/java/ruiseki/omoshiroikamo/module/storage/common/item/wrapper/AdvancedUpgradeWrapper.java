@@ -12,6 +12,7 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackH
 public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedFilterable, IToggleable {
 
     protected UpgradeItemStackHandler handler;
+    private boolean initialized = false;
 
     public AdvancedUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
@@ -45,9 +46,10 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
 
     @Override
     public UpgradeItemStackHandler getFilterItems() {
-        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
-        if (handlerTag != null) {
-            handler.deserializeNBT(handlerTag);
+        if (!initialized) {
+            NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+            if (handlerTag != null) handler.deserializeNBT(handlerTag);
+            initialized = true;
         }
         return handler;
     }

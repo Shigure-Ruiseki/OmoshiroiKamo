@@ -6,13 +6,19 @@ import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.item.IItem;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemCraftingUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemFeedingUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemFilterUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
 
 public enum StorageItems {
 
     // spotless: off
 
-    STACK_UPGRADE(new ItemStackUpgrade())
+    STACK_UPGRADE(new ItemStackUpgrade()),
+    CRAFTING_UPGRADE(new ItemCraftingUpgrade()),
+    FILTER_UPGRADE(new ItemFilterUpgrade()),
+    FEEDING_UPGRADE(new ItemFeedingUpgrade())
 
     ;
     // spotless: on

@@ -14,10 +14,10 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedCraf
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedStackHandlerSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.FilterSlotSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.FoodFilterSlotSH;
-import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IStorageUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 
 public class UpgradeSlotUpdateGroup {
@@ -144,7 +144,7 @@ public class UpgradeSlotUpdateGroup {
             syncManager.syncValue("crafting_slot_" + slotIndex, i, new ItemSlotSH(slot));
             craftingMatrixSlots[i] = slot;
         }
-        syncManager.registerSlotGroup(new SlotGroup("crafting_matrix_$slotIndex", 3, false));
+        syncManager.registerSlotGroup(new SlotGroup("crafting_matrix_" + slotIndex, 3, false));
         craftingOutputSlot = new IndexedModularCraftingSlot(
             slotIndex,
             wrapper,
