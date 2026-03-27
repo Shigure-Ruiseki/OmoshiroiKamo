@@ -3,6 +3,8 @@ package ruiseki.omoshiroikamo.module.storage.client.gui.widget;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -11,12 +13,10 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 
-import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.BigItemSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.helper.StorageInventoryHelpers;
-import ruiseki.omoshiroikamo.module.storage.common.init.StorageItems;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.ICraftingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;

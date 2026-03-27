@@ -15,8 +15,8 @@ public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilte
     protected final Row startingRow;
     protected final AdvancedFilterWidget filterWidget;
 
-    public AdvancedExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey,
-        String filterSyncKey, int coveredTabSize, int width) {
+    public AdvancedExpandedTabWidget(int slotIndex, ItemStack stack, T wrapper, String titleKey, String filterSyncKey,
+        int coveredTabSize, int width) {
         super(slotIndex, coveredTabSize, stack, titleKey, width);
 
         this.wrapper = wrapper;

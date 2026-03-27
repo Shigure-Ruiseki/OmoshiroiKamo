@@ -3,12 +3,12 @@ package ruiseki.omoshiroikamo.module.storage.client.gui.widget;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.item.ItemStack;
+
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
-import net.minecraft.item.ItemStack;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.MagnetUpgradeWrapper;
 
@@ -32,14 +32,7 @@ public class MagnetUpgradeWidget extends BasicExpandedTabWidget<MagnetUpgradeWra
     private final CyclicVariantButtonWidget expButton;
 
     public MagnetUpgradeWidget(int slotIndex, ItemStack stack, MagnetUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            stack,
-            wrapper,
-            "gui.backpack.magnet_settings",
-            "common_filter",
-            5,
-            75);
+        super(slotIndex, stack, wrapper, "gui.backpack.magnet_settings", "common_filter", 5, 75);
 
         this.itemButton = new CyclicVariantButtonWidget(ITEM_VARIANTS, wrapper.isCollectItem() ? 0 : 1, index -> {
             this.wrapper.setCollectItem(index == 0);

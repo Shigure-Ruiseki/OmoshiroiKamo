@@ -20,7 +20,9 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
             protected void onContentsChanged(int slot) {
                 NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(ICraftingUpgrade.STORAGE_TAG, this.serializeNBT());
-                OmoshiroiKamo.okLog(tag.getTag(ICraftingUpgrade.STORAGE_TAG).toString());
+                OmoshiroiKamo.okLog(
+                    tag.getTag(ICraftingUpgrade.STORAGE_TAG)
+                        .toString());
             }
         };
     }
@@ -45,11 +47,8 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
     @Override
     public CraftingDestination getCraftingDes() {
 
-        int ordinal = ItemNBTHelpers.getInt(
-            upgrade,
-            CRAFTING_DEST_TAG,
-            IBasicFilterable.FilterType.WHITELIST.ordinal()
-        );
+        int ordinal = ItemNBTHelpers
+            .getInt(upgrade, CRAFTING_DEST_TAG, IBasicFilterable.FilterType.WHITELIST.ordinal());
 
         CraftingDestination[] types = CraftingDestination.values();
 

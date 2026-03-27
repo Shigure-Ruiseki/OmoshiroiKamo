@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.modularui.api.drawable.IKey;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedVoidUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
@@ -26,14 +25,7 @@ public class AdvancedVoidUpgradeWidget extends AdvancedExpandedTabWidget<Advance
         new CyclicVariantButtonWidget.Variant(IKey.lang("gui.backpack.void_any"), OKGuiTextures.VOID_ANY));
 
     public AdvancedVoidUpgradeWidget(int slotIndex, ItemStack stack, AdvancedVoidUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            stack,
-            wrapper,
-            "gui.backpack.advanced_void_settings",
-            "adv_common_filter",
-            6,
-            100);
+        super(slotIndex, stack, wrapper, "gui.backpack.advanced_void_settings", "adv_common_filter", 6, 100);
 
         CyclicVariantButtonWidget inputButton = new CyclicVariantButtonWidget(
             VOID_INPUT_VARIANTS,

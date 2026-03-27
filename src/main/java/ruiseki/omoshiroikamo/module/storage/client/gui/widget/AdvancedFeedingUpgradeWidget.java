@@ -9,7 +9,6 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedFeedingUpgradeWrapper;
 
@@ -36,14 +35,7 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
     private final CyclicVariantButtonWidget heartButton;
 
     public AdvancedFeedingUpgradeWidget(int slotIndex, ItemStack stack, AdvancedFeedingUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            stack,
-            wrapper,
-            "gui.backpack.advanced_feeding_settings",
-            "adv_feeding_filter",
-            6,
-            100);
+        super(slotIndex, stack, wrapper, "gui.backpack.advanced_feeding_settings", "adv_feeding_filter", 6, 100);
 
         this.hungerButton = new CyclicVariantButtonWidget(
             HUNGER_VARIANTS,
