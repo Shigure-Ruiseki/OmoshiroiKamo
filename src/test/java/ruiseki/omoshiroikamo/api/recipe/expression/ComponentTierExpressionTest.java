@@ -318,11 +318,13 @@ public class ComponentTierExpressionTest {
 
     @Test
     public void testInvalidTierExpression_NoComponent() {
-        Exception exception = assertThrows(RuntimeException.class, () -> { ExpressionParser.parseExpression("tier"); });
+        // Note: "tier" alone is now valid as a MachinePropertyExpression (returns machine's overall tier)
+        // This test now verifies that "tier" is parsed as MachinePropertyExpression, not ComponentTierExpression
+        IExpression expr = ExpressionParser.parseExpression("tier");
 
-        assertTrue(
-            exception.getMessage()
-                .contains("Unknown variable"));
+        assertNotNull(expr);
+        assertTrue(expr instanceof MachinePropertyExpression);
+        assertEquals("tier", expr.toString());
     }
 
     @Test

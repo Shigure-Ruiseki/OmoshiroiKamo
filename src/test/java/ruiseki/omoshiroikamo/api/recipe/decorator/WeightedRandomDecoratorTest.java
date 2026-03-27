@@ -75,23 +75,33 @@ public class WeightedRandomDecoratorTest {
         }
 
         @Override
-        public boolean checkCapacity(List<IModularPort> ports) {
+        public boolean checkCapacity(List<IModularPort> ports, int multiplier, ConditionContext context) {
             return true;
         }
 
         @Override
-        public void apply(List<IModularPort> ports, int multiplier) {
+        public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
             applyCount += multiplier;
         }
 
         @Override
+        public boolean checkCapacity(List<IModularPort> ports) {
+            return checkCapacity(ports, 1, null);
+        }
+
+        @Override
+        public void apply(List<IModularPort> ports, int multiplier) {
+            apply(ports, multiplier, null);
+        }
+
+        @Override
         public boolean checkCapacity(List<IModularPort> ports, int multiplier) {
-            return true;
+            return checkCapacity(ports, multiplier, null);
         }
 
         @Override
         public void apply(List<IModularPort> ports) {
-            apply(ports, 1);
+            apply(ports, 1, null);
         }
 
         @Override
