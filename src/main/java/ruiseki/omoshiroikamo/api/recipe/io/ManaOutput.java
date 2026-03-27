@@ -6,9 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
@@ -16,9 +21,11 @@ import vazkii.botania.api.mana.spark.ISparkAttachable;
 public class ManaOutput extends AbstractModularRecipeOutput {
 
     private int amount;
+    private IExpression amountExpr;
 
     public ManaOutput(int amount, boolean perTick) {
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
         this.interval = perTick ? 1 : 0;
     }
 
@@ -41,8 +48,9 @@ public class ManaOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
-        long remaining = amount * multiplier;
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
+        long req = amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        long remaining = req * multiplier;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.MANA) continue;
@@ -83,6 +91,11 @@ public class ManaOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+    }
+
+    @Override
     public long getRequiredAmount() {
         return (long) amount;
     }
@@ -92,14 +105,23 @@ public class ManaOutput extends AbstractModularRecipeOutput {
         readPerTick(json, 0);
         if (json.has("index")) this.index = json.get("index")
             .getAsInt();
-        this.amount = json.get("mana")
-            .getAsInt();
+        this.amount = 0;
+        if (json.has("mana")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("mana"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluate(null);
+            }
+        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
-        json.addProperty("mana", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("mana", amount);
+        } else {
+            json.addProperty("mana", amountExpr.toString());
+        }
         if (interval != 0) {
             json.addProperty("pertick", interval);
         }
@@ -126,6 +148,7 @@ public class ManaOutput extends AbstractModularRecipeOutput {
         ManaOutput result = new ManaOutput(amount * multiplier, isPerTick());
         result.interval = this.interval;
         result.index = this.index;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -133,6 +156,9 @@ public class ManaOutput extends AbstractModularRecipeOutput {
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "mana");
         nbt.setInteger("amount", amount);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setInteger("interval", interval);
         nbt.setInteger("index", index);
     }
@@ -140,6 +166,11 @@ public class ManaOutput extends AbstractModularRecipeOutput {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
         this.interval = nbt.getInteger("interval");
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }

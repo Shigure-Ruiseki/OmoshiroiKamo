@@ -33,6 +33,9 @@ public class ItemInput extends AbstractModularRecipeInput {
     private String oreDict;
     private ItemStack required;
     private int count = 1;
+    private int metaData = 0; // Static meta fallback
+    private IExpression countExpr;
+    private IExpression metaExpr;
     private List<IExpression> nbtExpressions;
     private NBTListOperation nbtListOp;
     private NBTMatchMode nbtMatchMode = NBTMatchMode.IGNORE;
@@ -90,8 +93,16 @@ public class ItemInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    public long getRequiredAmount() {
+    public long getRequiredAmount(ConditionContext context) {
+        if (countExpr != null && context != null) {
+            return (long) countExpr.evaluate(context);
+        }
         return required != null ? required.stackSize : count;
+    }
+
+    @Override
+    public long getRequiredAmount() {
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -100,7 +111,7 @@ public class ItemInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         IInventory itemPort = (IInventory) port;
         long consumed = 0;
 
@@ -118,11 +129,11 @@ public class ItemInput extends AbstractModularRecipeInput {
 
         for (int i = min; i <= max && remaining > 0; i++) {
             ItemStack stack = itemPort.getStackInSlot(i);
-            if (stack != null && stacksMatch(stack)) {
+            if (stack != null && stacksMatch(stack, context)) {
                 int consume = (int) Math.min(stack.stackSize, remaining);
                 if (!simulate) {
                     // Apply NBT modifications before consuming
-                    applyNBTModifications(stack);
+                    applyNBTModifications(stack, context);
 
                     stack.stackSize -= consume;
                     if (stack.stackSize <= 0) {
@@ -139,7 +150,7 @@ public class ItemInput extends AbstractModularRecipeInput {
     /**
      * Apply NBT write operations to the ItemStack.
      */
-    private void applyNBTModifications(ItemStack stack) {
+    private void applyNBTModifications(ItemStack stack, ConditionContext context) {
         if (nbtExpressions == null && nbtListOp == null) {
             return; // No modifications
         }
@@ -150,13 +161,13 @@ public class ItemInput extends AbstractModularRecipeInput {
         }
 
         NBTTagCompound nbt = stack.getTagCompound();
-        ConditionContext context = new ConditionContext(null, 0, 0, 0);
+        ConditionContext ctx = context != null ? context : new ConditionContext(null, 0, 0, 0);
 
         // Apply expression-based NBT writes
         if (nbtExpressions != null) {
             for (IExpression expr : nbtExpressions) {
-                if (expr instanceof INBTWriteExpression) {
-                    ((INBTWriteExpression) expr).applyToNBT(nbt, context);
+                if (expr instanceof INBTWriteExpression nbtWriteExpr) {
+                    nbtWriteExpr.applyToNBT(nbt, ctx);
                 }
             }
         }
@@ -167,7 +178,7 @@ public class ItemInput extends AbstractModularRecipeInput {
         }
     }
 
-    private boolean stacksMatch(ItemStack input) {
+    protected boolean stacksMatch(ItemStack input, ConditionContext context) {
         if (input == null) return false;
 
         // Check item/metadata/oredict matching
@@ -185,19 +196,27 @@ public class ItemInput extends AbstractModularRecipeInput {
         } else {
             if (required == null) return false;
             if (required.getItem() != input.getItem()) return false;
+
+            int targetMeta = 32767;
+            if (metaExpr != null && context != null) {
+                targetMeta = (int) metaExpr.evaluate(context);
+            } else if (required.getItemDamage() != 32767) {
+                targetMeta = required.getItemDamage();
+            }
+
             // 32767 is wildcard
-            if (required.getItemDamage() != 32767 && required.getItemDamage() != input.getItemDamage()) return false;
+            if (targetMeta != 32767 && targetMeta != input.getItemDamage()) return false;
         }
 
         // Check NBT matching using the new NBTMatchMode system
-        return matchesNBT(input);
+        return matchesNBT(input, context);
     }
 
     /**
      * Check if the ItemStack's NBT matches all NBT conditions (PARTIAL mode).
      * This is the original checkNBTConditions logic for expression-based matching.
      */
-    private boolean checkNBTConditions(ItemStack stack) {
+    private boolean checkNBTConditions(ItemStack stack, ConditionContext context) {
         if (nbtExpressions == null && nbtListOp == null) {
             return true; // No NBT conditions
         }
@@ -210,10 +229,10 @@ public class ItemInput extends AbstractModularRecipeInput {
 
         // Check expression-based NBT conditions
         if (nbtExpressions != null) {
-            ConditionContext context = new ConditionContext(null, 0, 0, 0);
+            ConditionContext ctx = context != null ? context : new ConditionContext(null, 0, 0, 0);
             for (IExpression expr : nbtExpressions) {
                 // For condition checking, evaluate as boolean (non-zero = true)
-                if (expr.evaluate(context) == 0) {
+                if (expr.evaluate(ctx) == 0) {
                     return false;
                 }
             }
@@ -272,7 +291,7 @@ public class ItemInput extends AbstractModularRecipeInput {
      * @param stack The ItemStack to check
      * @return true if NBT matches according to the effective mode, false otherwise
      */
-    private boolean matchesNBT(ItemStack stack) {
+    private boolean matchesNBT(ItemStack stack, ConditionContext context) {
         // Determine effective match mode
         NBTMatchMode effectiveMode = determineEffectiveMatchMode();
 
@@ -287,7 +306,7 @@ public class ItemInput extends AbstractModularRecipeInput {
                 return matchesExactNBT(stack);
 
             case PARTIAL:
-                return checkNBTConditions(stack);
+                return checkNBTConditions(stack, context);
 
             default:
                 return true;
@@ -352,12 +371,37 @@ public class ItemInput extends AbstractModularRecipeInput {
             }
         }
 
+        // Common amount/meta expression parsing
+        if (json.has("amount")) {
+            JsonElement amountElement = json.get("amount");
+            if (amountElement.isJsonPrimitive() && amountElement.getAsJsonPrimitive()
+                .isString()) {
+                this.countExpr = ExpressionParser.parseExpression(amountElement.getAsString());
+            } else {
+                this.count = amountElement.getAsInt();
+                this.countExpr = null;
+            }
+        } else {
+            this.count = 1;
+            this.countExpr = null;
+        }
+
+        if (json.has("meta") && json.get("meta")
+            .isJsonPrimitive()
+            && json.get("meta")
+                .getAsJsonPrimitive()
+                .isString()) {
+            this.metaExpr = ExpressionParser.parseExpression(
+                json.get("meta")
+                    .getAsString());
+        } else {
+            this.metaExpr = null;
+        }
+
         if (json.has("ore")) {
             this.required = null;
             this.oreDict = json.get("ore")
                 .getAsString();
-            this.count = json.has("amount") ? json.get("amount")
-                .getAsInt() : 1;
             return;
         }
 
@@ -367,19 +411,17 @@ public class ItemInput extends AbstractModularRecipeInput {
         if (itemJson.name != null && itemJson.name.startsWith("ore:")) {
             this.required = null;
             this.oreDict = itemJson.name.substring(4);
-            this.count = itemJson.amount;
         } else if (itemJson.ore != null) {
             this.required = null;
             this.oreDict = itemJson.ore;
-            this.count = itemJson.amount;
         } else {
-            // First set the count so it's preserved even if resolution fails
-            this.count = itemJson.amount > 0 ? itemJson.amount : 1;
             ItemStack stack = ItemJson.resolveItemStack(itemJson);
             if (stack != null) {
                 this.required = stack;
                 this.oreDict = null;
-                this.count = stack.stackSize;
+                // Preserve countExpr if set, otherwise use resolved stack size
+                if (this.countExpr == null) this.count = stack.stackSize;
+                this.metaData = stack.getItemDamage();
             } else {
                 this.required = null;
                 this.oreDict = null;
@@ -401,13 +443,26 @@ public class ItemInput extends AbstractModularRecipeInput {
 
         if (oreDict != null) {
             json.addProperty("ore", oreDict);
-            if (count != 1) json.addProperty("amount", count);
+            if (countExpr != null) {
+                json.addProperty("amount", countExpr.toString());
+            } else if (count != 1) {
+                json.addProperty("amount", count);
+            }
         } else if (required != null) {
             ItemJson data = ItemJson.parseItemStack(required);
             if (data != null) {
                 json.addProperty("item", data.name);
-                if (data.amount != 1) json.addProperty("amount", data.amount);
-                if (data.meta != 0) json.addProperty("meta", data.meta);
+                if (countExpr != null) {
+                    json.addProperty("amount", countExpr.toString());
+                } else if (data.amount != 1) {
+                    json.addProperty("amount", data.amount);
+                }
+
+                if (metaExpr != null) {
+                    json.addProperty("meta", metaExpr.toString());
+                } else if (data.meta != 0) {
+                    json.addProperty("meta", data.meta);
+                }
             }
         }
 
@@ -457,6 +512,8 @@ public class ItemInput extends AbstractModularRecipeInput {
         ItemInput result = required != null ? new ItemInput(required) : new ItemInput(oreDict, count);
         result.count *= multiplier;
         if (result.required != null) result.required.stackSize *= multiplier;
+        result.countExpr = this.countExpr;
+        result.metaExpr = this.metaExpr;
         result.consume = this.consume;
         result.interval = this.interval;
         result.nbtExpressions = this.nbtExpressions;
@@ -485,6 +542,9 @@ public class ItemInput extends AbstractModularRecipeInput {
             required.writeToNBT(stackTag);
             nbt.setTag("required", stackTag);
         }
+
+        if (countExpr != null) nbt.setString("countExpr", countExpr.toString());
+        if (metaExpr != null) nbt.setString("metaExpr", metaExpr.toString());
 
         // Save NBT expressions
         if (nbtExpressions != null && !nbtExpressions.isEmpty()) {
@@ -525,6 +585,21 @@ public class ItemInput extends AbstractModularRecipeInput {
         }
         if (nbt.hasKey("required")) {
             this.required = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("required"));
+        }
+
+        if (nbt.hasKey("countExpr")) {
+            try {
+                this.countExpr = ExpressionParser.parseExpression(nbt.getString("countExpr"));
+            } catch (Exception e) {
+                Logger.error("Failed to restore count expression: " + e.getMessage());
+            }
+        }
+        if (nbt.hasKey("metaExpr")) {
+            try {
+                this.metaExpr = ExpressionParser.parseExpression(nbt.getString("metaExpr"));
+            } catch (Exception e) {
+                Logger.error("Failed to restore meta expression: " + e.getMessage());
+            }
         }
 
         // Restore NBT expressions

@@ -4,8 +4,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
@@ -14,10 +19,12 @@ public class VisInput extends AbstractModularRecipeInput {
 
     private String aspectTag;
     private int amountCentiVis;
+    private IExpression amountExpr;
 
     public VisInput(String aspectTag, int amountCentiVis) {
         this.aspectTag = aspectTag;
         this.amountCentiVis = amountCentiVis;
+        this.amountExpr = new ConstantExpression(amountCentiVis);
     }
 
     public String getAspectTag() {
@@ -34,6 +41,11 @@ public class VisInput extends AbstractModularRecipeInput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return amountExpr != null ? (long) amountExpr.evaluate(context) : amountCentiVis;
+    }
+
+    @Override
     public long getRequiredAmount() {
         return amountCentiVis;
     }
@@ -44,7 +56,7 @@ public class VisInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return 0;
 
@@ -71,8 +83,12 @@ public class VisInput extends AbstractModularRecipeInput {
 
         this.aspectTag = json.get("vis")
             .getAsString();
-        this.amountCentiVis = json.get("amount")
-            .getAsInt();
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amountCentiVis = (int) amountExpr.evaluate(null);
+            }
+        }
     }
 
     @Override
@@ -83,7 +99,11 @@ public class VisInput extends AbstractModularRecipeInput {
         if (aspectTag != null) {
             json.addProperty("vis", aspectTag);
         }
-        json.addProperty("amount", amountCentiVis);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amountCentiVis);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
     }
 
     @Override
@@ -107,6 +127,7 @@ public class VisInput extends AbstractModularRecipeInput {
         VisInput result = new VisInput(aspectTag, (int) (amountCentiVis * multiplier));
         result.consume = this.consume;
         result.interval = this.interval;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -117,6 +138,9 @@ public class VisInput extends AbstractModularRecipeInput {
         nbt.setBoolean("consume", consume);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amountCentiVis);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
     }
 
     @Override
@@ -125,6 +149,11 @@ public class VisInput extends AbstractModularRecipeInput {
         this.consume = nbt.getBoolean("consume");
         this.aspectTag = nbt.getString("aspect");
         this.amountCentiVis = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amountCentiVis);
+        }
     }
 
     @Override

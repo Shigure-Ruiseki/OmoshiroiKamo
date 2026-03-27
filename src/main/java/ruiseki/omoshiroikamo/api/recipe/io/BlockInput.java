@@ -23,7 +23,9 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.INBTWriteExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.NBTListOperation;
@@ -51,6 +53,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
     private String replace; // The block to find (Old / Condition)
     private String block; // The block to set (New / Result) or requirement
     private int amount;
+    private IExpression amountExpr;
     private boolean consume;
     private boolean optional;
     private List<IExpression> nbtExpressions;
@@ -63,6 +66,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         this.block = block;
         this.replace = replace;
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
         this.consume = consume;
         this.optional = optional;
     }
@@ -87,24 +91,29 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
     }
 
     @Override
-    public boolean process(List<IModularPort> ports, int multiplier, boolean simulate) {
-        IRecipeContext context = findRecipeContext(ports);
-        if (context == null) return false;
+    public boolean process(List<IModularPort> ports, int multiplier, boolean simulate, ConditionContext context) {
+        IRecipeContext recipeContext = (context != null) ? context.getRecipeContext() : findRecipeContext(ports);
+        if (recipeContext == null) return false;
 
-        return check(context, multiplier, simulate);
+        return check(recipeContext, multiplier, simulate, context);
+    }
+
+    @Override
+    public boolean process(List<IModularPort> ports, int multiplier, boolean simulate) {
+        return process(ports, multiplier, simulate, null);
     }
 
     /**
      * Check and optionally manipulate blocks at symbol positions.
      */
-    public boolean check(IRecipeContext context, int multiplier, boolean simulate) {
+    public boolean check(IRecipeContext context, int multiplier, boolean simulate, ConditionContext condContext) {
         if (optional && simulate) return true; // Always start if optional
 
         List<ChunkCoordinates> positions = context.getSymbolPositions(symbol);
         if (positions == null) return optional;
 
         World world = context.getWorld();
-        int totalRequired = amount * multiplier;
+        int totalRequired = (int) (getRequiredAmount(condContext) * multiplier);
         int found = 0;
         int processed = 0;
 
@@ -246,17 +255,14 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         if (nbt == null) return true;
 
         // Count keys - if more than 4, there's additional data
-        int keyCount = 0;
-        for (Object key : nbt.func_150296_c()) {
-            keyCount++;
-        }
+        int keyCount = nbt.func_150296_c()
+            .size();
 
         if (keyCount > 4) return false;
 
         // Check if all keys are standard TileEntity keys
         for (Object keyObj : nbt.func_150296_c()) {
-            String key = (String) keyObj;
-            if (!key.equals("x") && !key.equals("y") && !key.equals("z") && !key.equals("id")) {
+            if (!keyObj.equals("x") && !keyObj.equals("y") && !keyObj.equals("z") && !keyObj.equals("id")) {
                 return false;
             }
         }
@@ -320,6 +326,11 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+    }
+
+    @Override
     public long getRequiredAmount() {
         return amount;
     }
@@ -350,6 +361,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         result.nbtListOp = this.nbtListOp;
         result.nbtMatchMode = this.nbtMatchMode;
         result.interval = this.interval;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -359,7 +371,11 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         nbt.setString("symbol", String.valueOf(symbol));
         if (block != null) nbt.setString("block", block);
         if (replace != null) nbt.setString("replace", replace);
-        nbt.setInteger("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            nbt.setInteger("amount", amount);
+        } else {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setBoolean("consume", consume);
         nbt.setBoolean("optional", optional);
         nbt.setInteger("interval", interval);
@@ -416,6 +432,14 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         if (nbt.hasKey("nbtListOp")) {
             this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
         }
+
+        // Restore amount expression
+        this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
     }
 
     @Override
@@ -443,6 +467,16 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
                 .getAsString();
             this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
         }
+
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluate(null);
+            }
+        } else {
+            this.amount = 1;
+            this.amountExpr = new ConstantExpression(1);
+        }
     }
 
     @Override
@@ -451,7 +485,11 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         json.addProperty("symbol", String.valueOf(symbol));
         if (block != null) json.addProperty("block", block);
         if (replace != null) json.addProperty("replace", replace);
-        json.addProperty("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amount);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
         if (consume) json.addProperty("consume", true);
         if (optional) json.addProperty("optional", true);
         if (index != -1) json.addProperty("index", index);

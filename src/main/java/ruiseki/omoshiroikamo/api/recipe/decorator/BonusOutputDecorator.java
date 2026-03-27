@@ -8,8 +8,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
@@ -47,7 +49,10 @@ public class BonusOutputDecorator extends RecipeDecorator {
         if (!simulate) {
             // Context needs current machine state
             // TODO: Pass context to processOutputs or store it in TE
-            double finalChance = baseChanceExpr.evaluate(null);
+            IRecipeContext context = findRecipeContext(outputPorts);
+            ConditionContext condContext = context != null ? context.getConditionContext() : null;
+
+            double finalChance = baseChanceExpr.evaluate(condContext);
             // TODO: In the future, fetch modifier value from context or machine state using
             // modifierKey
 
@@ -58,8 +63,8 @@ public class BonusOutputDecorator extends RecipeDecorator {
                         // We don't block recipe if bonus fails (e.g. port full), we just attempt to
                         // apply it.
                         // This matches "bonus" behavior.
-                        if (modularBonus.checkCapacity(filtered)) {
-                            modularBonus.apply(filtered);
+                        if (modularBonus.checkCapacity(filtered, 1, condContext)) {
+                            modularBonus.apply(filtered, 1, condContext);
                         }
                     }
                 }
@@ -77,6 +82,15 @@ public class BonusOutputDecorator extends RecipeDecorator {
             }
         }
         return filtered;
+    }
+
+    private IRecipeContext findRecipeContext(List<IModularPort> outputPorts) {
+        for (IModularPort port : outputPorts) {
+            if (port instanceof IRecipeContext context) {
+                return context;
+            }
+        }
+        return null;
     }
 
     public IExpression getBaseChanceExpression() {

@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.recipe.io;
 
 import java.util.List;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
@@ -14,7 +15,7 @@ public abstract class AbstractModularRecipeOutput extends AbstractRecipeOutput i
     protected int index = -1;
 
     @Override
-    public boolean checkCapacity(List<IModularPort> ports, int multiplier) {
+    public boolean checkCapacity(List<IModularPort> ports, int multiplier, ConditionContext context) {
         long totalCapacity = 0;
 
         for (IModularPort port : ports) {
@@ -29,7 +30,7 @@ public abstract class AbstractModularRecipeOutput extends AbstractRecipeOutput i
             }
         }
 
-        return totalCapacity >= getRequiredAmount() * multiplier;
+        return totalCapacity >= getRequiredAmount(context) * multiplier;
     }
 
     /**

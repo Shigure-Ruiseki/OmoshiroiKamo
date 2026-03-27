@@ -24,6 +24,7 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
@@ -42,6 +43,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     private String block; // The block to set (New / Result)
     private String replace; // The block to find (Old / Filter)
     private int amount;
+    private IExpression amountExpr;
     private boolean optional;
     private final Map<String, IExpression> dynamicNbt; // Legacy NBT system
     private List<IExpression> nbtExpressions; // New NBT system
@@ -65,6 +67,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         this.block = block;
         this.replace = replace;
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
         this.optional = optional;
         this.dynamicNbt = dynamicNbt != null ? dynamicNbt : new HashMap<>();
     }
@@ -86,18 +89,18 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     }
 
     @Override
-    public boolean checkCapacity(List<IModularPort> ports, int multiplier) {
+    public boolean checkCapacity(List<IModularPort> ports, int multiplier, ConditionContext context) {
         if (optional) return true;
 
-        IRecipeContext context = findRecipeContext(ports);
-        if (context == null) return false;
+        IRecipeContext recipeContext = (context != null) ? context.getRecipeContext() : findRecipeContext(ports);
+        if (recipeContext == null) return false;
 
-        List<ChunkCoordinates> positions = context.getSymbolPositions(symbol);
+        List<ChunkCoordinates> positions = recipeContext.getSymbolPositions(symbol);
         if (positions == null) return false;
 
-        World world = context.getWorld();
+        World world = recipeContext.getWorld();
         int available = 0;
-        int totalRequired = amount * multiplier;
+        int totalRequired = (int) (getRequiredAmount(context) * multiplier);
 
         // Condition check
         for (ChunkCoordinates pos : positions) {
@@ -125,14 +128,19 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
         // Find IRecipeContext from ports
-        IRecipeContext context = findRecipeContext(ports);
-        if (context == null) {
+        IRecipeContext recipeContext = (context != null) ? context.getRecipeContext() : findRecipeContext(ports);
+        if (recipeContext == null) {
             return;
         }
 
-        apply(context, multiplier);
+        apply(recipeContext, multiplier, context);
+    }
+
+    @Override
+    public void apply(List<IModularPort> ports, int multiplier) {
+        apply(ports, multiplier, null);
     }
 
     /**
@@ -141,15 +149,15 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
      * @param context    Recipe context with structure information
      * @param multiplier The batch size multiplier
      */
-    public void apply(IRecipeContext context, int multiplier) {
+    public void apply(IRecipeContext context, int multiplier, ConditionContext condContext) {
         World world = context.getWorld();
         List<ChunkCoordinates> positions = context.getSymbolPositions(symbol);
         if (positions == null) return;
 
-        int totalRequired = amount * multiplier;
+        int totalRequired = (int) (getRequiredAmount(condContext) * multiplier);
         String block = getBlock();
         String replace = getReplace();
-        NBTTagCompound nbtResult = getNbt(context);
+        NBTTagCompound nbtResult = getNbt(context, condContext);
 
         List<ChunkCoordinates> changedPositions = new ArrayList<>();
         int remaining = totalRequired;
@@ -196,8 +204,8 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
     /**
      * Apply this output to a specific position (used by decorators).
      */
-    public void applyAt(IRecipeContext context, ChunkCoordinates pos) {
-        setBlockAt(context.getWorld(), pos, block, null);
+    public void applyAt(IRecipeContext context, ChunkCoordinates pos, ConditionContext condContext) {
+        setBlockAt(context.getWorld(), pos, block, getNbt(context, condContext));
     }
 
     @Override
@@ -234,7 +242,11 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         nbt.setString("symbol", String.valueOf(symbol));
         if (block != null) nbt.setString("block", block);
         if (replace != null) nbt.setString("replace", replace);
-        nbt.setInteger("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            nbt.setInteger("amount", amount);
+        } else {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setBoolean("optional", optional);
         nbt.setInteger("interval", interval);
 
@@ -296,6 +308,19 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         if (nbt.hasKey("nbtListOp")) {
             this.nbtListOp = NBTListOperation.readFromNBT(nbt.getCompoundTag("nbtListOp"));
         }
+
+        // Restore amount expression
+        this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
+    }
+
+    @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
     }
 
     @Override
@@ -317,6 +342,16 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
                 .getAsString();
             this.nbtMatchMode = NBTMatchMode.fromString(modeStr);
         }
+
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluate(null);
+            }
+        } else {
+            this.amount = 1;
+            this.amountExpr = new ConstantExpression(1);
+        }
     }
 
     @Override
@@ -325,7 +360,11 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         json.addProperty("symbol", String.valueOf(symbol));
         if (block != null) json.addProperty("block", block);
         if (replace != null) json.addProperty("replace", replace);
-        json.addProperty("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amount);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
         if (optional) json.addProperty("optional", true);
         if (index != -1) json.addProperty("index", index);
 
@@ -451,16 +490,14 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
      * Evaluate dynamic NBT once per apply.
      * Supports both legacy dynamicNbt and new nbtExpressions/nbtListOp systems.
      */
-    private NBTTagCompound getNbt(IRecipeContext context) {
+    private NBTTagCompound getNbt(IRecipeContext context, ConditionContext condContext) {
         boolean hasLegacy = !dynamicNbt.isEmpty();
         boolean hasNew = (nbtExpressions != null && !nbtExpressions.isEmpty()) || nbtListOp != null;
 
-        if (!hasLegacy && !hasNew) {
-            return null;
-        }
+        if (!hasLegacy && !hasNew) return null;
 
         NBTTagCompound nbtResult = new NBTTagCompound();
-        ConditionContext condContext = context.getConditionContext();
+        if (condContext == null) condContext = context.getConditionContext();
 
         // Legacy system: Map<String, IExpression>
         if (hasLegacy) {

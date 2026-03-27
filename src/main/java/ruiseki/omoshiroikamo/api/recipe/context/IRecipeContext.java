@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 
 /**
@@ -48,4 +49,11 @@ public interface IRecipeContext {
      * Get a condition context for expression evaluation.
      */
     ConditionContext getConditionContext();
+
+    /**
+     * Get the machine state for this context, if applicable.
+     */
+    default IMachineState getMachineState() {
+        return null;
+    }
 }

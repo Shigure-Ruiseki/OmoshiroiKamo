@@ -43,7 +43,7 @@ public class ExpressionParser {
         return false;
     }
 
-    private RecipeScriptException error(String message) {
+    public RecipeScriptException error(String message) {
         return new RecipeScriptException(input, Math.max(0, pos), message);
     }
 
@@ -360,52 +360,9 @@ public class ExpressionParser {
                     }
                 }
 
-                if (name.equals("nbt")) {
-                    if (args.isEmpty()) {
-                        throw error("nbt() requires at least one argument");
-                    }
-                    IExpression firstArg = args.get(0);
-                    if (firstArg instanceof StringLiteralExpression) {
-                        String nbtKey = ((StringLiteralExpression) firstArg).getStringValue();
-                        return new NbtExpression(nbtKey, 0.0);
-                    } else {
-                        throw error("nbt() first argument must be a string literal");
-                    }
-                }
-
-                if (isMathFunction(name)) {
-                    int argCount = args.size();
-                    if (name.equals("pow") || name.equals("min")
-                        || name.equals("max")
-                        || name.equals("atan2")
-                        || name.equals("npr")
-                        || name.equals("ncr")
-                        || name.equals("perm")
-                        || name.equals("permu")
-                        || name.equals("permutation")
-                        || name.equals("combi")
-                        || name.equals("combination")) {
-                        if (argCount < 2) {
-                            throw error(name + "() requires at least 2 arguments");
-                        }
-                    } else if (name.equals("log")) {
-                        if (argCount < 1 || argCount > 2) {
-                            throw error("log() requires 1 or 2 arguments");
-                        }
-                    } else if (name.equals("clamp")) {
-                        if (argCount < 3) {
-                            throw error(name + "() requires at least 3 arguments");
-                        }
-                    } else if (name.equals("random")) {
-                        if (argCount != 0) {
-                            throw error(name + "() takes no arguments");
-                        }
-                    } else {
-                        if (argCount != 1) {
-                            throw error(name + "() requires exactly 1 argument");
-                        }
-                    }
-                    return new MathFunctionExpression(name, args);
+                IExpression funcExpr = ExpressionRegistry.createFunction(name, args, this);
+                if (funcExpr != null) {
+                    return funcExpr;
                 }
 
                 throw error("Unknown function: '" + name + "'");
@@ -432,25 +389,15 @@ public class ExpressionParser {
             }
 
             // Single segment - check for known variables
-            if (name.equals("day") || name.equals("total_days")
-                || name.equals("time")
-                || name.equals("moon_phase")
-                || name.equals("moon")) {
-                return new WorldPropertyExpression(name.equals("moon") ? "moon_phase" : name);
-            } else if (name.equalsIgnoreCase("pi")) {
-                return new ConstantExpression(Math.PI);
-            } else if (name.equalsIgnoreCase("e")) {
-                return new ConstantExpression(Math.E);
+            IExpression varExpr = ExpressionRegistry.getVariable(name);
+            if (varExpr != null) {
+                return varExpr;
             } else {
                 throw error("Unknown variable: '" + name + "'");
             }
         } else {
             throw error("Unexpected character: '" + (char) ch + "'");
         }
-    }
-
-    private boolean isMathFunction(String name) {
-        return MathFunctionExpression.SUPPORTED_FUNCTIONS.contains(name.toLowerCase());
     }
 
     public static IExpression parseExpression(String input) {

@@ -51,7 +51,7 @@ public class BonusBlockOutputDecorator extends RecipeDecorator {
                 if (context != null) {
                     // Apply all bonus BlockOutputs
                     for (BlockOutput output : bonusOutputs) {
-                        output.apply(context, 1);
+                        output.apply(outputPorts, 1, condContext);
                     }
                 }
             }

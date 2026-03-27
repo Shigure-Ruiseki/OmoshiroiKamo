@@ -2,6 +2,7 @@ package ruiseki.omoshiroikamo.api.recipe.io;
 
 import java.util.List;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 
@@ -14,8 +15,8 @@ public abstract class AbstractModularRecipeInput extends AbstractRecipeInput imp
     protected int index = -1;
 
     @Override
-    public boolean process(List<IModularPort> ports, int multiplier, boolean simulate) {
-        long remaining = getRequiredAmount() * multiplier;
+    public boolean process(List<IModularPort> ports, int multiplier, boolean simulate, ConditionContext context) {
+        long remaining = getRequiredAmount(context) * multiplier;
         boolean actualSimulate = simulate || !consume;
 
         for (IModularPort port : ports) {
@@ -32,7 +33,7 @@ public abstract class AbstractModularRecipeInput extends AbstractRecipeInput imp
                             .getName());
             }
 
-            remaining -= consume(port, remaining, actualSimulate);
+            remaining -= consume(port, remaining, actualSimulate, context);
 
             if (remaining <= 0) break;
         }
@@ -48,7 +49,7 @@ public abstract class AbstractModularRecipeInput extends AbstractRecipeInput imp
     /**
      * Consume from a single port and return the amount consumed.
      */
-    protected abstract long consume(IModularPort port, long remaining, boolean simulate);
+    protected abstract long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context);
 
     @Override
     public int getIndex() {

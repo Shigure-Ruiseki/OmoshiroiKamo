@@ -6,18 +6,24 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.FluidJson;
 
 public class FluidInput extends AbstractModularRecipeInput {
 
     private FluidStack required;
     private int count = 0;
+    private IExpression amountExpr;
 
     public FluidInput(FluidStack required) {
         this.required = required != null ? required.copy() : null;
@@ -38,8 +44,16 @@ public class FluidInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    public long getRequiredAmount() {
+    public long getRequiredAmount(ConditionContext context) {
+        if (amountExpr != null && context != null) {
+            return (long) amountExpr.evaluate(context);
+        }
         return required != null ? required.amount : count;
+    }
+
+    @Override
+    public long getRequiredAmount() {
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -48,7 +62,7 @@ public class FluidInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         IFluidHandler fluidPort = (IFluidHandler) port;
         FluidStack stored = null;
 
@@ -80,9 +94,23 @@ public class FluidInput extends AbstractModularRecipeInput {
         FluidJson fluidJson = new FluidJson();
         fluidJson.name = json.get("fluid")
             .getAsString();
-        fluidJson.amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 1000;
-        this.count = fluidJson.amount;
+
+        if (json.has("amount")) {
+            JsonElement amountElement = json.get("amount");
+            if (amountElement.isJsonPrimitive() && amountElement.getAsJsonPrimitive()
+                .isString()) {
+                this.amountExpr = ExpressionParser.parseExpression(amountElement.getAsString());
+                this.count = 1000; // Fallback
+            } else {
+                this.count = amountElement.getAsInt();
+                this.amountExpr = null;
+            }
+        } else {
+            this.count = 1000;
+            this.amountExpr = null;
+        }
+
+        fluidJson.amount = this.count;
         this.required = FluidJson.resolveFluidStack(fluidJson);
     }
 
@@ -97,7 +125,11 @@ public class FluidInput extends AbstractModularRecipeInput {
                 "fluid",
                 required.getFluid()
                     .getName());
-            json.addProperty("amount", required.amount);
+            if (amountExpr != null) {
+                json.addProperty("amount", amountExpr.toString());
+            } else {
+                json.addProperty("amount", required.amount);
+            }
         }
     }
 
@@ -123,6 +155,7 @@ public class FluidInput extends AbstractModularRecipeInput {
         if (copyStack != null) copyStack.amount *= multiplier;
         FluidInput result = new FluidInput(copyStack);
         result.count = this.count * multiplier;
+        result.amountExpr = this.amountExpr;
         result.consume = this.consume;
         result.interval = this.interval;
         result.index = this.index;
@@ -141,6 +174,7 @@ public class FluidInput extends AbstractModularRecipeInput {
             required.writeToNBT(stackTag);
             nbt.setTag("required", stackTag);
         }
+        if (amountExpr != null) nbt.setString("amountExpr", amountExpr.toString());
     }
 
     @Override
@@ -151,6 +185,13 @@ public class FluidInput extends AbstractModularRecipeInput {
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
         if (nbt.hasKey("required")) {
             this.required = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("required"));
+        }
+        if (nbt.hasKey("amountExpr")) {
+            try {
+                this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+            } catch (Exception e) {
+                Logger.error("Failed to restore fluid amount expression: " + e.getMessage());
+            }
         }
     }
 

@@ -64,7 +64,7 @@ public class ItemOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
         if (output == null) return;
         int remaining = output.stackSize * multiplier;
         for (IModularPort port : ports) {

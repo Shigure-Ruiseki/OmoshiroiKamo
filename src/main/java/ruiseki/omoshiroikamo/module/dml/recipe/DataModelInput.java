@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
@@ -84,7 +85,7 @@ public class DataModelInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         if (!(port instanceof IInventory)) return 0;
         IInventory inv = (IInventory) port;
 

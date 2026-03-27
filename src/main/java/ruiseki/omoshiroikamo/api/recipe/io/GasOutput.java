@@ -10,8 +10,13 @@ import com.google.gson.JsonObject;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
@@ -20,10 +25,12 @@ public class GasOutput extends AbstractModularRecipeOutput {
 
     private String gasName;
     private int amount;
+    private IExpression amountExpr;
 
     public GasOutput(String gasName, int amount) {
         this.gasName = gasName;
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
     }
 
     public String getGasName() {
@@ -40,11 +47,12 @@ public class GasOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
-    public void apply(List<IModularPort> ports, int multiplier) {
+    public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
         Gas gas = GasRegistry.getGas(gasName);
         if (gas == null) return;
 
-        int remaining = amount * multiplier;
+        int req = amountExpr != null ? (int) amountExpr.evaluate(context) : amount;
+        int remaining = req * multiplier;
 
         for (IModularPort port : ports) {
             if (port.getPortType() != IPortType.Type.GAS) continue;
@@ -86,6 +94,11 @@ public class GasOutput extends AbstractModularRecipeOutput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+    }
+
+    @Override
     public long getRequiredAmount() {
         return amount;
     }
@@ -97,15 +110,26 @@ public class GasOutput extends AbstractModularRecipeOutput {
             .getAsInt();
         this.gasName = json.get("gas")
             .getAsString();
-        this.amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 1000;
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluate(null);
+            }
+        } else {
+            this.amount = 1000;
+            this.amountExpr = new ConstantExpression(1000);
+        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
         json.addProperty("gas", gasName);
-        json.addProperty("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amount);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
         if (interval > 0) json.addProperty("pertick", interval);
     }
 
@@ -130,6 +154,7 @@ public class GasOutput extends AbstractModularRecipeOutput {
         GasOutput result = new GasOutput(gasName, amount * multiplier);
         result.interval = this.interval;
         result.index = this.index;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -139,6 +164,9 @@ public class GasOutput extends AbstractModularRecipeOutput {
         nbt.setInteger("interval", interval);
         nbt.setString("gas", gasName);
         nbt.setInteger("amount", amount);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setInteger("index", index);
     }
 
@@ -147,6 +175,11 @@ public class GasOutput extends AbstractModularRecipeOutput {
         this.interval = nbt.getInteger("interval");
         this.gasName = nbt.getString("gas");
         this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 

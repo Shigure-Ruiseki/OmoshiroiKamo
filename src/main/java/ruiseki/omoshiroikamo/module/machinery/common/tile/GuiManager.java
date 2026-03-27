@@ -334,12 +334,18 @@ public class GuiManager {
             RecipeExecutionVisitor contextSetter = new RecipeExecutionVisitor(
                 RecipeExecutionVisitor.Mode.CHECK,
                 outputPorts,
-                agent);
+                agent,
+                agent.getContext()
+                    .getConditionContext());
 
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
                 output.accept(contextSetter); // Provides context implicitly
                 if (output instanceof IModularRecipeOutput modularOutput) {
-                    if (!modularOutput.process(outputPorts, true)) {
+                    if (!modularOutput.process(
+                        outputPorts,
+                        true,
+                        agent.getContext()
+                            .getConditionContext())) {
                         if (blocked.length() > 0) blocked.append(", ");
                         blocked.append(
                             LibMisc.LANG.localize(

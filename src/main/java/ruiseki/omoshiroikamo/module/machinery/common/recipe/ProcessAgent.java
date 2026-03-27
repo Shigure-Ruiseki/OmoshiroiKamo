@@ -45,7 +45,8 @@ public class ProcessAgent extends AbstractRecipeProcess {
     }
 
     // Re-implement start to return boolean and handle validation
-    public boolean startRecipe(IModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> outputPorts) {
+    public boolean startRecipe(IModularRecipe recipe, List<IModularPort> inputPorts, List<IModularPort> outputPorts,
+        ConditionContext context) {
         if (isRunning()) return false;
 
         // Calculate maximum possible batch size
@@ -63,7 +64,8 @@ public class ProcessAgent extends AbstractRecipeProcess {
             RecipeExecutionVisitor checker = new RecipeExecutionVisitor(
                 RecipeExecutionVisitor.Mode.CHECK,
                 inputPorts,
-                this);
+                this,
+                context);
             checker.setBatchSize(b);
             recipe.accept(checker);
 
@@ -72,7 +74,8 @@ public class ProcessAgent extends AbstractRecipeProcess {
                 RecipeExecutionVisitor outChecker = new RecipeExecutionVisitor(
                     RecipeExecutionVisitor.Mode.CACHE,
                     outputPorts,
-                    this);
+                    this,
+                    context);
                 outChecker.setBatchSize(b);
                 recipe.accept(outChecker);
 
@@ -97,7 +100,8 @@ public class ProcessAgent extends AbstractRecipeProcess {
         RecipeExecutionVisitor consumeVisitor = new RecipeExecutionVisitor(
             RecipeExecutionVisitor.Mode.CONSUME,
             inputPorts,
-            this);
+            this,
+            context);
         consumeVisitor.setBatchSize(currentBatchSize);
         recipe.accept(consumeVisitor);
 
@@ -107,7 +111,8 @@ public class ProcessAgent extends AbstractRecipeProcess {
         RecipeExecutionVisitor cacheVisitor = new RecipeExecutionVisitor(
             RecipeExecutionVisitor.Mode.CACHE,
             outputPorts,
-            this);
+            this,
+            context);
         cacheVisitor.setBatchSize(currentBatchSize);
         recipe.accept(cacheVisitor);
 
@@ -143,14 +148,14 @@ public class ProcessAgent extends AbstractRecipeProcess {
         // Generalized resource check for per-tick inputs/outputs
         for (IModularRecipeInput input : perTickInputs) {
             if (input.getInterval() > 0 && progress % input.getInterval() == 0) {
-                if (!input.process(inputPorts, 1, true)) {
+                if (!input.process(inputPorts, 1, true, context)) {
                     return mapResult(input.getFailureResult(true));
                 }
             }
         }
         for (IModularRecipeOutput output : perTickOutputs) {
             if (output.getInterval() > 0 && progress % output.getInterval() == 0) {
-                if (!output.checkCapacity(outputPorts, 1)) {
+                if (!output.checkCapacity(outputPorts, 1, context)) {
                     return mapResult(output.getFailureResult(true));
                 }
             }
@@ -161,7 +166,8 @@ public class ProcessAgent extends AbstractRecipeProcess {
             RecipeExecutionVisitor checker = new RecipeExecutionVisitor(
                 RecipeExecutionVisitor.Mode.CHECK,
                 inputPorts,
-                this);
+                this,
+                context);
             checker.setBatchSize(currentBatchSize);
             for (IRecipeInput input : currentRecipe.getInputs()) {
                 // Skip check if the input is meant to be consumed (already consumed at start)
@@ -197,11 +203,11 @@ public class ProcessAgent extends AbstractRecipeProcess {
     }
 
     @Override
-    protected boolean produceOutputs(List<IModularPort> outputPorts) {
+    protected boolean produceOutputs(List<IModularPort> outputPorts, ConditionContext context) {
         // 1. Check capacity for all
         for (IRecipeOutput output : cachedOutputs) {
             if (output instanceof IModularRecipeOutput o) {
-                if (!o.checkCapacity(outputPorts, 1)) {
+                if (!o.checkCapacity(outputPorts, 1, context)) {
                     return false;
                 }
             }
@@ -210,7 +216,7 @@ public class ProcessAgent extends AbstractRecipeProcess {
         // 2. Apply outputs
         for (IRecipeOutput output : cachedOutputs) {
             if (output instanceof IModularRecipeOutput o) {
-                o.apply(outputPorts, 1);
+                o.apply(outputPorts, 1, context);
             }
         }
 
@@ -293,24 +299,24 @@ public class ProcessAgent extends AbstractRecipeProcess {
         return (float) progress / maxProgress;
     }
 
-    public String getStatusMessage(List<IModularPort> outputPorts) {
+    public String getStatusMessage(List<IModularPort> outputPorts, ConditionContext context) {
         if (isRunning() && !isWaitingForOutput()) {
             if (maxProgress <= 0) return "Processing " + currentBatchSize + "x 0 %";
             return "Processing " + currentBatchSize + "x " + (int) ((float) progress / maxProgress * 100) + " %";
         }
         if (isWaitingForOutput()) {
-            String blocked = diagnoseBlockedOutputs(outputPorts);
+            String blocked = diagnoseBlockedOutputs(outputPorts, context);
             return (blocked != null && !blocked.isEmpty() ? blocked + " " : "") + "Output is full";
         }
         return "Idle";
     }
 
-    private String diagnoseBlockedOutputs(List<IModularPort> outputPorts) {
+    private String diagnoseBlockedOutputs(List<IModularPort> outputPorts, ConditionContext context) {
         if (currentRecipe != null) {
             StringBuilder blocked = new StringBuilder();
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
                 if (output instanceof IModularRecipeOutput o) {
-                    if (!o.checkCapacity(outputPorts, currentBatchSize)) {
+                    if (!o.checkCapacity(outputPorts, currentBatchSize, context)) {
                         if (blocked.length() > 0) blocked.append(", ");
                         blocked.append(
                             o.getPortType()
@@ -332,11 +338,11 @@ public class ProcessAgent extends AbstractRecipeProcess {
         return "Unknown";
     }
 
-    public boolean diagnoseBlockOutputFull(List<IModularPort> outputPorts) {
+    public boolean diagnoseBlockOutputFull(List<IModularPort> outputPorts, ConditionContext context) {
         if (currentRecipe != null) {
             for (IRecipeOutput output : currentRecipe.getOutputs()) {
                 if (output instanceof IModularRecipeOutput o) {
-                    if (o.getPortType() == IPortType.Type.BLOCK && !o.process(outputPorts, true)) {
+                    if (o.getPortType() == IPortType.Type.BLOCK && !o.process(outputPorts, 1, true, context)) {
                         return true;
                     }
                 }

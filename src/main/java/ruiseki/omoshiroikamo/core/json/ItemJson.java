@@ -33,19 +33,26 @@ public class ItemJson implements IJsonMaterial {
             try {
                 this.meta = Integer.parseInt(parts[2]);
             } catch (NumberFormatException e) {
-                this.meta = json.has("meta") ? json.get("meta")
-                    .getAsInt() : 0;
+                this.meta = parseSafeInt(json, "meta", 0);
             }
         } else {
             this.name = inputName;
-            this.meta = json.has("meta") ? json.get("meta")
-                .getAsInt() : 0;
+            this.meta = parseSafeInt(json, "meta", 0);
         }
 
         this.ore = json.has("ore") ? json.get("ore")
             .getAsString() : null;
-        this.amount = json.has("amount") ? json.get("amount")
-            .getAsInt() : 1;
+        this.amount = parseSafeInt(json, "amount", 1);
+    }
+
+    private int parseSafeInt(JsonObject json, String key, int defaultValue) {
+        if (!json.has(key)) return defaultValue;
+        try {
+            return json.get(key)
+                .getAsInt();
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     @Override

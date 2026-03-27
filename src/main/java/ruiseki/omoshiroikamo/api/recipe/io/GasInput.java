@@ -6,8 +6,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.google.gson.JsonObject;
 
 import mekanism.api.gas.GasStack;
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 
@@ -15,10 +20,12 @@ public class GasInput extends AbstractModularRecipeInput {
 
     private String gasName;
     private int amount;
+    private IExpression amountExpr;
 
     public GasInput(String gasName, int amount) {
         this.gasName = gasName;
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
     }
 
     public String getGasName() {
@@ -35,6 +42,11 @@ public class GasInput extends AbstractModularRecipeInput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+    }
+
+    @Override
     public long getRequiredAmount() {
         return amount;
     }
@@ -45,7 +57,7 @@ public class GasInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         IGasHandler gasPort = (IGasHandler) port;
         GasStack drawn = gasPort.drawGas(ForgeDirection.UNKNOWN, (int) remaining, false);
         if (drawn != null && drawn.amount > 0) {
@@ -54,7 +66,7 @@ public class GasInput extends AbstractModularRecipeInput {
                     .getName()
                     .equals(gasName)) {
                 if (!simulate) {
-                    gasPort.drawGas(ForgeDirection.UNKNOWN, drawn.amount, true);
+                    gasPort.drawGas(ForgeDirection.UNKNOWN, (int) drawn.amount, true);
                 }
                 return drawn.amount;
             }
@@ -75,8 +87,12 @@ public class GasInput extends AbstractModularRecipeInput {
 
         this.gasName = json.has("gas") ? json.get("gas")
             .getAsString() : null;
-        this.amount = json.get("amount")
-            .getAsInt();
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluate(null);
+            }
+        }
     }
 
     @Override
@@ -88,7 +104,11 @@ public class GasInput extends AbstractModularRecipeInput {
         if (gasName != null) {
             json.addProperty("gas", gasName);
         }
-        json.addProperty("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amount);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
     }
 
     @Override
@@ -113,6 +133,7 @@ public class GasInput extends AbstractModularRecipeInput {
         result.consume = this.consume;
         result.interval = this.interval;
         result.index = this.index;
+        result.amountExpr = this.amountExpr; // Reuse same expression
         return result;
     }
 
@@ -123,6 +144,9 @@ public class GasInput extends AbstractModularRecipeInput {
         nbt.setBoolean("consume", consume);
         nbt.setString("gas", gasName);
         nbt.setInteger("amount", amount);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setInteger("index", index);
     }
 
@@ -132,6 +156,11 @@ public class GasInput extends AbstractModularRecipeInput {
         this.consume = nbt.getBoolean("consume");
         this.gasName = nbt.getString("gas");
         this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 
