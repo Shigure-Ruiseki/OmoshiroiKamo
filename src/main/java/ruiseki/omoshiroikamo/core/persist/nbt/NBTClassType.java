@@ -166,6 +166,25 @@ public abstract class NBTClassType<T> {
         });
         NBTYPES.put(byte.class, NBTYPES.get(Byte.class));
 
+        NBTYPES.put(Long.class, new NBTClassType<Long>() {
+
+            @Override
+            public void writePersistedField(String name, Long object, NBTTagCompound tag) {
+                tag.setLong(name, object);
+            }
+
+            @Override
+            public Long readPersistedField(String name, NBTTagCompound tag) {
+                return tag.getLong(name);
+            }
+
+            @Override
+            public Long getDefaultValue() {
+                return 0L;
+            }
+        });
+        NBTYPES.put(long.class, NBTYPES.get(Long.class));
+
         NBTYPES.put(Fluid.class, new NBTClassType<Fluid>() {
 
             @Override

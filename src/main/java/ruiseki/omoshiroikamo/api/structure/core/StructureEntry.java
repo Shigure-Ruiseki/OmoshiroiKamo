@@ -12,7 +12,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 import ruiseki.omoshiroikamo.api.structure.visitor.IStructureVisitor;
 
@@ -29,10 +32,10 @@ public class StructureEntry implements IStructureEntry {
     private final List<String> recipeGroup;
     private final int[] controllerOffset;
     private final String tintColor;
-    private final double speedMultiplier;
-    private final double energyMultiplier;
-    private final int batchMin;
-    private final int batchMax;
+    private final IExpression speedMultiplierExpr;
+    private final IExpression energyMultiplierExpr;
+    private final IExpression batchMinExpr;
+    private final IExpression batchMaxExpr;
     private final int tier;
     private final String defaultFacing;
     private final Set<Character> externalPorts;
@@ -41,9 +44,10 @@ public class StructureEntry implements IStructureEntry {
 
     public StructureEntry(String name, String displayName, List<IStructureLayer> layers,
         Map<Character, ISymbolMapping> mappings, List<IStructureRequirement> requirements, List<String> recipeGroup,
-        int[] controllerOffset, String tintColor, double speedMultiplier, double energyMultiplier, int batchMin,
-        int batchMax, int tier, String defaultFacing, Set<Character> externalPorts,
-        Map<Character, EnumIO> fixedExternalPorts, List<TierStructureRef> tierStructures) {
+        int[] controllerOffset, String tintColor, IExpression speedMultiplierExpr, IExpression energyMultiplierExpr,
+        IExpression batchMinExpr, IExpression batchMaxExpr, int tier, String defaultFacing,
+        Set<Character> externalPorts, Map<Character, EnumIO> fixedExternalPorts,
+        List<TierStructureRef> tierStructures) {
         this.name = name;
         this.displayName = displayName;
         this.layers = Collections.unmodifiableList(new ArrayList<>(layers));
@@ -53,10 +57,10 @@ public class StructureEntry implements IStructureEntry {
             : Collections.emptyList();
         this.controllerOffset = controllerOffset != null ? controllerOffset.clone() : null;
         this.tintColor = tintColor;
-        this.speedMultiplier = speedMultiplier;
-        this.energyMultiplier = energyMultiplier;
-        this.batchMin = batchMin;
-        this.batchMax = batchMax;
+        this.speedMultiplierExpr = speedMultiplierExpr != null ? speedMultiplierExpr : new ConstantExpression(1.0);
+        this.energyMultiplierExpr = energyMultiplierExpr != null ? energyMultiplierExpr : new ConstantExpression(1.0);
+        this.batchMinExpr = batchMinExpr != null ? batchMinExpr : new ConstantExpression(1.0);
+        this.batchMaxExpr = batchMaxExpr != null ? batchMaxExpr : new ConstantExpression(1.0);
         this.tier = tier;
         this.defaultFacing = defaultFacing;
         this.externalPorts = externalPorts != null ? Collections.unmodifiableSet(new LinkedHashSet<>(externalPorts))
@@ -122,23 +126,23 @@ public class StructureEntry implements IStructureEntry {
     }
 
     @Override
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
+    public double getSpeedMultiplier(ConditionContext context) {
+        return speedMultiplierExpr.evaluate(context);
     }
 
     @Override
-    public double getEnergyMultiplier() {
-        return energyMultiplier;
+    public double getEnergyMultiplier(ConditionContext context) {
+        return energyMultiplierExpr.evaluate(context);
     }
 
     @Override
-    public int getBatchMin() {
-        return batchMin;
+    public int getBatchMin(ConditionContext context) {
+        return (int) Math.round(batchMinExpr.evaluate(context));
     }
 
     @Override
-    public int getBatchMax() {
-        return batchMax;
+    public int getBatchMax(ConditionContext context) {
+        return (int) Math.round(batchMaxExpr.evaluate(context));
     }
 
     @Override
@@ -201,17 +205,32 @@ public class StructureEntry implements IStructureEntry {
         if (tintColor != null) {
             json.addProperty("tintColor", tintColor);
         }
-        if (speedMultiplier != 1.0) {
-            json.addProperty("speedMultiplier", speedMultiplier);
+        if (speedMultiplierExpr instanceof ConstantExpression) {
+            double val = speedMultiplierExpr.evaluate(null);
+            if (val != 1.0) json.addProperty("speedMultiplier", val);
+        } else {
+            json.addProperty("speedMultiplier", speedMultiplierExpr.toString());
         }
-        if (energyMultiplier != 1.0) {
-            json.addProperty("energyMultiplier", energyMultiplier);
+
+        if (energyMultiplierExpr instanceof ConstantExpression) {
+            double val = energyMultiplierExpr.evaluate(null);
+            if (val != 1.0) json.addProperty("energyMultiplier", val);
+        } else {
+            json.addProperty("energyMultiplier", energyMultiplierExpr.toString());
         }
-        if (batchMin != 1) {
-            json.addProperty("batchMin", batchMin);
+
+        if (batchMinExpr instanceof ConstantExpression) {
+            int val = (int) Math.round(batchMinExpr.evaluate(null));
+            if (val != 1) json.addProperty("batchMin", val);
+        } else {
+            json.addProperty("batchMin", batchMinExpr.toString());
         }
-        if (batchMax != 1) {
-            json.addProperty("batchMax", batchMax);
+
+        if (batchMaxExpr instanceof ConstantExpression) {
+            int val = (int) Math.round(batchMaxExpr.evaluate(null));
+            if (val != 1) json.addProperty("batchMax", val);
+        } else {
+            json.addProperty("batchMax", batchMaxExpr.toString());
         }
 
         if (tier != 0) {

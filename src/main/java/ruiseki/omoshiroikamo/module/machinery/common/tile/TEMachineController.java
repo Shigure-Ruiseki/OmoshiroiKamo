@@ -51,6 +51,7 @@ import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
@@ -396,7 +397,50 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public double getSpeedMultiplier() {
-        return 1.0;
+        if (worldObj == null || !isFormed) return 1.0;
+        String name = getCustomStructureName();
+        if (name == null) return 1.0;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1.0;
+        return entry.getSpeedMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
+        if (worldObj == null || !isFormed) return 1.0;
+        String name = getCustomStructureName();
+        if (name == null) return 1.0;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1.0;
+        return entry.getEnergyMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public int getBatchMin() {
+        if (worldObj == null || !isFormed) return 1;
+        String name = getCustomStructureName();
+        if (name == null) return 1;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1;
+        return entry.getBatchMin(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public int getBatchMax() {
+        if (worldObj == null || !isFormed) return 1;
+        String name = getCustomStructureName();
+        if (name == null) return 1;
+        IStructureEntry entry = StructureManager.getInstance()
+            .getCustomStructure(name);
+        if (entry == null) return 1;
+        return entry.getBatchMax(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    public String getCustomStructureName() {
+        return structureAgent.getCustomStructureName();
     }
 
     @Override
@@ -578,7 +622,7 @@ public class TEMachineController extends AbstractMBModifierTE
             if (insufficientType != null) {
                 setProcessError(
                     ErrorReason.OUTPUT_CAPACITY_INSUFFICIENT,
-                    LibMisc.LANG.localize("gui.port_type." + insufficientType.name()));
+                    LangHelpers.localize("gui.port_type." + insufficientType.name()));
                 return;
             }
 
@@ -806,11 +850,6 @@ public class TEMachineController extends AbstractMBModifierTE
     }
 
     @Override
-    public double getEnergyMultiplier() {
-        return 1.0;
-    }
-
-    @Override
     public void writeCommon(NBTTagCompound nbt) {
         super.writeCommon(nbt);
         machineStateAgent.writeToNBT(nbt);
@@ -851,9 +890,6 @@ public class TEMachineController extends AbstractMBModifierTE
         }
         if (recipeGroups.isEmpty()) recipeGroups.add("default");
         // Load blueprint inventory
-        if (nbt.hasKey("inventory")) {
-            inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
-        }
         if (nbt.hasKey("inventory")) {
             inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
         }
@@ -953,13 +989,6 @@ public class TEMachineController extends AbstractMBModifierTE
         // Notify client
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-
-    /**
-     * Get the custom structure name.
-     */
-    public String getCustomStructureName() {
-        return structureAgent.getCustomStructureName();
     }
 
     /**

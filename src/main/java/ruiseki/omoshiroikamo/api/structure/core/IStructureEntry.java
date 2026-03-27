@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureSerializable;
@@ -57,22 +58,38 @@ public interface IStructureEntry extends IStructureSerializable {
     /**
      * Get the machine speed multiplier.
      */
-    double getSpeedMultiplier();
+    default double getSpeedMultiplier() {
+        return getSpeedMultiplier(null);
+    }
+
+    double getSpeedMultiplier(ConditionContext context);
 
     /**
      * Get the machine energy multiplier.
      */
-    double getEnergyMultiplier();
+    default double getEnergyMultiplier() {
+        return getEnergyMultiplier(null);
+    }
+
+    double getEnergyMultiplier(ConditionContext context);
 
     /**
      * Get the minimum batch size.
      */
-    int getBatchMin();
+    default int getBatchMin() {
+        return getBatchMin(null);
+    }
+
+    int getBatchMin(ConditionContext context);
 
     /**
      * Get the maximum batch size.
      */
-    int getBatchMax();
+    default int getBatchMax() {
+        return getBatchMax(null);
+    }
+
+    int getBatchMax(ConditionContext context);
 
     /**
      * Get the machine tier.

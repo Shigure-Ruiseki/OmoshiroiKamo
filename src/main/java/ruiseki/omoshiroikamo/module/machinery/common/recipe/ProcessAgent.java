@@ -14,6 +14,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.AbstractRecipeProcess;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.io.BlockInput;
 import ruiseki.omoshiroikamo.api.recipe.io.IModularRecipeInput;
@@ -23,7 +24,6 @@ import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.parser.InputNBTRegistry;
 import ruiseki.omoshiroikamo.api.recipe.parser.OutputNBTRegistry;
 import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
-import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 
 public class ProcessAgent extends AbstractRecipeProcess {
 
@@ -53,9 +53,9 @@ public class ProcessAgent extends AbstractRecipeProcess {
         int batchMin = 1;
         int batchMax = 1;
 
-        if (context instanceof IStructureEntry s) {
-            batchMin = Math.max(1, s.getBatchMin());
-            batchMax = Math.max(batchMin, s.getBatchMax());
+        if (this.context instanceof ITieredMachine tiered) {
+            batchMin = Math.max(1, tiered.getBatchMin());
+            batchMax = Math.max(batchMin, tiered.getBatchMax());
         }
 
         int selectedBatch = -1;
@@ -95,6 +95,15 @@ public class ProcessAgent extends AbstractRecipeProcess {
 
         // Initialize state via base start logic
         super.start(recipe, inputPorts);
+
+        // Apply energy multiplier
+        if (this.context instanceof ITieredMachine tiered) {
+            double multiplier = tiered.getEnergyMultiplier();
+            this.energyPerTick = (int) Math.round(this.energyPerTick * multiplier);
+            this.energyOutputPerTick = (int) Math.round(this.energyOutputPerTick * multiplier);
+            this.manaPerTick = (int) Math.round(this.manaPerTick * multiplier);
+            this.manaOutputPerTick = (int) Math.round(this.manaOutputPerTick * multiplier);
+        }
 
         // Consume and setup state (Specific to ProcessAgent)
         RecipeExecutionVisitor consumeVisitor = new RecipeExecutionVisitor(

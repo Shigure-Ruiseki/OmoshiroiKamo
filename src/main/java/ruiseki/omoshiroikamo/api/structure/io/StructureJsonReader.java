@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.structure.core.BlockMapping;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
@@ -237,24 +238,16 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
                     .getAsString());
         }
         if (json.has("speedMultiplier")) {
-            builder.setSpeedMultiplier(
-                json.get("speedMultiplier")
-                    .getAsDouble());
+            builder.setSpeedMultiplier(ExpressionsParser.parse(json.get("speedMultiplier")));
         }
         if (json.has("energyMultiplier")) {
-            builder.setEnergyMultiplier(
-                json.get("energyMultiplier")
-                    .getAsDouble());
+            builder.setEnergyMultiplier(ExpressionsParser.parse(json.get("energyMultiplier")));
         }
         if (json.has("batchMin")) {
-            builder.setBatchMin(
-                json.get("batchMin")
-                    .getAsInt());
+            builder.setBatchMin(ExpressionsParser.parse(json.get("batchMin")));
         }
         if (json.has("batchMax")) {
-            builder.setBatchMax(
-                json.get("batchMax")
-                    .getAsInt());
+            builder.setBatchMax(ExpressionsParser.parse(json.get("batchMax")));
         }
 
         // 6. tier

@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.structure.io.IStructureRequirement;
 
 /**
@@ -25,10 +27,10 @@ public class StructureEntryBuilder {
     private final Map<Character, EnumIO> fixedExternalPorts = new LinkedHashMap<>();
     private int[] controllerOffset;
     private String tintColor;
-    private double speedMultiplier = 1.0;
-    private double energyMultiplier = 1.0;
-    private int batchMin = 1;
-    private int batchMax = 1;
+    private IExpression speedMultiplier = new ConstantExpression(1.0);
+    private IExpression energyMultiplier = new ConstantExpression(1.0);
+    private IExpression batchMin = new ConstantExpression(1.0);
+    private IExpression batchMax = new ConstantExpression(1.0);
     private int tier = 0;
     private String defaultFacing;
     private final List<TierStructureRef> tierStructures = new ArrayList<>();
@@ -88,21 +90,41 @@ public class StructureEntryBuilder {
     }
 
     public StructureEntryBuilder setSpeedMultiplier(double speedMultiplier) {
+        this.speedMultiplier = new ConstantExpression(speedMultiplier);
+        return this;
+    }
+
+    public StructureEntryBuilder setSpeedMultiplier(IExpression speedMultiplier) {
         this.speedMultiplier = speedMultiplier;
         return this;
     }
 
     public StructureEntryBuilder setEnergyMultiplier(double energyMultiplier) {
+        this.energyMultiplier = new ConstantExpression(energyMultiplier);
+        return this;
+    }
+
+    public StructureEntryBuilder setEnergyMultiplier(IExpression energyMultiplier) {
         this.energyMultiplier = energyMultiplier;
         return this;
     }
 
     public StructureEntryBuilder setBatchMin(int batchMin) {
+        this.batchMin = new ConstantExpression(batchMin);
+        return this;
+    }
+
+    public StructureEntryBuilder setBatchMin(IExpression batchMin) {
         this.batchMin = batchMin;
         return this;
     }
 
     public StructureEntryBuilder setBatchMax(int batchMax) {
+        this.batchMax = new ConstantExpression(batchMax);
+        return this;
+    }
+
+    public StructureEntryBuilder setBatchMax(IExpression batchMax) {
         this.batchMax = batchMax;
         return this;
     }

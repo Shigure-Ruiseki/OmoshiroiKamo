@@ -22,4 +22,14 @@ public interface ITieredMachine {
      * Get the energy multiplier of the machine.
      */
     double getEnergyMultiplier();
+
+    /**
+     * Get the minimum batch size.
+     */
+    int getBatchMin();
+
+    /**
+     * Get the maximum batch size.
+     */
+    int getBatchMax();
 }
