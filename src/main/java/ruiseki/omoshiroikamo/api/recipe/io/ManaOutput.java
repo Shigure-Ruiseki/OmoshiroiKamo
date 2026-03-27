@@ -13,15 +13,11 @@ import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 
 public class ManaOutput extends AbstractModularRecipeOutput {
-
-    private int amount;
-    private IExpression amountExpr;
 
     public ManaOutput(int amount, boolean perTick) {
         this.amount = amount;
@@ -92,12 +88,12 @@ public class ManaOutput extends AbstractModularRecipeOutput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        return evaluateAmount(context);
     }
 
     @Override
     public long getRequiredAmount() {
-        return (long) amount;
+        return getRequiredAmount(null);
     }
 
     @Override

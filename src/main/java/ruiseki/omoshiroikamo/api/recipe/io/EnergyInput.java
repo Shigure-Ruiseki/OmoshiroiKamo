@@ -11,7 +11,6 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
@@ -21,9 +20,6 @@ import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
  * perTick=false: Energy consumed once at recipe start.
  */
 public class EnergyInput extends AbstractModularRecipeInput {
-
-    private int amount;
-    private IExpression amountExpr;
 
     public EnergyInput(int amount, boolean perTick) {
         this.amount = amount;
@@ -50,10 +46,7 @@ public class EnergyInput extends AbstractModularRecipeInput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        if (amountExpr != null && context != null) {
-            return (long) amountExpr.evaluate(context);
-        }
-        return (long) amount;
+        return evaluateAmount(context);
     }
 
     @Override

@@ -2,6 +2,8 @@ package ruiseki.omoshiroikamo.module.machinery.common.tile.agent;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.ToLongFunction;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -132,6 +134,49 @@ public class MachineStateAgent implements IMachineState {
         }
     }
 
+    // --- Generic Helper Methods ---
+
+    /**
+     * Generic helper to sum a property from all ports of a specific type.
+     *
+     * @param portType  The port type to query
+     * @param portClass The expected port interface class
+     * @param extractor Function to extract the value from each port
+     * @param <T>       The port type
+     * @return The sum of all extracted values
+     */
+    private <T> long sumPortProperty(IPortType.Type portType, Class<T> portClass, ToLongFunction<T> extractor) {
+        return controller.getPortManager()
+            .getInputPorts(portType)
+            .stream()
+            .filter(portClass::isInstance)
+            .map(portClass::cast)
+            .mapToLong(extractor)
+            .sum();
+    }
+
+    /**
+     * Generic helper for named resources (gas, fluid, essentia, vis).
+     *
+     * @param portType  The port type to query
+     * @param portClass The expected port interface class
+     * @param name      The resource name
+     * @param extractor Function to extract amount for the specific name
+     * @param <T>       The port type
+     * @return The sum of amounts for the named resource
+     */
+    private <T> long sumNamedResource(IPortType.Type portType, Class<T> portClass, String name,
+        BiFunction<T, String, Long> extractor) {
+        if (name == null || name.isEmpty()) return 0;
+        return controller.getPortManager()
+            .getInputPorts(portType)
+            .stream()
+            .filter(portClass::isInstance)
+            .map(portClass::cast)
+            .mapToLong(port -> extractor.apply(port, name))
+            .sum();
+    }
+
     @Override
     public long getStoredFluid() {
         long total = 0;
@@ -184,13 +229,7 @@ public class MachineStateAgent implements IMachineState {
 
     @Override
     public long getStoredMana() {
-        return controller.getPortManager()
-            .getInputPorts(IPortType.Type.MANA)
-            .stream()
-            .filter(p -> p instanceof IManaPool)
-            .map(p -> (IManaPool) p)
-            .mapToLong(p -> (long) p.getCurrentMana())
-            .sum();
+        return sumPortProperty(IPortType.Type.MANA, IManaPool.class, p -> (long) p.getCurrentMana());
     }
 
     @Override
@@ -211,36 +250,20 @@ public class MachineStateAgent implements IMachineState {
 
     @Override
     public long getStoredGas(String name) {
-        if (name == null || name.isEmpty()) return 0;
-        return controller.getPortManager()
-            .getInputPorts(IPortType.Type.GAS)
-            .stream()
-            .filter(p -> p instanceof IGasHandler)
-            .map(p -> (IGasHandler) p)
-            .mapToLong(p -> {
-                var drawn = p.drawGas(ForgeDirection.UNKNOWN, Integer.MAX_VALUE, false);
-                if (drawn != null && drawn.getGas()
-                    .getName()
-                    .equals(name)) {
-                    return drawn.amount;
-                }
-                return 0;
-            })
-            .sum();
+        return sumNamedResource(IPortType.Type.GAS, IGasHandler.class, name, (port, gasName) -> {
+            var drawn = port.drawGas(ForgeDirection.UNKNOWN, Integer.MAX_VALUE, false);
+            return (drawn != null && drawn.getGas()
+                .getName()
+                .equals(gasName)) ? (long) drawn.amount : 0L;
+        });
     }
 
     @Override
     public long getTotalStoredGas() {
-        return controller.getPortManager()
-            .getInputPorts(IPortType.Type.GAS)
-            .stream()
-            .filter(p -> p instanceof IGasHandler)
-            .map(p -> (IGasHandler) p)
-            .mapToLong(p -> {
-                var drawn = p.drawGas(ForgeDirection.UNKNOWN, Integer.MAX_VALUE, false);
-                return drawn != null ? drawn.amount : 0;
-            })
-            .sum();
+        return sumPortProperty(IPortType.Type.GAS, IGasHandler.class, p -> {
+            var drawn = p.drawGas(ForgeDirection.UNKNOWN, Integer.MAX_VALUE, false);
+            return drawn != null ? drawn.amount : 0;
+        });
     }
 
     @Override
@@ -255,13 +278,10 @@ public class MachineStateAgent implements IMachineState {
     public long getStoredEssentia(String aspectName) {
         Aspect aspect = Aspect.getAspect(aspectName);
         if (aspect == null) return 0;
-        return controller.getPortManager()
-            .getInputPorts(IPortType.Type.ESSENTIA)
-            .stream()
-            .filter(p -> p instanceof IAspectContainer)
-            .map(p -> (IAspectContainer) p)
-            .mapToLong(p -> (long) p.containerContains(aspect))
-            .sum();
+        return sumPortProperty(
+            IPortType.Type.ESSENTIA,
+            IAspectContainer.class,
+            p -> (long) p.containerContains(aspect));
     }
 
     @Override
@@ -275,13 +295,7 @@ public class MachineStateAgent implements IMachineState {
     public long getStoredVis(String aspectName) {
         Aspect aspect = Aspect.getAspect(aspectName);
         if (aspect == null) return 0;
-        return controller.getPortManager()
-            .getInputPorts(IPortType.Type.VIS)
-            .stream()
-            .filter(p -> p instanceof IAspectContainer)
-            .map(p -> (IAspectContainer) p)
-            .mapToLong(p -> (long) p.containerContains(aspect))
-            .sum();
+        return sumPortProperty(IPortType.Type.VIS, IAspectContainer.class, p -> (long) p.containerContains(aspect));
     }
 
     @Override

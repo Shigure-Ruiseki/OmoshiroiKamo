@@ -10,7 +10,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
@@ -18,13 +17,11 @@ import thaumcraft.api.aspects.IAspectContainer;
 public class VisInput extends AbstractModularRecipeInput {
 
     private String aspectTag;
-    private int amountCentiVis;
-    private IExpression amountExpr;
 
-    public VisInput(String aspectTag, int amountCentiVis) {
+    public VisInput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
-        this.amountCentiVis = amountCentiVis;
-        this.amountExpr = new ConstantExpression(amountCentiVis);
+        this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
     }
 
     public String getAspectTag() {
@@ -32,7 +29,7 @@ public class VisInput extends AbstractModularRecipeInput {
     }
 
     public int getAmount() {
-        return amountCentiVis;
+        return amount;
     }
 
     @Override
@@ -42,12 +39,12 @@ public class VisInput extends AbstractModularRecipeInput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amountCentiVis;
+        return evaluateAmount(context);
     }
 
     @Override
     public long getRequiredAmount() {
-        return amountCentiVis;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -86,7 +83,7 @@ public class VisInput extends AbstractModularRecipeInput {
         if (json.has("amount")) {
             this.amountExpr = ExpressionsParser.parse(json.get("amount"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amountCentiVis = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluate(null);
             }
         }
     }
@@ -100,7 +97,7 @@ public class VisInput extends AbstractModularRecipeInput {
             json.addProperty("vis", aspectTag);
         }
         if (amountExpr instanceof ConstantExpression) {
-            json.addProperty("amount", amountCentiVis);
+            json.addProperty("amount", amount);
         } else {
             json.addProperty("amount", amountExpr.toString());
         }
@@ -108,7 +105,7 @@ public class VisInput extends AbstractModularRecipeInput {
 
     @Override
     public boolean validate() {
-        return aspectTag != null && !aspectTag.isEmpty() && amountCentiVis > 0;
+        return aspectTag != null && !aspectTag.isEmpty() && amount > 0;
     }
 
     public static VisInput fromJson(JsonObject json) {
@@ -124,7 +121,7 @@ public class VisInput extends AbstractModularRecipeInput {
 
     @Override
     public IRecipeInput copy(int multiplier) {
-        VisInput result = new VisInput(aspectTag, (int) (amountCentiVis * multiplier));
+        VisInput result = new VisInput(aspectTag, (int) (amount * multiplier));
         result.consume = this.consume;
         result.interval = this.interval;
         result.amountExpr = this.amountExpr;
@@ -137,7 +134,7 @@ public class VisInput extends AbstractModularRecipeInput {
         nbt.setInteger("interval", interval);
         nbt.setBoolean("consume", consume);
         nbt.setString("aspect", aspectTag);
-        nbt.setInteger("amount", amountCentiVis);
+        nbt.setInteger("amount", amount);
         if (!(amountExpr instanceof ConstantExpression)) {
             nbt.setString("amountExpr", amountExpr.toString());
         }
@@ -148,11 +145,11 @@ public class VisInput extends AbstractModularRecipeInput {
         this.interval = nbt.getInteger("interval");
         this.consume = nbt.getBoolean("consume");
         this.aspectTag = nbt.getString("aspect");
-        this.amountCentiVis = nbt.getInteger("amount");
+        this.amount = nbt.getInteger("amount");
         if (nbt.hasKey("amountExpr")) {
             this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
         } else {
-            this.amountExpr = new ConstantExpression(amountCentiVis);
+            this.amountExpr = new ConstantExpression(amount);
         }
     }
 

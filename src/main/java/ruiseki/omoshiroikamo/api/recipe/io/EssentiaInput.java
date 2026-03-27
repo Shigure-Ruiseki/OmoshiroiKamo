@@ -10,7 +10,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
@@ -18,8 +17,6 @@ import thaumcraft.api.aspects.IAspectContainer;
 public class EssentiaInput extends AbstractModularRecipeInput {
 
     private String aspectTag;
-    private int amount;
-    private IExpression amountExpr;
 
     public EssentiaInput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
@@ -42,12 +39,12 @@ public class EssentiaInput extends AbstractModularRecipeInput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        return evaluateAmount(context);
     }
 
     @Override
     public long getRequiredAmount() {
-        return amount;
+        return getRequiredAmount(null);
     }
 
     @Override

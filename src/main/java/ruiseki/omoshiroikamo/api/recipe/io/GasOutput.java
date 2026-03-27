@@ -16,7 +16,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
@@ -24,8 +23,6 @@ import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 public class GasOutput extends AbstractModularRecipeOutput {
 
     private String gasName;
-    private int amount;
-    private IExpression amountExpr;
 
     public GasOutput(String gasName, int amount) {
         this.gasName = gasName;
@@ -95,12 +92,12 @@ public class GasOutput extends AbstractModularRecipeOutput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        return evaluateAmount(context);
     }
 
     @Override
     public long getRequiredAmount() {
-        return amount;
+        return getRequiredAmount(null);
     }
 
     @Override

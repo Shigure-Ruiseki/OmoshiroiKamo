@@ -12,7 +12,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
@@ -21,13 +20,11 @@ import thaumcraft.api.aspects.IAspectContainer;
 public class VisOutput extends AbstractModularRecipeOutput {
 
     private String aspectTag;
-    private int amountCentiVis;
-    private IExpression amountExpr;
 
-    public VisOutput(String aspectTag, int amountCentiVis) {
+    public VisOutput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
-        this.amountCentiVis = amountCentiVis;
-        this.amountExpr = new ConstantExpression(amountCentiVis);
+        this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
     }
 
     public String getAspectTag() {
@@ -35,7 +32,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
     }
 
     public int getAmountCentiVis() {
-        return amountCentiVis;
+        return amount;
     }
 
     @Override
@@ -48,7 +45,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return;
 
-        int req = amountExpr != null ? (int) amountExpr.evaluate(context) : amountCentiVis;
+        int req = amountExpr != null ? (int) amountExpr.evaluate(context) : amount;
         int remaining = req * multiplier;
 
         for (IModularPort port : ports) {
@@ -97,12 +94,12 @@ public class VisOutput extends AbstractModularRecipeOutput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amountCentiVis;
+        return evaluateAmount(context);
     }
 
     @Override
     public long getRequiredAmount() {
-        return amountCentiVis;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -115,10 +112,10 @@ public class VisOutput extends AbstractModularRecipeOutput {
         if (json.has("amount")) {
             this.amountExpr = ExpressionsParser.parse(json.get("amount"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amountCentiVis = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluate(null);
             }
         } else {
-            this.amountCentiVis = 100;
+            this.amount = 100;
             this.amountExpr = new ConstantExpression(100);
         }
     }
@@ -128,7 +125,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         if (index != -1) json.addProperty("index", index);
         json.addProperty("vis", aspectTag);
         if (amountExpr instanceof ConstantExpression) {
-            json.addProperty("amount", amountCentiVis);
+            json.addProperty("amount", amount);
         } else {
             json.addProperty("amount", amountExpr.toString());
         }
@@ -137,7 +134,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
 
     @Override
     public boolean validate() {
-        return aspectTag != null && !aspectTag.isEmpty() && amountCentiVis > 0;
+        return aspectTag != null && !aspectTag.isEmpty() && amount > 0;
     }
 
     public static VisOutput fromJson(JsonObject json) {
@@ -153,7 +150,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
 
     @Override
     public IRecipeOutput copy(int multiplier) {
-        VisOutput result = new VisOutput(aspectTag, (int) (amountCentiVis * multiplier));
+        VisOutput result = new VisOutput(aspectTag, (int) (amount * multiplier));
         result.interval = this.interval;
         result.index = this.index;
         result.amountExpr = this.amountExpr;
@@ -165,7 +162,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         nbt.setString("id", "vis");
         nbt.setInteger("interval", interval);
         nbt.setString("aspect", aspectTag);
-        nbt.setInteger("amount", amountCentiVis);
+        nbt.setInteger("amount", amount);
         if (!(amountExpr instanceof ConstantExpression)) {
             nbt.setString("amountExpr", amountExpr.toString());
         }
@@ -176,11 +173,11 @@ public class VisOutput extends AbstractModularRecipeOutput {
     public void readFromNBT(NBTTagCompound nbt) {
         this.interval = nbt.getInteger("interval");
         this.aspectTag = nbt.getString("aspect");
-        this.amountCentiVis = nbt.getInteger("amount");
+        this.amount = nbt.getInteger("amount");
         if (nbt.hasKey("amountExpr")) {
             this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
         } else {
-            this.amountExpr = new ConstantExpression(amountCentiVis);
+            this.amountExpr = new ConstantExpression(amount);
         }
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }

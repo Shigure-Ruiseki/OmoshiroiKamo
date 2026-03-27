@@ -17,15 +17,12 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
-import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 public class FluidOutput extends AbstractModularRecipeOutput {
 
     private String fluidName;
-    private int amount;
-    private IExpression amountExpr;
 
     public FluidOutput(String fluidName, int amount) {
         this.fluidName = fluidName;
@@ -120,10 +117,7 @@ public class FluidOutput extends AbstractModularRecipeOutput {
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        if (amountExpr != null && context != null) {
-            return (long) amountExpr.evaluate(context);
-        }
-        return amount;
+        return evaluateAmount(context);
     }
 
     @Override
