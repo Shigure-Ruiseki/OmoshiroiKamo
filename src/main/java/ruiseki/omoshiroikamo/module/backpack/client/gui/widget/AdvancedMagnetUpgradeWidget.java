@@ -10,7 +10,6 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedMagnetUpgradeWrapper;
 
 public class AdvancedMagnetUpgradeWidget extends AdvancedExpandedTabWidget<AdvancedMagnetUpgradeWrapper> {
@@ -32,15 +31,8 @@ public class AdvancedMagnetUpgradeWidget extends AdvancedExpandedTabWidget<Advan
     @Getter
     private final CyclicVariantButtonWidget expButton;
 
-    public AdvancedMagnetUpgradeWidget(int slotIndex, AdvancedMagnetUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            wrapper,
-            new ItemStack(BackpackItems.ADVANCED_MAGNET_UPGRADE.getItem()),
-            "gui.backpack.advanced_magnet_settings",
-            "adv_common_filter",
-            6,
-            100);
+    public AdvancedMagnetUpgradeWidget(int slotIndex, ItemStack stack, AdvancedMagnetUpgradeWrapper wrapper) {
+        super(slotIndex, stack, wrapper, "gui.backpack.advanced_magnet_settings", "adv_common_filter", 6, 100);
 
         this.itemButton = new CyclicVariantButtonWidget(ITEM_VARIANTS, wrapper.isCollectItem() ? 0 : 1, index -> {
             this.wrapper.setCollectItem(index == 0);

@@ -532,54 +532,54 @@ public class BackpackPanel extends ModularPanel {
             // Crafting
             if (wrapper instanceof CraftingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateCraftingDelegate(upgrade);
-                tabWidget.setExpandedWidget(new CraftingUpgradeWidget(slotIndex, upgrade, this));
+                tabWidget.setExpandedWidget(new CraftingUpgradeWidget(slotIndex, stack, upgrade, this));
             }
 
             // Feeding
             else if (wrapper instanceof AdvancedFeedingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedFeedingUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof FeedingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new FeedingUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Magnet
             else if (wrapper instanceof AdvancedMagnetUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedMagnetUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedMagnetUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof MagnetUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new MagnetUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new MagnetUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Filter
             else if (wrapper instanceof AdvancedFilterUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedFilterUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedFilterUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof FilterUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new FilterUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new FilterUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Void
             else if (wrapper instanceof AdvancedVoidUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new AdvancedVoidUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new AdvancedVoidUpgradeWidget(slotIndex, stack, upgrade));
             } else if (wrapper instanceof VoidUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
-                tabWidget.setExpandedWidget(new VoidUpgradeWidget(slotIndex, upgrade));
+                tabWidget.setExpandedWidget(new VoidUpgradeWidget(slotIndex, stack, upgrade));
             }
 
             // Base
             else if (wrapper instanceof AdvancedUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateAdvancedFilterDelegate(upgrade);
                 tabWidget.setExpandedWidget(
-                    new AdvancedExpandedTabWidget<>(slotIndex, upgrade, stack, upgrade.getSettingLangKey()));
+                    new AdvancedExpandedTabWidget<>(slotIndex, stack, upgrade, upgrade.getSettingLangKey()));
             } else if (wrapper instanceof BasicUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateFilterDelegate(upgrade);
                 tabWidget.setExpandedWidget(
-                    new BasicExpandedTabWidget<>(slotIndex, upgrade, stack, upgrade.getSettingLangKey()));
+                    new BasicExpandedTabWidget<>(slotIndex, stack, upgrade, upgrade.getSettingLangKey()));
             }
 
             // spotless: on

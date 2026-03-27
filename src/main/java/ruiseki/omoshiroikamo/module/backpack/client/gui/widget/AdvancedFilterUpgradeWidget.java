@@ -10,7 +10,6 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.syncHandler.UpgradeSlotSH;
-import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.AdvancedFilterUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IFilterUpgrade;
 
@@ -24,15 +23,8 @@ public class AdvancedFilterUpgradeWidget extends AdvancedExpandedTabWidget<Advan
     @Getter
     private final CyclicVariantButtonWidget filterButton;
 
-    public AdvancedFilterUpgradeWidget(int slotIndex, AdvancedFilterUpgradeWrapper wrapper) {
-        super(
-            slotIndex,
-            wrapper,
-            new ItemStack(BackpackItems.ADVANCED_FILTER_UPGRADE.getItem()),
-            "gui.backpack.advanced_filter_settings",
-            "adv_common_filter",
-            6,
-            100);
+    public AdvancedFilterUpgradeWidget(int slotIndex, ItemStack stack, AdvancedFilterUpgradeWrapper wrapper) {
+        super(slotIndex, stack, wrapper, "gui.backpack.advanced_filter_settings", "adv_common_filter", 6, 100);
 
         this.filterButton = new CyclicVariantButtonWidget(
             FILTER_VARIANTS,
