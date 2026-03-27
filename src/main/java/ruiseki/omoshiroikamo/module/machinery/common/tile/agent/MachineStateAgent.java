@@ -16,8 +16,11 @@ import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
+import ruiseki.omoshiroikamo.core.gas.GasTankInfo;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.essentia.AbstractEssentiaPortTE;
+import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.AbstractVisPortTE;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
 import vazkii.botania.api.mana.IManaPool;
@@ -268,10 +271,18 @@ public class MachineStateAgent implements IMachineState {
 
     @Override
     public long getGasCapacity() {
-        // IGasHandler might not have capacity getter, checking...
-        // Assuming some limit or just return total stored + free space if possible.
-        // For simplicity, sum up amounts for now.
-        return getTotalStoredGas(); // TODO: Need capacity if available in IGasHandler
+        long total = 0;
+        for (IModularPort port : controller.getPortManager()
+            .getInputPorts(IPortType.Type.GAS)) {
+            if (!(port instanceof IGasHandler gasPort)) continue;
+            GasTankInfo[] tankInfo = gasPort.getTankInfo(ForgeDirection.UNKNOWN);
+            if (tankInfo != null) {
+                for (GasTankInfo info : tankInfo) {
+                    total += info.capacity;
+                }
+            }
+        }
+        return total;
     }
 
     @Override
@@ -286,9 +297,10 @@ public class MachineStateAgent implements IMachineState {
 
     @Override
     public long getEssentiaCapacity() {
-        // IAspectContainer doesn't have a direct capacity getter in all versions,
-        // but we can sum up if known.
-        return 0; // TODO: Implement if needed
+        return sumPortProperty(
+            IPortType.Type.ESSENTIA,
+            AbstractEssentiaPortTE.class,
+            p -> (long) p.getMaxCapacityPerAspect());
     }
 
     @Override
@@ -300,6 +312,6 @@ public class MachineStateAgent implements IMachineState {
 
     @Override
     public long getVisCapacity() {
-        return 0;
+        return sumPortProperty(IPortType.Type.VIS, AbstractVisPortTE.class, p -> (long) p.getMaxVisPerAspect());
     }
 }
