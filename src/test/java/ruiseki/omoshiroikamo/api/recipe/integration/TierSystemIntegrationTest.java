@@ -73,6 +73,16 @@ public class TierSystemIntegrationTest {
         }
 
         @Override
+        public int getBatchMin() {
+            return 1;
+        }
+
+        @Override
+        public int getBatchMax() {
+            return 1;
+        }
+
+        @Override
         public int getTier() {
             return Math.min(casingTier, coreTier);
         }

@@ -61,6 +61,16 @@ public class ComponentTierExpressionTest {
             return 1.0;
         }
 
+        @Override
+        public int getBatchMin() {
+            return 1;
+        }
+
+        @Override
+        public int getBatchMax() {
+            return 1;
+        }
+
         // IRecipeContext methods - not needed for this test, returning defaults
         @Override
         public World getWorld() {
@@ -211,7 +221,8 @@ public class ComponentTierExpressionTest {
         IExpression expr = ExpressionParser.parseExpression("tier.glass >= 2");
 
         assertNotNull(expr);
-        // The expression should parse successfully (as a comparison or condition wrapper)
+        // The expression should parse successfully (as a comparison or condition
+        // wrapper)
 
         MockTieredMachine machine = new MockTieredMachine(3, 2);
         ConditionContext context = new ConditionContext(null, 0, 0, 0, machine);
@@ -328,8 +339,10 @@ public class ComponentTierExpressionTest {
 
     @Test
     public void testInvalidTierExpression_NoComponent() {
-        // Note: "tier" alone is now valid as a MachinePropertyExpression (returns machine's overall tier)
-        // This test now verifies that "tier" is parsed as MachinePropertyExpression, not ComponentTierExpression
+        // Note: "tier" alone is now valid as a MachinePropertyExpression (returns
+        // machine's overall tier)
+        // This test now verifies that "tier" is parsed as MachinePropertyExpression,
+        // not ComponentTierExpression
         IExpression expr = ExpressionParser.parseExpression("tier");
 
         assertNotNull(expr);
