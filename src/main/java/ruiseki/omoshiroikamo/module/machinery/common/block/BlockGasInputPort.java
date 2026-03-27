@@ -20,8 +20,8 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.client.util.IconRegistry;
 import ruiseki.omoshiroikamo.core.gas.IGasHandler;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
@@ -39,7 +39,7 @@ public class BlockGasInputPort extends AbstractPortBlock<TEGasInputPort> {
 
     protected BlockGasInputPort() {
         // Pass single TE class - we override createTileEntity and registerTileEntity
-        super(ModObject.blockModularGasInput.unlocalisedName, TEGasInputPort.class);
+        super(ModObject.blockModularGasInput.name, TEGasInputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -126,7 +126,7 @@ public class BlockGasInputPort extends AbstractPortBlock<TEGasInputPort> {
     @Override
     protected void addCapacityTooltip(List<String> list, int tier) {
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", MachineryConfig.getGasPortCapacity(tier)) + " mB"));
     }

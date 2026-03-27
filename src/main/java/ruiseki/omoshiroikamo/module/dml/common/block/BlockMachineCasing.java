@@ -9,7 +9,7 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 public class BlockMachineCasing extends BlockOK {
 
     protected BlockMachineCasing() {
-        super(ModObject.blockMachineCasing.unlocalisedName, Material.rock);
+        super(ModObject.MACHINE_CASING.name, Material.rock);
         isOpaque = false;
     }
 

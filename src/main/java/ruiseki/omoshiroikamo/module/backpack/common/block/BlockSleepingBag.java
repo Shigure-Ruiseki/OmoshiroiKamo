@@ -1,7 +1,5 @@
 package ruiseki.omoshiroikamo.module.backpack.common.block;
 
-import static ruiseki.omoshiroikamo.api.enums.ModObject.blockSleepingBag;
-
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -27,6 +25,7 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.OmoshiroiKamo;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.backpack.common.entity.properties.BackpackProperty;
@@ -46,7 +45,7 @@ public class BlockSleepingBag extends BlockOK {
     private IIcon[] topIcons;
 
     public BlockSleepingBag() {
-        super(blockSleepingBag.unlocalisedName, Material.cloth);
+        super(ModObject.SLEEPING_BAG.name, Material.cloth);
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.1F, 1.0F);
         this.setHardness(0F);
         this.isFullSize = this.isOpaque = false;

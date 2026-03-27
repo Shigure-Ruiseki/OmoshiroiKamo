@@ -37,8 +37,8 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.config.backport.ChickenConfig;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaEntityInfoProvider;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.chickens.common.entity.ai.EntityAIChickenTempt;
 
@@ -178,7 +178,7 @@ public class EntityChickensChicken extends EntityChicken
         }
 
         if (getChickenDescription() != null) {
-            return LibMisc.LANG.localize(getChickenDescription().getDisplayName());
+            return LangHelpers.localize(getChickenDescription().getDisplayName());
         }
 
         return super.getCommandSenderName();
@@ -387,12 +387,12 @@ public class EntityChickensChicken extends EntityChicken
         if (!(entity instanceof EntityChickensChicken chicken)) {
             return;
         }
-        tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.tier", chicken.getTier()));
+        tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.tier", chicken.getTier()));
 
         if (chicken.getStatsAnalyzed() || ChickenConfig.alwaysShowStats) {
-            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.growth", chicken.getGrowth()));
-            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.gain", chicken.getGain()));
-            tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.strength", chicken.getStrength()));
+            tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.growth", chicken.getGrowth()));
+            tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.gain", chicken.getGain()));
+            tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.strength", chicken.getStrength()));
         }
 
         if (!chicken.isChild()) {
@@ -404,7 +404,7 @@ public class EntityChickensChicken extends EntityChicken
 
                 String timeFormatted = String.format("%d:%02d", minutes, seconds);
 
-                tooltip.add(LibMisc.LANG.localize(LibResources.TOOLTIP + "mob.layProgress", timeFormatted));
+                tooltip.add(LangHelpers.localize(LibResources.TOOLTIP + "mob.layProgress", timeFormatted));
             }
         }
     }

@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.backpack.client.gui.handler.UpgradeItemStackHandler;
 
 public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implements IFeedingUpgrade {
@@ -25,7 +25,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
 
             @Override
             protected void onContentsChanged(int slot) {
-                NBTTagCompound tag = ItemNBTUtils.getNBT(upgrade);
+                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
             }
         };
@@ -65,7 +65,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     }
 
     public FeedingStrategy.Hunger getHungerFeedingStrategy() {
-        int ord = ItemNBTUtils.getInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, FeedingStrategy.Hunger.FULL.ordinal());
+        int ord = ItemNBTHelpers.getInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, FeedingStrategy.Hunger.FULL.ordinal());
         FeedingStrategy.Hunger[] vals = FeedingStrategy.Hunger.values();
         return (ord < 0 || ord >= vals.length) ? FeedingStrategy.Hunger.FULL : vals[ord];
     }
@@ -74,11 +74,11 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
         if (strategy == null) {
             strategy = FeedingStrategy.Hunger.FULL;
         }
-        ItemNBTUtils.setInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, strategy.ordinal());
+        ItemNBTHelpers.setInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, strategy.ordinal());
     }
 
     public FeedingStrategy.HEALTH getHealthFeedingStrategy() {
-        int ord = ItemNBTUtils.getInt(upgrade, HURT_FEEDING_STRATEGY_TAG, FeedingStrategy.HEALTH.ALWAYS.ordinal());
+        int ord = ItemNBTHelpers.getInt(upgrade, HURT_FEEDING_STRATEGY_TAG, FeedingStrategy.HEALTH.ALWAYS.ordinal());
         FeedingStrategy.HEALTH[] vals = FeedingStrategy.HEALTH.values();
         return (ord < 0 || ord >= vals.length) ? FeedingStrategy.HEALTH.ALWAYS : vals[ord];
     }
@@ -87,7 +87,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
         if (strategy == null) {
             strategy = FeedingStrategy.HEALTH.ALWAYS;
         }
-        ItemNBTUtils.setInt(upgrade, HURT_FEEDING_STRATEGY_TAG, strategy.ordinal());
+        ItemNBTHelpers.setInt(upgrade, HURT_FEEDING_STRATEGY_TAG, strategy.ordinal());
     }
 
     public static class FeedingStrategy {

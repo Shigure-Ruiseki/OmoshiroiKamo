@@ -10,7 +10,7 @@ import ruiseki.omoshiroikamo.core.item.ItemFoodOK;
 public class ItemMenrilBerries extends ItemFoodOK {
 
     public ItemMenrilBerries() {
-        super(ModObject.itemMenrilBerries.unlocalisedName, 4, 0.3f, false);
+        super(ModObject.MENRIL_BERRIES.name, 4, 0.3f, false);
         if (IDsConfig.nightVision) {
             setPotionEffect(Potion.nightVision.id, 20, 1, 1.0F);
         }

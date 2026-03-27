@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemRedstoneWriter extends AbstractPartItem {
 
     public ItemRedstoneWriter() {
-        super(ModObject.itemRedstoneWriter.unlocalisedName);
+        super(ModObject.REDSTONE_WRITER.name);
     }
 
     @Override

@@ -16,24 +16,24 @@ public enum BackpackBlocks {
 
     // spotless: off
 
-    BACKPACK_BASE(BlockBackpack.create(
-        ModObject.backpackLeather.unlocalisedName,
+    BACKPACK_BASE(new BlockBackpack(
+        ModObject.LEATHER_BACKPACK.name,
         BackpackConfig.leatherBackpackSlots,
         BackpackConfig.leatherUpgradeSlots)),
-    BACKPACK_IRON(BlockBackpack.create(
-        ModObject.blockBackpackIron.unlocalisedName,
+    BACKPACK_IRON(new BlockBackpack(
+        ModObject.IRON_BACKPACK.name,
         BackpackConfig.ironBackpackSlots,
         BackpackConfig.ironUpgradeSlots)),
-    BACKPACK_GOLD(BlockBackpack.create(
-        ModObject.blockBackpackGold.unlocalisedName,
+    BACKPACK_GOLD(new BlockBackpack(
+        ModObject.GOLD_BACKPACK.name,
         BackpackConfig.goldBackpackSlots,
         BackpackConfig.goldUpgradeSlots)),
-    BACKPACK_DIAMOND(BlockBackpack.create(
-        ModObject.blockBackpackDiamond.unlocalisedName,
+    BACKPACK_DIAMOND(new BlockBackpack(
+        ModObject.DIAMOND_BACKPACK.name,
         BackpackConfig.diamondBackpackSlots,
         BackpackConfig.diamondUpgradeSlots)),
-    BACKPACK_OBSIDIAN(BlockBackpack.create(
-        ModObject.blockBackpackObsidian.unlocalisedName,
+    BACKPACK_OBSIDIAN(new BlockBackpack(
+        ModObject.OBSIDIAN_BACKPACK.name,
         BackpackConfig.obsidianBackpackSlots,
         BackpackConfig.obsidianUpgradeSlots)),
     SLEEPING_BAG(new BlockSleepingBag()),

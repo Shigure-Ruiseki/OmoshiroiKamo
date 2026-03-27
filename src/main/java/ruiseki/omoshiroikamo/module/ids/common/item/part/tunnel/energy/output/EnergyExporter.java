@@ -42,8 +42,8 @@ import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.core.energy.EnergyUtils;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -158,14 +158,14 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.energyExporter.boolean"),
-            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.energyExporter.boolean"), allSetting),
+            LangHelpers.localize("gui.ids.energyExporter.boolean"),
+            writerSlotRow(0, LangHelpers.localize("gui.ids.energyExporter.boolean"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.energyExporter.amount"),
-            writerSlotRow(1, LibMisc.LANG.localize("gui.ids.energyExporter.amount"), allSetting),
+            LangHelpers.localize("gui.ids.energyExporter.amount"),
+            writerSlotRow(1, LangHelpers.localize("gui.ids.energyExporter.amount"), allSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -203,7 +203,7 @@ public class EnergyExporter extends AbstractWriterPart implements IEnergyPart {
 
         Row transferLimit = new Row();
         transferLimit.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.transferLimit")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.transferLimit")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getTransferLimit, this::setTransferLimit))
                     .right(0)

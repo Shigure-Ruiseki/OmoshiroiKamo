@@ -20,10 +20,10 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
-import ruiseki.omoshiroikamo.core.common.util.KeyboardUtils;
 import ruiseki.omoshiroikamo.core.common.util.TooltipUtils;
+import ruiseki.omoshiroikamo.core.helper.KeyboardHelpers;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class ItemDataModel extends ItemOK {
     // TODO: add mod integration by default
@@ -31,7 +31,7 @@ public class ItemDataModel extends ItemOK {
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemDataModel() {
-        super(ModObject.itemDataModel.unlocalisedName);
+        super(ModObject.DATA_MODEL.name);
         setMaxStackSize(1);
     }
 
@@ -58,7 +58,7 @@ public class ItemDataModel extends ItemOK {
         if (model == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG.localize(model.getItemName()) + ": " + DataModel.getTierName(stack);
+        return LangHelpers.localize(model.getItemName()) + ": " + DataModel.getTierName(stack);
     }
 
     @Override
@@ -87,13 +87,12 @@ public class ItemDataModel extends ItemOK {
             builder.add(DataModel.getExtraTooltip(stack));
         }
 
-        if (!KeyboardUtils.isHoldingShift()) {
+        if (!KeyboardHelpers.isHoldingShift()) {
             builder.addLang("tooltip.holdshift");
         } else {
             int tier = DataModel.getTier(stack);
-            builder.addLang(
-                "tooltip.data_model.tier",
-                LibMisc.LANG.localize(ModelTierRegistry.INSTANCE.getTierName(tier)));
+            builder
+                .addLang("tooltip.data_model.tier", LangHelpers.localize(ModelTierRegistry.INSTANCE.getTierName(tier)));
             if (tier != ModelTierRegistry.INSTANCE.getMaxTierValue()) {
                 builder.addLang(
                     "tooltip.data_model.data_collected",

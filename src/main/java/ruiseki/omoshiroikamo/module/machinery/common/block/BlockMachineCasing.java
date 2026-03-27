@@ -16,12 +16,13 @@ import com.gtnewhorizon.gtnhlib.client.model.color.IBlockColor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.api.modular.ModularTier;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.block.BlockOK;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.StructureTintCache;
@@ -40,7 +41,7 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
     private final IIcon[] tierIcons = new IIcon[TIERS];
 
     protected BlockMachineCasing() {
-        super("modularMachineCasing");
+        super(ModObject.MODULAR_MACHINE_CASING.name);
         setHardness(5.0F);
         setResistance(10.0F);
         this.hasSubtypes = false;
@@ -173,16 +174,16 @@ public class BlockMachineCasing extends BlockOK implements IModularBlockTint, IB
 
             // Format: %s (Tier) %s (Design)
             // e.g. "Revolutionary" "Machine Casing"
-            String tier = LibMisc.LANG.localizeExact("machinery.tier." + modularTier.getUnlocalizedName());
+            String tier = LangHelpers.localize("machinery.tier." + modularTier.getUnlocalizedName());
 
             // Handle backward compatibility: MACHINE_CASING has no design name
             if (block.designName.isEmpty()) {
-                String casingName = LibMisc.LANG.localizeExact("machinery.casing.modular");
-                return LibMisc.LANG.localizeExact("machinery.casing.format", tier, casingName);
+                String casingName = LangHelpers.localize("machinery.casing.modular");
+                return LangHelpers.localize("machinery.casing.format", tier, casingName);
             }
 
-            String design = LibMisc.LANG.localizeExact("machinery.design." + block.designName);
-            return LibMisc.LANG.localizeExact("machinery.casing.format", tier, design);
+            String design = LangHelpers.localize("machinery.design." + block.designName);
+            return LangHelpers.localize("machinery.casing.format", tier, design);
         }
 
         @Override

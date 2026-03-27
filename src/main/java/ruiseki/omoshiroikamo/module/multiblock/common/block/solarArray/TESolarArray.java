@@ -15,11 +15,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.SolarArrayConfig;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.energy.EnergyTransfer;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySource;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.common.block.modifier.ModifierHandler;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockAchievements;
@@ -40,7 +40,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
@@ -98,7 +98,7 @@ public abstract class TESolarArray extends AbstractMBModifierTE implements IOKEn
         if (this.player == null) {
             return;
         }
-        EntityPlayer player = PlayerUtils.getPlayerFromWorld(this.worldObj, this.player.getId());
+        EntityPlayer player = PlayerHelpers.getPlayerFromWorld(this.worldObj, this.player.getId());
         if (player == null) {
             return;
         }

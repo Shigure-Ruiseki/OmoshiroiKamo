@@ -7,7 +7,7 @@ import ruiseki.omoshiroikamo.module.ids.common.item.AbstractPartItem;
 public class ItemBlockReader extends AbstractPartItem {
 
     public ItemBlockReader() {
-        super(ModObject.itemBlockReader.unlocalisedName);
+        super(ModObject.BLOCK_READER.name);
     }
 
     @Override

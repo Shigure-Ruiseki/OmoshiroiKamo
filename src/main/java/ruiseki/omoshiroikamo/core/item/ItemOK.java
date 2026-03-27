@@ -26,7 +26,7 @@ public class ItemOK extends Item implements IItem {
     }
 
     public ItemOK(ModObject modObject) {
-        this(modObject.unlocalisedName);
+        this(modObject.name);
     }
 
     public void init() {
@@ -45,7 +45,7 @@ public class ItemOK extends Item implements IItem {
     }
 
     public ItemOK setName(ModObject modObject) {
-        this.setName(modObject.unlocalisedName);
+        this.setName(modObject.name);
         return this;
     }
 

@@ -26,12 +26,12 @@ import ruiseki.omoshiroikamo.api.enums.ExtractorType;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierBlock;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.energy.IOKEnergySink;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.core.item.weighted.IFocusableRegistry;
 import ruiseki.omoshiroikamo.core.item.weighted.WeightedStackBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractMBModifierTE;
 import ruiseki.omoshiroikamo.module.multiblock.client.render.BeamSegment;
@@ -85,7 +85,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
 
     @Override
     public String getLocalizedName() {
-        return LibMisc.LANG.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
+        return LangHelpers.localize(getUnlocalizedName() + ".tier_" + getTier() + ".name");
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class TEQuantumExtractor extends AbstractMBModifierTE implements
         if (this.player == null) {
             return;
         }
-        EntityPlayer player = PlayerUtils.getPlayerFromWorld(this.worldObj, this.player.getId());
+        EntityPlayer player = PlayerHelpers.getPlayerFromWorld(this.worldObj, this.player.getId());
         if (player == null) {
             return;
         }

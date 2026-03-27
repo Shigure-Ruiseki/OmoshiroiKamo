@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import lombok.Getter;
+import ruiseki.omoshiroikamo.core.helper.MathHelpers;
 
 public class StringAnimator<K> {
 
@@ -83,7 +84,7 @@ public class StringAnimator<K> {
     }
 
     public void goToRelativePosition(float relativePosition) {
-        relativePosition = MathUtils.clamp(relativePosition, 0, 1);
+        relativePosition = MathHelpers.clamp(relativePosition, 0, 1);
         goToPosition(relativePosition * totalDuration);
     }
 

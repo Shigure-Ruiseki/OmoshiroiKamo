@@ -43,8 +43,8 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -189,9 +189,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         // Rows
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.isInventory"),
+            LangHelpers.localize("gui.ids.inventoryReader.isInventory"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.isInventory"),
+                LangHelpers.localize("gui.ids.inventoryReader.isInventory"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("isInv"))),
                 0,
                 LogicKeys.IS_INVENTORY),
@@ -199,9 +199,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryFull"),
+            LangHelpers.localize("gui.ids.inventoryReader.inventoryFull"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryFull"),
+                LangHelpers.localize("gui.ids.inventoryReader.inventoryFull"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("full"))),
                 3,
                 LogicKeys.INV_FULL),
@@ -209,9 +209,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryEmpty"),
+            LangHelpers.localize("gui.ids.inventoryReader.inventoryEmpty"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryEmpty"),
+                LangHelpers.localize("gui.ids.inventoryReader.inventoryEmpty"),
                 IKey.dynamic(() -> String.valueOf(!clientCache.getBoolean("full"))),
                 1,
                 LogicKeys.INV_EMPTY),
@@ -219,9 +219,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryNotEmpty"),
+            LangHelpers.localize("gui.ids.inventoryReader.inventoryNotEmpty"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryNotEmpty"),
+                LangHelpers.localize("gui.ids.inventoryReader.inventoryNotEmpty"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("count") > 0)),
                 2,
                 LogicKeys.INV_NOT_EMPTY),
@@ -229,9 +229,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryCount"),
+            LangHelpers.localize("gui.ids.inventoryReader.inventoryCount"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.inventoryCount"),
+                LangHelpers.localize("gui.ids.inventoryReader.inventoryCount"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("count"))),
                 4,
                 LogicKeys.INV_COUNT),
@@ -239,9 +239,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.inventorySlots"),
+            LangHelpers.localize("gui.ids.inventoryReader.inventorySlots"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.inventorySlots"),
+                LangHelpers.localize("gui.ids.inventoryReader.inventorySlots"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("slots"))),
                 5,
                 LogicKeys.INV_SLOTS),
@@ -249,9 +249,9 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.slotsFilled"),
+            LangHelpers.localize("gui.ids.inventoryReader.slotsFilled"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.slotsFilled"),
+                LangHelpers.localize("gui.ids.inventoryReader.slotsFilled"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("filled"))),
                 6,
                 LogicKeys.INV_SLOTS_FILLED),
@@ -259,8 +259,8 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.fillRatio"),
-            infoRow(LibMisc.LANG.localize("gui.ids.inventoryReader.fillRatio"), IKey.dynamic(() -> {
+            LangHelpers.localize("gui.ids.inventoryReader.fillRatio"),
+            infoRow(LangHelpers.localize("gui.ids.inventoryReader.fillRatio"), IKey.dynamic(() -> {
                 int slots = clientCache.getInteger("slots");
                 int filled = clientCache.getInteger("filled");
                 return slots == 0 ? "0.00" : String.format("%.2f", (double) filled / slots);
@@ -270,19 +270,19 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         IPanelHandler slotItemSetting = syncManager.syncedPanel("slotItemSetting", true, this::slotItemSetting);
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.slotItem"),
-            infoRow(LibMisc.LANG.localize("gui.ids.inventoryReader.slotItem"), IKey.dynamic(() -> {
-                if (!clientCache.hasKey("slotItem")) return LibMisc.LANG.localize("gui.empty");
+            LangHelpers.localize("gui.ids.inventoryReader.slotItem"),
+            infoRow(LangHelpers.localize("gui.ids.inventoryReader.slotItem"), IKey.dynamic(() -> {
+                if (!clientCache.hasKey("slotItem")) return LangHelpers.localize("gui.empty");
                 ItemStack stack = ItemStack.loadItemStackFromNBT(clientCache.getCompoundTag("slotItem"));
-                return stack == null ? LibMisc.LANG.localize("gui.empty") : stack.getDisplayName();
+                return stack == null ? LangHelpers.localize("gui.empty") : stack.getDisplayName();
             }), 8, LogicKeys.SLOT_ITEM, slotItemSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.inventoryReader.itemsList"),
+            LangHelpers.localize("gui.ids.inventoryReader.itemsList"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.inventoryReader.itemsList"),
+                LangHelpers.localize("gui.ids.inventoryReader.itemsList"),
                 IKey.dynamic(this::buildItemsListText),
                 9,
                 LogicKeys.ITEMS_LIST),
@@ -303,12 +303,12 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
     }
 
     private String buildItemsListText() {
-        if (!clientCache.hasKey("items")) return LibMisc.LANG.localize("gui.empty");
+        if (!clientCache.hasKey("items")) return LangHelpers.localize("gui.empty");
 
         NBTTagCompound items = clientCache.getCompoundTag("items");
         int size = items.getInteger("size");
 
-        if (size <= 0) return LibMisc.LANG.localize("gui.empty");
+        if (size <= 0) return LangHelpers.localize("gui.empty");
 
         StringBuilder sb = new StringBuilder();
 
@@ -328,7 +328,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
         }
 
         if (sb.length() == 0) {
-            return LibMisc.LANG.localize("gui.empty");
+            return LangHelpers.localize("gui.empty");
         }
 
         return ellipsis(sb.toString(), 110);
@@ -343,7 +343,7 @@ public class InventoryReader extends AbstractReaderPart implements IInventoryPar
 
         Row selectSlot = new Row();
         selectSlot.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.id")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.id")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getSelectedSlot, this::setSelectedSlot))
                     .right(0)

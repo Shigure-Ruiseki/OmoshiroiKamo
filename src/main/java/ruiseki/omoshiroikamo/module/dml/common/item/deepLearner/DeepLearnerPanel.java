@@ -43,6 +43,7 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.container.DeepLearnerContainer;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
@@ -369,7 +370,7 @@ public class DeepLearnerPanel extends ModularPanel {
             .background(RIGHT_BUTTON)
             .hoverBackground(HOVER_RIGHT_BUTTON)
             .tooltip(tooltip -> {
-                tooltip.addLine(LibMisc.LANG.localize("gui.deep_learner.button_next"));
+                tooltip.addLine(LangHelpers.localize("gui.deep_learner.button_next"));
                 tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
             })
             .onMousePressed(button -> {
@@ -385,7 +386,7 @@ public class DeepLearnerPanel extends ModularPanel {
             .background(LEFT_BUTTON)
             .hoverBackground(HOVER_LEFT_BUTTON)
             .tooltip(tooltip -> {
-                tooltip.addLine(LibMisc.LANG.localize("gui.deep_learner.button_prev"));
+                tooltip.addLine(LangHelpers.localize("gui.deep_learner.button_prev"));
                 tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
             })
             .onMousePressed(button -> {

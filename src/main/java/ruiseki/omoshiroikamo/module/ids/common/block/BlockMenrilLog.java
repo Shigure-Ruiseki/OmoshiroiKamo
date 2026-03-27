@@ -6,7 +6,7 @@ import ruiseki.omoshiroikamo.core.block.tree.BlockLogOK;
 public class BlockMenrilLog extends BlockLogOK {
 
     public BlockMenrilLog() {
-        super(ModObject.blockMenrilLog.unlocalisedName);
+        super(ModObject.MENRIL_LOG.name);
         setTextureName("ids/menril_log");
     }
 }

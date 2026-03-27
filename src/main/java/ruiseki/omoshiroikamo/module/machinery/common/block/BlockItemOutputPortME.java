@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.item.output.TEItemOutp
 public class BlockItemOutputPortME extends AbstractPortBlock<TEItemOutputPortME> {
 
     protected BlockItemOutputPortME() {
-        super(ModObject.blockModularItemOutputME.unlocalisedName, TEItemOutputPortME.class);
+        super(ModObject.blockModularItemOutputME.name, TEItemOutputPortME.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");

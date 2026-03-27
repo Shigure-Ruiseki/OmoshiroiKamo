@@ -8,13 +8,13 @@ import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCost;
 import ruiseki.omoshiroikamo.api.multiblock.AttributeEnergyCostFixed;
 import ruiseki.omoshiroikamo.api.multiblock.IModifierAttribute;
 import ruiseki.omoshiroikamo.config.backport.multiblock.QuantumExtractorConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.ModifierAttribute;
 
 public class BlockModifierSpeed extends BlockModifier {
 
     protected BlockModifierSpeed() {
-        super(ModObject.blockModifierSpeed.unlocalisedName, "speed");
+        super(ModObject.MODIFIER_SPEED.name, "speed");
         setTextureName("multiblock/modifier_speed");
     }
 
@@ -37,8 +37,8 @@ public class BlockModifierSpeed extends BlockModifier {
         float energyCost = QuantumExtractorConfig.modifiers.speedEnergyCost;
 
         List<String> list = new ArrayList<>();
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.speed.effect"), speedMultiplier));
-        list.add(String.format(LibMisc.LANG.localize("tooltip.modifier.speed.penalty"), energyCost));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.speed.effect"), speedMultiplier));
+        list.add(String.format(LangHelpers.localize("tooltip.modifier.speed.penalty"), energyCost));
         return list;
     }
 }

@@ -6,8 +6,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Multiblock management subcommand handler.
@@ -38,15 +38,15 @@ public class CommandMultiblock extends CommandMod {
     @Override
     public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.usage_title")));
+            new ChatComponentText(EnumChatFormatting.YELLOW + LangHelpers.localize("command.ok.usage_title")));
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.usage_reload")));
+            new ChatComponentText(EnumChatFormatting.WHITE + "  " + LangHelpers.localize("command.ok.usage_reload")));
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.usage_status")));
+            new ChatComponentText(EnumChatFormatting.WHITE + "  " + LangHelpers.localize("command.ok.usage_status")));
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.usage_scan")));
+            new ChatComponentText(EnumChatFormatting.WHITE + "  " + LangHelpers.localize("command.ok.usage_scan")));
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + "  " + LibMisc.LANG.localize("command.ok.usage_wand_save")));
+                EnumChatFormatting.WHITE + "  " + LangHelpers.localize("command.ok.usage_wand_save")));
     }
 }

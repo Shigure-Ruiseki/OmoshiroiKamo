@@ -21,8 +21,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.common.structure.CustomStructureRegistry;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 
 /**
@@ -96,11 +96,11 @@ public class ItemMachineBlueprint extends ItemOK {
             if (entry != null && entry.getDisplayName() != null
                 && !entry.getDisplayName()
                     .isEmpty()) {
-                return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", entry.getDisplayName());
+                return LangHelpers.localize("item.machineBlueprint.display.name.format", entry.getDisplayName());
             }
-            return LibMisc.LANG.localize("item.machineBlueprint.display.name.format", structureName);
+            return LangHelpers.localize("item.machineBlueprint.display.name.format", structureName);
         }
-        return LibMisc.LANG.localize("item.machineBlueprint.display.name.empty");
+        return LangHelpers.localize("item.machineBlueprint.display.name.empty");
     }
 
     @Override
@@ -109,20 +109,20 @@ public class ItemMachineBlueprint extends ItemOK {
         String structureName = getStructureName(stack);
         if (structureName != null) {
             tooltip.add(
-                EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.structure", structureName));
+                EnumChatFormatting.GRAY + LangHelpers.localize("tooltip.machineBlueprint.structure", structureName));
 
             // Show if the structure is valid
             if (CustomStructureRegistry.hasDefinition(structureName)) {
-                tooltip.add(EnumChatFormatting.GREEN + LibMisc.LANG.localize("tooltip.machineBlueprint.valid"));
+                tooltip.add(EnumChatFormatting.GREEN + LangHelpers.localize("tooltip.machineBlueprint.valid"));
             } else {
-                tooltip.add(EnumChatFormatting.RED + LibMisc.LANG.localize("tooltip.machineBlueprint.invalid"));
+                tooltip.add(EnumChatFormatting.RED + LangHelpers.localize("tooltip.machineBlueprint.invalid"));
             }
         } else {
-            tooltip.add(EnumChatFormatting.GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.null"));
+            tooltip.add(EnumChatFormatting.GRAY + LangHelpers.localize("tooltip.machineBlueprint.null"));
         }
 
-        tooltip.add(EnumChatFormatting.DARK_GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.show"));
-        tooltip.add(EnumChatFormatting.DARK_GRAY + LibMisc.LANG.localize("tooltip.machineBlueprint.build"));
+        tooltip.add(EnumChatFormatting.DARK_GRAY + LangHelpers.localize("tooltip.machineBlueprint.show"));
+        tooltip.add(EnumChatFormatting.DARK_GRAY + LangHelpers.localize("tooltip.machineBlueprint.build"));
     }
 
     @Override
@@ -138,7 +138,7 @@ public class ItemMachineBlueprint extends ItemOK {
             if (!world.isRemote) {
                 player.addChatComponentMessage(
                     new ChatComponentText(
-                        EnumChatFormatting.YELLOW + LibMisc.LANG.localize("message.machineBlueprint.empty")));
+                        EnumChatFormatting.YELLOW + LangHelpers.localize("message.machineBlueprint.empty")));
             }
             return false;
         }

@@ -6,8 +6,8 @@ import net.minecraft.util.EnumChatFormatting;
 
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class CommandMultiblockStatus extends CommandMod {
 
@@ -22,26 +22,26 @@ public class CommandMultiblockStatus extends CommandMod {
         StructureManager manager = StructureManager.getInstance();
 
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.AQUA + LibMisc.LANG.localize("command.ok.status_header")));
+            new ChatComponentText(EnumChatFormatting.AQUA + LangHelpers.localize("command.ok.status_header")));
 
         String initialized = manager.isInitialized()
-            ? EnumChatFormatting.GREEN + LibMisc.LANG.localize("command.ok.status_yes")
-            : EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.status_no");
+            ? EnumChatFormatting.GREEN + LangHelpers.localize("command.ok.status_yes")
+            : EnumChatFormatting.RED + LangHelpers.localize("command.ok.status_no");
         sender.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.WHITE + LibMisc.LANG.localize("command.ok.status_initialized") + initialized));
+                EnumChatFormatting.WHITE + LangHelpers.localize("command.ok.status_initialized") + initialized));
 
         if (manager.hasErrors()) {
             String summary = manager.getErrorCollector()
                 .getSummary();
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.status_errors") + summary));
+                    EnumChatFormatting.RED + LangHelpers.localize("command.ok.status_errors") + summary));
         } else {
             sender.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.GREEN + LibMisc.LANG.localize("command.ok.status_errors")
-                        + LibMisc.LANG.localize("command.ok.status_none")));
+                    EnumChatFormatting.GREEN + LangHelpers.localize("command.ok.status_errors")
+                        + LangHelpers.localize("command.ok.status_none")));
         }
     }
 }

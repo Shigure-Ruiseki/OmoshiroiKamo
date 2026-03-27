@@ -31,7 +31,8 @@ import lombok.Getter;
 import ruiseki.omoshiroikamo.api.entity.dml.DataModel;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.common.util.StringAnimator;
-import ruiseki.omoshiroikamo.core.common.util.StringUtils;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.StringHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.RedstoneModeWidget;
@@ -166,19 +167,19 @@ public class SimulationChamberPanel extends ModularPanel {
                             .valueOf(DataModel.getCurrentTierSimulationCountWithKills(dataModel));
                         String maxData = String.valueOf(DataModel.getTierRoof(dataModel));
                         tooltip.addLine(
-                            LibMisc.LANG
+                            LangHelpers
                                 .localize("gui.simulation_chamber.tooltip.model_data", currentData + "/" + maxData));
                     } else {
-                        tooltip.add(LibMisc.LANG.localize("gui.simulation_chamber.tooltip.model_max"));
+                        tooltip.add(LangHelpers.localize("gui.simulation_chamber.tooltip.model_max"));
                     }
                     if (!DataModel.canSimulate(dataModel)) {
                         tooltip.addLine(
                             ChatFormatting.RED
-                                + LibMisc.LANG.localize("gui.simulation_chamber.tooltip.model_cannot_simulate")
+                                + LangHelpers.localize("gui.simulation_chamber.tooltip.model_cannot_simulate")
                                 + ChatFormatting.RESET);
                     }
                 } else {
-                    tooltip.addLine(LibMisc.LANG.localize("gui.simulation_chamber.tooltip.model_missing"));
+                    tooltip.addLine(LangHelpers.localize("gui.simulation_chamber.tooltip.model_missing"));
                 }
                 tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
             }));
@@ -195,7 +196,7 @@ public class SimulationChamberPanel extends ModularPanel {
                 .tooltipDynamic(tooltip -> {
                     tooltip.addLine(tileEntity.getEnergyStored() + "/" + tileEntity.getMaxEnergyStored() + " RF");
                     tooltip.addLine(
-                        LibMisc.LANG
+                        LangHelpers
                             .localize("gui.simulation_chamber.tooltip.sim_cost", tileEntity.getCraftingEnergyCost()));
                     tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
                 }));
@@ -248,10 +249,10 @@ public class SimulationChamberPanel extends ModularPanel {
 
             dataModelErrorAnimator.setString(
                 AnimatedString.ERROR_DATA_MODEL_TEXT_1,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.no_data_model_1"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.no_data_model_1"));
             dataModelErrorAnimator.setString(
                 AnimatedString.ERROR_DATA_MODEL_TEXT_2,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.no_data_model_2"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.no_data_model_2"));
             dataModelErrorAnimator.reset();
             dataModelError = DataModelError.MISSING;
             return;
@@ -262,10 +263,10 @@ public class SimulationChamberPanel extends ModularPanel {
 
             dataModelErrorAnimator.setString(
                 AnimatedString.ERROR_DATA_MODEL_TEXT_1,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.model_cannot_simulate_1"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.model_cannot_simulate_1"));
             dataModelErrorAnimator.setString(
                 AnimatedString.ERROR_DATA_MODEL_TEXT_2,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.model_cannot_simulate_2"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.model_cannot_simulate_2"));
             dataModelErrorAnimator.reset();
             dataModelError = DataModelError.FAULTY;
             return;
@@ -285,7 +286,7 @@ public class SimulationChamberPanel extends ModularPanel {
 
             simulationErrorAnimator.setString(
                 AnimatedString.ERROR_SIMULATION_TEXT,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.no_polymer"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.no_polymer"));
             simulationErrorAnimator.reset();
             simulationError = SimulationError.POLYMER;
             return;
@@ -298,7 +299,7 @@ public class SimulationChamberPanel extends ModularPanel {
 
             simulationErrorAnimator.setString(
                 AnimatedString.ERROR_SIMULATION_TEXT,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.no_energy"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.no_energy"));
             simulationErrorAnimator.reset();
             simulationError = SimulationError.ENERGY;
             return;
@@ -311,7 +312,7 @@ public class SimulationChamberPanel extends ModularPanel {
 
             simulationErrorAnimator.setString(
                 AnimatedString.ERROR_SIMULATION_TEXT,
-                LibMisc.LANG.localize("gui.simulation_chamber.error_text.output_full"));
+                LangHelpers.localize("gui.simulation_chamber.error_text.output_full"));
             simulationErrorAnimator.reset();
             simulationError = SimulationError.OUTPUT;
             return;
@@ -328,15 +329,15 @@ public class SimulationChamberPanel extends ModularPanel {
         currentIteration = iteration;
         currentPristineSuccess = pristineSuccess;
 
-        String iterationString = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.iteration", iteration);
+        String iterationString = LangHelpers.localize("gui.simulation_chamber.simulation_text.iteration", iteration);
         progressAnimator.setString(AnimatedString.SIMULATION_ITERATION, iterationString);
 
-        String pristineString = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.pristine");
+        String pristineString = LangHelpers.localize("gui.simulation_chamber.simulation_text.pristine");
         String successString = ChatFormatting.GREEN
-            + LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.pristine_success")
+            + LangHelpers.localize("gui.simulation_chamber.simulation_text.pristine_success")
             + ChatFormatting.RESET;
         String failureString = ChatFormatting.RED
-            + LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.pristine_failure")
+            + LangHelpers.localize("gui.simulation_chamber.simulation_text.pristine_failure")
             + ChatFormatting.RESET;
         pristineString += " " + (pristineSuccess ? successString : failureString);
         progressAnimator.setString(AnimatedString.SIMULATION_PRISTINE, pristineString);
@@ -353,9 +354,9 @@ public class SimulationChamberPanel extends ModularPanel {
         List<String> strings = new ArrayList<>();
 
         if (dataModelError == DataModelError.NONE) {
-            String tier = LibMisc.LANG.localize("gui.simulation_chamber.data_model_info.tier");
-            String iterations = LibMisc.LANG.localize("gui.simulation_chamber.data_model_info.iterations");
-            String pristine = LibMisc.LANG.localize("gui.simulation_chamber.data_model_info.pristine");
+            String tier = LangHelpers.localize("gui.simulation_chamber.data_model_info.tier");
+            String iterations = LangHelpers.localize("gui.simulation_chamber.data_model_info.iterations");
+            String pristine = LangHelpers.localize("gui.simulation_chamber.data_model_info.pristine");
             strings.add(tier + ": " + DataModel.getTierName(dataModel));
             strings.add(iterations + ": " + DataModel.getTotalSimulationCount(dataModel));
             strings.add(pristine + ": " + DataModel.getPristineChance(dataModel));
@@ -381,18 +382,18 @@ public class SimulationChamberPanel extends ModularPanel {
         } else if (redstoneDeactivated) {
             strings = new ArrayList<>();
             strings.add(
-                ChatFormatting.RED + StringUtils.getDashedLine(REDSTONE_DEACTIVATED_LINE_LENGTH)
+                ChatFormatting.RED + StringHelpers.getDashedLine(REDSTONE_DEACTIVATED_LINE_LENGTH)
                     + ChatFormatting.RESET);
             strings.add(
-                ChatFormatting.RED + StringUtils.pad(
-                    LibMisc.LANG.localize("gui.simulation_chamber.redstone_deactivated_1"),
+                ChatFormatting.RED + StringHelpers.pad(
+                    LangHelpers.localize("gui.simulation_chamber.redstone_deactivated_1"),
                     REDSTONE_DEACTIVATED_LINE_LENGTH) + ChatFormatting.RESET);
             strings.add(
-                ChatFormatting.RED + StringUtils.pad(
-                    LibMisc.LANG.localize("gui.simulation_chamber.redstone_deactivated_2"),
+                ChatFormatting.RED + StringHelpers.pad(
+                    LangHelpers.localize("gui.simulation_chamber.redstone_deactivated_2"),
                     REDSTONE_DEACTIVATED_LINE_LENGTH) + ChatFormatting.RESET);
             strings.add(
-                ChatFormatting.RED + StringUtils.getDashedLine(REDSTONE_DEACTIVATED_LINE_LENGTH)
+                ChatFormatting.RED + StringHelpers.getDashedLine(REDSTONE_DEACTIVATED_LINE_LENGTH)
                     + ChatFormatting.RESET);
         } else if (simulationError != SimulationError.NONE) {
             simulationErrorAnimator.advance(advanceAmount);
@@ -413,13 +414,13 @@ public class SimulationChamberPanel extends ModularPanel {
     private void prepareStringAnimators() {
         String blinkingCursor = " _"; // Space so this looks like it's blinking
 
-        String simulationLaunching = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.launching");
-        String simulationLoading = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.loading");
-        String simulationAssessing = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.assessing");
-        String simulationEngaged = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.engaged");
-        String simulationProcessing = LibMisc.LANG.localize("gui.simulation_chamber.simulation_text.processing")
+        String simulationLaunching = LangHelpers.localize("gui.simulation_chamber.simulation_text.launching");
+        String simulationLoading = LangHelpers.localize("gui.simulation_chamber.simulation_text.loading");
+        String simulationAssessing = LangHelpers.localize("gui.simulation_chamber.simulation_text.assessing");
+        String simulationEngaged = LangHelpers.localize("gui.simulation_chamber.simulation_text.engaged");
+        String simulationProcessing = LangHelpers.localize("gui.simulation_chamber.simulation_text.processing")
             + " . . . . ."; // Padding so this line is displayed a little longer
-        String error = LibMisc.LANG.localize("gui.simulation_chamber.error_text.error");
+        String error = LangHelpers.localize("gui.simulation_chamber.error_text.error");
 
         progressAnimator.addString(AnimatedString.SIMULATION_LAUNCHING, simulationLaunching);
         progressAnimator.addString(AnimatedString.SIMULATION_ITERATION, ""); // gets set in update method

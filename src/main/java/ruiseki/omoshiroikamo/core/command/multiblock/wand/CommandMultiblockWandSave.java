@@ -13,6 +13,7 @@ import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.common.structure.StructureConstants;
 import ruiseki.omoshiroikamo.core.common.structure.StructureScanner;
 import ruiseki.omoshiroikamo.core.common.structure.WandSelectionManager;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -29,7 +30,7 @@ public class CommandMultiblockWandSave extends CommandMod {
         EntityPlayer player = (EntityPlayer) sender;
         if (args.length < 1) {
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_usage")));
+                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_usage")));
             return;
         }
 
@@ -40,14 +41,14 @@ public class CommandMultiblockWandSave extends CommandMod {
 
         if (pending == null) {
             player.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_no_pending")));
+                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_no_pending")));
             return;
         }
 
         if (pending.dimensionId != player.worldObj.provider.dimensionId) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_different_dimension")));
+                    EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_different_dimension")));
             return;
         }
 
@@ -55,7 +56,7 @@ public class CommandMultiblockWandSave extends CommandMod {
         if (blockCount > StructureConstants.MAX_WAND_SCAN_BLOCKS) {
             player.addChatMessage(
                 new ChatComponentText(
-                    EnumChatFormatting.RED + LibMisc.LANG.localize(
+                    EnumChatFormatting.RED + LangHelpers.localize(
                         "chat.wand.area_too_large",
                         String.format("%,d", StructureConstants.MAX_WAND_SCAN_BLOCKS),
                         String.format("%,d", blockCount))));
@@ -64,7 +65,7 @@ public class CommandMultiblockWandSave extends CommandMod {
 
         player.addChatMessage(
             new ChatComponentText(
-                EnumChatFormatting.YELLOW + LibMisc.LANG.localize("command.ok.wand_scanning", blockCount)));
+                EnumChatFormatting.YELLOW + LangHelpers.localize("command.ok.wand_scanning", blockCount)));
 
         File configDir = new File(
             FMLCommonHandler.instance()

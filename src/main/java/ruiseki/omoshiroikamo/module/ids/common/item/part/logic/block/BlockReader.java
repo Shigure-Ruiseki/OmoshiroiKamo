@@ -36,8 +36,8 @@ import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
 import ruiseki.omoshiroikamo.core.datastructure.BlockStack;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -159,9 +159,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
         // Rows
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.hasBlock"),
+            LangHelpers.localize("gui.ids.blockReader.hasBlock"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.hasBlock"),
+                LangHelpers.localize("gui.ids.blockReader.hasBlock"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getBoolean("hasBlock"))),
                 0,
                 LogicKeys.HAS_BLOCK),
@@ -169,9 +169,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.dimension"),
+            LangHelpers.localize("gui.ids.blockReader.dimension"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.dimension"),
+                LangHelpers.localize("gui.ids.blockReader.dimension"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getString("dimension"))),
                 1,
                 LogicKeys.DIMENSION),
@@ -179,9 +179,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.coord.x"),
+            LangHelpers.localize("gui.ids.blockReader.coord.x"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.coord.x"),
+                LangHelpers.localize("gui.ids.blockReader.coord.x"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("x"))),
                 2,
                 LogicKeys.X),
@@ -189,9 +189,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.coord.y"),
+            LangHelpers.localize("gui.ids.blockReader.coord.y"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.coord.y"),
+                LangHelpers.localize("gui.ids.blockReader.coord.y"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("y"))),
                 3,
                 LogicKeys.Y),
@@ -199,9 +199,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.coord.z"),
+            LangHelpers.localize("gui.ids.blockReader.coord.z"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.coord.z"),
+                LangHelpers.localize("gui.ids.blockReader.coord.z"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("z"))),
                 4,
                 LogicKeys.Z),
@@ -209,9 +209,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.block"),
+            LangHelpers.localize("gui.ids.blockReader.block"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.block"),
+                LangHelpers.localize("gui.ids.blockReader.block"),
                 IKey.dynamic(
                     () -> String.valueOf(
                         BlockStack.deserializeNBT(clientCache.getCompoundTag("block"))
@@ -222,9 +222,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.biome"),
+            LangHelpers.localize("gui.ids.blockReader.biome"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.biome"),
+                LangHelpers.localize("gui.ids.blockReader.biome"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getString("biome"))),
                 6,
                 LogicKeys.BIOME),
@@ -232,9 +232,9 @@ public class BlockReader extends AbstractReaderPart implements IBlockPart {
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.blockReader.light"),
+            LangHelpers.localize("gui.ids.blockReader.light"),
             infoRow(
-                LibMisc.LANG.localize("gui.ids.blockReader.light"),
+                LangHelpers.localize("gui.ids.blockReader.light"),
                 IKey.dynamic(() -> String.valueOf(clientCache.getInteger("light"))),
                 7,
                 LogicKeys.LIGHT_LEVEL),

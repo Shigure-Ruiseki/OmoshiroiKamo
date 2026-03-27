@@ -12,7 +12,7 @@ import ruiseki.omoshiroikamo.core.item.ItemOK;
 public class ItemSolidXp extends ItemOK {
 
     public ItemSolidXp() {
-        super(ModObject.itemSolidXp);
+        super(ModObject.SOLID_XP);
         setTextureName("chicken/solid_xp");
     }
 

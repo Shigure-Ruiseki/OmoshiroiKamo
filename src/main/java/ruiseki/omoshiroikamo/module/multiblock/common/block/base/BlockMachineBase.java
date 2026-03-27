@@ -31,7 +31,7 @@ public class BlockMachineBase extends BlockOK implements IMBBlock {
     }
 
     protected BlockMachineBase() {
-        super(ModObject.blockMachineBase.unlocalisedName);
+        super(ModObject.MACHINE_BASE.name);
         hasSubtypes = true;
     }
 

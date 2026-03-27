@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicType;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypeRegistry;
 import ruiseki.omoshiroikamo.module.ids.common.item.logic.type.LogicTypes;
@@ -54,7 +54,7 @@ public class LogicNBTUtils {
     }
 
     public static void addTooltip(ItemStack stack, List<String> list) {
-        NBTTagCompound logic = ItemNBTUtils.getCompound(stack, "Logic", false);
+        NBTTagCompound logic = ItemNBTHelpers.getCompound(stack, "Logic", false);
 
         String type = logic.getString("Type");
         list.add("§6Logic Type: §f" + type);

@@ -34,6 +34,10 @@ public class BackportConfigs {
 
     @Config.DefaultBoolean(true)
     @Config.RequiresMcRestart
+    public static boolean enableStorage;
+
+    @Config.DefaultBoolean(true)
+    @Config.RequiresMcRestart
     public static boolean enableDML;
 
     @Config.DefaultBoolean(true)
@@ -46,6 +50,7 @@ public class BackportConfigs {
         ConfigurationManager.registerConfig(ChickenConfig.class);
         ConfigurationManager.registerConfig(CowConfig.class);
         ConfigurationManager.registerConfig(BackpackConfig.class);
+        ConfigurationManager.registerConfig(StorageConfig.class);
         ConfigurationManager.registerConfig(IDsConfig.class);
         ConfigurationManager.registerConfig(DMLConfig.class);
         ConfigurationManager.registerConfig(MachineryConfig.class);

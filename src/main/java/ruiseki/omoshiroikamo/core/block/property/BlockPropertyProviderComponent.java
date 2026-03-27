@@ -2,7 +2,6 @@ package ruiseki.omoshiroikamo.core.block.property;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class BlockPropertyProviderComponent implements IBlockPropertyProvider {
 
             for (Field field : current.getDeclaredFields()) {
 
-                if (!field.isAnnotationPresent(AutoBlockProperty.class)) continue;
+                if (!field.isAnnotationPresent(BlockPropertyReg.class)) continue;
 
                 field.setAccessible(true);
                 fields.add(field);
@@ -44,20 +43,15 @@ public class BlockPropertyProviderComponent implements IBlockPropertyProvider {
             try {
                 boolean isStatic = Modifier.isStatic(field.getModifiers());
                 Object value = field.get(isStatic ? null : block);
-
                 if (value == null) continue;
 
-                AutoBlockProperty annotation = field.getAnnotation(AutoBlockProperty.class);
-
                 if (value instanceof BlockProperty<?>property) {
-
-                    register(property, annotation);
+                    register(property);
 
                 } else if (value instanceof BlockProperty<?>[]array) {
-
                     for (BlockProperty<?> property : array) {
                         if (property != null) {
-                            register(property, annotation);
+                            register(property);
                         }
                     }
                 }
@@ -68,11 +62,7 @@ public class BlockPropertyProviderComponent implements IBlockPropertyProvider {
         }
     }
 
-    private void register(BlockProperty<?> property, AutoBlockProperty annotation) {
-        if (annotation.byClass()) {
-            BlockPropertyRegistry.registerProperty((Type) block.getClass(), property);
-        } else {
-            BlockPropertyRegistry.registerProperty(block, property);
-        }
+    private void register(BlockProperty<?> property) {
+        BlockPropertyRegistry.registerBlockItemProperty(block, property);
     }
 }

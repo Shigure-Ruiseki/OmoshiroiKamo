@@ -19,7 +19,7 @@ import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 public class BlockLens extends BlockOK implements IMBBlock {
 
     protected BlockLens() {
-        super(ModObject.blockLens.unlocalisedName, Material.glass);
+        super(ModObject.LENS.name, Material.glass);
         hasSubtypes = true;
         isFullSize = isOpaque = false;
     }

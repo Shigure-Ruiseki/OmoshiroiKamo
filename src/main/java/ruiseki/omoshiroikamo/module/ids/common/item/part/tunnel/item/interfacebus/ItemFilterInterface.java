@@ -49,10 +49,10 @@ import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.ids.ICableNode;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.handler.ItemStackHandlerBase;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.helper.RenderHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemStackKeyPool;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 import ruiseki.omoshiroikamo.module.ids.common.item.PartSettingPanel;
@@ -231,20 +231,20 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.itemFilterInterface.all"),
-            writerSlotRow(0, LibMisc.LANG.localize("gui.ids.itemFilterInterface.all"), allSetting),
+            LangHelpers.localize("gui.ids.itemFilterInterface.all"),
+            writerSlotRow(0, LangHelpers.localize("gui.ids.itemFilterInterface.all"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.itemFilterInterface.item"),
-            writerSlotRow(1, LibMisc.LANG.localize("gui.ids.itemFilterInterface.item"), allSetting),
+            LangHelpers.localize("gui.ids.itemFilterInterface.item"),
+            writerSlotRow(1, LangHelpers.localize("gui.ids.itemFilterInterface.item"), allSetting),
             searchValue);
 
         addSearchableRow(
             list,
-            LibMisc.LANG.localize("gui.ids.itemFilterInterface.items"),
-            writerSlotRow(2, LibMisc.LANG.localize("gui.ids.itemFilterInterface.items"), allSetting),
+            LangHelpers.localize("gui.ids.itemFilterInterface.items"),
+            writerSlotRow(2, LangHelpers.localize("gui.ids.itemFilterInterface.items"), allSetting),
             searchValue);
 
         TextWidget<?> valueWidget = IKey.dynamic(() -> ellipsis(getPreviewText(), 110))
@@ -282,7 +282,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row allowInsertions = new Row();
         allowInsertions.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.allowInsertions")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.allowInsertions")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -291,7 +291,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row allowExtractions = new Row();
         allowExtractions.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.allowExtractions")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.allowExtractions")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -300,7 +300,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row blackList = new Row();
         blackList.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.blackList")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.blackList")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -309,7 +309,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row transferLimit = new Row();
         transferLimit.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.transferLimit")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.transferLimit")).width(162))
             .child(
                 new TextFieldWidget().value(new IntSyncValue(this::getTransferLimit, this::setTransferLimit))
                     .right(0)
@@ -320,7 +320,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row nbt = new Row();
         nbt.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.nbt")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.nbt")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)
@@ -329,7 +329,7 @@ public class ItemFilterInterface extends AbstractWriterPart implements IItemPart
 
         Row stackSize = new Row();
         stackSize.coverChildren()
-            .child(new TextWidget<>(LibMisc.LANG.localize("gui.ids.stackSize")).width(162))
+            .child(new TextWidget<>(LangHelpers.localize("gui.ids.stackSize")).width(162))
             .child(
                 new ToggleButton().overlay(GuiTextures.CROSS_TINY)
                     .right(0)

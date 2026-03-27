@@ -17,9 +17,9 @@ public enum MultiBlockItems {
 
     CRYSTAL(new ItemCrystal()),
     ASSEMBLER(new ItemAssembler()),
-    STABILIZED_ENDER_PEAR(new ItemOK().setName(ModObject.itemStabilizedEnderPear)
+    STABILIZED_ENDER_PEAR(new ItemOK().setName(ModObject.STABILIZED_ENDER_PEAR)
         .setTextureName("multiblock/ender_stabilized")),
-    PHOTOVOLTAIC_CELL(new ItemOK().setName(ModObject.itemPhotovoltaicCell)
+    PHOTOVOLTAIC_CELL(new ItemOK().setName(ModObject.PHOTOVOLTAIC_CELL)
         .setTextureName("multiblock/photovoltaic_cell")),
 
     ;

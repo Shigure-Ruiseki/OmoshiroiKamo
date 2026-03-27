@@ -23,6 +23,7 @@ import com.gtnewhorizon.structurelib.alignment.enumerable.Rotation;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.api.modular.IModularBlockTint;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
 import ruiseki.omoshiroikamo.core.block.AbstractBlock;
@@ -40,7 +41,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.TEMachineController;
 public class BlockMachineController extends AbstractBlock<TEMachineController> implements IModularBlockTint {
 
     protected BlockMachineController() {
-        super("modularMachineController", TEMachineController.class);
+        super(ModObject.MODULAR_MACHINE_CONTROLLER.name, TEMachineController.class);
         setHardness(5.0F);
         setResistance(10.0F);
         // Enable translucent overlay rendering

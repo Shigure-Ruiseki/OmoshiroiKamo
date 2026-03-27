@@ -16,7 +16,7 @@ import ruiseki.omoshiroikamo.module.ids.common.init.IDsItems;
 public class BlockMenrilLeaves extends BlockLeavesOK {
 
     public BlockMenrilLeaves() {
-        super(ModObject.blockMenrilLeaves.unlocalisedName);
+        super(ModObject.MENRIL_LEAVES.name);
         setTextureName("ids/menril_leaves");
     }
 

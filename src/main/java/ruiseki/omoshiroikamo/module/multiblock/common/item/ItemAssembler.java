@@ -19,7 +19,7 @@ import ruiseki.omoshiroikamo.core.lib.LibResources;
 public class ItemAssembler extends ItemOK {
 
     public ItemAssembler() {
-        super(ModObject.itemAssembler);
+        super(ModObject.ASSEMBLER);
         setMaxStackSize(1);
         setNoRepair();
         setTextureName("multiblock/assembler");

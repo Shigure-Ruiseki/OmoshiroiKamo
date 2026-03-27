@@ -9,8 +9,8 @@ import net.minecraft.util.EnumChatFormatting;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandClear;
 import ruiseki.omoshiroikamo.core.command.multiblock.wand.CommandMultiblockWandSave;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 public class CommandMultiblockWand extends CommandMod {
 
@@ -26,7 +26,7 @@ public class CommandMultiblockWand extends CommandMod {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (!(sender instanceof EntityPlayer)) {
             sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_players_only")));
+                new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_players_only")));
             return;
         }
         super.processCommand(sender, args);
@@ -35,6 +35,6 @@ public class CommandMultiblockWand extends CommandMod {
     @Override
     public void processCommandHelp(ICommandSender sender, String[] args) throws CommandException {
         sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.RED + LibMisc.LANG.localize("command.ok.wand_usage")));
+            new ChatComponentText(EnumChatFormatting.RED + LangHelpers.localize("command.ok.wand_usage")));
     }
 }

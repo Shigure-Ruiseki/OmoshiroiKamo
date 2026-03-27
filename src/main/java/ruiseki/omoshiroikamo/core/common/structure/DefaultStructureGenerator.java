@@ -195,63 +195,64 @@ public class DefaultStructureGenerator {
 
         // Shared mappings (used by all structures)
         mappings.put('_', new BlockMapping('_', "air"));
-        mappings.put('F', new BlockMapping('F', "omoshiroikamo:basaltStructure:*"));
+        mappings.put('F', new BlockMapping('F', "omoshiroikamo:basalt_structure:*"));
 
         // Machine-specific mappings
         if ("oreMiner".equals(machineType) || "resMiner".equals(machineType)) {
             // Miner-specific: P (machine_base), C (laser_core)
-            mappings.put('P', new BlockMapping('P', "omoshiroikamo:machineBase:0"));
-            mappings.put('C', new BlockMapping('C', "omoshiroikamo:laserCore:0"));
+            mappings.put('P', new BlockMapping('P', "omoshiroikamo:machine_base:0"));
+            mappings.put('C', new BlockMapping('C', "omoshiroikamo:laser_core:0"));
 
             // Controller
-            String controllerBlock = "oreMiner".equals(machineType) ? "omoshiroikamo:quantumOreExtractor:0"
-                : "omoshiroikamo:quantumResExtractor:0";
+            String controllerBlock = "oreMiner".equals(machineType) ? "omoshiroikamo:quantum_ore_extractor:0"
+                : "omoshiroikamo:quantum_res_extractor:0";
             mappings.put('Q', new BlockMapping('Q', controllerBlock));
 
             // Lens (multiple options)
             List<String> lensBlocks = new ArrayList<>();
             lensBlocks.add("omoshiroikamo:lens:0");
             lensBlocks.add("omoshiroikamo:lens:1");
-            lensBlocks.add("omoshiroikamo:coloredLens:*");
+            lensBlocks.add("omoshiroikamo:colored_lens:*");
             mappings.put('L', new BlockMapping('L', lensBlocks));
 
             // Modifiers (multiple options)
             List<String> modBlocks = new ArrayList<>();
-            modBlocks.add("omoshiroikamo:modifierNull:0");
-            modBlocks.add("omoshiroikamo:modifierAccuracy:0");
-            modBlocks.add("omoshiroikamo:modifierSpeed:0");
+            modBlocks.add("omoshiroikamo:modifier_null:0");
+            modBlocks.add("omoshiroikamo:modifier_accuracy:0");
+            modBlocks.add("omoshiroikamo:modifier_speed:0");
+            modBlocks.add("omoshiroikamo:modifier_luck:0");
             mappings.put('A', new BlockMapping('A', modBlocks));
 
         } else if ("solarArray".equals(machineType)) {
             // Controller
-            mappings.put('Q', new BlockMapping('Q', "omoshiroikamo:solarArray:0"));
+            mappings.put('Q', new BlockMapping('Q', "omoshiroikamo:solar_array:0"));
 
             // Solar cells (tiers 0-5)
             List<String> cellBlocks = new ArrayList<>();
             for (int i = 0; i <= 5; i++) {
-                cellBlocks.add("omoshiroikamo:solarCell:" + i);
+                cellBlocks.add("omoshiroikamo:solar_cell:" + i);
             }
             mappings.put('G', new BlockMapping('G', cellBlocks));
 
             // Modifiers
             List<String> modBlocks = new ArrayList<>();
-            modBlocks.add("omoshiroikamo:modifierNull:0");
-            modBlocks.add("omoshiroikamo:modifierPiezo:0");
+            modBlocks.add("omoshiroikamo:modifier_null:0");
+            modBlocks.add("omoshiroikamo:modifier_piezo:0");
             mappings.put('A', new BlockMapping('A', modBlocks));
 
         } else if ("beacon".equals(machineType)) {
             // Beacon does NOT use C
-            mappings.put('P', new BlockMapping('P', "omoshiroikamo:machineBase:0"));
+            mappings.put('P', new BlockMapping('P', "omoshiroikamo:machine_base:0"));
 
             // Controller
-            mappings.put('Q', new BlockMapping('Q', "omoshiroikamo:quantumBeacon:0"));
+            mappings.put('Q', new BlockMapping('Q', "omoshiroikamo:quantum_beacon:0"));
 
             // Beacon modifiers (all types)
             List<String> modBlocks = new ArrayList<>();
-            String[] beaconModifiers = { "modifierNull", "modifierFireResistance", "modifierFlight",
-                "modifierNightVision", "modifierWaterBreathing", "modifierStrength", "modifierHaste",
-                "modifierRegeneration", "modifierSaturation", "modifierResistance", "modifierJumpBoost",
-                "modifierSpeed" };
+            String[] beaconModifiers = { "modifier_null", "modifier_fire_resistance", "modifier_flight",
+                "modifier_night_vision", "modifier_water_breathing", "modifier_strength", "modifier_haste",
+                "modifier_regeneration", "modifier_saturation", "modifier_resistance", "modifier_jump_boost",
+                "modifier_speed" };
             for (String mod : beaconModifiers) {
                 modBlocks.add("omoshiroikamo:" + mod + ":0");
             }
@@ -279,8 +280,8 @@ public class DefaultStructureGenerator {
             builder.addLayer(new StructureLayer("layer" + i, rows));
         }
 
-        // Add tier-specific frame mapping (basaltStructure:meta matches tier-1)
-        builder.addMapping('F', new BlockMapping('F', "omoshiroikamo:basaltStructure:" + (tier - 1)));
+        // Add tier-specific frame mapping (basalt_structure:meta matches tier-1)
+        builder.addMapping('F', new BlockMapping('F', "omoshiroikamo:basalt_structure:" + (tier - 1)));
 
         return builder.build();
     }

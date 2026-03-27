@@ -29,7 +29,7 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.fluid.output.TEFluidOu
 public class BlockFluidOutputPortME extends AbstractPortBlock<TEFluidOutputPortME> {
 
     protected BlockFluidOutputPortME() {
-        super(ModObject.blockModularFluidOutputME.unlocalisedName, TEFluidOutputPortME.class);
+        super(ModObject.blockModularFluidOutputME.name, TEFluidOutputPortME.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");

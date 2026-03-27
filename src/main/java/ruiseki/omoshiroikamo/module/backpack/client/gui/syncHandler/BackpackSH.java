@@ -151,17 +151,14 @@ public class BackpackSH extends SyncHandler {
         } else if (tile == null) {
             int[] can = BlockSleepingBag
                 .canDeploySleepingBag(world, player, (int) player.posX, (int) player.posY, (int) player.posZ, false);
-            int direction = can[0];
-            int x = can[1];
-            int y = can[2];
-            int z = can[3];
-            if (direction > -1) {
-                if (BlockSleepingBag.spawnSleepingBag(player, world, direction, x, y, z)) {
-                    Block placed = world.getBlock(x, y, z);
-                    if (placed instanceof BlockSleepingBag) {
+            if (can[0] > -1) {
+                if (wrapper.deploySleepingBag(player, world, can[0], can[1], can[2], can[3])) {
+                    Block portableBag = world.getBlock(can[1], can[2], can[3]);
+                    if (portableBag instanceof BlockSleepingBag) {
                         BackpackProperty.get(player)
                             .setSleepingInPortableBag(true);
-                        ((BlockSleepingBag) placed).onPortableBlockActivated(world, player, x, y, z);
+                        ((BlockSleepingBag) portableBag)
+                            .onPortableBlockActivated(world, player, can[1], can[2], can[3]);
                     }
                 }
             } else if (!world.isRemote) {

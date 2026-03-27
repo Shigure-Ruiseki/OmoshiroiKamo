@@ -17,7 +17,7 @@ import ruiseki.omoshiroikamo.core.integration.waila.WailaUtils;
 public class BlockRoost extends AbstractBlock<TERoost> {
 
     protected BlockRoost() {
-        super(ModObject.blockRoost.unlocalisedName, TERoost.class, Material.wood);
+        super(ModObject.ROOST.name, TERoost.class, Material.wood);
         isOpaque = false;
         rotatable = true;
     }

@@ -34,7 +34,6 @@ import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.client.gui.widget.RedstoneModeWidget;
 import ruiseki.omoshiroikamo.module.machinery.common.item.ItemMachineBlueprint;
 import ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent;
@@ -228,7 +227,7 @@ public class GuiManager {
         // Show energy error even during processing
         if (lastError == ErrorReason.NO_ENERGY) return LangHelpers.localize(lastError.getUnlocalizedName());
         if (lastError == ErrorReason.OUTPUT_FULL) {
-            return LibMisc.LANG
+            return LangHelpers
                 .localize(lastError.getUnlocalizedName(), diagnoseBlockedOutputs(controller.getOutputPorts()));
         }
 

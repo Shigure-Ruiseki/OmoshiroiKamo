@@ -21,7 +21,7 @@ import com.gtnewhorizon.gtnhlib.blockstate.properties.DirectionBlockProperty;
 
 import ruiseki.omoshiroikamo.core.block.orientable.IOrientableBlock;
 import ruiseki.omoshiroikamo.core.block.orientable.MetaRotation;
-import ruiseki.omoshiroikamo.core.block.property.AutoBlockProperty;
+import ruiseki.omoshiroikamo.core.block.property.BlockPropertyReg;
 import ruiseki.omoshiroikamo.core.helper.BlockStateHelpers;
 import ruiseki.omoshiroikamo.core.integration.waila.IWailaBlockInfoProvider;
 import ruiseki.omoshiroikamo.core.tileentity.AbstractTE;
@@ -31,7 +31,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
     implements IWailaBlockInfoProvider, IOrientableBlock {
     // TODO: Change block meta to extendedFacing for all the tileentities
 
-    @AutoBlockProperty
+    @BlockPropertyReg
     public static final DirectionBlockProperty FACING = DirectionBlockProperty.facing(0b0011, dir -> switch (dir) {
         case SOUTH -> 0;
         case EAST -> 1;

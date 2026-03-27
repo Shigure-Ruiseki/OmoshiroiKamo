@@ -21,7 +21,7 @@ import ruiseki.omoshiroikamo.core.item.ItemBlockOK;
 public class BlockBasaltStructure extends BlockOK implements IMBBlock {
 
     protected BlockBasaltStructure() {
-        super(ModObject.blockBasaltStructure.unlocalisedName);
+        super(ModObject.BASALT_STRUCTURE.name);
         hasSubtypes = true;
     }
 

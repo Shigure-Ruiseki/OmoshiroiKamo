@@ -2,7 +2,7 @@ package ruiseki.omoshiroikamo.module.backpack.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 
 public class VoidUpgradeWrapper extends BasicUpgradeWrapper implements IVoidUpgrade {
 
@@ -17,7 +17,7 @@ public class VoidUpgradeWrapper extends BasicUpgradeWrapper implements IVoidUpgr
 
     @Override
     public VoidType getVoidType() {
-        int ordinal = ItemNBTUtils.getInt(upgrade, VOID_TYPE_TAG, VoidType.OVERFLOW.ordinal());
+        int ordinal = ItemNBTHelpers.getInt(upgrade, VOID_TYPE_TAG, VoidType.OVERFLOW.ordinal());
         VoidType[] types = VoidType.values();
         if (ordinal < 0 || ordinal >= types.length) {
             return VoidType.OVERFLOW;
@@ -30,12 +30,12 @@ public class VoidUpgradeWrapper extends BasicUpgradeWrapper implements IVoidUpgr
         if (type == null) {
             type = VoidType.OVERFLOW;
         }
-        ItemNBTUtils.setInt(upgrade, VOID_TYPE_TAG, type.ordinal());
+        ItemNBTHelpers.setInt(upgrade, VOID_TYPE_TAG, type.ordinal());
     }
 
     @Override
     public VoidInput getVoidInput() {
-        int ordinal = ItemNBTUtils.getInt(upgrade, VOID_INPUT_TAG, VoidInput.ALL.ordinal());
+        int ordinal = ItemNBTHelpers.getInt(upgrade, VOID_INPUT_TAG, VoidInput.ALL.ordinal());
         VoidInput[] types = VoidInput.values();
         if (ordinal < 0 || ordinal >= types.length) {
             return VoidInput.ALL;
@@ -48,6 +48,6 @@ public class VoidUpgradeWrapper extends BasicUpgradeWrapper implements IVoidUpgr
         if (type == null) {
             type = VoidInput.ALL;
         }
-        ItemNBTUtils.setInt(upgrade, VOID_INPUT_TAG, type.ordinal());
+        ItemNBTHelpers.setInt(upgrade, VOID_INPUT_TAG, type.ordinal());
     }
 }

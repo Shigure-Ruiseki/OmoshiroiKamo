@@ -3,7 +3,6 @@ package ruiseki.omoshiroikamo.module.backpack.common.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -15,7 +14,6 @@ import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 
-import ruiseki.omoshiroikamo.config.backport.BackpackConfig;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
@@ -26,9 +24,9 @@ import ruiseki.omoshiroikamo.module.backpack.common.item.wrapper.IVoidUpgrade;
 
 public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolder<SidedPosGuiData> {
 
-    private final int[] allSlots;
+    private int[] allSlots;
 
-    private final BackpackWrapper wrapper;
+    private BackpackWrapper wrapper;
 
     @NBTPersist
     private boolean sleepingBagDeployed;
@@ -40,11 +38,11 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     private int sbz;
 
     public TEBackpack() {
-        this(BackpackConfig.obsidianBackpackSlots, BackpackConfig.obsidianUpgradeSlots);
+        this.wrapper = new BackpackWrapper();
     }
 
-    public TEBackpack(int slots, int upgradeSlots) {
-        wrapper = new BackpackWrapper(null, slots, upgradeSlots);
+    public void setWrapper(BackpackWrapper wrapper) {
+        this.wrapper = wrapper;
         allSlots = new int[wrapper.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
@@ -222,18 +220,6 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     @Override
     public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         return new BackpackGuiHolder.TileEntityGuiHolder(wrapper).buildUI(data, syncManager, settings);
-    }
-
-    @Override
-    public void writeCommon(NBTTagCompound tag) {
-        super.writeCommon(tag);
-        wrapper.writeToNBT(tag);
-    }
-
-    @Override
-    public void readCommon(NBTTagCompound tag) {
-        super.readCommon(tag);
-        wrapper.readFromNBT(tag);
     }
 
     public boolean isSleepingBagDeployed() {

@@ -13,7 +13,7 @@ import com.mojang.authlib.GameProfile;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.api.enums.CraftingState;
-import ruiseki.omoshiroikamo.core.common.util.PlayerUtils;
+import ruiseki.omoshiroikamo.core.helper.PlayerHelpers;
 import ruiseki.omoshiroikamo.core.persist.nbt.NBTPersist;
 
 /**
@@ -280,7 +280,7 @@ public abstract class AbstractMBModifierTE extends AbstractMachineTE {
      * @param plr player UUID
      */
     public void setPlayer(UUID plr) {
-        EntityPlayer pl = PlayerUtils.getPlayerFromWorld(this.worldObj, plr);
+        EntityPlayer pl = PlayerHelpers.getPlayerFromWorld(this.worldObj, plr);
         if (pl != null) {
             this.player = pl.getGameProfile();
         }

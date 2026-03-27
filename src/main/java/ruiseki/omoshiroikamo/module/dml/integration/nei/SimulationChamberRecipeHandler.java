@@ -18,9 +18,9 @@ import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistry;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelTierRegistryItem;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.integration.nei.RecipeHandlerBase;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.dml.common.block.simulationCharmber.BlockSimulationChamber;
 import ruiseki.omoshiroikamo.module.dml.common.init.DMLItems;
@@ -45,7 +45,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
 
     @Override
     public String getRecipeName() {
-        return LibMisc.LANG.localize("nei.dml.simulation_chamber");
+        return LangHelpers.localize("nei.dml.simulation_chamber");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SimulationChamberRecipeHandler extends RecipeHandlerBase {
         drawProgressBar(77, 17, 0, 43, 35, 6, 301, 0);
         ModelTierRegistryItem item = ModelTierRegistry.INSTANCE.getByType(1);
         if (item != null) {
-            String tierName = LibMisc.LANG.localize(item.getTierName());
+            String tierName = LangHelpers.localize(item.getTierName());
             String pristineChance = item.getPristineChance() + "%";
             int textWidth = fontRenderer.getStringWidth(tierName);
             fontRenderer.drawStringWithShadow(tierName, 95 - textWidth, 38, Color.WHITE.main);

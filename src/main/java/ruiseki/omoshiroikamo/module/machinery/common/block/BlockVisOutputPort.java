@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.MachineryConfig;
-import ruiseki.omoshiroikamo.core.lib.LibMisc;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.module.machinery.common.item.AbstractPortItemBlock;
 import ruiseki.omoshiroikamo.module.machinery.common.tier.TierManager;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.output.TEVisOutputPort;
@@ -28,7 +28,7 @@ public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
     private static final int TIER_COUNT = 16;
 
     protected BlockVisOutputPort() {
-        super(ModObject.blockModularVisOutput.unlocalisedName, TEVisOutputPort.class);
+        super(ModObject.blockModularVisOutput.name, TEVisOutputPort.class);
         setHardness(5.0F);
         setResistance(10.0F);
         setTextureName("modularmachineryOverlay/base_modularports");
@@ -78,7 +78,7 @@ public class BlockVisOutputPort extends AbstractPortBlock<TEVisOutputPort> {
     protected void addCapacityTooltip(List<String> list, int tier) {
         int capacity = MachineryConfig.getVisPortCapacity(tier);
         list.add(
-            LibMisc.LANG.localize(
+            LangHelpers.localize(
                 "tooltip.machinery.capacity",
                 String.format("%,d", capacity) + " Vis / " + String.format("%,d", capacity * 10) + " cV"));
     }

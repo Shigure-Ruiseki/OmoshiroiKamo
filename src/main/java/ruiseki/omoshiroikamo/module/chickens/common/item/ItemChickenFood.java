@@ -16,6 +16,7 @@ import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistry;
 import ruiseki.omoshiroikamo.api.entity.chicken.ChickensRegistryItem;
 import ruiseki.omoshiroikamo.api.entity.chicken.DataChicken;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
@@ -25,7 +26,7 @@ public class ItemChickenFood extends ItemOK {
     private final Map<Integer, IIcon> icons = new HashMap<>();
 
     public ItemChickenFood() {
-        super(ModObject.itemChickenFood);
+        super(ModObject.CHICKEN_FOOD);
         setHasSubtypes(true);
         setMaxStackSize(64);
     }
@@ -44,8 +45,7 @@ public class ItemChickenFood extends ItemOK {
         if (chicken == null) {
             return super.getItemStackDisplayName(stack);
         }
-        return LibMisc.LANG
-            .localizeExact("item.chickenFood.name", LibMisc.LANG.localizeExact(chicken.getDisplayName()));
+        return LangHelpers.localize("item.chicken_food.name", LangHelpers.localize(chicken.getDisplayName()));
     }
 
     @Override

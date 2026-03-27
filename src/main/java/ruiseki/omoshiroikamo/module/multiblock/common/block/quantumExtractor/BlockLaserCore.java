@@ -13,7 +13,7 @@ import ruiseki.omoshiroikamo.core.block.BlockOK;
 public class BlockLaserCore extends BlockOK implements IMBBlock {
 
     protected BlockLaserCore() {
-        super(ModObject.blockLaserCore.unlocalisedName);
+        super(ModObject.LASER_CORE.name);
         isFullSize = isOpaque = false;
     }
 

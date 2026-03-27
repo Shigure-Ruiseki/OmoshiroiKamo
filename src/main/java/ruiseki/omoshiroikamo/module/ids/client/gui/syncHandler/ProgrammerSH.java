@@ -10,7 +10,7 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.modularui.value.sync.SyncHandler;
 
-import ruiseki.omoshiroikamo.core.item.ItemNBTUtils;
+import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerHandler;
 import ruiseki.omoshiroikamo.module.ids.common.block.programmer.ProgrammerPanel;
 import ruiseki.omoshiroikamo.module.ids.common.util.LogicNBTUtils;
@@ -119,7 +119,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(value));
+        ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.booleanLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -129,7 +129,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.intLiteral(value));
+        ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.intLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -139,7 +139,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.longLiteral(value));
+        ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.longLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -149,7 +149,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.floatLiteral(value));
+        ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.floatLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -159,7 +159,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.doubleLiteral(value));
+        ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.doubleLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -169,7 +169,7 @@ public class ProgrammerSH extends SyncHandler {
         ItemStack stack = handler.getHandler()
             .getStackInSlot(0);
         if (stack == null) return;
-        ItemNBTUtils.setCompound(stack, "Logic", LogicNBTUtils.stringLiteral(value));
+        ItemNBTHelpers.setCompound(stack, "Logic", LogicNBTUtils.stringLiteral(value));
         handler.getHandler()
             .setStackInSlot(0, stack);
     }
@@ -188,9 +188,9 @@ public class ProgrammerSH extends SyncHandler {
 
         if (condS == null || thenS == null) return;
 
-        NBTTagCompound condLogic = ItemNBTUtils.getCompound(condS, "Logic", false);
-        NBTTagCompound thenLogic = ItemNBTUtils.getCompound(thenS, "Logic", false);
-        NBTTagCompound elseLogic = elseS != null ? ItemNBTUtils.getCompound(elseS, "Logic", false) : null;
+        NBTTagCompound condLogic = ItemNBTHelpers.getCompound(condS, "Logic", false);
+        NBTTagCompound thenLogic = ItemNBTHelpers.getCompound(thenS, "Logic", false);
+        NBTTagCompound elseLogic = elseS != null ? ItemNBTHelpers.getCompound(elseS, "Logic", false) : null;
 
         if (condLogic == null || thenLogic == null) return;
 
@@ -208,7 +208,7 @@ public class ProgrammerSH extends SyncHandler {
 
         logic.setTag("Children", children);
 
-        ItemNBTUtils.setCompound(target, "Logic", logic);
+        ItemNBTHelpers.setCompound(target, "Logic", logic);
         handler.getHandler()
             .setStackInSlot(0, target);
     }
@@ -225,8 +225,8 @@ public class ProgrammerSH extends SyncHandler {
 
         if (condS == null || thenS == null) return;
 
-        NBTTagCompound condLogic = ItemNBTUtils.getCompound(condS, "Logic", false);
-        NBTTagCompound thenLogic = ItemNBTUtils.getCompound(thenS, "Logic", false);
+        NBTTagCompound condLogic = ItemNBTHelpers.getCompound(condS, "Logic", false);
+        NBTTagCompound thenLogic = ItemNBTHelpers.getCompound(thenS, "Logic", false);
 
         if (condLogic == null || thenLogic == null) return;
 
@@ -240,7 +240,7 @@ public class ProgrammerSH extends SyncHandler {
 
         logic.setTag("Children", children);
 
-        ItemNBTUtils.setCompound(target, "Logic", logic);
+        ItemNBTHelpers.setCompound(target, "Logic", logic);
     }
 
 }

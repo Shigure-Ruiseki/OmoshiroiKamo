@@ -40,7 +40,8 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.api.entity.dml.ModelRegistryItem;
 import ruiseki.omoshiroikamo.api.enums.RedstoneMode;
 import ruiseki.omoshiroikamo.core.client.gui.widget.ItemStackDrawable;
-import ruiseki.omoshiroikamo.core.common.util.MathUtils;
+import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.helper.MathHelpers;
 import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.dml.client.gui.widget.InventoryWidget;
@@ -196,9 +197,9 @@ public class LootFabricatorPanel extends ModularPanel {
 
         deselectButton = new ButtonItemDeselect(this).pos(77, 5);
         prevPageButton = new ButtonPageSelect(Direction.PREV, this).pos(12, 66)
-            .tooltip(tooltip -> tooltip.addLine(LibMisc.LANG.localize("gui.button_page_select.prev")));
+            .tooltip(tooltip -> tooltip.addLine(LangHelpers.localize("gui.button_page_select.prev")));
         nextPageButton = new ButtonPageSelect(Direction.NEXT, this).pos(43, 66)
-            .tooltip(tooltip -> tooltip.addLine(LibMisc.LANG.localize("gui.button_page_select.prev")));
+            .tooltip(tooltip -> tooltip.addLine(LangHelpers.localize("gui.button_page_select.prev")));
 
         this.child(deselectButton)
             .child(prevPageButton)
@@ -223,7 +224,7 @@ public class LootFabricatorPanel extends ModularPanel {
             .pos(83, 23)
             .tooltipAutoUpdate(true)
             .tooltipDynamic(tooltip -> {
-                tooltip.addLine(LibMisc.LANG.localize("gui.progress", tileEntity.getProgress() * 100f));
+                tooltip.addLine(LangHelpers.localize("gui.progress", tileEntity.getProgress() * 100f));
                 tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
             });
         processBar.setEnabled(false);
@@ -253,7 +254,7 @@ public class LootFabricatorPanel extends ModularPanel {
                 .tooltipDynamic(tooltip -> {
                     tooltip.addLine(tileEntity.getEnergyStored() + "/" + tileEntity.getMaxEnergyStored() + " RF");
                     tooltip.addLine(
-                        LibMisc.LANG
+                        LangHelpers
                             .localize("gui.loot_fabricator.tooltip.crafting_cost", tileEntity.getCraftingEnergyCost()));
                     tooltip.pos(RichTooltip.Pos.NEXT_TO_MOUSE);
                 }));
@@ -330,7 +331,7 @@ public class LootFabricatorPanel extends ModularPanel {
             } else {
                 currentOutputItemPage = 0;
             }
-            totalOutputItemPages = MathUtils.divideAndRoundUp(lootItemList.size(), ITEMS_PER_PAGE);
+            totalOutputItemPages = MathHelpers.divideAndRoundUp(lootItemList.size(), ITEMS_PER_PAGE);
             setPageButtonsEnabled(totalOutputItemPages > 1);
         }
         updateOutputSelectButtons();
@@ -388,11 +389,11 @@ public class LootFabricatorPanel extends ModularPanel {
 
     private String getErrorTooltip() {
         return switch (craftingError) {
-            case REDSTONE -> LibMisc.LANG.localize("gui.loot_fabricator.error.redstone");
-            case NO_PRISTINE -> LibMisc.LANG.localize("gui.loot_fabricator.error.no_pristine");
-            case NO_OUTPUT_SELECTED -> LibMisc.LANG.localize("gui.loot_fabricator.error.no_output_selected");
-            case OUTPUT_FULL -> LibMisc.LANG.localize("gui.loot_fabricator.error.output_full");
-            case NO_ENERGY -> LibMisc.LANG.localize("gui.loot_fabricator.error.no_energy");
+            case REDSTONE -> LangHelpers.localize("gui.loot_fabricator.error.redstone");
+            case NO_PRISTINE -> LangHelpers.localize("gui.loot_fabricator.error.no_pristine");
+            case NO_OUTPUT_SELECTED -> LangHelpers.localize("gui.loot_fabricator.error.no_output_selected");
+            case OUTPUT_FULL -> LangHelpers.localize("gui.loot_fabricator.error.output_full");
+            case NO_ENERGY -> LangHelpers.localize("gui.loot_fabricator.error.no_energy");
             default -> "";
         };
     }

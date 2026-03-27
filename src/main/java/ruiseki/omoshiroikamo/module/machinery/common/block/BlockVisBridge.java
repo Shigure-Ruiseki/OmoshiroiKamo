@@ -1,12 +1,9 @@
 package ruiseki.omoshiroikamo.module.machinery.common.block;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -14,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ruiseki.omoshiroikamo.api.enums.ModObject;
+import ruiseki.omoshiroikamo.core.block.BlockOK;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.TileVisBridge;
 
@@ -22,11 +20,10 @@ import ruiseki.omoshiroikamo.module.machinery.common.tile.vis.TileVisBridge;
  * When placed, it absorbs Vis from the block face that was clicked.
  * TODO: Add texture and model
  */
-public class BlockVisBridge extends Block {
+public class BlockVisBridge extends BlockOK {
 
     public BlockVisBridge() {
-        super(Material.iron);
-        setBlockName(ModObject.blockVisBridge.unlocalisedName);
+        super(ModObject.blockVisBridge.name, Material.iron);
         setHardness(5.0F);
         setResistance(10.0F);
         setStepSound(soundTypeMetal);
@@ -37,10 +34,12 @@ public class BlockVisBridge extends Block {
     }
 
     public static BlockVisBridge create() {
-        BlockVisBridge block = new BlockVisBridge();
-        GameRegistry.registerBlock(block, ModObject.blockVisBridge.unlocalisedName);
-        GameRegistry.registerTileEntity(TileVisBridge.class, ModObject.blockVisBridge.unlocalisedName + "_TE");
-        return block;
+        return new BlockVisBridge();
+    }
+
+    @Override
+    protected void registerTileEntity() {
+        GameRegistry.registerTileEntity(TileVisBridge.class, name + "_TE");
     }
 
     @Override
@@ -91,13 +90,6 @@ public class BlockVisBridge extends Block {
     @Override
     public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int metadata) {
         return false;
-    }
-
-    @Override
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        ArrayList<ItemStack> drops = new ArrayList<>();
-        drops.add(new ItemStack(this, 1, 0));
-        return drops;
     }
 
     @Override
