@@ -56,40 +56,107 @@ public interface IStructureEntry extends IStructureSerializable {
     String getTintColor();
 
     /**
-     * Get the machine speed multiplier.
+     * Returns whether this structure entry requires dynamic evaluation.
+     * If true, {@link ruiseki.omoshiroikamo.module.machinery.common.recipe.ProcessAgent}
+     * will re-evaluate performance multipliers every tick.
+     *
+     * @return true if dynamic evaluation is needed
      */
-    default double getSpeedMultiplier() {
-        return getSpeedMultiplier(null);
-    }
-
-    double getSpeedMultiplier(ConditionContext context);
+    boolean isDynamic();
 
     /**
-     * Get the machine energy multiplier.
+     * Returns the static base speed multiplier for this structure.
+     * This is the non-contextual, predefined value.
+     *
+     * @return base speed multiplier
      */
-    default double getEnergyMultiplier() {
-        return getEnergyMultiplier(null);
-    }
-
-    double getEnergyMultiplier(ConditionContext context);
+    double getSpeedMultiplier();
 
     /**
-     * Get the minimum batch size.
+     * Evaluates the speed multiplier based on the given context.
+     *
+     * @param context the context for evaluation
+     * @return the evaluated speed multiplier
      */
-    default int getBatchMin() {
-        return getBatchMin(null);
-    }
-
-    int getBatchMin(ConditionContext context);
+    double evaluateSpeedMultiplier(ConditionContext context);
 
     /**
-     * Get the maximum batch size.
+     * Returns the static base energy multiplier for this structure.
+     * This is the non-contextual, predefined value.
+     *
+     * @return base energy multiplier
      */
-    default int getBatchMax() {
-        return getBatchMax(null);
+    double getEnergyMultiplier();
+
+    /**
+     * Evaluates the energy multiplier based on the given context.
+     *
+     * @param context the context for evaluation
+     * @return the evaluated energy multiplier
+     */
+    double evaluateEnergyMultiplier(ConditionContext context);
+
+    /**
+     * Returns the static base minimum batch size for this structure.
+     *
+     * @return base minimum batch size
+     */
+    int getBatchMin();
+
+    /**
+     * Evaluates the minimum batch size based on the given context.
+     *
+     * @param context the context for evaluation
+     * @return the evaluated minimum batch size
+     */
+    int evaluateBatchMin(ConditionContext context);
+
+    /**
+     * Returns the static base maximum batch size for this structure.
+     *
+     * @return base maximum batch size
+     */
+    int getBatchMax();
+
+    /**
+     * Evaluates the maximum batch size based on the given context.
+     *
+     * @param context the context for evaluation
+     * @return the evaluated maximum batch size
+     */
+    int evaluateBatchMax(ConditionContext context);
+
+    /**
+     * @deprecated Use {@link #evaluateSpeedMultiplier(ConditionContext)}
+     */
+    @Deprecated
+    default double getSpeedMultiplier(ConditionContext context) {
+        return evaluateSpeedMultiplier(context);
     }
 
-    int getBatchMax(ConditionContext context);
+    /**
+     * @deprecated Use {@link #evaluateEnergyMultiplier(ConditionContext)}
+     */
+    @Deprecated
+    default double getEnergyMultiplier(ConditionContext context) {
+        return evaluateEnergyMultiplier(context);
+    }
+
+    /**
+     * @deprecated Use {@link #evaluateBatchMin(ConditionContext)}
+     */
+    @Deprecated
+    default int getBatchMin(ConditionContext context) {
+        return evaluateBatchMin(context);
+    }
+
+    /**
+     * @deprecated Use {@link #evaluateBatchMax(ConditionContext)}
+     */
+    @Deprecated
+    default int getBatchMax(ConditionContext context) {
+        return evaluateBatchMax(context);
+    }
 
     /**
      * Get the machine tier.

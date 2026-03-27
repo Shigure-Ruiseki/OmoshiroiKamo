@@ -27,10 +27,15 @@ public class StructureEntryBuilder {
     private final Map<Character, EnumIO> fixedExternalPorts = new LinkedHashMap<>();
     private int[] controllerOffset;
     private String tintColor;
+    private double speedMultiplier = 1.0;
     private IExpression speedMultiplierExpr = new ConstantExpression(1.0);
+    private double energyMultiplier = 1.0;
     private IExpression energyMultiplierExpr = new ConstantExpression(1.0);
+    private double batchMin = 1.0;
     private IExpression batchMinExpr = new ConstantExpression(1.0);
+    private double batchMax = 1.0;
     private IExpression batchMaxExpr = new ConstantExpression(1.0);
+    private boolean dynamic = false;
     private int tier = 0;
     private String defaultFacing;
     private final List<TierStructureRef> tierStructures = new ArrayList<>();
@@ -90,42 +95,58 @@ public class StructureEntryBuilder {
     }
 
     public StructureEntryBuilder setSpeedMultiplier(double value) {
+        this.speedMultiplier = value;
         this.speedMultiplierExpr = new ConstantExpression(value);
         return this;
     }
 
     public StructureEntryBuilder setSpeedMultiplier(IExpression expr) {
         this.speedMultiplierExpr = expr;
+        if (!(expr instanceof ConstantExpression)) {
+            this.dynamic = true;
+        }
         return this;
     }
 
     public StructureEntryBuilder setEnergyMultiplier(double value) {
+        this.energyMultiplier = value;
         this.energyMultiplierExpr = new ConstantExpression(value);
         return this;
     }
 
     public StructureEntryBuilder setEnergyMultiplier(IExpression expr) {
         this.energyMultiplierExpr = expr;
+        if (!(expr instanceof ConstantExpression)) {
+            this.dynamic = true;
+        }
         return this;
     }
 
     public StructureEntryBuilder setBatchMin(int value) {
+        this.batchMin = value;
         this.batchMinExpr = new ConstantExpression(value);
         return this;
     }
 
     public StructureEntryBuilder setBatchMin(IExpression expr) {
         this.batchMinExpr = expr;
+        if (!(expr instanceof ConstantExpression)) {
+            this.dynamic = true;
+        }
         return this;
     }
 
     public StructureEntryBuilder setBatchMax(int value) {
+        this.batchMax = value;
         this.batchMaxExpr = new ConstantExpression(value);
         return this;
     }
 
     public StructureEntryBuilder setBatchMax(IExpression expr) {
         this.batchMaxExpr = expr;
+        if (!(expr instanceof ConstantExpression)) {
+            this.dynamic = true;
+        }
         return this;
     }
 
@@ -136,6 +157,11 @@ public class StructureEntryBuilder {
 
     public StructureEntryBuilder setDefaultFacing(String defaultFacing) {
         this.defaultFacing = defaultFacing;
+        return this;
+    }
+
+    public StructureEntryBuilder setDynamic(boolean dynamic) {
+        this.dynamic = dynamic;
         return this;
     }
 
@@ -157,10 +183,15 @@ public class StructureEntryBuilder {
             recipeGroups,
             controllerOffset,
             tintColor,
+            speedMultiplier,
             speedMultiplierExpr,
+            energyMultiplier,
             energyMultiplierExpr,
+            batchMin,
             batchMinExpr,
+            batchMax,
             batchMaxExpr,
+            dynamic,
             tier,
             defaultFacing,
             externalPorts,

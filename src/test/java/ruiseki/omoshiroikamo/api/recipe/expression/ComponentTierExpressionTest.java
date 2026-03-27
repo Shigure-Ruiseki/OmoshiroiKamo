@@ -101,6 +101,11 @@ public class ComponentTierExpressionTest {
         public ConditionContext getConditionContext() {
             return null;
         }
+
+        @Override
+        public IStructureEntry getStructureEntry() {
+            return null;
+        }
     }
 
     @Test

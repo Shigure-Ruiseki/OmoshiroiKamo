@@ -20,6 +20,7 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.ITieredMachine;
 import ruiseki.omoshiroikamo.api.recipe.core.ModularRecipe;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.core.datastructure.BlockPos;
 import ruiseki.omoshiroikamo.core.datastructure.DimPos;
 
@@ -173,6 +174,11 @@ public class TierSystemIntegrationTest {
         }
 
         public void update() {}
+
+        @Override
+        public IStructureEntry getStructureEntry() {
+            return null;
+        }
     }
 
     @Test

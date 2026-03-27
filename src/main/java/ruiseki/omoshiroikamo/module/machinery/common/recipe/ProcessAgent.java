@@ -24,11 +24,17 @@ import ruiseki.omoshiroikamo.api.recipe.io.IRecipeOutput;
 import ruiseki.omoshiroikamo.api.recipe.parser.InputNBTRegistry;
 import ruiseki.omoshiroikamo.api.recipe.parser.OutputNBTRegistry;
 import ruiseki.omoshiroikamo.api.recipe.visitor.RecipeExecutionVisitor;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 
 public class ProcessAgent extends AbstractRecipeProcess {
 
     private final IRecipeContext context;
     private int currentBatchSize = 1;
+    private double workProgress;
+    private double baseEnergyPerTick;
+    private double baseEnergyOutputPerTick;
+    private double baseManaPerTick;
+    private double baseManaOutputPerTick;
 
     public ProcessAgent(IRecipeContext context) {
         this.context = context;
@@ -96,14 +102,22 @@ public class ProcessAgent extends AbstractRecipeProcess {
         // Initialize state via base start logic
         super.start(recipe, inputPorts);
 
-        // Apply energy multiplier
+        // Cache base energy/mana values BEFORE applying multipliers
+        this.baseEnergyPerTick = this.energyPerTick;
+        this.baseEnergyOutputPerTick = this.energyOutputPerTick;
+        this.baseManaPerTick = this.manaPerTick;
+        this.baseManaOutputPerTick = this.manaOutputPerTick;
+
+        // Apply initial multipliers
         if (this.context instanceof ITieredMachine tiered) {
-            double multiplier = tiered.getEnergyMultiplier();
-            this.energyPerTick = (int) Math.round(this.energyPerTick * multiplier);
-            this.energyOutputPerTick = (int) Math.round(this.energyOutputPerTick * multiplier);
-            this.manaPerTick = (int) Math.round(this.manaPerTick * multiplier);
-            this.manaOutputPerTick = (int) Math.round(this.manaOutputPerTick * multiplier);
+            double eMultiplier = tiered.getEnergyMultiplier();
+            this.energyPerTick = (int) Math.round(this.baseEnergyPerTick * eMultiplier);
+            this.energyOutputPerTick = (int) Math.round(this.baseEnergyOutputPerTick * eMultiplier);
+            this.manaPerTick = (int) Math.round(this.baseManaPerTick * eMultiplier);
+            this.manaOutputPerTick = (int) Math.round(this.baseManaOutputPerTick * eMultiplier);
         }
+
+        this.workProgress = this.progress;
 
         // Consume and setup state (Specific to ProcessAgent)
         RecipeExecutionVisitor consumeVisitor = new RecipeExecutionVisitor(
@@ -191,15 +205,74 @@ public class ProcessAgent extends AbstractRecipeProcess {
             }
         }
 
-        // Execute base tick (handles conditions, progress, and actual consumption)
-        super.executeTick(inputPorts, outputPorts, context);
-
-        // Per-tick energy/mana outputs are already handled via perTickOutputs
+        // Execute actual tick logic
+        executeTick(inputPorts, outputPorts, context);
 
         if (isWaitingForOutput()) return TickResult.READY_OUTPUT;
         if (!isRunning()) return TickResult.IDLE;
 
         return TickResult.CONTINUE;
+    }
+
+    // Execute base tick (handles conditions, progress, and actual consumption)
+    @Override
+    public void executeTick(List<IModularPort> inputPorts, List<IModularPort> outputPorts, ConditionContext context) {
+        if (!isRunning() || isWaitingForOutput()) return;
+
+        double speedMultiplier = 1.0;
+        if (this.context instanceof ITieredMachine tiered) {
+            IStructureEntry entry = tiered.getStructureEntry();
+            if (entry != null && entry.isDynamic()) {
+                // Re-evaluate multipliers
+                speedMultiplier = tiered.getSpeedMultiplier();
+                double eMultiplier = tiered.getEnergyMultiplier();
+                this.energyPerTick = (int) Math.round(this.baseEnergyPerTick * eMultiplier);
+                this.energyOutputPerTick = (int) Math.round(this.baseEnergyOutputPerTick * eMultiplier);
+                this.manaPerTick = (int) Math.round(this.baseManaPerTick * eMultiplier);
+                this.manaOutputPerTick = (int) Math.round(this.baseManaOutputPerTick * eMultiplier);
+            } else {
+                speedMultiplier = tiered.getSpeedMultiplier();
+            }
+        }
+
+        // 1. Tick-based resource consumption
+        if (!consumePerTickResources(inputPorts)) {
+            onResourceMissing();
+            return;
+        }
+
+        // Process generalized per-tick inputs
+        for (IModularRecipeInput input : perTickInputs) {
+            if (input.getInterval() > 0 && progress % input.getInterval() == 0) {
+                input.process(inputPorts, 1, false, context);
+            }
+        }
+
+        // Process generalized per-tick outputs
+        for (IModularRecipeOutput output : perTickOutputs) {
+            if (output.getInterval() > 0 && progress % output.getInterval() == 0) {
+                output.apply(outputPorts, 1, context);
+            }
+        }
+
+        // 2. Continuous condition check
+        if (!checkContinuousConditions(context)) {
+            abort();
+            return;
+        }
+
+        // 3. Per-tick recipe logic
+        currentRecipe.onTick(context);
+
+        // 4. Progress update (Work-amount based)
+        workProgress += speedMultiplier;
+        this.progress = (long) workProgress;
+        onProgressUpdate(progress, maxProgress);
+
+        // 5. Completion check
+        if (workProgress >= maxProgress) {
+            handleCompletion();
+        }
     }
 
     /**
@@ -240,6 +313,11 @@ public class ProcessAgent extends AbstractRecipeProcess {
         this.energyOutputPerTick = 0;
         this.manaPerTick = 0;
         this.manaOutputPerTick = 0;
+        this.workProgress = 0;
+        this.baseEnergyPerTick = 0;
+        this.baseEnergyOutputPerTick = 0;
+        this.baseManaPerTick = 0;
+        this.baseManaOutputPerTick = 0;
         clearCaches();
     }
 
@@ -377,6 +455,12 @@ public class ProcessAgent extends AbstractRecipeProcess {
         if (currentRecipeName != null) nbt.setString("recipeName", currentRecipeName);
 
         if (running || waitingForOutput) {
+            nbt.setDouble("workProgress", workProgress);
+            nbt.setDouble("baseEnergyPerTick", baseEnergyPerTick);
+            nbt.setDouble("baseEnergyOutputPerTick", baseEnergyOutputPerTick);
+            nbt.setDouble("baseManaPerTick", baseManaPerTick);
+            nbt.setDouble("baseManaOutputPerTick", baseManaOutputPerTick);
+
             NBTTagList outputList = new NBTTagList();
             for (IRecipeOutput output : cachedOutputs) {
                 NBTTagCompound tag = new NBTTagCompound();
@@ -416,6 +500,12 @@ public class ProcessAgent extends AbstractRecipeProcess {
         currentRecipeName = nbt.hasKey("recipeName") ? nbt.getString("recipeName") : null;
 
         if (running || waitingForOutput) {
+            workProgress = nbt.getDouble("workProgress");
+            baseEnergyPerTick = nbt.getDouble("baseEnergyPerTick");
+            baseEnergyOutputPerTick = nbt.getDouble("baseEnergyOutputPerTick");
+            baseManaPerTick = nbt.getDouble("baseManaPerTick");
+            baseManaOutputPerTick = nbt.getDouble("baseManaOutputPerTick");
+
             if (currentRecipeName != null && !currentRecipeName.isEmpty()) {
                 this.currentRecipe = RecipeLoader.getInstance()
                     .getRecipeByRegistryName(currentRecipeName);

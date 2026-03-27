@@ -145,4 +145,29 @@ public class StubStructureEntry implements IStructureEntry {
 
     @Override
     public void accept(IStructureVisitor visitor) {}
+
+    @Override
+    public double evaluateSpeedMultiplier(ConditionContext context) {
+        return getSpeedMultiplier(context);
+    }
+
+    @Override
+    public double evaluateEnergyMultiplier(ConditionContext context) {
+        return getEnergyMultiplier(context);
+    }
+
+    @Override
+    public int evaluateBatchMin(ConditionContext context) {
+        return getBatchMin(context);
+    }
+
+    @Override
+    public int evaluateBatchMax(ConditionContext context) {
+        return getBatchMax(context);
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

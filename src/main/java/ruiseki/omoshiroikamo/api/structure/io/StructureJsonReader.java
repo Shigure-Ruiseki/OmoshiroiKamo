@@ -238,16 +238,46 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
                     .getAsString());
         }
         if (json.has("speedMultiplier")) {
-            builder.setSpeedMultiplier(ExpressionsParser.parse(json.get("speedMultiplier")));
+            JsonElement el = json.get("speedMultiplier");
+            if (el.isJsonPrimitive() && el.getAsJsonPrimitive()
+                .isNumber()) {
+                builder.setSpeedMultiplier(el.getAsDouble());
+            } else {
+                builder.setSpeedMultiplier(ExpressionsParser.parse(el));
+            }
         }
         if (json.has("energyMultiplier")) {
-            builder.setEnergyMultiplier(ExpressionsParser.parse(json.get("energyMultiplier")));
+            JsonElement el = json.get("energyMultiplier");
+            if (el.isJsonPrimitive() && el.getAsJsonPrimitive()
+                .isNumber()) {
+                builder.setEnergyMultiplier(el.getAsDouble());
+            } else {
+                builder.setEnergyMultiplier(ExpressionsParser.parse(el));
+            }
         }
         if (json.has("batchMin")) {
-            builder.setBatchMin(ExpressionsParser.parse(json.get("batchMin")));
+            JsonElement el = json.get("batchMin");
+            if (el.isJsonPrimitive() && el.getAsJsonPrimitive()
+                .isNumber()) {
+                builder.setBatchMin(el.getAsInt());
+            } else {
+                builder.setBatchMin(ExpressionsParser.parse(el));
+            }
         }
         if (json.has("batchMax")) {
-            builder.setBatchMax(ExpressionsParser.parse(json.get("batchMax")));
+            JsonElement el = json.get("batchMax");
+            if (el.isJsonPrimitive() && el.getAsJsonPrimitive()
+                .isNumber()) {
+                builder.setBatchMax(el.getAsInt());
+            } else {
+                builder.setBatchMax(ExpressionsParser.parse(el));
+            }
+        }
+
+        if (json.has("dynamic")) {
+            builder.setDynamic(
+                json.get("dynamic")
+                    .getAsBoolean());
         }
 
         // 6. tier

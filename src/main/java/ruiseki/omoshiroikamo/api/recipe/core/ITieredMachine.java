@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.recipe.core;
 
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
+
 /**
  * Interface for machines that support dynamic component-based tiers.
  */
@@ -32,4 +34,9 @@ public interface ITieredMachine {
      * Get the maximum batch size.
      */
     int getBatchMax();
+
+    /**
+     * Get the current structure entry being used.
+     */
+    IStructureEntry getStructureEntry();
 }

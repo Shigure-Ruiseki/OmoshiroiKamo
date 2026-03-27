@@ -403,7 +403,7 @@ public class TEMachineController extends AbstractMBModifierTE
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(name);
         if (entry == null) return 1.0;
-        return entry.getSpeedMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+        return entry.evaluateSpeedMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
     }
 
     @Override
@@ -414,7 +414,7 @@ public class TEMachineController extends AbstractMBModifierTE
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(name);
         if (entry == null) return 1.0;
-        return entry.getEnergyMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+        return entry.evaluateEnergyMultiplier(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
     }
 
     @Override
@@ -425,7 +425,7 @@ public class TEMachineController extends AbstractMBModifierTE
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(name);
         if (entry == null) return 1;
-        return entry.getBatchMin(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+        return entry.evaluateBatchMin(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
     }
 
     @Override
@@ -436,7 +436,16 @@ public class TEMachineController extends AbstractMBModifierTE
         IStructureEntry entry = StructureManager.getInstance()
             .getCustomStructure(name);
         if (entry == null) return 1;
-        return entry.getBatchMax(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+        return entry.evaluateBatchMax(new ConditionContext(worldObj, xCoord, yCoord, zCoord));
+    }
+
+    @Override
+    public IStructureEntry getStructureEntry() {
+        if (worldObj == null || !isFormed) return null;
+        String name = getCustomStructureName();
+        if (name == null) return null;
+        return StructureManager.getInstance()
+            .getCustomStructure(name);
     }
 
     public String getCustomStructureName() {
