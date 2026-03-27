@@ -2,6 +2,8 @@ package ruiseki.omoshiroikamo.core.helper;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -63,7 +65,7 @@ public final class StringHelpers {
     }
 
     public static String getDashedLine(int length) {
-        return org.apache.commons.lang3.StringUtils.repeat('-', length);
+        return StringUtils.repeat('-', length);
     }
 
     public static String pad(String original, int targetLength) {
@@ -71,8 +73,8 @@ public final class StringHelpers {
         if (padLength <= 0) return original;
 
         int leftPad = padLength / 2;
-        String leftPadded = org.apache.commons.lang3.StringUtils.leftPad(original, original.length() + leftPad);
-        return org.apache.commons.lang3.StringUtils.rightPad(leftPadded, targetLength);
+        String leftPadded = StringUtils.leftPad(original, original.length() + leftPad);
+        return StringUtils.rightPad(leftPadded, targetLength);
     }
 
     public static String uppercaseFirst(String original) {
