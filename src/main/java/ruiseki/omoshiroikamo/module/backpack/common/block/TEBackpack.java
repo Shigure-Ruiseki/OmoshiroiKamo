@@ -3,6 +3,7 @@ package ruiseki.omoshiroikamo.module.backpack.common.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -39,10 +40,24 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
 
     public TEBackpack() {
         this.wrapper = new BackpackWrapper();
+        this.wrapper.setMarkDirtyCallback(new Runnable() {
+
+            @Override
+            public void run() {
+                markDirty();
+            }
+        });
     }
 
     public void setWrapper(BackpackWrapper wrapper) {
         this.wrapper = wrapper;
+        this.wrapper.setMarkDirtyCallback(new Runnable() {
+
+            @Override
+            public void run() {
+                markDirty();
+            }
+        });
         allSlots = new int[wrapper.getSlots()];
         for (int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
@@ -57,6 +72,18 @@ public class TEBackpack extends AbstractTE implements ISidedInventory, IGuiHolde
     @Override
     public boolean processTasks(boolean redstoneCheckPassed) {
         return false;
+    }
+
+    @Override
+    public void writeCommon(NBTTagCompound tag) {
+        super.writeCommon(tag);
+        wrapper.writeToNBT(tag);
+    }
+
+    @Override
+    public void readCommon(NBTTagCompound tag) {
+        super.readCommon(tag);
+        wrapper.readFromNBT(tag);
     }
 
     @Override

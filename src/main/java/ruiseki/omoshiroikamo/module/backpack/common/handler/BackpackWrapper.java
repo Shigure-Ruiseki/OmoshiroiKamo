@@ -139,8 +139,17 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     @Setter
     protected InventoryType type = null;
 
+    private Runnable markDirtyCallback;
+
+    public void setMarkDirtyCallback(Runnable callback) {
+        this.markDirtyCallback = callback;
+    }
+
     public void markDirty() {
         this.isDirty = true;
+        if (markDirtyCallback != null) {
+            markDirtyCallback.run();
+        }
     }
 
     public void clearDirty() {
@@ -673,6 +682,7 @@ public class BackpackWrapper implements IItemHandlerModifiable {
     }
 
     public void readFromNBT(NBTTagCompound tag) {
+        if (tag == null) return;
 
         if (tag.hasKey(BACKPACK_SLOTS)) {
             backpackSlots = tag.getInteger(BACKPACK_SLOTS);
