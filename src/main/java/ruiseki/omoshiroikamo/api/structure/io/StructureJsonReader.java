@@ -2,6 +2,10 @@ package ruiseki.omoshiroikamo.api.structure.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -11,6 +15,7 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
@@ -22,7 +27,11 @@ import ruiseki.omoshiroikamo.api.structure.core.StructureEntryBuilder;
 import ruiseki.omoshiroikamo.api.structure.core.StructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.TierStructureRef;
 import ruiseki.omoshiroikamo.api.structure.core.TieredBlockMapping;
+import ruiseki.omoshiroikamo.core.common.structure.migration.StructureMigrationRegistry;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
+import ruiseki.omoshiroikamo.core.json.ParsingContext;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Reader that parses JSON into IStructureEntry.
@@ -30,15 +39,20 @@ import ruiseki.omoshiroikamo.core.json.AbstractJsonReader;
  */
 public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.FileData> {
 
+    /**
+     * Data returned by the reader.
+     */
     public static class FileData {
 
         public final Map<String, IStructureEntry> structures = new LinkedHashMap<>();
-        public final Map<Character, ISymbolMapping> defaultMappings = new HashMap<>();
+        public final Map<Character, ISymbolMapping> defaultMappings = new LinkedHashMap<>();
+        public boolean dirty = false; // Set to true if migration was applied
 
         public void merge(FileData other) {
             if (other == null) return;
             this.structures.putAll(other.structures);
             this.defaultMappings.putAll(other.defaultMappings);
+            this.dirty |= other.dirty; // Merge dirty flag
         }
     }
 
@@ -52,6 +66,57 @@ public class StructureJsonReader extends AbstractJsonReader<StructureJsonReader.
      */
     public static FileData readFile(JsonElement root) {
         return new StructureJsonReader(null).readFile(root, null);
+    }
+
+    /**
+     * Reads the structure data from the input stream.
+     * This handles both single structure objects and arrays of structures.
+     *
+     * @param is the input stream to read from
+     * @return FileData containing structures and default mappings
+     * @throws IOException if an I/O error occurs
+     */
+    public FileData readStream(InputStream is) throws IOException {
+        FileData fileData = new FileData();
+        try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            JsonElement root = new JsonParser().parse(reader);
+
+            // Apply migrations
+            fileData.dirty = StructureMigrationRegistry.migrate(root, LibMisc.VERSION);
+
+            // Directly use the existing readFile method which handles
+            // both Object and Array formats.
+            FileData parsedData = readFile(root, null);
+            fileData.structures.putAll(parsedData.structures);
+            fileData.defaultMappings.putAll(parsedData.defaultMappings);
+            // dirty flag is handled by the migrate call above
+        } catch (Exception e) {
+            throw new IOException("Failed to parse structure JSON", e);
+        }
+        return fileData;
+    }
+
+    /**
+     * Overrides the base readFile to apply migrations before parsing.
+     */
+    @Override
+    public FileData readFile(File file) {
+        ParsingContext.setCurrentFile(file);
+        try {
+            JsonElement root = readJsonElement(file);
+            if (root == null) return null;
+            boolean migrationApplied = StructureMigrationRegistry.migrate(root, LibMisc.VERSION);
+            FileData data = readFile(root, file);
+            if (data != null && migrationApplied) {
+                data.dirty = true;
+            }
+            return data;
+        } catch (IOException e) {
+            Logger.error("Failed to read JSON file: " + file.getName(), e);
+            return null;
+        } finally {
+            ParsingContext.clear();
+        }
     }
 
     @Override
