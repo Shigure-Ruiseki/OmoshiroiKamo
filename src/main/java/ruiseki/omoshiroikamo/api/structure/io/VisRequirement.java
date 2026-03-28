@@ -55,8 +55,8 @@ public class VisRequirement implements IStructureRequirement {
     public JsonObject serialize() {
         JsonObject json = new JsonObject();
         json.addProperty("type", type);
-        json.addProperty("min", min);
-        json.addProperty("max", max);
+        if (min != 0) json.addProperty("min", min);
+        if (max != Integer.MAX_VALUE) json.addProperty("max", max);
         return json;
     }
 

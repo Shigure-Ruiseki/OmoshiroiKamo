@@ -81,6 +81,36 @@ public class V1_SnakeCaseMigrator implements IDataMigrator {
                 if (changed) {
                     mappings.add(entry.getKey(), newArray);
                 }
+            } else if (element.isJsonObject()) {
+                // Handle object format: {"block": "mod:name"} or {"blocks": [...]}
+                JsonObject obj = element.getAsJsonObject();
+                if (obj.has("block")) {
+                    String oldId = obj.get("block")
+                        .getAsString();
+                    String newId = BlockCompat.camelToSnake(oldId);
+                    if (!oldId.equals(newId)) {
+                        obj.addProperty("block", newId);
+                    }
+                }
+                if (obj.has("blocks")) {
+                    JsonArray blocks = obj.getAsJsonArray("blocks");
+                    JsonArray newBlocks = new JsonArray();
+                    boolean changed = false;
+                    for (JsonElement item : blocks) {
+                        if (item.isJsonPrimitive() && item.getAsJsonPrimitive()
+                            .isString()) {
+                            String oldId = item.getAsString();
+                            String newId = BlockCompat.camelToSnake(oldId);
+                            newBlocks.add(new JsonPrimitive(newId));
+                            if (!oldId.equals(newId)) changed = true;
+                        } else {
+                            newBlocks.add(item);
+                        }
+                    }
+                    if (changed) {
+                        obj.add("blocks", newBlocks);
+                    }
+                }
             }
         }
     }
