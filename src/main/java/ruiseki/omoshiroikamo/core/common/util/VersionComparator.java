@@ -1,7 +1,7 @@
 package ruiseki.omoshiroikamo.core.common.util;
 
 /**
- * Utility for comparing semantic version strings (e.g., "0.2.2", "0.9.45").
+ * Utility for comparing semantic version strings.
  */
 public class VersionComparator {
 

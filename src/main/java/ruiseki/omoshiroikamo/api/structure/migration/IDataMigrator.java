@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 public interface IDataMigrator {
 
     /**
-     * @return The target version this migrator establishes (e.g., "1.5.4").
+     * @return The target version this migrator establishes
      */
     String getTargetModVersion();
 

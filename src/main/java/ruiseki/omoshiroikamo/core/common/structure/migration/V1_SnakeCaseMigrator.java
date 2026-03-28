@@ -12,15 +12,11 @@ import ruiseki.omoshiroikamo.core.common.structure.BlockCompat;
 
 /**
  * Migrator that converts block IDs from camelCase to snake_case.
- * Target mod version: 0.9.45 (refactoring release)
+ * Target mod version: 1.5.4.1 (refactoring release)
  */
 public class V1_SnakeCaseMigrator implements IDataMigrator {
 
-    private final String targetVersion;
-
-    public V1_SnakeCaseMigrator(String targetVersion) {
-        this.targetVersion = targetVersion;
-    }
+    private final String targetVersion = "1.5.4.1";
 
     @Override
     public String getTargetModVersion() {

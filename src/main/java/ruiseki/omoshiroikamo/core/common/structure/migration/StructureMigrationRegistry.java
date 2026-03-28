@@ -18,8 +18,7 @@ public class StructureMigrationRegistry {
     private static final List<IDataMigrator> MIGRATORS = new ArrayList<>();
 
     static {
-        // Register V1: snake_case conversion (introduced in 1.5.4)
-        MIGRATORS.add(new V1_SnakeCaseMigrator("1.5.4"));
+        MIGRATORS.add(new V1_SnakeCaseMigrator()); // v1.5.4.1
     }
 
     /**

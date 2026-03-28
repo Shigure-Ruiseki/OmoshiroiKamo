@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.recipe.expression;
 
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
 import com.google.gson.JsonObject;
@@ -48,9 +49,9 @@ public class WorldPropertyExpression implements IExpression {
             case "light":
                 return world.getBlockLightValue(x, y, z);
             case "light_block":
-                return world.getSavedLightValue(net.minecraft.world.EnumSkyBlock.Block, x, y, z);
+                return world.getSavedLightValue(EnumSkyBlock.Block, x, y, z);
             case "light_sky":
-                return world.getSavedLightValue(net.minecraft.world.EnumSkyBlock.Sky, x, y, z);
+                return world.getSavedLightValue(EnumSkyBlock.Sky, x, y, z);
             case "temp":
                 return world.getBiomeGenForCoords(x, z)
                     .getFloatTemperature(x, y, z);
