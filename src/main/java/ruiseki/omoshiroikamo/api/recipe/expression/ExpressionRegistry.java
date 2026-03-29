@@ -163,6 +163,14 @@ public class ExpressionRegistry {
                 return new MathFunctionExpression(mathFunc, args);
             });
         }
+
+        // --- Vision Functions ---
+        registerFunction(
+            "can_see_sky",
+            (args, parser) -> new VisionFunctionExpression(VisionFunctionExpression.Direction.SKY, args));
+        registerFunction(
+            "can_see_void",
+            (args, parser) -> new VisionFunctionExpression(VisionFunctionExpression.Direction.VOID, args));
     }
 
     public static IExpression getVariable(String name) {

@@ -403,8 +403,6 @@ public class WorldPropertyExpressionTest {
 
     private static class WorldStubWithMoonPhase extends World {
 
-        private final int moonPhase;
-
         public WorldStubWithMoonPhase(int moonPhase) {
             super(
                 new StubSaveHandler(),
@@ -412,7 +410,6 @@ public class WorldPropertyExpressionTest {
                 new WorldSettings(0, WorldSettings.GameType.SURVIVAL, true, false, WorldType.DEFAULT),
                 new StubWorldProviderWithMoon(moonPhase),
                 new Profiler());
-            this.moonPhase = moonPhase;
         }
 
         @Override

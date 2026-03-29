@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.recipe.expression;
 
+import java.util.Collections;
+
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
@@ -69,12 +71,15 @@ public class WorldPropertyExpression implements IExpression {
             case "is_thundering":
                 return world.isThundering() ? 1.0 : 0.0;
             case "can_see_sky":
-                return world.canBlockSeeTheSky(x, y, z) ? 1.0 : 0.0;
+                // Variable version is now identical to parameterless function call
+                return new VisionFunctionExpression(
+                    VisionFunctionExpression.Direction.SKY,
+                    Collections.emptyList()).evaluate(context);
             case "can_see_void":
-                for (int ty = y - 1; ty >= 0; ty--) {
-                    if (!world.isAirBlock(x, ty, z)) return 0.0;
-                }
-                return 1.0;
+                // Variable version is strict air-only
+                return new VisionFunctionExpression(
+                    VisionFunctionExpression.Direction.VOID,
+                    Collections.emptyList()).evaluate(context);
             case "tick":
                 return world.getTotalWorldTime();
             case "recipe_tick":
