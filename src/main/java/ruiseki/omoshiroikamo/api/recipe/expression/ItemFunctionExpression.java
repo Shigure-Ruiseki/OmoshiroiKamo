@@ -11,8 +11,6 @@ import ruiseki.omoshiroikamo.api.modular.IPortType;
 public class ItemFunctionExpression implements IExpression {
 
     public enum FunctionType {
-        COUNT,
-        SPACE,
         SLOT_COUNT,
         SLOT_EMPTY
     }
@@ -55,10 +53,6 @@ public class ItemFunctionExpression implements IExpression {
         var state = context.getRecipeContext()
             .getMachineState();
         switch (type) {
-            case COUNT:
-                return new EvaluationValue(state.getItemCount(direction, filter));
-            case SPACE:
-                return new EvaluationValue(state.getItemSpace(direction, filter));
             case SLOT_COUNT:
                 return new EvaluationValue((double) state.getItemSlotCount(direction, false));
             case SLOT_EMPTY:

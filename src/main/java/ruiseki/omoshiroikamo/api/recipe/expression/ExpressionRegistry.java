@@ -34,8 +34,12 @@ public class ExpressionRegistry {
         registerWorldProperty("is_night");
         registerWorldProperty("is_raining");
         registerWorldProperty("is_thundering");
-        registerWorldProperty("can_see_sky");
-        registerWorldProperty("can_see_void");
+        registerFunction(
+            "can_see_sky",
+            (args, parser) -> new VisionFunctionExpression(VisionFunctionExpression.Direction.SKY, args));
+        registerFunction(
+            "can_see_void",
+            (args, parser) -> new VisionFunctionExpression(VisionFunctionExpression.Direction.VOID, args));
         registerWorldProperty("tick");
         registerWorldProperty("recipe_tick");
         registerWorldProperty("progress_tick");
@@ -94,6 +98,10 @@ public class ExpressionRegistry {
         registerMachineProperty("fluid_free");
         registerMachineProperty("fluid_p");
         registerMachineProperty("fluid_percent");
+        registerMachineProperty("fluid_in");
+        registerMachineProperty("fluid_out");
+        registerMachineProperty("fluid_f_in");
+        registerMachineProperty("fluid_f_out");
         registerMachineProperty("gas");
         registerMachineProperty("gas_total");
         registerMachineProperty("total_gas");
@@ -103,8 +111,18 @@ public class ExpressionRegistry {
         registerMachineProperty("gas_free");
         registerMachineProperty("gas_p");
         registerMachineProperty("gas_percent");
+        registerMachineProperty("gas_in");
+        registerMachineProperty("gas_out");
+        registerMachineProperty("gas_f_in");
+        registerMachineProperty("gas_f_out");
+        registerMachineProperty("essentia");
+        registerMachineProperty("essentia_p");
+        registerMachineProperty("essentia_f");
         registerMachineProperty("essentia_max");
         registerMachineProperty("essentia_capacity");
+        registerMachineProperty("vis");
+        registerMachineProperty("vis_p");
+        registerMachineProperty("vis_f");
         registerMachineProperty("vis_max");
         registerMachineProperty("vis_capacity");
 
@@ -156,6 +174,25 @@ public class ExpressionRegistry {
             }
             return new ResourceFunctionExpression(ResourceFunctionExpression.Type.FLUID, args.get(0));
         });
+        registerResourceFunction("fluid_in", ResourceFunctionExpression.Type.FLUID_IN);
+        registerResourceFunction("fluid_out", ResourceFunctionExpression.Type.FLUID_OUT);
+        registerResourceFunction("fluid_f_in", ResourceFunctionExpression.Type.FLUID_F_IN);
+        registerResourceFunction("fluid_f_out", ResourceFunctionExpression.Type.FLUID_F_OUT);
+
+        registerFunction("gas_in", (args, parser) -> {
+            if (args.isEmpty() || args.size() > 1) {
+                throw parser.error("gas_in() function requires 1 argument (gas name)");
+            }
+            return new ResourceFunctionExpression(ResourceFunctionExpression.Type.GAS_IN, args.get(0));
+        });
+        registerFunction("gas_out", (args, parser) -> {
+            if (args.isEmpty() || args.size() > 1) {
+                throw parser.error("gas_out() function requires 1 argument (gas name)");
+            }
+            return new ResourceFunctionExpression(ResourceFunctionExpression.Type.GAS_OUT, args.get(0));
+        });
+        registerResourceFunction("gas_f_in", ResourceFunctionExpression.Type.GAS_F_IN);
+        registerResourceFunction("gas_f_out", ResourceFunctionExpression.Type.GAS_F_OUT);
 
         // Unified Item Functions
         registerResourceFunction("item", ResourceFunctionExpression.Type.ITEM);

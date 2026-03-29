@@ -162,6 +162,56 @@ public class MachinePropertyExpression implements IExpression {
         });
 
         register(
+            "fluid_in",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalFluidInput()));
+        register(
+            "fluid_out",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalFluidOutput()));
+        register(
+            "fluid_f_in",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalFluidInputSpace()));
+        register(
+            "fluid_f_out",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalFluidOutputSpace()));
+
+        register(
+            "gas_in",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalGasInput()));
+        register(
+            "gas_out",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalGasOutput()));
+        register(
+            "gas_f_in",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalGasInputSpace()));
+        register(
+            "gas_f_out",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalGasOutputSpace()));
+
+        register(
             "item",
             ctx -> new EvaluationValue(
                 ctx.getRecipeContext()
@@ -257,13 +307,87 @@ public class MachinePropertyExpression implements IExpression {
                     .getMachineState()
                     .getRecipeProcessedTypesCount()));
 
-        // Resource capacities
+        register(
+            "gas",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalStoredGas()));
+        register("gas_p", ctx -> {
+            long stored = ctx.getRecipeContext()
+                .getMachineState()
+                .getTotalStoredGas();
+            long max = ctx.getRecipeContext()
+                .getMachineState()
+                .getGasCapacity();
+            return new EvaluationValue(max > 0 ? (double) stored / max : 0);
+        });
+        register("gas_f", ctx -> {
+            long stored = ctx.getRecipeContext()
+                .getMachineState()
+                .getTotalStoredGas();
+            long max = ctx.getRecipeContext()
+                .getMachineState()
+                .getGasCapacity();
+            return new EvaluationValue(max - stored);
+        });
+
+        // Resource capacities and totals
+        register(
+            "essentia",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalStoredEssentia()));
+        register("essentia_p", ctx -> {
+            long stored = ctx.getRecipeContext()
+                .getMachineState()
+                .getTotalStoredEssentia();
+            long max = ctx.getRecipeContext()
+                .getMachineState()
+                .getEssentiaCapacity();
+            return new EvaluationValue(max > 0 ? (double) stored / max : 0);
+        });
+        register("essentia_f", ctx -> {
+            long stored = ctx.getRecipeContext()
+                .getMachineState()
+                .getTotalStoredEssentia();
+            long max = ctx.getRecipeContext()
+                .getMachineState()
+                .getEssentiaCapacity();
+            return new EvaluationValue(max - stored);
+        });
         register(
             "essentia_max",
             ctx -> new EvaluationValue(
                 ctx.getRecipeContext()
                     .getMachineState()
                     .getEssentiaCapacity()));
+
+        register(
+            "vis",
+            ctx -> new EvaluationValue(
+                ctx.getRecipeContext()
+                    .getMachineState()
+                    .getTotalStoredVis()));
+        register("vis_p", ctx -> {
+            long stored = ctx.getRecipeContext()
+                .getMachineState()
+                .getTotalStoredVis();
+            long max = ctx.getRecipeContext()
+                .getMachineState()
+                .getVisCapacity();
+            return new EvaluationValue(max > 0 ? (double) stored / max : 0);
+        });
+        register("vis_f", ctx -> {
+            long stored = ctx.getRecipeContext()
+                .getMachineState()
+                .getTotalStoredVis();
+            long max = ctx.getRecipeContext()
+                .getMachineState()
+                .getVisCapacity();
+            return new EvaluationValue(max - stored);
+        });
         register(
             "vis_max",
             ctx -> new EvaluationValue(
@@ -330,7 +454,11 @@ public class MachinePropertyExpression implements IExpression {
         alias("gas_percent", "gas_p");
 
         alias("essentia_capacity", "essentia_max");
+        alias("essentia_percent", "essentia_p");
+        alias("essentia_free", "essentia_f");
         alias("vis_capacity", "vis_max");
+        alias("vis_percent", "vis_p");
+        alias("vis_free", "vis_f");
 
         alias("item_total", "item");
         alias("item_capacity", "item_max");

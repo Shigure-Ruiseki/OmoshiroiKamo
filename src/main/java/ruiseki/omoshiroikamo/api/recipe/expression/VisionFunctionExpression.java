@@ -108,7 +108,6 @@ public class VisionFunctionExpression implements IExpression {
 
     @Override
     public String toString() {
-        return direction.name()
-            .toLowerCase() + "()";
+        return (direction == Direction.SKY ? "can_see_sky" : "can_see_void") + "()";
     }
 }

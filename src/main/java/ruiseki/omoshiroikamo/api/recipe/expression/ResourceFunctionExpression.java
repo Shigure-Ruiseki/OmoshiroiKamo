@@ -15,20 +15,21 @@ public class ResourceFunctionExpression implements IExpression {
         ESSENTIA,
         VIS,
         GAS,
+        GAS_IN,
+        GAS_OUT,
+        GAS_F_IN,
+        GAS_F_OUT,
         FLUID,
         FLUID_IN,
-        FLUID_OUT_S,
-        MANA,
+        FLUID_OUT,
+        FLUID_F_IN,
+        FLUID_F_OUT,
         ITEM,
         ITEM_IN,
         ITEM_OUT,
-        ITEM_S,
-        ITEM_IN_S,
-        ITEM_OUT_S,
         ITEM_F,
         ITEM_F_IN,
-        ITEM_F_OUT,
-        ENERGY
+        ITEM_F_OUT
     }
 
     private final Type type;
@@ -58,15 +59,23 @@ public class ResourceFunctionExpression implements IExpression {
                 return new EvaluationValue(state.getStoredVis(key));
             case GAS:
                 return new EvaluationValue(state.getStoredGas(key));
-            case ENERGY:
-                return new EvaluationValue(state.getStoredEnergy());
-            case MANA:
-                return new EvaluationValue(state.getStoredMana());
+            case GAS_IN:
+                return new EvaluationValue(state.getGasInput(key));
+            case GAS_OUT:
+                return new EvaluationValue(state.getGasOutput(key));
+            case GAS_F_IN:
+                return new EvaluationValue(state.getGasInputSpace(key));
+            case GAS_F_OUT:
+                return new EvaluationValue(state.getGasOutputSpace(key));
             case FLUID:
                 return new EvaluationValue(state.getStoredFluid(key));
             case FLUID_IN:
                 return new EvaluationValue(state.getFluidInput(key));
-            case FLUID_OUT_S:
+            case FLUID_OUT:
+                return new EvaluationValue(state.getFluidOutput(key));
+            case FLUID_F_IN:
+                return new EvaluationValue(state.getFluidInputSpace(key));
+            case FLUID_F_OUT:
                 return new EvaluationValue(state.getFluidOutputSpace(key));
             case ITEM:
                 return new EvaluationValue(state.getItemCount(IPortType.Direction.BOTH, key));
@@ -74,12 +83,6 @@ public class ResourceFunctionExpression implements IExpression {
                 return new EvaluationValue(state.getItemCount(IPortType.Direction.INPUT, key));
             case ITEM_OUT:
                 return new EvaluationValue(state.getItemCount(IPortType.Direction.OUTPUT, key));
-            case ITEM_S:
-                return new EvaluationValue(state.getItemSpace(IPortType.Direction.BOTH, key));
-            case ITEM_IN_S:
-                return new EvaluationValue(state.getItemSpace(IPortType.Direction.INPUT, key));
-            case ITEM_OUT_S:
-                return new EvaluationValue(state.getItemSpace(IPortType.Direction.OUTPUT, key));
             case ITEM_F:
                 return new EvaluationValue(state.getItemSpace(IPortType.Direction.BOTH, key));
             case ITEM_F_IN:
