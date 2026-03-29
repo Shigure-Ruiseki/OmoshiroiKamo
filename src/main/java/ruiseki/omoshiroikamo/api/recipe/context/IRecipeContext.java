@@ -51,6 +51,20 @@ public interface IRecipeContext {
     ConditionContext getConditionContext();
 
     /**
+     * Get the world tick when the current recipe started.
+     */
+    default long getRecipeStartTick() {
+        return 0;
+    }
+
+    /**
+     * Get the current redstone level at the controller (0-15).
+     */
+    default int getRedstoneLevel() {
+        return 0;
+    }
+
+    /**
      * Get the machine state for this context, if applicable.
      */
     default IMachineState getMachineState() {

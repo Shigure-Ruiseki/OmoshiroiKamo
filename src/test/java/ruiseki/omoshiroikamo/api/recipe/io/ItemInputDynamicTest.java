@@ -226,6 +226,16 @@ public class ItemInputDynamicTest {
         }
 
         @Override
+        public long getRecipeStartTick() {
+            return 0;
+        }
+
+        @Override
+        public int getRedstoneLevel() {
+            return 0;
+        }
+
+        @Override
         public IMachineState getMachineState() {
             return state;
         }

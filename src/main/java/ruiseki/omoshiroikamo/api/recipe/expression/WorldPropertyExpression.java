@@ -75,6 +75,21 @@ public class WorldPropertyExpression implements IExpression {
                     if (!world.isAirBlock(x, ty, z)) return 0.0;
                 }
                 return 1.0;
+            case "tick":
+                return world.getTotalWorldTime();
+            case "recipe_tick":
+                return world.getTotalWorldTime() - context.getRecipeContext()
+                    .getRecipeStartTick();
+            case "progress_tick":
+                return context.getRecipeContext()
+                    .getMachineState() != null ? context.getRecipeContext()
+                        .getMachineState()
+                        .getProgress() : 0;
+            case "redstone":
+                return context.getRecipeContext()
+                    .getRedstoneLevel();
+            case "seed":
+                return context.getEvaluationSeed();
             default:
                 return 0;
         }

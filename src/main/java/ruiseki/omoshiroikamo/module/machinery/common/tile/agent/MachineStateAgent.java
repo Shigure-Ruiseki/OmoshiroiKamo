@@ -66,6 +66,12 @@ public class MachineStateAgent implements IMachineState {
     }
 
     @Override
+    public long getProgress() {
+        return controller.getProcessAgent()
+            .getProgress();
+    }
+
+    @Override
     public boolean isRunning() {
         return controller.isRunning();
     }
@@ -328,5 +334,10 @@ public class MachineStateAgent implements IMachineState {
     @Override
     public double getEnergyMultiplier() {
         return controller.getEnergyMultiplier();
+    }
+
+    @Override
+    public long getRecipeStartTick() {
+        return controller.getRecipeStartTick();
     }
 }

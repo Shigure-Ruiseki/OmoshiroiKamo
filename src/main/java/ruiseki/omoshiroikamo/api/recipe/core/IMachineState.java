@@ -28,6 +28,13 @@ public interface IMachineState {
     double getProgressPercent();
 
     /**
+     * Get the raw progress value (usually ticks or work amount).
+     */
+    default long getProgress() {
+        return 0;
+    }
+
+    /**
      * Whether the machine is currently running a recipe.
      */
     boolean isRunning();
@@ -145,4 +152,11 @@ public interface IMachineState {
      * Get the current energy multiplier.
      */
     double getEnergyMultiplier();
+
+    /**
+     * Get the world tick when the current recipe started.
+     */
+    default long getRecipeStartTick() {
+        return 0;
+    }
 }

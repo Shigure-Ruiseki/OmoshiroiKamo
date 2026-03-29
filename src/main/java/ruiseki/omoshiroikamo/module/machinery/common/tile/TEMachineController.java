@@ -129,6 +129,8 @@ public class TEMachineController extends AbstractMBModifierTE
     private long timeContinuousCount = 0;
     @NBTPersist
     private long currentRecipeSeed = 0;
+    @NBTPersist
+    private long currentRecipeStartTick = 0;
 
     private final MachineStateAgent machineStateAgent = new MachineStateAgent(this);
 
@@ -644,6 +646,7 @@ public class TEMachineController extends AbstractMBModifierTE
 
             currentRecipeSeed = worldObj.getTotalWorldTime() ^ worldObj.getSeed()
                 ^ ((long) xCoord << 32 | (zCoord & 0xFFFFFFFFL));
+            currentRecipeStartTick = worldObj.getTotalWorldTime();
             ConditionContext context = getConditionContext();
             if (processAgent.startRecipe(recipe, getContextualInputPorts(), getContextualOutputPorts(), context))
                 lastProcessErrorReason = ErrorReason.NONE;
@@ -1214,6 +1217,16 @@ public class TEMachineController extends AbstractMBModifierTE
     public List<ChunkCoordinates> getSymbolPositions(char symbol) {
         List<ChunkCoordinates> pos = symbolPositions.getOrDefault(symbol, new ArrayList<>());
         return pos;
+    }
+
+    @Override
+    public long getRecipeStartTick() {
+        return currentRecipeStartTick;
+    }
+
+    @Override
+    public int getRedstoneLevel() {
+        return redstoneLevel;
     }
 
     @Override

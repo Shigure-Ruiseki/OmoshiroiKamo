@@ -73,6 +73,12 @@ public class MachinePropertyExpression implements IExpression {
             return maxG > 0 ? (double) state.getTotalStoredGas() / maxG : 0;
         }),
 
+        // Essentia properties
+        ESSENTIA_MAX("essentia_max", state -> (double) state.getEssentiaCapacity()),
+
+        // Vis properties
+        VIS_MAX("vis_max", state -> (double) state.getVisCapacity()),
+
         // Structural properties
         BATCH("batch", state -> (double) state.getBatchSize()),
         SPEED_MULTI("speed_multi", IMachineState::getSpeedMultiplier),
@@ -116,6 +122,7 @@ public class MachinePropertyExpression implements IExpression {
         PROPERTY_MAP.put("recipe_count", PropertyDefinition.RECIPEPROCESSED);
         PROPERTY_MAP.put("count_recipe", PropertyDefinition.RECIPEPROCESSED);
         PROPERTY_MAP.put("recipe_types_count", PropertyDefinition.RECIPEPROCESSEDTYPE);
+        PROPERTY_MAP.put("count_recipe_type", PropertyDefinition.RECIPEPROCESSEDTYPE);
         PROPERTY_MAP.put("count_recipe_types", PropertyDefinition.RECIPEPROCESSEDTYPE);
 
         // Register fluid aliases
@@ -140,9 +147,14 @@ public class MachinePropertyExpression implements IExpression {
 
         // Register gas aliases
         PROPERTY_MAP.put("gas_total", PropertyDefinition.GAS);
+        PROPERTY_MAP.put("total_gas", PropertyDefinition.GAS);
         PROPERTY_MAP.put("gas_capacity", PropertyDefinition.GAS_MAX);
         PROPERTY_MAP.put("gas_free", PropertyDefinition.GAS_FREE);
         PROPERTY_MAP.put("gas_percent", PropertyDefinition.GAS_PERCENT);
+
+        // Register essentia/vis aliases
+        PROPERTY_MAP.put("essentia_capacity", PropertyDefinition.ESSENTIA_MAX);
+        PROPERTY_MAP.put("vis_capacity", PropertyDefinition.VIS_MAX);
 
         // Structural aliases
         PROPERTY_MAP.put("batch_size", PropertyDefinition.BATCH);

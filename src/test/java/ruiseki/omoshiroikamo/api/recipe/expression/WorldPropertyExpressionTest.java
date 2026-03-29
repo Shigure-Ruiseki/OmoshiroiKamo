@@ -3,10 +3,12 @@ package ruiseki.omoshiroikamo.api.recipe.expression;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -17,6 +19,7 @@ import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.storage.IPlayerFileData;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +28,9 @@ import org.junit.jupiter.api.Test;
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
+import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
+import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.test.RegistryMocker;
 
 /**
@@ -240,6 +246,71 @@ public class WorldPropertyExpressionTest {
         assertEquals(0.0, result, 0.001, "未知のプロパティ名の場合、0を返すべき");
     }
 
+    @Test
+    @DisplayName("tick: ワールドの総経過時間を取得")
+    public void testTick() {
+        World world = new WorldStubWithTotalTime(123456);
+        ConditionContext context = new ConditionContext(world, 0, 64, 0);
+
+        WorldPropertyExpression expr = new WorldPropertyExpression("tick");
+
+        assertEquals(123456.0, expr.evaluate(context), 0.001);
+    }
+
+    @Test
+    @DisplayName("recipe_tick: レシピ開始時からの経過時間")
+    public void testRecipeTick() {
+        World world = new WorldStubWithTotalTime(10050);
+        StubRecipeContext recipeContext = new StubRecipeContext(10000);
+        ConditionContext context = new ConditionContext(world, 0, 64, 0, recipeContext);
+
+        WorldPropertyExpression expr = new WorldPropertyExpression("recipe_tick");
+
+        assertEquals(50.0, expr.evaluate(context), 0.001, "10050 - 10000 = 50 であるべき");
+    }
+
+    @Test
+    @DisplayName("progress_tick: レシピの進捗量")
+    public void testProgressTick() {
+        World world = new WorldStubWithTotalTime(10000);
+        StubRecipeContext recipeContext = new StubRecipeContext(9000);
+        recipeContext.setMachineState(new StubMachineState(500));
+        ConditionContext context = new ConditionContext(world, 0, 64, 0, recipeContext);
+
+        WorldPropertyExpression expr = new WorldPropertyExpression("progress_tick");
+
+        assertEquals(500.0, expr.evaluate(context), 0.001, "progress = 500 であるべき");
+    }
+
+    @Test
+    @DisplayName("redstone: コントローラの信号強度")
+    public void testRedstone() {
+        World world = new WorldStubWithTotalTime(10000);
+        StubRecipeContext recipeContext = new StubRecipeContext(9000) {
+
+            @Override
+            public int getRedstoneLevel() {
+                return 12;
+            }
+        };
+        ConditionContext context = new ConditionContext(world, 0, 64, 0, recipeContext);
+
+        WorldPropertyExpression expr = new WorldPropertyExpression("redstone");
+
+        assertEquals(12.0, expr.evaluate(context), 0.001);
+    }
+
+    @Test
+    @DisplayName("seed: 評価セッションのシード")
+    public void testSeed() {
+        World world = new WorldStubWithTotalTime(10000);
+        ConditionContext context = new ConditionContext(world, 0, 64, 0, null, 12345L);
+
+        WorldPropertyExpression expr = new WorldPropertyExpression("seed");
+
+        assertEquals(12345.0, expr.evaluate(context), 0.001);
+    }
+
     // ========================================
     // JSONシリアライゼーションのテスト
     // ========================================
@@ -431,6 +502,214 @@ public class WorldPropertyExpressionTest {
         @Override
         public String getWorldDirectoryName() {
             return "TestWorld";
+        }
+    }
+
+    private static class StubRecipeContext implements IRecipeContext {
+
+        private long startTick;
+        private IMachineState machineState;
+
+        public StubRecipeContext(long startTick) {
+            this.startTick = startTick;
+        }
+
+        public void setMachineState(IMachineState state) {
+            this.machineState = state;
+        }
+
+        @Override
+        public World getWorld() {
+            return null;
+        }
+
+        @Override
+        public ChunkCoordinates getControllerPos() {
+            return null;
+        }
+
+        @Override
+        public IStructureEntry getCurrentStructure() {
+            return null;
+        }
+
+        @Override
+        public ForgeDirection getFacing() {
+            return null;
+        }
+
+        @Override
+        public List<ChunkCoordinates> getSymbolPositions(char symbol) {
+            return null;
+        }
+
+        @Override
+        public ConditionContext getConditionContext() {
+            return null;
+        }
+
+        @Override
+        public long getRecipeStartTick() {
+            return startTick;
+        }
+
+        @Override
+        public int getRedstoneLevel() {
+            return 0;
+        }
+
+        @Override
+        public IMachineState getMachineState() {
+            return machineState;
+        }
+    }
+
+    private static class StubMachineState implements IMachineState {
+
+        private long progress;
+
+        public StubMachineState(long progress) {
+            this.progress = progress;
+        }
+
+        @Override
+        public long getStoredEnergy() {
+            return 0;
+        }
+
+        @Override
+        public long getEnergyCapacity() {
+            return 0;
+        }
+
+        @Override
+        public int getEnergyPerTick() {
+            return 0;
+        }
+
+        @Override
+        public double getProgressPercent() {
+            return 0;
+        }
+
+        @Override
+        public long getProgress() {
+            return progress;
+        }
+
+        @Override
+        public boolean isRunning() {
+            return false;
+        }
+
+        @Override
+        public boolean isWaitingForOutput() {
+            return false;
+        }
+
+        @Override
+        public int getTier() {
+            return 0;
+        }
+
+        @Override
+        public long getTimePlaced() {
+            return 0;
+        }
+
+        @Override
+        public long getTimeContinuous() {
+            return 0;
+        }
+
+        @Override
+        public int getRecipeProcessedCount() {
+            return 0;
+        }
+
+        @Override
+        public int getRecipeProcessedTypesCount() {
+            return 0;
+        }
+
+        @Override
+        public long getStoredFluid() {
+            return 0;
+        }
+
+        @Override
+        public long getFluidCapacity() {
+            return 0;
+        }
+
+        @Override
+        public long getStoredFluid(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getStoredMana() {
+            return 0;
+        }
+
+        @Override
+        public long getManaCapacity() {
+            return 0;
+        }
+
+        @Override
+        public long getStoredGas(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getTotalStoredGas() {
+            return 0;
+        }
+
+        @Override
+        public long getGasCapacity() {
+            return 0;
+        }
+
+        @Override
+        public long getStoredEssentia(String aspect) {
+            return 0;
+        }
+
+        @Override
+        public long getEssentiaCapacity() {
+            return 0;
+        }
+
+        @Override
+        public long getStoredVis(String aspect) {
+            return 0;
+        }
+
+        @Override
+        public long getVisCapacity() {
+            return 0;
+        }
+
+        @Override
+        public int getBatchSize() {
+            return 0;
+        }
+
+        @Override
+        public double getSpeedMultiplier() {
+            return 0;
+        }
+
+        @Override
+        public double getEnergyMultiplier() {
+            return 0;
+        }
+
+        @Override
+        public long getRecipeStartTick() {
+            return 0;
         }
     }
 }
