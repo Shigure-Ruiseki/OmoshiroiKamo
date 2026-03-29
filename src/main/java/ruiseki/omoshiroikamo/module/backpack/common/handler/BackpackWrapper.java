@@ -175,23 +175,11 @@ public class BackpackWrapper implements IItemHandlerModifiable {
         this.keepTab = true;
         this.sleepingBagDeployed = false;
 
-        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this) {
+        this.backpackHandler = new BackpackItemStackHandler(backpackSlots, this);
+        backpackHandler.setOnSlotChanged((integer, stack) -> { markDirty(); });
 
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                markDirty();
-            }
-        };
-
-        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                markDirty();
-            }
-        };
+        this.upgradeHandler = new UpgradeItemStackHandler(upgradeSlots);
+        upgradeHandler.setOnSlotChanged((integer, stack) -> { markDirty(); });
 
         readFromItem();
     }

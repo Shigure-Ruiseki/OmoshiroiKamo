@@ -27,6 +27,7 @@ public class UpgradeSlotUpdateGroup {
     private final StoragePanel panel;
     private final StorageWrapper wrapper;
     private final int slotIndex;
+    private final PanelSyncManager syncManager;
 
     // Common filters
     public DelegatedStackHandlerSH commonFilterStackHandler;
@@ -58,8 +59,7 @@ public class UpgradeSlotUpdateGroup {
         this.panel = panel;
         this.wrapper = wrapper;
         this.slotIndex = slotIndex;
-
-        PanelSyncManager syncManager = panel.syncManager;
+        this.syncManager = panel.syncManager;
 
         // COMMON FILTER
         this.commonFilterStackHandler = new DelegatedStackHandlerSH(wrapper, slotIndex, 9);
@@ -122,22 +122,7 @@ public class UpgradeSlotUpdateGroup {
         syncManager.syncValue("progress_" + slotIndex, progressHandler);
 
         // SMELTING
-        this.smeltingStackHandler = new DelegatedStackHandlerSH(wrapper, slotIndex, 3);
-        syncManager.syncValue("smelting_delegation_" + slotIndex, smeltingStackHandler);
-
-        this.smeltingSlots = new ModularSlot[3];
-        for (int i = 0; i < 3; i++) {
-            ModularSlot slot = new ModularSlot(smeltingStackHandler.delegatedStackHandler, i);
-            slot.slotGroup("smeltings_" + slotIndex);
-            syncManager.syncValue("smelting_" + slotIndex, i, new ItemSlotSH(slot));
-
-            smeltingSlots[i] = slot;
-        }
-
-        syncManager.registerSlotGroup(new SlotGroup("smeltings_" + slotIndex, 3, false));
-
-        this.burnProgress = new DelegatedFloatSH(wrapper, slotIndex);
-        syncManager.syncValue("burn_progress_" + slotIndex, burnProgress);
+        smeltingUpgradeGroup();
     }
 
     public void updateFilterDelegate(IBasicFilterable wrapper) {
@@ -164,9 +149,32 @@ public class UpgradeSlotUpdateGroup {
         burnProgress.syncToServer(DelegatedFloatSH.UPDATE_BURN);
     }
 
-    private void craftingUpgradeGroup() {
-        PanelSyncManager syncManager = panel.syncManager;
+    private void smeltingUpgradeGroup() {
+        this.smeltingStackHandler = new DelegatedStackHandlerSH(wrapper, slotIndex, 3);
+        syncManager.syncValue("smelting_delegation_" + slotIndex, smeltingStackHandler);
 
+        this.smeltingSlots = new ModularSlot[3];
+        for (int i = 0; i < 3; i++) {
+            ModularSlot slot = new ModularSlot(smeltingStackHandler.delegatedStackHandler, i);
+            slot.slotGroup("smeltings_" + slotIndex);
+            syncManager.syncValue("smelting_" + slotIndex, i, new ItemSlotSH(slot));
+            slot.changeListener((stack, onlyAmountChanged, client, init) -> {
+
+                if (!client) return;
+
+                craftingStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_STORAGE);
+            });
+
+            smeltingSlots[i] = slot;
+        }
+
+        syncManager.registerSlotGroup(new SlotGroup("smeltings_" + slotIndex, 3, false));
+
+        this.burnProgress = new DelegatedFloatSH(wrapper, slotIndex);
+        syncManager.syncValue("burn_progress_" + slotIndex, burnProgress);
+    }
+
+    private void craftingUpgradeGroup() {
         this.craftingStackHandler = new DelegatedCraftingStackHandlerSH(
             panel::getStorageContainer,
             wrapper,
@@ -180,6 +188,12 @@ public class UpgradeSlotUpdateGroup {
                 slotIndex,
                 craftingStackHandler.delegatedStackHandler,
                 i);
+            slot.changeListener((stack, onlyAmountChanged, client, init) -> {
+
+                if (!client) return;
+
+                craftingStackHandler.syncToServer(DelegatedCraftingStackHandlerSH.DETECT_CHANGES);
+            });
             slot.slotGroup("crafting_result_" + slotIndex);
             syncManager.syncValue("crafting_slot_" + slotIndex, i, new ItemSlotSH(slot));
             craftingMatrixSlots[i] = slot;

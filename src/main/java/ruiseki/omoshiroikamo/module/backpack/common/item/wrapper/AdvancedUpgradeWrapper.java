@@ -16,14 +16,11 @@ public class AdvancedUpgradeWrapper extends UpgradeWrapper implements IAdvancedF
 
     public AdvancedUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
-        this.handler = new UpgradeItemStackHandler(16) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-                tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
-            }
-        };
+        this.handler = new UpgradeItemStackHandler(16);
+        handler.setOnSlotChanged((integer, stack) -> {
+            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+            tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
+        });
     }
 
     @Override

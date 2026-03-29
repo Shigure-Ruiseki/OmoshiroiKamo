@@ -257,7 +257,11 @@ public class StorageWrapper implements IStorageWrapper {
     }
 
     public void tick() {
-        for (UpgradeWrapperBase wrapper : new ArrayList<>(wrapperCache.values())) {
+        if (wrapperCache.isEmpty()) return;
+        Map<Integer, UpgradeWrapperBase> snapshot = new HashMap<>(wrapperCache);
+
+        for (Map.Entry<Integer, UpgradeWrapperBase> entry : snapshot.entrySet()) {
+            UpgradeWrapperBase wrapper = entry.getValue();
             if (wrapper instanceof ITickable tickable) {
                 tickable.tick();
             }

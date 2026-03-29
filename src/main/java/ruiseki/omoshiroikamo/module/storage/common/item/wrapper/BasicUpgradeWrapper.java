@@ -13,15 +13,12 @@ public class BasicUpgradeWrapper extends UpgradeWrapperBase implements IBasicFil
 
     public BasicUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
         super(upgrade, storage);
-        handler = new UpgradeItemStackHandler(9) {
+        handler = new UpgradeItemStackHandler(9);
+        handler.setOnSlotChanged((slot, stack) -> {
+            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+            tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
+        });
 
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-                tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
-            }
-        };
         NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
         if (handlerTag != null) handler.deserializeNBT(handlerTag);
     }

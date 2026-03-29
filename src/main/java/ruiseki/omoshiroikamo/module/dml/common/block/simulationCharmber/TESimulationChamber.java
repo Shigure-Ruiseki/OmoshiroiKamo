@@ -42,6 +42,7 @@ public class TESimulationChamber extends AbstractMachineTE
 
         @Override
         protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
             onDataModelChanged();
         }
     };

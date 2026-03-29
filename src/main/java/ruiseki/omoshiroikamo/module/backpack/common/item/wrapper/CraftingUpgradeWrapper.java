@@ -12,14 +12,11 @@ public class CraftingUpgradeWrapper extends UpgradeWrapper implements ICraftingU
 
     public CraftingUpgradeWrapper(ItemStack upgrade) {
         super(upgrade);
-        handler = new UpgradeItemStackHandler(10) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-                tag.setTag(ICraftingUpgrade.STORAGE_TAG, this.serializeNBT());
-            }
-        };
+        handler = new UpgradeItemStackHandler(10);
+        handler.setOnSlotChanged((integer, stack) -> {
+            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+            tag.setTag(STORAGE_TAG, handler.serializeNBT());
+        });
     }
 
     @Override

@@ -22,6 +22,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFa
 public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
 
     public static final int UPDATE_CRAFTING = 2;
+    public static final int DETECT_CHANGES = 3;
 
     private final Supplier<StorageContainer> containerProvider;
     private final StorageWrapper wrapper;
@@ -72,9 +73,10 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
         inventoryCrafting.detectChanges();
 
         if (isValid() && !getSyncManager().isClient() && !(delegatedStackHandler.get() instanceof EmptyHandler)) {
+            int resultSlot = inventoryCrafting.getSizeInventory() - 1;
 
-            var result = delegatedStackHandler.get()
-                .getStackInSlot(9);
+            ItemStack result = delegatedStackHandler.get()
+                .getStackInSlot(resultSlot);
 
             syncToClient(UPDATE_CRAFTING, buffer -> buffer.writeItemStackToBuffer(result));
         }
@@ -120,6 +122,24 @@ public class DelegatedCraftingStackHandlerSH extends DelegatedStackHandlerSH {
                 if (wrapper instanceof ICraftingUpgrade upgrade) {
                     setDelegatedStackHandler(upgrade::getStorage);
                 }
+                break;
+            }
+
+            case DETECT_CHANGES: {
+
+                if (inventoryCrafting != null) {
+                    inventoryCrafting.detectChanges();
+
+                    if (!(delegatedStackHandler.get() instanceof EmptyHandler)) {
+                        int resultSlot = inventoryCrafting.getSizeInventory() - 1;
+
+                        ItemStack result = delegatedStackHandler.get()
+                            .getStackInSlot(resultSlot);
+
+                        syncToClient(UPDATE_CRAFTING, buffer -> buffer.writeItemStackToBuffer(result));
+                    }
+                }
+
                 break;
             }
         }

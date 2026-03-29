@@ -20,14 +20,13 @@ public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedi
             public boolean isItemValid(int slot, ItemStack stack) {
                 return stack != null && stack.getItem() instanceof ItemFood;
             }
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-                tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
-            }
         };
+
+        handler.setOnSlotChanged((slot, stack) -> {
+            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+            tag.setTag(FILTER_ITEMS_TAG, handler.serializeNBT());
+        });
+
         NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
         if (handlerTag != null) handler.deserializeNBT(handlerTag);
     }

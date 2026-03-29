@@ -35,6 +35,7 @@ public abstract class ItemHandlerPristineMatter extends ItemStackHandlerBase {
 
     @Override
     protected void onContentsChanged(int slot) {
+        super.onContentsChanged(slot);
         if (slot != 0) return;
 
         updateMetadata();

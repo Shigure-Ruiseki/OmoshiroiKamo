@@ -39,15 +39,11 @@ public abstract class AbstractStorageTE extends AbstractTE implements ISidedInve
     public AbstractStorageTE(SlotDefinition slotDefinition) {
         this.slotDefinition = slotDefinition;
 
-        inv = new ItemStackHandlerBase(slotDefinition.getItemSlots()) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                markDirty();
-                onContentsChange(slot);
-            }
-        };
+        inv = new ItemStackHandlerBase(slotDefinition.getItemSlots());
+        inv.setOnSlotChanged((slot, stack) -> {
+            markDirty();
+            onContentsChange(slot);
+        });
 
         int fluidSlots = slotDefinition.getFluidSlots();
         fluidTanks = new ArrayList<>(fluidSlots);

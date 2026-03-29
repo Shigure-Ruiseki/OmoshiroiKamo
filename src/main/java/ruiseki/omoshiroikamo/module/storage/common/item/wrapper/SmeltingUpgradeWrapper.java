@@ -15,15 +15,12 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
 
     public SmeltingUpgradeWrapper(ItemStack upgrade, IStorageWrapper wrapper) {
         super(upgrade, wrapper);
-        handler = new UpgradeItemStackHandler(3) {
+        handler = new UpgradeItemStackHandler(3);
+        handler.setOnSlotChanged((slot, stack) -> {
+            NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
+            tag.setTag(STORAGE_TAG, handler.serializeNBT());
+        });
 
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
-                tag.setTag(STORAGE_TAG, this.serializeNBT());
-            }
-        };
         NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
         if (handlerTag != null) handler.deserializeNBT(handlerTag);
     }
@@ -35,11 +32,11 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
 
     @Override
     public void tick() {
-
         UpgradeItemStackHandler inv = getStorage();
 
         ItemStack input = inv.getStackInSlot(0);
         ItemStack fuel = inv.getStackInSlot(1);
+        ItemStack output = inv.getStackInSlot(2);
 
         boolean burning = getBurnTime() > 0;
 
@@ -53,17 +50,13 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
 
         // try start burning
         if (!burning && canSmelt && fuel != null) {
-
-            int burn = TileEntityFurnace.getItemBurnTime(fuel);
-
-            if (burn > 0) {
-
-                setBurnTime(burn);
-                setBurnTimeTotal(burn);
+            int burnTime = TileEntityFurnace.getItemBurnTime(fuel);
+            if (burnTime > 0) {
+                setBurnTime(burnTime);
+                setBurnTimeTotal(burnTime);
                 burning = true;
 
                 fuel.stackSize--;
-
                 if (fuel.stackSize <= 0) {
                     inv.setStackInSlot(
                         1,
@@ -77,18 +70,16 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
 
         // cooking
         if (burning && canSmelt) {
-
             setCookTime(getCookTime() + 1);
 
             if (getCookTime() >= getCookTimeTotal()) {
-
                 setCookTime(0);
                 smeltItem(inv);
             }
-
-        } else if (getCookTime() > 0) {
-
-            setCookTime(Math.max(0, getCookTime() - 2));
+        } else {
+            if (getCookTime() > 0) {
+                setCookTime(Math.max(0, getCookTime() - 2));
+            }
         }
     }
 
@@ -173,14 +164,6 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
     @Override
     public void setCookTimeTotal(int value) {
         ItemNBTHelpers.setInt(upgrade, COOK_TIME_TOTAL_TAG, value);
-    }
-
-    public void addCookTime(int amount) {
-        setCookTime(getCookTime() + amount);
-    }
-
-    public void decreaseBurnTime() {
-        setBurnTime(Math.max(0, getBurnTime() - 1));
     }
 
     @Override
