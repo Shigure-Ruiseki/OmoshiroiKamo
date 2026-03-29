@@ -176,7 +176,7 @@ public class StoragePanel extends ModularPanel {
                 ItemStack last = lastUpgradeStacks[slotIndex];
 
                 boolean itemChanged = !ItemUtils.areStacksEqual(last, stack, true);
-                boolean tabChanged  = isTabStateDifferent(last, stack);
+                boolean tabChanged = isTabStateDifferent(last, stack);
 
                 if (!itemChanged && !tabChanged) return;
                 lastUpgradeStacks[slotIndex] = stack == null ? null : stack.copy();
@@ -675,11 +675,13 @@ public class StoragePanel extends ModularPanel {
     }
 
     private boolean isTabStateDifferent(ItemStack a, ItemStack b) {
-        boolean aState = a != null && a.hasTagCompound() &&
-            a.getTagCompound().getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
+        boolean aState = a != null && a.hasTagCompound()
+            && a.getTagCompound()
+                .getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
 
-        boolean bState = b != null && b.hasTagCompound() &&
-            b.getTagCompound().getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
+        boolean bState = b != null && b.hasTagCompound()
+            && b.getTagCompound()
+                .getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
 
         return aState != bState;
     }

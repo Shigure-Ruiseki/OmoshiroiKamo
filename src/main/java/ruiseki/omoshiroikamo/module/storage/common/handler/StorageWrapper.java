@@ -82,9 +82,7 @@ public class StorageWrapper implements IStorageWrapper {
 
         this.storageItemStackHandler = new StorageItemStackHandler(storageSlots, this);
         this.upgradeItemStackHandler = new UpgradeItemStackHandler(upgradeSlots);
-        upgradeItemStackHandler.setOnSlotChanged((slot, stack) -> {
-            rebuildWrapperCache();
-        });
+        upgradeItemStackHandler.setOnSlotChanged((slot, stack) -> { rebuildWrapperCache(); });
 
     }
 
