@@ -30,8 +30,6 @@ Recipes are evaluated and displayed in the following order (higher items take pr
 
 ## 3. Inputs and Outputs
 
-## 3. Inputs and Outputs
-
 The resource type is determined by the presence of a specific key within the object.
 
 ### Items
@@ -111,90 +109,16 @@ In the above example:
 
 ### Available Variables and Functions
 
-**Main Machine Properties**:
+For a complete list, see the [Expression Parser Variable & Function Reference](./EXPRESSION_REFERENCE.md).
+
+**Main Properties**:
 - `tier` - Current machine Tier (1-16)
-- `energy` / `energy_p` - Energy amount / fill percentage (0.0-1.0)
-- `fluid` / `fluid_p` - Fluid amount / fill percentage
-- `mana` / `mana_p` - Mana amount / fill percentage
-- `gas` / `gas_p` - Gas amount / fill percentage
+- `energy_p` / `fluid_p` / `mana_p` - Resource fill percentages (0.0-1.0)
 - `progress` - Recipe progress (0.0-1.0)
-- `recipeprocessed` - Number of processed recipes (statistics)
-- `is_running` - Whether machine is running (1 or 0)
-- `batch` - Current batch size (number of times processed at once)
-- `speed_multi` - Speed multiplier (inverse of processing time)
-- `energy_multi` - Energy multiplier (consumption multiplier)
+- `recipe_count` - Number of processed recipes
+- `time` / `day` - World time and elapsed days
 
-**Main World Properties**:
-- `day` / `total_days` - Elapsed days
-- `time` - Current time (0-23999)
-- `moon_phase` - Moon phase (0-7)
-
-**Math Functions**:
-- `min(a, b)` / `max(a, b)` - Minimum/Maximum value
-- `floor(x)` / `ceil(x)` / `round(x)` - Floor/Ceiling/Rounding
-- `sqrt(x)` / `pow(base, exp)` - Square root/Power
-- `sin(x)` / `cos(x)` - Trigonometric functions (radians)
-
-### Practical Examples
-
-#### Example 1: Tier-Dependent Input Amount
-```json
-{
-  "inputs": [
-    { "item": "minecraft:diamond", "amount": "tier * 2" }
-  ]
-}
-```
-Requires 2 diamonds at Tier 1, 16 diamonds at Tier 8.
-
-#### Example 2: Energy-Based Output
-```json
-{
-  "outputs": [
-    { "fluid": "steam", "amount": "energy_p * 10000" }
-  ]
-}
-```
-Produces 10,000mB at full energy, 5,000mB at 50% energy.
-
-#### Example 3: Time-of-Day Production Variance
-```json
-{
-  "outputs": [
-    {
-      "item": "minecraft:glowstone_dust",
-      "amount": "time > 13000 && time < 23000 ? 10 : 5"
-    }
-  ]
-}
-```
-Produces 10 items at night (13000-23000 ticks), 5 items during daytime.
-
-#### Example 4: Progress-Based Bonus
-```json
-{
-  "outputs": [
-    {
-      "item": "output_item",
-      "amount": "10 + floor(recipeprocessed / 100)"
-    }
-  ]
-}
-```
-Output increases by 1 every 100 recipe completions.
-
-#### Example 5: Multi-Condition Combination
-```json
-{
-  "inputs": [
-    {
-      "item": "fuel",
-      "amount": "max(1, tier * 5 - floor(energy_p * 20))"
-    }
-  ]
-}
-```
-Higher tiers require more fuel, but less fuel is needed when energy is high. Minimum 1 required.
+For practical examples, see the [Expression Examples](./EXPRESSION_EXAMPLES.md).
 
 ### Notes
 
@@ -206,7 +130,7 @@ Higher tiers require more fuel, but less fuel is needed when energy is high. Min
 
 ---
 
-### 11. External Block NBT Check/Consume (Block Nbt Input)
+### External Block NBT Check/Consume (Block Nbt Input)
 Assess and consume NBT data from blocks within the structure at recipe start.
 
 - `type`: `"block_nbt"`
@@ -263,7 +187,7 @@ If you find a bug, please create an issue.
 }]
 ```
 
-#### 8. External Block NBT Manipulation (Block Nbt Output)
+### External Block NBT Manipulation (Block Nbt Output)
 Manipulate NBT data of any TileEntity within the structure. Unlike `block` replacement, this modifies internal data numerically without changing the block itself.
 
 - `type`: Specify `"block_nbt"`.
@@ -283,7 +207,7 @@ Manipulate NBT data of any TileEntity within the structure. Unlike `block` repla
 }]
 ```
 
-## 3. Conditions
+## 4. Conditions
 Conditions are checked every tick or at the start of the process. Logical operators (CoR Pattern) can be used to construct complex conditions.
 
 Available types:
@@ -332,7 +256,7 @@ You can use the operator name directly as the key.
 - **`not`**: `{ "not": { condition } }`
 - `xor`, `nand`, `nor` are also supported.
 
-## 4. Decorators
+## 5. Decorators
 Decorators provide additional behavior during or after recipe execution.
 (Note: If the `type` property is omitted, the type is inferred from the keys used.)
 
@@ -355,7 +279,7 @@ Decorators provide additional behavior during or after recipe execution.
 ]
 ```
 
-## 5. Expressions (IExpression)
+## 6. Expressions (IExpression)
 Some parameters (like decorator chances) can use `IExpression` to calculate values dynamically. Instead of a direct numeric constant, you can use the following object format:
 
 - `constant`: Returns a fixed numeric value.
@@ -367,21 +291,14 @@ Some parameters (like decorator chances) can use `IExpression` to calculate valu
 ### Expression String (Recipe Script)
 Instead of deep JSON objects, you can write mathematical/logical expressions directly as strings. This supports complex logic and is referred to as **"Recipe Script"**.
 
-- **Advanced Features**:
-  - **Logical Operators**: Supports `&&` (AND), `||` (OR), `!` (NOT).
-  - **Grouping**: Use `()` or `{}` to control precedence.
-  - **Whitespace/Newlines**: You can use newlines and tabs to make scripts readable.
-
-- **Advanced Functions**:
-  - `nbt('key')`: Retrieves machine's own NBT.
-  - `nbt('S', 'key')`: Retrieves NBT from the block at symbol `S`.
-
 ```json
 "condition": "nbt('S', 'energy') > 5000",
 "chance": "{ nbt('energyStored') / 100000.0 } * 0.8"
 ```
 
-## 6. Inheritance
+For a full reference of available variables, functions, and operators, see the [Expression Parser Variable & Function Reference](./EXPRESSION_REFERENCE.md).
+
+## 7. Inheritance
 You can use an `abstract` recipe to share common properties.
 
 ```json

@@ -5,6 +5,7 @@
 ## 📚 関連ドキュメント
 
 - [JSON フォーマット](./JSON_FORMAT.md) - 基本的な JSON 構文
+- [式パーサー リファレンス](./EXPRESSION_REFERENCE.md) - 変数・関数の完全なリスト
 ---
 
 ## 1. 基本パターン

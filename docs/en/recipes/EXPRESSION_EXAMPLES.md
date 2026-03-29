@@ -5,6 +5,7 @@ This document provides practical recipe examples using the Dynamic Amount System
 ## 📚 Related Documentation
 
 - [JSON Format](./JSON_FORMAT.md) - Basic JSON syntax
+- [Expression Reference](./EXPRESSION_REFERENCE.md) - Complete list of variables and functions
 
 ---
 
