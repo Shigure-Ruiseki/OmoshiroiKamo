@@ -22,6 +22,11 @@ public class StringLiteralExpression implements IExpression {
         return 0;
     }
 
+    @Override
+    public String evaluateString(ConditionContext context) {
+        return value;
+    }
+
     /**
      * Get the string value.
      */

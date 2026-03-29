@@ -42,8 +42,8 @@ public class VisionFunctionExpression implements IExpression {
         Set<Block> allowedBlocks = new HashSet<>();
 
         for (IExpression filter : filterParams) {
-            if (filter instanceof StringLiteralExpression SLE) {
-                String val = SLE.getStringValue();
+            String val = filter.evaluateString(context);
+            if (val != null) {
                 if ("transparent".equalsIgnoreCase(val)) {
                     allowTransparent = true;
                 } else if ("strict".equalsIgnoreCase(val)) {
@@ -56,9 +56,9 @@ public class VisionFunctionExpression implements IExpression {
                 }
             } else if (filter instanceof ArrayLiteralExpression ALE) {
                 for (IExpression element : ALE.getElements()) {
-                    if (element instanceof StringLiteralExpression SLE) {
-                        String val = SLE.getStringValue();
-                        Block block = Block.getBlockFromName(val);
+                    String eVal = element.evaluateString(context);
+                    if (eVal != null) {
+                        Block block = Block.getBlockFromName(eVal);
                         if (block != null) {
                             allowedBlocks.add(block);
                         }

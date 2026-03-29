@@ -72,14 +72,12 @@ public class WorldPropertyExpression implements IExpression {
                 return world.isThundering() ? 1.0 : 0.0;
             case "can_see_sky":
                 // Variable version is now identical to parameterless function call
-                return new VisionFunctionExpression(
-                    VisionFunctionExpression.Direction.SKY,
-                    Collections.emptyList()).evaluate(context);
+                return new VisionFunctionExpression(VisionFunctionExpression.Direction.SKY, Collections.emptyList())
+                    .evaluate(context);
             case "can_see_void":
                 // Variable version is strict air-only
-                return new VisionFunctionExpression(
-                    VisionFunctionExpression.Direction.VOID,
-                    Collections.emptyList()).evaluate(context);
+                return new VisionFunctionExpression(VisionFunctionExpression.Direction.VOID, Collections.emptyList())
+                    .evaluate(context);
             case "tick":
                 return world.getTotalWorldTime();
             case "recipe_tick":
@@ -93,7 +91,13 @@ public class WorldPropertyExpression implements IExpression {
             case "redstone":
                 return context.getRecipeContext()
                     .getRedstoneLevel();
-            case "seed":
+            case "facing":
+                return context.getRecipeContext()
+                    .getFacing()
+                    .ordinal();
+            case "world_seed":
+                return world.getSeed();
+            case "random_seed":
                 return context.getEvaluationSeed();
             default:
                 return 0;

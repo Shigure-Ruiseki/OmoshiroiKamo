@@ -1,5 +1,6 @@
 package ruiseki.omoshiroikamo.api.recipe.expression;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +157,14 @@ public class ExpressionRegistry {
             return new ResourceFunctionExpression(ResourceFunctionExpression.Type.FLUID, args.get(0));
         });
 
+        // Unified Item Functions
+        registerResourceFunction("item", ResourceFunctionExpression.Type.ITEM);
+        registerResourceFunction("item_in", ResourceFunctionExpression.Type.ITEM_IN);
+        registerResourceFunction("item_out", ResourceFunctionExpression.Type.ITEM_OUT);
+        registerResourceFunction("item_f", ResourceFunctionExpression.Type.ITEM_F);
+        registerResourceFunction("item_f_in", ResourceFunctionExpression.Type.ITEM_F_IN);
+        registerResourceFunction("item_f_out", ResourceFunctionExpression.Type.ITEM_F_OUT);
+
         // Math Functions
         for (String mathFunc : MathFunctionExpression.SUPPORTED_FUNCTIONS) {
             registerFunction(mathFunc, (args, parser) -> {
@@ -171,6 +180,37 @@ public class ExpressionRegistry {
         registerFunction(
             "can_see_void",
             (args, parser) -> new VisionFunctionExpression(VisionFunctionExpression.Direction.VOID, args));
+
+        // Item Slot Functions
+        registerFunction(
+            "item_slot",
+            (args, parser) -> new ItemFunctionExpression(ItemFunctionExpression.FunctionType.SLOT_COUNT, args));
+        registerFunction("item_slot_in", (args, parser) -> {
+            // Directional slot count: use ItemFunctionExpression with direction argument
+            return new ItemFunctionExpression(
+                ItemFunctionExpression.FunctionType.SLOT_COUNT,
+                Arrays.asList(new StringLiteralExpression("input")));
+        });
+        registerFunction("item_slot_out", (args, parser) -> {
+            return new ItemFunctionExpression(
+                ItemFunctionExpression.FunctionType.SLOT_COUNT,
+                Arrays.asList(new StringLiteralExpression("output")));
+        });
+        registerFunction(
+            "item_slot_empty",
+            (args, parser) -> new ItemFunctionExpression(ItemFunctionExpression.FunctionType.SLOT_EMPTY, args));
+
+        // Environmental Functions
+        registerFunction("count_blocks", (args, parser) -> new CountBlocksFunctionExpression(args));
+    }
+
+    private static void registerResourceFunction(String name, ResourceFunctionExpression.Type type) {
+        registerFunction(name, (args, parser) -> {
+            if (args.isEmpty() || args.size() > 1) {
+                throw parser.error(name + "() function requires 1 argument (item ID or OreDict)");
+            }
+            return new ResourceFunctionExpression(type, args.get(0));
+        });
     }
 
     public static IExpression getVariable(String name) {

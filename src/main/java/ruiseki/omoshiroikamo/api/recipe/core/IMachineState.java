@@ -1,5 +1,7 @@
 package ruiseki.omoshiroikamo.api.recipe.core;
 
+import ruiseki.omoshiroikamo.api.modular.IPortType;
+
 /**
  * Interface for accessing machine state in expressions.
  * Allows the API layer to access energy, progress, etc., without depending on
@@ -157,6 +159,39 @@ public interface IMachineState {
      * Get the world tick when the current recipe started.
      */
     default long getRecipeStartTick() {
+        return 0;
+    }
+
+    /**
+     * Get the total count of items on a specific side.
+     * 
+     * @param direction Port direction (INPUT, OUTPUT, BOTH)
+     * @param itemName  Optional item name/ID or OreDict name to filter by.
+     *                  If null or empty, returns total count of all items.
+     */
+    default long getItemCount(IPortType.Direction direction, String itemName) {
+        return 0;
+    }
+
+    /**
+     * Get the remaining space for items on a specific side.
+     * 
+     * @param direction Port direction (INPUT, OUTPUT, BOTH)
+     * @param itemName  Optional item name/ID or OreDict name.
+     *                  If specific, counts how many of that item can be added.
+     *                  If null, counts total empty slot capacity.
+     */
+    default long getItemSpace(IPortType.Direction direction, String itemName) {
+        return 0;
+    }
+
+    /**
+     * Get the number of item slots on a specific side.
+     * 
+     * @param direction Port direction (INPUT, OUTPUT, BOTH)
+     * @param emptyOnly If true, only counts empty slots.
+     */
+    default int getItemSlotCount(IPortType.Direction direction, boolean emptyOnly) {
         return 0;
     }
 }

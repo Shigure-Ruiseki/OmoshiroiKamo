@@ -1,16 +1,22 @@
 package ruiseki.omoshiroikamo.module.machinery.common.tile.agent;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.ToLongFunction;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.oredict.OreDictionary;
 
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
@@ -339,5 +345,97 @@ public class MachineStateAgent implements IMachineState {
     @Override
     public long getRecipeStartTick() {
         return controller.getRecipeStartTick();
+    }
+
+    @Override
+    public long getItemCount(IPortType.Direction direction, String itemName) {
+        long total = 0;
+        for (IModularPort port : getPorts(direction)) {
+            if (!(port instanceof IInventory inv)) continue;
+            for (int i = 0; i < inv.getSizeInventory(); i++) {
+                ItemStack stack = inv.getStackInSlot(i);
+                if (stack != null && matches(stack, itemName)) {
+                    total += stack.stackSize;
+                }
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public long getItemSpace(IPortType.Direction direction, String itemName) {
+        long total = 0;
+        ItemStack filterStack = null;
+        if (itemName != null && !itemName.isEmpty() && !itemName.startsWith("ore:")) {
+            Item item = (Item) Item.itemRegistry.getObject(itemName);
+            if (item != null) filterStack = new ItemStack(item);
+        }
+
+        for (IModularPort port : getPorts(direction)) {
+            if (!(port instanceof IInventory inv)) continue;
+            for (int i = 0; i < inv.getSizeInventory(); i++) {
+                ItemStack stack = inv.getStackInSlot(i);
+                if (stack == null) {
+                    // Empty slot: if specific item, use its max stack size, else use 64
+                    total += (filterStack != null) ? filterStack.getMaxStackSize() : 64;
+                } else if (filterStack != null && stack.isItemEqual(filterStack)
+                    && ItemStack.areItemStackTagsEqual(stack, filterStack)) {
+                        // Same item: add remaining space in stack
+                        total += Math.max(0, stack.getMaxStackSize() - stack.stackSize);
+                    }
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public int getItemSlotCount(IPortType.Direction direction, boolean emptyOnly) {
+        int total = 0;
+        for (IModularPort port : getPorts(direction)) {
+            if (!(port instanceof IInventory inv)) continue;
+            if (emptyOnly) {
+                for (int i = 0; i < inv.getSizeInventory(); i++) {
+                    if (inv.getStackInSlot(i) == null) total++;
+                }
+            } else {
+                total += inv.getSizeInventory();
+            }
+        }
+        return total;
+    }
+
+    private List<IModularPort> getPorts(IPortType.Direction direction) {
+        if (direction == IPortType.Direction.INPUT) {
+            return controller.getPortManager()
+                .getInputPorts(IPortType.Type.ITEM);
+        } else if (direction == IPortType.Direction.OUTPUT) {
+            return controller.getPortManager()
+                .getOutputPorts(IPortType.Type.ITEM);
+        } else {
+            List<IModularPort> all = new ArrayList<>();
+            all.addAll(
+                controller.getPortManager()
+                    .getInputPorts(IPortType.Type.ITEM));
+            all.addAll(
+                controller.getPortManager()
+                    .getOutputPorts(IPortType.Type.ITEM));
+            return all;
+        }
+    }
+
+    private boolean matches(ItemStack stack, String filter) {
+        if (filter == null || filter.isEmpty()) return true;
+
+        if (filter.startsWith("ore:")) {
+            String oreName = filter.substring(4);
+            int oreId = OreDictionary.getOreID(oreName);
+            if (oreId < 0) return false;
+            int[] ids = OreDictionary.getOreIDs(stack);
+            for (int id : ids) if (id == oreId) return true;
+            return false;
+        } else {
+            String name = Item.itemRegistry.getNameForObject(stack.getItem());
+            return filter.equals(name);
+        }
     }
 }

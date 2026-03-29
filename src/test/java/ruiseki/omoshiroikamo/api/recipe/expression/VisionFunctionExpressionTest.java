@@ -182,7 +182,7 @@ public class VisionFunctionExpressionTest {
 
     // --- Stubs for Testing ---
 
-    private static class WorldStub extends World {
+    public static class WorldStub extends World {
 
         private final Block[][][] blocks = new Block[32][256][32];
 
@@ -223,7 +223,7 @@ public class VisionFunctionExpressionTest {
         }
     }
 
-    private static class StubWorldProvider extends WorldProvider {
+    public static class StubWorldProvider extends WorldProvider {
 
         @Override
         public String getDimensionName() {
@@ -231,7 +231,7 @@ public class VisionFunctionExpressionTest {
         }
     }
 
-    private static class StubSaveHandler implements ISaveHandler {
+    public static class StubSaveHandler implements ISaveHandler {
 
         @Override
         public WorldInfo loadWorldInfo() {

@@ -22,4 +22,12 @@ public interface IExpression {
     default double evaluateSafe() {
         return 1.0;
     }
+
+    /**
+     * Evaluate the expression as a string.
+     * Useful for literal strings in function arguments.
+     */
+    default String evaluateString(ConditionContext context) {
+        return null;
+    }
 }
