@@ -6,6 +6,12 @@ power.rf=RF
 fluid.millibucket=mB
 tooltip.holdshift=§7- hold §r§oSHIFT§r§7 for more info§r
 
+# Update
+omoshiroikamo.chat.prefix=[OmoshiroiKamo]
+omoshiroikamo.update.available=A new version is available!
+omoshiroikamo.update.link=[Check on CurseForge]
+omoshiroikamo.update.hover=Click to open the CurseForge page in your browser
+
 
 # Creative Tabs
 creativetab.okBackpack=OK Backpack

@@ -15,6 +15,7 @@ import com.google.common.collect.Maps;
 import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 import com.gtnewhorizon.gtnhlib.config.ConfigException;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -36,6 +37,7 @@ import ruiseki.omoshiroikamo.core.client.util.TextureLoader;
 import ruiseki.omoshiroikamo.core.command.CommandMod;
 import ruiseki.omoshiroikamo.core.command.CommandOK;
 import ruiseki.omoshiroikamo.core.event.MemoryEventHandler;
+import ruiseki.omoshiroikamo.core.event.UpdateNotificationHandler;
 import ruiseki.omoshiroikamo.core.helper.MinecraftHelpers;
 import ruiseki.omoshiroikamo.core.init.ModBase;
 import ruiseki.omoshiroikamo.core.integration.nei.NEIConfig;
@@ -44,6 +46,7 @@ import ruiseki.omoshiroikamo.core.integration.waila.WailaCompat;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.core.lib.LibMods;
 import ruiseki.omoshiroikamo.core.proxy.ICommonProxy;
+import ruiseki.omoshiroikamo.core.update.UpdateChecker;
 import ruiseki.omoshiroikamo.module.backpack.BackpackModule;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackBlocks;
 import ruiseki.omoshiroikamo.module.backpack.common.init.BackpackItems;
@@ -127,6 +130,11 @@ public class OmoshiroiKamo extends ModBase {
             }
         }
         WailaCompat.init();
+        if (MinecraftHelpers.isClientSide()) {
+            FMLCommonHandler.instance()
+                .bus()
+                .register(new UpdateNotificationHandler());
+        }
     }
 
     @Override
@@ -142,6 +150,7 @@ public class OmoshiroiKamo extends ModBase {
         StructureCompat.postInit();
         if (MinecraftHelpers.isClientSide()) {
             TextureLoader.loadFromConfig(LibMisc.MOD_ID, LibMisc.MOD_NAME + " Runtime Textures", OmoshiroiKamo.class);
+            UpdateChecker.checkUpdates();
         }
     }
 

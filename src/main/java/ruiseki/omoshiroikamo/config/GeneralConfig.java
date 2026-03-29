@@ -18,6 +18,9 @@ public class GeneralConfig {
     @Config.DefaultBoolean(false)
     public static boolean enableDebug;
 
+    @Config.DefaultBoolean(true)
+    public static boolean enableUpdateNotification;
+
     public static void registerConfig() throws ConfigException {
         ConfigurationManager.registerConfig(GeneralConfig.class);
         ItemConfigs.registerConfig();
