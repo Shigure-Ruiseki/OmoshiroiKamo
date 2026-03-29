@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedVoidUpgradeWrapper;
 
@@ -29,7 +30,7 @@ public class ItemAdvancedVoidUpgrade extends ItemUpgrade<AdvancedVoidUpgradeWrap
     }
 
     @Override
-    public AdvancedVoidUpgradeWrapper createWrapper(ItemStack stack) {
-        return new AdvancedVoidUpgradeWrapper(stack);
+    public AdvancedVoidUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper wrapper) {
+        return new AdvancedVoidUpgradeWrapper(stack, wrapper);
     }
 }

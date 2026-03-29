@@ -7,6 +7,4 @@ public interface IStorageUpgrade {
     String STORAGE_TAG = "Storage";
 
     UpgradeItemStackHandler getStorage();
-
-    void setStorage(UpgradeItemStackHandler handler);
 }

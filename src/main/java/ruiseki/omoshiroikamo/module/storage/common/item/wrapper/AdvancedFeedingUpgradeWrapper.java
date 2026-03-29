@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
@@ -14,8 +15,8 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     private static final String HUNGER_FEEDING_STRATEGY_TAG = "HungerFeedingStrategy";
     private static final String HURT_FEEDING_STRATEGY_TAG = "HurtFeedingStrategy";
 
-    public AdvancedFeedingUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
+    public AdvancedFeedingUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
         handler = new UpgradeItemStackHandler(16) {
 
             @Override
@@ -25,10 +26,13 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
 
             @Override
             protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
                 NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
             }
         };
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        if (handlerTag != null) handler.deserializeNBT(handlerTag);
     }
 
     @Override
@@ -71,9 +75,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     }
 
     public void setHungerFeedingStrategy(FeedingStrategy.Hunger strategy) {
-        if (strategy == null) {
-            strategy = FeedingStrategy.Hunger.FULL;
-        }
+        if (strategy == null) strategy = FeedingStrategy.Hunger.FULL;
         ItemNBTHelpers.setInt(upgrade, HUNGER_FEEDING_STRATEGY_TAG, strategy.ordinal());
     }
 
@@ -84,9 +86,7 @@ public class AdvancedFeedingUpgradeWrapper extends AdvancedUpgradeWrapper implem
     }
 
     public void setHealthFeedingStrategy(FeedingStrategy.HEALTH strategy) {
-        if (strategy == null) {
-            strategy = FeedingStrategy.HEALTH.ALWAYS;
-        }
+        if (strategy == null) strategy = FeedingStrategy.HEALTH.ALWAYS;
         ItemNBTHelpers.setInt(upgrade, HURT_FEEDING_STRATEGY_TAG, strategy.ordinal());
     }
 

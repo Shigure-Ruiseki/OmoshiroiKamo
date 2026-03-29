@@ -25,7 +25,6 @@ import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.helper.ItemStackHelpers;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
-import ruiseki.omoshiroikamo.core.persist.nbt.INBTSerializable;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackHandler;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
@@ -34,11 +33,12 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFeedingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IMagnetUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IPickupUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.ITickable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 
-public class StorageWrapper implements IStorageWrapper, INBTSerializable {
+public class StorageWrapper implements IStorageWrapper {
 
     public final StorageItemStackHandler storageItemStackHandler;
     public final UpgradeItemStackHandler upgradeItemStackHandler;
@@ -64,6 +64,8 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
     public static final String MAIN_COLOR = "MainColor";
     public static final String ACCENT_COLOR = "AccentColor";
 
+    private final Map<Integer, UpgradeWrapperBase> wrapperCache = new HashMap<>();
+
     public StorageWrapper() {
         this(120, 7);
     }
@@ -80,8 +82,13 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
 
         this.storageItemStackHandler = new StorageItemStackHandler(storageSlots, this);
         this.upgradeItemStackHandler = new UpgradeItemStackHandler(upgradeSlots);
+        upgradeItemStackHandler.setOnSlotChanged((slot, stack) -> {
+            rebuildWrapperCache();
+        });
+
     }
 
+    @Override
     public String getDisplayName() {
         if (hasCustomInventoryName()) {
             return this.customName;
@@ -104,6 +111,12 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         return storageItemStackHandler.prioritizedInsertion(slot, stack, simulate);
     }
 
+    @Override
+    public @Nullable ItemStack extractItem(int slot, int amount, boolean simulate) {
+        return storageItemStackHandler.extractItem(slot, amount, simulate);
+    }
+
+    @Override
     public @Nullable ItemStack insertItem(@Nullable ItemStack stack, boolean simulate) {
         if (stack == null || stack.stackSize <= 0) return null;
 
@@ -152,10 +165,6 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
     }
 
     @Override
-    public @Nullable ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return storageItemStackHandler.extractItem(slot, amount, simulate);
-    }
-
     public ItemStack extractItem(ItemStack wanted, int amount, boolean simulate) {
         if (wanted == null || amount <= 0) return null;
 
@@ -249,6 +258,14 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         this.accentColor = accentColor;
     }
 
+    public void tick() {
+        for (UpgradeWrapperBase wrapper : new ArrayList<>(wrapperCache.values())) {
+            if (wrapper instanceof ITickable tickable) {
+                tickable.tick();
+            }
+        }
+    }
+
     // ---------- UPGRADE ----------
     public int getTotalStackMultiplier() {
         List<ItemStack> stacks = upgradeItemStackHandler.getStacks();
@@ -324,9 +341,11 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
     }
 
     public boolean feed(EntityPlayer player, IItemHandler handler) {
-        for (IFeedingUpgrade upgrade : gatherCapabilityUpgrades(IFeedingUpgrade.class).values()) {
-            if (upgrade.feed(player, handler)) {
-                return true;
+        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
+            if (wrapper instanceof IFeedingUpgrade upgrade) {
+                if (upgrade.feed(player, handler)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -338,68 +357,65 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, aabb);
         List<EntityXPOrb> xps = world.getEntitiesWithinAABB(EntityXPOrb.class, aabb);
 
-        for (IMagnetUpgrade upgrade : gatherCapabilityUpgrades(IMagnetUpgrade.class).values()) {
-            if (upgrade.isCollectItem()) {
-                for (EntityItem item : items) {
-                    if (upgrade.canCollectItem(item.getEntityItem())) {
-                        result.add(item);
+        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
+            if (wrapper instanceof IMagnetUpgrade upgrade) {
+                if (upgrade.isCollectItem()) {
+                    for (EntityItem item : items) {
+                        if (upgrade.canCollectItem(item.getEntityItem())) {
+                            result.add(item);
+                        }
                     }
                 }
-            }
-            if (upgrade.isCollectExp()) {
-                result.addAll(xps);
+                if (upgrade.isCollectExp()) {
+                    result.addAll(xps);
+                }
             }
         }
-
         return new ArrayList<>(result);
     }
 
     public boolean canInsert(ItemStack stack) {
-        Map<Integer, IFilterUpgrade> upgrades = gatherCapabilityUpgrades(IFilterUpgrade.class);
-
-        if (upgrades.isEmpty()) {
-            return true;
-        }
-
-        for (IFilterUpgrade upgrade : upgrades.values()) {
-            if (upgrade.canInsert(stack)) {
-                return true;
+        if (wrapperCache.isEmpty()) return true;
+        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
+            if (wrapper instanceof IFilterUpgrade upgrade) {
+                if (upgrade.canInsert(stack)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public boolean canExtract(ItemStack stack) {
-        Map<Integer, IFilterUpgrade> upgrades = gatherCapabilityUpgrades(IFilterUpgrade.class);
-
-        if (upgrades.isEmpty()) {
-            return true;
-        }
-
-        for (IFilterUpgrade upgrade : upgrades.values()) {
-            if (upgrade.canExtract(stack)) {
-                return true;
+        if (wrapperCache.isEmpty()) return true;
+        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
+            if (wrapper instanceof IFilterUpgrade upgrade) {
+                if (upgrade.canExtract(stack)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public boolean canPickupItem(ItemStack stack) {
-
-        for (IPickupUpgrade upgrade : gatherCapabilityUpgrades(IPickupUpgrade.class).values()) {
-            if (upgrade.canPickup(stack)) {
-                return true;
+        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
+            if (wrapper instanceof IPickupUpgrade upgrade) {
+                if (upgrade.canPickup(stack)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public boolean canVoid(ItemStack newStack, IVoidUpgrade.VoidType type, IVoidUpgrade.VoidInput input) {
-
-        for (IVoidUpgrade upgrade : gatherCapabilityUpgrades(IVoidUpgrade.class).values()) {
-            if (upgrade.canVoid(newStack) && upgrade.getVoidType() == type
-                && (upgrade.getVoidInput() == input || input == IVoidUpgrade.VoidInput.AUTOMATION)) {
-                return true;
+        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
+            if (wrapper instanceof IVoidUpgrade upgrade) {
+                if (upgrade.canVoid(newStack) && upgrade.getVoidType() == type
+                    && (upgrade.getVoidInput() == input || input == IVoidUpgrade.VoidInput.AUTOMATION)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -514,23 +530,43 @@ public class StorageWrapper implements IStorageWrapper, INBTSerializable {
         } else {
             customName = tag.getString(CUSTOM_NAME_TAG);
         }
+
+        rebuildWrapperCache();
     }
 
     public <T> Map<Integer, T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
         Map<Integer, T> result = new HashMap<>();
 
-        for (int i = 0; i < upgradeSlots; i++) {
-            ItemStack stack = upgradeItemStackHandler.getStackInSlot(i);
+        for (int slotIndex = 0; slotIndex < upgradeSlots; slotIndex++) {
+            int finalSlotIndex = slotIndex;
+            ItemStack stack = upgradeItemStackHandler.getStackInSlot(slotIndex);
             if (stack == null) continue;
 
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this);
             if (wrapper == null) continue;
 
             if (capabilityClass.isAssignableFrom(wrapper.getClass())) {
-                result.put(i, capabilityClass.cast(wrapper));
+                result.put(slotIndex, capabilityClass.cast(wrapper));
             }
         }
 
         return result;
+    }
+
+    private void rebuildWrapperCache() {
+        wrapperCache.clear();
+
+        for (int slot = 0; slot < upgradeSlots; slot++) {
+            ItemStack stack = upgradeItemStackHandler.getStackInSlot(slot);
+            if (stack == null) continue;
+
+            int finalSlot = slot;
+
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this);
+
+            if (wrapper != null) {
+                wrapperCache.put(slot, wrapper);
+            }
+        }
     }
 }

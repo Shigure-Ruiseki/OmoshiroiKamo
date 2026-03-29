@@ -7,12 +7,13 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemOK;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IUpgradeWrapperFactory;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 
-public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUpgradeWrapperFactory<T> {
+public class ItemUpgrade<T extends UpgradeWrapperBase> extends ItemOK implements IUpgradeWrapperFactory<T> {
 
     public ItemUpgrade(String name) {
         super(name);
@@ -35,7 +36,7 @@ public class ItemUpgrade<T extends UpgradeWrapper> extends ItemOK implements IUp
 
     @SuppressWarnings("unchecked")
     @Override
-    public T createWrapper(ItemStack stack) {
-        return (T) new UpgradeWrapper(stack);
+    public T createWrapper(ItemStack stack, IStorageWrapper wrapper) {
+        return (T) new UpgradeWrapperBase(stack, wrapper);
     }
 }

@@ -382,7 +382,7 @@ public class StorageInventoryHelpers {
                 }
                 break;
 
-            case BACKPACK:
+            case STORAGE:
                 for (int i = 0; i < stackHandler.getSlots() - 1; i++) {
                     ItemStack original = stackHandler.getStackInSlot(i);
                     if (original == null || original.stackSize <= 0) continue;

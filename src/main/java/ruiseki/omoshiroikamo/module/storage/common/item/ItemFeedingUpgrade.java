@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FeedingUpgradeWrapper;
 
@@ -29,7 +30,7 @@ public class ItemFeedingUpgrade extends ItemUpgrade<FeedingUpgradeWrapper> {
     }
 
     @Override
-    public FeedingUpgradeWrapper createWrapper(ItemStack stack) {
-        return new FeedingUpgradeWrapper(stack);
+    public FeedingUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper wrapper) {
+        return new FeedingUpgradeWrapper(stack, wrapper);
     }
 }

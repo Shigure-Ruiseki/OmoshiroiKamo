@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeWrapper;
 
@@ -29,7 +30,7 @@ public class ItemCraftingUpgrade extends ItemUpgrade<CraftingUpgradeWrapper> {
     }
 
     @Override
-    public CraftingUpgradeWrapper createWrapper(ItemStack stack) {
-        return new CraftingUpgradeWrapper(stack);
+    public CraftingUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper wrapper) {
+        return new CraftingUpgradeWrapper(stack, wrapper);
     }
 }

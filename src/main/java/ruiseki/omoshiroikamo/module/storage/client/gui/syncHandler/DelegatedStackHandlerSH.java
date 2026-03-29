@@ -12,12 +12,14 @@ import com.cleanroommc.modularui.value.sync.SyncHandler;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.DelegatedItemHandler;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IBasicFilterable;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IStorageUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 
 public class DelegatedStackHandlerSH extends SyncHandler {
 
     public static final int UPDATE_FILTERABLE = 0;
+    public static final int UPDATE_STORAGE = 1;
 
     private final StorageWrapper wrapper;
     private final int slotIndex;
@@ -43,11 +45,21 @@ public class DelegatedStackHandlerSH extends SyncHandler {
     @Override
     public void readOnServer(int id, PacketBuffer buf) {
         ItemStack stack = wrapper.upgradeItemStackHandler.getStackInSlot(slotIndex);
-        if (id == UPDATE_FILTERABLE) {
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-            if (wrapper instanceof IBasicFilterable upgrade) {
-                setDelegatedStackHandler(upgrade::getFilterItems);
-            }
+        UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this.wrapper);
+
+        switch (id) {
+            case UPDATE_FILTERABLE:
+                if (wrapper instanceof IBasicFilterable upgrade) {
+                    setDelegatedStackHandler(upgrade::getFilterItems);
+                }
+                break;
+            case UPDATE_STORAGE:
+                if (wrapper instanceof IStorageUpgrade upgrade) {
+                    setDelegatedStackHandler(upgrade::getStorage);
+                }
+                break;
+
         }
+
     }
 }

@@ -16,6 +16,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.ItemFeedingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemFilterUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemMagnetUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemPickupUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.ItemSmeltingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemVoidUpgrade;
@@ -37,6 +38,7 @@ public enum StorageItems {
     ADVANCED_VOID_UPGRADE(new ItemAdvancedVoidUpgrade()),
     FILTER_UPGRADE(new ItemFilterUpgrade()),
     ADVANCED_FILTER_UPGRADE(new ItemAdvancedFilterUpgrade()),
+    SMELTING_UPGRADE(new ItemSmeltingUpgrade()),
 
     ;
     // spotless: on

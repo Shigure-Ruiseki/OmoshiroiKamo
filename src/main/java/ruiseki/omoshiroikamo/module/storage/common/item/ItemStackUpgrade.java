@@ -15,9 +15,9 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.config.backport.StorageConfig;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 
-public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapper> {
+public class ItemStackUpgrade extends ItemUpgrade<UpgradeWrapperBase> {
 
     @SideOnly(Side.CLIENT)
     protected IIcon tier1, tier2, tier3, tier4;

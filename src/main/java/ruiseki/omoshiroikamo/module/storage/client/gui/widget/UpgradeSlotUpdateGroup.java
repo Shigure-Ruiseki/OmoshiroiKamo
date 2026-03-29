@@ -11,12 +11,14 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCrafti
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.IndexedModularCraftingSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularFilterSlot;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedCraftingStackHandlerSH;
+import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedFloatSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.DelegatedStackHandlerSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.FilterSlotSH;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.FoodFilterSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IBasicFilterable;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.ISmeltingUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IStorageUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 
@@ -42,8 +44,15 @@ public class UpgradeSlotUpdateGroup {
     public DelegatedStackHandlerSH craftingStackHandler;
     public ModularSlot[] craftingMatrixSlots;
     public ModularCraftingSlot craftingOutputSlot;
-
     public CraftingSlotInfo craftingInfo;
+
+    // Smelting
+    public DelegatedStackHandlerSH smeltingStackHandler;
+    public ModularSlot[] smeltingSlots;
+
+    public DelegatedFloatSH burnProgress;
+
+    public DelegatedFloatSH progressHandler;
 
     public UpgradeSlotUpdateGroup(StoragePanel panel, StorageWrapper wrapper, int slotIndex) {
         this.panel = panel;
@@ -107,6 +116,28 @@ public class UpgradeSlotUpdateGroup {
 
         // CRAFTING
         craftingUpgradeGroup();
+
+        // PROGRESS
+        this.progressHandler = new DelegatedFloatSH(wrapper, slotIndex);
+        syncManager.syncValue("progress_" + slotIndex, progressHandler);
+
+        // SMELTING
+        this.smeltingStackHandler = new DelegatedStackHandlerSH(wrapper, slotIndex, 3);
+        syncManager.syncValue("smelting_delegation_" + slotIndex, smeltingStackHandler);
+
+        this.smeltingSlots = new ModularSlot[3];
+        for (int i = 0; i < 3; i++) {
+            ModularSlot slot = new ModularSlot(smeltingStackHandler.delegatedStackHandler, i);
+            slot.slotGroup("smeltings_" + slotIndex);
+            syncManager.syncValue("smelting_" + slotIndex, i, new ItemSlotSH(slot));
+
+            smeltingSlots[i] = slot;
+        }
+
+        syncManager.registerSlotGroup(new SlotGroup("smeltings_" + slotIndex, 3, false));
+
+        this.burnProgress = new DelegatedFloatSH(wrapper, slotIndex);
+        syncManager.syncValue("burn_progress_" + slotIndex, burnProgress);
     }
 
     public void updateFilterDelegate(IBasicFilterable wrapper) {
@@ -122,6 +153,15 @@ public class UpgradeSlotUpdateGroup {
     public void updateCraftingDelegate(IStorageUpgrade wrapper) {
         craftingStackHandler.setDelegatedStackHandler(wrapper::getStorage);
         craftingStackHandler.syncToServer(DelegatedCraftingStackHandlerSH.UPDATE_CRAFTING);
+    }
+
+    public void updateSmeltingDelegate(ISmeltingUpgrade wrapper) {
+        smeltingStackHandler.setDelegatedStackHandler(wrapper::getStorage);
+        smeltingStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_STORAGE);
+        progressHandler.setDelegatedSupplier(() -> wrapper::getProgress);
+        progressHandler.syncToServer(DelegatedFloatSH.UPDATE_PROGRESS);
+        burnProgress.setDelegatedSupplier(() -> wrapper::getBurnProgress);
+        burnProgress.syncToServer(DelegatedFloatSH.UPDATE_BURN);
     }
 
     private void craftingUpgradeGroup() {

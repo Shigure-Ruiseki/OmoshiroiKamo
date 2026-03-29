@@ -23,7 +23,7 @@ import lombok.Setter;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IToggleable;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 
@@ -130,12 +130,9 @@ public class UpgradeSlotGroupWidget extends ParentWidget<UpgradeSlotGroupWidget>
 
         public IToggleable getWrapper() {
             ItemStack stack = panel.wrapper.upgradeItemStackHandler.getStackInSlot(slotIndex);
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-            if (wrapper instanceof IToggleable toggleableWrapper) {
-                return toggleableWrapper;
-            } else {
-                return null;
-            }
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, panel.wrapper);
+            if (wrapper instanceof IToggleable toggleableWrapper) return toggleableWrapper;
+            return null;
         }
 
         @Override

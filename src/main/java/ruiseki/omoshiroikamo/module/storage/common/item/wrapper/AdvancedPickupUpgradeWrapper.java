@@ -2,10 +2,12 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
+
 public class AdvancedPickupUpgradeWrapper extends AdvancedUpgradeWrapper implements IPickupUpgrade {
 
-    public AdvancedPickupUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
+    public AdvancedPickupUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.network.NetworkUtils;
 
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.module.storage.client.gui.syncHandler.UpgradeSlotSH;
@@ -56,12 +57,8 @@ public class AdvancedVoidUpgradeWidget extends AdvancedExpandedTabWidget<Advance
         if (this.filterWidget.getSlotSyncHandler() != null) {
             this.filterWidget.getSyncHandler()
                 .syncToServer(UpgradeSlotSH.UPDATE_VOID, buf -> {
-                    buf.writeInt(
-                        wrapper.getVoidType()
-                            .ordinal());
-                    buf.writeInt(
-                        wrapper.getVoidInput()
-                            .ordinal());
+                    NetworkUtils.writeEnumValue(buf, wrapper.getVoidType());
+                    NetworkUtils.writeEnumValue(buf, wrapper.getVoidInput());
                 });
         }
     }

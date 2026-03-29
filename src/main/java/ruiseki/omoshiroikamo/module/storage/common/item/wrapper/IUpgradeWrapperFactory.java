@@ -2,7 +2,9 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-public interface IUpgradeWrapperFactory<W extends UpgradeWrapper> {
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 
-    W createWrapper(ItemStack stack);
+public interface IUpgradeWrapperFactory<W extends UpgradeWrapperBase> {
+
+    W createWrapper(ItemStack stack, IStorageWrapper wrapper);
 }

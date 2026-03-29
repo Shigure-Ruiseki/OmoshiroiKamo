@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FilterUpgradeWrapper;
 
@@ -29,7 +30,7 @@ public class ItemFilterUpgrade extends ItemUpgrade<FilterUpgradeWrapper> {
     }
 
     @Override
-    public FilterUpgradeWrapper createWrapper(ItemStack stack) {
-        return new FilterUpgradeWrapper(stack);
+    public FilterUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper wrapper) {
+        return new FilterUpgradeWrapper(stack, wrapper);
     }
 }

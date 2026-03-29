@@ -32,6 +32,7 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import ruiseki.omoshiroikamo.api.enums.SortType;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
 import ruiseki.omoshiroikamo.core.client.gui.widget.TileWidget;
+import ruiseki.omoshiroikamo.core.item.ItemUtils;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageContainer;
 import ruiseki.omoshiroikamo.module.storage.client.gui.container.StorageGuiContainer;
@@ -55,6 +56,7 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.widget.FilterUpgradeWidge
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.MagnetUpgradeWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.SettingTabWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.ShiftButtonWidget;
+import ruiseki.omoshiroikamo.module.storage.client.gui.widget.SmeltingUpgradeWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.StorageList;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.StorageSearchBarWidget;
 import ruiseki.omoshiroikamo.module.storage.client.gui.widget.TabWidget;
@@ -74,8 +76,10 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeW
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FilterUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IToggleable;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.MagnetUpgradeWrapper;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.SmeltingUpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.VoidUpgradeWrapper;
 
@@ -113,8 +117,9 @@ public class StoragePanel extends ModularPanel {
     public final List<TabWidget> tabWidgets;
     public final List<ItemSlot> upgradeSlotWidgets = new ArrayList<>();
     final UpgradeSlotGroupWidget upgradeSlotGroupWidget;
-    private final UpgradeSlotSH[] upgradeSlotSyncHandlers;
+    public final UpgradeSlotSH[] upgradeSlotSyncHandlers;
     private final UpgradeSlotUpdateGroup[] upgradeSlotGroups;
+    private final ItemStack[] lastUpgradeStacks;
 
     private StorageSearchBarWidget searchBarWidget;
 
@@ -160,15 +165,25 @@ public class StoragePanel extends ModularPanel {
         this.upgradeSlotGroupWidget = new UpgradeSlotGroupWidget(this, this.wrapper.upgradeSlots);
         this.upgradeSlotSyncHandlers = new UpgradeSlotSH[this.wrapper.upgradeSlots];
         this.upgradeSlotGroups = new UpgradeSlotUpdateGroup[this.wrapper.upgradeSlots];
+        this.lastUpgradeStacks = new ItemStack[this.wrapper.upgradeSlots];
         for (int i = 0; i < this.wrapper.upgradeSlots; i++) {
+            int slotIndex = i;
             ModularUpgradeSlot slot = new ModularUpgradeSlot(this.wrapper, i, this);
             slot.slotGroup("upgrade_inventory");
             UpgradeSlotSH syncHandler = new UpgradeSlotSH(slot, this.wrapper, this);
-            slot.changeListener((lastStack, currentStack, isClient, init) -> {
-                if (isClient) {
-                    updateUpgradeWidgets();
-                }
+            slot.changeListener((stack, onlyAmountChanged, client, init) -> {
+                if (!client) return;
+                ItemStack last = lastUpgradeStacks[slotIndex];
+
+                boolean itemChanged = !ItemUtils.areStacksEqual(last, stack, true);
+                boolean tabChanged  = isTabStateDifferent(last, stack);
+
+                if (!itemChanged && !tabChanged) return;
+                lastUpgradeStacks[slotIndex] = stack == null ? null : stack.copy();
+
+                updateUpgradeWidgets();
             });
+
             this.syncManager.syncValue("upgrades", i, syncHandler);
             this.upgradeSlotSyncHandlers[i] = syncHandler;
             this.upgradeSlotGroups[i] = new UpgradeSlotUpdateGroup(this, this.wrapper, i);
@@ -424,19 +439,17 @@ public class StoragePanel extends ModularPanel {
 
         for (int slotIndex = 0; slotIndex < upgradeSlotWidgets.size(); slotIndex++) {
             ItemSlot slotWidget = upgradeSlotWidgets.get(slotIndex);
-            ItemStack upgrade = slotWidget.getSlot()
+            ItemStack stack = slotWidget.getSlot()
                 .getStack();
-            if (!(upgrade != null && upgrade.getItem() instanceof ItemUpgrade<?>item)) {
+            if (!(stack != null && stack.getItem() instanceof ItemUpgrade<?>item)) {
                 continue;
             }
             if (!item.hasTab()) {
                 continue;
             }
 
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(upgrade);
-            if (wrapper == null) {
-                continue;
-            }
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this.wrapper);
+            if (wrapper == null) continue;
 
             if (wrapper.isTabOpened()) {
                 if (openedTabIndex != null) {
@@ -464,8 +477,7 @@ public class StoragePanel extends ModularPanel {
 
             TabWidget tabWidget = tabWidgets.get(tabIndex);
             UpgradeSlotUpdateGroup upgradeSlotGroup = upgradeSlotGroups[slotIndex];
-
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this.wrapper);
             if (wrapper == null) {
                 continue;
             }
@@ -486,6 +498,12 @@ public class StoragePanel extends ModularPanel {
             if (wrapper instanceof CraftingUpgradeWrapper upgrade) {
                 upgradeSlotGroup.updateCraftingDelegate(upgrade);
                 tabWidget.setExpandedWidget(new CraftingUpgradeWidget(slotIndex, stack, upgrade, this));
+            }
+
+            // Smelting
+            else if (wrapper instanceof SmeltingUpgradeWrapper upgrade) {
+                upgradeSlotGroup.updateSmeltingDelegate(upgrade);
+                tabWidget.setExpandedWidget(new SmeltingUpgradeWidget(slotIndex, stack, upgrade, this));
             }
 
             // Feeding
@@ -611,16 +629,16 @@ public class StoragePanel extends ModularPanel {
 
     public void resetOpenedTabsIfNotKeep() {
         if (!wrapper.keepTab && !isResetOpenedTabs) {
-            for (int i = 0; i < upgradeSlotWidgets.size(); i++) {
-                ItemSlot slotWidget = upgradeSlotWidgets.get(i);
+            for (int slotIndex = 0; slotIndex < upgradeSlotWidgets.size(); slotIndex++) {
+                ItemSlot slotWidget = upgradeSlotWidgets.get(slotIndex);
                 ItemStack stack = slotWidget.getSlot()
                     .getStack();
                 if (stack == null || !(stack.getItem() instanceof ItemUpgrade<?>item) || !item.hasTab()) continue;
 
-                UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+                UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this.wrapper);
                 if (wrapper != null && wrapper.isTabOpened()) {
                     wrapper.setTabOpened(false);
-                    upgradeSlotSyncHandlers[i]
+                    upgradeSlotSyncHandlers[slotIndex]
                         .syncToServer(UpgradeSlotSH.UPDATE_UPGRADE_TAB_STATE, buf -> buf.writeBoolean(false));
                 }
             }
@@ -642,8 +660,7 @@ public class StoragePanel extends ModularPanel {
             if (!(item instanceof ItemUpgrade<?> && ((ItemUpgrade<?>) item).hasTab())) {
                 continue;
             }
-
-            UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this.wrapper);
             if (wrapper == null) continue;
 
             if (wrapper instanceof CraftingUpgradeWrapper && wrapper.isTabOpened()) {
@@ -655,6 +672,16 @@ public class StoragePanel extends ModularPanel {
 
     public CraftingSlotInfo getCraftingInfo(int slotIndex) {
         return upgradeSlotGroups[slotIndex].craftingInfo;
+    }
+
+    private boolean isTabStateDifferent(ItemStack a, ItemStack b) {
+        boolean aState = a != null && a.hasTagCompound() &&
+            a.getTagCompound().getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
+
+        boolean bState = b != null && b.hasTagCompound() &&
+            b.getTagCompound().getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
+
+        return aState != bState;
     }
 
     @Override

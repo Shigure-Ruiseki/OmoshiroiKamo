@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.network.NetworkUtils;
 
 import lombok.Getter;
 import ruiseki.omoshiroikamo.core.client.gui.OKGuiTextures;
@@ -68,12 +69,8 @@ public class AdvancedFeedingUpgradeWidget extends AdvancedExpandedTabWidget<Adva
         if (this.filterWidget.getSlotSyncHandler() != null) {
             this.filterWidget.getSyncHandler()
                 .syncToServer(UpgradeSlotSH.UPDATE_ADVANCED_FEEDING, writer -> {
-                    writer.writeInt(
-                        wrapper.getHungerFeedingStrategy()
-                            .ordinal());
-                    writer.writeInt(
-                        wrapper.getHealthFeedingStrategy()
-                            .ordinal());
+                    NetworkUtils.writeEnumValue(writer, wrapper.getHungerFeedingStrategy());
+                    NetworkUtils.writeEnumValue(writer, wrapper.getHealthFeedingStrategy());
                 });
         }
     }

@@ -20,7 +20,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IMagnetUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IToggleable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 import ruiseki.omoshiroikamo.module.storage.common.tileentity.StoragePanel;
 
@@ -98,34 +98,33 @@ public class UpgradeSlotSH extends ItemSlotSH {
         super.readOnClient(id, buf);
     }
 
-    private void updateTabState(PacketBuffer buf) {
+    private UpgradeWrapperBase getWrapper() {
         ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-        if (wrapper == null) {
-            return;
-        }
+        if (stack == null) return null;
+
+        return UpgradeWrapperFactory.createWrapper(stack, wrapper);
+    }
+
+    private void updateTabState(PacketBuffer buf) {
+        UpgradeWrapperBase wrapper = getWrapper();
+        if (wrapper == null) return;
         wrapper.setTabOpened(buf.readBoolean());
     }
 
     private void updateToggleable() {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
-        if (!(wrapper instanceof IToggleable toggleWrapper)) {
-            return;
-        }
+        UpgradeWrapperBase wrapper = getWrapper();
+        if (!(wrapper instanceof IToggleable toggleWrapper)) return;
         toggleWrapper.toggle();
     }
 
     private void updateBasicFilterable(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof IBasicFilterable upgradeWrapper)) return;
         upgradeWrapper.setFilterType(NetworkUtils.readEnumValue(buf, IBasicFilterable.FilterType.class));
     }
 
     private void updateAdvancedFilterable(PacketBuffer buf) throws IOException {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof IAdvancedFilterable upgradeWrapper)) return;
 
         // APPLY
@@ -143,8 +142,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
     }
 
     private void updateAdvanceFeedingUpgrade(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof AdvancedFeedingUpgradeWrapper upgradeWrapper)) return;
 
         upgradeWrapper.setHungerFeedingStrategy(
@@ -154,47 +152,41 @@ public class UpgradeSlotSH extends ItemSlotSH {
     }
 
     private void updateFilterUpgrade(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof IFilterUpgrade upgradeWrapper)) return;
         upgradeWrapper.setFilterWay(NetworkUtils.readEnumValue(buf, IFilterUpgrade.FilterWayType.class));
     }
 
     private void updateMagnetUpgrade(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof IMagnetUpgrade upgrade)) return;
         upgrade.setCollectItem(buf.readBoolean());
         upgrade.setCollectExp(buf.readBoolean());
     }
 
     private void updateCraftingUpgrade(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof ICraftingUpgrade upgradeWrapper)) return;
         upgradeWrapper.setCraftingDes(NetworkUtils.readEnumValue(buf, ICraftingUpgrade.CraftingDestination.class));
         upgradeWrapper.setUseBackpack(buf.readBoolean());
     }
 
     private void updateVoidUpgrade(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof IVoidUpgrade upgradeWrapper)) return;
         upgradeWrapper.setVoidType(NetworkUtils.readEnumValue(buf, IVoidUpgrade.VoidType.class));
         upgradeWrapper.setVoidInput(NetworkUtils.readEnumValue(buf, IVoidUpgrade.VoidInput.class));
     }
 
     public void updateRotated(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof ICraftingUpgrade upgradeWrapper)) return;
         ItemStackHandler stackHandler = upgradeWrapper.getStorage();
         StorageInventoryHelpers.rotated(stackHandler, buf.readBoolean());
     }
 
     public void updateGrid(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof ICraftingUpgrade upgradeWrapper)) return;
         ItemStackHandler stackHandler = upgradeWrapper.getStorage();
         if (buf.readBoolean()) {
@@ -205,8 +197,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
     }
 
     public void updateClear(PacketBuffer buf) {
-        ItemStack stack = getSlot().getStack();
-        UpgradeWrapper wrapper = UpgradeWrapperFactory.createWrapper(stack);
+        UpgradeWrapperBase wrapper = getWrapper();
         if (!(wrapper instanceof ICraftingUpgrade upgradeWrapper)) {
             return;
         }

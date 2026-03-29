@@ -2,16 +2,17 @@ package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
 import net.minecraft.item.ItemStack;
 
-import lombok.Getter;
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 
-public class UpgradeWrapper implements IUpgrade {
+public class UpgradeWrapperBase implements IUpgradeWrapper {
 
-    @Getter
     protected final ItemStack upgrade;
+    protected final IStorageWrapper storage;
 
-    public UpgradeWrapper(ItemStack upgrade) {
+    public UpgradeWrapperBase(ItemStack upgrade, IStorageWrapper storage) {
         this.upgrade = upgrade;
+        this.storage = storage;
     }
 
     @Override
@@ -28,5 +29,4 @@ public class UpgradeWrapper implements IUpgrade {
     public String getSettingLangKey() {
         return "";
     }
-
 }

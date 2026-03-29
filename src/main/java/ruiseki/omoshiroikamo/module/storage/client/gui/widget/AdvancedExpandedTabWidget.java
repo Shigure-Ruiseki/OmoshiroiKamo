@@ -6,9 +6,9 @@ import com.cleanroommc.modularui.widgets.layout.Column;
 import com.cleanroommc.modularui.widgets.layout.Row;
 
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IAdvancedFilterable;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 
-public class AdvancedExpandedTabWidget<T extends UpgradeWrapper & IAdvancedFilterable>
+public class AdvancedExpandedTabWidget<T extends UpgradeWrapperBase & IAdvancedFilterable>
     extends ExpandedUpgradeTabWidget<T> {
 
     protected final T wrapper;

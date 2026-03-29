@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.Interactable;
+import com.cleanroommc.modularui.network.NetworkUtils;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.layout.Column;
@@ -166,9 +167,7 @@ public class CraftingUpgradeWidget extends ExpandedUpgradeTabWidget<CraftingUpgr
     public void updateWrapper() {
         this.getSyncHandler()
             .syncToServer(UpgradeSlotSH.UPDATE_CRAFTING, buf -> {
-                buf.writeInt(
-                    wrapper.getCraftingDes()
-                        .ordinal());
+                NetworkUtils.writeEnumValue(buf, wrapper.getCraftingDes());
                 buf.writeBoolean(wrapper.isUseBackpack());
             });
     }

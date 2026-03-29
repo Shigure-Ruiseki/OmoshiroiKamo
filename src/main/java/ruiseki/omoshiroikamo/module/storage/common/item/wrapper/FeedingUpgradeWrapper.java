@@ -6,13 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 
+import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
 public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedingUpgrade {
 
-    public FeedingUpgradeWrapper(ItemStack upgrade) {
-        super(upgrade);
+    public FeedingUpgradeWrapper(ItemStack upgrade, IStorageWrapper storage) {
+        super(upgrade, storage);
         handler = new UpgradeItemStackHandler(9) {
 
             @Override
@@ -22,10 +23,13 @@ public class FeedingUpgradeWrapper extends BasicUpgradeWrapper implements IFeedi
 
             @Override
             protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
                 NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
                 tag.setTag(IBasicFilterable.FILTER_ITEMS_TAG, this.serializeNBT());
             }
         };
+        NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, FILTER_ITEMS_TAG, false);
+        if (handlerTag != null) handler.deserializeNBT(handlerTag);
     }
 
     @Override

@@ -9,14 +9,14 @@ import ruiseki.omoshiroikamo.api.enums.ModObject;
 import ruiseki.omoshiroikamo.core.helper.LangHelpers;
 import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.lib.LibResources;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedMagnetUpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.SmeltingUpgradeWrapper;
 
-public class ItemAdvancedMagnetUpgrade extends ItemUpgrade<AdvancedMagnetUpgradeWrapper> {
+public class ItemSmeltingUpgrade extends ItemUpgrade<SmeltingUpgradeWrapper> {
 
-    public ItemAdvancedMagnetUpgrade() {
-        super(ModObject.STORAGE_ADVANCED_MAGNET_UPGRADE.name);
+    public ItemSmeltingUpgrade() {
+        super(ModObject.STORAGE_SMELTING_UPGRADE.name);
         setMaxStackSize(1);
-        setTextureName("storage/advanced_magnet_upgrade");
+        setTextureName("storage/smelting_upgrade");
     }
 
     @Override
@@ -26,11 +26,11 @@ public class ItemAdvancedMagnetUpgrade extends ItemUpgrade<AdvancedMagnetUpgrade
 
     @Override
     public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag) {
-        list.add(LangHelpers.localize(LibResources.TOOLTIP + "storage.advanced_magnet_upgrade"));
+        list.add(LangHelpers.localize(LibResources.TOOLTIP + "storage.smelting_upgrade"));
     }
 
     @Override
-    public AdvancedMagnetUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper wrapper) {
-        return new AdvancedMagnetUpgradeWrapper(stack, wrapper);
+    public SmeltingUpgradeWrapper createWrapper(ItemStack stack, IStorageWrapper wrapper) {
+        return new SmeltingUpgradeWrapper(stack, wrapper);
     }
 }

@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
-public interface IUpgrade {
+public interface IUpgradeWrapper {
 
     String TAB_STATE_TAG = "TabState";
 

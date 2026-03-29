@@ -48,6 +48,7 @@ public class TEStorage extends TileEntityOK
     @Override
     protected void doUpdate() {
         super.doUpdate();
+        wrapper.tick();
     }
 
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
@@ -207,4 +208,5 @@ public class TEStorage extends TileEntityOK
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return true;
     }
+
 }

@@ -141,6 +141,7 @@ public enum ModObject {
     STORAGE_ADVANCED_FILTER_UPGRADE("storage_advanced_filter_upgrade"),
     STORAGE_VOID_UPGRADE("storage_void_upgrade"),
     STORAGE_ADVANCED_VOID_UPGRADE("storage_advanced_void_upgrade"),
+    STORAGE_SMELTING_UPGRADE("storage_smelting_upgrade"),
 
     // Chickens
     ROOST("roost"),

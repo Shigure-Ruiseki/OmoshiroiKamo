@@ -35,7 +35,7 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.slot.ModularStorageSlot;
 import ruiseki.omoshiroikamo.module.storage.common.handler.StorageWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
 
 public class StorageContainer extends ModularContainer {
@@ -145,7 +145,8 @@ public class StorageContainer extends ModularContainer {
                         if (slot instanceof IndexedModularCraftingMatrixSlot matrixSlot) {
                             ItemStack stack = wrapper.upgradeItemStackHandler
                                 .getStackInSlot(matrixSlot.getUpgradeSlotIndex());
-                            UpgradeWrapper upgradeWrapper = UpgradeWrapperFactory.createWrapper(stack);
+                            UpgradeWrapperBase upgradeWrapper = UpgradeWrapperFactory
+                                .createWrapper(stack, this.wrapper);
                             if (upgradeWrapper == null) continue;
                             if (!upgradeWrapper.isTabOpened()) continue;
                         }
@@ -432,7 +433,7 @@ public class StorageContainer extends ModularContainer {
             if (inventoryCrafting == null) {
                 transferItemFiltered(fromSlot, fromStack, slot -> PLAYER_INV.equals(slot.getSlotGroupName()));
             } else
-                if (inventoryCrafting.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.BACKPACK) {
+                if (inventoryCrafting.getCraftingDestination() == CraftingUpgradeWrapper.CraftingDestination.STORAGE) {
 
                     transferItemFiltered(
                         fromSlot,
