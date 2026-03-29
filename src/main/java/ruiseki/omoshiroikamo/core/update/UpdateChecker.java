@@ -18,7 +18,7 @@ import ruiseki.omoshiroikamo.core.common.util.VersionComparator;
 import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
- * Checks for updates from Modrinth API.
+ * Checks for updates from CurseForge API.
  */
 public class UpdateChecker {
 
