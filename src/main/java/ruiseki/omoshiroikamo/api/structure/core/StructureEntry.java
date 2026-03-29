@@ -150,7 +150,7 @@ public class StructureEntry implements IStructureEntry {
 
     @Override
     public double evaluateSpeedMultiplier(ConditionContext context) {
-        return speedMultiplierExpr.evaluate(context);
+        return speedMultiplierExpr.evaluateDouble(context);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class StructureEntry implements IStructureEntry {
 
     @Override
     public double evaluateEnergyMultiplier(ConditionContext context) {
-        return energyMultiplierExpr.evaluate(context);
+        return energyMultiplierExpr.evaluateDouble(context);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class StructureEntry implements IStructureEntry {
 
     @Override
     public int evaluateBatchMin(ConditionContext context) {
-        return (int) Math.round(batchMinExpr.evaluate(context));
+        return (int) Math.round(batchMinExpr.evaluateDouble(context));
     }
 
     @Override
@@ -180,7 +180,7 @@ public class StructureEntry implements IStructureEntry {
 
     @Override
     public int evaluateBatchMax(ConditionContext context) {
-        return (int) Math.round(batchMaxExpr.evaluate(context));
+        return (int) Math.round(batchMaxExpr.evaluateDouble(context));
     }
 
     @Override

@@ -20,7 +20,8 @@ public class ExpressionParserTest {
 
     private double eval(String expr) {
         return ExpressionParser.parseExpression(expr)
-            .evaluate(emptyContext);
+            .evaluate(emptyContext)
+            .asDouble();
     }
 
     private boolean check(String cond) {

@@ -84,7 +84,7 @@ public class ManaInput extends AbstractModularRecipeInput {
         if (json.has("mana")) {
             this.amountExpr = ExpressionsParser.parse(json.get("mana"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amount = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluateDouble(null);
             }
         }
     }

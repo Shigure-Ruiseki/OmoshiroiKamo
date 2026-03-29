@@ -320,7 +320,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        return amountExpr != null ? (long) amountExpr.evaluateDouble(context) : amount;
     }
 
     @Override
@@ -346,7 +346,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         if (json.has("amount")) {
             this.amountExpr = ExpressionsParser.parse(json.get("amount"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amount = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluateDouble(null);
             }
         } else {
             this.amount = 1;
@@ -503,7 +503,7 @@ public class BlockOutput extends AbstractRecipeOutput implements IModularRecipeO
         if (hasLegacy) {
             for (Map.Entry<String, IExpression> entry : dynamicNbt.entrySet()) {
                 double val = entry.getValue()
-                    .evaluate(condContext);
+                    .evaluateDouble(condContext);
                 nbtResult.setDouble(entry.getKey(), val);
             }
         }

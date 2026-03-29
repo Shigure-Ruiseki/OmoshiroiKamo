@@ -90,6 +90,16 @@ public interface IMachineState {
     long getStoredFluid(String name);
 
     /**
+     * Get the amount of a specific fluid in input tanks.
+     */
+    long getFluidInput(String name);
+
+    /**
+     * Get the remaining space for a specific fluid in output tanks.
+     */
+    long getFluidOutputSpace(String name);
+
+    /**
      * Get the current total mana stored in the machine.
      */
     long getStoredMana();

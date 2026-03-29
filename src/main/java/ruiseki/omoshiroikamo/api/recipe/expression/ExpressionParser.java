@@ -1,6 +1,7 @@
 package ruiseki.omoshiroikamo.api.recipe.expression;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.JsonObject;
@@ -55,16 +56,37 @@ public class ExpressionParser {
         return x;
     }
 
+    public IExpression parseExpression() {
+        Object res = parse();
+        if (res instanceof IExpression expression) return expression;
+        throw error("Expected numeric expression, got action or condition");
+    }
+
+    public IAction parseAction() {
+        Object res = parse();
+        if (res instanceof IAction action) return action;
+        if (res instanceof IExpression expression) {
+            return new IAction() {
+
+                @Override
+                public void execute(ConditionContext context) {
+                    expression.evaluate(context);
+                }
+            };
+        }
+        throw error("Expected action or expression");
+    }
+
     // 1. OR: x || y
     private Object parseLogicalOr() {
         Object x = parseLogicalAnd();
         while (eat('|')) {
             if (!eat('|')) throw error("Expected '||'");
             Object y = parseLogicalAnd();
-            if (x instanceof ICondition && y instanceof ICondition) {
+            if (x instanceof ICondition cx && y instanceof ICondition cy) {
                 List<ICondition> children = new ArrayList<>();
-                children.add((ICondition) x);
-                children.add((ICondition) y);
+                children.add(cx);
+                children.add(cy);
                 x = new OpOr(children);
             } else {
                 throw error("OR (||) requires condition operands");
@@ -79,10 +101,10 @@ public class ExpressionParser {
         while (eat('&')) {
             if (!eat('&')) throw error("Expected '&&'");
             Object y = parseComparison();
-            if (x instanceof ICondition && y instanceof ICondition) {
+            if (x instanceof ICondition cx && y instanceof ICondition cy) {
                 List<ICondition> children = new ArrayList<>();
-                children.add((ICondition) x);
-                children.add((ICondition) y);
+                children.add(cx);
+                children.add(cy);
                 x = new OpAnd(children);
             } else {
                 throw error("AND (&&) requires condition operands");
@@ -92,14 +114,13 @@ public class ExpressionParser {
     }
 
     private IExpression asExpression(Object obj) {
-        if (obj instanceof IExpression) return (IExpression) obj;
-        if (obj instanceof ICondition) {
-            final ICondition cond = (ICondition) obj;
+        if (obj instanceof IExpression expr) return expr;
+        if (obj instanceof ICondition cond) {
             return new IExpression() {
 
                 @Override
-                public double evaluate(ConditionContext context) {
-                    return cond.isMet(context) ? 1 : 0;
+                public EvaluationValue evaluate(ConditionContext context) {
+                    return cond.isMet(context) ? EvaluationValue.TRUE : EvaluationValue.FALSE;
                 }
 
                 @Override
@@ -112,14 +133,14 @@ public class ExpressionParser {
     }
 
     private ICondition asCondition(Object obj) {
-        if (obj instanceof ICondition) return (ICondition) obj;
-        if (obj instanceof IExpression) {
-            final IExpression expr = (IExpression) obj;
+        if (obj instanceof ICondition cond) return cond;
+        if (obj instanceof IExpression expr) {
             return new ICondition() {
 
                 @Override
                 public boolean isMet(ConditionContext context) {
-                    return expr.evaluate(context) != 0;
+                    return expr.evaluate(context)
+                        .asBoolean();
                 }
 
                 @Override
@@ -141,7 +162,7 @@ public class ExpressionParser {
 
     // 3. Comparison: x == y, x != y, ...
     private Object parseComparison() {
-        Object x = parseExpression();
+        Object x = parseAdditiveExpression();
         while (true) {
             String op = "";
             if (eat('=')) {
@@ -202,7 +223,7 @@ public class ExpressionParser {
             }
 
             if (!op.isEmpty()) {
-                Object y = parseExpression();
+                Object y = parseAdditiveExpression();
                 x = new ComparisonCondition(asExpression(x), asExpression(y), op);
             }
         }
@@ -214,18 +235,16 @@ public class ExpressionParser {
      */
     private Object parseAssignment(Object left, String operation) {
         // Parse right-hand side
-        Object right = parseExpression();
+        Object right = parseAdditiveExpression();
 
-        if (left instanceof NbtExpression) {
-            NbtExpression nbtExpr = (NbtExpression) left;
+        if (left instanceof NbtExpression nbtExpr) {
             String nbtKey = nbtExpr.getNbtKey();
             return new NBTAssignmentExpression(
                 nbtKey,
-                java.util.Arrays.asList(nbtKey.split("\\.")),
+                Arrays.asList(nbtKey.split("\\.")),
                 asExpression(right),
                 operation);
-        } else if (left instanceof DotNotationNBTExpression) {
-            DotNotationNBTExpression dotExpr = (DotNotationNBTExpression) left;
+        } else if (left instanceof DotNotationNBTExpression dotExpr) {
             String nbtKey = dotExpr.getFullPath();
             List<String> pathSegments = new ArrayList<>(dotExpr.getPathSegments());
             return new NBTAssignmentExpression(nbtKey, pathSegments, asExpression(right), operation);
@@ -235,7 +254,7 @@ public class ExpressionParser {
     }
 
     // expression = term ( ( "+" | "-" ) term )*
-    private Object parseExpression() {
+    private Object parseAdditiveExpression() {
         Object x = parseTerm();
         for (;;) {
             if (eat('+')) x = new ArithmeticExpression(asExpression(x), asExpression(parseTerm()), "+");
@@ -257,8 +276,7 @@ public class ExpressionParser {
 
     private Object parseFactor() {
         if (eat('+')) return parseFactor(); // unary plus
-        if (eat('-')) return new ArithmeticExpression(new ConstantExpression(0), asExpression(parseFactor()), "-"); // unary
-                                                                                                                    // minus
+        if (eat('-')) return new ArithmeticExpression(new ConstantExpression(0), asExpression(parseFactor()), "-");
         if (eat('!')) {
             return new OpNot(asCondition(parseFactor()));
         }
@@ -340,7 +358,9 @@ public class ExpressionParser {
                 }
                 pathSegments.add(segment.toString());
             }
-
+            if (pathSegments.isEmpty()) {
+                throw error("Expected identifier");
+            }
             String name = pathSegments.get(0);
 
             // Check if this is a function call
@@ -402,14 +422,13 @@ public class ExpressionParser {
 
     public static IExpression parseExpression(String input) {
         Object res = new ExpressionParser(input).parse();
-        if (res instanceof IExpression) return (IExpression) res;
-        if (res instanceof ICondition) {
-            final ICondition cond = (ICondition) res;
+        if (res instanceof IExpression expr) return expr;
+        if (res instanceof ICondition cond) {
             return new IExpression() {
 
                 @Override
-                public double evaluate(ConditionContext context) {
-                    return cond.isMet(context) ? 1 : 0;
+                public EvaluationValue evaluate(ConditionContext context) {
+                    return cond.isMet(context) ? EvaluationValue.TRUE : EvaluationValue.FALSE;
                 }
 
                 @Override
@@ -423,14 +442,14 @@ public class ExpressionParser {
 
     public static ICondition parseCondition(String input) {
         Object res = new ExpressionParser(input).parse();
-        if (res instanceof ICondition) return (ICondition) res;
-        if (res instanceof IExpression) {
-            final IExpression expr = (IExpression) res;
+        if (res instanceof ICondition cond) return cond;
+        if (res instanceof IExpression expr) {
             return new ICondition() {
 
                 @Override
                 public boolean isMet(ConditionContext context) {
-                    return expr.evaluate(context) != 0;
+                    return expr.evaluate(context)
+                        .asBoolean();
                 }
 
                 @Override

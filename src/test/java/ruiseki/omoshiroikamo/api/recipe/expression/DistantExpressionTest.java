@@ -44,26 +44,40 @@ public class DistantExpressionTest {
 
     @Test
     void testFacing() {
+        ConditionContext ctx1 = new ConditionContext(world, 10, 10, 10, recipeContext, 12345L);
         recipeContext.setFacing(ForgeDirection.SOUTH); // 3
         WorldPropertyExpression expr = new WorldPropertyExpression("facing");
-        assertEquals(3.0, expr.evaluate(context));
+        assertEquals(
+            3.0,
+            expr.evaluate(ctx1)
+                .asDouble());
 
+        ConditionContext ctx2 = new ConditionContext(world, 10, 10, 10, recipeContext, 12345L);
         recipeContext.setFacing(ForgeDirection.UP); // 1
-        assertEquals(1.0, expr.evaluate(context));
+        assertEquals(
+            1.0,
+            expr.evaluate(ctx2)
+                .asDouble());
     }
 
     @Test
     void testWorldSeed() {
         // WorldStub.getSeed() returns 0 by default, but let's check
         WorldPropertyExpression expr = new WorldPropertyExpression("world_seed");
-        assertEquals((double) world.getSeed(), expr.evaluate(context));
+        assertEquals(
+            (double) world.getSeed(),
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
     void testRandomSeed() {
         // Renamed from "seed"
         WorldPropertyExpression expr = new WorldPropertyExpression("random_seed");
-        assertEquals(12345.0, expr.evaluate(context));
+        assertEquals(
+            12345.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -75,12 +89,18 @@ public class DistantExpressionTest {
 
         // distance 1, all blocks (non-air) -> 3
         CountBlocksFunctionExpression all = new CountBlocksFunctionExpression(Arrays.asList(new ConstantExpression(1)));
-        assertEquals(3.0, all.evaluate(context));
+        assertEquals(
+            3.0,
+            all.evaluate(context)
+                .asDouble());
 
         // distance 1, only stone -> 2
         CountBlocksFunctionExpression stoneOnly = new CountBlocksFunctionExpression(
             Arrays.asList(new ConstantExpression(1), new StringLiteralExpression("minecraft:stone")));
-        assertEquals(2.0, stoneOnly.evaluate(context));
+        assertEquals(
+            2.0,
+            stoneOnly.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -90,11 +110,17 @@ public class DistantExpressionTest {
         ResourceFunctionExpression expr = new ResourceFunctionExpression(
             ResourceFunctionExpression.Type.ITEM,
             new StringLiteralExpression("minecraft:iron_ingot"));
-        assertEquals(100.0, expr.evaluate(context));
+        assertEquals(
+            100.0,
+            expr.evaluate(context)
+                .asDouble());
 
         // Machine property: item
         MachinePropertyExpression prop = new MachinePropertyExpression("item");
-        assertEquals(100.0, prop.evaluate(context));
+        assertEquals(
+            100.0,
+            prop.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -104,11 +130,17 @@ public class DistantExpressionTest {
         ResourceFunctionExpression expr = new ResourceFunctionExpression(
             ResourceFunctionExpression.Type.ITEM_F,
             new StringLiteralExpression("minecraft:iron_ingot"));
-        assertEquals(10.0, expr.evaluate(context));
+        assertEquals(
+            10.0,
+            expr.evaluate(context)
+                .asDouble());
 
         // Machine property: item_f
         MachinePropertyExpression prop = new MachinePropertyExpression("item_f");
-        assertEquals(10.0, prop.evaluate(context));
+        assertEquals(
+            10.0,
+            prop.evaluate(context)
+                .asDouble());
     }
 
     // --- Mocks ---
@@ -258,6 +290,16 @@ public class DistantExpressionTest {
 
         @Override
         public double getEnergyMultiplier() {
+            return 0;
+        }
+
+        @Override
+        public long getFluidInput(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getFluidOutputSpace(String name) {
             return 0;
         }
 

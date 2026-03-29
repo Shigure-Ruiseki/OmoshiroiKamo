@@ -62,7 +62,7 @@ public class RandomBlockOutputDecorator extends RecipeDecorator {
                 ConditionContext condContext = context.getConditionContext();
                 for (BlockOutputSelection selection : selections) {
                     // Evaluate selection count
-                    int selectCount = (int) countExpr.evaluate(condContext);
+                    int selectCount = (int) countExpr.evaluateDouble(condContext);
 
                     // Get all positions for this symbol
                     List<ChunkCoordinates> allPositions = context.getSymbolPositions(selection.symbol);

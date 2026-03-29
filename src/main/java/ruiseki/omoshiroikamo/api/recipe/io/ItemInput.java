@@ -95,7 +95,7 @@ public class ItemInput extends AbstractModularRecipeInput {
     @Override
     public long getRequiredAmount(ConditionContext context) {
         if (countExpr != null && context != null) {
-            return (long) countExpr.evaluate(context);
+            return (long) countExpr.evaluateDouble(context);
         }
         return required != null ? required.stackSize : count;
     }
@@ -199,7 +199,7 @@ public class ItemInput extends AbstractModularRecipeInput {
 
             int targetMeta = 32767;
             if (metaExpr != null && context != null) {
-                targetMeta = (int) metaExpr.evaluate(context);
+                targetMeta = (int) metaExpr.evaluateDouble(context);
             } else if (required.getItemDamage() != 32767) {
                 targetMeta = required.getItemDamage();
             }
@@ -232,7 +232,8 @@ public class ItemInput extends AbstractModularRecipeInput {
             ConditionContext ctx = context != null ? context : new ConditionContext(null, 0, 0, 0);
             for (IExpression expr : nbtExpressions) {
                 // For condition checking, evaluate as boolean (non-zero = true)
-                if (expr.evaluate(ctx) == 0) {
+                if (expr.evaluate(ctx)
+                    .isZero()) {
                     return false;
                 }
             }

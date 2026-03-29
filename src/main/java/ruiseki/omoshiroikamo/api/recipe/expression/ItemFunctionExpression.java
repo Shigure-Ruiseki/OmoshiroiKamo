@@ -26,23 +26,20 @@ public class ItemFunctionExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
+    public EvaluationValue evaluate(ConditionContext context) {
         if (context == null || context.getRecipeContext() == null
             || context.getRecipeContext()
                 .getMachineState() == null) {
-            return 0;
+            return EvaluationValue.ZERO;
         }
 
         IPortType.Direction direction = IPortType.Direction.BOTH;
         String filter = null;
 
-        // Parse arguments: ( [direction], [filter] )
-        // Direction is optional string: "input", "output", "both"
-        // Filter is optional string: "minecraft:iron_ingot" or "ore:ingotIron"
-
         for (IExpression arg : arguments) {
-            String val = arg.evaluateString(context);
-            if (val == null) continue;
+            String val = arg.evaluate(context)
+                .asString();
+            if (val == null || val.isEmpty()) continue;
 
             if (val.equalsIgnoreCase("input")) {
                 direction = IPortType.Direction.INPUT;
@@ -51,7 +48,6 @@ public class ItemFunctionExpression implements IExpression {
             } else if (val.equalsIgnoreCase("both")) {
                 direction = IPortType.Direction.BOTH;
             } else {
-                // Must be a filter
                 filter = val;
             }
         }
@@ -60,15 +56,21 @@ public class ItemFunctionExpression implements IExpression {
             .getMachineState();
         switch (type) {
             case COUNT:
-                return state.getItemCount(direction, filter);
+                return new EvaluationValue(state.getItemCount(direction, filter));
             case SPACE:
-                return state.getItemSpace(direction, filter);
+                return new EvaluationValue(state.getItemSpace(direction, filter));
             case SLOT_COUNT:
-                return state.getItemSlotCount(direction, false);
+                return new EvaluationValue((double) state.getItemSlotCount(direction, false));
             case SLOT_EMPTY:
-                return state.getItemSlotCount(direction, true);
+                return new EvaluationValue((double) state.getItemSlotCount(direction, true));
             default:
-                return 0;
+                return EvaluationValue.ZERO;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "item_" + type.name()
+            .toLowerCase() + "()";
     }
 }

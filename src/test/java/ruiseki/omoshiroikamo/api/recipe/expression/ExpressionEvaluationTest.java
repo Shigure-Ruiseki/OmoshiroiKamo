@@ -47,10 +47,18 @@ public class ExpressionEvaluationTest {
         ConditionContext context = new ConditionContext(null, 0, 0, 0);
 
         MapRangeExpression expr = new MapRangeExpression(new ConstantExpression(25), 0, 100, 0.0, 1.0, true);
-        assertEquals(0.25, expr.evaluate(context), 0.001);
+        assertEquals(
+            0.25,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
 
         expr = new MapRangeExpression(new ConstantExpression(75), 0, 100, 0.0, 1.0, true);
-        assertEquals(0.75, expr.evaluate(context), 0.001);
+        assertEquals(
+            0.75,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -59,13 +67,25 @@ public class ExpressionEvaluationTest {
         ConditionContext context = new ConditionContext(null, 0, 0, 0);
 
         MapRangeExpression expr = new MapRangeExpression(new ConstantExpression(150), 0, 100, 0.0, 1.0, true);
-        assertEquals(1.0, expr.evaluate(context), 0.001);
+        assertEquals(
+            1.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
 
         expr = new MapRangeExpression(new ConstantExpression(-50), 0, 100, 0.0, 1.0, true);
-        assertEquals(0.0, expr.evaluate(context), 0.001);
+        assertEquals(
+            0.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
 
         expr = new MapRangeExpression(new ConstantExpression(150), 0, 100, 0.0, 1.0, false);
-        assertEquals(1.5, expr.evaluate(context), 0.001);
+        assertEquals(
+            1.5,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     // ========================================
@@ -89,7 +109,11 @@ public class ExpressionEvaluationTest {
         ConditionContext context = new ConditionContext(wrappedWorld, 10, 64, 10);
         NbtExpression expr = new NbtExpression("TestKey", 0.0);
 
-        assertEquals(0.123, expr.evaluate(context), 0.001);
+        assertEquals(
+            0.123,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -100,6 +124,7 @@ public class ExpressionEvaluationTest {
             @Override
             public void writeToNBT(NBTTagCompound tag) {
                 // super.writeToNBT(tag);
+                tag.setString("StringVal", "3.1415");
             }
         };
 
@@ -108,7 +133,19 @@ public class ExpressionEvaluationTest {
         ConditionContext context = new ConditionContext(wrappedWorld, 10, 64, 10);
         NbtExpression expr = new NbtExpression("MissingKey", 0.99);
 
-        assertEquals(0.99, expr.evaluate(context), 0.001);
+        assertEquals(
+            0.99,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
+
+        // NBTTagStringのasDouble挙動確認
+        NbtExpression exprStr = new NbtExpression("StringVal", 0.0);
+        assertEquals(
+            3.1415,
+            exprStr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     private static class WorldStub extends World {

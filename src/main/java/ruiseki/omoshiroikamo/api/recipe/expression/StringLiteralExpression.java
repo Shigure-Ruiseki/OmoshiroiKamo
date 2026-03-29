@@ -6,7 +6,6 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 
 /**
  * Expression representing a string literal value.
- * Returns 0 when evaluated as a number (for compatibility).
  */
 public class StringLiteralExpression implements IExpression {
 
@@ -17,19 +16,10 @@ public class StringLiteralExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        // String literals evaluate to 0 for numeric contexts
-        return 0;
+    public EvaluationValue evaluate(ConditionContext context) {
+        return new EvaluationValue(value);
     }
 
-    @Override
-    public String evaluateString(ConditionContext context) {
-        return value;
-    }
-
-    /**
-     * Get the string value.
-     */
     public String getStringValue() {
         return value;
     }

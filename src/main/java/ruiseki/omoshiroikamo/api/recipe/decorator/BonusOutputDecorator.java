@@ -52,9 +52,8 @@ public class BonusOutputDecorator extends RecipeDecorator {
             IRecipeContext context = findRecipeContext(outputPorts);
             ConditionContext condContext = context != null ? context.getConditionContext() : null;
 
-            double finalChance = baseChanceExpr.evaluate(condContext);
-            // TODO: In the future, fetch modifier value from context or machine state using
-            // modifierKey
+            double finalChance = baseChanceExpr.evaluateDouble(condContext);
+            // TODO: Fetch modifier value from context or machine state using modifierKey
 
             if (rand.nextFloat() < finalChance) {
                 for (IRecipeOutput bonus : bonusOutputs) {

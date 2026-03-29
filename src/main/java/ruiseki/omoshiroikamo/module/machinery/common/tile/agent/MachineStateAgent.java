@@ -243,6 +243,31 @@ public class MachineStateAgent implements IMachineState {
     }
 
     @Override
+    public long getFluidInput(String name) {
+        return getStoredFluid(name);
+    }
+
+    @Override
+    public long getFluidOutputSpace(String name) {
+        if (name == null || name.isEmpty()) return 0;
+        long total = 0;
+        for (IModularPort port : controller.getPortManager()
+            .getOutputPorts(IPortType.Type.FLUID)) {
+            if (!(port instanceof IFluidHandler fluidPort)) continue;
+            FluidTankInfo[] tanks = fluidPort.getTankInfo(ForgeDirection.UNKNOWN);
+            if (tanks == null) continue;
+            for (FluidTankInfo tank : tanks) {
+                if (tank.fluid == null || tank.fluid.getFluid()
+                    .getName()
+                    .equals(name)) {
+                    total += Math.max(0, tank.capacity - (tank.fluid != null ? tank.fluid.amount : 0));
+                }
+            }
+        }
+        return total;
+    }
+
+    @Override
     public long getStoredMana() {
         return sumPortProperty(IPortType.Type.MANA, IManaPool.class, p -> (long) p.getCurrentMana());
     }

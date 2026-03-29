@@ -8,26 +8,25 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 public interface IExpression {
 
     /**
-     * Evaluate the expression and return a double value.
+     * Evaluate the expression and return an EvaluationValue.
      *
      * @param context The context (machine station, world, etc.)
-     * @return The calculated value.
+     * @return The calculated value wrapper.
      */
-    double evaluate(ConditionContext context);
+    EvaluationValue evaluate(ConditionContext context);
 
     /**
      * Evaluate without a context. For constant expressions, returns the value.
-     * For dynamic expressions that require context, returns 1.0 as a neutral default.
+     * For dynamic expressions that require context, returns VOID.
      */
-    default double evaluateSafe() {
-        return 1.0;
+    default EvaluationValue evaluateSafe() {
+        return EvaluationValue.VOID;
     }
 
     /**
-     * Evaluate the expression as a string.
-     * Useful for literal strings in function arguments.
+     * Helper to get double value directly.
      */
-    default String evaluateString(ConditionContext context) {
-        return null;
+    default double evaluateDouble(ConditionContext context) {
+        return evaluate(context).asDouble();
     }
 }

@@ -68,7 +68,7 @@ public abstract class AbstractModularRecipeOutput extends AbstractRecipeOutput i
      */
     protected long evaluateAmount(ConditionContext context) {
         if (amountExpr != null && context != null) {
-            double evaluated = amountExpr.evaluate(context);
+            double evaluated = amountExpr.evaluateDouble(context);
             return (long) Math.max(0, evaluated);
         }
         return amount;

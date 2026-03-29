@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -214,6 +215,31 @@ public class ItemInputDynamicTest {
         @Override
         public double getEnergyMultiplier() {
             return 1.0;
+        }
+
+        @Override
+        public long getFluidInput(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getFluidOutputSpace(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getItemCount(IPortType.Direction direction, String itemName) {
+            return 0;
+        }
+
+        @Override
+        public long getItemSpace(IPortType.Direction direction, String itemName) {
+            return 0;
+        }
+
+        @Override
+        public long getRecipeStartTick() {
+            return 0;
         }
     }
 

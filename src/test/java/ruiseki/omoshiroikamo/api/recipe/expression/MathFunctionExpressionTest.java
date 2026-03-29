@@ -21,27 +21,32 @@ public class MathFunctionExpressionTest {
         assertEquals(
             5.0,
             ExpressionParser.parseExpression("abs(-5)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             4.0,
             ExpressionParser.parseExpression("sqrt(16)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             2.0,
             ExpressionParser.parseExpression("floor(2.9)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             3.0,
             ExpressionParser.parseExpression("ceil(2.1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             3.0,
             ExpressionParser.parseExpression("round(2.5)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -53,27 +58,32 @@ public class MathFunctionExpressionTest {
         assertEquals(
             1.0,
             ExpressionParser.parseExpression("sin(pi / 2)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("sin(0)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             1.0,
             ExpressionParser.parseExpression("cos(0)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("cos(pi / 2)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             1.0,
             ExpressionParser.parseExpression("tan(pi / 4)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -84,12 +94,14 @@ public class MathFunctionExpressionTest {
         assertEquals(
             Math.PI / 2,
             ExpressionParser.parseExpression("rad(90)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             90.0,
             ExpressionParser.parseExpression("deg(pi / 2)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -100,12 +112,14 @@ public class MathFunctionExpressionTest {
         assertEquals(
             Math.PI,
             ExpressionParser.parseExpression("pi")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             Math.E,
             ExpressionParser.parseExpression("e")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -117,22 +131,26 @@ public class MathFunctionExpressionTest {
         assertEquals(
             8.0,
             ExpressionParser.parseExpression("pow(2, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             10.0,
             ExpressionParser.parseExpression("min(10, 20)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             20.0,
             ExpressionParser.parseExpression("max(10, 20)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             Math.PI / 4,
             ExpressionParser.parseExpression("atan2(1, 1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -143,17 +161,20 @@ public class MathFunctionExpressionTest {
         assertEquals(
             Math.PI / 2,
             ExpressionParser.parseExpression("asin(1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("acos(1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             Math.PI / 4,
             ExpressionParser.parseExpression("atan(1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -164,28 +185,33 @@ public class MathFunctionExpressionTest {
         assertEquals(
             Math.E,
             ExpressionParser.parseExpression("exp(1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             1.0,
             ExpressionParser.parseExpression("log(e)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             2.0,
             ExpressionParser.parseExpression("log10(100)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         // log(x, base) のテスト
         assertEquals(
             3.0,
             ExpressionParser.parseExpression("log(8, 2)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             2.0,
             ExpressionParser.parseExpression("log(100, 10)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -196,44 +222,52 @@ public class MathFunctionExpressionTest {
         assertEquals(
             120.0,
             ExpressionParser.parseExpression("fact(5)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             60.0,
             ExpressionParser.parseExpression("npr(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             10.0,
             ExpressionParser.parseExpression("ncr(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
 
         // エイリアスのテスト
         assertEquals(
             10.0,
             ExpressionParser.parseExpression("combi(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             10.0,
             ExpressionParser.parseExpression("combination(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             60.0,
             ExpressionParser.parseExpression("perm(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             60.0,
             ExpressionParser.parseExpression("permu(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             60.0,
             ExpressionParser.parseExpression("permutation(5, 3)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -244,43 +278,51 @@ public class MathFunctionExpressionTest {
         assertEquals(
             100.0,
             ExpressionParser.parseExpression("clamp(150, 0, 100)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("clamp(-50, 0, 100)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             50.0,
             ExpressionParser.parseExpression("clamp(50, 0, 100)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             1.0,
             ExpressionParser.parseExpression("sign(10)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             -1.0,
             ExpressionParser.parseExpression("sign(-10)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
 
         double rnd = ExpressionParser.parseExpression("random()")
-            .evaluate(context);
+            .evaluate(context)
+            .asDouble();
         assertTrue(rnd >= 0.0 && rnd < 1.0);
 
         // クリップの逆転 (min > max) のテスト
         assertEquals(
             50.0,
             ExpressionParser.parseExpression("clamp(50, 100, 0)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("clamp(-10, 100, 0)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -291,37 +333,44 @@ public class MathFunctionExpressionTest {
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("sqrt(-1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("asin(2.0)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("acos(-1.5)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("log(0)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("log(-5)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("log(10, 1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("log(10, -2)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -333,20 +382,25 @@ public class MathFunctionExpressionTest {
         ConditionContext context2 = new ConditionContext(null, 10, 20, 30, null, 54321L);
 
         double val1 = ExpressionParser.parseExpression("random()")
-            .evaluate(context1);
+            .evaluate(context1)
+            .asDouble();
         double val1_same = ExpressionParser.parseExpression("random()")
-            .evaluate(context1_same);
+            .evaluate(context1_same)
+            .asDouble();
         double val2 = ExpressionParser.parseExpression("random()")
-            .evaluate(context2);
+            .evaluate(context2)
+            .asDouble();
 
         assertEquals(val1, val1_same, "同じシードなら同じ値が返るべき");
         assertNotEquals(val1, val2, "違うシードなら違う値が返るべき");
 
         // chance() の検証
         double chance1 = ExpressionParser.parseExpression("chance(0.5)")
-            .evaluate(context1);
+            .evaluate(context1)
+            .asDouble();
         double chance1_same = ExpressionParser.parseExpression("chance(0.5)")
-            .evaluate(context1_same);
+            .evaluate(context1_same)
+            .asDouble();
         assertEquals(chance1, chance1_same, "同じシードなら chance() も同じ結果になるべき");
     }
 
@@ -358,22 +412,26 @@ public class MathFunctionExpressionTest {
         assertEquals(
             15.0,
             ExpressionParser.parseExpression("10 + sqrt(25)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             2.0,
             ExpressionParser.parseExpression("max(1, 2) * min(5, 1)")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             0.5,
             ExpressionParser.parseExpression("sin(rad(30))")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
         assertEquals(
             15.0,
             ExpressionParser.parseExpression("ncr(5, 2) + fact(3) - 1")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 
@@ -385,7 +443,8 @@ public class MathFunctionExpressionTest {
         assertEquals(
             0.0,
             ExpressionParser.parseExpression("nbt('any')")
-                .evaluate(context),
+                .evaluate(context)
+                .asDouble(),
             0.001);
     }
 

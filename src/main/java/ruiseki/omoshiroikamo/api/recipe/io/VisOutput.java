@@ -45,7 +45,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return;
 
-        int req = amountExpr != null ? (int) amountExpr.evaluate(context) : amount;
+        int req = amountExpr != null ? (int) amountExpr.evaluateDouble(context) : amount;
         int remaining = req * multiplier;
 
         for (IModularPort port : ports) {
@@ -112,7 +112,7 @@ public class VisOutput extends AbstractModularRecipeOutput {
         if (json.has("amount")) {
             this.amountExpr = ExpressionsParser.parse(json.get("amount"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amount = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluateDouble(null);
             }
         } else {
             this.amount = 100;

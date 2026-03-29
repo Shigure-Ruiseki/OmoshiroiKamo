@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -95,7 +96,8 @@ public class ExpressionRegistryTest {
 
     private double evaluate(String expression, ConditionContext context) {
         return ExpressionParser.parseExpression(expression)
-            .evaluate(context);
+            .evaluate(context)
+            .asDouble();
     }
 
     /**
@@ -285,6 +287,31 @@ public class ExpressionRegistryTest {
         @Override
         public double getEnergyMultiplier() {
             return 1.0;
+        }
+
+        @Override
+        public long getFluidInput(String name) {
+            return getStoredFluid(name);
+        }
+
+        @Override
+        public long getFluidOutputSpace(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getItemCount(IPortType.Direction direction, String itemName) {
+            return 0;
+        }
+
+        @Override
+        public long getItemSpace(IPortType.Direction direction, String itemName) {
+            return 0;
+        }
+
+        @Override
+        public long getRecipeStartTick() {
+            return 0;
         }
     }
 }

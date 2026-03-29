@@ -16,12 +16,19 @@ public class ResourceFunctionExpression implements IExpression {
         VIS,
         GAS,
         FLUID,
+        FLUID_IN,
+        FLUID_OUT_S,
+        MANA,
         ITEM,
         ITEM_IN,
         ITEM_OUT,
+        ITEM_S,
+        ITEM_IN_S,
+        ITEM_OUT_S,
         ITEM_F,
         ITEM_F_IN,
-        ITEM_F_OUT
+        ITEM_F_OUT,
+        ENERGY
     }
 
     private final Type type;
@@ -33,45 +40,55 @@ public class ResourceFunctionExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        if (context == null) return 0;
+    public EvaluationValue evaluate(ConditionContext context) {
+        if (context == null) return EvaluationValue.ZERO;
         IRecipeContext recipeContext = context.getRecipeContext();
-        if (recipeContext == null) return 0;
+        if (recipeContext == null) return EvaluationValue.ZERO;
 
         IMachineState state = recipeContext.getMachineState();
-        if (state == null) return 0;
+        if (state == null) return EvaluationValue.ZERO;
 
-        String key = "";
-        if (argument instanceof StringLiteralExpression) {
-            key = ((StringLiteralExpression) argument).getStringValue();
-        } else {
-            key = String.valueOf(argument.evaluate(context));
-        }
+        String key = argument != null ? argument.evaluate(context)
+            .asString() : "";
 
         switch (type) {
             case ESSENTIA:
-                return state.getStoredEssentia(key);
+                return new EvaluationValue(state.getStoredEssentia(key));
             case VIS:
-                return state.getStoredVis(key);
+                return new EvaluationValue(state.getStoredVis(key));
             case GAS:
-                return state.getStoredGas(key);
+                return new EvaluationValue(state.getStoredGas(key));
+            case ENERGY:
+                return new EvaluationValue(state.getStoredEnergy());
+            case MANA:
+                return new EvaluationValue(state.getStoredMana());
             case FLUID:
-                return state.getStoredFluid(key);
+                return new EvaluationValue(state.getStoredFluid(key));
+            case FLUID_IN:
+                return new EvaluationValue(state.getFluidInput(key));
+            case FLUID_OUT_S:
+                return new EvaluationValue(state.getFluidOutputSpace(key));
             case ITEM:
-                return state.getItemCount(IPortType.Direction.BOTH, key);
+                return new EvaluationValue(state.getItemCount(IPortType.Direction.BOTH, key));
             case ITEM_IN:
-                return state.getItemCount(IPortType.Direction.INPUT, key);
+                return new EvaluationValue(state.getItemCount(IPortType.Direction.INPUT, key));
             case ITEM_OUT:
-                return state.getItemCount(IPortType.Direction.OUTPUT, key);
+                return new EvaluationValue(state.getItemCount(IPortType.Direction.OUTPUT, key));
+            case ITEM_S:
+                return new EvaluationValue(state.getItemSpace(IPortType.Direction.BOTH, key));
+            case ITEM_IN_S:
+                return new EvaluationValue(state.getItemSpace(IPortType.Direction.INPUT, key));
+            case ITEM_OUT_S:
+                return new EvaluationValue(state.getItemSpace(IPortType.Direction.OUTPUT, key));
             case ITEM_F:
-                return state.getItemSpace(IPortType.Direction.BOTH, key);
+                return new EvaluationValue(state.getItemSpace(IPortType.Direction.BOTH, key));
             case ITEM_F_IN:
-                return state.getItemSpace(IPortType.Direction.INPUT, key);
+                return new EvaluationValue(state.getItemSpace(IPortType.Direction.INPUT, key));
             case ITEM_F_OUT:
-                return state.getItemSpace(IPortType.Direction.OUTPUT, key);
-            default:
-                return 0;
+                return new EvaluationValue(state.getItemSpace(IPortType.Direction.OUTPUT, key));
         }
+
+        return EvaluationValue.ZERO;
     }
 
     @Override

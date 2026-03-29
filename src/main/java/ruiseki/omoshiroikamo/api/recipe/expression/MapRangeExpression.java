@@ -27,11 +27,11 @@ public class MapRangeExpression implements IExpression {
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
-        double val = input.evaluate(context);
-
-        // Linear interpolation
-        double result = minOut + (val - minIn) * (maxOut - minOut) / (maxIn - minIn);
+    public EvaluationValue evaluate(ConditionContext context) {
+        double val = input.evaluate(context)
+            .asDouble();
+        double denom = (maxIn - minIn);
+        double result = denom != 0 ? minOut + (val - minIn) * (maxOut - minOut) / denom : minOut;
 
         if (clamp) {
             double lower = Math.min(minOut, maxOut);
@@ -39,7 +39,7 @@ public class MapRangeExpression implements IExpression {
             result = Math.max(lower, Math.min(upper, result));
         }
 
-        return result;
+        return new EvaluationValue(result);
     }
 
     public static IExpression fromJson(JsonObject json) {

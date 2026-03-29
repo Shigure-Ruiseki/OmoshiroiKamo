@@ -1,14 +1,10 @@
 package ruiseki.omoshiroikamo.api.condition;
 
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
-
 import com.google.gson.JsonObject;
 
-import ruiseki.omoshiroikamo.api.recipe.expression.DotNotationNBTExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.EvaluationValue;
 import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.expression.IExpression;
-import ruiseki.omoshiroikamo.api.recipe.expression.StringLiteralExpression;
 
 /**
  * Condition that compares two expressions.
@@ -27,65 +23,29 @@ public class ComparisonCondition implements ICondition {
 
     @Override
     public boolean isMet(ConditionContext context) {
-        // Check for string comparison first
-        String lStr = getStringValue(left, context);
-        String rStr = getStringValue(right, context);
+        EvaluationValue v1 = left.evaluate(context);
+        EvaluationValue v2 = right.evaluate(context);
 
-        if (lStr != null && rStr != null) {
-            // Both are strings - perform string comparison
-            return compareStrings(lStr, rStr);
+        if (operator.equals("==")) {
+            return v1.looseEquals(v2);
+        }
+        if (operator.equals("!=")) {
+            return !v1.looseEquals(v2);
         }
 
-        // Fall back to numeric comparison
-        double lVal = left.evaluate(context);
-        double rVal = right.evaluate(context);
+        double d1 = v1.asDouble();
+        double d2 = v2.asDouble();
 
         switch (operator) {
             case ">":
-                return lVal > rVal;
+                return d1 > d2;
             case ">=":
-                return lVal >= rVal;
+                return d1 >= d2;
             case "<":
-                return lVal < rVal;
+                return d1 < d2;
             case "<=":
-                return lVal <= rVal;
-            case "==":
-                return Math.abs(lVal - rVal) < 0.0001;
-            case "!=":
-                return Math.abs(lVal - rVal) >= 0.0001;
+                return d1 <= d2;
             default:
-                return false;
-        }
-    }
-
-    /**
-     * Get string value from an expression if it represents a string.
-     * Returns null if the expression is not a string.
-     */
-    private String getStringValue(IExpression expr, ConditionContext context) {
-        if (expr instanceof StringLiteralExpression) {
-            return ((StringLiteralExpression) expr).getStringValue();
-        } else if (expr instanceof DotNotationNBTExpression) {
-            NBTBase nbt = ((DotNotationNBTExpression) expr).getNestedNBT(context);
-            if (nbt instanceof NBTTagString) {
-                return ((NBTTagString) nbt).func_150285_a_(); // getString()
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Compare two strings based on the operator.
-     * Only == and != are supported for strings.
-     */
-    private boolean compareStrings(String left, String right) {
-        switch (operator) {
-            case "==":
-                return left.equals(right);
-            case "!=":
-                return !left.equals(right);
-            default:
-                // Other operators (<, >, <=, >=) not supported for strings
                 return false;
         }
     }
@@ -99,6 +59,11 @@ public class ComparisonCondition implements ICondition {
     public void write(JsonObject json) {
         json.addProperty("type", "comparison");
         // Serialization not implemented yet
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
     }
 
     public static ICondition fromJson(JsonObject json) {

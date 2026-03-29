@@ -6,9 +6,10 @@ import net.minecraft.util.StatCollector;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.recipe.expression.EvaluationValue;
+
 /**
  * Condition that checks an NBT value of the TileEntity at the current position.
- * Supports basic numeric comparisons.
  */
 public class TileNbtCondition implements ICondition {
 
@@ -24,18 +25,26 @@ public class TileNbtCondition implements ICondition {
 
     @Override
     public boolean isMet(ConditionContext context) {
-        TileEntity te = context.getWorld()
-            .getTileEntity(context.getX(), context.getY(), context.getZ());
-        if (te == null) return false;
+        if (context == null || context.getWorld() == null) return false;
 
-        NBTTagCompound nbt = new NBTTagCompound();
-        te.writeToNBT(nbt);
+        String teCacheKey = "te_nbt_" + context.getX() + "_" + context.getY() + "_" + context.getZ();
+        EvaluationValue teNbtValue = context.getCachedValue(teCacheKey);
+        NBTTagCompound nbt;
+
+        if (teNbtValue != null && teNbtValue.isNbt() && teNbtValue.asNbt() instanceof NBTTagCompound nbtTagCompound) {
+            nbt = nbtTagCompound;
+        } else {
+            TileEntity te = context.getWorld()
+                .getTileEntity(context.getX(), context.getY(), context.getZ());
+            if (te == null) return false;
+            nbt = new NBTTagCompound();
+            te.writeToNBT(nbt);
+            context.setCachedValue(teCacheKey, new EvaluationValue(nbt));
+        }
 
         if (!nbt.hasKey(key)) return false;
 
-        // Basic support for numeric values.
-        // Note: For 1.7.10, NBT handling is a bit primitive but work with numbers.
-        double actualValue = nbt.getDouble(key); // getDouble works even if it's Int/Float
+        double actualValue = nbt.getDouble(key);
 
         switch (op) {
             case GREATER_THAN:
@@ -47,7 +56,7 @@ public class TileNbtCondition implements ICondition {
             case LESS_OR_EQUAL:
                 return actualValue <= value;
             case EQUAL:
-                return actualValue == value;
+                return Math.abs(actualValue - value) < 0.0001;
             default:
                 return false;
         }

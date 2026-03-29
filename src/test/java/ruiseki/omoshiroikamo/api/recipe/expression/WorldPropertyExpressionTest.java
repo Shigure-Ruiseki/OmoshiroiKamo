@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IMachineState;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
@@ -69,7 +70,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("time");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(12000.0, result, 0.001, "time = 12000 であるべき");
     }
@@ -82,7 +84,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("time");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(2000.0, result, 0.001, "time = 26000 % 24000 = 2000 であるべき");
     }
@@ -95,7 +98,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("time");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001, "time = 0 であるべき");
     }
@@ -108,7 +112,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("time");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(23999.0, result, 0.001, "time = 23999 であるべき");
     }
@@ -125,7 +130,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("total_days");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(2.0, result, 0.001, "total_days = 48000 / 24000 = 2 であるべき");
     }
@@ -139,8 +145,10 @@ public class WorldPropertyExpressionTest {
         WorldPropertyExpression exprDay = new WorldPropertyExpression("day");
         WorldPropertyExpression exprTotalDays = new WorldPropertyExpression("total_days");
 
-        double resultDay = exprDay.evaluate(context);
-        double resultTotalDays = exprTotalDays.evaluate(context);
+        double resultDay = exprDay.evaluate(context)
+            .asDouble();
+        double resultTotalDays = exprTotalDays.evaluate(context)
+            .asDouble();
 
         assertEquals(resultTotalDays, resultDay, 0.001, "day と total_days は同じ値を返すべき");
     }
@@ -153,7 +161,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("total_days");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001, "total_days = 0 であるべき");
     }
@@ -166,7 +175,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("total_days");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(1.0, result, 0.001, "total_days = 36000 / 24000 = 1（整数除算）であるべき");
     }
@@ -183,7 +193,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("moon_phase");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(5.0, result, 0.001, "moon_phase = 5 であるべき");
     }
@@ -197,8 +208,10 @@ public class WorldPropertyExpressionTest {
         WorldPropertyExpression exprMoon = new WorldPropertyExpression("moon");
         WorldPropertyExpression exprMoonPhase = new WorldPropertyExpression("moon_phase");
 
-        double resultMoon = exprMoon.evaluate(context);
-        double resultMoonPhase = exprMoonPhase.evaluate(context);
+        double resultMoon = exprMoon.evaluate(context)
+            .asDouble();
+        double resultMoonPhase = exprMoonPhase.evaluate(context)
+            .asDouble();
 
         assertEquals(resultMoonPhase, resultMoon, 0.001, "moon と moon_phase は同じ値を返すべき");
     }
@@ -212,7 +225,8 @@ public class WorldPropertyExpressionTest {
     public void testContextNull() {
         WorldPropertyExpression expr = new WorldPropertyExpression("time");
 
-        double result = expr.evaluate(null);
+        double result = expr.evaluate(null)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001, "context=nullの場合、0を返すべき");
     }
@@ -224,7 +238,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("time");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001, "world=nullの場合、0を返すべき");
     }
@@ -241,7 +256,8 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("unknown_property");
 
-        double result = expr.evaluate(context);
+        double result = expr.evaluate(context)
+            .asDouble();
 
         assertEquals(0.0, result, 0.001, "未知のプロパティ名の場合、0を返すべき");
     }
@@ -254,7 +270,11 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("tick");
 
-        assertEquals(123456.0, expr.evaluate(context), 0.001);
+        assertEquals(
+            123456.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -266,7 +286,12 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("recipe_tick");
 
-        assertEquals(50.0, expr.evaluate(context), 0.001, "10050 - 10000 = 50 であるべき");
+        assertEquals(
+            50.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001,
+            "10050 - 10000 = 50 であるべき");
     }
 
     @Test
@@ -279,7 +304,12 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("progress_tick");
 
-        assertEquals(500.0, expr.evaluate(context), 0.001, "progress = 500 であるべき");
+        assertEquals(
+            500.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001,
+            "progress = 500 であるべき");
     }
 
     @Test
@@ -297,7 +327,11 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("redstone");
 
-        assertEquals(12.0, expr.evaluate(context), 0.001);
+        assertEquals(
+            12.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -308,7 +342,11 @@ public class WorldPropertyExpressionTest {
 
         WorldPropertyExpression expr = new WorldPropertyExpression("seed");
 
-        assertEquals(12345.0, expr.evaluate(context), 0.001);
+        assertEquals(
+            12345.0,
+            expr.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     // ========================================
@@ -706,6 +744,21 @@ public class WorldPropertyExpressionTest {
 
         @Override
         public long getRecipeStartTick() {
+            return 0;
+        }
+
+        @Override
+        public long getFluidInput(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getFluidOutputSpace(String name) {
+            return 0;
+        }
+
+        @Override
+        public long getItemCount(IPortType.Direction direction, String itemName) {
             return 0;
         }
     }

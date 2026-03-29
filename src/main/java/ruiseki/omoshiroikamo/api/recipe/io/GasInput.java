@@ -87,7 +87,7 @@ public class GasInput extends AbstractModularRecipeInput {
         if (json.has("amount")) {
             this.amountExpr = ExpressionsParser.parse(json.get("amount"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amount = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluateDouble(null);
             }
         }
     }

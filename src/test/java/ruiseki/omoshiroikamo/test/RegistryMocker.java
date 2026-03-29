@@ -49,6 +49,7 @@ public class RegistryMocker {
             try {
                 Field fluidsField = frClass.getDeclaredField("fluids");
                 fluidsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
                 Map<String, Fluid> fluids = (Map<String, Fluid>) fluidsField.get(null);
 
                 if (fluids == null) {

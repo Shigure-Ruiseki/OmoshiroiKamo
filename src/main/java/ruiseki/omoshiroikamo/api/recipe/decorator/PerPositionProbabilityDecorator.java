@@ -48,7 +48,7 @@ public class PerPositionProbabilityDecorator extends RecipeDecorator {
             if (context != null) {
                 ConditionContext condContext = context.getConditionContext();
                 List<ChunkCoordinates> positions = context.getSymbolPositions(symbol);
-                double chance = chanceExpr.evaluate(condContext);
+                double chance = chanceExpr.evaluateDouble(condContext);
 
                 // Check each position independently
                 for (ChunkCoordinates pos : positions) {

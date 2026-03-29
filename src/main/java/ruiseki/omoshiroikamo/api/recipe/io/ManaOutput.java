@@ -45,7 +45,7 @@ public class ManaOutput extends AbstractModularRecipeOutput {
 
     @Override
     public void apply(List<IModularPort> ports, int multiplier, ConditionContext context) {
-        long req = amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        long req = amountExpr != null ? (long) amountExpr.evaluateDouble(context) : amount;
         long remaining = req * multiplier;
 
         for (IModularPort port : ports) {
@@ -105,7 +105,7 @@ public class ManaOutput extends AbstractModularRecipeOutput {
         if (json.has("mana")) {
             this.amountExpr = ExpressionsParser.parse(json.get("mana"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amount = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluateDouble(null);
             }
         }
     }

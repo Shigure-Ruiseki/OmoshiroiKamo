@@ -120,15 +120,15 @@ public class ExpressionRegistry {
         registerMachineProperty("multiplier_energy");
 
         // --- Constants ---
-        registerVariable("pi", name -> new ConstantExpression(Math.PI));
-        registerVariable("e", name -> new ConstantExpression(Math.E));
+        registerVariable("pi", name -> ConstantExpression.PI);
+        registerVariable("e", name -> ConstantExpression.E);
 
         // --- Functions ---
         registerFunction("nbt", (args, parser) -> {
             if (args.isEmpty()) throw parser.error("nbt() requires at least one argument");
             IExpression firstArg = args.get(0);
-            if (firstArg instanceof StringLiteralExpression) {
-                return new NbtExpression(((StringLiteralExpression) firstArg).getStringValue(), 0.0);
+            if (firstArg instanceof StringLiteralExpression strExpr) {
+                return new NbtExpression(strExpr.getStringValue(), EvaluationValue.ZERO, '\0');
             }
             throw parser.error("nbt() first argument must be a string literal");
         });

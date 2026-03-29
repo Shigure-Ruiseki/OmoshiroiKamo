@@ -45,7 +45,7 @@ public class BonusBlockOutputDecorator extends RecipeDecorator {
             IRecipeContext context = findRecipeContext(outputPorts);
             ConditionContext condContext = context != null ? context.getConditionContext() : null;
 
-            double chance = chanceExpr.evaluate(condContext);
+            double chance = chanceExpr.evaluateDouble(condContext);
 
             if (rand.nextDouble() < chance) {
                 if (context != null) {

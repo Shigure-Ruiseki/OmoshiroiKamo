@@ -162,7 +162,11 @@ public class ChanceRecipeDecoratorTest {
         // 設定した式が取得できる
         IExpression retrieved = decorator.getChanceExpression();
         assertNotNull(retrieved);
-        assertEquals(0.75, retrieved.evaluate(context));
+        assertEquals(
+            0.75,
+            retrieved.evaluate(context)
+                .asDouble(),
+            0.001);
     }
 
     // ========================================

@@ -231,7 +231,8 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         if (nbtExpressions != null) {
             ConditionContext condContext = new ConditionContext(world, pos.posX, pos.posY, pos.posZ, context);
             for (IExpression expr : nbtExpressions) {
-                if (expr.evaluate(condContext) == 0) {
+                if (expr.evaluate(condContext)
+                    .isZero()) {
                     return false;
                 }
             }
@@ -327,7 +328,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
 
     @Override
     public long getRequiredAmount(ConditionContext context) {
-        return amountExpr != null ? (long) amountExpr.evaluate(context) : amount;
+        return amountExpr != null ? (long) amountExpr.evaluateDouble(context) : amount;
     }
 
     @Override
@@ -471,7 +472,7 @@ public class BlockInput extends AbstractRecipeInput implements IModularRecipeInp
         if (json.has("amount")) {
             this.amountExpr = ExpressionsParser.parse(json.get("amount"));
             if (amountExpr instanceof ConstantExpression) {
-                this.amount = (int) amountExpr.evaluate(null);
+                this.amount = (int) amountExpr.evaluateDouble(null);
             }
         } else {
             this.amount = 1;

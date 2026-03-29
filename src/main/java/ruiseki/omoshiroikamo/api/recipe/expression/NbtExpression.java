@@ -16,39 +16,21 @@ import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 public class NbtExpression implements IExpression {
 
     private final String nbtKey;
-    private final double defaultValue;
+    private final EvaluationValue defaultValue;
     private final char symbol;
 
-    public NbtExpression(String nbtKey, double defaultValue, char symbol) {
+    public NbtExpression(String nbtKey, EvaluationValue defaultValue, char symbol) {
         this.nbtKey = nbtKey;
         this.defaultValue = defaultValue;
         this.symbol = symbol;
     }
 
     public NbtExpression(String nbtKey, double defaultValue) {
-        this(nbtKey, defaultValue, '\0');
-    }
-
-    /**
-     * Get the NBT key this expression reads from.
-     *
-     * @return The NBT key name
-     */
-    public String getNbtKey() {
-        return nbtKey;
-    }
-
-    /**
-     * Get the symbol character associated with this expression.
-     *
-     * @return The symbol character, or '\0' if none
-     */
-    public char getSymbol() {
-        return symbol;
+        this(nbtKey, new EvaluationValue(defaultValue), '\0');
     }
 
     @Override
-    public double evaluate(ConditionContext context) {
+    public EvaluationValue evaluate(ConditionContext context) {
         if (context == null || context.getWorld() == null) return defaultValue;
 
         ChunkCoordinates pos = null;
@@ -56,7 +38,7 @@ public class NbtExpression implements IExpression {
             List<ChunkCoordinates> positions = context.getRecipeContext()
                 .getSymbolPositions(symbol);
             if (positions != null && !positions.isEmpty()) {
-                pos = positions.get(0); // Take first position for symbol
+                pos = positions.get(0);
             }
         } else {
             pos = new ChunkCoordinates(context.getX(), context.getY(), context.getZ());
@@ -64,24 +46,48 @@ public class NbtExpression implements IExpression {
 
         if (pos == null) return defaultValue;
 
-        TileEntity te = context.getWorld()
-            .getTileEntity(pos.posX, pos.posY, pos.posZ);
-        if (te != null) {
-            NBTTagCompound nbt = new NBTTagCompound();
+        String teCacheKey = "te_nbt_" + pos.posX + "_" + pos.posY + "_" + pos.posZ;
+        EvaluationValue teNbtValue = context.getCachedValue(teCacheKey);
+        NBTTagCompound nbt;
+
+        if (teNbtValue != null && teNbtValue.isNbt() && teNbtValue.asNbt() instanceof NBTTagCompound nbttagcompound) {
+            nbt = nbttagcompound;
+        } else {
+            TileEntity te = context.getWorld()
+                .getTileEntity(pos.posX, pos.posY, pos.posZ);
+            if (te == null) return defaultValue;
+            nbt = new NBTTagCompound();
             te.writeToNBT(nbt);
-            if (nbt.hasKey(nbtKey)) {
-                // Try to get as double, falling back to float/int if needed
-                return nbt.getDouble(nbtKey);
-            }
+            context.setCachedValue(teCacheKey, new EvaluationValue(nbt));
         }
+
+        if (nbt.hasKey(nbtKey)) {
+            return new EvaluationValue(nbt.getTag(nbtKey));
+        }
+
         return defaultValue;
+    }
+
+    @Override
+    public String toString() {
+        return (symbol != '\0' ? symbol + "." : "") + nbtKey;
+    }
+
+    public String getNbtKey() {
+        return nbtKey;
+    }
+
+    public char getSymbol() {
+        return symbol;
     }
 
     public static IExpression fromJson(JsonObject json) {
         String key = json.get("key")
             .getAsString();
-        double def = json.has("default") ? json.get("default")
-            .getAsDouble() : 0.0;
+        EvaluationValue def = json.has("default") ? new EvaluationValue(
+            json.get("default")
+                .getAsDouble())
+            : EvaluationValue.ZERO;
         char sym = json.has("symbol") ? json.get("symbol")
             .getAsString()
             .charAt(0) : '\0';

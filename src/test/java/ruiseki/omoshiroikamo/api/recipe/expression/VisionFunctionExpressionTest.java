@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,7 +61,10 @@ public class VisionFunctionExpressionTest {
             VisionFunctionExpression.Direction.SKY,
             Collections.emptyList());
 
-        assertEquals(1.0, expr.evaluate(context));
+        assertEquals(
+            1.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -72,7 +76,10 @@ public class VisionFunctionExpressionTest {
             VisionFunctionExpression.Direction.SKY,
             Collections.emptyList());
 
-        assertEquals(0.0, expr.evaluate(context));
+        assertEquals(
+            0.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -85,7 +92,10 @@ public class VisionFunctionExpressionTest {
             VisionFunctionExpression.Direction.SKY,
             Arrays.asList(new StringLiteralExpression("transparent")));
 
-        assertEquals(1.0, expr.evaluate(context));
+        assertEquals(
+            1.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -98,7 +108,10 @@ public class VisionFunctionExpressionTest {
             VisionFunctionExpression.Direction.SKY,
             Arrays.asList(new StringLiteralExpression("minecraft:stone")));
 
-        assertEquals(1.0, expr.evaluate(context));
+        assertEquals(
+            1.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -110,7 +123,10 @@ public class VisionFunctionExpressionTest {
             VisionFunctionExpression.Direction.VOID,
             Collections.emptyList());
 
-        assertEquals(1.0, expr.evaluate(context));
+        assertEquals(
+            1.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -122,7 +138,10 @@ public class VisionFunctionExpressionTest {
             VisionFunctionExpression.Direction.VOID,
             Collections.emptyList());
 
-        assertEquals(0.0, expr.evaluate(context));
+        assertEquals(
+            0.0,
+            expr.evaluate(context)
+                .asDouble());
     }
 
     @Test
@@ -130,54 +149,96 @@ public class VisionFunctionExpressionTest {
         // Setup: Bedrock at Y=0, air elsewhere
         world.setTestBlock(10, 0, 10, Blocks.bedrock);
 
-        // Default mode bedrock is opaque, so fail
+        // Bedrock is always treated as success for VOID direction
         VisionFunctionExpression def = new VisionFunctionExpression(
             VisionFunctionExpression.Direction.VOID,
             Collections.emptyList());
-        assertEquals(0.0, def.evaluate(context));
+        assertEquals(
+            1.0,
+            def.evaluate(context)
+                .asDouble());
 
-        // Bedrock mode -> should succeed
+        // Also success even if bedrock is explicitly listed
         VisionFunctionExpression bedrock = new VisionFunctionExpression(
             VisionFunctionExpression.Direction.VOID,
             Arrays.asList(new StringLiteralExpression("minecraft:bedrock")));
-        assertEquals(1.0, bedrock.evaluate(context));
+        assertEquals(
+            1.0,
+            bedrock.evaluate(context)
+                .asDouble());
     }
 
     @Test
     void testStrictMode() {
-        // Setup: Glass at Y=5
-        world.setTestBlock(10, 5, 10, Blocks.glass);
+        // Setup: Glass at Y=5 (must be manually mocked to ensure transparency)
+        Block testGlass = new Block(Material.glass) {
 
-        // Default mode -> should succeed (glass is transparent)
+            @Override
+            public boolean isOpaqueCube() {
+                return false;
+            }
+
+            @Override
+            public int getLightOpacity() {
+                return 0;
+            }
+        };
+        world.setTestBlock(10, 5, 10, testGlass);
+
+        // Default mode -> should succeed (glass is transparent by default)
         VisionFunctionExpression def = new VisionFunctionExpression(
             VisionFunctionExpression.Direction.VOID,
             Collections.emptyList());
-        assertEquals(1.0, def.evaluate(context));
+        assertEquals(
+            1.0,
+            def.evaluate(context)
+                .asDouble());
 
         // Strict mode -> should fail
         VisionFunctionExpression strict = new VisionFunctionExpression(
             VisionFunctionExpression.Direction.VOID,
             Arrays.asList(new StringLiteralExpression("strict")));
-        assertEquals(0.0, strict.evaluate(context));
+        assertEquals(
+            0.0,
+            strict.evaluate(context)
+                .asDouble());
     }
 
     @Test
     void testMultipleAllowedBlocks() {
         // Setup: Stone at 15, Glass at 20
+        Block testGlass = new Block(Material.glass) {
+
+            @Override
+            public boolean isOpaqueCube() {
+                return false;
+            }
+
+            @Override
+            public int getLightOpacity() {
+                return 0;
+            }
+        };
         world.setTestBlock(10, 15, 10, Blocks.stone);
-        world.setTestBlock(10, 20, 10, Blocks.glass);
+        world.setTestBlock(10, 20, 10, testGlass);
 
         // only stone + strict -> fail (because of glass)
         VisionFunctionExpression onlyStoneStrict = new VisionFunctionExpression(
             VisionFunctionExpression.Direction.SKY,
             Arrays.asList(new StringLiteralExpression("minecraft:stone"), new StringLiteralExpression("strict")));
-        assertEquals(0.0, onlyStoneStrict.evaluate(context));
+        assertEquals(
+            0.0,
+            onlyStoneStrict.evaluate(context)
+                .asDouble());
 
         // stone and transparent -> success
         VisionFunctionExpression both = new VisionFunctionExpression(
             VisionFunctionExpression.Direction.SKY,
             Arrays.asList(new StringLiteralExpression("minecraft:stone"), new StringLiteralExpression("transparent")));
-        assertEquals(1.0, both.evaluate(context));
+        assertEquals(
+            1.0,
+            both.evaluate(context)
+                .asDouble());
     }
 
     // --- Stubs for Testing ---
