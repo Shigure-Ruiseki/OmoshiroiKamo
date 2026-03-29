@@ -158,13 +158,6 @@ public class UpgradeSlotUpdateGroup {
             ModularSlot slot = new ModularSlot(smeltingStackHandler.delegatedStackHandler, i);
             slot.slotGroup("smeltings_" + slotIndex);
             syncManager.syncValue("smelting_" + slotIndex, i, new ItemSlotSH(slot));
-            slot.changeListener((stack, onlyAmountChanged, client, init) -> {
-
-                if (!client) return;
-
-                craftingStackHandler.syncToServer(DelegatedStackHandlerSH.UPDATE_STORAGE);
-            });
-
             smeltingSlots[i] = slot;
         }
 

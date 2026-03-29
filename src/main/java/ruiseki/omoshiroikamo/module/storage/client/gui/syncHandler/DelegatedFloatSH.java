@@ -25,8 +25,8 @@ public class DelegatedFloatSH extends ValueSyncHandler<Float>
     public static final int UPDATE_PROGRESS = 1;
     public static final int UPDATE_BURN = 2;
 
-    private final StorageWrapper wrapper;
-    private final int slotIndex;
+    public final StorageWrapper wrapper;
+    public final int slotIndex;
 
     public DelegatedFloatSupplier delegatedFloatSupplier;
 

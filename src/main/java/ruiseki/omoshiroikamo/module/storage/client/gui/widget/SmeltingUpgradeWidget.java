@@ -24,7 +24,7 @@ public class SmeltingUpgradeWidget extends ExpandedUpgradeTabWidget<SmeltingUpgr
         this.syncHandler("upgrades", slotIndex);
 
         Row row = (Row) new Row().coverChildren()
-            .childPadding(4);
+            .childPadding(2);
 
         Column left = (Column) new Column().coverChildren()
             .childPadding(2);
@@ -46,17 +46,20 @@ public class SmeltingUpgradeWidget extends ExpandedUpgradeTabWidget<SmeltingUpgr
 
         row.child(left);
 
+        Row mid = (Row) new Row().coverChildren()
+            .childPadding(6);
+
         ProgressWidget cookProgress = new ProgressWidget().texture(GuiTextures.PROGRESS_ARROW, 20)
             .direction(ProgressWidget.Direction.RIGHT)
             .syncHandler("progress_" + slotIndex)
-            .paddingRight(6)
             .size(20);
 
-        row.child(cookProgress);
+        mid.child(cookProgress);
 
         ItemSlot output = new BigItemSlot().syncHandler("smelting_" + slotIndex, 2);
 
-        row.child(output);
+        mid.child(output);
+        row.child(mid);
 
         Column root = (Column) new Column().pos(8, 38)
             .coverChildren()

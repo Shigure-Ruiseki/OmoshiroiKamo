@@ -1,6 +1,6 @@
 package ruiseki.omoshiroikamo.module.storage.common.item.wrapper;
 
-public interface ISmeltingUpgrade extends IProgressable, ITickable, IStorageUpgrade {
+public interface ISmeltingUpgrade extends IProgressable, ITickable, IStorageUpgrade, IDirtable {
 
     String BURN_TIME_TAG = "BurnTime";
     String BURN_TIME_TOTAL_TAG = "BurnTimeTotal";

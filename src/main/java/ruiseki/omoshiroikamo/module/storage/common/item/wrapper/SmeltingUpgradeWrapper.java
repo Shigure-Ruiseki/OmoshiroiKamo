@@ -9,16 +9,23 @@ import ruiseki.omoshiroikamo.core.inventory.IStorageWrapper;
 import ruiseki.omoshiroikamo.core.item.ItemNBTHelpers;
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 
-public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmeltingUpgrade, IStorageUpgrade {
+public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmeltingUpgrade {
 
     protected UpgradeItemStackHandler handler;
 
     public SmeltingUpgradeWrapper(ItemStack upgrade, IStorageWrapper wrapper) {
         super(upgrade, wrapper);
-        handler = new UpgradeItemStackHandler(3);
+        handler = new UpgradeItemStackHandler(3) {
+
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return super.isItemValid(slot, stack) && !isDirty();
+            }
+        };
         handler.setOnSlotChanged((slot, stack) -> {
             NBTTagCompound tag = ItemNBTHelpers.getNBT(upgrade);
             tag.setTag(STORAGE_TAG, handler.serializeNBT());
+            markDirty();
         });
 
         NBTTagCompound handlerTag = ItemNBTHelpers.getCompound(upgrade, STORAGE_TAG, false);
@@ -175,9 +182,22 @@ public class SmeltingUpgradeWrapper extends UpgradeWrapperBase implements ISmelt
     }
 
     @Override
-    public void setProgress(float progress) {
-        progress = Math.max(0F, Math.min(1F, progress));
-        int total = getCookTimeTotal();
-        setCookTime((int) (progress * total));
+    public boolean isDirty() {
+        return ItemNBTHelpers.getBoolean(upgrade, DIRTY_TAG, false);
+    }
+
+    @Override
+    public void markDirty() {
+        ItemNBTHelpers.setBoolean(upgrade, DIRTY_TAG, true);
+    }
+
+    @Override
+    public void markClean() {
+        ItemNBTHelpers.setBoolean(upgrade, DIRTY_TAG, false);
+    }
+
+    @Override
+    public void setDirty(boolean value) {
+        ItemNBTHelpers.setBoolean(upgrade, DIRTY_TAG, value);
     }
 }

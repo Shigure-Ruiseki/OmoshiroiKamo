@@ -16,6 +16,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.AdvancedFeedingU
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IAdvancedFilterable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IBasicFilterable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.ICraftingUpgrade;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IDirtable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFilterUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IMagnetUpgrade;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IToggleable;
@@ -38,6 +39,7 @@ public class UpgradeSlotSH extends ItemSlotSH {
     public static final int UPDATE_CRAFTING_R = 15;
     public static final int UPDATE_CRAFTING_G = 16;
     public static final int UPDATE_CRAFTING_C = 17;
+    public static final int UPDATE_DIRTY = 18;
 
     public final StorageWrapper wrapper;
     public final StoragePanel panel;
@@ -86,6 +88,9 @@ public class UpgradeSlotSH extends ItemSlotSH {
                 break;
             case UPDATE_CRAFTING_C:
                 updateClear(buf);
+                break;
+            case UPDATE_DIRTY:
+                updateDirty(buf);
                 break;
             default:
                 super.readOnServer(id, buf);
@@ -207,4 +212,10 @@ public class UpgradeSlotSH extends ItemSlotSH {
         panel.player.inventory.markDirty();
     }
 
+    private void updateDirty(PacketBuffer buf) {
+        UpgradeWrapperBase wrapper = getWrapper();
+        if (!(wrapper instanceof IDirtable upgradeWrapper)) return;
+        boolean isDirty = buf.readBoolean();
+        upgradeWrapper.setDirty(isDirty);
+    }
 }

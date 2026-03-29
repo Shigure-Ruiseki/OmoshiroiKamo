@@ -1,11 +1,6 @@
 package ruiseki.omoshiroikamo.module.storage.common.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -29,14 +24,7 @@ import ruiseki.omoshiroikamo.module.storage.client.gui.handler.StorageItemStackH
 import ruiseki.omoshiroikamo.module.storage.client.gui.handler.UpgradeItemStackHandler;
 import ruiseki.omoshiroikamo.module.storage.common.block.BlockBarrel;
 import ruiseki.omoshiroikamo.module.storage.common.item.ItemStackUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFeedingUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IFilterUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IMagnetUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IPickupUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.ITickable;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IVoidUpgrade;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperBase;
-import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.UpgradeWrapperFactory;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.*;
 
 public class StorageWrapper implements IStorageWrapper {
 
@@ -64,8 +52,6 @@ public class StorageWrapper implements IStorageWrapper {
     public static final String MAIN_COLOR = "MainColor";
     public static final String ACCENT_COLOR = "AccentColor";
 
-    private final Map<Integer, UpgradeWrapperBase> wrapperCache = new HashMap<>();
-
     public StorageWrapper() {
         this(120, 7);
     }
@@ -82,16 +68,11 @@ public class StorageWrapper implements IStorageWrapper {
 
         this.storageItemStackHandler = new StorageItemStackHandler(storageSlots, this);
         this.upgradeItemStackHandler = new UpgradeItemStackHandler(upgradeSlots);
-        upgradeItemStackHandler.setOnSlotChanged((slot, stack) -> { rebuildWrapperCache(); });
-
     }
 
     @Override
     public String getDisplayName() {
-        if (hasCustomInventoryName()) {
-            return this.customName;
-        }
-        return LangHelpers.localize("container.inventory");
+        return hasCustomInventoryName() ? customName : LangHelpers.localize("container.inventory");
     }
 
     @Override
@@ -123,43 +104,29 @@ public class StorageWrapper implements IStorageWrapper {
             return simulate ? stack : null;
         }
 
-        // Void Overflow early have max item
+        // Void overflow early
         for (int i = 0; i < storageItemStackHandler.getSlots(); i++) {
             ItemStack slotStack = getStackInSlot(i);
             if (slotStack != null && ItemHandlerHelper.canItemStacksStack(slotStack, stack)) {
-
-                int limit = getSlotLimit(i);
-                if (slotStack.stackSize >= limit
+                if (slotStack.stackSize >= getSlotLimit(i)
                     && canVoid(stack, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-                    return null;
+                    return simulate ? stack : null;
                 }
             }
         }
 
         ItemStack remaining = stack;
-
         for (int i = 0; i < storageItemStackHandler.getSlots() && remaining != null; i++) {
-
             int before = remaining.stackSize;
             remaining = insertItem(i, remaining, simulate);
 
-            boolean changed = (remaining == null) || (remaining.stackSize != before);
-
-            // Void Overflow
-            if (changed && remaining != null && remaining.stackSize > 0) {
-                if (canVoid(remaining, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
-                    return simulate ? remaining : null;
-                }
+            if (remaining != null && remaining.stackSize < before
+                && canVoid(remaining, IVoidUpgrade.VoidType.OVERFLOW, IVoidUpgrade.VoidInput.ALL)) {
+                return simulate ? remaining : null;
             }
         }
 
-        if (remaining != null && remaining.stackSize > 0) {
-            if (simulate) {
-                return null;
-            }
-        }
-
-        return remaining;
+        return (remaining != null && remaining.stackSize > 0 && simulate) ? remaining : null;
     }
 
     @Override
@@ -169,20 +136,17 @@ public class StorageWrapper implements IStorageWrapper {
         int remaining = amount;
         ItemStack result = null;
 
-        for (int i = 0; i < storageItemStackHandler.getSlots(); i++) {
+        for (int i = 0; i < storageItemStackHandler.getSlots() && remaining > 0; i++) {
             ItemStack slotStack = getStackInSlot(i);
             if (slotStack != null && slotStack.isItemEqual(wanted)) {
                 int take = Math.min(slotStack.stackSize, remaining);
                 ItemStack extracted = extractItem(i, take, simulate);
 
-                if (result == null) {
-                    result = extracted;
-                } else if (extracted != null) {
-                    result.stackSize += extracted.stackSize;
+                if (extracted != null) {
+                    if (result == null) result = extracted.copy();
+                    else result.stackSize += extracted.stackSize;
+                    remaining -= extracted.stackSize;
                 }
-
-                remaining -= take;
-                if (remaining <= 0) break;
             }
         }
 
@@ -199,10 +163,8 @@ public class StorageWrapper implements IStorageWrapper {
         storageItemStackHandler.setStackInSlot(slot, stack);
     }
 
-    // Setting
-
     public boolean isSlotMemorized(int slotIndex) {
-        return !(storageItemStackHandler.memorizedSlotStack.get(slotIndex) == null);
+        return storageItemStackHandler.memorizedSlotStack.get(slotIndex) != null;
     }
 
     public ItemStack getMemorizedStack(int slotIndex) {
@@ -213,9 +175,9 @@ public class StorageWrapper implements IStorageWrapper {
         ItemStack currentStack = getStackInSlot(slotIndex);
         if (currentStack == null) return;
 
-        ItemStack copiedStack = currentStack.copy();
-        copiedStack.stackSize = 1;
-        storageItemStackHandler.memorizedSlotStack.set(slotIndex, copiedStack);
+        ItemStack copy = currentStack.copy();
+        copy.stackSize = 1;
+        storageItemStackHandler.memorizedSlotStack.set(slotIndex, copy);
         storageItemStackHandler.memorizedSlotRespectNbtList.set(slotIndex, respectNBT);
     }
 
@@ -257,56 +219,32 @@ public class StorageWrapper implements IStorageWrapper {
     }
 
     public void tick() {
-        if (wrapperCache.isEmpty()) return;
-        Map<Integer, UpgradeWrapperBase> snapshot = new HashMap<>(wrapperCache);
-
-        for (Map.Entry<Integer, UpgradeWrapperBase> entry : snapshot.entrySet()) {
-            UpgradeWrapperBase wrapper = entry.getValue();
-            if (wrapper instanceof ITickable tickable) {
-                tickable.tick();
-            }
+        Map<Integer, ITickable> gathered = gatherCapabilityUpgrades(ITickable.class);
+        if (gathered.isEmpty()) return;
+        for (ITickable wrapper : gathered.values()) {
+            wrapper.tick();
         }
     }
 
-    // ---------- UPGRADE ----------
     public int getTotalStackMultiplier() {
-        List<ItemStack> stacks = upgradeItemStackHandler.getStacks();
         int result = 0;
-
-        if (stacks.isEmpty()) {
-            return 1;
-        }
-
-        for (ItemStack stack : stacks) {
-            if (stack == null) {
-                continue;
-            }
-            if (stack.getItem() instanceof ItemStackUpgrade upgrade) {
-                result += upgrade.multiplier(stack);
+        for (ItemStack stack : upgradeItemStackHandler.getStacks()) {
+            if (stack != null && stack.getItem() instanceof ItemStackUpgrade up) {
+                result += up.multiplier(stack);
             }
         }
         return result == 0 ? 1 : result;
     }
 
     public int getStackMultiplierExcluding(int excludeSlot, ItemStack replacement) {
-        List<ItemStack> stacks = upgradeItemStackHandler.getStacks();
-
         int result = 0;
         for (int i = 0; i < upgradeItemStackHandler.getSlots(); i++) {
-            ItemStack stack = stacks.get(i);
-
+            ItemStack stack = upgradeItemStackHandler.getStackInSlot(i);
             if (i == excludeSlot) {
                 if (replacement != null && replacement.getItem() instanceof ItemStackUpgrade up) {
                     result += up.multiplier(replacement);
                 }
-                continue;
-            }
-
-            if (stack == null) {
-                continue;
-            }
-
-            if (stack.getItem() instanceof ItemStackUpgrade up) {
+            } else if (stack != null && stack.getItem() instanceof ItemStackUpgrade up) {
                 result += up.multiplier(stack);
             }
         }
@@ -315,116 +253,94 @@ public class StorageWrapper implements IStorageWrapper {
 
     public boolean canAddStackUpgrade(int newMultiplier) {
         long result = (long) getTotalStackMultiplier() * 64L * newMultiplier;
-        return result == (int) result;
+        return result <= Integer.MAX_VALUE;
     }
 
     public boolean canReplaceStackUpgrade(int slotIndex, ItemStack replacement) {
-        ItemStack old = upgradeItemStackHandler.getStacks()
-            .get(slotIndex);
+        if (replacement == null) return true;
 
-        if (old != null && replacement != null
-            && old.getItem() instanceof ItemStackUpgrade oldUp
+        ItemStack old = upgradeItemStackHandler.getStackInSlot(slotIndex);
+
+        if (old != null && old.getItem() instanceof ItemStackUpgrade oldUp
             && replacement.getItem() instanceof ItemStackUpgrade newUp
-            && oldUp.multiplier(old) == newUp.multiplier(replacement)) {
-            return true;
-        }
+            && oldUp.multiplier(old) == newUp.multiplier(replacement)) return true;
 
-        int newStackMultiplier = getStackMultiplierExcluding(slotIndex, replacement);
+        int newMultiplier = getStackMultiplierExcluding(slotIndex, replacement);
 
         for (ItemStack stack : storageItemStackHandler.getStacks()) {
-            if (stack == null) continue;
-
-            if (stack.stackSize > stack.getMaxStackSize() * newStackMultiplier) {
-                return false;
-            }
+            if (stack != null && stack.stackSize > stack.getMaxStackSize() * newMultiplier) return false;
         }
-
         return true;
     }
 
     public boolean feed(EntityPlayer player, IItemHandler handler) {
-        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
-            if (wrapper instanceof IFeedingUpgrade upgrade) {
-                if (upgrade.feed(player, handler)) {
-                    return true;
-                }
-            }
+        Map<Integer, IFeedingUpgrade> gathered = gatherCapabilityUpgrades(IFeedingUpgrade.class);
+        if (gathered.isEmpty()) return false;
+        for (IFeedingUpgrade wrapper : gathered.values()) {
+            return wrapper.feed(player, handler);
         }
         return false;
     }
 
     public List<Entity> getMagnetEntities(World world, AxisAlignedBB aabb) {
+        Map<Integer, IMagnetUpgrade> gathered = gatherCapabilityUpgrades(IMagnetUpgrade.class);
         Set<Entity> result = new HashSet<>();
-
         List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, aabb);
         List<EntityXPOrb> xps = world.getEntitiesWithinAABB(EntityXPOrb.class, aabb);
 
-        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
-            if (wrapper instanceof IMagnetUpgrade upgrade) {
-                if (upgrade.isCollectItem()) {
-                    for (EntityItem item : items) {
-                        if (upgrade.canCollectItem(item.getEntityItem())) {
-                            result.add(item);
-                        }
-                    }
-                }
-                if (upgrade.isCollectExp()) {
-                    result.addAll(xps);
+        if (gathered.isEmpty()) return new ArrayList<>(result);
+        for (IMagnetUpgrade wrapper : gathered.values()) {
+            if (wrapper.isCollectItem()) {
+                for (EntityItem item : items) {
+                    if (wrapper.canCollectItem(item.getEntityItem())) result.add(item);
                 }
             }
+            if (wrapper.isCollectExp()) result.addAll(xps);
         }
         return new ArrayList<>(result);
     }
 
     public boolean canInsert(ItemStack stack) {
-        if (wrapperCache.isEmpty()) return true;
-        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
-            if (wrapper instanceof IFilterUpgrade upgrade) {
-                if (upgrade.canInsert(stack)) {
-                    return true;
-                }
-            }
+        Map<Integer, IFilterUpgrade> gathered = gatherCapabilityUpgrades(IFilterUpgrade.class);
+        if (gathered.isEmpty()) return false;
+        for (IFilterUpgrade wrapper : gathered.values()) {
+            return wrapper.canInsert(stack);
         }
         return false;
     }
 
     public boolean canExtract(ItemStack stack) {
-        if (wrapperCache.isEmpty()) return true;
-        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
-            if (wrapper instanceof IFilterUpgrade upgrade) {
-                if (upgrade.canExtract(stack)) {
-                    return true;
-                }
-            }
+        Map<Integer, IFilterUpgrade> gathered = gatherCapabilityUpgrades(IFilterUpgrade.class);
+        if (gathered.isEmpty()) return false;
+        for (IFilterUpgrade wrapper : gathered.values()) {
+            return wrapper.canExtract(stack);
         }
         return false;
     }
 
     public boolean canPickupItem(ItemStack stack) {
-        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
-            if (wrapper instanceof IPickupUpgrade upgrade) {
-                if (upgrade.canPickup(stack)) {
-                    return true;
-                }
-            }
+        Map<Integer, IPickupUpgrade> gathered = gatherCapabilityUpgrades(IPickupUpgrade.class);
+        if (gathered.isEmpty()) return false;
+        for (IPickupUpgrade wrapper : gathered.values()) {
+            return wrapper.canPickup(stack);
         }
         return false;
     }
 
-    public boolean canVoid(ItemStack newStack, IVoidUpgrade.VoidType type, IVoidUpgrade.VoidInput input) {
-        for (UpgradeWrapperBase wrapper : wrapperCache.values()) {
-            if (wrapper instanceof IVoidUpgrade upgrade) {
-                if (upgrade.canVoid(newStack) && upgrade.getVoidType() == type
-                    && (upgrade.getVoidInput() == input || input == IVoidUpgrade.VoidInput.AUTOMATION)) {
-                    return true;
-                }
+    public boolean canVoid(ItemStack stack, IVoidUpgrade.VoidType type, IVoidUpgrade.VoidInput input) {
+        Map<Integer, IVoidUpgrade> gathered = gatherCapabilityUpgrades(IVoidUpgrade.class);
+        if (gathered.isEmpty()) return false;
+        for (IVoidUpgrade wrapper : gathered.values()) {
+            if (wrapper.canVoid(stack) && wrapper.getVoidType() == type
+                && (wrapper.getVoidInput() == input || input == IVoidUpgrade.VoidInput.AUTOMATION)) {
+                return true;
             }
         }
         return false;
     }
 
     public boolean hasCustomInventoryName() {
-        return this.customName != null && !this.customName.isEmpty();
+        return customName != null && !customName.isEmpty();
     }
 
     @Override
@@ -432,8 +348,8 @@ public class StorageWrapper implements IStorageWrapper {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger(STORAGE_SLOTS, storageSlots);
         tag.setInteger(UPGRADE_SLOTS, upgradeSlots);
-        tag.setInteger(MAIN_COLOR, getMainColor());
-        tag.setInteger(ACCENT_COLOR, getAccentColor());
+        tag.setInteger(MAIN_COLOR, mainColor);
+        tag.setInteger(ACCENT_COLOR, accentColor);
 
         tag.setTag(BACKPACK_INV, storageItemStackHandler.serializeNBT());
         tag.setTag(UPGRADE_INV, upgradeItemStackHandler.serializeNBT());
@@ -457,118 +373,49 @@ public class StorageWrapper implements IStorageWrapper {
         tag.setByteArray(LOCKED_SLOTS_TAG, lockedBytes);
 
         tag.setByte(SORT_TYPE_TAG, (byte) sortType.ordinal());
-
         tag.setBoolean(KEEP_TAB_TAG, keepTab);
+        if (hasCustomInventoryName()) tag.setString(CUSTOM_NAME_TAG, customName);
 
-        if (hasCustomInventoryName()) {
-            tag.setString(CUSTOM_NAME_TAG, this.customName);
-        }
         return tag;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound tag) {
-        if (tag.hasKey(STORAGE_SLOTS)) {
-            storageSlots = tag.getInteger(STORAGE_SLOTS);
-        }
-        if (tag.hasKey(UPGRADE_SLOTS)) {
-            upgradeSlots = tag.getInteger(UPGRADE_SLOTS);
-        }
+        if (tag.hasKey(STORAGE_SLOTS)) storageSlots = tag.getInteger(STORAGE_SLOTS);
+        if (tag.hasKey(UPGRADE_SLOTS)) upgradeSlots = tag.getInteger(UPGRADE_SLOTS);
+        if (tag.hasKey(MAIN_COLOR)) mainColor = tag.getInteger(MAIN_COLOR);
+        if (tag.hasKey(ACCENT_COLOR)) accentColor = tag.getInteger(ACCENT_COLOR);
 
-        if (tag.hasKey(MAIN_COLOR)) {
-            mainColor = tag.getInteger(MAIN_COLOR);
-        }
-        if (tag.hasKey(ACCENT_COLOR)) {
-            accentColor = tag.getInteger(ACCENT_COLOR);
-        }
-
-        if (tag.hasKey(BACKPACK_INV)) {
-            storageItemStackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
-
-            ItemStackHelpers
-                .loadAllItemsExtended(tag.getCompoundTag(BACKPACK_INV), storageItemStackHandler.getStacks());
-            if (storageItemStackHandler.getSlots() != storageSlots) {
-                storageItemStackHandler.resize(storageSlots);
-            }
-        }
-        if (tag.hasKey(UPGRADE_INV)) {
-            upgradeItemStackHandler.deserializeNBT(tag.getCompoundTag(UPGRADE_INV));
-            if (upgradeItemStackHandler.getSlots() != upgradeSlots) {
-                upgradeItemStackHandler.resize(upgradeSlots);
-            }
-        }
-
-        if (tag.hasKey(MEMORY_STACK_ITEMS_TAG)) {
-            ItemStackHelpers.loadAllItemsExtended(
-                tag.getCompoundTag(MEMORY_STACK_ITEMS_TAG),
-                storageItemStackHandler.memorizedSlotStack);
-        }
+        if (tag.hasKey(BACKPACK_INV)) storageItemStackHandler.deserializeNBT(tag.getCompoundTag(BACKPACK_INV));
+        if (tag.hasKey(UPGRADE_INV)) upgradeItemStackHandler.deserializeNBT(tag.getCompoundTag(UPGRADE_INV));
 
         byte[] respectArr = tag.getByteArray(MEMORY_STACK_RESPECT_NBT_TAG);
-        int maxRespect = storageItemStackHandler.memorizedSlotRespectNbtList.size();
-        for (int i = 0; i < respectArr.length && i < maxRespect; i++) {
-            setMemoryStackRespectNBT(i, respectArr[i] != 0);
+        for (int i = 0; i < respectArr.length && i < storageItemStackHandler.memorizedSlotRespectNbtList.size(); i++) {
+            storageItemStackHandler.memorizedSlotRespectNbtList.set(i, respectArr[i] != 0);
         }
 
         byte[] lockedArr = tag.getByteArray(LOCKED_SLOTS_TAG);
-        int maxLocked = storageItemStackHandler.sortLockedSlots.size();
-        for (int i = 0; i < lockedArr.length && i < maxLocked; i++) {
-            setSlotLocked(i, lockedArr[i] != 0);
+        for (int i = 0; i < lockedArr.length && i < storageItemStackHandler.sortLockedSlots.size(); i++) {
+            storageItemStackHandler.sortLockedSlots.set(i, lockedArr[i] != 0);
         }
 
-        if (tag.hasKey(SORT_TYPE_TAG)) {
-            sortType = SortType.values()[tag.getByte(SORT_TYPE_TAG)];
-        }
+        if (tag.hasKey(SORT_TYPE_TAG)) sortType = SortType.values()[tag.getByte(SORT_TYPE_TAG)];
+        if (tag.hasKey(KEEP_TAB_TAG)) keepTab = tag.getBoolean(KEEP_TAB_TAG);
 
-        if (tag.hasKey(KEEP_TAB_TAG)) {
-            keepTab = tag.getBoolean(KEEP_TAB_TAG);
-        }
-
-        if (tag.hasKey("display", 10)) {
-            NBTTagCompound display = tag.getCompoundTag("display");
-            if (display.hasKey("Name", 8)) {
-                customName = display.getString("Name");
-            }
-        } else {
-            customName = tag.getString(CUSTOM_NAME_TAG);
-        }
-
-        rebuildWrapperCache();
+        if (tag.hasKey(CUSTOM_NAME_TAG)) customName = tag.getString(CUSTOM_NAME_TAG);
     }
 
     public <T> Map<Integer, T> gatherCapabilityUpgrades(Class<T> capabilityClass) {
         Map<Integer, T> result = new HashMap<>();
-
-        for (int slotIndex = 0; slotIndex < upgradeSlots; slotIndex++) {
-            int finalSlotIndex = slotIndex;
-            ItemStack stack = upgradeItemStackHandler.getStackInSlot(slotIndex);
-            if (stack == null) continue;
-
-            UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this);
-            if (wrapper == null) continue;
-
-            if (capabilityClass.isAssignableFrom(wrapper.getClass())) {
-                result.put(slotIndex, capabilityClass.cast(wrapper));
-            }
-        }
-
-        return result;
-    }
-
-    private void rebuildWrapperCache() {
-        wrapperCache.clear();
-
         for (int slot = 0; slot < upgradeSlots; slot++) {
             ItemStack stack = upgradeItemStackHandler.getStackInSlot(slot);
             if (stack == null) continue;
 
-            int finalSlot = slot;
-
             UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this);
-
-            if (wrapper != null) {
-                wrapperCache.put(slot, wrapper);
+            if (wrapper != null && capabilityClass.isAssignableFrom(wrapper.getClass())) {
+                result.put(slot, capabilityClass.cast(wrapper));
             }
         }
+        return result;
     }
 }

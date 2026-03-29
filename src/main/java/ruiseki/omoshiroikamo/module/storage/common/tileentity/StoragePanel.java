@@ -75,6 +75,7 @@ import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.BasicUpgradeWrap
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.CraftingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FeedingUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.FilterUpgradeWrapper;
+import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IDirtable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IToggleable;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.IUpgradeWrapper;
 import ruiseki.omoshiroikamo.module.storage.common.item.wrapper.MagnetUpgradeWrapper;
@@ -171,22 +172,24 @@ public class StoragePanel extends ModularPanel {
             ModularUpgradeSlot slot = new ModularUpgradeSlot(this.wrapper, i, this);
             slot.slotGroup("upgrade_inventory");
             UpgradeSlotSH syncHandler = new UpgradeSlotSH(slot, this.wrapper, this);
+
+            this.syncManager.syncValue("upgrades", i, syncHandler);
+            this.upgradeSlotSyncHandlers[i] = syncHandler;
+            this.upgradeSlotGroups[i] = new UpgradeSlotUpdateGroup(this, this.wrapper, i);
+
             slot.changeListener((stack, onlyAmountChanged, client, init) -> {
                 if (!client) return;
                 ItemStack last = lastUpgradeStacks[slotIndex];
 
                 boolean itemChanged = !ItemUtils.areStacksEqual(last, stack, true);
                 boolean tabChanged = isTabStateDifferent(last, stack);
+                boolean tabDirty = isTabDirty(stack, syncHandler);
 
-                if (!itemChanged && !tabChanged) return;
+                if (!itemChanged && !tabChanged && !tabDirty) return;
                 lastUpgradeStacks[slotIndex] = stack == null ? null : stack.copy();
 
                 updateUpgradeWidgets();
             });
-
-            this.syncManager.syncValue("upgrades", i, syncHandler);
-            this.upgradeSlotSyncHandlers[i] = syncHandler;
-            this.upgradeSlotGroups[i] = new UpgradeSlotUpdateGroup(this, this.wrapper, i);
         }
         this.syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 1, 99, true));
 
@@ -439,6 +442,7 @@ public class StoragePanel extends ModularPanel {
 
         for (int slotIndex = 0; slotIndex < upgradeSlotWidgets.size(); slotIndex++) {
             ItemSlot slotWidget = upgradeSlotWidgets.get(slotIndex);
+            if (slotWidget.getSlot() == null) continue;
             ItemStack stack = slotWidget.getSlot()
                 .getStack();
             if (!(stack != null && stack.getItem() instanceof ItemUpgrade<?>item)) {
@@ -684,6 +688,18 @@ public class StoragePanel extends ModularPanel {
                 .getBoolean(IUpgradeWrapper.TAB_STATE_TAG);
 
         return aState != bState;
+    }
+
+    private boolean isTabDirty(ItemStack stack, UpgradeSlotSH upgradeSlot) {
+        UpgradeWrapperBase wrapper = UpgradeWrapperFactory.createWrapper(stack, this.wrapper);
+        if (wrapper instanceof IDirtable dirtable) {
+            boolean isDirty = dirtable.isDirty();
+            if (isDirty) {
+                upgradeSlot.syncToServer(UpgradeSlotSH.UPDATE_DIRTY, buf -> { buf.writeBoolean(false); });
+            }
+            return isDirty;
+        }
+        return false;
     }
 
     @Override
