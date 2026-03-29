@@ -5,8 +5,6 @@
 ## 📚 関連ドキュメント
 
 - [JSON フォーマット](./JSON_FORMAT.md) - 基本的な JSON 構文
-- [式リファレンス](../../../run/ArithmeticParserFields.md) - 利用可能な変数・関数の完全なリスト
-
 ---
 
 ## 1. 基本パターン
@@ -541,7 +539,6 @@ NBT と組み合わせて段階的な動作を実現。
 ## 6. 参考リンク
 
 - [JSON フォーマット完全版](./JSON_FORMAT.md)
-- [式リファレンス（変数・関数一覧）](../../../run/ArithmeticParserFields.md)
 - [開発者ガイド](./DEVELOPER_GUIDE.md)
 
 ---

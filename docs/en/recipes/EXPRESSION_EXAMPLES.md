@@ -5,7 +5,6 @@ This document provides practical recipe examples using the Dynamic Amount System
 ## 📚 Related Documentation
 
 - [JSON Format](./JSON_FORMAT.md) - Basic JSON syntax
-- [Expression Reference](../../../run/ArithmeticParserFields.md) - Complete list of available variables and functions
 
 ---
 
@@ -541,7 +540,6 @@ Example when `duration` field can use expressions.
 ## 6. Reference Links
 
 - [Complete JSON Format](./JSON_FORMAT.md)
-- [Expression Reference (Variables & Functions)](../../../run/ArithmeticParserFields.md)
 - [Developer Guide](./DEVELOPER_GUIDE.md)
 
 ---

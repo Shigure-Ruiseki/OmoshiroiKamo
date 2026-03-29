@@ -118,8 +118,6 @@
 
 ### 使用可能な変数と関数
 
-利用可能な変数・関数の完全なリストは、[ArithmeticParserFields.md](../../../run/ArithmeticParserFields.md) を参照してください。
-
 **主なマシンプロパティ**:
 - `tier` - マシンの現在の Tier (1-16)
 - `energy` / `energy_p` - エネルギー量 / 充填率 (0.0-1.0)

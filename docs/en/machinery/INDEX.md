@@ -47,7 +47,6 @@ An expression system for dynamically changing recipe input/output amounts. Enabl
 ```
 
 **Related Documentation**:
-- [Expression Reference (Variables & Functions)](../../../run/ArithmeticParserFields.md) - Complete list of available variables and functions
 - [JSON Format: Dynamic Amount](../recipes/JSON_FORMAT.md#31-dynamic-amount) - Basic usage
 - [Practical Examples](../recipes/EXPRESSION_EXAMPLES.md) - Detailed usage examples by pattern
 

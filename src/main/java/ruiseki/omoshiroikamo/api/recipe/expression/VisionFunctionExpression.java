@@ -83,7 +83,7 @@ public class VisionFunctionExpression implements IExpression {
             for (int checkY = y - 1; checkY >= 0; checkY--) {
                 Block block = world.getBlock(x, checkY, z);
                 if (block == null || block == Blocks.air || block.isAir(world, x, checkY, z)) continue;
-                if (block == Blocks.bedrock) return true; // 岩盤に当たった場合は成功扱い
+                if (block == Blocks.bedrock) return true;
                 if (isAllowed(block, strict, allowedBlockIds)) continue;
                 return false;
             }

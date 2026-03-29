@@ -111,8 +111,6 @@ In the above example:
 
 ### Available Variables and Functions
 
-For a complete list of available variables and functions, refer to [ArithmeticParserFields.md](../../../run/ArithmeticParserFields.md).
-
 **Main Machine Properties**:
 - `tier` - Current machine Tier (1-16)
 - `energy` / `energy_p` - Energy amount / fill percentage (0.0-1.0)
