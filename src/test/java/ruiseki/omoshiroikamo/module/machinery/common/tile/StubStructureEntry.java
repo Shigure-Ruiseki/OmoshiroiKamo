@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.enums.EnumIO;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
@@ -76,13 +77,23 @@ public class StubStructureEntry implements IStructureEntry {
     }
 
     @Override
-    public float getSpeedMultiplier() {
-        return 1.0f;
+    public double getSpeedMultiplier() {
+        return 1.0;
     }
 
     @Override
-    public float getEnergyMultiplier() {
-        return 1.0f;
+    public double getSpeedMultiplier(ConditionContext context) {
+        return getSpeedMultiplier();
+    }
+
+    @Override
+    public double getEnergyMultiplier() {
+        return 1.0;
+    }
+
+    @Override
+    public double getEnergyMultiplier(ConditionContext context) {
+        return getEnergyMultiplier();
     }
 
     @Override
@@ -91,8 +102,18 @@ public class StubStructureEntry implements IStructureEntry {
     }
 
     @Override
+    public int getBatchMin(ConditionContext context) {
+        return getBatchMin();
+    }
+
+    @Override
     public int getBatchMax() {
         return 1;
+    }
+
+    @Override
+    public int getBatchMax(ConditionContext context) {
+        return getBatchMax();
     }
 
     @Override
@@ -124,4 +145,29 @@ public class StubStructureEntry implements IStructureEntry {
 
     @Override
     public void accept(IStructureVisitor visitor) {}
+
+    @Override
+    public double evaluateSpeedMultiplier(ConditionContext context) {
+        return getSpeedMultiplier(context);
+    }
+
+    @Override
+    public double evaluateEnergyMultiplier(ConditionContext context) {
+        return getEnergyMultiplier(context);
+    }
+
+    @Override
+    public int evaluateBatchMin(ConditionContext context) {
+        return getBatchMin(context);
+    }
+
+    @Override
+    public int evaluateBatchMax(ConditionContext context) {
+        return getBatchMax(context);
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

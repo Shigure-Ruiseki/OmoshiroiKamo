@@ -21,46 +21,24 @@ public class ArrayLiteralExpression implements IExpression {
         this.elements = new ArrayList<>(elements);
     }
 
-    /**
-     * Get the list of element expressions.
-     * 
-     * @return Unmodifiable list of elements
-     */
     public List<IExpression> getElements() {
         return Collections.unmodifiableList(elements);
     }
 
-    /**
-     * Evaluate as numeric value (returns array length).
-     */
     @Override
-    public double evaluate(ConditionContext context) {
-        return elements.size();
-    }
-
-    /**
-     * Convert array literal to NBTTagList.
-     * Supports both string and numeric elements.
-     *
-     * @param context The condition context
-     * @return NBTTagList containing the elements
-     */
-    public NBTTagList toNBTList(ConditionContext context) {
+    public EvaluationValue evaluate(ConditionContext context) {
         NBTTagList list = new NBTTagList();
-
         for (IExpression element : elements) {
-            if (element instanceof StringLiteralExpression) {
-                // String element
-                String value = ((StringLiteralExpression) element).getStringValue();
-                list.appendTag(new NBTTagString(value));
-            } else {
-                // Numeric element
-                double value = element.evaluate(context);
-                list.appendTag(NBTTypeInference.parseNumeric(value));
+            EvaluationValue eval = element.evaluate(context);
+            if (eval.isString()) {
+                list.appendTag(new NBTTagString(eval.asString()));
+            } else if (eval.isNumeric()) {
+                list.appendTag(NBTTypeInference.parseNumeric(eval.asDouble()));
+            } else if (eval.isNbt()) {
+                list.appendTag(eval.asNbt());
             }
         }
-
-        return list;
+        return new EvaluationValue(list);
     }
 
     @Override
@@ -74,5 +52,11 @@ public class ArrayLiteralExpression implements IExpression {
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    // Legacy method but keeping for compatibility if needed
+    public NBTTagList toNBTList(ConditionContext context) {
+        EvaluationValue val = evaluate(context);
+        return (NBTTagList) val.asNbt();
     }
 }

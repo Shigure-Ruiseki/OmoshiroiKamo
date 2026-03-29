@@ -15,6 +15,7 @@ import ruiseki.omoshiroikamo.api.structure.core.IStructureLayer;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
 import ruiseki.omoshiroikamo.api.structure.core.StructureShapeWithMappings;
 import ruiseki.omoshiroikamo.api.structure.io.StructureJsonReader;
+import ruiseki.omoshiroikamo.api.structure.io.StructureJsonWriter;
 import ruiseki.omoshiroikamo.api.structure.visitor.StructureValidationVisitor;
 import ruiseki.omoshiroikamo.core.common.util.Logger;
 import ruiseki.omoshiroikamo.core.integration.structureLib.StructureCompat;
@@ -129,6 +130,10 @@ public class StructureManager {
 
                 // Always register default mappings even if some structures failed
                 fileDefaultMappings.put(name, fileData.defaultMappings);
+
+                if (fileData.dirty) {
+                    saveMigratedFile(file, fileData);
+                }
 
                 if (successCount > 0 || errorCount > 0) {
                     Logger.info(
@@ -283,6 +288,25 @@ public class StructureManager {
         }
     }
 
+    private void saveMigratedFile(File file, StructureJsonReader.FileData fileData) {
+        try {
+            // Create backup
+            File backup = new File(file.getAbsolutePath() + ".bak");
+            if (file.exists()) {
+                if (backup.exists()) backup.delete();
+                file.renameTo(backup);
+            }
+
+            // Write updated content
+            StructureJsonWriter writer = new StructureJsonWriter(file);
+            writer.writeWithDefaults(fileData.structures.values(), fileData.defaultMappings);
+
+            Logger.info("[Migration] Successfully migrated and saved: " + file.getName());
+        } catch (Exception e) {
+            Logger.error("[Migration] Failed to save migrated file: " + file.getName(), e);
+        }
+    }
+
     private void loadCustomStructures() {
         File customDir = new File(configDir, "modular/structures");
         if (!customDir.exists()) {
@@ -290,29 +314,39 @@ public class StructureManager {
             return;
         }
 
-        StructureJsonReader reader = new StructureJsonReader(customDir);
-        try {
-            StructureJsonReader.FileData fileData = reader.read();
-            int successCount = 0;
-            int errorCount = 0;
+        File[] files = customDir.listFiles();
+        if (files == null) return;
 
-            for (IStructureEntry entry : fileData.structures.values()) {
-                if (validateAndRegister(entry, fileData.defaultMappings, "custom:" + entry.getName(), true)) {
-                    successCount++;
-                } else {
-                    errorCount++;
+        int successCount = 0;
+        int errorCount = 0;
+
+        for (File jsonFile : files) {
+            if (!jsonFile.isFile() || !jsonFile.getName()
+                .endsWith(".json")) continue;
+            try {
+                StructureJsonReader reader = new StructureJsonReader(jsonFile);
+                StructureJsonReader.FileData fileData = reader.readFile(jsonFile);
+                if (fileData == null) continue;
+
+                if (fileData.dirty) {
+                    saveMigratedFile(jsonFile, fileData);
                 }
-            }
 
-            if (successCount > 0 || errorCount > 0) {
-                Logger.info(
-                    "Custom structures: " + successCount
-                        + " loaded successfully, "
-                        + errorCount
-                        + " failed validation");
+                for (IStructureEntry entry : fileData.structures.values()) {
+                    if (validateAndRegister(entry, fileData.defaultMappings, "custom:" + entry.getName(), true)) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                    }
+                }
+            } catch (Exception e) {
+                errorCollector.collect(StructureException.loadFailed("custom:" + jsonFile.getName(), e));
             }
-        } catch (Exception e) {
-            errorCollector.collect(StructureException.loadFailed("custom_structures", e));
+        }
+
+        if (successCount > 0 || errorCount > 0) {
+            Logger.info(
+                "Custom structures: " + successCount + " loaded successfully, " + errorCount + " failed validation");
         }
     }
 

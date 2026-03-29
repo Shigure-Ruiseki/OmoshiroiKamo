@@ -539,7 +539,8 @@ public class JSONLoaderIntegrationTest {
 
         // Context=null の場合、NBT デフォルト値 50.0 が使われるはず。
         // MapRange(50.0, 0~100 -> 0~1) は 0.5 になる
-        double val = expr.evaluate(null);
+        double val = expr.evaluate(null)
+            .asDouble();
         assertEquals(0.5, val, 0.001, "デフォルト値での評価が 0.5 になるべき");
     }
 

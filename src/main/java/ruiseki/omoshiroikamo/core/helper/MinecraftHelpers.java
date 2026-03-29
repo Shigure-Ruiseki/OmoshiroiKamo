@@ -248,6 +248,7 @@ public class MinecraftHelpers {
             teok.destroy();
         } else {
             TileEntityNBTStorage.TAG = null;
+            TileEntityNBTStorage.TILE = null;
         }
 
         // TODO: add IWorldNameable

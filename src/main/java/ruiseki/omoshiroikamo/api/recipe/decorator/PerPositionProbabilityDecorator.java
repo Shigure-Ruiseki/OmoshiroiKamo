@@ -7,6 +7,7 @@ import net.minecraft.util.ChunkCoordinates;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
@@ -45,13 +46,14 @@ public class PerPositionProbabilityDecorator extends RecipeDecorator {
             IRecipeContext context = findRecipeContext(outputPorts);
 
             if (context != null) {
+                ConditionContext condContext = context.getConditionContext();
                 List<ChunkCoordinates> positions = context.getSymbolPositions(symbol);
-                double chance = chanceExpr.evaluate(null);
+                double chance = chanceExpr.evaluateDouble(condContext);
 
                 // Check each position independently
                 for (ChunkCoordinates pos : positions) {
                     if (rand.nextDouble() < chance) {
-                        output.applyAt(context, pos);
+                        output.applyAt(context, pos, condContext);
                     }
                 }
             }

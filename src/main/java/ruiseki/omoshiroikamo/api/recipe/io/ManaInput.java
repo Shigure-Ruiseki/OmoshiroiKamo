@@ -4,18 +4,21 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
 import ruiseki.omoshiroikamo.api.recipe.core.RecipeTickResult;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import vazkii.botania.api.mana.IManaPool;
 
 public class ManaInput extends AbstractModularRecipeInput {
 
-    private int amount;
-
     public ManaInput(int amount, boolean perTick) {
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
         this.interval = perTick ? 1 : 0;
     }
 
@@ -38,8 +41,13 @@ public class ManaInput extends AbstractModularRecipeInput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return evaluateAmount(context);
+    }
+
+    @Override
     public long getRequiredAmount() {
-        return (long) amount;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -48,7 +56,7 @@ public class ManaInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         IManaPool manaPort = (IManaPool) port;
         int stored = manaPort.getCurrentMana();
         if (stored > 0) {
@@ -72,15 +80,24 @@ public class ManaInput extends AbstractModularRecipeInput {
                 .getAsBoolean();
         }
 
-        this.amount = json.get("mana")
-            .getAsInt();
+        this.amount = 0;
+        if (json.has("mana")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("mana"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluateDouble(null);
+            }
+        }
     }
 
     @Override
     public void write(JsonObject json) {
         if (index != -1) json.addProperty("index", index);
         if (!consume) json.addProperty("consume", false);
-        json.addProperty("mana", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("mana", amount);
+        } else {
+            json.addProperty("mana", amountExpr.toString());
+        }
         if (interval != 0) {
             json.addProperty("pertick", interval);
         }
@@ -108,6 +125,7 @@ public class ManaInput extends AbstractModularRecipeInput {
         result.interval = this.interval;
         result.consume = this.consume;
         result.index = this.index;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -115,6 +133,9 @@ public class ManaInput extends AbstractModularRecipeInput {
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setString("id", "mana");
         nbt.setInteger("amount", amount);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setInteger("interval", interval);
         nbt.setBoolean("consume", consume);
         nbt.setInteger("index", index);
@@ -123,6 +144,11 @@ public class ManaInput extends AbstractModularRecipeInput {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
         this.interval = nbt.getInteger("interval");
         this.consume = nbt.getBoolean("consume");
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;

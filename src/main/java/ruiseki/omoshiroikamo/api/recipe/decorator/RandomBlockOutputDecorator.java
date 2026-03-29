@@ -11,6 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.recipe.context.IRecipeContext;
 import ruiseki.omoshiroikamo.api.recipe.core.IModularRecipe;
@@ -58,9 +59,10 @@ public class RandomBlockOutputDecorator extends RecipeDecorator {
             IRecipeContext context = findRecipeContext(outputPorts);
 
             if (context != null) {
+                ConditionContext condContext = context.getConditionContext();
                 for (BlockOutputSelection selection : selections) {
                     // Evaluate selection count
-                    int selectCount = (int) countExpr.evaluate(null);
+                    int selectCount = (int) countExpr.evaluateDouble(condContext);
 
                     // Get all positions for this symbol
                     List<ChunkCoordinates> allPositions = context.getSymbolPositions(selection.symbol);
@@ -70,7 +72,7 @@ public class RandomBlockOutputDecorator extends RecipeDecorator {
 
                     // Apply BlockOutput to selected positions only
                     for (ChunkCoordinates pos : selectedPositions) {
-                        selection.output.applyAt(context, pos);
+                        selection.output.applyAt(context, pos, condContext);
                     }
                 }
             }

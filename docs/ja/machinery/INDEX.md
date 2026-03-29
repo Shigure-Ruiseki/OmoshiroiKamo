@@ -21,11 +21,45 @@ Modular Machineryモジュールの技術ドキュメント一覧です。
 
 ---
 
+---
+
+## 💡 新機能ガイド
+
+### 動的数量システム (Expression System)
+レシピの入出力量を動的に変化させるための式システム。マシンの状態やワールド環境に応じて、柔軟なレシピ設計が可能になります。
+
+**主な機能**:
+- **マシン状態の参照**: エネルギー、流体、マナ、ガス、Tier、進捗など
+- **ワールド環境の参照**: 時間、天候、月齢、バイオーム、経過日数など
+- **数学関数**: 三角関数、対数、べき乗、乱数など
+- **条件分岐**: 三項演算子、論理演算子による複雑な制御
+
+**使用例**:
+```json
+{
+  "inputs": [
+    { "item": "minecraft:iron_ingot", "amount": "tier * 10 + 5" }
+  ],
+  "outputs": [
+    { "fluid": "steam", "amount": "energy_p * 1000" }
+  ]
+}
+```
+
+**関連ドキュメント**:
+- [JSON フォーマット: 動的数量](../recipes/JSON_FORMAT.md#31-動的数量-dynamic-amount) - 基本的な使い方
+- [実用例集](../recipes/EXPRESSION_EXAMPLES.md) - パターン別の詳細な使用例
+
+**対象読者**: レシピ作成者、Modpack 製作者
+
+---
+
 ## 🔗 関連ドキュメント
 
 ### Recipe System
 - [概要](../recipes/OVERVIEW.md)
 - [JSON フォーマット](../recipes/JSON_FORMAT.md)
+- [実用例集](../recipes/EXPRESSION_EXAMPLES.md) 🆕
 - [開発者ガイド](../recipes/DEVELOPER_GUIDE.md)
 
 ### Structure System

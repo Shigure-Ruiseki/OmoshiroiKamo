@@ -4,8 +4,12 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.JsonObject;
 
+import ruiseki.omoshiroikamo.api.condition.ConditionContext;
 import ruiseki.omoshiroikamo.api.modular.IModularPort;
 import ruiseki.omoshiroikamo.api.modular.IPortType;
+import ruiseki.omoshiroikamo.api.recipe.expression.ConstantExpression;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionParser;
+import ruiseki.omoshiroikamo.api.recipe.expression.ExpressionsParser;
 import ruiseki.omoshiroikamo.api.recipe.visitor.IRecipeVisitor;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.IAspectContainer;
@@ -13,11 +17,11 @@ import thaumcraft.api.aspects.IAspectContainer;
 public class EssentiaInput extends AbstractModularRecipeInput {
 
     private String aspectTag;
-    private int amount;
 
     public EssentiaInput(String aspectTag, int amount) {
         this.aspectTag = aspectTag;
         this.amount = amount;
+        this.amountExpr = new ConstantExpression(amount);
     }
 
     public String getAspectTag() {
@@ -34,8 +38,13 @@ public class EssentiaInput extends AbstractModularRecipeInput {
     }
 
     @Override
+    public long getRequiredAmount(ConditionContext context) {
+        return evaluateAmount(context);
+    }
+
+    @Override
     public long getRequiredAmount() {
-        return amount;
+        return getRequiredAmount(null);
     }
 
     @Override
@@ -44,7 +53,7 @@ public class EssentiaInput extends AbstractModularRecipeInput {
     }
 
     @Override
-    protected long consume(IModularPort port, long remaining, boolean simulate) {
+    protected long consume(IModularPort port, long remaining, boolean simulate, ConditionContext context) {
         Aspect aspect = Aspect.getAspect(aspectTag);
         if (aspect == null) return 0;
 
@@ -73,8 +82,12 @@ public class EssentiaInput extends AbstractModularRecipeInput {
 
         this.aspectTag = json.get("essentia")
             .getAsString();
-        this.amount = json.get("amount")
-            .getAsInt();
+        if (json.has("amount")) {
+            this.amountExpr = ExpressionsParser.parse(json.get("amount"));
+            if (amountExpr instanceof ConstantExpression) {
+                this.amount = (int) amountExpr.evaluateDouble(null);
+            }
+        }
     }
 
     @Override
@@ -86,7 +99,11 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         if (aspectTag != null) {
             json.addProperty("essentia", aspectTag);
         }
-        json.addProperty("amount", amount);
+        if (amountExpr instanceof ConstantExpression) {
+            json.addProperty("amount", amount);
+        } else {
+            json.addProperty("amount", amountExpr.toString());
+        }
     }
 
     @Override
@@ -111,6 +128,7 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         result.consume = this.consume;
         result.interval = this.interval;
         result.index = this.index;
+        result.amountExpr = this.amountExpr;
         return result;
     }
 
@@ -121,6 +139,9 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         nbt.setBoolean("consume", consume);
         nbt.setString("aspect", aspectTag);
         nbt.setInteger("amount", amount);
+        if (!(amountExpr instanceof ConstantExpression)) {
+            nbt.setString("amountExpr", amountExpr.toString());
+        }
         nbt.setInteger("index", index);
     }
 
@@ -130,6 +151,11 @@ public class EssentiaInput extends AbstractModularRecipeInput {
         this.consume = nbt.getBoolean("consume");
         this.aspectTag = nbt.getString("aspect");
         this.amount = nbt.getInteger("amount");
+        if (nbt.hasKey("amountExpr")) {
+            this.amountExpr = ExpressionParser.parseExpression(nbt.getString("amountExpr"));
+        } else {
+            this.amountExpr = new ConstantExpression(amount);
+        }
         this.index = nbt.hasKey("index") ? nbt.getInteger("index") : -1;
     }
 

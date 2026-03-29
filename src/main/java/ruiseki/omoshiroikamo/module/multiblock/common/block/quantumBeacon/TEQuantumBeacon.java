@@ -305,8 +305,8 @@ public abstract class TEQuantumBeacon extends AbstractMBModifierTE implements IO
     }
 
     @Override
-    public float getSpeedMultiplier() {
-        return 0.0F;
+    public double getSpeedMultiplier() {
+        return 0.0;
     }
 
     private void updateModifierHandler() {

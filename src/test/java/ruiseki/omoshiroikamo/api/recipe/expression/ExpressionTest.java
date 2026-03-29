@@ -42,35 +42,55 @@ public class ExpressionTest {
         IExpression expr = new ConstantExpression(0.75);
 
         // どのコンテキストでも同じ値を返す
-        assertEquals(0.75, expr.evaluate(new ConditionContext(null, 0, 0, 0)), 0.001);
+        assertEquals(
+            0.75,
+            expr.evaluate(new ConditionContext(null, 0, 0, 0))
+                .asDouble(),
+            0.001);
     }
 
     @Test
     @DisplayName("ConstantExpression: 0.0")
     public void testConstantZero() {
         IExpression expr = new ConstantExpression(0.0);
-        assertEquals(0.0, expr.evaluate(null), 0.001);
+        assertEquals(
+            0.0,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     @Test
     @DisplayName("ConstantExpression: 1.0")
     public void testConstantOne() {
         IExpression expr = new ConstantExpression(1.0);
-        assertEquals(1.0, expr.evaluate(null), 0.001);
+        assertEquals(
+            1.0,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     @Test
     @DisplayName("ConstantExpression: 負の値")
     public void testConstantNegative() {
         IExpression expr = new ConstantExpression(-5.5);
-        assertEquals(-5.5, expr.evaluate(null), 0.001);
+        assertEquals(
+            -5.5,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     @Test
     @DisplayName("ConstantExpression: 大きな値")
     public void testConstantLarge() {
         IExpression expr = new ConstantExpression(99999.99);
-        assertEquals(99999.99, expr.evaluate(new ConditionContext(null, 0, 0, 0)), 0.001);
+        assertEquals(
+            99999.99,
+            expr.evaluate(new ConditionContext(null, 0, 0, 0))
+                .asDouble(),
+            0.001);
     }
 
     // ========================================
@@ -85,7 +105,11 @@ public class ExpressionTest {
 
         assertNotNull(expr);
         assertTrue(expr instanceof ConstantExpression);
-        assertEquals(0.5, expr.evaluate(null), 0.001);
+        assertEquals(
+            0.5,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -95,7 +119,11 @@ public class ExpressionTest {
         IExpression expr = ExpressionsParser.parse(json);
 
         assertNotNull(expr);
-        assertEquals(3.0, expr.evaluate(null), 0.001);
+        assertEquals(
+            3.0,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -105,7 +133,11 @@ public class ExpressionTest {
         IExpression expr = ExpressionsParser.parse(json);
 
         assertNotNull(expr);
-        assertEquals(0.0, expr.evaluate(new ConditionContext(null, 0, 0, 0)), 0.001);
+        assertEquals(
+            0.0,
+            expr.evaluate(new ConditionContext(null, 0, 0, 0))
+                .asDouble(),
+            0.001);
     }
 
     // ========================================
@@ -145,7 +177,11 @@ public class ExpressionTest {
 
         assertNotNull(expr);
         // デフォルト値が返される（コンテキストにNBTがない場合）
-        assertEquals(1.0, expr.evaluate(new ConditionContext(null, 0, 0, 0)), 0.001);
+        assertEquals(
+            1.0,
+            expr.evaluate(new ConditionContext(null, 0, 0, 0))
+                .asDouble(),
+            0.001);
     }
 
     @Test
@@ -154,7 +190,11 @@ public class ExpressionTest {
         NbtExpression expr = new NbtExpression("missing.path", 0.75);
 
         // コンテキストが不完全な場合、デフォルト値を返す
-        assertEquals(0.75, expr.evaluate(new ConditionContext(null, 0, 0, 0)), 0.001);
+        assertEquals(
+            0.75,
+            expr.evaluate(new ConditionContext(null, 0, 0, 0))
+                .asDouble(),
+            0.001);
     }
 
     // ========================================
@@ -168,7 +208,8 @@ public class ExpressionTest {
 
         // nullの場合、デフォルト値（例: 0.0）を返すConstantExpressionが生成される
         if (expr != null) {
-            double result = expr.evaluate(null);
+            double result = expr.evaluate(null)
+                .asDouble();
             assertTrue(result >= 0.0);
         }
     }
@@ -177,14 +218,22 @@ public class ExpressionTest {
     @DisplayName("【エッジ】ConstantExpression: Double.MAX_VALUE")
     public void testConstantMaxValue() {
         IExpression expr = new ConstantExpression(Double.MAX_VALUE);
-        assertEquals(Double.MAX_VALUE, expr.evaluate(null), 0.001);
+        assertEquals(
+            Double.MAX_VALUE,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     @Test
     @DisplayName("【エッジ】ConstantExpression: Double.MIN_VALUE")
     public void testConstantMinValue() {
         IExpression expr = new ConstantExpression(Double.MIN_VALUE);
-        assertEquals(Double.MIN_VALUE, expr.evaluate(null), 0.001);
+        assertEquals(
+            Double.MIN_VALUE,
+            expr.evaluate(null)
+                .asDouble(),
+            0.001);
     }
 
     // ========================================

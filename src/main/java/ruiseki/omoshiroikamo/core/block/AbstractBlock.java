@@ -57,7 +57,7 @@ public abstract class AbstractBlock<T extends AbstractTE> extends BlockOK
 
     @Override
     public int damageDropped(int meta) {
-        return meta;
+        return 0;
     }
 
     @Override

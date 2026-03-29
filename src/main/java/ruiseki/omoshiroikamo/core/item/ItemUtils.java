@@ -30,6 +30,7 @@ public class ItemUtils extends ItemUtil {
 
     public static ItemStack merge(ItemStack a, ItemStack b) {
         if (a == null) return b;
+        if (b == null) return a;
         a.stackSize += b.stackSize;
         return a;
     }

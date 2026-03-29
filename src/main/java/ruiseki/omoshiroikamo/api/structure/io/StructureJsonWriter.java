@@ -10,7 +10,9 @@ import com.google.gson.JsonObject;
 
 import ruiseki.omoshiroikamo.api.structure.core.IStructureEntry;
 import ruiseki.omoshiroikamo.api.structure.core.ISymbolMapping;
+import ruiseki.omoshiroikamo.core.common.util.VersionComparator;
 import ruiseki.omoshiroikamo.core.json.AbstractJsonWriter;
+import ruiseki.omoshiroikamo.core.lib.LibMisc;
 
 /**
  * Writer that serializes IStructureEntry objects to JSON files.
@@ -102,9 +104,12 @@ public class StructureJsonWriter extends AbstractJsonWriter<IStructureEntry> {
             rootArray.add(defaultEntry);
         }
 
-        // Add all structure entries
+        // Add all structure entries, stamping modVersion so migration is not re-applied
+        String baseVersion = VersionComparator.toBaseVersion(LibMisc.VERSION);
         for (IStructureEntry structure : structures) {
-            rootArray.add(structure.serialize());
+            JsonObject structureJson = structure.serialize();
+            structureJson.addProperty("modVersion", baseVersion);
+            rootArray.add(structureJson);
         }
 
         File targetFile = path.isDirectory() ? new File(path, "structures.json") : path;
