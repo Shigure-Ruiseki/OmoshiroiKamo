@@ -270,6 +270,84 @@ public class MathFunctionExpressionTest {
         double rnd = ExpressionParser.parseExpression("random()")
             .evaluate(context);
         assertTrue(rnd >= 0.0 && rnd < 1.0);
+
+        // クリップの逆転 (min > max) のテスト
+        assertEquals(
+            50.0,
+            ExpressionParser.parseExpression("clamp(50, 100, 0)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("clamp(-10, 100, 0)")
+                .evaluate(context),
+            0.001);
+    }
+
+    @Test
+    @DisplayName("安全性ガード: sqrt(-1), asin(2), log(0), log(10, 1)")
+    public void testSafetyGuards() {
+        ConditionContext context = new ConditionContext(null, 0, 0, 0);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("sqrt(-1)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("asin(2.0)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("acos(-1.5)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("log(0)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("log(-5)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("log(10, 1)")
+                .evaluate(context),
+            0.001);
+        assertEquals(
+            0.0,
+            ExpressionParser.parseExpression("log(10, -2)")
+                .evaluate(context),
+            0.001);
+    }
+
+    @Test
+    @DisplayName("決定論的ランダムの検証")
+    public void testDeterministicRandom() {
+        ConditionContext context1 = new ConditionContext(null, 10, 20, 30, null, 12345L);
+        ConditionContext context1_same = new ConditionContext(null, 10, 20, 30, null, 12345L);
+        ConditionContext context2 = new ConditionContext(null, 10, 20, 30, null, 54321L);
+
+        double val1 = ExpressionParser.parseExpression("random()")
+            .evaluate(context1);
+        double val1_same = ExpressionParser.parseExpression("random()")
+            .evaluate(context1_same);
+        double val2 = ExpressionParser.parseExpression("random()")
+            .evaluate(context2);
+
+        assertEquals(val1, val1_same, "同じシードなら同じ値が返るべき");
+        assertNotEquals(val1, val2, "違うシードなら違う値が返るべき");
+
+        // chance() の検証
+        double chance1 = ExpressionParser.parseExpression("chance(0.5)")
+            .evaluate(context1);
+        double chance1_same = ExpressionParser.parseExpression("chance(0.5)")
+            .evaluate(context1_same);
+        assertEquals(chance1, chance1_same, "同じシードなら chance() も同じ結果になるべき");
     }
 
     @Test

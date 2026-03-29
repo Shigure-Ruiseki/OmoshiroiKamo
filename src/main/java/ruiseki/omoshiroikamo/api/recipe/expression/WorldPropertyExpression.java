@@ -53,9 +53,11 @@ public class WorldPropertyExpression implements IExpression {
             case "light_sky":
                 return world.getSavedLightValue(EnumSkyBlock.Sky, x, y, z);
             case "temp":
+                if (!world.blockExists(x, y, z)) return 0.5; // Fallback to standard temp
                 return world.getBiomeGenForCoords(x, z)
                     .getFloatTemperature(x, y, z);
             case "humidity":
+                if (!world.blockExists(x, y, z)) return 0.5; // Fallback to standard humidity
                 return world.getBiomeGenForCoords(x, z)
                     .getFloatRainfall();
             case "is_day":

@@ -14,17 +14,23 @@ public class ConditionContext {
     private final int y;
     private final int z;
     private final IRecipeContext recipeContext;
+    private final long evaluationSeed;
 
-    public ConditionContext(World world, int x, int y, int z, IRecipeContext recipeContext) {
+    public ConditionContext(World world, int x, int y, int z, IRecipeContext recipeContext, long evaluationSeed) {
         this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
         this.recipeContext = recipeContext;
+        this.evaluationSeed = evaluationSeed;
+    }
+
+    public ConditionContext(World world, int x, int y, int z, IRecipeContext recipeContext) {
+        this(world, x, y, z, recipeContext, 0L);
     }
 
     public ConditionContext(World world, int x, int y, int z) {
-        this(world, x, y, z, null);
+        this(world, x, y, z, null, 0L);
     }
 
     public World getWorld() {
@@ -45,5 +51,12 @@ public class ConditionContext {
 
     public IRecipeContext getRecipeContext() {
         return recipeContext;
+    }
+
+    /**
+     * Get a stable seed for deterministic evaluation during this check.
+     */
+    public long getEvaluationSeed() {
+        return evaluationSeed;
     }
 }

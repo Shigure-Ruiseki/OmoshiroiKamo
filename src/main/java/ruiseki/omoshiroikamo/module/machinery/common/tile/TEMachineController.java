@@ -127,6 +127,8 @@ public class TEMachineController extends AbstractMBModifierTE
     private long timePlacedCount = 0;
     @NBTPersist
     private long timeContinuousCount = 0;
+    @NBTPersist
+    private long currentRecipeSeed = 0;
 
     private final MachineStateAgent machineStateAgent = new MachineStateAgent(this);
 
@@ -640,7 +642,9 @@ public class TEMachineController extends AbstractMBModifierTE
                 return;
             }
 
-            ConditionContext context = new ConditionContext(worldObj, xCoord, yCoord, zCoord);
+            currentRecipeSeed = worldObj.getTotalWorldTime() ^ worldObj.getSeed()
+                ^ ((long) xCoord << 32 | (zCoord & 0xFFFFFFFFL));
+            ConditionContext context = getConditionContext();
             if (processAgent.startRecipe(recipe, getContextualInputPorts(), getContextualOutputPorts(), context))
                 lastProcessErrorReason = ErrorReason.NONE;
             else lastProcessErrorReason = ErrorReason.NO_INPUT;
@@ -1214,7 +1218,11 @@ public class TEMachineController extends AbstractMBModifierTE
 
     @Override
     public ConditionContext getConditionContext() {
-        return new ConditionContext(worldObj, xCoord, yCoord, zCoord, this);
+        long seed = (long) xCoord ^ ((long) zCoord << 32)
+            ^ worldObj.getSeed()
+            ^ ((long) machineStateAgent.getRecipeProcessedCount() << 16)
+            ^ currentRecipeSeed;
+        return new ConditionContext(worldObj, xCoord, yCoord, zCoord, this, seed);
     }
 
     // ========== ISidedTexture Implementation ==========

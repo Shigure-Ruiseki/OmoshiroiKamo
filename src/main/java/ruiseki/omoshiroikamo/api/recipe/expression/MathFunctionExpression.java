@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import ruiseki.omoshiroikamo.api.condition.ConditionContext;
+import ruiseki.omoshiroikamo.core.common.util.Logger;
 
 /**
  * Expression that performs mathematical functions like sin, cos, sqrt, etc.
@@ -16,7 +17,6 @@ public class MathFunctionExpression implements IExpression {
 
     private final String functionName;
     private final List<IExpression> arguments;
-    private static final Random RANDOM = new Random();
 
     public static final Set<String> SUPPORTED_FUNCTIONS = Collections.unmodifiableSet(
         new HashSet<>(
@@ -61,6 +61,10 @@ public class MathFunctionExpression implements IExpression {
 
     @Override
     public double evaluate(ConditionContext context) {
+        if (functionName.equals("random")) {
+            return new Random(context.getEvaluationSeed()).nextDouble();
+        }
+
         if (arguments.isEmpty()) {
             return 0;
         }
@@ -72,7 +76,7 @@ public class MathFunctionExpression implements IExpression {
             case "abs":
                 return Math.abs(v1);
             case "sqrt":
-                return Math.sqrt(v1);
+                return v1 < 0 ? 0 : Math.sqrt(v1);
             case "sin":
                 return Math.sin(v1);
             case "cos":
@@ -87,17 +91,18 @@ public class MathFunctionExpression implements IExpression {
                 return Math.exp(v1);
             case "log":
                 if (arguments.size() >= 2) {
-                    return Math.log(v1) / Math.log(
-                        arguments.get(1)
-                            .evaluate(context));
+                    double base = arguments.get(1)
+                        .evaluate(context);
+                    if (base <= 0 || base == 1 || v1 <= 0) return 0;
+                    return Math.log(v1) / Math.log(base);
                 }
-                return Math.log(v1);
+                return v1 <= 0 ? 0 : Math.log(v1);
             case "log10":
-                return Math.log10(v1);
+                return v1 <= 0 ? 0 : Math.log10(v1);
             case "asin":
-                return Math.asin(v1);
+                return (v1 < -1 || v1 > 1) ? 0 : Math.asin(v1);
             case "acos":
-                return Math.acos(v1);
+                return (v1 < -1 || v1 > 1) ? 0 : Math.acos(v1);
             case "atan":
                 return Math.atan(v1);
             case "fact":
@@ -137,9 +142,14 @@ public class MathFunctionExpression implements IExpression {
                     .evaluate(context);
                 double max = arguments.get(2)
                     .evaluate(context);
+                if (min > max) {
+                    Logger.warn(
+                        "[Expression] clamp(v, min, max) called with min > max (min=" + min + ", max=" + max + ")");
+                    double temp = min;
+                    min = max;
+                    max = temp;
+                }
                 return Math.max(min, Math.min(max, v1));
-            case "random":
-                return RANDOM.nextDouble();
             case "floor":
                 return Math.floor(v1);
             case "ceil":
@@ -148,7 +158,7 @@ public class MathFunctionExpression implements IExpression {
                 return Math.round(v1);
             case "chance":
                 // 1.0 if chance succeeds, 0.0 otherwise
-                return RANDOM.nextDouble() < v1 ? 1.0 : 0.0;
+                return new Random(context.getEvaluationSeed() + 1).nextDouble() < v1 ? 1.0 : 0.0;
             case "pow":
                 if (arguments.size() < 2) return 0;
                 return Math.pow(
