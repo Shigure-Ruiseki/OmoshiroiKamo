@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,6 +31,22 @@ public class ItemMaterialPart extends ItemOK {
         super(partType);
         this.partType = partType;
         setHasSubtypes(true);
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        EnumMaterial material = EnumMaterial.byMetadata(stack.getItemDamage());
+        if (material == null) return super.getItemStackDisplayName(stack);
+
+        String matKey = "material." + material.getName();
+        String matName = StatCollector.canTranslate(matKey) ? StatCollector.translateToLocal(matKey)
+            : material.getOreName();
+
+        String formatKey = "part." + partType + ".format";
+        String format = StatCollector.canTranslate(formatKey) ? StatCollector.translateToLocal(formatKey)
+            : "%s " + partType;
+
+        return String.format(format, matName);
     }
 
     @Override
