@@ -75,9 +75,9 @@ public class CoreModule extends ModModuleBase {
 
     @Override
     public void reload(ICommandSender sender) throws Exception {
-        StructureManager.getInstance().reload();
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.GREEN + "  [Core] Structures reloaded."));
+        StructureManager.getInstance()
+            .reload();
+        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  [Core] Structures reloaded."));
     }
 
     @Override

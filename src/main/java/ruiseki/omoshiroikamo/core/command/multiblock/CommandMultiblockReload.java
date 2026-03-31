@@ -23,16 +23,17 @@ public class CommandMultiblockReload extends CommandMod {
         sender.addChatMessage(
             new ChatComponentText(EnumChatFormatting.YELLOW + "[OmoshiroiKamo] Reloading multiblock..."));
 
-        MultiBlockModule multiblockModule = getMod().getModuleManager().getModuleByType(MultiBlockModule.class);
+        MultiBlockModule multiblockModule = getMod().getModuleManager()
+            .getModuleByType(MultiBlockModule.class);
         if (multiblockModule == null || !multiblockModule.isEnable()) {
-            sender.addChatMessage(
-                new ChatComponentText(EnumChatFormatting.RED + "[Multiblock] Module is disabled."));
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "[Multiblock] Module is disabled."));
             return;
         }
 
         try {
-            getMod().getModuleManager().getModuleByType(
-                ruiseki.omoshiroikamo.core.CoreModule.class).reload(sender);
+            getMod().getModuleManager()
+                .getModuleByType(ruiseki.omoshiroikamo.core.CoreModule.class)
+                .reload(sender);
             multiblockModule.reload(sender);
         } catch (Exception e) {
             sender.addChatMessage(
@@ -40,7 +41,8 @@ public class CommandMultiblockReload extends CommandMod {
             return;
         }
 
-        if (!JsonErrorCollector.getInstance().hasErrors()) {
+        if (!JsonErrorCollector.getInstance()
+            .hasErrors()) {
             sender.addChatMessage(
                 new ChatComponentText(EnumChatFormatting.GREEN + "[OmoshiroiKamo] Multiblock reload completed!"));
         }

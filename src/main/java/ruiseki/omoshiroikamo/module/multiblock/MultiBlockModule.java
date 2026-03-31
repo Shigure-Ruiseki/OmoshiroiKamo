@@ -65,7 +65,6 @@ public class MultiBlockModule extends ModModuleBase {
     @Override
     public void reload(ICommandSender sender) throws Exception {
         QuantumExtractorRecipes.reload();
-        sender.addChatMessage(
-            new ChatComponentText(EnumChatFormatting.GREEN + "  [Multiblock] Recipes reloaded."));
+        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "  [Multiblock] Recipes reloaded."));
     }
 }
