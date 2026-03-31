@@ -47,6 +47,10 @@ public class LivingRegistry {
         return null;
     }
 
+    public void clear() {
+        items.clear();
+    }
+
     public Collection<LivingRegistryItem> getItems() {
         List<LivingRegistryItem> result = new ArrayList<>();
         for (LivingRegistryItem t : items.values()) {

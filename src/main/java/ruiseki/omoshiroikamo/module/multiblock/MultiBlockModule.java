@@ -1,5 +1,9 @@
 package ruiseki.omoshiroikamo.module.multiblock;
 
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -14,6 +18,7 @@ import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockItems;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiBlockOreDicts;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiblockRecipes;
 import ruiseki.omoshiroikamo.module.multiblock.common.init.MultiblockWorldGenerator;
+import ruiseki.omoshiroikamo.module.multiblock.common.init.QuantumExtractorRecipes;
 
 public class MultiBlockModule extends ModModuleBase {
 
@@ -55,7 +60,12 @@ public class MultiBlockModule extends ModModuleBase {
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {}
 
+    @Override
+    public void reload(ICommandSender sender) throws Exception {
+        QuantumExtractorRecipes.reload();
+        sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.GREEN + "  [Multiblock] Recipes reloaded."));
     }
 }

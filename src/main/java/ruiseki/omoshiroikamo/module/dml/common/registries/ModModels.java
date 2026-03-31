@@ -23,6 +23,17 @@ public class ModModels {
         loadConfiguration();
     }
 
+    public static void reload() {
+        Logger.info("Models Reloading...");
+        LivingRegistry.INSTANCE.clear();
+        ModelRegistry.INSTANCE.clear();
+        ModelTierRegistry.INSTANCE.clear();
+        registeredModAddons.clear();
+        registerModAddons();
+        loadConfiguration();
+        postInit();
+    }
+
     public static void postInit() {
         Logger.info("Resolving Entity Classes for Data Models...");
         ModelRegistry.INSTANCE.getItems()

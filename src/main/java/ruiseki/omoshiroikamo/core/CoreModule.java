@@ -3,6 +3,9 @@ package ruiseki.omoshiroikamo.core;
 import java.util.Map;
 
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -13,6 +16,7 @@ import ruiseki.omoshiroikamo.core.capabilities.fluid.CapabilityFluidHandler;
 import ruiseki.omoshiroikamo.core.capabilities.item.CapabilityItemHandler;
 import ruiseki.omoshiroikamo.core.capabilities.light.CapabilityLight;
 import ruiseki.omoshiroikamo.core.capabilities.redstone.CapabilityRedstone;
+import ruiseki.omoshiroikamo.core.command.CommandReload;
 import ruiseki.omoshiroikamo.core.command.multiblock.CommandMultiblock;
 import ruiseki.omoshiroikamo.core.common.init.CoreItems;
 import ruiseki.omoshiroikamo.core.common.init.CoreOreDict;
@@ -66,6 +70,14 @@ public class CoreModule extends ModModuleBase {
     protected void registerSubCommand(Map<String, ICommand> subcommand) {
         super.registerSubCommand(subcommand);
         subcommand.put(CommandMultiblock.NAME, new CommandMultiblock(this.getMod()));
+        subcommand.put(CommandReload.NAME, new CommandReload(this.getMod()));
+    }
+
+    @Override
+    public void reload(ICommandSender sender) throws Exception {
+        StructureManager.getInstance().reload();
+        sender.addChatMessage(
+            new ChatComponentText(EnumChatFormatting.GREEN + "  [Core] Structures reloaded."));
     }
 
     @Override

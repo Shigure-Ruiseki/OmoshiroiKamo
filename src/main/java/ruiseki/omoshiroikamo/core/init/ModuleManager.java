@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -28,6 +31,14 @@ public class ModuleManager {
 
     public void register(ModModuleBase module) {
         modules.add(module);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends ModModuleBase> T getModuleByType(Class<T> type) {
+        for (ModModuleBase module : modules) {
+            if (type.isInstance(module)) return (T) module;
+        }
+        return null;
     }
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -113,6 +124,28 @@ public class ModuleManager {
         for (ModModuleBase module : modules) {
             if (!module.isEnable()) continue;
             module.registerSubCommand(subcommand);
+        }
+    }
+
+    /**
+     * Reloads all enabled modules.
+     * Disabled modules are silently skipped, matching the pattern used in all other methods.
+     * Errors in one module do not prevent reloading of subsequent modules.
+     */
+    public void reloadAll(ICommandSender sender) {
+        for (ModModuleBase module : modules) {
+            if (!module.isEnable()) continue;
+            try {
+                module.reload(sender);
+            } catch (Exception e) {
+                sender.addChatMessage(
+                    new ChatComponentText(
+                        EnumChatFormatting.RED + "  ["
+                            + module.getClass()
+                                .getSimpleName()
+                            + "] failed: "
+                            + e.getMessage()));
+            }
         }
     }
 }
