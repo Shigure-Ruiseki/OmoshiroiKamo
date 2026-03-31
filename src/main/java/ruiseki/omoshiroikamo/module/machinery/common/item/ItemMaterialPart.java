@@ -34,7 +34,11 @@ public class ItemMaterialPart extends ItemOK {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
+        if (stack == null) return super.getUnlocalizedName();
+
         EnumMaterial material = EnumMaterial.byMetadata(stack.getItemDamage());
+        if (material == null) return super.getUnlocalizedName();
+
         return super.getUnlocalizedName() + "_" + material.getName();
     }
 
@@ -42,10 +46,14 @@ public class ItemMaterialPart extends ItemOK {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         icons = new HashMap<>();
+        // Ingot textures are in the root modular directory,
+        // while others are in their respective subdirectories.
+        String folder = partType.equals("ingot") ? "" : partType + "/";
         for (EnumMaterial material : EnumMaterial.values()) {
             icons.put(
                 material.getMeta(),
-                register.registerIcon(LibResources.PREFIX_MOD + "modular/" + partType + material.getOreName()));
+                register
+                    .registerIcon(LibResources.PREFIX_MOD + "modular/" + folder + partType + material.getOreName()));
         }
     }
 
