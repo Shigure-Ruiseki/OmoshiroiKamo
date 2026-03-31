@@ -77,6 +77,7 @@ gui.sort_order.desc=Descending
 # Items
 item.wrench.name=Wrench
 item.structure_wand.name=Structure Wand
+item.fluid_canister.name=Fluid Canister
 
 
 # Tooltips
@@ -1362,3 +1363,27 @@ tooltip.machinery.mana_transfer=Transfer: %s /t
 tooltip.machinery.deprecated=§e[DEPRECATED]
 tooltip.machinery.deprecated.hint=§7This block uses the legacy system.
 
+# Gas/Fluid
+tile.gas.helium.name=Helium
+tile.gas.neon.name=Neon
+tile.gas.argon.name=Argon
+tile.gas.krypton.name=Krypton
+tile.gas.xenon.name=Xenon
+tile.gas.radon.name=Radon
+tile.gas.oganesson.name=Oganesson
+tile.gas.fluorine.name=Fluorine
+tile.gas.chlorine.name=Chlorine
+tile.gas.hydrogen.name=Hydrogen
+tile.gas.oxygen.name=Oxygen
+tile.gas.nitrogen.name=Nitrogen
+tile.gas.carbon_dioxide.name=Carbon Dioxide
+tile.gas.steam.name=Steam
+tile.liquid.bromine.name=Bromine
+tile.liquid.iodine.name=Iodine
+tile.liquid.astatine.name=Astatine
+tile.liquid.tennessine.name=Tennessine
+tile.liquid.oil.name=Oil
+tile.liquid.fuel.name=Fuel
+tile.liquid.biofuel.name=Biofuel
+tile.liquid.ethanol.name=Ethanol
+tile.liquid.mana.name=Mana

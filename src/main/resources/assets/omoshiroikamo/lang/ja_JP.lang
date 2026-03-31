@@ -79,6 +79,7 @@ gui.sort_order.desc=降順
 # Items
 item.wrench.name=レンチ
 item.structure_wand.name=ストラクチャーワンド
+item.fluid_canister.name=流体キャニスター
 
 
 # Tooltips
@@ -1359,3 +1360,27 @@ tooltip.machinery.capacity=容量: %s
 tooltip.machinery.slots=スロット数: %s
 tooltip.machinery.mana_transfer=転送量: %s /t
 
+# Gas/Fluid
+tile.gas.helium.name=ヘリウム
+tile.gas.neon.name=ネオン
+tile.gas.argon.name=アルゴン
+tile.gas.krypton.name=クリプトン
+tile.gas.xenon.name=キセノン
+tile.gas.radon.name=ラドン
+tile.gas.oganesson.name=オガネソン
+tile.gas.fluorine.name=フッ素
+tile.gas.chlorine.name=塩素
+tile.gas.hydrogen.name=水素
+tile.gas.oxygen.name=酸素
+tile.gas.nitrogen.name=窒素
+tile.gas.carbon_dioxide.name=二酸化炭素
+tile.gas.steam.name=蒸気
+tile.liquid.bromine.name=臭素
+tile.liquid.iodine.name=ヨウ素
+tile.liquid.astatine.name=アスタチン
+tile.liquid.tennessine.name=テネシン
+tile.liquid.oil.name=石油
+tile.liquid.fuel.name=燃料
+tile.liquid.biofuel.name=バイオ燃料
+tile.liquid.ethanol.name=エタノール
+tile.liquid.mana.name=マナ
