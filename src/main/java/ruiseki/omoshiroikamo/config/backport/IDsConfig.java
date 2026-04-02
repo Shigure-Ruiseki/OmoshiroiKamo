@@ -15,9 +15,14 @@ public class IDsConfig {
     public static int[] meneglinBiomeDimensionBlacklist;
 
     @Config.DefaultInt(5)
-    @Config.Comment("The weight of spawning.")
+    @Config.Comment("The weight of meneglin biome spawning.")
     @Config.RangeInt(min = 0)
     public static int spawnWeight;
+
+    @Config.DefaultInt(193)
+    @Config.Comment("The ID of the meneglin biome.")
+    @Config.RequiresMcRestart
+    public static int meneglinBiomeID;
 
     @Config.DefaultInt(4)
     @Config.Comment("A 1/x chance menril berries will be dropped when breaking a leaves block.")
